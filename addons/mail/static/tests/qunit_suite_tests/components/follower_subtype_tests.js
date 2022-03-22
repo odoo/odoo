@@ -1,11 +1,14 @@
 /** @odoo-module **/
 
-import { insert, link } from '@mail/model/model_field_command';
+import { makeDeferred } from '@mail/utils/deferred';
 import {
     afterNextRender,
     createRootMessagingComponent,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
+
+import FormView from 'web.FormView';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -21,185 +24,225 @@ QUnit.module('follower_subtype_tests.js', {
                 target,
             });
         };
+
+        // FIXME archs could be removed once task-2248306 is done
+        // The mockServer will try to get the list view
+        // of every relational fields present in the main view.
+        // In the case of mail fields, we don't really need them,
+        // but they still need to be defined.
+        this.createView = async (viewParams, ...args) => {
+            const startResult = makeDeferred();
+            await afterNextRender(async () => {
+                const viewArgs = Object.assign(
+                    {
+                        archs: {
+                            'mail.activity,false,list': '<tree/>',
+                            'mail.followers,false,list': '<tree/>',
+                            'mail.message,false,list': '<tree/>',
+                        },
+                    },
+                    viewParams,
+                );
+                startResult.resolve(await start(viewArgs, ...args));
+            });
+            return startResult;
+        };
     },
 });
 
 QUnit.test('simplest layout of a followed subtype', async function (assert) {
     assert.expect(5);
 
-    const { messaging, widget } = await start();
-
-    const thread = messaging.models['Thread'].create({
-        id: 100,
+    const pyEnv = await startServer();
+    const subtypeId = pyEnv['mail.message.subtype'].create({
+        default: true,
+        name: 'TestSubtype',
+    });
+    const followerId = pyEnv['mail.followers'].create({
+        display_name: "François Perusse",
+        partner_id: pyEnv.currentPartnerId,
+        res_model: 'res.partner',
+        res_id: pyEnv.currentPartnerId,
+        subtype_ids: [subtypeId],
+    });
+    pyEnv['res.partner'].write([pyEnv.currentPartnerId], {
+        message_follower_ids: [followerId],
+    });
+    const { click } = await this.createView({
+        hasDialog: true,
+        hasView: true,
+        // View params
+        View: FormView,
         model: 'res.partner',
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                </div>
+            </form>
+        `,
+        res_id: pyEnv.currentPartnerId,
+        // FIXME: should adapt mock server code to provide `hasWriteAccess`
+        async mockRPC(route, args) {
+            if (route === '/mail/thread/data') {
+                // mimic user with write access
+                const res = await this._super(...arguments);
+                res['hasWriteAccess'] = true;
+                return res;
+            }
+            return this._super(...arguments);
+        },
     });
-    const follower = messaging.models['Follower'].create({
-        partner: insert({
-            id: 1,
-            name: "François Perusse",
-        }),
-        followedThread: link(thread),
-        id: 2,
-        isActive: true,
-    });
-    const followerSubtype = messaging.models['FollowerSubtype'].create({
-        id: 1,
-        isDefault: true,
-        isInternal: false,
-        name: "Dummy test",
-        resModel: 'res.partner'
-    });
-    follower.update({
-        selectedSubtypes: link(followerSubtype),
-        subtypes: link(followerSubtype),
-    });
-    await this.createFollowerSubtypeComponent({
-        follower,
-        followerSubtype,
-        target: widget.el,
-    });
+    await click('.o_FollowerListMenu_buttonFollowers');
+    await click('.o_Follower_editButton');
     assert.containsOnce(
         document.body,
-        '.o_FollowerSubtype',
-        "should have follower subtype component"
+        '.o_FollowerSubtype:contains(TestSubtype)',
+        "should have a follower subtype for 'TestSubtype'"
     );
     assert.containsOnce(
-        document.body,
+        document.querySelector('.o_FollowerSubtype'),
         '.o_FollowerSubtype_label',
         "should have a label"
     );
     assert.containsOnce(
-        document.body,
+       $('.o_FollowerSubtype:contains(TestSubtype)'),
         '.o_FollowerSubtype_checkbox',
         "should have a checkbox"
     );
     assert.strictEqual(
-        document.querySelector('.o_FollowerSubtype_label').textContent,
-        "Dummy test",
+        $('.o_FollowerSubtype:contains(TestSubtype) .o_FollowerSubtype_label')[0].textContent,
+        "TestSubtype",
         "should have the name of the subtype as label"
     );
     assert.ok(
-        document.querySelector('.o_FollowerSubtype_checkbox').checked,
+        $('.o_FollowerSubtype:contains(TestSubtype) .o_FollowerSubtype_checkbox')[0].checked,
         "checkbox should be checked as follower subtype is followed"
     );
 });
 
 QUnit.test('simplest layout of a not followed subtype', async function (assert) {
-    assert.expect(5);
+    assert.expect(1);
 
-    const { messaging, widget } = await start();
-
-    const thread = messaging.models['Thread'].create({
-        id: 100,
+    const pyEnv = await startServer();
+    pyEnv['mail.message.subtype'].create({
+        default: true,
+        name: 'TestSubtype',
+    });
+    const followerId = pyEnv['mail.followers'].create({
+        display_name: "François Perusse",
+        partner_id: pyEnv.currentPartnerId,
+        res_model: 'res.partner',
+        res_id: pyEnv.currentPartnerId,
+    });
+    pyEnv['res.partner'].write([pyEnv.currentPartnerId], {
+        message_follower_ids: [followerId],
+    });
+    const { click } = await this.createView({
+        hasDialog: true,
+        hasView: true,
+        // View params
+        View: FormView,
         model: 'res.partner',
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                </div>
+            </form>
+        `,
+        res_id: pyEnv.currentPartnerId,
+        // FIXME: should adapt mock server code to provide `hasWriteAccess`
+        async mockRPC(route, args) {
+            if (route === '/mail/thread/data') {
+                // mimic user with write access
+                const res = await this._super(...arguments);
+                res['hasWriteAccess'] = true;
+                return res;
+            }
+            return this._super(...arguments);
+        },
     });
-    const follower = messaging.models['Follower'].create({
-        partner: insert({
-            id: 1,
-            name: "François Perusse",
-        }),
-        followedThread: link(thread),
-        id: 2,
-        isActive: true,
-    });
-    const followerSubtype = messaging.models['FollowerSubtype'].create({
-        id: 1,
-        isDefault: true,
-        isInternal: false,
-        name: "Dummy test",
-        resModel: 'res.partner'
-    });
-    follower.update({ subtypes: link(followerSubtype) });
-    await this.createFollowerSubtypeComponent({
-        follower,
-        followerSubtype,
-        target: widget.el,
-    });
-    assert.containsOnce(
-        document.body,
-        '.o_FollowerSubtype',
-        "should have follower subtype component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_FollowerSubtype_label',
-        "should have a label"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_FollowerSubtype_checkbox',
-        "should have a checkbox"
-    );
-    assert.strictEqual(
-        document.querySelector('.o_FollowerSubtype_label').textContent,
-        "Dummy test",
-        "should have the name of the subtype as label"
-    );
+    await click('.o_FollowerListMenu_buttonFollowers');
+    await click('.o_Follower_editButton');
     assert.notOk(
-        document.querySelector('.o_FollowerSubtype_checkbox').checked,
+        $('.o_FollowerSubtype:contains(TestSubtype) .o_FollowerSubtype_checkbox')[0].checked,
         "checkbox should not be checked as follower subtype is not followed"
     );
 });
 
 QUnit.test('toggle follower subtype checkbox', async function (assert) {
-    assert.expect(5);
+    assert.expect(3);
 
-    const { messaging, widget } = await start();
-
-    const thread = messaging.models['Thread'].create({
-        id: 100,
+    const pyEnv = await startServer();
+    pyEnv['mail.message.subtype'].create({
+        default: true,
+        name: 'TestSubtype',
+    });
+    const followerId = pyEnv['mail.followers'].create({
+        display_name: "François Perusse",
+        partner_id: pyEnv.currentPartnerId,
+        res_model: 'res.partner',
+        res_id: pyEnv.currentPartnerId,
+    });
+    pyEnv['res.partner'].write([pyEnv.currentPartnerId], {
+        message_follower_ids: [followerId],
+    });
+    const { click, messaging } = await this.createView({
+        hasDialog: true,
+        hasView: true,
+        // View params
+        View: FormView,
         model: 'res.partner',
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                </div>
+            </form>
+        `,
+        res_id: pyEnv.currentPartnerId,
+        // FIXME: should adapt mock server code to provide `hasWriteAccess`
+        async mockRPC(route, args) {
+            if (route === '/mail/thread/data') {
+                // mimic user with write access
+                const res = await this._super(...arguments);
+                res['hasWriteAccess'] = true;
+                return res;
+            }
+            return this._super(...arguments);
+        },
     });
-    const follower = messaging.models['Follower'].create({
-        partner: insert({
-            id: 1,
-            name: "François Perusse",
-        }),
-        followedThread: link(thread),
-        id: 2,
-        isActive: true,
-    });
-    const followerSubtype = messaging.models['FollowerSubtype'].create({
-        id: 1,
-        isDefault: true,
-        isInternal: false,
-        name: "Dummy test",
-        resModel: 'res.partner'
-    });
-    follower.update({ subtypes: link(followerSubtype) });
-    await this.createFollowerSubtypeComponent({
-        follower,
-        followerSubtype,
-        target: widget.el,
-    });
-    assert.containsOnce(
-        document.body,
-        '.o_FollowerSubtype',
-        "should have follower subtype component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_FollowerSubtype_checkbox',
-        "should have a checkbox"
-    );
+    await click('.o_FollowerListMenu_buttonFollowers');
+    await click('.o_Follower_editButton');
+    const followerSubtype = messaging.models['FollowerSubtype'].find(subtype => subtype.name === 'TestSubtype');
+    const followerSubtypeView = followerSubtype.followerSubtypeViews[0];
     assert.notOk(
-        document.querySelector('.o_FollowerSubtype_checkbox').checked,
+        document.querySelector(`.o_FollowerSubtype[data-local-id="${followerSubtypeView.localId}"] .o_FollowerSubtype_checkbox`).checked,
         "checkbox should not be checked as follower subtype is not followed"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_FollowerSubtype_checkbox').click()
-    );
+    await click(`.o_FollowerSubtype[data-local-id="${followerSubtypeView.localId}"] .o_FollowerSubtype_checkbox`);
     assert.ok(
-        document.querySelector('.o_FollowerSubtype_checkbox').checked,
+        document.querySelector(`.o_FollowerSubtype[data-local-id="${followerSubtypeView.localId}"] .o_FollowerSubtype_checkbox`).checked,
         "checkbox should now be checked"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_FollowerSubtype_checkbox').click()
-    );
+    await click(`.o_FollowerSubtype[data-local-id="${followerSubtypeView.localId}"] .o_FollowerSubtype_checkbox`);
     assert.notOk(
-        document.querySelector('.o_FollowerSubtype_checkbox').checked,
+        document.querySelector(`.o_FollowerSubtype[data-local-id="${followerSubtypeView.localId}"] .o_FollowerSubtype_checkbox`).checked,
         "checkbox should be no more checked"
     );
 });

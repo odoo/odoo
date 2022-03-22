@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr } from '@mail/model/model_field';
+import { attr, many } from '@mail/model/model_field';
 
 registerModel({
     name: 'FollowerSubtype',
@@ -38,6 +38,10 @@ registerModel({
         },
     },
     fields: {
+        followerSubtypeViews: many('FollowerSubtypeView', {
+            inverse: 'subtype',
+            isCausal: true,
+        }),
         id: attr({
             readonly: true,
             required: true,
