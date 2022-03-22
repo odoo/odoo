@@ -28,7 +28,8 @@ from werkzeug import urls
 
 import odoo.modules
 
-from odoo import api, models, fields
+from odoo import _, api, models, fields
+from odoo.exceptions import ValidationError
 from odoo.tools import ustr, posix_to_ldml, pycompat
 from odoo.tools import html_escape as escape
 from odoo.tools.misc import get_lang, babel_locale_parse
@@ -178,8 +179,11 @@ class Float(models.AbstractModel):
     def from_html(self, model, field, element):
         lang = self.user_lang()
         value = element.text_content().strip()
-        return float(value.replace(lang.thousands_sep, '')
-                          .replace(lang.decimal_point, '.'))
+        try:
+            return float(value.replace(lang.thousands_sep, '')
+                              .replace(lang.decimal_point, '.'))
+        except:
+            raise ValidationError(_('You entered an invalid value, please try again.'))
 
 
 class ManyToOne(models.AbstractModel):
@@ -476,8 +480,11 @@ class Monetary(models.AbstractModel):
 
         value = element.find('span').text.strip()
 
-        return float(value.replace(lang.thousands_sep, '')
-                          .replace(lang.decimal_point, '.'))
+        try:
+            return float(value.replace(lang.thousands_sep, '')
+                              .replace(lang.decimal_point, '.'))
+        except:
+            raise ValidationError(_('You entered an invalid value, please try again.'))
 
 
 class Duration(models.AbstractModel):
