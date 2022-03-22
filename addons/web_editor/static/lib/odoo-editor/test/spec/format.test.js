@@ -15,8 +15,8 @@ const strikeThrough = async editor => {
 };
 
 describe('Format', () => {
-    const b = (content, zws) => `<span${zws === 'first' ? ' oe-zws-empty-inline=""' : ''} style="font-weight: bolder;"${zws === 'last' ? ' oe-zws-empty-inline=""' : ''}>${content}</span>`;
-    const notB = (content, weight, zws) => `<span${zws === 'first' ? ' oe-zws-empty-inline=""' : ''} style="font-weight: ${weight || 'normal'};"${zws === 'last' ? ' oe-zws-empty-inline=""' : ''}>${content}</span>`;
+    const b = (content, zws) => `<span${zws === 'first' ? ' data-oe-zws-empty-inline=""' : ''} style="font-weight: bolder;"${zws === 'last' ? ' data-oe-zws-empty-inline=""' : ''}>${content}</span>`;
+    const notB = (content, weight, zws) => `<span${zws === 'first' ? ' data-oe-zws-empty-inline=""' : ''} style="font-weight: ${weight || 'normal'};"${zws === 'last' ? ' data-oe-zws-empty-inline=""' : ''}>${content}</span>`;
     describe('bold', () => {
         it('should make a few characters bold', async () => {
             await testEditor(BasicEditor, {
@@ -99,8 +99,8 @@ describe('Format', () => {
             });
         });
     });
-    const i = (content, zws) => `<span${zws === 'first' ? ' oe-zws-empty-inline=""' : ''} style="font-style: italic;"${zws === 'last' ? ' oe-zws-empty-inline=""' : ''}>${content}</span>`;
-    const notI = (content, zws) => `<span${zws === 'first' ? ' oe-zws-empty-inline=""' : ''} style="font-style: normal;"${zws === 'last' ? ' oe-zws-empty-inline=""' : ''}>${content}</span>`;
+    const i = (content, zws) => `<span${zws === 'first' ? ' data-oe-zws-empty-inline=""' : ''} style="font-style: italic;"${zws === 'last' ? ' data-oe-zws-empty-inline=""' : ''}>${content}</span>`;
+    const notI = (content, zws) => `<span${zws === 'first' ? ' data-oe-zws-empty-inline=""' : ''} style="font-style: normal;"${zws === 'last' ? ' data-oe-zws-empty-inline=""' : ''}>${content}</span>`;
     describe('italic', () => {
         it('should make a few characters italic', async () => {
             await testEditor(BasicEditor, {
@@ -183,7 +183,7 @@ describe('Format', () => {
             });
         });
     });
-    const u = (content, zws) => `<span${zws === 'first' ? ' oe-zws-empty-inline=""' : ''} style="text-decoration-line: underline;"${zws === 'last' ? ' oe-zws-empty-inline=""' : ''}>${content}</span>`;
+    const u = (content, zws) => `<span${zws === 'first' ? ' data-oe-zws-empty-inline=""' : ''} style="text-decoration-line: underline;"${zws === 'last' ? ' data-oe-zws-empty-inline=""' : ''}>${content}</span>`;
     describe('underline', () => {
         it('should make a few characters underline', async () => {
             await testEditor(BasicEditor, {
@@ -260,12 +260,12 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>${u(`ab[]cd`)}</p>`,
                 stepFunction: underline,
-                contentAfterEdit: `<p>${u(`ab`)}<span oe-zws-empty-inline="">\u200B[]</span>${u(`cd`)}</p>`,
+                contentAfterEdit: `<p>${u(`ab`)}<span data-oe-zws-empty-inline="">\u200B[]</span>${u(`cd`)}</p>`,
                 contentAfter: `<p>${u(`ab`)}[]${u(`cd`)}</p>`,
             });
         });
     });
-    const s = (content, zws) => `<span${zws === 'first' ? ' oe-zws-empty-inline=""' : ''} style="text-decoration-line: line-through;"${zws === 'last' ? ' oe-zws-empty-inline=""' : ''}>${content}</span>`;
+    const s = (content, zws) => `<span${zws === 'first' ? ' data-oe-zws-empty-inline=""' : ''} style="text-decoration-line: line-through;"${zws === 'last' ? ' data-oe-zws-empty-inline=""' : ''}>${content}</span>`;
     describe('strikeThrough', () => {
         it('should make a few characters strikeThrough', async () => {
             await testEditor(BasicEditor, {
@@ -342,7 +342,7 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>${s(`ab[]cd`)}</p>`,
                 stepFunction: strikeThrough,
-                contentAfterEdit: `<p>${s(`ab`)}<span oe-zws-empty-inline="">\u200B[]</span>${s(`cd`)}</p>`,
+                contentAfterEdit: `<p>${s(`ab`)}<span data-oe-zws-empty-inline="">\u200B[]</span>${s(`cd`)}</p>`,
                 contentAfter: `<p>${s(`ab`)}[]${s(`cd`)}</p>`,
             });
         });
@@ -376,7 +376,7 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>ab${u(s(`cd`))}${s(u(`ghi[]`))}${u(s(`ef`))}</p>`,
                 stepFunction: underline,
-                contentAfterEdit: `<p>ab${u(s(`cd`))}${s(u(`ghi`) + `<span oe-zws-empty-inline="">\u200b[]</span>`)}${u(s(`ef`))}</p>`,
+                contentAfterEdit: `<p>ab${u(s(`cd`))}${s(u(`ghi`) + `<span data-oe-zws-empty-inline="">\u200b[]</span>`)}${u(s(`ef`))}</p>`,
                 contentAfter: `<p>ab${u(s(`cd`))}${s(u(`ghi`) + `[]`)}${u(s(`ef`))}</p>`,
             });
         });
@@ -398,7 +398,7 @@ describe('Format', () => {
         });
     });
     describe('underline + italic', () => {
-        const iAndU = (content, zws) => `<span${zws === 'first' ? ' oe-zws-empty-inline=""' : ''} style="font-style: italic; text-decoration-line: underline;"${zws === 'last' ? ' oe-zws-empty-inline=""' : ''}>${content}</span>`;
+        const iAndU = (content, zws) => `<span${zws === 'first' ? ' data-oe-zws-empty-inline=""' : ''} style="font-style: italic; text-decoration-line: underline;"${zws === 'last' ? ' data-oe-zws-empty-inline=""' : ''}>${content}</span>`;
         it('should get ready to write in italic and underline', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>ab[]cd</p>`,
@@ -470,7 +470,7 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>ab${u(i(`cd`))}${i(u(`ghi[]`))}${u(i(`ef`))}</p>`,
                 stepFunction: underline,
-                contentAfterEdit: `<p>ab${u(i(`cd`))}${i(u(`ghi`) + `<span oe-zws-empty-inline="">\u200b[]</span>`)}${u(i(`ef`))}</p>`,
+                contentAfterEdit: `<p>ab${u(i(`cd`))}${i(u(`ghi`) + `<span data-oe-zws-empty-inline="">\u200b[]</span>`)}${u(i(`ef`))}</p>`,
                 contentAfter: `<p>ab${u(i(`cd`))}${i(u(`ghi`) + `[]`)}${u(i(`ef`))}</p>`,
             });
         });

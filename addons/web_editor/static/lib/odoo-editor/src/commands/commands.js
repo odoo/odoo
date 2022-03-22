@@ -359,10 +359,10 @@ export function toggleFormat(editor, format) {
                 selectedTextNodes.includes(siblings[0]) &&
                 selectedTextNodes.includes(siblings[siblings.length - 1])
             ) {
-                zws.parentElement.setAttribute('oe-zws-empty-inline', '');
+                zws.parentElement.setAttribute('data-oe-zws-empty-inline', '');
             } else {
                 const span = document.createElement('span');
-                span.setAttribute('oe-zws-empty-inline', '');
+                span.setAttribute('data-oe-zws-empty-inline', '');
                 zws.before(span);
                 span.append(zws);
 
@@ -395,10 +395,10 @@ export function toggleFormat(editor, format) {
                     selectedTextNodes.includes(siblings[0]) &&
                     selectedTextNodes.includes(siblings[siblings.length - 1])
                 ) {
-                    zws.parentElement.setAttribute('oe-zws-empty-inline', '');
+                    zws.parentElement.setAttribute('data-oe-zws-empty-inline', '');
                 } else {
                     const span = document.createElement('span');
-                    span.setAttribute('oe-zws-empty-inline', '');
+                    span.setAttribute('data-oe-zws-empty-inline', '');
                     zws.before(span);
                     span.append(zws);
 
