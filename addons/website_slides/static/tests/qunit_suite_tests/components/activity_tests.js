@@ -14,10 +14,7 @@ QUnit.test('grant course access', async function (assert) {
     assert.expect(8);
 
     this.data['res.partner'].records.push({ id: 5 });
-    this.data['slide.channel'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['slide.channel'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         can_write: true,
         id: 12,
@@ -54,10 +51,7 @@ QUnit.test('refuse course access', async function (assert) {
     assert.expect(8);
 
     this.data['res.partner'].records.push({ id: 5 });
-    this.data['slide.channel'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['slide.channel'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         can_write: true,
         id: 12,

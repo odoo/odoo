@@ -16,10 +16,7 @@ QUnit.module('activity_tests.js', {
 QUnit.test('activity simplest layout', async function (assert) {
     assert.expect(12);
 
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         id: 12,
         res_id: 100,
@@ -95,10 +92,7 @@ QUnit.test('activity simplest layout', async function (assert) {
 QUnit.test('activity with note layout', async function (assert) {
     assert.expect(3);
 
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         id: 12,
         note: 'There is no good or bad note',
@@ -133,10 +127,7 @@ QUnit.test('activity info layout when planned after tomorrow', async function (a
     const today = new Date();
     const fiveDaysFromNow = new Date();
     fiveDaysFromNow.setDate(today.getDate() + 5);
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         date_deadline: date_to_str(fiveDaysFromNow),
         id: 12,
@@ -176,10 +167,7 @@ QUnit.test('activity info layout when planned tomorrow', async function (assert)
     const today = new Date();
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         date_deadline: date_to_str(tomorrow),
         id: 12,
@@ -216,10 +204,7 @@ QUnit.test('activity info layout when planned tomorrow', async function (assert)
 QUnit.test('activity info layout when planned today', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         date_deadline: date_to_str(new Date()),
         id: 12,
@@ -259,10 +244,7 @@ QUnit.test('activity info layout when planned yesterday', async function (assert
     const today = new Date();
     const yesterday = new Date();
     yesterday.setDate(today.getDate() - 1);
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         date_deadline: date_to_str(yesterday),
         id: 12,
@@ -302,10 +284,7 @@ QUnit.test('activity info layout when planned before yesterday', async function 
     const today = new Date();
     const fiveDaysBeforeNow = new Date();
     fiveDaysBeforeNow.setDate(today.getDate() - 5);
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         date_deadline: date_to_str(fiveDaysBeforeNow),
         id: 12,
@@ -342,10 +321,7 @@ QUnit.test('activity info layout when planned before yesterday', async function 
 QUnit.test('activity with a summary layout', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         id: 12,
         res_id: 100,
@@ -382,10 +358,7 @@ QUnit.test('activity with a summary layout', async function (assert) {
 QUnit.test('activity without summary layout', async function (assert) {
     assert.expect(5);
 
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         activity_type_id: 1,
         id: 12,
@@ -430,10 +403,7 @@ QUnit.test('activity details toggle', async function (assert) {
     const today = new Date();
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         create_date: date_to_str(today),
         create_uid: 1,
@@ -492,10 +462,7 @@ QUnit.test('activity details layout', async function (assert) {
         id: 10,
         name: 'Pauvre pomme',
     });
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         activity_type_id: 1,
         create_date: date_to_str(today),
@@ -576,10 +543,7 @@ QUnit.test('activity details layout', async function (assert) {
 QUnit.test('activity with mail template layout', async function (assert) {
     assert.expect(8);
 
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.template'].records.push({
         id: 1,
         name: "Dummy mail template",
@@ -675,10 +639,7 @@ QUnit.test('activity with mail template: preview mail', async function (assert) 
         );
     });
 
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 42,
-    });
+    this.data['res.partner'].records.push({ id: 42 });
     this.data['mail.template'].records.push({
         id: 1,
         name: "Dummy mail template",
@@ -716,10 +677,7 @@ QUnit.test('activity with mail template: preview mail', async function (assert) 
 QUnit.test('activity with mail template: send mail', async function (assert) {
     assert.expect(7);
 
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 42,
-    });
+    this.data['res.partner'].records.push({ id: 42 });
     this.data['mail.template'].records.push({
         id: 1,
         name: "Dummy mail template",
@@ -770,10 +728,7 @@ QUnit.test('activity with mail template: send mail', async function (assert) {
 QUnit.test('activity upload document is available', async function (assert) {
     assert.expect(3);
 
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100, });
     this.data['mail.activity'].records.push({
         activity_category: 'upload_file',
         activity_type_id: 28,
@@ -806,10 +761,7 @@ QUnit.test('activity upload document is available', async function (assert) {
 QUnit.test('activity click on mark as done', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         activity_category: 'default',
         activity_type_id: 1,
@@ -856,10 +808,7 @@ QUnit.test('activity click on mark as done', async function (assert) {
 QUnit.test('activity mark as done popover should focus feedback input on open [REQUIRE FOCUS]', async function (assert) {
     assert.expect(3);
 
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         activity_category: 'default',
         activity_type_id: 1,
@@ -927,10 +876,7 @@ QUnit.test('activity click on edit', async function (assert) {
         );
     });
 
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 42,
-    });
+    this.data['res.partner'].records.push({ id: 42 });
     this.data['mail.template'].records.push({
         id: 1,
         name: "Dummy mail template",
@@ -969,10 +915,7 @@ QUnit.test('activity click on edit', async function (assert) {
 QUnit.test('activity edition', async function (assert) {
     assert.expect(14);
 
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 42,
-    });
+    this.data['res.partner'].records.push({ id: 42 });
     this.data['mail.activity'].records.push({
         can_write: true,
         icon: 'fa-times',
@@ -1064,10 +1007,7 @@ QUnit.test('activity edition', async function (assert) {
 QUnit.test('activity click on cancel', async function (assert) {
     assert.expect(7);
 
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         activity_type_id: 1,
         can_write: true,
@@ -1121,10 +1061,7 @@ QUnit.test('activity mark done popover close on ESCAPE', async function (assert)
     // This test is not in activity_mark_done_popover_tests.js as it requires the activity mark done
     // component to have a parent in order to allow testing interactions the popover.
     assert.expect(2);
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         activity_category: 'default',
         activity_type_id: 1,
@@ -1164,10 +1101,7 @@ QUnit.test('activity mark done popover click on discard', async function (assert
     // component to have a parent in order to allow testing interactions the popover.
     assert.expect(3);
 
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         activity_category: 'default',
         activity_type_id: 1,
@@ -1228,10 +1162,7 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
         assert.step('do-action:openFormView_some.model_250');
     });
 
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         activity_category: 'default',
         activity_type_id: 1,
@@ -1268,10 +1199,7 @@ QUnit.test('button related to file uploading is replaced when updating activity 
     assert.expect(2);
 
     const activityId = 513;
-    this.data['res.partner'].records.push({
-        activity_ids: [activityId],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         activity_category: 'upload_file',
         activity_type_id: 28,

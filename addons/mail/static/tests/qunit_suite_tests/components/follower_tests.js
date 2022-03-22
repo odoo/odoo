@@ -188,7 +188,7 @@ QUnit.test('click on partner follower details', async function (assert) {
 QUnit.test('click on edit follower', async function (assert) {
     assert.expect(5);
 
-    this.data['res.partner'].records.push({ id: 100, message_follower_ids: [2] });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.followers'].records.push({
         id: 2,
         is_active: true,
