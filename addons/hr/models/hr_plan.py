@@ -11,8 +11,8 @@ class HrPlan(models.Model):
     name = fields.Char('Name', required=True)
     company_id = fields.Many2one(
         'res.company', default=lambda self: self.env.company)
-    plan_activity_type_ids = fields.Many2many(
-        'hr.plan.activity.type',
+    plan_activity_type_ids = fields.One2many(
+        'hr.plan.activity.type', 'plan_id',
         string='Activities',
         domain="[('company_id', '=', company_id)]")
     active = fields.Boolean(default=True)

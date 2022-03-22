@@ -12,15 +12,18 @@ class HrPlanWizard(models.TransientModel):
         employee = self.env['hr.employee'].browse(self.env.context.get('active_id'))
         return self.env['hr.plan'].search([('company_id', '=', employee.company_id.id)], limit=1)
 
-    plan_id = fields.Many2one('hr.plan', default=_default_plan_id, domain="[('company_id', '=', company_id)]")
+    plan_id = fields.Many2one('hr.plan', default=lambda self: self._default_plan_id(), domain="[('company_id', '=', company_id)]")
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', required=True,
         default=lambda self: self.env.context.get('active_id', None),
     )
     company_id = fields.Many2one(related='employee_id.company_id')
 
+    def _get_activities_to_schedule(self):
+        return self.plan_id.plan_activity_type_ids
+
     def action_launch(self):
-        for activity_type in self.plan_id.plan_activity_type_ids:
+        for activity_type in self._get_activities_to_schedule():
             responsible = activity_type.get_responsible_id(self.employee_id)
 
             if self.env['hr.employee'].with_user(responsible).check_access_rights('read', raise_exception=False):
