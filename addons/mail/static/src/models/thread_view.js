@@ -438,6 +438,8 @@ registerModel({
         }),
         lastMessageView: one('MessageView', {
             compute: '_computeLastMessageView',
+            inverse: 'threadViewOwnerAsLastMessageView',
+            readonly: true,
         }),
         /**
          * Most recent message in this ThreadView that has been shown to the
