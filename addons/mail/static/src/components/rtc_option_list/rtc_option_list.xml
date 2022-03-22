@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.RtcOptionList" owl="1">
-        <div class="o_RtcOptionList" t-attf-class="{{ className }}" t-ref="root">
-            <t t-if="rtcOptionList">
+        <t t-if="rtcOptionList">
+            <div class="o_RtcOptionList" t-attf-class="{{ className }}" t-ref="root">
                 <button class="o_RtcOptionList_button" t-on-click="rtcOptionList.onClickLayout">
                     <i class="o_RtcOptionList_buttonIcon fa fa-lg fa-th-large"/>
                     <span class="o_RtcOptionList_buttonText">Change layout</span>
@@ -30,8 +30,8 @@
                         <span class="o_RtcOptionList_buttonText">Download logs</span>
                     </button>
                 </t>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
 </templates>
