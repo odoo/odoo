@@ -8,7 +8,7 @@
                     'o-focused': composerView.isFocused,
                     'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
                     'o-has-footer': composerView.hasFooter,
-                    'o-has-header': hasHeader,
+                    'o-has-header': composerView.hasHeader,
                     'o-is-in-thread-view': composerView.threadView,
                     'o-is-compact': composerView.isCompact,
                     'o-messaging-in-editing': composerView.messageViewInEditing,
@@ -23,7 +23,7 @@
                         onDropzoneFilesDropped="_onDropZoneFilesDropped"
                     />
                 </t>
-                <t t-if="hasHeader">
+                <t t-if="composerView.hasHeader">
                     <div class="o_Composer_coreHeader text-truncate">
                         <t t-if="composerView.threadView and composerView.threadView.replyingToMessageView">
                             Replying to <b t-esc="composerView.threadView.replyingToMessageView.message.authorName"/>
