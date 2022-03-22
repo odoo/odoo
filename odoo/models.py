@@ -860,7 +860,7 @@ class BaseModel(metaclass=MetaModel):
             SELECT res_id, module, name
             FROM ir_model_data
             WHERE model = %s AND res_id in %s
-        """, (self._name, tuple(self.ids)))
+        """, (self._name, tuple(self.ids)), autoflush=False)
         xids = {
             res_id: (module, name)
             for res_id, module, name in cr.fetchall()
@@ -1656,7 +1656,7 @@ class BaseModel(metaclass=MetaModel):
                 if '.' in view_ref:
                     module, view_ref = view_ref.split('.', 1)
                     query = "SELECT res_id FROM ir_model_data WHERE model='ir.ui.view' AND module=%s AND name=%s"
-                    self._cr.execute(query, (module, view_ref))
+                    self._cr.execute(query, (module, view_ref), autoflush=False)
                     view_ref_res = self._cr.fetchone()
                     if view_ref_res:
                         view_id = view_ref_res[0]
@@ -2618,7 +2618,7 @@ class BaseModel(metaclass=MetaModel):
             'limit': prefix_term('LIMIT', int(limit) if limit else None),
             'offset': prefix_term('OFFSET', int(offset) if limit else None),
         }
-        self._cr.execute(query, where_clause_params)
+        self._cr.execute(query, where_clause_params, autoflush=False)
         fetched_data = self._cr.dictfetchall()
 
         if not groupby_fields:
@@ -2759,7 +2759,7 @@ class BaseModel(metaclass=MetaModel):
             FROM __parent_store_compute comp
             WHERE row.id = comp.id
         """.format(table=self._table, parent=self._parent_name)
-        self.env.cr.execute(query)
+        self.env.cr.execute(query, autoflush=False)
         self.invalidate_cache(['parent_path'])
         return True
 
@@ -2778,7 +2778,7 @@ class BaseModel(metaclass=MetaModel):
                    "   AND c.oid=a.attrelid"
                    "   AND a.attisdropped=%s"
                    "   AND pg_catalog.format_type(a.atttypid, a.atttypmod) NOT IN ('cid', 'tid', 'oid', 'xid')"
-                   "   AND a.attname NOT IN %s", (self._table, False, tuple(cols))),
+                   "   AND a.attname NOT IN %s", (self._table, False, tuple(cols)), autoflush=False),
 
         for row in cr.dictfetchall():
             if log:
@@ -2805,14 +2805,14 @@ class BaseModel(metaclass=MetaModel):
             _logger.debug("Table '%s': setting default value of new column %s to %r",
                           self._table, column_name, value)
             query = f'UPDATE "{self._table}" SET "{column_name}" = %s WHERE "{column_name}" IS NULL'
-            self._cr.execute(query, (value,))
+            self._cr.execute(query, (value,), autoflush=False)
 
     @ormcache()
     def _table_has_rows(self):
         """ Return whether the model's table has rows. This method should only
             be used when updating the database schema (:meth:`~._auto_init`).
         """
-        self.env.cr.execute('SELECT 1 FROM "%s" LIMIT 1' % self._table)
+        self.env.cr.execute('SELECT 1 FROM "%s" LIMIT 1' % self._table, autoflush=False)
         return self.env.cr.rowcount
 
     def _auto_init(self):
@@ -2881,7 +2881,7 @@ class BaseModel(metaclass=MetaModel):
                 # mark existing records for computation now, so that computed
                 # required fields are flushed before the NOT NULL constraint is
                 # added to the database
-                cr.execute('SELECT id FROM "{}"'.format(self._table))
+                cr.execute('SELECT id FROM "{}"'.format(self._table), autoflush=False)
                 records = self.browse(row[0] for row in cr.fetchall())
                 if records:
                     for field in fields_to_compute:
@@ -3382,7 +3382,7 @@ Fields:
 
             result = []
             for sub_ids in cr.split_for_in_conditions(self.ids):
-                cr.execute(query_str, params + [sub_ids])
+                cr.execute(query_str, params + [sub_ids], autoflush=False)
                 result += cr.fetchall()
         else:
             self.check_access_rule('read')
@@ -3485,7 +3485,7 @@ Fields:
             if not nclauses:
                 continue
             query = "SELECT id FROM %s WHERE %s" % (self._table, " OR ".join([check_clause] * nclauses))
-            self._cr.execute(query, tuple(params))
+            self._cr.execute(query, tuple(params), autoflush=False)
             res = self._cr.fetchone()
             if res:
                 # mention the first one only to keep the error message readable
@@ -3631,7 +3631,7 @@ Fields:
         query_str, params = query.select()
         self._flush_search([])
         for sub_ids in self._cr.split_for_in_conditions(self.ids):
-            self._cr.execute(query_str, params + [sub_ids])
+            self._cr.execute(query_str, params + [sub_ids], autoflush=False)
             valid_ids.update(row[0] for row in self._cr.fetchall())
 
         # return new ids without origin and ids with origin in valid_ids
@@ -3699,7 +3699,7 @@ Fields:
                 Property.search([('res_id', 'in', refs)]).unlink()
 
                 query = "DELETE FROM %s WHERE id IN %%s" % self._table
-                cr.execute(query, (sub_ids,))
+                cr.execute(query, (sub_ids,), autoflush=False)
 
                 # Removing the ir_model_data reference if the record being deleted
                 # is a record created by xml/csv file, as these are not connected
@@ -3721,7 +3721,7 @@ Fields:
                 # ir_attachment is overridden to hide attachments of deleted
                 # records)
                 query = 'SELECT id FROM ir_attachment WHERE res_model=%s AND res_id IN %s'
-                cr.execute(query, (self._name, sub_ids))
+                cr.execute(query, (self._name, sub_ids), autoflush=False)
                 attachments = Attachment.browse([row[0] for row in cr.fetchall()])
                 if attachments:
                     ir_attachment_unlink |= attachments.sudo()
@@ -3983,7 +3983,7 @@ Fields:
             query = f'UPDATE "{self._table}" SET {template} WHERE id IN %s'
             params = list(columns.values())
             for sub_ids in cr.split_for_in_conditions(self._ids):
-                cr.execute(query, params + [sub_ids])
+                cr.execute(query, params + [sub_ids], autoflush=False)
 
         # update parent_path
         if parent_records:
@@ -4249,6 +4249,7 @@ Fields:
             cr.execute(
                 f'INSERT INTO "{self._table}" ({header}) VALUES {template} RETURNING "id"',
                 [tuple(row) for row in rows],
+                autoflush=False,
             )
             ids.extend(id_ for id_, in cr.fetchall())
 
@@ -4357,7 +4358,7 @@ Fields:
                                     WHERE parent.id=node.{1}), node.id, '/')
             WHERE node.id IN %s
         """.format(self._table, self._parent_name)
-        self._cr.execute(query, [tuple(self.ids)])
+        self._cr.execute(query, [tuple(self.ids)], autoflush=False)
 
     def _parent_store_update_prepare(self, vals):
         """ Return the records in ``self`` that must update their parent_path
@@ -4377,7 +4378,7 @@ Fields:
                         WHERE id IN %s AND {1} IS NOT NULL """
             params = [tuple(self.ids)]
         query = query.format(self._table, self._parent_name)
-        self._cr.execute(query, params)
+        self._cr.execute(query, params, autoflush=False)
         return self.browse([row[0] for row in self._cr.fetchall()])
 
     def _parent_store_update(self):
@@ -4389,7 +4390,7 @@ Fields:
             SELECT parent.parent_path FROM {0} node, {0} parent
             WHERE node.id = %s AND parent.id = node.{1}
         """
-        cr.execute(query.format(self._table, self._parent_name), [self.ids[0]])
+        cr.execute(query.format(self._table, self._parent_name), [self.ids[0]], autoflush=False)
         prefix = cr.fetchone()[0] if cr.rowcount else ''
 
         # check for recursion
@@ -4408,7 +4409,7 @@ Fields:
             AND child.parent_path LIKE concat(node.parent_path, '%%')
             RETURNING child.id, child.parent_path
         """
-        cr.execute(query.format(self._table), [prefix, tuple(self.ids)])
+        cr.execute(query.format(self._table), [prefix, tuple(self.ids)], autoflush=False)
 
         # update the cache of updated nodes, and determine what to recompute
         updated = dict(cr.fetchall())
@@ -4788,7 +4789,7 @@ Fields:
             # Ignore order, limit and offset when just counting, they don't make sense and could
             # hurt performance
             query_str, params = query.select("count(1)")
-            self._cr.execute(query_str, params)
+            self._cr.execute(query_str, params, autoflush=False)
             res = self._cr.fetchone()
             return res[0]
 
@@ -4965,7 +4966,7 @@ Fields:
         query = Query(self.env.cr, self._table, self._table_query)
         query.add_where(f'"{self._table}".id IN %s', [tuple(ids)])
         query_str, params = query.select()
-        self.env.cr.execute(query_str, params)
+        self.env.cr.execute(query_str, params, autoflush=False)
         valid_ids = set([r[0] for r in self._cr.fetchall()] + new_ids)
         return self.browse(i for i in self._ids if i in valid_ids)
 
@@ -4988,7 +4989,7 @@ Fields:
         for id in self.ids:
             current_id = id
             while current_id:
-                cr.execute(query, (current_id,))
+                cr.execute(query, (current_id,), autoflush=False)
                 result = cr.fetchone()
                 current_id = result[0] if result else None
                 if current_id == id:
@@ -5020,7 +5021,7 @@ Fields:
         todo, done = set(self.ids), set()
         while todo:
             # retrieve the respective successors of the nodes in 'todo'
-            cr.execute(query, [tuple(todo)])
+            cr.execute(query, [tuple(todo)], autoflush=False)
             done.update(todo)
             todo.clear()
             for id1, id2 in cr.fetchall():
@@ -6782,7 +6783,7 @@ class TransientModel(Model):
     def _transient_clean_old_rows(self, max_count):
         # Check how many rows we have in the table
         query = 'SELECT count(*) FROM "{}"'.format(self._table)
-        self._cr.execute(query)
+        self._cr.execute(query, autoflush=False)
         [count] = self._cr.fetchone()
         if count > max_count:
             self._transient_clean_rows_older_than(300)
@@ -6795,7 +6796,7 @@ class TransientModel(Model):
             WHERE COALESCE(write_date, create_date, (now() AT TIME ZONE 'UTC'))::timestamp
                 < (now() AT TIME ZONE 'UTC') - interval %s
         """.format(self._table)
-        self._cr.execute(query, ["%s seconds" % seconds])
+        self._cr.execute(query, ["%s seconds" % seconds], autoflush=False)
         ids = [x[0] for x in self._cr.fetchall()]
         self.sudo().browse(ids).unlink()
 
@@ -6838,7 +6839,7 @@ def convert_pgerror_unique(model, fields, info, e):
             FROM pg_constraint
             JOIN pg_class t ON t.oid = conrelid
             WHERE conname = %s
-        """, [e.diag.constraint_name])
+        """, [e.diag.constraint_name], autoflush=False)
         constraint, table, ufields = cr_tmp.fetchone() or (None, None, None)
     # if the unique constraint is on an expression or on an other table
     if not ufields or model._table != table:

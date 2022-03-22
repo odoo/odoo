@@ -340,10 +340,23 @@ class Cursor(BaseCursor):
         encoding = psycopg2.extensions.encodings[self.connection.encoding]
         return self._obj.mogrify(query, params).decode(encoding, 'replace')
 
-    def execute(self, query, params=None, log_exceptions=None):
+    def execute(self, query, params=None, log_exceptions=None, *, autoflush=True):
         if params and not isinstance(params, (tuple, list, dict)):
             # psycopg2's TypeError is not clear if you mess up the params
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
+
+        if autoflush and self.transaction and self.transaction.registry._table_to_model:
+            table_to_model = self.transaction.registry._table_to_model
+            all_tables = self.transaction.registry._all_tables
+            all_fields = self.transaction.registry._all_fields
+            tokens = set(re.findall(r'\b\w+\b', str(query)))
+            queried_tables = tokens & all_tables
+            queried_fields = tokens & all_fields
+            for env in self.transaction.envs:
+                for table in queried_tables:
+                    model = env[table_to_model[table]]
+                    fnames = list(queried_fields & set(model._fields))
+                    model.flush(fnames=fnames)
 
         if self.sql_log:
             _logger.debug("query: %s", self._format(query, params))

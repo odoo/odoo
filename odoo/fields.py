@@ -1036,7 +1036,7 @@ class Field(MetaField('DummyField', (object,), {})):
             comodel_table=comodel._table,
             comodel_field=comodel_field,
             join_field=join_field,
-        ))
+        ), autoflush=False)
 
     ############################################################################
     #
@@ -3808,7 +3808,7 @@ class Many2many(_RelationalMulti):
                 COMMENT ON TABLE "{rel}" IS %s;
                 CREATE INDEX ON "{rel}" ("{id2}","{id1}");
             """.format(rel=self.relation, id1=self.column1, id2=self.column2)
-            cr.execute(query, ['RELATION BETWEEN %s AND %s' % (model._table, comodel._table)])
+            cr.execute(query, ['RELATION BETWEEN %s AND %s' % (model._table, comodel._table)], autoflush=False)
             _schema.debug("Create table %r: m2m relation between %r and %r", self.relation, model._table, comodel._table)
 
         model.pool.post_init(self.update_db_foreign_keys, model)
@@ -3851,7 +3851,7 @@ class Many2many(_RelationalMulti):
 
         # retrieve lines and group them by record
         group = defaultdict(list)
-        records._cr.execute(query, where_params)
+        records._cr.execute(query, where_params, autoflush=False)
         for row in records._cr.fetchall():
             group[row[0]].append(row[1])
 
@@ -3951,7 +3951,7 @@ class Many2many(_RelationalMulti):
                 query = "INSERT INTO {} ({}, {}) VALUES {} ON CONFLICT DO NOTHING".format(
                     self.relation, self.column1, self.column2, ", ".join(["%s"] * len(pairs)),
                 )
-                cr.execute(query, pairs)
+                cr.execute(query, pairs, autoflush=False)
 
             # update the cache of inverse fields
             y_to_xs = defaultdict(set)
@@ -3992,7 +3992,7 @@ class Many2many(_RelationalMulti):
                     self.relation, " OR ".join([COND] * len(xs_to_ys)),
                 )
                 params = [arg for xs, ys in xs_to_ys.items() for arg in [tuple(xs), tuple(ys)]]
-                cr.execute(query, params)
+                cr.execute(query, params, autoflush=False)
 
             # update the cache of inverse fields
             for invf in records.pool.field_inverses[self]:

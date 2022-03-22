@@ -113,6 +113,9 @@ class Registry(Mapping):
         self._init = True
         self._assertion_report = odoo.tests.runner.OdooTestResult()
         self._fields_by_model = None
+        self._table_to_model = None
+        self._all_tables = None
+        self._all_fields = None
         self._ordinary_tables = None
         self._constraint_queue = deque()
         self.__cache = LRU(8192)
@@ -301,6 +304,15 @@ class Registry(Mapping):
                 self.field_depends[field] = tuple(depends)
                 self.field_depends_context[field] = tuple(depends_context)
 
+        self._table_to_model = {model._table: model._name for model in models}
+        self._all_tables = set(self._table_to_model)
+        self._all_fields = set(
+            field_name
+            for model in models
+            for field_name, field in model._fields.items()
+            if field.store
+        )
+
         # Reinstall registry hooks. Because of the condition, this only happens
         # on a fully loaded registry, and not on a registry being loaded.
         if self.ready:
@@ -469,7 +481,7 @@ class Registry(Mapping):
             return
 
         cr.execute("SELECT indexname FROM pg_indexes WHERE indexname IN %s",
-                   [tuple(row[0] for row in expected)])
+                   [tuple(row[0] for row in expected)], autoflush=False)
         existing = {row[0] for row in cr.fetchall()}
 
         if not self.has_trigram and any(row[3] == 'trigram' for row in expected):
@@ -520,7 +532,7 @@ class Registry(Mapping):
             JOIN pg_attribute AS a2 ON a2.attrelid = c2.oid AND fk.confkey[1] = a2.attnum
             WHERE fk.contype = 'f' AND c1.relname IN %s
         """
-        cr.execute(query, [tuple({table for table, column in self._foreign_keys})])
+        cr.execute(query, [tuple({table for table, column in self._foreign_keys})], autoflush=False)
         existing = {
             (table1, column1): (name, table2, column2, deltype)
             for name, table1, column1, table2, column2, deltype in cr.fetchall()
@@ -592,7 +604,7 @@ class Registry(Mapping):
                    AND n.nspname = 'public'
             """
             tables = tuple(m._table for m in self.models.values())
-            cr.execute(query, [tables])
+            cr.execute(query, [tables], autoflush=False)
             self._ordinary_tables = {row[0] for row in cr.fetchall()}
 
         return model._table in self._ordinary_tables
@@ -625,16 +637,16 @@ class Registry(Mapping):
             # must be reloaded.
             # The `base_cache_signaling` sequence indicates when all caches must
             # be invalidated (i.e. cleared).
-            cr.execute("SELECT sequence_name FROM information_schema.sequences WHERE sequence_name='base_registry_signaling'")
+            cr.execute("SELECT sequence_name FROM information_schema.sequences WHERE sequence_name='base_registry_signaling'", autoflush=False)
             if not cr.fetchall():
-                cr.execute("CREATE SEQUENCE base_registry_signaling INCREMENT BY 1 START WITH 1")
-                cr.execute("SELECT nextval('base_registry_signaling')")
-                cr.execute("CREATE SEQUENCE base_cache_signaling INCREMENT BY 1 START WITH 1")
-                cr.execute("SELECT nextval('base_cache_signaling')")
+                cr.execute("CREATE SEQUENCE base_registry_signaling INCREMENT BY 1 START WITH 1", autoflush=False)
+                cr.execute("SELECT nextval('base_registry_signaling')", autoflush=False)
+                cr.execute("CREATE SEQUENCE base_cache_signaling INCREMENT BY 1 START WITH 1", autoflush=False)
+                cr.execute("SELECT nextval('base_cache_signaling')", autoflush=False)
 
             cr.execute(""" SELECT base_registry_signaling.last_value,
                                   base_cache_signaling.last_value
-                           FROM base_registry_signaling, base_cache_signaling""")
+                           FROM base_registry_signaling, base_cache_signaling""", autoflush=False)
             self.registry_sequence, self.cache_sequence = cr.fetchone()
             _logger.debug("Multiprocess load registry signaling: [Registry: %s] [Cache: %s]",
                           self.registry_sequence, self.cache_sequence)
@@ -649,7 +661,7 @@ class Registry(Mapping):
         with closing(self.cursor()) as cr:
             cr.execute(""" SELECT base_registry_signaling.last_value,
                                   base_cache_signaling.last_value
-                           FROM base_registry_signaling, base_cache_signaling""")
+                           FROM base_registry_signaling, base_cache_signaling""", autoflush=False)
             r, c = cr.fetchone()
             _logger.debug("Multiprocess signaling check: [Registry - %s -> %s] [Cache - %s -> %s]",
                           self.registry_sequence, r, self.cache_sequence, c)
@@ -676,7 +688,7 @@ class Registry(Mapping):
         if self.registry_invalidated and not self.in_test_mode():
             _logger.info("Registry changed, signaling through the database")
             with closing(self.cursor()) as cr:
-                cr.execute("select nextval('base_registry_signaling')")
+                cr.execute("select nextval('base_registry_signaling')", autoflush=False)
                 self.registry_sequence = cr.fetchone()[0]
 
         # no need to notify cache invalidation in case of registry invalidation,
@@ -684,7 +696,7 @@ class Registry(Mapping):
         elif self.cache_invalidated and not self.in_test_mode():
             _logger.info("At least one model cache has been invalidated, signaling through the database.")
             with closing(self.cursor()) as cr:
-                cr.execute("select nextval('base_cache_signaling')")
+                cr.execute("select nextval('base_cache_signaling')", autoflush=False)
                 self.cache_sequence = cr.fetchone()[0]
 
         self.registry_invalidated = False
