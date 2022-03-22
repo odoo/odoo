@@ -1,6 +1,3 @@
-from unittest.mock import patch
-
-from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.tests.common import TestCommon, patch_api
 
