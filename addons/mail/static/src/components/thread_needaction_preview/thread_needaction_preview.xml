@@ -40,10 +40,7 @@
                     <div class="o_ThreadNeedactionPreview_core">
                         <span class="o_ThreadNeedactionPreview_coreItem o_ThreadNeedactionPreview_inlineText text-truncate" t-att-class="{ 'o-empty': inlineLastNeedactionMessageAsOriginThreadBody.length === 0 }">
                             <t t-if="threadNeedactionPreviewView.messageAuthorPrefixView">
-                                <MessageAuthorPrefix
-                                    localId="threadNeedactionPreviewView.messageAuthorPrefixView.localId"
-                                    threadLocalId="threadNeedactionPreviewView.thread.localId"
-                                />
+                                <MessageAuthorPrefix localId="threadNeedactionPreviewView.messageAuthorPrefixView.localId"/>
                             </t>
                             <t t-esc="inlineLastNeedactionMessageAsOriginThreadBody"/>
                         </span>
