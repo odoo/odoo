@@ -2,6 +2,7 @@ import './spec/utils.test.js';
 import './spec/align.test.js';
 import './spec/color.test.js';
 import './spec/editor.test.js';
+import './spec/copyPaste.test.js';
 import './spec/list.test.js';
 import './spec/link.test.js';
 import './spec/fontSize.test.js';
