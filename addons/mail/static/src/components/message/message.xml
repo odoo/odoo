@@ -5,7 +5,7 @@
         <t t-if="messageView">
             <div class="o_Message position-relative pt-1"
                 t-att-class="{
-                    'o_Message_active': isActive,
+                    'o_Message_active': messageView.isActive,
                     'o-clicked': messageView.isClicked,
                     'o-discussion': messageView.message.is_discussion or messageView.message.is_notification,
                     'o-has-message-selection': messageView.threadView and messageView.threadView.replyingToMessageView,
@@ -21,7 +21,7 @@
                 t-ref="root"
             >
                 <MessageInReplyToView t-if="messageView.messageInReplyToView" messageInReplyToViewLocalId="messageView.messageInReplyToView.localId"/>
-                <div t-if="isActive and messageView.messageActionList" class="o_Message_actionListContainer pl-5 pr-3" t-att-class="{ 'o-squashed': messageView.isSquashed }">
+                <div t-if="messageView.isActive and messageView.messageActionList" class="o_Message_actionListContainer pl-5 pr-3" t-att-class="{ 'o-squashed': messageView.isSquashed }">
                     <MessageActionList localId="messageView.messageActionList.localId"/>
                 </div>
                 <div class="d-flex flex-shrink-0">
@@ -44,12 +44,12 @@
                             </div>
                         </t>
                         <t t-else="">
-                            <t t-if="isActive and messageView.message.date">
+                            <t t-if="messageView.isActive and messageView.message.date">
                                 <div class="o_Message_date o_Message_sidebarItem mt-1" t-att-class="{ 'o-message-selected': messageView.isSelected }">
                                     <t t-esc="messageView.message.shortTime"/>
                                 </div>
                             </t>
-                            <t t-if="!isActive and messageView.message.isCurrentUserOrGuestAuthor and messageView.threadView and messageView.threadView.thread and messageView.threadView.thread.hasSeenIndicators">
+                            <t t-if="!messageView.isActive and messageView.message.isCurrentUserOrGuestAuthor and messageView.threadView and messageView.threadView.thread and messageView.threadView.thread.hasSeenIndicators">
                                 <MessageSeenIndicator className="'o_Message_seenIndicator'" messageLocalId="messageView.message.localId" threadLocalId="messageView.threadView.thread.localId"/>
                             </t>
                         </t>
