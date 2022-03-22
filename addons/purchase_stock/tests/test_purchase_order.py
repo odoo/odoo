@@ -699,7 +699,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             'trigger': 'manual',
         })
         orderpoint.action_replenish()
-        po = self.env['purchase.order'].search([("product_id", "=", product.id)], limit=1)
+        po = self.env['purchase.order'].search([("order_line.product_id", "=", product.id)], limit=1)
         po.picking_type_id = super_receipt
         po.button_confirm()
         picking = po.picking_ids
