@@ -11,8 +11,25 @@ from odoo.tools import consteq
 
 class DigestController(Controller):
 
-    @route('/digest/<int:digest_id>/unsubscribe', type='http', website=True, auth='public')
-    def digest_unsubscribe(self, digest_id, token=None, user_id=None):
+    # csrf is disabled here because it will be called by the MUA with unpredictable session at that time
+    @route('/digest/<int:digest_id>/unsubscribe', type='http', website=True, auth='public', methods=['GET', 'POST'],
+           csrf=False)
+    def digest_unsubscribe(self, digest_id, token=None, user_id=None, one_click=None):
+        """ Unsubscribe a given user from a given digest
+
+        :param int digest_id: id of digest to unsubscribe from
+        :param str token: token preventing URL forgery
+        :param user_id: id of user to unsubscribe
+        :param int one_click: set it to 1 when using the URL in the header of
+          the email to allow mail user agent to propose a one click button to the
+          user to unsubscribe as defined in rfc8058. When set to True, only POST
+          method is allowed preventing the risk that anti-spam trigger unwanted
+          unsubscribe (scenario explained in the same rfc). Note: this method
+          must support encoding method 'multipart/form-data' and 'application/x-www-form-urlencoded'.
+        """
+        if one_click and int(one_click) and request.httprequest.method != "POST":
+            raise Forbidden()
+
         digest_sudo = request.env['digest.digest'].sudo().browse(digest_id).exists()
 
         # new route parameters

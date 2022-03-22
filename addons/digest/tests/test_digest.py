@@ -6,7 +6,7 @@ import random
 
 from dateutil.relativedelta import relativedelta
 from lxml import html
-from werkzeug.urls import url_encode
+from werkzeug.urls import url_encode, url_join
 
 from odoo import fields, SUPERUSER_ID
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
@@ -256,6 +256,24 @@ class TestUnsubscribe(HttpCaseWithUserDemo):
         self.test_digest.invalidate_recordset()
         self.assertNotIn(self.user_demo, self.test_digest.user_ids)
 
+    def test_unsubscribe_token_one_click(self):
+        self.assertIn(self.user_demo, self.test_digest.user_ids)
+        self.authenticate(None, None)
+
+        # Ensure we cannot unregister using GET method (method not allowed)
+        response = self._url_unsubscribe(token=self.user_demo_unsubscribe_token, user_id=self.user_demo.id,
+                                         one_click='1', method='GET')
+        self.assertEqual(response.status_code, 403, 'GET method is forbidden')
+        self.test_digest.invalidate_recordset()
+        self.assertIn(self.user_demo, self.test_digest.user_ids)
+
+        # Ensure we can unregister with POST method
+        response = self._url_unsubscribe(token=self.user_demo_unsubscribe_token, user_id=self.user_demo.id,
+                                         one_click='1', method='POST')
+        self.assertEqual(response.status_code, 200)
+        self.test_digest.invalidate_recordset()
+        self.assertNotIn(self.user_demo, self.test_digest.user_ids)
+
     def test_unsubscribe_public(self):
         """ Check public users are redirected when trying to catch unsubscribe
         route. """
@@ -264,16 +282,18 @@ class TestUnsubscribe(HttpCaseWithUserDemo):
         response = self._url_unsubscribe()
         self.assertEqual(response.status_code, 404)
 
-    def _url_unsubscribe(self, token=None, user_id=None):
+    def _url_unsubscribe(self, token=None, user_id=None, one_click=None, method='GET'):
         url_params = {}
         if token is not None:
             url_params['token'] = token
         if user_id is not None:
             url_params['user_id'] = user_id
+        if one_click is not None:
+            url_params['one_click'] = one_click
 
-        url = "%s/digest/%s/unsubscribe?%s" % (
-            self.base_url,
-            self.test_digest.id,
-            url_encode(url_params)
-        )
-        return self.url_open(url)
+        url = url_join(self.base_url, f'digest/{self.test_digest.id}/unsubscribe?{url_encode(url_params)}')
+        if method == 'GET':
+            return self.opener.get(url, timeout=10, allow_redirects=True)
+        if method == 'POST':
+            return self.opener.post(url, timeout=10, allow_redirects=True)
+        raise Exception(f'Invalid method {method}')

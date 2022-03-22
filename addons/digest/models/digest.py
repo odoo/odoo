@@ -7,6 +7,7 @@ import pytz
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
+from werkzeug.urls import url_join
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
@@ -113,18 +114,38 @@ class Digest(models.Model):
         self.periodicity = periodicity
 
     def action_send(self):
-        to_slowdown = self._check_daily_logs()
+        """ Send digests emails to all the registered users. """
+        return self._action_send(update_periodicity=True)
+
+    def action_send_manual(self):
+        """ Manually send digests emails to all registered users. In that case
+        do not update periodicity as this is not an automated action that could
+        be considered as unwanted spam. """
+        return self._action_send(update_periodicity=False)
+
+    def _action_send(self, update_periodicity=True):
+        """ Send digests email to all the registered users.
+
+        :param bool update_periodicity: if True, check user logs to update
+          periodicity of digests. Purpose is to slow down digest whose users
+          do not connect to avoid spam;
+        """
+        to_slowdown = self._check_daily_logs() if update_periodicity else self.env['digest.digest']
+
         for digest in self:
             for user in digest.user_ids:
                 digest.with_context(
                     digest_slowdown=digest in to_slowdown,
                     lang=user.lang
                 )._action_send_to_user(user, tips_count=1)
-            if digest in to_slowdown:
-                digest.write({'periodicity': self._get_next_periodicity()[0]})
             digest.next_run_date = digest._get_next_run_date()
 
-    def _action_send_to_user(self, user, tips_count=1, consum_tips=True):
+        for digest in to_slowdown:
+            digest.periodicity = digest._get_next_periodicity()[0]
+
+    def _action_send_to_user(self, user, tips_count=1, consume_tips=True):
+        unsubscribe_token = self._get_unsubscribe_token(user.id)
+
         rendered_body = self.env['mail.render.mixin']._render_template(
             'digest.digest_mail_main',
             'digest.digest',
@@ -136,12 +157,12 @@ class Digest(models.Model):
                 'top_button_url': self.get_base_url(),
                 'company': user.company_id,
                 'user': user,
-                'unsubscribe_token': self._get_unsubscribe_token(user.id),
+                'unsubscribe_token': unsubscribe_token,
                 'tips_count': tips_count,
                 'formatted_date': datetime.today().strftime('%B %d, %Y'),
                 'display_mobile_banner': True,
                 'kpi_data': self._compute_kpis(user.company_id, user),
-                'tips': self._compute_tips(user.company_id, user, tips_count=tips_count, consumed=consum_tips),
+                'tips': self._compute_tips(user.company_id, user, tips_count=tips_count, consumed=consume_tips),
                 'preferences': self._compute_preferences(user.company_id, user),
             },
             post_process=True,
@@ -156,16 +177,24 @@ class Digest(models.Model):
             },
         )
         # create a mail_mail based on values, without attachments
+        unsub_url = url_join(self.get_base_url(),
+                             f'/digest/{self.id}/unsubscribe?token={unsubscribe_token}&user_id={user.id}&one_click=1')
         mail_values = {
             'auto_delete': True,
             'author_id': self.env.user.partner_id.id,
+            'body_html': full_mail,
             'email_from': (
                 self.company_id.partner_id.email_formatted
                 or self.env.user.email_formatted
                 or self.env.ref('base.user_root').email_formatted
             ),
             'email_to': user.email_formatted,
-            'body_html': full_mail,
+            # Add headers that allow the MUA to offer a one click button to unsubscribe (requires DKIM to work)
+            'headers': {
+                'List-Unsubscribe': f'<{unsub_url}>',
+                'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+                'X-Auto-Response-Suppress': 'OOF',  # avoid out-of-office replies from MS Exchange
+            },
             'state': 'outgoing',
             'subject': '%s: %s' % (user.company_id.name, self.name),
         }
