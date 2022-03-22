@@ -78,15 +78,20 @@ export function areSimilarElements(node, node2) {
 class Sanitize {
     constructor(root) {
         this.root = root;
-        // Remove unique ids from checklists and stars. These will be renewed
-        // afterwards.
-        for (const node of closestBlock(root).querySelectorAll('[id^=checkId-]')) {
-            node.removeAttribute('id');
+        const rootClosestBlock = closestBlock(root);
+        if (rootClosestBlock) {
+            // Remove unique ids from checklists and stars. These will be
+            // renewed afterwards.
+            for (const node of rootClosestBlock.querySelectorAll('[id^=checkId-]')) {
+                node.removeAttribute('id');
+            }
         }
         this.parse(root);
-        // Ensure unique ids on checklists and stars.
-        for (const node of closestBlock(root).querySelectorAll('.o_checklist > li, .o_stars')) {
-            node.setAttribute('id', `checkId-${Math.floor(new Date() * Math.random())}`);
+        if (rootClosestBlock) {
+            // Ensure unique ids on checklists and stars.
+            for (const node of rootClosestBlock.querySelectorAll('.o_checklist > li, .o_stars')) {
+                node.setAttribute('id', `checkId-${Math.floor(new Date() * Math.random())}`);
+            }
         }
     }
 
