@@ -5,6 +5,7 @@ var publicWidget = require('web.public.widget');
 const Dialog = require('web.Dialog');
 const {_t, qweb} = require('web.core');
 const ajax = require('web.ajax');
+const session = require('web.session');
 
 publicWidget.registry.portalDetails = publicWidget.Widget.extend({
     selector: '.o_portal_details',
@@ -153,6 +154,87 @@ publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
         ev.preventDefault();
         this._search();
     },
+});
+
+publicWidget.registry.NewAPIKeyButton = publicWidget.Widget.extend({
+    selector: '.o_portal_new_api_key',
+    events: {
+        click: '_onClick'
+    },
+
+    async _onClick(e){
+        e.preventDefault();
+        // This call is done just so it asks for the password confirmation before starting displaying the
+        // dialog forms, to mimic the behavior from the backend, in which it asks for the password before
+        // displaying the wizard.
+        // The result of the call is unused. But it's required to call a method with the decorator `@check_identity`
+        // in order to use `handleCheckIdentity`.
+        await handleCheckIdentity(this.proxy('_rpc'), this._rpc({
+            model: 'res.users',
+            method: 'api_key_wizard',
+            args: [session.user_id],
+        }));
+        await ajax.loadXML('/portal/static/src/xml/portal_security.xml', qweb);
+        const self = this;
+        const d_description = new Dialog(self, {
+            title: _t('New API Key'),
+            $content: qweb.render('portal.keydescription'),
+            buttons: [{text: _t('Confirm'), classes: 'btn-primary', close: true, click: async () => {
+                var description = d_description.el.querySelector('[name="description"]').value;
+                var wizard_id = await this._rpc({
+                    model: 'res.users.apikeys.description',
+                    method: 'create',
+                    args: [{name: description}],
+                });
+                var res = await handleCheckIdentity(
+                    this.proxy('_rpc'),
+                    this._rpc({
+                        model: 'res.users.apikeys.description',
+                        method: 'make_key',
+                        args: [wizard_id],
+                    })
+                );
+                const d_show = new Dialog(self, {
+                    title: _t('API Key Ready'),
+                    $content: qweb.render('portal.keyshow', {key: res.context.default_key}),
+                    buttons: [{text: _t('Close'), clases: 'btn-primary', close: true}],
+                });
+                d_show.on('closed', this, () => {
+                    window.location = window.location;
+                });
+                d_show.open();
+            }}, {text: _t('Discard'), close: true}],
+        });
+        d_description.opened(() => {
+            const input = d_description.el.querySelector('[name="description"]');
+            input.focus();
+            d_description.el.addEventListener('submit', (e) => {
+                e.preventDefault();
+                d_description.$footer.find('.btn-primary').click();
+            });
+        });
+        d_description.open();
+    }
+});
+
+publicWidget.registry.RemoveAPIKeyButton = publicWidget.Widget.extend({
+    selector: '.o_portal_remove_api_key',
+    events: {
+        click: '_onClick'
+    },
+
+    async _onClick(e){
+        e.preventDefault();
+        await handleCheckIdentity(
+            this.proxy('_rpc'),
+            this._rpc({
+                model: 'res.users.apikeys',
+                method: 'remove',
+                args: [parseInt(this.target.id)]
+            })
+        );
+        window.location = window.location;
+    }
 });
 
 /**
