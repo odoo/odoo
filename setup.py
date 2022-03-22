@@ -31,8 +31,6 @@ setup(
         'Jinja2',
         'lxml',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'libsass',
-        'mako',
-        'mock',
         'ofxparse',
         'passlib',
         'pillow',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
