@@ -40,7 +40,7 @@ registerModel({
                 this.highlight();
                 this.update({ doHighlight: clear() });
             }
-            if (this.threadView && this.threadView.lastMessageView === this && this.component && this.component.isPartiallyVisible()) {
+            if (this.threadViewOwnerAsLastMessageView && this.component && this.component.isPartiallyVisible()) {
                 this.threadView.handleVisibleMessage(this.message);
             }
         },
@@ -266,6 +266,14 @@ registerModel({
          */
         threadView: one('ThreadView', {
             inverse: 'messageViews',
+            readonly: true,
+        }),
+        /**
+         * States whether this message view is the last one of its thread view.
+         * Computed from inverse relation.
+         */
+        threadViewOwnerAsLastMessageView: one('ThreadView', {
+            inverse: 'lastMessageView',
             readonly: true,
         }),
     },
