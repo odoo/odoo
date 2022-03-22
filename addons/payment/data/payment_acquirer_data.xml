@@ -349,6 +349,23 @@
                ])]"/>
     </record>
 
+    <record id="payment_acquirer_razorpay" model="payment.acquirer">
+        <field name="name">Razorpay</field>
+        <field name="display_as">Credit &amp; Debit Card, UPI (Powered by Razorpay)</field>
+        <field name="image_128" type="base64" file="payment_razorpay/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_razorpay"/>
+        <!-- https://razorpay.com/docs/payments/payment-methods/#supported-payment-methods -->
+        <field name="payment_icon_ids"
+               eval="[(6, 0, [
+                   ref('payment.payment_icon_cc_maestro'),
+                   ref('payment.payment_icon_cc_mastercard'),
+                   ref('payment.payment_icon_cc_rupay'),
+                   ref('payment.payment_icon_cc_diners_club_intl'),
+                   ref('payment.payment_icon_cc_american_express'),
+                   ref('payment.payment_icon_cc_visa')
+               ])]"/>
+    </record>
+
     <record id="payment_acquirer_sepa_direct_debit" model="payment.acquirer">
         <field name="name">SEPA Direct Debit</field>
         <field name="sequence">20</field>
