@@ -1,22 +1,15 @@
 /** @odoo-module **/
 
 import { insertAndReplace, replace } from '@mail/model/model_field_command';
-import {
-    beforeEach,
-    start,
-} from '@mail/../tests/helpers/test_utils';
+import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('model_field_commands', {}, function () {
-QUnit.module('replace_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('replace_tests.js');
 
 QUnit.test('replace: should link a record for an empty x2one field', async function (assert) {
     assert.expect(2);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const contact = messaging.models['TestContact'].create({ id: 10 });
     const address = messaging.models['TestAddress'].create({ id: 10 });
@@ -35,7 +28,7 @@ QUnit.test('replace: should link a record for an empty x2one field', async funct
 
 QUnit.test('replace: should replace a record for a non-empty x2one field', async function (assert) {
     assert.expect(3);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const contact = messaging.models['TestContact'].create({
         id: 10,
@@ -63,7 +56,7 @@ QUnit.test('replace: should replace a record for a non-empty x2one field', async
 
 QUnit.test('replace: should link a record for an empty x2many field', async function (assert) {
     assert.expect(4);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const contact = messaging.models['TestContact'].create({ id: 10 });
     const task = messaging.models['TestTask'].create({ id: 10 });
@@ -92,7 +85,7 @@ QUnit.test('replace: should link a record for an empty x2many field', async func
 
 QUnit.test('replace: should replace all records for a non-empty field', async function (assert) {
     assert.expect(5);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const contact = messaging.models['TestContact'].create({
         id: 10,
@@ -134,7 +127,7 @@ QUnit.test('replace: should replace all records for a non-empty field', async fu
 
 QUnit.test('replace: should order the existing records for x2many field', async function (assert) {
     assert.expect(3);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const contact = messaging.models['TestContact'].create({
         id: 10,

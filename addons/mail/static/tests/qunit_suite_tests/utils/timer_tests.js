@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { beforeEach, nextTick, start } from '@mail/../tests/helpers/test_utils';
+import { nextTick, start } from '@mail/../tests/helpers/test_utils';
 import Timer from '@mail/utils/timer';
 
 const { TimerClearedError } = Timer;
@@ -9,8 +9,7 @@ QUnit.module('mail', {}, function () {
 QUnit.module('utils', {}, function () {
 QUnit.module('timer', {}, function () {
 QUnit.module('timer_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
+    beforeEach() {
         this.timers = [];
     },
     afterEach() {
@@ -25,7 +24,7 @@ QUnit.module('timer_tests.js', {
 QUnit.test('timer does not timeout on initialization', async function (assert) {
     assert.expect(3);
 
-    const { env, messaging } = await start({ data: this.data, hasTimeControl: true });
+    const { env, messaging } = await start({ hasTimeControl: true });
 
     let hasTimedOut = false;
     this.timers.push(
@@ -57,7 +56,7 @@ QUnit.test('timer does not timeout on initialization', async function (assert) {
 QUnit.test('timer start (duration: 0ms)', async function (assert) {
     assert.expect(2);
 
-    const { env, messaging } = await start({ data: this.data, hasTimeControl: true });
+    const { env, messaging } = await start({ hasTimeControl: true });
 
     let hasTimedOut = false;
     this.timers.push(
@@ -84,7 +83,7 @@ QUnit.test('timer start (duration: 0ms)', async function (assert) {
 QUnit.test('timer start observe termination (duration: 0ms)', async function (assert) {
     assert.expect(6);
 
-    const { env, messaging } = await start({ data: this.data, hasTimeControl: true });
+    const { env, messaging } = await start({ hasTimeControl: true });
 
     let hasTimedOut = false;
     this.timers.push(
@@ -131,7 +130,7 @@ QUnit.test('timer start observe termination (duration: 0ms)', async function (as
 QUnit.test('timer start (duration: 1000s)', async function (assert) {
     assert.expect(5);
 
-    const { env, messaging } = await start({ data: this.data, hasTimeControl: true });
+    const { env, messaging } = await start({ hasTimeControl: true });
 
     let hasTimedOut = false;
     this.timers.push(
@@ -176,7 +175,7 @@ QUnit.test('timer start (duration: 1000s)', async function (assert) {
 QUnit.test('[no cancelation intercept] timer start then immediate clear (duration: 0ms)', async function (assert) {
     assert.expect(4);
 
-    const { env, messaging } = await start({ data: this.data, hasTimeControl: true });
+    const { env, messaging } = await start({ hasTimeControl: true });
 
     let hasTimedOut = false;
     this.timers.push(
@@ -215,7 +214,7 @@ QUnit.test('[no cancelation intercept] timer start then immediate clear (duratio
 QUnit.test('[no cancelation intercept] timer start then clear before timeout (duration: 1000ms)', async function (assert) {
     assert.expect(4);
 
-    const { env, messaging } = await start({ data: this.data, hasTimeControl: true });
+    const { env, messaging } = await start({ hasTimeControl: true });
 
     let hasTimedOut = false;
     this.timers.push(
@@ -255,7 +254,7 @@ QUnit.test('[no cancelation intercept] timer start then clear before timeout (du
 QUnit.test('[no cancelation intercept] timer start then reset before timeout (duration: 1000ms)', async function (assert) {
     assert.expect(5);
 
-    const { env, messaging } = await start({ data: this.data, hasTimeControl: true });
+    const { env, messaging } = await start({ hasTimeControl: true });
 
     let hasTimedOut = false;
     this.timers.push(
@@ -301,7 +300,7 @@ QUnit.test('[no cancelation intercept] timer start then reset before timeout (du
 QUnit.test('[with cancelation intercept] timer start then immediate clear (duration: 0ms)', async function (assert) {
     assert.expect(5);
 
-    const { messaging } = await start({ data: this.data, hasTimeControl: true });
+    const { messaging } = await start({ hasTimeControl: true });
 
     let hasTimedOut = false;
     this.timers.push(
@@ -342,7 +341,7 @@ QUnit.test('[with cancelation intercept] timer start then immediate clear (durat
 QUnit.test('[with cancelation intercept] timer start then immediate reset (duration: 0ms)', async function (assert) {
     assert.expect(9);
 
-    const { env, messaging } = await start({ data: this.data, hasTimeControl: true });
+    const { env, messaging } = await start({ hasTimeControl: true });
 
     let hasTimedOut = false;
     this.timers.push(

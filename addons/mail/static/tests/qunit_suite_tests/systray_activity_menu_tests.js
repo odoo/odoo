@@ -3,7 +3,6 @@
 import ActivityMenu from '@mail/js/systray/systray_activity_menu';
 import {
     afterNextRender,
-    beforeEach,
     start,
 } from '@mail/../tests/helpers/test_utils';
 
@@ -12,7 +11,6 @@ import testUtils from 'web.test_utils';
 QUnit.module('mail', {}, function () {
 QUnit.module('ActivityMenu', {
     async beforeEach() {
-        await beforeEach(this);
         this.activities = [{
                 name: "Contact",
                 model: "res.partner",
@@ -69,7 +67,6 @@ QUnit.test('activity menu widget: menu with no records', async function (assert)
     assert.expect(1);
 
     const { widget } = await start({
-        data: this.data,
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {
                 return Promise.resolve([]);
@@ -89,7 +86,6 @@ QUnit.test('activity menu widget: activity menu with 3 records', async function 
     var self = this;
 
     const { widget } = await start({
-        data: this.data,
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {
                 return Promise.resolve(self.activities);
@@ -151,7 +147,6 @@ QUnit.test('activity menu widget: activity view icon', async function (assert) {
     var self = this;
 
     const { widget } = await start({
-        data: this.data,
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {
                 return Promise.resolve(self.activities);
@@ -212,7 +207,6 @@ QUnit.test('activity menu widget: close on messaging menu click', async function
     assert.expect(2);
 
     const { createMessagingMenuComponent, widget } = await start({
-        data: this.data,
         async mockRPC(route, args) {
             if (args.method === 'systray_get_activities') {
                 return [];
