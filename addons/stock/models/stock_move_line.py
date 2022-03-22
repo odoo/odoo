@@ -762,6 +762,7 @@ class StockMoveLine(models.Model):
                                                    'product_uom_rec': uom,
                                                    'product': move_line.product_id}
             else:
+                aggregated_move_lines[line_key]['qty_ordered'] += move_line.move_id.product_uom_qty
                 aggregated_move_lines[line_key]['qty_done'] += move_line.qty_done
 
         # Does the same for empty move line to retrieve the ordered qty. for partially done moves
