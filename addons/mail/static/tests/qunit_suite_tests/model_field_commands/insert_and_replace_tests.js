@@ -1,22 +1,15 @@
 /** @odoo-module **/
 
 import { insertAndReplace } from '@mail/model/model_field_command';
-import {
-    beforeEach,
-    start,
-} from '@mail/../tests/helpers/test_utils';
+import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('model_field_commands', {}, function () {
-QUnit.module('insert_and_replace_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('insert_and_replace_tests.js');
 
 QUnit.test('insertAndReplace: should create and link a new record for an empty x2one field', async function (assert) {
     assert.expect(2);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const contact = messaging.models['TestContact'].create({ id: 10 });
     contact.update({ address: insertAndReplace({ id: 10 }) });
@@ -35,7 +28,7 @@ QUnit.test('insertAndReplace: should create and link a new record for an empty x
 
 QUnit.test('insertAndReplace: should create and replace a new record for a non-empty x2one field', async function (assert) {
     assert.expect(3);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const contact = messaging.models['TestContact'].create({
         id: 10,
@@ -63,7 +56,7 @@ QUnit.test('insertAndReplace: should create and replace a new record for a non-e
 
 QUnit.test('insertAndReplace: should update the existing record for an x2one field', async function (assert) {
     assert.expect(2);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const contact = messaging.models['TestContact'].create({
         id: 10,
@@ -93,7 +86,7 @@ QUnit.test('insertAndReplace: should update the existing record for an x2one fie
 
 QUnit.test('insertAndReplace: should create and replace the records for an x2many field', async function (assert) {
     assert.expect(4);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const contact = messaging.models['TestContact'].create({
         id: 10,
@@ -126,7 +119,7 @@ QUnit.test('insertAndReplace: should create and replace the records for an x2man
 
 QUnit.test('insertAndReplace: should update and replace the records for an x2many field', async function (assert) {
     assert.expect(4);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const contact = messaging.models['TestContact'].create({
         id: 10,

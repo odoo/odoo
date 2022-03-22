@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 import { file } from 'web.test_utils';
 
@@ -8,23 +8,20 @@ const { createFile, inputFiles } = file;
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('file_uploader', {}, function () {
-QUnit.module('file_uploader_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('file_uploader_tests.js');
 
 QUnit.test('no conflicts between file uploaders', async function (assert) {
     assert.expect(2);
 
-    this.data['res.partner'].records.push({ id: 100 }, { id: 101 });
-    const { afterNextRender, createChatterContainerComponent, messaging } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([{}, {}]);
+    const { afterNextRender, createChatterContainerComponent, messaging } = await start();
     const firstChatterContainerComponent = await createChatterContainerComponent({
-        threadId: 100,
+        threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
     const secondChatterContainerComponent = await createChatterContainerComponent({
-        threadId: 101,
+        threadId: resPartnerId2,
         threadModel: 'res.partner',
     });
     await afterNextRender(() => {

@@ -1,19 +1,15 @@
 /** @odoo-module **/
 
-import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('models', {}, function () {
-QUnit.module('attachment_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('attachment_tests.js');
 
 QUnit.test('create (txt)', async function (assert) {
     assert.expect(9);
 
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
     assert.notOk(messaging.models['Attachment'].findFromIdentifyingData({ id: 750 }));
 
     const attachment = messaging.models['Attachment'].create({
@@ -35,7 +31,7 @@ QUnit.test('create (txt)', async function (assert) {
 QUnit.test('displayName', async function (assert) {
     assert.expect(5);
 
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
     assert.notOk(messaging.models['Attachment'].findFromIdentifyingData({ id: 750 }));
 
     const attachment = messaging.models['Attachment'].create({
@@ -53,7 +49,7 @@ QUnit.test('displayName', async function (assert) {
 QUnit.test('extension', async function (assert) {
     assert.expect(5);
 
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
     assert.notOk(messaging.models['Attachment'].findFromIdentifyingData({ id: 750 }));
 
     const attachment = messaging.models['Attachment'].create({
@@ -71,7 +67,7 @@ QUnit.test('extension', async function (assert) {
 QUnit.test('fileType', async function (assert) {
     assert.expect(5);
 
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
     assert.notOk(messaging.models['Attachment'].findFromIdentifyingData({ id: 750 }));
 
     const attachment = messaging.models['Attachment'].create({
@@ -91,7 +87,7 @@ QUnit.test('fileType', async function (assert) {
 QUnit.test('isTextFile', async function (assert) {
     assert.expect(5);
 
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
     assert.notOk(messaging.models['Attachment'].findFromIdentifyingData({ id: 750 }));
 
     const attachment = messaging.models['Attachment'].create({
@@ -109,7 +105,7 @@ QUnit.test('isTextFile', async function (assert) {
 QUnit.test('isViewable', async function (assert) {
     assert.expect(5);
 
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
     assert.notOk(messaging.models['Attachment'].findFromIdentifyingData({ id: 750 }));
 
     const attachment = messaging.models['Attachment'].create({

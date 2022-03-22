@@ -1,22 +1,15 @@
 /** @odoo-module **/
 
 import { insertAndReplace, link } from '@mail/model/model_field_command';
-import {
-    beforeEach,
-    start,
-} from '@mail/../tests/helpers/test_utils';
+import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('model_field_commands', {}, function () {
-QUnit.module('field_command_link_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('field_command_link_tests.js');
 
 QUnit.test('link: should link a record to an empty x2one field', async function (assert) {
     assert.expect(2);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const contact = messaging.models['TestContact'].create({ id: 10 });
     const address = messaging.models['TestAddress'].create({ id: 10 });
@@ -35,7 +28,7 @@ QUnit.test('link: should link a record to an empty x2one field', async function 
 
 QUnit.test('link: should replace a record to a non-empty x2one field', async function (assert) {
     assert.expect(3);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const contact = messaging.models['TestContact'].create({
         id: 10,
@@ -63,7 +56,7 @@ QUnit.test('link: should replace a record to a non-empty x2one field', async fun
 
 QUnit.test('link: should link a record to an empty x2many field', async function (assert) {
     assert.expect(3);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const contact = messaging.models['TestContact'].create({ id: 10 });
     const task = messaging.models['TestTask'].create({ id: 10 });
@@ -87,7 +80,7 @@ QUnit.test('link: should link a record to an empty x2many field', async function
 
 QUnit.test('link: should link and add a record to a non-empty x2many field', async function (assert) {
     assert.expect(5);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const contact = messaging.models['TestContact'].create({
         id: 10,
