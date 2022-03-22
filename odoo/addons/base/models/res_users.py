@@ -1556,7 +1556,10 @@ class UsersView(models.Model):
                 if allfields and field_name not in allfields:
                     continue
                 # selection group field
-                tips = ['%s: %s' % (g.name, g.comment) for g in gs if g.comment]
+                tips = []
+                if app.description:
+                    tips.append(app.description + '\n')
+                tips.extend('%s: %s' % (g.name, g.comment) for g in gs if g.comment)
                 res[field_name] = {
                     'type': 'selection',
                     'string': app.name or _('Other'),
