@@ -76,7 +76,7 @@ QUnit.test('base rendering editable', async function (assert) {
 QUnit.test('hover following button', async function (assert) {
     assert.expect(8);
 
-    this.data['res.partner'].records.push({ id: 100, message_follower_ids: [1] });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.followers'].records.push({
         id: 1,
         is_active: true,
@@ -143,7 +143,7 @@ QUnit.test('hover following button', async function (assert) {
 QUnit.test('click on "follow" button', async function (assert) {
     assert.expect(6);
 
-    this.data['res.partner'].records.push({ id: 100, message_follower_ids: [1] });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.followers'].records.push({
         id: 1,
         is_active: true,
@@ -197,7 +197,7 @@ QUnit.test('click on "follow" button', async function (assert) {
 QUnit.test('click on "unfollow" button', async function (assert) {
     assert.expect(7);
 
-    this.data['res.partner'].records.push({ id: 100, message_follower_ids: [1] });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.followers'].records.push({
         id: 1,
         is_active: true,

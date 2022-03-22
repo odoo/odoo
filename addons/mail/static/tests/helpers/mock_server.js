@@ -519,13 +519,7 @@ MockServer.include({
             return res;
         }
         if (request_list.includes('activities')) {
-            const activities = this._mockSearchRead('mail.activity', [[
-                '|',
-                    ['id', 'in', thread.activity_ids || []],
-                    '&',
-                        ['res_id', '=', thread.id],
-                        ['res_model', '=', thread_model],
-            ]], {});
+            const activities = this._mockSearchRead('mail.activity', [[['id', 'in', thread.activity_ids || []]]], {});
             res['activities'] = this._mockMailActivityActivityFormat(activities.map(activity => activity.id));
         }
         if (request_list.includes('attachments')) {
@@ -535,13 +529,7 @@ MockServer.include({
             res['attachments'] = this._mockIrAttachment_attachmentFormat(attachments.map(attachment => attachment.id), true);
         }
         if (request_list.includes('followers')) {
-            const followers = this._mockSearchRead('mail.followers', [[
-                '|',
-                    ['id', 'in', thread.message_follower_ids || []],
-                    '&',
-                        ['res_id', '=', thread.id],
-                        ['res_model', '=', thread_model],
-            ]], {});
+            const followers = this._mockSearchRead('mail.followers', [[['id', 'in', thread.message_follower_ids || []]]], {});
             // search read returns many2one relations as an array [id, display_name].
             // But the original route does not. Thus, we need to change it now.
             followers.forEach(follower => follower.partner_id = follower.partner_id[0]);

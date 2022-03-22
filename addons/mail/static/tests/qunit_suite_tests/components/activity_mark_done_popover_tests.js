@@ -15,10 +15,7 @@ QUnit.module('activity_mark_done_popover_tests.js', {
 QUnit.test('activity mark done popover simplest layout', async function (assert) {
     assert.expect(6);
 
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         activity_category: 'not_upload_file',
         can_write: true,
@@ -68,10 +65,7 @@ QUnit.test('activity mark done popover simplest layout', async function (assert)
 QUnit.test('activity with force next mark done popover simplest layout', async function (assert) {
     assert.expect(6);
 
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         activity_category: 'not_upload_file',
         can_write: true,
@@ -122,10 +116,7 @@ QUnit.test('activity with force next mark done popover simplest layout', async f
 QUnit.test('activity mark done popover mark done without feedback', async function (assert) {
     assert.expect(7);
 
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         activity_category: 'not_upload_file',
         can_write: true,
@@ -167,10 +158,7 @@ QUnit.test('activity mark done popover mark done without feedback', async functi
 QUnit.test('activity mark done popover mark done with feedback', async function (assert) {
     assert.expect(7);
 
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         activity_category: 'not_upload_file',
         can_write: true,
@@ -221,10 +209,7 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
         assert.step('activity_action');
         throw new Error("The do-action event should not be triggered when the route doesn't return an action");
     });
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         activity_category: 'not_upload_file',
         can_write: true,
@@ -279,10 +264,7 @@ QUnit.test('[technical] activity mark done & schedule next with new action', asy
             "The content of the action should be correct"
         );
     });
-    this.data['res.partner'].records.push({
-        activity_ids: [12],
-        id: 100,
-    });
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.activity'].records.push({
         activity_category: 'not_upload_file',
         can_write: true,
