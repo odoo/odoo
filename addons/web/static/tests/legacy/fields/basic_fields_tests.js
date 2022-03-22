@@ -1302,6 +1302,38 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test("click on email field link don't switch to edit mode", async function (assert) {
+        testUtils.mock.patch(field_registry.map.email, {
+            _onClickLink: function (ev) {
+                assert.step(ev.target.nodeName + " clicked");
+                this._super.apply(this, arguments);
+            },
+        });
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo" widget="email"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        await testUtils.dom.click(form.el.querySelector('.o_field_email a'));
+        assert.containsOnce(form.el, ".o_form_readonly", "form view is not in edit mode");
+
+        await testUtils.dom.click(form.el.querySelector('.o_field_email'));
+        assert.verifySteps(["A clicked", "DIV clicked"]);
+        assert.containsOnce(form.el, ".o_form_editable", "form view is in edit mode");
+
+        form.destroy();
+        testUtils.mock.unpatch(field_registry.map.email);
+    });
+
     QUnit.module('FieldChar');
 
     QUnit.test('char widget isValid method works', async function (assert) {
