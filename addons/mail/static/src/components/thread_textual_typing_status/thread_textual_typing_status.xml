@@ -2,13 +2,15 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ThreadTextualTypingStatus" owl="1">
-        <div class="o_ThreadTextualTypingStatus" t-attf-class="{{ className }}" t-ref="root">
-            <t t-if="thread and thread.orderedOtherTypingMembers.length > 0">
-                <ThreadTypingIcon animation="'pulse'" size="'medium'"/>
-                <span class="o_ThreadTextualTypingStatus_separator"/>
-                <span class="text-truncate" t-esc="thread.typingStatusText"/>
-            </t>
-        </div>
+        <t t-if="thread">
+            <div class="o_ThreadTextualTypingStatus" t-attf-class="{{ className }}" t-ref="root">
+                <t t-if="thread.orderedOtherTypingMembers.length > 0">
+                    <ThreadTypingIcon animation="'pulse'" size="'medium'"/>
+                    <span class="o_ThreadTextualTypingStatus_separator"/>
+                    <span class="text-truncate" t-esc="thread.typingStatusText"/>
+                </t>
+            </div>
+        </t>
     </t>
 
 </templates>
