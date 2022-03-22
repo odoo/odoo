@@ -179,6 +179,18 @@ class HrLeave(models.Model):
         where the refused leave was.
         """
         res = super(HrLeave, self).action_refuse()
+        self._regen_work_entries()
+        return res
+
+    def _action_user_cancel(self, reason):
+        res = super()._action_user_cancel(reason)
+        self.sudo()._regen_work_entries()
+        return res
+
+    def _regen_work_entries(self):
+        """
+        Called when the leave is refused or cancelled to regenerate the work entries properly for that period.
+        """
         work_entries = self.env['hr.work.entry'].sudo().search([('leave_id', 'in', self.ids)])
 
         work_entries.write({'active': False})
@@ -187,7 +199,6 @@ class HrLeave(models.Model):
         for work_entry in work_entries:
             vals_list += work_entry.contract_id._get_work_entries_values(work_entry.date_start, work_entry.date_stop)
         self.env['hr.work.entry'].create(vals_list)
-        return res
 
     def _get_number_of_days(self, date_from, date_to, employee_id):
         """ If an employee is currently working full time but asks for time off next month
@@ -225,7 +236,7 @@ class HrLeave(models.Model):
         super()._compute_can_cancel()
 
         cancellable_leaves = self.filtered('can_cancel')
-        work_entries = self.env['hr.work.entry'].sudo().search([('leave_id', 'in', cancellable_leaves.ids)])
+        work_entries = self.env['hr.work.entry'].sudo().search([('state', '=', 'validated'), ('leave_id', 'in', cancellable_leaves.ids)])
         leave_ids = work_entries.mapped('leave_id').ids
 
         for leave in cancellable_leaves:
