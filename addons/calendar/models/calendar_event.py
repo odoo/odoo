@@ -13,7 +13,14 @@ from odoo import api, fields, models
 from odoo import tools
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.calendar.models.calendar_attendee import Attendee
-from odoo.addons.calendar.models.calendar_recurrence import weekday_to_field, RRULE_TYPE_SELECTION, END_TYPE_SELECTION, MONTH_BY_SELECTION, WEEKDAY_SELECTION, BYDAY_SELECTION
+from odoo.addons.calendar.models.calendar_recurrence import (
+    weekday_to_field,
+    RRULE_TYPE_SELECTION,
+    END_TYPE_SELECTION,
+    MONTH_BY_SELECTION,
+    WEEKDAY_SELECTION,
+    BYDAY_SELECTION
+)
 from odoo.tools.translate import _
 from odoo.tools.misc import get_lang
 from odoo.tools import pycompat
@@ -745,7 +752,6 @@ class Meeting(models.Model):
         # Add commands to create attendees from partners (if present) if no attendee command
         # is already given (coming from Google event for example).
         # Automatically add the current partner when creating an event if there is none (happens when we quickcreate an event)
-        default_partners_ids = defaults.get('partner_ids') or ([(4, self.env.user.partner_id.id)])
         vals_list = [
             dict(vals, attendee_ids=self._attendees_values(vals['partner_ids']))
             if 'partner_ids' in vals and not vals.get('attendee_ids')
