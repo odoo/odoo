@@ -21,10 +21,26 @@ registerModel({
             }
             return clear();
         },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeThread() {
+            if (this.threadNeedactionPreviewViewOwner) {
+                return replace(this.threadNeedactionPreviewViewOwner.thread);
+            }
+            if (this.threadPreviewViewOwner) {
+                return replace(this.threadPreviewViewOwner.thread);
+            }
+            return clear();
+        },
     },
     fields: {
         message: one('Message', {
             compute: '_computeMessage',
+        }),
+        thread: one('Thread', {
+            compute: '_computeThread',
         }),
         threadNeedactionPreviewViewOwner: one('ThreadNeedactionPreviewView', {
             inverse: 'messageAuthorPrefixView',
