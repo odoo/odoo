@@ -35,7 +35,7 @@ class ImLivechatChannel(models.Model):
     input_placeholder = fields.Char('Chat Input Placeholder', help='Text that prompts the user to initiate the chat.')
     header_background_color = fields.Char(default="#875A7B", help="Default background color of the channel header once open")
     title_color = fields.Char(default="#FFFFFF", help="Default title color of the channel once open")
-    button_background_color = fields.Char(default="#878787", help="Default background color of the Livechat button")
+    button_background_color = fields.Char(default="#875A7B", help="Default background color of the Livechat button")
     button_text_color = fields.Char(default="#FFFFFF", help="Default text color of the Livechat button")
 
     # computed fields
