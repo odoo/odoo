@@ -394,3 +394,22 @@ class TestTimesheet(TestCommonTimesheet):
             'company_id': company_3.id,
         })
         self.assertFalse(timesheet.employee_id, 'As there are several employees for this user, but none of them in this company, none must be found')
+
+    def test_create_timesheet_with_multi_company(self):
+        """ Always set the current company in the timesheet, not the employee company """
+        company_4 = self.env['res.company'].create({'name': 'Company 4'})
+        empl_employee = self.env['hr.employee'].with_company(company_4).create({
+            'name': 'Employee 3',
+        })
+
+        Timesheet = self.env['account.analytic.line'].with_context(allowed_company_ids=[company_4.id, self.env.company.id])
+
+        timesheet = Timesheet.create({
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'name': 'my first timesheet',
+            'unit_amount': 4,
+            'employee_id': empl_employee.id,
+        })
+
+        self.assertEqual(timesheet.company_id.id, self.env.company.id)
