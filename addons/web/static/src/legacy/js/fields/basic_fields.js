@@ -1684,7 +1684,7 @@ var FieldEmail = InputField.extend({
     description: _lt("Email"),
     className: 'o_field_email',
     events: _.extend({}, InputField.prototype.events, {
-        'click': '_onClick',
+        'click': '_onClickLink',
     }),
     prefix: 'mailto',
     supportedFieldTypes: ['char'],
@@ -1759,8 +1759,10 @@ var FieldEmail = InputField.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onClick: function (ev) {
-        ev.stopPropagation();
+    _onClickLink: function (ev) {
+        if (ev.target.matches("a")) {
+            ev.stopImmediatePropagation();
+        }
     },
 });
 
