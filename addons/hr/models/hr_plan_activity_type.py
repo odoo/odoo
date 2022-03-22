@@ -26,9 +26,10 @@ class HrPlanActivityType(models.Model):
         ('other', 'Other')], default='employee', string='Responsible', required=True)
     responsible_id = fields.Many2one(
         'res.users',
-        'Name',
+        'Other Responsible',
         check_company=True,
         help='Specific responsible of activity if not linked to the employee.')
+    plan_id = fields.Many2one('hr.plan')
     note = fields.Html('Note')
 
     @api.depends('activity_type_id')
