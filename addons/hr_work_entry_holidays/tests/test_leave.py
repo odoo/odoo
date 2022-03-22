@@ -4,6 +4,9 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+from freezegun import freeze_time
+
+from odoo import SUPERUSER_ID
 from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHolidaysBase
 
 
@@ -136,3 +139,36 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
         work_entry.toggle_active()
         self.assertEqual(work_entry.state, 'cancelled', "Attendance work entries should be cancelled and not conflict")
         self.assertFalse(work_entry.active)
+
+    def test_work_entry_cancel_leave(self):
+        user = self.env['res.users'].create({
+            'name': 'User Employee',
+            'login': 'jul',
+            'password': 'julpassword',
+        })
+        self.richard_emp.user_id = user
+        self.richard_emp.contract_ids.state = 'open'
+        with freeze_time(datetime(2022, 3, 21)):
+            # Tests that cancelling a leave archives the work entries.
+            leave = self.env['hr.leave'].with_user(user).create({
+                'name': 'Sick 1 week during christmas snif',
+                'employee_id': self.richard_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'date_from': datetime(2022, 3, 22, 6),
+                'date_to': datetime(2022, 3, 25, 20),
+                'number_of_days': 4,
+            })
+            can_cancel_field = leave._fields['can_cancel']
+            leave.with_user(SUPERUSER_ID).action_validate()
+            # No work entries exist yet
+            self.assertTrue(leave.can_cancel, "The leave should still be cancellable")
+            # can not create in the future
+            self.richard_emp.contract_ids._generate_work_entries(datetime(2022, 3, 21, 6), datetime(2022, 3, 25, 20))
+            work_entries = self.env['hr.work.entry'].search([('employee_id', '=', self.richard_emp.id)])
+            self.env.cache.invalidate([(can_cancel_field, leave.ids)])
+            # Work entries exist but are not locked yet
+            self.assertTrue(leave.can_cancel, "The leave should still be cancellable")
+            work_entries.action_validate()
+            self.env.cache.invalidate([(can_cancel_field, leave.ids)])
+            # Work entries locked
+            self.assertFalse(leave.can_cancel, "The leave should not be cancellable")
