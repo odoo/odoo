@@ -29,11 +29,6 @@ export class Message extends Component {
              * it displays message actions.
              */
              isHovered: false,
-            /**
-             * Determine whether the message is clicked. When message is in
-             * clicked state, it keeps displaying actions even if not hovered.
-             */
-            isClicked: false,
         });
         useUpdate({ func: () => this._update() });
         /**
@@ -94,7 +89,7 @@ export class Message extends Component {
     get isActive() {
         return Boolean(
             this.state.isHovered ||
-            this.state.isClicked ||
+            (this.messageView && this.messageView.isClicked) ||
             (
                 this.messageView &&
                 this.messageView.messageActionList &&
@@ -358,7 +353,7 @@ export class Message extends Component {
             !isEventHandled(ev, 'MessageReactionGroup.Click') &&
             !isEventHandled(ev, 'MessageInReplyToView.ClickMessageInReplyTo')
         ) {
-            this.state.isClicked = !this.state.isClicked;
+            this.messageView.update({ isClicked: !this.messageView.isClicked });
         }
     }
 
