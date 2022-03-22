@@ -13,11 +13,12 @@
                     </header>
                     <main class="modal-body">
                         <div class="o_FollowerSubtypeList_subtypes">
-                            <t t-foreach="followerSubtypeList.follower.subtypes" t-as="subtype" t-key="subtype.id">
+                            <t t-foreach="followerSubtypeList.followerSubtypeViews" t-as="followerSubtypeView" t-key="followerSubtypeView.localId">
                                 <FollowerSubtype
                                     className="'o_FollowerSubtypeList_subtype'"
+                                    localId="followerSubtypeView.localId"
                                     followerLocalId="followerSubtypeList.follower.localId"
-                                    followerSubtypeLocalId="subtype.localId"
+                                    followerSubtypeLocalId="followerSubtypeView.subtype.localId"
                                 />
                             </t>
                         </div>
