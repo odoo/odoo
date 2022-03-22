@@ -36,7 +36,9 @@ class SaleOrder(models.Model):
                 # Especially when installing sale_management in a db
                 # already containing SO records
                 continue
-            order.sale_order_template_id = order.company_id.sale_order_template_id.id
+            company_template = order.company_id.sale_order_template_id
+            if company_template and order.sale_order_template_id != company_template:
+                order.sale_order_template_id = order.company_id.sale_order_template_id.id
 
     @api.depends('partner_id', 'sale_order_template_id')
     def _compute_note(self):
