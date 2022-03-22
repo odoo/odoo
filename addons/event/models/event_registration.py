@@ -89,7 +89,7 @@ class EventRegistration(models.Model):
         for registration in self:
             if not registration.date_closed:
                 if registration.state == 'done':
-                    registration.date_closed = fields.Datetime.now()
+                    registration.date_closed = self.env.cr.now()
                 else:
                     registration.date_closed = False
 
