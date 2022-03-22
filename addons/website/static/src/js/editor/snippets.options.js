@@ -3083,15 +3083,6 @@ options.registry.WebsiteAnimate = options.Class.extend({
             this.$target.toggleClass('o_animate_preview o_animate', !!widgetValue);
         }
     },
-    /**
-     * @override
-     */
-    async _computeWidgetVisibility(widgetName, params) {
-        if (widgetName === 'animation_launch_opt') {
-            return !this.$target[0].closest('.dropdown');
-        }
-        return this._super(...arguments);
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -3119,6 +3110,9 @@ options.registry.WebsiteAnimate = options.Class.extend({
     _computeWidgetVisibility(widgetName, params) {
         if (widgetName === 'no_animation_opt') {
             return !this.isAnimatedText;
+        }
+        if (widgetName === 'animation_launch_opt') {
+            return !this.$target[0].closest('.dropdown');
         }
         return this._super(...arguments);
     },
