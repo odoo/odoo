@@ -234,6 +234,13 @@ registerModel({
          */
         highlightTimeout: attr(),
         /**
+         * Determines whether the message is clicked. When message is in
+         * clicked state, it keeps displaying actions even if not hovered.
+         */
+        isClicked: attr({
+            default: false
+        }),
+        /**
          * Whether the message should be forced to be isHighlighted. Should only
          * be set through @see highlight()
          */
