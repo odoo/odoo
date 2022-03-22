@@ -73,6 +73,13 @@ class CustomerPortal(CustomerPortal):
 
         return values
 
+    def _get_sale_searchbar_sortings(self):
+        return {
+            'date': {'label': _('Order Date'), 'order': 'date_order desc'},
+            'name': {'label': _('Reference'), 'order': 'name'},
+            'stage': {'label': _('Stage'), 'order': 'state'},
+        }
+
     #
     # Quotations and Sales Orders
     #
@@ -85,11 +92,7 @@ class CustomerPortal(CustomerPortal):
 
         domain = self._prepare_quotations_domain(partner)
 
-        searchbar_sortings = {
-            'date': {'label': _('Order Date'), 'order': 'date_order desc'},
-            'name': {'label': _('Reference'), 'order': 'name'},
-            'stage': {'label': _('Stage'), 'order': 'state'},
-        }
+        searchbar_sortings = self._get_sale_searchbar_sortings()
 
         # default sortby order
         if not sortby:
@@ -132,11 +135,8 @@ class CustomerPortal(CustomerPortal):
 
         domain = self._prepare_orders_domain(partner)
 
-        searchbar_sortings = {
-            'date': {'label': _('Order Date'), 'order': 'date_order desc'},
-            'name': {'label': _('Reference'), 'order': 'name'},
-            'stage': {'label': _('Stage'), 'order': 'state'},
-        }
+        searchbar_sortings = self._get_sale_searchbar_sortings()
+
         # default sortby order
         if not sortby:
             sortby = 'date'
