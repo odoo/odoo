@@ -370,7 +370,7 @@
         <ul t-if="state.sources.length" class="dropdown-menu o_searchview_autocomplete dropdown-menu show" role="menu">
             <li t-foreach="state.sources" t-as="src" t-key="src.id"
                 t-att-id="src.id"
-                class="o_menu_item"
+                class="o_menu_item dropdown-item"
                 t-att-class="{ o_indent: src.parent and !src.parent.selection, o_selection_focus: src_index === state.focusedItem }"
                 t-on-click="()=>this._selectSource(src)"
                 t-on-mousemove="()=>this._onSourceMousemove(src_index)"
@@ -384,12 +384,12 @@
                 </a>
                 <a href="#" t-on-click.prevent="">
                     <t t-if="src.parent.selection">
-                        Search <em t-esc="src.parent.description"/>: <strong t-esc="src.label"/></t>
+                        Search <b t-esc="src.parent.description"/>: <b class="font-italic text-primary" t-esc="src.label"/></t>
                     <t t-elif="src.label" t-esc="src.label"/>
                     <t t-elif="['date', 'datetime'].includes(src.type)">
-                        <t>Search <em t-esc="src.description"/> at: <strong t-esc="state.inputValue"/></t>
+                        <t>Search <b t-esc="src.description"/> at: <b class="font-italic text-primary" t-esc="state.inputValue"/></t>
                     </t>
-                    <t t-else="">Search <em t-esc="src.description"/> for: <strong t-esc="state.inputValue"/></t>
+                    <t t-else="">Search <b t-esc="src.description"/> for: <b class="font-italic text-primary" t-esc="state.inputValue"/></t>
                 </a>
             </li>
         </ul>
