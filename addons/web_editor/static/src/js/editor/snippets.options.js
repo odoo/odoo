@@ -3087,13 +3087,17 @@ const SnippetOptionWidget = Widget.extend({
      * @returns {Promise|undefined}
      */
     selectClass: function (previewMode, widgetValue, params) {
+        const $target = params.target ? this.options.wysiwyg.getEditable().find(params.target) : this.$target;
+        if (!$target[0]) {
+            return;
+        }
         for (const classNames of params.possibleValues) {
             if (classNames) {
-                this.$target[0].classList.remove(...classNames.trim().split(/\s+/g));
+                $target[0].classList.remove(...classNames.trim().split(/\s+/g));
             }
         }
         if (widgetValue) {
-            this.$target[0].classList.add(...widgetValue.trim().split(/\s+/g));
+            $target[0].classList.add(...widgetValue.trim().split(/\s+/g));
         }
     },
     /**
@@ -3155,26 +3159,30 @@ const SnippetOptionWidget = Widget.extend({
      * @returns {Promise|undefined}
      */
     selectStyle: async function (previewMode, widgetValue, params) {
+        const $target = params.target ? this.options.wysiwyg.getEditable().find(params.target) : this.$target;
+        if (!$target[0]) {
+            return;
+        }
         // Disable all transitions for the duration of the method as many
         // comparisons will be done on the element to know if applying a
         // property has an effect or not. Also, changing a css property via the
         // editor should not show any transition as previews would not be done
         // immediately, which is not good for the user experience.
-        this.$target[0].classList.add('o_we_force_no_transition');
-        const _restoreTransitions = () => this.$target[0].classList.remove('o_we_force_no_transition');
+        $target[0].classList.add('o_we_force_no_transition');
+        const _restoreTransitions = () => $target[0].classList.remove('o_we_force_no_transition');
 
         if (params.cssProperty === 'background-color') {
-            this.$target.trigger('background-color-event', previewMode);
+            $target.trigger('background-color-event', previewMode);
         }
 
         // Always reset the inline style first to not put inline style on an
         // element which already have this style through css stylesheets.
         let cssProps = weUtils.CSS_SHORTHANDS[params.cssProperty] || [params.cssProperty];
         for (const cssProp of cssProps) {
-            this.$target[0].style.setProperty(cssProp, '');
+            $target[0].style.setProperty(cssProp, '');
         }
         if (params.extraClass) {
-            this.$target.removeClass(params.extraClass);
+            $target.removeClass(params.extraClass);
         }
         // Plain color and gradient are mutually exclusive as background so in
         // case we edit a background-color we also have to reset the gradient
@@ -3184,11 +3192,11 @@ const SnippetOptionWidget = Widget.extend({
         // reset anyway).
         let bgImageParts = undefined;
         if (params.withGradients && params.cssProperty === 'background-color') {
-            const styles = getComputedStyle(this.$target[0]);
+            const styles = getComputedStyle($target[0]);
             bgImageParts = backgroundImageCssToParts(styles['background-image']);
             delete bgImageParts.gradient;
             const combined = backgroundImagePartsToCss(bgImageParts);
-            this.$target[0].style.setProperty('background-image', '');
+            $target[0].style.setProperty('background-image', '');
             applyCSS.call(this, 'background-image', combined, styles);
         }
 
@@ -3200,28 +3208,28 @@ const SnippetOptionWidget = Widget.extend({
         if (params.colorNames && params.colorPrefix) {
             const colorNames = params.colorNames.filter(name => !weUtils.isColorCombinationName(name));
             const classes = weUtils.computeColorClasses(colorNames, params.colorPrefix);
-            this.$target[0].classList.remove(...classes);
+            $target[0].classList.remove(...classes);
 
             if (colorNames.includes(widgetValue)) {
-                const originalCSSValue = window.getComputedStyle(this.$target[0])[cssProps[0]];
+                const originalCSSValue = window.getComputedStyle($target[0])[cssProps[0]];
                 const className = params.colorPrefix + widgetValue;
-                this.$target[0].classList.add(className);
-                if (originalCSSValue !== window.getComputedStyle(this.$target[0])[cssProps[0]]) {
+                $target[0].classList.add(className);
+                if (originalCSSValue !== window.getComputedStyle($target[0])[cssProps[0]]) {
                     // If applying the class did indeed changed the css
                     // property we are editing, nothing more has to be done.
                     // (except adding the extra class)
-                    this.$target.addClass(params.extraClass);
+                    $target.addClass(params.extraClass);
                     _restoreTransitions();
                     return;
                 }
                 // Otherwise, it means that class probably does not exist,
                 // we remove it and continue. Especially useful for some
                 // prefixes which only work with some color names but not all.
-                this.$target[0].classList.remove(className);
+                $target[0].classList.remove(className);
             }
         }
 
-        const styles = window.getComputedStyle(this.$target[0]);
+        const styles = window.getComputedStyle($target[0]);
 
         // At this point, the widget value is either a property/color name or
         // an actual css property value. If it is a property/color name, we will
@@ -3273,15 +3281,15 @@ const SnippetOptionWidget = Widget.extend({
         hasUserValue = applyCSS.call(this, cssProps[0], values.join(' '), styles) || hasUserValue;
 
         function applyCSS(cssProp, cssValue, styles) {
-            if (!weUtils.areCssValuesEqual(styles[cssProp], cssValue, cssProp, this.$target[0])) {
-                this.$target[0].style.setProperty(cssProp, cssValue, 'important');
+            if (!weUtils.areCssValuesEqual(styles[cssProp], cssValue, cssProp, $target[0])) {
+                $target[0].style.setProperty(cssProp, cssValue, 'important');
                 return true;
             }
             return false;
         }
 
         if (params.extraClass) {
-            this.$target.toggleClass(params.extraClass, hasUserValue);
+            $target.toggleClass(params.extraClass, hasUserValue);
         }
 
         _restoreTransitions();
@@ -3537,6 +3545,10 @@ const SnippetOptionWidget = Widget.extend({
      * @returns {Promise<string|undefined>|string|undefined}
      */
     _computeWidgetState: async function (methodName, params) {
+        const $target = params.target ? this.options.wysiwyg.getEditable().find(params.target) : this.$target;
+        if (!$target[0]) {
+            return;
+        }
         switch (methodName) {
             case 'selectClass': {
                 let maxNbClasses = 0;
@@ -3547,7 +3559,7 @@ const SnippetOptionWidget = Widget.extend({
                     }
                     const classes = classNames.split(/\s+/g);
                     if (params.stateToFirstClass) {
-                        if (this.$target[0].classList.contains(classes[0])) {
+                        if ($target[0].classList.contains(classes[0])) {
                             return classNames;
                         } else {
                             continue;
@@ -3555,7 +3567,7 @@ const SnippetOptionWidget = Widget.extend({
                     }
 
                     if (classes.length >= maxNbClasses
-                            && classes.every(className => this.$target[0].classList.contains(className))) {
+                            && classes.every(className => $target[0].classList.contains(className))) {
                         maxNbClasses = classes.length;
                         activeClassNames = classNames;
                     }
@@ -3567,9 +3579,9 @@ const SnippetOptionWidget = Widget.extend({
                 const attrName = params.attributeName;
                 let attrValue;
                 if (methodName === 'selectAttribute') {
-                    attrValue = this.$target[0].getAttribute(attrName);
+                    attrValue = $target[0].getAttribute(attrName);
                 } else if (methodName === 'selectDataAttribute') {
-                    attrValue = this.$target[0].dataset[attrName];
+                    attrValue = $target[0].dataset[attrName];
                 }
                 attrValue = (attrValue || '').trim();
                 if (params.saveUnit && !params.withUnit) {
@@ -3582,7 +3594,7 @@ const SnippetOptionWidget = Widget.extend({
                 if (params.colorPrefix && params.colorNames) {
                     for (const c of params.colorNames) {
                         const className = weUtils.computeColorClasses([c], params.colorPrefix)[0];
-                        if (this.$target[0].classList.contains(className)) {
+                        if ($target[0].classList.contains(className)) {
                             if (weUtils.isColorCombinationName(c)) {
                                 usedCC = c;
                                 continue;
@@ -3595,10 +3607,10 @@ const SnippetOptionWidget = Widget.extend({
                 // Disable all transitions for the duration of the style check
                 // as we want to know the final value of a property to properly
                 // update the UI.
-                this.$target[0].classList.add('o_we_force_no_transition');
-                const _restoreTransitions = () => this.$target[0].classList.remove('o_we_force_no_transition');
+                $target[0].classList.add('o_we_force_no_transition');
+                const _restoreTransitions = () => $target[0].classList.remove('o_we_force_no_transition');
 
-                const styles = window.getComputedStyle(this.$target[0]);
+                const styles = window.getComputedStyle($target[0]);
 
                 if (params.withGradients && params.cssProperty === 'background-color') {
                     // Check if there is a gradient, in that case this is the
@@ -3624,13 +3636,13 @@ const SnippetOptionWidget = Widget.extend({
                     }
                     return value;
                 });
-                if (cssValues.length === 4 && weUtils.areCssValuesEqual(cssValues[3], cssValues[1], params.cssProperty, this.$target)) {
+                if (cssValues.length === 4 && weUtils.areCssValuesEqual(cssValues[3], cssValues[1], params.cssProperty, $target)) {
                     cssValues.pop();
                 }
-                if (cssValues.length === 3 && weUtils.areCssValuesEqual(cssValues[2], cssValues[0], params.cssProperty, this.$target)) {
+                if (cssValues.length === 3 && weUtils.areCssValuesEqual(cssValues[2], cssValues[0], params.cssProperty, $target)) {
                     cssValues.pop();
                 }
-                if (cssValues.length === 2 && weUtils.areCssValuesEqual(cssValues[1], cssValues[0], params.cssProperty, this.$target)) {
+                if (cssValues.length === 2 && weUtils.areCssValuesEqual(cssValues[1], cssValues[0], params.cssProperty, $target)) {
                     cssValues.pop();
                 }
 
@@ -3668,7 +3680,7 @@ const SnippetOptionWidget = Widget.extend({
                             continue;
                         }
                         const className = weUtils.computeColorClasses([c])[0];
-                        if (this.$target[0].classList.contains(className)) {
+                        if ($target[0].classList.contains(className)) {
                             return c;
                         }
                     }
