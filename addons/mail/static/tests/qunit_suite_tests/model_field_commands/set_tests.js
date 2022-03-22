@@ -5,22 +5,15 @@ import {
     increment,
     set
 } from '@mail/model/model_field_command';
-import {
-    beforeEach,
-    start,
-} from '@mail/../tests/helpers/test_utils';
+import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('model_field_commands', {}, function () {
-QUnit.module('set_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('set_tests.js');
 
 QUnit.test('decrement: should decrease attribute field value', async function (assert) {
     assert.expect(1);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const task = messaging.models['TestTask'].create({
         id: 10,
@@ -36,7 +29,7 @@ QUnit.test('decrement: should decrease attribute field value', async function (a
 
 QUnit.test('increment: should increase attribute field value', async function (assert) {
     assert.expect(1);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const task = messaging.models['TestTask'].create({
         id: 10,
@@ -52,7 +45,7 @@ QUnit.test('increment: should increase attribute field value', async function (a
 
 QUnit.test('set: should set a value for attribute field', async function (assert) {
     assert.expect(1);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const task = messaging.models['TestTask'].create({
         id: 10,
@@ -68,7 +61,7 @@ QUnit.test('set: should set a value for attribute field', async function (assert
 
 QUnit.test('multiple attribute commands combination', async function (assert) {
     assert.expect(1);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const task = messaging.models['TestTask'].create({
         id: 10,

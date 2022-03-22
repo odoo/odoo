@@ -1,112 +1,22 @@
 /** @odoo-module **/
 
-import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 import FormView from 'web.FormView';
 import ListView from 'web.ListView';
 import testUtils from 'web.test_utils';
 
 QUnit.module('mail', {}, function () {
-QUnit.module('Chatter', {
-    async beforeEach() {
-        await beforeEach(this);
-
-        this.data['res.partner'].records.push({ id: 11, im_status: 'online' });
-        this.data['mail.activity.type'].records.push(
-            { id: 1, name: "Type 1" },
-            { id: 2, name: "Type 2" },
-            { id: 3, name: "Type 3", category: 'upload_file' },
-            { id: 4, name: "Exception", decoration_type: "warning", icon: "fa-warning" }
-        );
-        this.data['ir.attachment'].records.push(
-            {
-                id: 1,
-                mimetype: 'image/png',
-                name: 'filename.jpg',
-                res_id: 7,
-                res_model: 'res.users',
-                type: 'url',
-            },
-            {
-                id: 2,
-                mimetype: "application/x-msdos-program",
-                name: "file2.txt",
-                res_id: 7,
-                res_model: 'res.users',
-                type: 'binary',
-            },
-            {
-                id: 3,
-                mimetype: "application/x-msdos-program",
-                name: "file3.txt",
-                res_id: 5,
-                res_model: 'res.users',
-                type: 'binary',
-            },
-        );
-        Object.assign(this.data['res.users'].fields, {
-            activity_exception_decoration: {
-                string: 'Decoration',
-                type: 'selection',
-                selection: [['warning', 'Alert'], ['danger', 'Error']],
-            },
-            activity_exception_icon: {
-                string: 'icon',
-                type: 'char',
-            },
-            activity_ids: {
-                string: 'Activities',
-                type: 'one2many',
-                relation: 'mail.activity',
-                relation_field: 'res_id',
-            },
-            activity_state: {
-                string: 'State',
-                type: 'selection',
-                selection: [['overdue', 'Overdue'], ['today', 'Today'], ['planned', 'Planned']],
-            },
-            activity_summary: {
-                string: "Next Activity Summary",
-                type: 'char',
-            },
-            activity_type_icon: {
-                string: "Activity Type Icon",
-                type: 'char',
-            },
-            activity_type_id: {
-                string: "Activity type",
-                type: "many2one",
-                relation: "mail.activity.type",
-            },
-            foo: { string: "Foo", type: "char", default: "My little Foo Value" },
-            message_attachment_count: {
-                string: 'Attachment count',
-                type: 'integer',
-            },
-            message_follower_ids: {
-                string: "Followers",
-                type: "one2many",
-                relation: 'mail.followers',
-                relation_field: "res_id",
-            },
-            message_ids: {
-                string: "messages",
-                type: "one2many",
-                relation: 'mail.message',
-                relation_field: "res_id",
-            },
-        });
-    },
-});
+QUnit.module('Chatter');
 
 QUnit.test('list activity widget with no activity', async function (assert) {
     assert.expect(4);
 
+    const pyEnv = await startServer();
     const { widget: list } = await start({
         hasView: true,
         View: ListView,
         model: 'res.users',
-        data: this.data,
         arch: '<list><field name="activity_ids" widget="list_activity"/></list>',
         mockRPC: function (route) {
             if (!['/mail/init_messaging', '/mail/load_message_failures'].includes(route)) {
@@ -114,7 +24,7 @@ QUnit.test('list activity widget with no activity', async function (assert) {
             }
             return this._super(...arguments);
         },
-        session: { uid: 2 },
+        session: { uid: pyEnv.currentUserId },
     });
 
     assert.containsOnce(list, '.o_mail_activity .o_activity_color_default');
@@ -128,30 +38,30 @@ QUnit.test('list activity widget with no activity', async function (assert) {
 QUnit.test('list activity widget with activities', async function (assert) {
     assert.expect(6);
 
-    const currentUser = this.data['res.users'].records.find(user =>
-        user.id === this.data.currentUserId
+    const pyEnv = await startServer();
+    const [mailActivityId1, mailActivityId2] = pyEnv['mail.activity'].create([{}, {}]);
+    const [mailActivityTypeId1, mailActivityTypeId2] = pyEnv['mail.activity.type'].create(
+        [{ name: 'Type 1' }, { name: 'Type 2' }],
     );
-    Object.assign(currentUser, {
-        activity_ids: [1, 4],
+    pyEnv['res.users'].write([pyEnv.currentUserId], {
+        activity_ids: [mailActivityId1, mailActivityId2],
         activity_state: 'today',
         activity_summary: 'Call with Al',
-        activity_type_id: 3,
+        activity_type_id: mailActivityTypeId1,
         activity_type_icon: 'fa-phone',
     });
 
-    this.data['res.users'].records.push({
-        id: 44,
-        activity_ids: [2],
+    pyEnv['res.users'].create({
+        activity_ids: [mailActivityId2],
         activity_state: 'planned',
         activity_summary: false,
-        activity_type_id: 2,
+        activity_type_id: mailActivityTypeId2,
     });
 
     const { widget: list } = await start({
         hasView: true,
         View: ListView,
         model: 'res.users',
-        data: this.data,
         arch: '<list><field name="activity_ids" widget="list_activity"/></list>',
         mockRPC: function (route) {
             if (!['/mail/init_messaging', '/mail/load_message_failures'].includes(route)) {
@@ -177,14 +87,14 @@ QUnit.test('list activity widget with activities', async function (assert) {
 QUnit.test('list activity widget with exception', async function (assert) {
     assert.expect(4);
 
-    const currentUser = this.data['res.users'].records.find(user =>
-        user.id === this.data.currentUserId
-    );
-    Object.assign(currentUser, {
-        activity_ids: [1],
+    const pyEnv = await startServer();
+    const mailActivityId1 = pyEnv['mail.activity'].create();
+    const mailActivityTypeId1 = pyEnv['mail.activity.type'].create();
+    pyEnv['res.users'].write([pyEnv.currentUserId], {
+        activity_ids: [mailActivityId1],
         activity_state: 'today',
         activity_summary: 'Call with Al',
-        activity_type_id: 3,
+        activity_type_id: mailActivityTypeId1,
         activity_exception_decoration: 'warning',
         activity_exception_icon: 'fa-warning',
     });
@@ -193,7 +103,6 @@ QUnit.test('list activity widget with exception', async function (assert) {
         hasView: true,
         View: ListView,
         model: 'res.users',
-        data: this.data,
         arch: '<list><field name="activity_ids" widget="list_activity"/></list>',
         mockRPC: function (route) {
             if (!['/mail/init_messaging', '/mail/load_message_failures'].includes(route)) {
@@ -214,46 +123,41 @@ QUnit.test('list activity widget with exception', async function (assert) {
 QUnit.test('list activity widget: open dropdown', async function (assert) {
     assert.expect(9);
 
-    const currentUser = this.data['res.users'].records.find(user =>
-        user.id === this.data.currentUserId
-    );
-    Object.assign(currentUser, {
-        activity_ids: [1, 4],
-        activity_state: 'today',
-        activity_summary: 'Call with Al',
-        activity_type_id: 3,
-    });
-    this.data['mail.activity'].records.push(
+    const pyEnv = await startServer();
+    const [mailActivityTypeId1, mailActivityTypeId2] = pyEnv['mail.activity.type'].create([{}, {}]);
+    const [mailActivityId1, mailActivityId2] = pyEnv['mail.activity'].create([
         {
-            id: 1,
             display_name: "Call with Al",
             date_deadline: moment().format("YYYY-MM-DD"), // now
             can_write: true,
             state: "today",
-            user_id: this.data.currentUserId,
-            create_uid: this.data.currentUserId,
-            activity_type_id: 3,
+            user_id: pyEnv.currentUserId,
+            create_uid: pyEnv.currentUserId,
+            activity_type_id: mailActivityTypeId1,
         },
         {
-            id: 4,
             display_name: "Meet FP",
             date_deadline: moment().add(1, 'day').format("YYYY-MM-DD"), // tomorrow
             can_write: true,
             state: "planned",
-            user_id: this.data.currentUserId,
-            create_uid: this.data.currentUserId,
-            activity_type_id: 1,
+            user_id: pyEnv.currentUserId,
+            create_uid: pyEnv.currentUserId,
+            activity_type_id: mailActivityTypeId2,
         }
-    );
+    ]);
+    pyEnv['res.users'].write([pyEnv.currentUserId], {
+        activity_ids: [mailActivityId1, mailActivityId2],
+        activity_state: 'today',
+        activity_summary: 'Call with Al',
+        activity_type_id: mailActivityTypeId2,
+    });
 
     const { widget: list } = await start({
         hasView: true,
         View: ListView,
         model: 'res.users',
-        data: this.data,
         arch: `
             <list>
-                <field name="foo"/>
                 <field name="activity_ids" widget="list_activity"/>
             </list>`,
         mockRPC: function (route, args) {
@@ -261,14 +165,11 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
                 assert.step(args.method || route);
             }
             if (args.method === 'action_feedback') {
-                const currentUser = this.data['res.users'].records.find(user =>
-                    user.id === this.currentUserId
-                );
-                Object.assign(currentUser, {
-                    activity_ids: [4],
+                pyEnv['res.users'].write([pyEnv.currentUserId], {
+                    activity_ids: [mailActivityId2],
                     activity_state: 'planned',
                     activity_summary: 'Meet FP',
-                    activity_type_id: 1,
+                    activity_type_id: mailActivityTypeId1,
                 });
                 return Promise.resolve();
             }
@@ -310,51 +211,44 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
 QUnit.test('list activity exception widget with activity', async function (assert) {
     assert.expect(3);
 
-    const currentUser = this.data['res.users'].records.find(user =>
-        user.id === this.data.currentUserId
-    );
-    currentUser.activity_ids = [1];
-    this.data['res.users'].records.push({
-        id: 13,
-        message_attachment_count: 3,
-        display_name: "second partner",
-        foo: "Tommy",
-        message_follower_ids: [],
-        message_ids: [],
-        activity_ids: [2],
-        activity_exception_decoration: 'warning',
-        activity_exception_icon: 'fa-warning',
-    });
-    this.data['mail.activity'].records.push(
+    const pyEnv = await startServer();
+    const [mailActivityTypeId1, mailActivityTypeId2] = pyEnv['mail.activity.type'].create([{}, {}]);
+    const [mailActivityId1, mailActivityId2] = pyEnv['mail.activity'].create([
         {
-            id: 1,
             display_name: "An activity",
             date_deadline: moment().format("YYYY-MM-DD"), // now
             can_write: true,
             state: "today",
-            user_id: 2,
-            create_uid: 2,
-            activity_type_id: 1,
+            user_id: pyEnv.currentUserId,
+            create_uid: pyEnv.currentUserId,
+            activity_type_id: mailActivityTypeId1,
         },
         {
-            id: 2,
             display_name: "An exception activity",
             date_deadline: moment().format("YYYY-MM-DD"), // now
             can_write: true,
             state: "today",
-            user_id: 2,
-            create_uid: 2,
-            activity_type_id: 4,
+            user_id: pyEnv.currentUserId,
+            create_uid: pyEnv.currentUserId,
+            activity_type_id: mailActivityTypeId2,
         }
-    );
+    ]);
 
+    pyEnv['res.users'].write([pyEnv.currentUserId], { activity_ids: [mailActivityId1] });
+    pyEnv['res.users'].create({
+        message_attachment_count: 3,
+        display_name: "second partner",
+        message_follower_ids: [],
+        message_ids: [],
+        activity_ids: [mailActivityId2],
+        activity_exception_decoration: 'warning',
+        activity_exception_icon: 'fa-warning',
+    });
     const { widget: list } = await start({
         hasView: true,
         View: ListView,
         model: 'res.users',
-        data: this.data,
         arch: '<tree>' +
-                '<field name="foo"/>' +
                 '<field name="activity_exception_decoration" widget="activity_exception"/> ' +
             '</tree>',
     });
@@ -368,36 +262,27 @@ QUnit.test('list activity exception widget with activity', async function (asser
     list.destroy();
 });
 
-QUnit.module('FieldMany2ManyTagsEmail', {
-    async beforeEach() {
-        await beforeEach(this);
+QUnit.module('FieldMany2ManyTagsEmail');
 
-        this.data['mail.message'].records.push({
-            id: 11,
-            display_name: "first record",
-            partner_ids: [],
-        });
-        this.data['res.partner'].records.push(
-            { id: 12, name: "gold", email: 'coucou@petite.perruche' },
-            { id: 14, name: "silver", email: '' },
-        );
-    },
-});
-
-QUnit.test('fieldmany2many tags email', function (assert) {
+QUnit.test('fieldmany2many tags email', async function (assert) {
     assert.expect(13);
     var done = assert.async();
 
-    const message11 = this.data['mail.message'].records.find(message => message.id === 11);
+    const pyEnv = await startServer();
+    const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([
+        { name: "gold", email: 'coucou@petite.perruche' },
+        { name: "silver", email: '' },
+    ]);
+    const mailMessageId1 = pyEnv['mail.message'].create({
+        partner_ids: [resPartnerId1, resPartnerId2],
+    });
 
-    message11.partner_ids = [12, 14];
     // the modals need to be closed before the form view rendering
     start({
         hasView: true,
         View: FormView,
         model: 'mail.message',
-        data: this.data,
-        res_id: 11,
+        res_id: mailMessageId1,
         arch: '<form string="Partners">' +
                 '<sheet>' +
                     '<field name="body"/>' +
@@ -419,7 +304,7 @@ QUnit.test('fieldmany2many tags email', function (assert) {
         },
     }).then(async function ({ widget: form }) {
         // should read it 3 times (1 with the form view, one with the form dialog and one after save)
-        assert.verifySteps(['[12,14]', '[14]', '[14]']);
+        assert.verifySteps([`[${resPartnerId1},${resPartnerId2}]`, `[${resPartnerId2}]`, `[${resPartnerId2}]`]);
         await testUtils.nextTick();
         assert.containsN(form, '.o_field_many2manytags[name="partner_ids"] .badge.o_tag_color_0', 2,
             "two tags should be present");
@@ -435,7 +320,7 @@ QUnit.test('fieldmany2many tags email', function (assert) {
         assert.strictEqual($('.modal-body.o_act_window').length, 1,
             "there should be one modal opened to edit the empty email");
         assert.strictEqual($('.modal-body.o_act_window input[name="name"]').val(), "silver",
-            "the opened modal should be a form view dialog with the res.partner 14");
+            "the opened modal should be a form view dialog with the res.partner 2");
         assert.strictEqual($('.modal-body.o_act_window input[name="email"]').length, 1,
             "there should be an email field in the modal");
 
@@ -449,15 +334,20 @@ QUnit.test('fieldmany2many tags email', function (assert) {
 QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
     assert.expect(15);
 
-    const message11 = this.data['mail.message'].records.find(message => message.id === 11);
-    message11.partner_ids = [12];
+    const pyEnv = await startServer();
+    const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([
+        { name: "gold", email: 'coucou@petite.perruche' },
+        { name: "silver", email: '' },
+    ]);
+    const mailMessageId1 = pyEnv['mail.message'].create({
+        partner_ids: [resPartnerId1],
+    });
 
     var { widget: form } = await start({
         hasView: true,
         View: FormView,
         model: 'mail.message',
-        data: this.data,
-        res_id: 11,
+        res_id: mailMessageId1,
         arch: '<form string="Partners">' +
                 '<sheet>' +
                     '<field name="body"/>' +
@@ -479,7 +369,7 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
         },
     });
 
-    assert.verifySteps(['[12]']);
+    assert.verifySteps([`[${resPartnerId1}]`]);
     assert.containsOnce(form, '.o_field_many2manytags[name="partner_ids"] .badge.o_tag_color_0',
         "should contain one tag");
 
@@ -500,9 +390,9 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
 
     assert.containsN(form, '.o_field_many2manytags[name="partner_ids"] .badge.o_tag_color_0', 2,
         "should contain the second tag");
-    // should have read [14] three times: when opening the dropdown, when opening the modal, and
+    // should have read resPartnerId2 three times: when opening the dropdown, when opening the modal, and
     // after the save
-    assert.verifySteps(['[14]', '[14]', '[14]']);
+    assert.verifySteps([`[${resPartnerId2}]`, `[${resPartnerId2}]`, `[${resPartnerId2}]`]);
 
     form.destroy();
 });
@@ -510,20 +400,21 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
 QUnit.test('many2many_tags_email widget can load more than 40 records', async function (assert) {
     assert.expect(3);
 
-    const message11 = this.data['mail.message'].records.find(message => message.id === 11);
-    message11.partner_ids = [];
+    const pyEnv = await startServer();
+    const messagePartnerIds = [];
     for (let i = 100; i < 200; i++) {
-        this.data['res.partner'].records.push({ id: i, display_name: `partner${i}` });
-        message11.partner_ids.push(i);
+        messagePartnerIds.push(pyEnv['res.partner'].create({ display_name: `partner${i}` }));
     }
+    const mailMessageId1 = pyEnv['mail.message'].create({
+        partner_ids: messagePartnerIds,
+    });
 
     const { widget: form } = await start({
         hasView: true,
         View: FormView,
         model: 'mail.message',
-        data: this.data,
         arch: '<form><field name="partner_ids" widget="many2many_tags"/></form>',
-        res_id: 11,
+        res_id: mailMessageId1,
     });
 
     assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] .badge').length, 100);

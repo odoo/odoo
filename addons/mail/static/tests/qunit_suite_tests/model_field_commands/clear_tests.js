@@ -1,22 +1,15 @@
 /** @odoo-module **/
 
 import { clear, insertAndReplace } from '@mail/model/model_field_command';
-import {
-    beforeEach,
-    start,
-} from '@mail/../tests/helpers/test_utils';
+import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('model_field_commands', {}, function () {
-QUnit.module('clear_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('clear_tests.js');
 QUnit.test('clear: should set attribute field undefined if there is no default value', async function (assert) {
     assert.expect(1);
 
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
     const task = messaging.models['TestTask'].create({
         id: 1,
         title: 'test title 1',
@@ -32,7 +25,7 @@ QUnit.test('clear: should set attribute field undefined if there is no default v
 QUnit.test('clear: should set attribute field the default value', async function (assert) {
     assert.expect(1);
 
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
     const task = messaging.models['TestTask'].create({
         id: 1,
         difficulty: 5,
@@ -47,7 +40,7 @@ QUnit.test('clear: should set attribute field the default value', async function
 
 QUnit.test('clear: should set x2one field undefined if no default value is given', async function (assert) {
     assert.expect(2);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const contact = messaging.models['TestContact'].create({
         id: 10,
@@ -69,7 +62,7 @@ QUnit.test('clear: should set x2one field undefined if no default value is given
 
 QUnit.test('clear: should set x2one field the default value', async function (assert) {
     assert.expect(1);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const contact = messaging.models['TestContact'].create({
         favorite: insertAndReplace({ description: 'pingpong' }),
@@ -85,7 +78,7 @@ QUnit.test('clear: should set x2one field the default value', async function (as
 
 QUnit.test('clear: should set x2many field empty array if no default value is given', async function (assert) {
     assert.expect(2);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const contact = messaging.models['TestContact'].create({
         id: 10,
@@ -107,7 +100,7 @@ QUnit.test('clear: should set x2many field empty array if no default value is gi
 
 QUnit.test('clear: should set x2many field the default value', async function (assert) {
     assert.expect(1);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const contact = messaging.models['TestContact'].create({
         id: 10,

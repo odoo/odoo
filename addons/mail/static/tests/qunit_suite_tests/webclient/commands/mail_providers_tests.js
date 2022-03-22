@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { afterNextRender, beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { afterNextRender, start, startServer } from '@mail/../tests/helpers/test_utils';
 import { editSearchBar } from '@web/../tests/core/commands/command_service_tests';
 import { click, getFixture, nextTick, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { browser } from '@web/core/browser/browser';
@@ -11,9 +11,8 @@ const serviceRegistry = registry.category("services");
 
 QUnit.module('mail', {}, function () {
     QUnit.module('Command Palette', {
-        async beforeEach() {
+        beforeEach() {
             serviceRegistry.add("command", commandService);
-            await beforeEach(this);
             patchWithCleanup(browser, {
                 clearTimeout() {},
                 setTimeout(later, wait) {
@@ -27,24 +26,24 @@ QUnit.module('mail', {}, function () {
     QUnit.test('open the chatWindow of a user from the command palette', async function (assert) {
         assert.expect(3);
 
-        this.data['res.partner'].records.push(
-            { id: 11, name: "Partner 1", email: "p1@odoo.com" },
-            { id: 12, name: "Partner 2", email: "p2@odoo.com" },
-            { id: 13, name: "Partner 3", email: "p3@odoo.com" },
-        );
-        this.data['res.users'].records.push(
-            { id: 11, name: "User 1", partner_id: 11 },
-            { id: 7, name: "User 2", partner_id: 12 },
-            { id: 23, name: "User 3", partner_id: 13 },
-        );
+        const pyEnv = await startServer();
+        const [resPartnerId1, resPartnerId2, resPartnerId3] = pyEnv['res.partner'].create([
+            { name: "Partner 1", email: "p1@odoo.com" },
+            { name: "Partner 2", email: "p2@odoo.com" },
+            { name: "Partner 3", email: "p3@odoo.com" },
+        ]);
+        pyEnv['res.users'].create([
+            { name: "User 1", partner_id: resPartnerId1 },
+            { name: "User 2", partner_id: resPartnerId2 },
+            { name: "User 3", partner_id: resPartnerId3 },
+        ]);
 
         const target = getFixture();
         await start({
-                data: this.data,
-                hasChatWindow: true,
-                hasWebClient: true,
-                target,
-            });
+            hasChatWindow: true,
+            hasWebClient: true,
+            target,
+        });
         triggerHotkey("control+k");
         await nextTick();
 
@@ -67,23 +66,21 @@ QUnit.module('mail', {}, function () {
     QUnit.test('open the chatWindow of a channel from the command palette', async function (assert) {
         assert.expect(3);
 
-        this.data['mail.channel'].records.push({
-            id: 100,
+        const pyEnv = await startServer();
+        pyEnv['mail.channel'].create({
             name: "general",
-            members: [this.data.currentPartnerId],
+            members: [pyEnv.currentPartnerId],
         });
-        this.data['mail.channel'].records.push({
-            id: 101,
+        pyEnv['mail.channel'].create({
             name: "project",
-            members: [this.data.currentPartnerId],
+            members: [pyEnv.currentPartnerId],
         });
         const target = getFixture();
         await start({
-                data: this.data,
-                hasChatWindow: true,
-                hasWebClient: true,
-                target,
-            });
+            hasChatWindow: true,
+            hasWebClient: true,
+            target,
+        });
         triggerHotkey("control+k");
         await nextTick();
 

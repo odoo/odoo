@@ -1,16 +1,12 @@
 /** @odoo-module **/
 
-import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { start } from '@mail/../tests/helpers/test_utils';
 
 import FormView from 'web.FormView';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('widgets', {}, function () {
-QUnit.module('notification_alert_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('notification_alert_tests.js');
 
 QUnit.skip('notification_alert widget: display blocked notification alert', async function (assert) {
     // FIXME: Test should work, but for some reasons OWL always flags the
@@ -24,7 +20,6 @@ QUnit.skip('notification_alert widget: display blocked notification alert', asyn
                 <widget name="notification_alert"/>
             </form>
         `,
-        data: this.data,
         env: {
             browser: {
                 Notification: {
@@ -54,7 +49,6 @@ QUnit.test('notification_alert widget: no notification alert when granted', asyn
                 <widget name="notification_alert"/>
             </form>
         `,
-        data: this.data,
         env: {
             browser: {
                 Notification: {
@@ -84,7 +78,6 @@ QUnit.test('notification_alert widget: no notification alert when default', asyn
                 <widget name="notification_alert"/>
             </form>
         `,
-        data: this.data,
         env: {
             browser: {
                 Notification: {

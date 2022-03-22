@@ -1,13 +1,9 @@
 /** @odoo-module **/
 
-import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail_bot', {}, function () {
-QUnit.module('messaging_initializer_tests.js', {
-    beforeEach() {
-        beforeEach(this);
-    },
-});
+QUnit.module('messaging_initializer_tests.js');
 
 
 QUnit.test('OdooBot initialized at init', async function (assert) {
@@ -16,7 +12,6 @@ QUnit.test('OdooBot initialized at init', async function (assert) {
     assert.expect(2);
 
     await start({
-        data: this.data,
         env: {
             session: {
                 odoobot_initialized: false,

@@ -1,22 +1,15 @@
 /** @odoo-module **/
 
 import { insertAndReplace, unlinkAll } from '@mail/model/model_field_command';
-import {
-    beforeEach,
-    start,
-} from '@mail/../tests/helpers/test_utils';
+import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('model_field_commands', {}, function () {
-QUnit.module('unlink_all_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('unlink_all_tests.js');
 
 QUnit.test('unlinkAll: should set x2one field undefined', async function (assert) {
     assert.expect(2);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const contact = messaging.models['TestContact'].create({
         id: 10,
@@ -38,7 +31,7 @@ QUnit.test('unlinkAll: should set x2one field undefined', async function (assert
 
 QUnit.test('unlinkAll: should set x2many field an empty array', async function (assert) {
     assert.expect(2);
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
 
     const contact = messaging.models['TestContact'].create({
         id: 10,

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Many2OneAvatarUser } from '@mail/js/m2x_avatar_user';
-import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { start, startServer } from '@mail/../tests/helpers/test_utils';
 import { click, getFixture, legacyExtraNextTick, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { doAction } from '@web/../tests/webclient/helpers';
 import { registry } from "@web/core/registry";
@@ -18,30 +18,9 @@ let target;
 
 QUnit.module('mail', {}, function () {
     QUnit.module('M2XAvatarUser', {
-        async beforeEach() {
-            await beforeEach(this);
-
+        beforeEach() {
             // reset the cache before each test
             Many2OneAvatarUser.prototype.partnerIds = {};
-
-            this.data['m2x.avatar.user'].records.push(
-                { id: 1, user_id: 11, user_ids: [11, 23], },
-                { id: 2, user_id: 7 },
-                { id: 3, user_id: 11 },
-                { id: 4, user_id: 23 },
-            );
-
-            this.data['res.partner'].records.push(
-                { id: 11, display_name: "Partner 1" },
-                { id: 12, display_name: "Partner 2" },
-                { id: 13, display_name: "Partner 3" }
-            );
-            this.data['res.users'].records.push(
-                { id: 11, name: "Mario", partner_id: 11 },
-                { id: 7, name: "Luigi", partner_id: 12 },
-                { id: 23, name: "Yoshi", partner_id: 13 }
-            );
-
             target = getFixture();
         },
     });
@@ -49,12 +28,15 @@ QUnit.module('mail', {}, function () {
     QUnit.test('many2one_avatar_user widget in list view', async function (assert) {
         assert.expect(2);
 
+        const pyEnv = await startServer();
+        const resPartnerId1 = pyEnv['res.partner'].create({ display_name: 'Partner 1' });
+        const resUsersId1 = pyEnv['res.users'].create({ name: "Mario", partner_id: resPartnerId1 });
+        pyEnv['m2x.avatar.user'].create({ user_id: resUsersId1 });
         const { widget: list } = await start({
             hasChatWindow: true,
             hasView: true,
             View: ListView,
             model: 'm2x.avatar.user',
-            data: this.data,
             arch: '<tree><field name="user_id" widget="many2one_avatar_user"/></tree>',
         });
 
@@ -72,14 +54,17 @@ QUnit.module('mail', {}, function () {
     QUnit.test('many2many_avatar_user widget in form view', async function (assert) {
         assert.expect(2);
 
+        const pyEnv = await startServer();
+        const resPartnerId1 = pyEnv['res.partner'].create({ display_name: 'Partner 1' });
+        const resUsersId1 = pyEnv['res.users'].create({ name: "Mario", partner_id: resPartnerId1 });
+        const m2xAvatarUserId1 = pyEnv['m2x.avatar.user'].create({ user_ids: [resUsersId1] });
         const { widget: form } = await start({
             hasChatWindow: true,
             hasView: true,
             View: FormView,
             model: 'm2x.avatar.user',
-            data: this.data,
             arch: '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
-            res_id: 1,
+            res_id: m2xAvatarUserId1,
         });
 
         await dom.click(form.$('.o_field_many2manytags.avatar .badge:first .o_m2m_avatar'));
@@ -96,14 +81,16 @@ QUnit.module('mail', {}, function () {
     QUnit.test('many2many_avatar_user in kanban view', async function (assert) {
         assert.expect(4);
 
-        this.data['res.users'].records.push({ id: 15, name: "Tapu", partner_id: 11 },);
-        this.data['m2x.avatar.user'].records[2].user_ids = [11, 23, 7, 15];
+        const pyEnv = await startServer();
+        const resUsersIds = pyEnv['res.users'].create(
+            [{ name: "Mario" }, { name: "Yoshi" }, { name: "Luigi" }, { name: "Tapu" }],
+        );
+        pyEnv['m2x.avatar.user'].create({ user_ids: resUsersIds });
 
         const { widget: kanban } = await start({
             hasView: true,
             View: KanbanView,
             model: 'm2x.avatar.user',
-            data: this.data,
             arch: `
                 <kanban>
                     <templates>
@@ -123,12 +110,12 @@ QUnit.module('mail', {}, function () {
                 </kanban>`,
         });
 
-        assert.containsOnce(kanban, '.o_kanban_record:eq(2) .o_field_many2manytags .o_m2m_avatar_empty',
+        assert.containsOnce(kanban, '.o_kanban_record .o_field_many2manytags .o_m2m_avatar_empty',
             "should have o_m2m_avatar_empty span");
-        assert.strictEqual(kanban.$('.o_kanban_record:eq(2) .o_field_many2manytags .o_m2m_avatar_empty').text().trim(), "+2",
+        assert.strictEqual(kanban.$('.o_kanban_record .o_field_many2manytags .o_m2m_avatar_empty').text().trim(), "+2",
             "should have +2 in o_m2m_avatar_empty");
 
-        kanban.$('.o_kanban_record:eq(2) .o_field_many2manytags .o_m2m_avatar_empty').trigger($.Event('mouseenter'));
+        kanban.$('.o_kanban_record .o_field_many2manytags .o_m2m_avatar_empty').trigger($.Event('mouseenter'));
         await nextTick();
         assert.containsOnce(kanban, '.popover',
             "should open a popover hover on o_m2m_avatar_empty");
@@ -141,6 +128,11 @@ QUnit.module('mail', {}, function () {
     QUnit.test('many2one_avatar_user widget edited by the smart action "Assign to..."', async function (assert) {
         assert.expect(4);
 
+        const pyEnv = await startServer();
+        const [resUsersId1] = pyEnv['res.users'].create(
+            [{ name: "Mario" }, { name: "Luigi" }, { name: "Yoshi" }],
+        );
+        const m2xAvatarUserId1 = pyEnv['m2x.avatar.user'].create({ user_id: resUsersId1 });
         const legacyEnv = makeTestEnvironment({ bus: core.bus });
         const serviceRegistry = registry.category("services");
         serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
@@ -149,10 +141,9 @@ QUnit.module('mail', {}, function () {
             'm2x.avatar.user,false,form': '<form><field name="user_id" widget="many2one_avatar_user"/></form>',
             'm2x.avatar.user,false,search': '<search></search>',
         };
-        const serverData = { models: this.data, views };
-        const { widget: webClient } = await start({ hasWebClient: true, serverData });
+        const { widget: webClient } = await start({ hasWebClient: true, serverData: { views } });
         await doAction(webClient, {
-            res_id: 1,
+            res_id: m2xAvatarUserId1,
             type: 'ir.actions.act_window',
             target: 'current',
             res_model: 'm2x.avatar.user',
@@ -183,7 +174,10 @@ QUnit.module('mail', {}, function () {
     QUnit.test('many2one_avatar_user widget edited by the smart action "Assign to me"', async function (assert) {
         assert.expect(4);
 
-        patchWithCleanup(session, { user_id: [7] })
+        const pyEnv = await startServer();
+        const [resUsersId1, resUsersId2] = pyEnv['res.users'].create([{ name: "Mario" }, { name: "Luigi" }]);
+        const m2xAvatarUserId1 = pyEnv['m2x.avatar.user'].create({ user_id: resUsersId1 });
+        patchWithCleanup(session, { user_id: [resUsersId2] });
         const legacyEnv = makeTestEnvironment({ bus: core.bus });
         const serviceRegistry = registry.category("services");
         serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
@@ -192,10 +186,9 @@ QUnit.module('mail', {}, function () {
             'm2x.avatar.user,false,form': '<form><field name="user_id" widget="many2one_avatar_user"/></form>',
             'm2x.avatar.user,false,search': '<search></search>',
         };
-        const serverData = { models: this.data, views };
-        const { widget: webClient } = await start({ hasWebClient: true, serverData });
+        const { widget: webClient } = await start({ hasWebClient: true, serverData: { views } });
         await doAction(webClient, {
-            res_id: 1,
+            res_id: m2xAvatarUserId1,
             type: 'ir.actions.act_window',
             target: 'current',
             res_model: 'm2x.avatar.user',
@@ -224,6 +217,11 @@ QUnit.module('mail', {}, function () {
     QUnit.test('many2many_avatar_user widget edited by the smart action "Assign to..."', async function (assert) {
         assert.expect(4);
 
+        const pyEnv = await startServer();
+        const [resUsersId1, resUsersId2] = pyEnv['res.users'].create(
+            [{ name: "Mario" }, { name: "Yoshi" }, { name: "Luigi" }],
+        );
+        const m2xAvatarUserId1 = pyEnv['m2x.avatar.user'].create({ user_ids: [resUsersId1, resUsersId2] });
         const legacyEnv = makeTestEnvironment({ bus: core.bus });
         const serviceRegistry = registry.category("services");
         serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
@@ -232,10 +230,9 @@ QUnit.module('mail', {}, function () {
             'm2x.avatar.user,false,form': '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
             'm2x.avatar.user,false,search': '<search></search>',
         };
-        const serverData = { models: this.data, views };
-        const { widget: webClient } = await start({ hasWebClient: true, serverData });
+        const { widget: webClient } = await start({ hasWebClient: true, serverData: { views } });
         await doAction(webClient, {
-            res_id: 1,
+            res_id: m2xAvatarUserId1,
             type: 'ir.actions.act_window',
             target: 'current',
             res_model: 'm2x.avatar.user',
@@ -267,7 +264,12 @@ QUnit.module('mail', {}, function () {
     QUnit.test('many2many_avatar_user widget edited by the smart action "Assign to me"', async function (assert) {
         assert.expect(4);
 
-        patchWithCleanup(session, { user_id: [7] })
+        const pyEnv = await startServer();
+        const [resUsersId1, resUsersId2, resUsersId3] = pyEnv['res.users'].create(
+            [{ name: "Mario" }, { name: "Luigi" }, { name: "Yoshi" }],
+        );
+        const m2xAvatarUserId1 = pyEnv['m2x.avatar.user'].create({ user_ids: [resUsersId1, resUsersId3] });
+        patchWithCleanup(session, { user_id: [resUsersId2] });
         const legacyEnv = makeTestEnvironment({ bus: core.bus });
         const serviceRegistry = registry.category("services");
         serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
@@ -276,10 +278,9 @@ QUnit.module('mail', {}, function () {
             'm2x.avatar.user,false,form': '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
             'm2x.avatar.user,false,search': '<search></search>',
         };
-        const serverData = { models: this.data, views };
-        const { widget: webClient } = await start({ hasWebClient: true, serverData });
+        const { widget: webClient } = await start({ hasWebClient: true, serverData: { views } });
         await doAction(webClient, {
-            res_id: 1,
+            res_id: m2xAvatarUserId1,
             type: 'ir.actions.act_window',
             target: 'current',
             res_model: 'm2x.avatar.user',
@@ -312,17 +313,19 @@ QUnit.module('mail', {}, function () {
     QUnit.test('avatar_user widget displays the appropriate user image in list view', async function (assert) {
         assert.expect(1);
 
+        const pyEnv = await startServer();
+        const resUsersId1 = pyEnv['res.users'].create({ name: "Mario" });
+        const m2xAvatarUserId1 = pyEnv['m2x.avatar.user'].create({ user_id: resUsersId1 });
         const { widget: list } = await start({
             hasView: true,
             View: ListView,
             model: 'm2x.avatar.user',
-            data: this.data,
             arch: '<tree><field name="user_id" widget="many2one_avatar_user"/></tree>',
-            res_id: 1,
+            res_id: m2xAvatarUserId1,
         });
         assert.strictEqual(
             list.$('.o_m2o_avatar > img').data('src'),
-            '/web/image/res.users/11/avatar_128',
+            `/web/image/res.users/${resUsersId1}/avatar_128`,
             'Should have correct avatar image'
         );
         list.destroy();
@@ -331,11 +334,13 @@ QUnit.module('mail', {}, function () {
     QUnit.test('avatar_user widget displays the appropriate user image in kanban view', async function (assert) {
         assert.expect(1);
 
+        const pyEnv = await startServer();
+        const resUsersId1 = pyEnv['res.users'].create({ name: "Mario" });
+        const m2xAvatarUserId1 = pyEnv['m2x.avatar.user'].create({ user_id: resUsersId1 });
         const { widget: kanban } = await start({
             hasView: true,
             View: KanbanView,
             model: 'm2x.avatar.user',
-            data: this.data,
             arch: `<kanban>
                         <templates>
                             <t t-name="kanban-box">
@@ -345,11 +350,11 @@ QUnit.module('mail', {}, function () {
                             </t>
                         </templates>
                     </kanban>`,
-            res_id: 1,
+            res_id: m2xAvatarUserId1,
         });
         assert.strictEqual(
             kanban.$('.o_m2o_avatar > img').data('src'),
-            '/web/image/res.users/11/avatar_128',
+            `/web/image/res.users/${resUsersId1}/avatar_128`,
             'Should have correct avatar image'
         );
         kanban.destroy();
@@ -358,17 +363,19 @@ QUnit.module('mail', {}, function () {
     QUnit.test('avatar_user widget displays the appropriate user image in form view', async function (assert) {
         assert.expect(1);
 
+        const pyEnv = await startServer();
+        const resUsersId1 = pyEnv['res.users'].create({ name: "Mario" });
+        const m2xAvatarUserId1 = pyEnv['m2x.avatar.user'].create({ user_ids: [resUsersId1] });
         const { widget: form } = await start({
             hasView: true,
             View: FormView,
             model: 'm2x.avatar.user',
-            data: this.data,
             arch: '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
-            res_id: 1,
+            res_id: m2xAvatarUserId1,
         });
         assert.strictEqual(
             form.$('.o_field_many2manytags.avatar.o_field_widget .badge:first img').data('src'),
-            '/web/image/res.users/11/avatar_128',
+            `/web/image/res.users/${resUsersId1}/avatar_128`,
             'Should have correct avatar image'
         );
         form.destroy();
