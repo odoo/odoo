@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.RtcLayoutMenu" owl="1">
-        <div class="o_RtcLayoutMenu" t-attf-class="{{ className }}" t-ref="root">
-            <t t-if="layoutMenu">
-                <t t-if="layoutMenu and layoutMenu.callViewer.threadView.thread.videoCount > 0">
+        <t t-if="layoutMenu">
+            <div class="o_RtcLayoutMenu" t-attf-class="{{ className }}" t-ref="root">
+                <t t-if="layoutMenu.callViewer.threadView.thread.videoCount > 0">
                     <label class="o_RtcLayoutMenu_radio">
                         <div class="o_RtcLayoutMenu_radioInputContainer">
                             <input class="o_RtcLayoutMenu_radioInput" type="radio" name="filter" value="all" t-on-click="layoutMenu.onClickFilter" t-att-checked="!layoutMenu.callViewer.filterVideoGrid"/>
@@ -46,8 +46,8 @@
                         <t t-call="mail.RtcLayoutMenu_sidebarSvg"/>
                     </span>
                 </label>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
     <!-- TODO TEMPORARY ICONS -->
