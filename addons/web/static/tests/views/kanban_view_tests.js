@@ -8669,7 +8669,7 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getCardTexts(), ["yop", "blip", "gnap", "blip"]);
     });
 
-    QUnit.skipWOWL("click on image field in kanban with oe_kanban_global_click", async (assert) => {
+    QUnit.test("click on image field in kanban with oe_kanban_global_click", async (assert) => {
         assert.expect(2);
 
         await makeView({
@@ -8684,30 +8684,18 @@ QUnit.module("Views", (hooks) => {
                 "</div>" +
                 "</t></templates>" +
                 "</kanban>",
-            async mockRPC(route) {
-                if (route.startsWith("data:image")) {
-                    return true;
-                }
-            },
-            intercepts: {
-                switch_view: function (event) {
-                    assert.deepEqual(
-                        _.pick(event.data, "mode", "model", "res_id", "view_type"),
-                        {
-                            mode: "readonly",
-                            resModel: "partner",
-                            res_id: 1,
-                            view_type: "form",
-                        },
-                        "should trigger an event to open the clicked record in a form view"
-                    );
-                },
+            selectRecord(recordId) {
+                assert.equal(
+                    recordId,
+                    1,
+                    "should call its selectRecord prop with the clicked record"
+                );
             },
         });
 
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 4);
 
-        await click(target, ".o_field_image");
+        await click(target.querySelector(".o_field_image"));
     });
 
     QUnit.skipWOWL("kanban view with boolean field", async (assert) => {
