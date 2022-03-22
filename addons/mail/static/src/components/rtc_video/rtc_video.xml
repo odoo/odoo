@@ -2,14 +2,16 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.RtcVideo" owl="1">
-        <video class="o_RtcVideo"
-           t-attf-class="{{ className }}"
-           playsinline="true"
-           autoplay="true"
-           muted="true"
-           t-on-loadedmetadata="_onVideoLoadedMetaData"
-           t-ref="root"
-        />
+        <t t-if="rtcSession">
+            <video class="o_RtcVideo"
+                t-attf-class="{{ className }}"
+                playsinline="true"
+                autoplay="true"
+                muted="true"
+                t-on-loadedmetadata="_onVideoLoadedMetaData"
+                t-ref="root"
+            />
+        </t>
     </t>
 
 </templates>
