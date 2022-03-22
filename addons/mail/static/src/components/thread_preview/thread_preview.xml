@@ -46,10 +46,7 @@
                     <div class="o_ThreadPreview_core">
                         <span class="o_ThreadPreview_coreItem o_ThreadPreview_inlineText text-truncate" t-att-class="{ 'o-empty': inlineLastMessageBody.length === 0 }">
                             <t t-if="threadPreviewView.messageAuthorPrefixView">
-                                <MessageAuthorPrefix
-                                    localId="threadPreviewView.messageAuthorPrefixView.localId"
-                                    threadLocalId="threadPreviewView.thread.localId"
-                                />
+                                <MessageAuthorPrefix localId="threadPreviewView.messageAuthorPrefixView.localId"/>
                             </t>
                             <t t-esc="inlineLastMessageBody"/>
                         </span>
