@@ -703,9 +703,21 @@ class Picking(models.Model):
                     'message': partner.picking_warn_msg
                 }}
 
-    @api.onchange('location_id', 'location_dest_id')
+    @api.onchange('location_id', 'location_dest_id', 'picking_type_id')
     def _onchange_locations(self):
+<<<<<<< HEAD
         (self.move_ids | self.move_ids_without_package).update({
+=======
+        from_wh = self.location_id.warehouse_id
+        to_wh = self.location_dest_id.warehouse_id
+        if self.picking_type_id.code == 'internal' and from_wh and to_wh and from_wh != to_wh:
+            return {'warning': {
+                'title': _("Warning"),
+                'message': _("You should not use an internal transfer to move some products between two warehouses. "
+                             "Instead, use two pickings: a delivery from %s and a receipt to %s") % (from_wh.display_name, to_wh.display_name),
+            }}
+        (self.move_lines | self.move_ids_without_package).update({
+>>>>>>> bb09e58e7a5... temp
             "location_id": self.location_id,
             "location_dest_id": self.location_dest_id
         })
