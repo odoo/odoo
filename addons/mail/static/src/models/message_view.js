@@ -154,6 +154,23 @@ registerModel({
          * @private
          * @returns {boolean}
          */
+        _computeIsActive() {
+            return Boolean(
+                this.isHovered ||
+                this.isClicked ||
+                (
+                    this.messageActionList &&
+                    (
+                        this.messageActionList.reactionPopoverView ||
+                        this.messageActionList.deleteConfirmDialog
+                    )
+                )
+            );
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
         _computeIsSelected() {
             return Boolean(
                 this.threadView &&
@@ -239,6 +256,13 @@ registerModel({
          * id of the current timeout that will reset isHighlighted to false.
          */
         highlightTimeout: attr(),
+        /**
+         * Whether the message is "active", ie: hovered or clicked, and should
+         * display additional things (date in sidebar, message actions, etc.)
+         */
+        isActive: attr({
+            compute: '_computeIsActive',
+        }),
         /**
          * Determines whether the message is clicked. When message is in
          * clicked state, it keeps displaying actions even if not hovered.

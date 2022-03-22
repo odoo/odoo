@@ -74,29 +74,6 @@ export class Message extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Whether the message is "active", ie: hovered or clicked, and should
-     * display additional things (date in sidebar, message actions, etc.)
-     *
-     * @returns {boolean}
-     */
-    get isActive() {
-        return Boolean(
-            this.messageView &&
-            (
-                this.messageView.isHovered ||
-                this.messageView.isClicked ||
-                (
-                    this.messageView.messageActionList &&
-                    (
-                        this.messageView.messageActionList.reactionPopoverView ||
-                        this.messageView.messageActionList.deleteConfirmDialog
-                    )
-                )
-            )
-        );
-    }
-
-    /**
      * Tell whether the bottom of this message is visible or not.
      *
      * @param {Object} param0
