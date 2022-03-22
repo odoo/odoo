@@ -1844,13 +1844,13 @@ const Wysiwyg = Widget.extend({
                     // the DOM regeneration. Add markings instead, and returns a
                     // new rejection with all relevant info
                     var id = _.uniqueId('carlos_danger_');
-                    $el.addClass('o_dirty oe_carlos_danger ' + id);
+                    $el.addClass('o_dirty o_editable oe_carlos_danger ' + id);
                     $('.o_editable.' + id)
                         .removeClass(id)
                         .popover({
                             trigger: 'hover',
                             content: response.message.data.message || '',
-                            placement: 'auto top',
+                            placement: 'auto',
                         })
                         .popover('show');
                 });
@@ -1860,8 +1860,7 @@ const Wysiwyg = Widget.extend({
             window.onbeforeunload = null;
         }).guardedCatch((failed) => {
             // If there were errors, re-enable edition
-            this.cancel();
-            this.start();
+            this.cancel(false);
         });
     },
     // TODO unused => remove or reuse as it should be
