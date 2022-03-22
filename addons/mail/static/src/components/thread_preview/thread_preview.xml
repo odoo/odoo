@@ -2,12 +2,12 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ThreadPreview" owl="1">
-        <!--
-            The preview template is used by the discuss in mobile, and by the systray
-            menu in order to show preview of threads.
-        -->
-        <div class="o_ThreadPreview" t-att-class="{ 'o-muted': threadPreviewView and threadPreviewView.thread.localMessageUnreadCounter === 0 }" t-attf-class="{{ className }}" t-on-click="_onClick" t-att-data-thread-local-id="threadPreviewView ? threadPreviewView.thread.localId : undefined" t-ref="root">
-            <t t-if="threadPreviewView">
+        <t t-if="threadPreviewView">
+            <!--
+                The preview template is used by the discuss in mobile, and by the systray
+                menu in order to show preview of threads.
+            -->
+            <div class="o_ThreadPreview" t-att-class="{ 'o-muted': threadPreviewView.thread.localMessageUnreadCounter === 0 }" t-attf-class="{{ className }}" t-on-click="_onClick" t-att-data-thread-local-id="threadPreviewView.thread.localId" t-ref="root">
                 <div class="o_ThreadPreview_sidebar">
                     <div class="o_ThreadPreview_imageContainer o_ThreadPreview_sidebarItem">
                         <img class="o_ThreadPreview_image rounded-circle" t-att-src="image()" alt="Thread Image"/>
@@ -59,8 +59,8 @@
                         </t>
                     </div>
                 </div>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
 </templates>
