@@ -155,3 +155,44 @@ class TestDeliveryCost(common.TransactionCase):
         self.default_delivery_policy = self.SaleConfigSetting.create({})
 
         self.default_delivery_policy.execute()
+
+    def test_01_delivery_cost_from_pricelist(self):
+        """ This test aims to validate the use of a pricelist to compute the delivery cost in the case the associated
+            product of the shipping method is defined in the pricelist """
+
+        # Create pricelist with a custom price for the standard shipping method
+        my_pricelist = self.env['product.pricelist'].create({
+            'name': 'shipping_cost_change',
+            'item_ids': [(0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 5,
+                'applied_on': '0_product_variant',
+                'product_id': self.normal_delivery.product_id.id,
+            })],
+        })
+
+        # Create sales order with Normal Delivery Charges
+        sale_pricelist_based_delivery_charges = self.SaleOrder.create({
+            'partner_id': self.partner_18.id,
+            'pricelist_id': my_pricelist.id,
+            'order_line': [(0, 0, {
+                'name': 'PC Assamble + 2GB RAM',
+                'product_id': self.product_4.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_uom_unit.id,
+                'price_unit': 750.00,
+            })],
+        })
+
+        # Add of delivery cost in Sales order
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': sale_pricelist_based_delivery_charges.id,
+            'default_carrier_id': self.normal_delivery.id
+        }))
+        self.assertEqual(delivery_wizard.delivery_price, 5.0, "Delivery cost does not correspond to 5.0 in wizard")
+        delivery_wizard.save().button_confirm()
+
+        line = self.SaleOrderLine.search([('order_id', '=', sale_pricelist_based_delivery_charges.id),
+                                          ('product_id', '=', self.normal_delivery.product_id.id)])
+        self.assertEqual(len(line), 1, "Delivery cost hasn't been added to SO")
+        self.assertEqual(line.price_subtotal, 5.0, "Delivery cost does not correspond to 5.0")
