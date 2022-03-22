@@ -11,13 +11,6 @@ export class FollowerSubtype extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {Follower|undefined}
-     */
-    get follower() {
-        return this.messaging && this.messaging.models['Follower'].get(this.props.followerLocalId);
-    }
-
-    /**
      * @returns {FollowerSubtypeView}
      */
     get followerSubtypeView() {
@@ -36,19 +29,16 @@ export class FollowerSubtype extends Component {
      */
     _onChangeCheckbox(ev) {
         if (ev.target.checked) {
-            this.follower.selectSubtype(this.followerSubtypeView.subtype);
+            this.followerSubtypeView.follower.selectSubtype(this.followerSubtypeView.subtype);
         } else {
-            this.follower.unselectSubtype(this.followerSubtypeView.subtype);
+            this.followerSubtypeView.follower.unselectSubtype(this.followerSubtypeView.subtype);
         }
     }
 
 }
 
 Object.assign(FollowerSubtype, {
-    props: {
-        followerLocalId: String,
-        localId: String,
-    },
+    props: { localId: String },
     template: 'mail.FollowerSubtype',
 });
 
