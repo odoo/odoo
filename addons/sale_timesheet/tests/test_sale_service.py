@@ -599,3 +599,18 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         # copy the task
         task_copy = task.copy()
         self.assertEqual(task.sale_line_id, task_copy.sale_line_id, "Duplicatinga task should keep its Sale line")
+
+    def test_sol_product_type_update(self):
+        self.product_delivery_timesheet3.type = 'consu'
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': self.sale_order.id,
+            'name': self.product_delivery_timesheet3.name,
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 5,
+            'product_uom': self.product_delivery_timesheet3.uom_id.id,
+            'price_unit': self.product_delivery_timesheet3.list_price
+        })
+        self.assertFalse(sale_order_line.is_service, "As the product is consumable, the SOL should not be a service")
+
+        self.product_delivery_timesheet3.type = 'service'
+        self.assertTrue(sale_order_line.is_service, "As the product is a service, the SOL should be a service")
