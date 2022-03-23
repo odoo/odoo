@@ -171,3 +171,24 @@ class TestUsers2(TransactionCase):
         user.write({fname: group2.id})
         self.assertEqual(user.groups_id & groups, groups)
         self.assertEqual(user.read([fname])[0][fname], group2.id)
+
+    def test_read_group_with_reified_field(self):
+        """ Check that read_group gets rid of reified fields"""
+        User = self.env['res.users']
+        fnames = ['name', 'email', 'login']
+
+        # find some reified field name
+        reified_fname = next(
+            fname
+            for fname in User.fields_get()
+            if fname.startswith(('in_group_', 'sel_groups_'))
+        )
+
+        # check that the reified field name has no effect in fields
+        res_with_reified = User.read_group([], fnames + [reified_fname], ['company_id'])
+        res_without_reified = User.read_group([], fnames, ['company_id'])
+        self.assertEqual(res_with_reified, res_without_reified, "Reified fields should be ignored")
+
+        # Verify that the read_group is raising an error if reified field is used as groupby
+        with self.assertRaises(ValueError):
+            User.read_group([], fnames + [reified_fname], [reified_fname])
