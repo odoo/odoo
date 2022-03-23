@@ -118,6 +118,15 @@ class UserInputSession(http.Controller):
             template_values = self._prepare_manage_session_values(survey)
             template_values['is_rpc_call'] = True
 
+            if template_values["is_last_question"]:
+                template_values["next_page_status"] = "Closing Words"
+            else:
+                next_question_2x = survey._get_session_next_question(go_back)
+                if next_question_2x.is_page:
+                    template_values["next_page_status"] = "Next Section"
+                else:
+                    template_values["next_page_status"] = "Next Question"
+
             return {
                 'background_image_url': survey.session_question_id.background_image_url,
                 'question_html': request.env.ref('survey.user_input_session_manage_content')._render(template_values)

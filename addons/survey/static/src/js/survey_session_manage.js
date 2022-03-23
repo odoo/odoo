@@ -28,6 +28,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
     start: function () {
         var self = this;
         this.fadeInOutTime = 500;
+	this.$('[data-toggle="tooltip"]').tooltip({ delay: 0 });
         return this._super.apply(this, arguments).then(function () {
             // general survey props
             self.surveyId = self.$el.data('surveyId');
@@ -392,7 +393,8 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             self.$('.o_survey_session_close').click();
             self.$('.o_survey_session_results').addClass('d-none');
             self.$('.o_survey_session_description_done').prepend($("<h1>").text(_t('Thank you!'))).removeClass('d-none');
-        }
+        document.querySelector('#wrapwrap > main > div > div > a').style.display="none";
+	}
 
         // Background Management
         if (this.refreshBackground) {
