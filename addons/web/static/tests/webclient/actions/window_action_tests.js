@@ -55,7 +55,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
         ]);
     });
@@ -66,7 +66,7 @@ QUnit.module("ActionManager", (hooks) => {
             print: [{ name: "Print that record" }],
         };
         const mockRPC = async (route, args) => {
-            if (args && args.method === "load_views") {
+            if (args && args.method === "get_views") {
                 assert.strictEqual(
                     args.kwargs.options.toolbar,
                     true,
@@ -122,7 +122,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
             "/web/dataset/search_read",
             "/web/dataset/search_read",
@@ -176,7 +176,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "web_read_group",
             "/web/dataset/search_read",
             "/web/dataset/search_read",
@@ -679,7 +679,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
             "onchange",
             "/web/dataset/search_read",
@@ -737,7 +737,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
             "read",
             "object",
@@ -884,11 +884,11 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
             "read",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
         ]);
     });
@@ -935,10 +935,10 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "/web/dataset/call_kw/partner/load_views",
+            "/web/dataset/call_kw/partner/get_views",
             "/web/dataset/call_kw/partner/read",
             "/web/action/load",
-            "/web/dataset/call_kw/partner/load_views",
+            "/web/dataset/call_kw/partner/get_views",
             "/web/dataset/search_read",
         ]);
     });
@@ -1050,7 +1050,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
             "read",
             "/web/dataset/search_read",
@@ -1191,7 +1191,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "/web/dataset/call_kw/partner/load_views",
+            "/web/dataset/call_kw/partner/get_views",
             "/web/dataset/search_read",
             "/web/dataset/call_kw/partner/read",
             "/web/dataset/call_kw/partner/get_formview_id",
@@ -1416,7 +1416,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
         ]);
     });
@@ -1449,7 +1449,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "onchange",
         ]);
     });
@@ -1702,12 +1702,12 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
             "onchange",
             "get_formview_action",
             "create", // FIXME: to check with mcm
-            "load_views",
+            "get_views",
             "read",
             "read",
         ]);
@@ -1722,7 +1722,7 @@ QUnit.module("ActionManager", (hooks) => {
             print: [],
         };
         const mockRPC = async (route, args) => {
-            if (args && args.method === "load_views" && args.model === "partner") {
+            if (args && args.method === "get_views" && args.model === "partner") {
                 assert.strictEqual(
                     args.kwargs.options.toolbar,
                     true,
@@ -1992,7 +1992,7 @@ QUnit.module("ActionManager", (hooks) => {
             assert.verifySteps([
                 "/web/webclient/load_menus",
                 "/web/action/load",
-                "/web/dataset/call_kw/partner/load_views",
+                "/web/dataset/call_kw/partner/get_views",
                 "/web/dataset/call_kw/partner/read",
             ]);
             assert.containsN(target, ".o_form_buttons_view button:not([disabled])", 2);
@@ -2365,7 +2365,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.test("action and load_views rpcs are cached", async function (assert) {
+    QUnit.test("action and get_views rpcs are cached", async function (assert) {
         const mockRPC = async (route, args) => {
             assert.step(args.method || route);
         };
@@ -2374,7 +2374,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         await doAction(webClient, 1);
         assert.containsOnce(target, ".o_kanban_view");
-        assert.verifySteps(["/web/action/load", "load_views", "/web/dataset/search_read"]);
+        assert.verifySteps(["/web/action/load", "get_views", "/web/dataset/search_read"]);
 
         await doAction(webClient, 1);
         assert.containsOnce(target, ".o_kanban_view");

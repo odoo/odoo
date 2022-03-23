@@ -3,7 +3,7 @@
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { getFixture, mount } from "@web/../tests/helpers/utils";
 import { getDefaultConfig, View } from "@web/views/view";
-import { _fieldsViewGet } from "../helpers/mock_server";
+import { _getView } from "../helpers/mock_server";
 import { addLegacyMockEnvironment } from "../webclient/helpers";
 
 /**
@@ -46,15 +46,14 @@ export const makeView = async (params) => {
                 props.fields[fieldName].name = fieldName;
             }
         }
-        const fvg = _fieldsViewGet({
+        const view = _getView({
             arch: props.arch,
             modelName: props.resModel,
             fields: props.fields,
             context: props.context || {},
             models: serverData.models,
         });
-        props.arch = fvg.arch;
-        props.fields = Object.assign({}, props.fields, fvg.fields);
+        props.arch = view.arch;
         props.searchViewArch = props.searchViewArch || "<search/>";
         props.searchViewFields = props.searchViewFields || Object.assign({}, props.fields);
     }

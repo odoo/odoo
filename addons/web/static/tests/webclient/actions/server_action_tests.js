@@ -32,7 +32,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/action/load",
             "/web/action/run",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
         ]);
     });
@@ -62,7 +62,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "onchange",
             "/web/action/load",
             "/web/action/run",

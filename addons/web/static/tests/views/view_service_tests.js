@@ -20,16 +20,29 @@ QUnit.module("View service", (hooks) => {
             },
         };
 
+        const fakeUiService = {
+            start(env) {
+                Object.defineProperty(env, "isSmall", {
+                    get() {
+                        return false;
+                    },
+                });
+            },
+        };
         serverData = { models, views };
-        registry.category("services").add("views", viewService).add("orm", ormService);
+        registry
+            .category("services")
+            .add("views", viewService)
+            .add("orm", ormService)
+            .add("ui", fakeUiService);
     });
 
     QUnit.test("stores calls in cache in success", async (assert) => {
         assert.expect(2);
 
         const mockRPC = (route, args) => {
-            if (route.includes("load_views")) {
-                assert.step("load_views");
+            if (route.includes("get_views")) {
+                assert.step("get_views");
             }
         };
 
@@ -51,15 +64,15 @@ QUnit.module("View service", (hooks) => {
             {}
         );
 
-        assert.verifySteps(["load_views"]);
+        assert.verifySteps(["get_views"]);
     });
 
     QUnit.test("stores calls in cache when failed", async (assert) => {
         assert.expect(5);
 
         const mockRPC = (route, args) => {
-            if (route.includes("load_views")) {
-                assert.step("load_views");
+            if (route.includes("get_views")) {
+                assert.step("get_views");
                 return Promise.reject("my little error");
             }
         };
@@ -91,6 +104,6 @@ QUnit.module("View service", (hooks) => {
             assert.strictEqual(error, "my little error");
         }
 
-        assert.verifySteps(["load_views", "load_views"]);
+        assert.verifySteps(["get_views", "get_views"]);
     });
 });

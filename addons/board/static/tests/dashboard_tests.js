@@ -365,7 +365,7 @@ odoo.define("board.dashboard_tests", function (require) {
                         ],
                     });
                 }
-                if (args.method === "load_views") {
+                if (args.method === "get_views") {
                     assert.deepEqual(
                         args.kwargs.context,
                         { a: 1, b: 2 },
@@ -656,8 +656,8 @@ odoo.define("board.dashboard_tests", function (require) {
                 "</board>" +
                 "</form>",
             intercepts: {
-                load_views: function () {
-                    throw new Error("load_views should not be called");
+                get_views: function () {
+                    throw new Error("get_views should not be called");
                 },
             },
             mockRPC: function (route) {
@@ -1048,7 +1048,7 @@ odoo.define("board.dashboard_tests", function (require) {
                 "</board>" +
                 "</form>",
             mockRPC: function (route, args) {
-                if (args.method === "load_views") {
+                if (args.method === "get_views") {
                     assert.deepEqual(
                         pyUtils.eval("context", args.kwargs.context),
                         { lang: "fr_FR" },

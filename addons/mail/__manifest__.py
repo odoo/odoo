@@ -99,6 +99,7 @@
             'web/static/src/legacy/js/services/data_manager.js',
             'web/static/src/legacy/js/services/session.js',
             'web/static/src/legacy/js/widgets/date_picker.js',
+            'web/static/src/legacy/legacy_load_views.js',
             'web/static/src/legacy/legacy_promise_error_handler.js',
             'web/static/src/legacy/legacy_rpc_error_handler.js',
             'web/static/src/legacy/utils.js',

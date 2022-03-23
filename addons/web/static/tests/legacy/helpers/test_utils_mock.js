@@ -23,6 +23,7 @@ const MockServer = require('web.MockServer');
 const RamStorage = require('web.RamStorage');
 const session = require('web.session');
 const { patchDate } = require("@web/../tests/helpers/utils");
+const { processArch } = require("@web/legacy/legacy_load_views");
 
 const { Component } = owl;
 const DebouncedField = basic_fields.DebouncedField;
@@ -80,11 +81,11 @@ async function _getMockedOwlEnv(params, mockServer) {
                         options: options,
                         views: params.views_descr,
                     },
-                    method: 'load_views',
+                    method: 'get_views',
                     model: params.model,
                 }).then(function (views) {
                     views = _.mapObject(views, viewParams => {
-                        return fieldsViewGet(mockServer, viewParams);
+                        return getView(mockServer, viewParams);
                     });
                     if (favoriteFilters && 'search' in views) {
                         views.search.favoriteFilters = favoriteFilters;
@@ -247,7 +248,7 @@ function _observe(widget) {
 //------------------------------------------------------------------------------
 
 /**
- * performs a fields_view_get, and mocks the postprocessing done by the
+ * performs a get_view, and mocks the postprocessing done by the
  * data_manager to return an equivalent structure.
  *
  * @param {MockServer} server
@@ -255,12 +256,24 @@ function _observe(widget) {
  * @param {string} params.model
  * @returns {Object} an object with 3 keys: arch, fields and viewFields
  */
-function fieldsViewGet(server, params) {
-    var fieldsView = server.fieldsViewGet(params);
+function getView(server, params) {
+    var view = server.getView(params);
+    const fields = server.fieldsGet(params.model);
     // mock the structure produced by the DataManager
-    fieldsView.viewFields = fieldsView.fields;
-    fieldsView.fields = server.fieldsGet(params.model);
-    return fieldsView;
+    const models = { [params.model]: fields };
+    for (const modelName of view.models) {
+        models[modelName] = models[modelName] || server.fieldsGet(modelName);
+    }
+    const { arch, viewFields } = processArch(view.arch, view.type, params.model, models);
+    return {
+        arch,
+        fields,
+        model: view.model,
+        toolbar: view.toolbar,
+        type: view.type,
+        viewFields,
+        view_id: view.id,
+    };
 }
 
 /**
@@ -681,7 +694,7 @@ function patchSetTimeout() {
 
 return {
     addMockEnvironment: addMockEnvironment,
-    fieldsViewGet: fieldsViewGet,
+    getView: getView,
     addMockEnvironmentOwl: addMockEnvironmentOwl,
     intercept: intercept,
     patchDate: legacyPatchDate,
