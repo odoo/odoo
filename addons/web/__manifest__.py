@@ -39,7 +39,6 @@ This module provides the core of the Odoo Web Client.
         #   > web_editor.assets_wysiwyg = assets needed by components defined in the "web_editor" module.
 
         'web.assets_qweb': [
-            'web/static/src/core/dropdown/dropdown_item.xml',
             'web/static/src/**/*.xml',
             ('remove', 'web/static/src/legacy/**/*.xml'),
             'web/static/src/legacy/xml/base.xml',

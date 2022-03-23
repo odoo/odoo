@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- WOWL FIXME: this file has been named dropdown_item_checkbox instead of checkbox_dropdown_item so that it appears after the template that it inherits from so as not to crash. Ideally, we should determine load order in a way that is not this brittle and doesn't require adding a special order in the manifest before using a glob -->
+<templates xml:space="preserve">
+    <t t-debug="pdb" t-name="web.CheckBoxDropdownItem" t-inherit="web.DropdownItem" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-slot='default']" position="replace">
+            <CheckBox
+             onChange="props.onSelected"
+             disabled="props.disabled"
+             value="props.value"
+             >
+                <t t-slot="default"/>
+            </CheckBox>
+        </xpath>
+    </t>
+
+</templates>
