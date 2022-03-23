@@ -5,7 +5,7 @@
         <ul name="contact_details" position="inside">
             <t t-set="renter_sponsor" t-value="booth.sponsor_id"/>
             <li t-if="renter_sponsor">
-                <b>Sponsor</b>: <a href="#" t-att-data-oe-model="booth.sponsor_id._name" t-att-data-oe-id="booth.sponsor_id.id" t-esc="booth.sponsor_id.name"/>
+                <b>Sponsor</b>: <a href="#" t-att-data-oe-model="booth.sponsor_id._name" t-att-data-oe-id="booth.sponsor_id.id" t-out="booth.sponsor_id.name"/>
             </li>
         </ul>
     </template>

@@ -23,7 +23,7 @@
             t-att-data-question-id="question['id']" t-att-data-title="question['name']" >
             <div class="row d-flex mb-2 mx-0">
                 <div class="h4">
-                    <span t-esc="question['name']"/>
+                    <span t-out="question['name']"/>
                 </div>
             </div>
             <div class="list-group">
@@ -41,7 +41,7 @@
                             <i class="fa fa-times-circle text-danger d-none"></i>
                             <i t-att-class="'fa fa-check-circle text-success %s' % ('d-none' if not (quiz_completed and answer['is_correct']) else '')"></i>
                         </label>
-                        <span t-esc="answer['text_value']"/>
+                        <span t-out="answer['text_value']"/>
                     </a>
                 </t>
             </div>

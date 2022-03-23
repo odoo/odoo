@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import base64
+from datetime import time
 import logging
 import re
 from io import BytesIO
@@ -515,6 +516,32 @@ class FloatTimeConverter(models.AbstractModel):
     @api.model
     def value_to_html(self, value, options):
         return format_duration(value)
+
+
+class TimeConverter(models.AbstractModel):
+    """ ``time`` converter, to display integer or fractional value as
+    human-readable time (e.g. 1.5 as "1:30 AM"). The unit of this value
+    is in hours.
+
+    Can be used on any numerical field between: 0 <= value < 24
+    """
+    _name = 'ir.qweb.field.time'
+    _description = 'QWeb Field Time'
+    _inherit = 'ir.qweb.field'
+
+    @api.model
+    def value_to_html(self, value, options):
+        if value < 0:
+            raise ValueError(_("The value (%s) passed should be positive", value))
+        hours, minutes = divmod(int(abs(value) * 60), 60)
+        if hours > 23:
+            raise ValueError(_("The hour must be between 0 and 23"))
+        t = time(hour=hours, minute=minutes)
+
+        locale = babel_locale_parse(self.user_lang().code)
+        pattern = options.get('format', 'short')
+
+        return babel.dates.format_time(t, format=pattern, tzinfo=None, locale=locale)
 
 
 class DurationConverter(models.AbstractModel):

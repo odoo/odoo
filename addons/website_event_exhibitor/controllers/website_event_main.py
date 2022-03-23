@@ -15,7 +15,7 @@ class WebsiteEventController(main.WebsiteEventController):
         if "from_sponsor_id" in post and not event.is_ongoing:
             sponsor = request.env["event.sponsor"].browse(int(post["from_sponsor_id"])).exists()
             if sponsor:
-                date_begin = format_datetime(event.with_context(tz=event.date_tz).date_begin, format="medium")
+                date_begin = format_datetime(event.date_begin, format="medium", tzinfo=event.date_tz)
 
                 values["toast_message"] = (
                     _('The event %s starts on %s (%s). \nJoin us there to meet %s !')

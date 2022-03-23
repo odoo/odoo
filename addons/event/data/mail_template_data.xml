@@ -126,7 +126,7 @@
                             <td style="padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;">
                                 <div><strong>From</strong> <t t-out="object.event_id.date_begin_located or ''">May 4, 2021, 7:00:00 AM</t></div>
                                 <div><strong>To</strong> <t t-out="object.event_id.date_end_located or ''">May 6, 2021, 5:00:00 PM</t></div>
-                                <div style="font-size:12px;color:#9e9e9e"><i><strong>TZ</strong> <t t-out="object.event_id.date_tz or ''">Europe/Brussels</t></i></div>
+                                <div style="font-size:12px;color:#9e9e9e"><i>(<t t-out="object.event_id.date_tz or ''">Europe/Brussels</t>)</i></div>
                             </td>
                             <td style="vertical-align:top;">
                                 <t t-if="event_address">
@@ -353,7 +353,7 @@
                             <td style="padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;">
                                 <div><strong>From</strong> <t t-out="object.event_id.date_begin_located or ''">May 4, 2021, 7:00:00 AM</t></div>
                                 <div><strong>To</strong> <t t-out="object.event_id.date_end_located or ''">May 6, 2021, 5:00:00 PM</t></div>
-                                <div style="font-size:12px;color:#9e9e9e"><i><strong>TZ</strong> <t t-out="object.event_id.date_tz or ''">Europe/Brussels</t></i></div>
+                                <div style="font-size:12px;color:#9e9e9e"><i><t t-out="object.event_id.date_tz or ''">Europe/Brussels</t></i></div>
                             </td>
                             <td style="vertical-align:top;">
                                 <t t-if="event_address">

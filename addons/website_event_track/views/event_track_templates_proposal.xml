@@ -7,7 +7,7 @@
         <div class="container">
             <section class="pt48">
                 <h1 class="o_page_header">Call for Proposals</h1>
-                <h2 class="text-center text-secondary font-weight-bold my-4" t-esc="event.name"/>
+                <h2 class="text-center text-secondary font-weight-bold my-4" t-out="event.name"/>
             </section>
             <section id="forms" t-if="not event.website_track_proposal">
                 <h1>Proposals are closed!</h1>
