@@ -2,6 +2,7 @@
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
@@ -9,6 +10,9 @@ import { standardFieldProps } from "./standard_field_props";
 const { Component } = owl;
 
 export class StateSelectionField extends Component {
+    setup() {
+        this.initiateCommand(); //TODO only if view === form
+    }
     get colorClass() {
         if (this.currentValue === "blocked") {
             return "o_status_red";
@@ -24,6 +28,33 @@ export class StateSelectionField extends Component {
         return this.props.options.find((o) => o[0] === this.currentValue)[1];
     }
 
+    initiateCommand() {
+        try {
+            const commandService = useService("command");
+            const provide = () => {
+                return this.props.options.map((value) => ({
+                    name: value[1],
+                    action: () => {
+                        this.props.update(value[0]);
+                    },
+                }));
+            };
+            const name = this.env._t("Set kanban state...");
+            const action = () => {
+                return commandService.openPalette({
+                    placeholder: this.env._t("Set a kanban state..."),
+                    providers: [{ provide }],
+                });
+            };
+            const options = {
+                category: "smart_action",
+                hotkey: "alt+shift+r",
+            };
+            commandService.add(name, action, options);
+        } catch {
+            console.log("Could not add command to service");
+        }
+    }
     /**
      * @param {Event} ev
      */

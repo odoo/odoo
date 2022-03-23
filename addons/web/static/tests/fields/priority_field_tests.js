@@ -206,6 +206,8 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
+        serviceRegistry.add("command", commandService);
+
         setupViewRegistries();
     });
 
