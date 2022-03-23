@@ -57,6 +57,7 @@
 
 .o_configurator_container {
     @include o-position-absolute(0, 0, 0, 0);
+    background-color: $white;
 
     .o_configurator_screen {
 
@@ -167,6 +168,7 @@
                     border: none;
                     border-bottom: 3px solid theme-color(primary);
                     color: theme-color(primary);
+                    background-color: inherit;
 
                     &:focus {
                         color: inherit;
@@ -178,6 +180,7 @@
                     content: attr(data-value) '|';
                     display: inline-block;
                     overflow: hidden;
+                    opacity: 0;
                 }
             }
 
@@ -211,6 +214,7 @@
                 @include border-bottom-radius($border-radius);
                 font-size: inherit;
                 min-width: 100%;
+                overflow-y: auto;
             }
 
             .dropdown-item, .fa-angle-down, .ui-menu-item a, .ui-menu-item a.ui-state-active {
@@ -252,6 +256,31 @@
         }
 
         &.o_palette_selection_screen {
+            @include media-breakpoint-down(md) {
+                .o_detect_logo {
+                    width: 100% !important;
+                }
+
+                .o_content_container {
+                    height: 100% !important;
+                    flex-direction: column !important;
+                }
+
+                .o_palettes_separator {
+                    width: 100% !important;
+                }
+
+                .o_palettes_container {
+                    width: 100% !important;
+                }
+            }
+
+            @include media-breakpoint-down(sm) {
+                .o_palette_card_container {
+                    width: 50% !important;
+                }
+            }
+
             .palette_card {
                 cursor: pointer;
                 box-shadow: 0 0 0 1px gray('200');
@@ -295,6 +324,18 @@
         }
 
         &.o_feature_selection_screen {
+            @include media-breakpoint-down(md) {
+                .o_feature_card_container {
+                    width: 50% !important;
+                }
+            }
+
+            @include media-breakpoint-down(sm) {
+                .o_feature_card_container {
+                    width: 100% !important;
+                }
+            }
+
             .card {
                 cursor: pointer;
 
