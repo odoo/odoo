@@ -489,6 +489,18 @@ class ResPartner(models.Model):
             company = self.env.company
         return {'domain': {'property_account_position_id': [('company_id', 'in', [company.id, False])]}}
 
+    @api.onchange('parent_id')
+    def onchange_parent_id(self):
+        result = super().onchange_parent_id()
+        if self.sudo()._origin.journal_item_count:
+            result['warning'] = {
+                'title': _('Warning'),
+                'message': _('Setting a company for a contact who has some moves '
+                             'could lead to unintended behaviour, you should '
+                             'create a new contact under the company instead. '
+                             'You can use the "Discard" button to abandon this change.')}
+        return result
+
     def can_edit_vat(self):
         ''' Can't edit `vat` if there is (non draft) issued invoices. '''
         can_edit_vat = super(ResPartner, self).can_edit_vat()
