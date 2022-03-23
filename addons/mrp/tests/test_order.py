@@ -2141,7 +2141,7 @@ class TestMrpOrder(TestMrpCommon):
         mo.bom_id = bom
         mo = mo.save()
 
-        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["pending", "pending"])
+        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["waiting", "waiting"])
 
         mo.action_confirm()
         mo.action_assign()

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv.expression import AND, NEGATIVE_TERM_OPERATORS
 from odoo.tools import float_round
@@ -80,6 +80,9 @@ class MrpBom(models.Model):
     possible_product_template_attribute_value_ids = fields.Many2many(
         'product.template.attribute.value',
         compute='_compute_possible_product_template_attribute_value_ids')
+    allow_operation_dependencies = fields.Boolean('Operation Dependencies',
+        help="Create operation level dependencies that will influence both planning and the status of work orders upon MO confirmation. If this feature is ticked, and nothing is specified, Odoo will assume that all operations can be started simultaneously."
+    )
 
     _sql_constraints = [
         ('qty_positive', 'check (product_qty > 0)', 'The quantity to produce must be positive!'),
@@ -177,11 +180,21 @@ class MrpBom(models.Model):
 
     def copy(self, default=None):
         res = super().copy(default)
-        for bom_line in res.bom_line_ids:
-            if bom_line.operation_id:
-                operation = res.operation_ids.filtered(lambda op: op._get_comparison_values() == bom_line.operation_id._get_comparison_values())
-                # Two operations could have the same values so we take the first one
-                bom_line.operation_id = operation[:1]
+        if self.operation_ids:
+            operations_mapping = {}
+            for original, copied in zip(self.operation_ids, res.operation_ids.sorted()):
+                operations_mapping[original] = copied
+            for bom_line in res.bom_line_ids:
+                if bom_line.operation_id:
+                    bom_line.operation_id = operations_mapping[bom_line.operation_id]
+            for operation in self.operation_ids:
+                if operation.blocked_by_operation_ids:
+                    copied_operation = operations_mapping[operation]
+                    dependencies = []
+                    for dependency in operation.blocked_by_operation_ids:
+                        dependencies.append(Command.link(operations_mapping[dependency].id))
+                    copied_operation.blocked_by_operation_ids = dependencies
+
         return res
 
     @api.model
