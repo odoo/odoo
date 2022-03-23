@@ -1049,6 +1049,12 @@ class WebsiteSale(http.Controller):
             })
         }
 
+    def validate_transaction_for_order(self, transaction, sale_order):
+        """
+        Override me to apply payment unrelated checks & processing
+        """
+        return
+
     @http.route('/shop/payment/validate', type='http', auth="public", website=True, sitemap=False)
     def shop_payment_validate(self, transaction_id=None, sale_order_id=None, **post):
         """ Method that should be called by the server when receiving an update
@@ -1082,6 +1088,7 @@ class WebsiteSale(http.Controller):
         if tx and tx.state == 'draft':
             return request.redirect('/shop')
 
+        self.validate_transaction_for_order(tx, order)
         PaymentPostProcessing.remove_transactions(tx)
         return request.redirect('/shop/confirmation')
 

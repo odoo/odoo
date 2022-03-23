@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website.sale.onsite</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website_sale.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='onsite_payment_setting']/div[hasclass('o_setting_right_pane')]" position="inside">
+                <div class="content-group">
+                    <field name="default_picking_product_id" invisible="1"/>
+                    <label class="col-lg-3" string="Picking sites" for="picking_site_ids"/>
+                    <field name="picking_site_ids" domain="[('delivery_type', '=', 'onsite')]" widget="many2many_tags"
+                           context="{'default_website_id': website_id, 'default_product_id': default_picking_product_id, 'default_delivery_type': 'onsite'}"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

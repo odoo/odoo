@@ -29,6 +29,7 @@ class ResConfigSettings(models.TransientModel):
     module_website_sale_comparison = fields.Boolean("Product Comparison Tool")
     module_website_sale_gift_card = fields.Boolean("Gift Card")
     module_account = fields.Boolean("Invoicing")
+    module_website_sale_picking = fields.Boolean('On Site Payments & Picking')
 
     cart_recovery_mail_template = fields.Many2one('mail.template', string='Cart Recovery Email', domain="[('model', '=', 'sale.order')]",
                                                   related='website_id.cart_recovery_mail_template_id', readonly=False)
