@@ -408,52 +408,52 @@ registerModel({
          * considered together.
          */
         setFirstSuggestionActive() {
-            const suggestedRecords = this.mainSuggestions.map(suggestion => suggestion.record).concat(this.extraSuggestedRecords);
-            const firstRecord = suggestedRecords[0];
-            this.update({ activeSuggestedRecord: link(firstRecord) });
+            const suggestions = this.mainSuggestions.concat(this.extraSuggestions);
+            const firstSuggestion = suggestions[0];
+            this.update({ activeSuggestedRecord: link(firstSuggestion.record) });
         },
         /**
          * Sets the last suggestion as active. Main and extra records are
          * considered together.
          */
         setLastSuggestionActive() {
-            const suggestedRecords = this.mainSuggestions.map(suggestion => suggestion.record).concat(this.extraSuggestedRecords);
-            const { length, [length - 1]: lastRecord } = suggestedRecords;
-            this.update({ activeSuggestedRecord: link(lastRecord) });
+            const suggestions = this.mainSuggestions.concat(this.extraSuggestions);
+            const { length, [length - 1]: lastSuggestion } = suggestions;
+            this.update({ activeSuggestedRecord: link(lastSuggestion.record) });
         },
         /**
          * Sets the next suggestion as active. Main and extra records are
          * considered together.
          */
         setNextSuggestionActive() {
-            const suggestedRecords = this.mainSuggestions.map(suggestion => suggestion.record).concat(this.extraSuggestedRecords);
-            const activeElementIndex = suggestedRecords.findIndex(
-                suggestion => suggestion === this.activeSuggestedRecord
+            const suggestions = this.mainSuggestions.concat(this.extraSuggestions);
+            const activeElementIndex = suggestions.findIndex(
+                suggestion => suggestion.record === this.activeSuggestedRecord
             );
-            if (activeElementIndex === suggestedRecords.length - 1) {
+            if (activeElementIndex === suggestions.length - 1) {
                 // loop when reaching the end of the list
                 this.setFirstSuggestionActive();
                 return;
             }
-            const nextRecord = suggestedRecords[activeElementIndex + 1];
-            this.update({ activeSuggestedRecord: link(nextRecord) });
+            const nextSuggestion = suggestions[activeElementIndex + 1];
+            this.update({ activeSuggestedRecord: link(nextSuggestion.record) });
         },
         /**
          * Sets the previous suggestion as active. Main and extra records are
          * considered together.
          */
         setPreviousSuggestionActive() {
-            const suggestedRecords = this.mainSuggestions.map(suggestion => suggestion.record).concat(this.extraSuggestedRecords);
-            const activeElementIndex = suggestedRecords.findIndex(
-                suggestion => suggestion === this.activeSuggestedRecord
+            const suggestions = this.mainSuggestions.concat(this.extraSuggestions);
+            const activeElementIndex = suggestions.findIndex(
+                suggestion => suggestion.record === this.activeSuggestedRecord
             );
             if (activeElementIndex === 0) {
                 // loop when reaching the start of the list
                 this.setLastSuggestionActive();
                 return;
             }
-            const previousRecord = suggestedRecords[activeElementIndex - 1];
-            this.update({ activeSuggestedRecord: link(previousRecord) });
+            const previousSuggestion = suggestions[activeElementIndex - 1];
+            this.update({ activeSuggestedRecord: link(previousSuggestion.record) });
         },
         /**
          * Update a posted message when the message is ready.
@@ -496,19 +496,19 @@ registerModel({
         _computeActiveSuggestedRecord() {
             if (
                 this.mainSuggestions.length === 0 &&
-                this.extraSuggestedRecords.length === 0
+                this.extraSuggestions.length === 0
             ) {
                 return unlink();
             }
             if (
                 this.mainSuggestions.map(suggestion => suggestion.record).includes(this.activeSuggestedRecord) ||
-                this.extraSuggestedRecords.includes(this.activeSuggestedRecord)
+                this.extraSuggestions.map(suggestion => suggestion.record).includes(this.activeSuggestedRecord)
             ) {
                 return;
             }
-            const suggestedRecords = this.mainSuggestions.map(suggestion => suggestion.record).concat(this.extraSuggestedRecords);
-            const firstRecord = suggestedRecords[0];
-            return link(firstRecord);
+            const suggestions = this.mainSuggestions.concat(this.extraSuggestions);
+            const firstSuggestion = suggestions[0];
+            return link(firstSuggestion.record);
         },
         /**
          * @private
@@ -556,18 +556,18 @@ registerModel({
             return '/web/static/img/user_menu_avatar.png';
         },
         /**
-         * Clears the extra suggested record on closing mentions, and ensures
+         * Clears the extra suggestions on closing mentions, and ensures
          * the extra list does not contain any element already present in the
          * main list, which is a requirement for the navigation process.
          *
          * @private
-         * @returns {Record[]}
+         * @returns {FieldCommand}
          */
-        _computeExtraSuggestedRecords() {
+        _computeExtraSuggestions() {
             if (this.suggestionDelimiterPosition === undefined) {
                 return clear();
             }
-            return unlink(this.mainSuggestions.map(suggestion => suggestion.record));
+            return unlink(this.mainSuggestions);
         },
         /**
          * @private
@@ -607,7 +607,7 @@ registerModel({
          * @return {boolean}
          */
         _computeHasSuggestions() {
-            return this.mainSuggestions.length > 0 || this.extraSuggestedRecords.length > 0;
+            return this.mainSuggestions.length > 0 || this.extraSuggestions.length > 0;
         },
         /**
          * @private
@@ -986,7 +986,20 @@ registerModel({
             mainSuggestedRecords.length = Math.min(mainSuggestedRecords.length, limit);
             extraSuggestedRecords.length = Math.min(extraSuggestedRecords.length, limit - mainSuggestedRecords.length);
             this.update({
-                extraSuggestedRecords: replace(extraSuggestedRecords),
+                extraSuggestions: insertAndReplace(
+                    extraSuggestedRecords.map(record => {
+                        switch (record.constructor.name) {
+                            case 'CannedResponse':
+                                return { cannedResponse: replace(record) };
+                            case 'ChannelCommand':
+                                return { channelCommand: replace(record) };
+                            case 'Partner':
+                                return { partner: replace(record) };
+                            case 'Thread':
+                                return { thread: replace(record) };
+                        }
+                    }),
+                ),
                 hasToScrollToActiveSuggestion: true,
                 mainSuggestions: insertAndReplace(
                     mainSuggestedRecords.map(record => {
@@ -1064,13 +1077,12 @@ registerModel({
             isCausal: true,
         }),
         /**
-         * Determines the extra records that are currently suggested.
-         * Allows to have different model types of mentions through a dynamic
-         * process. 2 arbitrary lists can be provided and the second is defined
-         * as "extra".
+         * Determines the extra suggestions.
          */
-        extraSuggestedRecords: many('Record', {
-            compute: '_computeExtraSuggestedRecords',
+        extraSuggestions: many('ComposerSuggestion', {
+            compute: '_computeExtraSuggestions',
+            inverse: 'composerViewOwnerAsExtraSuggestion',
+            isCausal: true,
         }),
         fileUploader: one('FileUploader', {
             default: insertAndReplace(),
