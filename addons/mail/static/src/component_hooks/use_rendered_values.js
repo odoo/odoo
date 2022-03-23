@@ -26,7 +26,7 @@ export function useRenderedValues(selector) {
         modelManager.startListening(listener);
         renderedValues = selector();
         modelManager.stopListening(listener);
-    })
+    });
     onMounted(onUpdate);
     onPatched(onUpdate);
     function onUpdate() {
