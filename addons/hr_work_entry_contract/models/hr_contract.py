@@ -179,6 +179,7 @@ class HrContract(models.Model):
         return contract_vals
 
     def _generate_work_entries(self, date_start, date_stop, force=False):
+        self = self.with_context(tracking_disable=True)
         canceled_contracts = self.filtered(lambda c: c.state == 'cancel')
         if canceled_contracts:
             raise UserError(
