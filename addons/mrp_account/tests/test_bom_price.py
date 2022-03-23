@@ -110,7 +110,7 @@ class TestBomPrice(common.TransactionCase):
         workcenter_from1 = Form(self.env['mrp.workcenter'])
         workcenter_from1.name = 'Workcenter'
         workcenter_from1.time_efficiency = 100
-        workcenter_from1.capacity = 2
+        workcenter_from1.default_capacity = 2
         workcenter_from1.oee_target = 100
         workcenter_from1.time_start = 0
         workcenter_from1.time_stop = 0

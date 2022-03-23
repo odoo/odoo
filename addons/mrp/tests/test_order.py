@@ -2673,7 +2673,7 @@ class TestMrpOrder(TestMrpCommon):
         """
         workcenter_1 = self.env['mrp.workcenter'].create({
             'name': 'wc1',
-            'capacity': 2,
+            'default_capacity': 2,
             'time_start': 1,
             'time_stop': 1,
             'time_efficiency': 100,
@@ -2681,7 +2681,7 @@ class TestMrpOrder(TestMrpCommon):
 
         workcenter_2 = self.env['mrp.workcenter'].create({
             'name': 'wc2',
-            'capacity': 2,
+            'default_capacity': 2,
             'time_start': 10,
             'time_stop': 5,
             'time_efficiency': 100,
@@ -2725,7 +2725,7 @@ class TestMrpOrder(TestMrpCommon):
         mo.button_unplan()
 
         # Update the production capcity
-        workcenter_2.capacity = 4
+        workcenter_2.default_capacity = 4
 
         #MO_2
         mo_form = Form(self.env['mrp.production'])

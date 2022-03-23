@@ -220,7 +220,8 @@ class ReportBomStructure(models.AbstractModel):
         for operation in bom.operation_ids:
             if operation._skip_operation_line(product):
                 continue
-            operation_cycle = float_round(qty / operation.workcenter_id.capacity, precision_rounding=1, rounding_method='UP')
+            capacity = operation.workcenter_id._get_capacity(product)
+            operation_cycle = float_round(qty / capacity, precision_rounding=1, rounding_method='UP')
             duration_expected = (operation_cycle * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency) + (operation.workcenter_id.time_stop + operation.workcenter_id.time_start)
             total = ((duration_expected / 60.0) * operation.workcenter_id.costs_hour)
             operations.append({

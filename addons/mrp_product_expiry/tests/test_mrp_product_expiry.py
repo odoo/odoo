@@ -60,7 +60,7 @@ class TestStockLot(TestStockCommon):
         # Creation of a routing
         cls.workcenter = cls.env['mrp.workcenter'].create({
             'name': 'Bakery',
-            'capacity': 2,
+            'default_capacity': 2,
             'time_start': 10,
             'time_stop': 5,
             'time_efficiency': 80,
