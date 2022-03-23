@@ -109,6 +109,7 @@ export class MessageList extends Component {
                     // saved position if it exists or scroll to the end
                     this._adjustScrollFromModel();
                     break;
+                case 'message-posted':
                 case 'message-received':
                 case 'messages-loaded':
                 case 'new-messages-loaded':
