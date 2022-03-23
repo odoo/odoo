@@ -3,6 +3,7 @@
 import ast
 import collections
 import datetime
+import functools
 import inspect
 import json
 import logging
@@ -2148,7 +2149,13 @@ class NameManager:
 
     @lazy_property
     def field_info(self):
-        return self.model.fields_get()
+        field_info = self.model.fields_get()
+        has_access = functools.partial(self.model.check_access_rights, raise_exception=False)
+        if not (has_access('write') or has_access('create')):
+            for info in field_info.vals():
+                info['readonly'] = True
+                info['states'] = {}
+        return field_info
 
     def has_field(self, name, info=frozendict()):
         self.available_fields[name].update(info)

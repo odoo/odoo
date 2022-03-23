@@ -3121,9 +3121,6 @@ class BaseModel(metaclass=MetaModel):
         :param allfields: list of fields to document, all if empty or not provided
         :param attributes: list of description attributes to return for each field, all if empty or not provided
         """
-        has_access = functools.partial(self.check_access_rights, raise_exception=False)
-        readonly = not (has_access('write') or has_access('create'))
-
         res = {}
         for fname, field in self._fields.items():
             if allfields and fname not in allfields:
@@ -3131,15 +3128,7 @@ class BaseModel(metaclass=MetaModel):
             if field.groups and not self.env.su and not self.user_has_groups(field.groups):
                 continue
 
-            description = field.get_description(self.env)
-            description['name'] = fname
-            if readonly:
-                description['readonly'] = True
-                description['states'] = {}
-            if attributes:
-                description = {key: val
-                               for key, val in description.items()
-                               if key in attributes}
+            description = field.get_description(self.env, attributes=attributes)
             res[fname] = description
 
         return res
