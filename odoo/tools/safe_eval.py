@@ -169,19 +169,23 @@ def assert_valid_codeobj(allowed_codes, code_obj, expr):
         if isinstance(const, CodeType):
             assert_valid_codeobj(allowed_codes, const, 'lambda')
 
-def test_expr(expr, allowed_codes, mode="eval"):
-    """test_expr(expression, allowed_codes[, mode]) -> code_object
+def test_expr(expr, allowed_codes, mode="eval", filename=None):
+    """test_expr(expression, allowed_codes[, mode[, filename]]) -> code_object
 
     Test that the expression contains only the allowed opcodes.
     If the expression is valid and contains only allowed codes,
     return the compiled code object.
     Otherwise raise a ValueError, a Syntax Error or TypeError accordingly.
+
+    :param filename: optional pseudo-filename for the compiled expression,
+                 displayed for example in traceback frames
+    :type filename: string
     """
     try:
         if mode == 'eval':
             # eval() does not like leading/trailing whitespace
             expr = expr.strip()
-        code_obj = compile(expr, "", mode)
+        code_obj = compile(expr, filename or "", mode)
     except (SyntaxError, TypeError, ValueError):
         raise
     except Exception as e:
@@ -280,7 +284,7 @@ _BUILTINS = {
     'zip': zip,
     'Exception': Exception,
 }
-def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=False, locals_builtins=False):
+def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=False, locals_builtins=False, filename=None):
     """safe_eval(expression[, globals[, locals[, mode[, nocopy]]]]) -> result
 
     System-restricted Python expression evaluation
@@ -292,6 +296,9 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     This can be used to e.g. evaluate
     an OpenERP domain expression from an untrusted source.
 
+    :param filename: optional pseudo-filename for the compiled expression,
+                     displayed for example in traceback frames
+    :type filename: string
     :throws TypeError: If the expression provided is a code object
     :throws SyntaxError: If the expression provided is not valid Python
     :throws NameError: If the expression provided accesses forbidden names
@@ -325,7 +332,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
         if locals_dict is None:
             locals_dict = {}
         locals_dict.update(_BUILTINS)
-    c = test_expr(expr, _SAFE_OPCODES, mode=mode)
+    c = test_expr(expr, _SAFE_OPCODES, mode=mode, filename=filename)
     try:
         return unsafe_eval(c, globals_dict, locals_dict)
     except odoo.exceptions.UserError:
