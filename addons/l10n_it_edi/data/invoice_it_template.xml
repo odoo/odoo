@@ -20,7 +20,7 @@
                 </Descrizione>
                 <Quantita t-esc="format_numbers(line.quantity)"/>
                 <UnitaMisura t-if="line.product_uom_id.category_id != env.ref('uom.product_uom_categ_unit')" t-esc="line.product_uom_id.name"/>
-                <PrezzoUnitario t-esc="'%.06f' % (line.price_subtotal / (( 1 - (line.discount or 0.0) / 100.0) * line.quantity) if line.discount != 100.0 else line.price_unit)"/>
+                <PrezzoUnitario t-esc="'%.06f' % (line.price_subtotal / (( 1 - (line.discount or 0.0) / 100.0) * line.quantity) if line.quantity and line.discount != 100.0 else line.price_unit)"/>
                 <ScontoMaggiorazione t-if="line.discount != 0">
                     <!-- [2.2.1.10] -->
                     <Tipo t-esc="discount_type(line.discount)"/>
