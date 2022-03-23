@@ -438,7 +438,7 @@ export class ListView extends Component {
 
 ListView.type = "list";
 ListView.display_name = "List";
-ListView.icon = "oi-table";
+ListView.icon = "oi oi-view-list";
 ListView.multiRecord = true;
 ListView.components = { ActionMenus, ListViewHeaderButton, ListRenderer, Layout, ViewButton };
 ListView.props = {

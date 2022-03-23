@@ -368,7 +368,7 @@ export class KanbanView extends Component {
 
 KanbanView.type = "kanban";
 KanbanView.display_name = "Kanban";
-KanbanView.icon = "oi-align--vertical-top";
+KanbanView.icon = "oi oi-view-kanban";
 KanbanView.multiRecord = true;
 KanbanView.template = `web.KanbanView`;
 KanbanView.components = { Layout, KanbanRenderer };
