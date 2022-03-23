@@ -612,7 +612,7 @@ registerModel({
          * @returns {boolean|FieldCommand}
          */
         _computeHasThreadTyping() {
-            if (this.threadView && this.threadView.hasComposerThreadTyping !== undefined) {
+            if (this.threadView) {
                 return this.threadView.hasComposerThreadTyping;
             }
             return clear();
