@@ -661,7 +661,7 @@ class TestTranslationWrite(TransactionCase):
 
         # check that load_views() also returns the expected label
         info = model.load_views([(False, 'form')])
-        info['model_fields'][model._name]['name']['string']
+        info['models'][model._name]['name']['string']
 
 
 class TestXMLTranslation(TransactionCase):

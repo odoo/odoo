@@ -1628,16 +1628,13 @@ class BaseModel(metaclass=MetaModel):
         result['views'] = {
             v_type: self.view_get(
                 v_id, v_type if v_type != 'list' else 'tree',
-                **dict(options, toolbar=options.get('toolbar') if v_type != 'search' else False)
+                **options
             )
             for [v_id, v_type] in views
         }
-        models = set(model for view_type, info in result['views'].items() for model in info['models'])
+        models = set(model for view_type, info in result['views'].items() for model in info.pop('models'))
 
-        result['model_fields'] = {model: self.env[model].fields_get() for model in models}
-
-        if options.get('load_filters'):
-            result['filters'] = self.env['ir.filters'].get_filters(self._name, options.get('action_id'))
+        result['models'] = {model: self.env[model].fields_get() for model in models}
 
         # TODO: Remove, this is to simulate the old behavior.
         # ---------------------------------------------------
@@ -1672,7 +1669,7 @@ class BaseModel(metaclass=MetaModel):
                     el.remove(child)
             return node, view_fields
 
-        result['fields'] = result['model_fields'][self._name]
+        result['fields'] = result['models'][self._name]
         fields_views = {}
         for (_view_id, view_type) in views:
             view_info = result['views'][view_type]
@@ -1683,7 +1680,9 @@ class BaseModel(metaclass=MetaModel):
             # Detected with the tour test_01_main_flow_tour_mobile, when trying to open the timsheets
             # of a task (under the `Recorded` button of the task)
             # https://github.com/odoo/odoo/blob/master/odoo/addons/test_main_flows/static/tests/tours/main_flow.js#L892
-            fields_views[view_type] = dict(view_info, arch=arch, fields=fields, type=view_type)
+            fields_views[view_type] = dict(view_info, arch=arch, fields=fields, type=view_type, view_id=view_info['id'])
+            if view_type == 'search' and view_info.get('filters'):
+                result['filters'] = view_info['filters']
 
         result['fields_views'] = fields_views
         # ---------------------------------------------------
@@ -1766,7 +1765,7 @@ class BaseModel(metaclass=MetaModel):
         result = {
             'arch': arch,
             # TODO: only `web_studio` seems to require this. I guess this is acceptable to keep it.
-            'view_id': view.id,
+            'id': view.id,
             # TODO: only `web_studio` seems to require this. But this one on the other hand should be eliminated:
             # you just called `load_views` for that model, so obviously the web client already knows the model.
             'model': self._name,
@@ -1774,7 +1773,7 @@ class BaseModel(metaclass=MetaModel):
         }
 
         # Add related action information if asked
-        if options.get('toolbar'):
+        if options.get('toolbar') and view_type != 'search':
             vt = 'list' if view_type == 'tree' else view_type
             bindings = self.env['ir.actions.actions'].get_bindings(self._name)
             resreport = [action
@@ -1788,6 +1787,10 @@ class BaseModel(metaclass=MetaModel):
                 'print': resreport,
                 'action': resaction,
             }
+
+        if options.get('load_filters') and view_type == 'search':
+            result['filters'] = self.env['ir.filters'].get_filters(self._name, options.get('action_id'))
+
         return result
 
     def get_formview_id(self, access_uid=None):
@@ -1884,7 +1887,7 @@ class BaseModel(metaclass=MetaModel):
         """
         names = dict(self.name_get())
         for record in self:
-            record.display_name = names.get(record.id, False)
+            record.display_name = names.get(record.id) or False
 
     def name_get(self):
         """Returns a textual representation for the records in ``self``, with
@@ -1905,7 +1908,7 @@ class BaseModel(metaclass=MetaModel):
         if name in self._fields:
             convert = self._fields[name].convert_to_display_name
             for record in self:
-                result.append((record.id, convert(record[name], record)))
+                result.append((record.id, convert(record[name], record) or ""))
         else:
             for record in self:
                 result.append((record.id, "%s,%s" % (record._name, record.id)))
