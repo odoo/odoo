@@ -506,6 +506,84 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
+    QUnit.test("restoring a controller when doing an action -- load_action slow", async function (assert) {
+        assert.expect(14);
+        let def;
+        const mockRPC = async (route, args) => {
+            assert.step((args && args.method) || route);
+            if (route === "/web/action/load") {
+                return Promise.resolve(def);
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 3);
+        assert.containsOnce(webClient, ".o_list_view");
+        await click(webClient.el.querySelector(".o_list_view .o_data_cell"));
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, ".o_form_view");
+        def = makeDeferred();
+        doAction(webClient, 4, { clearBreadcrumbs: true });
+        await nextTick();
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, ".o_form_view", "should still contain the form view");
+        await click(webClient.el.querySelector(".o_control_panel .breadcrumb-item a"));
+        def.resolve();
+        await nextTick();
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, ".o_list_view");
+        assert.strictEqual(
+            webClient.el.querySelector(".o_control_panel .breadcrumb-item").textContent,
+            "Partners"
+        );
+        assert.containsNone(webClient, ".o_form_view");
+        assert.verifySteps([
+            "/web/webclient/load_menus",
+            "/web/action/load",
+            "load_views",
+            "/web/dataset/search_read",
+            "read",
+            "/web/action/load",
+            "/web/dataset/search_read",
+        ]);
+    });
+
+    QUnit.test("switching when doing an action -- load_action slow", async function (assert) {
+        assert.expect(12);
+        let def;
+        const mockRPC = async (route, args) => {
+            assert.step((args && args.method) || route);
+            if (route === "/web/action/load") {
+                return Promise.resolve(def);
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 3);
+        assert.containsOnce(webClient, ".o_list_view");
+        def = makeDeferred();
+        doAction(webClient, 4, { clearBreadcrumbs: true });
+        await nextTick();
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, ".o_list_view", "should still contain the list view");
+        await cpHelpers.switchView(webClient, "kanban");
+        def.resolve();
+        await nextTick();
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, ".o_kanban_view");
+        assert.strictEqual(
+            webClient.el.querySelector(".o_control_panel .breadcrumb-item").textContent,
+            "Partners"
+        );
+        assert.containsNone(webClient, ".o_list_view");
+        assert.verifySteps([
+            "/web/webclient/load_menus",
+            "/web/action/load",
+            "load_views",
+            "/web/dataset/search_read",
+            "/web/action/load",
+            "/web/dataset/search_read",
+        ]);
+    });
+
     QUnit.test("switching when doing an action -- load_views slow", async function (assert) {
         assert.expect(13);
         let def;
