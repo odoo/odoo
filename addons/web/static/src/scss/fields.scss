@@ -202,19 +202,22 @@
         vertical-align: baseline;
         > .o_priority_star {
             display: inline-block;
-            font-size: 1.35em;
+            font-size: 1.00em;
+
             &:hover, &:focus {
                 text-decoration: none;
                 outline: none;
+                font-size: 1.20em;
             }
 
             + .o_priority_star {
-                padding-left: 5px;
+                padding-left: 2px;
             }
 
             &.fa-star-o {
                 color: $o-main-color-muted;
             }
+
             &.fa-star {
                 color: gold;
             }
