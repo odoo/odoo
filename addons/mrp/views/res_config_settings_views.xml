@@ -29,6 +29,15 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row mt-2" attrs="{'invisible': [('group_mrp_routings','=',False)]}">
+                                        <field name="group_mrp_workorder_dependencies" class="col-lg-1 ml16 mr0"/>
+                                        <div class="col pl-0">
+                                            <label for="group_mrp_workorder_dependencies"/>
+                                            <div class="text-muted">
+                                                Set the order that work orders should be processed in. Activate the feature within each BoM's Miscellaneous tab
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-12 o_setting_box">
