@@ -5,7 +5,7 @@ class MentalHealthNotes(models.Model):
     _name = "mental_health.notes"
     _description = "A model to be used to write mental health notes"
 
-    name = fields.Many2one(comodel_name='res.partner')
+    name = fields.Many2one(comodel_name='res.partner', required=True, copy=True)
     mode_of_therapy = fields.Selection(string='Mode of Therapy', required=True,
                                        selection=[('in_person', 'In Person'),
                                                   ('by_phone', 'By Phone'),
