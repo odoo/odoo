@@ -21,6 +21,13 @@ class ResConfigSettings(models.TransientModel):
         implied_group='mrp.group_mrp_routings')
     group_unlocked_by_default = fields.Boolean("Unlock Manufacturing Orders", implied_group='mrp.group_unlocked_by_default')
     group_mrp_reception_report = fields.Boolean("Allocation Report for Manufacturing Orders", implied_group='mrp.group_mrp_reception_report')
+    group_mrp_workorder_dependencies = fields.Boolean("Work Order Dependencies", implied_group="mrp.group_mrp_workorder_dependencies")
+
+    def set_values(self):
+        super().set_values()
+        if not self.group_mrp_workorder_dependencies:
+            # Disabling this option should not interfere with currently planned productions
+            self.env['mrp.bom'].search([('allow_operation_dependencies', '=', True)]).allow_operation_dependencies = False
 
     @api.onchange('use_manufacturing_lead')
     def _onchange_use_manufacturing_lead(self):
