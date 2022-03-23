@@ -221,8 +221,8 @@ class Page(models.Model):
         self.ensure_one()
         return self.view_id.get_website_meta()
 
-    @staticmethod
-    def _get_cached_blacklist():
+    @api.model
+    def _get_cached_blacklist(self):
         return ('data-snippet="s_website_form"', 'data-no-page-cache=', )
 
     def _can_be_cached(self, response):
