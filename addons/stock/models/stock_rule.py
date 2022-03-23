@@ -282,6 +282,18 @@ class StockRule(models.Model):
         # it is possible that we've already got some move done, so check for the done qty and create
         # a new move with the correct qty
         qty_left = product_qty
+
+        move_dest_ids = values.get('move_dest_ids', False) and [(4, x.id) for x in values['move_dest_ids']] or []
+
+        # when create chained moves for inter-warehouse transfers, set the warehouses as partners
+        if not partner and move_dest_ids:
+            move_dest = values['move_dest_ids']
+            if location_id == company_id.internal_transit_location_id:
+                partners = move_dest.location_dest_id.get_warehouse().partner_id
+                if len(partners) == 1:
+                    partner = partners
+                    move_dest.partner_id = partner
+
         move_values = {
             'name': name[:2000],
             'company_id': self.company_id.id or self.location_src_id.company_id.id or self.location_id.company_id.id or company_id.id,
@@ -291,7 +303,7 @@ class StockRule(models.Model):
             'partner_id': partner.id if partner else False,
             'location_id': self.location_src_id.id,
             'location_dest_id': location_id.id,
-            'move_dest_ids': values.get('move_dest_ids', False) and [(4, x.id) for x in values['move_dest_ids']] or [],
+            'move_dest_ids': move_dest_ids,
             'rule_id': self.id,
             'procure_method': self.procure_method,
             'origin': origin,
