@@ -9428,7 +9428,8 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("o2m add a line custom control create non-editable", async function (assert) {
+    // WOWL TODO DAM
+    QUnit.skipWOWL("o2m add a line custom control create non-editable", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
