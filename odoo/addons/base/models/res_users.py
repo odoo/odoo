@@ -1775,8 +1775,7 @@ class APIKeyDescription(models.TransientModel):
     @check_identity
     def make_key(self):
         # only create keys for users who can delete their keys
-        if not self.user_has_groups('base.group_user'):
-            raise AccessError(_("Only internal users can create API keys"))
+        self.check_access_make_key()
 
         description = self.sudo()
         k = self.env['res.users.apikeys']._generate(None, self.sudo().name)
@@ -1792,6 +1791,10 @@ class APIKeyDescription(models.TransientModel):
                 'default_key': k,
             }
         }
+
+    def check_access_make_key(self):
+        if not self.user_has_groups('base.group_user'):
+            raise AccessError(_("Only internal users can create API keys"))
 
 class APIKeyShow(models.AbstractModel):
     _name = _description = 'res.users.apikeys.show'
