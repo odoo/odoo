@@ -430,7 +430,13 @@ class ThreadedServer(CommonServer):
         conn = odoo.sql_db.db_connect('postgres')
         with conn.cursor() as cr:
             pg_conn = cr._cnx
-            cr.execute("LISTEN cron_trigger")
+            # LISTEN / NOTIFY doesn't work in recovery mode
+            cr.execute("SELECT pg_is_in_recovery()")
+            in_recovery = cr.fetchone()[0]
+            if not in_recovery:
+                cr.execute("LISTEN cron_trigger")
+            else:
+                _logger.warning("PG cluster in recovery mode, cron trigger not activated")
             cr.commit()
 
             while True:
@@ -1176,7 +1182,13 @@ class WorkerCron(Worker):
 
         dbconn = odoo.sql_db.db_connect('postgres')
         self.dbcursor = dbconn.cursor()
-        self.dbcursor.execute("LISTEN cron_trigger")
+        # LISTEN / NOTIFY doesn't work in recovery mode
+        self.dbcursor.execute("SELECT pg_is_in_recovery()")
+        in_recovery = self.dbcursor.fetchone()[0]
+        if not in_recovery:
+            self.dbcursor.execute("LISTEN cron_trigger")
+        else:
+            _logger.warning("PG cluster in recovery mode, cron trigger not activated")
         self.dbcursor.commit()
 
     def stop(self):
