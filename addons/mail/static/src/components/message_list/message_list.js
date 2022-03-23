@@ -271,17 +271,6 @@ export class MessageList extends Component {
     }
 
     /**
-     * @private
-     */
-    _loadMore() {
-        const { threadCache } = this._lastRenderedValues();
-        if (!threadCache || !threadCache.exists()) {
-            return;
-        }
-        threadCache.loadMoreMessages();
-    }
-
-    /**
      * Scrolls to the end of the list.
      *
      * @private
@@ -308,7 +297,11 @@ export class MessageList extends Component {
      */
     _onClickLoadMore(ev) {
         ev.preventDefault();
-        this._loadMore();
+        const { threadCache } = this._lastRenderedValues();
+        if (!threadCache || !threadCache.exists()) {
+            return;
+        }
+        threadCache.loadMoreMessages();
     }
 
     /**
@@ -320,7 +313,7 @@ export class MessageList extends Component {
             return;
         }
         threadCache.update({ hasLoadingFailed: false });
-        this._loadMore();
+        threadCache.loadMoreMessages();
     }
 
     /**
@@ -369,8 +362,13 @@ export class MessageList extends Component {
         }
         messageListView.threadViewOwner.threadViewer.saveThreadCacheScrollHeightAsInitial(this._getScrollableElement().scrollHeight, threadCache);
         messageListView.threadViewOwner.threadViewer.saveThreadCacheScrollPositionsAsInitial(scrollTop, threadCache);
-        if (!messageListView.isLastScrollProgrammatic && this._isLoadMoreVisible()) {
-            this._loadMore();
+        if (
+            !messageListView.isLastScrollProgrammatic &&
+            this._isLoadMoreVisible() &&
+            threadCache &&
+            threadCache.exists()
+        ) {
+            threadCache.loadMoreMessages();
         }
         this._checkMostRecentMessageIsVisible();
         messageListView.update({ isLastScrollProgrammatic: false });
