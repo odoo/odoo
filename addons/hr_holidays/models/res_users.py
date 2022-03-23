@@ -50,6 +50,7 @@ class User(models.Model):
         self.env.cr.execute('''SELECT res_users.%s FROM res_users
                             JOIN hr_leave ON hr_leave.user_id = res_users.id
                             AND state not in ('cancel', 'refuse')
+                            AND hr_leave.active = 't'
                             AND res_users.active = 't'
                             AND date_from <= %%s AND date_to >= %%s''' % field, (now, now))
         return [r[0] for r in self.env.cr.fetchall()]
