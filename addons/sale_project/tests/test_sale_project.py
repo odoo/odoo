@@ -139,3 +139,24 @@ class TestSaleProject(SavepointCase):
         # service_tracking 'project_only'
         self.assertFalse(so_line_order_only_project.task_id, "Task should not be created")
         self.assertTrue(so_line_order_only_project.project_id, "Sales order line should be linked to newly created project")
+
+    def test_sol_product_type_update(self):
+        partner = self.env['res.partner'].create({'name': "Mur en brique"})
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': partner.id,
+            'partner_invoice_id': partner.id,
+            'partner_shipping_id': partner.id,
+        })
+        self.product_order_service3.type = 'consu'
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'name': self.product_order_service3.name,
+            'product_id': self.product_order_service3.id,
+            'product_uom_qty': 5,
+            'product_uom': self.product_order_service3.uom_id.id,
+            'price_unit': self.product_order_service3.list_price
+        })
+        self.assertFalse(sale_order_line.is_service, "As the product is consumable, the SOL should not be a service")
+
+        self.product_order_service3.type = 'service'
+        self.assertTrue(sale_order_line.is_service, "As the product is a service, the SOL should be a service")
