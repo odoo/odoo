@@ -17,12 +17,12 @@ class MentalHealthNotes(models.Model):
 
     date = fields.Date(string='Date Recorded', required=True, default=lambda self: fields.Date.today(), copy=False)
     arrival_status = fields.Selection(string='Arrival Status', required=True,
-                                    selection=[('on_time', 'On Time'),
-                                               ('late', 'Late'),
-                                               ('no_show', 'No Show'),
-                                               ('cancelled', 'Cancelled')],
-                                    default='on_time',
-                                    help='Select the arrival status of the client.')
+                                      selection=[('on_time', 'On Time'),
+                                                 ('late', 'Late'),
+                                                 ('no_show', 'No Show'),
+                                                 ('cancelled', 'Cancelled')],
+                                      default='on_time',
+                                      help='Select the arrival status of the client.')
     service_type = fields.Selection(string='Service Provided', required=True,
                                     selection=[('intake', 'Intake'),
                                                ('individual_therapy', 'Individual Therapy')],
