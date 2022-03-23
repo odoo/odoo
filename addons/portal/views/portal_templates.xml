@@ -495,6 +495,41 @@
                     <button type="submit" class="btn btn-danger">Change Password</button>
                 </form>
             </section>
+            <section t-if="debug and allow_api_keys">
+                <h3>
+                Developer API Keys
+                    <a href="https://www.odoo.com/documentation/15.0/developer/misc/api/odoo.html#api-keys" target="_blank">
+                        <i title="Documentation" class="fa fa-fw o_button_icon fa-info-circle"></i>
+                    </a>
+                </h3>
+                <div>
+                    <table class="table o_main_table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Scope</th>
+                                <th>Added On</th>
+                                <th/>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="request.env.user.api_key_ids" t-as="key">
+                                <tr>
+                                    <td><span t-field="key.name"/></td>
+                                    <td><span t-field="key.scope"/></td>
+                                    <td><span t-field="key.create_date"/></td>
+                                    <td>
+                                        <i class="fa fa-trash text-danger o_portal_remove_api_key" type="button" t-att-id="key.id"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary o_portal_new_api_key">New API Key</button>
+                </div>
+            </section>
         </div></t>
     </template>
 
