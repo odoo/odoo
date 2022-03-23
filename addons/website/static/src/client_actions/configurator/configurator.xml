@@ -93,8 +93,8 @@
             <img class="ml-lg-5" style="height: 31px; width: 99px;" src="/website/static/src/img/odoo_logo.svg" title="Odoo Logo"/>
         </div>
         <div class="o_configurator_screen_content container palette_selection d-flex flex-grow-1 h-100">
-            <div class="d-flex flex-column flex-lg-row w-100 h-100 h-lg-auto align-self-md-center o_configurator_show">
-                <div class="w-100 w-lg-25 order-lg-3 my-4 my-md-0 d-flex flex-column">
+            <div class="o_content_container d-flex flex-row w-100 h-auto align-self-md-center o_configurator_show">
+                <div class="o_detect_logo w-25 order-lg-3 my-4 my-md-0 d-flex flex-column">
                     <div class="h4 text-center">
                         <b>Detect</b> from Logo</div>
                     <div class="d-flex flex-column flex-grow-1 py-4">
@@ -122,17 +122,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="position-relative d-flex justify-content-center order-lg-2 w-100 w-lg-0 py-3 py-lg-0 px-lg-5 mb-4 mb-lg-0">
+                <div class="o_palettes_separator position-relative d-flex justify-content-center order-lg-2 w-0 py-3 py-lg-0 px-lg-5 mb-4 mb-lg-0">
                     <div class="border-top w-100"></div>
                     <b class="palette_selection_or bg-white text-muted w-lg-100 text-center px-3 py-lg-3">OR</b>
                     <div class="border-left d-none d-lg-inline h-100 mx-auto w-0"></div>
                 </div>
-                <div class="w-100 w-lg-auto flex-grow-1 o_configurator_show_fast">
+                <div class="o_palettes_container w-auto flex-grow-1 o_configurator_show_fast">
                     <div class="h4 text-center">
                         <b>Choose</b> a pre-made Palette</div>
                     <div class="d-flex flex-wrap align-items-end">
                         <t t-foreach="state.getPalettes()" t-as="palette" t-key="palette_index">
-                            <div class="w-50 w-md-25 px-2 pt-3">
+                            <div class="o_palette_card_container w-25 px-2 pt-3">
                                 <div t-attf-class="palette_card rounded-pill overflow-hidden d-flex {{state.getSelectedPaletteName() == palette.name ? 'selected' : ''}}"
                                      t-on-click="() => this.selectPalette(palette.name)" t-attf-style="background-color: {{palette.color3}}">
                                     <div class="color_sample w-100" t-attf-style="background-color: {{palette.color1}}"/>
@@ -162,7 +162,7 @@
                     <div class="w-100 page_feature_selection d-flex flex-wrap">
                         <t t-foreach="state.getFeatures()" t-as="feature" t-key="feature_index">
                             <t t-set='isInstalled' t-value="feature.module_state == 'installed'"/>
-                            <div class="p-2 w-100 w-md-50 w-lg-25" t-if="feature.type != 'empty'">
+                            <div class="o_feature_card_container p-2 w-25" t-if="feature.type != 'empty'">
                                 <div t-attf-class="card h-100 {{isInstalled ? 'card_installed' : (feature.selected ? 'border-success' : '')}}" t-on-click="() => state.toggleFeature(feature.id)">
                                     <div class="card-body py-2">
                                         <t t-if="isInstalled">
