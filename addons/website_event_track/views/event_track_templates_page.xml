@@ -34,10 +34,10 @@
         <!-- LIVE INFORMATIONS -->
         <div t-if="not track.event_id.is_ongoing" class="pt-3">
             <div class="mx-3 alert alert-warning">
-                Event <span t-esc="track.event_id.name" class="font-weight-bold"/>
+                Event <span t-out="track.event_id.name" class="font-weight-bold"/>
                 <span t-if="track.event_id.start_today">
                     starts in
-                    <span t-if="track.event_id.start_remaining &gt;= 1" t-esc="track.event_id.start_remaining"
+                    <span t-if="track.event_id.start_remaining &gt;= 1" t-out="track.event_id.start_remaining"
                         t-options="{'widget': 'duration', 'digital': False, 'unit': 'minute', 'round': 'minute'}"/>
                     <t t-else="">
                         a few seconds
@@ -46,7 +46,8 @@
                 <span t-else="">
                     starts on
                     <span t-field="track.event_id.with_context(tz=track.event_id.date_tz).date_begin"
-                        t-options="{'format': 'long', 'tz_name': track.event_id.date_tz, 'hide_seconds': True}"/>
+                        t-options="{'format': 'medium', 'tz_name': track.event_id.date_tz, 'hide_seconds': 'True'}"/>
+                    (<span t-out="track.event_id.date_tz"/>)
                 </span>
             </div>
         </div>
@@ -59,12 +60,12 @@
         <div class="o_wesession_track_main_description overflow-auto">
             <div class="mx-3 pt-3 mb-3 d-flex justify-content-between flex-column flex-md-row">
                 <div class="d-flex flex-column">
-                    <span class="h4 mb-0" t-esc="track.name"/>
+                    <span class="h4 mb-0" t-out="track.name"/>
                     <div>
                         <t t-foreach="track.tag_ids" t-as="tag">
                             <span t-if="tag.color"
                                 t-att-class="'badge o_tag_color_hovered_%s' % (tag.color)"
-                                t-esc="tag.name"/>
+                                t-out="tag.name"/>
                         </t>
                     </div>
                 </div>
@@ -85,12 +86,12 @@
                 </t>
                 <t t-if="track.date">
                     <span t-field="track.date"
-                        t-options='{"hide_seconds":"True", "format": "short"}'/>
+                        t-options='{"hide_seconds":"True", "format": "short", "tz_name": event.date_tz}'/>
                     -
                     <span t-field="track.date_end"
-                        t-options='{"hide_seconds":"True", "format": "short"}'/>
+                        t-options='{"hide_seconds":"True", "format": "short", "tz_name": event.date_tz}'/>
                     <t t-if="event.date_tz">
-                        (<span t-field="track.date_end" t-options='{"format": "zzz"}'/>)
+                        (<span t-out="event.date_tz"/>)
                     </t>
                 </t>
                 <t t-if="track.duration">
@@ -109,9 +110,9 @@
                     <div class="pl-2 pr-0 pr-md-2 d-flex flex-column">
                         <span t-field="track.partner_name" class="font-weight-bold mb-2"/>
                         <span class="mb-1 d-flex align-items-baseline text-break" t-if="track.partner_function">
-                            <i class="fa fa-briefcase mr-2"/><span t-esc="track.partner_function"/>
+                            <i class="fa fa-briefcase mr-2"/><span t-out="track.partner_function"/>
                             <t t-if="track.partner_company_name">
-                                <span>&amp;nbsp;at&amp;nbsp;</span><span t-esc="track.partner_company_name"/>
+                                <span>&amp;nbsp;at&amp;nbsp;</span><span t-out="track.partner_company_name"/>
                             </t>
                         </span>
                         <span class="mb-1 d-flex align-items-baseline text-break" t-if="track.partner_id.website">
@@ -157,7 +158,7 @@
                     <a t-att-href="track.website_cta_url"
                         target="_blank"
                         class="btn btn-primary w-100 mb-3 mt-2 mt-md-0">
-                        <span t-esc="track.website_cta_title"/>
+                        <span t-out="track.website_cta_title"/>
                     </a>
                 </div>
             </div>
@@ -198,9 +199,9 @@
 </template>
 
 <template id="event_track_aside_other_track">
-    <span t-esc="track_other.name" class="w-100"/>
+    <span t-out="track_other.name" class="w-100"/>
     <div class="d-flex align-items-center">
-        <small class="text-muted" t-esc="track_other.partner_name"/>
+        <small class="text-muted" t-out="track_other.partner_name"/>
         <div class="d-inline-block ml-auto o_wesession_track_aside_info text-truncate">
             <small t-if="not track_other.website_published and user_event_manager"
                 class="badge badge-danger">Unpublished</small>
@@ -210,12 +211,12 @@
                 class="badge badge-light">Done</small>
             <small t-elif="track_other.is_track_today and track_other.track_start_remaining"
                 class="badge badge-light">
-                <span t-esc="track_other.track_start_remaining"
+                <span t-out="track_other.track_start_remaining"
                     t-options="{'widget': 'duration', 'digital': False, 'add_direction': True,
                                 'unit': 'second', 'round': 'minute', 'format': 'narrow'}"/>
             </small>
             <div t-elif="track_other.date" class="badge badge-light">
-                <span t-esc="track_other.date" t-options="{'widget': 'datetime', 'tz_name': track_other.event_id.date_tz, 'format': 'MMM. dd'}"/>
+                <span t-out="track_other.date" t-options="{'widget': 'datetime', 'tz_name': track_other.event_id.date_tz, 'format': 'MMM. dd'}"/>
             </div>
         </div>
     </div>

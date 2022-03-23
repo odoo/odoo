@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 import json
 import werkzeug.urls
 
-from pytz import utc
+from pytz import utc, timezone
 
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
@@ -407,12 +407,13 @@ class Event(models.Model):
         return super(Event, self)._track_subtype(init_values)
 
     def _get_event_resource_urls(self):
-        url_date_start = self.date_begin.strftime('%Y%m%dT%H%M%SZ')
-        url_date_stop = self.date_end.strftime('%Y%m%dT%H%M%SZ')
+        url_date_start = self.date_begin.astimezone(timezone(self.date_tz)).strftime('%Y%m%dT%H%M%S')
+        url_date_stop = self.date_end.astimezone(timezone(self.date_tz)).strftime('%Y%m%dT%H%M%S')
         params = {
             'action': 'TEMPLATE',
             'text': self.name,
             'dates': url_date_start + '/' + url_date_stop,
+            'ctz': self.date_tz,
             'details': self.name,
         }
         if self.address_id:

@@ -34,15 +34,15 @@
         <!-- EVENT NOT STARTED ALERTS -->
         <t t-if="not sponsor.event_id.is_ongoing">
             <div t-if="sponsor.event_id.is_done" class="alert alert-warning rounded-0 text-center" role="alert">
-                Event <span t-esc="sponsor.event_id.name" class="font-weight-bold"/> is over.
+                Event <span t-out="sponsor.event_id.name" class="font-weight-bold"/> is over.
                 <br/>
-                <span>Join us next time to meet <b t-esc="sponsor.partner_name"/>!</span>
+                <span>Join us next time to meet <b t-out="sponsor.partner_name"/>!</span>
             </div>
             <div t-else="" class="alert alert-warning rounded-0 text-center" role="alert">
-                Event <span t-esc="sponsor.event_id.name" class="font-weight-bold"/>
+                Event <span t-out="sponsor.event_id.name" class="font-weight-bold"/>
                 <span t-if="sponsor.event_id.start_today">
                     starts in
-                    <span t-if="sponsor.event_id.start_remaining &gt;= 1" t-esc="sponsor.event_id.start_remaining"
+                    <span t-if="sponsor.event_id.start_remaining &gt;= 1" t-out="sponsor.event_id.start_remaining"
                         t-options="{'widget': 'duration', 'digital': False, 'unit': 'minute', 'round': 'minute'}"/>
                     <t t-else="">
                         a few seconds
@@ -51,11 +51,11 @@
                 <span class="my-0" t-else="">
                     starts on
                     <span t-field="sponsor.event_id.with_context(tz=sponsor.event_id.date_tz).date_begin"
-                        t-options="{'format': 'medium'}"/> (<t t-esc="sponsor.event_id.date_tz"/>).
+                        t-options="{'format': 'medium'}"/> (<t t-out="sponsor.event_id.date_tz"/>).
                 </span>
                 <br/>
-                <span t-if="is_event_user">Attendees will be able to join to meet <b t-esc="sponsor.partner_name"/> .</span>
-                <span t-else="">Join us there to meet <b t-esc="sponsor.partner_name"/> !</span>
+                <span t-if="is_event_user">Attendees will be able to join to meet <b t-out="sponsor.partner_name"/> .</span>
+                <span t-else="">Join us there to meet <b t-out="sponsor.partner_name"/> !</span>
             </div>
         </t>
         <!-- SPONSOR JITSI + CLOSED/FULL ALERTS -->
@@ -65,10 +65,10 @@
                     <span>Oops! This room is currently closed</span><br />
                     Come back between
                     <strong>
-                        <t t-esc="sponsor.hour_from" t-options="{'widget': 'float_time'}"/>
+                        <t t-out="sponsor.hour_from" t-options="{'widget': 'time'}"/>
                         -
-                        <t t-esc="sponsor.hour_to" t-options="{'widget': 'float_time'}"/>
-                    </strong> (<span t-esc="sponsor.event_date_tz"/>)
+                        <t t-out="sponsor.hour_to" t-options="{'widget': 'time'}"/>
+                    </strong> (<span t-out="sponsor.event_date_tz"/>)
                     to meet them !
                 </div>
             </t>
@@ -95,7 +95,7 @@
         </div>
         <!-- SPONSOR DESCRIPTION -->
         <div class="h5 m-3">
-            About <t t-esc="sponsor.name"/>
+            About <t t-out="sponsor.name"/>
         </div>
         <hr class="my-0"/>
         <div class="ml-3 clearfix">
@@ -117,10 +117,10 @@
                     <div t-if="sponsor.hour_from and sponsor.hour_to"
                         t-att-class="'%s' % 'mb-3' if sponsor.hour_from and sponsor.hour_to else ''">
                         Available from
-                        <t t-esc="sponsor.hour_from" t-options="{'widget': 'float_time'}"/>
+                        <t t-out="sponsor.hour_from" t-options="{'widget': 'time'}"/>
                         -
-                        <t t-esc="sponsor.hour_to" t-options="{'widget': 'float_time'}"/>
-                        <span t-esc="sponsor.event_date_tz"/>
+                        <t t-out="sponsor.hour_to" t-options="{'widget': 'time'}"/>
+                        (<span t-out="sponsor.event_date_tz"/>)
                     </div>
                     <div t-if="sponsor.url" class="d-flex text-break align-items-baseline">
                         <i class="fa fa-home mr-2"/><a t-att-href="sponsor.url"><span t-field="sponsor.url"/></a>
@@ -175,16 +175,16 @@
                             t-att-alt="sponsor_other.partner_id.country_id.name"/>
                             <span t-if="sponsor_other.sponsor_type_id.display_ribbon_style not in [False, 'no_ribbon']"
                                 t-att-class="'badge badge-light mr-2 ribbon_%s' % sponsor_other.sponsor_type_id.display_ribbon_style"
-                                t-esc="sponsor_other.sponsor_type_id.name"/>
+                                t-out="sponsor_other.sponsor_type_id.name"/>
                             <span t-else="" class="badge badge-light mr-2"
-                                t-esc="sponsor_other.sponsor_type_id.name"/>
+                                t-out="sponsor_other.sponsor_type_id.name"/>
                         </div>
                         <div class="col flex-grow-1 overflow-auto">
                             <span class="d-flex align-items-baseline o_wesponsor_sponsor_name">
-                                <span class="d-inline-block text-truncate" t-esc="sponsor_other.name"/>
+                                <span class="d-inline-block text-truncate" t-out="sponsor_other.name"/>
 
                             </span>
-                            <small class="text-muted" t-esc="sponsor_other.subtitle"/>
+                            <small class="text-muted" t-out="sponsor_other.subtitle"/>
                             <div class="d-inline-block float-right" t-if="not sponsor_other.website_published">
                                 <small class="badge badge-danger">Unpublished</small>
                             </div>

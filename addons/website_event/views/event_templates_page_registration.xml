@@ -50,8 +50,10 @@
                             <t t-if="event.is_one_day">
                                 <i class="fa fa-long-arrow-right mx-1"/>
                                 <span t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'time_only': 'true', 'format': 'short'}"/>
+                                (<span t-out="event.date_tz"/>)
                             </t>
                             <t t-else="">
+                                (<span t-out="event.date_tz"/>)
                                 <i class="fa fa-long-arrow-down d-block text-muted mx-3 my-2" style="font-size: 1.5rem"/>
                                 <div class="d-flex">
                                     <h5 t-field="event.with_context(tz=event.date_tz).date_end" class="my-1 mr-1 oe_hide_on_date_edit" t-options="{'date_only': 'true', 'format': 'EEEE'}"/>
@@ -59,9 +61,8 @@
                                 </div>
                                 <t t-if="not event.is_one_day">End -</t>
                                 <span t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'time_only': 'true', 'format': 'short'}"/>
+                                (<span t-out="event.date_tz"/>)
                             </t>
-                            <!-- Timezone -->
-                            <small t-esc="event.date_tz" class="d-block my-3 text-muted"/>
 
                             <div class="dropdown">
                                 <i class="fa fa-calendar mr-1"/>
@@ -122,9 +123,9 @@
             <t t-if="not event.event_registrations_started">
                 <div class="col-md-8 d-flex">
                     <em class="mr-2">Ticket Sales starting on
-                        <span class="" t-esc="event.start_sale_datetime"
+                        <span class="" t-out="event.start_sale_datetime"
                             t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
-                        <span t-esc="event.date_tz"/>
+                        <span t-out="event.date_tz"/>
                     </em>
                     <t t-call="website_event.registration_configure_tickets_button"
                         t-if="request.env.user.has_group('event.group_event_manager')"/>
@@ -178,15 +179,15 @@
                             </t>
                             <small t-if="ticket.end_sale_datetime and ticket.sale_available and not ticket.is_expired"
                                    class="text-muted mr-3" itemprop="availabilityEnds">Sales end on
-                                <span itemprop="priceValidUntil" t-esc="ticket.end_sale_datetime"
+                                <span itemprop="priceValidUntil" t-out="ticket.end_sale_datetime"
                                 t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
-                                <span t-esc="ticket.event_id.date_tz"/>
+                                (<span t-out="ticket.event_id.date_tz"/>)
                             </small>
                             <small t-if="ticket.start_sale_datetime and not ticket.sale_available and not ticket.is_expired"
                                    class="text-muted mr-3" itemprop="availabilityEnds">
-                                Sales start on <span itemprop="priceValidUntil" t-esc="ticket.start_sale_datetime"
+                                Sales start on <span itemprop="priceValidUntil" t-out="ticket.start_sale_datetime"
                                 t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
-                                <span t-esc="ticket.event_id.date_tz"/>
+                                (<span t-out="ticket.event_id.date_tz"/>)
                             </small>
                         </div>
                         <div class="col-md-4 col-xs-12 p-0 d-flex align-items-center justify-content-between">
@@ -199,7 +200,7 @@
                                     <t t-set="seats_max_event" t-value="(not event.seats_limited or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
                                     <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event)"/>
                                     <t t-foreach="range(0, seats_max)" t-as="nb">
-                                        <option t-esc="nb" t-att-selected="len(ticket) == 0 and nb == 0 and 'selected'"/>
+                                        <option t-out="nb" t-att-selected="len(ticket) == 0 and nb == 0 and 'selected'"/>
                                     </t>
                                 </select>
                                 <div t-else="" class="text-danger">
@@ -214,7 +215,7 @@
                             <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" disabled="" t-attf-id="#{event.id}">
                                 Register
                                 <t t-if="event.seats_limited and event.seats_max and event.seats_available &lt;= (event.seats_max * 0.2)">
-                                    (only <t t-esc="event.seats_available"/> available)
+                                    (only <t t-out="event.seats_available"/> available)
                                 </t>
                             </button>
                         </div>
@@ -228,10 +229,12 @@
                             <span t-if="tickets" t-field="tickets.name"/>
                             <span t-else="">Registration</span>
                         </h6>
-                        <small t-if="tickets.end_sale_datetime and tickets.sale_available and not tickets.is_expired" class="text-muted mr-3" itemprop="availabilityEnds">Sales end on
-                            <span itemprop="priceValidUntil" t-esc="tickets.end_sale_datetime"
+                        <small t-if="tickets.end_sale_datetime and tickets.sale_available and not tickets.is_expired"
+                            class="text-muted ml-1 mr-3" itemprop="availabilityEnds">
+                            Sales end on
+                            <span itemprop="priceValidUntil" t-out="tickets.end_sale_datetime"
                                 t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
-                            <span t-esc="tickets.event_id.date_tz"/>
+                            (<span t-out="tickets.event_id.date_tz"/>)
                         </small>
                         <t t-call="website_event.registration_configure_tickets_button"
                         t-if="request.env.user.has_group('event.group_event_manager')"/>
@@ -244,7 +247,7 @@
                                     <t t-set="seats_max_event" t-value="(not event.seats_limited or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
                                     <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event) if tickets else seats_max_event"/>
                                     <t t-foreach="range(0, seats_max)" t-as="nb">
-                                        <option t-esc="nb" t-att-selected="nb == 1 and 'selected'"/>
+                                        <option t-out="nb" t-att-selected="nb == 1 and 'selected'"/>
                                     </t>
                                 </select>
                             </t>
@@ -259,7 +262,7 @@
                         <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" t-attf-id="#{event.id}">
                             Register
                             <t t-if="event.seats_limited and event.seats_max and event.seats_available &lt;= (event.seats_max * 0.2)">
-                                (only <t t-esc="event.seats_available"/> available)
+                                (only <t t-out="event.seats_available"/> available)
                             </t>
                         </button>
                     </div>
@@ -285,7 +288,7 @@
                         <t t-foreach="range(1, ticket['quantity'] + 1)" t-as="att_counter" name="attendee_loop">
                             <t t-set="counter" t-value="counter + 1"/>
                             <div class="modal-body bg-light border-bottom">
-                                <h5 class="mt-1 pb-2 border-bottom">Ticket #<span t-esc="counter"/> <small class="text-muted">- <span t-esc="ticket['name']"/></small></h5>
+                                <h5 class="mt-1 pb-2 border-bottom">Ticket #<span t-out="counter"/> <small class="text-muted">- <span t-out="ticket['name']"/></small></h5>
                                 <div class="row">
                                     <div class="col-lg my-2">
                                         <label>Name *</label>
@@ -329,31 +332,31 @@
             <div class="row mb-3">
                 <div class="col-12">
                     <h3>Registration confirmed!</h3>
-                    <span class="h4 text-muted" t-esc="event.name"/>
+                    <span class="h4 text-muted" t-out="event.name"/>
                 </div>
             </div>
             <div class="row mb-3 o_wereg_confirmed_attendees">
                 <div class="col-md-4 col-xs-12 mt-3" t-foreach="attendees" t-as="attendee">
                     <div class="d-flex flex-column">
                         <span class="font-weight-bold text-truncate">
-                            <t t-if="attendee.name" t-esc="attendee.name"/>
+                            <t t-if="attendee.name" t-out="attendee.name"/>
                             <t t-else="">N/A</t>
                         </span>
                         <span class="text-truncate">
                             <i class="fa fa-envelope mr-2   "></i>
-                            <t t-if="attendee.email" t-esc="attendee.email"/>
+                            <t t-if="attendee.email" t-out="attendee.email"/>
                             <t t-else="">N/A</t>
                         </span>
                         <span t-if="attendee.phone">
                             <i class="fa fa-phone mr-2"></i>
-                            <t t-esc="attendee.phone"/>
+                            <t t-out="attendee.phone"/>
                         </span>
                         <span>
                             <i class="fa fa-ticket mr-2"></i>
                             <t t-if="attendee.event_ticket_id">
-                                <t t-esc="attendee.event_ticket_id.name"/> (Ref: <t t-esc="attendee.id"/>)
+                                <t t-out="attendee.event_ticket_id.name"/> (Ref: <t t-out="attendee.id"/>)
                             </t>
-                            <t t-else="">Ref: <t t-esc="attendee.id"/></t>
+                            <t t-else="">Ref: <t t-out="attendee.id"/></t>
                         </span>
                     </div>
                 </div>
@@ -365,7 +368,8 @@
                             <b>Start</b>
                         </div>
                         <div class="col pl-0">
-                            <span itemprop="startDate" t-esc="event.date_begin_located"/>
+                            <span itemprop="startDate" t-out="event.date_begin_located"/>
+                            (<span t-out="event.date_tz"/>)
                         </div>
                     </div>
                     <div class="row">
@@ -373,7 +377,8 @@
                             <b>End</b>
                         </div>
                         <div class="col pl-0">
-                            <span itemprop="endDate" t-esc="event.date_end_located"/>
+                            <span itemprop="endDate" t-out="event.date_end_located"/>
+                            (<span t-out="event.date_tz"/>)
                         </div>
                     </div>
                     <div class="mt-4">
