@@ -182,9 +182,15 @@ class Http(models.AbstractModel):
         )
         if status != 200:
             return self._response_by_status(status, headers, content)
-        else:
-            headers.append(('Content-Length', len(content)))
-            response = request.make_response(content, headers)
+
+        # Setting CSP required in order to play same origin videos as BG videos.
+        # It presents no additional security risk when set to 'self', for more info
+        # check https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/media-src.
+        xaccel_header = [header for header in headers if 'X-Accel-Redirect' in header]
+
+        content = content if not xaccel_header else ""
+        headers.append(('Content-Length', len(content)))
+        response = request.make_response(content, headers)
         return response
 
     @api.model
@@ -216,12 +222,16 @@ class Http(models.AbstractModel):
             status = 200
             if not (width or height):
                 width, height = odoo.tools.image_guess_size_from_field_name(field)
-        try:
-            content = image_process(image, size=(int(width), int(height)), crop=crop, quality=int(quality))
-        except Exception:
-            return request.not_found()
-        headers = http.set_safe_image_headers(headers, content)
-        response = request.make_response(content, headers)
+
+        content = None
+        process_image = width or height or crop or quality
+        if process_image or not [header for header in headers if 'X-Accel-Redirect' in header]:
+            try:
+                content = image_process(image, size=(int(width), int(height)), crop=crop, quality=int(quality))
+            except Exception:
+                return request.not_found()
+            headers = http.set_safe_image_headers(headers, content)
+        response = request.make_response(content or image, headers)
         response.status_code = status
         return response
 

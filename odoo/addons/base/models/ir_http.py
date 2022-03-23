@@ -364,8 +364,8 @@ class IrHttp(models.AbstractModel):
         status = 200 if content else 404
         return status, content, filename, mimetype, filehash
 
-    def _binary_set_headers(self, status, filename, mimetype, unique, filehash=None, download=False):
-        headers = [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff'), ('Content-Security-Policy', "default-src 'none'")]
+    def _binary_set_headers(self, status, filename, mimetype, unique, filehash=None, download=False, xaccel_header=None):
+        headers = [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff'), ('Content-Security-Policy', "default-src 'none'")] + ([xaccel_header] if xaccel_header else [])
         # cache
         etag = bool(request) and request.httprequest.headers.get('If-None-Match')
         status = status or 200
@@ -405,9 +405,15 @@ class IrHttp(models.AbstractModel):
         :returns: (status, headers, content)
         """
         record, status = self._get_record_and_check(xmlid=xmlid, model=model, id=id, field=field, access_token=access_token)
+        xaccel_header = None
 
         if not record:
-            return (status or 404, [], None)
+            return status or 404, [], None
+
+        if odoo.tools.config['xaccel'] and hasattr(record, "store_fname") and record.store_fname:
+            # Uses NGINX location /protected_odoo_filestore/ to serve files through NGINX
+            # instead of reading the binaries using Odoo workers
+            xaccel_header = ('X-Accel-Redirect', f"/protected_odoo_filestore/{record.store_fname}")
 
         content, headers, status = None, [], None
 
@@ -419,7 +425,7 @@ class IrHttp(models.AbstractModel):
                 default_mimetype='application/octet-stream')
 
         status, headers = self._binary_set_headers(
-            status, filename, mimetype, unique, filehash=filehash, download=download)
+            status, filename, mimetype, unique, filehash=filehash, download=download, xaccel_header=xaccel_header)
 
         return status, headers, content
 

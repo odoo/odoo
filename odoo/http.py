@@ -422,10 +422,12 @@ def set_safe_image_headers(headers, content):
     file is of an unsafe type, it is not interpreted as that type if the
     `Content-type` header was already set to a different mimetype
     """
+    xaccel_header = [header for header in headers if 'X-Accel-Redirect' in header]
     headers = werkzeug.datastructures.Headers(headers)
-    content_type = guess_mimetype(content)
-    if content_type in SAFE_IMAGE_MIMETYPES:
-        headers['Content-Type'] = content_type
+    if not xaccel_header:
+        content_type = guess_mimetype(content)
+        if content_type in SAFE_IMAGE_MIMETYPES:
+            headers['Content-Type'] = content_type
     headers['X-Content-Type-Options'] = 'nosniff'
     headers['Content-Length'] = len(content)
     return list(headers)

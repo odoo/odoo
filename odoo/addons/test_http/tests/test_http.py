@@ -108,6 +108,11 @@ class TestHttpGreeting(TestHttpBase):
 
 @tagged('post_install', '-at_install')
 class TestHttpStatic(TestHttpBase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.classPatch(config, 'options', {**config.options, 'xaccel': False})
+
     def test_static0_png_image(self):
         res = self.nodb_url_open("/test_http/static/src/img/gizeh.png")
         self.assertEqual(res.status_code, 200)
@@ -132,24 +137,51 @@ class TestHttpStatic(TestHttpBase):
         res = self.nodb_url_open("/test_http/static/i-dont-exist")
         self.assertEqual(res.status_code, 404)
 
-    def test_static3_attachment(self):
-        with file_open('test_http/static/src/img/gizeh.svg', 'rb') as file:
-            content = file.read()
-
-        attachment = self.env['ir.attachment'].create({
-            'name': 'point_of_origin.svg',
-            'type': 'binary',
-            'raw': content,
-            'res_model': 'test_http.stargate',
-            'res_id': self.ref('test_http.earth'),
-        })
-        attachment['url'] = f'/test_http/{attachment["checksum"]}'
+    def test_static3_attachment_fallback(self):
+        attachment = self.env.ref('test_http.one_pixel_png')
 
         res = self.db_url_open(attachment['url'])
-        self.assertEqual(res.headers.get('Content-Length'), '1529')
-        self.assertEqual(res.headers.get('Content-Type'), 'image/svg+xml; charset=utf-8')
+        res.raise_for_status()
+        self.assertEqual(res.headers.get('Content-Length'), '70')
+        self.assertEqual(res.headers.get('Content-Type'), 'image/png')
         self.assertEqual(res.headers.get('Content-Security-Policy'), "default-src 'none'")
-        self.assertEqual(res.content, content)
+        self.assertEqual(res.content, attachment.raw)
+
+    def test_static4_web_content(self):
+        xmlid = 'test_http.one_pixel_png'
+        attachment = self.env.ref(xmlid)
+
+        with self.subTest(using_x_accel=False):
+            res = self.db_url_open(f'/web/content/{xmlid}')
+            res.raise_for_status()
+            self.assertEqual(res.headers.get('Content-Length'), '70')
+            self.assertEqual(res.headers.get('Content-Type'), 'image/png')
+            self.assertEqual(res.headers.get('Content-Security-Policy'), "default-src 'none'")
+            self.assertEqual(res.content, attachment.raw)
+
+        with self.subTest(using_x_accel=True), \
+             patch.object(config, 'options', {**config.options, 'xaccel': True}):
+            res = self.db_url_open(f'/web/content/{xmlid}')
+            res.raise_for_status()
+            self.assertEqual(res.headers.get('X-Accel-Redirect'), f'/protected_odoo_filestore/{attachment.store_fname}')
+
+    def test_static5_web_image(self):
+        xmlid = 'test_http.one_pixel_png'
+        attachment = self.env.ref(xmlid)
+
+        with self.subTest(using_x_accel=False):
+            res = self.db_url_open(f'/web/image/{xmlid}')
+            res.raise_for_status()
+            self.assertEqual(res.content, attachment.raw, res.content)
+            self.assertEqual(res.headers.get('Content-Length'), '70')
+            self.assertEqual(res.headers.get('Content-Type'), 'image/png')
+            self.assertEqual(res.headers.get('Content-Security-Policy'), "default-src 'none'")
+
+        with self.subTest(using_x_accel=True), \
+             patch.object(config, 'options', {**config.options, 'xaccel': True}):
+            res = self.db_url_open(f'/web/image/{xmlid}')
+            res.raise_for_status()
+            self.assertEqual(res.headers.get('X-Accel-Redirect'), f'/protected_odoo_filestore/{attachment.store_fname}')
 
 
 @tagged('post_install', '-at_install')
