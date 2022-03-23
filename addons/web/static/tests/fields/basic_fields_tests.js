@@ -2543,6 +2543,48 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('image fields are correctly rendered with one dimension set', async function (assert) {
+        assert.expect(6);
+
+        this.data.partner.fields.picture = { string: 'Picture', type: 'binary' };
+        this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
+        this.data.partner.records[0].document = 'myimage1';
+        this.data.partner.records[0].picture = 'myimage2';
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                '<field name="document" widget="image" options="{\'size\': [180, 0]}"/> ' +
+                '<field name="picture" widget="image" options="{\'size\': [0, 270]}"/> ' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route.startsWith('data:image/png;base64,myimage')) {
+                    return Promise.resolve('wow');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.containsOnce(form, 'div[name="document"] > img', "the widget should contain an image");
+        assert.hasAttrValue(form.$('div[name="document"] > img'), 'width', "180",
+            "the image should correctly set its attributes");
+        const image1Style = form.$('div[name="document"] > img').attr('style');
+        assert.ok(['max-width: 180px', 'height: auto', 'max-height: 100%'].every(e => image1Style.includes(e)),
+            "the image should correctly set its style");
+
+        assert.containsOnce(form, 'div[name="picture"] > img', "the widget should contain an image");
+        assert.hasAttrValue(form.$('div[name="picture"] > img'), 'height', "270",
+            "the image should correctly set its attributes");
+        const image2Style = form.$('div[name="picture"] > img').attr('style');
+        assert.ok(['max-height: 270px', 'width: auto', 'max-width: 100%'].every(e => image2Style.includes(e)),
+            "the image should correctly set its style");
+
+        form.destroy();
+    });
+
     QUnit.test('image fields in subviews are loaded correctly', async function (assert) {
         assert.expect(6);
 
