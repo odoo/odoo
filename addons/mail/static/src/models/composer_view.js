@@ -369,13 +369,15 @@ registerModel({
                 for (const threadView of message.originThread.threadViews) {
                     // Reset auto scroll to be able to see the newly posted message.
                     threadView.update({ hasAutoScrollOnMessageReceived: true });
+                    threadView.addComponentHint('message-posted', { message });
                 }
                 if (chatterThread) {
                     if (this.exists()) {
                         this.delete();
                     }
                     if (chatterThread.exists()) {
-                        chatterThread.fetchData(['followers', 'suggestedRecipients']);
+                        // Load new messages to fetch potential new messages from other users (useful due to lack of auto-sync in chatter).
+                        chatterThread.fetchData(['followers', 'messages', 'suggestedRecipients']);
                     }
                 }
                 if (threadViewThread) {
