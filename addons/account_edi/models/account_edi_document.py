@@ -181,16 +181,13 @@ class AccountEdiDocument(models.Model):
 
         def _postprocess_cancel_edi_results(documents, edi_result):
             invoice_ids_to_cancel = set()  # Avoid duplicates
-            attachments_to_unlink = self.env['ir.attachment']
             for document in documents:
                 move = document.move_id
                 move_result = edi_result.get(move, {})
                 if move_result.get('success') is True:
-                    old_attachment = document.attachment_id
                     document.write({
                         'state': 'cancelled',
                         'error': False,
-                        'attachment_id': False,
                         'blocking_level': False,
                     })
 
@@ -198,9 +195,6 @@ class AccountEdiDocument(models.Model):
                         # The user requested a cancellation of the EDI and it has been approved. Then, the invoice
                         # can be safely cancelled.
                         invoice_ids_to_cancel.add(move.id)
-
-                    if not old_attachment.res_model or not old_attachment.res_id:
-                        attachments_to_unlink |= old_attachment
 
                 elif not move_result.get('success'):
                     document.write({
@@ -212,10 +206,6 @@ class AccountEdiDocument(models.Model):
                 invoices = self.env['account.move'].browse(list(invoice_ids_to_cancel))
                 invoices.button_draft()
                 invoices.button_cancel()
-
-            # Attachments that are not explicitly linked to a business model could be removed because they are not
-            # supposed to have any traceability from the user.
-            attachments_to_unlink.unlink()
 
         test_mode = self._context.get('edi_test_mode', False)
 
