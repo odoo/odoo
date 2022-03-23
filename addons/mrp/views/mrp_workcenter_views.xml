@@ -40,7 +40,7 @@
                     <field name="alternative_workcenter_ids" widget="many2many_tags" optional="show"/>
                     <field name="productive_time" optional="hide"/>
                     <field name="costs_hour" optional="show"/>
-                    <field name="capacity" optional="show"/>
+                    <field name="default_capacity" optional="show"/>
                     <field name="time_efficiency" optional="show"/>
                     <field name="oee_target" optional="show"/>
                     <field name="time_start" optional="hide"/>
@@ -364,8 +364,7 @@
                                         <div class="o_row">
                                             <field name="time_efficiency"/> %
                                         </div>
-                                        <field name="capacity"/>
-
+                                        <field name="default_capacity"/>
                                         <label for="oee_target"/>
                                         <div class="o_row">
                                             <field name="oee_target"/> %
@@ -387,6 +386,15 @@
                                 </group>
                                 <separator string="Description"/>
                                 <field name="note" nolabel="1" placeholder="Description of the work center..."/>
+                            </page>
+                            <page string="Specific Capacities" name="capacity">
+                                <field name="capacity_ids" context="{'default_workcenter_id': id, 'default_company_id': company_id}">
+                                    <tree editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="product_uom_id" groups="uom.group_uom"/>
+                                        <field name="capacity"/>
+                                    </tree>
+                                </field>
                             </page>
                         </notebook>
                     </sheet>

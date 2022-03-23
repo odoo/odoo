@@ -175,7 +175,7 @@ class MrpWorkcenter(models.Model):
             ('resource_calendar_id', populate.compute(get_resource_calendar_id)),
             ('active', populate.iterate([True, False], [0.9, 0.1])),
             ('code', populate.constant("W/{counter}")),
-            ('capacity', populate.iterate([0.5, 1.0, 2.0, 5.0], [0.2, 0.4, 0.2, 0.2])),
+            ('default_capacity', populate.iterate([0.5, 1.0, 2.0, 5.0], [0.2, 0.4, 0.2, 0.2])),
             ('sequence', populate.randint(1, 1000)),
             ('color', populate.randint(1, 12)),
             ('costs_hour', populate.randint(5, 25)),

@@ -15,7 +15,7 @@ class TestAnalyticAccount(TransactionCase):
         cls.analytic_account = cls.env['account.analytic.account'].create({'name': 'test_analytic_account'})
         cls.workcenter = cls.env['mrp.workcenter'].create({
             'name': 'Workcenter',
-            'capacity': 1,
+            'default_capacity': 1,
             'time_efficiency': 100,
             'costs_hour': 10,
         })
