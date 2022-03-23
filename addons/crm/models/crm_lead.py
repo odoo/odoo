@@ -1233,11 +1233,11 @@ class Lead(models.Model):
         if not duration:
             duration = _('unknown')
         else:
-            duration = str(duration)
+            duration = self.env['ir.qweb.field.duration'].value_to_html(duration, {'unit': 'hour'})
         meet_date = fields.Datetime.from_string(meeting_date)
         meeting_usertime = fields.Datetime.to_string(fields.Datetime.context_timestamp(self, meet_date))
         html_time = "<time datetime='%s+00:00'>%s</time>" % (meeting_date, meeting_usertime)
-        message = _("Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hours") % (html_time, meeting_subject, duration)
+        message = _("Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s") % (html_time, meeting_subject, duration)
         return self.message_post(body=message)
 
     # ------------------------------------------------------------
