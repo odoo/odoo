@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website.sale.onsite</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website_sale.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='onsite_payment_setting']/div[hasclass('o_setting_right_pane')]" position="inside">
+                <div class="content-group">
+                    <label class="col-lg-3" string="Picking sites" for="picking_site_ids"/>
+                    <field name="picking_site_ids" domain="[('delivery_type', '=', 'onsite')]" widget="many2many_tags"
+                           context="{'default_website_id': website_id, 'default_product_id': %(website_sale_picking.onsite_delivery_product)d, 'default_delivery_type': 'onsite', 'default_website_published': True, 'default_company_id': company_id}"/>
+                </div>
+                <div class="mt8">
+                    <button name="%(delivery.action_delivery_carrier_form)d" icon="fa-arrow-right" type="action" string="Customize Pickup Sites" class="btn-link" context="{'search_default_delivery_type': 'onsite'}"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
