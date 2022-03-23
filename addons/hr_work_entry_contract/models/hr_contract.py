@@ -1,6 +1,9 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import itertools
+import pytz
+
 from collections import defaultdict
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
@@ -10,7 +13,6 @@ from odoo.addons.resource.models.resource import datetime_to_string, string_to_d
 from odoo.osv import expression
 from odoo.exceptions import UserError
 
-import pytz
 
 class HrContract(models.Model):
     _inherit = 'hr.contract'
@@ -60,6 +62,9 @@ class HrContract(models.Model):
         employees_by_calendar = defaultdict(lambda: self.env['hr.employee'])
         for contract in self:
             employees_by_calendar[contract.resource_calendar_id] |= contract.employee_id
+
+        all_resources = self.employee_id.resource_id
+
         attendances_by_calendar = {
             calendar: calendar._attendance_intervals_batch(
                 start_dt,
@@ -68,6 +73,20 @@ class HrContract(models.Model):
                 tz=pytz.timezone(calendar.tz)
             ) for calendar, employees in employees_by_calendar.items()}
 
+        resource_calendar_leaves = self.env['resource.calendar.leaves'].search([
+            ('time_type', '=', 'leave'),
+            # ('calendar_id', '=', self.id), --> Get all the time offs
+            ('resource_id', 'in', [False] + all_resources.ids),
+            ('date_from', '<=', datetime_to_string(end_dt)),
+            ('date_to', '>=', datetime_to_string(start_dt)),
+            ('company_id', '=', self.env.company.id),
+        ])
+        # {resource: resource_calendar_leaves}
+        leaves_by_resource = defaultdict(lambda: self.env['resource.calendar.leaves'])
+        for leave in resource_calendar_leaves:
+            leaves_by_resource[leave.resource_id.id] |= leave
+
+        tz_dates = {}
         for contract in self:
             employee = contract.employee_id
             calendar = contract.resource_calendar_id
@@ -81,21 +100,9 @@ class HrContract(models.Model):
             # YTI TODO: This mimics the behavior of _leave_intervals_batch, while waiting to be cleaned
             # in master.
             resources_list = [self.env['resource.resource'], resource]
-            resource_ids = [False, resource.id]
-            leave_domain = [
-                ('time_type', '=', 'leave'),
-                # ('calendar_id', '=', self.id), --> Get all the time offs
-                ('resource_id', 'in', resource_ids),
-                ('date_from', '<=', datetime_to_string(end_dt)),
-                ('date_to', '>=', datetime_to_string(start_dt)),
-                ('company_id', '=', self.env.company.id),
-            ]
             result = defaultdict(lambda: [])
-            tz_dates = {}
-            for leave in self.env['resource.calendar.leaves'].search(leave_domain):
+            for leave in itertools.chain(leaves_by_resource[False], leaves_by_resource[resource.id]):
                 for resource in resources_list:
-                    if leave.resource_id.id not in [False, resource.id]:
-                        continue
                     tz = tz if tz else pytz.timezone((resource or contract).tz)
                     if (tz, start_dt) in tz_dates:
                         start = tz_dates[(tz, start_dt)]
