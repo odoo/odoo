@@ -229,7 +229,7 @@ export class SearchModel extends EventBus {
 
         const searchViewDescription = {};
         if (loadSearchView) {
-            const viewDescriptions = await this.viewService.loadViews(
+            const result = await this.viewService.loadViews(
                 {
                     context: this.globalContext,
                     resModel,
@@ -240,13 +240,11 @@ export class SearchModel extends EventBus {
                     loadIrFilters: loadIrFilters || false,
                 }
             );
-            Object.assign(searchViewDescription, viewDescriptions.search);
+            Object.assign(searchViewDescription, result.views.search);
+            searchViewFields = searchViewFields || result.fields;
         }
         if (searchViewArch) {
             searchViewDescription.arch = searchViewArch;
-        }
-        if (searchViewFields) {
-            searchViewDescription.fields = searchViewFields;
         }
         if (irFilters) {
             searchViewDescription.irFilters = irFilters;
@@ -254,9 +252,8 @@ export class SearchModel extends EventBus {
         if (searchViewId !== undefined) {
             searchViewDescription.viewId = searchViewId;
         }
-
         this.searchViewArch = searchViewDescription.arch || "<search/>";
-        this.searchViewFields = searchViewDescription.fields || {};
+        this.searchViewFields = searchViewFields || {};
         if (searchViewDescription.irFilters) {
             this.irFilters = searchViewDescription.irFilters;
         }
@@ -266,7 +263,7 @@ export class SearchModel extends EventBus {
 
         if (config.state) {
             this._importState(config.state);
-            this.__legacyParseSearchPanelArchAnyway(searchViewDescription);
+            this.__legacyParseSearchPanelArchAnyway(searchViewDescription, searchViewFields);
             this.domainParts = {};
             this.display = this._getDisplay(config.display);
 
@@ -307,6 +304,7 @@ export class SearchModel extends EventBus {
 
         const parser = new SearchArchParser(
             searchViewDescription,
+            searchViewFields,
             searchDefaults,
             searchPanelDefaults
         );
@@ -2084,13 +2082,14 @@ export class SearchModel extends EventBus {
      * extension doesn't include the arch information, i.e. the class name and
      * view types. We have to extract those if they are not given.
      * @param {Object} searchViewDescription
+     * @param {Object} searchViewFields
      */
-    __legacyParseSearchPanelArchAnyway(searchViewDescription) {
+    __legacyParseSearchPanelArchAnyway(searchViewDescription, searchViewFields) {
         if (this.searchPanelInfo) {
             return;
         }
 
-        const parser = new SearchArchParser(searchViewDescription);
+        const parser = new SearchArchParser(searchViewDescription, searchViewFields);
         const { searchPanelInfo } = parser.parse();
 
         this.searchPanelInfo = { ...searchPanelInfo, shouldReload: false };

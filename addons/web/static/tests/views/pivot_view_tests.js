@@ -4780,7 +4780,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_pivot_view");
         assert.strictEqual(getCurrentValues(target), ["4", "2", "2"].join(","));
 
-        assert.verifySteps(["/web/webclient/load_menus", "load_views", "read_group", "read_group"]);
+        assert.verifySteps(["/web/webclient/load_menus", "get_views", "read_group", "read_group"]);
 
         // switch to list view
         await click(target.querySelector(".o_control_panel .o_switch_view.o_list"));

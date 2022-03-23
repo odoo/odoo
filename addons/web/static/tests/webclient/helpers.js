@@ -12,6 +12,7 @@ import {
     makeLegacySessionService,
 } from "@web/legacy/utils";
 import { makeLegacyActionManagerService } from "@web/legacy/backend_utils";
+import { generateLegacyLoadViewsResult } from "@web/legacy/legacy_load_views";
 import { viewService } from "@web/views/view_service";
 import { actionService } from "@web/webclient/actions/action_service";
 import { effectService } from "@web/core/effects/effect_service";
@@ -118,16 +119,18 @@ export function addLegacyMockEnvironment(env, legacyParams = {}) {
                 });
             },
             load_views: async (params, options) => {
-                const result = await env.services.rpc(`/web/dataset/call_kw/${params.model}`, {
+                let result = await env.services.rpc(`/web/dataset/call_kw/${params.model}`, {
                     args: [],
                     kwargs: {
                         context: params.context,
                         options: options,
                         views: params.views_descr,
                     },
-                    method: "load_views",
+                    method: "get_views",
                     model: params.model,
                 });
+                const { models, views: _views } = result;
+                result = generateLegacyLoadViewsResult(params.model, _views, models);
                 const views = result.fields_views;
                 for (const [, viewType] of params.views_descr) {
                     const fvg = views[viewType];

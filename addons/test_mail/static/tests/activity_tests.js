@@ -562,7 +562,7 @@ QUnit.test("Schedule activity dialog uses the same search view as activity view"
     });
 
     function mockRPC(route, args) {
-        if (args.method === "load_views") {
+        if (args.method === "get_views") {
             assert.step(JSON.stringify(args.kwargs.views));
         }
     }

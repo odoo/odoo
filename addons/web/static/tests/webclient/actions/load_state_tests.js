@@ -216,7 +216,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
         ]);
     });
@@ -239,7 +239,7 @@ QUnit.module("ActionManager", (hooks) => {
             "Second record",
             "should have opened the second record"
         );
-        assert.verifySteps(["/web/webclient/load_menus", "load_views", "read"]);
+        assert.verifySteps(["/web/webclient/load_menus", "get_views", "read"]);
     });
 
     QUnit.test("properly load records with existing first APP", async function (assert) {
@@ -266,7 +266,7 @@ QUnit.module("ActionManager", (hooks) => {
             "should have opened the second record"
         );
         assert.containsNone(target, ".o_menu_brand");
-        assert.verifySteps(["/web/webclient/load_menus", "load_views", "read"]);
+        assert.verifySteps(["/web/webclient/load_menus", "get_views", "read"]);
     });
 
     QUnit.test("properly load default record", async function (assert) {
@@ -287,7 +287,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "onchange",
         ]);
     });
@@ -309,7 +309,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
         ]);
     });
@@ -345,7 +345,7 @@ QUnit.module("ActionManager", (hooks) => {
             assert.verifySteps([
                 "/web/webclient/load_menus",
                 "/web/action/load",
-                "load_views",
+                "get_views",
                 "read",
                 "/web/dataset/search_read",
             ]);
@@ -458,12 +458,12 @@ QUnit.module("ActionManager", (hooks) => {
             "should have opened the requested record"
         );
         // verify steps to ensure that the whole action hasn't been re-executed
-        // (if it would have been, /web/action/load and load_views would appear
+        // (if it would have been, /web/action/load and get_views would appear
         // several times)
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
             "/web/dataset/search_read",
             "read",
@@ -507,12 +507,12 @@ QUnit.module("ActionManager", (hooks) => {
             "should have switched to the requested record"
         );
         // verify steps to ensure that the whole action hasn't been re-executed
-        // (if it would have been, /web/action/load and load_views would appear
+        // (if it would have been, /web/action/load and get_views would appear
         // twice)
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
             "read",
             "read",
@@ -717,7 +717,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
             "setItem session current_action",
             "getItem session current_action",
@@ -749,7 +749,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "/web/dataset/call_kw/partner/load_views",
+            "/web/dataset/call_kw/partner/get_views",
             "/web/dataset/search_read",
         ]);
     });
@@ -799,7 +799,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "/web/dataset/call_kw/partner/load_views",
+            "/web/dataset/call_kw/partner/get_views",
             "/web/dataset/search_read",
         ]);
     });
@@ -830,7 +830,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "/web/dataset/call_kw/partner/load_views",
+            "/web/dataset/call_kw/partner/get_views",
             "/web/dataset/call_kw/partner/read",
         ]);
         await loadState(webClient, {

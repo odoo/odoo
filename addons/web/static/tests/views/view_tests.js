@@ -110,7 +110,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.module("View component");
 
     ////////////////////////////////////////////////////////////////////////////
-    // load_views
+    // get_views
     ////////////////////////////////////////////////////////////////////////////
 
     QUnit.test("simple rendering", async function (assert) {
@@ -132,7 +132,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             mockRPC: (_, args) => {
                 assert.strictEqual(args.model, "animal");
-                assert.strictEqual(args.method, "load_views");
+                assert.strictEqual(args.method, "get_views");
                 assert.deepEqual(args.kwargs.views, [[false, "toy"]]);
                 assert.deepEqual(args.kwargs.options, {
                     action_id: false,

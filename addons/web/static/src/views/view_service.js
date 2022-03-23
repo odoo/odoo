@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
+import { deepCopy } from "@web/core/utils/objects";
 import { registry } from "@web/core/registry";
-import { device } from 'web.config';
+import { generateLegacyLoadViewsResult } from "@web/legacy/legacy_load_views";
 
 /**
  * @typedef {Object} IrFilter
@@ -64,47 +65,48 @@ export const viewService = {
          * @returns {Promise<ViewDescriptions>}
          */
         async function loadViews(params, options) {
-            const key = JSON.stringify([params.resModel, params.views, params.context, options]);
+            const loadViewsOptions = {
+                action_id: options.actionId || false,
+                load_filters: options.loadIrFilters || false,
+                toolbar: options.loadActionMenus || false,
+            };
+            if (env.isSmall) {
+                loadViewsOptions.mobile = true;
+            }
+            const { context, resModel, views } = params;
+            const key = JSON.stringify([resModel, views, context, loadViewsOptions]);
             if (!cache[key]) {
-                var load_views_options = {
-                    action_id: options.actionId || false,
-                    load_filters: options.loadIrFilters || false,
-                    toolbar: options.loadActionMenus || false,
-                }
-                if (device.isMobile){
-                    load_views_options.mobile = device.isMobile;
-                }
                 cache[key] = orm
-                    .call(params.resModel, "load_views", [], {
-                        views: params.views,
-                        options: load_views_options,
-                        context: params.context,
-                    })
+                    .call(resModel, "get_views", [], { context, views, options: loadViewsOptions })
                     .then((result) => {
+                        const { models, views } = result;
+                        const modelsCopy = deepCopy(models); // for legacy views
+                        const fields = models[resModel];
+                        // add relatedFields for relational fields in view
+                        function setRelatedFields(fields, models) {
+                            for (const field of Object.values(fields)) {
+                                if (field.relation && !field.relatedFields) {
+                                    field.relatedFields = models[field.relation] || {};
+                                    setRelatedFields(field.relatedFields, models);
+                                }
+                            }
+                        }
+                        setRelatedFields(models[resModel], models);
                         const viewDescriptions = {
-                            __legacy__: result,
-                        }; // for legacy purpose, keys in result are left in viewDescriptions
-                        for (const [, viewType] of params.views) {
-                            const viewDescription = JSON.parse(
-                                JSON.stringify(result.fields_views[viewType])
-                            );
-                            viewDescription.viewId = viewDescription.view_id;
-                            delete viewDescription.view_id;
-                            if (viewDescription.toolbar) {
-                                viewDescription.actionMenus = viewDescription.toolbar;
-                                delete viewDescription.toolbar;
+                            __legacy__: generateLegacyLoadViewsResult(resModel, views, modelsCopy),
+                            fields,
+                            views: {},
+                        };
+                        for (const viewType in views) {
+                            const { arch, toolbar, id, filters } = views[viewType];
+                            const viewDescription = { arch, id };
+                            if (toolbar) {
+                                viewDescription.actionMenus = toolbar;
                             }
-                            viewDescription.fields = Object.assign(
-                                {},
-                                result.fields,
-                                viewDescription.fields
-                            ); // before a deep freeze was done.
-                            delete viewDescription.base_model; // unused
-                            delete viewDescription.field_parent; // unused
-                            if (viewType === "search" && options.loadIrFilters) {
-                                viewDescription.irFilters = result.filters;
+                            if (filters) {
+                                viewDescription.irFilters = filters;
                             }
-                            viewDescriptions[viewType] = viewDescription;
+                            viewDescriptions.views[viewType] = viewDescription;
                         }
                         return viewDescriptions;
                     })

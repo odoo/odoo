@@ -137,8 +137,8 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             mockRPC: function (_, args) {
-                if (args.method === "load_views") {
-                    throw new Error("No load_views should be done");
+                if (args.method === "get_views") {
+                    throw new Error("No get_views should be done");
                 }
             },
             resModel: "animal",
@@ -159,7 +159,7 @@ QUnit.module("Search", (hooks) => {
             await makeWithSearch({
                 serverData,
                 mockRPC: function (_, args) {
-                    if (args.method === "load_views") {
+                    if (args.method === "get_views") {
                         assert.deepEqual(args.kwargs, {
                             context: {
                                 lang: "en",
@@ -193,8 +193,8 @@ QUnit.module("Search", (hooks) => {
             await makeWithSearch({
                 serverData,
                 mockRPC: function (_, args) {
-                    if (args.method === "load_views") {
-                        throw new Error("No load_views should be done");
+                    if (args.method === "get_views") {
+                        throw new Error("No get_views should be done");
                     }
                 },
                 resModel: "animal",
@@ -218,7 +218,7 @@ QUnit.module("Search", (hooks) => {
             await makeWithSearch({
                 serverData,
                 mockRPC: function (_, args) {
-                    if (args.method === "load_views") {
+                    if (args.method === "get_views") {
                         assert.deepEqual(args.kwargs.options, {
                             action_id: false,
                             load_filters: true,
@@ -253,7 +253,7 @@ QUnit.module("Search", (hooks) => {
             await makeWithSearch({
                 serverData,
                 mockRPC: function (_, args) {
-                    if (args.method === "load_views") {
+                    if (args.method === "get_views") {
                         assert.deepEqual(args.kwargs.views, [[1, "search"]]);
                     }
                 },
