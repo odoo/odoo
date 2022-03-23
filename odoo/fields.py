@@ -793,10 +793,12 @@ class Field(MetaField('DummyField', (object,), {})):
     # Field description
     #
 
-    def get_description(self, env):
+    def get_description(self, env, attributes=None):
         """ Return a dictionary that describes the field ``self``. """
-        desc = {'type': self.type}
+        desc = {}
         for attr, prop in self.description_attrs:
+            if attributes is not None and attr not in attributes:
+                continue
             value = getattr(self, prop)
             if callable(value):
                 value = value(env)
@@ -806,6 +808,8 @@ class Field(MetaField('DummyField', (object,), {})):
         return desc
 
     # properties used by get_description()
+    _description_name = property(attrgetter('name'))
+    _description_type = property(attrgetter('type'))
     _description_store = property(attrgetter('store'))
     _description_manual = property(attrgetter('manual'))
     _description_related = property(attrgetter('related'))
