@@ -3295,7 +3295,7 @@ QUnit.module('Views', {
                 initialDate: initialDate,
             },
             mockRPC: function (route, args) {
-                if (args.method === "load_views") {
+                if (args.method === "get_views") {
                     assert.strictEqual(args.kwargs.views[0][0], 1,
                         "should load view with id 1");
                 }

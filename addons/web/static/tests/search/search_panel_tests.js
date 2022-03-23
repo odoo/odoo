@@ -1060,7 +1060,7 @@ QUnit.module("Search", (hooks) => {
         promise.resolve();
         await compPromise;
 
-        assert.verifySteps(["load_views", "search_panel_select_range"]);
+        assert.verifySteps(["get_views", "search_panel_select_range"]);
 
         // Case 2: search domain changed so we wait for the search panel once again
         promise = makeDeferred();
@@ -1123,7 +1123,7 @@ QUnit.module("Search", (hooks) => {
         await compPromise;
 
         assert.verifySteps([
-            "load_views",
+            "get_views",
             "search_panel_select_range",
             "search_panel_select_multi_range",
         ]);
@@ -1160,7 +1160,7 @@ QUnit.module("Search", (hooks) => {
         await compPromise;
 
         assert.verifySteps([
-            "load_views",
+            "get_views",
             "search_panel_select_range",
             "search_panel_select_multi_range",
         ]);

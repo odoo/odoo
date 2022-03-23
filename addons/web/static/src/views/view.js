@@ -199,32 +199,31 @@ export class View extends Component {
         if (loadView || loadSearchView) {
             // view description (or search view description if required) is incomplete
             // a loadViews is done to complete the missing information
-            const viewDescriptions = await this.viewService.loadViews(
+            const result = await this.viewService.loadViews(
                 { context, resModel, views },
                 { actionId: this.env.config.actionId, loadActionMenus, loadIrFilters }
             );
             // Note: if this.props.views is different from views, the cached descriptions
             // will certainly not be reused! (but for the standard flow this will work as
             // before)
-            viewDescription = viewDescriptions[type];
-            view[0] = viewDescription.viewId;
-            searchViewDescription = viewDescriptions.search;
+            viewDescription = result.views[type];
+            searchViewDescription = result.views.search;
             if (loadSearchView) {
-                searchViewId = searchViewId || searchViewDescription.viewId;
+                searchViewId = searchViewId || searchViewDescription.id;
                 if (!searchViewArch) {
                     searchViewArch = searchViewDescription.arch;
-                    searchViewFields = searchViewDescription.fields;
+                    searchViewFields = result.fields;
                 }
                 if (!irFilters) {
                     irFilters = searchViewDescription.irFilters;
                 }
             }
             this.env.config.views = views;
+            fields = fields || result.fields;
         }
 
         if (!arch) {
             arch = viewDescription.arch;
-            fields = viewDescription.fields;
         }
         if (!actionMenus) {
             actionMenus = viewDescription.actionMenus;
@@ -244,7 +243,7 @@ export class View extends Component {
         }
 
         Object.assign(this.env.config, {
-            viewId: viewDescription.viewId,
+            viewId: viewDescription.id,
             viewType: type,
             viewSubType: subType,
             bannerRoute,

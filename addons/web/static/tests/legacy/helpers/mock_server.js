@@ -79,7 +79,7 @@ var MockServer = Class.extend({
     },
     /**
      * helper: read a string describing an arch, and returns a simulated
-     * 'field_view_get' call to the server. Calls processViews() of data_manager
+     * 'view_get' call to the server. Calls processViews() of data_manager
      * to mimick the real behavior of a call to loadViews().
      *
      * @param {Object} params
@@ -90,7 +90,7 @@ var MockServer = Class.extend({
      * @param {Object} [params.viewOptions] the view options set in the test (optional)
      * @returns {Object} an object with 2 keys: arch and fields
      */
-    fieldsViewGet: function (params) {
+    getView: function (params) {
         var model = params.model;
         var toolbar = params.toolbar;
         var viewId = params.view_id;
@@ -99,14 +99,14 @@ var MockServer = Class.extend({
             throw new Error('Model ' + model + ' was not defined in mock server data');
         }
         var fields = $.extend(true, {}, this.data[model].fields);
-        var fvg = this._fieldsViewGet(params.arch, model, fields, viewOptions.context || {});
+        var view = this._getView(params.arch, model, fields, viewOptions.context || {});
         if (toolbar) {
-            fvg.toolbar = toolbar;
+            view.toolbar = toolbar;
         }
         if (viewId) {
-            fvg.view_id = viewId;
+            view.id = viewId;
         }
-        return fvg;
+        return view;
     },
     /**
      * Simulates a complete fetch call.
@@ -266,7 +266,7 @@ var MockServer = Class.extend({
     },
     /**
      * helper: read a string describing an arch, and returns a simulated
-     * 'fields_view_get' call to the server.
+     * 'get_view' call to the server.
      *
      * @private
      * @param {string} arch a string OR a parsed xml document
@@ -276,12 +276,13 @@ var MockServer = Class.extend({
      * @returns {Object} an object with 2 keys: arch and fields (the fields
      *   appearing in the views)
      */
-    _fieldsViewGet: function (arch, model, fields, context) {
+    _getView: function (arch, model, fields, context) {
         var self = this;
         var modifiersNames = ['invisible', 'readonly', 'required'];
         var onchanges = this.data[model].onchanges || {};
         var fieldNodes = {};
         var groupbyNodes = {};
+        const relatedModels = new Set([model]);
 
         var doc;
         if (typeof arch === 'string') {
@@ -394,7 +395,7 @@ var MockServer = Class.extend({
             return !isField;
         });
 
-        var relModel, relFields;
+        let relModel, relFields;
         _.each(fieldNodes, function (node, name) {
             var field = fields[name];
             if (field.type === "many2one" || field.type === "many2many") {
@@ -404,13 +405,16 @@ var MockServer = Class.extend({
                 node.setAttribute('can_write', canWrite || "true");
             }
             if (field.type === "one2many" || field.type === "many2many") {
-                field.views = {};
-                _.each(node.childNodes, function (children) {
-                    if (children.tagName) { // skip text nodes
-                        relModel = field.relation;
+                relModel = field.relation;
+                relatedModels.add(relModel);
+                _.each(node.childNodes, function (childNode) {
+                    if (childNode.tagName) { // skip text nodes
                         relFields = $.extend(true, {}, self.data[relModel].fields);
-                        field.views[children.tagName] = self._fieldsViewGet(children, relModel,
+                        // this is hackhish, but _getView modifies the subview document in place,
+                        // especially to generate the "modifiers" attribute
+                        const { models } = self._getView(childNode, relModel,
                             relFields, _.extend({}, context, {base_model_name: model}));
+                        [...models].forEach((modelName) => relatedModels.add(modelName));
                     }
                 });
             }
@@ -427,22 +431,21 @@ var MockServer = Class.extend({
             }
             field.views = {};
             relModel = field.relation;
+            relatedModels.add(relModel);
             relFields = $.extend(true, {}, self.data[relModel].fields);
             node._isProcessed = true;
             // postprocess simulation
-            field.views.groupby = self._fieldsViewGet(node, relModel, relFields, context);
-            while (node.firstChild) {
-                node.removeChild(node.firstChild);
-            }
+            const { models } = self._getView(node, relModel, relFields, context);
+            [...models].forEach((modelName) => relatedModels.add(modelName));
         });
 
         var xmlSerializer = new XMLSerializer();
         var processedArch = xmlSerializer.serializeToString(doc);
         return {
             arch: processedArch,
-            fields: _.pick(fields, _.keys(fieldNodes)),
             model: model,
             type: doc.tagName === 'tree' ? 'list' : doc.tagName,
+            models: relatedModels,
         };
     },
     /**
@@ -1180,7 +1183,7 @@ var MockServer = Class.extend({
         return action || false;
     },
     /**
-     * Simulate a 'load_views' operation
+     * Simulate a 'get_views' operation
      *
      * @param {string} model
      * @param {Array} args
@@ -1190,7 +1193,7 @@ var MockServer = Class.extend({
      * @param {Object} kwargs.context
      * @returns {Object}
      */
-    _mockLoadViews: function (model, kwargs) {
+    _mockGetViews: function (model, kwargs) {
         var self = this;
         var views = {};
         _.each(kwargs.views, function (view_descr) {
@@ -1199,7 +1202,7 @@ var MockServer = Class.extend({
             if (!viewID) {
                 var contextKey = (viewType === 'list' ? 'tree' : viewType) + '_view_ref';
                 if (contextKey in kwargs.context) {
-                    viewID = kwargs.context[contextKey];
+                    viewID = parseInt(kwargs.context[contextKey]);
                 }
             }
             var key = [model, viewID, viewType].join(',');
@@ -1989,8 +1992,8 @@ var MockServer = Class.extend({
             case 'search_panel_select_multi_range':
                 return this._mockSearchPanelSelectMultiRange(args.model, args.args, args.kwargs);
 
-            case 'load_views':
-                return this._mockLoadViews(args.model, args.kwargs);
+            case 'get_views':
+                return this._mockGetViews(args.model, args.kwargs);
 
             case 'name_get':
                 return this._mockNameGet(args.model, args.args);

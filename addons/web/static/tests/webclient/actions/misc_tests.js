@@ -311,7 +311,7 @@ QUnit.module("ActionManager", (hooks) => {
                 },
             });
             const mockRPC = async function (route, args) {
-                if (args && args.method === "load_views") {
+                if (args && args.method === "get_views") {
                     await Promise.resolve(def);
                 }
             };
@@ -319,7 +319,7 @@ QUnit.module("ActionManager", (hooks) => {
             // execute action 4 to know the number of widgets it instantiates
             await doAction(webClient, 4);
             const n = delta;
-            // execute a first action (its 'load_views' RPC is blocked)
+            // execute a first action (its 'get_views' RPC is blocked)
             def = testUtils.makeTestPromise();
             doAction(webClient, 3, { clearBreadcrumbs: true });
             await testUtils.nextTick();

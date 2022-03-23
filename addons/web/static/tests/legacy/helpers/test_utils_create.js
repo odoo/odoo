@@ -142,13 +142,13 @@ odoo.define('web.test_utils_create', function (require) {
                 new Widget(),
                 serverParams,
             );
-            const { arch, fields } = testUtilsMock.fieldsViewGet(mockServer, {
+            const { arch } = testUtilsMock.getView(mockServer, {
                 arch: globalConfig.arch,
                 fields: globalConfig.fields,
                 model,
                 viewOptions: { context: globalConfig.context },
             });
-            Object.assign(globalConfig, { arch, fields });
+            Object.assign(globalConfig, { arch });
         }
 
         globalConfig.env = env;
@@ -283,7 +283,7 @@ odoo.define('web.test_utils_create', function (require) {
 
         // add mock environment: mock server, session, fieldviewget, ...
         const mockServer = await testUtilsMock.addMockEnvironment(widget, params);
-        const viewInfo = testUtilsMock.fieldsViewGet(mockServer, params);
+        const viewInfo = testUtilsMock.getView(mockServer, params);
 
         params.server = mockServer;
 
@@ -297,7 +297,7 @@ odoo.define('web.test_utils_create', function (require) {
         };
         const viewOptions = Object.assign({
             action: Object.assign(defaultAction, params.action),
-            view: viewInfo,
+            view: { ...viewInfo, fields: mockServer.fieldsGet(params.model) },
             modelName: modelName,
             ids: 'res_id' in params ? [params.res_id] : undefined,
             currentId: 'res_id' in params ? params.res_id : undefined,
@@ -323,7 +323,7 @@ odoo.define('web.test_utils_create', function (require) {
             // TODO: probably needs to create an helper just for that
             view = new params.View({ viewInfo, modelName });
         } else {
-            viewOptions.controlPanelFieldsView = Object.assign(testUtilsMock.fieldsViewGet(mockServer, {
+            viewOptions.controlPanelFieldsView = Object.assign(testUtilsMock.getView(mockServer, {
                 arch: params.archs && params.archs[params.model + ',false,search'] || '<search/>',
                 fields: viewInfo.fields,
                 model: params.model,
