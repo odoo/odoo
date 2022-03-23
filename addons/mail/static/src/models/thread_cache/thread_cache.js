@@ -54,7 +54,7 @@ registerModel({
             }
             const messageIds = this.fetchedMessages.map(message => message.id);
             const fetchedMessages = this._loadMessages({ minId: Math.max(...messageIds) });
-            if (!fetchedMessages) {
+            if (!fetchedMessages || fetchedMessages.length === 0) {
                 return;
             }
             for (const threadView of this.threadViews) {
