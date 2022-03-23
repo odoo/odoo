@@ -101,7 +101,7 @@ const formatField = (field, value, opts = {}) => {
     }
     const type = field.type === "id" ? "integer" : field.type;
     const format = formatters.contains(type) ? formatters.get(type) : (v) => v;
-    return format(value, { field, ...opts });
+    return format(value, { digits: field.digits, ...opts });
 };
 
 export class CustomFilterItem extends Component {

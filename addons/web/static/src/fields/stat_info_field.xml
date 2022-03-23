@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.StatInfoField" owl="1">
-        <span class="o_stat_info o_stat_value" t-esc="value"/>
+        <span class="o_stat_info o_stat_value" t-esc="formattedValue"/>
         <span t-if="!props.noLabel" class="o_stat_text" t-esc="props.label"/>
     </t>
 

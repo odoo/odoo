@@ -6,12 +6,8 @@ import { standardFieldProps } from "./standard_field_props";
 const { Component } = owl;
 
 export class StatInfoField extends Component {
-    get formatter() {
-        return registry.category("formatters").get(this.props.type);
-    }
-
-    get value() {
-        return this.props.format(this.props.value || 0);
+    get formattedValue() {
+        return this.props.format(this.props.value || 0, { digits: this.props.digits });
     }
 }
 
@@ -20,6 +16,7 @@ StatInfoField.props = {
     ...standardFieldProps,
     label: { type: String, optional: true },
     noLabel: { type: Boolean, optional: true },
+    digits: { type: Array, optional: true },
 };
 StatInfoField.supportedTypes = ["float", "integer"];
 StatInfoField.isEmpty = () => false;
@@ -29,6 +26,9 @@ StatInfoField.extractProps = (fieldName, record, attrs) => {
             ? record.data[attrs.options.label_field]
             : record.activeFields[fieldName].string,
         noLabel: Boolean(attrs.nolabel && !/^(0|false)$/i.test(attrs.nolabel)),
+        digits:
+            (attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits) ||
+            record.fields[fieldName].digits,
     };
 };
 

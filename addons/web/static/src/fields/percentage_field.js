@@ -21,6 +21,12 @@ export class PercentageField extends Component {
         }
         this.props.update(parsedValue);
     }
+
+    get formattedValue() {
+        return this.props.format(this.props.value, {
+            digits: this.props.digits,
+        });
+    }
 }
 
 PercentageField.template = "web.PercentageField";
@@ -30,10 +36,14 @@ PercentageField.defaultProps = {
 PercentageField.props = {
     ...standardFieldProps,
     setAsInvalid: { type: Function, optional: true },
+    digits: { type: Array, optional: true },
 };
-PercentageField.extractProps = (fieldName, record) => {
+PercentageField.extractProps = (fieldName, record, attrs) => {
     return {
         setAsInvalid: record.setInvalidField.bind(record),
+        digits:
+            (attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits) ||
+            record.fields[fieldName].digits,
     };
 };
 PercentageField.displayName = _lt("Percentage");

@@ -27,7 +27,6 @@ export class FloatField extends Component {
     get formattedValue() {
         return this.props.format(this.props.value, {
             digits: this.props.digits,
-            field: this.props.field,
         });
     }
 
@@ -59,7 +58,9 @@ FloatField.extractProps = (fieldName, record, attrs) => {
         inputType: attrs.options.type,
         // Sadly, digits param was available as an option and an attr.
         // The option version could be removed with some xml refactoring.
-        digits: attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits,
+        digits:
+            (attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits) ||
+            record.fields[fieldName].digits,
     };
 };
 

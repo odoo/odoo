@@ -116,9 +116,6 @@ export const formatChar = (value, options) => {
  *
  * @param {number | false} value the value that should be formatted
  * @param {Object} [options]
- * @param {Object} [options.field] a description of the field (returned by
- *   fields_get for example).  It may contain a description of the number of
- *   digits that should be used.
  * @param {number[]} [options.digits] the number of digits that should be used,
  *   instead of the default digits precision in the field.
  * @param {boolean} [options.humanReadable] if true, large numbers are formatted
@@ -144,8 +141,6 @@ export const formatFloat = (value, options = {}) => {
     let precision;
     if (options.digits) {
         precision = options.digits[1];
-    } else if (options.field && options.field.digits) {
-        precision = options.field.digits[1];
     } else {
         precision = 2;
     }
@@ -163,7 +158,6 @@ export const formatFloat = (value, options = {}) => {
  *
  * @param {number | false} value
  * @param {Object} [options]
- * @param {Object} [options.field] a description of the field
  * @param {number} [options.factor=1.0] conversion factor
  * @returns {string}
  */
@@ -182,7 +176,6 @@ export const formatFloatFactor = (value, options = {}) => {
  *
  * @param {number | false} value
  * @param {Object} [options]
- * @param {Object} [options.field] a description of the field
  * @param {boolean} [options.noLeadingZeroHour] if true, format like 1:30
  *   otherwise, format like 01:30
  * @returns {string}
@@ -214,7 +207,6 @@ export const formatFloatTime = (value, options = {}) => {
  *
  * @param {number | false | null} value
  * @param {Object} [options]
- * @param {Object} [options.field] a description of the field
  * @param {boolean} [options.humanReadable] if true, large numbers are formatted
  *   to a human readable format.
  * @param {boolean} [options.isPassword=false] if returns true, acts like
@@ -343,7 +335,6 @@ export const formatMonetary = (value, options = {}) => {
  *
  * @param {number | false} value
  * @param {Object} [options]
- * @param {Object} [options.field] a description of the field
  * @param {boolean} [options.noSymbol] if true, doesn't concatenate with "%"
  * @returns {string}
  */
@@ -362,8 +353,8 @@ export const formatPercentage = (value, options = {}) => {
  * @returns {string}
  */
 export const formatSelection = (value, options = {}) => {
-    if (!value || !options.field) return "";
-    return Object.fromEntries(options.field.selection)[value] || "";
+    if (!value || !options.selection) return "";
+    return Object.fromEntries(options.selection)[value] || "";
 };
 
 /**

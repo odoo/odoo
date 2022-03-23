@@ -109,8 +109,6 @@ export class Field extends Component {
         const field = record.fields[this.props.name];
         const activeField = record.activeFields[this.props.name];
 
-        options = Object.assign({ field: field }, options);
-
         // GES
         // Is this the right place ? Or should we delegate that to the fields anyway.
         // The option exists at least on integer field. To see if it use at many places.
