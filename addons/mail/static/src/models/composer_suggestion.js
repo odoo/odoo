@@ -12,7 +12,7 @@ import { clear, replace } from '@mail/model/model_field_command';
  */
 registerModel({
     name: 'ComposerSuggestion',
-    identifyingFields: ['composerViewOwnerAsMainSuggestion', ['cannedResponse', 'channelCommand', 'partner', 'thread']],
+    identifyingFields: [['composerViewOwnerAsExtraSuggestion', 'composerViewOwnerAsMainSuggestion'], ['cannedResponse', 'channelCommand', 'partner', 'thread']],
     recordMethods: {
         /**
          * @private
@@ -41,10 +41,13 @@ registerModel({
         channelCommand: one('ChannelCommand', {
             readonly: true,
         }),
+        composerViewOwnerAsExtraSuggestion: one('ComposerView', {
+            inverse: 'extraSuggestions',
+            readonly: true,
+        }),
         composerViewOwnerAsMainSuggestion: one('ComposerView', {
             inverse: 'mainSuggestions',
             readonly: true,
-            required: true,
         }),
         record: one('Record', {
             compute: '_computeRecord',
