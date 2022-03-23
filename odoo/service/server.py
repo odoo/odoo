@@ -1205,7 +1205,7 @@ Maybe you forgot to add those addons in your addons_path configuration."""
 def _reexec(updated_modules=None):
     """reexecute openerp-server process with (nearly) the same arguments"""
     if odoo.tools.osutil.is_running_as_nt_service():
-        subprocess.call('net stop {0} && net start {0}'.format(nt_service_name), shell=True)
+        subprocess.call(['net stop {0} && net start {0}'.format(nt_service_name)])
     exe = os.path.basename(sys.executable)
     args = stripped_sys_argv()
     if updated_modules:
