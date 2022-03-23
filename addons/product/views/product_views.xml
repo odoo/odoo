@@ -660,7 +660,9 @@
                     <field name="name" readonly="1"/>
                     <field name="product_id" readonly="1" optional="hide"
                         invisible="context.get('product_template_invisible_variant', False)"
-                        groups="product.group_product_variant"/>
+                        groups="product.group_product_variant"
+                        domain="[('product_tmpl_id', '=?', context.get('default_product_tmpl_id', False))]"
+                        options="{'no_quick_create': True, 'no_create_edit' : True}"/>
                     <field name="product_tmpl_id" string="Product" readonly="1"
                         invisible="context.get('visible_product_tmpl_id', True)"/>
                     <field name="product_name" optional="hide"/>
