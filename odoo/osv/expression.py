@@ -123,7 +123,7 @@ from functools import partial
 
 from datetime import date, datetime, time
 import odoo.modules
-from odoo.osv.query import Query
+from odoo.osv.query import Query, _generate_table_alias
 from odoo.tools import pycompat
 from odoo.tools.misc import get_lang
 from ..models import MAGIC_COLUMNS, BaseModel
@@ -742,7 +742,8 @@ class expression(object):
 
             elif field.type == 'one2many':
                 domain = field.get_domain_list(model)
-                inverse_is_int = comodel._fields[field.inverse_name].type in ('integer', 'many2one_reference')
+                inverse_field = comodel._fields[field.inverse_name]
+                inverse_is_int = inverse_field.type in ('integer', 'many2one_reference')
                 unwrap_inverse = (lambda ids: ids) if inverse_is_int else (lambda recs: recs.ids)
 
                 if right is not False:
@@ -758,36 +759,43 @@ class expression(object):
                     if inverse_is_int and domain:
                         ids2 = comodel._search([('id', 'in', ids2)] + domain, order='id')
 
-                    if isinstance(ids2, Query) and comodel._fields[field.inverse_name].store:
-                        op1 = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
-                        subquery, subparams = ids2.subselect('"%s"."%s"' % (comodel._table, field.inverse_name))
-                        push(('id', op1, (subquery, subparams)), model, alias, internal=True)
-                    elif ids2 and comodel._fields[field.inverse_name].store:
-                        op1 = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
-                        subquery = 'SELECT "%s" FROM "%s" WHERE "id" IN %%s' % (field.inverse_name, comodel._table)
-                        subparams = [tuple(ids2)]
-                        push(('id', op1, (subquery, subparams)), model, alias, internal=True)
+                    if inverse_field.store:
+                        # In the condition, one must avoid subqueries to return
+                        # NULL values, since it makes the IN test NULL instead
+                        # of FALSE.  This may discard expected results, as for
+                        # instance "id NOT IN (42, NULL)" is never TRUE.
+                        in_ = 'NOT IN' if operator in NEGATIVE_TERM_OPERATORS else 'IN'
+                        if isinstance(ids2, Query):
+                            if not inverse_field.required:
+                                ids2.add_where(f'"{comodel._table}"."{inverse_field.name}" IS NOT NULL')
+                            subquery, subparams = ids2.subselect(f'"{comodel._table}"."{inverse_field.name}"')
+                        else:
+                            subquery = f'SELECT "{inverse_field.name}" FROM "{comodel._table}" WHERE "id" IN %s'
+                            if not inverse_field.required:
+                                subquery += f' AND "{inverse_field.name}" IS NOT NULL'
+                            subparams = [tuple(ids2) or (None,)]
+                        push_result(f'("{alias}"."id" {in_} ({subquery}))', subparams)
                     else:
                         # determine ids1 in model related to ids2
                         recs = comodel.browse(ids2).sudo().with_context(prefetch_fields=False)
-                        ids1 = unwrap_inverse(recs.mapped(field.inverse_name))
+                        ids1 = unwrap_inverse(recs.mapped(inverse_field.name))
                         # rewrite condition in terms of ids1
                         op1 = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
                         push(('id', op1, ids1), model, alias)
 
                 else:
-                    if comodel._fields[field.inverse_name].store and not (inverse_is_int and domain):
+                    if inverse_field.store and not (inverse_is_int and domain):
                         # rewrite condition to match records with/without lines
                         op1 = 'inselect' if operator in NEGATIVE_TERM_OPERATORS else 'not inselect'
-                        subquery = 'SELECT "%s" FROM "%s" where "%s" is not null' % (field.inverse_name, comodel._table, field.inverse_name)
+                        subquery = f'SELECT "{inverse_field.name}" FROM "{comodel._table}" WHERE "{inverse_field.name}" IS NOT NULL'
                         push(('id', op1, (subquery, [])), model, alias, internal=True)
                     else:
-                        comodel_domain = [(field.inverse_name, '!=', False)]
+                        comodel_domain = [(inverse_field.name, '!=', False)]
                         if inverse_is_int and domain:
                             comodel_domain += domain
                         recs = comodel.search(comodel_domain, order='id').sudo().with_context(prefetch_fields=False)
                         # determine ids1 = records with lines
-                        ids1 = unwrap_inverse(recs.mapped(field.inverse_name))
+                        ids1 = unwrap_inverse(recs.mapped(inverse_field.name))
                         # rewrite condition to match records with/without lines
                         op1 = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
                         push(('id', op1, ids1), model, alias)
@@ -805,8 +813,14 @@ class expression(object):
                     if comodel == model:
                         push(('id', 'in', ids2), model, alias)
                     else:
-                        subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
-                        push(('id', 'inselect', (subquery, [tuple(ids2) or (None,)])), model, alias, internal=True)
+                        rel_alias = _generate_table_alias(alias, field.name)
+                        push_result(f"""
+                            EXISTS (
+                                SELECT 1 FROM "{rel_table}" AS "{rel_alias}"
+                                WHERE "{rel_alias}"."{rel_id1}" = "{alias}".id
+                                AND "{rel_alias}"."{rel_id2}" IN %s
+                            )
+                        """, [tuple(ids2) or (None,)])
 
                 elif right is not False:
                     # determine ids2 in comodel
@@ -822,22 +836,33 @@ class expression(object):
 
                     if isinstance(ids2, Query):
                         # rewrite condition in terms of ids2
-                        subop = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
-                        subquery, subparams = ids2.subselect()
-                        query = 'SELECT "%s" FROM "%s" WHERE "%s" IN (%s)' % (rel_id1, rel_table, rel_id2, subquery)
-                        push(('id', subop, (query, subparams)), model, alias, internal=True)
+                        subquery, params = ids2.subselect()
+                        term_id2 = f"({subquery})"
                     else:
                         # rewrite condition in terms of ids2
-                        subop = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
-                        subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
-                        ids2 = tuple(it for it in ids2 if it) or (None,)
-                        push(('id', subop, (subquery, [ids2])), model, alias, internal=True)
+                        term_id2 = "%s"
+                        params = [tuple(it for it in ids2 if it) or (None,)]
+
+                    exists = 'NOT EXISTS' if operator in NEGATIVE_TERM_OPERATORS else 'EXISTS'
+                    rel_alias = _generate_table_alias(alias, field.name)
+                    push_result(f"""
+                        {exists} (
+                            SELECT 1 FROM "{rel_table}" AS "{rel_alias}"
+                            WHERE "{rel_alias}"."{rel_id1}" = "{alias}".id
+                            AND "{rel_alias}"."{rel_id2}" IN {term_id2}
+                        )
+                    """, params)
 
                 else:
                     # rewrite condition to match records with/without relations
-                    op1 = 'inselect' if operator in NEGATIVE_TERM_OPERATORS else 'not inselect'
-                    subquery = 'SELECT "%s" FROM "%s" where "%s" is not null' % (rel_id1, rel_table, rel_id1)
-                    push(('id', op1, (subquery, [])), model, alias, internal=True)
+                    exists = 'EXISTS' if operator in NEGATIVE_TERM_OPERATORS else 'NOT EXISTS'
+                    rel_alias = _generate_table_alias(alias, field.name)
+                    push_result(f"""
+                        {exists} (
+                            SELECT 1 FROM "{rel_table}" AS "{rel_alias}"
+                            WHERE "{rel_alias}"."{rel_id1}" = "{alias}".id
+                        )
+                    """, [])
 
             elif field.type == 'many2one':
                 if operator in HIERARCHY_FUNCS:
