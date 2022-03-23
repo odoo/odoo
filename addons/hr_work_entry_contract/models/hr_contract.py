@@ -51,19 +51,30 @@ class HrContract(models.Model):
         return self.env.ref('hr_work_entry_contract.work_entry_type_leave')
 
     def _get_contract_work_entries_values(self, date_start, date_stop):
+        start_dt = pytz.utc.localize(date_start) if not date_start.tzinfo else date_start
+        end_dt = pytz.utc.localize(date_stop) if not date_stop.tzinfo else date_stop
+
         contract_vals = []
         bypassing_work_entry_type_codes = self._get_bypassing_work_entry_type_codes()
+        # {calendar: employees}
+        employees_by_calendar = defaultdict(lambda: self.env['hr.employee'])
+        for contract in self:
+            employees_by_calendar[contract.resource_calendar_id] |= contract.employee_id
+        attendances_by_calendar = {
+            calendar: calendar._attendance_intervals_batch(
+                start_dt,
+                end_dt,
+                resources=employees.resource_id,
+                tz=pytz.timezone(calendar.tz)
+            ) for calendar, employees in employees_by_calendar.items()}
+
         for contract in self:
             employee = contract.employee_id
             calendar = contract.resource_calendar_id
             resource = employee.resource_id
             tz = pytz.timezone(calendar.tz)
-            start_dt = pytz.utc.localize(date_start) if not date_start.tzinfo else date_start
-            end_dt = pytz.utc.localize(date_stop) if not date_stop.tzinfo else date_stop
 
-            attendances = calendar._attendance_intervals_batch(
-                start_dt, end_dt, resources=resource, tz=tz
-            )[resource.id]
+            attendances = attendances_by_calendar[calendar][resource.id]
 
             # Other calendars: In case the employee has declared time off in another calendar
             # Example: Take a time off, then a credit time.
