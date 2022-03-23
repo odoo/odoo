@@ -14,15 +14,15 @@
                                 recordLocalId="suggestion.record.localId"
                             />
                         </t>
-                        <t t-if="composerView.mainSuggestions.length > 0 and composerView.extraSuggestedRecords.length > 0">
+                        <t t-if="composerView.mainSuggestions.length > 0 and composerView.extraSuggestions.length > 0">
                             <div role="separator" class="dropdown-divider"/>
                         </t>
-                        <t t-foreach="composerView.extraSuggestedRecords" t-as="record" t-key="record.localId">
+                        <t t-foreach="composerView.extraSuggestions" t-as="suggestion" t-key="suggestion.localId">
                             <ComposerSuggestion
                                 composerViewLocalId="composerView.localId"
-                                isActive="record === composerView.activeSuggestedRecord"
+                                isActive="suggestion.record === composerView.activeSuggestedRecord"
                                 modelName="composerView.suggestionModelName"
-                                recordLocalId="record.localId"
+                                recordLocalId="suggestion.record.localId"
                             />
                         </t>
                     </div>
