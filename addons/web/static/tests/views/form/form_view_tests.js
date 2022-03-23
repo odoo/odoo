@@ -1290,7 +1290,7 @@ QUnit.module("Views", (hooks) => {
             1: {
                 id: 1,
                 name: "Partner",
-                resModel: "partner",
+                res_model: "partner",
                 type: "ir.actions.act_window",
                 views: [
                     [false, "list"],

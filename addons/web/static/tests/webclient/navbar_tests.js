@@ -4,7 +4,9 @@ import { browser } from "@web/core/browser/browser";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { menuService } from "@web/webclient/menus/menu_service";
 import { registry } from "@web/core/registry";
+import { ormService } from "@web/core/orm_service";
 import { uiService } from "@web/core/ui/ui_service";
+import { viewService } from "@web/views/view_service";
 import { actionService } from "@web/webclient/actions/action_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { NavBar } from "@web/webclient/navbar/navbar";
@@ -37,6 +39,8 @@ QUnit.module("Navbar", {
         serviceRegistry.add("notification", notificationService);
         serviceRegistry.add("hotkey", hotkeyService);
         serviceRegistry.add("ui", uiService);
+        serviceRegistry.add("view", viewService); // #action-serv-leg-compat-js-class
+        serviceRegistry.add("orm", ormService); // #action-serv-leg-compat-js-class
         systrayRegistry.add("addon.myitem", { Component: MySystrayItem });
         patchWithCleanup(browser, {
             setTimeout: (handler, delay, ...args) => handler(...args),

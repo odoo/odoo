@@ -763,9 +763,7 @@ function makeActionManager(env) {
         controller.__info__ = {
             id: ++id,
             Component: ControllerComponent,
-            componentProps: Object.assign(controller.props, {
-                resModel: controller.action.resModel || controller.action.res_model, // @GES: aaron, why did I need to add this ?
-            }),
+            componentProps: controller.props,
         };
         env.bus.trigger("ACTION_MANAGER:UPDATE", controller.__info__);
         return Promise.all([currentActionProm, closingProm]).then((r) => r[0]);
@@ -815,13 +813,42 @@ function makeActionManager(env) {
      * @param {ActWindowAction} action
      * @param {ActionOptions} options
      */
-    function _executeActWindowAction(action, options) {
+    async function _executeActWindowAction(action, options) {
+        // LEGACY CODE COMPATIBILITY: load views to determine js_class if any, s.t.
+        // we know if the view to use is legacy or not
+        // When all views will be converted, this will be done exclusively by View
+        // #action-serv-leg-compat-js-class
+        const loadViewParams = {
+            context: action.context || {},
+            views: action.views,
+            resModel: action.res_model,
+        };
+        const loadViewOptions = {
+            actionId: action.id,
+            loadActionMenus: action.target !== "new" && action.target !== "inline",
+            loadIrFilters: action.views.some((v) => v[1] === "search"),
+        };
+        const prom = env.services.view.loadViews(loadViewParams, loadViewOptions);
+        const viewDescriptions = await keepLast.add(prom);
+        const domParser = new DOMParser();
         const views = [];
         for (const [, type] of action.views) {
-            if (viewRegistry.contains(type)) {
-                views.push(viewRegistry.get(type));
+            if (type !== "search") {
+                const arch = viewDescriptions[type].arch;
+                const archDoc = domParser.parseFromString(arch, "text/xml").documentElement;
+                const key = archDoc.getAttribute("js_class") || type;
+                if (viewRegistry.contains(key)) {
+                    views.push(viewRegistry.get(key));
+                }
             }
         }
+        // END LEGACY CODE COMPATIBILITY
+        // const views = [];
+        // for (const [, type] of action.views) {
+        //     if (type !== "search" && viewRegistry.contains(type)) {
+        //         views.push(viewRegistry.get(key));
+        //     }
+        // }
         if (!views.length) {
             throw new Error(`No view found for act_window action ${action.id}`);
         }
@@ -1435,6 +1462,7 @@ export const actionService = {
         "router",
         "rpc",
         "title",
+        "view", // for legacy view compatibility #action-serv-leg-compat-js-class
         "ui",
         "user",
     ],
