@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from contextlib import contextmanager
 from dateutil.relativedelta import relativedelta
 import itertools
@@ -77,19 +78,36 @@ class HrWorkEntry(models.Model):
 
     @api.depends('date_stop', 'date_start')
     def _compute_duration(self):
+        durations = self._get_duration_batch()
         for work_entry in self:
-            work_entry.duration = work_entry._get_duration(work_entry.date_start, work_entry.date_stop)
+            work_entry.duration = durations[work_entry.id]
 
     @api.depends('date_start', 'duration')
     def _compute_date_stop(self):
         for work_entry in self.filtered(lambda w: w.date_start and w.duration):
             work_entry.date_stop = work_entry.date_start + relativedelta(hours=work_entry.duration)
 
+    def _get_duration_batch(self):
+        result = {}
+        cached_periods = defaultdict(float)
+        for work_entry in self:
+            date_start = work_entry.date_start
+            date_stop = work_entry.date_stop
+            if not date_start or not date_stop:
+                result[work_entry.id] = 0.0
+                continue
+            if (date_start, date_stop) in cached_periods:
+                result[work_entry.id] = cached_periods[(date_start, date_stop)]
+            else:
+                dt = date_stop - date_start
+                duration = dt.days * 24 + dt.seconds / 3600  # Number of hours
+                cached_periods[(date_start, date_stop)] = duration
+                result[work_entry.id] = duration
+        return result
+
+    # YTI TODO: Remove me in master: Deprecated, use _get_duration_batch instead
     def _get_duration(self, date_start, date_stop):
-        if not date_start or not date_stop:
-            return 0
-        dt = date_stop - date_start
-        return dt.days * 24 + dt.seconds / 3600  # Number of hours
+        return self._get_duration_batch()[self.id]
 
     def action_validate(self):
         """
