@@ -3,7 +3,7 @@
 import { emojis } from '@mail/js/emojis';
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 import { addLink, escapeAndCompactTextContent, parseAndTransform } from '@mail/js/utils';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
@@ -408,7 +408,7 @@ registerModel({
          * considered together.
          */
         setFirstSuggestionActive() {
-            const suggestedRecords = this.mainSuggestedRecords.concat(this.extraSuggestedRecords);
+            const suggestedRecords = this.mainSuggestions.map(suggestion => suggestion.record).concat(this.extraSuggestedRecords);
             const firstRecord = suggestedRecords[0];
             this.update({ activeSuggestedRecord: link(firstRecord) });
         },
@@ -417,7 +417,7 @@ registerModel({
          * considered together.
          */
         setLastSuggestionActive() {
-            const suggestedRecords = this.mainSuggestedRecords.concat(this.extraSuggestedRecords);
+            const suggestedRecords = this.mainSuggestions.map(suggestion => suggestion.record).concat(this.extraSuggestedRecords);
             const { length, [length - 1]: lastRecord } = suggestedRecords;
             this.update({ activeSuggestedRecord: link(lastRecord) });
         },
@@ -426,7 +426,7 @@ registerModel({
          * considered together.
          */
         setNextSuggestionActive() {
-            const suggestedRecords = this.mainSuggestedRecords.concat(this.extraSuggestedRecords);
+            const suggestedRecords = this.mainSuggestions.map(suggestion => suggestion.record).concat(this.extraSuggestedRecords);
             const activeElementIndex = suggestedRecords.findIndex(
                 suggestion => suggestion === this.activeSuggestedRecord
             );
@@ -443,7 +443,7 @@ registerModel({
          * considered together.
          */
         setPreviousSuggestionActive() {
-            const suggestedRecords = this.mainSuggestedRecords.concat(this.extraSuggestedRecords);
+            const suggestedRecords = this.mainSuggestions.map(suggestion => suggestion.record).concat(this.extraSuggestedRecords);
             const activeElementIndex = suggestedRecords.findIndex(
                 suggestion => suggestion === this.activeSuggestedRecord
             );
@@ -495,18 +495,18 @@ registerModel({
          */
         _computeActiveSuggestedRecord() {
             if (
-                this.mainSuggestedRecords.length === 0 &&
+                this.mainSuggestions.length === 0 &&
                 this.extraSuggestedRecords.length === 0
             ) {
                 return unlink();
             }
             if (
-                this.mainSuggestedRecords.includes(this.activeSuggestedRecord) ||
+                this.mainSuggestions.map(suggestion => suggestion.record).includes(this.activeSuggestedRecord) ||
                 this.extraSuggestedRecords.includes(this.activeSuggestedRecord)
             ) {
                 return;
             }
-            const suggestedRecords = this.mainSuggestedRecords.concat(this.extraSuggestedRecords);
+            const suggestedRecords = this.mainSuggestions.map(suggestion => suggestion.record).concat(this.extraSuggestedRecords);
             const firstRecord = suggestedRecords[0];
             return link(firstRecord);
         },
@@ -565,9 +565,9 @@ registerModel({
          */
         _computeExtraSuggestedRecords() {
             if (this.suggestionDelimiterPosition === undefined) {
-                return unlinkAll();
+                return clear();
             }
-            return unlink(this.mainSuggestedRecords);
+            return unlink(this.mainSuggestions.map(suggestion => suggestion.record));
         },
         /**
          * @private
@@ -607,7 +607,7 @@ registerModel({
          * @return {boolean}
          */
         _computeHasSuggestions() {
-            return this.mainSuggestedRecords.length > 0 || this.extraSuggestedRecords.length > 0;
+            return this.mainSuggestions.length > 0 || this.extraSuggestedRecords.length > 0;
         },
         /**
          * @private
@@ -643,14 +643,14 @@ registerModel({
             return clear();
         },
         /**
-         * Clears the main suggested record on closing mentions.
+         * Clears the main suggestions on closing mentions.
          *
          * @private
          * @returns {Record[]}
          */
-        _computeMainSuggestedRecords() {
+        _computeMainSuggestions() {
             if (this.suggestionDelimiterPosition === undefined) {
-                return unlinkAll();
+                return clear();
             }
         },
         /**
@@ -988,7 +988,20 @@ registerModel({
             this.update({
                 extraSuggestedRecords: replace(extraSuggestedRecords),
                 hasToScrollToActiveSuggestion: true,
-                mainSuggestedRecords: replace(mainSuggestedRecords),
+                mainSuggestions: insertAndReplace(
+                    mainSuggestedRecords.map(record => {
+                        switch (record.constructor.name) {
+                            case 'CannedResponse':
+                                return { cannedResponse: replace(record) };
+                            case 'ChannelCommand':
+                                return { channelCommand: replace(record) };
+                            case 'Partner':
+                                return { partner: replace(record) };
+                            case 'Thread':
+                                return { thread: replace(record) };
+                        }
+                    }),
+                ),
             });
         },
     },
@@ -1113,13 +1126,12 @@ registerModel({
             default: false,
         }),
         /**
-         * Determines the main records that are currently suggested.
-         * Allows to have different model types of mentions through a dynamic
-         * process. 2 arbitrary lists can be provided and the first is defined
-         * as "main".
+         * Determines the main suggestions.
          */
-        mainSuggestedRecords: many('Record', {
-            compute: '_computeMainSuggestedRecords',
+        mainSuggestions: many('ComposerSuggestion', {
+            compute: '_computeMainSuggestions',
+            inverse: 'composerViewOwnerAsMainSuggestion',
+            isCausal: true,
         }),
         /**
          * States the message view on which this composer allows editing (if any).
