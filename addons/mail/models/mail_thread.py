@@ -2442,6 +2442,8 @@ class MailThread(models.AbstractModel):
         for pid, cid, active, pshare, ctype, notif, groups in res:
             if pid and pid == author_id and not self.env.context.get('mail_notify_author'):  # do not notify the author of its own messages
                 continue
+            if pid and self.env.context.get("do_not_send_mail"):
+                continue
             if pid:
                 if active is False:
                     continue
