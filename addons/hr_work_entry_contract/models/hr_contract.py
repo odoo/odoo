@@ -189,6 +189,13 @@ class HrContract(models.Model):
         date_stop = datetime.combine(fields.Datetime.to_datetime(date_stop), datetime.max.time())
 
         intervals_to_generate = defaultdict(lambda: self.env['hr.contract'])
+        # In case the date_generated_from == date_generated_to, move it to the date_start to
+        # avoid trying to generate several months/years of history for old contracts for which
+        # we've never generated the work entries.
+        self.filtered(lambda c: c.date_generated_from == c.date_generated_to).write({
+            'date_generated_from': date_start,
+            'date_generated_to': date_start,
+        })
         for contract in self:
             contract_start = fields.Datetime.to_datetime(contract.date_start)
             contract_stop = datetime.combine(fields.Datetime.to_datetime(contract.date_end or datetime.max.date()),
@@ -199,14 +206,6 @@ class HrContract(models.Model):
                 intervals_to_generate[(date_start_work_entries, date_stop_work_entries)] |= contract
                 continue
 
-            # In case the date_generated_from == date_generated_to, move it to the date_start to
-            # avoid trying to generate several months/years of history for old contracts for which
-            # we've never generated the work entries.
-            if contract.date_generated_from == contract.date_generated_to:
-                contract.write({
-                    'date_generated_from': date_start,
-                    'date_generated_to': date_start,
-                })
             # For each contract, we found each interval we must generate
             last_generated_from = min(contract.date_generated_from, contract_stop)
             if last_generated_from > date_start_work_entries:
