@@ -16,6 +16,11 @@ class MentalHealthNotes(models.Model):
                                        help='Select the mode of therapy.')
 
     date = fields.Date(string='Date Recorded', required=True, default=lambda self: fields.Date.today(), copy=False)
+    service_type = fields.Selection(string='Service Provided', required=True,
+                                    selection=[('intake', 'Intake'),
+                                               ('individual_therapy', 'Individual Therapy')],
+                                    default='individual_therapy',
+                                    help='Select the type of service provided.')
     icd10_codes = fields.Selection(string='ICD10 Code', required=False, copy=False,
                                    selection=[('f40.00', 'F40.00 - Agoraphobia unspecified'),
                                               ('f40.01', 'F40.01 - Agoraphobia with panic disorder')])
