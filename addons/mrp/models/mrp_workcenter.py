@@ -30,9 +30,9 @@ class MrpWorkcenter(models.Model):
     note = fields.Html(
         'Description',
         help="Description of the Work Center.")
-    capacity = fields.Float(
+    default_capacity = fields.Float(
         'Capacity', default=1.0,
-        help="Number of pieces that can be produced in parallel. In case the work center has a capacity of 5 and you have to produce 10 units on your work order, the usual operation time will be multiplied by 2.")
+        help="Default number of pieces that can be produced in parallel. In case the work center has a capacity of 5 and you have to produce 10 units on your work order, the usual operation time will be multiplied by 2.")
     sequence = fields.Integer(
         'Sequence', default=1, required=True,
         help="Gives the sequence order when displaying a list of work centers.")
@@ -73,6 +73,8 @@ class MrpWorkcenter(models.Model):
         help="Alternative workcenters that can be substituted to this one in order to dispatch production"
     )
     tag_ids = fields.Many2many('mrp.workcenter.tag')
+    capacity_ids = fields.One2many('mrp.workcenter.capacity', 'workcenter_id', string='Product Capacities',
+        help="Specific number of pieces that can be produced in parallel per product.", copy=True)
 
     @api.constrains('alternative_workcenter_ids')
     def _check_alternative_workcenter(self):
@@ -172,9 +174,9 @@ class MrpWorkcenter(models.Model):
             else:
                 workcenter.performance = 0.0
 
-    @api.constrains('capacity')
+    @api.constrains('default_capacity')
     def _check_capacity(self):
-        if any(workcenter.capacity <= 0.0 for workcenter in self):
+        if any(workcenter.default_capacity <= 0.0 for workcenter in self):
             raise exceptions.UserError(_('The capacity must be strictly positive.'))
 
     def unblock(self):
@@ -286,6 +288,10 @@ class MrpWorkcenter(models.Model):
                 },
             }
         return res
+
+    def _get_capacity(self, product):
+        product_capacity = self.capacity_ids.filtered(lambda capacity: capacity.product_id == product)
+        return product_capacity.capacity if product_capacity else self.default_capacity
 
 
 class WorkcenterTag(models.Model):
@@ -405,3 +411,19 @@ class MrpWorkcenterProductivity(models.Model):
     def button_block(self):
         self.ensure_one()
         self.workcenter_id.order_ids.end_all()
+
+
+class MrpWorkCenterCapacity(models.Model):
+    _name = 'mrp.workcenter.capacity'
+    _description = 'Work Center Capacity'
+    _check_company_auto = True
+
+    workcenter_id = fields.Many2one('mrp.workcenter', string='Work Center', required=True)
+    product_id = fields.Many2one('product.product', string='Product', required=True)
+    product_uom_id = fields.Many2one('uom.uom', string='Product UoM', related='product_id.uom_id')
+    capacity = fields.Float('Capacity', default=1.0, help="Number of pieces that can be produced in parallel for this product.")
+
+    _sql_constraints = [
+        ('positive_capacity', 'CHECK(capacity > 0)', 'Capacity should be a positive number.'),
+        ('unique_product', 'UNIQUE(workcenter_id, product_id)', 'Product capacity should be unique for each workcenter.'),
+    ]

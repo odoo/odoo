@@ -79,21 +79,21 @@ class TestMrpCommon(common2.TestStockCommon):
 
         cls.workcenter_1 = cls.env['mrp.workcenter'].create({
             'name': 'Nuclear Workcenter',
-            'capacity': 2,
+            'default_capacity': 2,
             'time_start': 10,
             'time_stop': 5,
             'time_efficiency': 80,
         })
         cls.workcenter_2 = cls.env['mrp.workcenter'].create({
             'name': 'Simple Workcenter',
-            'capacity': 1,
+            'default_capacity': 1,
             'time_start': 0,
             'time_stop': 0,
             'time_efficiency': 100,
         })
         cls.workcenter_3 = cls.env['mrp.workcenter'].create({
             'name': 'Double Workcenter',
-            'capacity': 2,
+            'default_capacity': 2,
             'time_start': 0,
             'time_stop': 0,
             'time_efficiency': 100,
