@@ -320,17 +320,20 @@ var BaseSettingRenderer = FormRenderer.extend({
             module.settingView.find('h2').addClass('o_hidden');
             module.settingView.find('.settingSearchHeader').addClass('o_hidden');
             module.settingView.find('.o_settings_container').removeClass('mt16');
-            var resultSetting = module.settingView.find(".o_form_label:containsTextLike('" + self.searchText + "')");
-            if (resultSetting.length > 0) {
-                resultSetting.each(function () {
-                    var settingBox = $(this).closest('.o_setting_box');
+
+            const upperCasedSearchText = self.searchText.toUpperCase();
+            const resultSetting = module.settingView.find(".o_form_label")
+                .filter((_, e) => e.textContent.toUpperCase().includes(upperCasedSearchText));
+            if (resultSetting.length) {
+                for (let result of resultSetting) {
+                    const settingBox = $(result).closest('.o_setting_box');
                     if (!settingBox.hasClass('o_invisible_modifier')) {
                         settingBox.removeClass('o_hidden');
-                        $(this).html(self._wordHighlighter($(this).html(), self.searchText));
+                        self._wordHighlighter(result, upperCasedSearchText);
                     } else {
                         self.inVisibleCount++;
                     }
-                });
+                }
                 if (self.inVisibleCount !== resultSetting.length) {
                     module.settingView.find('.settingSearchHeader').removeClass('o_hidden');
                     module.settingView.removeClass('o_hidden');
@@ -344,22 +347,23 @@ var BaseSettingRenderer = FormRenderer.extend({
             this._resetSearch();
         }
     },
+
     /**
      * highlight search word
      *
      * @private
-     * @param {string} text
-     * @param {string} word
+     * @param {HTMLElement} node
+     * @param {string} upperCasedSearchText
      */
-    _wordHighlighter: function (text, word) {
-        if (text.indexOf('highlighter') !== -1) {
-            text = text.replace('<span class="highlighter">', "");
-            text = text.replace("</span>", "");
-        }
-        var match = text.search(new RegExp(word, "i"));
-        word = text.substring(match, match + word.length);
-        var highlightedWord = "<span class='highlighter'>" + word + '</span>';
-        return text.replace(word, highlightedWord);
+    _wordHighlighter: function (node, upperCasedSearchText) {
+        const text = node.textContent;
+        const startIndex = text.toUpperCase().indexOf(upperCasedSearchText);
+        const endIndex = startIndex + upperCasedSearchText.length;
+        $(node).empty().append(
+            document.createTextNode(text.substring(0, startIndex)),
+            $('<span class="highlighter">').text(text.substring(startIndex, endIndex)),
+            document.createTextNode(text.substring(endIndex))
+        );
     },
 });
 
