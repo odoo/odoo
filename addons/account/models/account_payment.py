@@ -156,7 +156,7 @@ class AccountPayment(models.Model):
         currency_field='currency_id', compute='_compute_amount_signed', tracking=True,
         help='Negative value of amount field if payment_type is outbound')
     amount_company_currency_signed = fields.Monetary(
-        currency_field='company_currency_id', compute='_compute_amount_company_currency_signed')
+        currency_field='company_currency_id', compute='_compute_amount_company_currency_signed', store=True)
 
     _sql_constraints = [
         (
