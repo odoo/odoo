@@ -7,7 +7,7 @@
             t-attf-class="o_search_panel_section o_search_panel_{{ section.type }}"
             >
             <header class="o_search_panel_section_header text-uppercase o_cursor_default">
-                <i t-attf-class="fa {{ section.icon }} o_search_panel_section_icon mr-2"
+                <i t-attf-class="fa {{ section.icon }} o_search_panel_section_icon {{section.type === 'category' &amp;&amp; !section.color ? 'text-odoo' : ''}} mr-2"
                     t-att-style="section.color and ('color: ' + section.color)"
                 />
                 <b t-esc="section.description"/>

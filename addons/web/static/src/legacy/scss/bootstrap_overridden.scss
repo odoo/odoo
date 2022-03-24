@@ -30,6 +30,14 @@ $info: $o-info !default;
 $warning: $o-warning !default;
 $danger: $o-danger !default;
 
+$theme-colors: () !default;
+$theme-colors: map-merge(
+    (
+        "odoo": $o-brand-odoo,
+    ),
+    $theme-colors
+);
+
 // Options
 //
 // Quickly modify global styling by enabling or disabling optional features.

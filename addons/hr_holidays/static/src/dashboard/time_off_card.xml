@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-    <div t-name="hr_holidays.TimeOffCard" owl="1" class="o_timeoff_card py-3">
+    <div t-name="hr_holidays.TimeOffCard" owl="1" class="o_timeoff_card py-3 text-odoo">
         <t t-set="data" t-value="props.data"/>
         <t t-set="duration" t-value="props.requires_allocation ? data.virtual_remaining_leaves : data.virtual_leaves_taken"/>
         <t t-set="show_popover" t-value="true"/>
@@ -49,7 +49,7 @@
                 <strong t-esc="duration" class="o_timeoff_green"/> / <span t-esc="data.max_leaves"/> <t t-if="data.request_unit == 'hour'">Hours</t><t t-else="">Days</t> <span class="o_timeoff_green">Available</span>
             </t>
             <t t-else="">
-                <strong t-esc="duration"/> <t t-if="data.request_unit == 'hour'">Hours</t><t t-else="">Days</t> <span class="o_timeoff_purple">Taken</span>
+                <strong t-esc="duration"/> <t t-if="data.request_unit == 'hour'">Hours</t><t t-else="">Days</t> <span class="text-odoo">Taken</span>
             </t>
         </span>
     </t>

@@ -7,7 +7,7 @@
                 <div t-attf-class="o_expense_card o_arrow_button flex-grow-1 d-flex flex-column border-right-0">
                     <div class="content_center">
                         <div>
-                            <span t-esc="render_monetary_field(expenses[expense]['amount'], expenses[expense]['currency'])" class="h2 o_expense_purple"/>
+                            <span t-esc="render_monetary_field(expenses[expense]['amount'], expenses[expense]['currency'])" class="h2 text-odoo"/>
                         </div>
                         <b class="m-2"><span t-esc="expenses[expense]['description']"/></b>
                     </div>
