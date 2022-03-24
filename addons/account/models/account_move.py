@@ -3473,6 +3473,7 @@ class AccountMoveLine(models.Model):
     _description = "Journal Item"
     _order = "date desc, move_name desc, sequence, id"
     _check_company_auto = True
+    _rec_names_search = ['name', 'move_id', 'product_id']
 
     # ==== Business fields ====
     move_id = fields.Many2one('account.move', string='Journal Entry',
