@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear, replace } from '@mail/model/model_field_command';
 
 /**
@@ -14,6 +14,24 @@ registerModel({
     name: 'ComposerSuggestion',
     identifyingFields: [['composerViewOwnerAsExtraSuggestion', 'composerViewOwnerAsMainSuggestion'], ['cannedResponse', 'channelCommand', 'partner', 'thread']],
     recordMethods: {
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeMentionText() {
+            if (this.cannedResponse) {
+                return this.cannedResponse.substitution;
+            }
+            if (this.channelCommand) {
+                return this.channelCommand.name;
+            }
+            if (this.partner) {
+                return this.partner.name;
+            }
+            if (this.thread) {
+                return this.thread.name;
+            }
+        },
         /**
          * @private
          * @returns {FieldCommand}
@@ -48,6 +66,12 @@ registerModel({
         composerViewOwnerAsMainSuggestion: one('ComposerView', {
             inverse: 'mainSuggestions',
             readonly: true,
+        }),
+        /**
+         * The text that identifies this suggestion in a mention.
+         */
+        mentionText: attr({
+            compute: '_computeMentionText',
         }),
         record: one('Record', {
             compute: '_computeRecord',

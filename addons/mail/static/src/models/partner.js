@@ -334,14 +334,6 @@ registerModel({
             return this.user.getChat();
         },
         /**
-         * Returns the text that identifies this partner in a mention.
-         *
-         * @returns {string}
-         */
-        getMentionText() {
-            return this.name;
-        },
-        /**
          * Opens a chat between the user of this partner and the current user
          * and returns it.
          *

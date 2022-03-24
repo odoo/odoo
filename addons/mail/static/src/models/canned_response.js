@@ -68,16 +68,6 @@ registerModel({
             )];
         },
     },
-    recordMethods: {
-        /**
-         * Returns the text that identifies this canned response in a mention.
-         *
-         * @returns {string}
-         */
-        getMentionText() {
-            return this.substitution;
-        },
-    },
     fields: {
         id: attr({
             readonly: true,
