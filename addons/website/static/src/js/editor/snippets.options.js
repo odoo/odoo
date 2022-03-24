@@ -2680,9 +2680,7 @@ options.registry.CoverProperties = options.Class.extend({
      */
     _updateColorDataset(bgColorStyle = '', bgColorClass = '') {
         this.$target[0].dataset.bgColorStyle = bgColorStyle;
-        if (bgColorClass) {
-            this.$target[0].dataset.bgColorClass = bgColorClass;
-        }
+        this.$target[0].dataset.bgColorClass = bgColorClass;
     },
     /**
      * Updates the cover properties dataset used for saving.
@@ -2691,15 +2689,6 @@ options.registry.CoverProperties = options.Class.extend({
      */
     _updateSavingDataset(colorValue) {
         const [colorPickerWidget, sizeWidget, textAlignWidget] = this._requestUserValueWidgets('bg_color_opt', 'size_opt', 'text_align_opt');
-        if (!colorPickerWidget) {
-            // Saving without closing the color palette, but the last picked
-            // color was already taken into account (we still need to update the
-            // dataset when a custom color is selected).
-            if (colorValue) {
-                this._updateColorDataset(`background-color: ${colorValue};`);
-            }
-            return;
-        }
         // TODO: `o_record_has_cover` should be handled using model field, not
         // resize_class to avoid all of this.
         // Get values from DOM (selected values in options are only available
@@ -2732,7 +2721,7 @@ options.registry.CoverProperties = options.Class.extend({
         if (ccValue) {
             colorNames.push(ccValue);
         }
-        if (!isGradient && !isCSSColor) {
+        if (colorOrGradient && !isGradient && !isCSSColor) {
             colorNames.push(colorOrGradient);
         }
         const bgColorClass = weUtils.computeColorClasses(colorNames).join(' ');
