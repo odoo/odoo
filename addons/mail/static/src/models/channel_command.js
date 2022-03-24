@@ -101,14 +101,6 @@ registerModel({
                 kwargs: { body },
             });
         },
-        /**
-         * Returns the text that identifies this channel command in a mention.
-         *
-         * @returns {string}
-         */
-        getMentionText() {
-            return this.name;
-        },
     },
     fields: {
         /**

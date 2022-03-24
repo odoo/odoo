@@ -147,7 +147,7 @@ registerModel({
                     this.composer.textInputContent.length
                 );
             }
-            const recordReplacement = this.activeSuggestedRecord.getMentionText();
+            const recordReplacement = this.activeSuggestion.mentionText;
             const updateData = {
                 isLastStateChangeProgrammatic: true,
                 textInputContent: textLeft + recordReplacement + ' ' + textRight,
@@ -157,13 +157,11 @@ registerModel({
             // Specific cases for channel and partner mentions: the message with
             // the mention will appear in the target channel, or be notified to
             // the target partner.
-            switch (this.activeSuggestedRecord.constructor.name) {
-                case 'Thread':
-                    Object.assign(updateData, { mentionedChannels: link(this.activeSuggestedRecord) });
-                    break;
-                case 'Partner':
-                    Object.assign(updateData, { mentionedPartners: link(this.activeSuggestedRecord) });
-                    break;
+            if (this.activeSuggestion.thread) {
+                Object.assign(updateData, { mentionedChannels: link(this.activeSuggestion.thread) });
+            }
+            if (this.activeSuggestion.partner) {
+                Object.assign(updateData, { mentionedPartners: link(this.activeSuggestion.partner) });
             }
             this.composer.update(updateData);
         },
@@ -410,7 +408,7 @@ registerModel({
         setFirstSuggestionActive() {
             const suggestions = this.mainSuggestions.concat(this.extraSuggestions);
             const firstSuggestion = suggestions[0];
-            this.update({ activeSuggestedRecord: link(firstSuggestion.record) });
+            this.update({ activeSuggestion: replace(firstSuggestion) });
         },
         /**
          * Sets the last suggestion as active. Main and extra records are
@@ -419,7 +417,7 @@ registerModel({
         setLastSuggestionActive() {
             const suggestions = this.mainSuggestions.concat(this.extraSuggestions);
             const { length, [length - 1]: lastSuggestion } = suggestions;
-            this.update({ activeSuggestedRecord: link(lastSuggestion.record) });
+            this.update({ activeSuggestion: replace(lastSuggestion) });
         },
         /**
          * Sets the next suggestion as active. Main and extra records are
@@ -428,7 +426,7 @@ registerModel({
         setNextSuggestionActive() {
             const suggestions = this.mainSuggestions.concat(this.extraSuggestions);
             const activeElementIndex = suggestions.findIndex(
-                suggestion => suggestion.record === this.activeSuggestedRecord
+                suggestion => suggestion === this.activeSuggestion
             );
             if (activeElementIndex === suggestions.length - 1) {
                 // loop when reaching the end of the list
@@ -436,7 +434,7 @@ registerModel({
                 return;
             }
             const nextSuggestion = suggestions[activeElementIndex + 1];
-            this.update({ activeSuggestedRecord: link(nextSuggestion.record) });
+            this.update({ activeSuggestion: replace(nextSuggestion) });
         },
         /**
          * Sets the previous suggestion as active. Main and extra records are
@@ -445,7 +443,7 @@ registerModel({
         setPreviousSuggestionActive() {
             const suggestions = this.mainSuggestions.concat(this.extraSuggestions);
             const activeElementIndex = suggestions.findIndex(
-                suggestion => suggestion.record === this.activeSuggestedRecord
+                suggestion => suggestion === this.activeSuggestion
             );
             if (activeElementIndex === 0) {
                 // loop when reaching the start of the list
@@ -453,7 +451,7 @@ registerModel({
                 return;
             }
             const previousSuggestion = suggestions[activeElementIndex - 1];
-            this.update({ activeSuggestedRecord: link(previousSuggestion.record) });
+            this.update({ activeSuggestion: replace(previousSuggestion) });
         },
         /**
          * Update a posted message when the message is ready.
@@ -487,28 +485,28 @@ registerModel({
             }
         },
         /**
-         * Clears the active suggested record on closing mentions or adapt it if
-         * the active current record is no longer part of the suggestions.
+         * Clears the active suggestion on closing mentions or adapts it if
+         * the active suggestion is no longer part of the suggestions.
          *
          * @private
-         * @returns {Record}
+         * @returns {FieldCommand}
          */
-        _computeActiveSuggestedRecord() {
+        _computeActiveSuggestion() {
             if (
                 this.mainSuggestions.length === 0 &&
                 this.extraSuggestions.length === 0
             ) {
-                return unlink();
+                return clear();
             }
             if (
-                this.mainSuggestions.map(suggestion => suggestion.record).includes(this.activeSuggestedRecord) ||
-                this.extraSuggestions.map(suggestion => suggestion.record).includes(this.activeSuggestedRecord)
+                this.mainSuggestions.includes(this.activeSuggestion) ||
+                this.extraSuggestions.includes(this.activeSuggestion)
             ) {
                 return;
             }
             const suggestions = this.mainSuggestions.concat(this.extraSuggestions);
             const firstSuggestion = suggestions[0];
-            return link(firstSuggestion.record);
+            return replace(firstSuggestion);
         },
         /**
          * @private
@@ -1020,12 +1018,12 @@ registerModel({
     },
     fields: {
         /**
-         * Determines the suggested record that is currently active. This record
-         * is highlighted in the UI and it will be the selected record if the
+         * Determines the suggestion that is currently active. This suggestion
+         * is highlighted in the UI and it will be selected when the
          * suggestion is confirmed by the user.
          */
-        activeSuggestedRecord: one('Record', {
-            compute: '_computeActiveSuggestedRecord',
+        activeSuggestion: one('ComposerSuggestion', {
+            compute: '_computeActiveSuggestion',
         }),
         /**
          * Determines the attachment list that will be used to display the attachments.

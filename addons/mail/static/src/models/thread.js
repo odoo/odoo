@@ -799,14 +799,6 @@ registerModel({
             return partner.nameOrDisplayName;
         },
         /**
-         * Returns the text that identifies this thread in a mention.
-         *
-         * @returns {string}
-         */
-        getMentionText() {
-            return this.name;
-        },
-        /**
          * Joins this thread. Only makes sense on channels of type channel.
          */
         async join() {
