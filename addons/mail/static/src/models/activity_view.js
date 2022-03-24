@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { attr, many, one } from '@mail/model/model_field';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 import { auto_str_to_date, getLangDateFormat, getLangDatetimeFormat } from 'web.time';
 
@@ -123,6 +123,20 @@ registerModel({
         },
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeMailTemplateViews() {
+            if (this.activity.mailTemplates.length === 0) {
+                return clear();
+            }
+            return insertAndReplace(
+                this.activity.mailTemplates.map(
+                    mailTemplate => ({ mailTemplate: replace(mailTemplate) })
+                ),
+            );
+        },
+        /**
+         * @private
          * @returns {string}
          */
         _computeMarkDoneText() {
@@ -198,6 +212,11 @@ registerModel({
          */
         formattedDeadlineDate: attr({
             compute: '_computeFormattedDeadlineDate',
+        }),
+        mailTemplateViews: many('MailTemplateView', {
+            compute: '_computeMailTemplateViews',
+            inverse: 'activityViewOwner',
+            isCausal: true,
         }),
         /**
          * Label for mark as done. This is just for translations purpose.
