@@ -15,7 +15,7 @@
                 <div class="oe_structure"/>
                 <div class="o_event_foldable_badge_ticket_wrapper p-2">
                     <div class="o_event_foldable_badge_ticket_wrapper_top page">
-                        <h5 class="o_event_foldable_badge_event_name font-weight-bold text-center" t-field="event.name"/>
+                        <h5 class="o_event_foldable_badge_event_name text-odoo font-weight-bold text-center" t-field="event.name"/>
                         <div class="text-center o_event_foldable_badge_font_small">
                             <span itemprop="startDate" t-out="event.date_begin.date()"
                                 class="font-weight-bold"/>
@@ -117,7 +117,7 @@
                                 <div class="o_event_full_page_ticket_font_faded">
                                     Event Ticket For
                                 </div>
-                                <h5 class="o_event_full_page_ticket_event_name font-weight-bold py-0 my-0" t-field="event.name"/>
+                                <h5 class="o_event_full_page_ticket_event_name text-odoo font-weight-bold py-0 my-0" t-field="event.name"/>
                                 <span itemprop="startDate" t-out="event.date_begin.date()"
                                     class="font-weight-bold"/>
                                 <span itemprop="startDateTime" t-out="event.date_begin"
@@ -177,7 +177,7 @@
     </div>
 
     <div class="row footer o_event_full_page_ticket_footer d-block">
-        <div class="o_event_full_page_ticket_powered_by text-white text-center p-2 w-100">
+        <div class="o_event_full_page_ticket_powered_by bg-odoo text-white text-center p-2 w-100">
             <t t-if="event.organizer_id">
                 <span class="font-weight-bold" t-field="event.organizer_id.name"></span>
                 <span t-if="event.organizer_id.phone" class="pl-3 fa fa-phone"/>
