@@ -17,6 +17,7 @@ TIMEOUT = 20
 DEFAULT_MICROSOFT_AUTH_ENDPOINT = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize'
 DEFAULT_MICROSOFT_TOKEN_ENDPOINT = 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
 
+RESOURCE_NOT_FOUND_STATUSES = (204, 404)
 
 class MicrosoftService(models.AbstractModel):
     _name = 'microsoft.service'
@@ -149,7 +150,7 @@ class MicrosoftService(models.AbstractModel):
             res.raise_for_status()
             status = res.status_code
 
-            if int(status) in (204, 404):  # Page not found, no response
+            if int(status) in RESOURCE_NOT_FOUND_STATUSES:
                 response = False
             else:
                 # Some answers return empty content
@@ -160,7 +161,7 @@ class MicrosoftService(models.AbstractModel):
             except:
                 pass
         except requests.HTTPError as error:
-            if error.response.status_code in (204, 404):
+            if error.response.status_code in RESOURCE_NOT_FOUND_STATUSES:
                 status = error.response.status_code
                 response = ""
             else:

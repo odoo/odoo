@@ -9,7 +9,8 @@ from datetime import timedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.loglevels import exception_to_unicode
-from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService, InvalidSyncToken
+from odoo.addons.microsoft_account.models.microsoft_service import DEFAULT_MICROSOFT_TOKEN_ENDPOINT
+from odoo.addons.microsoft_calendar.utils.microsoft_calendar import InvalidSyncToken
 
 _logger = logging.getLogger(__name__)
 
@@ -58,8 +59,9 @@ class User(models.Model):
         }
 
         try:
-            endpoint = self.env['microsoft.service']._get_token_endpoint()
-            dummy, response, dummy = self.env['microsoft.service']._do_request(endpoint, params=data, headers=headers, method='POST', preuri='')
+            dummy, response, dummy = self.env['microsoft.service']._do_request(
+                DEFAULT_MICROSOFT_TOKEN_ENDPOINT, params=data, headers=headers, method='POST', preuri=''
+            )
             ttl = response.get('expires_in')
             self.write({
                 'microsoft_calendar_token': response.get('access_token'),
@@ -83,31 +85,31 @@ class User(models.Model):
                 error_key)
             raise UserError(error_msg)
 
-    def _sync_microsoft_calendar(self, calendar_service: MicrosoftCalendarService):
+    def _sync_microsoft_calendar(self):
         self.ensure_one()
         if self.microsoft_synchronization_stopped:
             return False
+        calendar_service = self.env["calendar.event"]._get_microsoft_service()
         full_sync = not bool(self.microsoft_calendar_sync_token)
         with microsoft_calendar_token(self) as token:
             try:
-                events, next_sync_token, default_reminders = calendar_service.get_events(self.microsoft_calendar_sync_token, token=token)
+                events, next_sync_token = calendar_service.get_events(self.microsoft_calendar_sync_token, token=token)
             except InvalidSyncToken:
-                events, next_sync_token, default_reminders = calendar_service.get_events(token=token)
+                events, next_sync_token = calendar_service.get_events(token=token)
                 full_sync = True
         self.microsoft_calendar_sync_token = next_sync_token
 
         # Microsoft -> Odoo
-        recurrences = events.filter(lambda e: e.is_recurrent())
-        synced_events, synced_recurrences = self.env['calendar.event']._sync_microsoft2odoo(events, default_reminders=default_reminders) if events else (self.env['calendar.event'], self.env['calendar.recurrence'])
+        synced_events, synced_recurrences = self.env['calendar.event']._sync_microsoft2odoo(events) if events else (self.env['calendar.event'], self.env['calendar.recurrence'])
 
         # Odoo -> Microsoft
         recurrences = self.env['calendar.recurrence']._get_microsoft_records_to_sync(full_sync=full_sync)
         recurrences -= synced_recurrences
-        recurrences._sync_odoo2microsoft(calendar_service)
+        recurrences._sync_odoo2microsoft()
         synced_events |= recurrences.calendar_event_ids
 
         events = self.env['calendar.event']._get_microsoft_records_to_sync(full_sync=full_sync)
-        (events - synced_events)._sync_odoo2microsoft(calendar_service)
+        (events - synced_events)._sync_odoo2microsoft()
 
         return bool(events | synced_events) or bool(recurrences | synced_recurrences)
 
@@ -115,11 +117,10 @@ class User(models.Model):
     def _sync_all_microsoft_calendar(self):
         """ Cron job """
         users = self.env['res.users'].search([('microsoft_calendar_rtoken', '!=', False), ('microsoft_synchronization_stopped', '=', False)])
-        microsoft = MicrosoftCalendarService(self.env['microsoft.service'])
         for user in users:
             _logger.info("Calendar Synchro - Starting synchronization for %s", user)
             try:
-                user.with_user(user).sudo()._sync_microsoft_calendar(microsoft)
+                user.with_user(user).sudo()._sync_microsoft_calendar()
                 self.env.cr.commit()
             except Exception as e:
                 _logger.exception("[%s] Calendar Synchro - Exception : %s !", user, exception_to_unicode(e))

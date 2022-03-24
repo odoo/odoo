@@ -40,8 +40,12 @@ class Attendee(models.Model):
         return res
 
     def _microsoft_sync_event(self, answer):
-        microsoft_service = MicrosoftCalendarService(self.env['microsoft.service'])
         params = {"comment": "", "sendResponse": True}
         # Microsoft prevent user to answer the meeting when they are the organizer
-        for event in self.event_id.filtered(lambda e: e.microsoft_id and e.user_id != self.env.user):
-            event._microsoft_attendee_answer(microsoft_service, event.microsoft_id, answer, params)
+        linked_events = self.event_id._get_synced_events()
+        for event in linked_events.filtered(lambda e: e.user_id != self.env.user):
+            event._microsoft_patch(
+                event._get_organizer(),
+                event.ms_organizer_event_id,
+                event._microsoft_values(["attendee_ids"]),
+            )

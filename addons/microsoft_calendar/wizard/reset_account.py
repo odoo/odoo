@@ -4,7 +4,6 @@
 from odoo import fields, models
 
 from odoo.addons.microsoft_calendar.models.microsoft_sync import microsoft_calendar_token
-from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 
 
 class ResetMicrosoftAccount(models.TransientModel):
@@ -25,15 +24,15 @@ class ResetMicrosoftAccount(models.TransientModel):
     ], string="Next Synchronization", required=True, default='new')
 
     def reset_account(self):
-        microsoft = MicrosoftCalendarService(self.env['microsoft.service'])
+        microsoft = self.env["calendar.event"]._get_microsoft_service()
 
         events = self.env['calendar.event'].search([
             ('user_id', '=', self.user_id.id),
-            ('microsoft_id', '!=', False)])
+            ('ms_universal_event_id', '!=', False)])
         if self.delete_policy in ('delete_microsoft', 'delete_both'):
             with microsoft_calendar_token(self.user_id) as token:
                 for event in events:
-                    microsoft.delete(event.microsoft_id, token=token)
+                    microsoft.delete(event.ms_universal_event_id, token=token)
 
         if self.delete_policy in ('delete_odoo', 'delete_both'):
             events.microsoft_id = False

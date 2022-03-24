@@ -3,7 +3,6 @@
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 
 
 class MicrosoftCalendarController(http.Controller):
@@ -18,7 +17,7 @@ class MicrosoftCalendarController(http.Controller):
             this URL for authorization for example
         """
         if model == 'calendar.event':
-            MicrosoftCal = MicrosoftCalendarService(request.env['microsoft.service'])
+            MicrosoftCal = request.env["calendar.event"]._get_microsoft_service()
 
             # Checking that admin have already configured Microsoft API for microsoft synchronization !
             client_id = request.env['ir.config_parameter'].sudo().get_param('microsoft_calendar_client_id')
@@ -41,14 +40,7 @@ class MicrosoftCalendarController(http.Controller):
                     "url": url
                 }
             # If App authorized, and user access accepted, We launch the synchronization
-            need_refresh = request.env.user.sudo()._sync_microsoft_calendar(MicrosoftCal)
-
-            # If synchronization has been stopped
-            if not need_refresh and request.env.user.microsoft_synchronization_stopped:
-                return {
-                    "status": "sync_stopped",
-                    "url": ''
-                }
+            need_refresh = request.env.user.sudo()._sync_microsoft_calendar()
             return {
                 "status": "need_refresh" if need_refresh else "no_new_event_from_microsoft",
                 "url": ''
