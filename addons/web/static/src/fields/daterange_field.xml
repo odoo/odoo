@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DateRangeField" owl="1">
+        <t t-if="props.readonly">
+            <t t-esc="formattedValue" />
+        </t>
+        <t t-else="">
+            <div t-on-click.stop="" t-ref="root">
+                <input type="text" t-att-value="formattedValue" />
+            </div>
+        </t>
+    </t>
+
+</templates>
