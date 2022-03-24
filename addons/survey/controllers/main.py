@@ -84,7 +84,7 @@ class Survey(http.Controller):
             return 'survey_void'
 
         if answer_sudo and check_partner:
-            if request.env.user._is_public() and answer_sudo.partner_id:
+            if request.env.user._is_public() and answer_sudo.partner_id and not answer_token:
                 # answers from public user should not have any partner_id; this indicates probably a cookie issue
                 return 'answer_wrong_user'
             if not request.env.user._is_public() and answer_sudo.partner_id != request.env.user.partner_id:
