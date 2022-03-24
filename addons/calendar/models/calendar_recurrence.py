@@ -198,6 +198,13 @@ class RecurrenceRule(models.Model):
         ranges_to_create = (event_range for event_range in ranges if event_range not in existing_ranges)
         return synced_events, ranges_to_create
 
+    def _select_new_base_event(self):
+        """
+        when the base event is no more available (archived, deleted, etc.), a new one should be selected
+        """
+        for recurrence in self:
+            recurrence.base_event_id = recurrence._get_first_event()
+
     def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False, generic_values_creation=None):
         """Create missing events in the recurrence and detach events which no longer
         follow the recurrence rules.
