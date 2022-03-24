@@ -49,6 +49,7 @@ function factory(dependencies) {
          * @param {integer} ui.item.id
          */
         async handleAddChannelAutocompleteSelect(ev, ui) {
+            ev.preventDefault();
             const name = this.addingChannelValue;
             this.clearIsAddingItem();
             if (ui.item.special) {
