@@ -74,7 +74,8 @@ export const viewService = {
                 loadViewsOptions.mobile = true;
             }
             const { context, resModel, views } = params;
-            const key = JSON.stringify([resModel, views, context, loadViewsOptions]);
+            let filteredContext = Object.fromEntries(Object.entries(context || {}).filter((k,v) => !String(k).startsWith("default_")));
+            const key = JSON.stringify([resModel, views, filteredContext, loadViewsOptions]);
             if (!cache[key]) {
                 cache[key] = orm
                     .call(resModel, "get_views", [], { context, views, options: loadViewsOptions })
