@@ -106,13 +106,14 @@
                         </div>
                     </t>
 
-                    <t t-if="activityView.activity.mailTemplates.length > 0">
+                    <t t-if="activityView.mailTemplateViews.length > 0">
                         <div class="o_Activity_mailTemplates">
-                            <t t-foreach="activityView.activity.mailTemplates" t-as="mailTemplate" t-key="mailTemplate.localId">
+                            <t t-foreach="activityView.mailTemplateViews" t-as="mailTemplateView" t-key="mailTemplateView.localId">
                                 <MailTemplate
                                     className="'o_Activity_mailTemplate'"
                                     activityLocalId="activityView.activity.localId"
-                                    mailTemplateLocalId="mailTemplate.localId"
+                                    localId="mailTemplateView.localId"
+                                    mailTemplateLocalId="mailTemplateView.mailTemplate.localId"
                                 />
                             </t>
                         </div>
