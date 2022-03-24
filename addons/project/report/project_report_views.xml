@@ -58,7 +58,8 @@
                     <filter string="My Projects" name="own_projects" domain="[('project_id.user_id', '=', uid)]"/>
                     <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]"/>
                     <separator/>
-                    <filter string="Starred" name="starred" domain="[('priority', 'in', [0, 1])]"/>
+                    <filter string="High Priority" name="high_priority" domain="[('priority', '=', 1)]"/>
+                    <filter string="Low Priority" name="low_priority" domain="[('priority', '=', 0)]"/>
                     <separator/>
                     <filter string="Tasks Late" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <separator/>

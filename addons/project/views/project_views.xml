@@ -28,8 +28,8 @@
                     <filter string="Followed Tasks" name="followed_by_me" domain="[('message_is_follower', '=', True)]"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_ids', '=', False)]"/>
                     <separator/>
-                    <filter string="Starred" name="starred" domain="[('priority', '=', 1)]"/>
-                    <filter string="Not Starred" name="not_starred" domain="[('priority', '=', 0)]"/>
+                    <filter string="High Priority" name="high_priority" domain="[('priority', '=', 1)]"/>
+                    <filter string="Low Priority" name="low_priority" domain="[('priority', '=', 0)]"/>
                     <separator/>
                     <filter string="Open" name="open_tasks" domain="[('is_closed', '=', False)]"/>
                     <filter string="Closed" name="closed_tasks" domain="[('is_closed', '!=', False)]"/>
@@ -1239,7 +1239,8 @@
                 <calendar date_start="date_deadline" string="Tasks" mode="month" 
                           color="user_ids" event_limit="5" hide_time="true" 
                           event_open_popup="true" quick_add="false" show_unusual_days="True"
-                          js_class="project_calendar">
+                          js_class="project_calendar"
+                          scales="month,year">
                     <field name="project_id" widget="project_private_task" filters="1"/>
                     <field name="user_ids" widget="many2many_avatar_user"/>
                     <field name="partner_id" attrs="{'invisible': [('partner_id', '=', False)]}"/>
