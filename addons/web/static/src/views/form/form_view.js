@@ -33,6 +33,11 @@ export class FormArchParser extends XMLParser {
                 const fieldInfo = Field.parseFieldNode(node, fields, "form");
                 activeFields[fieldInfo.name] = fieldInfo;
                 return false;
+            } else if (node.tagName === "div") {
+                // TODO TO FIX WITH MAIL
+                if (node.className === "oe_chatter") {
+                    return false;
+                }
             }
         });
         return { arch, activeActions, activeFields, xmlDoc };
