@@ -40,6 +40,9 @@ class EventBooth(models.Model):
                 'partner_id': self.partner_id.id,
                 **{key.partition('sponsor_')[2]: value for key, value in vals.items() if key.startswith('sponsor_')},
             }
+            # If confirmed from backend, we don't have _prepare_booth_registration_values
+            if not values.get('name'):
+                values['name'] = self.partner_id.name
             if self.booth_category_id.exhibitor_type == 'online':
                 values.update({
                     'room_name': 'odoo-exhibitor-%s' % self.partner_id.name,

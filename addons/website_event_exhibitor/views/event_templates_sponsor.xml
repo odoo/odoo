@@ -28,7 +28,7 @@
 <template id="event_sponsor_thumb_details">
     <div class="h-100 shadow-sm p-2">
         <span t-field="sponsor.image_128"
-            t-options='{"widget": "image", "class": "img img-fluid"}'/>
+            t-options='{"widget": "image", "class": "img img-fluid", "filename-field": "partner_name"}'/>
         <span t-if="sponsor.sponsor_type_id.display_ribbon_style and sponsor.sponsor_type_id.display_ribbon_style != 'no_ribbon'"
             t-field="sponsor.sponsor_type_id" t-attf-class="o_ribbon o_ribbon_right ribbon_#{sponsor.sponsor_type_id.display_ribbon_style}"/>
     </div>

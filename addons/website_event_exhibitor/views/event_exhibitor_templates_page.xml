@@ -100,10 +100,10 @@
         <hr class="my-0"/>
         <div class="ml-3 clearfix">
             <div class="float-left pt-3">
-                <span t-if="sponsor.image_512" t-field="sponsor.image_512" class="o_wevent_online_page_avatar"
-                    t-options="{'widget': 'image', 'max-width': '96'}"/>
-                <span t-elif="sponsor.partner_id.image_512" t-field="sponsor.partner_id.image_512" class="o_wevent_online_page_avatar"
-                    t-options="{'widget': 'image', 'max-width': '96'}"/>
+                <span t-if="sponsor.image_128" t-field="sponsor.image_128" class="o_wevent_online_page_avatar"
+                    t-options="{'widget': 'image', 'filename-field': 'partner_name'}"/>
+                <span t-elif="sponsor.partner_id.image_128" t-field="sponsor.partner_id.image_128" class="o_wevent_online_page_avatar"
+                    t-options="{'widget': 'image', 'filename-field': 'partner_name'}"/>
             </div>
             <div class="o_wevent_sponsor px-3 pt-3 d-flex flex-row justify-content-between position-relative">
                 <div class="d-flex flex-column">
