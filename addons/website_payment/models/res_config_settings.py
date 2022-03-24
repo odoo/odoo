@@ -18,6 +18,8 @@ class ResConfigSettings(models.TransientModel):
         compute='_compute_acquirers_state')
     module_payment_paypal = fields.Boolean(
         string='Paypal - Express Checkout')
+    is_stripe_supported_country = fields.Boolean(
+        related='company_id.country_id.is_stripe_supported_country')
 
     def _get_activated_acquirers(self):
         self.ensure_one()
@@ -46,14 +48,13 @@ class ResConfigSettings(models.TransientModel):
                 config.acquirers_state = 'none'
 
     def action_activate_stripe(self):
+        self.ensure_one()
+        if not self.is_stripe_supported_country:
+            return False
         stripe = self.env.ref('payment.payment_acquirer_stripe')
         stripe.button_immediate_install()
-        if stripe.state == 'disabled':
-            stripe.state = 'test'
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'reload',
-        }
+        # This will make sure that a new request is made between the installation and the call to `action_stripe_connect_account`.
+        return self.env['ir.actions.actions']._for_xml_id('website_payment.action_stripe_connect_account')
 
     def action_configure_first_provider(self):
         self.ensure_one()

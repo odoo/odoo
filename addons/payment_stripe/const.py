@@ -42,3 +42,53 @@ HANDLED_WEBHOOK_EVENTS = [
     'charge.refunded',  # A refund has been issued.
     'charge.refund.updated',  # The refund status has changed, possibly from succeeded to failed.
 ]
+
+# The countries supported by Stripe. See https://stripe.com/global page.
+SUPPORTED_COUNTRIES = {
+    'AE',
+    'AT',
+    'AU',
+    'BE',
+    'BG',
+    'BR',
+    'CA',
+    'CH',
+    'CY',
+    'CZ',
+    'DE',
+    'DK',
+    'EE',
+    'ES',
+    'FI',
+    'FR',
+    'GB',
+    'GI',  # Beta
+    'GR',
+    'HK',
+    'HR',  # Beta
+    'HU',
+    'ID',  # Beta
+    'IE',
+    'IT',
+    'JP',
+    'LI',  # Beta
+    'LT',
+    'LU',
+    'LV',
+    'MT',
+    'MX',
+    'MY',
+    'NL',
+    'NO',
+    'NZ',
+    'PH',  # Beta
+    'PL',
+    'PT',
+    'RO',
+    'SE',
+    'SG',
+    'SI',
+    'SK',
+    'TH',  # Beta
+    'US',
+}
