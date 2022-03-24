@@ -24,6 +24,13 @@ export class MailTemplate extends Component {
         return this.messaging && this.messaging.models['MailTemplate'].get(this.props.mailTemplateLocalId);
     }
 
+    /**
+     * @returns {MailTemplateView}
+     */
+    get mailTemplateView() {
+        return this.messaging && this.messaging.models['MailTemplateView'].get(this.props.localId);
+    }
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -53,6 +60,7 @@ export class MailTemplate extends Component {
 Object.assign(MailTemplate, {
     props: {
         activityLocalId: String,
+        localId: String,
         mailTemplateLocalId: String,
     },
     template: 'mail.MailTemplate',
