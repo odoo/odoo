@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import tagged
 
 
@@ -207,3 +208,33 @@ class TestInvoiceTaxAmountByGroup(AccountTestInvoicingCommon):
         self.assertAmountByTaxGroup(invoice, [
             (self.tax_group1.id, 2000.0, 750.0),
         ])
+
+    def test_tax_by_group_with_portal(self):
+        """ AccountMove.amount_by_group may be called from portal.
+            In this case, _compute_invoice_taxes_by_group() will be triggered.
+            This method reads line_ids.tax_ids and writes on amount_by_group.
+            As portal has neither permission, this test checks that no AccessError is raised.
+        """
+        portal = mail_new_test_user(self.env, login='Hugue Portal', groups='base.group_portal')
+        tax = self.env['account.tax'].create({
+            'name': "tax",
+            'amount_type': 'percent',
+            'amount': 10.0,
+            'tax_group_id': self.tax_group1.id,
+            'include_base_amount': True,
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'invoice_line_ids': [
+                (0, 0, {
+                    'name': 'line',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'price_unit': 1000.0,
+                    'tax_ids': [(6, 0, tax.ids)],
+                }),
+            ]
+        })
+        # Just to trigger _compute_invoice_taxes_by_group()
+        self.assertTrue(invoice.with_user(portal).amount_by_group)
