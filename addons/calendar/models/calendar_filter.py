@@ -8,8 +8,8 @@ class Contacts(models.Model):
     _name = 'calendar.filters'
     _description = 'Calendar Filters'
 
-    user_id = fields.Many2one('res.users', 'Me', required=True, default=lambda self: self.env.user)
-    partner_id = fields.Many2one('res.partner', 'Employee', required=True)
+    user_id = fields.Many2one('res.users', 'Me', required=True, default=lambda self: self.env.user, index=True)
+    partner_id = fields.Many2one('res.partner', 'Employee', required=True, index=True)
     active = fields.Boolean('Active', default=True)
     partner_checked = fields.Boolean('Checked', default=True,
         help="This field is used to know if the partner is checked in the filter of the calendar view for the user_id.")
