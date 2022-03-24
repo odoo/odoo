@@ -13,7 +13,7 @@ class TestRecurrentEvents(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
-        super().setUpClass()
+        super(TestRecurrentEvents, cls).setUpClass()
         lang = cls.env['res.lang']._lang_get(cls.env.user.lang)
         lang.week_start = '1'  # Monday
 
