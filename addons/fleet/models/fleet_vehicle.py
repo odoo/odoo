@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
@@ -151,11 +152,31 @@ class FleetVehicle(models.Model):
         Odometer = self.env['fleet.vehicle.odometer']
         LogService = self.env['fleet.vehicle.log.services']
         LogContract = self.env['fleet.vehicle.log.contract']
-        for record in self:
-            record.odometer_count = Odometer.search_count([('vehicle_id', '=', record.id)])
-            record.service_count = LogService.search_count([('vehicle_id', '=', record.id), ('active', '=', record.active)])
-            record.contract_count = LogContract.search_count([('vehicle_id', '=', record.id), ('state', '!=', 'closed'), ('active', '=', record.active)])
-            record.history_count = self.env['fleet.vehicle.assignation.log'].search_count([('vehicle_id', '=', record.id)])
+        History = self.env['fleet.vehicle.assignation.log']
+        odometers_data = Odometer.read_group([('vehicle_id', 'in', self.ids)], ['vehicle_id'], ['vehicle_id'])
+        services_data = LogService.read_group([('vehicle_id', 'in', self.ids)], ['vehicle_id'], ['vehicle_id'])
+        logs_data = LogContract.read_group([('vehicle_id', 'in', self.ids), ('state', '!=', 'closed')], ['vehicle_id'], ['vehicle_id'])
+        histories_data = History.read_group([('vehicle_id', 'in', self.ids)], ['vehicle_id'], ['vehicle_id'])
+
+        mapped_odometer_data = defaultdict(lambda: 0)
+        mapped_service_data = defaultdict(lambda: 0)
+        mapped_log_data = defaultdict(lambda: 0)
+        mapped_history_data = defaultdict(lambda: 0)
+
+        for odometer_data in odometers_data:
+            mapped_odometer_data[odometer_data['vehicle_id'][0]] = odometer_data['vehicle_id_count']
+        for service_data in services_data:
+            mapped_service_data[service_data['vehicle_id'][0]] = service_data['vehicle_id_count']
+        for log_data in logs_data:
+            mapped_log_data[log_data['vehicle_id'][0]] = log_data['vehicle_id_count']
+        for history_data in histories_data:
+            mapped_history_data[history_data['vehicle_id'][0]] = history_data['vehicle_id_count']
+
+        for vehicle in self:
+            vehicle.odometer_count = mapped_odometer_data[vehicle.id]
+            vehicle.service_count = mapped_service_data[vehicle.id]
+            vehicle.contract_count = mapped_log_data[vehicle.id]
+            vehicle.history_count = mapped_history_data[vehicle.id]
 
     @api.depends('log_contracts')
     def _compute_contract_reminder(self):
