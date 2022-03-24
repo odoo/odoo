@@ -1,20 +1,14 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { click, getFixture, nextTick, triggerEvent } from "../helpers/utils";
+import { commandService } from "@web/core/commands/command_service";
+import { click, getFixture, nextTick, triggerEvent, triggerHotkey } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
 let target;
 
-// WOWL remove after adapting tests
-let makeLegacyCommandService,
-    createWebClient,
-    triggerHotkey,
-    legacyExtraNextTick,
-    doAction,
-    core,
-    makeTestEnvironment;
+const serviceRegistry = registry.category("services");
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -692,48 +686,40 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         'PriorityField edited by the smart action "Set priority..."',
         async function (assert) {
             assert.expect(4);
 
-            const legacyEnv = makeTestEnvironment({ bus: core.bus });
-            const serviceRegistry = registry.category("services");
-            serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
-
-            const views = {
-                "partner,false,form":
-                    "<form>" + '<field name="selection" widget="priority"/>' + "</form>",
-                "partner,false,search": "<search></search>",
-            };
-            const serverData = { models: this.data, views };
-            const webClient = await createWebClient({ serverData });
-            await doAction(webClient, {
-                res_id: 1,
-                type: "ir.actions.act_window",
-                target: "current",
-                res_model: "partner",
-                view_mode: "form",
-                views: [[false, "form"]],
+            await makeView({
+                serverData,
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `<form>
+                        <field name="selection" widget="priority"/>
+                    </form>`,
+                resId: 1,
             });
-            assert.containsOnce(webClient, ".fa-star");
+
+            assert.containsOnce(target, "a.fa-star");
 
             triggerHotkey("control+k");
             await nextTick();
-            const idx = [...webClient.el.querySelectorAll(".o_command")]
+            const idx = [...target.querySelectorAll(".o_command")]
                 .map((el) => el.textContent)
                 .indexOf("Set priority...ALT + R");
             assert.ok(idx >= 0);
 
-            await click([...webClient.el.querySelectorAll(".o_command")][idx]);
+            await click([...target.querySelectorAll(".o_command")][idx]);
             await nextTick();
             assert.deepEqual(
-                [...webClient.el.querySelectorAll(".o_command")].map((el) => el.textContent),
+                [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
                 ["Normal", "Blocked", "Done"]
             );
-            await click(webClient.el, "#o_command_2");
-            await legacyExtraNextTick();
-            assert.containsN(webClient, ".fa-star", 2);
+            await click(target, "#o_command_2");
+            await nextTick();
+            assert.containsN(target, "a.fa-star", 2);
         }
     );
 });

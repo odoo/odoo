@@ -55,6 +55,8 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
+        serviceRegistry.add("command", commandService);
+
         setupViewRegistries();
     });
 
@@ -448,8 +450,6 @@ QUnit.module("Fields", (hooks) => {
         'StateSelectionField edited by the smart action "Set kanban state..."',
         async function (assert) {
             assert.expect(4);
-
-            serviceRegistry.add("command", commandService);
 
             await makeView({
                 serverData,
