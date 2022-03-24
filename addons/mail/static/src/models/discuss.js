@@ -34,6 +34,9 @@ registerModel({
          * @param {integer} ui.item.id
          */
         async handleAddChannelAutocompleteSelect(ev, ui) {
+            // Necessary in order to prevent AutocompleteSelect event's default
+            // behaviour as html tags visible for a split second in text area
+            ev.preventDefault();
             const name = this.addingChannelValue;
             this.clearIsAddingItem();
             if (ui.item.special) {
