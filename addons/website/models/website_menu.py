@@ -184,7 +184,7 @@ class Menu(models.Model):
             menu_id = self.browse(menu['id'])
             # if the url match a website.page, set the m2o relation
             # except if the menu url is '#', meaning it will be used as a menu container, most likely for a dropdown
-            if menu['url'] == '#':
+            if not menu['url'] or menu['url'] == '#':
                 if menu_id.page_id:
                     menu_id.page_id = None
             else:
