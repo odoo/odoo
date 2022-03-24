@@ -824,6 +824,7 @@ export class Record extends DataPoint {
         this.onChanges();
         await this._applyChange(fieldName, value);
         const activeField = this.activeFields[fieldName];
+        const proms = [];
         if (activeField && activeField.onChange) {
             await this.model.mutex.exec(async () => {
                 const changes = await this._onChange(fieldName);
@@ -834,6 +835,7 @@ export class Record extends DataPoint {
                     if (isX2Many(field)) {
                         this._changes[fieldName] = value;
                         this.data[fieldName].applyCommands(value);
+                        proms.push(this.data[fieldName].load());
                     } else {
                         this._changes[fieldName] = value;
                         this.data[fieldName] = this._changes[fieldName];
@@ -841,7 +843,8 @@ export class Record extends DataPoint {
                 }
             });
         }
-        await this.loadPreloadedData();
+        proms.push(this.loadPreloadedData());
+        await Promise.all(proms);
         this._removeInvalidField(fieldName);
         this.model.notify();
     }
@@ -2491,7 +2494,7 @@ export class StaticList extends DataPoint {
     }
 
     /**
-     * Add missing records to cache and load records to display
+     * Add missing records to display to cache and load them
      */
     async _loadRecords() {
         const displayedIds = this._getDisplayedIds();
@@ -2501,9 +2504,6 @@ export class StaticList extends DataPoint {
             if (!recordId) {
                 const key = typeof id === "number" ? "resId" : "virtualId";
                 proms.push(this._createRecord({ [key]: id }));
-            } else {
-                const record = this._cache[recordId];
-                proms.push(record.load());
             }
         }
         await Promise.all(proms);

@@ -1630,7 +1630,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsN(target, ".o_data_row", 3);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "x2many fields inside x2manys are fetched after an onchange",
         async function (assert) {
             assert.expect(6);
@@ -1642,8 +1642,8 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            var checkRPC = false;
-            const form = await makeView({
+            let checkRPC = false;
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -1674,33 +1674,30 @@ QUnit.module("Fields", (hooks) => {
                             "should only read the display_name of the unknown record"
                         );
                     }
-                    return this._super.apply(this, arguments);
                 },
                 resId: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
             });
 
-            assert.containsOnce(form, ".o_data_row", "there should be one record in the relation");
+            await clickEdit(target);
+            assert.containsOnce(target, ".o_data_row", "there should be one record in the relation");
             assert.strictEqual(
-                form.$(".o_data_row .o_field_widget[name=partner_ids]").text().replace(/\s/g, ""),
+                target.querySelector(".o_data_row .o_field_widget[name=partner_ids]").innerText.replace(/\s/g, ""),
                 "secondrecordaaa",
                 "many2many_tags should be correctly displayed"
             );
 
             // change the value of foo to trigger the onchange
             checkRPC = true; // enable flag to check read RPC for the m2m field
-            await testUtils.fields.editInput(form.$(".o_field_widget[name=foo]"), "some value");
+            await editInput(target, ".o_field_widget[name=foo] input", "some value");
 
             assert.containsN(
-                form,
+                target,
                 ".o_data_row",
                 3,
                 "there should be three records in the relation"
             );
             assert.strictEqual(
-                form.$(".o_data_row:first .o_field_widget[name=partner_ids]").text().trim(),
+                target.querySelector(".o_data_row .o_field_widget[name=partner_ids]").innerText.trim(),
                 "first record",
                 "many2many_tags should be correctly displayed"
             );
