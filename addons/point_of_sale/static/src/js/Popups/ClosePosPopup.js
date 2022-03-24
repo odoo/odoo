@@ -77,7 +77,6 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
         openDetailsPopup() {
             this.state.payments[this.defaultCashDetails.id].counted = 0;
             this.state.payments[this.defaultCashDetails.id].difference = -this.defaultCashDetails.amount;
-            this.state.notes = "";
             this.state.displayMoneyDetailsPopup = true;
         }
         closeDetailsPopup() {
@@ -93,7 +92,6 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             let expectedAmount;
             if (paymentId === this.defaultCashDetails.id) {
                 this.manualInputCashCount = true;
-                this.state.notes = '';
                 expectedAmount = this.defaultCashDetails.amount;
             } else {
                 expectedAmount = this.otherPaymentMethods.find(pm => paymentId === pm.id).amount;
@@ -106,7 +104,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             this.state.payments[this.defaultCashDetails.id].difference =
                 this.env.pos.round_decimals_currency(this.state.payments[[this.defaultCashDetails.id]].counted - this.defaultCashDetails.amount);
             if (moneyDetailsNotes) {
-                this.state.notes = moneyDetailsNotes;
+                this.state.notes += this.state.notes ? `\n Closing ${moneyDetailsNotes}`: `Closing ${moneyDetailsNotes}`;
             }
             this.manualInputCashCount = false;
             this.moneyDetails = moneyDetails;
