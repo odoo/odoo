@@ -13,13 +13,14 @@ function cycle(num, max) {
 export class Powerbox {
     constructor(options = {}) {
         this.options = options;
-        this.options.width = this.options.width || 340;
         if (!this.options._t) this.options._t = string => string;
 
         this.el = document.createElement('div');
         this.el.className = 'oe-commandbar-wrapper';
         this.el.style.display = 'none';
-        this.el.style.width = `${this.options.width}px`;
+        if (this.options.width !== undefined) {
+            this.el.style.width = `${this.options.width}px`;
+        }
         document.body.append(this.el);
 
         this.addKeydownTrigger('/', { commands: this.options.commands });
