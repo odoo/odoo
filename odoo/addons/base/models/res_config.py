@@ -668,7 +668,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
     def name_get(self):
         """ Override name_get method to return an appropriate configuration wizard
         name, and not the generated name."""
-        action = self.env['ir.actions.act_window'].search([('res_model', '=', self._name)], limit=1)
+        action = self.env['ir.actions.act_window'].search([('res_model', '=', self._name)], limit=1, order='id')
         name = action.name or self._name
         return [(record.id, name) for record in self]
 
