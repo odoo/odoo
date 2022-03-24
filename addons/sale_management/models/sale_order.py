@@ -31,10 +31,12 @@ class SaleOrder(models.Model):
     @api.depends('company_id')
     def _compute_sale_order_template_id(self):
         for order in self:
-            if order.state != 'draft':
-                # Do NOT update existing SO's template and dependent fields
+            if order._origin.id:  # If record has already been saved
+                # 1) Do NOT update existing SO's template and dependent fields
                 # Especially when installing sale_management in a db
                 # already containing SO records
+                # 2) Only apply the company default if the company is modified before the record is saved
+                # to make sure the lines are not magically reset when the company is modified (internal odoo issue)
                 continue
             company_template = order.company_id.sale_order_template_id
             if company_template and order.sale_order_template_id != company_template:
