@@ -951,9 +951,9 @@ class Task(models.Model):
     name = fields.Char(string='Title', tracking=True, required=True, index='trigram')
     description = fields.Html(string='Description')
     priority = fields.Selection([
-        ('0', 'Normal'),
-        ('1', 'Important'),
-    ], default='0', index=True, string="Starred", tracking=True)
+        ('0', 'Low'),
+        ('1', 'High'),
+    ], default='0', index=True, string="Priority", tracking=True)
     sequence = fields.Integer(string='Sequence', default=10,
         help="Gives the sequence order when displaying a list of tasks.")
     stage_id = fields.Many2one('project.task.type', string='Stage', compute='_compute_stage_id',
@@ -1795,9 +1795,10 @@ class Task(models.Model):
             # reset kanban state when changing stage
             if 'kanban_state' not in vals:
                 vals['kanban_state'] = 'normal'
-        # user_ids change: update date_assign
-        if vals.get('user_ids') and 'date_assign' not in vals:
-            vals['date_assign'] = now
+        task_ids_without_user_set = set()
+        if 'user_ids' in vals and 'date_assign' not in vals:
+            # prepare update of date_assign after super call
+            task_ids_without_user_set = {task.id for task in self if not task.user_ids}
 
         # recurrence fields
         rec_fields = vals.keys() & self._get_recurrence_fields()
@@ -1840,6 +1841,14 @@ class Task(models.Model):
 
         if 'user_ids' in vals:
             tasks._populate_missing_personal_stages()
+
+        # user_ids change: update date_assign
+        if 'user_ids' in vals:
+            for task in self:
+                if not task.user_ids and task.date_assign:
+                    task.date_assign = False
+                elif 'date_assign' not in vals and task.id in task_ids_without_user_set:
+                    task.date_assign = now
 
         # rating on stage
         if 'stage_id' in vals and vals.get('stage_id'):
