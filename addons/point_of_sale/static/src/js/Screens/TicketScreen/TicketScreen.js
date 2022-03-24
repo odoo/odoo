@@ -247,6 +247,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             // Set the customer to the destinationOrder.
             if (customer && !destinationOrder.get_client()) {
                 destinationOrder.set_client(customer);
+                destinationOrder.updatePricelist(customer);
             }
 
             this._onCloseScreen();
