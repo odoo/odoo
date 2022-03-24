@@ -351,6 +351,10 @@ export class Record extends DataPoint {
             state.resIds ||
             (this.resId ? [this.resId] : []);
 
+        this._values = {};
+        this._changes = {};
+        this.data = {};
+
         this.parentActiveFields = params.parentActiveFields || false;
         this.onChanges = params.onChanges || (() => {});
 
@@ -406,6 +410,7 @@ export class Record extends DataPoint {
                 evalContext[fieldName] = value;
             }
         }
+        evalContext.id = this.resId || false;
         if (this.getParentEvalContext) {
             evalContext.parent = this.getParentEvalContext();
         }
@@ -602,15 +607,8 @@ export class Record extends DataPoint {
         return false;
     }
 
-    async load(params) {
-        if (!this.data) {
-            // replace by firstLoad?
-            this._values = {};
-            this._changes = {};
-            this.data = {};
-        }
-
-        if (!this._cache) {
+    async load(params = {}) {
+        // if (!this._cache) {
             this._cache = {};
             for (const fieldName in this.activeFields) {
                 const field = this.fields[fieldName];
@@ -619,24 +617,18 @@ export class Record extends DataPoint {
                     this._cache[fieldName] = staticList;
                 }
             }
-        }
+        // }
 
         if (!this.fieldNames.length) {
-            if (this.resId) {
-                this.data.id = this.resId;
-            }
             return;
         }
 
-        if (params) {
+        if (params.values || params.changes) {
             await this._load(params);
         } else if (this.isVirtual) {
-            await this.model.mutex.exec(async () => {
-                const changes = await this._onChange();
-                await this._load({ changes });
-            });
+            const changes = await this._onChange();
+            await this._load({ changes });
         } else {
-            //mutex here?
             const values = await this._read();
             await this._load({ values });
         }
@@ -941,17 +933,9 @@ export class Record extends DataPoint {
      * @param {Object} values
      * @param {Object} changes
      */
-    async _load(params) {
-        clearObject(this._values);
-        clearObject(this._changes);
-        clearObject(this.data);
-
-        Object.assign(this._values, params.values);
-        Object.assign(this._changes, params.changes);
-
-        if (this.resId) {
-            this.data.id = this.resId;
-        }
+    async _load(params = {}) {
+        this._values = params.values || {};
+        this._changes = params.changes || {};
 
         const defaultValues = this._getDefaultValues();
         for (const fieldName in this.activeFields) {
@@ -964,20 +948,21 @@ export class Record extends DataPoint {
                 this.data[fieldName] = staticList;
             } else {
                 // smth is wrong here for many2one maybe
-                this.data[fieldName] =
-                    this._changes[fieldName] !== undefined
-                        ? this._changes[fieldName]
-                        : fieldName in this._values
-                        ? this._values[fieldName]
-                        : defaultValues[fieldName];
+                if (fieldName in this._changes) {
+                    this.data[fieldName] = this._changes[fieldName];
+                } else if (fieldName in this._values) {
+                    this.data[fieldName] = this._values[fieldName];
+                } else {
+                    this.data[fieldName] = defaultValues[fieldName];
+                }
             }
         }
-        // every field value should be correct here
-        this._invalidFields.clear();
 
-        // Relational data
         await this.loadRelationalData();
         await this.loadPreloadedData();
+
+        // every field value should be correct here
+        this._invalidFields.clear();
     }
 
     async _loadMany2OneData(fieldName, value) {
@@ -997,11 +982,9 @@ export class Record extends DataPoint {
     }
 
     async _loadX2ManyData(fieldName) {
-        if (this.isInvisible(fieldName)) {
-            return Promise.resolve();
+        if (!this.isInvisible(fieldName)) {
+            await this.data[fieldName].load();
         }
-        const staticList = this.data[fieldName];
-        await staticList.load();
     }
 
     async _onChange(fieldName) {
@@ -1319,7 +1302,7 @@ export class DynamicRecordList extends DynamicList {
             onRecordWillSwitchMode: this.onRecordWillSwitchMode,
             ...params,
         });
-        await newRecord.load();
+        await this.model.mutex.exec(() => newRecord.load());
         this.editedRecord = newRecord;
         return this.addRecord(newRecord, atFirstPosition ? 0 : this.count);
     }

@@ -1761,7 +1761,7 @@ QUnit.module("Views", (hooks) => {
         class ListViewCustom extends ListView {
             openRecord(record) {
                 assert.step("openRecord");
-                assert.strictEqual(record.data.id, 2);
+                assert.strictEqual(record.resId, 2);
             }
         }
         registry.category("views").add("list", ListViewCustom, { force: true });
@@ -2236,7 +2236,6 @@ QUnit.module("Views", (hooks) => {
             {
                 bar: true,
                 foo: "yop",
-                id: 1,
             },
             "the correct record should be selected"
         );

@@ -309,7 +309,7 @@ export class ListRenderer extends Component {
     }
 
     evalModifier(modifier, record) {
-        return !!(modifier && new Domain(modifier).contains(record.data));
+        return !!(modifier && new Domain(modifier).contains(record.evalContext));
     }
 
     get getEmptyRowIds() {
