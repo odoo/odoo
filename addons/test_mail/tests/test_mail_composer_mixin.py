@@ -12,7 +12,6 @@ class TestMailComposerMixin(TestMailCommon, TestRecipients):
     @classmethod
     def setUpClass(cls):
         super(TestMailComposerMixin, cls).setUpClass()
-        cls._init_mail_gateway()
 
         cls.mail_template = cls.env['mail.template'].create({
             'subject': 'Subject for {{ object.name }}',

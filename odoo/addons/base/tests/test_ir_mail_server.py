@@ -15,6 +15,7 @@ from odoo.tools import mute_logger
 class TestIrMailServer(TransactionCase, MockSmtplibCase):
 
     def setUp(self):
+        self._init_mail_config()
         self._init_mail_servers()
 
     def _build_email(self, mail_from, return_path=None):
@@ -231,7 +232,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         self.assertEqual(len(self.emails), 1)
 
         self.assert_email_sent_smtp(
-            smtp_from='bounce@xn--9caaaaaaa.com',
+            smtp_from='bounce.test@xn--9caaaaaaa.com',
             smtp_to_list=['dest@xn--example--i1a.com'],
             message_from='test@=?utf-8?b?w6nDqcOpw6nDqcOpw6k=?=.com',
             from_filter=False,
@@ -322,7 +323,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         )
 
     @mute_logger('odoo.models.unlink')
-    @patch.dict("odoo.tools.config.options", {"from_filter": "test.com"})
+    @patch.dict("odoo.tools.config.options", {"from_filter": "test.com", "smtp_server": "example.com"})
     def test_mail_server_binary_arguments_domain(self):
         """Test the configuration provided in the odoo-bin arguments.
 
@@ -374,7 +375,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         )
 
     @mute_logger('odoo.models.unlink')
-    @patch.dict("odoo.tools.config.options", {"from_filter": "test.com"})
+    @patch.dict("odoo.tools.config.options", {"from_filter": "test.com", "smtp_server": "example.com"})
     def test_mail_server_binary_arguments_domain_smtp_session(self):
         """Test the configuration provided in the odoo-bin arguments.
 
@@ -417,7 +418,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         )
 
     @mute_logger('odoo.models.unlink')
-    @patch.dict('odoo.tools.config.options', {'from_filter': 'test.com'})
+    @patch.dict('odoo.tools.config.options', {'from_filter': 'test.com', 'smtp_server': 'example.com'})
     def test_mail_server_mail_default_from_filter(self):
         """Test that the config parameter "mail.default.from_filter" overwrite the odoo-bin
         argument "--from-filter"

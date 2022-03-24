@@ -47,8 +47,6 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
             'message_id': '<123456-openerp-%s-mail.test.gateway@%s>' % (cls.test_record.id, socket.gethostname()),
         })
 
-        cls._init_mail_gateway()
-
     @users('employee')
     def test_notify_reply_to_computation(self):
         test_record = self.env['mail.test.gateway'].browse(self.test_record.ids)

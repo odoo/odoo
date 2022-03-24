@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from functools import partial
+
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError, UserError
+
+mail_channel_new_test_user = partial(mail_new_test_user, context={'mail_channel_nosubscribe': False})
 
 
 class TestMailChannelMembers(MailCommon):
@@ -22,23 +26,23 @@ class TestMailChannelMembers(MailCommon):
             'res_id': cls.secret_group.id,
         })
 
-        cls.user_1 = mail_new_test_user(
+        cls.user_1 = mail_channel_new_test_user(
             cls.env, login='user_1',
             name='User 1',
             groups='base.group_user,mail.secret_group')
-        cls.user_2 = mail_new_test_user(
+        cls.user_2 = mail_channel_new_test_user(
             cls.env, login='user_2',
             name='User 2',
             groups='base.group_user,mail.secret_group')
-        cls.user_3 = mail_new_test_user(
+        cls.user_3 = mail_channel_new_test_user(
             cls.env, login='user_3',
             name='User 3',
             groups='base.group_user,mail.secret_group')
-        cls.user_portal = mail_new_test_user(
+        cls.user_portal = mail_channel_new_test_user(
             cls.env, login='user_portal',
             name='User Portal',
             groups='base.group_portal')
-        cls.user_public = mail_new_test_user(
+        cls.user_public = mail_channel_new_test_user(
             cls.env, login='user_ublic',
             name='User Public',
             groups='base.group_public')

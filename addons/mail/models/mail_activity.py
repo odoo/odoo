@@ -472,20 +472,20 @@ class MailActivity(models.Model):
     def action_done(self):
         """ Wrapper without feedback because web button add context as
         parameter, therefore setting context to feedback """
-        messages, next_activities = self._action_done()
-        return messages.ids and messages.ids[0] or False
+        return self.action_feedback()
 
     def action_feedback(self, feedback=False, attachment_ids=None):
-        self = self.with_context(clean_context(self.env.context))
-        messages, next_activities = self._action_done(feedback=feedback, attachment_ids=attachment_ids)
-        return messages.ids and messages.ids[0] or False
+        messages, _next_activities = self.with_context(
+            clean_context(self.env.context)
+        )._action_done(feedback=feedback, attachment_ids=attachment_ids)
+        return messages[0].id if messages else False
 
     def action_done_schedule_next(self):
         """ Wrapper without feedback because web button add context as
         parameter, therefore setting context to feedback """
         return self.action_feedback_schedule_next()
 
-    def action_feedback_schedule_next(self, feedback=False):
+    def action_feedback_schedule_next(self, feedback=False, attachment_ids=None):
         ctx = dict(
             clean_context(self.env.context),
             default_previous_activity_type_id=self.activity_type_id.id,
@@ -493,7 +493,7 @@ class MailActivity(models.Model):
             default_res_id=self.res_id,
             default_res_model=self.res_model,
         )
-        messages, next_activities = self._action_done(feedback=feedback)  # will unlink activity, dont access self after that
+        _messages, next_activities = self._action_done(feedback=feedback, attachment_ids=attachment_ids)  # will unlink activity, dont access self after that
         if next_activities:
             return False
         return {

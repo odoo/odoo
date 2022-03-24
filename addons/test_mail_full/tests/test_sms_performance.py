@@ -14,22 +14,20 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
     def setUp(self):
         super(TestSMSPerformance, self).setUp()
 
-        self.test_record = self.env['mail.test.sms'].with_context(self._quick_create_ctx).create({
+        self.test_record = self.env['mail.test.sms'].with_context(self._test_context).create({
             'name': 'Test',
             'customer_id': self.customer.id,
             'phone_nbr': '0456999999',
         })
 
         # prepare recipients to test for more realistic workload
-        self.partners = self.env['res.partner'].with_context(self._quick_create_ctx).create([
+        self.partners = self.env['res.partner'].with_context(self._test_context).create([
             {'name': 'Test %s' % x,
              'email': 'test%s@example.com' % x,
              'mobile': '0456%s%s0000' % (x, x),
              'country_id': self.env.ref('base.be').id,
             } for x in range(0, 10)
         ])
-
-        self._init_mail_gateway()
 
     @mute_logger('odoo.addons.sms.models.sms_sms')
     @users('employee')
@@ -87,13 +85,13 @@ class TestSMSMassPerformance(BaseMailPerformance, sms_common.MockSMS):
         records = self.env['mail.test.sms']
         partners = self.env['res.partner']
         for x in range(50):
-            partners += self.env['res.partner'].with_context(**self._quick_create_ctx).create({
+            partners += self.env['res.partner'].with_context(**self._test_context).create({
                 'name': 'Partner_%s' % (x),
                 'email': '_test_partner_%s@example.com' % (x),
                 'country_id': be_country_id,
                 'mobile': '047500%02d%02d' % (x, x)
             })
-            records += self.env['mail.test.sms'].with_context(**self._quick_create_ctx).create({
+            records += self.env['mail.test.sms'].with_context(**self._test_context).create({
                 'name': 'Test_%s' % (x),
                 'customer_id': partners[x].id,
             })

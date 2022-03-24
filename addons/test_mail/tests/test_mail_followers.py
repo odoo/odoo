@@ -14,7 +14,6 @@ class BaseFollowersTest(TestMailCommon):
         super(BaseFollowersTest, cls).setUpClass()
         cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
         cls._create_portal_user()
-        cls._create_channel_listener()
 
         # allow employee to update partners
         cls.user_employee.write({'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)]})

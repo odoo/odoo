@@ -60,8 +60,10 @@ class MailTestActivity(models.Model):
             summary=action_summary
         )
 
-    def action_close(self, action_feedback):
-        self.activity_feedback(['test_mail.mail_act_test_todo'], feedback=action_feedback)
+    def action_close(self, action_feedback, attachment_ids=None):
+        self.activity_feedback(['test_mail.mail_act_test_todo'],
+                               feedback=action_feedback,
+                               attachment_ids=attachment_ids)
 
 
 class MailTestTicket(models.Model):
@@ -111,6 +113,18 @@ class MailTestTicket(models.Model):
         return super(MailTestTicket, self)._track_subtype(init_values)
 
 
+class MailTestTicketMC(models.Model):
+    """ Just mail.test.ticket, but multi company. Kept as different model to
+    avoid messing with existing tests, notably performance, and ease backward
+    comparison. """
+    _description = 'Ticket-like model'
+    _name = 'mail.test.ticket.mc'
+    _inherit = ['mail.test.ticket']
+
+    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
+    container_id = fields.Many2one('mail.test.container.mc', tracking=True)
+
+
 class MailTestContainer(models.Model):
     """ This model can be used in tests when container records like projects
     or teams are required. """
@@ -143,6 +157,18 @@ class MailTestContainer(models.Model):
             values['alias_force_thread_id'] = self.id
             values['alias_parent_thread_id'] = self.id
         return values
+
+class MailTestContainerMC(models.Model):
+    """ Just mail.test.container, but multi company. Kept as different model to
+    avoid messing with existing tests, notably performance, and ease backward
+    comparison. """
+    _description = 'Project-like model with alias (MC)'
+    _name = 'mail.test.container.mc'
+    _mail_post_access = 'read'
+    _inherit = ['mail.test.container']
+
+    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
+
 
 class MailTestComposerMixin(models.Model):
     """ A simple invite-like wizard using the composer mixin, rendering on
