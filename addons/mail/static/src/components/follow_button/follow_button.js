@@ -71,10 +71,12 @@ export class FollowButton extends Component {
 Object.assign(FollowButton, {
     defaultProps: {
         isDisabled: false,
+        isChatterButton: false,
     },
     props: {
         isDisabled: { type: Boolean, optional: true },
         threadLocalId: String,
+        isChatterButton: { type: Boolean, optional: true },
     },
     template: 'mail.FollowButton',
 });
