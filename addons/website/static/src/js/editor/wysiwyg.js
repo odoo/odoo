@@ -120,6 +120,13 @@ Wysiwyg.include({
             throw new Error('There should be a model and id associated to the cover');
         }
 
+        // The cover might be dirty for another reason than cover properties
+        // values only (like an editable text inside). In that case, do not
+        // update the cover properties values.
+        if (!('coverClass' in el.dataset)) {
+            return;
+        }
+
         this.__savedCovers = this.__savedCovers || {};
         this.__savedCovers[resModel] = this.__savedCovers[resModel] || [];
 
