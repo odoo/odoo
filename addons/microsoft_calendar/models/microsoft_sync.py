@@ -216,6 +216,7 @@ class MicrosoftSync(models.AbstractModel):
         new_recurrence = self.env['calendar.recurrence']
         updated_events = self.env['calendar.event']
 
+        # --- create new recurrences and associated events ---
         for recurrent_master in recurrent_masters:
             new_calendar_recurrence = dict(
                 self.env['calendar.recurrence']._microsoft_to_odoo_values(recurrent_master, default_values, with_ids=True),
@@ -263,7 +264,9 @@ class MicrosoftSync(models.AbstractModel):
             to_update = recurrents.filter(lambda e: e.seriesMasterId == recurrent_master_id)
             for recurrent_event in to_update:
                 if recurrent_event.type == 'occurrence':
-                    value = self.env['calendar.event']._microsoft_to_odoo_recurrence_values(recurrent_event, {'need_sync_m': False})
+                    value = self.env['calendar.event']._microsoft_to_odoo_recurrence_values(
+                        recurrent_event, {'need_sync_m': False}
+                    )
                 else:
                     value = self.env['calendar.event']._microsoft_to_odoo_values(recurrent_event, default_values)
                 existing_event = recurrence_id.calendar_event_ids.filtered(
@@ -335,7 +338,7 @@ class MicrosoftSync(models.AbstractModel):
             for e in (new - new_recurrence)
         ]
         synced_events = self.with_context(dont_notify=True)._create_from_microsoft(new, odoo_values)
-        synced_recurrences, updated_events = self._sync_recurrence_microsoft2odoo(new_recurrence)
+        synced_recurrences, updated_events = self._sync_recurrence_microsoft2odoo(existing, new_recurrence)
         synced_events |= updated_events
 
         # remove cancelled events and recurrences
