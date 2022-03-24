@@ -236,6 +236,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             // Set the partner to the destinationOrder.
             if (partner && !destinationOrder.get_partner()) {
                 destinationOrder.set_partner(partner);
+                destinationOrder.updatePricelist(partner);
             }
 
             this._onCloseScreen();
