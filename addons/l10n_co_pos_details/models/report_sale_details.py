@@ -15,7 +15,7 @@ class L10nCoPosDetailsReport(models.AbstractModel):
             'pos_config': self.env['pos.config'].browse(config_ids),
             'first_ref': orders and orders[-1].name,
             'last_ref': orders and orders[0].name,
-            'total_payment_count': self.env["pos.payment"].search_count([('pos_order_id', 'in', orders.ids)]),
+            'total_payment_count': sum(payment.get('count', 0.0) for payment in result.get('payments', [])),
         })
         return result
 
