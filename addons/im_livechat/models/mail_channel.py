@@ -107,23 +107,6 @@ class MailChannel(models.Model):
             'name': self.anonymous_name or _("Visitor"),
         }
 
-    def _channel_get_livechat_partner_name(self):
-        if self.livechat_operator_id in self.channel_partner_ids:
-            partners = self.channel_partner_ids - self.livechat_operator_id
-            if partners:
-                partner_name = False
-                for partner in partners:
-                    if not partner_name:
-                        partner_name = partner.name
-                    else:
-                        partner_name += ', %s' % partner.name
-                    if partner.country_id:
-                        partner_name += ' (%s)' % partner.country_id.name
-                return partner_name
-        if self.anonymous_name:
-            return self.anonymous_name
-        return _("Visitor")
-
     @api.autovacuum
     def _gc_empty_livechat_sessions(self):
         hours = 1  # never remove empty session created within the last hour
