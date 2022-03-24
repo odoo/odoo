@@ -115,10 +115,12 @@ export class FollowerListMenu extends Component {
 Object.assign(FollowerListMenu, {
     defaultProps: {
         isDisabled: false,
+        isChatterButton: false,
     },
     props: {
         isDisabled: { type: Boolean, optional: true },
         threadLocalId: String,
+        isChatterButton: { type: Boolean, optional: true },
     },
     template: 'mail.FollowerListMenu',
 });
