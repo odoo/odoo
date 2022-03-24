@@ -9,7 +9,8 @@
                         <t t-foreach="composerView.mainSuggestions" t-as="suggestion" t-key="suggestion.localId">
                             <ComposerSuggestion
                                 composerViewLocalId="composerView.localId"
-                                isActive="suggestion.record === composerView.activeSuggestedRecord"
+                                isActive="suggestion === composerView.activeSuggestion"
+                                localId="suggestion.localId"
                                 modelName="composerView.suggestionModelName"
                                 recordLocalId="suggestion.record.localId"
                             />
@@ -20,7 +21,8 @@
                         <t t-foreach="composerView.extraSuggestions" t-as="suggestion" t-key="suggestion.localId">
                             <ComposerSuggestion
                                 composerViewLocalId="composerView.localId"
-                                isActive="suggestion.record === composerView.activeSuggestedRecord"
+                                isActive="suggestion === composerView.activeSuggestion"
+                                localId="suggestion.localId"
                                 modelName="composerView.suggestionModelName"
                                 recordLocalId="suggestion.record.localId"
                             />
