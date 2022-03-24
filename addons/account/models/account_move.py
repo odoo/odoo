@@ -1139,7 +1139,7 @@ class AccountMove(models.Model):
                         total_tax_currency += line.amount_currency
                         total += line.balance
                         total_currency += line.amount_currency
-                    elif line.account_id.user_type_id.type in ('receivable', 'payable'):
+                    elif line.account_id.user_type_id.type in ('receivable', 'payable') and move.state not in ('draft', 'cancel'):
                         # Residual amount.
                         total_residual += line.amount_residual
                         total_residual_currency += line.amount_residual_currency
