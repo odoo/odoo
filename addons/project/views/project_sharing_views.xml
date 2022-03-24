@@ -242,7 +242,8 @@
                 <field string="Project" name="display_project_id"/>
                 <filter string="Unassigned" name="unassigned" domain="[('user_ids', '=', False)]"/>
                 <separator/>
-                <filter string="Starred" name="starred" domain="[('priority', 'in', [1, 2])]"/>
+                <filter string="High Priority" name="high_priority" domain="[('priority', '=', 1)]"/>
+                <filter string="Low Priority" name="low_priority" domain="[('priority', '=', 0)]"/>
                 <separator/>
                 <filter string="Late Tasks" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <separator/>

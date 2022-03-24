@@ -34,8 +34,7 @@ class ReportProjectTaskUser(models.Model):
     rating_avg = fields.Float('Average Rating', readonly=True)
     priority = fields.Selection([
         ('0', 'Low'),
-        ('1', 'Normal'),
-        ('2', 'High')
+        ('1', 'High')
         ], readonly=True, string="Priority")
     state = fields.Selection([
             ('normal', 'In Progress'),
