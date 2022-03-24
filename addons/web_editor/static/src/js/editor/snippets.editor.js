@@ -1260,7 +1260,7 @@ var SnippetsMenu = Widget.extend({
             this.$('.o_we_customize_snippet_btn').addClass('active').prop('disabled', false);
             this.$('o_we_ui_loading').addClass('d-none');
             $(this.customizePanel).removeClass('d-none');
-            return Promise.all(defs).then(this._addToolbar.bind(this));
+            return Promise.all(defs);
         }
         this.invisibleDOMPanelEl = document.createElement('div');
         this.invisibleDOMPanelEl.classList.add('o_we_invisible_el_panel');
