@@ -3,7 +3,7 @@
 
 {
     'name': 'Time Off',
-    'version': '1.5',
+    'version': '1.6',
     'category': 'Human Resources/Time Off',
     'sequence': 85,
     'summary': 'Allocate time off and follow time off requests',
