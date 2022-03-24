@@ -282,6 +282,7 @@ const Wysiwyg = Widget.extend({
 
             if ($target.is(this.customizableLinksSelector)
                     && $target.is('a')
+                    && $target[0].isContentEditable
                     && !$target.attr('data-oe-model')
                     && !$target.find('> [data-oe-model]').length
                     && !$target[0].closest('.o_extra_menu_items')) {
