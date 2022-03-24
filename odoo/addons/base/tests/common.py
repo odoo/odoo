@@ -252,14 +252,14 @@ class MockSmtplibCase:
         self.testing_smtp_session = TestingSMTPSession()
 
         IrMailServer = self.env['ir.mail_server']
-        connect = IrMailServer.connect
-        find_mail_server = IrMailServer._find_mail_server
+        connect_origin = IrMailServer.connect
+        find_mail_server_origin = IrMailServer._find_mail_server
 
-        with patch.object(type(IrMailServer), '_is_test_mode', lambda self: False), \
-             patch('smtplib.SMTP_SSL', side_effect=lambda *args, **kwargs: self.testing_smtp_session), \
+        with patch('smtplib.SMTP_SSL', side_effect=lambda *args, **kwargs: self.testing_smtp_session), \
              patch('smtplib.SMTP', side_effect=lambda *args, **kwargs: self.testing_smtp_session), \
-             patch.object(type(IrMailServer), 'connect', side_effect=connect) as connect_mocked, \
-             patch.object(type(IrMailServer), '_find_mail_server', side_effect=find_mail_server) as find_mail_server_mocked:
+             patch.object(type(IrMailServer), '_is_test_mode', lambda self: False), \
+             patch.object(type(IrMailServer), 'connect', wraps=IrMailServer, side_effect=connect_origin) as connect_mocked, \
+             patch.object(type(IrMailServer), '_find_mail_server', side_effect=find_mail_server_origin) as find_mail_server_mocked:
             self.connect_mocked = connect_mocked
             self.find_mail_server_mocked = find_mail_server_mocked
             yield
@@ -298,14 +298,16 @@ class MockSmtplibCase:
         )
 
     @classmethod
-    def _init_mail_servers(cls):
-        cls.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', 'test.com')
-        cls.env['ir.config_parameter'].sudo().set_param('mail.default.from', 'notifications')
-        cls.env['ir.config_parameter'].sudo().set_param('mail.bounce.alias', 'bounce')
-
-        cls.alias_bounce = 'bounce'
+    def _init_mail_config(cls):
+        cls.alias_bounce = 'bounce.test'
         cls.alias_domain = 'test.com'
+        cls.default_from = 'notifications'
+        cls.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', cls.alias_domain)
+        cls.env['ir.config_parameter'].sudo().set_param('mail.default.from', cls.default_from)
+        cls.env['ir.config_parameter'].sudo().set_param('mail.bounce.alias', cls.alias_bounce)
 
+    @classmethod
+    def _init_mail_servers(cls):
         cls.env['ir.mail_server'].search([]).unlink()
 
         ir_mail_server_values = {

@@ -475,7 +475,7 @@ class MailActivityMixin(models.AbstractModel):
             activities.write(write_vals)
         return activities
 
-    def activity_feedback(self, act_type_xmlids, user_id=None, feedback=None):
+    def activity_feedback(self, act_type_xmlids, user_id=None, feedback=None, attachment_ids=None):
         """ Set activities as done, limiting to some activity types and
         optionally to a given user. """
         if self.env.context.get('mail_activity_automation_skip'):
@@ -488,7 +488,7 @@ class MailActivityMixin(models.AbstractModel):
             return False
         activities = self.activity_search(act_type_xmlids, user_id=user_id)
         if activities:
-            activities.action_feedback(feedback=feedback)
+            activities.action_feedback(feedback=feedback, attachment_ids=attachment_ids)
         return True
 
     def activity_unlink(self, act_type_xmlids, user_id=None):

@@ -18,7 +18,6 @@ class TestMessageValues(TestMailCommon):
     def setUpClass(cls):
         super(TestMessageValues, cls).setUpClass()
 
-        cls._init_mail_gateway()
         cls.alias_record = cls.env['mail.test.container'].with_context(cls._test_context).create({
             'name': 'Pigs',
             'alias_name': 'pigs',

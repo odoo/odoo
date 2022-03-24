@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import users
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.tests import tagged, users
 
 
+@tagged('mail_composer')
 class TestMailComposer(MailCommon):
+
     @classmethod
     def setUpClass(cls):
         super(TestMailComposer, cls).setUpClass()
@@ -47,9 +49,11 @@ class TestMailComposer(MailCommon):
 
         values = mail_compose_message.get_mail_values(self.partner_employee.ids)
 
-        self.assertIn(self.body_html,
+        self.assertIn(
+            self.body_html,
             values[self.partner_employee.id]['body_html'],
-            'We must preserve (mso) comments in email html')
+            'We must preserve (mso) comments in email html'
+        )
 
     @users('employee')
     def test_mail_mass_mode_compose_with_mso(self):
@@ -69,6 +73,8 @@ class TestMailComposer(MailCommon):
 
         values = composer.get_mail_values(self.partner_employee.ids)
 
-        self.assertIn(self.body_html,
+        self.assertIn(
+            self.body_html,
             values[self.partner_employee.id]['body_html'],
-            'We must preserve (mso) comments in email html')
+            'We must preserve (mso) comments in email html'
+        )

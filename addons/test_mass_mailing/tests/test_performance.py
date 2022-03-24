@@ -2,39 +2,25 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.tests.common import TransactionCase, users, warmup
+from odoo.addons.test_mail.tests.test_performance import BaseMailPerformance
+from odoo.tests.common import users, warmup
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
-class TestMassMailPerformanceBase(TransactionCase):
+class TestMassMailPerformanceBase(BaseMailPerformance):
 
-    def setUp(self):
-        super(TestMassMailPerformanceBase, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super(TestMassMailPerformanceBase, cls).setUpClass()
 
-        self.user_employee = mail_new_test_user(
-            self.env, login='emp',
-            groups='base.group_user',
-            name='Ernest Employee', notification_type='inbox')
-
-        self.user_marketing = mail_new_test_user(
-            self.env, login='marketing',
+        cls.user_marketing = mail_new_test_user(
+            cls.env,
             groups='base.group_user,mass_mailing.group_mass_mailing_user',
-            name='Martial Marketing', signature='--\nMartial')
-
-        # setup mail gateway
-        self.alias_domain = 'example.com'
-        self.alias_catchall = 'catchall.test'
-        self.alias_bounce = 'bounce.test'
-        self.default_from = 'notifications'
-        self.env['ir.config_parameter'].set_param('mail.bounce.alias', self.alias_bounce)
-        self.env['ir.config_parameter'].set_param('mail.catchall.domain', self.alias_domain)
-        self.env['ir.config_parameter'].set_param('mail.catchall.alias', self.alias_catchall)
-        self.env['ir.config_parameter'].set_param('mail.default.from', self.default_from)
-
-        # patch registry to simulate a ready environment
-        self.patch(self.env.registry, 'ready', True)
-
+            login='marketing',
+            name='Martial Marketing',
+            signature='--\nMartial'
+        )
 
 @tagged('mail_performance')
 class TestMassMailPerformance(TestMassMailPerformanceBase):
@@ -60,8 +46,8 @@ class TestMassMailPerformance(TestMassMailPerformanceBase):
             'mailing_domain': [('id', 'in', self.mm_recs.ids)],
         })
 
-        # runbot needs +101 compared to local (1568)
-        with self.assertQueryCount(__system__=1670, marketing=1671):
+        # runbot needs +101 compared to local (1570)
+        with self.assertQueryCount(__system__=1672, marketing=1673):
             mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)
@@ -100,8 +86,8 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
             'mailing_domain': [('id', 'in', self.mm_recs.ids)],
         })
 
-        # runbot needs +125 compared to local (1834)
-        with self.assertQueryCount(__system__=1960, marketing=1961):
+        # runbot needs +125 compared to local (1836)
+        with self.assertQueryCount(__system__=1962, marketing=1963):
             mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)
