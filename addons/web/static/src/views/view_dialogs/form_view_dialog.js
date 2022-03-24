@@ -31,6 +31,7 @@ export class FormViewDialog extends Dialog {
                 resIds: this.props.resIds,
                 viewMode: "form",
                 rootType: "record",
+                mode: this.props.mode,
             });
         } else {
             this.model = this.record.model;
@@ -52,28 +53,26 @@ export class FormViewDialog extends Dialog {
 
             if (!this.record) {
                 this.record = this.model.root;
+                this.record.activeFields = {
+                    ...this.record.activeFields,
+                    ...this.archInfo.activeFields,
+                };
+                this.record.fields = { ...this.record.fields, ...this.archInfo.fields };
+                await loadSubViews(
+                    this.archInfo.activeFields,
+                    this.archInfo.fields,
+                    this.record ? this.record.context : this.props.context || {},
+                    this.record.resModel,
+                    this.viewService,
+                    this.user
+                );
+                await this.record.load();
             }
 
             this.readonly = !this.record.isInEdition;
             this.multiSelect = this.record.resId === false && !this.props.disableMultipleSelection;
 
-            this.record.activeFields = {
-                ...this.record.activeFields,
-                ...this.archInfo.activeFields,
-            };
-            this.record.fields = { ...this.record.fields, ...this.archInfo.fields };
-
             this.extractFooter();
-
-            await loadSubViews(
-                this.archInfo.activeFields,
-                this.archInfo.fields,
-                this.record ? this.record.context : this.props.context || {},
-                this.record.resModel,
-                this.viewService,
-                this.user
-            );
-            await this.record.load();
         });
     }
 
@@ -114,7 +113,9 @@ export class FormViewDialog extends Dialog {
         await this.model.root.save();
         await this.model.load({ resId: null });
         this.enableButtons(disabledButtons);
-        this.title && this.title.replace(this.env._t("Open:"), this.env._t("New:"));
+        if (this.title) {
+            this.title.replace(this.env._t("Open:"), this.env._t("New:"));
+        }
     }
 
     disableButtons() {
@@ -144,8 +145,9 @@ FormViewDialog.props = {
     resId: { type: Number, optional: true },
     resIds: { type: Array, optional: true },
     context: { type: Object, optional: true },
-    viewId: { type: String, optional: true },
+    viewId: { type: [Number, false], optional: true },
     disableMultipleSelection: { type: Boolean, optional: true },
+    mode: { type: String, optional: true },
     closeText: { type: String, optional: true },
     saveText: { type: String, optional: true },
     save: { type: Function, optional: true },

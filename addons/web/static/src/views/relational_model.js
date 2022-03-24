@@ -623,13 +623,13 @@ export class Record extends DataPoint {
             return;
         }
 
-        if (params.values || params.changes) {
-            await this._load(params);
-        } else if (this.isVirtual) {
-            const changes = await this._onChange();
+        if (this.isVirtual) {
+            const changes = params.changes || await this._onChange();
             await this._load({ changes });
         } else {
-            const values = await this._read();
+            let values = params.values || {};
+            const missingFields = this.fieldNames.filter((fieldName) => !(fieldName in values));
+            values = Object.assign({}, values, await this._read(missingFields));
             await this._load({ values });
         }
     }
@@ -930,8 +930,8 @@ export class Record extends DataPoint {
 
     /**
      * @param {Object} params
-     * @param {Object} values
-     * @param {Object} changes
+     * @param {Object} params.values
+     * @param {Object} params.changes
      */
     async _load(params = {}) {
         this._values = params.values || {};
@@ -1014,11 +1014,15 @@ export class Record extends DataPoint {
         return this._parseServerValues(changes);
     }
 
-    async _read() {
+    async _read(fieldNames) {
+        fieldNames = fieldNames || this.fieldNames;
+        if (!fieldNames.length) {
+            return {};
+        }
         const [serverValues] = await this.model.orm.read(
             this.resModel,
             [this.resId],
-            this.fieldNames,
+            fieldNames,
             {
                 bin_size: true,
                 ...this.context,
@@ -2058,7 +2062,8 @@ export class StaticList extends DataPoint {
         this.applyCommand(Commands.linkTo(resId));
 
         if (!this._mapping[resId]) {
-            await this._createRecord(params);
+            const record = this._createRecord(params);
+            await record.load();
         }
 
         this.records = this._getRecords();
@@ -2075,7 +2080,8 @@ export class StaticList extends DataPoint {
             throw new Error("you rascal");
         }
 
-        const record = await this._createRecord(params);
+        const record = this._createRecord(params);
+        await record.load();
 
         record._onWillSwitchMode(record, "edit"); // bof
 
@@ -2250,7 +2256,15 @@ export class StaticList extends DataPoint {
     setCurrentIds(resIds = [], commands = []) {
         this._serverIds = resIds;
         this._commandsById = {}; // to remove?
-        this._commands = this._getNormalizedCommands([], commands); // modifies commands and this._commandsById in places
+        for (const command of commands) {
+            if (command[0] === CREATE && !this._cache[command[1]]) {
+                const record = this._createRecord({ mode: "readonly", virtualId: command[1] });
+                record.load({ changes: command[2] });
+                command[1] = record.virtualId; // command[1] might be false, so we set it to a virtual id
+            }
+        }
+        // this._commands = this._getNormalizedCommands([], commands); // modifies commands and this._commandsById in places
+        this._commands = commands;
         this.currentIds = this._getCurrentIds(this._serverIds, this._commands);
     }
 
@@ -2289,7 +2303,7 @@ export class StaticList extends DataPoint {
      * @param {Object} params
      * @returns {Record}
      */
-    async _createRecord(params) {
+    _createRecord(params = {}) {
         const record = this.model.createDataPoint("record", {
             resModel: this.resModel,
             fields: this.fields,
@@ -2316,8 +2330,6 @@ export class StaticList extends DataPoint {
 
         this._mapping[id] = record.id;
         this._cache[record.id] = record;
-
-        await record.load();
 
         return record;
     }
@@ -2486,7 +2498,8 @@ export class StaticList extends DataPoint {
             const recordId = this._mapping[id];
             if (!recordId) {
                 const key = typeof id === "number" ? "resId" : "virtualId";
-                proms.push(this._createRecord({ [key]: id }));
+                const record = this._createRecord({ [key]: id });
+                proms.push(record.load());
             }
         }
         await Promise.all(proms);
@@ -2521,6 +2534,9 @@ export class RelationalModel extends Model {
         if (this.rootType === "record") {
             this.rootParams.resId = params.resId;
             this.rootParams.resIds = params.resIds;
+            if (params.mode) {
+                this.rootParams.mode = params.mode;
+            }
         } else {
             this.rootParams.openGroupsByDefault = params.openGroupsByDefault || false;
             this.rootParams.limit = params.limit;

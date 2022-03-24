@@ -1894,11 +1894,9 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "onchange on one2many with x2many in list (no widget) and form view (list)",
         async function (assert) {
-            assert.expect(6);
-
             serverData.models.turtle.fields.turtle_foo.default = "a default value";
             serverData.models.partner.onchanges = {
                 foo: function (obj) {
@@ -1906,7 +1904,7 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -1915,7 +1913,7 @@ QUnit.module("Fields", (hooks) => {
                         <field name="foo"/>
                         <field name="p">
                             <tree>
-                             <field name="turtles"/>
+                                <field name="turtles"/>
                             </tree>
                             <form>
                                 <field name="turtles">
@@ -1929,34 +1927,32 @@ QUnit.module("Fields", (hooks) => {
             });
 
             assert.containsOnce(
-                form,
+                target,
                 ".o_data_row",
                 "the onchange should have created one record in the relation"
             );
 
             // open the created o2m record in a form view
-            await click(form.$(".o_data_row"));
+            await click(target.querySelector(".o_data_row .o_data_cell"));
 
             assert.containsOnce(document.body, ".modal", "should have opened a dialog");
             assert.containsOnce(document.body, ".modal .o_data_row");
-            assert.strictEqual($(".modal .o_data_row").text(), "hello");
+            assert.strictEqual(document.querySelector(".modal .o_data_row").innerText.trim(), "hello");
 
             // add a one2many subrecord and check if the default value is correctly applied
-            await click($(".modal .o_field_x2many_list_row_add a"));
+            await click(document.querySelector(".modal .o_field_x2many_list_row_add a"));
 
             assert.containsN(document.body, ".modal .o_data_row", 2);
             assert.strictEqual(
-                $(".modal .o_data_row:first .o_field_widget[name=turtle_foo]").val(),
+                document.querySelector(".modal .o_data_row .o_field_widget[name=turtle_foo] input").value,
                 "a default value"
             );
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "onchange on one2many with x2many in list (many2many_tags) and form view (list)",
         async function (assert) {
-            assert.expect(6);
-
             serverData.models.turtle.fields.turtle_foo.default = "a default value";
             serverData.models.partner.onchanges = {
                 foo: function (obj) {
@@ -1964,7 +1960,7 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -1987,24 +1983,24 @@ QUnit.module("Fields", (hooks) => {
             });
 
             assert.containsOnce(
-                form,
+                target,
                 ".o_data_row",
                 "the onchange should have created one record in the relation"
             );
 
             // open the created o2m record in a form view
-            await click(form.$(".o_data_row"));
+            await click(target.querySelector(".o_data_row .o_data_cell"));
 
             assert.containsOnce(document.body, ".modal", "should have opened a dialog");
             assert.containsOnce(document.body, ".modal .o_data_row");
-            assert.strictEqual($(".modal .o_data_row").text(), "hello");
+            assert.strictEqual(document.querySelector(".modal .o_data_row").innerText.trim(), "hello");
 
             // add a one2many subrecord and check if the default value is correctly applied
-            await click($(".modal .o_field_x2many_list_row_add a"));
+            await click(document.querySelector(".modal .o_field_x2many_list_row_add a"));
 
             assert.containsN(document.body, ".modal .o_data_row", 2);
             assert.strictEqual(
-                $(".modal .o_data_row:first .o_field_widget[name=turtle_foo]").val(),
+                document.querySelector(".modal .o_data_row .o_field_widget[name=turtle_foo] input").value,
                 "a default value"
             );
         }

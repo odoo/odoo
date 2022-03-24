@@ -415,10 +415,13 @@ export class KanbanRenderer extends Component {
         group.list.loadMore();
     }
 
-    editGroup(group) {
+    async editGroup(group) {
         this.dialog.add(FormViewDialog, {
             parent: this,
-            record: group.makeRecord({ mode: "edit" }),
+            resModel: group.resModel,
+            resId: group.value,
+            context: group.context,
+            mode: "edit",
             title: sprintf(this.env._t("Edit: %s"), group.displayName),
             save: async (record) => {
                 await record.save({ noReload: true });

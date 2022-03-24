@@ -111,7 +111,7 @@ export class X2ManyField extends Component {
         };
     }
 
-    openRecord(record) {
+    async openRecord(record) {
         const form = this.list.views.form;
         const newRecord = this.list.model.createDataPoint("record", {
             context: record.context,
@@ -121,10 +121,9 @@ export class X2ManyField extends Component {
             views: { form },
             mode: "edit",
             viewMode: "form",
-            values: record._values,
-            changes: record._changes,
             resId: record.resId,
         });
+        await newRecord.load({ values: record._values, changes: record._changes });
         this.dialogService.add(FormViewDialog, {
             parent: this,
             archInfo: form, // FIXME: might not be there

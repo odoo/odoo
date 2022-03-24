@@ -135,18 +135,13 @@ export class Many2OneField extends Component {
             context: this.props.record.getFieldContext(this.props.name),
         });
 
-        const record = this.env.model.createDataPoint("record", {
-            activeFields: {},
-            fields: {},
-            resId,
-            resModel: this.props.relation,
-            context: this.props.record.getFieldContext(this.props.name),
-            mode: this.props.readonly ? "readonly" : "edit",
-            viewId,
-        });
         this.dialog.add(FormViewDialog, {
             parent: this,
-            record,
+            resId,
+            mode: this.props.readonly ? "readonly" : "edit",
+            context: this.props.record.getFieldContext(this.props.name),
+            resModel: this.props.relation,
+            viewId,
             title: sprintf(
                 this.env._t("Open: %s"),
                 this.props.record.activeFields[this.props.name].string
