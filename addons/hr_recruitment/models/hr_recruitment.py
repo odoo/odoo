@@ -421,8 +421,11 @@ class Applicant(models.Model):
         # found.
         self = self.with_context(default_user_id=False)
         stage = False
+        user_id = False
         if custom_values and 'job_id' in custom_values:
-            stage = self.env['hr.job'].browse(custom_values['job_id'])._get_first_stage()
+            hr_job = self.env['hr.job'].browse(custom_values['job_id'])
+            stage = hr_job._get_first_stage()
+            user_id = hr_job.user_id.id
         val = msg.get('from').split('<')[0]
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
@@ -435,6 +438,8 @@ class Applicant(models.Model):
         if stage and stage.id:
             defaults['stage_id'] = stage.id
         if custom_values:
+            if user_id:
+                custom_values.update({'user_id': user_id})
             defaults.update(custom_values)
         return super(Applicant, self).message_new(msg, custom_values=defaults)
 
