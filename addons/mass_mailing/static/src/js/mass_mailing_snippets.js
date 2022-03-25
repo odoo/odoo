@@ -115,6 +115,12 @@ options.registry.ImageTools.include({
         if (imgShapeContainerEl) {
             imgShapeContainerEl.classList.toggle('d-none', !odoo.debug);
         }
+
+        // Transform is _very_ badly supported in mail clients. Hide the option.
+        const transformEl = this.el.querySelector('[data-transform="true"]');
+        if (transformEl) {
+            transformEl.classList.toggle('d-none', true);
+        }
     },
 
     //--------------------------------------------------------------------------
