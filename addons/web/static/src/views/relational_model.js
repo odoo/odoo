@@ -2269,11 +2269,16 @@ export class StaticList extends DataPoint {
     }
 
     async sortBy(fieldName) {
-        if (this.orderBy.name === fieldName) {
-            this.orderBy.asc = !this.orderBy.asc;
+        if (this.orderBy.length && this.orderBy[0].name === fieldName) {
+            this.orderBy[0].asc = !this.orderBy[0].asc;
         } else {
-            this.orderBy = { name: fieldName, asc: true };
+            this.orderBy = this.orderBy.filter((o) => o.name !== fieldName);
+            this.orderBy.unshift({
+                name: fieldName,
+                asc: true,
+            });
         }
+
         await this.load();
         this.model.notify();
     }

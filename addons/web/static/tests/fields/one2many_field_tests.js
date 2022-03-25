@@ -2569,17 +2569,15 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("sorting one2many fields", async function (assert) {
-        assert.expect(4);
-
+    QUnit.test("sorting one2many fields", async function (assert) {
         serverData.models.partner.fields.foo.sortable = true;
         serverData.models.partner.records.push({ id: 23, foo: "abc" });
         serverData.models.partner.records.push({ id: 24, foo: "xyz" });
         serverData.models.partner.records.push({ id: 25, foo: "def" });
         serverData.models.partner.records[0].p = [23, 24, 25];
 
-        var rpcCount = 0;
-        const form = await makeView({
+        let rpcCount = 0;
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -2592,37 +2590,20 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
             resId: 1,
-            mockRPC: function () {
+            mockRPC() {
                 rpcCount++;
-                return this._super.apply(this, arguments);
             },
         });
 
         rpcCount = 0;
-        assert.ok(
-            form.$("table tbody tr:eq(2) td:contains(def)").length,
-            "the 3rd record is the one with 'def' value"
-        );
-        form.renderer._render = function () {
-            throw "should not render the whole form";
-        };
+        assert.strictEqual([...target.querySelectorAll(".o_data_cell")].map((c) => c.innerText).join(" "), "abc xyz def");
 
-        await click(form.$("table thead th:contains(Foo)"));
-        assert.strictEqual(
-            rpcCount,
-            0,
-            "sort should be in memory, no extra RPCs should have been done"
-        );
-        assert.ok(
-            form.$("table tbody tr:eq(2) td:contains(xyz)").length,
-            "the 3rd record is the one with 'xyz' value"
-        );
+        await click(target.querySelector("table thead .o_column_sortable"));
+        assert.strictEqual(rpcCount, 0, "in memory sort, no RPC should have been done");
+        assert.strictEqual([...target.querySelectorAll(".o_data_cell")].map((c) => c.innerText).join(" "), "abc def xyz");
 
-        await click(form.$("table thead th:contains(Foo)"));
-        assert.ok(
-            form.$("table tbody tr:eq(2) td:contains(abc)").length,
-            "the 3rd record is the one with 'abc' value"
-        );
+        await click(target.querySelector("table thead .o_column_sortable"));
+        assert.strictEqual([...target.querySelectorAll(".o_data_cell")].map((c) => c.innerText).join(" "), "xyz def abc");
     });
 
     // I was here WOWL
