@@ -813,7 +813,6 @@ export class Record extends DataPoint {
     }
 
     async update(fieldName, value) {
-        this.onChanges();
         await this._applyChange(fieldName, value);
         const activeField = this.activeFields[fieldName];
         const proms = [];
@@ -837,6 +836,7 @@ export class Record extends DataPoint {
         }
         proms.push(this.loadPreloadedData());
         await Promise.all(proms);
+        this.onChanges();
         this._removeInvalidField(fieldName);
         this.model.notify();
     }
@@ -2086,7 +2086,7 @@ export class StaticList extends DataPoint {
         record._onWillSwitchMode(record, "edit"); // bof
 
         this.limit++;
-        this.applyCommand(Commands.create(record.virtualId, record.data));
+        this.applyCommand(Commands.create(record.virtualId, record.getChanges()));
 
         this._checkValidity(record);
 

@@ -2606,10 +2606,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual([...target.querySelectorAll(".o_data_cell")].map((c) => c.innerText).join(" "), "xyz def abc");
     });
 
-    // I was here WOWL
     QUnit.test("one2many list field edition", async function (assert) {
-        assert.expect(7);
-
         serverData.models.partner.records.push({
             id: 3,
             display_name: "relational record 1",
@@ -2675,10 +2672,8 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".o_form_view"));
         await clickSave(target);
 
-        // FIXME: this next test doesn't pass as the save of updates of
-        // relational data is temporarily disabled
-        // assert.strictEqual(form.$('.o_field_one2many tbody td').first().text(), 'new value',
-        //     "display name of first record in o2m list should be 'new value'");
+        assert.strictEqual(target.querySelector('.o_field_one2many tbody td').innerText, 'new value',
+            "display name of first record in o2m list should be 'new value'");
     });
 
     QUnit.test("one2many list: create action disabled", async function (assert) {

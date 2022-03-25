@@ -1000,6 +1000,8 @@ QUnit.module("Fields", (hooks) => {
 
             await click(target, ".o_field_x2many_list_row_add a");
             assert.strictEqual(target.querySelector(".o_field_widget[name='foo'] input").value, "");
+            // FIXME WOWL: this doesn't reproduce what was tested before (I think in the orignal
+            // scenario, the model wasn't notified of the field change (at least for "test"))
             await editInput(target, ".o_field_widget[name='foo'] input", "test"); // set value for foo
             await editInput(target, ".o_field_widget[name='foo'] input", ""); // remove value for foo
 
