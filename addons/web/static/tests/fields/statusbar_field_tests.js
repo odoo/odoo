@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { click, getFixture, patchWithCleanup } from "../helpers/utils";
+import { commandService } from "@web/core/commands/command_service";
+import { click, getFixture, nextTick, patchWithCleanup, triggerHotkey } from "../helpers/utils";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { makeView, setupViewRegistries } from "../views/helpers";
 import { registry } from "@web/core/registry";
@@ -9,15 +10,10 @@ import { registry } from "@web/core/registry";
 let serverData;
 let target;
 
+const serviceRegistry = registry.category("services");
+
 // WOWL remove after adapting tests
-let testUtils,
-    makeTestEnvironment,
-    triggerHotkey,
-    nextTick,
-    doAction,
-    core,
-    makeLegacyCommandService,
-    createWebClient;
+let testUtils;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -37,12 +33,6 @@ QUnit.module("Fields", (hooks) => {
                             relation: "partner",
                             relation_field: "trululu",
                         },
-                        turtles: {
-                            string: "one2many turtle field",
-                            type: "one2many",
-                            relation: "turtle",
-                            relation_field: "turtle_trululu",
-                        },
                         trululu: { string: "Trululu", type: "many2one", relation: "partner" },
                         timmy: { string: "pokemon", type: "many2many", relation: "partner_type" },
                         product_id: { string: "Product", type: "many2one", relation: "product" },
@@ -55,19 +45,7 @@ QUnit.module("Fields", (hooks) => {
                             default: "red",
                             string: "Color",
                         },
-                        date: { string: "Some Date", type: "date" },
-                        datetime: { string: "Datetime Field", type: "datetime" },
                         user_id: { string: "User", type: "many2one", relation: "user" },
-                        reference: {
-                            string: "Reference Field",
-                            type: "reference",
-                            selection: [
-                                ["product", "Product"],
-                                ["partner_type", "Partner Type"],
-                                ["partner", "Partner"],
-                            ],
-                        },
-                        model_id: { string: "Model", type: "many2one", relation: "ir.model" },
                     },
                     records: [
                         {
@@ -78,11 +56,9 @@ QUnit.module("Fields", (hooks) => {
                             int_field: 10,
                             qux: 0.44,
                             p: [],
-                            turtles: [2],
                             timmy: [],
                             trululu: 4,
                             user_id: 17,
-                            reference: "product,37",
                         },
                         {
                             id: 2,
@@ -95,8 +71,6 @@ QUnit.module("Fields", (hooks) => {
                             timmy: [],
                             trululu: 1,
                             product_id: 37,
-                            date: "2017-01-25",
-                            datetime: "2016-12-12 10:55:05",
                             user_id: 17,
                         },
                         {
@@ -105,7 +79,6 @@ QUnit.module("Fields", (hooks) => {
                             bar: false,
                         },
                     ],
-                    onchanges: {},
                 },
                 product: {
                     fields: {
@@ -132,63 +105,6 @@ QUnit.module("Fields", (hooks) => {
                         { id: 14, display_name: "silver", color: 5 },
                     ],
                 },
-                turtle: {
-                    fields: {
-                        display_name: { string: "Displayed name", type: "char" },
-                        turtle_foo: { string: "Foo", type: "char" },
-                        turtle_bar: { string: "Bar", type: "boolean", default: true },
-                        turtle_int: { string: "int", type: "integer", sortable: true },
-                        turtle_description: { string: "Description", type: "text" },
-                        turtle_trululu: {
-                            string: "Trululu",
-                            type: "many2one",
-                            relation: "partner",
-                        },
-                        turtle_ref: {
-                            string: "Reference",
-                            type: "reference",
-                            selection: [
-                                ["product", "Product"],
-                                ["partner", "Partner"],
-                            ],
-                        },
-                        product_id: {
-                            string: "Product",
-                            type: "many2one",
-                            relation: "product",
-                            required: true,
-                        },
-                        partner_ids: { string: "Partner", type: "many2many", relation: "partner" },
-                    },
-                    records: [
-                        {
-                            id: 1,
-                            display_name: "leonardo",
-                            turtle_bar: true,
-                            turtle_foo: "yop",
-                            partner_ids: [],
-                        },
-                        {
-                            id: 2,
-                            display_name: "donatello",
-                            turtle_bar: true,
-                            turtle_foo: "blip",
-                            turtle_int: 9,
-                            partner_ids: [2, 4],
-                        },
-                        {
-                            id: 3,
-                            display_name: "raphael",
-                            product_id: 37,
-                            turtle_bar: false,
-                            turtle_foo: "kawa",
-                            turtle_int: 21,
-                            partner_ids: [],
-                            turtle_ref: "product,37",
-                        },
-                    ],
-                    onchanges: {},
-                },
                 user: {
                     fields: {
                         name: { string: "Name", type: "char" },
@@ -210,29 +126,6 @@ QUnit.module("Fields", (hooks) => {
                             name: "Christine",
                         },
                     ],
-                },
-                "ir.model": {
-                    fields: {
-                        model: { string: "Model", type: "char" },
-                    },
-                    records: [
-                        {
-                            id: 17,
-                            name: "Partner",
-                            model: "partner",
-                        },
-                        {
-                            id: 20,
-                            name: "Product",
-                            model: "product",
-                        },
-                        {
-                            id: 21,
-                            name: "Partner Type",
-                            model: "partner_type",
-                        },
-                    ],
-                    onchanges: {},
                 },
             },
         };
@@ -563,50 +456,36 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    // TODO: Once the code base is converted with wowl, replace webclient by formview.
-    QUnit.skipWOWL(
-        'statusbar edited by the smart action "Move to stage..."',
-        async function (assert) {
-            assert.expect(3);
+    QUnit.test('statusbar edited by the smart action "Move to stage..."', async function (assert) {
+        assert.expect(3);
 
-            const legacyEnv = makeTestEnvironment({ bus: core.bus });
-            const serviceRegistry = registry.category("services");
-            serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
+        serviceRegistry.add("command", commandService);
 
-            const views = {
-                "partner,false,form":
-                    "<form>" +
-                    '<header><field name="trululu" widget="statusbar" options=\'{"clickable": "1"}\'/></header>' +
-                    "</form>",
-                "partner,false,search": "<search></search>",
-            };
-            const serverData = { models: this.data, views };
-            const webClient = await createWebClient({ serverData });
-            await doAction(webClient, {
-                res_id: 1,
-                type: "ir.actions.act_window",
-                target: "current",
-                res_model: "partner",
-                view_mode: "form",
-                views: [[false, "form"]],
-            });
-            assert.containsOnce(webClient, ".o_field_widget");
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><header><field name="trululu" widget="statusbar" options=\'{"clickable": "1"}\'/></header></form>`,
+            resId: 1,
+        });
 
-            triggerHotkey("control+k");
-            await nextTick();
-            const movestage = webClient.el.querySelectorAll(".o_command");
-            const idx = [...movestage]
-                .map((el) => el.textContent)
-                .indexOf("Move to Trululu...ALT + SHIFT + X");
-            assert.ok(idx >= 0);
+        assert.containsOnce(target, ".o_field_widget");
 
-            await click(movestage[idx]);
-            await nextTick();
-            assert.deepEqual(
-                [...webClient.el.querySelectorAll(".o_command")].map((el) => el.textContent),
-                ["first record", "second record", "aaa"]
-            );
-            await click(webClient.el, "#o_command_2");
-        }
-    );
+        triggerHotkey("control+k");
+        await nextTick();
+        const movestage = target.querySelectorAll(".o_command");
+        const idx = [...movestage]
+            .map((el) => el.textContent)
+            .indexOf("Move to Trululu...ALT + SHIFT + X");
+        assert.ok(idx >= 0);
+
+        await click(movestage[idx]);
+        await nextTick();
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+            ["first record", "second record", "aaa"]
+        );
+        await click(target, "#o_command_2");
+    });
 });

@@ -3,19 +3,21 @@
 import { registry } from "@web/core/registry";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { useService } from "@web/core/utils/hooks";
 import { groupBy } from "@web/core/utils/arrays";
 import { standardFieldProps } from "./standard_field_props";
+import { escape, sprintf } from "@web/core/utils/strings";
 
 const { Component } = owl;
 
 export class StatusBarField extends Component {
-    get isDisabled() {
-        return !this.props.clickable;
+    setup() {
+        this.initiateCommand();
     }
 
     get dropdownClassNames() {
         const classNames = ["btn", "btn-secondary", "o_arrow_button"];
-        if (this.isDisabled) {
+        if (this.props.isDisabled) {
             classNames.push("disabled");
         }
         return classNames.join(" ");
@@ -76,15 +78,43 @@ export class StatusBarField extends Component {
     onDropdownItemSelected(ev) {
         this.selectItem(ev.detail.payload);
     }
-    onItemSelected(item) {
-        this.selectItem(item);
+
+    initiateCommand() {
+        try {
+            const commandService = useService("command");
+            const provide = () => {
+                return this.computeItems().unfolded.map((value) => ({
+                    name: value.name,
+                    action: () => {
+                        this.selectItem(value);
+                    },
+                }));
+            };
+            const name = sprintf(this.env._t(`Move to %s...`), escape(this.props.displayName));
+            const action = () => {
+                return commandService.openPalette({
+                    placeholder: name,
+                    providers: [{ provide }],
+                });
+            };
+            const options = {
+                category: "smart_action",
+                hotkey: "alt+shift+x",
+            };
+            commandService.add(name, action, options);
+        } catch {
+            console.log("Could not add command to service");
+        }
     }
 }
 
 StatusBarField.template = "web.StatusBarField";
 StatusBarField.props = {
     ...standardFieldProps,
-    clickable: { type: Boolean, optional: true },
+    canCreate: { type: Boolean, optional: true },
+    canWrite: { type: Boolean, optional: true },
+    displayName: { type: String, optional: true },
+    isDisabled: { type: Boolean, optional: true },
     visibleSelection: { type: Array, optional: true },
 };
 StatusBarField.components = {
@@ -95,7 +125,10 @@ StatusBarField.supportedTypes = ["many2one", "selection"];
 StatusBarField.isEmpty = () => false;
 StatusBarField.extractProps = (fieldName, record, attrs) => {
     return {
-        clickable: Boolean(attrs.options.clickable),
+        canCreate: Boolean(attrs.can_create),
+        canWrite: Boolean(attrs.can_write),
+        displayName: record.fields[fieldName].string,
+        isDisabled: !attrs.options.clickable,
         visibleSelection:
             attrs.statusbar_visible && attrs.statusbar_visible.trim().split(/\s*,\s*/g),
     };

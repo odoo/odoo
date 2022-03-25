@@ -9,7 +9,7 @@
                 <button type="button" class="btn o_arrow_button btn-secondary dropdown-toggle">More</button>
                 <Dropdown toggler="'parent'">
                     <t t-foreach="items.folded" t-as="item" t-key="item.id">
-                        <DropdownItem class="dropdownClassNames" onSelected="() => this.onDropdownItemSelected(item)">
+                        <DropdownItem class="dropdownClassNames" onSelected="(ev) => this.selectItem(ev.detail.payload)">
                             <t t-esc="item.name" />
                         </DropdownItem>
                     </t>
@@ -26,12 +26,12 @@
                         data-tooltip="Current state"
                         aria-checked="true"
                         aria-current="step"
-                        t-att-disabled="isDisabled"
+                        t-att-disabled="props.isDisabled"
                         t-att-data-value="item.id"
                         t-esc="item.name"
                     />
                 </t>
-                <t t-elif="isDisabled">
+                <t t-elif="props.isDisabled">
                     <button
                         type="button"
                         class="btn btn-secondary o_arrow_button disabled"
@@ -39,7 +39,7 @@
                         role="radio"
                         data-tooltip="Not active state"
                         aria-checked="false"
-                        t-att-disabled="isDisabled"
+                        t-att-disabled="props.isDisabled"
                         t-att-data-value="item.id"
                         t-esc="item.name"
                     />
@@ -53,7 +53,7 @@
                         aria-checked="false"
                         t-att-data-value="item.id"
                         t-esc="item.name"
-                        t-on-click="() => this.onItemSelected(item)"
+                        t-on-click="() => this.selectItem(item)"
                     />
                 </t>
             </t>
