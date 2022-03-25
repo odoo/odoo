@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, getFixture, triggerEvent } from "../helpers/utils";
+import { click, editSelect, getFixture, triggerEvent } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -171,9 +171,7 @@ QUnit.module("Fields", (hooks) => {
             "should not have any value in trululu field"
         );
 
-        const select = target.querySelector(".o_field_widget[name='product_id'] select");
-        select.value = "41";
-        await triggerEvent(select, null, "change");
+        await editSelect(target, ".o_field_widget[name='product_id'] select", "41");
 
         assert.strictEqual(
             target.querySelector(".o_field_widget[name='product_id'] select").value,
@@ -292,11 +290,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await click(target, ".o_form_button_edit");
-
-        const select = target.querySelector(".o_form_view select");
-        select.value = "false";
-        await triggerEvent(select, null, "change");
-
+        await editSelect(target, ".o_form_view select", "false");
         await click(target, ".o_form_button_save");
     });
 
@@ -372,9 +366,7 @@ QUnit.module("Fields", (hooks) => {
             );
 
             // trigger an onchange that will update the domain
-            const input = target.querySelector(".o_field_widget[name='int_field'] input");
-            input.value = 2;
-            await triggerEvent(input, null, "change");
+            await editSelect(target, ".o_field_widget[name='int_field'] input", 2);
 
             assert.containsOnce(
                 target,
@@ -426,9 +418,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // change value to update widget modifier values
-        const select = target.querySelector(".o_field_widget[name='feedback_value'] select");
-        select.value = `"bad"`;
-        await triggerEvent(select, null, "change");
+        await editSelect(target, ".o_field_widget[name='feedback_value'] select", "bad");
 
         assert.containsN(
             target.querySelector(".o_field_widget[name='color']"),

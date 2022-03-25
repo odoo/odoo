@@ -365,6 +365,12 @@ export async function editInput(el, selector, value) {
     return triggerEvent(input, null, "change");
 }
 
+export function editSelect(el, selector, value) {
+    const select = findElement(el, selector);
+    select.value = value;
+    return triggerEvent(select, null, "change");
+}
+
 /**
  * Triggers an hotkey properly disregarding the operating system.
  *
