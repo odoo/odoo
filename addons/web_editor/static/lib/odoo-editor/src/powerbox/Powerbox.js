@@ -42,14 +42,8 @@ export class Powerbox {
         clearTimeout(this._renderingTimeout);
         this._hoverActive = false;
 
+        this._mainWrapperElement.classList.toggle('oe-commandbar-noResult', commands.length === 0);
         if (commands.length === 0) {
-            const groupWrapperEl = document.createElement('div');
-            groupWrapperEl.className = 'oe-commandbar-groupWrapper';
-            const groupNameEl = document.createElement('div');
-            groupNameEl.className = 'oe-commandbar-noResult';
-            groupWrapperEl.append(groupNameEl);
-            this._mainWrapperElement.append(groupWrapperEl);
-            groupNameEl.innerText = this.options._t('No results');
             return;
         }
 
