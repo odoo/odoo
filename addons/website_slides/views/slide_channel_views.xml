@@ -234,7 +234,7 @@
             <field name="name">slide.channel.view.kanban</field>
             <field name="model">slide.channel</field>
             <field name="arch" type="xml">
-                <kanban string="eLearning Overview" class="o_emphasize_colors o_kanban_dashboard o_slide_kanban" edit="false" sample="1">
+                <kanban string="eLearning Overview" class="o_emphasize_colors o_kanban_dashboard o_slide_kanban o_slide_channel_kanban" edit="false" sample="1">
                     <field name="color"/>
                     <field name="enroll"/>
                     <field name="website_published"/>
@@ -256,6 +256,16 @@
                         </t>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                                <div class="ribbon ribbon-top-right"
+                                    attrs="{'invisible': [('active', '=', True)]}">
+                                    <field name="active" invisible="1"/>
+                                    <span class="bg-danger">Archived</span>
+                                </div>
+                                <div class="ribbon ribbon-top-right"
+                                    attrs="{'invisible': ['|', ('website_published', '!=', True), ('active', '=', False)]}">
+                                    <field name="website_published" invisible="1"/>
+                                    <span class="bg-odoo">Published</span>
+                                </div>
                                 <div class="o_kanban_card_header">
                                     <div class="o_kanban_card_header_title mb16">
                                         <div class="o_primary">
@@ -263,12 +273,12 @@
                                                 <span><field name="name" class="o_primary"/></span>
                                             </a>
                                         </div>
-                                        <div t-if="record.tag_ids">
+                                        <div t-if="record.tag_ids" class="w-75">
                                             <field name="tag_ids" widget="many2many_tags"  options="{'color_field': 'color'}"/>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="container o_kanban_card_content mt0">
+                                <div class="container o_kanban_card_content mt1">
                                     <div class="row mb16">
                                         <div class="col-6 o_kanban_primary_left">
                                             <button class="btn btn-primary" name="open_website_url" type="object">View course</button>
