@@ -195,7 +195,7 @@ class PosSession(models.Model):
         if unposted_invoices:
             raise UserError(_('You cannot close the POS when invoices are not posted.\n'
                               'Invoices: %s') % str.join('\n',
-                                                         ['%s - %s' % (invoice.name, invoice.state) for invoice in
+                                                         ['%s - %s - %s' % (invoice.display_name, invoice.invoice_origin, invoice.state) for invoice in
                                                           unposted_invoices]))
 
     @api.model
