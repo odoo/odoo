@@ -17,8 +17,8 @@ class SaleOrder(models.Model):
     project_id = fields.Many2one(
         'project.project', 'Project', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         help='Select a non billable project on which tasks can be created.')
-    project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_user", help="Projects used in this sales order.")
-    project_count = fields.Integer(string='Number of Projects', compute='_compute_project_ids', groups='project.group_project_user')
+    project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_manager", help="Projects used in this sales order.")
+    project_count = fields.Integer(string='Number of Projects', compute='_compute_project_ids', groups='project.group_project_manager')
 
     @api.depends('order_line.product_id.project_id')
     def _compute_tasks_ids(self):
