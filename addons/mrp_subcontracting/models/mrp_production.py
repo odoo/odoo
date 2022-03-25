@@ -4,6 +4,7 @@
 from collections import defaultdict
 from odoo import fields, models, _, api
 from odoo.exceptions import UserError
+from odoo.osv import expression
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 
@@ -15,6 +16,24 @@ class MrpProduction(models.Model):
         inverse='_inverse_move_line_raw_ids', compute='_compute_move_line_raw_ids'
     )
     subcontracting_has_been_recorded = fields.Boolean("Has been recorded?", copy=False)
+
+    incoming_picking = fields.Many2one(related='move_finished_ids.move_dest_ids.picking_id')
+
+    @api.depends('name')
+    def name_get(self):
+        return [
+            (record.id, "%s (%s)" % (record.incoming_picking.name, record.name)) if record.bom_id.type == 'subcontract'
+            else (record.id, record.name) for record in self
+        ]
+
+    @api.model
+    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+        args = args or []
+        if operator == 'ilike' and not (name or '').strip():
+            domain = []
+        else:
+            domain = ['|', ('name', operator, name), ('incoming_picking.name', operator, name)]
+        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     @api.depends('move_raw_ids.move_line_ids')
     def _compute_move_line_raw_ids(self):
