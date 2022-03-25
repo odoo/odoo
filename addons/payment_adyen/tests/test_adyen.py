@@ -115,8 +115,131 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         self.assertNotEqual(refund_tx, source_tx)
         self.assertEqual(refund_tx.source_transaction_id, source_tx)
 
+    def test_get_tx_from_notification_data_returns_partial_capture_child_tx(self):
+        self.provider.capture_manually = True
+        source_tx = self._create_transaction(
+            'direct', state='authorized', provider_reference=self.original_reference
+        )
+        capture_tx = self._create_transaction(
+            'direct',
+            reference='CaptureTx',
+            provider_reference=self.psp_reference,
+            amount=source_tx.amount-10,
+            operation=source_tx.operation,
+            source_transaction_id=source_tx.id,
+        )
+        data = dict(
+            self.webhook_notification_payload,
+            amount={
+                'currency': 'USD',
+                'value': payment_utils.to_minor_currency_units(
+                    source_tx.amount-10, capture_tx.currency_id
+                ),
+            },
+            eventCode='CAPTURE',
+        )
+        returned_tx = self.env['payment.transaction']._get_tx_from_notification_data('adyen', data)
+        self.assertEqual(returned_tx, capture_tx, msg="The existing capture tx is the one returned")
+
+    def test_get_tx_from_notification_data_creates_capture_tx_when_missing(self):
+        self.provider.capture_manually = True
+        source_tx = self._create_transaction(
+            'direct', state='authorized', provider_reference=self.original_reference
+        )
+        data = dict(
+            self.webhook_notification_payload,
+            amount={'currency': 'USD', 'value': payment_utils.to_minor_currency_units(
+                self.amount - 10, source_tx.currency_id
+            )},
+            eventCode='CAPTURE',
+        )
+        capture_tx = self.env['payment.transaction']._get_tx_from_notification_data('adyen', data)
+        self.assertTrue(
+            capture_tx,
+            msg="If no child tx is found with received capture data, a child tx should be created.",
+        )
+        self.assertNotEqual(capture_tx, source_tx)
+        self.assertEqual(capture_tx.source_transaction_id, source_tx)
+
+    def test_get_tx_from_notification_data_returns_void_tx(self):
+        self.provider.capture_manually = True
+        source_tx = self._create_transaction(
+            'direct', state='authorized', provider_reference=self.original_reference
+        )
+        cancel_tx = self._create_transaction(
+            'direct',
+            reference='CancelTx',
+            provider_reference=self.psp_reference,
+            amount=source_tx.amount - 10,
+            operation=source_tx.operation,
+            source_transaction_id=source_tx.id,
+        )
+        data = dict(
+            self.webhook_notification_payload,
+            amount={
+                'currency': 'USD',
+                'value': payment_utils.to_minor_currency_units(
+                    source_tx.amount - 10, cancel_tx.currency_id
+                ),
+            },
+            eventCode='CANCELLATION',
+        )
+        returned_tx = self.env['payment.transaction']._get_tx_from_notification_data('adyen', data)
+        self.assertEqual(returned_tx, cancel_tx, msg="The existing void tx is the one returned")
+
+    def test_get_tx_from_notification_data_creates_void_tx_when_missing(self):
+        self.provider.capture_manually = True
+        source_tx = self._create_transaction(
+            'direct', state='authorized', provider_reference=self.original_reference
+        )
+        data = dict(
+            self.webhook_notification_payload,
+            amount={'currency': 'USD', 'value': payment_utils.to_minor_currency_units(
+                self.amount - 10, source_tx.currency_id
+            )},
+            eventCode='CANCELLATION',
+        )
+        void_tx = self.env['payment.transaction']._get_tx_from_notification_data('adyen', data)
+        self.assertTrue(
+            void_tx,
+            msg="If no child tx is found with received void data, a child tx should be created."
+        )
+        self.assertNotEqual(void_tx, source_tx)
+        self.assertEqual(void_tx.source_transaction_id, source_tx)
+
+    def test_send_full_capture_request_does_not_create_capture_tx(self):
+        self.provider.capture_manually = True
+        source_tx = self._create_transaction(flow='direct', state='authorized')
+        with patch(
+            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
+            return_value={'status': 'received', 'pspreference': 'dummy ref'},
+        ):
+            child_tx = source_tx._send_capture_request()
+        self.assertFalse(
+            child_tx, msg="Full capture should not create a child transaction."
+        )
+
+    def test_send_partial_capture_request_creates_capture_tx(self):
+        self.provider.capture_manually = True
+        source_tx = self._create_transaction(flow='direct', state='authorized')
+        with patch(
+            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
+            return_value={'status': 'received', 'pspreference': 'dummy ref'},
+        ):
+            child_tx = source_tx._send_capture_request(amount_to_capture=10)
+        self.assertTrue(
+            source_tx.child_transaction_ids,
+            msg="Partial capture should create a child transaction and linked it to the source tx.",
+        )
+        self.assertEqual(
+            child_tx.amount, 10, msg="Child transaction should have the requested amount."
+        )
+        self.assertEqual(
+            child_tx.state, 'draft', msg="Child transaction are created in draft until confirmed."
+        )
+
     @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
-    def test_tx_state_after_send_capture_request(self):
+    def test_tx_state_after_send_full_capture_request(self):
         self.provider.capture_manually = True
         tx = self._create_transaction('direct', state='authorized')
 
@@ -133,6 +256,60 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         )
 
     @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
+    def test_tx_state_after_send_partial_capture_request(self):
+        self.provider.capture_manually = True
+        tx = self._create_transaction('direct', state='authorized')
+
+        with patch(
+            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
+            return_value={'status': 'received'},
+        ):
+            tx._send_capture_request(amount_to_capture=10)
+        self.assertEqual(
+            tx.state,
+            'authorized',
+            msg="A partial capture request as been made, but the state of the source transaction "
+                "stays as 'authorized' until the full amount is either done or canceled.",
+        )
+        self.assertEqual(
+            tx.child_transaction_ids[0].state,
+            'draft',
+            msg="A partial capture request as been made, but the state of the child transaction "
+                "stays as 'draft' until a success notification is sent.",
+        )
+
+    def test_send_full_void_request_does_not_create_void_tx(self):
+        self.provider.capture_manually = True
+        source_tx = self._create_transaction(flow='direct', state='authorized')
+        with patch(
+            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
+            return_value={'status': 'received', 'pspreference': 'dummy ref'},
+        ):
+            child_tx = source_tx._send_void_request()
+        self.assertFalse(
+            child_tx, msg="Full void should not create a child transaction."
+        )
+
+    def test_send_partial_void_request_creates_void_tx(self):
+        self.provider.capture_manually = True
+        source_tx = self._create_transaction(flow='direct', state='authorized')
+        with patch(
+            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
+            return_value={'status': 'received', 'pspreference': 'dummy ref'},
+        ):
+            child_tx = source_tx._send_void_request(amount_to_void=10)
+        self.assertTrue(
+            source_tx.child_transaction_ids,
+            msg="Partial void should create a child transaction and linked it to the source tx.",
+        )
+        self.assertEqual(
+            child_tx.amount, 10, msg="Child transaction should have the requested amount."
+        )
+        self.assertEqual(
+            child_tx.state, 'draft', msg="Child transaction are created in draft until confirmed."
+        )
+
+    @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
     def test_tx_state_after_send_void_request(self):
         self.provider.capture_manually = True
         tx = self._create_transaction('direct', state='authorized')
@@ -145,8 +322,8 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         self.assertEqual(
             tx.state,
             'authorized',
-            msg="A void request as been made, but the state of the transaction stays as "
-                "'authorized' until a success notification is sent",
+            msg="A void request as been made, but the state of the transaction stays as"
+                " 'authorized' until a success notification is sent",
         )
 
     def test_webhook_notification_confirms_transaction(self):
@@ -168,7 +345,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
     def test_webhook_notification_captures_transaction(self):
         self.provider.capture_manually = True
         tx = self._create_transaction(
-            'direct', state='authorized', provider_reference=self.original_reference
+            'direct', state='authorized', provider_reference=self.original_reference, amount=9.99
         )
         payload = dict(self.webhook_notification_batch_data, notificationItems=[{
             'NotificationRequestItem': dict(self.webhook_notification_payload, eventCode='CAPTURE')
@@ -181,7 +358,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
 
     def test_webhook_notification_cancels_transaction(self):
         tx = self._create_transaction(
-            'direct', state='pending', provider_reference=self.original_reference
+            'direct', state='pending', provider_reference=self.original_reference, amount=9.99
         )
         payload = dict(self.webhook_notification_batch_data, notificationItems=[{
             'NotificationRequestItem': dict(

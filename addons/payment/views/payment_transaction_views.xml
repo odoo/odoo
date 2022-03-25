@@ -54,6 +54,8 @@
                             <field name="partner_lang"/>
                         </group>
                     </group>
+                    <separator string="Child transactions" attrs="{'invisible': [('child_transaction_ids', '=', [])]}"/>
+                    <field name="child_transaction_ids" attrs="{'invisible': [('child_transaction_ids', '=', [])]}"/>
                     <group string="Message" attrs="{'invisible': [('state_message', '=', False)]}">
                         <field name="state_message" colspan="2" nolabel="1"/>
                     </group>

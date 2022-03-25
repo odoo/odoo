@@ -97,16 +97,11 @@ class PaymentTransaction(models.Model):
 
         return refund_tx
 
-    def _send_capture_request(self):
-        """ Override of payment to simulate a capture request.
-
-        Note: self.ensure_one()
-
-        :return: None
-        """
-        super()._send_capture_request()
+    def _send_capture_request(self, amount_to_capture=None):
+        """ Override of `payment` to simulate a capture request. """
+        child_capture_tx = super()._send_capture_request(amount_to_capture=amount_to_capture)
         if self.provider_code != 'demo':
-            return
+            return child_capture_tx
 
         notification_data = {
             'reference': self.reference,
@@ -115,19 +110,18 @@ class PaymentTransaction(models.Model):
         }
         self._handle_notification_data('demo', notification_data)
 
-    def _send_void_request(self):
-        """ Override of payment to simulate a void request.
+        return child_capture_tx
 
-        Note: self.ensure_one()
-
-        :return: None
-        """
-        super()._send_void_request()
+    def _send_void_request(self, amount_to_void=None):
+        """ Override of `payment` to simulate a void request. """
+        child_void_tx = super()._send_void_request(amount_to_void=amount_to_void)
         if self.provider_code != 'demo':
-            return
+            return child_void_tx
 
         notification_data = {'reference': self.reference, 'simulated_state': 'cancel'}
         self._handle_notification_data('demo', notification_data)
+
+        return child_void_tx
 
     def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Override of payment to find the transaction based on dummy data.
