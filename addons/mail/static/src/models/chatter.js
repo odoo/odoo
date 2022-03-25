@@ -351,6 +351,7 @@ registerModel({
         isShowingAttachmentsLoading: attr({
             default: false,
         }),
+        scrollPanelRef: attr(),
         /**
          * Determines the `Thread` that should be displayed by `this`.
          */

@@ -7,6 +7,15 @@ registerModel({
     name: 'MessageListView',
     identifyingFields: ['threadViewOwner'],
     recordMethods: {
+        /**
+         * @returns {Element|undefined}
+         */
+        getScrollableElement() {
+            if (this.threadViewOwner.threadViewer.chatter) {
+                return this.threadViewOwner.threadViewer.chatter.scrollPanelRef.el;
+            }
+            return this.component.root.el;
+        },
         /***
          * @private
          * @returns {boolean}
@@ -20,7 +29,7 @@ registerModel({
             if (this.threadViewOwner.order === 'asc') {
                 return this.scrollTop >= this.scrollHeight - this.clientHeight - endThreshold;
             }
-            return this.scrollTop <= endThreshold;;
+            return this.scrollTop <= endThreshold;
         },
     },
     fields: {
