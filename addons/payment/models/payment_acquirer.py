@@ -256,6 +256,11 @@ class PaymentAcquirer(models.Model):
         '''
         self.ensure_one()
         account_vals = self.company_id.chart_template_id._prepare_transfer_account_for_direct_creation(self.name, self.company_id)
+        liquidity_type = self.env.ref('account.data_account_type_liquidity', raise_if_not_found=False)
+        account_vals.update({
+            'user_type_id': liquidity_type and liquidity_type.id or False,
+            'reconcile': False,
+        })
         account = self.env['account.account'].create(account_vals)
         inbound_payment_method_ids = []
         if self.token_implemented and self.payment_flow == 's2s':
