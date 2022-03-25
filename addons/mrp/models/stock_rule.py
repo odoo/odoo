@@ -58,7 +58,7 @@ class StockRule(models.Model):
             self.env['stock.move'].sudo().create(productions._get_moves_raw_values())
             self.env['stock.move'].sudo().create(productions._get_moves_finished_values())
             productions._create_workorder()
-            productions.filtered(lambda p: not p.orderpoint_id).action_confirm()
+            productions.filtered(lambda p: not p.orderpoint_id or not p.move_raw_ids).action_confirm()
 
             for production in productions:
                 origin_production = production.move_dest_ids and production.move_dest_ids[0].raw_material_production_id or False
