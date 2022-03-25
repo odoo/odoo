@@ -299,7 +299,7 @@ QUnit.module("Fields", (hooks) => {
 
             serverData.models.partner.records[0].timmy = [12, 14];
             serverData.models.partner_type.records.push({ id: 13, display_name: "red", color: 8 });
-            var form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -331,7 +331,7 @@ QUnit.module("Fields", (hooks) => {
                     }
                 },
             });
-            assert.containsN(form, ".o_field_many2many_tags .badge", 2, "should contain 2 tags");
+            assert.containsN(target, ".o_field_many2many_tags .badge", 2, "should contain 2 tags");
             assert.strictEqual(
                 target.querySelector(".badge .o_tag_badge_text").innerText,
                 "gold",
@@ -351,7 +351,7 @@ QUnit.module("Fields", (hooks) => {
             await click(target.querySelector(".o_form_button_edit"));
 
             assert.containsN(
-                form,
+                target,
                 ".o_field_many2many_tags .badge",
                 2,
                 "should still contain 2 tags in edit mode"
@@ -361,7 +361,7 @@ QUnit.module("Fields", (hooks) => {
                 'first tag should still contain "gold" and be color 2 in edit mode'
             );
             assert.containsN(
-                form,
+                target,
                 ".o_field_many2many_tags .o_delete",
                 2,
                 "tags should contain a delete button"
@@ -384,7 +384,7 @@ QUnit.module("Fields", (hooks) => {
             await click(autocomplete.querySelector("li a"));
             //await testUtils.fields.many2one.clickHighlightedItem("timmy");
             assert.containsN(
-                form,
+                target,
                 ".o_field_many2many_tags .badge .dropdown-toggle",
                 3,
                 "should contain 3 tags"
@@ -406,7 +406,7 @@ QUnit.module("Fields", (hooks) => {
                 target.querySelector(".o_field_many2many_tags .badge[data-id=14] .o_delete")
             );
             assert.containsN(
-                form,
+                target,
                 ".o_field_many2many_tags .badge .dropdown-toggle",
                 2,
                 "should contain 2 tags"
@@ -439,7 +439,7 @@ QUnit.module("Fields", (hooks) => {
                 "should have unticked checkbox in colorpicker dropdown menu"
             );
 
-            //await testUtils.fields.editAndTrigger(checkBox, null, ["mouseenter", "mousedown"]);
+            await click(target, ".o_tag_dropdown input[type='checkbox']");
 
             input = target.querySelector(
                 ".o_field_many2many_tags .badge[data-id=13] .dropdown-toggle"
@@ -458,7 +458,7 @@ QUnit.module("Fields", (hooks) => {
                 "should have a ticked checkbox in colorpicker dropdown menu after mousedown"
             );
 
-            //await testUtils.fields.editAndTrigger(checkBox, null, ["mouseenter", "mousedown"]);
+            await click(target, ".o_tag_dropdown input[type='checkbox']");
 
             input = target.querySelector(
                 ".o_field_many2many_tags .badge[data-id=13] .dropdown-toggle"
@@ -571,7 +571,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch: "<form>" + '<field name="timmy" widget="many2many_tags"/>' + "</form>",
+            arch: "<form>" + '<field name="timmy" widget="many2many_tags"///>' + "</form>",
             mockRPC: (route, { args }) => {
                 if (route === "/web/dataset/call_kw/partner/create") {
                     var commands = args[0].timmy;
