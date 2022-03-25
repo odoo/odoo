@@ -143,8 +143,7 @@ def retrying(func, env):
                 env.cr.rollback()
                 env.registry.reset_changes()
                 if request:
-                    request.session.clear()
-                    request.session.update(json.loads(request.session.json_data))
+                    request.session = request._get_session_and_dbname()[0]
                 if isinstance(exc, IntegrityError):
                     raise _as_validation_error(env, exc) from exc
                 if exc.pgcode not in PG_CONCURRENCY_ERRORS_TO_RETRY:

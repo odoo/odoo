@@ -5,6 +5,11 @@ from odoo.http import FilesystemSessionStore
 from odoo.tools._vendor.sessions import SessionStore
 
 
+class MemoryGeoipResolver:
+    def resolve(self, ip):
+        return {}
+
+
 class MemorySessionStore(SessionStore):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
