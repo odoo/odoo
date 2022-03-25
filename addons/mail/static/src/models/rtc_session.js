@@ -328,11 +328,11 @@ registerModel({
             default: false,
         }),
         /**
-         * States whether this RTC session is connected.
+         * States whether the current user/guest has initiated the RTC session connection offer.
          * Useful when attempting to recover a failed peer connection by
-         * inverting the call direction.
+         * inverting the connection offer direction.
          */
-         isConnected: attr({
+        isCurrentUserInitiatorOfConnectionOffer: attr({
             default: false,
         }),
         /**
