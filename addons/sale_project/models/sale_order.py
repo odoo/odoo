@@ -36,11 +36,8 @@ class SaleOrder(models.Model):
     @api.depends('order_line.product_id', 'order_line.project_id')
     def _compute_project_ids(self):
         for order in self:
-            projects = order.order_line.mapped('product_id.project_id')
-            projects |= order.order_line.mapped('project_id')
-            projects |= order.project_id
-            order.project_ids = projects
-            order.project_count = len(projects)
+            order.project_ids = self.env['project.project'].search(['|', '|', ('sale_order_id', '=', order.id), ('id', 'in', order.order_line.project_id.ids), ('id', 'in', order.order_line.product_id.project_id.ids)])
+            order.project_count = len(order.project_ids)
 
     @api.onchange('project_id')
     def _onchange_project_id(self):
