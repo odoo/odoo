@@ -231,6 +231,29 @@ export function findNode(domPath, findCallback = () => true, stopCallback = () =
  */
 
 /**
+ * Return the furthest uneditable parent of node contained within parentLimit.
+ * @see deleteRange Used to guarantee that uneditables are fully contained in
+ * the range (so that it is not possible to partially remove them)
+ *
+ * @param {Node} node
+ * @param {Node} parentLimit non-inclusive furthest parent allowed
+ * @returns {Node} uneditable parent if it exists
+ */
+export function getFurthestUneditableParent(node, parentLimit) {
+    if (node === parentLimit || !parentLimit.contains(node)) {
+        return undefined;
+    }
+    let parent = node && node.parentElement;
+    let nonEditableElement;
+    while (parent && parent !== parentLimit) {
+        if (!parent.isContentEditable) {
+            nonEditableElement = parent;
+        }
+        parent = parent.parentElement;
+    }
+    return nonEditableElement;
+}
+/**
  * Returns the closest HTMLElement of the provided Node
  * if a 'selector' is provided, Returns the closest HTMLElement that match the selector
  *
