@@ -275,6 +275,7 @@ class AccountMove(models.Model):
              "This is needed when cancelling the source: it will post the inverse journal entry to cancel that part too.")
     tax_cash_basis_origin_move_id = fields.Many2one(
         comodel_name='account.move',
+        index='btree_not_null',
         string="Cash Basis Origin",
         readonly=1,
         help="The journal entry from which this tax cash basis journal entry has been created.")
