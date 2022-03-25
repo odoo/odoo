@@ -11,6 +11,12 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
+                        <button name="%(event.event_registration_action_stats_from_event)d"
+                                type="action" class="oe_stat_button" icon="fa-line-chart">
+                            <span class="o_stat_text">
+                                Registration statistics
+                            </span>
+                        </button>
                         <button name="%(event.act_event_registration_from_event)d"
                                 type="action"
                                 context="{'search_default_expected': True}"
@@ -198,14 +204,14 @@
                                         <div t-if="record.address_id.value"><i class="fa fa-map-marker" title="Location"/> <span class="o_text_overflow o_event_kanban_location" t-out="record.address_id.value"/></div>
                                     </div>
                                     <h5 class="o_event_fontsize_11 p-0">
-                                        <a name="%(act_event_registration_from_event)d"
+                                        <a name="%(event_registration_action_stats_from_event)d"
                                            type="action"
                                            context="{'search_default_expected': True}">
                                             <t t-out="record.seats_expected.raw_value"/> Expected attendees
                                         </a>
                                         <t t-set="total_seats" t-value="record.seats_reserved.raw_value + record.seats_used.raw_value"/>
                                         <div  class="pt-2 pt-md-0" t-if="total_seats > 0 and ! record.auto_confirm.raw_value"><br/>
-                                            <a class="pl-2" name="%(act_event_registration_from_event)d" type="action" context="{'search_default_confirmed': True}">
+                                            <a class="pl-2" name="%(event_registration_action_stats_from_event)d" type="action" context="{'search_default_confirmed': True}">
                                                 <i class="fa fa-level-up fa-rotate-90" title="Confirmed"/><span class="pl-2"><t t-out="total_seats"/> Confirmed</span>
                                             </a>
                                         </div>

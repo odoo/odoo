@@ -40,6 +40,8 @@ class EventRegistration(models.Model):
         readonly=False, store=True)
     event_begin_date = fields.Datetime(string="Event Start Date", related='event_id.date_begin', readonly=True)
     event_end_date = fields.Datetime(string="Event End Date", related='event_id.date_end', readonly=True)
+    event_organizer_id = fields.Many2one(string='Event Organizer', related='event_id.organizer_id', readonly=True)
+    event_user_id = fields.Many2one(string='Event Responsible', related='event_id.user_id', readonly=True)
     company_id = fields.Many2one(
         'res.company', string='Company', related='event_id.company_id',
         store=True, readonly=True, states={'draft': [('readonly', False)]})
