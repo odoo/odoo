@@ -156,6 +156,7 @@ export class Powerbox {
     open(openOptions) {
         this.options.onActivate && this.options.onActivate();
         this._currentOpenOptions = openOptions;
+        this._currentOpenOptions.commands = this._orderCommandsByGroup(openOptions.commands);
 
         const openOnKeyupTarget =
             this._currentOpenOptions.openOnKeyupTarget || this.options.editable;
@@ -283,6 +284,7 @@ export class Powerbox {
 
     nextOpenOptions(openOptions) {
         this._currentOpenOptions = openOptions;
+        this._currentOpenOptions.commands = this._orderCommandsByGroup(openOptions.commands);
         this._initialValue = (
             this._currentOpenOptions.openOnKeyupTarget || this.options.editable
         ).textContent;
@@ -302,11 +304,11 @@ export class Powerbox {
     }
 
     // -------------------------------------------------------------------------
-    // private
+    // Private
     // -------------------------------------------------------------------------
 
     _filter(term, commands) {
-        const initalCommands = commands;
+        const initialCommands = commands;
         term = term.toLowerCase();
         term = term.replaceAll(/\s/g, '\\s');
         const regex = new RegExp(
@@ -316,14 +318,25 @@ export class Powerbox {
                 .join('.*'),
         );
         if (term.length) {
-            commands = initalCommands.filter(command => {
+            commands = initialCommands.filter(command => {
                 const commandText = (command.groupName + ' ' + command.title).toLowerCase();
                 return commandText.match(regex);
             });
         }
         return commands;
     }
-
+    _orderCommandsByGroup(commands) {
+        const groups = {};
+        for (const command of commands) {
+            groups[command.groupName] = groups[command.groupName] || [];
+            groups[command.groupName].push(command);
+        }
+        const reorderedCommands = [];
+        for (const groupCommands of Object.values(groups)) {
+            reorderedCommands.push(...groupCommands);
+        }
+        return reorderedCommands;
+    }
     _resetPosition() {
         const position = getRangePosition(this.el, this.options.document);
         if (!position) {
