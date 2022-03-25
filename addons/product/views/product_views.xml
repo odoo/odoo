@@ -371,9 +371,10 @@
                 </xpath>
                 <field name="list_price" position="attributes">
                    <attribute name="attrs">{'readonly': [('product_variant_count', '&gt;', 1)]}</attribute>
+                   <attribute name="invisible">1</attribute>
                 </field>
                 <field name="list_price" position="after">
-                   <field name="lst_price" invisible="1"/>
+                   <field name="lst_price" class="oe_inline" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                 </field>
                 <group name="packaging" position="attributes">
                     <attribute name="attrs">{'invisible': 0}</attribute>

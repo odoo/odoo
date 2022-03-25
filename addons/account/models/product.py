@@ -63,23 +63,29 @@ class ProductTemplate(models.Model):
     @api.depends('taxes_id', 'list_price')
     def _compute_tax_string(self):
         for record in self:
-            currency = record.currency_id
-            res = record.taxes_id.compute_all(record.list_price, product=record, partner=self.env['res.partner'])
-            joined = []
-            included = res['total_included']
-            if currency.compare_amounts(included, record.list_price):
-                joined.append(_('%s Incl. Taxes', format_amount(self.env, included, currency)))
-            excluded = res['total_excluded']
-            if currency.compare_amounts(excluded, record.list_price):
-                joined.append(_('%s Excl. Taxes', format_amount(self.env, excluded, currency)))
-            if joined:
-                record.tax_string = f"(= {', '.join(joined)})"
-            else:
-                record.tax_string = " "
+            record.tax_string = record._construct_tax_string(record.list_price)
+
+    def _construct_tax_string(self, price):
+        currency = self.currency_id
+        res = self.taxes_id.compute_all(price, product=self, partner=self.env['res.partner'])
+        joined = []
+        included = res['total_included']
+        if currency.compare_amounts(included, price):
+            joined.append(_('%s Incl. Taxes', format_amount(self.env, included, currency)))
+        excluded = res['total_excluded']
+        if currency.compare_amounts(excluded, price):
+            joined.append(_('%s Excl. Taxes', format_amount(self.env, excluded, currency)))
+        if joined:
+            tax_string = f"(= {', '.join(joined)})"
+        else:
+            tax_string = " "
+        return tax_string
 
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
+
+    tax_string = fields.Char(compute='_compute_tax_string')
 
     def _get_product_accounts(self):
         return self.product_tmpl_id._get_product_accounts()
@@ -156,3 +162,8 @@ class ProductProduct(models.Model):
             product_price_unit = product_currency._convert(product_price_unit, currency, company, document_date)
 
         return product_price_unit
+
+    @api.depends('lst_price', 'product_tmpl_id', 'taxes_id')
+    def _compute_tax_string(self):
+        for record in self:
+            record.tax_string = record.product_tmpl_id._construct_tax_string(record.lst_price)
