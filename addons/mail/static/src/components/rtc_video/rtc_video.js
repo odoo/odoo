@@ -44,7 +44,7 @@ export class RtcVideo extends Component {
      *
      */
     _loadVideo() {
-        if (!this.root) {
+        if (!this.root.el) {
             return;
         }
         if (!this.rtcSession || !this.rtcSession.videoStream) {
