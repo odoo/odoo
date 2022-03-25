@@ -118,7 +118,7 @@
                                                 <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                                                 <span t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"></span>
                                                 <small class="d-block text-muted" groups="website_sale.group_show_uom_price" t-if="product.base_unit_price">
-                                                    <t t-call='website_sale.base_unit_price'><t t-set='product' t-value='line.product_id' /></t>
+                                                    <t t-call='website_sale.base_unit_price'/>
                                                 </small>
                                             </span>
 
