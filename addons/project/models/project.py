@@ -2335,15 +2335,23 @@ class ProjectTags(models.Model):
         ('name_uniq', 'unique (name)', "A tag with the same name already exists."),
     ]
 
+    def _get_project_tags_domain(self, domain, project_id):
+        return AND([
+            domain,
+            ['|', ('task_ids.project_id', '=', project_id), ('project_ids', 'in', project_id)]
+        ])
+
+    @api.model
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+        if 'project_id' in self.env.context:
+            domain = self._get_project_tags_domain(domain, self.env.context.get('project_id'))
+        return super().search_read(domain=domain, fields=fields, offset=offset, limit=limit, order=order)
+
     @api.model
     def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
         domain = args
         if 'project_id' in self.env.context:
-            project_id = self.env.context.get('project_id')
-            domain = AND([
-                domain,
-                ['|', ('task_ids.project_id', '=', project_id), ('project_ids', 'in', project_id)]
-            ])
+            domain = self._get_project_tags_domain(domain, self.env.context.get('project_id'))
         return super()._name_search(name, domain, operator, limit, name_get_uid)
 
     @api.model
