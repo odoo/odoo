@@ -120,6 +120,10 @@ class IrHttp(models.AbstractModel):
             raise AccessDenied()
 
     @classmethod
+    def _geoip_resolve(cls):
+        return request._geoip_resolve()
+
+    @classmethod
     def _pre_dispatch(cls, rule, args):
         request.dispatcher.pre_dispatch(rule, args)
 

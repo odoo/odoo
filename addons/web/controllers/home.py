@@ -44,7 +44,7 @@ class Home(http.Controller):
             raise http.SessionExpiredException("Session expired")
 
         # Side-effect, refresh the session lifetime
-        request.session.should_touch = True
+        request.session.touch()
 
         # Restore the user on the environment, it was lost due to auth="none"
         request.update_env(user=request.session.uid)
