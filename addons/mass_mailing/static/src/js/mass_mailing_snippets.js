@@ -95,6 +95,26 @@ options.registry.BackgroundImage = options.registry.BackgroundImage.extend({
     }
 });
 
+options.registry.ImageTools.include({
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async updateUIVisibility() {
+        await this._super(...arguments);
+
+        // Transform is _very_ badly supported in mail clients. Hide the option.
+        const transformEl = this.el.querySelector('[data-transform="true"]');
+        if (transformEl) {
+            transformEl.classList.toggle('d-none', true);
+        }
+    },
+});
+
 options.registry.ImageOptimize.include({
 
     //--------------------------------------------------------------------------
