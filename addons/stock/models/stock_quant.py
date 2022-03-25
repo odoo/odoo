@@ -800,32 +800,50 @@ class StockQuant(models.Model):
         argument, we’ll create a new quant in order for these transactions to not rollback. This
         method will find and deduplicate these quants.
         """
-        query = """WITH
-                        dupes AS (
-                            SELECT min(id) as to_update_quant_id,
-                                (array_agg(id ORDER BY id))[2:array_length(array_agg(id), 1)] as to_delete_quant_ids,
-                                SUM(reserved_quantity) as reserved_quantity,
-                                SUM(inventory_quantity) as inventory_quantity,
-                                SUM(quantity) as quantity,
-                                MIN(in_date) as in_date
-                            FROM stock_quant
-                            GROUP BY product_id, company_id, location_id, lot_id, package_id, owner_id
-                            HAVING count(id) > 1
-                        ),
-                        _up AS (
-                            UPDATE stock_quant q
-                                SET quantity = d.quantity,
-                                    reserved_quantity = d.reserved_quantity,
-                                    inventory_quantity = d.inventory_quantity,
-                                    in_date = d.in_date
-                            FROM dupes d
-                            WHERE d.to_update_quant_id = q.id
-                        )
-                   DELETE FROM stock_quant WHERE id in (SELECT unnest(to_delete_quant_ids) from dupes)
-        """
         try:
             with self.env.cr.savepoint():
+                query = """
+                SELECT
+                    min(id) as to_update_quant_id,
+                    (array_agg(id ORDER BY id))[2:array_length(array_agg(id), 1)] as to_delete_quant_ids,
+                    SUM(reserved_quantity) as reserved_quantity,
+                    SUM(inventory_quantity) as inventory_quantity,
+                    SUM(quantity) as quantity,
+                    MIN(in_date) as in_date
+                FROM stock_quant
+                GROUP BY product_id, company_id, location_id, lot_id, package_id, owner_id
+                HAVING count(id) > 1
+                """
+
                 self.env.cr.execute(query)
+                quants_to_update = {row[0]: row[1:] for row in self.env.cr.fetchall()}
+                if not quants_to_update:
+                    return
+                ids = set()
+                for quant, values in quants_to_update.items():
+                    ids.add(quant)
+                    ids |= set(values[0])
+
+                query = """SELECT id FROM stock_quant WHERE id in %s FOR UPDATE SKIP LOCKED;"""
+                self.env.cr.execute(query, [tuple(ids)])
+                ids = set(self.env.cr.fetchall())
+                quant_ids_to_unlink = set()
+                for quant_id, values in quants_to_update.items():
+                    quants_to_delete, reserved_quantity, inventory_quantity, quantity, in_date = values
+                    if quant_id not in ids or not set(quants_to_delete) < ids:
+                        continue
+                    query = """
+                    UPDATE stock_quant
+                    SET quantity = %s,
+                        reserved_quantity = %s,
+                        inventory_quantity = %s,
+                        in_date = %s
+                    WHERE id = %s
+                    """
+                    self.env.cr.execute(query, [quantity, reserved_quantity, inventory_quantity, in_date, quant_id])
+                    quant_ids_to_unlink |= set(quants_to_delete)
+
+                self.env['stock.quant'].browse(quant_ids_to_unlink).sudo().unlink()
                 self.invalidate_cache()
         except Error as e:
             _logger.info('an error occurred while merging quants: %s', e.pgerror)
