@@ -13,6 +13,8 @@
         'views/payment_templates.xml',  # Only load the SDK on pages with a payment form.
 
         'data/payment_provider_data.xml',  # Depends on views/payment_adyen_templates.xml
+
+        'wizards/payment_capture_wizard_views.xml',
     ],
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',

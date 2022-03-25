@@ -41,4 +41,12 @@
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
+    <!-- Wizards -->
+
+    <record id="payment_capture_wizard_rule" model="ir.rule">
+        <field name="name">Payment Capture Wizard</field>
+        <field name="model_id" ref="model_payment_capture_wizard"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+     </record>
+
 </odoo>

@@ -300,16 +300,11 @@ class PaymentTransaction(models.Model):
 
         return refund_tx
 
-    def _send_capture_request(self):
-        """ Override of payment to send a capture request to Stripe.
-
-        Note: self.ensure_one()
-
-        :return: None
-        """
-        super()._send_capture_request()
+    def _send_capture_request(self, amount_to_capture=None):
+        """ Override of `payment` to send a capture request to Stripe. """
+        child_capture_tx = super()._send_capture_request(amount_to_capture=amount_to_capture)
         if self.provider_code != 'stripe':
-            return
+            return child_capture_tx
 
         # Make the capture request to Stripe
         payment_intent = self.provider_id._stripe_make_request(
@@ -327,16 +322,13 @@ class PaymentTransaction(models.Model):
         )
         self._handle_notification_data('stripe', notification_data)
 
-    def _send_void_request(self):
-        """ Override of payment to send a void request to Stripe.
+        return child_capture_tx
 
-        Note: self.ensure_one()
-
-        :return: None
-        """
-        super()._send_void_request()
+    def _send_void_request(self, amount_to_void=None):
+        """ Override of `payment` to send a void request to Stripe. """
+        child_void_tx = super()._send_void_request(amount_to_void=amount_to_void)
         if self.provider_code != 'stripe':
-            return
+            return child_void_tx
 
         # Make the void request to Stripe
         payment_intent = self.provider_id._stripe_make_request(
@@ -353,6 +345,8 @@ class PaymentTransaction(models.Model):
             payment_intent, notification_data
         )
         self._handle_notification_data('stripe', notification_data)
+
+        return child_void_tx
 
     def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Override of payment to find the transaction based on Stripe data.

@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -34,7 +36,7 @@ class TestPaymentTransaction(PaymentCommon):
         tx = self._create_transaction('redirect', state='done')
 
         # Test the default values of a full refund transaction
-        refund_tx = tx._create_refund_transaction()
+        refund_tx = tx._create_child_transaction(tx.amount, is_refund=True)
         self.assertEqual(
             refund_tx.reference,
             f'R-{tx.reference}',
@@ -54,7 +56,7 @@ class TestPaymentTransaction(PaymentCommon):
         self.assertEqual(
             refund_tx.currency_id,
             tx.currency_id,
-            msg="The currency of the refund transaction should that of the source transaction."
+            msg="The currency of the refund transaction should be that of the source transaction."
         )
         self.assertEqual(
             refund_tx.operation,
@@ -69,17 +71,110 @@ class TestPaymentTransaction(PaymentCommon):
         self.assertEqual(
             refund_tx.partner_id,
             tx.partner_id,
-            msg="The partner of the refund transaction should that of the source transaction."
+            msg="The partner of the refund transaction should be that of the source transaction."
         )
 
         # Test the values of a partial refund transaction with custom refund amount
-        partial_refund_tx = tx._create_refund_transaction(amount_to_refund=11.11)
+        partial_refund_tx = tx._create_child_transaction(11.11, is_refund=True)
         self.assertAlmostEqual(
             partial_refund_tx.amount,
             -11.11,
             places=2,
             msg="The amount of the refund transaction should be the negative value of the amount "
                 "to refund."
+        )
+
+    def test_partial_capture_transaction_values(self):
+        self.provider.support_manual_capture = 'partial'
+        self.provider.capture_manually = True
+        tx = self._create_transaction('redirect', state='authorized')
+
+        capture_tx = tx._create_child_transaction(11.11)
+        self.assertEqual(
+            capture_tx.reference,
+            f'P-{tx.reference}',
+            msg="The reference of a partial capture should be the prefixed reference of the source "
+                "transaction.",
+        )
+        self.assertEqual(
+            capture_tx.amount,
+            11.11,
+            msg="The amount of a partial capture should be the one passed as argument.",
+        )
+        self.assertEqual(
+            capture_tx.currency_id,
+            tx.currency_id,
+            msg="The currency of the partial capture should be that of the source transaction.",
+        )
+        self.assertEqual(
+            capture_tx.operation,
+            tx.operation,
+            msg="The operation of the partial capture should be the same as the source"
+                " transaction.",
+        )
+        self.assertEqual(
+            tx,
+            capture_tx.source_transaction_id,
+            msg="The partial capture transaction should be linked to the source transaction.",
+        )
+        self.assertEqual(
+            capture_tx.partner_id,
+            tx.partner_id,
+            msg="The partner of the partial capture should be that of the source transaction.",
+        )
+
+    def test_capturing_child_tx_triggers_source_tx_state_update(self):
+        self.provider.support_manual_capture = 'partial'
+        self.provider.capture_manually = True
+        source_tx = self._create_transaction(flow='direct', state='authorized')
+        child_tx_1 = source_tx._create_child_transaction(100)
+        with patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._update_source_transaction_state'
+        ) as patched:
+            child_tx_1._set_done()
+            patched.assert_called_once()
+
+    def test_voiding_child_tx_triggers_source_tx_state_update(self):
+        self.provider.support_manual_capture = 'partial'
+        self.provider.capture_manually = True
+        source_tx = self._create_transaction(flow='direct', state='authorized')
+        child_tx_1 = source_tx._create_child_transaction(100)
+        child_tx_1._set_done()
+        child_tx_2 = source_tx._create_child_transaction(source_tx.amount-100)
+        with patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._update_source_transaction_state'
+        ) as patched:
+            child_tx_2._set_canceled()
+            patched.assert_called_once()
+
+    def test_capturing_partial_amount_leaves_source_tx_authorized(self):
+        self.provider.support_manual_capture = 'partial'
+        self.provider.capture_manually = True
+        source_tx = self._create_transaction(flow='direct', state='authorized')
+        child_tx_1 = source_tx._create_child_transaction(100)
+        child_tx_1._set_done()
+        self.assertEqual(
+            source_tx.state,
+            'authorized',
+            msg="The whole amount of the source transaction has not been processed yet, it's state "
+                "should still be 'authorized'.",
+        )
+
+    def test_capturing_full_amount_confirms_source_tx(self):
+        self.provider.support_manual_capture = 'partial'
+        self.provider.capture_manually = True
+        source_tx = self._create_transaction(flow='direct', state='authorized')
+        child_tx_1 = source_tx._create_child_transaction(100)
+        child_tx_1._set_done()
+        child_tx_2 = source_tx._create_child_transaction(source_tx.amount - 100)
+        child_tx_2._set_canceled()
+        self.assertEqual(
+            source_tx.state,
+            'done',
+            msg="The whole amount of the source transaction has been processed, it's state is now "
+                "'done'."
         )
 
     @mute_logger('odoo.addons.payment.models.payment_transaction')

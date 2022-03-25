@@ -163,8 +163,10 @@ class PaymentProvider(models.Model):
     support_tokenization = fields.Boolean(
         string="Tokenization Supported", compute='_compute_feature_support_fields'
     )
-    support_manual_capture = fields.Boolean(
-        string="Manual Capture Supported", compute='_compute_feature_support_fields'
+    support_manual_capture = fields.Selection(
+        string="Manual Capture Supported",
+        selection=[('full_only', "Full Only"), ('partial', "Partial")],
+        compute='_compute_feature_support_fields',
     )
     support_express_checkout = fields.Boolean(
         string="Express Checkout Supported", compute='_compute_feature_support_fields'

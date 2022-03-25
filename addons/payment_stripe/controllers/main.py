@@ -192,7 +192,7 @@ class StripeController(http.Controller):
         converted_amount = payment_utils.to_major_currency_units(
             amount_to_refund, source_tx_sudo.currency_id
         )
-        return source_tx_sudo._create_refund_transaction(amount_to_refund=converted_amount)
+        return source_tx_sudo._create_child_transaction(converted_amount, is_refund=True)
 
     def _verify_notification_signature(self, tx_sudo):
         """ Check that the received signature matches the expected one.

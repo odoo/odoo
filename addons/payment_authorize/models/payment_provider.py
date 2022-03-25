@@ -63,7 +63,7 @@ class PaymentProvider(models.Model):
         """ Override of `payment` to enable additional features. """
         super()._compute_feature_support_fields()
         self.filtered(lambda p: p.code == 'authorize').update({
-            'support_manual_capture': True,
+            'support_manual_capture': 'full_only',
             'support_refund': 'full_only',
             'support_tokenization': True,
         })

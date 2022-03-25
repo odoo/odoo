@@ -110,6 +110,9 @@ class PaymentTransaction(models.Model):
         them. This is also true for validations with a validity check (transfer of a small amount
         with immediate refund) because validation amounts are not included in payouts.
 
+        As the reconciliation is done in the child transactions for partial voids and captures, no
+        payment is created for their source transactions.
+
         :return: None
         """
         super()._reconcile_after_done()
@@ -119,7 +122,8 @@ class PaymentTransaction(models.Model):
 
         # Create and post missing payments for transactions requiring reconciliation
         for tx in self.filtered(lambda t: t.operation != 'validation' and not t.payment_id):
-            tx._create_payment()
+            if not any(child.state in ['done', 'cancel'] for child in tx.child_transaction_ids):
+                tx._create_payment()
 
     def _create_payment(self, **extra_create_values):
         """Create an `account.payment` record for the current transaction.
@@ -161,10 +165,15 @@ class PaymentTransaction(models.Model):
         # Track the payment to make a one2one.
         self.payment_id = payment
 
-        if self.invoice_ids:
-            self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
+        # Reconcile the payment with the source transaction's invoices in case of a partial capture.
+        if self.operation == self.source_transaction_id.operation:
+            invoices = self.source_transaction_id.invoice_ids
+        else:
+            invoices = self.invoice_ids
+        if invoices:
+            invoices.filtered(lambda inv: inv.state == 'draft').action_post()
 
-            (payment.line_ids + self.invoice_ids.line_ids).filtered(
+            (payment.line_ids + invoices.line_ids).filtered(
                 lambda line: line.account_id == payment.destination_account_id
                 and not line.reconciled
             ).reconcile()
@@ -186,10 +195,12 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
         self = self.with_user(SUPERUSER_ID)  # Log messages as 'OdooBot'
-        if self.source_transaction_id.payment_id:
-            self.source_transaction_id.payment_id.message_post(body=message)
+        if self.source_transaction_id:
             for invoice in self.source_transaction_id.invoice_ids:
                 invoice.message_post(body=message)
+            payment_id = self.source_transaction_id.payment_id
+            if payment_id:
+                payment_id.message_post(body=message)
         for invoice in self.invoice_ids:
             invoice.message_post(body=message)
 

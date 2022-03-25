@@ -43,7 +43,7 @@ class WebsiteSaleCartPayment(PaymentCommon):
     def test_paid_orders_cannot_be_retrieved(self):
         """ Test that fetching sales orders linked to a payment transaction in the states 'pending',
         'authorized', or 'done' returns an empty recordset to prevent updating the paid orders. """
-        self.tx.provider_id.support_manual_capture = True
+        self.tx.provider_id.support_manual_capture = 'full_only'
         for paid_order_tx_state in ('pending', 'authorized', 'done'):
             self.tx.state = paid_order_tx_state
             with MockRequest(self.env, website=self.website, sale_order_id=self.order.id):

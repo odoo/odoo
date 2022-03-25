@@ -36,8 +36,8 @@ class TestRefundFlows(StripeCommon, PaymentHttpCommon):
         """ Test that receiving a webhook notification for a refund cancellation
         (`charge.refund.updated` event) triggers the processing of the notification data. """
         source_tx = self._create_transaction('redirect', state='done')
-        source_tx._create_refund_transaction(
-            amount_to_refund=source_tx.amount, provider_reference=self.refund_object['id']
+        source_tx._create_child_transaction(
+            source_tx.amount, is_refund=True, provider_reference=self.refund_object['id']
         )
         url = self._build_url(StripeController._webhook_url)
         with patch(

@@ -70,7 +70,7 @@ class PaymentTransaction(models.Model):
             ('online_token', "Online payment by token"),
             ('validation', "Validation of the payment method"),
             ('offline', "Offline payment by token"),
-            ('refund', "Refund")
+            ('refund', "Refund"),
         ],
         readonly=True,
         index=True,
@@ -78,12 +78,12 @@ class PaymentTransaction(models.Model):
     source_transaction_id = fields.Many2one(
         string="Source Transaction",
         comodel_name='payment.transaction',
-        help="The source transaction of related refund transactions",
+        help="The source transaction of the related child transactions",
         readonly=True,
     )
     child_transaction_ids = fields.One2many(
         string="Child Transactions",
-        help="The child transactions of the source transaction.",
+        help="The child transactions of the transaction.",
         comodel_name='payment.transaction',
         inverse_name='source_transaction_id',
         readonly=True,
@@ -262,24 +262,46 @@ class PaymentTransaction(models.Model):
         return action
 
     def action_capture(self):
-        """ Check the state of the transactions and request their capture. """
-        if any(tx.state != 'authorized' for tx in self):
-            raise ValidationError(_("Only authorized transactions can be captured."))
+        """ Open the partial capture wizard if it is supported by the related providers, otherwise
+        capture the transactions immediately.
 
+        :return: The action to open the partial capture wizard, if supported.
+        :rtype: action.act_window|None
+        """
         payment_utils.check_rights_on_recordset(self)
-        for tx in self:
-            # In sudo mode because we need to be able to read on provider fields.
-            tx.sudo()._send_capture_request()
+
+        if any(tx.provider_id.sudo().support_manual_capture == 'partial' for tx in self):
+            return {
+                'name': _("Capture"),
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'res_model': 'payment.capture.wizard',
+                'target': 'new',
+                'context': {
+                    'active_model': 'payment.transaction',
+                    # Consider also confirmed transactions to calculate the total authorized amount.
+                    'active_ids': self.filtered(lambda tx: tx.state in ['authorized', 'done']).ids,
+                },
+            }
+        else:
+            for tx in self.filtered(lambda tx: tx.state == 'authorized'):
+                # In sudo mode because we need to be able to read on provider fields.
+                tx.sudo()._send_capture_request()
 
     def action_void(self):
         """ Check the state of the transaction and request to have them voided. """
+        payment_utils.check_rights_on_recordset(self)
+
         if any(tx.state != 'authorized' for tx in self):
             raise ValidationError(_("Only authorized transactions can be voided."))
 
-        payment_utils.check_rights_on_recordset(self)
         for tx in self:
+            # Consider all the confirmed partial capture (same operation as parent) child txs.
+            captured_amount = sum(child_tx.amount for child_tx in tx.child_transaction_ids.filtered(
+                lambda t: t.state == 'done' and t.operation == tx.operation
+            ))
             # In sudo mode because we need to be able to read on provider fields.
-            tx.sudo()._send_void_request()
+            tx.sudo()._send_void_request(amount_to_void=tx.amount - captured_amount)
 
     def action_refund(self, amount_to_refund=None):
         """ Check the state of the transactions and request their refund.
@@ -524,58 +546,52 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
         self._ensure_provider_is_not_disabled()
 
-        refund_tx = self._create_refund_transaction(amount_to_refund=amount_to_refund)
+        refund_tx = self._create_child_transaction(amount_to_refund or self.amount, is_refund=True)
         refund_tx._log_sent_message()
         return refund_tx
 
-    def _create_refund_transaction(self, amount_to_refund=None, **custom_create_values):
-        """ Create a new transaction with the operation `refund` and the current transaction as
-        source transaction.
-
-        :param float amount_to_refund: The strictly positive amount to refund, in the same currency
-                                       as the source transaction.
-        :return: The refund transaction.
-        :rtype: recordset of `payment.transaction`
-        """
-        self.ensure_one()
-
-        return self.create({
-            'provider_id': self.provider_id.id,
-            'reference': self._compute_reference(self.provider_code, prefix=f'R-{self.reference}'),
-            'amount': -(amount_to_refund or self.amount),
-            'currency_id': self.currency_id.id,
-            'token_id': self.token_id.id,
-            'operation': 'refund',
-            'source_transaction_id': self.id,
-            'partner_id': self.partner_id.id,
-            **custom_create_values,
-        })
-
-    def _send_capture_request(self):
+    def _send_capture_request(self, amount_to_capture=None):
         """ Request the provider handling the transaction to capture the payment.
+
+        For partial captures, create a child transaction linked to the source transaction.
 
         For a provider to support authorization, it must override this method and make an API
         request to capture the payment.
 
         Note: `self.ensure_one()`
 
-        :return: None
+        :param float amount_to_capture: The amount to capture.
+        :return: The created capture child transaction, if any.
+        :rtype: `payment.transaction`
         """
         self.ensure_one()
         self._ensure_provider_is_not_disabled()
 
-    def _send_void_request(self):
+        if amount_to_capture and amount_to_capture != self.amount:
+            return self._create_child_transaction(amount_to_capture)
+        return self.env['payment.transaction']
+
+    def _send_void_request(self, amount_to_void=None):
         """ Request the provider handling the transaction to void the payment.
+
+        For partial voids, create a child transaction linked to the source transaction.
 
         For a provider to support authorization, it must override this method and make an API
         request to void the payment.
 
         Note: `self.ensure_one()`
 
-        :return: None
+        :param float amount_to_void: The amount to be voided.
+        :return: The created void child transaction, if any.
+        :rtype: payment.transaction
         """
         self.ensure_one()
         self._ensure_provider_is_not_disabled()
+
+        if amount_to_void and amount_to_void != self.amount:
+            return self._create_child_transaction(amount_to_void)
+
+        return self.env['payment.transaction']
 
     def _ensure_provider_is_not_disabled(self):
         """ Ensure that the provider's state is not `disabled` before sending a request to its
@@ -588,6 +604,42 @@ class PaymentTransaction(models.Model):
             raise UserError(_(
                 "Making a request to the provider is not possible because the provider is disabled."
             ))
+
+    def _create_child_transaction(self, amount, is_refund=False, **custom_create_values):
+        """ Create a new transaction with the current transaction as its parent transaction.
+
+        This happens only in case of a refund or a partial capture (where the initial transaction is
+        split between smaller transactions, either captured or voided).
+
+        Note: self.ensure_one()
+
+        :param float amount: The strictly positive amount of the child transaction, in the same
+                             currency as the source transaction.
+        :param bool is_refund: Whether the child transaction is a refund.
+        :return: The created child transaction.
+        :rtype: payment.transaction
+        """
+        self.ensure_one()
+
+        if is_refund:
+            reference_prefix = f'R-{self.reference}'
+            amount = -amount
+            operation = 'refund'
+        else:  # Partial capture or void.
+            reference_prefix = f'P-{self.reference}'
+            operation = self.operation
+
+        return self.create({
+            'provider_id': self.provider_id.id,
+            'reference': self._compute_reference(self.provider_code, prefix=reference_prefix),
+            'amount': amount,
+            'currency_id': self.currency_id.id,
+            'token_id': self.token_id.id,
+            'operation': operation,
+            'source_transaction_id': self.id,
+            'partner_id': self.partner_id.id,
+            **custom_create_values,
+        })
 
     def _handle_notification_data(self, provider_code, notification_data):
         """ Match the transaction with the notification data, update its state and return it.
@@ -679,6 +731,7 @@ class PaymentTransaction(models.Model):
         txs_to_process = self._update_state(
             allowed_states + extra_allowed_states, target_state, state_message
         )
+        txs_to_process._update_source_transaction_state()
         txs_to_process._log_received_message()
         return txs_to_process
 
@@ -696,7 +749,7 @@ class PaymentTransaction(models.Model):
         txs_to_process = self._update_state(
             allowed_states + extra_allowed_states, target_state, state_message
         )
-        # Cancel the existing payments.
+        txs_to_process._update_source_transaction_state()
         txs_to_process._log_received_message()
         return txs_to_process
 
@@ -775,6 +828,28 @@ class PaymentTransaction(models.Model):
             'last_state_change': fields.Datetime.now(),
         })
         return txs_to_process
+
+    def _update_source_transaction_state(self):
+        """ Update the state of the source transactions for which all child transactions have
+        reached a final state.
+
+        :return: None
+        """
+        for child_tx in self.filtered('source_transaction_id'):
+            sibling_txs = child_tx.source_transaction_id.child_transaction_ids.filtered(
+                lambda tx: tx.state in ['done', 'cancel'] and tx.operation == child_tx.operation
+            )
+            processed_amount = round(
+                sum(tx.amount for tx in sibling_txs), child_tx.currency_id.decimal_places
+            )
+            if child_tx.source_transaction_id.amount == processed_amount:
+                state_message = _(
+                    "This transaction has been confirmed following the processing of its partial "
+                    "capture and partial void transactions (%(provider)s).",
+                    provider=child_tx.provider_id.name,
+                )
+                # Call `_update_state` directly instead of `_set_authorized` to avoid looping.
+                child_tx.source_transaction_id._update_state(('authorized',), 'done', state_message)
 
     def _execute_callback(self):
         """ Execute the callbacks defined on the transactions.
@@ -884,7 +959,7 @@ class PaymentTransaction(models.Model):
                 ('state', '=', 'done'),
                 ('is_post_processed', '=', False),
                 '|', ('last_state_change', '<=', client_handling_limit_date),
-                     ('operation', '=', 'refund'),
+                     ('source_transaction_id', '!=', False),
                 ('last_state_change', '>=', retry_limit_date),
             ])
         for tx in txs_to_post_process:
