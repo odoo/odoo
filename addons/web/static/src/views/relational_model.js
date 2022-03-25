@@ -887,9 +887,25 @@ export class Record extends DataPoint {
             field: this.fields[fieldName],
             views,
             viewMode,
-            onChanges: () => {
-                this.onChanges();
+            onChanges: async () => {
                 this._changes[fieldName] = list.getCommands();
+                const changes = await this._onChange(fieldName);
+                const proms = [];
+                for (const [fieldName, value] of Object.entries(changes)) {
+                    const field = this.fields[fieldName];
+                    // for x2many fields, the onchange returns commands, not ids, so we need to process them
+                    // for now, we simply return an empty list
+                    if (isX2Many(field)) {
+                        this._changes[fieldName] = value;
+                        this.data[fieldName].applyCommands(value);
+                        proms.push(this.data[fieldName].load());
+                    } else {
+                        this._changes[fieldName] = value;
+                        this.data[fieldName] = this._changes[fieldName];
+                    }
+                }
+                await Promise.all(proms);
+                this.onChanges();
             },
         });
 
@@ -2242,8 +2258,7 @@ export class StaticList extends DataPoint {
     setCurrentIds(resIds = [], commands = []) {
         this._serverIds = resIds;
         this._commandsById = {}; // to remove?
-    this._commands = this._getNormalizedCommands([], commands); // modifies commands and this._commandsById in places
-        // this._commands = commands;
+        this._commands = this._getNormalizedCommands([], commands); // modifies commands and this._commandsById in places
         this.currentIds = this._getCurrentIds(this._serverIds, this._commands);
     }
 
@@ -2295,14 +2310,14 @@ export class StaticList extends DataPoint {
             viewMode: this.viewMode,
             views: this.views,
             onRecordWillSwitchMode: this.onRecordWillSwitchMode,
-            onChanges: () => {
-                this.onChanges();
+            onChanges: async () => {
                 this.applyCommand(
                     x2ManyCommands.update(record.resId || record.virtualId, record.getChanges())
                 );
                 if (record.virtualId === this.notYetValidated) {
                     this._checkValidity(record);
                 }
+                this.onChanges();
             },
             ...params,
             context: makeContext(

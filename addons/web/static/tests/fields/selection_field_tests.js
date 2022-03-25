@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, editSelect, getFixture, triggerEvent } from "../helpers/utils";
+import { click, editSelect, getFixture } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
