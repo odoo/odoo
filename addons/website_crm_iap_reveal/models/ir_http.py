@@ -20,8 +20,8 @@ class IrHttp(models.AbstractModel):
             # We are avoiding to create a reveal_view if a lead is already
             # created from another module, e.g. website_form
             if not (visitor_sudo and visitor_sudo.lead_ids):
-                country_code = 'geoip' in request.session and request.session['geoip'].get('country_code')
-                state_code = 'geoip' in request.session and request.session['geoip'].get('region')
+                country_code = request.geoip.get('country_code')
+                state_code = request.geoip.get('region')
                 if country_code:
                     try:
                         url = request.httprequest.url

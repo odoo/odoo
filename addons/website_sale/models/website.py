@@ -200,7 +200,7 @@ class Website(models.Model):
         return pl_id in self.get_pricelist_available(show_visible=False).ids
 
     def _get_geoip_country_code(self):
-        return request and request.session.geoip and request.session.geoip.get('country_code') or False
+        return request and request.geoip.get('country_code') or False
 
     def _get_cached_pricelist_id(self):
         return request and request.session.get('website_sale_current_pl') or None
@@ -417,7 +417,7 @@ class Website(models.Model):
         # If the current user is the website public user, the fiscal position
         # is computed according to geolocation.
         if request.website.partner_id.id == partner_sudo.id:
-            country_code = request.session['geoip'].get('country_code')
+            country_code = request.geoip.get('country_code')
             if country_code:
                 country_id = self.env['res.country'].search([('code', '=', country_code)], limit=1).id
                 fpos = self.env['account.fiscal.position'].sudo()._get_fpos_by_region(country_id)

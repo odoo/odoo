@@ -12,8 +12,7 @@ class LinkTracker(http.Controller):
     @http.route('/r/<string:code>', type='http', auth='public', website=True)
     def full_url_redirect(self, code, **post):
         if not request.env['ir.http'].is_a_bot():
-            country_code = request.session.geoip and request.session.geoip.get(
-                'country_code') or False
+            country_code = request.geoip.get('country_code')
             request.env['link.tracker.click'].sudo().add_click(
                 code,
                 ip=request.httprequest.remote_addr,

@@ -222,7 +222,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         # group by grade
         grade_domain = list(base_partner_domain)
         if not country and not country_all:
-            country_code = request.session['geoip'].get('country_code')
+            country_code = request.geoip.get('country_code')
             if country_code:
                 country = country_obj.search([('code', '=', country_code)], limit=1)
         if country:
