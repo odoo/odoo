@@ -5,7 +5,7 @@
 
 .pos .close-pos-popup .body{
     margin: 0;
-    padding: 15px 50px;
+    padding: 3% 5%;
 }
 
 .pos .close-pos-popup header {
@@ -16,34 +16,44 @@
     background-color: rgb(255, 255, 255);
 }
 
-.pos .close-pos-popup .title {
-    height: inherit;
-    box-sizing: border-box;
-    padding: 20px;
-}
-
+.pos .close-pos-popup .title,
 .pos .close-pos-popup .total-orders {
-    height: inherit;
-    box-sizing: border-box;
-    padding: 20px;
+    padding: 2.5%;
 }
 
 .pos .close-pos-popup .total-orders .amount {
-    margin: 0 15px;
+    display: inline-block; 
 }
 
-.pos .close-pos-popup .opening-note {
+.notes-container {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    border-top: dotted 1px darkgrey;
+    padding-top: 1%;
+}
+
+.pos .close-pos-popup .opening-notes {
     color: darkgrey;
     text-align: left;
     font-size: 16px;
     box-sizing: border-box;
-    width: 100%;
-    max-height: 90px;
+    min-width: 40%;
     padding: 5px 10px;
-    margin-bottom: 10px;
-    border-left: solid 3px darkgrey;
+    border-left: solid 3px darkgray;
     overflow-y: auto;
     word-break: break-word;
+}
+
+.pos .close-pos-popup .closing-notes { 
+    font-style: italic;
+    font-weight: 350;
+    box-sizing: border-box;
+    line-height: 20px;
+    width: 100%;
+    min-width: 60%;
+    min-height: 100px;
+    resize: none;
 }
 
 .pos .close-pos-popup .payment-methods-overview {
@@ -64,16 +74,33 @@
     display: flex;
 }
 
-.pos .close-pos-popup .right-align {
-    text-align: right;
-    padding-right: 20px;
+.pos .close-pos-popup th:nth-child(1),
+.pos .close-pos-popup td:nth-child(1) {
+    padding-right: 5px;
 }
 
-.pos .close-pos-popup .payment-methods-overview table .pos-input {
-    width: 110px;
+.pos .close-pos-popup th:nth-child(2),
+.pos .close-pos-popup td:nth-child(2) {
     text-align: right;
-    padding-right: 10px;
-    margin-right: 5px;
+    padding-right: 5%;
+    white-space: nowrap;
+}
+
+.pos .close-pos-popup th:nth-child(3),
+.pos .close-pos-popup td:nth-child(3) {
+    padding-left: 5px;
+}
+
+.pos .close-pos-popup th:nth-child(4),
+.pos .close-pos-popup td:nth-child(4) {
+    text-align: left;
+    padding-left: 10px;
+}
+.pos .close-pos-popup .payment-methods-overview table .pos-input {
+    width: 75%;
+    text-align: right;
+    padding-right: 7%;
+    margin-right: 3%;
 }
 
 .pos .close-pos-popup .payment-methods-overview table .warning {
@@ -100,15 +127,6 @@
     padding-left: 10px;
 }
 
-.pos .close-pos-popup .closing-notes {
-    font-style: italic;
-    font-weight: 350;
-    width: calc(100% - 20px); /* textarea has a padding of 10px */
-    line-height: 20px;
-    resize: none;
-    height: 70px;
-    margin: 20px 0;
-}
 
 .pos .close-pos-popup .invisible {
     visibility: hidden;
@@ -126,12 +144,14 @@
 
 .pos .close-pos-popup .footer .button {
     float: left;
-    width: 130px;
+    width: 16%;
+    min-width: 95px;
 }
 
 .pos .close-pos-popup .footer .small.button {
     float: right;
-    width: 50px;
+    width: 6%;
+    min-width: 45px;
 }
 
 .pos .close-pos-popup .footer .button.disabled {
