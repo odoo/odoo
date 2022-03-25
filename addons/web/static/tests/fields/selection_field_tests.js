@@ -418,7 +418,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // change value to update widget modifier values
-        await editSelect(target, ".o_field_widget[name='feedback_value'] select", "bad");
+        await editSelect(target, ".o_field_widget[name='feedback_value'] select", '"bad"');
 
         assert.containsN(
             target.querySelector(".o_field_widget[name='color']"),
