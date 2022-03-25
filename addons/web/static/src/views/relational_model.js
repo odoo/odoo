@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Commands, ORM } from "@web/core/orm_service";
+import { ORM, x2ManyCommands } from "@web/core/orm_service";
 import { Deferred, KeepLast, Mutex } from "@web/core/utils/concurrency";
 import {
     deserializeDate,
@@ -22,6 +22,7 @@ const { markRaw, toRaw, xml } = owl;
 
 const preloadedDataRegistry = registry.category("preloadedData");
 
+const { CREATE, UPDATE, DELETE, FORGET, LINK_TO, DELETE_ALL, REPLACE_WITH } = x2ManyCommands;
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection"];
 const DEFAULT_QUICK_CREATE_VIEW = {
     form: {
@@ -608,16 +609,14 @@ export class Record extends DataPoint {
     }
 
     async load(params = {}) {
-        // if (!this._cache) {
-            this._cache = {};
-            for (const fieldName in this.activeFields) {
-                const field = this.fields[fieldName];
-                if (isX2Many(field)) {
-                    const staticList = this._createStaticList(fieldName);
-                    this._cache[fieldName] = staticList;
-                }
+        this._cache = {};
+        for (const fieldName in this.activeFields) {
+            const field = this.fields[fieldName];
+            if (isX2Many(field)) {
+                const staticList = this._createStaticList(fieldName);
+                this._cache[fieldName] = staticList;
             }
-        // }
+        }
 
         if (!this.fieldNames.length) {
             return;
@@ -1969,19 +1968,6 @@ const remove = (arr, el) => {
     }
 };
 
-// To put elsewhere
-
-// local commands
-const CREATE = 0;
-const UPDATE = 1;
-const DELETE = 2;
-const FORGET = 3;
-const LINK_TO = 4;
-
-// global commands
-const DELETE_ALL = 5;
-const REPLACE_WITH = 6;
-
 export class StaticList extends DataPoint {
     setup(params, state) {
         this.offset = params.offset || 0;
@@ -2020,7 +2006,7 @@ export class StaticList extends DataPoint {
             if (this.notYetValidated) {
                 const virtualId = this.notYetValidated;
                 this.notYetValidated = null;
-                this.applyCommand(Commands.delete(virtualId));
+                this.applyCommand(x2ManyCommands.delete(virtualId));
                 delete this._cache[this._mapping[virtualId]]; // won't be used anymore
                 this.records = this._getRecords();
                 this.onChanges();
@@ -2059,7 +2045,7 @@ export class StaticList extends DataPoint {
 
         const { resId } = params;
         this.limit++;
-        this.applyCommand(Commands.linkTo(resId));
+        this.applyCommand(x2ManyCommands.linkTo(resId));
 
         if (!this._mapping[resId]) {
             const record = this._createRecord(params);
@@ -2086,7 +2072,7 @@ export class StaticList extends DataPoint {
         record._onWillSwitchMode(record, "edit"); // bof
 
         this.limit++;
-        this.applyCommand(Commands.create(record.virtualId, record.getChanges()));
+        this.applyCommand(x2ManyCommands.create(record.virtualId, record.getChanges()));
 
         this._checkValidity(record);
 
@@ -2116,7 +2102,7 @@ export class StaticList extends DataPoint {
             delete this._cache[recordId];
         }
         const id = record.resId || record.virtualId;
-        this.applyCommand(Commands.delete(id));
+        this.applyCommand(x2ManyCommands.delete(id));
 
         this.records = this._getRecords();
         this.onChanges();
@@ -2238,7 +2224,7 @@ export class StaticList extends DataPoint {
             const extraCommands = [];
             for (const resId of this._serverIds) {
                 if (!this._commandsById[resId]) {
-                    extraCommands.push(Commands.linkTo(resId));
+                    extraCommands.push(x2ManyCommands.linkTo(resId));
                 }
             }
             return [...this._commands, ...extraCommands];
@@ -2247,7 +2233,7 @@ export class StaticList extends DataPoint {
     }
 
     async replaceWith(resIds) {
-        this.applyCommand(Commands.replaceWith(resIds));
+        this.applyCommand(x2ManyCommands.replaceWith(resIds));
         await this.load();
         this.onChanges();
         this.model.notify();
@@ -2256,15 +2242,8 @@ export class StaticList extends DataPoint {
     setCurrentIds(resIds = [], commands = []) {
         this._serverIds = resIds;
         this._commandsById = {}; // to remove?
-        for (const command of commands) {
-            if (command[0] === CREATE && !this._cache[command[1]]) {
-                const record = this._createRecord({ mode: "readonly", virtualId: command[1] });
-                record.load({ changes: command[2] });
-                command[1] = record.virtualId; // command[1] might be false, so we set it to a virtual id
-            }
-        }
-        // this._commands = this._getNormalizedCommands([], commands); // modifies commands and this._commandsById in places
-        this._commands = commands;
+    this._commands = this._getNormalizedCommands([], commands); // modifies commands and this._commandsById in places
+        // this._commands = commands;
         this.currentIds = this._getCurrentIds(this._serverIds, this._commands);
     }
 
@@ -2319,7 +2298,7 @@ export class StaticList extends DataPoint {
             onChanges: () => {
                 this.onChanges();
                 this.applyCommand(
-                    Commands.update(record.resId || record.virtualId, record.getChanges())
+                    x2ManyCommands.update(record.resId || record.virtualId, record.getChanges())
                 );
                 if (record.virtualId === this.notYetValidated) {
                     this._checkValidity(record);
@@ -2398,6 +2377,10 @@ export class StaticList extends DataPoint {
         let nextCommands = [...normalizedCommands];
         for (const command of commands) {
             const code = command[0];
+            if (code === CREATE && !command[1]) {
+                // FIXME WOWL: works because we change command in place (also stored in parent _changes)
+                command[1] = this.model.nextVirtualId;
+            }
             const id = command[1];
 
             if ([DELETE_ALL, REPLACE_WITH].includes(code)) {
@@ -2503,8 +2486,13 @@ export class StaticList extends DataPoint {
             const recordId = this._mapping[id];
             if (!recordId) {
                 const key = typeof id === "number" ? "resId" : "virtualId";
-                const record = this._createRecord({ [key]: id });
-                proms.push(record.load());
+                const record = this._createRecord({ [key]: id, mode: "readonly" });
+                let changes;
+                const commands = this._commandsById[id];
+                if (commands && commands[CREATE]) {
+                    changes = commands[CREATE][2];
+                }
+                proms.push(record.load({ changes }));
             }
         }
         await Promise.all(proms);

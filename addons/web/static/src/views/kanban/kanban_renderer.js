@@ -415,7 +415,7 @@ export class KanbanRenderer extends Component {
         group.list.loadMore();
     }
 
-    async editGroup(group) {
+    editGroup(group) {
         this.dialog.add(FormViewDialog, {
             parent: this,
             resModel: group.resModel,
