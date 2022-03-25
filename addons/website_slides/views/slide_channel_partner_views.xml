@@ -11,6 +11,8 @@
                     <field name="channel_id" string="Course"/>
                      <separator/>
                     <filter string="Completed" name="filter_completed" domain="[('completed', '=', True)]"/>
+                    <separator/>
+                    <filter string="Archived" name="filter_archived" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Channel" name="groupby_channel_id" context="{'group_by': 'channel_id'}"/>
                     </group>
@@ -37,7 +39,9 @@
                         decoration-warning="channel_enroll == 'payment'"
                         optional="hide"/>
                     <field name="channel_website_id" groups="website.group_multi_website" optional="hide"/>
-                    <button name="unlink" title="Remove" icon="fa-times" type="object"/>
+                    <field name="active" invisible="1"/>
+                    <button name="action_archive" title="Archive" icon="fa-times" type="object" attrs="{'invisible': [('active', '=', False)]}"/>
+                    <button name="action_unarchive" title="Unarchive" icon="fa-undo" type="object" attrs="{'invisible': [('active', '=', True)]}"/>
                 </tree>
             </field>
         </record>
@@ -46,7 +50,8 @@
             <field name="name">slide.channel.partner.view.kanban</field>
             <field name="model">slide.channel.partner</field>
             <field name="arch" type="xml">
-                <kanban string="Followed Courses">
+                <kanban string="Followed Courses" class="o_slide_attendee_kanban">
+                    <field name="active"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color oe_kanban_card">

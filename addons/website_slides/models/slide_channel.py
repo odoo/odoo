@@ -21,6 +21,7 @@ class ChannelUsersRelation(models.Model):
     _description = 'Channel / Partners (Members)'
     _table = 'slide_channel_partner'
 
+    active = fields.Boolean(string='Active', default=True)
     channel_id = fields.Many2one('slide.channel', index=True, required=True, ondelete='cascade')
     completed = fields.Boolean('Is Completed', help='Channel validated, even if slides / lessons are added once done.')
     completion = fields.Integer('% Completed Slides')
@@ -54,9 +55,8 @@ class ChannelUsersRelation(models.Model):
              ('slide_id.active', '=', True)],
             ['channel_id', 'partner_id'],
             groupby=['channel_id', 'partner_id'], lazy=False)
-        mapped_data = dict()
+        mapped_data = defaultdict(dict)
         for item in read_group_res:
-            mapped_data.setdefault(item['channel_id'][0], dict())
             mapped_data[item['channel_id'][0]][item['partner_id'][0]] = item['__count']
 
         completed_records = self.env['slide.channel.partner']
@@ -645,7 +645,7 @@ class Channel(models.Model):
         """ Redirects to attendees of the course. If completed is True, a filter
         will be added in action that will display only attendees who have completed
         the course. """
-        action_ctx = {'active_test': False}
+        action_ctx = {}
         action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_channel_partner_action")
         if completed:
             action_ctx['search_default_filter_completed'] = 1
@@ -701,13 +701,17 @@ class Channel(models.Model):
         """
         to_join = self._filter_add_members(target_partners)
         if to_join:
-            existing = self.env['slide.channel.partner'].sudo().search([
+            existing_channel_partners = self.env['slide.channel.partner'].with_context(active_test=False).sudo().search([
                 ('channel_id', 'in', self.ids),
                 ('partner_id', 'in', target_partners.ids)
             ])
-            existing_map = dict((cid, list()) for cid in self.ids)
-            for item in existing:
+            existing_map = defaultdict(list)
+            for item in existing_channel_partners:
                 existing_map[item.channel_id.id].append(item.partner_id.id)
+
+            archived_members = existing_channel_partners.filtered(lambda channel_partner: not channel_partner.active)
+            if archived_members:
+                archived_members.action_unarchive()
 
             to_create_values = [
                 dict(channel_id=channel.id, partner_id=partner.id)
@@ -716,7 +720,8 @@ class Channel(models.Model):
             ]
             slide_partners_sudo = self.env['slide.channel.partner'].sudo().create(to_create_values)
             to_join.message_subscribe(partner_ids=target_partners.ids, subtype_ids=[self.env.ref('website_slides.mt_channel_slide_published').id])
-            return slide_partners_sudo
+            # Also consider re-joined members along with newly joined ones
+            return slide_partners_sudo | archived_members
         return self.env['slide.channel.partner'].sudo()
 
     def _filter_add_members(self, target_partners):
@@ -780,28 +785,14 @@ class Channel(models.Model):
         return total_karma
 
     def _remove_membership(self, partner_ids):
-        """ Unlink (!!!) the relationships between the passed partner_ids
-        and the channels and their slides (done in the unlink of slide.channel.partner model).
-        Remove earned karma when completed quizz """
+        """ Karma earned during course progress is kept upon membership removal.
+        This is done because re-joining the course will not allow you to gain the karma again,
+        as we keep your progress """
         if not partner_ids:
             raise ValueError("Do not use this method with an empty partner_id recordset")
 
         removed_channel_partner_domain = []
         for channel in self:
-            earned_karma = channel._get_earned_karma(partner_ids)
-            users = self.env['res.users'].sudo().search([('partner_id', 'in', list(earned_karma))])
-
-            karma_values = {}
-            for user in users:
-                karma = sum(values['karma'] for values in earned_karma[user.partner_id.id])
-                if karma:
-                    karma_values[user] = {
-                        'gain': karma * -1,
-                        'source': channel,
-                        'reason': _('Membership Removed'),
-                    }
-            self.env['res.users']._add_karma_batch(karma_values)
-
             removed_channel_partner_domain = expression.OR([
                 removed_channel_partner_domain,
                 [('partner_id', 'in', partner_ids),
@@ -810,7 +801,9 @@ class Channel(models.Model):
 
         self.message_unsubscribe(partner_ids=partner_ids)
         if removed_channel_partner_domain:
-            self.env['slide.channel.partner'].sudo().search(removed_channel_partner_domain).unlink()
+            removed_channel_partner = self.env['slide.channel.partner'].sudo().search(removed_channel_partner_domain)
+            if removed_channel_partner:
+                removed_channel_partner.action_archive()
 
     def _send_share_email(self, emails):
         """ Share channel through emails."""
