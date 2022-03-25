@@ -299,6 +299,15 @@ class TestStockValuationStandard(TestStockValuationCommon):
         self.assertTrue(product2.stock_valuation_layer_ids)
         self.assertFalse(product1.stock_valuation_layer_ids)
 
+    def test_currency_precision_and_standard_svl_value(self):
+        self.env.company.currency_id.rounding = 1
+        self.product1.standard_price = 3
+
+        self._make_in_move(self.product1, 0.5)
+        self._make_out_move(self.product1, 0.5)
+
+        self.assertEqual(self.product1.value_svl, 0.0)
+
 
 class TestStockValuationAVCO(TestStockValuationCommon):
     def setUp(self):
@@ -703,6 +712,14 @@ class TestStockValuationFIFO(TestStockValuationCommon):
 
         self.assertEqual(self.product1.value_svl, 20)
         self.assertEqual(self.product1.quantity_svl, 10)
+
+    def test_currency_precision_and_fifo_svl_value(self):
+        self.env.company.currency_id.rounding = 1.0
+
+        self._make_in_move(self.product1, 0.5, unit_cost=3)
+        self._make_out_move(self.product1, 0.5)
+
+        self.assertEqual(self.product1.value_svl, 0.0)
 
 
 class TestStockValuationChangeCostMethod(TestStockValuationCommon):
