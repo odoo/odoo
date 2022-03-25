@@ -20,6 +20,7 @@ import {
     endPos,
     ensureFocus,
     getCursorDirection,
+    getFurthestUneditableParent,
     getListMode,
     getOuid,
     insertText,
@@ -1323,6 +1324,28 @@ export class OdooEditor extends EventTarget {
             correctTripleClick: true,
         });
         if (!range) return;
+        // Expand the range to fully include all contentEditable=False elements.
+        const commonAncestorContainer = this.editable.contains(range.commonAncestorContainer) ?
+            range.commonAncestorContainer :
+            this.editable;
+        const startUneditable = getFurthestUneditableParent(range.startContainer, commonAncestorContainer);
+        if (startUneditable) {
+            let leaf = previousLeaf(startUneditable);
+            if (leaf) {
+                range.setStart(leaf, nodeSize(leaf));
+            } else {
+                range.setStart(commonAncestorContainer, 0);
+            }
+        }
+        const endUneditable = getFurthestUneditableParent(range.endContainer, commonAncestorContainer);
+        if (endUneditable) {
+            let leaf = nextLeaf(endUneditable);
+            if (leaf) {
+                range.setEnd(leaf, 0);
+            } else {
+                range.setEnd(commonAncestorContainer, nodeSize(commonAncestorContainer));
+            }
+        }
         let start = range.startContainer;
         let end = range.endContainer;
         // Let the DOM split and delete the range.
