@@ -425,6 +425,9 @@ var SnippetEditor = Widget.extend({
         if (this.$target.parent('.row').length) {
             return _t("Column");
         }
+        if (this.$target.is('.btn')) {
+            return _t("Button");
+        }
         return _t("Block");
     },
     /**
