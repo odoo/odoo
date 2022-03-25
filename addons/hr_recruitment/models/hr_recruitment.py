@@ -435,6 +435,9 @@ class Applicant(models.Model):
         if stage and stage.id:
             defaults['stage_id'] = stage.id
         if custom_values:
+            user_id = self.env['hr.job'].browse(custom_values['job_id']).user_id.id
+            if user_id:
+                custom_values.update({'user_id': user_id})
             defaults.update(custom_values)
         return super(Applicant, self).message_new(msg, custom_values=defaults)
 
