@@ -890,6 +890,19 @@ class SaleOrderLine(models.Model):
 
     #=== CRUD METHODS ===#
 
+    def _add_precomputed_values(self, vals_list):
+        """ In the specific case where the discount is provided in the create values
+        without being rounded, we have to 'manually' round it otherwise it won't be,
+        because editable precomputed field values are kept 'as is'.
+
+        This is a temporary fix until the problem is fixed in the ORM.
+        """
+        precision = self.env['decimal.precision'].precision_get('Discount')
+        for vals in vals_list:
+            if vals.get('discount'):
+                vals['discount'] = float_round(vals['discount'], precision_digits=precision)
+        return super()._add_precomputed_values(vals_list)
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:

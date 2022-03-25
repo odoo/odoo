@@ -862,3 +862,20 @@ class TestSaleOrder(TestSaleCommon):
         self.sol_product_order.product_uom_qty = 0.0
         self.sol_product_order.product_uom = self.env['uom.uom'].search([('name', '=', 'Dozen')], limit=1)
         self.assertEqual(self.sol_product_order.product_uom_qty, 0.0)
+
+    def test_discount_rounding(self):
+        """
+            Check the discount is properly rounded and the price subtotal
+            computed with this rounded discount
+        """
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+                'price_unit': 192,
+                'discount': 74.246,
+            })]
+        })
+        self.assertEqual(sale_order.order_line.price_subtotal, 49.44, "Subtotal should be equal to 192 * (1 - 0.7425)")
+        self.assertEqual(sale_order.order_line.discount, 74.25)
