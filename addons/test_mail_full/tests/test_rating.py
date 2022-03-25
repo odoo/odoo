@@ -63,12 +63,12 @@ class TestRatingFlow(TestMailFullCommon, TestMailFullRecipients):
         self.assertIn('Top Feedback', message.body)
         self.assertIn('rating/static/src/img/rating_5.png', message.body)
         self.assertEqual(message.author_id, self.partner_1)
-        self.assertFalse(message.rating_ids)
+        self.assertEqual(message.rating_ids, rating)
         self.assertEqual(message.notified_partner_ids, self.partner_admin)
         self.assertEqual(message.subtype_id, self.env.ref('mail.mt_comment'))
 
         # check rating update
         self.assertTrue(rating.consumed)
         self.assertEqual(rating.feedback, 'Top Feedback')
-        self.assertFalse(rating.message_id)
+        self.assertEqual(rating.message_id, message)
         self.assertEqual(rating.rating, 5)
