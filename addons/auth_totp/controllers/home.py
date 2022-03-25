@@ -53,7 +53,7 @@ class Home(web_home.Home):
                         browser=request.httprequest.user_agent.browser.capitalize(),
                         platform=request.httprequest.user_agent.platform.capitalize(),
                     )
-                    geoip = request.session.geoip
+                    geoip = request.geoip
                     if geoip:
                         name += " (%s, %s)" % (geoip['city'], geoip['country_name'])
 
@@ -66,11 +66,11 @@ class Home(web_home.Home):
                         samesite='Lax'
                     )
                 # Crapy workaround for unupdatable Odoo Mobile App iOS (Thanks Apple :@)
-                request.session.should_touch = True
+                request.session.touch()
                 return response
 
         # Crapy workaround for unupdatable Odoo Mobile App iOS (Thanks Apple :@)
-        request.session.should_touch = True
+        request.session.touch()
         return request.render('auth_totp.auth_totp_form', {
             'user': user,
             'error': error,

@@ -128,7 +128,8 @@ class TestAPIKeys(common.HttpCase):
                 'cookies': {},
             }),
             # bypass check_identity flow
-            'session': {'identity-check-last': time.time()}
+            'session': {'identity-check-last': time.time()},
+            'geoip': {},
         })
         _request_stack.push(fake_req)
         self.addCleanup(_request_stack.pop)

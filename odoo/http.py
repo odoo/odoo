@@ -110,6 +110,7 @@ endpoint
 
 import cgi
 import collections
+import collections.abc
 import contextlib
 import functools
 import glob
@@ -124,6 +125,7 @@ import re
 import threading
 import time
 import traceback
+import warnings
 import zlib
 from abc import ABC, abstractmethod
 from datetime import datetime
@@ -154,6 +156,7 @@ from .modules.registry import Registry
 from .service import security, model as service_model
 from .tools import (config, consteq, date_utils, profiler, resolve_attr,
                     submap, unique, ustr,)
+from .tools.geoipresolver import GeoIPResolver
 from .tools.func import filter_kwargs, lazy_property
 from .tools.mimetypes import guess_mimetype
 from .tools._vendor import sessions
@@ -703,29 +706,56 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
                     os.unlink(path)
 
 
-class Session(dict):
+class Session(collections.abc.MutableMapping):
     """ Structure containing data persisted across requests. """
-    __slots__ = ('can_save', 'is_explicit', 'json_data', 'new', 'should_rotate', 'should_touch', 'sid')
+    __slots__ = ('can_save', 'data', 'is_dirty', 'is_explicit', 'is_new',
+                 'should_rotate', 'sid')
 
     def __init__(self, data, sid, new=False):
-        super().__init__(data)
-        object.__setattr__(self, 'can_save', True)
-        object.__setattr__(self, 'is_explicit', False)
-        object.__setattr__(self, 'json_data', json.dumps(data))
-        object.__setattr__(self, 'new', new)
-        object.__setattr__(self, 'should_rotate', False)
-        object.__setattr__(self, 'should_touch', False)
-        object.__setattr__(self, 'sid', sid)
+        self.can_save = True
+        self.data = data
+        self.is_dirty = False
+        self.is_explicit = False
+        self.is_new = new
+        self.should_rotate = False
+        self.sid = sid
+
+    #
+    # MutableMapping implementation with DocDict-like extension
+    #
+    def __getitem__(self, item):
+        if item == 'geoip':
+            warnings.warn('request.session.geoip have been moved to request.geoip', DeprecationWarning)
+            return request.geoip if request else {}
+        return self.data[item]
+
+    def __setitem__(self, item, value):
+        if item not in self.data or self.data[item] != value:
+            self.is_dirty = True
+        self.data[item] = value
+
+    def __delitem__(self, item):
+        del self.data[item]
+        self.is_dirty = True
+
+    def __len__(self):
+        return len(self.data)
+
+    def __iter__(self):
+        return iter(self.data)
 
     def __getattr__(self, attr):
         return self.get(attr, None)
 
     def __setattr__(self, key, val):
         if key in self.__slots__:
-            object.__setattr__(self, key, val)
+            super().__setattr__(key, val)
         else:
             self[key] = val
 
+    #
+    # Session methods
+    #
     def authenticate(self, dbname, login=None, password=None):
         """
         Authenticate the current user with the given db, login and
@@ -795,6 +825,9 @@ class Session(dict):
         self.update(DEFAULT_SESSION, db=db, debug=debug)
         self.context['lang'] = request.default_lang() if request else DEFAULT_LANG
         self.should_rotate = True
+
+    def touch(self):
+        self.is_dirty = True
 
 
 # =========================================================
@@ -919,18 +952,11 @@ class Request:
         self.dispatcher = _dispatchers['http'](self)  # until we match
         #self.params = {}  # set by the Dispatcher
 
-        self.session = self._get_session()
-        self.db = self._get_dbname()
+        self.session, self.db = self._get_session_and_dbname()
         self.registry = None
         self.env = None
 
-        if self.session.db != self.db:
-            if self.session.db:
-                _logger.warning("Logged into database %r, but dbfilter rejects it; logging session out.", self.session.db)
-                self.session.logout(keep_db=False)
-            self.session.db = self.db
-
-    def _get_session(self):
+    def _get_session_and_dbname(self):
         # The session is explicit when it comes from the query-string or
         # the header. It is implicit when it comes from the cookie or
         # that is does not exist yet. The explicit session should be
@@ -948,26 +974,31 @@ class Request:
             session = root.session_store.new()
         else:
             session = root.session_store.get(sid)
-
+            session.sid = sid  # in case the session was not persisted
         session.is_explicit = is_explicit
+
         for key, val in DEFAULT_SESSION.items():
             session.setdefault(key, val)
         if not session.context.get('lang'):
             session.context['lang'] = self.default_lang()
 
-        return session
+        dbname = None
+        host = self.httprequest.environ['HTTP_HOST']
+        if session.db and db_filter([session.db], host=host):
+            dbname = session.db
+        else:
+            all_dbs = db_list(force=True, host=host)
+            if len(all_dbs) == 1:
+                dbname = all_dbs[0]  # monodb
 
-    def _get_dbname(self):
-        if self.session.db and db_filter([self.session.db], host=self.httprequest.environ['HTTP_HOST']):
-            return self.session.db
+        if session.db != dbname:
+            if session.db:
+                _logger.warning("Logged into database %r, but dbfilter rejects it; logging session out.", session.db)
+                session.logout(keep_db=False)
+            session.db = dbname
 
-        # monodb
-        all_dbs = db_list(force=True, host=self.httprequest.environ['HTTP_HOST'])
-        if len(all_dbs) == 1:
-            return all_dbs[0]
-
-        # nodb
-        return None
+        session.is_dirty = False
+        return session, dbname
 
     # =====================================================
     # Getters and setters
@@ -1013,6 +1044,27 @@ class Request:
         raise ValueError("You cannot replace the cursor attached to the current request.")
 
     _cr = cr
+
+    @property
+    def geoip(self):
+        """
+        Get the remote address geolocalisation.
+
+        When geolocalization is successful, the return value is a
+        dictionary whoose format is:
+
+            {'city': str, 'country_code': str, 'country_name': str,
+             'latitude': float, 'longitude': float, 'region': str,
+             'time_zone': str}
+
+        When geolocalization fails, an empty dict is returned.
+        """
+        if '_geoip' not in self.session:
+            was_dirty = self.session.is_dirty
+            self.session._geoip = (self.registry['ir.http']._geoip_resolve()
+                                   if self.db else self._geoip_resolve())
+            self.session.is_dirty = was_dirty
+        return self.session._geoip
 
     # =====================================================
     # Helpers
@@ -1089,6 +1141,11 @@ class Request:
             return lang
         except (ValueError, KeyError):
             return DEFAULT_LANG
+
+    def _geoip_resolve(self):
+        if not (root.geoip_resolver and self.httprequest.remote_addr):
+            return {}
+        return root.geoip_resolver.resolve(self.httprequest.remote_addr) or {}
 
     def get_http_params(self):
         """
@@ -1212,8 +1269,10 @@ class Request:
             return
 
         if sess.should_rotate:
+            sess['_geoip'] = self.geoip
             root.session_store.rotate(sess, self.env)  # it saves
-        elif sess.should_touch or json.dumps(sess) != sess.json_data:
+        elif sess.is_dirty:
+            sess['_geoip'] = self.geoip
             root.session_store.save(sess)
 
         # We must not set the cookie if the session id was specified
@@ -1226,7 +1285,7 @@ class Request:
         #   cookie). That is a special feature of the Javascript Session.
         # - It could allow session fixation attacks.
         cookie_sid = self.httprequest.cookies.get('session_id')
-        if (sess.should_touch or cookie_sid != sess.sid and not sess.is_explicit):
+        if not sess.is_explicit and (sess.is_dirty or cookie_sid != sess.sid):
             self.future_response.set_cookie('session_id', sess.sid, max_age=SESSION_LIFETIME, httponly=True)
 
     def _set_request_dispatcher(self, rule):
@@ -1619,6 +1678,13 @@ class Application:
         path = odoo.tools.config.session_dir
         _logger.debug('HTTP sessions stored in: %s', path)
         return FilesystemSessionStore(path, session_class=Session, renew_missing=True)
+
+    @lazy_property
+    def geoip_resolver(self):
+        try:
+            return GeoIPResolver.open(config.get('geoip_database'))
+        except Exception as e:
+            _logger.warning('Cannot load GeoIP: %s', e)
 
     def get_db_router(self, db):
         if not db:

@@ -1,7 +1,10 @@
-# coding: utf-8
-from odoo.addons.website.tools import MockRequest
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from unittest.mock import patch
+from odoo.http import root
 from odoo.tests import common, HttpCase, tagged
 from odoo.tools import mute_logger
+from odoo.addons.website.tools import MockRequest
 
 
 @tagged('-at_install', 'post_install')
@@ -273,3 +276,10 @@ class WithContext(HttpCase):
             r = self.url_open(self.page.url)
             self.assertEqual(r.status_code, 500, "15/0 raise a 500 error page (2)")
             self.assertIn('ZeroDivisionError: division by zero', r.text, "Error should be shown in debug.")
+
+    def test_04_visitor_no_session(self):
+        with patch.object(root.session_store, 'save') as session_save,\
+             MockRequest(self.env, website=self.env['website'].browse(1)):
+            # no session should be saved for website visitor
+            self.url_open(self.page.url).raise_for_status()
+            session_save.assert_not_called()

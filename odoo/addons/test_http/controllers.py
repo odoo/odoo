@@ -120,3 +120,15 @@ class TestHttp(http.Controller):
         ensure_db()
         assert request.db, "There should be a database"
         return request.db
+
+    # =====================================================
+    # Session
+    # =====================================================
+    @http.route('/test_http/geoip', type='http', auth='none')
+    def geoip(self):
+        return str(request.geoip)
+
+    @http.route('/test_http/save_session', type='http', auth='none')
+    def touch(self):
+        request.session.touch()
+        return ''

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import contextlib
 import logging
@@ -26,8 +26,6 @@ from odoo.addons.base.models.ir_qweb import QWebException
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import config, ustr, pycompat
-
-from ..geoipresolver import GeoIPResolver
 
 _logger = logging.getLogger(__name__)
 
@@ -521,31 +519,8 @@ class IrHttp(models.AbstractModel):
         request.httprequest = httprequest
 
     @classmethod
-    def _geoip_setup_resolver(cls):
-        # Lazy init of GeoIP resolver
-        if odoo._geoip_resolver is not None:
-            return
-        geofile = config.get('geoip_database')
-        try:
-            odoo._geoip_resolver = GeoIPResolver.open(geofile) or False
-        except Exception as e:
-            _logger.warning('Cannot load GeoIP: %s', ustr(e))
-
-    @classmethod
-    def _geoip_resolve(cls):
-        if 'geoip' not in request.session:
-            record = {}
-            if odoo._geoip_resolver and request.httprequest.remote_addr:
-                record = odoo._geoip_resolver.resolve(request.httprequest.remote_addr) or {}
-            request.session['geoip'] = record
-
-
-    @classmethod
     def _pre_dispatch(cls, rule, args):
         super()._pre_dispatch(rule, args)
-
-        cls._geoip_setup_resolver()
-        cls._geoip_resolve()
 
         if request.is_frontend:
             cls._frontend_pre_dispatch()
