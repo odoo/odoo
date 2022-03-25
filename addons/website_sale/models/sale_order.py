@@ -29,6 +29,18 @@ class SaleOrder(models.Model):
     website_id = fields.Many2one('website', string='Website', readonly=True,
                                  help='Website through which this order was placed.')
 
+    def _compute_user_id(self):
+        """Do not assign self.env.user as salesman for e-commerce orders
+        Leave salesman empty if no salesman is specified on partner or website
+
+        c/p of the logic in Website._prepare_sale_order_values
+        """
+        website_orders = self.filtered('website_id')
+        super(SaleOrder, self - website_orders)._compute_user_id()
+        for order in website_orders:
+            if not order.user_id:
+                order.user_id = order.website_id.salesperson_id or order.partner_id.parent_id.user_id.id or order.partner_id.user_id.id
+
     @api.model
     def _get_note_url(self):
         website = self.env['website'].get_current_website()
