@@ -2180,9 +2180,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("one2many field when using the pager", async function (assert) {
-        assert.expect(13);
-
+    QUnit.test("one2many field when using the pager", async function (assert) {
         const ids = [];
         for (let i = 0; i < 45; i++) {
             const id = 10 + i;
@@ -2196,7 +2194,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.records[1].p = ids.slice(42);
 
         let count = 0;
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -2213,13 +2211,11 @@ QUnit.module("Fields", (hooks) => {
                         </kanban>
                     </field>
                 </form>`,
-            // ids: [1, 2],
-            // ids: [1],
-            // index: 0,
-            mockRPC: function () {
+            mockRPC() {
                 count++;
             },
             resId: 1,
+            resIds: [1, 2],
         });
 
         // we are on record 1, which has 90 related record (first 40 should be
@@ -2231,51 +2227,46 @@ QUnit.module("Fields", (hooks) => {
         // move to record 2, which has 3 related records (and shouldn't contain the
         // related records of record 1 anymore). Two additional RPCs should have
         // been done
-        await testUtils.controlPanel.pagerNext(form);
+        await click(target.querySelector(".o_form_view .o_control_panel .o_pager_next"));
         assert.strictEqual(count, 4);
-        assert.strictEqual(
-            form.$('.o_kanban_record:not(".o_kanban_ghost")').length,
+        assert.containsN(target, '.o_kanban_record:not(".o_kanban_ghost")',
             3,
             "one2many kanban should contain 3 cards for record 2"
         );
 
         // move back to record 1, which should contain again its first 40 related
         // records
-        await testUtils.controlPanel.pagerPrevious(form);
+        await click(target.querySelector(".o_form_view .o_control_panel .o_pager_previous"));
         assert.strictEqual(count, 6);
-        assert.strictEqual(
-            form.$('.o_kanban_record:not(".o_kanban_ghost")').length,
+        assert.containsN(target, '.o_kanban_record:not(".o_kanban_ghost")',
             40,
             "one2many kanban should contain 40 cards for record 1"
         );
 
         // move to the second page of the o2m: 1 RPC should have been done to fetch
         // the 2 subrecords of page 2, and those records should now be displayed
-        await click(form.$(".o_x2m_control_panel .o_pager_next"));
+        await click(target.querySelector(".o_x2m_control_panel .o_pager_next"));
         assert.strictEqual(count, 7, "one RPC should have been done");
-        assert.strictEqual(
-            form.$('.o_kanban_record:not(".o_kanban_ghost")').length,
+        assert.containsN(target, '.o_kanban_record:not(".o_kanban_ghost")',
             2,
             "one2many kanban should contain 2 cards for record 1 at page 2"
         );
 
         // move to record 2 again and check that everything is correctly updated
-        await testUtils.controlPanel.pagerNext(form);
+        await click(target.querySelector(".o_form_view .o_control_panel .o_pager_next"));
         assert.strictEqual(count, 9);
-        assert.strictEqual(
-            form.$('.o_kanban_record:not(".o_kanban_ghost")').length,
+        assert.containsN(target, '.o_kanban_record:not(".o_kanban_ghost")',
             3,
             "one2many kanban should contain 3 cards for record 2"
         );
 
         // move back to record 1 and move to page 2 again: all data should have
         // been correctly reloaded
-        await testUtils.controlPanel.pagerPrevious(form);
+        await click(target.querySelector(".o_form_view .o_control_panel .o_pager_previous"));
         assert.strictEqual(count, 11);
-        await click(form.$(".o_x2m_control_panel .o_pager_next"));
+        await click(target.querySelector(".o_x2m_control_panel .o_pager_next"));
         assert.strictEqual(count, 12, "one RPC should have been done");
-        assert.strictEqual(
-            form.$('.o_kanban_record:not(".o_kanban_ghost")').length,
+        assert.containsN(target, '.o_kanban_record:not(".o_kanban_ghost")',
             2,
             "one2many kanban should contain 2 cards for record 1 at page 2"
         );

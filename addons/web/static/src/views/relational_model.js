@@ -2506,7 +2506,7 @@ export class StaticList extends DataPoint {
     }
 }
 
-StaticList.DEFAULT_LIMIT = 80;
+StaticList.DEFAULT_LIMIT = 40;
 
 export class RelationalModel extends Model {
     setup(params, { action, dialog, notification, rpc, user, view }) {

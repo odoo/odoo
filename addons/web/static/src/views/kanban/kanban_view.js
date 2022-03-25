@@ -281,6 +281,7 @@ export class KanbanArchParser extends XMLParser {
         return {
             arch,
             activeActions,
+            activeFields,
             className,
             defaultGroupBy,
             hasHandleWidget,
@@ -292,7 +293,6 @@ export class KanbanArchParser extends XMLParser {
             progressAttributes,
             cardColorField,
             xmlDoc: applyDefaultAttributes(kanbanBox),
-            fields: activeFields,
             tooltipInfo,
             examples: xmlDoc.getAttribute("examples"),
         };
@@ -307,7 +307,7 @@ export class KanbanView extends Component {
         this.actionService = useService("action");
         this.archInfo = new ArchParser().parse(this.props.arch, this.props.fields);
         const { resModel, fields } = this.props;
-        const { fields: activeFields, defaultGroupBy, onCreate, quickCreateView } = this.archInfo;
+        const { activeFields, defaultGroupBy, onCreate, quickCreateView } = this.archInfo;
         this.model = useModel(Model, {
             activeFields,
             progressAttributes: this.archInfo.progressAttributes,
