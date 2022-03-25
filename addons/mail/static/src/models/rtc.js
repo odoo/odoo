@@ -204,7 +204,7 @@ registerModel({
                 this.messaging.browser.clearTimeout(rtcSession.connectionRecoveryTimeout);
                 rtcSession.update({
                     connectionRecoveryTimeout: clear(),
-                    isConnected: clear(),
+                    isCurrentUserInitiatorOfConnectionOffer: clear(),
                     rtcDataChannel: clear(),
                 });
             }
@@ -391,7 +391,7 @@ registerModel({
             for (const trackKind of TRANSCEIVER_ORDER) {
                 await this._updateRemoteTrack(peerConnection, trackKind, { initTransceiver: true, sessionId: rtcSession.id });
             }
-            rtcSession.update({ isConnected: true });
+            rtcSession.update({ isCurrentUserInitiatorOfConnectionOffer: true });
         },
         /**
          * Call all the sessions that do not have an already initialized peerConnection.
@@ -688,7 +688,7 @@ registerModel({
             if (!peerConnection || !this.channel) {
                 return;
             }
-            if (rtcSession.isConnected) {
+            if (rtcSession.isCurrentUserInitiatorOfConnectionOffer) {
                 return;
             }
             if (peerConnection.iceConnectionState === 'connected') {
@@ -762,7 +762,7 @@ registerModel({
             delete this._peerConnections[sessionId];
             this.messaging.models['RtcSession'].insert({
                 id: sessionId,
-                isConnected: false,
+                isCurrentUserInitiatorOfConnectionOffer: clear(),
             });
             this._addLogEntry(sessionId, 'peer removed', { step: 'peer removed' });
         },
