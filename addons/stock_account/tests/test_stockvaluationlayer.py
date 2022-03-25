@@ -29,19 +29,21 @@ class TestStockValuationCommon(SavepointCase):
         # Counter automatically incremented by `_make_in_move` and `_make_out_move`.
         self.days = 0
 
-    def _make_in_move(self, product, quantity, unit_cost=None, create_picking=False):
+    def _make_in_move(self, product, quantity, unit_cost=None, create_picking=False, loc_dest=None, pick_type=None):
         """ Helper to create and validate a receipt move.
         """
         unit_cost = unit_cost or product.standard_price
+        loc_dest = loc_dest or self.stock_location
+        pick_type = pick_type or self.picking_type_in
         in_move = self.env['stock.move'].create({
             'name': 'in %s units @ %s per unit' % (str(quantity), str(unit_cost)),
             'product_id': product.id,
             'location_id': self.supplier_location.id,
-            'location_dest_id': self.stock_location.id,
+            'location_dest_id': loc_dest.id,
             'product_uom': self.uom_unit.id,
             'product_uom_qty': quantity,
             'price_unit': unit_cost,
-            'picking_type_id': self.picking_type_in.id,
+            'picking_type_id': pick_type.id,
         })
 
         if create_picking:
@@ -60,17 +62,19 @@ class TestStockValuationCommon(SavepointCase):
         self.days += 1
         return in_move.with_context(svl=True)
 
-    def _make_out_move(self, product, quantity, force_assign=None, create_picking=False):
+    def _make_out_move(self, product, quantity, force_assign=None, create_picking=False, loc_src=None, pick_type=None):
         """ Helper to create and validate a delivery move.
         """
+        loc_src = loc_src or self.stock_location
+        pick_type = pick_type or self.picking_type_out
         out_move = self.env['stock.move'].create({
             'name': 'out %s units' % str(quantity),
             'product_id': product.id,
-            'location_id': self.stock_location.id,
+            'location_id': loc_src.id,
             'location_dest_id': self.customer_location.id,
             'product_uom': self.uom_unit.id,
             'product_uom_qty': quantity,
-            'picking_type_id': self.picking_type_out.id,
+            'picking_type_id': pick_type.id,
         })
 
         if create_picking:
@@ -299,6 +303,30 @@ class TestStockValuationStandard(TestStockValuationCommon):
         self.assertTrue(product2.stock_valuation_layer_ids)
         self.assertFalse(product1.stock_valuation_layer_ids)
 
+    def test_currency_precision_and_standard_svl_value(self):
+        currency = self.env['res.currency'].create({
+            'name': 'Odoo',
+            'symbol': 'O',
+            'rounding': 1,
+        })
+        new_company = self.env['res.company'].create({
+            'name': 'Super Company',
+            'currency_id': currency.id,
+        })
+
+        old_company = self.env.user.company_id
+        try:
+            self.env.user.company_id = new_company
+            warehouse = self.env['stock.warehouse'].search([('company_id', '=', new_company.id)])
+            product = self.product1.with_company(new_company)
+            product.standard_price = 3
+
+            self._make_in_move(product, 0.5, loc_dest=warehouse.lot_stock_id, pick_type=warehouse.in_type_id)
+            self._make_out_move(product, 0.5, loc_src=warehouse.lot_stock_id, pick_type=warehouse.out_type_id)
+
+            self.assertEqual(product.value_svl, 0.0)
+        finally:
+            self.env.user.company_id = old_company
 
 class TestStockValuationAVCO(TestStockValuationCommon):
     def setUp(self):
@@ -703,6 +731,31 @@ class TestStockValuationFIFO(TestStockValuationCommon):
 
         self.assertEqual(self.product1.value_svl, 20)
         self.assertEqual(self.product1.quantity_svl, 10)
+
+    def test_currency_precision_and_fifo_svl_value(self):
+        currency = self.env['res.currency'].create({
+            'name': 'Odoo',
+            'symbol': 'O',
+            'rounding': 1,
+        })
+        new_company = self.env['res.company'].create({
+            'name': 'Super Company',
+            'currency_id': currency.id,
+        })
+
+        old_company = self.env.user.company_id
+        try:
+            self.env.user.company_id = new_company
+            product = self.product1.with_company(new_company)
+            product.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+            warehouse = self.env['stock.warehouse'].search([('company_id', '=', new_company.id)])
+
+            self._make_in_move(product, 0.5, loc_dest=warehouse.lot_stock_id, pick_type=warehouse.in_type_id, unit_cost=3)
+            self._make_out_move(product, 0.5, loc_src=warehouse.lot_stock_id, pick_type=warehouse.out_type_id)
+
+            self.assertEqual(product.value_svl, 0.0)
+        finally:
+            self.env.user.company_id = old_company
 
 
 class TestStockValuationChangeCostMethod(TestStockValuationCommon):
