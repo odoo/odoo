@@ -35,10 +35,13 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line.product_id', 'order_line.project_id')
     def _compute_project_ids(self):
+        is_project_manager = self.user_has_groups('project.group_project_manager')
         for order in self:
             projects = order.order_line.mapped('product_id.project_id')
             projects |= order.order_line.mapped('project_id')
             projects |= order.project_id
+            if not is_project_manager:
+                projects = projects._filter_access_rules('read')
             order.project_ids = projects
             order.project_count = len(projects)
 
