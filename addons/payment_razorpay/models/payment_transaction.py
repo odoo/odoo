@@ -142,16 +142,11 @@ class PaymentTransaction(models.Model):
 
         return refund_tx
 
-    def _send_capture_request(self):
-        """ Override of `payment` to send a capture request to Razorpay.
-
-        Note: self.ensure_one()
-
-        :return: None
-        """
-        super()._send_capture_request()
+    def _send_capture_request(self, amount_to_capture=None):
+        """ Override of `payment` to send a capture request to Razorpay. """
+        child_capture_tx = super()._send_capture_request(amount_to_capture=amount_to_capture)
         if self.provider_code != 'razorpay':
-            return
+            return child_capture_tx
 
         converted_amount = payment_utils.to_minor_currency_units(self.amount, self.currency_id)
         payload = {'amount': converted_amount, 'currency': self.currency_id.name}
@@ -170,16 +165,14 @@ class PaymentTransaction(models.Model):
         # Handle the capture request response.
         self._handle_notification_data('razorpay', response_content)
 
-    def _send_void_request(self):
+        return child_capture_tx
+
+    def _send_void_request(self, amount_to_void=None):
         """ Override of `payment` to explain that it is impossible to void a Razorpay transaction.
-
-        Note: self.ensure_one()
-
-        :return: None
         """
-        super()._send_void_request()
+        child_void_tx = super()._send_void_request(amount_to_void=amount_to_void)
         if self.provider_code != 'razorpay':
-            return
+            return child_void_tx
 
         raise UserError(_("Transactions processed by Razorpay can't be manually voided from Odoo."))
 
@@ -244,8 +237,8 @@ class PaymentTransaction(models.Model):
         converted_amount = payment_utils.to_major_currency_units(
             amount_to_refund, source_tx.currency_id
         )
-        return source_tx._create_refund_transaction(
-            amount_to_refund=converted_amount, provider_reference=refund_provider_reference
+        return source_tx._create_child_transaction(
+            converted_amount, is_refund=True, provider_reference=refund_provider_reference
         )
 
     def _process_notification_data(self, notification_data):

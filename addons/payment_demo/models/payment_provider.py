@@ -25,7 +25,7 @@ class PaymentProvider(models.Model):
         super()._compute_feature_support_fields()
         self.filtered(lambda p: p.code == 'demo').update({
             'support_fees': True,
-            'support_manual_capture': True,
+            'support_manual_capture': 'full_only',
             'support_refund': 'partial',
             'support_tokenization': True,
         })

@@ -36,7 +36,7 @@ class TestAccountPayment(AccountPaymentCommon):
     def test_full_amount_available_for_refund_when_refunds_are_pending(self):
         self.provider.write({
             'support_refund': 'full_only',  # Should simply not be False
-            'support_manual_capture': True,  # To create transaction in the 'authorized' state
+            'support_manual_capture': 'partial',  # To create transaction in the 'authorized' state
         })
         tx = self._create_transaction('redirect', state='done')
         tx._reconcile_after_done()  # Create the payment
@@ -149,3 +149,30 @@ class TestAccountPayment(AccountPaymentCommon):
             [('payment_transaction_id', '=', tx.id)]
         )
         self.assertEqual(payment_count, 0, msg="validation transactions should not create payments")
+
+    def test_payments_for_source_tx_with_children(self):
+        self.provider.support_manual_capture = 'partial'
+        source_tx = self._create_transaction(flow='direct', state='authorized')
+        child_tx_1 = source_tx._create_child_transaction(100)
+        child_tx_1._set_done()
+        child_tx_2 = source_tx._create_child_transaction(source_tx.amount - 100)
+        self.assertEqual(
+            source_tx.state,
+            'authorized',
+            msg="The source transaction should be authorized when the total processed amount of its"
+                " children is not equal to the source amount.",
+        )
+        child_tx_2._set_canceled()
+        self.assertEqual(
+            source_tx.state,
+            'done',
+            msg="The source transaction should be done when the total processed amount of its"
+                " children is equal to the source amount.",
+        )
+        child_tx_2._reconcile_after_done()
+        self.assertTrue(child_tx_2.payment_id, msg="Child transactions should create payments.")
+        source_tx._reconcile_after_done()
+        self.assertFalse(
+            source_tx.payment_id,
+            msg="source transactions with done or cancel children should not create payments.",
+        )

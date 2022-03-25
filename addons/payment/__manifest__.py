@@ -23,6 +23,7 @@
         'security/ir.model.access.csv',
         'security/payment_security.xml',
 
+        'wizards/payment_capture_wizard_views.xml',
         'wizards/payment_link_wizard_views.xml',
         'wizards/payment_onboarding_views.xml',
     ],

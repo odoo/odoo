@@ -280,6 +280,9 @@ class AdyenController(http.Controller):
                     notification_data['resultCode'] = 'Cancelled' if success else 'Error'
                 elif event_code in ['REFUND', 'CAPTURE']:
                     notification_data['resultCode'] = 'Authorised' if success else 'Error'
+                elif event_code == 'CAPTURE_FAILED' and success:
+                    # The capture failed after a capture notification with success = True was sent
+                    notification_data['resultCode'] = 'Error'
                 else:
                     continue  # Don't handle unsupported event codes and failed events
 
