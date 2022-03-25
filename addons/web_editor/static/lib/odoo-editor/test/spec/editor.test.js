@@ -2351,6 +2351,36 @@ X[]
                     <p>before[]after</p>`),
             });
         });
+        it('should extend the range to fully include contenteditable=false that are partially selected at the end of the range', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <p>before[o</p>
+                    <div contenteditable="false">
+                        <div contenteditable="true"><p>intruder]</p></div>
+                    </div>
+                    <p>after</p>`),
+                stepFunction: async editor => {
+                    await deleteBackward(editor);
+                },
+                contentAfter: unformat(`
+                    <p>before[]</p><p>after</p>`),
+            });
+        });
+        it('should extend the range to fully include contenteditable=false that are partially selected at the start of the range', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <p>before</p>
+                    <div contenteditable="false">
+                        <div contenteditable="true"><p>[intruder</p></div>
+                    </div>
+                    <p>o]after</p>`),
+                stepFunction: async editor => {
+                    await deleteBackward(editor);
+                },
+                contentAfter: unformat(`
+                    <p>before[]after</p>`),
+            });
+        });
     });
 
     describe('CTRL+Backspace', () => {
