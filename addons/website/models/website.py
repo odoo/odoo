@@ -930,7 +930,7 @@ class Website(models.Model):
         # The format of `httprequest.host` is `domain:port`
         domain_name = request and request.httprequest.host or ''
 
-        country = request.session.geoip.get('country_code') if request and 'geoip' in request.session else False
+        country = request and request.geoip.get('country_code')
         country_id = False
         if country:
             country_id = self.env['res.country'].search([('code', '=', country)], limit=1).id

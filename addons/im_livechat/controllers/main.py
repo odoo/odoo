@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http, tools, _
@@ -52,7 +51,7 @@ class LivechatController(http.Controller):
         rule = {}
         # find the country from the request
         country_id = False
-        country_code = request.session.geoip.get('country_code') if request.session.geoip else False
+        country_code = request.geoip.get('country_code')
         if country_code:
             country_id = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1).id
         # extract url
@@ -85,9 +84,9 @@ class LivechatController(http.Controller):
             country_id = request.env.user.country_id.id
         else:
             # if geoip, add the country name to the anonymous name
-            if request.session.geoip:
+            if request.geoip:
                 # get the country of the anonymous person, if any
-                country_code = request.session.geoip.get('country_code', "")
+                country_code = request.geoip.get('country_code', "")
                 country = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1) if country_code else None
                 if country:
                     country_id = country.id

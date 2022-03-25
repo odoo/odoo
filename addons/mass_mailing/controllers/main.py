@@ -138,7 +138,7 @@ class MassMailController(http.Controller):
     def full_url_redirect(self, code, mailing_trace_id, **post):
         # don't assume geoip is set, it is part of the website module
         # which mass_mailing doesn't depend on
-        country_code = request.session.get('geoip', False) and request.session.geoip.get('country_code', False)
+        country_code = request.geoip.get('country_code')
 
         request.env['link.tracker.click'].sudo().add_click(
             code,

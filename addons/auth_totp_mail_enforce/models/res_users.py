@@ -88,7 +88,7 @@ class Users(models.Model):
         template = self.env.ref('auth_totp_mail_enforce.mail_template_totp_mail_code').sudo()
         context = {}
         if request:
-            geoip = request.session.geoip
+            geoip = request.geoip
             device = request.httprequest.user_agent.platform
             browser = request.httprequest.user_agent.browser
             context.update({
