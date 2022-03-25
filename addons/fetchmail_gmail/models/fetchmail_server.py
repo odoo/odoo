@@ -23,8 +23,6 @@ class FetchmailServer(models.Model):
             self.is_ssl = True
             self.port = 993
         else:
-            self.type = 'pop'
-            self.is_ssl = False
             self.google_gmail_authorization_code = False
             self.google_gmail_refresh_token = False
             self.google_gmail_access_token = False
