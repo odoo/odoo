@@ -34,35 +34,43 @@ function assignOptions(kwargs, options, whileList) {
  * and update) either the new ``ids`` list of related records (command set),
  * either 0 (commands delete, unlink, link, and clear).
  */
-export const Commands = {
+export const x2ManyCommands = {
+    // (0, virtualID | false, { values })
+    CREATE: 0,
     create(virtualID, values) {
         delete values.id;
-        return [0, virtualID || false, values];
+        return [x2ManyCommands.CREATE, virtualID || false, values];
     },
-
+    // (1, id, { values })
+    UPDATE: 1,
     update(id, values) {
         delete values.id;
-        return [1, id, values];
+        return [x2ManyCommands.UPDATE, id, values];
     },
-
+    // (2, id[, _])
+    DELETE: 2,
     delete(id) {
-        return [2, id, false];
+        return [x2ManyCommands.DELETE, id, false];
     },
-
+    // (3, id[, _]) removes relation, but not linked record itself
+    FORGET: 3,
     forget(id) {
-        return [3, id, false];
+        return [x2ManyCommands.FORGET, id, false];
     },
-
+    // (4, id[, _])
+    LINK_TO: 4,
     linkTo(id) {
-        return [4, id, false];
+        return [x2ManyCommands.LINK_TO, id, false];
     },
-
+    // (5[, _[, _]])
+    DELETE_ALL: 5,
     deleteAll() {
-        return [5, false, false];
+        return [x2ManyCommands.DELETE_ALL, false, false];
     },
-
+    // (6, _, ids) replaces all linked records with provided ids
+    REPLACE_WITH: 6,
     replaceWith(ids) {
-        return [6, false, ids];
+        return [x2ManyCommands.REPLACE_WITH, false, ids];
     },
 };
 
