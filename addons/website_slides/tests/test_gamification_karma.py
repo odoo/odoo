@@ -96,10 +96,8 @@ class TestKarmaGain(common.SlidesCase):
         slide_user.action_dislike()
         self.assertEqual(user.karma, computed_karma)
 
-        # Leave the finished course
+        # Leave the finished course - karma should not move as we only archive membership
         self.channel._remove_membership(user.partner_id.ids)
-        computed_karma -= self.channel.karma_gen_channel_finish
-        computed_karma -= self.slide_3.quiz_second_attempt_reward
         self.assertEqual(user.karma, computed_karma)
 
     @mute_logger('odoo.models')
@@ -143,19 +141,19 @@ class TestKarmaGain(common.SlidesCase):
             self.assertEqual(user_trackings[1].old_value, 0)
             self.assertEqual(user_trackings[1].origin_ref, self.channel)
 
-        # now, remove the membership in batch, on multiple users
+        # now, remove the membership in batch, on multiple users - karma should not move as we only archive membership
         with self.assertQueryCount(43):
             (self.channel | self.channel_2)._remove_membership(users.partner_id.ids)
 
         for user in users:
-            self.assertEqual(user.karma, 0)
+            self.assertEqual(user.karma, computed_karma)
             user_trackings = user.karma_tracking_ids
-            self.assertEqual(len(user_trackings), 4)
+            self.assertEqual(len(user_trackings), 2)
 
-            self.assertEqual(user_trackings[0].new_value, 0)
+            self.assertEqual(user_trackings[0].new_value, computed_karma)
             self.assertEqual(user_trackings[0].old_value, self.channel.karma_gen_channel_finish)
             self.assertEqual(user_trackings[0].origin_ref, self.channel_2)
 
             self.assertEqual(user_trackings[1].new_value, self.channel.karma_gen_channel_finish)
-            self.assertEqual(user_trackings[1].old_value, computed_karma)
+            self.assertEqual(user_trackings[1].old_value, 0)
             self.assertEqual(user_trackings[1].origin_ref, self.channel)
