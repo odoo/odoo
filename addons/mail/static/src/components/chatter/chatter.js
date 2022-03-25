@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdate } from '@mail/component_hooks/use_update';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { LegacyComponent } from '@web/legacy/legacy_component';
-
-const { useRef } = owl;
 
 export class Chatter extends LegacyComponent {
 
@@ -16,12 +15,7 @@ export class Chatter extends LegacyComponent {
         super.setup();
         useUpdate({ func: () => this._update() });
         useComponentToModel({ fieldName: 'component', modelName: 'Chatter' });
-        /**
-         * Reference of the scroll Panel (Real scroll element). Useful to pass the Scroll element to
-         * child component to handle proper scrollable element.
-         */
-        this._scrollPanelRef = useRef('scrollPanel');
-        this.getScrollableElement = this.getScrollableElement.bind(this);
+        useRefToModel({ fieldName: 'scrollPanelRef', modelName: 'Chatter', refName: 'scrollPanel' });
     }
 
     //--------------------------------------------------------------------------
@@ -33,16 +27,6 @@ export class Chatter extends LegacyComponent {
      */
     get chatter() {
         return this.messaging && this.messaging.models['Chatter'].get(this.props.localId);
-    }
-
-    /**
-     * @returns {Element|undefined} Scrollable Element
-     */
-    getScrollableElement() {
-        if (!this._scrollPanelRef.el) {
-            return;
-        }
-        return this._scrollPanelRef.el;
     }
 
     //--------------------------------------------------------------------------
