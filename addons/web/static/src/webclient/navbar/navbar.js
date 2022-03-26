@@ -189,8 +189,8 @@ export class NavBar extends Component {
 
     getMenuItemHref(payload) {
         const parts = [`menu_id=${payload.id}`];
-        if (payload.action) {
-            parts.push(`action=${payload.action.split(",")[1]}`);
+        if (payload.actionID) {
+            parts.push(`action=${payload.actionID}`);
         }
         return "#" + parts.join("&");
     }
