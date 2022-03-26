@@ -8,8 +8,8 @@
 # Léonie Bouchat <lbo@odoo.com>, 2021
 # Cécile Collart <cco@odoo.com>, 2021
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2022
-# Friederike Fasterling-Nesselbosch, 2022
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -790,6 +790,9 @@ msgid ""
 "        UNSPSC code for their products and uoms.\n"
 "    "
 msgstr ""
+"\n"
+"Paesi come la Colombia, il Perù e il Messico devono poter utilizzare il\n"
+"codice UNSPSC per i loro prodotti e le loro merci."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_in_purchase_stock
@@ -926,6 +929,12 @@ msgid ""
 "        For more information about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
+"\n"
+"        Genera ordini di pagamento come raccomandato dalla norma SEPA, grazie ai messaggi pain.001. Le versioni di pain supportate (paesi) sono pain.001.001.03 (generico), pain.001.001.03.ch.02 (Svizzera) e pain.001.003.03 (Germania). Il file XML generato può poi essere caricato nella tua banca.\n"
+"\n"
+"        Questo modulo segue le linee guida di implementazione emesse dall'European Payment Council.\n"
+"Per maggiori informazioni sugli standard SEPA: http://www.iso20022.org/ e http://www.europeanpaymentscouncil.eu/\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -1468,6 +1477,12 @@ msgid ""
 "    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
+"\n"
+"Rendere la data di blocco irreversibile:\n"
+"\n"
+"* Non è possibile impostare restrizioni più severe per i consulenti che per gli utenti. Pertanto, la data di blocco di tutti gli utenti deve essere anteriore (o uguale) alla data di blocco di fatture e ricevute.\n"
+"* Non si può bloccare un periodo non ancora terminato. Pertanto, la All Users Lock Date deve essere anteriore (o uguale) all'ultimo giorno del mese precedente.\n"
+"* Ogni nuova All Users Lock Date deve essere posteriore (o uguale) alla precedente."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud
@@ -2382,6 +2397,9 @@ msgid ""
 "Allows to compute accurate margin for Service sales.\n"
 "======================================================\n"
 msgstr ""
+"\n"
+"Permette di calcolare un margine accurato per le vendite di servizi.\n"
+"======================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_project
@@ -5104,6 +5122,11 @@ msgid ""
 "Improve the import of bank statement feature to support the SEPA recommended Cash Management format (CAMT.053).\n"
 "    "
 msgstr ""
+"\n"
+"Modulo per importare gli estratti conto CAMT.\n"
+"======================================\n"
+"\n"
+"Migliorare la funzione di importazione dell'estratto conto bancario per supportare il formato Cash Management raccomandato dalla SEPA (CAMT.053)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_coda
@@ -5378,6 +5401,12 @@ msgid ""
 "can embed graph and/or pivot views, and displays aggregate values.\n"
 "        "
 msgstr ""
+"\n"
+"Odoo Dashboard View.\n"
+"========================\n"
+"\n"
+"Questo modulo definisce la vista Dashboard, un nuovo tipo di vista di reporting. Questa vista\n"
+"può incorporare grafici e/o viste pivot e mostra valori aggregati."
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_enterprise
@@ -5418,6 +5447,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Odoo Web Gantt chart view.\n"
+"=============================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web
@@ -5428,6 +5462,11 @@ msgid ""
 "\n"
 "This module provides the core of the Odoo Web Client.\n"
 msgstr ""
+"\n"
+"Modulo base di Odoo Web.\n"
+"========================\n"
+"\n"
+"Questo modulo fornisce il nucleo di Odoo Web Client.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_tour
@@ -7170,6 +7209,10 @@ msgid ""
 "widget.\n"
 "    "
 msgstr ""
+"\n"
+"Questo modulo aggiunge la possibilità di filtrare per numero di assegno nel widget di\n"
+"riconciliazione.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_attendance
@@ -7783,6 +7826,10 @@ msgid ""
 "It will install the e-learning, survey and e-commerce apps and make a complete\n"
 "certification flow including purchase, certification, failure and success.\n"
 msgstr ""
+"\n"
+"Questo modulo testerà il principale flusso di certificazione di Odoo.\n"
+"Installerà le applicazioni di e-learning, sondaggio ed e-commerce e farà un flusso di\n"
+"certificazione completo, compreso l'acquisto, la certificazione, fallimento e successo.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_event_full
@@ -8014,6 +8061,8 @@ msgid ""
 "\n"
 "Use devices connected to an IoT Box to control the quality of your products.\n"
 msgstr ""
+"\n"
+"Utilizzo di dispositivi connessi a un box IoT per il controllo della qualità dei prodotti.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant_iot
@@ -8021,6 +8070,8 @@ msgid ""
 "\n"
 "Use receipt printers connected to an IoT Box to print orders in the kitchen or at the bar.\n"
 msgstr ""
+"\n"
+"Utilizzo di stampanti per le ricevute connesse a un box IoT per stampare ordini in cucina o al bar.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_booth_sale
@@ -8382,6 +8433,9 @@ msgid ""
 "\n"
 "Implicitly accessed through '%(document_kind)s' (%(document_model)s)."
 msgstr ""
+"%(previous_message)s\n"
+"\n"
+"Si accede implicitamente attraverso '%(document_kind)s' (%(document_model)s)."
 
 #. module: base
 #: code:addons/base/models/res_currency.py:0
@@ -8478,7 +8532,7 @@ msgstr "%s (copia)"
 #: code:addons/base/models/res_currency.py:0
 #, python-format
 msgid "%s per Unit"
-msgstr ""
+msgstr "%s per unità"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -9080,7 +9134,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>R</strong>"
-msgstr ""
+msgstr "<strong>R</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -9938,6 +9992,8 @@ msgstr "Aggiungi lingua"
 #: model:ir.module.module,summary:base.module_data_merge_helpdesk
 msgid "Add Merge action in contextual menu of helpdesk ticket model."
 msgstr ""
+"Aggiungere l'azione Merge nel menu contestuale del modello di ticket "
+"dell'helpdesk."
 
 #. module: base
 #: model:ir.module.module,description:base.module_data_merge_project
@@ -11812,6 +11868,9 @@ msgid ""
 "                notably for selling mouse traps. With that trick he cut\n"
 "                IT budget by almost half within the last 2 years."
 msgstr ""
+"Brandon lavora nel settore IT <b>da 10 anni</b>. È conosciuto\n"
+"in particolare per la vendita di trappole per topi. Con questo trucco ha tagliato\n"
+"il budget IT di quasi la metà negli ultimi 2 anni."
 
 #. module: base
 #: model:res.country,name:base.br
@@ -12100,7 +12159,7 @@ msgstr ""
 #. module: base
 #: model:res.country,vat_label:base.ar
 msgid "CUIT"
-msgstr ""
+msgstr "CUIT"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__calendar
@@ -12851,7 +12910,7 @@ msgstr "Proprietà azienda"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate__company_rate
 msgid "Company Rate"
-msgstr ""
+msgstr "Tasso aziendale"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__company_registry
@@ -13783,7 +13842,7 @@ msgstr "Cron"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_trigger_view_form
 msgid "Cron Trigger"
-msgstr ""
+msgstr "Cron Trigger"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_trigger_view_search
@@ -14479,7 +14538,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Developer API Keys"
-msgstr ""
+msgstr "Chiavi API sviluppatore"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest_enterprise
@@ -15527,7 +15586,7 @@ msgstr "Sale riunioni per eventi"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_social
 msgid "Event Social"
-msgstr ""
+msgstr "Eventi Social"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_exhibitor
@@ -15731,7 +15790,7 @@ msgstr "Esportare pagamenti come file di bonifico ABA"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_us_payment_nacha
 msgid "Export payments as NACHA files"
-msgstr ""
+msgstr "Esportazione di pagamenti come file NACHA"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_sepa
@@ -16348,7 +16407,7 @@ msgstr "Finanza/Assicurazione"
 #: model:ir.module.module,summary:base.module_data_merge_crm
 #: model:ir.module.module,summary:base.module_data_merge_utm
 msgid "Find duplicate records and merge them"
-msgstr ""
+msgstr "Trova i record duplicati e li unisce"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_unsplash
@@ -16924,7 +16983,7 @@ msgstr "Germania - Certificazione per i punti vendita"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_pos_res_cert
 msgid "Germany - Certification for Point of Sale of type restaurant"
-msgstr ""
+msgstr "Germania - Certificazione per punto vendita di tipo ristorante"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_purchase
@@ -17046,7 +17105,7 @@ msgstr "Apri pannello di configurazione"
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Go to users"
-msgstr ""
+msgstr "Vai agli utenti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_calendar
@@ -18151,7 +18210,7 @@ msgstr "Implementazione"
 #. module: base
 #: model:ir.module.module,summary:base.module_base_sparse_field
 msgid "Implementation of sparse fields."
-msgstr ""
+msgstr "Implementazione di campi sparsi."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_l10n_se
@@ -18453,7 +18512,7 @@ msgstr "Strumenti per installazione iniziale"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__init_stack_trace
 msgid "Initial stack trace"
-msgstr ""
+msgstr "Stack trace iniziale"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window__target__inline
@@ -18837,7 +18896,7 @@ msgstr "Definizione vista %(name)s non valida in %(file)s"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Invalid xmlid %(xmlid)s for button of type action."
-msgstr ""
+msgstr "ID XML %(xmlid)s non valido per un pulsante di tipo azione."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_inventory
@@ -18855,7 +18914,7 @@ msgstr "Magazzino, logistica, valorizzazione, contabilità"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate__inverse_company_rate
 msgid "Inverse Company Rate"
-msgstr ""
+msgstr "Tasso aziendale inverso"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__inverse_rate
@@ -19794,7 +19853,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_sale_product_configurator
 msgid "Link module between point_of_sale and sale_product_configurator"
-msgstr ""
+msgstr "Modulo di collegamento tra point_of_sale e sale_product_configurator"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -20178,6 +20237,48 @@ msgid ""
 "allowing you to easily find for specific skills and build up a database of\n"
 "profiles.\n"
 msgstr ""
+"Gestire il reclutamento e le domande di lavoro\n"
+"---------------------------------------\n"
+"\n"
+"Pubblica, promuovi e organizza le tue offerte di lavoro con Odoo\n"
+"<a href=\"https://www.odoo.com/app/recruitment\">Applicazione Open Source di Reclutamento</a>.\n"
+"\n"
+"Organizza la tua job board, promuovi i tuoi annunci di lavoro e tieni traccia delle\n"
+"candidature facilmente. Segui ogni candidato e costruisci un database\n"
+"di competenze e profili con documenti indicizzati.\n"
+"\n"
+"Pubblica i tuoi posti vacanti sui migliori siti di lavoro\n"
+"---------------------------------\n"
+"\n"
+"Collegati automaticamente ai più famosi portali di lavoro: LinkedIn, Monster,\n"
+"Craigslist, ... Ogni posizione di lavoro ha un nuovo indirizzo e-mail automaticamente\n"
+"assegnato per indirizzare le domande di candidatura al posto giusto.\n"
+"\n"
+"Se i candidati ti contattano via e-mail o tramite un modulo online, ottieni tutti i\n"
+"dati indicizzati automaticamente (curriculum, lettera di motivazione) e puoi rispondere\n"
+"in un solo clic, riutilizzando i template di risposta.\n"
+"\n"
+"Personalizza il tuo processo di reclutamento\n"
+"----------------------------------\n"
+"\n"
+"Utilizza la vista kanban e personalizza i passi del tuo processo di reclutamento;\n"
+"pre-qualificazione, primo colloquio, secondo colloquio, trattative, ...\n"
+"\n"
+"Ottieni statistiche accurate sulla tua pipeline di reclutamento. Ottieni rapporti per confrontare\n"
+"la performance dei tuoi diversi annunci su portali di lavoro esterni.\n"
+"\n"
+"Ottimizza il tuo processo di reclutamento\n"
+"-----------------------------------\n"
+"\n"
+"Segui i candidati nel tuo processo di reclutamento con la vista kanban intelligente. Risparmia\n"
+"tempo automatizzando alcune comunicazioni con template e-mail.\n"
+"\n"
+"Documenti come curriculum e lettere di motivazione sono indicizzati automaticamente,\n"
+"permettendoti di cercare facilmente competenze specifiche e creare un database di\n"
+"profili.\n"
+"\n"
+"\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_work_entry_holidays
@@ -21071,7 +21172,7 @@ msgstr "Moldavia"
 #: model:ir.module.module,description:base.module_payment_mollie
 #: model:ir.module.module,shortdesc:base.module_payment_mollie
 msgid "Mollie Payment Acquirer"
-msgstr ""
+msgstr "Mollie Payment Acquirer"
 
 #. module: base
 #: model:res.country,name:base.mc
@@ -21939,6 +22040,107 @@ msgid ""
 "Compare revenues with forecasts and budgets in real time.\n"
 "\n"
 msgstr ""
+"Odoo CRM\n"
+"--------\n"
+"\n"
+"Aumenta la produttività delle vendite, migliora i tassi di successo, aumenta i ricavi con Odoo\n"
+"<a href=\"https://www.odoo.com/app/crm\">Open Source CRM</a>.\n"
+"\n"
+"Gestisci il tuo sales funnel senza sforzo. Attira i lead, segui \n"
+"telefonate e incontri. Analizza la qualità dei tuoi contatti per prendere decisioni\n"
+"e risparmiare tempo integrando le e-mail direttamente nell'applicazione.\n"
+"\n"
+"Il tuo Sales Funnel, come piace a te\n"
+"--------------------------------------\n"
+"\n"
+"Traccia la tua pipeline di opportunità con la rivoluzionaria vista kanban. Lavora\n"
+"all'interno del tuo sales funnel e ottieni informazioni visive istantanee sulle prossime azioni,\n"
+"nuovi messaggi, le migliori opportunità e i ricavi attesi.\n"
+"\n"
+"Gestione dei lead resa facile\n"
+"-------------------------\n"
+"\n"
+"Crea automaticamente i lead dalle email in arrivo. Analizza l'efficienza dei lead e\n"
+"confronta le performance per campagne, canali o team di vendita.\n"
+"\n"
+"Trova i duplicati, unisci i lead e assegnali all'addetto vendita giusto in un'unica\n"
+"operazione. Dedica meno tempo all'amministrazione e più tempo alla qualificazione dei lead.\n"
+"\n"
+"Organizza le tue opportunità\n"
+"---------------------------\n"
+"\n"
+"Organizza le tue opportunità per rimanere concentrato sulle migliori offerte. Gestisci tutte\n"
+"le tue interazioni con i clienti dall'opportunità come e-mail, telefonate,\n"
+"note interne, riunioni e preventivi.\n"
+"\n"
+"Segui le opportunità che ti interessano per essere avvisato in caso di eventi specifici:\n"
+"affare vinto o perso, fase cambiata, nuova richiesta del cliente, ecc.\n"
+"\n"
+"Integrazione e automazione della posta elettronica\n"
+"--------------------------------\n"
+"\n"
+"Lavora con le applicazioni e-mail che già usi ogni giorno. Sia che la tua\n"
+"azienda usi Microsoft Outlook o Gmail, non c'è bisogno di cambiare il modo\n"
+"di lavoro, cosicché tutti rimangano produttivi.\n"
+"\n"
+"Indirizza, ordina e filtra automaticamente le email in arrivo. Odoo CRM gestisce le e-mail in arrivo\n"
+"e le indirizza alle giuste opportunità o al team di vendita. I nuovi lead sono\n"
+"creati al volo e i venditori interessati vengono notificati automaticamente.\n"
+"\n"
+"Agenda collaborativa\n"
+"--------------------\n"
+"\n"
+"Programma le tue riunioni e telefonate utilizzando il calendario integrato. Puoi\n"
+"vedere la tua agenda e quella dei tuoi colleghi in un'unica vista. Come manager, è facile vedere\n"
+"in cosa è impegnato il tuo team.\n"
+"\n"
+"Lead Automation e campagne di marketing\n"
+"---------------------------------------\n"
+"\n"
+"Aumentare la performance automatizzando i compiti con Odoo <a href=\"https://www.odoo.com/app/crm\">CRM</a>.\n"
+"\n"
+"Usa le nostre campagne di marketing per automatizzare l'acquisizione di lead, follow up e\n"
+"promozioni. Definisci azioni automatizzate (ad esempio, chiedi a un venditore di chiamare, invia un\n"
+"e-mail, ...) basate su trigger (nessuna attività da 20 giorni, risposta a un\n"
+"e-mail promozionale, ecc.)\n"
+"\n"
+"Ottimizza le campagne dal lead alla chiusura, su ogni canale. Prendi decisioni più intelligenti\n"
+"su dove investire e mostra l'impatto delle tue attività di marketing sui profitti della tua azienda.\n"
+"\n"
+"Personalizza il tuo ciclo di vendita\n"
+"--------------------------\n"
+"\n"
+"Personalizza il tuo ciclo di vendita configurando le fasi di vendita che corrispondono perfettamente al tuo\n"
+"approccio di vendita. Controlla le statistiche per ottenere previsioni accurate e migliorare le tue\n"
+"le tue prestazioni di vendita in ogni fase della tua relazione con il cliente.\n"
+"\n"
+"Aumenta la motivazione dei dipendenti con la Gamification\n"
+"----------------------------------\n"
+"\n"
+"### Utilizza il naturale desiderio di competizione della tua squadra\n"
+"\n"
+"Rafforza le buone abitudini e migliora i tassi di successo con il riconoscimento in tempo reale e\n"
+"premi ispirati alla [meccanica del gioco](http://en.wikipedia.org/wiki/Gamification).\n"
+"Allinea i team di vendita intorno a chiari obiettivi di business con sfide, obiettivi\n"
+"personali e classifiche di squadra.\n"
+"\n"
+"### Classifiche\n"
+"\n"
+"Promuovi i top performer e la competizione tra il team di vendita con relazioni sulle prestazioni.\n"
+"\n"
+"### Obiettivi personali\n"
+"\n"
+"Assegna obiettivi chiari agli utenti per allinearli con gli obiettivi dell'azienda.\n"
+"\n"
+"### Obiettivi del team\n"
+"\n"
+"Confronta i ricavi con previsioni e budget in tempo reale.\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"\n"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__oeel-1
@@ -23082,7 +23284,7 @@ msgstr "Appuntamento online"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_online_synchronization
 msgid "Online Bank Statement Synchronization"
-msgstr ""
+msgstr "Sincronizzazione estratti conto bancari online"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_booth_sale
@@ -23164,7 +23366,7 @@ msgstr ""
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "Only internal users can create API keys"
-msgstr ""
+msgstr "Le chiavi API possono essere create solo da utenti interni"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_rate_unique_name_per_day
@@ -23905,7 +24107,7 @@ msgstr "Geolocalizzazione partner"
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Partners: %(category)s"
-msgstr ""
+msgstr "Partner: %(category)s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_pass
@@ -24039,7 +24241,7 @@ msgstr "Sistema di pagamento: implementazione Stripe"
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_transfer
 msgid "Payment Acquirer: Wire Transfer Implementation"
-msgstr ""
+msgstr "Payment Acquirer: Attuazione del bonifico bancario"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_payment_acquirers
@@ -24256,7 +24458,7 @@ msgstr "Punto vendita"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_coupon
 msgid "Point of Sale Coupons"
-msgstr ""
+msgstr "Coupon per punti vendita"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
@@ -24546,6 +24748,8 @@ msgstr "Profiling è attualmente disattivato."
 msgid ""
 "Profiling is not enabled on this database. Please contact an administrator."
 msgstr ""
+"La profilazione non è abilitata su questo database. Si prega di contattare "
+"un amministratore."
 
 #. module: base
 #: model:ir.model,name:base.model_ir_profile
@@ -24671,6 +24875,77 @@ msgid ""
 "accurate reports on your team's performance.\n"
 "\n"
 msgstr ""
+"Project Management\n"
+"------------------\n"
+"\n"
+"### Infinitamente flessibile. Incredibilmente facile da usare.\n"
+"\n"
+"\n"
+"<a href=\"https://www.odoo.com/app/project\">La gestione di progetti open source</a> collaborativa e in tempo reale di Odoo\n"
+"aiuta il tuo team a portare a termine il lavoro. Tieni traccia di tutto, dal quadro generale\n"
+"ai minimi dettagli, dal contratto con il cliente alla fatturazione.\n"
+"\n"
+"Progettato per adattarsi ai tuoi processi\n"
+"--------------------------------\n"
+"\n"
+"Organizza i progetti intorno ai tuoi processi. Lavora su compiti e problemi usando la vista\n"
+"kanban, pianifica i compiti usando il diagramma di gantt e controlla le scadenze nella\n"
+"vista calendario. Ogni progetto può avere le proprie fasi, permettendo ai team di\n"
+"ottimizzare il loro lavoro.\n"
+"\n"
+"Facile da usare\n"
+"-----------\n"
+"\n"
+"Organizzati rapidamente. Non serve molto tempo per imparare\n"
+"come funziona l'interfaccia facile da usare, e ogni azione è istantanea, quindi niente si frappone\n"
+"tra te e il tuo dolce flusso produttivo.\n"
+"\n"
+"Lavorare insieme\n"
+"-------------\n"
+"\n"
+"### Chat in tempo reale, condivisione di documenti, integrazione email\n"
+"\n"
+"Usa il chat per comunicare con il tuo team o con i clienti e condividi commenti\n"
+"e documenti su compiti e problemi. Integra la discussione velocemente con l'integrazione\n"
+"e-mail.\n"
+"\n"
+"Parla con altri utenti o clienti con la funzione live chat del sito web.\n"
+"\n"
+"Scrittura collaborativa\n"
+"---------------------\n"
+"\n"
+"### La potenza di etherpad, dentro i tuoi compiti\n"
+"\n"
+"Modifica in modo collaborativo le stesse sezioni o i verbali delle riunioni proprio all'interno\n"
+"dell' applicazione. La funzione etherpad integrata permette a diverse persone di\n"
+"lavorare sugli stessi compiti, allo stesso tempo.\n"
+"\n"
+"Questo è molto efficiente per le riunioni scrum, i verbali delle riunioni o le\n"
+"specifiche complesse. Ogni utente ha il proprio colore e si può riprodurre l'intera\n"
+"creazione del contenuto.\n"
+"\n"
+"Ottieni risultati\n"
+"-------------\n"
+"\n"
+"Ricevi avvisi sugli eventi seguiti per rimanere aggiornato su ciò che ti interessa. Usa\n"
+"indicatori visivi verdi/rossi istantanei per scansionare ciò che è stato fatto e ciò che\n"
+"richiede la tua attenzione.\n"
+"\n"
+"Fogli ore, contratti e fatturazione\n"
+"---------------------------------\n"
+"\n"
+"I progetti sono automaticamente integrati con i contratti dei clienti, permettendoti di\n"
+"fatturare in base al tempo e ai materiali e registrare facilmente i fogli ore.\n"
+"\n"
+"Traccia problemi\n"
+"------------\n"
+"\n"
+"Individua i problemi che sorgono in un progetto per concentrarti meglio\n"
+"sulla loro risoluzione. Integra l'interazione del cliente su ogni problema e ottieni\n"
+"rapporti accurati sulla performance del tuo team.\n"
+"\n"
+"\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge_project
@@ -24720,7 +24995,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_project_account_asset
 msgid "Project accounting assets"
-msgstr ""
+msgstr "Attività di contabilità del progetto"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_holidays
@@ -24745,7 +25020,7 @@ msgstr "Contabilità libro paga progetto"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_project_account
 msgid "Project sales accounting"
-msgstr ""
+msgstr "Contabilità vendite del progetto"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_sale_subscription
@@ -24964,7 +25239,7 @@ msgstr "Gestione acquisti e produzione"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_purchase
 msgid "Purchase and Subcontracting Management"
-msgstr ""
+msgstr "Gestione degli acquisti e dei subappalti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_enterprise
@@ -25906,7 +26181,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_ssl_certificate
 #: model:ir.model.fields.selection,name:base.selection__ir_mail_server__smtp_authentication__certificate
 msgid "SSL Certificate"
-msgstr ""
+msgstr "Certificato SSL"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_ssl_private_key
@@ -25917,7 +26192,7 @@ msgstr ""
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid "SSL certificate is missing for %s."
-msgstr ""
+msgstr "Manca il certificato SSL per %s."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_ssl_certificate
@@ -27173,7 +27448,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__speedscope
 msgid "Speedscope"
-msgstr ""
+msgstr "Speedscope"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track
@@ -27777,7 +28052,7 @@ msgstr "Nome tecnico"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate__rate
 msgid "Technical Rate"
-msgstr ""
+msgstr "Tasso tecnico"
 
 #. module: base
 #: code:addons/base/models/ir_translation.py:0
@@ -27924,7 +28199,7 @@ msgstr "Tests per read_group"
 #. module: base
 #: model:ir.module.module,description:base.module_test_search_panel
 msgid "Tests for the search panel python methods"
-msgstr ""
+msgstr "Test per i metodi python del pannello di ricerca"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_converter
@@ -27985,7 +28260,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__url_code
 msgid "The Lang Code displayed in the URL"
-msgstr ""
+msgstr "Codice lingua visualizzato nell'URL"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__grouping
@@ -28274,7 +28549,7 @@ msgstr "Il modello a cui appartiene questo campo"
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "The modes in view_mode must not be duplicated: %s"
-msgstr ""
+msgstr "Le modalità in view_mode non devono essere duplicate: %s"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_name_uniq
@@ -28896,6 +29171,8 @@ msgid ""
 "This module lets you use the full power of certifications within your "
 "courses."
 msgstr ""
+"Questo modulo ti permette di usare tutta la potenza delle certificazioni nei"
+" tuoi corsi."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -29190,7 +29467,7 @@ msgstr "Gestione dei canali di reclutamento"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk
 msgid "Track, prioritize, and solve customer tickets"
-msgstr ""
+msgstr "Tracciare, dare priorità e risolvere i ticket dei clienti"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event
@@ -29621,6 +29898,8 @@ msgid ""
 "Unable to order by %s: fields used for ordering must be present on the model"
 " and stored."
 msgstr ""
+"Impossibile ordinare per %s: i campi utilizzati per l'ordinamento devono "
+"essere presenti nel modello e memorizzati."
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0

@@ -2172,6 +2172,12 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
+"Definisce il metodo predefinito utilizzato per suggerire la posizione esatta (scaffale) da dove prendere i prodotti, quale lotto ecc. per questa posizione. Questo metodo può essere applicato a livello di categoria di prodotto, e viene effettuato un fallback sulle ubicazioni madri se nessuno è impostato qui.\n"
+"\n"
+"FIFO: i prodotti/lotti che sono stati immagazzinati per primi saranno spostati per primi.\n"
+"LIFO: i prodotti/lotti che sono stati immagazzinati per ultimi saranno spostati per primi.\n"
+"Closest location: i prodotti/lotti più vicini alla posizione di destinazione saranno spostati per primi.\n"
+"FEFO: i prodotti/lotti con la data di rimozione più vicina saranno spostati per primi (la disponibilità di questo metodo dipende dall'impostazione \"Date di scadenza\")."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -6896,6 +6902,12 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
+"Imposta una strategia di rimozione specifica che sarà utilizzata indipendentemente dalla posizione di origine per questa categoria di prodotti.\n"
+"\n"
+"FIFO: i prodotti/lotti che sono stati immagazzinati per primi saranno spostati per primi.\n"
+"LIFO: i prodotti/lotti che sono stati immagazzinati per ultimi saranno spostati per primi.\n"
+"Posizione più vicina: i prodotti/lotti più vicini alla posizione di destinazione saranno spostati per primi.\n"
+"FEFO: i prodotti/lotti con la data di rimozione più vicina saranno spostati per primi (la disponibilità di questo metodo dipende dall'impostazione \"Date di scadenza\")."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7628,6 +7640,9 @@ msgid ""
 "\n"
 "Is this expected? For example this can occur if a delivery operation is validated before its corresponding receipt operation is validated. In this case the issue will be solved automatically once all steps are completed. Otherwise, the serial number should be corrected to prevent inconsistent data."
 msgstr ""
+"Il numero di serie (%s) è già usato in queste posizioni: %s.\n"
+"\n"
+"È previsto? Per esempio, questo può accadere se un'operazione di consegna è convalidata prima che la sua corrispondente operazione di ricezione sia convalidata. In questo caso il problema si risolve automaticamente una volta che tutti i passi sono stati completati. Altrimenti, il numero di serie dovrebbe essere corretto per evitare dati incoerenti."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0

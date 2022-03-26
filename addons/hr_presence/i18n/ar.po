@@ -32,11 +32,19 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    عزيزتنا <t t-out=\"object.name or ''\">أبيغيل بيترسون</t>،<br/><br/>\n"
+"                    يبدو أنك غير متواجدة في المكتب ولا يوجد طلب إجازة مقدم، إلا إذا كان هذا خطأً من جهتنا.<br/>\n"
+"                    يرجى أخذ الإجراء اللازم لتنفيذ هذا الغياب.<br/>\n"
+"                    لا تترددي في التواصل مع مديرك أو قسم الموارد البشرية.\n"
+"                    <br/>مع أطيب التحيات،<br/><br/>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
 msgid "Absence/Presence"
-msgstr ""
+msgstr "الغياب/الحضور "
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
@@ -53,7 +61,7 @@ msgstr "الموظف الأساسي"
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_company
 msgid "Companies"
-msgstr "شركات"
+msgstr "الشركات "
 
 #. module: hr_presence
 #: code:addons/hr_presence/models/hr_employee.py:0
@@ -64,39 +72,39 @@ msgstr "رسالة جديدة"
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.ir_actions_server_action_open_presence_view
 msgid "Compute presence and open presence view"
-msgstr ""
+msgstr "احتساب الحضور وفتح عرض الحضور "
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__create_uid
 msgid "Create Uid"
-msgstr ""
+msgstr "إنشاء معرف فريد "
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__email_sent
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__email_sent
 msgid "Email Sent"
-msgstr ""
+msgstr "تم إرسال البريد الإلكتروني "
 
 #. module: hr_presence
 #: model:ir.ui.menu,name:hr_presence.menu_hr_presence_view
 msgid "Employee Presence"
-msgstr ""
+msgstr "حضور الموظفين "
 
 #. module: hr_presence
 #: model:mail.template,name:hr_presence.mail_template_presence
 msgid "Employee: Absence email"
-msgstr ""
+msgstr "الموظف: رسالة الغياب "
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
 msgid "Employee: Presence Reminder"
-msgstr ""
+msgstr "الموظف: تذكير الحضور "
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
 msgid "Employees"
-msgstr "الموظفون"
+msgstr "الموظفين "
 
 #. module: hr_presence
 #: code:addons/hr_presence/models/hr_employee.py:0
@@ -107,25 +115,28 @@ msgid ""
 "Please, take appropriate measures in order to carry out this work absence.\n"
 "Do not hesitate to contact your manager or the human resource department."
 msgstr ""
+"يبدو أنك غير متواجد في المكتب ولا يوجد طلب إجازة مقدم، إلا إذا كان هذا خطأً من جهتنا.\n"
+"يرجى أخذ الإجراء اللازم لتنفيذ هذا الغياب.\n"
+"لا تتردد في التواصل مع مديرك أو قسم الموارد البشرية. "
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.ir_cron_presence_control_ir_actions_server
 #: model:ir.cron,cron_name:hr_presence.ir_cron_presence_control
 #: model:ir.cron,name:hr_presence.ir_cron_presence_control
 msgid "HR Presence: cron"
-msgstr ""
+msgstr "حضور الموارد البشرية: cron "
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
 msgid "Hr Presence Last Compute Date"
-msgstr ""
+msgstr "تاريخ آخر احتساب لحضور الموارد البشرية "
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__hr_presence_state_display
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__hr_presence_state_display
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__hr_presence_state_display
 msgid "Hr Presence State Display"
-msgstr ""
+msgstr "عرض حالة حضور الموارد البشرية "
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__ip
@@ -137,7 +148,7 @@ msgstr "عنوان IP"
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__ip_connected
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__ip_connected
 msgid "Ip Connected"
-msgstr ""
+msgstr "IP متصل "
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -149,20 +160,20 @@ msgstr "سجل"
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__manually_set_present
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_present
 msgid "Manually Set Present"
-msgstr ""
+msgstr "تعيين الحضور يدوياً "
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Presence"
-msgstr ""
+msgstr "الحضور "
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__present
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__present
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__present
 msgid "Present"
-msgstr "الحالي"
+msgstr "حاضر "
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -172,29 +183,29 @@ msgstr "الرسائل النصية القصيرة "
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
 msgid "Set as absent"
-msgstr ""
+msgstr "التعيين كغائب "
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
 msgid "Set as present"
-msgstr ""
+msgstr "التعيين كحاضر "
 
 #. module: hr_presence
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "There is no professional email address for this employee."
-msgstr ""
+msgstr "ليس هناك عنوان بريد إلكتروني مهني لهذا الموظف. "
 
 #. module: hr_presence
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "There is no professional mobile for this employee."
-msgstr ""
+msgstr "ليس هناك رقم هاتف محمول مهني لهذا الموظف. "
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
 msgid "Time Off"
-msgstr "الاجازات"
+msgstr "الإجازات "
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__to_define
@@ -206,7 +217,7 @@ msgstr "للتعريف"
 #. module: hr_presence
 #: model:mail.template,subject:hr_presence.mail_template_presence
 msgid "Unexpected Absence"
-msgstr ""
+msgstr "الغياب غير المتوقع "
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log
@@ -219,4 +230,4 @@ msgstr "سجل المستخدمين"
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "You don't have the right to do this. Please contact an Administrator."
-msgstr ""
+msgstr "لا تملك حق القيام بذلك. يرجى التواصل مع أحد المدراء. "

@@ -6,8 +6,8 @@
 # Martin Trigaux, 2021
 # Léonie Bouchat <lbo@odoo.com>, 2021
 # sakodoo <sak@odoo.com>, 2022
-# Friederike Fasterling-Nesselbosch, 2022
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,7 +52,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid " The %(lock_type)s lock date is set on %(lock_date)s."
-msgstr ""
+msgstr " La data di blocco %(lock_type)s è impostata su %(lock_date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -2468,6 +2468,8 @@ msgid ""
 "An error occurred when computing the inalterability. Impossible to get the "
 "unique previous posted journal entry."
 msgstr ""
+"Si è verificato un errore durante il calcolo dell'inalterabilità. "
+"Impossibile ottenere la voce unica del diario postato in precedenza."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -5735,7 +5737,7 @@ msgstr "Registrazioni"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__entries_count
 msgid "Entries Count"
-msgstr ""
+msgstr "Conteggio voci"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_print_journal__sort_selection
@@ -7358,6 +7360,8 @@ msgid ""
 "Invoice and credit note repartition should have at least one tax repartition"
 " line."
 msgstr ""
+"La ripartizione delle fatture e delle note di credito dovrebbe avere almeno "
+"una linea di ripartizione delle tasse."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -7859,7 +7863,7 @@ msgstr "Movimenti con numero abbinato non impostato"
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "Journal should be the same type as the reversed entry."
-msgstr ""
+msgstr "Il giornale dovrebbe essere dello stesso tipo della voce invertita."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__automatic_entry_default_journal_id
@@ -8275,7 +8279,7 @@ msgstr "Lasciare vuoto per assegnare l'addetto vendite della fattura."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Leave empty to use the default outstanding account"
-msgstr ""
+msgstr "Lasciare vuoto per usare il conto in sospeso di default"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_accounting_ledgers
@@ -10317,7 +10321,7 @@ msgstr ""
 #: code:addons/account/models/ir_module_module.py:0
 #, python-format
 msgid "Please update the Invoicing module before continuing."
-msgstr ""
+msgstr "Si prega di aggiornare il modulo di fatturazione prima di continuare."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -13456,6 +13460,9 @@ msgid ""
 "The accounting date being set prior to the %(lock_type)s lock date "
 "%(lock_date)s, it will be changed to %(accounting_date)s upon posting."
 msgstr ""
+"La data contabile è impostata prima della data di blocco "
+"%(lock_type)s%(lock_date)s, sarà cambiata a %(accounting_date)s al momento "
+"della registrazione."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13827,7 +13834,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__group_tax_id
 msgid "The group of taxes that generated this tax line"
-msgstr ""
+msgstr "Il gruppo di tasse che ha generato questa linea fiscale"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -14078,6 +14085,8 @@ msgid ""
 "The recipient bank account link to this invoice is archived.\n"
 "So you cannot confirm the invoice."
 msgstr ""
+"Il link del conto bancario del destinatario di questa fattura è archiviato.\n"
+"Quindi non è possibile confermare la fattura."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -15634,6 +15643,8 @@ msgid ""
 "When an internal transfer is posted, a paired payment is created. They are "
 "cross referenced trough this field"
 msgstr ""
+"Quando viene inviato un trasferimento interno, viene creato un pagamento "
+"abbinato. Essi vengono incrociati attraverso questo campo"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -16073,6 +16084,8 @@ msgid ""
 "You cannot delete this entry, as it has already consumed a sequence number "
 "and is not the last one in the chain. You should probably revert it instead."
 msgstr ""
+"Non puoi cancellare questa voce, poiché ha già consumato un numero di "
+"sequenza e non è l'ultima nella catena. Devi invece ripristinarla."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -16671,7 +16684,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "tax"
-msgstr ""
+msgstr "tax"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_group_id
@@ -16721,7 +16734,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "user"
-msgstr ""
+msgstr "user"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
-# Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2022
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,6 +47,16 @@ msgstr "\"%s\" richiede accesso al microfono"
 #, python-format
 msgid "%(activity_name)s: %(summary)s assigned to you"
 msgstr "%(activity_name)s: %(summary)s assegnata a te"
+
+#. module: mail
+#: code:addons/mail/models/res_partner.py:0
+#, python-format
+msgid ""
+"%(email)s is not recognized as a valid email. This is required to create a "
+"new customer."
+msgstr ""
+"%(email)s non è riconosciuto come un'email valida. Questo è necessario per "
+"creare un nuovo cliente."
 
 #. module: mail
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
@@ -206,7 +216,7 @@ msgstr "(inizialmente assegnato a "
 #: code:addons/mail/static/src/models/thread/thread.js:0
 #, python-format
 msgid ", "
-msgstr ""
+msgstr ", "
 
 #. module: mail
 #. openerp-web
@@ -1018,6 +1028,7 @@ msgstr ""
 #, python-format
 msgid "Are you sure you want to unblacklist this Email Address?"
 msgstr ""
+"Sei sicuro di voler togliere dalla lista nera questo indirizzo e-mail?"
 
 #. module: mail
 #. openerp-web
@@ -5965,7 +5976,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Restrict mail templates edition and QWEB placeholders usage."
-msgstr ""
+msgstr "Limita l'edizione dei modelli di posta e l'uso dei segnaposto QWEB."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -7837,6 +7848,8 @@ msgid ""
 "You do not have the access right to unblacklist emails. Please contact your "
 "administrator."
 msgstr ""
+"Non hai il diritto di accesso per togliere le email dalla lista nera. "
+"Contatta il tuo amministratore."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0

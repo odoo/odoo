@@ -2079,6 +2079,8 @@ msgid ""
 "Immediately: When the date corresponds to the new level, your accrual is automatically computed, granted and you switch to new level\n"
 "                After this accrual's period: When the accrual is complete (a week, a month), and granted, you switch to next level if allocation date corresponds"
 msgstr ""
+"Immediatamente: Quando la data corrisponde al nuovo livello, il tuo rateo è automaticamente calcolato, concesso e passi al nuovo livello\n"
+"Dopo il periodo di questo rateo: Quando il rateo è completo (una settimana, un mese), e concesso, si passa al livello successivo se la data di assegnazione corrisponde"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -4067,6 +4069,12 @@ msgid ""
 msgstr ""
 "Diritti non sufficienti per applicare la seconda approvazione a una "
 "richiesta di ferie"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "You must be %s\\'s Manager to approve this leave"
+msgstr "Deve essere il manager di %s per approvare questo congedo"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
