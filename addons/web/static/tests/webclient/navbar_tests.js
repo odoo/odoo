@@ -70,6 +70,19 @@ QUnit.test("dropdown menu can be toggled", async (assert) => {
     assert.containsNone(dropdown, ".dropdown-menu");
 });
 
+QUnit.test("href attribute on apps menu items", async (assert) => {
+    baseConfig.serverData.menus = {
+        root: { id: "root", children: [1], name: "root", appID: "root" },
+        1: { id: 1, children: [2], name: "My app", appID: 1, actionID: 339 },
+    };
+    const env = await makeTestEnv(baseConfig);
+    await mount(NavBar, target, { env });
+    const appsMenu = target.querySelector(".o_navbar_apps_menu");
+    await click(appsMenu, "button.dropdown-toggle");
+    const dropdownItem = target.querySelector(".o_navbar_apps_menu .dropdown-item");
+    assert.strictEqual(dropdownItem.getAttribute("href"), "#menu_id=1&action=339");
+});
+
 QUnit.test("data-menu-xmlid attribute on AppsMenu items", async (assert) => {
     baseConfig.serverData.menus = {
         root: { id: "root", children: [1, 2], name: "root", appID: "root" },
