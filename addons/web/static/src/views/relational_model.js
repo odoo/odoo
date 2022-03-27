@@ -523,7 +523,7 @@ export class Record extends DataPoint {
             const fieldType = this.fields[fieldName].type;
             if (["one2many", "many2many"].includes(fieldType)) {
                 const staticList = this._cache[fieldName];
-                changes[fieldName] = staticList.getCommands(); // always ask
+                changes[fieldName] = staticList.getCommands(allFields); // always ask
                 if (!changes[fieldName]) {
                     delete changes[fieldName];
                 }
@@ -537,7 +537,10 @@ export class Record extends DataPoint {
                     : false;
             }
         }
-        return changes;
+        return {
+            ...this._rawChanges,
+            ...changes,
+        };
     }
 
     getFieldContext(fieldName) {
@@ -618,17 +621,15 @@ export class Record extends DataPoint {
             }
         }
 
-        if (!this.fieldNames.length) {
-            return;
-        }
-
         if (this.isVirtual) {
-            const changes = params.changes || await this._onChange();
+            const changes = params.changes || (await this._onChange());
             await this._load({ changes });
         } else {
             let values = params.values || {};
             const missingFields = this.fieldNames.filter((fieldName) => !(fieldName in values));
-            values = Object.assign({}, values, await this._read(missingFields));
+            if (missingFields.length) {
+                values = Object.assign({}, values, await this._read(missingFields));
+            }
             await this._load({ values });
         }
     }
@@ -888,20 +889,23 @@ export class Record extends DataPoint {
             views,
             viewMode,
             onChanges: async () => {
-                this._changes[fieldName] = list.getCommands();
-                const changes = await this._onChange(fieldName);
+                this._changes[fieldName] = list;
                 const proms = [];
-                for (const [fieldName, value] of Object.entries(changes)) {
-                    const field = this.fields[fieldName];
-                    // for x2many fields, the onchange returns commands, not ids, so we need to process them
-                    // for now, we simply return an empty list
-                    if (isX2Many(field)) {
-                        this._changes[fieldName] = value;
-                        this.data[fieldName].applyCommands(value);
-                        proms.push(this.data[fieldName].load());
-                    } else {
-                        this._changes[fieldName] = value;
-                        this.data[fieldName] = this._changes[fieldName];
+                if (activeField && activeField.onChange) {
+                    const changes = await this._onChange(fieldName);
+                    const proms = [];
+                    for (const [fieldName, value] of Object.entries(changes)) {
+                        const field = this.fields[fieldName];
+                        // for x2many fields, the onchange returns commands, not ids, so we need to process them
+                        // for now, we simply return an empty list
+                        if (isX2Many(field)) {
+                            this._changes[fieldName] = value;
+                            this.data[fieldName].applyCommands(value);
+                            proms.push(this.data[fieldName].load());
+                        } else {
+                            this._changes[fieldName] = value;
+                            this.data[fieldName] = this._changes[fieldName];
+                        }
                     }
                 }
                 await Promise.all(proms);
@@ -951,9 +955,12 @@ export class Record extends DataPoint {
     async _load(params = {}) {
         this._values = params.values || {};
         this._changes = params.changes || {};
-
+        this._rawChanges = {
+            ...this._changes,
+        };
         const defaultValues = this._getDefaultValues();
         for (const fieldName in this.activeFields) {
+            delete this._rawChanges[fieldName];
             const field = this.fields[fieldName];
             if (isX2Many(field)) {
                 const resIds = this._values[fieldName];
@@ -1003,6 +1010,10 @@ export class Record extends DataPoint {
     }
 
     async _onChange(fieldName) {
+        if (!this.fieldNames.length) {
+            return;
+        }
+
         const { domain, value: changes, warning } = await this.model.orm.call(
             this.resModel,
             "onchange",
@@ -1034,15 +1045,10 @@ export class Record extends DataPoint {
         if (!fieldNames.length) {
             return {};
         }
-        const [serverValues] = await this.model.orm.read(
-            this.resModel,
-            [this.resId],
-            fieldNames,
-            {
-                bin_size: true,
-                ...this.context,
-            }
-        );
+        const [serverValues] = await this.model.orm.read(this.resModel, [this.resId], fieldNames, {
+            bin_size: true,
+            ...this.context,
+        });
         return this._parseServerValues(serverValues);
     }
 
@@ -1984,6 +1990,8 @@ const remove = (arr, el) => {
     }
 };
 
+const symbolValues = Symbol("values");
+
 export class StaticList extends DataPoint {
     setup(params, state) {
         this.offset = params.offset || 0;
@@ -2088,7 +2096,7 @@ export class StaticList extends DataPoint {
         record._onWillSwitchMode(record, "edit"); // bof
 
         this.limit++;
-        this.applyCommand(x2ManyCommands.create(record.virtualId, record.getChanges()));
+        this.applyCommand(x2ManyCommands.create(record.virtualId, symbolValues));
 
         this._checkValidity(record);
 
@@ -2230,20 +2238,39 @@ export class StaticList extends DataPoint {
     /**
      * @returns {Array[] | null}
      */
-    getCommands() {
+    getCommands(allFields = false) {
         if (this._commands.length) {
-            const hasGlobalCommand =
-                this._commands && [DELETE_ALL, REPLACE_WITH].includes(this._commands[0][0]);
-            if (hasGlobalCommand) {
-                return [...this._commands];
-            }
-            const extraCommands = [];
-            for (const resId of this._serverIds) {
-                if (!this._commandsById[resId]) {
-                    extraCommands.push(x2ManyCommands.linkTo(resId));
+            const commands = [];
+            for (const command of this._commands) {
+                const code = command[0];
+                if ([CREATE, UPDATE].includes(code)) {
+                    const id = command[1];
+                    let values;
+                    const recordId = this._mapping[id];
+                    if (recordId) {
+                        const record = this._cache[recordId];
+                        values = record.getChanges(allFields);
+                    } else {
+                        values = this._initialValues[id];
+                    }
+                    commands.push([code, id, values]);
+                } else {
+                    commands.push(command);
                 }
             }
-            return [...this._commands, ...extraCommands];
+
+            const hasGlobalCommand =
+                this._commands && [DELETE_ALL, REPLACE_WITH].includes(this._commands[0][0]);
+            if (!hasGlobalCommand) {
+                for (const resId of this._serverIds) {
+                    if (!this._commandsById[resId]) {
+                        commands.push(x2ManyCommands.linkTo(resId));
+                    }
+                }
+            } else if (DELETE_ALL === this._commands[0][0]) {
+                commands.shift();
+            }
+            return commands;
         }
         return null;
     }
@@ -2312,7 +2339,7 @@ export class StaticList extends DataPoint {
             onRecordWillSwitchMode: this.onRecordWillSwitchMode,
             onChanges: async () => {
                 this.applyCommand(
-                    x2ManyCommands.update(record.resId || record.virtualId, record.getChanges())
+                    x2ManyCommands.update(record.resId || record.virtualId, symbolValues)
                 );
                 if (record.virtualId === this.notYetValidated) {
                     this._checkValidity(record);
@@ -2392,11 +2419,23 @@ export class StaticList extends DataPoint {
         let nextCommands = [...normalizedCommands];
         for (const command of commands) {
             const code = command[0];
+
             if (code === CREATE && !command[1]) {
                 // FIXME WOWL: works because we change command in place (also stored in parent _changes)
                 command[1] = this.model.nextVirtualId;
             }
+
             const id = command[1];
+
+            if ([CREATE, UPDATE].includes(code)) {
+                if (!this._commandsById[id]) {
+                    if (!this._initialValues) {
+                        this._initialValues = {};
+                    }
+                    this._initialValues[id] = command[2];
+                }
+                command[2] = symbolValues;
+            }
 
             if ([DELETE_ALL, REPLACE_WITH].includes(code)) {
                 this._commandsById = {};
@@ -2415,23 +2454,9 @@ export class StaticList extends DataPoint {
                     // we assume that delete/forget cannot be found in this._commandsById[id]
                     // we can find create/linkTo/update
                     // we merge create/update and update/update
-                    if (this._commandsById[id][CREATE]) {
-                        this._commandsById[id][CREATE][2] = Object.assign(
-                            this._commandsById[id][CREATE][2],
-                            command[2]
-                        );
-                    } else if (this._commandsById[id][UPDATE]) {
-                        this._commandsById[id][UPDATE][2] = Object.assign(
-                            this._commandsById[id][UPDATE][2],
-                            command[2]
-                        );
-                    } else {
-                        if (this._commandsById[id][LINK_TO]) {
-                            remove(nextCommands, this._commandsById[id][LINK_TO]);
-                            delete this._commandsById[id][LINK_TO];
-                        }
-
-                        this._commandsById[id][UPDATE] = command;
+                    if (this._commandsById[id][LINK_TO]) {
+                        this._commandsById[id][UPDATE] = { [UPDATE]: command };
+                        remove(nextCommands, this._commandsById[id][LINK_TO]);
                         nextCommands.push(command);
                     }
                     break;
@@ -2505,7 +2530,7 @@ export class StaticList extends DataPoint {
                 let changes;
                 const commands = this._commandsById[id];
                 if (commands && commands[CREATE]) {
-                    changes = commands[CREATE][2];
+                    changes = this._initialValues[id];
                 }
                 proms.push(record.load({ changes }));
             }

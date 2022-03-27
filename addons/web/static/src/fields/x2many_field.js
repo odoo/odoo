@@ -123,7 +123,10 @@ export class X2ManyField extends Component {
             viewMode: "form",
             resId: record.resId,
         });
-        await newRecord.load({ values: record._values, changes: record._changes });
+        await newRecord.load({
+            values: record._values,
+            changes: record.getChanges(true),
+        });
         this.dialogService.add(FormViewDialog, {
             parent: this,
             archInfo: form, // FIXME: might not be there
