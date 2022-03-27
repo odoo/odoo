@@ -60,8 +60,9 @@ class Partner(models.Model):
             ], limit=1, order='date_cancel').date_cancel
 
             if partner.membership_cancel and today > partner.membership_cancel:
-                partner.membership_state = 'free' if partner.free_member else 'canceled'
-                continue
+                if not partner.membership_stop or partner.membership_stop and partner.membership_stop < partner.membership_cancel:
+                    partner.membership_state = 'free' if partner.free_member else 'canceled'
+                    continue
             if partner.membership_stop and today > partner.membership_stop:
                 if partner.free_member:
                     partner.membership_state = 'free'
