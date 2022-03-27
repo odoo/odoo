@@ -1,4 +1,5 @@
 import {
+    click,
     BasicEditor,
     insertText,
     nextTickFrame,
@@ -16,6 +17,43 @@ import {
  * cases will be tested for both to validate the symmetry.
  */
 describe('NavigationNode', () => {
+    describe('click', () => {
+        it('should append a navigationNode when clicking on an editableContextParent if it only has uneditable children', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <div contenteditable="false"><div contenteditable="true">
+                        <p>[]<br></p>
+                    </div></div>
+                    <div contenteditable="false"><div contenteditable="true">
+                        <div id="target" contenteditable="false">
+                            <p>uneditable</p>
+                        </div>
+                    </div></div>`),
+                stepFunction: async editor => {
+                    const element = editor.editable.querySelector('#target');
+                    await click(element);
+                    /**
+                     * verify that the inserted node was actually a
+                     * navigationNode by creating another one from its position
+                     * with ArrowUp. If the first navigationNode was not created
+                     * this operation would put the navigationNode as the first
+                     * child of editor.editable
+                     */
+                    triggerEvent(editor.editable, 'keydown', { key: 'ArrowUp' });
+                },
+                contentAfter: unformat(`
+                    <div contenteditable="false"><div contenteditable="true">
+                        <p><br></p>
+                    </div></div>
+                    <div contenteditable="false"><div contenteditable="true">
+                        <p>[]<br></p>
+                        <div id="target" contenteditable="false">
+                            <p>uneditable</p>
+                        </div>
+                    </div></div>`),
+            });
+        });
+    });
     describe('Selection change', () => {
         /**
          * The first part of this test re-enacts another test which proves that

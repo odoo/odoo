@@ -319,6 +319,39 @@ export function closestBlock(node) {
     return findNode(closestPath(node), node => isBlock(node));
 }
 /**
+ * Return the first editable block element starting from node which has an
+ * uneditable parent. Search limited by root. Search stops when a parent is not
+ * editable. The node itself can be an editableContextParent.
+ *
+ * @param {Node} node current node
+ * @param {Element} root uppermost element that contains node, to limit the
+ *                       search (typically the editable)
+ * @returns {Element|null}
+ */
+export function getEditableContextParent(node, root) {
+    if (!root.contains(node) || (node === root && !root.isContentEditable)) {
+        return null;
+    }
+    if (!node.isContentEditable) {
+        node = node.parentElement;
+    }
+    while (root.contains(node) && node.isContentEditable) {
+        if (root === node) {
+            return root;
+        }
+        let parent = node.parentElement;
+        if (!parent.isContentEditable) {
+            if (isBlock(node)) {
+                return node;
+            } else {
+                return null;
+            }
+        }
+        node = parent;
+    }
+    return null;
+}
+/**
  * Returns the deepest child in last position.
  *
  * @param {Node} node

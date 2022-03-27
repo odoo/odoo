@@ -3,6 +3,7 @@ import { OdooEditor } from '../../src/OdooEditor.js';
 import { getTraversedNodes, setCursorStart } from '../../src/utils/utils.js';
 import {
     BasicEditor,
+    click,
     deleteBackward,
     deleteForward,
     insertLineBreak,
@@ -21,6 +22,86 @@ async function twoDeleteForward(editor) {
 }
 
 describe('Editor', () => {
+    describe('click', () => {
+        it('should append an empty <p><br></p> when clicking this.editable below an uneditable element.', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <p><br></p>
+                    <div contenteditable="false">
+                        <p>uneditable</p>
+                    </div>`),
+                stepFunction: async editor => {
+                    const pos = editor.editable.getBoundingClientRect();
+                    const clientY = pos.top + pos.height + 1;
+                    await click(editor.editable, {
+                        clientY: clientY,
+                    });
+                },
+                contentAfter: unformat(`
+                    <p><br></p>
+                    <div contenteditable="false">
+                        <p>uneditable</p>
+                    </div>
+                    <p>[]<br></p>`),
+            });
+        });
+        it('should not append an empty <p><br></p> when clicking this.editable below an uneditable element if the last element is already a <p>', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <div contenteditable="false">
+                        <p>uneditable</p>
+                    </div>
+                    <p><br></p>`),
+                stepFunction: async editor => {
+                    const pos = editor.editable.getBoundingClientRect();
+                    const clientY = pos.top + pos.height + 1;
+                    await click(editor.editable, {
+                        clientY: clientY,
+                    });
+                },
+                contentAfter: unformat(`
+                    <div contenteditable="false">
+                        <p>uneditable</p>
+                    </div>
+                    <p><br></p>`),
+            });
+        });
+        it('should not append an empty <p><br></p> when clicking above/on an uneditable', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <p><br></p>
+                    <div contenteditable="false">
+                        <p>uneditable</p>
+                    </div>`),
+                stepFunction: async editor => {
+                    await click(editor.editable);
+                },
+                contentAfter: unformat(`
+                    <p><br></p>
+                    <div contenteditable="false">
+                        <p>uneditable</p>
+                    </div>`),
+            });
+        });
+        it('should append an empty <p><br></p> when clicking on an editableContextParent if it has no child', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <p><br></p>
+                    <div contenteditable="false"><div id="target" contenteditable="true">
+                    </div></div>`),
+                stepFunction: async editor => {
+                    const element = editor.editable.querySelector('#target');
+                    await click(element);
+                },
+                contentAfter: unformat(`
+                    <p><br></p>
+                    <div contenteditable="false"><div id="target" contenteditable="true">
+                        <p>[]<br></p>
+                    </div></div>`),
+            });
+        });
+    });
+
     describe('deleteForward', () => {
         describe('Selection collapsed', () => {
             describe('Basic', () => {

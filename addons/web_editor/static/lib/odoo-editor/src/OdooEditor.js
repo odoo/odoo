@@ -23,6 +23,7 @@ import {
     ensureFocus,
     getBrSibling,
     getCursorDirection,
+    getEditableContextParent,
     getFurthestUneditableParent,
     getListMode,
     getOuid,
@@ -363,6 +364,7 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.editable, 'mouseup', this._onMouseup);
         this.addDomListener(this.editable, 'paste', this._onPaste);
         this.addDomListener(this.editable, 'drop', this._onDrop);
+        this.addDomListener(this.editable, 'click', this._onClick);
 
         this.addDomListener(this.document, 'selectionchange', this._onSelectionChange);
         this.addDomListener(this.document, 'selectionchange', this._handleCommandHint);
@@ -2431,6 +2433,71 @@ export class OdooEditor extends EventTarget {
 
     _onBeforeInput(ev) {
         this._lastBeforeInputType = ev.inputType;
+    }
+
+    /**
+     * Implement various failsafes in order to add a <p> element to handle the
+     * caret if the user clicks on an element that should be able to handle the
+     * caret but currently can not or incorrectly (i.e. will add text nodes
+     * instead of <p> elements).
+     */
+    _onClick(ev) {
+        if (this.editable && this.editable.isContentEditable) {
+            const editableContextParent = getEditableContextParent(ev.target, this.editable);
+            if (editableContextParent) {
+                /**
+                 * Check whether the editableContextParent has at least one
+                 * editable (or text) child (able to handle the caret).
+                 */
+                const hasEditable = !![...editableContextParent.childNodes].find(node => {
+                    return node.nodeType === Node.TEXT_NODE ||
+                        node.isContentEditable || node.querySelector('[contenteditable="true"]');
+                });
+                if (!hasEditable) {
+                    const lastChild = editableContextParent.lastElementChild;
+                    if (lastChild) {
+                        /**
+                         * Add a navigationNode if all children of the
+                         * editableContextParent are uneditables (unable to
+                         * handle the caret).
+                         */
+                        ev.preventDefault();
+                        ev.stopPropagation();
+                        this._setNavigationNode(lastChild);
+                        return;
+                    } else {
+                        /**
+                         * Add a permanent <p><br></p> if the
+                         * editableContextParent has no child (and thus is
+                         * unable to properly handle the caret <=> will create
+                         * text nodes instead of <p> elements)
+                         */
+                        const paragraph = createPBR();
+                        editableContextParent.append(paragraph);
+                        setCursorStart(paragraph);
+                        this.historyStep();
+                        return;
+                    }
+                }
+            }
+        }
+        /**
+         * Append an empty <p><br></p> when clicking below the last child of
+         * this.editable if the last child is not a <p> element.
+         */
+        const clientY = ev.clientY;
+        const lastElementChild = this.editable.lastElementChild;
+        let childY = 0;
+        if (lastElementChild) {
+            const {top, height} = lastElementChild.getBoundingClientRect();
+            childY = top + height;
+        }
+        if (clientY > childY && (!lastElementChild || lastElementChild.tagName !== 'P')) {
+            const paragraph = createPBR();
+            this.editable.append(paragraph);
+            setCursorStart(paragraph);
+            this.historyStep();
+        }
     }
 
     /**
