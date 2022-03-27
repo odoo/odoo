@@ -4467,6 +4467,18 @@ msgstr ""
 " запланована дата початку. Виправте це, щоби зберегти робоче замовлення."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The product has already been used at least once, editing its structure may "
+"lead to undesirable behaviours. You should rather archive the product and "
+"create a new one with a new bill of materials."
+msgstr ""
+"Товар вже використовувався принаймні один раз, редагування його структури "
+"може призвести до небажаної поведінки. Вам краще заархівувати товар і "
+"створити новий з новим переліком матеріалів."
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_qty_positive
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
