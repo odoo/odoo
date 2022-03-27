@@ -5,6 +5,7 @@
 # Translators:
 # efraimbiffi <eab@odoo.com>, 2020
 # Pietro Della Notte <pdellanotte@gmail.com>, 2020
+# Fabio Genovese <ing.fabiogenovese@gmail.com>, 2020
 # Simone Rubino <simone.rubino@agilebg.com>, 2020
 # Niccolò Lubello <nlubello@gmail.com>, 2020
 # Simone Bernini <simone@aperturelabs.it>, 2020
@@ -20,7 +21,6 @@
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2020
 # SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2020
 # Paolo Valier, 2020
-# Fabio Genovese <ing.fabiogenovese@gmail.com>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Martin Trigaux, 2020
 # BigBlu <paolo.moroni@air-srl.com>, 2021
@@ -928,6 +928,12 @@ msgid ""
 "        For more information about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
+"\n"
+"        Genera ordini di pagamento come raccomandato dalla norma SEPA, grazie ai messaggi pain.001. Le versioni di pain supportate (paesi) sono pain.001.001.03 (generico), pain.001.001.03.ch.02 (Svizzera) e pain.001.003.03 (Germania). Il file XML generato può poi essere caricato nella tua banca.\n"
+"\n"
+"        Questo modulo segue le linee guida di implementazione emesse dall'European Payment Council.\n"
+"Per maggiori informazioni sugli standard SEPA: http://www.iso20022.org/ e http://www.europeanpaymentscouncil.eu/\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -1348,6 +1354,12 @@ msgid ""
 "    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
+"\n"
+"Rendere la data di blocco irreversibile:\n"
+"\n"
+"* Non è possibile impostare restrizioni più severe per i consulenti che per gli utenti. Pertanto, la data di blocco di tutti gli utenti deve essere anteriore (o uguale) alla data di blocco di fatture e ricevute.\n"
+"* Non si può bloccare un periodo non ancora terminato. Pertanto, la All Users Lock Date deve essere anteriore (o uguale) all'ultimo giorno del mese precedente.\n"
+"* Ogni nuova All Users Lock Date deve essere posteriore (o uguale) alla precedente."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud
@@ -4163,6 +4175,12 @@ msgid ""
 "Link module to map leads to tickets\n"
 "        "
 msgstr ""
+"\n"
+"Da contatto CRM a segnalazioni\n"
+"==============================\n"
+"\n"
+"Modulo di collegamento per mappare i contatti CRM con le segnalazioni\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_board
@@ -4741,6 +4759,12 @@ msgid ""
 "Improve the import of bank statement feature to support the SEPA recommended Cash Management format (CAMT.053).\n"
 "    "
 msgstr ""
+"\n"
+"Modulo per importare gli estratti conto CAMT.\n"
+"=========================================\n"
+"\n"
+"Migliora la funzionalità di importazione degli estratti conto bancari per supportare il formato di gestione raccomandato da SEPA (CAMT.053).\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_coda
@@ -5007,6 +5031,13 @@ msgid ""
 "can embed graph and/or pivot views, and displays aggregate values.\n"
 "        "
 msgstr ""
+"\n"
+"Vista bacheca Odoo.\n"
+"======================\n"
+"\n"
+"Questo modulo definisce la vista bacheca, un nuovo tipo di vista per la rendicontazione.\n"
+"Può incorporare grafici e/o viste pivot e visualizzare valori aggregati.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_enterprise
@@ -6698,6 +6729,10 @@ msgid ""
 "widget.\n"
 "    "
 msgstr ""
+"\n"
+"Questo modulo aggiunge la possibilità di filtrare per numero di assegno nel widget di\n"
+"riconciliazione.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_attendance
@@ -7157,6 +7192,8 @@ msgid ""
 "\n"
 "This module is used for Online bank synchronization."
 msgstr ""
+"\n"
+"Modulo utilizzato per la sincronizzazione bancaria online."
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals
@@ -7317,6 +7354,10 @@ msgid ""
 "It will install the e-learning, survey and e-commerce apps and make a complete\n"
 "certification flow including purchase, certification, failure and success.\n"
 msgstr ""
+"\n"
+"Questo modulo testerà il principale flusso di certificazione di Odoo.\n"
+"Installerà le applicazioni di e-learning, sondaggio ed e-commerce e farà un flusso di\n"
+"certificazione completo, compreso l'acquisto, la certificazione, fallimento e successo.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_event_full
@@ -7528,6 +7569,8 @@ msgid ""
 "\n"
 "Use devices connected to an IoT Box to control the quality of your products.\n"
 msgstr ""
+"\n"
+"Utilizzo di dispositivi connessi a un box IoT per il controllo della qualità dei prodotti.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant_iot
@@ -7535,6 +7578,8 @@ msgid ""
 "\n"
 "Use receipt printers connected to an IoT Box to print orders in the kitchen or at the bar.\n"
 msgstr ""
+"\n"
+"Utilizzo di stampanti per le ricevute connesse a un box IoT per stampare ordini in cucina o al bar.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sales_team
@@ -7880,6 +7925,9 @@ msgid ""
 "\n"
 "Implicitly accessed through '%(document_kind)s' (%(document_model)s)."
 msgstr ""
+"%(previous_message)s\n"
+"\n"
+"Accesso implicito tramite \"%(document_kind)s\" (%(document_model)s)."
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -8724,12 +8772,12 @@ msgid ""
 "to see. Whether they can have a read, write, create and delete access right "
 "can be managed from here."
 msgstr ""
-"Un gruppo è un set di aree funzionali che viene assegnato all'utente per "
-"fornirgli l'accesso e i diritti su applicazioni e attività specifici nel "
-"sistema. Per default è possibile creare gruppi personalizzati o modificarle "
-"esistenti per poi modificare il menu che gli utenti saranno in grado di "
-"vedere. Se è necessario assegnare permessi di lettura, scrittura, creazione "
-"e cancellazione è possibile gestire il tutto da qui."
+"Un gruppo è un insieme di aree funzionali che vengono assegnate all'utente "
+"per fornire accesso e diritti su specifiche applicazioni e attività nel "
+"sistema. È possibile creare gruppi personalizzati o modificare quelli "
+"esistenti in modo predefinito, per personalizzare la vista del menù che gli "
+"utenti potranno vedere. Da qui è possibile gestire l'assegnazione dei "
+"diritti di accesso in lettura, scrittura ed eliminazione."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_posbox_homepage
@@ -11035,6 +11083,9 @@ msgid ""
 "                notably for selling mouse traps. With that trick he cut\n"
 "                IT budget by almost half within the last 2 years."
 msgstr ""
+"Brandon lavora nel settore IT <b>da 10 anni</b>. È conosciuto\n"
+"in particolare per la vendita di trappole per topi. Con questo trucco ha tagliato\n"
+"il budget IT di quasi la metà negli ultimi 2 anni."
 
 #. module: base
 #: model:res.country,name:base.br
@@ -11247,7 +11298,7 @@ msgstr ""
 #. module: base
 #: model:res.country,vat_label:base.ar
 msgid "CUIT"
-msgstr ""
+msgstr "CUIT"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__calendar
@@ -12556,8 +12607,8 @@ msgid ""
 "Create and manage the companies that will be managed by Odoo from here. "
 "Shops or subsidiaries can be created and maintained from here."
 msgstr ""
-"Crea e modifica le compagnie che verranno amministrate da Odoo da qui. I "
-"negozi e le sedi secondarie possono essere creati e mantenuti da qui."
+"Crea e gestisci le aziende che verranno amministrate da Odoo. Da qui è "
+"possibile creare e mantenere i negozi o le società controllate."
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_users
@@ -12567,10 +12618,10 @@ msgid ""
 "not connect to the system. You can assign them groups in order to give them "
 "specific access to the applications they need to use in the system."
 msgstr ""
-"Crea e gestisce gli utenti che si collegheranno al sistema. Possono essere "
+"Crea e gestisci gli utenti che si collegheranno al sistema. Possono essere "
 "disattivati per un periodo di inattività o di preclusione all'accesso. Per "
-"fornire loro accessi ad applicazioni specifiche necessarie per l'utilizzo "
-"del sistema è possibile assegnare dei gruppi."
+"fornire loro accessi ad applicazioni specifiche, necessarie per l'utilizzo "
+"del sistema, è possibile assegnare dei gruppi."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_approvals
@@ -12990,8 +13041,8 @@ msgid ""
 "Customized views are used when users reorganize the content of their "
 "dashboard views (via web client)"
 msgstr ""
-"Le viste personalizzate quando gli utenti riorganizzano il contenuto delle "
-"loro viste dashboard (attraverso il web client)"
+"Le viste personalizzate vengono utilizzate quando gli utenti riorganizzano "
+"il contenuto delle viste bacheca personali (tramite client web)"
 
 #. module: base
 #: model:res.country,name:base.cy
@@ -13478,7 +13529,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Developer API Keys"
-msgstr ""
+msgstr "Chiavi API sviluppatore"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest_enterprise
@@ -15249,7 +15300,7 @@ msgstr "Finanza/Assicurazione"
 #: model:ir.module.module,summary:base.module_data_merge_crm
 #: model:ir.module.module,summary:base.module_data_merge_utm
 msgid "Find duplicate records and merge them"
-msgstr ""
+msgstr "Trova i record duplicati e li unisce"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_unsplash
@@ -15424,7 +15475,7 @@ msgstr "Password dimenticata?"
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__form
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Form"
-msgstr "Modulo"
+msgstr "Scheda"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -16941,7 +16992,7 @@ msgstr "Implementazione"
 #. module: base
 #: model:ir.module.module,summary:base.module_base_sparse_field
 msgid "Implementation of sparse fields."
-msgstr ""
+msgstr "Implementazione di campi sparsi."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_blackbox_be
@@ -17551,7 +17602,7 @@ msgstr "Definizione vista %(name)s non valida in %(file)s"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Invalid xmlid %(xmlid)s for button of type action."
-msgstr ""
+msgstr "ID XML %(xmlid)s non valido per un pulsante di tipo azione."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_inventory
@@ -18914,11 +18965,11 @@ msgid ""
 "assigned to specific groups in order to make them accessible to some users "
 "within the system."
 msgstr ""
-"Gestisci e personalizza gli elementi disponibili e visualizzati nei menu di "
-"Odoo. Puoi cancellare un elemento facendo clic sulla casella all'inizio di "
-"ogni riga e poi sul pulsante che appare. Gli elementi possono essere "
-"assegnati a gruppi specifici per renderli accessibili a solo alcuni utenti "
-"del sistema."
+"Gestisci e personalizza le voci disponibili e visualizzate nel menù di "
+"sistema Odoo. È possibile eliminare una voce facendo clic sulla casella "
+"all'inizio di ogni riga e quindi sul pulsante che compare. Le voci possono "
+"essere assegnate a gruppi specifici per renderle accessibili ad alcuni "
+"utenti del sistema."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides
@@ -18936,8 +18987,8 @@ msgid ""
 "Manage contact tags to better classify them for tracking and analysis "
 "purposes."
 msgstr ""
-"Gestisci le etichette di contatto per meglio classificarle a scopo di "
-"monitoraggio e di analisi."
+"Gestisci le etichette dei contatti per una migliore classificazione a scopo "
+"di monitoraggio e analisi."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_disallowed_expenses
@@ -18979,6 +19030,8 @@ msgid ""
 "Manage industries to better classify partners for tracking and analysis "
 "purposes."
 msgstr ""
+"Gestisci i settori industriali per una migliore classificazione a scopo di "
+"monitoraggio e analisi."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_stock
@@ -19002,9 +19055,9 @@ msgid ""
 "way you want to print them in letters and other documents. Some example: "
 "Mr., Mrs."
 msgstr ""
-"Gestisci i titoli dei contatti disponibili nel sistema e il modo in cui "
-"saranno stampati sulle lettere e gli altri documenti. Alcuni esempi: Sig., "
-"Sig.ra. "
+"Gestisci i titoli dei contatti da rendere disponibili nel sistema e il modo "
+"in cui vuoi che vengano stampati su lettere e altri documenti. Alcuni "
+"esempi: Sig., Sig.ra."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_work_entry
@@ -21897,7 +21950,7 @@ msgstr "Appuntamento online"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_online_synchronization
 msgid "Online Bank Statement Synchronization"
-msgstr ""
+msgstr "Sincronizzazione estratti conto bancari online"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
@@ -21969,7 +22022,7 @@ msgstr ""
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "Only internal users can create API keys"
-msgstr ""
+msgstr "Le chiavi API possono essere create solo da utenti interni"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_rate_unique_name_per_day
@@ -22676,7 +22729,7 @@ msgstr "Geolocalizzazione partner"
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Partners: %(category)s"
-msgstr ""
+msgstr "Partner: %(category)s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_pass
@@ -22904,7 +22957,7 @@ msgstr "Pivot"
 #. module: base
 #: model:ir.module.module,summary:base.module_project_forecast
 msgid "Plan your resources on project tasks"
-msgstr "Pianifica le risorse dei lavori nei progetti"
+msgstr "Pianifica le risorse nei lavori dei progetti"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_planning
@@ -24735,7 +24788,7 @@ msgstr "Ambito"
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Search"
-msgstr "Cerca"
+msgstr "Ricerca"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_search
@@ -26260,7 +26313,7 @@ msgstr "Tests per read_group"
 #. module: base
 #: model:ir.module.module,description:base.module_test_search_panel
 msgid "Tests for the search panel python methods"
-msgstr ""
+msgstr "Test per i metodi python del pannello di ricerca"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_converter
@@ -26319,7 +26372,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__url_code
 msgid "The Lang Code displayed in the URL"
-msgstr ""
+msgstr "Codice lingua visualizzato nell'URL"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__grouping
@@ -26588,7 +26641,7 @@ msgstr "Il modello a cui appartiene questo campo"
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "The modes in view_mode must not be duplicated: %s"
-msgstr ""
+msgstr "Le modalità in view_mode non devono essere duplicate: %s"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_name_uniq
@@ -27164,6 +27217,8 @@ msgid ""
 "This module lets you use the full power of certifications within your "
 "courses."
 msgstr ""
+"Questo modulo permette di utilizzare tutta la potenza delle certificazioni "
+"all'interno dei corsi."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -27438,7 +27493,7 @@ msgstr "Monitora il flusso di selezione del personale"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk
 msgid "Track, prioritize, and solve customer tickets"
-msgstr ""
+msgstr "Tracciare, dare priorità e risolvere i ticket dei clienti"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event
@@ -27849,6 +27904,8 @@ msgid ""
 "Unable to order by %s: fields used for ordering must be present on the model"
 " and stored."
 msgstr ""
+"Impossibile ordinare per %s: i campi utilizzati per l'ordinamento devono "
+"essere presenti nel modello e memorizzati."
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
