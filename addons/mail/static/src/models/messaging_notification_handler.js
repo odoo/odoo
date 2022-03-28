@@ -323,10 +323,6 @@ registerModel({
                     pendingSeenMessageId: undefined,
                 });
             }
-            if (shouldComputeSeenIndicators) {
-                // FIXME force the computing of thread values (cf task-2261221)
-                this.messaging.models['Thread'].computeLastCurrentPartnerMessageSeenByEveryone(channel);
-            }
         },
         /**
          * @private
