@@ -80,7 +80,7 @@ class Populate(Command):
 
                     # force the flush to make sure population time still
                     # considers flushing all values to database
-                    env['base'].flush()
+                    env.flush_all()
 
                 if commit:
                     env.cr.commit()
