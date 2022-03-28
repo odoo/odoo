@@ -50,6 +50,17 @@ class TestClocFields(test_cloc.TestClocCustomization):
             'state': 'installed',
             'summary': 'Test imported module for cloc',
         })
+        # Studio module does not exist at this stage, so we simulate it
+        # Check for existing module in case the test run on an existing database
+        if not self.env['ir.module.module'].search([('name', '=', 'studio_customization')]):
+            self.env['ir.module.module'].create({
+                'author': 'Odoo',
+                'imported': True,
+                'latest_version': '15.0.1.0.0',
+                'name': 'studio_customization',
+                'state': 'installed',
+                'summary': 'Studio Customization',
+            })
         qweb_view = self.env['ir.ui.view'].create({
             "name": "Qweb Test",
             "type": "qweb",
@@ -78,6 +89,7 @@ class TestClocFields(test_cloc.TestClocCustomization):
         cl = cloc.Cloc()
         cl.count_customization(self.env)
         self.assertEqual(cl.code.get('test_imported_module', 0), 5, "Count only qweb view from imported module")
+        self.assertEqual(cl.code.get('studio_customization', 0), 0, "Do not count from studio_customization module")
 
     def test_count_attachment_imported_module(self):
         manifest_content = json.dumps({
