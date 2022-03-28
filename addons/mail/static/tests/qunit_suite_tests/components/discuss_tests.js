@@ -2533,7 +2533,7 @@ QUnit.test('composer state: text save and restore', async function (assert) {
         { name: "General" },
         { name: "Special" },
     ]);
-    await this.start({
+    const { insertText } = await this.start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -2541,21 +2541,11 @@ QUnit.test('composer state: text save and restore', async function (assert) {
         },
     });
     // Write text in composer for #general
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "A message");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('input'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', "A message");
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-name="Special"]`).click()
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "An other message");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('input'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', "An other message");
     // Switch back to #general
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-name="General"]`).click()

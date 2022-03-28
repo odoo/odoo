@@ -953,6 +953,7 @@ async function start(param0 = {}) {
         createMessagingMenuComponent: getCreateMessagingMenuComponent({ env: testEnv, widget }),
         createNotificationListComponent: getCreateNotificationListComponent({ env: testEnv, modelManager, widget }),
         createThreadViewComponent: getCreateThreadViewComponent({ afterEvent, env: testEnv, widget }),
+        insertText,
         messaging: modelManager.messaging,
         openDiscuss,
     };
@@ -1005,6 +1006,25 @@ function pasteFiles(el, files) {
         value: _createFakeDataTransfer(files),
     });
     el.dispatchEvent(ev);
+}
+
+//------------------------------------------------------------------------------
+// Public: input utilities
+//------------------------------------------------------------------------------
+
+/**
+ * @param {string} selector
+ * @param {string} content
+ */
+ async function insertText(selector, content) {
+    await afterNextRender(() => {
+        document.querySelector(selector).focus();
+        for (const char of content) {
+            document.execCommand('insertText', false, char);
+            document.querySelector(selector).dispatchEvent(new window.KeyboardEvent('keydown', { key: char }));
+            document.querySelector(selector).dispatchEvent(new window.KeyboardEvent('keyup', { key: char }));
+        }
+    });
 }
 
 //------------------------------------------------------------------------------
