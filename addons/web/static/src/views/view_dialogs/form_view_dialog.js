@@ -52,6 +52,7 @@ export class FormViewDialog extends Dialog {
             }
 
             if (!this.record) {
+                await this.model.isLoaded;
                 this.record = this.model.root;
                 this.record.activeFields = {
                     ...this.record.activeFields,

@@ -2611,7 +2611,8 @@ export class RelationalModel extends Model {
         }
         const state = this.root ? this.root.exportState() : {};
         const newRoot = this.createDataPoint(this.rootType, rootParams, state);
-        await this.keepLast.add(newRoot.load());
+        this.isLoaded = this.keepLast.add(newRoot.load());
+        await this.isLoaded;
         this.root = newRoot;
         this.rootParams = rootParams;
         this.notify();
