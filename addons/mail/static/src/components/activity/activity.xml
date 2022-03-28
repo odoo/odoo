@@ -111,7 +111,6 @@
                             <t t-foreach="activityView.mailTemplateViews" t-as="mailTemplateView" t-key="mailTemplateView.localId">
                                 <MailTemplate
                                     className="'o_Activity_mailTemplate'"
-                                    activityLocalId="activityView.activity.localId"
                                     localId="mailTemplateView.localId"
                                     mailTemplateLocalId="mailTemplateView.mailTemplate.localId"
                                 />
