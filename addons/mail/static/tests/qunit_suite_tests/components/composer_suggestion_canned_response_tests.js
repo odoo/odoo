@@ -11,22 +11,20 @@ QUnit.test('canned response suggestion displayed', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { createComposerSuggestionComponent, messaging } = await start();
-    const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
-    });
-    const cannedResponse = messaging.models['CannedResponse'].create({
-        id: 7,
+    pyEnv['mail.shortcode'].create({
         source: 'hello',
         substitution: "Hello, how are you?",
     });
-    await createComposerSuggestionComponent(thread.composer, {
-        isActive: true,
-        modelName: 'CannedResponse',
-        recordLocalId: cannedResponse.localId,
+    const { insertText, openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: mailChannelId1,
+            },
+        },
+        hasDiscuss: true,
     });
-
+    await openDiscuss();
+    await insertText('.o_ComposerTextInput_textarea', ":hello");
     assert.containsOnce(
         document.body,
         `.o_ComposerSuggestion`,
@@ -35,31 +33,24 @@ QUnit.test('canned response suggestion displayed', async function (assert) {
 });
 
 QUnit.test('canned response suggestion correct data', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { createComposerSuggestionComponent, messaging } = await start();
-    const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
-    });
-    const cannedResponse = messaging.models['CannedResponse'].create({
-        id: 7,
+    pyEnv['mail.shortcode'].create({
         source: 'hello',
         substitution: "Hello, how are you?",
     });
-    await createComposerSuggestionComponent(thread.composer, {
-        isActive: true,
-        modelName: 'CannedResponse',
-        recordLocalId: cannedResponse.localId,
+    const { insertText, openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: mailChannelId1,
+            },
+        },
+        hasDiscuss: true,
     });
-
-    assert.containsOnce(
-        document.body,
-        '.o_ComposerSuggestion',
-        "Canned response suggestion should be present"
-    );
+    await openDiscuss();
+    await insertText('.o_ComposerTextInput_textarea', ":hello");
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion_part1',
@@ -83,31 +74,24 @@ QUnit.test('canned response suggestion correct data', async function (assert) {
 });
 
 QUnit.test('canned response suggestion active', async function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { createComposerSuggestionComponent, messaging } = await start();
-    const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
-    });
-    const cannedResponse = messaging.models['CannedResponse'].create({
-        id: 7,
+    pyEnv['mail.shortcode'].create({
         source: 'hello',
         substitution: "Hello, how are you?",
     });
-    await createComposerSuggestionComponent(thread.composer, {
-        isActive: true,
-        modelName: 'CannedResponse',
-        recordLocalId: cannedResponse.localId,
+    const { insertText, openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: mailChannelId1,
+            },
+        },
+        hasDiscuss: true,
     });
-
-    assert.containsOnce(
-        document.body,
-        '.o_ComposerSuggestion',
-        "Canned response suggestion should be displayed"
-    );
+    await openDiscuss();
+    await insertText('.o_ComposerTextInput_textarea', ":hello");
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestion'),
         'active',
