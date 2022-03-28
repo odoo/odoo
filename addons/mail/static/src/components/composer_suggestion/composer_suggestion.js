@@ -38,10 +38,6 @@ export class ComposerSuggestion extends Component {
         return this.props.modelName === "CannedResponse";
     }
 
-    get isChannel() {
-        return this.props.modelName === "Thread";
-    }
-
     get isCommand() {
         return this.props.modelName === "ChannelCommand";
     }
@@ -64,7 +60,7 @@ export class ComposerSuggestion extends Component {
         if (this.isCannedResponse) {
             return _.str.sprintf("%s: %s", this.record.source, this.record.substitution);
         }
-        if (this.isChannel) {
+        if (this.composerSuggestion.thread) {
             return this.record.name;
         }
         if (this.isCommand) {

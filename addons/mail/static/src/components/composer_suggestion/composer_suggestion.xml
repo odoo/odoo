@@ -8,7 +8,7 @@
                     <span class="o_ComposerSuggestion_part1 text-truncate"><t t-esc="record.source"/></span>
                     <span class="o_ComposerSuggestion_part2 text-truncate"><t t-esc="record.substitution"/></span>
                 </t>
-                <t t-if="isChannel">
+                <t t-if="composerSuggestion.thread">
                     <span class="o_ComposerSuggestion_part1 text-truncate"><t t-esc="record.name"/></span>
                 </t>
                 <t t-if="isCommand">
