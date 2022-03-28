@@ -11,7 +11,7 @@
                 <t t-if="isChannel">
                     <span class="o_ComposerSuggestion_part1 text-truncate"><t t-esc="record.name"/></span>
                 </t>
-                <t t-if="isCommand">
+                <t t-if="composerSuggestion.channelCommand">
                     <span class="o_ComposerSuggestion_part1 text-truncate"><t t-esc="record.name"/></span>
                     <span class="o_ComposerSuggestion_part2 text-truncate"><t t-esc="record.help"/></span>
                 </t>

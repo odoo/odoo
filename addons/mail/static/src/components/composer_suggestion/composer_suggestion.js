@@ -42,10 +42,6 @@ export class ComposerSuggestion extends Component {
         return this.props.modelName === "Thread";
     }
 
-    get isCommand() {
-        return this.props.modelName === "ChannelCommand";
-    }
-
     get isPartner() {
         return this.props.modelName === "Partner";
     }
@@ -67,7 +63,7 @@ export class ComposerSuggestion extends Component {
         if (this.isChannel) {
             return this.record.name;
         }
-        if (this.isCommand) {
+        if (this.composerSuggestion.channelCommand) {
             return _.str.sprintf("%s: %s", this.record.name, this.record.help);
         }
         if (this.isPartner) {
