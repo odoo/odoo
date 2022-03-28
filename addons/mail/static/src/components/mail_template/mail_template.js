@@ -11,13 +11,6 @@ export class MailTemplate extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {Activity}
-     */
-    get activity() {
-        return this.messaging && this.messaging.models['Activity'].get(this.props.activityLocalId);
-    }
-
-    /**
      * @returns {MailTemplate}
      */
     get mailTemplate() {
@@ -42,7 +35,7 @@ export class MailTemplate extends Component {
     _onClickPreview(ev) {
         ev.stopPropagation();
         ev.preventDefault();
-        this.mailTemplate.preview(this.activity);
+        this.mailTemplate.preview(this.mailTemplateView.activityViewOwner.activity);
     }
 
     /**
@@ -52,14 +45,13 @@ export class MailTemplate extends Component {
     _onClickSend(ev) {
         ev.stopPropagation();
         ev.preventDefault();
-        this.mailTemplate.send(this.activity);
+        this.mailTemplate.send(this.mailTemplateView.activityViewOwner.activity);
     }
 
 }
 
 Object.assign(MailTemplate, {
     props: {
-        activityLocalId: String,
         localId: String,
         mailTemplateLocalId: String,
     },
