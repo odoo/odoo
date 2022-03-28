@@ -378,7 +378,13 @@
 
     <!-- Replace a media -->
     <!-- TODO probably review this system once the new editor is merged to not duplicate the selector, etc -->
-    <div data-js="ReplaceMedia" data-selector="img, .media_iframe_video, span.fa, i.fa">
+    <div data-js="ReplaceMediaField" data-selector="[data-oe-type='image'] > img">
+        <we-row string="Media">
+            <we-button class="o_we_bg_brand_primary" data-replace-media="true" data-no-preview="true">Replace</we-button>
+        </we-row>
+    </div>
+    <div data-js="ReplaceMedia" data-selector="img, .media_iframe_video, span.fa, i.fa"
+        data-exclude="[data-oe-type='image'] > img">
         <we-row string="Media">
             <we-button class="o_we_bg_brand_primary" data-replace-media="true" data-no-preview="true">Replace</we-button>
         </we-row>

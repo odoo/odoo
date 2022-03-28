@@ -4716,7 +4716,27 @@ registry.SnippetMove = SnippetOptionWidget.extend({
 /**
  * Allows for media to be replaced.
  */
-registry.ReplaceMedia = SnippetOptionWidget.extend({
+registry.ReplaceMediaField = SnippetOptionWidget.extend({
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Replaces the media.
+     *
+     * @see this.selectClass for parameters
+     */
+    async replaceMedia() {
+        // TODO for now, this simulates a double click on the media,
+        // to be refactored when the new editor is merged
+        this.$target.dblclick();
+    },
+});
+
+/**
+ * Allows for media to be replaced and a link to be added.
+ */
+ registry.ReplaceMedia = registry.ReplaceMediaField.extend({
     xmlDependencies: ['/web_editor/static/src/xml/image_link_tools.xml'],
 
     /**
@@ -4739,16 +4759,6 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
     // Options
     //--------------------------------------------------------------------------
 
-    /**
-     * Replaces the media.
-     *
-     * @see this.selectClass for parameters
-     */
-    async replaceMedia() {
-        // TODO for now, this simulates a double click on the media,
-        // to be refactored when the new editor is merged
-        this.$target.dblclick();
-    },
     /**
      * Makes the image a clickable link by wrapping it in an <a>.
      * This function is also called for the opposite operation.
