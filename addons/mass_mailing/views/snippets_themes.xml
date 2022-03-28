@@ -523,26 +523,23 @@
     <!-- DESIGN OPTIONS -->
     <div data-js="DesignTab" data-selector="design-options" data-no-check="true">
         <!-- BODY WIDTH -->
-        <we-row string="Body Width">
-            <we-button-group data-target=".o_mail_wrapper" data-no-preview="true">
-                <we-button data-select-class="o_mail_small"
-                            data-img="/mass_mailing/static/src/img/snippets_options/content_width_small.svg"
-                            title="Small"/>
-                <we-button data-select-class="o_mail_regular"
-                            data-img="/mass_mailing/static/src/img/snippets_options/content_width_normal.svg"
-                            title="Regular"/>
-                <we-button data-select-class=""
-                            data-img="/mass_mailing/static/src/img/snippets_options/content_width_full.svg"
-                            title="Full"/>
-            </we-button-group>
-        </we-row>
-        <we-row string="Background Color">
-            <we-colorpicker data-target=".o_layout, .note-editable > div:not(.o_layout)"
-                            data-select-style="true"
-                            data-no-transparency="true"
-                            data-css-property="background-color"
-                            data-color-prefix="bg-"/>
-        </we-row>
+        <we-button-group string="Body Width" data-apply-to=".o_mail_wrapper" data-no-preview="true">
+            <we-button data-select-class="o_mail_small"
+                        data-img="/mass_mailing/static/src/img/snippets_options/content_width_small.svg"
+                        title="Small"/>
+            <we-button data-select-class="o_mail_regular"
+                        data-img="/mass_mailing/static/src/img/snippets_options/content_width_normal.svg"
+                        title="Regular"/>
+            <we-button data-select-class=""
+                        data-img="/mass_mailing/static/src/img/snippets_options/content_width_full.svg"
+                        title="Full"/>
+        </we-button-group>
+        <we-colorpicker string="Background Color"
+                        data-apply-to=".o_layout, > div:not(.o_layout)"
+                        data-select-style="true"
+                        data-no-transparency="true"
+                        data-css-property="background-color"
+                        data-color-prefix="bg-"/>
         <!-- HEADING 1 -->
         <we-row string="Heading 1" class="o_design_tab_title">
             <we-input data-customize-css-property=""
