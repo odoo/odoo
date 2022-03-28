@@ -11,38 +11,15 @@ export class MessageSeenIndicator extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {Message}
-     */
-    get message() {
-        return this.messaging && this.messaging.models['Message'].get(this.props.messageLocalId);
-    }
-
-    /**
      * @returns {MessageSeenIndicator}
      */
-    get messageSeenIndicator() {
-        if (!this.thread || this.thread.model !== 'mail.channel') {
-            return undefined;
-        }
-        return this.messaging.models['MessageSeenIndicator'].findFromIdentifyingData({
-            message: this.message,
-            thread: this.thread,
-        });
-    }
-
-    /**
-     * @returns {Thread}
-     */
-    get thread() {
-        return this.messaging && this.messaging.models['Thread'].get(this.props.threadLocalId);
+     get messageSeenIndicatorView() {
+        return this.messaging && this.messaging.models['MessageSeenIndicatorView'].get(this.props.localId);
     }
 }
 
 Object.assign(MessageSeenIndicator, {
-    props: {
-        messageLocalId: String,
-        threadLocalId: String,
-    },
+    props: { localId: String },
     template: 'mail.MessageSeenIndicator',
 });
 
