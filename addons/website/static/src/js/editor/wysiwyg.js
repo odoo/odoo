@@ -68,7 +68,11 @@ Wysiwyg.include({
             // Then toggle the clicked one
             toggleDropdown($toggle)
                 .then(dispose)
-                .then(() => this._toggleMegaMenu($toggle[0]))
+                .then(() => {
+                    if (!this.options.enableTranslation) {
+                        this._toggleMegaMenu($toggle[0]);
+                    }
+                })
                 .then(() => this.odooEditor.observerActive());
         });
 
