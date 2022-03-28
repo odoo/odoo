@@ -990,13 +990,15 @@ class PosGlobalState extends PosModel {
      * Make the products corresponding to the given ids to be available_in_pos and
      * fetch them to be added on the loaded products.
      */
-    async _addProducts(ids){
-        await this.env.services.rpc({
-            model: 'product.product',
-            method: 'write',
-            args: [ids, {'available_in_pos': true}],
-            context: this.env.session.user_context,
-        });
+    async _addProducts(ids, setAvailable=true){
+        if(setAvailable){
+            await this.env.services.rpc({
+                model: 'product.product',
+                method: 'write',
+                args: [ids, {'available_in_pos': true}],
+                context: this.env.session.user_context,
+            });
+        }
         let product = await this.env.services.rpc({
             model: 'pos.session',
             method: 'get_pos_ui_product_product_by_params',
