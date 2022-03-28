@@ -7,9 +7,10 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.website.tests.test_base_url import TestUrlCommon
 from odoo.addons.website_event.tests.common import OnlineEventCase
+from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
-
+from odoo.tests.common import users
 
 @tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithUserDemo):
@@ -42,11 +43,20 @@ class TestWebsiteAccess(HttpCaseWithUserDemo, OnlineEventCase):
     def setUp(self):
         super(TestWebsiteAccess, self).setUp()
 
+        self.website = self.env['website'].create({'name': 'Website Test'})
+        self.partner = self.env['res.partner'].create([{
+            'name': 'Test Partner1',
+            'email': 'test@example.com',
+            'city': 'Turlock',
+            'state_id': self.env.ref('base.state_us_5').id,
+            'country_id': self.env.ref('base.us').id,
+        }])
         self.events = self.env['event.event'].create([{
             'name': 'Event 0 - Sitemap test',
             'website_published': True,
             'date_begin': datetime.today() - timedelta(days=1),
             'date_end': datetime.today() + timedelta(days=1),
+            'address_id': self.partner.id,
         }, {
             'name': 'Event 1 - Sitemap test',
             'website_published': True,
@@ -129,3 +139,14 @@ class TestWebsiteAccess(HttpCaseWithUserDemo, OnlineEventCase):
         self.assertTrue('/event/event-0' in resp.text, 'Published events must be present in the sitemap')
         self.assertTrue('/event/event-1' in resp.text, 'Published events must be present in the sitemap')
         self.assertFalse('/event/event-2' in resp.text, 'Unpublished events must not be present in the sitemap')
+
+    @users('user_portal')
+    def test_check_search_in_address(self):
+        ret = self.env['event.event']._search_get_detail(
+            self.website, order=None, options={'displayDescription':'', 'displayDetail':''}
+        )
+        result = ret['search_extra'](self.env, 'Turlock')[0][-1].get_result_ids()
+        self.assertEqual(*result, self.events[0].id, 'Event should exist for the searched term')
+
+        with self.assertRaises(AccessError):
+            self.env['res.partner'].browse(self.partner.id).read()
