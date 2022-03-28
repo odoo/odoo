@@ -177,8 +177,6 @@ registerModel({
                 message: insertAndReplace({ id: last_message_id }),
                 thread: replace(channel),
             });
-            // FIXME force the computing of message values (cf task-2261221)
-            this.messaging.models['MessageSeenIndicator'].recomputeFetchedValues(channel);
         },
         /**
          * @private
@@ -328,8 +326,6 @@ registerModel({
             if (shouldComputeSeenIndicators) {
                 // FIXME force the computing of thread values (cf task-2261221)
                 this.messaging.models['Thread'].computeLastCurrentPartnerMessageSeenByEveryone(channel);
-                // FIXME force the computing of message values (cf task-2261221)
-                this.messaging.models['MessageSeenIndicator'].recomputeSeenValues(channel);
             }
         },
         /**
