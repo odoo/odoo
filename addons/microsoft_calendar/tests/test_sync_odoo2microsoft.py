@@ -88,7 +88,7 @@ class TestSyncOdoo2Microsoft(TransactionCase):
             'start': {'dateTime': '%s-01-15T08:00:00+00:00' % year, 'timeZone': 'Europe/London'},
             'end': {'dateTime': '%s-01-15T18:00:00+00:00' % year, 'timeZone': 'Europe/London'},
             'subject': 'Event',
-            'body': {'content': '', 'contentType': 'text'},
+            'body': {'content': '', 'contentType': 'html'},
             'attendees': [],
             'isAllDay': False,
             'isOrganizer': True,
