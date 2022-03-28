@@ -49,8 +49,8 @@
                                     <t t-esc="messageView.message.shortTime"/>
                                 </div>
                             </t>
-                            <t t-if="!messageView.isActive and messageView.message.isCurrentUserOrGuestAuthor and messageView.threadView and messageView.threadView.thread and messageView.threadView.thread.hasSeenIndicators">
-                                <MessageSeenIndicator className="'o_Message_seenIndicator'" messageLocalId="messageView.message.localId" threadLocalId="messageView.threadView.thread.localId"/>
+                            <t t-if="!messageView.isActive and messageView.messageSeenIndicatorView">
+                                <MessageSeenIndicator className="'o_Message_seenIndicator'" localId="messageView.messageSeenIndicatorView.localId" messageLocalId="messageView.message.localId" threadLocalId="messageView.threadView.thread.localId"/>
                             </t>
                         </t>
                     </div>
@@ -87,8 +87,8 @@
                                         - <t t-esc="messageView.message.dateFromNow"/>
                                     </div>
                                 </t>
-                                <t t-if="messageView.message.isCurrentUserOrGuestAuthor and messageView.threadView and messageView.threadView.thread and messageView.threadView.thread.hasSeenIndicators">
-                                    <MessageSeenIndicator className="'o_Message_seenIndicator'" messageLocalId="messageView.message.localId" threadLocalId="messageView.threadView.thread.localId"/>
+                                <t t-if="messageView.messageSeenIndicatorView">
+                                    <MessageSeenIndicator className="'o_Message_seenIndicator'" localId="messageView.messageSeenIndicatorView.localId" messageLocalId="messageView.message.localId" threadLocalId="messageView.threadView.thread.localId"/>
                                 </t>
                                 <t t-if="messageView.threadView and messageView.message.originThread and messageView.message.originThread !== messageView.threadView.thread">
                                     <div class="o_Message_originThread" t-att-class="{ 'o-message-selected': messageView.isSelected }">

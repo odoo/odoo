@@ -196,6 +196,21 @@ registerModel({
                 this.message.parentMessage
             ) ? insertAndReplace() : clear();
         },
+        /**
+         * @private
+         * @retuns {FieldCommand}
+         */
+        _computeMessageSeenIndicatorView() {
+            if (
+                this.message.isCurrentUserOrGuestAuthor &&
+                this.threadView &&
+                this.threadView.thread &&
+                this.threadView.thread.hasSeenIndicators
+            ) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
     },
     fields: {
         /**
@@ -321,6 +336,11 @@ registerModel({
             inverse: 'messageView',
             isCausal: true,
             readonly: true,
+        }),
+        messageSeenIndicatorView: one('MessageSeenIndicatorView', {
+            compute: '_computeMessageSeenIndicatorView',
+            inverse: 'messageViewOwner',
+            isCausal: true,
         }),
         /**
          * States the thread view that is displaying this messages (if any).

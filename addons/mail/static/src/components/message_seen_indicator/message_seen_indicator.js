@@ -31,6 +31,13 @@ export class MessageSeenIndicator extends Component {
     }
 
     /**
+     * @returns {MessageSeenIndicator}
+     */
+     get messageSeenIndicatorView() {
+        return this.messaging && this.messaging.models['MessageSeenIndicatorView'].get(this.props.localId);
+    }
+
+    /**
      * @returns {Thread}
      */
     get thread() {
@@ -40,6 +47,7 @@ export class MessageSeenIndicator extends Component {
 
 Object.assign(MessageSeenIndicator, {
     props: {
+        localId: String,
         messageLocalId: String,
         threadLocalId: String,
     },

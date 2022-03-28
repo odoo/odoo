@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { insert, insertAndReplace, link } from '@mail/model/model_field_command';
 import {
     createRootMessagingComponent,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
@@ -26,30 +26,38 @@ QUnit.module('message_seen_indicator_tests.js', {
 QUnit.test('rendering when just one has received the message', async function (assert) {
     assert.expect(3);
 
-    const { messaging, widget } = await start();
-    const thread = messaging.models['Thread'].create({
-        id: 1000,
-        model: 'mail.channel',
-        partnerSeenInfos: insertAndReplace([
-            {
-                lastFetchedMessage: insert({ id: 100 }),
-                partner: insertAndReplace({ id: 10 }),
-            },
-            {
-                partner: insertAndReplace({ id: 100 }),
-            },
-        ]),
-        messageSeenIndicators: insertAndReplace({
-            message: insertAndReplace({ id: 100 }),
-        }),
+    const pyEnv = await startServer();
+    
+    const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo User" });
+    const resPartnerId2 = pyEnv['res.partner'].create({ name: "Other User" });
+    const mailChannelId = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId1 }],
+            [0, 0, { partner_id: resPartnerId2 }],
+        ],
+        channel_type: 'chat', // only chat channel have seen notification
     });
-    const message = messaging.models['Message'].insert({
-        author: insert({ id: messaging.currentPartner.id, display_name: "Demo User" }),
+    const mailMessageId = pyEnv['mail.message'].create({
+        author_id: pyEnv.currentPartnerId,
         body: "<p>Test</p>",
-        id: 100,
-        originThread: link(thread),
+        model: 'mail.channel',
+        res_id: mailChannelId,
     });
-    await this.createMessageSeenIndicatorComponent({ message, target: widget.el, thread });
+    const [cpId1] = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId], ['partner_id', '=', resPartnerId1]]);
+    pyEnv['mail.channel.partner'].write([cpId1], {
+        fetched_message_id: mailMessageId,
+        seen_message_id: false,
+    });
+    const { openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: `mail.channel_${mailChannelId}`,
+            },
+        },
+        hasDiscuss: true,
+    });
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_MessageSeenIndicator',
@@ -70,31 +78,37 @@ QUnit.test('rendering when just one has received the message', async function (a
 QUnit.test('rendering when everyone have received the message', async function (assert) {
     assert.expect(3);
 
-    const { messaging, widget } = await start();
-    const thread = messaging.models['Thread'].create({
-        id: 1000,
-        model: 'mail.channel',
-        partnerSeenInfos: insertAndReplace([
-            {
-                lastFetchedMessage: insert({ id: 100 }),
-                partner: insertAndReplace({ id: 10 }),
-            },
-            {
-                lastFetchedMessage: insert({ id: 99 }),
-                partner: insertAndReplace({ id: 100 }),
-            },
-        ]),
-        messageSeenIndicators: insertAndReplace({
-            message: insertAndReplace({ id: 100 }),
-        }),
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo User" });
+    const resPartnerId2 = pyEnv['res.partner'].create({ name: "Other User" });
+    const mailChannelId = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId1 }],
+            [0, 0, { partner_id: resPartnerId2 }],
+        ],
+        channel_type: 'chat',
     });
-    const message = messaging.models['Message'].insert({
-        author: insert({ id: messaging.currentPartner.id, display_name: "Demo User" }),
+    const mailMessageId = pyEnv['mail.message'].create({
+        author_id: pyEnv.currentPartnerId,
         body: "<p>Test</p>",
-        id: 100,
-        originThread: link(thread),
+        model: 'mail.channel',
+        res_id: mailChannelId,
     });
-    await this.createMessageSeenIndicatorComponent({ message, target: widget.el, thread });
+    const cpIds = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId]]);
+    pyEnv['mail.channel.partner'].write(cpIds, {
+        fetched_message_id: mailMessageId,
+        seen_message_id: false,
+    });
+    const { openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: `mail.channel_${mailChannelId}`,
+            },
+        },
+        hasDiscuss: true,
+    });
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_MessageSeenIndicator',
@@ -115,32 +129,41 @@ QUnit.test('rendering when everyone have received the message', async function (
 QUnit.test('rendering when just one has seen the message', async function (assert) {
     assert.expect(3);
 
-    const { messaging, widget } = await start();
-    const thread = messaging.models['Thread'].create({
-        id: 1000,
-        model: 'mail.channel',
-        partnerSeenInfos: insertAndReplace([
-            {
-                lastFetchedMessage: insert({ id: 100 }),
-                lastSeenMessage: insert({ id: 100 }),
-                partner: insertAndReplace({ id: 10 }),
-            },
-            {
-                lastFetchedMessage: insert({ id: 99 }),
-                partner: insertAndReplace({ id: 100 }),
-            },
-        ]),
-        messageSeenIndicators: insertAndReplace({
-            message: insertAndReplace({ id: 100 }),
-        }),
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo User" });
+    const resPartnerId2 = pyEnv['res.partner'].create({ name: "Other User" });
+    const mailChannelId = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId1 }],
+            [0, 0, { partner_id: resPartnerId2 }],
+        ],
+        channel_type: 'chat',
     });
-    const message = messaging.models['Message'].insert({
-        author: insert({ id: messaging.currentPartner.id, display_name: "Demo User" }),
+    const mailMessageId = pyEnv['mail.message'].create({
+        author_id: pyEnv.currentPartnerId,
         body: "<p>Test</p>",
-        id: 100,
-        originThread: link(thread),
+        model: 'mail.channel',
+        res_id: mailChannelId,
     });
-    await this.createMessageSeenIndicatorComponent({ message, target: widget.el, thread });
+    const cpIds = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId]]);
+    pyEnv['mail.channel.partner'].write(cpIds, {
+        fetched_message_id: mailMessageId,
+        seen_message_id: false,
+    });
+    const [seenCpId] = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId], ['partner_id', '=', resPartnerId1]]);
+    pyEnv['mail.channel.partner'].write([seenCpId], {
+        seen_message_id: mailMessageId,
+    });
+    const { openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: `mail.channel_${mailChannelId}`,
+            },
+        },
+        hasDiscuss: true,
+    });
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_MessageSeenIndicator',
@@ -162,31 +185,37 @@ QUnit.test('rendering when just one has seen the message', async function (asser
 QUnit.test('rendering when just one has seen & received the message', async function (assert) {
     assert.expect(3);
 
-    const { messaging, widget } = await start();
-    const thread = messaging.models['Thread'].create({
-        id: 1000,
-        model: 'mail.channel',
-        partnerSeenInfos: insertAndReplace([
-            {
-                lastFetchedMessage: insert({ id: 100 }),
-                lastSeenMessage: insert({ id: 100 }),
-                partner: insertAndReplace({ id: 10 }),
-            },
-            {
-                partner: insertAndReplace({ id: 100 }),
-            },
-        ]),
-        messageSeenIndicators: insertAndReplace({
-            message: insertAndReplace({ id: 100 }),
-        }),
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo User" });
+    const resPartnerId2 = pyEnv['res.partner'].create({ name: "Other User" });
+    const mailChannelId = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId1 }],
+            [0, 0, { partner_id: resPartnerId2 }],
+        ],
+        channel_type: 'chat',
     });
-    const message = messaging.models['Message'].insert({
-        author: insert({ id: messaging.currentPartner.id, display_name: "Demo User" }),
+    const mailMessageId = pyEnv['mail.message'].create({
+        author_id: pyEnv.currentPartnerId,
         body: "<p>Test</p>",
-        id: 100,
-        originThread: link(thread),
+        model: 'mail.channel',
+        res_id: mailChannelId,
     });
-    await this.createMessageSeenIndicatorComponent({ message, target: widget.el, thread });
+    const [seenCpId] = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId], ['partner_id', '=', resPartnerId1]]);
+    pyEnv['mail.channel.partner'].write([seenCpId], {
+        seen_message_id: mailMessageId,
+        fetched_message_id: mailMessageId,
+    });
+    const { openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: `mail.channel_${mailChannelId}`,
+            },
+        },
+        hasDiscuss: true,
+    });
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_MessageSeenIndicator',
@@ -208,33 +237,37 @@ QUnit.test('rendering when just one has seen & received the message', async func
 QUnit.test('rendering when just everyone has seen the message', async function (assert) {
     assert.expect(3);
 
-    const { messaging, widget } = await start();
-    const thread = messaging.models['Thread'].create({
-        id: 1000,
-        model: 'mail.channel',
-        partnerSeenInfos: insertAndReplace([
-            {
-                lastFetchedMessage: insert({ id: 100 }),
-                lastSeenMessage: insert({ id: 100 }),
-                partner: insertAndReplace({ id: 10 }),
-            },
-            {
-                lastFetchedMessage: insert({ id: 100 }),
-                lastSeenMessage: insert({ id: 100 }),
-                partner: insertAndReplace({ id: 100 }),
-            },
-        ]),
-        messageSeenIndicators: insertAndReplace({
-            message: insertAndReplace({ id: 100 }),
-        }),
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo User" });
+    const resPartnerId2 = pyEnv['res.partner'].create({ name: "Other User" });
+    const mailChannelId = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId1 }],
+            [0, 0, { partner_id: resPartnerId2 }],
+        ],
+        channel_type: 'chat',
     });
-    const message = messaging.models['Message'].insert({
-        author: insert({ id: messaging.currentPartner.id, display_name: "Demo User" }),
+    const mailMessageId = pyEnv['mail.message'].create({
+        author_id: pyEnv.currentPartnerId,
         body: "<p>Test</p>",
-        id: 100,
-        originThread: link(thread),
+        model: 'mail.channel',
+        res_id: mailChannelId,
     });
-    await this.createMessageSeenIndicatorComponent({ message, target: widget.el, thread });
+    const cpIds = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId]]);
+    pyEnv['mail.channel.partner'].write(cpIds, {
+        fetched_message_id: mailMessageId,
+        seen_message_id: mailMessageId,
+    });
+    const { openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: `mail.channel_${mailChannelId}`,
+            },
+        },
+        hasDiscuss: true,
+    });
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_MessageSeenIndicator',
