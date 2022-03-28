@@ -129,3 +129,50 @@ class TestProject(TestCommonSaleTimesheet):
         employee_mapping.cost = self.employee_user.timesheet_cost
         employee_mapping.employee_id = self.employee_company_B
         self.assertEqual(employee_mapping.cost, self.employee_company_B.timesheet_cost)
+
+    def test_analytic_account_balance(self):
+        """
+            1) Add new billable project
+            2) Add Employee/SOL mapping in the project
+            3) Add Task and Timesheet with the same user
+            4) Assert analytic_account_balance is calculated
+        """
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_b.id,
+        })
+        sale_line = self.env['sale.order.line'].create({
+            'name': self.product_delivery_timesheet1.name,
+            'product_id': self.product_delivery_timesheet1.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product_delivery_timesheet1.uom_id.id,
+            'price_unit': self.product_delivery_timesheet1.list_price,
+            'order_id': sale_order.id,
+        })
+
+        unit_amount = 6
+        expected_analytic_account_balance = - self.employee_user.timesheet_cost * unit_amount
+        self.project_global.write({
+            'sale_line_id': sale_line.id,
+            'sale_line_employee_ids': [
+                Command.create({
+                    'employee_id': self.employee_user.id,
+                    'sale_line_id': sale_line.id,
+                }),
+            ],
+        })
+        self.assertFalse(self.project_global.analytic_account_balance)
+
+        self.env['project.task'].create({
+            'name': 'task A',
+            'project_id': self.project_global.id,
+            'planned_hours': 10,
+            'timesheet_ids': [
+                Command.create({
+                    'name': '/',
+                    'employee_id': self.employee_user.id,
+                    'unit_amount': unit_amount,
+                }),
+            ],
+        })
+
+        self.assertEqual(self.project_global.analytic_account_balance, expected_analytic_account_balance)
