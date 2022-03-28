@@ -89,18 +89,18 @@ def slugify(s, max_length=0, path=False):
 
 
 def slug(value):
-    if isinstance(value, models.BaseModel):
+    try:
         if not value.id:
             raise ValueError("Cannot slug non-existent record %s" % value)
         # [(id, name)] = value.name_get()
         identifier, name = value.id, getattr(value, 'seo_name', False) or value.display_name
-    else:
+    except AttributeError:
         # assume name_search result tuple
         identifier, name = value
     slugname = slugify(name or '').strip().strip('-')
     if not slugname:
         return str(identifier)
-    return "%s-%d" % (slugname, identifier)
+    return f"{slugname}-{identifier}"
 
 
 # NOTE: as the pattern is used as it for the ModelConverter (ir_http.py), do not use any flags
