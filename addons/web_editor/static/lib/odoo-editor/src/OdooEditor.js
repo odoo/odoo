@@ -292,6 +292,19 @@ export class OdooEditor extends EventTarget {
          * ArrowUp/ArrowDown, between blocks, if there is no existing <p>
          */
         this._navigationNode = null;
+        /**
+         * Element that will stand out in the editor. If this property is set,
+         * subsequent @see 'selectionchange' or @see _onKeyDown calls will
+         * decide if the element should be removed or unselected. Its main
+         * purpose is to handle the deletion of contenteditable=false elements
+         * (which do not have a caret). Such elements can be "selected" via this
+         * property with @see oDeleteBackward when the selection is at the start
+         * of the next (editable) sibling. The editable will be removed if it is
+         * empty, and the uneditable will be selected. The element is unselected
+         * when the selection change, or upon keydown events.
+         */
+        this._uneditableSelection = null;
+        this._lockedUneditableSelection = false;
 
         // -------------------
         // Alter the editable
@@ -354,6 +367,7 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.document, 'selectionchange', this._onSelectionChange);
         this.addDomListener(this.document, 'selectionchange', this._handleCommandHint);
         this.addDomListener(this.document, 'selectionchange', this._handleNavigationNode);
+        this.addDomListener(this.document, 'selectionchange', this._handleUneditableSelection);
         this.addDomListener(this.document, 'keydown', this._onDocumentKeydown);
         this.addDomListener(this.document, 'keyup', this._onDocumentKeyup);
         this.addDomListener(this.document, 'mousedown', this._onDoumentMousedown);
@@ -606,6 +620,19 @@ export class OdooEditor extends EventTarget {
                         'value': record.target.getAttribute(record.attributeName),
                         'oldValue': record.oldValue,
                     });
+                    if (record.attributeName === 'class' && record.target) {
+                        /**
+                         * Apply or remove an uneditable selection when a
+                         * mutation related to the custom class occur.
+                         */
+                        const wasUneditableSelected = record.oldValue !== null && record.oldValue.includes('oe-uneditable-selected');
+                        const isUneditableSelected = record.target.classList.contains('oe-uneditable-selected');
+                        if (isUneditableSelected && !wasUneditableSelected) {
+                            this._setUneditableSelection(record.target);
+                        } else if (wasUneditableSelected && !isUneditableSelected && record.target === this._uneditableSelection) {
+                            this._removeUneditableSelection();
+                        }
+                    }
                     break;
                 }
                 case 'childList': {
@@ -1042,6 +1069,13 @@ export class OdooEditor extends EventTarget {
         }
     }
     historySetSelection(step) {
+        if (this._uneditableSelection) {
+            /**
+             * If an uneditable selection is currently displayed, the selection
+             * should not be altered.
+             */
+            return;
+        }
         if (step.selection && step.selection.anchorNodeOid) {
             const anchorNode = this.idFind(step.selection.anchorNodeOid);
             const focusNode = this.idFind(step.selection.focusNodeOid) || anchorNode;
@@ -2537,6 +2571,13 @@ export class OdooEditor extends EventTarget {
     _onKeyDown(ev) {
         this.keyboardType =
             ev.key === 'Unidentified' ? KEYBOARD_TYPES.VIRTUAL : KEYBOARD_TYPES.PHYSICAL;
+        /**
+         * An uneditableSelectionSnapshot can be set by an event handler when
+         * the uneditableSelection must be locked in order to apply a real
+         * selection change while maintaining the uneditableSelection.
+         * @see _navigateUneditable
+         */
+        let uneditableSelectionSnapshot = null;
         // If the pressed key has a printed representation, the returned value
         // is a non-empty Unicode character string containing the printable
         // representation of the key. In this case, call `deleteRange` before
@@ -2545,13 +2586,45 @@ export class OdooEditor extends EventTarget {
             const selection = this.document.getSelection();
             if (selection && !selection.isCollapsed) {
                 this.deleteRange(selection);
+            } else if (this._uneditableSelection) {
+                /**
+                 * If the pressed key has a printed representation and a
+                 * contenteditable=false is currently "selected", create a <p>
+                 * to hold the typed character, which will replace the
+                 * contenteditable=false if it can be removed. @see _protect
+                 */
+                this._uneditableSelection.classList.remove('oe-uneditable-selected');
+                this._addPBR('after', this._uneditableSelection, {
+                    isStep: true,
+                    replace: true,
+                });
             }
         }
-        if (ev.key === 'Backspace') {
+        if (ev.key === 'Delete') {
+            if (!ev.ctrlKey && !ev.metaKey) {
+                if (this._uneditableSelection) {
+                    // replace the uneditableSelection by <p>
+                    ev.preventDefault();
+                    this._uneditableSelection.classList.remove('oe-uneditable-selected');
+                    this._addPBR('before', this._uneditableSelection, {
+                        isStep: true,
+                        replace: true,
+                    });
+                }
+            }
+        } else if (ev.key === 'Backspace') {
             // backspace
             const selection = this.document.getSelection();
             if (!ev.ctrlKey && !ev.metaKey) {
-                if (selection.isCollapsed) {                    
+                if (this._uneditableSelection) {
+                    // replace the uneditableSelection by <p>
+                    ev.preventDefault();
+                    this._uneditableSelection.classList.remove('oe-uneditable-selected');
+                    this._addPBR('after', this._uneditableSelection, {
+                        isStep: true,
+                        replace: true,
+                    });
+                } else if (selection.isCollapsed) {
                     // We need to hijack it because firefox doesn't trigger a
                     // deleteBackward input event with a collapsed selection in
                     // front of a contentEditable="false" (eg: font awesome).
@@ -2624,7 +2697,11 @@ export class OdooEditor extends EventTarget {
             ev.preventDefault();
             ev.stopPropagation();
             this.execCommand('strikeThrough');
-        } else if (IS_KEYBOARD_EVENT_LEFT_ARROW(ev)) {
+        } else if (IS_KEYBOARD_EVENT_LEFT_ARROW(ev) && !ev.altKey && !ev.defaultPrevented) {
+            if (this._uneditableSelection) {
+                // create a caret holder to handle the Arrow event
+                uneditableSelectionSnapshot = this._navigateUneditable(1);
+            }
             getDeepRange(this.editable);
             const selection = this.document.getSelection();
             // Find previous character.
@@ -2646,7 +2723,11 @@ export class OdooEditor extends EventTarget {
                 const startOffset = ev.shiftKey ? selection.anchorOffset : focusOffset;
                 setSelection(startContainer, startOffset, focusNode, focusOffset);
             }
-        } else if (IS_KEYBOARD_EVENT_RIGHT_ARROW(ev)) {
+        } else if (IS_KEYBOARD_EVENT_RIGHT_ARROW(ev) && !ev.altKey && !ev.defaultPrevented) {
+            if (this._uneditableSelection) {
+                // create a caret holder to handle the Arrow event
+                uneditableSelectionSnapshot = this._navigateUneditable(0);
+            }
             getDeepRange(this.editable);
             const selection = this.document.getSelection();
             // Find next character.
@@ -2669,8 +2750,108 @@ export class OdooEditor extends EventTarget {
                 setSelection(startContainer, startOffset, focusNode, focusOffset);
             }
         } else if (['ArrowDown', 'ArrowUp'].includes(ev.key) && !ev.ctrlKey && !ev.metaKey && !ev.altKey && !ev.defaultPrevented) {
+            if (this._uneditableSelection) {
+                // create a caret holder to handle the Arrow event
+                uneditableSelectionSnapshot = this._navigateUneditable((ev.key === 'ArrowDown') ? 0 : 1);
+            }
             this._handleVerticalArrowsNavigation(ev);
         }
+        if (uneditableSelectionSnapshot) {
+            /**
+             * Handle the uneditableSelectionSnapshot to remove eventual
+             * temporary caret holders and unlock the uneditableSelection.
+             * This must be done at the start of the next event cycle, in order
+             * for all event handlers to carry their tasks.
+             */
+            setTimeout(() => {
+                const selection = this.document.getSelection();
+                let unlockTimeout = false;
+                if (selection.anchorNode === uneditableSelectionSnapshot.uneditableCaretHolder) {
+                    /**
+                     * If the selection is still on the temporary caret holder,
+                     * maintain the uneditable selection.
+                     */
+                    selection.removeAllRanges();
+                    unlockTimeout = true;
+                    uneditableSelectionSnapshot.uneditableSelection.classList.add('oe-uneditable-selected');
+                } else {
+                    /**
+                     * Remove the uneditable selection (since it was locked, it
+                     * did not catch the selection change).
+                     */
+                    uneditableSelectionSnapshot.uneditableSelection.classList.remove('oe-uneditable-selected');
+                    if (this._uneditableSelection === uneditableSelectionSnapshot.uneditableSelection) {
+                        /**
+                         * Removing the current uneditable selection should
+                         * always be a step.
+                         */
+                        this.historyStep();
+                    }
+                }
+                this._removeUneditableCaretHolder(uneditableSelectionSnapshot.uneditableCaretHolder, unlockTimeout);
+            });
+        }
+    }
+
+    /**
+     * Remove an uneditableCaretHolder and unlock the uneditableSelection.
+     *
+     * @param {Element} uneditableCaretHolder
+     * @param {boolean} unlockTimeout Whether to unlock right now or at the
+     *                                start of the next event cycle (i.e. when
+     *                                the selection will change in the current
+     *                                event cycle, but the uneditable selection
+     *                                has to be preserved).
+     */
+    _removeUneditableCaretHolder(uneditableCaretHolder, unlockTimeout=false) {
+        this.observerUnactive('uneditableSelection');
+        uneditableCaretHolder.remove();
+        this.observerActive('uneditableSelection');
+        const unlockUneditableSelection = () => {
+            this._lockedUneditableSelection = false;
+        };
+        if (unlockTimeout) {
+            setTimeout(unlockUneditableSelection);
+        } else {
+            unlockUneditableSelection();
+        }
+    }
+
+    /**
+     * Create a temporary caret holder for an uneditableSelection. The purpose
+     * is to handle an Arrow event handling from an element which does not have
+     * a caret. The caret holder is placed before the element if the direction
+     * is next, and after if the direction is previous so that the navigation
+     * will go through the element during the event handling.
+     * Lock the uneditable Selection to allow the caret to be placed in the
+     * temporary holder.
+     *
+     * @param {integer} direction 0 <=> NEXT, 1 <=> PREVIOUS
+     * @returns uneditableSelectionSnapshot which contains the current
+     *          uneditable selection and the temporary caret holder.
+     */
+    _navigateUneditable(direction) {
+        this._lockedUneditableSelection = true;
+        this.observerUnactive('uneditableSelection');
+        let uneditableCaretHolder;
+        if (direction) {
+            uneditableCaretHolder = this._addPBR('after', this._uneditableSelection, {
+                select: false,
+                style: { maxHeight: '0px', padding: '0px', marginBottom: '0px', marginTop: '0px' },
+            });
+        } else {
+            uneditableCaretHolder = this._addPBR('before', this._uneditableSelection, {
+                select: false,
+                style: { maxHeight: '0px', padding: '0px', marginBottom: `0px`, marginTop: '0px' },
+            });
+        }
+        uneditableCaretHolder.oIgnoreInEditor = true;
+        setCursorStart(uneditableCaretHolder);
+        this.observerActive('uneditableSelection');
+        return {
+            uneditableSelection: this._uneditableSelection,
+            uneditableCaretHolder: uneditableCaretHolder,
+        };
     }
 
     /**
@@ -2997,6 +3178,15 @@ export class OdooEditor extends EventTarget {
             el.textContent = el.textContent.replace('\u200B', '');
         }
 
+        // Remove oe-uneditable-selected on elements
+        for (const el of element.querySelectorAll('.oe-uneditable-selected')) {
+            el.classList.remove('oe-uneditable-selected');
+        }
+
+        // Clean empty class attributes
+        for (const el of element.querySelectorAll('[class=""]')) {
+            el.removeAttribute('class');
+        }
     }
     /**
      * Handle the hint preview for the commandbar.
@@ -3046,6 +3236,86 @@ export class OdooEditor extends EventTarget {
         // placeholder hint
         if (this.editable.textContent === '' && this.options.placeholder) {
             this._makeHint(this.editable.firstChild, this.options.placeholder, true);
+        }
+    }
+
+    /**
+     * Add a <p><br></p> element with various options
+     *
+     * @param {string} operation Node insertion operation (after, before, ...)
+     * @param {Element} element Target for the desired PBR
+     * @param {Object}
+     * @param {boolean} [replace] Whether <p> should replace element
+     * @param {boolean} [isStep] Whether the operation should register a history
+     *                           step
+     * @param {boolean} [select] Whether the caret should be placed in <p>
+     * @param {Object} [style] HTMLElement style properties to be applied on <p>
+     * @returns {Element} <p><br></p>
+     */
+    _addPBR(operation, element, {replace, isStep, style, select=true} = {}) {
+        if (!element) {
+            return;
+        }
+        const paragraph = createPBR();
+        element[operation](paragraph);
+        for (let property in style) {
+            paragraph.style[property] = style[property];
+        }
+        if (select) {
+            setCursorStart(paragraph);
+        }
+        if (replace) {
+            this._protect(() => element.remove());
+        }
+        if (isStep) {
+            this.historyStep();
+        }
+        return paragraph;
+    }
+
+    /**
+     * Mark element as an "Uneditable Selection".
+     *
+     * @param {Element} element
+     */
+    _setUneditableSelection(element) {
+        this._removeUneditableSelection();
+        this._lockedUneditableSelection = true;
+        const sel = this.document.getSelection();
+        sel.removeAllRanges();
+        /**
+         * Unlock the uneditable selection only after the selection removal
+         * has been handled, at the start of the next event cycle.
+         */
+        setTimeout(() => {
+            this._lockedUneditableSelection = false;
+        });
+        this._uneditableSelection = element;
+    }
+
+    _removeUneditableSelection() {
+        this._uneditableSelection = null;
+    }
+
+    /**
+     * Called on 'selectionchange' events. It will remove the uneditable
+     * selection unless it is locked or if there is no current "normal"
+     * selection.
+     */
+    _handleUneditableSelection() {
+        const sel = this.document.getSelection();
+        if (!this._lockedUneditableSelection && this._uneditableSelection && sel.anchorNode) {
+            if (this._uneditableSelection.classList.contains('oe-uneditable-selected')) {
+                this._uneditableSelection.classList.remove('oe-uneditable-selected');
+                // Removing the uneditableSelection should always be a step
+                this.historyStep();
+            } else {
+                /**
+                 * Failsafe if for some reason the uneditableSelection has lost
+                 * its class.
+                 */
+                this._removeUneditableSelection();
+            }
         }
     }
 

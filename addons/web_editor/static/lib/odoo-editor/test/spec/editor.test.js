@@ -278,6 +278,23 @@ X[]
                         contentAfter: `<div>[]def</div>`,
                     });
                 });
+                it('should not remove a child of a contenteditable=false', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`
+                            <div contenteditable="false">
+                                <div contenteditable="true"><p>[]<br></p></div>
+                                <div contenteditable="false"><p>uneditable</p></div>
+                            </div>`),
+                        stepFunction: async editor => {
+                            await deleteForward(editor);
+                        },
+                        contentAfter: unformat(`
+                            <div contenteditable="false">
+                                <div contenteditable="true"><p>[]<br></p></div>
+                                <div contenteditable="false"><p>uneditable</p></div>
+                            </div>`),
+                    });
+                });
             });
             describe('white spaces', () => {
                 describe('no intefering spaces', () => {
@@ -1356,13 +1373,16 @@ X[]
                         contentAfter: `<div>[]def</div>`,
                     });
                 });
-                it('should remove contenteditable="false" at the beggining of a P', async () => {
+                it('should remove contenteditable="false" (replace by <p>) at the begining of a P', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: `<p>abc</p><div contenteditable="false">def</div><p>[]ghi</p>`,
                         stepFunction: async editor => {
+                            // Select uneditable block
                             await deleteBackward(editor);
+                            // Confirm suppression
+                            triggerEvent(editor.editable, 'keydown', { key: 'Backspace' });
                         },
-                        contentAfter: `<p>abc</p><p>[]ghi</p>`,
+                        contentAfter: `<p>abc</p><p>[]<br></p><p>ghi</p>`,
                     });
                 });
                 it('should remove a fontawesome', async () => {
@@ -1374,13 +1394,143 @@ X[]
                         contentAfter: `<p>abc</p><p>[]def</p>`,
                     });
                 });
-                it('should remove a media element', async () => {
+                it('should remove a media element (replace by <p>)', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: `<p>abc</p><div class="o_image"></div><p>[]def</p>`,
                         stepFunction: async editor => {
+                            /**
+                             * Select uneditable block (o_image is sanitized and
+                             * its contenteditable is set to false)
+                             */
+                            await deleteBackward(editor);
+                            // Confirm suppression
+                            triggerEvent(editor.editable, 'keydown', { keys: 'Backspace' });
+                        },
+                        contentAfter: `<p>abc</p><p>[]<br></p><p>def</p>`,
+                    });
+                });
+                it('should highlight a contenteditable="false" and remove the current selected block if it is empty, and clean the selection class on save', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p>abc</p><div contenteditable="false"></div><p>[]<br></p>`,
+                        stepFunction: async editor => {
                             await deleteBackward(editor);
                         },
-                        contentAfter: `<p>abc</p><p>[]def</p>`,
+                        contentAfterEdit: `<p>abc</p><div contenteditable="false" data-oe-keep-contenteditable="" class="oe-uneditable-selected"></div>`,
+                        contentAfter: `<p>abc</p><div contenteditable="false"></div>`
+                    });
+                });
+            });
+            describe('Uneditable selection', () => {
+                it('should remove the uneditable selection when the selection changes', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p id="target">abc</p><div contenteditable="false"></div><p>[]def</p>`,
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                            const element = editor.editable.querySelector('#target');
+                            // Wait for the attribute mutation to take effect
+                            await nextTickFrame();
+                            setCursorStart(element);
+                            await nextTickFrame();
+                        },
+                        contentAfterEdit: `<p id="target">[]abc</p><div contenteditable="false" data-oe-keep-contenteditable="" class=""></div><p>def</p>`,
+                    });
+                });
+                it('should preserve the uneditable selection when using an arrow key but the selection did not change', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p>abc</p><div contenteditable="false"></div><p>[]<br></p>`,
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                            triggerEvent(editor.editable, 'keydown', { key: 'ArrowRight' });
+                        },
+                        contentAfterEdit: `<p>abc</p><div contenteditable="false" data-oe-keep-contenteditable="" class="oe-uneditable-selected"></div>`,
+                    });
+                });
+                it('should delete the uneditable selection with delete', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p>abc</p><div contenteditable="false">def</div><p>[]ghi</p>`,
+                        stepFunction: async editor => {
+                            // Select uneditable block
+                            await deleteBackward(editor);
+                            // Confirm suppression
+                            triggerEvent(editor.editable, 'keydown', { key: 'Delete' });
+                        },
+                        contentAfter: `<p>abc</p><p>[]<br></p><p>ghi</p>`,
+                    });
+                });
+                it('should delete the uneditable selection when a printable character is written over it', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p>abc</p><div contenteditable="false">def</div><p>[]ghi</p>`,
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                            // Write over the uneditable selection
+                            triggerEvent(editor.editable, 'keydown', { key: 'a' });
+                            await insertText(editor, 'a');
+                        },
+                        contentAfter: `<p>abc</p><p>a[]</p><p>ghi</p>`,
+                    });
+                });
+                it('should undo an uneditable selection', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p>abc</p><div contenteditable="false">def</div><p>[]ghi</p>`,
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                            undo(editor);
+                        },
+                        contentAfterEdit: `<p>abc</p><div contenteditable="false" data-oe-keep-contenteditable="">def</div><p>[]ghi</p>`,
+                    });
+                });
+                it('should redo an undone uneditable selection', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p>abc</p><div contenteditable="false">def</div><p>[]ghi</p>`,
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                            undo(editor);
+                            redo(editor);
+                            await nextTickFrame();
+                        },
+                        contentAfterEdit: `<p>abc</p><div contenteditable="false" data-oe-keep-contenteditable="" class="oe-uneditable-selected">def</div><p>ghi</p>`,
+                    });
+                });
+                it('should undo a removed uneditable selection', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p>abc</p><div contenteditable="false">def</div><p>[]ghi</p>`,
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                            triggerEvent(editor.editable, 'keydown', { key: 'Delete' });
+                            undo(editor);
+                            await nextTickFrame();
+                        },
+                        contentAfterEdit: `<p>abc</p><div contenteditable="false" data-oe-keep-contenteditable="" class="oe-uneditable-selected">def</div><p>ghi</p>`,
+                    });
+                });
+                it('should redo an undone removal of an uneditable selection', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p>abc</p><div contenteditable="false">def</div><p>[]ghi</p>`,
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                            triggerEvent(editor.editable, 'keydown', { key: 'Delete' });
+                            undo(editor);
+                            redo(editor);
+                            await nextTickFrame();
+                        },
+                        contentAfter: `<p>abc</p><p>[]<br></p><p>ghi</p>`,
+                    });
+                });
+                it('should not create an uneditable selection on an element whose parent is not editable and should not remove a child of an uneditable', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`
+                            <div contenteditable="false">
+                                <div contenteditable="false"><p>uneditable</p></div>
+                                <div contenteditable="true"><p>[]<br></p></div>
+                            </div>`),
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                        },
+                        contentAfter: unformat(`
+                            <div contenteditable="false">
+                                <div contenteditable="false"><p>uneditable</p></div>
+                                <div contenteditable="true"><p>[]<br></p></div>
+                            </div>`),
                     });
                 });
             });

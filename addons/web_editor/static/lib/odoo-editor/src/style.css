@@ -322,3 +322,17 @@ i.oe-commandbar-commandImg {
     border-radius: 2px;
     padding: 0.3em 0.6em;
 }
+
+/* Contenteditable=false selection */
+.oe-uneditable-selected {
+    outline: 5px solid #198bf0 !important;
+    outline-offset: -5px !important;
+    isolation: isolate !important;
+    z-index: 1000 !important;
+}
+
+hr.oe-uneditable-selected {
+    border-top: 1px solid #198bf0 !important;
+    outline: 2px solid #198bf0 !important;
+    outline-offset: 0px !important;
+}

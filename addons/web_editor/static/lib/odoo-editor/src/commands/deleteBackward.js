@@ -9,8 +9,11 @@ import {
     endPos,
     fillEmpty,
     getState,
+    inlineTextTagNames,
     isBlock,
+    isEmptyBlock,
     isInPre,
+    isUnbreakable,
     isUnremovable,
     isVisible,
     isVisibleStr,
@@ -79,6 +82,26 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
         const leftNode = this.childNodes[offset - 1];
         if (isUnremovable(leftNode)) {
             throw UNREMOVABLE_ROLLBACK_CODE;
+        }
+        if (!this.isContentEditable) {
+            // Should not try to remove a child of a contenteditable=false
+            throw UNBREAKABLE_ROLLBACK_CODE;
+        }
+        if (this.isContentEditable &&
+            (isNotEditableNode(leftNode) && !inlineTextTagNames.has(leftNode.tagName))) {
+            /**
+             * Create a special contentEditable=false selection for non inline
+             * elements
+             */
+            if (isEmptyBlock(this.childNodes[offset])) {
+                /**
+                 * Remove the current block element if it is empty. This allows
+                 * to remove an element between 2 contenteditable=false.
+                 */
+                this.childNodes[offset].remove();
+            }
+            leftNode.classList.add('oe-uneditable-selected');
+            return;
         }
         if (
             isDeletable(leftNode)
