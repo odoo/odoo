@@ -7,40 +7,6 @@ import { replace, unlinkAll } from '@mail/model/model_field_command';
 registerModel({
     name: 'MessageSeenIndicator',
     identifyingFields: ['thread', 'message'],
-    modelMethods: {
-        /**
-         * @param {Thread} [channel] the concerned thread
-         */
-        recomputeFetchedValues(channel = undefined) {
-            const indicatorFindFunction = channel ? localIndicator => localIndicator.thread === channel : undefined;
-            const indicators = this.messaging.models['MessageSeenIndicator'].all(indicatorFindFunction);
-            for (const indicator of indicators) {
-                indicator.update({
-                    hasEveryoneFetched: indicator._computeHasEveryoneFetched(),
-                    hasSomeoneFetched: indicator._computeHasSomeoneFetched(),
-                    partnersThatHaveFetched: indicator._computePartnersThatHaveFetched(),
-                });
-            }
-        },
-        /**
-         * @param {Thread} [channel] the concerned thread
-         */
-        recomputeSeenValues(channel = undefined) {
-            const indicatorFindFunction = channel ? localIndicator => localIndicator.thread === channel : undefined;
-            const indicators = this.messaging.models['MessageSeenIndicator'].all(indicatorFindFunction);
-            for (const indicator of indicators) {
-                indicator.update({
-                    hasEveryoneSeen: indicator._computeHasEveryoneSeen(),
-                    hasSomeoneFetched: indicator._computeHasSomeoneFetched(),
-                    hasSomeoneSeen: indicator._computeHasSomeoneSeen(),
-                    isMessagePreviousToLastCurrentPartnerMessageSeenByEveryone:
-                        indicator._computeIsMessagePreviousToLastCurrentPartnerMessageSeenByEveryone(),
-                    partnersThatHaveFetched: indicator._computePartnersThatHaveFetched(),
-                    partnersThatHaveSeen: indicator._computePartnersThatHaveSeen(),
-                });
-            }
-        },
-    },
     recordMethods: {
         /**
          * Manually called as not always called when necessary
