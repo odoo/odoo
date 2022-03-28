@@ -186,12 +186,6 @@ class Project(models.Model):
     _rating_satisfaction_days = 30  # takes 30 days by default
     _check_company_auto = True
 
-    def _default_rating_status(self):
-        return self.env['ir.config_parameter'].sudo().get_param('project.rating_status') or 'stage'
-
-    def _default_rating_status_period(self):
-        return self.env['ir.config_parameter'].sudo().get_param('project.rating_status_period') or 'monthly'
-
     def _compute_attached_docs_count(self):
         self.env.cr.execute(
             """
@@ -344,7 +338,7 @@ class Project(models.Model):
     rating_status = fields.Selection(
         [('stage', 'Rating when changing stage'),
          ('periodic', 'Periodic rating')
-        ], 'Customer Ratings Status', default=_default_rating_status, required=True,
+        ], 'Customer Ratings Status', default="stage", required=True,
         help="How to get customer feedback?\n"
              "- Rating when changing stage: an email will be sent when a task is pulled to another stage.\n"
              "- Periodic rating: an email will be sent periodically.\n\n"
@@ -355,7 +349,7 @@ class Project(models.Model):
         ('bimonthly', 'Twice a Month'),
         ('monthly', 'Once a Month'),
         ('quarterly', 'Quarterly'),
-        ('yearly', 'Yearly')], 'Rating Frequency', required=True, default=_default_rating_status_period)
+        ('yearly', 'Yearly')], 'Rating Frequency', required=True, default='monthly')
 
     # Not `required` since this is an option to enable in project settings.
     stage_id = fields.Many2one('project.project.stage', string='Stage', ondelete='restrict', groups="project.group_project_stages",
