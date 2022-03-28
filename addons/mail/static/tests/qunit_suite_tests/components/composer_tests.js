@@ -289,7 +289,7 @@ QUnit.test('display canned response suggestions on typing ":"', async function (
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create();
     pyEnv['mail.shortcode'].create({ source: "hello", substitution: "Hello! How are you?" });
-    const { createComposerComponent, messaging } = await start();
+    const { createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
@@ -301,14 +301,7 @@ QUnit.test('display canned response suggestions on typing ":"', async function (
         '.o_ComposerSuggestionList_list',
         "Canned responses suggestions list should not be present"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, ":");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', ':');
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestionList_list'),
         'show',
@@ -322,7 +315,7 @@ QUnit.test('use a canned response', async function (assert) {
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create();
     pyEnv['mail.shortcode'].create({ source: "hello", substitution: "Hello! How are you?" });
-    const { createComposerComponent, messaging } = await start();
+    const { createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
@@ -339,14 +332,7 @@ QUnit.test('use a canned response', async function (assert) {
         "",
         "text content of composer should be empty initially"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, ":");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', ':');
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -368,7 +354,7 @@ QUnit.test('use a canned response some text', async function (assert) {
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create();
     pyEnv['mail.shortcode'].create({ source: "hello", substitution: "Hello! How are you?" });
-    const { createComposerComponent, messaging } = await start();
+    const { createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
@@ -385,22 +371,13 @@ QUnit.test('use a canned response some text', async function (assert) {
         "",
         "text content of composer should be empty initially"
     );
-    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-    await afterNextRender(() =>
-        document.execCommand('insertText', false, "bluhbluh ")
-    );
+    await insertText('.o_ComposerTextInput_textarea', "bluhbluh ");
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "bluhbluh ",
         "text content of composer should have content"
     );
-    await afterNextRender(() => {
-        document.execCommand('insertText', false, ":");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', ':');
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -422,7 +399,7 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create();
     pyEnv['mail.shortcode'].create({ source: "hello", substitution: "Hello! How are you?" });
-    const { createComposerComponent, messaging } = await start();
+    const { createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
@@ -439,14 +416,7 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
         "",
         "text content of composer should be empty initially"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, ":");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', ':');
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -480,7 +450,7 @@ QUnit.test('display channel mention suggestions on typing "#"', async function (
 
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", public: "groups" });
-    const { createComposerComponent, messaging } = await start();
+    const { createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
@@ -492,14 +462,7 @@ QUnit.test('display channel mention suggestions on typing "#"', async function (
         '.o_ComposerSuggestionList_list',
         "channel mention suggestions list should not be present"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "#");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', "#");
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestionList_list'),
         'show',
@@ -512,7 +475,7 @@ QUnit.test('mention a channel', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", public: "groups" });
-    const { createComposerComponent, messaging } = await start();
+    const { createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
@@ -529,14 +492,7 @@ QUnit.test('mention a channel', async function (assert) {
         "",
         "text content of composer should be empty initially"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "#");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', "#");
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -557,7 +513,7 @@ QUnit.test('mention a channel after some text', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", public: "groups" });
-    const { createComposerComponent, messaging } = await start();
+    const { createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
@@ -583,13 +539,7 @@ QUnit.test('mention a channel after some text', async function (assert) {
         "bluhbluh ",
         "text content of composer should have content"
     );
-    await afterNextRender(() => {
-        document.execCommand('insertText', false, "#");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', "#");
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -610,7 +560,7 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", public: "groups" });
-    const { createComposerComponent, messaging } = await start();
+    const { createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
@@ -627,14 +577,7 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
         "",
         "text content of composer should be empty initially"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "#");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', "#");
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -668,7 +611,7 @@ QUnit.test('display command suggestions on typing "/"', async function (assert) 
 
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create({ channel_type: 'channel' });
-    const { createComposerComponent, messaging } = await start();
+    const { createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
@@ -680,14 +623,7 @@ QUnit.test('display command suggestions on typing "/"', async function (assert) 
         '.o_ComposerSuggestionList_list',
         "command suggestions list should not be present"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "/");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', "/");
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestionList_list'),
         'show',
@@ -700,7 +636,7 @@ QUnit.test('do not send typing notification on typing "/" command', async functi
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    await start({
+    const { insertText } = await start({
         autoOpenDiscuss: true,
         discuss: {
             params: {
@@ -716,14 +652,7 @@ QUnit.test('do not send typing notification on typing "/" command', async functi
         },
     });
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "/");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', "/");
     assert.verifySteps([], "No rpc done");
 });
 
@@ -732,7 +661,7 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    await start({
+    const { insertText } = await start({
         autoOpenDiscuss: true,
         discuss: {
             params: {
@@ -748,35 +677,20 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
         },
     });
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "/");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', "/");
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, " is user?");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', " is user?");
     assert.verifySteps([], "No rpc done");
 });
 
 QUnit.test('use a command for a specific channel type', async function (assert) {
     assert.expect(3);
 
-
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create({ channel_type: 'chat' });
-    const { createComposerComponent, messaging } = await start();
+    const { createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
@@ -793,14 +707,7 @@ QUnit.test('use a command for a specific channel type', async function (assert) 
         "",
         "text content of composer should be empty initially"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "/");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', "/");
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
     );
@@ -816,7 +723,7 @@ QUnit.test('command suggestion should only open if command is the first characte
 
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create({ channel_type: 'channel' });
-    const { createComposerComponent, messaging } = await start();
+    const { createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
@@ -832,22 +739,13 @@ QUnit.test('command suggestion should only open if command is the first characte
         "",
         "text content of composer should be empty initially"
     );
-    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-    await afterNextRender(() =>
-        document.execCommand('insertText', false, "bluhbluh ")
-    );
+    await insertText('.o_ComposerTextInput_textarea', "bluhbluh ");
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "bluhbluh ",
         "text content of composer should have content"
     );
-    await afterNextRender(() => {
-        document.execCommand('insertText', false, "/");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', "/");
     assert.containsNone(
         document.body,
         '.o_ComposerSuggestion',
@@ -860,7 +758,7 @@ QUnit.test('add an emoji after a command', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create({ channel_type: 'channel' });
-    const { createComposerComponent, messaging } = await start();
+    const { createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
@@ -877,14 +775,7 @@ QUnit.test('add an emoji after a command', async function (assert) {
         "",
         "text content of composer should be empty initially"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "/");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', "/");
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
     );
@@ -917,7 +808,7 @@ QUnit.test('display partner mention suggestions on typing "@"', async function (
     pyEnv['res.partner'].create({ email: "testpartner2@odoo.com", name: "TestPartner2" });
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { createComposerComponent, messaging } = await start();
+    const { createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -929,14 +820,7 @@ QUnit.test('display partner mention suggestions on typing "@"', async function (
         '.o_ComposerSuggestionList_list',
         "mention suggestions list should not be present"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "@");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', "@");
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestionList_list'),
         'show',
@@ -955,7 +839,7 @@ QUnit.test('mention a partner', async function (assert) {
     const pyEnv = await startServer();
     pyEnv['res.partner'].create({ email: "testpartner@odoo.com", name: "TestPartner" });
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { createComposerComponent, messaging } = await start();
+    const { createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -972,24 +856,7 @@ QUnit.test('mention a partner', async function (assert) {
         "",
         "text content of composer should be empty initially"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "@");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-        document.execCommand('insertText', false, "T");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-        document.execCommand('insertText', false, "e");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', '@Te');
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -1011,7 +878,7 @@ QUnit.test('mention a partner after some text', async function (assert) {
     const pyEnv = await startServer();
     pyEnv['res.partner'].create({ email: "testpartner@odoo.com", name: "TestPartner" });
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { createComposerComponent, messaging } = await start();
+    const { createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -1037,24 +904,7 @@ QUnit.test('mention a partner after some text', async function (assert) {
         "bluhbluh ",
         "text content of composer should have content"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "@");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-        document.execCommand('insertText', false, "T");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-        document.execCommand('insertText', false, "e");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', "@Te");
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -1076,7 +926,7 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
     const pyEnv = await startServer();
     pyEnv['res.partner'].create({ email: "testpartner@odoo.com", name: "TestPartner" });
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { createComposerComponent, messaging } = await start();
+    const { createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -1093,24 +943,7 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
         "",
         "text content of composer should be empty initially"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "@");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-        document.execCommand('insertText', false, "T");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-        document.execCommand('insertText', false, "e");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', "@Te");
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -1343,7 +1176,7 @@ QUnit.test('current partner notify is typing to other thread members', async fun
     // with a random unique id that will be referenced in the test
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    await start({
+    const { insertText } = await start({
         autoOpenDiscuss: true,
         discuss: {
             params: {
@@ -1359,11 +1192,7 @@ QUnit.test('current partner notify is typing to other thread members', async fun
         },
     });
 
-    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-    document.execCommand('insertText', false, "a");
-    document.querySelector(`.o_ComposerTextInput_textarea`)
-        .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'a' }));
-
+    await insertText('.o_ComposerTextInput_textarea', 'a');
     assert.verifySteps(
         ['notify_typing:true'],
         "should have notified current partner typing status"
@@ -1377,7 +1206,7 @@ QUnit.test('current partner is typing should not translate on textual typing sta
     // with a random unique id that will be referenced in the test
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    await start({
+    const { insertText } = await start({
         autoOpenDiscuss: true,
         discuss: {
             params: {
@@ -1394,10 +1223,7 @@ QUnit.test('current partner is typing should not translate on textual typing sta
         },
     });
 
-    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-    document.execCommand('insertText', false, "a");
-    document.querySelector(`.o_ComposerTextInput_textarea`)
-        .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'a' }));
+    await insertText('.o_ComposerTextInput_textarea', 'a');
 
     assert.verifySteps(
         ['notify_typing:true'],
@@ -1419,7 +1245,7 @@ QUnit.test('current partner notify no longer is typing to thread members after 5
     // with a random unique id that will be referenced in the test
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { env } = await start({
+    const { env, insertText } = await start({
         autoOpenDiscuss: true,
         discuss: {
             params: {
@@ -1436,10 +1262,7 @@ QUnit.test('current partner notify no longer is typing to thread members after 5
         },
     });
 
-    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-    document.execCommand('insertText', false, "a");
-    document.querySelector(`.o_ComposerTextInput_textarea`)
-        .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'a' }));
+    await insertText('.o_ComposerTextInput_textarea', 'a');
 
     assert.verifySteps(
         ['notify_typing:true'],
@@ -1460,7 +1283,7 @@ QUnit.test('current partner notify is typing again to other members every 50s of
     // with a random unique id that will be referenced in the test
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { env } = await start({
+    const { env, insertText } = await start({
         autoOpenDiscuss: true,
         discuss: {
             params: {
@@ -1477,10 +1300,7 @@ QUnit.test('current partner notify is typing again to other members every 50s of
         },
     });
 
-    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-    document.execCommand('insertText', false, "a");
-    document.querySelector(`.o_ComposerTextInput_textarea`)
-        .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'a' }));
+    await insertText('.o_ComposerTextInput_textarea', "a");
     assert.verifySteps(
         ['notify_typing:true'],
         "should have notified current partner is typing"
@@ -1490,9 +1310,7 @@ QUnit.test('current partner notify is typing again to other members every 50s of
     let totalTimeElapsed = 0;
     const elapseTickTime = 2.5 * 1000;
     while (totalTimeElapsed < 50 * 1000) {
-        document.execCommand('insertText', false, "a");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'a' }));
+        await insertText('.o_ComposerTextInput_textarea', 'a');
         totalTimeElapsed += elapseTickTime;
         await env.testUtils.advanceTime(elapseTickTime);
     }

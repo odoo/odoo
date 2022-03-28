@@ -1084,7 +1084,7 @@ QUnit.test('Post a message containing an email address followed by a mention on 
         email: "testpartner@odoo.com",
         name: "TestPartner",
     });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
@@ -1095,17 +1095,8 @@ QUnit.test('Post a message containing an email address followed by a mention on 
         thread: link(thread),
     });
     await createThreadViewComponent(threadViewer.threadView);
-    document.querySelector('.o_ComposerTextInput_textarea').focus();
-    await afterNextRender(() => document.execCommand('insertText', false, "email@odoo.com\n"));
-    await afterNextRender(() => {
-        ["@", "T", "e"].forEach((char)=>{
-            document.execCommand('insertText', false, char);
-            document.querySelector(`.o_ComposerTextInput_textarea`)
-                .dispatchEvent(new window.KeyboardEvent('keydown'));
-            document.querySelector(`.o_ComposerTextInput_textarea`)
-                .dispatchEvent(new window.KeyboardEvent('keyup'));
-        });
-    });
+    await insertText('.o_ComposerTextInput_textarea', "email@odoo.com\n");
+    await insertText('.o_ComposerTextInput_textarea', "@Te");
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
     );
@@ -1128,7 +1119,7 @@ QUnit.test(`Mention a partner with special character (e.g. apostrophe ')`, async
         email: "usatyi@example.com",
         name: "Pynya's spokesman",
     });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
@@ -1139,16 +1130,7 @@ QUnit.test(`Mention a partner with special character (e.g. apostrophe ')`, async
         thread: link(thread),
     });
     await createThreadViewComponent(threadViewer.threadView);
-    document.querySelector('.o_ComposerTextInput_textarea').focus();
-    await afterNextRender(() => {
-        ["@", "P", "y", "n"].forEach((char)=>{
-            document.execCommand('insertText', false, char);
-            document.querySelector(`.o_ComposerTextInput_textarea`)
-                .dispatchEvent(new window.KeyboardEvent('keydown'));
-            document.querySelector(`.o_ComposerTextInput_textarea`)
-                .dispatchEvent(new window.KeyboardEvent('keyup'));
-        });
-    });
+    await insertText('.o_ComposerTextInput_textarea', "@Pyn");
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
     );
@@ -1177,7 +1159,7 @@ QUnit.test('mention 2 different partners that have the same name', async functio
             name: "TestPartner",
         },
     );
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
@@ -1188,26 +1170,9 @@ QUnit.test('mention 2 different partners that have the same name', async functio
         thread: link(thread),
     });
     await createThreadViewComponent(threadViewer.threadView);
-    document.querySelector('.o_ComposerTextInput_textarea').focus();
-    await afterNextRender(() => {
-        ["@", "T", "e"].forEach((char)=>{
-            document.execCommand('insertText', false, char);
-            document.querySelector(`.o_ComposerTextInput_textarea`)
-                .dispatchEvent(new window.KeyboardEvent('keydown'));
-            document.querySelector(`.o_ComposerTextInput_textarea`)
-                .dispatchEvent(new window.KeyboardEvent('keyup'));
-        });
-    });
+    await insertText('.o_ComposerTextInput_textarea', "@Te");
     await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestion')[0].click());
-    await afterNextRender(() => {
-        ["@", "T", "e"].forEach((char)=>{
-            document.execCommand('insertText', false, char);
-            document.querySelector(`.o_ComposerTextInput_textarea`)
-                .dispatchEvent(new window.KeyboardEvent('keydown'));
-            document.querySelector(`.o_ComposerTextInput_textarea`)
-                .dispatchEvent(new window.KeyboardEvent('keyup'));
-        });
-    });
+    await insertText('.o_ComposerTextInput_textarea', "@Te");
     await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestion')[1].click());
     await afterNextRender(() => document.querySelector('.o_Composer_buttonSend').click());
     assert.containsOnce(document.body, '.o_Message_content', 'should have one message after posting it');
@@ -1230,7 +1195,7 @@ QUnit.test('mention a channel with space in the name', async function (assert) {
         id: 7,
         name: "General good boy",
     });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
@@ -1242,14 +1207,7 @@ QUnit.test('mention a channel with space in the name', async function (assert) {
     });
     await createThreadViewComponent(threadViewer.threadView);
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "#");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', "#");
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
     );
@@ -1275,7 +1233,7 @@ QUnit.test('mention a channel with "&" in the name', async function (assert) {
         id: 7,
         name: "General & good",
     });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
@@ -1287,14 +1245,7 @@ QUnit.test('mention a channel with "&" in the name', async function (assert) {
     });
     await createThreadViewComponent(threadViewer.threadView);
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "#");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', "#");
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
     );
@@ -1320,7 +1271,7 @@ QUnit.test('mention a channel on a second line when the first line contains #', 
         id: 7,
         name: "General good",
     });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
@@ -1332,14 +1283,8 @@ QUnit.test('mention a channel on a second line when the first line contains #', 
     });
     await createThreadViewComponent(threadViewer.threadView);
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "#blabla\n#");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', "#blabla\n");
+    await insertText('.o_ComposerTextInput_textarea', "#");
     await afterNextRender(() => {
         document.querySelector('.o_ComposerSuggestion').click();
     });
@@ -1365,7 +1310,7 @@ QUnit.test('mention a channel when replacing the space after the mention by anot
         id: 7,
         name: "General good",
     });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
@@ -1377,26 +1322,13 @@ QUnit.test('mention a channel when replacing the space after the mention by anot
     });
     await createThreadViewComponent(threadViewer.threadView);
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "#");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', "#");
     await afterNextRender(() => {
         document.querySelector('.o_ComposerSuggestion').click();
     });
-    await afterNextRender(() => {
-        const text = document.querySelector(`.o_ComposerTextInput_textarea`).value;
-        document.querySelector(`.o_ComposerTextInput_textarea`).value = text.slice(0, -1);
-        document.execCommand('insertText', false, ", test");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    const text = document.querySelector(`.o_ComposerTextInput_textarea`).value;
+    document.querySelector(`.o_ComposerTextInput_textarea`).value = text.slice(0, -1);
+    await insertText('.o_ComposerTextInput_textarea', ", test");
     await afterNextRender(() => {
         document.querySelector('.o_Composer_buttonSend').click();
     });
@@ -1426,7 +1358,7 @@ QUnit.test('mention 2 different channels that have the same name', async functio
             name: "my channel",
         },
     );
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
@@ -1438,25 +1370,9 @@ QUnit.test('mention 2 different channels that have the same name', async functio
     });
     await createThreadViewComponent(threadViewer.threadView);
     document.querySelector('.o_ComposerTextInput_textarea').focus();
-    await afterNextRender(() => {
-        ["#", "m", "y"].forEach((char)=>{
-            document.execCommand('insertText', false, char);
-            document.querySelector(`.o_ComposerTextInput_textarea`)
-                .dispatchEvent(new window.KeyboardEvent('keydown'));
-            document.querySelector(`.o_ComposerTextInput_textarea`)
-                .dispatchEvent(new window.KeyboardEvent('keyup'));
-        });
-    });
+    await insertText('.o_ComposerTextInput_textarea', "#my");
     await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestion')[0].click());
-    await afterNextRender(() => {
-        ["#", "m", "y"].forEach((char)=>{
-            document.execCommand('insertText', false, char);
-            document.querySelector(`.o_ComposerTextInput_textarea`)
-                .dispatchEvent(new window.KeyboardEvent('keydown'));
-            document.querySelector(`.o_ComposerTextInput_textarea`)
-                .dispatchEvent(new window.KeyboardEvent('keyup'));
-        });
-    });
+    await insertText('.o_ComposerTextInput_textarea', "#my");
     await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestion')[1].click());
     await afterNextRender(() => document.querySelector('.o_Composer_buttonSend').click());
     assert.containsOnce(document.body, '.o_Message_content', 'should have one message after posting it');
