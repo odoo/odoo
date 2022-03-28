@@ -295,13 +295,12 @@ class Currency(models.Model):
         arch, view = super(Currency, self)._view_get(view_id=view_id, view_type=view_type, **options)
         if view_type in ('tree', 'form'):
             currency_name = (self.env['res.company'].browse(self._context.get('company_id')) or self.env.company).currency_id.name
-            doc = arch
             for field in [['company_rate', _('Unit per %s', currency_name)],
                           ['inverse_company_rate', _('%s per Unit', currency_name)]]:
-                node = doc.xpath("//tree//field[@name='%s']" % field[0])
+                node = arch.xpath("//tree//field[@name='%s']" % field[0])
                 if node:
                     node[0].set('string', field[1])
-        return doc, view
+        return arch, view
 
 
 class CurrencyRate(models.Model):

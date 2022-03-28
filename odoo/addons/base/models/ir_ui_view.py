@@ -1046,7 +1046,7 @@ actual arch.
             name_managers.extend(name_manager.childs)
         return arch, models
 
-    def _postprocess_view(self, node, model_name, editable=True, **options):
+    def _postprocess_view(self, node, model_name, editable=True, parent=None, **options):
         """ Process the given architecture, modifying it in-place to add and
         remove stuff.
 
@@ -1064,7 +1064,12 @@ actual arch.
 
         self._postprocess_on_change(root, model)
 
-        name_manager = NameManager(model, **dict(options, view_type=node.tag))
+        name_manager = NameManager(model, parent=parent)
+
+        root_info = {
+            'view_type': root.tag,
+            'mobile': options.get('mobile'),
+        }
 
         # use a stack to recursively traverse the tree
         stack = [(root, editable)]
@@ -1074,10 +1079,7 @@ actual arch.
             # compute default
             tag = node.tag
             parent = node.getparent()
-            node_info = {
-                'modifiers': {},
-                'editable': editable and self._editable_node(node, name_manager),
-            }
+            node_info = dict(root_info, modifiers={}, editable=editable and self._editable_node(node, name_manager))
 
             # tag-specific postprocessing
             postprocessor = getattr(self, f"_postprocess_tag_{tag}", None)
@@ -1153,6 +1155,9 @@ actual arch.
                             not self._context.get(action, True) and is_base_model):
                         node.set(action, 'false')
 
+    def _postprocess_prepare_2many_inline_view_widgets(self):
+        return []
+
     #------------------------------------------------------
     # Specific node postprocessors
     #------------------------------------------------------
@@ -1174,18 +1179,27 @@ actual arch.
                     node.getparent().remove(node)
                     # no point processing view-level ``groups`` anymore, return
                     return
-                if name_manager.view_type == 'form' \
-                   and field.type in ('one2many', 'many2many') \
-                   and (not node.get('widget') or not any(node.get('widget').startswith(widget) for widget in ('many2many_avatar_employee', 'many2many_tags', 'many2many_checkboxes'))) \
-                   and not node.get('invisible')\
-                   and name_manager.level < 1:
+                if (
+                    node_info.get('view_type') == 'form'
+                    and field.type in ('one2many', 'many2many')
+                    and (
+                            not node.get('widget')
+                            or node.get('widget') in self._postprocess_prepare_2many_inline_view_widgets()
+                        )
+                    and not node.get('invisible')
+                    and name_manager.level < 1
+                ):
+                    # Embed kanban/tree/form views for visible x2many fields in form views
+                    # if no widget or the widget requires it.
+                    # So the web client doesn't have to call `load_views` for x2many fields not embedding their view
+                    # in the main form view.
                     current_view_types = [el.tag for el in node.xpath("./*[descendant::field]")]
                     missing_view_types = []
                     if 'form' not in current_view_types:
                         missing_view_types.append('form')
                     if not any(view_type in current_view_types for view_type in node.get('mode', 'kanban,tree').split(',')):
                         missing_view_types.append(
-                            node.get('mode', 'kanban' if name_manager.mobile else 'tree').split(',')[0]
+                            node.get('mode', 'kanban' if node_info.get('mobile') else 'tree').split(',')[0]
                         )
                     if missing_view_types:
                         comodel = self.env[field.comodel_name].sudo(False)
@@ -1202,12 +1216,11 @@ actual arch.
                 for child in node:
                     if child.tag in ('form', 'tree', 'graph', 'kanban', 'calendar'):
                         node_info['children'] = []
-                        sub_name_manager = self.with_context(
+                        self.with_context(
                             base_model_name=name_manager.model._name,
                         )._postprocess_view(
-                            child, field.comodel_name, editable=node_info['editable'], level=name_manager.level + 1,
+                            child, field.comodel_name, editable=node_info['editable'], parent=name_manager,
                         )
-                        name_manager.childs.add(sub_name_manager)
                 if field.type in ('many2one', 'many2many'):
                     comodel = self.env[field.comodel_name].sudo(False)
                     can_create = comodel.check_access_rights('create', raise_exception=False)
@@ -1234,11 +1247,10 @@ actual arch.
         if not field or not field.comodel_name:
             return
         # post-process the node as a nested view, and associate it to the field
-        sub_name_manager = self.with_context(
+        self.with_context(
             base_model_name=name_manager.model._name,
-        )._postprocess_view(node, field.comodel_name, editable=False)
+        )._postprocess_view(node, field.comodel_name, editable=False, parent=name_manager)
         name_manager.has_field(name)
-        name_manager.childs.add(sub_name_manager)
 
     def _postprocess_tag_label(self, node, name_manager, node_info):
         if node.get('for'):
@@ -1252,7 +1264,7 @@ actual arch.
             self.with_context(
                 base_model_name=name_manager.model._name,
             )._postprocess_view(
-                searchpanel[0], name_manager.model._name, editable=False,
+                searchpanel[0], name_manager.model._name, editable=False, parent=name_manager
             )
             node_info['children'] = [child for child in node if child.tag != 'searchpanel']
 
@@ -2229,7 +2241,7 @@ class ResetViewArchWizard(models.TransientModel):
 class NameManager:
     """ An object that manages all the named elements in a view. """
 
-    def __init__(self, model, **options):
+    def __init__(self, model, parent=None):
         self.model = model
         self.available_fields = collections.defaultdict(dict)   # {field_name: field_info}
         self.available_actions = set()
@@ -2237,10 +2249,12 @@ class NameManager:
         self.mandatory_fields = dict()          # {field_name: use}
         self.mandatory_parent_fields = dict()   # {field_name: use}
         self.mandatory_names = dict()           # {name: use}
-        self.view_type = options.get('view_type')
-        self.level = options.get('level', 0)
-        self.mobile = options.get('mobile')
-        self.childs = set()
+        self.parent = parent
+        self.childs = []
+        self.level = 0
+        if self.parent:
+            self.parent.childs.append(self)
+            self.level = self.parent.level + 1
 
     @lazy_property
     def field_info(self):

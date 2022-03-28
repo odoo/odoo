@@ -1736,12 +1736,15 @@ class BaseModel(metaclass=MetaModel):
     def view_get(self, view_id=None, view_type='form', **options):
         """ view_get([view_id | view_type='form'])
 
-        Get the detailed composition of the requested view like fields, model, view architecture
+        Get the detailed composition of the requested view like model, view architecture
 
         :param int view_id: id of the view or None
         :param str view_type: type of the view to return if view_id is None ('form', 'tree', ...)
-        :param bool toolbar: true to include contextual actions
-        :param submenu: deprecated
+        :param dict options: bool options to return additional features:
+            - bool load_filters: returns the model's filters (for search views)
+            - bool mobile: true if the web client is currently using the responsive mobile view
+              (to use kanban views instead of list views for x2many fields)
+            - bool toolbar: true to include contextual actions
         :return: composition of the requested view (including inherited views and extensions)
         :rtype: dict
         :raise AttributeError:
@@ -1791,6 +1794,47 @@ class BaseModel(metaclass=MetaModel):
         if options.get('load_filters') and view_type == 'search':
             result['filters'] = self.env['ir.filters'].get_filters(self._name, options.get('action_id'))
 
+        return result
+
+    @api.model
+    def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        warnings.warn('_fields_view_get method is deprecated, use `_view_get` instead', DeprecationWarning)
+        arch, view = self._view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        result = {
+            'arch': etree.tostring(arch, encoding='unicode'),
+            'model': self._name,
+            'field_parent': False,
+        }
+        if view:
+            result['name'] = view.name
+            result['type'] = view.type
+            result['view_id'] = view.id
+            result['field_parent'] = view.field_parent
+            result['base_model'] = view.model
+        else:
+            result['type'] = view_type
+            result['name'] = 'default'
+        return result
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        warnings.warn('fields_view_get method is deprecated, use `view_get` instead', DeprecationWarning)
+        result = self.view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        node = etree.fromstring(result['arch'])
+        view_fields = set(el.get('name') for el in node.xpath('.//field[not(ancestor::field)]'))
+        result['fields'] = self.fields_get(view_fields)
+        result.pop('models', None)
+        if 'id' in result:
+            view = self.env['ir.ui.view'].sudo(result.pop('id'))
+            result['name'] = view.name
+            result['type'] = view.type
+            result['view_id'] = view.id
+            result['field_parent'] = view.field_parent
+            result['base_model'] = view.model
+        else:
+            result['type'] = view_type
+            result['name'] = 'default'
+            result['field_parent'] = False
         return result
 
     def get_formview_id(self, access_uid=None):

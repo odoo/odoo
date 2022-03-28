@@ -437,27 +437,27 @@ class Product(models.Model):
         if self._context.get('location') and isinstance(self._context['location'], int):
             location = self.env['stock.location'].browse(self._context['location'])
             if location.usage == 'supplier':
-                if fields.get('virtual_available'):
+                if res.get('virtual_available'):
                     res['virtual_available']['string'] = _('Future Receipts')
-                if fields.get('qty_available'):
+                if res.get('qty_available'):
                     res['qty_available']['string'] = _('Received Qty')
             elif location.usage == 'internal':
-                if fields.get('virtual_available'):
+                if res.get('virtual_available'):
                     res['virtual_available']['string'] = _('Forecasted Quantity')
             elif location.usage == 'customer':
-                if fields.get('virtual_available'):
+                if res.get('virtual_available'):
                     res['virtual_available']['string'] = _('Future Deliveries')
-                if fields.get('qty_available'):
+                if res.get('qty_available'):
                     res['qty_available']['string'] = _('Delivered Qty')
             elif location.usage == 'inventory':
-                if fields.get('virtual_available'):
+                if res.get('virtual_available'):
                     res['virtual_available']['string'] = _('Future P&L')
-                if fields.get('qty_available'):
+                if res.get('qty_available'):
                     res['qty_available']['string'] = _('P&L Qty')
             elif location.usage == 'production':
-                if fields.get('virtual_available'):
+                if res.get('virtual_available'):
                     res['virtual_available']['string'] = _('Future Productions')
-                if fields.get('qty_available'):
+                if res.get('qty_available'):
                     res['qty_available']['string'] = _('Produced Qty')
         return res
 
