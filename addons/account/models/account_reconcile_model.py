@@ -370,13 +370,14 @@ class AccountReconcileModel(models.Model):
                 'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
                 'reconcile_model_id': self.id,
                 'journal_id': line.journal_id.id,
+                'tax_ids': [],
             }
             lines_vals_list.append(writeoff_line)
 
             residual_balance -= balance
 
             if line.tax_ids:
-                writeoff_line['tax_ids'] = [(6, None, line.tax_ids.ids)]
+                writeoff_line['tax_ids'] += [(6, None, line.tax_ids.ids)]
                 tax = line.tax_ids
                 # Multiple taxes with force_tax_included results in wrong computation, so we
                 # only allow to set the force_tax_included field if we have one tax selected
