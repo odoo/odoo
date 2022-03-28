@@ -53,8 +53,7 @@ class UserInputSession(http.Controller):
 
         survey = self._fetch_from_token(survey_token)
 
-        if not survey or not survey.session_state:
-            # no open session
+        if not survey:
             return NotFound()
 
         if survey.session_state == 'ready':
@@ -66,9 +65,8 @@ class UserInputSession(http.Controller):
             return request.render('survey.user_input_session_open', {
                 'survey': survey
             })
-        else:
-            template_values = self._prepare_manage_session_values(survey)
-            return request.render('survey.user_input_session_manage', template_values)
+        # Note that at this stage survey.session_state can be False meaning that the survey has ended (session closed)
+        return request.render('survey.user_input_session_manage', self._prepare_manage_session_values(survey))
 
     @http.route('/survey/session/next_question/<string:survey_token>', type='json', auth='user', website=True)
     def survey_session_next_question(self, survey_token, go_back=False, **kwargs):
@@ -212,6 +210,7 @@ class UserInputSession(http.Controller):
             'survey': survey,
             'is_last_question': is_last_question,
             'is_first_question': is_first_question,
+            'is_session_closed': not survey.session_state,
         }
 
         values.update(self._prepare_question_results_values(survey, request.env['survey.user_input.line']))
