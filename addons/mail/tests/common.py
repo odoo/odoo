@@ -111,6 +111,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
              'smtp_host': 'smtp_host',
             }
         ])
+        cls.mail_servers = cls.mail_server_domain + cls.mail_server_global
 
     # ------------------------------------------------------------
     # GATEWAY TOOLS
@@ -507,6 +508,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         debug_info = '-'.join('From: %s-To: %s' % (mail['email_from'], mail['email_to']) for mail in self._mails) if not bool(sent_mail) else ''
         self.assertTrue(bool(sent_mail), 'Expected mail from %s to %s not found in %s' % (expected['email_from'], expected['email_to'], debug_info))
 
+        # assert values
         for val in direct_check:
             if val in expected:
                 self.assertEqual(expected[val], sent_mail[val], 'Value for %s: expected %s, received %s' % (val, expected[val], sent_mail[val]))
