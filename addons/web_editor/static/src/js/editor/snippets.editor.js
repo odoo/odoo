@@ -296,7 +296,7 @@ var SnippetEditor = Widget.extend({
      */
     buildSnippet: async function () {
         for (var i in this.styles) {
-            this.styles[i].onBuilt();
+            await this.styles[i].onBuilt();
         }
         await this.toggleTargetVisibility(true);
     },
