@@ -210,6 +210,7 @@ export class OdooEditor extends EventTarget {
                 onChange: () => {},
                 isHintBlacklisted: () => false,
                 filterMutationRecords: (records) => records,
+                onPostSanitize: () => {},
                 direction: 'ltr',
                 _t: string => string,
                 allowCommandVideo: true,
@@ -272,7 +273,11 @@ export class OdooEditor extends EventTarget {
         // Convention: root node is ID root.
         editable.oid = 'root';
         this._idToNodeMap.set(1, editable);
-        this.editable = this.options.toSanitize ? sanitize(editable) : editable;
+        if (this.options.toSanitize) {
+            sanitize(editable);
+            this.options.onPostSanitize(editable);
+        }
+        this.editable = editable;
         this.editable.classList.add("odoo-editor-editable");
         this.editable.setAttribute('dir', this.options.direction);
 
@@ -414,6 +419,7 @@ export class OdooEditor extends EventTarget {
         // sanitize and mark current position as sanitized
         sanitize(commonAncestor);
         this._pluginCall('sanitizeElement', [commonAncestor]);
+        this.options.onPostSanitize(commonAncestor);
     }
 
     addDomListener(element, eventName, callback) {
@@ -502,6 +508,7 @@ export class OdooEditor extends EventTarget {
                 this.observerApply(records);
             });
         }
+        this.dispatchEvent(new Event('preObserverActive'));
         this.observer.observe(this.editable, {
             childList: true,
             subtree: true,
@@ -696,7 +703,7 @@ export class OdooEditor extends EventTarget {
         if (!this._historyStepsActive) {
             return;
         }
-        this.observerFlush();
+        this.sanitize();
         // check that not two unBreakables modified
         if (this._toRollback) {
             if (!skipRollback) this.historyRollback();
@@ -1575,7 +1582,6 @@ export class OdooEditor extends EventTarget {
     _applyCommand(...args) {
         this._recordHistorySelection(true);
         const result = this._protect(() => this._applyRawCommand(...args));
-        this.sanitize();
         this.historyStep();
         this._handleCommandHint();
         return result;
@@ -2304,12 +2310,10 @@ export class OdooEditor extends EventTarget {
                         if (brs.includes(anchor.firstChild)) {
                             brs.forEach(br => anchor.before(br));
                             setSelection(...rightPos(brs[brs.length - 1]));
-                            this.sanitize();
                             this.historyStep();
                         } else if (brs.includes(anchor.lastChild)) {
                             brs.forEach(br => anchor.after(br));
                             setSelection(...rightPos(brs[0]));
-                            this.sanitize();
                             this.historyStep();
                         }
                     }
@@ -2353,7 +2357,6 @@ export class OdooEditor extends EventTarget {
                 ) {
                     this._convertUrlInElement(closestElement(selection.anchorNode));
                 }
-                this.sanitize();
                 this.historyStep();
             } else if (ev.inputType === 'insertLineBreak') {
                 this._compositionStep();
@@ -2361,7 +2364,6 @@ export class OdooEditor extends EventTarget {
                 ev.preventDefault();
                 this._applyCommand('oShiftEnter');
             } else {
-                this.sanitize();
                 this.historyStep();
             }
         } else if (ev.inputType === 'insertCompositionText') {
