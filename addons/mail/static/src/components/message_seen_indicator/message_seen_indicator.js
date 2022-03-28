@@ -11,13 +11,6 @@ export class MessageSeenIndicator extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {Message}
-     */
-    get message() {
-        return this.messaging && this.messaging.models['Message'].get(this.props.messageLocalId);
-    }
-
-    /**
      * @returns {MessageSeenIndicator}
      */
      get messageSeenIndicatorView() {
@@ -35,7 +28,6 @@ export class MessageSeenIndicator extends Component {
 Object.assign(MessageSeenIndicator, {
     props: {
         localId: String,
-        messageLocalId: String,
         threadLocalId: String,
     },
     template: 'mail.MessageSeenIndicator',
