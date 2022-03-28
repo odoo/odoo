@@ -205,6 +205,9 @@ Wysiwyg.include({
      * @returns {Promise}
      */
     _toggleMegaMenu: function (toggleEl) {
+        if (this.options.enableTranslation) {
+            return;
+        }
         const megaMenuEl = toggleEl.parentElement.querySelector('.o_mega_menu');
         if (!megaMenuEl || !megaMenuEl.classList.contains('show')) {
             return this.snippetsMenu.activateSnippet(false);
