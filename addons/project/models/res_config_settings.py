@@ -15,18 +15,6 @@ class ResConfigSettings(models.TransientModel):
     group_project_recurring_tasks = fields.Boolean("Recurring Tasks", implied_group="project.group_project_recurring_tasks")
     group_project_task_dependencies = fields.Boolean("Task Dependencies", implied_group="project.group_project_task_dependencies")
     group_project_milestone = fields.Boolean('Milestones', implied_group='project.group_project_milestone', group='base.group_portal,base.group_user')
-    rating_status = fields.Selection(
-        [('stage', 'Rating when changing stage'),
-         ('periodic', 'Periodic rating')
-        ], 'Customer Ratings Status', default="stage", required=True, config_parameter='project.rating_status')
-    rating_status_period = fields.Selection([
-        ('daily', 'Daily'),
-        ('weekly', 'Weekly'),
-        ('bimonthly', 'Twice a Month'),
-        ('monthly', 'Once a Month'),
-        ('quarterly', 'Quarterly'),
-        ('yearly', 'Yearly')], 'Rating Frequency', required=True, default='monthly', config_parameter='project.rating_status_period')
-
 
     @api.model
     def _get_basic_project_domain(self):

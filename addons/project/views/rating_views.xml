@@ -116,6 +116,9 @@
                 <field name="parent_res_name" position="move"/>
                 <field name="res_name" position="move"/>
             </xpath>
+            <xpath expr="//field[@name='rated_partner_id']" position="attributes">
+                <attribute name="string">Assigned to</attribute>
+            </xpath>
             <xpath expr="//field[@name='parent_res_name']" position="attributes">
                 <attribute name="string">Project</attribute>
             </xpath>
@@ -131,7 +134,9 @@
             <xpath expr="//filter[@name='resource']" position="attributes">
                 <attribute name="string">Task</attribute>
             </xpath>
-            <xpath expr="//filter[@name='responsible']" position="replace"></xpath>
+            <xpath expr="//filter[@name='responsible']" position="attributes">
+                <attribute name="string">Assigned to</attribute>
+            </xpath>
             <xpath expr="//filter[@name='filter_create_date']" position="replace">
                 <filter name="filter_write_date" string="Submitted On" date="write_date"/>
             </xpath>
