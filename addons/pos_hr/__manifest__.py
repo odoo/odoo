@@ -33,7 +33,7 @@ The actual till still requires one user but an unlimited number of employees can
         'web.assets_tests': [
             'pos_hr/static/tests/**/*',
         ],
-        'web.assets_qweb': [
+        'point_of_sale.assets_qweb': [
             'pos_hr/static/src/xml/**/*',
         ],
     },

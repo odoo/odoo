@@ -44,7 +44,7 @@ following:
             'pos_mercury/static/src/js/ProductScreen.js',
             'pos_mercury/static/src/css/pos_mercury.css',
         ],
-        'web.assets_qweb': [
+        'point_of_sale.assets_qweb': [
             'pos_mercury/static/src/xml/**/*',
         ],
     },

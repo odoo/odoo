@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { makeEnv, startServices } from "./env";
-import { legacySetupProm } from "./legacy/legacy_setup";
+import { legacySetupProm } from "web.legacySetup";
 import { mapLegacyEnvToWowlEnv } from "./legacy/utils";
 import { processTemplates } from "./core/assets";
 import { localization } from "@web/core/l10n/localization";

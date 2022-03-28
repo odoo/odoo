@@ -2,8 +2,15 @@
 <odoo>
 
 <template id="point_of_sale.qunit_suite_assets">
+    <!-- css -->
+    <t t-call-assets="web.assets_common" t-js="false" />
     <t t-call-assets="web.assets_backend" t-js="false" />
+    <t t-call-assets="point_of_sale.assets" t-js="false" />
     <t t-call-assets="point_of_sale.tests_assets" t-js="false"/>
+    <!-- js -->
+    <t t-call-assets="web.assets_common" t-css="false" />
+    <t t-call-assets="web.assets_backend" t-css="false" />
+    <t t-call-assets="point_of_sale.assets" t-css="false" />
     <t t-call-assets="point_of_sale.tests_assets" t-css="false"/>
     <style>
         body {
@@ -38,7 +45,6 @@
                 })"/>;
             </script>
 
-            <t t-call="point_of_sale.assets_common" />
             <t t-call="point_of_sale.qunit_suite_assets" />
             <t t-call-assets="point_of_sale.qunit_suite_tests" />
         </t>

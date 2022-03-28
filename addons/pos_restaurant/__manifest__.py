@@ -66,7 +66,7 @@ This module adds several features to the Point of Sale that are specific to rest
         'web.assets_tests': [
             'pos_restaurant/static/tests/tours/**/*',
         ],
-        'web.assets_qweb': [
+        'point_of_sale.assets_qweb': [
             'pos_restaurant/static/src/xml/**/*',
         ],
     },

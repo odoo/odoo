@@ -18,7 +18,6 @@
         'wizard/pos_details.xml',
         'wizard/pos_payment.xml',
         'wizard/pos_close_session_wizard.xml',
-        'views/pos_assets_common.xml',
         'views/pos_assets_index.xml',
         'views/pos_assets_qunit.xml',
         'views/point_of_sale_report.xml',
@@ -84,26 +83,139 @@
         'web.assets_tests': [
             'point_of_sale/static/tests/tours/**/*',
         ],
-        'web.assets_qweb': [
-            'point_of_sale/static/src/xml/**/*.xml',
-        ],
 
         ####################################################
         ## Exclusive POS Assets 1: For running the POS UI ##
         ####################################################
 
-        'point_of_sale.pos_assets_backend_style': [
+        'point_of_sale.assets_qweb': [
+            'web/static/src/webclient/loading_indicator/loading_indicator.xml',
+            'point_of_sale/static/src/xml/**/*.xml',
+        ],
+        'point_of_sale.required_style_assets': [
             "web/static/src/core/ui/**/*.scss",
         ],
-        # TODO: We need to control this asset bundle.
-        # We can reduce the size of loaded assets in POS UI by selectively
-        # loading the `web` assets. We should only include what POS needs.
-        'point_of_sale.pos_assets_backend': [
+        # This bundle contains the necessary modules from web needed to open the pos ui.
+        # Extract only js files in this asset bundle.
+        'point_of_sale.required_assets': [
             ('include', 'web.assets_common'),
-            ('include', 'web.assets_backend'),
-            ('remove', 'web/static/src/webclient/menus/menu_service.js'),
-            ('remove', 'web/static/src/core/errors/error_handlers.js'),
-            ('remove', 'web/static/src/legacy/legacy_rpc_error_handler.js'),
+            ('remove', 'web/static/src/legacy/js/core/menu.js'),
+            # lib
+            'web/static/lib/py.js/lib/py.js',
+            'web/static/lib/py.js/lib/py_extras.js',
+            'web/static/lib/luxon/luxon.js',
+            # modules
+            'bus/static/src/js/longpolling_bus.js',
+            'bus/static/src/js/crosstab_bus.js',
+            'bus/static/src/js/services/bus_service.js',
+            'barcodes/static/src/js/barcode_events.js',
+            'barcodes/static/src/js/barcode_parser.js',
+            'web_tour/static/src/js/tour_service.js',
+            'web/static/src/core/assets.js',
+            'web/static/src/core/browser/browser.js',
+            'web/static/src/core/browser/feature_detection.js',
+            'web/static/src/core/context.js',
+            'web/static/src/core/dialog/dialog.js',
+            'web/static/src/core/errors/error_dialogs.js',
+            'web/static/src/core/hotkeys/hotkey_hook.js',
+            'web/static/src/core/l10n/localization.js',
+            'web/static/src/core/l10n/translation.js',
+            'web/static/src/core/network/rpc_service.js',
+            'web/static/src/core/py_js/py_builtin.js',
+            'web/static/src/core/py_js/py_date.js',
+            'web/static/src/core/py_js/py_interpreter.js',
+            'web/static/src/core/py_js/py_parser.js',
+            'web/static/src/core/py_js/py_tokenizer.js',
+            'web/static/src/core/py_js/py_utils.js',
+            'web/static/src/core/py_js/py.js',
+            'web/static/src/core/registry.js',
+            'web/static/src/core/transition.js',
+            'web/static/src/core/ui/block_ui.js',
+            'web/static/src/core/ui/ui_service.js',
+            'web/static/src/core/ui/ui_service.js',
+            'web/static/src/core/utils/functions.js',
+            'web/static/src/core/utils/hooks.js',
+            'web/static/src/core/utils/render.js',
+            'web/static/src/core/utils/strings.js',
+            'web/static/src/core/utils/timing.js',
+            'web/static/src/env.js',
+            'web/static/src/legacy/backend_utils.js',
+            'web/static/src/legacy/js/control_panel/search_utils.js',
+            'web/static/src/legacy/js/core/domain.js',
+            'web/static/src/legacy/js/core/misc.js',
+            'web/static/src/legacy/js/core/py_utils.js',
+            'web/static/src/legacy/js/env.js',
+            'web/static/src/legacy/js/fields/field_utils.js',
+            'web/static/src/legacy/js/model.js',
+            'web/static/src/legacy/js/owl_compatibility.js',
+            'web/static/src/legacy/js/services/data_manager.js',
+            'web/static/src/legacy/js/services/session.js',
+            'web/static/src/legacy/js/views/action_model.js',
+            'web/static/src/legacy/js/views/view_utils.js',
+            'web/static/src/legacy/root_widget.js',
+            'web/static/src/webclient/actions/action_service.js',
+            'web/static/src/webclient/loading_indicator/loading_indicator.js',
+            # Starting here, the following are dependencies of action_service.
+            'web/static/src/search/layout.js',
+            'web/static/src/webclient/actions/scrolling.js',
+            'web/static/src/core/position_hook.js',
+            'web/static/src/core/user_service.js',
+            'web/static/src/core/debug/debug_context.js',
+            'web/static/src/core/network/download.js',
+            'web/static/src/core/utils/concurrency.js',
+            'web/static/src/legacy/utils.js',
+            'web/static/src/views/view.js',
+            'web/static/src/webclient/actions/action_dialog.js',
+            'web/static/src/webclient/actions/action_hook.js',
+            'web/static/src/core/utils/objects.js',
+            'web/static/src/search/with_search/with_search.js',
+            'web/static/src/views/helpers/view_hook.js',
+            'web/static/src/core/debug/debug_menu.js',
+            'web/static/src/core/utils/scrolling.js',
+            'web/static/src/search/search_model.js',
+            'web/static/src/search/control_panel/control_panel.js',
+            'web/static/src/search/search_panel/search_panel.js',
+            'web/static/src/core/dropdown/dropdown.js',
+            'web/static/src/core/dropdown/dropdown_item.js',
+            'web/static/src/core/debug/debug_menu_basic.js',
+            'web/static/src/core/commands/command_hook.js',
+            'web/static/src/core/domain.js',
+            'web/static/src/core/utils/arrays.js',
+            'web/static/src/search/search_arch_parser.js',
+            'web/static/src/search/utils/dates.js',
+            'web/static/src/search/utils/misc.js',
+            'web/static/src/core/pager/pager.js',
+            'web/static/src/search/comparison_menu/comparison_menu.js',
+            'web/static/src/search/favorite_menu/favorite_menu.js',
+            'web/static/src/search/filter_menu/filter_menu.js',
+            'web/static/src/search/group_by_menu/group_by_menu.js',
+            'web/static/src/search/search_bar/search_bar.js',
+            'web/static/src/core/dropdown/dropdown_navigation_hook.js',
+            'web/static/src/core/utils/xml.js',
+            'web/static/src/core/l10n/dates.js',
+            'web/static/src/core/confirmation_dialog/confirmation_dialog.js',
+            'web/static/src/search/filter_menu/custom_filter_item.js',
+            'web/static/src/search/group_by_menu/custom_group_by_item.js',
+            'web/static/src/core/utils/search.js',
+            'web/static/src/core/datepicker/datepicker.js',
+            # effect_service
+            'web/static/src/core/effects/effect_service.js',
+            'web/static/src/core/effects/effect_container.js',
+            'web/static/src/core/effects/rainbow_man.js',
+            # localization_service
+            'web/static/src/core/l10n/localization_service.js',
+            # notification_service
+            'web/static/src/core/notifications/notification_service.js',
+            'web/static/src/core/notifications/notification_container.js',
+            'web/static/src/core/notifications/notification.js',
+            # router_service
+            'web/static/src/core/browser/router_service.js',
+            'web/static/src/core/utils/urls.js',
+            # title_service
+            'web/static/src/core/browser/title_service.js',
+            # company_service
+            'web/static/src/webclient/company_service.js',
+            'web/static/src/core/browser/cookie_service.js',
         ],
         # This bundle includes the main pos assets.
         'point_of_sale.assets': [
@@ -125,11 +237,11 @@
         ],
         # This bundle contains the code responsible for starting the POS UI.
         # It is practically the entry point.
-        'point_of_sale.assets_backend_prod_only': [
+        'point_of_sale.entry': [
             'point_of_sale/static/src/entry/chrome_adapter.js',
             'point_of_sale/static/src/entry/main.js',
             'web/static/src/start.js',
-            'web/static/src/legacy/legacy_setup.js',
+            'point_of_sale/static/src/entry/custom_legacy_setup.js',
         ],
 
         #########################################################

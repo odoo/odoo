@@ -7,12 +7,41 @@ odoo.define('point_of_sale.tests.PosPopupController', function(require) {
     const makeTestEnvironment = require('web.test_env');
     const testUtils = require('web.test_utils');
     const Registries = require('point_of_sale.Registries');
-    const { mount } = require('@web/../tests/helpers/utils');
+    const { loadBundle } = require('@web/core/assets');
 
     const { EventBus, useSubEnv, xml } = owl;
 
+    async function createTestPosApp() {
+        class Root extends PosComponent {
+            setup() {
+                super.setup();
+                useSubEnv({
+                    isDebug: () => false,
+                    posbus: new EventBus(),
+                });
+            }
+        }
+        Root.template = xml/* html */ `<div><PosPopupController /></div>`;
+
+        const app = new owl.App(Root, {
+            env: makeTestEnvironment(),
+            templates: window.__OWL_TEMPLATES__,
+            test: true,
+        });
+        const { templates: posTemplates } = await loadBundle('point_of_sale.assets_qweb', { templates: true });
+        for (const template of posTemplates.querySelectorAll("[t-name]")) {
+            const name = template.getAttribute("t-name");
+            if (!(name in app.rawTemplates)) {
+                app.addTemplate(name, template);
+            }
+        }
+        return app;
+    }
+
+    let testPosApp;
+
     QUnit.module('unit tests for PosPopupController', {
-        before() {
+        async before() {
             Registries.Component.freeze();
 
             // Note that we are creating new popups here to decouple this test from the pos app.
@@ -42,29 +71,15 @@ odoo.define('point_of_sale.tests.PosPopupController', function(require) {
             `;
 
             PosPopupController.components = { CustomPopup1, CustomPopup2 };
+
+            testPosApp = await createTestPosApp();
         },
     });
 
     QUnit.test('allow multiple popups at the same time', async function(assert) {
         assert.expect(12);
 
-        class Root extends PosComponent {
-            setup() {
-                super.setup();
-                useSubEnv({
-                    isDebug: () => false,
-                    posbus: new EventBus(),
-                });
-            }
-        }
-        Root.env = makeTestEnvironment();
-        Root.template = xml/* html */ `
-            <div>
-                <PosPopupController />
-            </div>
-        `;
-
-        const root = await mount(Root, testUtils.prepareTarget());
+        const root = await testPosApp.mount(testUtils.prepareTarget());
 
         // Check 1 popup
         let popup1Promise = root.showPopup('CustomPopup1', {});
@@ -113,28 +128,14 @@ odoo.define('point_of_sale.tests.PosPopupController', function(require) {
         let result2 = await popup2Promise;
         assert.strictEqual(result1.confirmed, false); // false because it's cancelled.
         assert.strictEqual(result2.confirmed, true); // true because it's confirmed.
+
+        testPosApp.destroy();
     });
 
     QUnit.test('pressing cancel/confirm key should only close the top popup', async function(assert) {
         assert.expect(6);
 
-        class Root extends PosComponent {
-            setup() {
-                super.setup();
-                useSubEnv({
-                    isDebug: () => false,
-                    posbus: new EventBus(),
-                });
-            }
-        }
-        Root.env = makeTestEnvironment();
-        Root.template = xml/* html */ `
-            <div>
-                <PosPopupController />
-            </div>
-        `;
-
-        const root = await mount(Root, testUtils.prepareTarget());
+        const root = await testPosApp.mount(testUtils.prepareTarget());
 
         let popup1Promise = root.showPopup('CustomPopup1', { confirmKey: 'Enter', cancelKey: 'Escape' });
         await testUtils.nextTick();
@@ -161,5 +162,7 @@ odoo.define('point_of_sale.tests.PosPopupController', function(require) {
 
         const result1 = await popup1Promise;
         assert.strictEqual(result1.confirmed, true);
+
+        testPosApp.destroy();
     });
 });

@@ -16,7 +16,7 @@ K.S.A. POS Localization
     'data': [
     ],
     'assets': {
-        'web.assets_qweb': [
+        'point_of_sale.assets_qweb': [
             'l10n_sa_pos/static/src/xml/OrderReceipt.xml',
         ],
         'point_of_sale.assets': [

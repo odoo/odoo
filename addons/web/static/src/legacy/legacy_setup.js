@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.legacySetup **/
+/** @odoo-module alias=web.legacySetup default=false **/
 
 import { registry } from "../core/registry";
 import {

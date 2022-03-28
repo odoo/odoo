@@ -59,7 +59,7 @@ class TestAssetsGenerateTime(TestAssetsGenerateTimeCommon):
         thresholds = {
             'web.qunit_suite_tests.js': 3.6,
             'project.webclient.js': 2.5,
-            'point_of_sale.pos_assets_backend.js': 2.5,
+            'point_of_sale.required_assets.js': 2.5,
             'web.assets_backend.js': 2.5,
         }
         for bundle, duration in self.generate_bundles():

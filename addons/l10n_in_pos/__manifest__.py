@@ -19,7 +19,7 @@
         'point_of_sale.assets': [
             'l10n_in_pos/static/src/js/**/*',
         ],
-        'web.assets_qweb': [
+        'point_of_sale.assets_qweb': [
             'l10n_in_pos/static/src/xml/**/*',
         ],
     },

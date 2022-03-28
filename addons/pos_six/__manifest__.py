@@ -21,7 +21,7 @@
             'pos_six/static/src/js/models.js',
             'pos_six/static/src/js/payment_six.js',
         ],
-        'web.assets_qweb': [
+        'point_of_sale.assets_qweb': [
             'pos_six/static/src/xml/**/*',
         ],
     }

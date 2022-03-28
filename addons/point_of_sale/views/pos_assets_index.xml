@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+<template id="point_of_sale.assets_misc" name="PoS Misc Assets">
+    <!-- Will contain assets that can't be declared in the manifest, e.g. stripe. -->
+</template>
+
 <!-- This contains the tour assets. They are included during testing. -->
 <template id="point_of_sale.index" name="POS Index">&lt;!DOCTYPE html&gt;
 <html>
@@ -33,12 +37,19 @@
                 'pos_session_id': pos_session_id,
                 'debug': debug,
             })"/>;
-            odoo.loadTemplatesPromise = fetch(`/web/webclient/qweb/${odoo.__session_info__.cache_hashes.qweb}?bundle=web.assets_qweb`).then(doc => doc.text());
+            odoo.loadTemplatesPromise = fetch(`/web/webclient/qweb/${odoo.__session_info__.cache_hashes.qweb}?bundle=point_of_sale.assets_qweb`).then(doc => doc.text());
         </script>
 
-        <t t-call="point_of_sale.assets_common"/>
-        <t t-call="web.conditional_assets_tests"/>
-        <t t-call-assets="point_of_sale.assets_backend_prod_only" />
+        <!-- style assets -->
+        <t t-call-assets="point_of_sale.required_style_assets" t-js="false" />
+        <t t-call-assets="point_of_sale.assets" t-js="false" />
+
+        <!-- js assets -->
+        <t t-call-assets="point_of_sale.required_assets" t-css="false" />
+        <t t-call-assets="point_of_sale.assets" t-css="false" />
+        <t t-call="point_of_sale.assets_misc" />
+        <t t-call="web.conditional_assets_tests" />
+        <t t-call-assets="point_of_sale.entry" />
     </head>
     <body>
     </body>

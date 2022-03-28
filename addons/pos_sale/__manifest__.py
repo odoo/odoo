@@ -38,7 +38,7 @@ This module adds a custom Sales Team for the Point of Sale. This enables you to 
             'pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js',
             'pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js',
         ],
-        'web.assets_qweb': [
+        'point_of_sale.assets_qweb': [
             'pos_sale/static/src/xml/**/*',
         ],
     },
