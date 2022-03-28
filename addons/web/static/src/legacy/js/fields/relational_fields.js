@@ -3455,14 +3455,6 @@ var FieldRadio = FieldSelection.extend({
     },
 
     /**
-     * @override
-     * @returns {boolean} always true
-     */
-    isSet: function () {
-        return true;
-    },
-
-    /**
      * Associates the 'for' attribute to the radiogroup, instead of the selected
      * radio button.
      *
