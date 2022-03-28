@@ -5,7 +5,7 @@
             <field name="model">product.template</field>
             <field name="priority">3</field>
             <field name="inherit_id" ref="product.product_template_only_form_view" />
-            <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
+            <field name="groups_id" eval="[(4, ref('mrp.group_mrp_manager'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//span[@name='update_cost_price']" position="inside">
                     <button name="button_bom_cost"
@@ -22,7 +22,7 @@
             <field name="model">product.product</field>
             <field name="priority">4</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
+            <field name="groups_id" eval="[(4, ref('mrp.group_mrp_manager'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//span[@name='update_cost_price']" position="inside">
                     <button name="button_bom_cost"
@@ -39,6 +39,7 @@
             <field name="name">product.product.product.view.form.easy.bom.inherit</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+            <field name="groups_id" eval="[(4, ref('mrp.group_mrp_manager'))]"/>
             <field name="arch" type="xml">
                 <data>
                 <xpath expr="//div[@name='update_cost_price']" position="inside">
