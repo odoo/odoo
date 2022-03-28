@@ -4,7 +4,7 @@
     <t t-name="mail.ComposerSuggestion" owl="1">
         <t t-if="composerSuggestion">
             <a class="o_ComposerSuggestion dropdown-item" t-att-class="{ 'active bg-300': props.isActive }" t-attf-class="{{ className }}" href="#" t-att-title="title()" role="menuitem" t-on-click="_onClick" t-ref="root">
-                <t t-if="isCannedResponse">
+                <t t-if="composerSuggestion.cannedResponse">
                     <span class="o_ComposerSuggestion_part1 text-truncate"><t t-esc="record.source"/></span>
                     <span class="o_ComposerSuggestion_part2 text-truncate"><t t-esc="record.substitution"/></span>
                 </t>

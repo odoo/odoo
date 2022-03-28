@@ -34,10 +34,6 @@ export class ComposerSuggestion extends Component {
         return this.messaging && this.messaging.models['ComposerView'].get(this.props.composerViewLocalId);
     }
 
-    get isCannedResponse() {
-        return this.props.modelName === "CannedResponse";
-    }
-
     get isChannel() {
         return this.props.modelName === "Thread";
     }
@@ -61,7 +57,7 @@ export class ComposerSuggestion extends Component {
      * @returns {string}
      */
     title() {
-        if (this.isCannedResponse) {
+        if (this.composerSuggestion.cannedResponse) {
             return _.str.sprintf("%s: %s", this.record.source, this.record.substitution);
         }
         if (this.isChannel) {
