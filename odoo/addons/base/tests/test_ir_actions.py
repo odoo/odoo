@@ -499,7 +499,7 @@ class TestCustomFields(common.TransactionCase):
         partners = self.env['res.partner'].create([
             {'name': country.code, 'country_id': country.id} for country in countries
         ])
-        partners.flush()
+        self.env.flush_all()
 
         # create a non-computed field, and assert how many queries it takes
         model_id = self.env['ir.model']._get_id('res.partner')

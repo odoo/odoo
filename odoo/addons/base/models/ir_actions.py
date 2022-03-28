@@ -107,7 +107,7 @@ class IrActions(models.Model):
         if not debug:
             user_groups -= self.env.ref('base.group_no_one')
 
-        self.flush()
+        self.env.flush_all()
         cr.execute("""
             SELECT a.id, a.type, a.binding_type
               FROM ir_actions a

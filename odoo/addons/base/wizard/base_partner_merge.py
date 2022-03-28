@@ -112,7 +112,7 @@ class MergePartnerAutomatic(models.TransientModel):
         Partner = self.env['res.partner']
         relations = self._get_fk_on('res_partner')
 
-        self.flush()
+        self.env.flush_all()
 
         for table, column in relations:
             if 'base_partner_merge_' in table:  # ignore two tables
@@ -175,7 +175,7 @@ class MergePartnerAutomatic(models.TransientModel):
                     query = 'DELETE FROM "%(table)s" WHERE "%(column)s" IN %%s' % query_dic
                     self._cr.execute(query, (tuple(src_partners.ids),))
 
-        self.invalidate_cache()
+        self.env.invalidate_all()
 
     @api.model
     def _update_reference_fields(self, src_partners, dst_partner):
@@ -193,7 +193,7 @@ class MergePartnerAutomatic(models.TransientModel):
             try:
                 with mute_logger('odoo.sql_db'), self._cr.savepoint():
                     records.sudo().write({field_id: dst_partner.id})
-                    records.flush()
+                    records.env.flush_all()
             except psycopg2.Error:
                 # updating fails, most likely due to a violated unique constraint
                 # keeping record with nonexistent partner_id is useless, better delete it
@@ -228,7 +228,7 @@ class MergePartnerAutomatic(models.TransientModel):
                 }
                 records_ref.sudo().write(values)
 
-        self.flush()
+        self.env.flush_all()
 
     def _get_summable_fields(self):
         """ Returns the list of fields that should be summed when merging partners
@@ -458,7 +458,7 @@ class MergePartnerAutomatic(models.TransientModel):
             next wizard line. Each line is a subset of partner that can be merged together.
             If no line left, the end screen will be displayed (but an action is still returned).
         """
-        self.invalidate_cache() # FIXME: is this still necessary?
+        self.env.invalidate_all() # FIXME: is this still necessary?
         values = {}
         if self.line_ids:
             # in this case, we try to find the next record.
@@ -542,7 +542,7 @@ class MergePartnerAutomatic(models.TransientModel):
         """
         self.ensure_one()
         self.action_start_manual_process()  # here we don't redirect to the next screen, since it is automatic process
-        self.invalidate_cache() # FIXME: is this still necessary?
+        self.env.invalidate_all() # FIXME: is this still necessary?
 
         for line in self.line_ids:
             partner_ids = literal_eval(line.aggr_ids)

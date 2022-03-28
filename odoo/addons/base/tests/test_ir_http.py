@@ -94,8 +94,8 @@ class test_ir_http_mimetype(common.TransactionCase):
             # as the attachment has just been created above as sudo, the data is in cache and if we don't remove it the below
             # `test_access` wont have to fetch it and therefore wont raise the accesserror as its already in the cache
             # `__last_update` must be removed from the cache when `test_access` is called, which happens and recompute the todos
-            attachment.flush()
-            attachment.invalidate_cache()
+            attachment.env.flush_all()
+            attachment.env.invalidate_all()
             status, _, _ = self.env['ir.http'].with_user(public_user).binary_content(
                 **dict(defaults, **kwargs)
             )

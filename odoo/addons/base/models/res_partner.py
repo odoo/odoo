@@ -564,7 +564,7 @@ class Partner(models.Model):
             # RCO: when creating a user for partner, the user is automatically added in partner.user_ids.
             # This is wrong if the user is not active, as partner.user_ids only returns active users.
             # Hence this temporary hack until the ORM updates inverse fields correctly.
-            self.invalidate_cache(['user_ids'], self._ids)
+            self.invalidate_recordset(['user_ids'])
             users = self.env['res.users'].sudo().search([('partner_id', 'in', self.ids)])
             if users:
                 if self.env['res.users'].sudo(False).check_access_rights('write', raise_exception=False):

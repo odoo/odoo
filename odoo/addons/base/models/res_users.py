@@ -353,7 +353,7 @@ class Users(models.Model):
             'UPDATE res_users SET password=%s WHERE id=%s',
             (pw, uid)
         )
-        self.invalidate_cache(['password'], [uid])
+        self.browse(uid).invalidate_recordset(['password'])
 
     def _check_credentials(self, password, env):
         """ Validates the current user's password.

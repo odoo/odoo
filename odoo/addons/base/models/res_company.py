@@ -227,7 +227,7 @@ class Company(models.Model):
                 for vals in no_partner_vals_list
             ])
             # compute stored fields, for example address dependent fields
-            partners.flush()
+            partners.flush_model()
             for vals, partner in zip(no_partner_vals_list, partners):
                 vals['partner_id'] = partner.id
 
@@ -259,7 +259,7 @@ class Company(models.Model):
         company_address_fields = self._get_company_address_field_names()
         company_address_fields_upd = set(company_address_fields) & set(values.keys())
         if company_address_fields_upd:
-            self.invalidate_cache(fnames=company_address_fields)
+            self.invalidate_model(company_address_fields)
         return res
 
     @api.constrains('parent_id')
