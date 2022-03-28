@@ -349,7 +349,6 @@ export const formatPercentage = (value, options = {}) => {
  * Returns a string of the value of the selection.
  *
  * @param {Object} [options]
- * @param {Object} [options.field] a description of the field
  * @returns {string}
  */
 export const formatSelection = (value, options = {}) => {
