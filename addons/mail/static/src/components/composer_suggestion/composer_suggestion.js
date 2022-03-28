@@ -34,22 +34,6 @@ export class ComposerSuggestion extends Component {
         return this.messaging && this.messaging.models['ComposerView'].get(this.props.composerViewLocalId);
     }
 
-    get isCannedResponse() {
-        return this.props.modelName === "CannedResponse";
-    }
-
-    get isChannel() {
-        return this.props.modelName === "Thread";
-    }
-
-    get isCommand() {
-        return this.props.modelName === "ChannelCommand";
-    }
-
-    get isPartner() {
-        return this.props.modelName === "Partner";
-    }
-
     get record() {
         return this.messaging && this.messaging.models[this.props.modelName].get(this.props.recordLocalId);
     }
@@ -61,16 +45,16 @@ export class ComposerSuggestion extends Component {
      * @returns {string}
      */
     title() {
-        if (this.isCannedResponse) {
+        if (this.composerSuggestion.cannedResponse) {
             return _.str.sprintf("%s: %s", this.record.source, this.record.substitution);
         }
-        if (this.isChannel) {
+        if (this.composerSuggestion.thread) {
             return this.record.name;
         }
-        if (this.isCommand) {
+        if (this.composerSuggestion.channelCommand) {
             return _.str.sprintf("%s: %s", this.record.name, this.record.help);
         }
-        if (this.isPartner) {
+        if (this.composerSuggestion.partner) {
             if (this.record.email) {
                 return _.str.sprintf("%s (%s)", this.record.nameOrDisplayName, this.record.email);
             }
