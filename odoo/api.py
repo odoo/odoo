@@ -459,7 +459,7 @@ def call_kw(model, name, args, kwargs):
         result = _call_kw_model_create(method, model, args, kwargs)
     else:
         result = _call_kw_multi(method, model, args, kwargs)
-    model.flush()
+    model.env.flush_all()
     return result
 
 
@@ -701,6 +701,21 @@ class Environment(Mapping):
         )
         return self.cr.savepoint()
 
+    def invalidate_all(self):
+        """ Invalidate the cache of all records. """
+        self.cache.invalidate()
+
+    def _recompute_all(self):
+        """ Process all pending computations. """
+        for field in list(self.fields_to_compute()):
+            self[field.model_name]._recompute_field(field)
+
+    def flush_all(self):
+        """ Flush all pending computations and updates to the database. """
+        self._recompute_all()
+        for model_name in list(self.all.towrite):
+            self[model_name].flush_model()
+
     def is_protected(self, field, record):
         """ Return whether `record` is protected against invalidation or
             recomputation for `field`.
@@ -834,7 +849,7 @@ class Transaction:
                 if env.uid is not None:
                     break
         if env_to_flush is not None:
-            env_to_flush['base'].flush()
+            env_to_flush.flush_all()
 
     def clear(self):
         """ Clear the caches and pending computations and updates in the translations. """
@@ -983,7 +998,7 @@ class Cache(object):
     def check(self, env):
         """ Check the consistency of the cache for the given environment. """
         # flush fields to be recomputed before evaluating the cache
-        env['res.partner'].recompute()
+        env._recompute_all()
 
         # make a copy of the cache, and invalidate it
         dump = dict(self._data)

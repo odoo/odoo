@@ -496,14 +496,14 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
             return lambda x: x
 
         if flush:
-            self.env.user.flush()
+            self.env.flush_all()
             self.env.cr.flush()
 
         with patch('odoo.sql_db.Cursor.execute', execute):
             with patch('odoo.osv.expression.get_unaccent_wrapper', get_unaccent_wrapper):
                 yield actual_queries
                 if flush:
-                    self.env.user.flush()
+                    self.env.flush_all()
                     self.env.cr.flush()
 
         self.assertEqual(
@@ -538,12 +538,12 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
                 login = self.env.user.login
                 expected = counters.get(login, default)
                 if flush:
-                    self.env.user.flush()
+                    self.env.flush_all()
                     self.env.cr.flush()
                 count0 = self.cr.sql_log_count
                 yield
                 if flush:
-                    self.env.user.flush()
+                    self.env.flush_all()
                     self.env.cr.flush()
                 count = self.cr.sql_log_count - count0
                 if count != expected:
@@ -562,11 +562,11 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
             # flush before and after during warmup, in order to reproduce the
             # same operations, otherwise the caches might not be ready!
             if flush:
-                self.env.user.flush()
+                self.env.flush_all()
                 self.env.cr.flush()
             yield
             if flush:
-                self.env.user.flush()
+                self.env.flush_all()
                 self.env.cr.flush()
 
     def assertRecordValues(self, records, expected_values):
@@ -772,7 +772,7 @@ class TransactionCase(BaseCase):
         self.addCleanup(self.env.clear)
 
         # flush everything in setUpClass before introducing a savepoint
-        self.env['base'].flush()
+        self.env.flush_all()
 
         self._savepoint_id = next(savepoint_seq)
         self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
@@ -816,7 +816,7 @@ class SingleTransactionCase(BaseCase):
 
     def setUp(self):
         super(SingleTransactionCase, self).setUp()
-        self.env.user.flush()
+        self.env.flush_all()
 
 
 class ChromeBrowserException(Exception):
@@ -1509,7 +1509,7 @@ class HttpCase(TransactionCase):
 
         ICP = cls.env['ir.config_parameter']
         ICP.set_param('web.base.url', cls.base_url())
-        ICP.flush()
+        ICP.env.flush_all()
         # v8 api with correct xmlrpc exception handling.
         cls.xmlrpc_url = f'http://{HOST}:{odoo.tools.config["http_port"]:d}/xmlrpc/2/'
         cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
@@ -1737,16 +1737,16 @@ def warmup(func, *args, **kwargs):
         effects of the warmup phase are rolled back thanks to a savepoint.
     """
     self = args[0]
-    self.env['base'].flush()
-    self.env.cache.invalidate()
+    self.env.flush_all()
+    self.env.invalidate_all()
     # run once to warm up the caches
     self.warm = False
     self.cr.execute('SAVEPOINT test_warmup')
     func(*args, **kwargs)
-    self.env['base'].flush()
+    self.env.flush_all()
     # run once for real
     self.cr.execute('ROLLBACK TO SAVEPOINT test_warmup')
-    self.env.cache.invalidate()
+    self.env.invalidate_all()
     self.warm = True
     func(*args, **kwargs)
 
@@ -2127,7 +2127,7 @@ class Form(object):
             record_to_values(self._view['fields'], r)
         )
         self._changed.clear()
-        self._model.flush()
+        self._model.env.flush_all()
         self._model.env.clear()  # discard cache and pending recomputations
         return r
 
@@ -2244,7 +2244,7 @@ class Form(object):
 
         record = self._model.browse(self._values.get('id'))
         result = record.onchange(self._onchange_values(), fields, spec)
-        self._model.flush()
+        self._model.env.flush_all()
         self._model.env.clear()  # discard cache and pending recomputations
         if result.get('warning'):
             _logger.getChild('onchange').warning("%(title)s %(message)s" % result.get('warning'))
