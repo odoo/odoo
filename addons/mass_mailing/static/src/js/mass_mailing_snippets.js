@@ -245,6 +245,14 @@ options.registry.DesignTab = options.Class.extend({
     /**
      * @override
      */
+    init() {
+        this._super(...arguments);
+        // Set the target on the whole editable so apply-to looks within it.
+        this.setTarget(this.options.wysiwyg.getEditable());
+    },
+    /**
+     * @override
+     */
     async start() {
         const res = await this._super(...arguments);
         const $editable = this.options.wysiwyg.getEditable();
