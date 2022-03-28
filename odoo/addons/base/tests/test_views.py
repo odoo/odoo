@@ -280,7 +280,7 @@ class TestViewInheritance(ViewCase):
         # If the query count increases, you probably made the view combination
         # fetch an extra field on views. You better fetch that extra field with
         # the query of _get_inheriting_views() and manually feed the cache.
-        self.View.invalidate_cache()
+        self.env.invalidate_all()
         with self.assertQueryCount(3):
             # 1: browse([self.view_ids['A']])
             # 2: _get_inheriting_views: id, inherit_id, mode, groups
@@ -2510,7 +2510,7 @@ class TestViewTranslations(common.TransactionCase):
         # `arch_db` is in `_write` instead of `create` because `arch_db` is the inverse of `arch`.
         # We need to flush `arch_db` before creating the translations otherwise the translation for which there is no value will be deleted,
         # while the `test_sync_update` specifically needs empty translations
-        view.flush()
+        self.env.flush_all()
         self.env['ir.translation'].create([
             {
                 'type': 'model_terms',
@@ -2712,7 +2712,7 @@ class ViewModeField(ViewCase):
         })
         with self.assertRaises(IntegrityError):
             view_pure_primary.write({'mode': 'extension'})
-            view_pure_primary.flush()
+            view_pure_primary.env.flush_all()
 
     def testInheritPrimaryToExtension(self):
         """
@@ -3239,7 +3239,7 @@ class TestRenderAllViews(common.TransactionCase):
                 with self.subTest(model=model):
                     times = []
                     for _ in range(5):
-                        model.invalidate_cache()
+                        env.invalidate_all()
                         before = time.perf_counter()
                         model.get_view()
                         times.append(time.perf_counter() - before)

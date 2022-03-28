@@ -123,7 +123,7 @@ class Property(models.Model):
             # Easy solution, need to flush write when changing a property.
             # Maybe it would be better to be able to compute all impacted cache value and update those instead
             # Then clear_caches must be removed as well.
-            self.flush()
+            self.env.flush_all()
             self.clear_caches()
         return r
 
@@ -134,7 +134,7 @@ class Property(models.Model):
         r = super(Property, self).create(vals_list)
         if created_default:
             # DLE P44: test `test_27_company_dependent`
-            self.flush()
+            self.env.flush_all()
             self.clear_caches()
         return r
 

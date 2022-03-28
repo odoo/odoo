@@ -252,7 +252,7 @@ class TestLanguageInstall(TransactionCase):
         fr = self.env['res.lang'].with_context(active_test=False).search([('code', '=', 'fr_FR')])
         self.assertTrue(fr)
         wizard = self.env['base.language.install'].create({'lang_ids': fr.ids})
-        wizard.flush()
+        self.env.flush_all()
 
         # running the wizard calls _load_module_terms() to load PO files
         loaded = []
@@ -390,7 +390,7 @@ class TestTranslation(TransactionCase):
         self.assertEqual(cheese.with_context(lang=None).name, 'Cheese')
         self.assertEqual(cheese.with_context(lang='fr_FR').name, 'Fromage')
         self.assertEqual(cheese.with_context(lang='en_US').name, 'The Cheese')
-        cheese.flush()
+        self.env.flush_all()
 
         # set a new master value
         cheese.with_context(lang='en_US').write({'name': 'Delicious Cheese'})
@@ -622,8 +622,8 @@ class TestTranslationWrite(TransactionCase):
             'value': 'Parfum Exquis',
             'state': 'translated',
         })
-        translation.flush()
-        translation.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
         self.cr.execute("DELETE FROM res_partner_category WHERE id=%s", [self.category.id])
 
         # deleting the translation should be possible, provided the user has
@@ -670,8 +670,8 @@ class TestTranslationWrite(TransactionCase):
             'value': 'Fromage',
             'state': 'translated',
         })
-        translation.flush()
-        translation.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
 
         # deleting the translation should be possible, provided the user has
         # access rights on the translation's model
@@ -743,7 +743,7 @@ class TestXMLTranslation(TransactionCase):
         # `arch_db` is in `_write` instead of `create` because `arch_db` is the inverse of `arch`.
         # We need to flush `arch_db` before creating the translations otherwise the translation for which there is no value will be deleted,
         # while the `test_sync_update` specifically needs empty translations
-        view.flush()
+        self.env.flush_all()
         for lang, trans_terms in kwargs.items():
             for src, val in zip(terms, trans_terms):
                 self.env['ir.translation'].create({

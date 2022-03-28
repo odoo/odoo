@@ -629,7 +629,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             lambda m: not self[f'module_{m.name}'] and m.state in ('installed', 'to upgrade'))
 
         if to_install or to_uninstall:
-            self.flush()
+            self.env.flush_all()
 
         if to_uninstall:
             to_uninstall.button_immediate_uninstall()
