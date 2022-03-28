@@ -29,6 +29,11 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         var self = this;
         this.fadeInOutTime = 500;
         return this._super.apply(this, arguments).then(function () {
+            if (self.$el.data('sessionClosed')) {
+                self._displaySessionClosedPage();
+                self.$el.removeClass('invisible');
+                return;
+            }
             // general survey props
             self.surveyId = self.$el.data('surveyId');
             self.surveyAccessToken = self.$el.data('surveyAccessToken');
@@ -60,6 +65,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             setupPromises.push(self._setupChart());
             setupPromises.push(self._setupLeaderboard());
 
+            self.$el.removeClass('invisible');
             return Promise.all(setupPromises);
         });
     },
@@ -350,6 +356,13 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         });
     },
 
+    _displaySessionClosedPage:function () {
+        this.$('.o_survey_session_results').addClass('d-none');
+        this.$('.o_survey_session_description_done').prepend($("<h1>").text(_t('Thank you!'))).removeClass('d-none');
+        this.$('.o_survey_session_navigation_previous').addClass('d-none');
+        this.$('.o_survey_session_navigation_next').addClass('d-none');
+    },
+
     /**
      * Refresh the screen with the next question's rendered template.
      *
@@ -389,9 +402,9 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
                 self.leaderBoard.showLeaderboard(false, false);
             });
         } else {
-            self.$('.o_survey_session_close').click();
-            self.$('.o_survey_session_results').addClass('d-none');
-            self.$('.o_survey_session_description_done').prepend($("<h1>").text(_t('Thank you!'))).removeClass('d-none');
+            // There are multiple o_survey_session_close in the page so :first is mandatory
+            self.$('.o_survey_session_close:first').click();
+            self._displaySessionClosedPage();
         }
 
         // Background Management
