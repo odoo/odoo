@@ -2999,8 +2999,9 @@ const SnippetOptionWidget = Widget.extend({
      * menu. Note: this is called after the start and onFocus methods.
      *
      * @abstract
+     * @returns {Promise|undefined}
      */
-    onBuilt: function () {},
+    async onBuilt() {},
     /**
      * Called when the parent edition overlay is removed from the associated
      * snippet (another snippet enters edition for example).
