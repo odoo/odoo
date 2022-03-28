@@ -123,17 +123,6 @@ registerModel({
     },
     modelMethods: {
         /**
-         * @param {Thread} [thread] the concerned thread
-         */
-        computeLastCurrentPartnerMessageSeenByEveryone(thread = undefined) {
-            const threads = thread ? [thread] : this.messaging.models['Thread'].all();
-            threads.map(localThread => {
-                localThread.update({
-                    lastCurrentPartnerMessageSeenByEveryone: localThread._computeLastCurrentPartnerMessageSeenByEveryone(),
-                });
-            });
-        },
-        /**
          * @param {Object} data
          * @return {Object}
          */
