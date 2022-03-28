@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from setuptools import Command
 from odoo.tests.common import TransactionCase
 
 
@@ -173,3 +174,60 @@ class TestSaleProject(TransactionCase):
 
         self.product_order_service3.type = 'service'
         self.assertTrue(sale_order_line.is_service, "As the product is a service, the SOL should be a service")
+
+    def test_analytic_account_balance(self):
+        """
+            1) Get Deco Addict Partner and Mitchell Admin employee
+            2) Add new billable project
+            3) Add Employee/SOL mapping in the project
+            4) Add Task and Timesheet with the same user
+            5) Assert analytic_account_balance is calculated
+        """
+        partner = self.env['res.partner'].search([('name', '=', 'Deco Addict')], limit=1)
+        employee = self.env['hr.employee'].search([('name', '=', 'Mitchell Admin')], limit=1)
+        self.assertTrue(partner)
+        self.assertTrue(employee)
+
+        project = self.env['project.project'].create({
+            'name': 'Project A',
+            'allow_billable': True,
+            'partner_id': partner.id
+        })
+
+        self.assertFalse(project.sale_line_id)
+        self.assertFalse(project.sale_line_employee_ids)
+
+        sale_line = self.env['sale.order.line'].search([('order_partner_id', '=', partner.id), 
+                ('name', '=', 'Junior Architect (Invoice on Timesheets)')], limit=1)
+
+        unit_cost = 15
+        unit_amount = 6
+        expected_analytic_account_balance = unit_cost * unit_amount * -1
+        project.write({
+            'sale_line_id': sale_line.id,
+            'sale_line_employee_ids': [
+                Command.create({
+                    'employee_id': employee.id,
+                    'sale_line_id': sale_line.id,
+                    'cost': unit_cost
+            })]
+        })
+
+        self.assertTrue(project.sale_line_id)
+        self.assertTrue(project.sale_line_employee_ids)
+        self.assertFalse(project.analytic_account_balance)
+
+        task = self.env['project.task'].create({
+            'name': 'task A',
+            'project_id': project.id,
+            'planned_hours': 10,
+            'timesheet_ids': [
+                Command.create({
+                    'name': 'Mitchell Admin timesheet',
+                    'employee_id': employee.id,
+                    'unit_amount': unit_amount
+                })
+            ]
+        })
+        
+        self.assertEqual(project.analytic_account_balance, expected_analytic_account_balance)
