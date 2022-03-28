@@ -141,7 +141,7 @@ class ProductTemplate(models.Model):
 
     def write(self, vals):
         # timesheet product can't be archived
-        test_mode = getattr(threading.currentThread(), 'testing', False) or self.env.registry.in_test_mode()
+        test_mode = getattr(threading.current_thread(), 'testing', False) or self.env.registry.in_test_mode()
         if not test_mode and 'active' in vals and not vals['active']:
             time_product = self.env.ref('sale_timesheet.time_product')
             if time_product.product_tmpl_id in self:
@@ -175,7 +175,7 @@ class ProductProduct(models.Model):
 
     def write(self, vals):
         # timesheet product can't be archived
-        test_mode = getattr(threading.currentThread(), 'testing', False) or self.env.registry.in_test_mode()
+        test_mode = getattr(threading.current_thread(), 'testing', False) or self.env.registry.in_test_mode()
         if not test_mode and 'active' in vals and not vals['active']:
             time_product = self.env.ref('sale_timesheet.time_product')
             if time_product in self:

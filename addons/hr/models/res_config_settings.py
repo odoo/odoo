@@ -23,7 +23,7 @@ class ResConfigSettings(models.TransientModel):
 
     @api.constrains('module_hr_presence', 'hr_presence_control_email', 'hr_presence_control_ip')
     def _check_advanced_presence(self):
-        test_mode = self.env.registry.in_test_mode() or getattr(threading.currentThread(), 'testing', False)
+        test_mode = self.env.registry.in_test_mode() or getattr(threading.current_thread(), 'testing', False)
         if self.env.context.get('install_mode', False) or test_mode:
             return
 
