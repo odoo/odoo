@@ -723,6 +723,9 @@ registerModel({
             const isActiveCall = !!this.rtc;
             if (this.messaging.rtc.channel) {
                 await this.messaging.rtc.channel.leaveCall();
+                this.env.bus.trigger('set_title_part', {
+                    part: '_rtc',
+                });
             }
             if (isActiveCall) {
                 this.update({ hasPendingRtcRequest: false });
@@ -730,6 +733,10 @@ registerModel({
             }
             await this._joinCall(options);
             this.update({ hasPendingRtcRequest: false });
+            this.env.bus.trigger('set_title_part', {
+                part: '_rtc',
+                title: '🔴',
+            });
         },
         /**
          * @param {Object} [param0]
