@@ -756,7 +756,7 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
     const pyEnv = await startServer();
     pyEnv['res.partner'].create({ name: "TestPartner" });
     pyEnv['mail.channel'].create({ is_minimized: true });
-    await this.start({
+    const { insertText } = await this.start({
         mockRPC(route, args) {
             if (args.method === 'channel_fold') {
                 assert.step(`rpc:channel_fold/${args.kwargs.state}`);
@@ -794,14 +794,7 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
         "chat window should still be opened after pressing escape on emojis button"
     );
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "@");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertText('.o_ComposerTextInput_textarea', "@");
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestionList_list'),
         'show',
