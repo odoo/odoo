@@ -13,71 +13,52 @@ QUnit.module('mail', {}, function () {
 QUnit.module('ActivityMenu', {
     async beforeEach() {
         await beforeEach(this);
-
-        Object.assign(this.data, {
-            'mail.activity.menu': {
-                fields: {
-                    name: { type: "char" },
-                    model: { type: "char" },
-                    type: { type: "char" },
-                    planned_count: { type: "integer" },
-                    today_count: { type: "integer" },
-                    overdue_count: { type: "integer" },
-                    total_count: { type: "integer" },
-                    actions: [{
-                        icon: { type: "char" },
-                        name: { type: "char" },
-                        action_xmlid: { type: "char" },
-                    }],
-                },
-                records: [{
-                        name: "Contact",
-                        model: "res.partner",
-                        type: "activity",
-                        planned_count: 0,
-                        today_count: 1,
-                        overdue_count: 0,
-                        total_count: 1,
-                    },
-                    {
-                        name: "Task",
-                        type: "activity",
-                        model: "project.task",
-                        planned_count: 1,
-                        today_count: 0,
-                        overdue_count: 0,
-                        total_count: 1,
-                    },
-                    {
-                        name: "Issue",
-                        type: "activity",
-                        model: "project.issue",
-                        planned_count: 1,
-                        today_count: 1,
-                        overdue_count: 1,
-                        total_count: 3,
-                        actions: [{
-                            icon: "fa-clock-o",
-                            name: "summary",
-                        }],
-                    },
-                    {
-                        name: "Note",
-                        type: "activity",
-                        model: "partner",
-                        planned_count: 1,
-                        today_count: 1,
-                        overdue_count: 1,
-                        total_count: 3,
-                        actions: [{
-                            icon: "fa-clock-o",
-                            name: "summary",
-                            action_xmlid: "mail.mail_activity_type_view_tree",
-                        }],
-                    }
-                ],
+        this.activities = [{
+                name: "Contact",
+                model: "res.partner",
+                type: "activity",
+                planned_count: 0,
+                today_count: 1,
+                overdue_count: 0,
+                total_count: 1,
             },
-        });
+            {
+                name: "Task",
+                type: "activity",
+                model: "project.task",
+                planned_count: 1,
+                today_count: 0,
+                overdue_count: 0,
+                total_count: 1,
+            },
+            {
+                name: "Issue",
+                type: "activity",
+                model: "project.issue",
+                planned_count: 1,
+                today_count: 1,
+                overdue_count: 1,
+                total_count: 3,
+                actions: [{
+                    icon: "fa-clock-o",
+                    name: "summary",
+                }],
+            },
+            {
+                name: "Note",
+                type: "activity",
+                model: "partner",
+                planned_count: 1,
+                today_count: 1,
+                overdue_count: 1,
+                total_count: 3,
+                actions: [{
+                    icon: "fa-clock-o",
+                    name: "summary",
+                    action_xmlid: "mail.mail_activity_type_view_tree",
+                }],
+            },
+        ];
         this.session = {
             uid: 10,
         };
@@ -111,7 +92,7 @@ QUnit.test('activity menu widget: activity menu with 3 records', async function 
         data: this.data,
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {
-                return Promise.resolve(self.data['mail.activity.menu']['records']);
+                return Promise.resolve(self.activities);
             }
             return this._super(route, args);
         },
@@ -173,7 +154,7 @@ QUnit.test('activity menu widget: activity view icon', async function (assert) {
         data: this.data,
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {
-                return Promise.resolve(self.data['mail.activity.menu'].records);
+                return Promise.resolve(self.activities);
             }
             return this._super(route, args);
         },
