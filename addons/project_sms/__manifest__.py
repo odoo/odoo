@@ -11,6 +11,7 @@
     'data': [
         'views/project_stage_views.xml',
         'views/project_task_type_views.xml',
+        'views/project_views.xml',
         'security/ir.model.access.csv',
         'security/project_sms_security.xml',
     ],

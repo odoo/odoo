@@ -374,7 +374,7 @@
             <field name="inherit_id" ref="project.view_project_project_filter"/>
             <field name="arch" type="xml">
                 <filter name="followed_by_me" position='before'>
-                    <filter string="My Team's Projects" name="my_team_projects"  domain="[('user_id.employee_parent_id.user_id', '=', uid)]"/>
+                    <filter string="My Team" name="my_team_projects"  domain="[('user_id.employee_parent_id.user_id', '=', uid)]"/>
                     <filter string="My Department" name="my_department" domain="[('user_id.employee_id.member_of_department', '=', True)]"/>
                 </filter>
                 <filter name="late_milestones" position="before">
