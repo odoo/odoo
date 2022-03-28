@@ -553,7 +553,7 @@ class TestProfiling(TransactionCase):
             queries_start = self.env.cr.sql_log_count
             for i in range(10):
                 self.env['res.partner'].create({'name': 'snail%s' % i})
-            self.env['res.partner'].flush()
+            self.env.flush_all()
             total_queries = self.env.cr.sql_log_count - queries_start
 
         rq = next(r for r in p.collectors if r.name == "sql").entries

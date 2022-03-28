@@ -246,8 +246,8 @@ class TestPermissions(TransactionCase):
             'domain_force': "[('id', '!=', %s)]" % record.id,
             'perm_read': False
         })
-        a.flush()
-        a.invalidate_cache(ids=a.ids)
+        self.env.flush_all()
+        a.invalidate_recordset()
 
     def test_no_read_permission(self):
         """If the record can't be read, the attachment can't be read either
@@ -256,7 +256,7 @@ class TestPermissions(TransactionCase):
         self.attachment.datas
         # prevent read access on record
         self.rule.perm_read = True
-        self.attachment.invalidate_cache(ids=self.attachment.ids)
+        self.attachment.invalidate_recordset()
         with self.assertRaises(AccessError):
             self.attachment.datas
 

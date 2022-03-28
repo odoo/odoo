@@ -114,7 +114,7 @@ class TestACL(TransactionCaseWithUserDemo):
         """Test access to records having restricted fields"""
         # Invalidate cache to avoid restricted value to be available
         # in the cache
-        self.user_demo.invalidate_cache()
+        self.env.invalidate_all()
         partner = self.env['res.partner'].with_user(self.user_demo)
         self._set_field_groups(partner, 'email', GROUP_SYSTEM)
 

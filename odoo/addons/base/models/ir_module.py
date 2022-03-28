@@ -81,6 +81,8 @@ class ModuleCategory(models.Model):
 
     @api.depends('module_ids')
     def _compute_module_nr(self):
+        self.env['ir.module.module'].flush_model(['category_id'])
+        self.flush_model(['parent_id'])
         cr = self._cr
         cr.execute('SELECT category_id, COUNT(*) \
                       FROM ir_module_module \
@@ -520,6 +522,8 @@ class Module(models.Model):
         """
         if not self:
             return self
+        self.flush_model(['name', 'state'])
+        self.env['ir.module.module.dependency'].flush_model(['module_id', 'name'])
         known_deps = known_deps or self.browse()
         query = """ SELECT DISTINCT m.id
                     FROM ir_module_module_dependency d
@@ -544,6 +548,8 @@ class Module(models.Model):
         """
         if not self:
             return self
+        self.flush_model(['name', 'state'])
+        self.env['ir.module.module.dependency'].flush_model(['module_id', 'name'])
         known_deps = known_deps or self.browse()
         query = """ SELECT DISTINCT m.id
                     FROM ir_module_module_dependency d
@@ -894,6 +900,7 @@ class Module(models.Model):
         return tools.config.get('apps_server', 'https://apps.odoo.com/apps')
 
     def _update_dependencies(self, depends=None, auto_install_requirements=()):
+        self.env['ir.module.module.dependency'].flush_model()
         existing = set(dep.name for dep in self.dependencies_id)
         needed = set(depends or [])
         for dep in (needed - existing):
@@ -902,16 +909,19 @@ class Module(models.Model):
             self._cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s and name = %s', (self.id, dep))
         self._cr.execute('UPDATE ir_module_module_dependency SET auto_install_required = (name = any(%s)) WHERE module_id = %s',
                          (list(auto_install_requirements or ()), self.id))
-        self.invalidate_cache(['dependencies_id'], self.ids)
+        self.env['ir.module.module.dependency'].invalidate_model()
+        self.invalidate_recordset(['dependencies_id'])
 
     def _update_exclusions(self, excludes=None):
+        self.env['ir.module.module.exclusion'].flush_model()
         existing = set(excl.name for excl in self.exclusion_ids)
         needed = set(excludes or [])
         for name in (needed - existing):
             self._cr.execute('INSERT INTO ir_module_module_exclusion (module_id, name) VALUES (%s, %s)', (self.id, name))
         for name in (existing - needed):
             self._cr.execute('DELETE FROM ir_module_module_exclusion WHERE module_id=%s AND name=%s', (self.id, name))
-        self.invalidate_cache(['exclusion_ids'], self.ids)
+        self.env['ir.module.module.exclusion'].invalidate_model()
+        self.invalidate_recordset(['exclusion_ids'])
 
     def _update_category(self, category='Uncategorized'):
         current_category = self.category_id
@@ -954,6 +964,7 @@ class Module(models.Model):
 
     @tools.ormcache('name')
     def _get_id(self, name):
+        self.flush_model(['name'])
         self.env.cr.execute("SELECT id FROM ir_module_module WHERE name=%s", (name,))
         return self.env.cr.fetchone()
 

@@ -52,10 +52,11 @@ def _select_nextval(cr, seq_name):
 
 
 def _update_nogap(self, number_increment):
+    self.flush_recordset(['number_next'])
     number_next = self.number_next
     self._cr.execute("SELECT number_next FROM %s WHERE id=%%s FOR UPDATE NOWAIT" % self._table, [self.id])
     self._cr.execute("UPDATE %s SET number_next=number_next+%%s WHERE id=%%s " % self._table, (number_increment, self.id))
-    self.invalidate_cache(['number_next'], [self.id])
+    self.invalidate_recordset(['number_next'])
     return number_next
 
 def _predict_nextval(self, seq_id):
@@ -192,7 +193,7 @@ class IrSequence(models.Model):
                         _create_sequence(self._cr, "ir_sequence_%03d_%03d" % (seq.id, sub_seq.id), i, n)
         res = super(IrSequence, self).write(values)
         # DLE P179
-        self.flush(values.keys())
+        self.flush_model(values.keys())
         return res
 
     def _next_do(self):
@@ -385,5 +386,5 @@ class IrSequenceDateRange(models.Model):
         #  - But selecting the number next happens a lot,
         # Therefore, if I chose to put the flush just above the select, it would check the flush most of the time for no reason.
         res = super(IrSequenceDateRange, self).write(values)
-        self.flush(values.keys())
+        self.flush_model(values.keys())
         return res

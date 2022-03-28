@@ -281,6 +281,7 @@ class IrTranslation(models.Model):
         :param ids: the ids of the given records
         :param src: the source of the translation
         """
+        self.flush_model()
         self._cr.execute("""UPDATE ir_translation
                             SET src=%s
                             WHERE type=%s AND name=%s AND res_id IN %s
@@ -288,10 +289,11 @@ class IrTranslation(models.Model):
                          (src, 'model', name, tuple(ids)))
         existing_ids = [row[0] for row in self._cr.fetchall()]
         # invalidate src for updated translations
-        self.invalidate_cache(fnames=['src'], ids=existing_ids)
+        self.browse(existing_ids).invalidate_recordset(['src'])
 
     @api.model
     def _get_source_query(self, name, types, lang, source, res_id):
+        self.flush_model()
         if source:
             # Note: the extra test on md5(src) is a hint for postgres to use the
             # index ir_translation_src_md5
@@ -354,6 +356,7 @@ class IrTranslation(models.Model):
     @api.model
     def _get_terms_query(self, field, records):
         """ Utility function that makes the query for field terms. """
+        self.flush_model()
         query = """ SELECT * FROM ir_translation
                     WHERE lang=%s AND type=%s AND name=%s AND res_id IN %s """
         name = "%s,%s" % (field.model_name, field.name)
@@ -452,8 +455,8 @@ class IrTranslation(models.Model):
             # delete in SQL to avoid invalidating the whole cache
             discarded._modified()
             discarded.modified(self._fields)
-            self.flush(self._fields, discarded)
-            self.invalidate_cache(ids=discarded._ids)
+            discarded.flush_recordset()
+            discarded.invalidate_recordset()
             self.env.cr.execute("DELETE FROM ir_translation WHERE id IN %s", [discarded._ids])
 
     @api.model
@@ -557,7 +560,7 @@ class IrTranslation(models.Model):
         records.check('create')
         records._modified()
         # DLE P62: `test_translate.py`, `test_sync`
-        self.flush()
+        self.env.flush_all()
         return records
 
     def write(self, vals):
@@ -574,7 +577,7 @@ class IrTranslation(models.Model):
         # the flush to database is not done.
         # this causes issues when changing the src/value of a translation, as when we read, we ask the flush,
         # but its not really the field which is in the towrite values, but its translation
-        self.flush()
+        self.env.flush_all()
         return result
 
     def unlink(self):
@@ -589,12 +592,13 @@ class IrTranslation(models.Model):
         # e.g. email.with_context(lang='fr_FR').label = "bonjour"
         # and then search on translations for this translation, must flush as the translation has not yet been written in database
         if any(self.env[model]._fields[field].translate for model, ids in self.env.all.towrite.items() for record_id, fields in ids.items() for field in fields):
-            self.flush()
+            self.env.flush_all()
         return super(IrTranslation, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
     @api.model
     def insert_missing(self, field, records):
         """ Insert missing translations for `field` on `records`. """
+        self.flush_model()
         records = records.with_context(lang=None)
         external_ids = records.get_external_id()  # if no xml_id, empty string
         if callable(field.translate):
@@ -658,6 +662,7 @@ class IrTranslation(models.Model):
             Mandatory values: name, lang, res_id, src, type
             The other keys are ignored during update if not present
         """
+        self.flush_model()
         rows_by_type = defaultdict(list)
         for vals in vals_list:
             rows_by_type[vals['type']].append((
@@ -701,6 +706,7 @@ class IrTranslation(models.Model):
             ``vals_list`` is trusted to be the right values
             No new translation will be created
         """
+        self.flush_model()
         grouped_rows = {}
         for vals in vals_list:
             key = (vals['lang'], vals['type'], vals['name'])

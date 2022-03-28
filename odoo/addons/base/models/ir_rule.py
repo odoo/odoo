@@ -173,7 +173,7 @@ class IrRule(models.Model):
     def create(self, vals_list):
         res = super(IrRule, self).create(vals_list)
         # DLE P33: tests
-        self.flush()
+        self.env.flush_all()
         self.clear_caches()
         return res
 
@@ -183,7 +183,7 @@ class IrRule(models.Model):
         # - odoo/addons/test_access_rights/tests/test_feedback.py
         # - odoo/addons/test_access_rights/tests/test_ir_rules.py
         # - odoo/addons/base/tests/test_orm.py (/home/dle/src/odoo/master-nochange-fp/odoo/addons/base/tests/test_orm.py)
-        self.flush()
+        self.env.flush_all()
         self.clear_caches()
         return res
 

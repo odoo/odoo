@@ -320,7 +320,7 @@ actual arch.
         # the field 'arch' depends on the context and has been implicitly
         # modified in all languages; the invalidation below ensures that the
         # field does not keep an old value in another environment
-        self.invalidate_cache(['arch'], self._ids)
+        self.invalidate_recordset(['arch'])
 
     @api.depends('arch')
     @api.depends_context('read_arch_from_file')

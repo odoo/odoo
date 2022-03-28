@@ -289,7 +289,7 @@ class Lang(models.Model):
             self.env['ir.default'].discard_values('res.partner', 'lang', lang_codes)
 
         res = super(Lang, self).write(vals)
-        self.flush()
+        self.env.flush_all()
         self.clear_caches()
         return res
 

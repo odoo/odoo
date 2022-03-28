@@ -472,8 +472,8 @@ class ir_cron(models.Model):
 
     def _neutralize(self):
         super()._neutralize()
-        self.flush()
-        self.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
         self.env.cr.execute("""
             UPDATE ir_cron
             SET active = false

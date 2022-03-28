@@ -48,7 +48,7 @@ class TestTestCursor(common.TransactionCase):
         record.ref = value
 
     def flush(self, record):
-        record.flush(['ref'])
+        record.flush_model(['ref'])
 
     def check(self, record, value):
         self.assertEqual(record.read(['ref'])[0]['ref'], value)
