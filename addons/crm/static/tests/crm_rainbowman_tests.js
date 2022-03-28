@@ -2,7 +2,7 @@ odoo.define('crm.form_rainbowman_tests', function (require) {
     "use strict";
 
     var CrmFormView = require('@crm/js/crm_form')[Symbol.for("default")].CrmFormView;
-    var CrmKanbanView = require('@crm/js/crm_kanban')[Symbol.for("default")].CrmKanbanView;
+    const { CRMKanbanView } = require('@crm/js/crm_kanban');
     var testUtils = require('web.test_utils');
     var createView = testUtils.createView;
 
@@ -90,7 +90,7 @@ odoo.define('crm.form_rainbowman_tests', function (require) {
                     </kanban>`,
                 data: this.data,
                 model: 'crm.lead',
-                View: CrmKanbanView,
+                View: CRMKanbanView,
                 groupBy: ['stage_id'],
             };
         },
