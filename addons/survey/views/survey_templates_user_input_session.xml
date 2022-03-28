@@ -64,7 +64,7 @@
         <t t-set="is_scored_question" t-value="any(answer.answer_score for answer in question.suggested_answer_ids)" />
         <t t-set="show_bar_chart" t-value="question.question_type in ['simple_choice', 'multiple_choice']" />
         <t t-set="show_text_answers" t-value="question.question_type in ['char_box', 'date', 'datetime'] and not question.save_as_email and not question.save_as_nickname" />
-        <div class="wrap min-vh-100 align-items-center justify-content-center d-flex flex-column o_survey_session_manage"
+        <div class="wrap min-vh-100 align-items-center justify-content-center d-flex flex-column o_survey_session_manage invisible"
             t-att-style="'display: none;' if is_rpc_call else ''"
             t-att-data-is-rpc-call="is_rpc_call"
             t-att-data-survey-id="survey.id"
@@ -83,8 +83,9 @@
             t-att-data-current-screen="'question' if is_scored_question else 'userInputs'"
             t-att-data-show-bar-chart="show_bar_chart"
             t-att-data-show-text-answers="show_text_answers"
-            t-att-data-refresh-background="any(page.background_image for page in survey.page_ids)">
-            <div class="o_survey_question_header flex-wrap px-3 w-100 d-flex justify-content-between align-items-center position-absolute">
+            t-att-data-refresh-background="any(page.background_image for page in survey.page_ids)"
+            t-att-data-is-session-closed="is_session_closed">
+            <div t-if="not is_session_closed" class="o_survey_question_header flex-wrap px-3 w-100 d-flex justify-content-between align-items-center position-absolute">
                 <h3>
                     <span>Go to <a t-att-href="survey.session_link" t-esc="survey.session_link" target="_blank" /></span>
                     <i class="fa fa-copy font-weight-normal ml-3 mr-1 o_survey_session_copy" />
@@ -105,7 +106,10 @@
                 </div>
             </div>
             <div class="container px-4 pb-3 pt96 d-flex flex-column o_survey_session_manage_container">
-                <div class="o_survey_session_description_done d-none" t-field="survey.description_done" />
+                <div class="o_survey_session_description_done d-none">
+                    <h1>Thank you!</h1>
+                    <div t-field="survey.description_done"/>
+                </div>
                 <a role="button"
                     class="font-weight-bold fa fa-chevron-right o_survey_session_navigation o_survey_session_navigation_next p-3" />
                 <a role="button"
