@@ -103,31 +103,14 @@ QUnit.module("Form Compiler", () => {
                 </form>`;
 
         const expected = /*xml*/ `
-        <div class="o_notebook">
-            <t t-set="notebook_1" t-value="state.notebook_1 or getActivePage(record,{&quot;page_2&quot;:false,&quot;page_4&quot;:false})"/>
-            <div class="o_notebook_headers">
-                <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link" t-on-click.prevent="()=&gt;state.notebook_1='page_2'" href="#" role="tab" t-attf-class="{{notebook_1==='page_2'?'active':''}}">
-                            Page1
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" t-on-click.prevent="()=&gt;state.notebook_1='page_4'" href="#" role="tab" t-attf-class="{{notebook_1==='page_4'?'active':''}}">
-                            Page2
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="tab-content">
-                <div t-if="notebook_1==='page_2'" class="tab-pane active">
-                    <Field id="'field_charfield_3'" name="'charfield'" record="record" archs="'views' in record.fields.charfield and record.fields.charfield.views"/>
-                </div>
-                <div t-if="notebook_1==='page_4'" class="tab-pane active">
-                    <Field id="'field_display_name_5'" name="'display_name'" record="record" archs="'views' in record.fields.display_name and record.fields.display_name.views"/>
-                </div>
-            </div>
-        </div>`;
+            <Notebook>
+                <t t-set-slot="page_1" title="&quot;Page1&quot;" isVisible="true">
+                    <Field id="'field_charfield_2'" name="'charfield'" record="record" archs="'views' in record.fields.charfield and record.fields.charfield.views"/>
+                </t>
+                <t t-set-slot="page_3" title="&quot;Page2&quot;" isVisible="true">
+                    <Field id="'field_display_name_4'" name="'display_name'" record="record" archs="'views' in record.fields.display_name and record.fields.display_name.views"/>
+               </t>
+           </Notebook>`;
 
         assert.areContentEquivalent(compileTemplate(arch), expected);
     });

@@ -2,7 +2,7 @@
 
 import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
-import { combineAttributes, createElement, createTextNode } from "@web/core/utils/xml";
+import { combineAttributes, createElement, createTextNode, transformStringForExpression } from "@web/core/utils/xml";
 import { Field } from "@web/fields/field";
 
 /**
@@ -744,101 +744,48 @@ export class ViewCompiler {
      * @returns {Element}
      */
     compileNotebook(el, params) {
-        params = Object.create(params);
-        const noteBookId = `notebook_${this.id++}`;
-        params.noteBookId = noteBookId;
+        const noteBook = createElement("Notebook");
+        if (el.hasAttribute("class")) {
+            noteBook.setAttribute("className", `"${el.getAttribute("class")}"`);
+            el.removeAttribute("class");
+        }
 
-        const headersList = createElement("ul");
-        headersList.className = "nav nav-tabs";
-
-        const contents = createElement("div");
-        contents.className = "tab-content";
-
-        const invisibleDomains = {};
-        let containsAlwaysVisiblePages = false;
-        for (const child of el.childNodes) {
-            if (!(child instanceof Element)) {
+        for (const child of el.children) {
+            if (child.nodeName !== "page"){
                 continue;
             }
-            const page = this.compilePage(child, params);
-            if (!page) {
+            const invisible = getModifier(child, "invisible");
+            if (isAlwaysInvisible(invisible, params)) {
                 continue;
             }
-            invisibleDomains[page.pageId] = page.invisible;
-            containsAlwaysVisiblePages = containsAlwaysVisiblePages || !page.invisible;
-            append(headersList, applyInvisible(page.invisible, page.header, params));
-            append(contents, page.content);
-        }
-        if (headersList.children.length === 0) {
-            return; // notebook has no visible page
-        }
 
-        let notebook = createElement("div");
-        if (!containsAlwaysVisiblePages) {
-            const notebookDomain = Domain.combine(Object.values(invisibleDomains), "AND");
-            notebook = applyInvisible(notebookDomain.toString(), notebook, params);
-        }
-        notebook.classList.add("o_notebook");
+            const pageSlot = createElement("t");
+            append(noteBook, pageSlot);
 
-        const activePage = createElement("t");
-        activePage.setAttribute("t-set", noteBookId);
-        activePage.setAttribute(
-            "t-value",
-            `state.${noteBookId} or getActivePage(record,${JSON.stringify(invisibleDomains)})`
-        );
-        append(notebook, activePage);
+            const pageId = `page_${this.id++}`;
+            const pageTitle = transformStringForExpression(child.getAttribute("string") || child.getAttribute("name"));
+            pageSlot.setAttribute("t-set-slot", pageId);
+            pageSlot.setAttribute("title", pageTitle);
 
-        const headers = createElement("div");
-        headers.className = "o_notebook_headers";
+            let isVisible;
+            if (invisible === false) {
+                isVisible = "true";
+            } else {
+                isVisible = `!evalDomain(record,${JSON.stringify(invisible)})`;
+            }
+            pageSlot.setAttribute("isVisible", isVisible);
 
-        append(headers, headersList);
-        append(notebook, headers);
-        append(notebook, contents);
-
-        return notebook;
-    }
-
-    /**
-     * @param {Element} el
-     * @param {Record<string, any>} params
-     * @returns {{
-     *  pageId: string,
-     *  header: Element,
-     *  content: Element,
-     *  invisible: boolean | boolean[],
-     * }}
-     */
-    compilePage(el, params) {
-        const invisible = getModifier(el, "invisible");
-        if (typeof invisible === "boolean" && invisible) {
-            return;
+            for (const contents of child.children) {
+                append(pageSlot, this.compileNode(contents, params));
+            }
+            // In owl 2 slots that have no content are not passed to the Component,
+            // so we force dummy content on the slot.
+            if (!pageSlot.children.length) {
+                append(pageSlot, createElement("span"));
+            }
         }
 
-        const pageId = `page_${this.id++}`;
-        const header = createElement("li");
-        header.className = "nav-item";
-
-        const headerLink = createElement("a");
-        headerLink.className = "nav-link";
-        headerLink.setAttribute("t-on-click.prevent", `()=>state.${params.noteBookId}='${pageId}'`);
-        headerLink.setAttribute("href", "#");
-        headerLink.setAttribute("role", "tab");
-        headerLink.setAttribute(
-            "t-attf-class",
-            `{{${params.noteBookId}==='${pageId}'?'active':''}}`
-        );
-        headerLink.textContent = el.getAttribute("string") || el.getAttribute("name");
-        append(header, headerLink);
-
-        const content = createElement("div");
-        content.setAttribute("t-if", `${params.noteBookId}==='${pageId}'`);
-        content.className = "tab-pane active";
-
-        for (const child of el.childNodes) {
-            append(content, this.compileNode(child, params));
-        }
-
-        return { pageId, header, content, invisible };
+        return noteBook;
     }
 
     /**

@@ -5,6 +5,7 @@ import { ButtonBox } from "@web/views/form/button_box/button_box";
 import { FormCompiler } from "@web/views/form/form_compiler";
 import { useViewCompiler } from "@web/views/helpers/view_compiler";
 import { ViewButton } from "@web/views/view_button/view_button";
+import { Notebook } from "../../core/notebook/notebook";
 
 const { Component, useSubEnv, useState, xml } = owl;
 
@@ -21,15 +22,7 @@ export class FormRenderer extends Component {
     get record() {
         return this.props.record;
     }
-
-    getActivePage(record, invisibleDomains) {
-        for (const page in invisibleDomains) {
-            if (!invisibleDomains[page] || !this.evalDomain(record, invisibleDomains[page])) {
-                return page;
-            }
-        }
-    }
 }
 
 FormRenderer.template = xml`<t t-call="{{ templateId }}" />`;
-FormRenderer.components = { Field, ButtonBox, ViewButton };
+FormRenderer.components = { Field, ButtonBox, ViewButton, Notebook };

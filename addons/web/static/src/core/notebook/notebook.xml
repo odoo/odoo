@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.Notebook" owl="1">
+        <div class="o_notebook" t-attf-class="{{ this.props.className }}" t-if="state.currentPage">
+            <div class="o_notebook_headers">
+                <ul class="nav nav-tabs">
+                    <li t-foreach="props.slots" t-as="page" t-key="page" class="nav-item" t-if="page_value.isVisible">
+                        <a class="nav-link" t-on-click.prevent="() => state.currentPage = page" href="#" role="tab" t-att-class="{ active: page === state.currentPage}" t-esc="page_value.title"/>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane active">
+                    <t t-slot="{{ state.currentPage }}"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>
