@@ -193,7 +193,7 @@ export class ListView extends Component {
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
         this.notificationService = useService("notification");
-        this.user = useService("user");
+        this.userService = useService("user");
 
         this.archInfo = new ListArchParser().parse(this.props.arch, this.props.fields);
         this.editable = this.props.editable ? this.archInfo.editable : false;
@@ -210,13 +210,13 @@ export class ListView extends Component {
         useViewButtons(this.model);
 
         onWillStart(async () => {
-            this.isExportEnable = await this.user.hasGroup("base.group_allow_export");
+            this.isExportEnable = await this.userService.hasGroup("base.group_allow_export");
         });
 
         this.archiveEnabled = "active" in this.props.fields || "x_active" in this.props.fields;
 
         onWillStart(async () => {
-            this.isExportEnable = await this.user.hasGroup("base.group_allow_export");
+            this.isExportEnable = await this.userService.hasGroup("base.group_allow_export");
         });
 
         useSubEnv({ model: this.model }); // do this in useModel?

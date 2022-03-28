@@ -114,10 +114,10 @@ export function evalDomain(modifier, evalContext) {
  *
  * @param {string} resModel
  * @param {integer[]} resIds
- * @param {boolean} [unarchive=false] if true, unarchive the records, otherwise archive them
+ * @param {boolean} doArchive archive the records if true, otherwise unarchive them
  */
-async function archiveOrUnarchiveRecords(model, resModel, resIds, unarchive) {
-    const method = unarchive === true ? "action_unarchive" : "action_archive";
+async function toggleArchive(model, resModel, resIds, doArchive) {
+    const method = doArchive ? "action_archive" : "action_unarchive";
     const action = await model.orm.call(resModel, method, [resIds]);
     if (action && Object.keys(action).length !== 0) {
         model.action.doAction(action);
@@ -448,7 +448,7 @@ export class Record extends DataPoint {
     // -------------------------------------------------------------------------
 
     async archive() {
-        await archiveOrUnarchiveRecords(this.model, this.resModel, [this.resId]);
+        await toggleArchive(this.model, this.resModel, [this.resId], true);
         await this.load();
         this.model.notify();
     }
@@ -815,7 +815,7 @@ export class Record extends DataPoint {
     }
 
     async unarchive() {
-        await archiveOrUnarchiveRecords(this.model, this.resModel, [this.resId], true);
+        await toggleArchive(this.model, this.resModel, [this.resId], false);
         await this.load();
         this.model.notify();
     }
@@ -1086,10 +1086,12 @@ class DynamicList extends DataPoint {
         this.groupBy = params.groupBy || [];
         this.domain = markRaw(params.domain || []);
         this.orderBy = params.orderBy || []; // rename orderBy + get back from state
-        this.offset = 0;
+        this.offset = state.offset || 0;
         this.count = 0;
         this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
         this.isDomainSelected = false;
+        this.loadedCount = state.loadedCount || 0;
+        this.previousParams = state.previousParams || "[]";
 
         this.editedRecord = null;
         this.onRecordWillSwitchMode = async (record, mode) => {
@@ -1111,6 +1113,10 @@ class DynamicList extends DataPoint {
     // -------------------------------------------------------------------------
     // Getters
     // -------------------------------------------------------------------------
+
+    get currentParams() {
+        return JSON.stringify([this.domain, this.groupBy]);
+    }
 
     get firstGroupBy() {
         return this.groupBy[0] || false;
@@ -1146,7 +1152,7 @@ class DynamicList extends DataPoint {
      */
     async archive(isSelected) {
         const resIds = await this.getResIds(isSelected);
-        await archiveOrUnarchiveRecords(this.model, this.resModel, resIds);
+        await toggleArchive(this.model, this.resModel, resIds, true);
         await this.model.load();
         return resIds;
         //todo fge _invalidateCache
@@ -1164,6 +1170,9 @@ class DynamicList extends DataPoint {
     exportState() {
         return {
             limit: this.limit,
+            offset: this.offset,
+            loadedCount: this.records.length,
+            previousParams: this.currentParams,
         };
     }
 
@@ -1213,7 +1222,7 @@ class DynamicList extends DataPoint {
      */
     async unarchive(isSelected) {
         const resIds = await this.getResIds(isSelected);
-        await archiveOrUnarchiveRecords(this.model, this.resModel, resIds, true);
+        await toggleArchive(this.model, this.resModel, resIds, false);
         await this.model.load();
         return resIds;
         //todo fge _invalidateCache
@@ -1228,6 +1237,7 @@ class DynamicList extends DataPoint {
      * If 'movedId' is provided, the record matching that ID will be resequenced
      * in the current list of IDs, at the start of the list or after the record
      * matching 'targetId' if given as well.
+     *
      * @param {(Group | Record)[]} list
      * @param {string} idProperty property on the given list used to determine each ID
      * @param {string} [movedId]
@@ -1334,10 +1344,7 @@ export class DynamicRecordList extends DynamicList {
         for (const record of records) {
             this.removeRecord(record);
         }
-        // Reload the model only if more records should appear on the current page.
-        if (this.count && !this.records.length) {
-            await this.model.load();
-        }
+        await this._adjustOffset();
         return resIds;
     }
 
@@ -1348,6 +1355,7 @@ export class DynamicRecordList extends DynamicList {
 
     async load() {
         this.records = await this._loadRecords();
+        await this._adjustOffset();
     }
 
     async loadMore() {
@@ -1389,23 +1397,42 @@ export class DynamicRecordList extends DynamicList {
     // Protected
     // -------------------------------------------------------------------------
 
+    /**
+     * Reload the model if more records should appear on the current page.
+     *
+     * @returns {Promise<void>}
+     */
+    async _adjustOffset() {
+        if (this.offset && !this.records.length) {
+            this.offset = Math.max(this.offset - this.limit, 0);
+            await this.load();
+        }
+    }
+
+    /**
+     * @returns {Promise<Record[]>}
+     */
     async _loadRecords() {
-        const order = orderByToString(this.orderBy);
+        const options = {
+            limit: this.limit,
+            offset: this.offset,
+            order: orderByToString(this.orderBy),
+        };
+        if (this.loadedCount > this.limit) {
+            // This condition means that we are reloading a list of records
+            // that has been manually extended: we need to load exactly the
+            // same amount of records.
+            options.limit = this.loadedCount;
+            options.offset = 0;
+        }
         const { records: rawRecords, length } =
             this.data ||
             (await this.model.orm.webSearchRead(
                 this.resModel,
                 this.domain,
                 this.fieldNames,
-                {
-                    limit: this.limit,
-                    order,
-                    offset: this.offset,
-                },
-                {
-                    bin_size: true,
-                    ...this.context,
-                }
+                options,
+                { bin_size: true, ...this.context }
             ));
 
         const records = await Promise.all(
@@ -1578,8 +1605,19 @@ export class DynamicGroupList extends DynamicList {
     }
 
     async load() {
+        /** @type {[Group, number][]} */
+        const previousGroups = this.groups.map((g, i) => [g, i]);
         this.groups = await this._loadGroups();
         await Promise.all(this.groups.map((group) => group.load()));
+        if (this.previousParams === this.currentParams) {
+            for (const [group, index] of previousGroups) {
+                const newGroup = this.groups.find((g) => group.valueEquals(g.value));
+                if (!group.deleted && !newGroup) {
+                    group.empty();
+                    this.groups.splice(index, 0, group);
+                }
+            }
+        }
     }
 
     async quickCreate(group) {
@@ -1920,6 +1958,10 @@ export class Group extends DataPoint {
         this.count++;
         this.list.count++;
         return record;
+    }
+
+    valueEquals(value) {
+        return this.value instanceof DateTime ? this.value.equals(value) : this.value === value;
     }
 }
 

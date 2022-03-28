@@ -303,11 +303,12 @@ export class KanbanArchParser extends XMLParser {
 
 export class KanbanView extends Component {
     setup() {
+        const { ArchParser, Model } = this.constructor;
         this.actionService = useService("action");
-        this.archInfo = new KanbanArchParser().parse(this.props.arch, this.props.fields);
+        this.archInfo = new ArchParser().parse(this.props.arch, this.props.fields);
         const { resModel, fields } = this.props;
         const { fields: activeFields, defaultGroupBy, onCreate, quickCreateView } = this.archInfo;
-        this.model = useModel(KanbanModel, {
+        this.model = useModel(Model, {
             activeFields,
             progressAttributes: this.archInfo.progressAttributes,
             fields,
@@ -374,6 +375,8 @@ KanbanView.template = `web.KanbanView`;
 KanbanView.components = { Layout, KanbanRenderer };
 KanbanView.props = { ...standardViewProps };
 KanbanView.buttonTemplate = "web.KanbanView.Buttons";
+
 KanbanView.ArchParser = KanbanArchParser;
+KanbanView.Model = KanbanModel;
 
 registry.category("views").add("kanban", KanbanView);

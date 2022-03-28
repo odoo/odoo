@@ -17,12 +17,9 @@ import {
  * @property {string} string
  */
 
-const { DateTime } = luxon;
 const { EventBus, markRaw } = owl;
 
 const FALSE = Symbol("false");
-
-const isValueEqual = (v1, v2) => (v1 instanceof DateTime ? v1.equals(v2) : v1 === v2);
 
 const useTransaction = () => {
     const bus = new EventBus();
@@ -256,7 +253,7 @@ class KanbanGroup extends Group {
     updateAggregates(groupData) {
         const fname = this.groupByField.name;
         const { sumField } = this.model.progressAttributes;
-        const group = groupData.find((g) => isValueEqual(g[fname], this.value));
+        const group = groupData.find((g) => this.valueEquals(g[fname]));
         if (sumField) {
             this.aggregates[sumField.name] = group ? group[sumField.name] : 0;
         }
@@ -316,11 +313,10 @@ class KanbanGroup extends Group {
     }
 }
 
-class KanbanDynamicGroupList extends DynamicGroupList {
-    setup(_params, state = {}) {
+export class KanbanDynamicGroupList extends DynamicGroupList {
+    setup() {
         super.setup(...arguments);
 
-        this.previousParams = state.previousParams || "";
         this.model.addEventListener("group-updated", ({ detail }) => {
             if (this.groups.some((g) => g.id === detail.group.id)) {
                 this.updateGroupProgressData([detail.group], detail.withProgressBars);
@@ -336,27 +332,7 @@ class KanbanDynamicGroupList extends DynamicGroupList {
      * @override
      */
     async load() {
-        const oldGroups = this.groups.map((g, i) => [g, i]);
         await this._loadWithProgressData(super.load());
-        if (this.previousParams === JSON.stringify([this.domain, this.groupBy])) {
-            for (const [group, index] of oldGroups) {
-                const newGroup = this.groups.find((g) => isValueEqual(g.value, group.value));
-                if (!group.deleted && !newGroup) {
-                    group.empty();
-                    this.groups.splice(index, 0, group);
-                }
-            }
-        }
-    }
-
-    /**
-     * @override
-     */
-    exportState() {
-        return {
-            ...super.exportState(),
-            previousParams: JSON.stringify([this.domain, this.groupBy]),
-        };
     }
 
     /**
@@ -421,7 +397,7 @@ class KanbanDynamicGroupList extends DynamicGroupList {
      * @param {string} dataGroupId
      * @param {string} refId
      * @param {string} targetGroupId
-     * @returns {Promise<void>}
+     * @returns {Promise<Record>}
      */
     async moveRecord(dataRecordId, dataGroupId, refId, targetGroupId) {
         const sourceGroup = this.groups.find((g) => g.id === dataGroupId);
@@ -460,6 +436,8 @@ class KanbanDynamicGroupList extends DynamicGroupList {
         }
         this.model.transaction.commit();
         this.model.notify();
+
+        return record;
     }
 
     // ------------------------------------------------------------------------
@@ -502,7 +480,7 @@ class KanbanDynamicGroupList extends DynamicGroupList {
     }
 }
 
-class KanbanDynamicRecordList extends DynamicRecordList {
+export class KanbanDynamicRecordList extends DynamicRecordList {
     async moveRecord(dataRecordId, _dataGroupId, refId) {
         this.model.transaction.start();
 
@@ -553,7 +531,6 @@ export class KanbanModel extends RelationalModel {
     }
 }
 
-KanbanModel.services = [...RelationalModel.services, "view"];
 KanbanModel.DynamicGroupList = KanbanDynamicGroupList;
 KanbanModel.DynamicRecordList = KanbanDynamicRecordList;
 KanbanModel.Group = KanbanGroup;

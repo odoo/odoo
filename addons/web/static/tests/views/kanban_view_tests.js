@@ -6625,63 +6625,59 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(getCard(0), "oe_kanban_color_9");
     });
 
-    QUnit.skipWOWL("load more records in column", async (assert) => {
+    QUnit.test("load more records in column", async (assert) => {
         assert.expect(13);
 
-        let envIDs = [1, 2, 4]; // the ids that should be in the environment during this test
-        const kanban = await makeView({
+        await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
             arch:
                 "<kanban>" +
                 '<templates><t t-name="kanban-box">' +
-                '<div><field name="foo"/></div>' +
+                '<div><field name="id"/></div>' +
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["bar"],
             limit: 2,
-            async mockRPC(route, args) {
-                if (route === "web_search_read") {
-                    assert.step(args.limit + " - " + args.offset);
+            async mockRPC(_route, { method, kwargs }) {
+                if (method === "web_search_read") {
+                    assert.step(`${kwargs.limit} - ${kwargs.offset}`);
                 }
             },
         });
 
-        assert.strictEqual(
-            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
+        assert.containsN(
+            getColumn(1),
+            ".o_kanban_record",
             2,
             "there should be 2 records in the column"
         );
-        assert.deepEqual(kanban.exportState().resIds, envIDs);
+        assert.deepEqual(getCardTexts(1), ["1", "2"]);
 
         // load more
-        envIDs = [1, 2, 3, 4]; // id 3 will be loaded
-        await click(
-            target.querySelector(".o_kanban_group:nth-child(2)").find(".o_kanban_load_more")
-        );
+        await loadMore(1);
 
-        assert.strictEqual(
-            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
+        assert.containsN(
+            getColumn(1),
+            ".o_kanban_record",
             3,
             "there should now be 3 records in the column"
         );
-        assert.verifySteps(
-            ["2 - undefined", "2 - undefined", "2 - 2"],
-            "the records should be correctly fetched"
-        );
-        assert.deepEqual(kanban.exportState().resIds, envIDs);
+        assert.verifySteps(["2 - 0", "2 - 0", "2 - 2"], "the records should be correctly fetched");
+        assert.deepEqual(getCardTexts(1), ["1", "2", "3"]);
 
         // reload
-        await reload(kanban);
+        await validateSearch(target);
 
-        assert.strictEqual(
-            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
+        assert.containsN(
+            getColumn(1),
+            ".o_kanban_record",
             3,
             "there should still be 3 records in the column after reload"
         );
-        assert.deepEqual(kanban.exportState().resIds, envIDs);
-        assert.verifySteps(["4 - undefined", "2 - undefined"]);
+        assert.deepEqual(getCardTexts(1), ["1", "2", "3"]);
+        assert.verifySteps(["2 - 0", "3 - 0"]);
     });
 
     QUnit.skipWOWL("load more records in column with x2many", async (assert) => {
