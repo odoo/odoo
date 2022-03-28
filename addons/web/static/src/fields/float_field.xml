@@ -2,8 +2,8 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="web.FloatField" owl="1">
-        <span t-if="props.readonly" t-esc="formattedValue" />
-        <input t-else="" t-ref="input" t-att-type="props.inputType" class="o_input" t-att-value="formattedInputValue" t-on-change="onChange" t-att-step="props.step" />
+        <span t-if="props.readonly" t-esc="getFormattedValue()" />
+        <input t-else="" t-att-type="props.inputType" inputmode="numeric" class="o_input" t-att-value="defaultInputValue" t-on-change="onChange" t-att-step="props.step" />
     </t>
 
 </templates>

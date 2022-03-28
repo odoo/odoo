@@ -2,7 +2,7 @@
 
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import { registry } from "@web/core/registry";
-import { click, editInput, getFixture, triggerEvent } from "../helpers/utils";
+import { click, editInput, getFixture } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -139,7 +139,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("basic flow in form view", async function (assert) {
-        assert.expect(6);
+        assert.expect(5);
 
         await makeView({
             type: "form",
@@ -168,24 +168,11 @@ QUnit.module("Fields", (hooks) => {
             "The value should be rendered with correct precision."
         );
 
-        target.querySelector(".o_field_widget[name=float_field] input").value = "108.2451938598598";
-
+        await editInput(target, 'div[name="float_field"] input', "108.2451938598598");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name=float_field] input").value,
             "108.2451938598598",
-            "The value should not be formated yet."
-        );
-
-        await triggerEvent(
-            target.querySelector(".o_field_widget[name=float_field] input"),
-            null,
-            "change"
-        );
-
-        assert.strictEqual(
-            target.querySelector(".o_field_widget[name=float_field] input").value,
-            "108.245",
-            "The value should be formated"
+            "The value should not be formatted yet."
         );
 
         await editInput(target, ".o_field_widget[name=float_field] input", "18.8958938598598");
@@ -284,7 +271,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("float field in editable list view", async function (assert) {
         assert.expect(4);
 
-        const list = await makeView({
+        await makeView({
             serverData,
             type: "list",
             resModel: "partner",
@@ -308,7 +295,7 @@ QUnit.module("Fields", (hooks) => {
         await click(cell);
 
         assert.containsOnce(
-            list,
+            target,
             'div[name="float_field"] input',
             "The view should have 1 input for editable float."
         );
@@ -317,7 +304,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             target.querySelector('div[name="float_field"] input').value,
             "108.2458938598598",
-            "The value should not be formated yet."
+            "The value should not be formatted yet."
         );
 
         await editInput(target, 'div[name="float_field"] input', "18.8958938598598");
@@ -443,7 +430,7 @@ QUnit.module("Fields", (hooks) => {
             assert.strictEqual(
                 target.querySelector(".o_field_widget[name=float_field] input").value,
                 "109.2458938598598",
-                "The value should not be formated yet."
+                "The value should not be formatted yet."
             );
 
             await click(target.querySelector(".o_form_button_save"));
@@ -456,7 +443,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("float field with type number option", async function (assert) {
+    QUnit.test("float field with type number option", async function (assert) {
         assert.expect(4);
 
         await makeView({
@@ -493,18 +480,18 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".o_form_button_edit"));
         assert.strictEqual(
             target.querySelector(".o_field_widget input").value,
-            "123456.789",
+            "123456.7890",
             "Float value must be not formatted if input type is number."
         );
         await click(target.querySelector(".o_form_button_save"));
         assert.strictEqual(
             target.querySelector(".o_field_widget").innerText,
-            "123,456.8",
+            "123,456.79",
             "Float value must be formatted in readonly view even if the input type is number."
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "float field with type number option and comma decimal separator",
         async function (assert) {
             assert.expect(4);
@@ -544,20 +531,20 @@ QUnit.module("Fields", (hooks) => {
             await click(target.querySelector(".o_form_button_save"));
             await click(target.querySelector(".o_form_button_edit"));
             assert.strictEqual(
-                target.querySelector(".o_field_widget").value,
+                target.querySelector(".o_field_widget input").value,
                 "123456.789",
                 "Float value must be not formatted if input type is number."
             );
             await click(target.querySelector(".o_form_button_save"));
             assert.strictEqual(
                 target.querySelector(".o_field_widget").innerText,
-                "123.456,8",
+                "123.456,79",
                 "Float value must be formatted in readonly view even if the input type is number."
             );
         }
     );
 
-    QUnit.skipWOWL("float field without type number option", async function (assert) {
+    QUnit.test("float field without type number option", async function (assert) {
         assert.expect(2);
 
         await makeView({
@@ -588,7 +575,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".o_form_button_edit"));
         assert.strictEqual(
             target.querySelector(".o_field_widget input").value,
-            "123,456.8",
+            "123,456.79",
             "Float value must be formatted if input type isn't number."
         );
     });

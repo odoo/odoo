@@ -3,17 +3,26 @@
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "./standard_field_props";
 
-const { Component, useRef } = owl;
+const { Component, onWillUpdateProps } = owl;
 export class FloatField extends Component {
     setup() {
-        this.inputRef = useRef("input");
+        this.defaultInputValue = this.getFormattedValue();
+        onWillUpdateProps((nextProps) => {
+            if (
+                nextProps.readonly !== this.props.readonly &&
+                !nextProps.readonly &&
+                nextProps.inputType !== "number"
+            ) {
+                this.defaultInputValue = this.getFormattedValue(nextProps);
+            }
+        });
     }
 
     onChange(ev) {
         let isValid = true;
         let value = ev.target.value;
         try {
-            value = this.props.parse(value);
+            value = this.props.inputType === "number" ? Number(value) : this.props.parse(value);
         } catch (_e) {
             // WOWL TODO: rethrow error when not the expected type
             isValid = false;
@@ -21,20 +30,17 @@ export class FloatField extends Component {
         }
         if (isValid) {
             this.props.update(value);
+            this.defaultInputValue = ev.target.value;
         }
     }
 
-    get formattedValue() {
-        return this.props.format(this.props.value, {
-            digits: this.props.digits,
+    getFormattedValue(props = this.props) {
+        if (props.inputType === "number" && !props.readonly && props.value) {
+            return props.value;
+        }
+        return this.props.format(props.value, {
+            digits: props.digits,
         });
-    }
-
-    get formattedInputValue() {
-        if (this.props.inputType === "number") {
-            return this.props.value;
-        }
-        return this.formattedValue;
     }
 }
 
