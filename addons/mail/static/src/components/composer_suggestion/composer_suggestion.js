@@ -46,10 +46,6 @@ export class ComposerSuggestion extends Component {
         return this.props.modelName === "ChannelCommand";
     }
 
-    get isPartner() {
-        return this.props.modelName === "Partner";
-    }
-
     get record() {
         return this.messaging && this.messaging.models[this.props.modelName].get(this.props.recordLocalId);
     }
@@ -70,7 +66,7 @@ export class ComposerSuggestion extends Component {
         if (this.isCommand) {
             return _.str.sprintf("%s: %s", this.record.name, this.record.help);
         }
-        if (this.isPartner) {
+        if (this.composerSuggestion.partner) {
             if (this.record.email) {
                 return _.str.sprintf("%s (%s)", this.record.nameOrDisplayName, this.record.email);
             }

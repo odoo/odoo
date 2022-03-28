@@ -15,7 +15,7 @@
                     <span class="o_ComposerSuggestion_part1 text-truncate"><t t-esc="record.name"/></span>
                     <span class="o_ComposerSuggestion_part2 text-truncate"><t t-esc="record.help"/></span>
                 </t>
-                <t t-if="isPartner">
+                <t t-if="composerSuggestion.partner">
                     <PartnerImStatusIcon
                         className="'o_ComposerSuggestion_partnerImStatusIcon mr-1'"
                         hasBackground="false"
