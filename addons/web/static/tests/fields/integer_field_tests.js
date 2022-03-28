@@ -158,6 +158,30 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("with 'step' option", async function (assert) {
+        await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            resId: 1,
+            arch: `<form><field name="int_field" options="{'type': 'number', 'step': 3}"/></form>`,
+        });
+
+        await click(target, ".o_form_button_edit");
+
+        assert.ok(
+            target.querySelector(".o_field_widget input").hasAttribute("step"),
+            "Integer field with option type must have a step attribute."
+        );
+
+        assert.hasAttrValue(
+            target.querySelector(".o_field_widget input"),
+            "step",
+            "3",
+            'Integer field with option type must have a step attribute equals to "3".'
+        );
+    });
+
     QUnit.test("without input type option", async function (assert) {
         assert.expect(2);
 

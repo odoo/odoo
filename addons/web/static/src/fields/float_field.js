@@ -42,6 +42,7 @@ FloatField.template = "web.FloatField";
 FloatField.props = {
     ...standardFieldProps,
     inputType: { type: String, optional: true },
+    step: { type: Number, optional: true },
     digits: { type: Array, optional: true },
     setAsInvalid: { type: Function, optional: true },
     field: { type: Object, optional: true },
@@ -56,6 +57,7 @@ FloatField.extractProps = (fieldName, record, attrs) => {
         setAsInvalid: record.setInvalidField.bind(record),
         field: record.fields[fieldName], // To remove
         inputType: attrs.options.type,
+        step: attrs.options.step,
         // Sadly, digits param was available as an option and an attr.
         // The option version could be removed with some xml refactoring.
         digits:

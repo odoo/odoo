@@ -30,6 +30,7 @@ IntegerField.template = "web.IntegerField";
 IntegerField.props = {
     ...standardFieldProps,
     inputType: { type: String, optional: true },
+    step: { type: Number, optional: true },
     setAsInvalid: { type: Function, optional: true },
 };
 IntegerField.defaultProps = {
@@ -40,6 +41,7 @@ IntegerField.isEmpty = () => false;
 IntegerField.extractProps = (fieldName, record, attrs) => {
     return {
         inputType: attrs.options.type,
+        step: attrs.options.step,
         setAsInvalid: record.setInvalidField.bind(record),
     };
 };
