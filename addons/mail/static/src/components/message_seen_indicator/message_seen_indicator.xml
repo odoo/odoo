@@ -3,7 +3,7 @@
 
     <t t-name="mail.MessageSeenIndicator" owl="1">
         <t t-if="messageSeenIndicator">
-            <span class="o_MessageSeenIndicator" t-att-class="{ 'o-all-seen': messageSeenIndicator.hasEveryoneSeen }" t-attf-class="{{ className }}" t-att-title="indicatorTitle" t-ref="root">
+            <span class="o_MessageSeenIndicator" t-att-class="{ 'o-all-seen': messageSeenIndicator.hasEveryoneSeen }" t-attf-class="{{ className }}" t-att-title="messageSeenIndicator.text" t-ref="root">
                 <t t-if="!messageSeenIndicator.isMessagePreviousToLastCurrentPartnerMessageSeenByEveryone">
                     <t t-if="messageSeenIndicator.hasSomeoneFetched or messageSeenIndicator.hasSomeoneSeen">
                         <i class="o_MessageSeenIndicator_icon o-first fa fa-check"/>
