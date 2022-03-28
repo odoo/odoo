@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { replace, unlinkAll } from '@mail/model/model_field_command';
+import { clear, replace, unlinkAll } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'MessageSeenIndicator',
@@ -165,6 +165,71 @@ registerModel({
             }
             return replace(otherPartnersThatHaveSeen);
         },
+        /**
+         * @private
+         * @returns {string|FieldCommand} 
+         */
+        _computeText() {
+            if (this.hasEveryoneSeen) {
+                return this.env._t("Seen by Everyone");
+            }
+            if (this.hasSomeoneSeen) {
+                const partnersThatHaveSeen = this.partnersThatHaveSeen.map(partner => {
+                    if (this.message.originThread) {
+                        return this.message.originThread.getMemberName(partner);
+                    }
+                    return partner.nameOrDisplayName;
+                });
+                if (partnersThatHaveSeen.length === 1) {
+                    return _.str.sprintf(
+                        this.env._t("Seen by %s"),
+                        partnersThatHaveSeen[0]
+                    );
+                }
+                if (partnersThatHaveSeen.length === 2) {
+                    return _.str.sprintf(
+                        this.env._t("Seen by %s and %s"),
+                        partnersThatHaveSeen[0],
+                        partnersThatHaveSeen[1]
+                    );
+                }
+                return _.str.sprintf(
+                    this.env._t("Seen by %s, %s and more"),
+                    partnersThatHaveSeen[0],
+                    partnersThatHaveSeen[1]
+                );
+            }
+            if (this.hasEveryoneFetched) {
+                return this.env._t("Received by Everyone");
+            }
+            if (this.hasSomeoneFetched) {
+                const partnersThatHaveFetched = this.partnersThatHaveFetched.map(partner => {
+                    if (this.message.originThread) {
+                        return this.message.originThread.getMemberName(partner);
+                    }
+                    return partner.nameOrDisplayName;
+                });
+                if (partnersThatHaveFetched.length === 1) {
+                    return _.str.sprintf(
+                        this.env._t("Received by %s"),
+                        partnersThatHaveFetched[0]
+                    );
+                }
+                if (partnersThatHaveFetched.length === 2) {
+                    return _.str.sprintf(
+                        this.env._t("Received by %s and %s"),
+                        partnersThatHaveFetched[0],
+                        partnersThatHaveFetched[1]
+                    );
+                }
+                return _.str.sprintf(
+                    this.env._t("Received by %s, %s and more"),
+                    partnersThatHaveFetched[0],
+                    partnersThatHaveFetched[1]
+                );
+            }
+            return clear();
+        },
     },
     fields: {
         hasEveryoneFetched: attr({
@@ -200,6 +265,10 @@ registerModel({
         }),
         partnersThatHaveSeen: many('Partner', {
             compute: '_computePartnersThatHaveSeen',
+        }),
+        text: attr({
+            compute: '_computeText',
+            default: '',
         }),
         /**
          * The thread concerned by this seen indicator.
