@@ -5316,11 +5316,17 @@ registry.ImageTools = ImageHandlerOption.extend({
         this.trigger_up('disable_loading_effect');
 
         const document = this.$target[0].ownerDocument;
+        const playState = this.$target[0].style.animationPlayState;
+        const transition = this.$target[0].style.transition;
         this.$target.transfo({document});
         const mousedown = mousedownEvent => {
             if (!$(mousedownEvent.target).closest('.transfo-container').length) {
                 this.$target.transfo('destroy');
                 $(document).off('mousedown', mousedown);
+                // Restore animation css properties potentially affected by the
+                // jQuery transfo plugin.
+                this.$target[0].style.animationPlayState = playState;
+                this.$target[0].style.transition = transition;
             }
         };
         $(document).on('mousedown', mousedown);

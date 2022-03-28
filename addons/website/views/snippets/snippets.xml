@@ -337,7 +337,9 @@
 </template>
 
 <template id="snippet_options">
-    <t t-call="web_editor.snippet_options"/>
+    <t t-call="web_editor.snippet_options">
+        <t t-set="image_transform_dependencies" t-valuef="no_animation_opt"/>
+    </t>
 
     <!-- COLOR, BORDER, SHADOW | .s_three_columns | .s_comparisons -->
     <div data-js="Box"
@@ -1250,7 +1252,7 @@
     <div data-js="WebsiteAnimate"
          data-selector=".o_animable, section .row > div, img, .fa, .btn, .o_animated_text"
          data-exclude="[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize">
-        <we-select string="Animate" data-is-animation-type-selection="true">
+        <we-select string="Animate" data-dependencies="!image_transform_opt" data-is-animation-type-selection="true">
             <we-button data-select-class="" data-name="no_animation_opt">No Animation</we-button>
             <we-divider/>
             <we-button data-select-class="o_anim_fade_in">Fade In</we-button>
