@@ -4,18 +4,18 @@
     <t t-name="mail.ComposerSuggestion" owl="1">
         <t t-if="composerSuggestion">
             <a class="o_ComposerSuggestion dropdown-item d-flex w-100 py-2 px-4" t-att-class="{ 'active bg-300': props.isActive }" t-attf-class="{{ className }}" href="#" t-att-title="title()" role="menuitem" t-on-click="_onClick" t-ref="root">
-                <t t-if="isCannedResponse">
+                <t t-if="composerSuggestion.cannedResponse">
                     <strong class="o_ComposerSuggestion_part1 flex-shrink-0 mw-100 pr-2 text-truncate"><t t-esc="record.source"/></strong>
                     <em class="o_ComposerSuggestion_part2 text-600 text-truncate"><t t-esc="record.substitution"/></em>
                 </t>
-                <t t-if="isChannel">
+                <t t-if="composerSuggestion.thread">
                     <strong class="o_ComposerSuggestion_part1 flex-shrink-0 mw-100 pr-2 text-truncate"><t t-esc="record.name"/></strong>
                 </t>
-                <t t-if="isCommand">
+                <t t-if="composerSuggestion.channelCommand">
                     <strong class="o_ComposerSuggestion_part1 flex-shrink-0 mw-100 pr-2 text-truncate"><t t-esc="record.name"/></strong>
                     <em class="o_ComposerSuggestion_part2 text-600 text-truncate"><t t-esc="record.help"/></em>
                 </t>
-                <t t-if="isPartner">
+                <t t-if="composerSuggestion.partner">
                     <PartnerImStatusIcon
                         className="'o_ComposerSuggestion_partnerImStatusIcon flex-shrink-0 mr-1'"
                         hasBackground="false"
