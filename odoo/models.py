@@ -908,7 +908,7 @@ class BaseModel(metaclass=MetaModel):
             )
         finally:
             psycopg2.extensions.set_wait_callback(callback)
-        self.env['ir.model.data'].invalidate_cache(fnames=fields)
+        self.env['ir.model.data'].invalidate_model(fields)
 
         return (
             (record, to_xid(record.id))
@@ -935,7 +935,7 @@ class BaseModel(metaclass=MetaModel):
                 sub = rs[idx:idx+1000]
                 for rec in sub:
                     yield rec
-                rs.invalidate_cache(ids=sub.ids)
+                sub.invalidate_recordset()
         if not _is_toplevel_call:
             splittor = lambda rs: rs
 
@@ -1060,7 +1060,7 @@ class BaseModel(metaclass=MetaModel):
         :type data: list(list(str))
         :returns: {ids: list(int)|False, messages: [Message][, lastrow: int]}
         """
-        self.flush()
+        self.env.flush_all()
 
         # determine values of mode, current_module and noupdate
         mode = self._context.get('mode', 'init')
@@ -1171,15 +1171,15 @@ class BaseModel(metaclass=MetaModel):
 
         # make 'flush' available to the methods below, in the case where XMLID
         # resolution fails, for instance
-        flush_self = self.with_context(import_flush=flush, import_cache=LRU(1024))
+        flush_recordset = self.with_context(import_flush=flush, import_cache=LRU(1024))
 
         # TODO: break load's API instead of smuggling via context?
         limit = self._context.get('_import_limit')
         if limit is None:
             limit = float('inf')
-        extracted = flush_self._extract_records(fields, data, log=messages.append, limit=limit)
+        extracted = flush_recordset._extract_records(fields, data, log=messages.append, limit=limit)
 
-        converted = flush_self._convert_records(extracted, log=messages.append)
+        converted = flush_recordset._convert_records(extracted, log=messages.append)
 
         info = {'rows': {'to': -1}}
         for id, xid, record, info in converted:
@@ -2837,7 +2837,7 @@ class BaseModel(metaclass=MetaModel):
             WHERE row.id = comp.id
         """.format(table=self._table, parent=self._parent_name)
         self.env.cr.execute(query)
-        self.invalidate_cache(['parent_path'])
+        self.invalidate_model(['parent_path'])
         return True
 
     def _check_removed_columns(self, log=False):
@@ -3419,7 +3419,7 @@ class BaseModel(metaclass=MetaModel):
 
         # if a read() follows a write(), we must flush updates, as read() will
         # fetch from database and overwrites the cache (`test_update_with_id`)
-        self.flush(fields, self)
+        self.flush_recordset(fields)
 
         field_names = []
         inherited_field_names = []
@@ -3761,7 +3761,7 @@ class BaseModel(metaclass=MetaModel):
 
         # mark fields that depend on 'self' to recompute them after 'self' has
         # been deleted (like updating a sum of lines after deleting one line)
-        self.flush()
+        self.env.flush_all()
         self.modified(self._fields, before=True)
 
         with self.env.norecompute():
@@ -3819,14 +3819,14 @@ class BaseModel(metaclass=MetaModel):
 
             # invalidate the *whole* cache, since the orm does not handle all
             # changes made in the database, like cascading delete!
-            self.invalidate_cache()
+            self.env.invalidate_all()
             if ir_model_data_unlink:
                 ir_model_data_unlink.unlink()
             if ir_attachment_unlink:
                 ir_attachment_unlink.unlink()
             # DLE P93: flush after the unlink, for recompute fields depending on
             # the modified of the unlink
-            self.flush()
+            self.env.flush_all()
 
         # auditing: deletions are infrequent and leave no trace in the database
         _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, self._name, self.ids)
@@ -3943,7 +3943,7 @@ class BaseModel(metaclass=MetaModel):
                       for field in protected
                       if field.compute and field.name not in vals]
         if to_compute:
-            self.recompute(to_compute, self)
+            self._recompute_recordset(to_compute)
 
         # protect fields being written against recomputation
         with env.protecting(protected, self):
@@ -3992,7 +3992,7 @@ class BaseModel(metaclass=MetaModel):
             self.modified(vals)
 
             if self._parent_store and self._parent_name in vals:
-                self.flush([self._parent_name])
+                self.flush_model([self._parent_name])
 
             # validate non-inversed fields first
             inverse_fields = [f.name for fs in determine_inverses.values() for f in fs]
@@ -4840,7 +4840,7 @@ class BaseModel(metaclass=MetaModel):
                     models.append(self.env[model_name])
 
         for model_name, field_names in to_flush.items():
-            self.env[model_name].flush(field_names)
+            self.env[model_name].flush_model(field_names)
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
@@ -5067,7 +5067,7 @@ class BaseModel(metaclass=MetaModel):
 
         # must ignore 'active' flag, ir.rules, etc. => direct SQL query
         cr = self._cr
-        self.flush([parent])
+        self.flush_model([parent])
         query = 'SELECT "%s" FROM "%s" WHERE id = %%s' % (parent, self._table)
         for id in self.ids:
             current_id = id
@@ -5093,7 +5093,7 @@ class BaseModel(metaclass=MetaModel):
             # field must be a many2many on itself
             raise ValueError('invalid field_name: %r' % (field_name,))
 
-        self.flush([field_name])
+        self.flush_model([field_name])
 
         cr = self._cr
         query = 'SELECT "%s", "%s" FROM "%s" WHERE "%s" IN %%s AND "%s" IS NOT NULL' % \
@@ -5775,63 +5775,92 @@ class BaseModel(metaclass=MetaModel):
         :param Model records: if given (together with ``fnames``), limit the
             processing to the given records.
         """
+        warnings.warn(
+            "Deprecated method flush(), use flush_model(), flush_recordset() or env.flush_all() instead",
+            DeprecationWarning,
+        )
+        if fnames is None:
+            self.env.flush_all()
+        elif records is None:
+            self.flush_model(fnames)
+        else:
+            records.flush_recordset(fnames)
+
+    def flush_model(self, fnames=None):
+        """ Process the pending computations and database updates on ``self``'s
+        model.  When the parameter is given, the method guarantees that at least
+        the given fields are flushed to the database.  More fields can be
+        flushed, though.
+
+        :param fnames: optional iterable of field names to flush
+        """
+        self._recompute_model(fnames)
+        self._flush(fnames)
+
+    def flush_recordset(self, fnames=None):
+        """ Process the pending computations and database updates on the records
+        ``self``.   When the parameter is given, the method guarantees that at
+        least the given fields on records ``self`` are flushed to the database.
+        More fields and records can be flushed, though.
+
+        :param fnames: optional iterable of field names to flush
+        """
+        self._recompute_recordset(fnames)
+        towrite = self.env.all.towrite.get(self._name)
+        if fnames is None:
+            must_flush = towrite and any(id_ in towrite for id_ in self._ids)
+        else:
+            must_flush = towrite and any(
+                fname in vals
+                for id_ in self._ids
+                for vals in towrite.get(id_, ())
+                for fname in fnames
+            )
+        if must_flush:
+            self._flush(fnames)
+
+    def _flush(self, fnames=None):
         def process(model, id_vals):
             # group record ids by vals, to update in batch when possible
             updates = defaultdict(list)
-            for rid, vals in id_vals.items():
-                updates[frozendict(vals)].append(rid)
+            for id_, vals in id_vals.items():
+                updates[frozendict(vals)].append(id_)
 
             for vals, ids in updates.items():
                 model.browse(ids)._write(vals)
 
+        # DLE P76: test_onchange_one2many_with_domain_on_related_field
+        # ```
+        # email.important = True
+        # self.assertIn(email, discussion.important_emails)
+        # ```
+        # When a search on a field coming from a related occurs (the domain
+        # on discussion.important_emails field), make sure the related field
+        # is flushed
         if fnames is None:
-            # flush everything
-            self.recompute()
-            while self.env.all.towrite:
-                model_name, id_vals = self.env.all.towrite.popitem()
-                process(self.env[model_name], id_vals)
+            fields = self._fields.values()
         else:
-            # flush self's model if any of the fields must be flushed
-            self.recompute(fnames, records=records)
+            fields = [self._fields[fname] for fname in fnames]
 
-            # check whether any of 'records' must be flushed
-            if records is not None:
-                fnames = set(fnames)
-                towrite = self.env.all.towrite.get(self._name)
-                if not towrite or all(
-                    fnames.isdisjoint(towrite.get(record.id, ()))
-                    for record in records
-                ):
-                    return
+        model_fields = defaultdict(list)
+        for field in fields:
+            model_fields[field.model_name].append(field)
+            if field.related_field:
+                model_fields[field.related_field.model_name].append(field.related_field)
 
-            # DLE P76: test_onchange_one2many_with_domain_on_related_field
-            # ```
-            # email.important = True
-            # self.assertIn(email, discussion.important_emails)
-            # ```
-            # When a search on a field coming from a related occurs (the domain
-            # on discussion.important_emails field), make sure the related field
-            # is flushed
-            model_fields = {}
-            for fname in fnames:
-                field = self._fields[fname]
-                model_fields.setdefault(field.model_name, []).append(field)
-                if field.related_field:
-                    model_fields.setdefault(field.related_field.model_name, []).append(field.related_field)
-            for model_name, fields in model_fields.items():
-                if any(
-                    field.name in vals
-                    for vals in self.env.all.towrite.get(model_name, {}).values()
-                    for field in fields
-                ):
-                    id_vals = self.env.all.towrite.pop(model_name)
-                    process(self.env[model_name], id_vals)
+        for model_name, fields_ in model_fields.items():
+            if any(
+                field.name in vals
+                for vals in self.env.all.towrite.get(model_name, {}).values()
+                for field in fields_
+            ):
+                id_vals = self.env.all.towrite.pop(model_name)
+                process(self.env[model_name], id_vals)
 
-            # missing for one2many fields, flush their inverse
-            for fname in fnames:
-                field = self._fields[fname]
-                if field.type == 'one2many' and field.inverse_name:
-                    self.env[field.comodel_name].flush([field.inverse_name])
+        # flush the inverse of one2many fields, too
+        for field in fields:
+            if field.type == 'one2many' and field.inverse_name:
+                self.env[field.comodel_name].flush_model([field.inverse_name])
 
     #
     # New records - represent records that do not exist in the database yet;
@@ -6099,7 +6128,7 @@ class BaseModel(metaclass=MetaModel):
         """
         warnings.warn('refresh() is deprecated method, use invalidate_cache() instead',
                       DeprecationWarning)
-        self.invalidate_cache()
+        self.env.invalidate_all()
 
     @api.model
     def invalidate_cache(self, fnames=None, ids=None):
@@ -6109,16 +6138,45 @@ class BaseModel(metaclass=MetaModel):
             :param fnames: the list of modified fields, or ``None`` for all fields
             :param ids: the list of modified record ids, or ``None`` for all
         """
-        if fnames is None:
-            if ids is None:
-                return self.env.cache.invalidate()
-            fields = list(self._fields.values())
+        warnings.warn(
+            "Deprecated method invalidate_cache(), use invalidate_model(), invalidate_recordset() or env.invalidate_all() instead",
+            DeprecationWarning,
+        )
+        if ids is not None:
+            self.browse(ids).invalidate_recordset(fnames)
+        elif fnames is not None:
+            self.invalidate_model(fnames)
         else:
-            fields = [self._fields[n] for n in fnames]
+            self.env.invalidate_all()
 
-        # invalidate fields and inverse fields, too
-        spec = [(f, ids) for f in fields] + \
-               [(invf, None) for f in fields for invf in self.pool.field_inverses[f]]
+    def invalidate_model(self, fnames=None):
+        """ Invalidate the cache of all records of ``self``'s model, when the
+        cached values no longer correspond to the database values.  If the
+        parameter is given, only the given fields are invalidated from cache.
+
+        :param fnames: optional iterable of field names to invalidate
+        """
+        self._invalidate_cache(fnames)
+
+    def invalidate_recordset(self, fnames=None):
+        """ Invalidate the cache of the records in ``self``, when the cached
+        values no longer correspond to the database values.  If the parameter
+        is given, only the given fields on ``self`` are invalidated from cache.
+
+        :param fnames: optional iterable of field names to invalidate
+        """
+        self._invalidate_cache(fnames, self._ids)
+
+    def _invalidate_cache(self, fnames=None, ids=None):
+        if fnames is None:
+            fields = self._fields.values()
+        else:
+            fields = [self._fields[fname] for fname in fnames]
+        spec = []
+        for field in fields:
+            spec.append((field, ids))
+            for invf in self.pool.field_inverses[field]:
+                spec.append((invf, None))
         self.env.cache.invalidate(spec)
 
     def modified(self, fnames, create=False, before=False):
@@ -6260,38 +6318,73 @@ class BaseModel(metaclass=MetaModel):
             The fields and records to recompute have been determined by method
             :meth:`modified`.
         """
-        def process(field):
-            recs = self.env.records_to_compute(field)
-            if (not recs) or (records is not None and not (records & recs)):
-                return
-            if field.store:
-                # do not force recomputation on new records; those will be
-                # recomputed by accessing the field on the records
-                recs = recs.filtered('id')
-                try:
-                    field.recompute(recs)
-                except MissingError:
-                    existing = recs.exists()
-                    field.recompute(existing)
-                    # mark the field as computed on missing records, otherwise
-                    # they remain forever in the todo list, and lead to an
-                    # infinite loop...
-                    for f in recs.pool.field_computed[field]:
-                        self.env.remove_to_compute(f, recs - existing)
-            else:
-                self.env.cache.invalidate([(field, recs._ids)])
-                self.env.remove_to_compute(field, recs)
-
+        warnings.warn(
+            "Deprecated method recompute(), use flush_model(), flush_recordset() or env.flush_all() instead",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         if fnames is None:
-            # recompute everything
-            for field in list(self.env.fields_to_compute()):
-                process(field)
+            self.env._recompute()
+        elif records is None:
+            self._recompute_model(fnames)
         else:
-            # recompute the given fields on self's model
-            for fname in fnames:
-                field = self._fields[fname]
-                if field.compute:
-                    process(field)
+            records._recompute_recordset(fnames)
+
+    def _recompute_model(self, fnames=None):
+        """ Process the pending computations of the fields of ``self``'s model.
+
+        :param fnames: optional iterable of field names to compute
+        """
+        if fnames is None:
+            fields = self._fields.values()
+        else:
+            fields = [self._fields[fname] for fname in fnames]
+
+        for field in fields:
+            if field.compute:
+                self._recompute_field(field)
+
+    def _recompute_recordset(self, fnames=None):
+        """ Process the pending computations of the fields of the records in ``self``.
+
+        :param fnames: optional iterable of field names to compute
+        """
+        if fnames is None:
+            fields = self._fields.values()
+        else:
+            fields = [self._fields[fname] for fname in fnames]
+
+        for field in fields:
+            if field.compute:
+                self._recompute_field(field, self._ids)
+
+    def _recompute_field(self, field, ids=None):
+        ids_to_compute = self.env.all.tocompute.get(field, ())
+        if ids is None:
+            ids = ids_to_compute
+        else:
+            ids = [id_ for id_ in ids if id_ in ids_to_compute]
+        if not ids:
+            return
+
+        records = self.browse(ids)
+        if field.store:
+            # do not force recomputation on new records; those will be
+            # recomputed by accessing the field on the records
+            records = records.filtered('id')
+            try:
+                field.recompute(records)
+            except MissingError:
+                existing = records.exists()
+                field.recompute(existing)
+                # mark the field as computed on missing records, otherwise
+                # they remain forever in the todo list, and lead to an
+                # infinite loop...
+                for f in records.pool.field_computed[field]:
+                    self.env.remove_to_compute(f, records - existing)
+        else:
+            self.env.cache.invalidate([(field, records._ids)])
+            self.env.remove_to_compute(field, records)
 
     #
     # Generic onchange method
@@ -6388,7 +6481,7 @@ class BaseModel(metaclass=MetaModel):
             methods to them, and return all the fields in ``field_onchange``.
         """
         # this is for tests using `Form`
-        self.flush()
+        self.env.flush_all()
 
         env = self.env
         if isinstance(field_name, list):
@@ -6653,7 +6746,7 @@ class BaseModel(metaclass=MetaModel):
         snapshot1 = Snapshot(record, nametree)
 
         # determine values that have changed by comparing snapshots
-        self.invalidate_cache()
+        self.env.invalidate_all()
         result['value'] = snapshot1.diff(snapshot0, force=first_call)
 
         # format warnings

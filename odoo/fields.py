@@ -1024,7 +1024,7 @@ class Field(MetaField('DummyField', (object,), {})):
             @model.pool.post_init
             def add_not_null():
                 # flush values before adding NOT NULL constraint
-                model.flush([self.name])
+                model.flush_model([self.name])
                 model.pool.post_constraint(apply_required, model, self.name)
 
         elif not self.required and has_notnull:
@@ -3472,7 +3472,7 @@ class One2many(_RelationalMulti):
             # cache value of self is consistent
             inverse_field = records.pool[self.comodel_name]._fields[self.inverse_name]
             if inverse_field.compute:
-                records.env[self.comodel_name].recompute([self.inverse_name])
+                records.env[self.comodel_name]._recompute_model([self.inverse_name])
         return super().__get__(records, owner)
 
     def read(self, records):

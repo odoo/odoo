@@ -306,7 +306,7 @@ class Registry(Mapping):
         if self.ready:
             for model in env.values():
                 model._register_hook()
-            env['base'].flush()
+            env.flush_all()
 
     @lazy_property
     def field_computed(self):
@@ -445,7 +445,7 @@ class Registry(Mapping):
             self.check_indexes(cr, model_names)
             self.check_foreign_keys(cr)
 
-            env['base'].flush()
+            env.flush_all()
 
             # make sure all tables are present
             self.check_tables_exist(cr)
@@ -561,7 +561,7 @@ class Registry(Mapping):
             for name in missing:
                 _logger.info("Recreate table of model %s.", name)
                 env[name].init()
-            env['base'].flush()
+            env.flush_all()
             # check again, and log errors if tables are still missing
             missing_tables = set(table2model).difference(existing_tables(cr, table2model))
             for table in missing_tables:

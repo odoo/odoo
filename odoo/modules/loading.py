@@ -119,7 +119,7 @@ def force_demo(cr):
         load_demo(cr, package, {}, 'init')
 
     env = api.Environment(cr, SUPERUSER_ID, {})
-    env['ir.module.module'].invalidate_cache(['demo'])
+    env['ir.module.module'].invalidate_model(['demo'])
     env['res.groups']._update_user_groups_view()
 
 
@@ -183,7 +183,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
                 migrations.migrate_module(package, 'pre')
             if package.name != 'base':
                 env = api.Environment(cr, SUPERUSER_ID, {})
-                env['base'].flush()
+                env.flush_all()
 
         load_openerp_module(package.name)
 
@@ -230,7 +230,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             load_data(cr, idref, mode, kind='data', package=package)
             demo_loaded = package.dbdemo = load_demo(cr, package, idref, mode)
             cr.execute('update ir_module_module set demo=%s where id=%s', (demo_loaded, module_id))
-            module.invalidate_cache(['demo'])
+            module.invalidate_model(['demo'])
 
             migrations.migrate_module(package, 'post')
 
@@ -308,7 +308,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             for kind in ('init', 'demo', 'update'):
                 if hasattr(package, kind):
                     delattr(package, kind)
-            module.flush()
+            module.env.flush_all()
 
         extra_queries = odoo.sql_db.sql_counter - module_extra_query_count - test_queries
         extras = []
@@ -454,9 +454,9 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
                 if modules:
                     modules.button_upgrade()
 
+            env.flush_all()
             cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
-            Module.invalidate_cache(['state'])
-            Module.flush()
+            Module.invalidate_model(['state'])
 
         # STEP 3: Load marked modules (skipping base which was done in STEP 1)
         # IMPORTANT: this is done in two parts, first loading all installed or
@@ -519,7 +519,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
 
             # Cleanup orphan records
             env['ir.model.data']._process_end(processed_modules)
-            env['base'].flush()
+            env.flush_all()
 
         for kind in ('init', 'demo', 'update'):
             tools.config[kind] = {}
@@ -587,7 +587,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
         env = api.Environment(cr, SUPERUSER_ID, {})
         for model in env.values():
             model._register_hook()
-        env['base'].flush()
+        env.flush_all()
 
         # STEP 9: save installed/updated modules for post-install tests
         registry.updated_modules += processed_modules
