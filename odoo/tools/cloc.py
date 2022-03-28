@@ -201,13 +201,13 @@ class Cloc(object):
         if not imported_module:
             return
 
-        # Count qweb view only from imported module
+        # Count qweb view only from imported module and not studio
         query = """
             SELECT view.id, data.module
               FROM ir_ui_view view
         INNER JOIN ir_model_data data ON view.id = data.res_id AND data.model = 'ir.ui.view'
         INNER JOIN ir_module_module mod ON mod.name = data.module AND mod.imported = True
-             WHERE view.type = 'qweb'
+             WHERE view.type = 'qweb' AND mod.name != 'studio_customization'
         """
         env.cr.execute(query)
         custom_views = dict(env.cr.fetchall())
