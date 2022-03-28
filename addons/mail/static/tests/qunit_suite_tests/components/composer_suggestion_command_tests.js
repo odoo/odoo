@@ -10,56 +10,39 @@ QUnit.test('command suggestion displayed', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { createComposerSuggestionComponent, messaging } = await start();
-    const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
+    const mailChannelId1 = pyEnv['mail.channel'].create({ name: 'my-channel' });
+    const { insertText, openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: mailChannelId1,
+            },
+        },
+        hasDiscuss: true,
     });
-    const command = messaging.models['ChannelCommand'].create({
-        methodName: '',
-        name: 'whois',
-        help: "Displays who it is",
-    });
-    await createComposerSuggestionComponent(thread.composer, {
-        isActive: true,
-        modelName: 'ChannelCommand',
-        recordLocalId: command.localId,
-    });
-
+    await openDiscuss();
+    await insertText('.o_ComposerTextInput_textarea', "/who");
     assert.containsOnce(
         document.body,
-        `.o_ComposerSuggestion`,
-        "Command suggestion should be present"
+        '.o_ComposerSuggestion',
+        "Command suggestion should be present",
     );
 });
 
 QUnit.test('command suggestion correct data', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { createComposerSuggestionComponent, messaging } = await start();
-    const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
+    const mailChannelId1 = pyEnv['mail.channel'].create({ name: 'my-channel' });
+    const { insertText, openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: mailChannelId1,
+            },
+        },
+        hasDiscuss: true,
     });
-    const command = messaging.models['ChannelCommand'].create({
-        methodName: '',
-        name: 'whois',
-        help: "Displays who it is",
-    });
-    await createComposerSuggestionComponent(thread.composer, {
-        isActive: true,
-        modelName: 'ChannelCommand',
-        recordLocalId: command.localId,
-    });
-
-    assert.containsOnce(
-        document.body,
-        '.o_ComposerSuggestion',
-        "Command suggestion should be present"
-    );
+    await openDiscuss();
+    await insertText('.o_ComposerTextInput_textarea', "/who");
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion_part1',
@@ -67,51 +50,40 @@ QUnit.test('command suggestion correct data', async function (assert) {
     );
     assert.strictEqual(
         document.querySelector(`.o_ComposerSuggestion_part1`).textContent,
-        "whois",
+        "who",
         "Command name should be displayed"
     );
     assert.containsOnce(
-        document.body,
+        document.querySelector('.o_ComposerSuggestion'),
         '.o_ComposerSuggestion_part2',
         "Command help should be present"
     );
     assert.strictEqual(
         document.querySelector(`.o_ComposerSuggestion_part2`).textContent,
-        "Displays who it is",
+        "List users in the current channel",
         "Command help should be displayed"
     );
 });
 
 QUnit.test('command suggestion active', async function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { createComposerSuggestionComponent, messaging } = await start();
-    const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
+    const mailChannelId1 = pyEnv['mail.channel'].create({ name: 'my-channel' });
+    const { insertText, openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: mailChannelId1,
+            },
+        },
+        hasDiscuss: true,
     });
-    const command = messaging.models['ChannelCommand'].create({
-        methodName: '',
-        name: 'whois',
-        help: "Displays who it is",
-    });
-    await createComposerSuggestionComponent(thread.composer, {
-        isActive: true,
-        modelName: 'ChannelCommand',
-        recordLocalId: command.localId,
-    });
-
-    assert.containsOnce(
-        document.body,
-        '.o_ComposerSuggestion',
-        "Command suggestion should be displayed"
-    );
+    await openDiscuss();
+    await insertText('.o_ComposerTextInput_textarea', "/who");
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestion'),
         'active',
-        "should be active initially"
+        "1st suggestion should be active initially"
     );
 });
 

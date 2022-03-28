@@ -10,18 +10,17 @@ QUnit.test('channel mention suggestion displayed', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { createComposerSuggestionComponent, messaging } = await start();
-    const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
+    const mailChannelId1 = pyEnv['mail.channel'].create({ name: 'my-channel' });
+    const { insertText, openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: mailChannelId1,
+            },
+        },
+        hasDiscuss: true,
     });
-    await createComposerSuggestionComponent(thread.composer, {
-        isActive: true,
-        modelName: 'Thread',
-        recordLocalId: thread.localId,
-    });
-
+    await openDiscuss();
+    await insertText('.o_ComposerTextInput_textarea', "#my-channel");
     assert.containsOnce(
         document.body,
         `.o_ComposerSuggestion`,
@@ -30,26 +29,20 @@ QUnit.test('channel mention suggestion displayed', async function (assert) {
 });
 
 QUnit.test('channel mention suggestion correct data', async function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({ name: "General" });
-    const { createComposerSuggestionComponent, messaging } = await start();
-    const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
+    const { insertText, openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: mailChannelId1,
+            },
+        },
+        hasDiscuss: true,
     });
-    await createComposerSuggestionComponent(thread.composer, {
-        isActive: true,
-        modelName: 'Thread',
-        recordLocalId: thread.localId,
-    });
-
-    assert.containsOnce(
-        document.body,
-        '.o_ComposerSuggestion',
-        "Channel mention suggestion should be present"
-    );
+    await openDiscuss();
+    await insertText('.o_ComposerTextInput_textarea', "#General");
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion_part1',
@@ -63,26 +56,20 @@ QUnit.test('channel mention suggestion correct data', async function (assert) {
 });
 
 QUnit.test('channel mention suggestion active', async function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { createComposerSuggestionComponent, messaging } = await start();
-    const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
+    const mailChannelId1 = pyEnv['mail.channel'].create({ name: 'my-channel' });
+    const { insertText, openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: mailChannelId1,
+            },
+        },
+        hasDiscuss: true,
     });
-    await createComposerSuggestionComponent(thread.composer, {
-        isActive: true,
-        modelName: 'Thread',
-        recordLocalId: thread.localId,
-    });
-
-    assert.containsOnce(
-        document.body,
-        '.o_ComposerSuggestion',
-        "Channel mention suggestion should be displayed"
-    );
+    await openDiscuss();
+    await insertText('.o_ComposerTextInput_textarea', "#my-channel");
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestion'),
         'active',
