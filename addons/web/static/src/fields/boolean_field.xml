@@ -2,7 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="web.BooleanField" owl="1">
-        <CheckBox id="props.id" value="props.value or false" disabled="props.readonly" onChange.bind="onChange" onKeydown.bind="onKeydown" />
+        <div t-ref="root">
+            <CheckBox id="props.id" value="props.value or false" disabled="props.readonly" onChange.bind="onChange" onKeydown.bind="onKeydown" />
+        </div>
     </t>
 
 </templates>

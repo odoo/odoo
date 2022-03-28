@@ -5,14 +5,31 @@ import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 
-const { Component } = owl;
+const { Component, useExternalListener, useRef } = owl;
 
 export class BooleanField extends Component {
+    setup() {
+        this.root = useRef("root");
+        useExternalListener(window, "click", (ev) => this.onClick(ev), { capture: true });
+    }
     /**
      * @param {Event} ev
      */
     onChange(newValue) {
         this.props.update(newValue);
+    }
+    /**
+     * @param {Event} ev
+     */
+    onClick(ev) {
+        if (
+            this.props.readonly &&
+            !this.props.isDisabled &&
+            ev.composedPath().includes(this.root.el)
+        ) {
+            this.props.update(!this.props.value);
+            ev.stopPropagation();
+        }
     }
     /**
      * @param {MouseEvent} ev
@@ -29,6 +46,12 @@ export class BooleanField extends Component {
 BooleanField.template = "web.BooleanField";
 BooleanField.props = {
     ...standardFieldProps,
+    isDisabled: { type: Boolean, optional: true },
+};
+BooleanField.extractProps = (fieldName, record) => {
+    return {
+        isDisabled: record.isReadonly(fieldName),
+    };
 };
 BooleanField.displayName = _lt("Checkbox");
 BooleanField.supportedTypes = ["boolean"];

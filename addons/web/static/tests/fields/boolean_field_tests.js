@@ -160,7 +160,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("boolean field in editable list view", async function (assert) {
+    QUnit.test("boolean field in editable list view", async function (assert) {
         assert.expect(11);
 
         await makeView({
