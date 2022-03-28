@@ -131,7 +131,7 @@ export class Powerbox {
                     ev => {
                         ev.preventDefault();
                         ev.stopImmediatePropagation();
-                        this._currentValidate();
+                        this._currentValidate(command);
                     },
                     true,
                 );
@@ -260,10 +260,12 @@ export class Powerbox {
 
             this.options.onStop && this.options.onStop();
         };
-        this._currentValidate = () => {
-            const command = this._currentFilteredCommands.find(
-                c => c === this._currentSelectedCommand,
-            );
+        this._currentValidate = (command) => {
+            if (!command) {
+                command = this._currentFilteredCommands.find(
+                    c => c === this._currentSelectedCommand,
+                );
+            }
             if (command) {
                 !command.isIntermediateStep &&
                     (!command.shouldPreValidate || command.shouldPreValidate()) &&
