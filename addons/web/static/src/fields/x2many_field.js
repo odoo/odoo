@@ -170,7 +170,7 @@ export class X2ManyField extends Component {
                 save: () => {
                     record.switchMode("readonly");
                     this.list.addNew({
-                        context: this.list.context,
+                        context: makeContext([this.list.context, context]),
                         resModel: this.list.resModel,
                         fields: this.list.fields,
                         activeFields: this.list.activeFields,

@@ -247,12 +247,15 @@ Field.parseFieldNode = function (node, fields, viewType) {
         }
 
         fieldInfo.relation = field.relation; // not really necessary
+
         const relatedFields = {};
-        if (fieldInfo.FieldComponent.useSubView) {
-            const firstView = fieldInfo.views && fieldInfo.views[fieldInfo.viewMode];
-            if (firstView) {
-                Object.assign(relatedFields, firstView.fields);
+        // the idea is to have at least all the fields that are used in one of
+        // the views or "somewhere else" --> but all comodel fields could do the job here.
+        if (fieldInfo.FieldComponent.useSubView && fieldInfo.views) {
+            for (const viewType in fieldInfo.views) {
+                Object.assign(relatedFields, fieldInfo.views[viewType].fields);
             }
+            // works because we look to things that do not vary in fields with viewType: type, relation,...
         }
         // add fields required by specific FieldComponents
         Object.assign(relatedFields, fieldInfo.FieldComponent.fieldsToFetch);
