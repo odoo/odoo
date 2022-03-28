@@ -6,6 +6,7 @@ import logging
 import werkzeug
 
 from werkzeug.exceptions import Forbidden
+from werkzeug.urls import url_encode
 
 from odoo import http
 from odoo.exceptions import UserError
@@ -72,5 +73,10 @@ class MicrosoftOutlookController(http.Controller):
             'microsoft_outlook_access_token': access_token,
             'microsoft_outlook_access_token_expiration': expiration,
         })
-
-        return werkzeug.utils.redirect(f'/web?#id={rec_id}&model={model_name}&view_type=form', 303)
+        url_params = {
+            'id': rec_id,
+            'model': model_name,
+            'view_type': 'form'
+        }
+        url = '/web?#' + url_encode(url_params)
+        return werkzeug.utils.redirect(url, 303)
