@@ -3,7 +3,7 @@
 {
     'name': 'Booths/Exhibitors Bridge',
     'category': 'Marketing/Events',
-    'version': '1.0',
+    'version': '1.1',
     'summary': 'Event Booths, automatically create a sponsor.',
     'description': """
 Automatically create a sponsor when renting a booth.
