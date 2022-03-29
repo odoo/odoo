@@ -14,9 +14,8 @@ class AccountJournal(models.Model):
             return
 
         company = self.env['res.company'].browse(vals['company_id']) if vals.get('company_id') else self.env.company
-        if company.country_id.code == "NL":
-            type_control_ids = vals.get('type_control_ids', [])
-            type_control_ids.append(self.env.ref('account.data_account_type_direct_costs').id)
+        if company.country_id.code == "NL" and not vals.get('type_control_ids')[0][2]:
+            type_control_ids = self.env.ref('account.data_account_type_direct_costs').ids
             vals['type_control_ids'] = [(6, 0, type_control_ids)]
 
     @api.model
