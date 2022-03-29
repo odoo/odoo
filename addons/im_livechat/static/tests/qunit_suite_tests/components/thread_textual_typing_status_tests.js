@@ -2,17 +2,15 @@
 
 import {
     afterNextRender,
-    beforeEach,
     createRootMessagingComponent,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('thread_textual_typing_status_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-
+    beforeEach() {
         this.createThreadTextualTypingStatusComponent = async (thread, target) => {
             await createRootMessagingComponent(thread.env, "ThreadTextualTypingStatus", {
                 props: { threadLocalId: thread.localId },
@@ -25,16 +23,16 @@ QUnit.module('thread_textual_typing_status_tests.js', {
 QUnit.test('receive visitor typing status "is typing"', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         anonymous_name: "Visitor 20",
         channel_type: 'livechat',
-        id: 20,
-        livechat_operator_id: this.data.currentPartnerId,
-        channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
+        livechat_operator_id: pyEnv.currentPartnerId,
+        channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
     });
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     await this.createThreadTextualTypingStatusComponent(thread, widget.el);
@@ -50,7 +48,7 @@ QUnit.test('receive visitor typing status "is typing"', async function (assert) 
         widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/typing_status',
             payload: {
-                channel_id: 20,
+                channel_id: mailChannelId1,
                 is_typing: true,
                 partner_id: messaging.publicPartners[0].id,
                 partner_name: messaging.publicPartners[0].name,

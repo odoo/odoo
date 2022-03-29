@@ -1,21 +1,17 @@
 /** @odoo-module **/
 
-import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('composer_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('composer_tests.js');
 
 QUnit.test('livechat: no add attachment button', async function (assert) {
     // Attachments are not yet supported in livechat, especially from livechat
     // visitor PoV. This may likely change in the future with task-2029065.
     assert.expect(2);
 
-    const { createComposerComponent, messaging } = await start({ data: this.data });
+    const { createComposerComponent, messaging } = await start();
     const thread = messaging.models['Thread'].create({
         channel_type: 'livechat',
         id: 10,

@@ -2,29 +2,24 @@
 
 import {
     afterNextRender,
-    beforeEach,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 import FormView from 'web.FormView';
 import { mock } from 'web.test_utils';
 
 QUnit.module('website_livechat', {}, function () {
-QUnit.module('messaging_notification_handler_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('messaging_notification_handler_tests.js');
 
 QUnit.test('should open chat window on send chat request to website visitor', async function (assert) {
     assert.expect(3);
 
-    this.data['website.visitor'].records.push({
+    const pyEnv = await startServer();
+    const websiteVisitorId1 = pyEnv['website.visitor'].create({
         display_name: "Visitor #11",
-        id: 11,
     });
     const { env, widget } = await start({
-        data: this.data,
         hasChatWindow: true,
         hasView: true,
         // View params
@@ -38,7 +33,7 @@ QUnit.test('should open chat window on send chat request to website visitor', as
                 <field name="name"/>
             </form>
         `,
-        res_id: 11,
+        res_id: websiteVisitorId1,
     });
     mock.intercept(widget, 'execute_action', payload => {
         env.services.rpc({

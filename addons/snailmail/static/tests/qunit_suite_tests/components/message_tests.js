@@ -3,45 +3,43 @@
 import { insert, insertAndReplace } from '@mail/model/model_field_command';
 import {
     afterNextRender,
-    beforeEach,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 import Bus from 'web.Bus';
 
 QUnit.module('snailmail', {}, function () {
-QUnit.module('components', {}, function () {
-QUnit.module('message_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('components', {}, async function() {
+QUnit.module('message_tests.js');
 
 QUnit.test('Sent', async function (assert) {
     assert.expect(8);
 
-    this.data['res.partner'].records.push({ id: 12, name: "Someone", partner_share: true });
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({
+        name: "Someone",
+        partner_share: true,
+    });
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
-        id: 10,
         message_type: 'snailmail',
         model: 'mail.channel',
-        res_id: 11,
+        res_id: mailChannelId1,
     });
-    this.data['mail.notification'].records.push({
-        id: 11,
-        mail_message_id: 10,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'snail',
-        res_partner_id: 12,
+        res_partner_id: resPartnerId1,
     });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { createThreadViewComponent, messaging } = await start();
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
-            id: 11,
+            id: mailChannelId1,
             model: 'mail.channel',
         }),
     });
@@ -96,28 +94,30 @@ QUnit.test('Sent', async function (assert) {
 QUnit.test('Canceled', async function (assert) {
     assert.expect(8);
 
-    this.data['res.partner'].records.push({ id: 12, name: "Someone", partner_share: true });
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({
+        name: "Someone",
+        partner_share: true,
+    });
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
-        id: 10,
         message_type: 'snailmail',
         model: 'mail.channel',
-        res_id: 11,
+        res_id: mailChannelId1,
     });
-    this.data['mail.notification'].records.push({
-        id: 11,
-        mail_message_id: 10,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'canceled',
         notification_type: 'snail',
-        res_partner_id: 12,
+        res_partner_id: resPartnerId1,
     });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { createThreadViewComponent, messaging } = await start();
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
-            id: 11,
+            id: mailChannelId1,
             model: 'mail.channel',
         }),
     });
@@ -172,28 +172,30 @@ QUnit.test('Canceled', async function (assert) {
 QUnit.test('Pending', async function (assert) {
     assert.expect(8);
 
-    this.data['res.partner'].records.push({ id: 12, name: "Someone", partner_share: true });
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({
+        name: "Someone",
+        partner_share: true,
+    });
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
-        id: 10,
         message_type: 'snailmail',
         model: 'mail.channel',
-        res_id: 11,
+        res_id: mailChannelId1,
     });
-    this.data['mail.notification'].records.push({
-        id: 11,
-        mail_message_id: 10,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'ready',
         notification_type: 'snail',
-        res_partner_id: 12,
+        res_partner_id: resPartnerId1,
     });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { createThreadViewComponent, messaging } = await start();
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
-            id: 11,
+            id: mailChannelId1,
             model: 'mail.channel',
         }),
     });
@@ -248,28 +250,29 @@ QUnit.test('Pending', async function (assert) {
 QUnit.test('No Price Available', async function (assert) {
     assert.expect(10);
 
-    this.data['res.partner'].records.push({ id: 12, name: "Someone", partner_share: true });
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({
+        name: "Someone",
+        partner_share: true,
+    });
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
-        id: 10,
         message_type: 'snailmail',
         model: 'mail.channel',
-        res_id: 11,
+        res_id: mailChannelId1,
     });
-    this.data['mail.notification'].records.push({
+    pyEnv['mail.notification'].create({
         failure_type: 'sn_price',
-        id: 11,
-        mail_message_id: 10,
+        mail_message_id: mailMessageId1,
         notification_status: 'exception',
         notification_type: 'snail',
-        res_partner_id: 12,
+        res_partner_id: resPartnerId1,
     });
     const { createThreadViewComponent, messaging } = await start({
-        data: this.data,
         hasDialog: true,
         async mockRPC(route, args) {
-            if (args.method === 'cancel_letter' && args.model === 'mail.message' && args.args[0][0] === 10) {
+            if (args.method === 'cancel_letter' && args.model === 'mail.message' && args.args[0][0] === mailMessageId1) {
                 assert.step(args.method);
             }
             return this._super(...arguments);
@@ -279,7 +282,7 @@ QUnit.test('No Price Available', async function (assert) {
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
-            id: 11,
+            id: mailChannelId1,
             model: 'mail.channel',
         }),
     });
@@ -342,28 +345,29 @@ QUnit.test('No Price Available', async function (assert) {
 QUnit.test('Credit Error', async function (assert) {
     assert.expect(11);
 
-    this.data['res.partner'].records.push({ id: 12, name: "Someone", partner_share: true });
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({
+        name: "Someone",
+        partner_share: true,
+    });
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
-        id: 10,
         message_type: 'snailmail',
         model: 'mail.channel',
-        res_id: 11,
+        res_id: mailChannelId1,
     });
-    this.data['mail.notification'].records.push({
+    pyEnv['mail.notification'].create({
         failure_type: 'sn_credit',
-        id: 11,
-        mail_message_id: 10,
+        mail_message_id: mailMessageId1,
         notification_status: 'exception',
         notification_type: 'snail',
-        res_partner_id: 12,
+        res_partner_id: resPartnerId1,
     });
     const { createThreadViewComponent, messaging } = await start({
-        data: this.data,
         hasDialog: true,
         async mockRPC(route, args) {
-            if (args.method === 'send_letter' && args.model === 'mail.message' && args.args[0][0] === 10) {
+            if (args.method === 'send_letter' && args.model === 'mail.message' && args.args[0][0] === mailMessageId1) {
                 assert.step(args.method);
             }
             return this._super(...arguments);
@@ -373,7 +377,7 @@ QUnit.test('Credit Error', async function (assert) {
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
-            id: 11,
+            id: mailChannelId1,
             model: 'mail.channel',
         }),
     });
@@ -441,28 +445,29 @@ QUnit.test('Credit Error', async function (assert) {
 QUnit.test('Trial Error', async function (assert) {
     assert.expect(11);
 
-    this.data['res.partner'].records.push({ id: 12, name: "Someone", partner_share: true });
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({
+        name: "Someone",
+        partner_share: true,
+    });
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
-        id: 10,
         message_type: 'snailmail',
         model: 'mail.channel',
-        res_id: 11,
+        res_id: mailChannelId1,
     });
-    this.data['mail.notification'].records.push({
+    pyEnv['mail.notification'].create({
         failure_type: 'sn_trial',
-        id: 11,
-        mail_message_id: 10,
+        mail_message_id: mailMessageId1,
         notification_status: 'exception',
         notification_type: 'snail',
-        res_partner_id: 12,
+        res_partner_id: resPartnerId1,
     });
     const { createThreadViewComponent, messaging } = await start({
-        data: this.data,
         hasDialog: true,
         async mockRPC(route, args) {
-            if (args.method === 'send_letter' && args.model === 'mail.message' && args.args[0][0] === 10) {
+            if (args.method === 'send_letter' && args.model === 'mail.message' && args.args[0][0] === mailMessageId1) {
                 assert.step(args.method);
             }
             return this._super(...arguments);
@@ -472,7 +477,7 @@ QUnit.test('Trial Error', async function (assert) {
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
-            id: 11,
+            id: mailChannelId1,
             model: 'mail.channel',
         }),
     });
@@ -540,6 +545,25 @@ QUnit.test('Trial Error', async function (assert) {
 QUnit.test('Format Error', async function (assert) {
     assert.expect(8);
 
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({
+        name: "Someone",
+        partner_share: true,
+    });
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailMessageId1 = pyEnv['mail.message'].create({
+        body: 'not empty',
+        message_type: 'snailmail',
+        model: 'mail.channel',
+        res_id: mailChannelId1,
+    });
+    pyEnv['mail.notification'].create({
+        failure_type: 'sn_format',
+        mail_message_id: mailMessageId1,
+        notification_status: 'exception',
+        notification_type: 'snail',
+        res_partner_id: resPartnerId1,
+    });
     const bus = new Bus();
     bus.on('do-action', null, payload => {
         assert.step('do_action');
@@ -550,33 +574,16 @@ QUnit.test('Format Error', async function (assert) {
         );
         assert.strictEqual(
             payload.options.additional_context.message_id,
-            10,
+            mailMessageId1,
             "action should have correct message id"
         );
     });
-    this.data['res.partner'].records.push({ id: 12, name: "Someone", partner_share: true });
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['mail.message'].records.push({
-        body: 'not empty',
-        id: 10,
-        message_type: 'snailmail',
-        model: 'mail.channel',
-        res_id: 11,
-    });
-    this.data['mail.notification'].records.push({
-        failure_type: 'sn_format',
-        id: 11,
-        mail_message_id: 10,
-        notification_status: 'exception',
-        notification_type: 'snail',
-        res_partner_id: 12,
-    });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data, env: { bus } });
+    const { createThreadViewComponent, messaging } = await start({ env: { bus } });
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
-            id: 11,
+            id: mailChannelId1,
             model: 'mail.channel',
         }),
     });
@@ -615,22 +622,22 @@ QUnit.test('Format Error', async function (assert) {
 QUnit.test('Missing Required Fields', async function (assert) {
     assert.expect(8);
 
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
-        id: 10, // random unique id, useful to link letter and notification
         message_type: 'snailmail',
-        res_id: 20, // non 0 id, necessary to fetch failure at init
+        res_id: resPartnerId1, // non 0 id, necessary to fetch failure at init
         model: 'res.partner', // not mail.compose.message, necessary to fetch failure at init
     });
-    this.data['mail.notification'].records.push({
+    pyEnv['mail.notification'].create({
         failure_type: 'sn_fields',
-        mail_message_id: 10,
+        mail_message_id: mailMessageId1,
         notification_status: 'exception',
         notification_type: 'snail',
     });
-    this.data['snailmail.letter'].records.push({
-        id: 22, // random unique id, will be asserted in the test
-        message_id: 10, // id of related message
+    const snailMailLetterId1 = pyEnv['snailmail.letter'].create({
+        message_id: mailMessageId1,
     });
     const bus = new Bus();
     bus.on('do-action', null, payload => {
@@ -642,19 +649,18 @@ QUnit.test('Missing Required Fields', async function (assert) {
         );
         assert.strictEqual(
             payload.options.additional_context.default_letter_id,
-            22,
+            snailMailLetterId1,
             "action should have correct letter id"
         );
     });
 
     const { createThreadViewComponent, messaging } = await start({
-        data: this.data,
         env: { bus },
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
-        thread: insert({ id: 20, model: 'res.partner' }),
+        thread: insert({ id: resPartnerId1, model: 'res.partner' }),
     });
     await createThreadViewComponent(threadViewer.threadView);
 

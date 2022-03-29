@@ -1,23 +1,17 @@
 /** @odoo-module **/
 
 import ActivityMenu from '@mail/js/systray/systray_activity_menu';
-import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { start } from '@mail/../tests/helpers/test_utils';
 
 import testUtils from 'web.test_utils';
 
 QUnit.module('note', {}, function () {
-QUnit.module("ActivityMenu", {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module("ActivityMenu");
 
 QUnit.test('note activity menu widget: create note from activity menu', async function (assert) {
     assert.expect(15);
 
-    const { widget } = await start({
-        data: this.data,
-    });
+    const { widget } = await start();
 
     const activityMenu = new ActivityMenu(widget);
     await activityMenu.appendTo($('#qunit-fixture'));

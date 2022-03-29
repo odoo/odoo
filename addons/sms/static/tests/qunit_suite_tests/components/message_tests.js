@@ -4,45 +4,40 @@ import { insert, insertAndReplace } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred';
 import {
     afterNextRender,
-    beforeEach,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 import Bus from 'web.Bus';
 
 QUnit.module('sms', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('message_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('message_tests.js');
 
 QUnit.test('Notification Sent', async function (assert) {
     assert.expect(9);
 
-    this.data['res.partner'].records.push({ id: 12, name: "Someone", partner_share: true });
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ name: "Someone", partner_share: true });
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
-        id: 10,
         message_type: 'sms',
         model: 'mail.channel',
-        res_id: 11,
+        res_id: mailChannelId1,
     });
-    this.data['mail.notification'].records.push({
-        id: 11,
-        mail_message_id: 10,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'sms',
-        res_partner_id: 12,
+        res_partner_id: resPartnerId1,
     });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { createThreadViewComponent, messaging } = await start();
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
-            id: 11,
+            id: mailChannelId1,
             model: 'mail.channel',
         }),
     });
@@ -103,6 +98,21 @@ QUnit.test('Notification Error', async function (assert) {
     assert.expect(8);
 
     const openResendActionDef = makeDeferred();
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ name: "Someone", partner_share: true });
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
+    const mailMessageId1 = pyEnv['mail.message'].create({
+        body: 'not empty',
+        message_type: 'sms',
+        model: 'mail.channel',
+        res_id: mailChannelId1,
+    });
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
+        notification_status: 'exception',
+        notification_type: 'sms',
+        res_partner_id: resPartnerId1,
+    });
     const bus = new Bus();
     bus.on('do-action', null, payload => {
         assert.step('do_action');
@@ -113,33 +123,17 @@ QUnit.test('Notification Error', async function (assert) {
         );
         assert.strictEqual(
             payload.options.additional_context.default_mail_message_id,
-            10,
+            mailMessageId1,
             "action should have correct message id"
         );
         openResendActionDef.resolve();
     });
-    this.data['res.partner'].records.push({ id: 12, name: "Someone", partner_share: true });
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['mail.message'].records.push({
-        body: 'not empty',
-        id: 10,
-        message_type: 'sms',
-        model: 'mail.channel',
-        res_id: 11,
-    });
-    this.data['mail.notification'].records.push({
-        id: 11,
-        mail_message_id: 10,
-        notification_status: 'exception',
-        notification_type: 'sms',
-        res_partner_id: 12,
-    });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data, env: { bus } });
+    const { createThreadViewComponent, messaging } = await start({ env: { bus } });
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
-            id: 11,
+            id: mailChannelId1,
             model: 'mail.channel',
         }),
     });

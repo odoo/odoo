@@ -1,42 +1,37 @@
 /** @odoo-module **/
 
-import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('website_slides', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('activity_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('activity_tests.js');
 
 QUnit.test('grant course access', async function (assert) {
     assert.expect(8);
 
-    this.data['res.partner'].records.push({ id: 5 });
-    this.data['slide.channel'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const slideChannelId1 = pyEnv['slide.channel'].create();
+    pyEnv['mail.activity'].create({
         can_write: true,
-        id: 12,
-        res_id: 100,
-        request_partner_id: 5,
+        res_id: slideChannelId1,
+        request_partner_id: resPartnerId1,
         res_model: 'slide.channel',
     });
     const { createChatterContainerComponent } = await start({
-        data: this.data,
         async mockRPC(route, args) {
             if (args.method === 'action_grant_access') {
                 assert.strictEqual(args.args.length, 1);
                 assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], 100);
-                assert.strictEqual(args.kwargs.partner_id, 5);
+                assert.strictEqual(args.args[0][0], slideChannelId1);
+                assert.strictEqual(args.kwargs.partner_id, resPartnerId1);
                 assert.step('access_grant');
             }
             return this._super(...arguments);
         },
     });
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: slideChannelId1,
         threadModel: 'slide.channel',
     });
 
@@ -50,30 +45,29 @@ QUnit.test('grant course access', async function (assert) {
 QUnit.test('refuse course access', async function (assert) {
     assert.expect(8);
 
-    this.data['res.partner'].records.push({ id: 5 });
-    this.data['slide.channel'].records.push({ id: 100 });
-    this.data['mail.activity'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const slideChannelId1 = pyEnv['slide.channel'].create();
+    pyEnv['mail.activity'].create({
         can_write: true,
-        id: 12,
-        res_id: 100,
-        request_partner_id: 5,
+        res_id: slideChannelId1,
+        request_partner_id: resPartnerId1,
         res_model: 'slide.channel',
     });
     const { createChatterContainerComponent } = await start({
-        data: this.data,
         async mockRPC(route, args) {
             if (args.method === 'action_refuse_access') {
                 assert.strictEqual(args.args.length, 1);
                 assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], 100);
-                assert.strictEqual(args.kwargs.partner_id, 5);
+                assert.strictEqual(args.args[0][0], slideChannelId1);
+                assert.strictEqual(args.kwargs.partner_id, resPartnerId1);
                 assert.step('access_refuse');
             }
             return this._super(...arguments);
         },
     });
     await createChatterContainerComponent({
-        threadId: 100,
+        threadId: slideChannelId1,
         threadModel: 'slide.channel',
     });
 

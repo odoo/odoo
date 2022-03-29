@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import {
-    beforeEach,
     createRootMessagingComponent,
     start,
 } from '@mail/../tests/helpers/test_utils';
@@ -9,9 +8,7 @@ import {
 QUnit.module('hr_holidays', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('partner_im_status_icon_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-
+    beforeEach() {
         this.createPartnerImStatusIcon = async (partner, target) => {
             await createRootMessagingComponent(partner.env, "PartnerImStatusIcon", {
                 props: { partnerLocalId: partner.localId },
@@ -24,7 +21,7 @@ QUnit.module('partner_im_status_icon_tests.js', {
 QUnit.test('on leave & online', async function (assert) {
     assert.expect(2);
 
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const partner = messaging.models['Partner'].create({
         id: 7,
         name: "Demo User",
@@ -46,7 +43,7 @@ QUnit.test('on leave & online', async function (assert) {
 QUnit.test('on leave & away', async function (assert) {
     assert.expect(2);
 
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const partner = messaging.models['Partner'].create({
         id: 7,
         name: "Demo User",
@@ -68,7 +65,7 @@ QUnit.test('on leave & away', async function (assert) {
 QUnit.test('on leave & offline', async function (assert) {
     assert.expect(2);
 
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const partner = messaging.models['Partner'].create({
         id: 7,
         name: "Demo User",

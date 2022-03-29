@@ -2,34 +2,29 @@
 
 import {
     afterNextRender,
-    beforeEach,
     nextAnimationFrame,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 import { datetime_to_str } from 'web.time';
 
 QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('discuss_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('discuss_tests.js');
 
 QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
     assert.expect(5);
 
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         anonymous_name: "Visitor 11",
         channel_type: 'livechat',
-        id: 11,
-        livechat_operator_id: this.data.currentPartnerId,
-        channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
+        livechat_operator_id: pyEnv.currentPartnerId,
+        channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
     });
     const { messaging } = await start({
         autoOpenDiscuss: true,
-        data: this.data,
         hasDiscuss: true,
     });
     assert.containsOnce(document.body, '.o_Discuss_sidebar',
@@ -48,7 +43,7 @@ QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
     const livechat = groupLivechat.querySelector(`
         .o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
-                id: 11,
+                id: mailChannelId1,
                 model: 'mail.channel',
             }).localId
         }"]
@@ -67,25 +62,22 @@ QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
 QUnit.test('livechat in the sidebar: existing user with country', async function (assert) {
     assert.expect(3);
 
-    this.data['res.country'].records.push({
+    const pyEnv = await startServer();
+    const resCountryId1 = pyEnv['res.country'].create({
         code: 'be',
-        id: 10,
         name: "Belgium",
     });
-    this.data['res.partner'].records.push({
-        country_id: 10,
-        id: 10,
+    const resPartnerId1 = pyEnv['res.partner'].create({
+        country_id: resCountryId1,
         name: "Jean",
     });
-    this.data['mail.channel'].records.push({
+    pyEnv['mail.channel'].create({
         channel_type: 'livechat',
-        id: 11,
-        livechat_operator_id: this.data.currentPartnerId,
-        channel_partner_ids: [this.data.currentPartnerId, 10],
+        livechat_operator_id: pyEnv.currentPartnerId,
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
     await start({
         autoOpenDiscuss: true,
-        data: this.data,
         hasDiscuss: true,
     });
     assert.containsOnce(
@@ -108,17 +100,13 @@ QUnit.test('livechat in the sidebar: existing user with country', async function
 QUnit.test('do not add livechat in the sidebar on visitor opening his chat', async function (assert) {
     assert.expect(2);
 
-    const currentUser = this.data['res.users'].records.find(user =>
-        user.id === this.data.currentUserId
-    );
-    currentUser.im_status = 'online';
-    this.data['im_livechat.channel'].records.push({
-        id: 10,
-        user_ids: [this.data.currentUserId],
+    const pyEnv = await startServer();
+    pyEnv['res.users'].write([pyEnv.currentUserId], { im_status: 'online' });
+    const imLivechatChannelId1 = pyEnv['im_livechat.channel'].create({
+        user_ids: [pyEnv.currentUserId],
     });
     const { env } = await start({
         autoOpenDiscuss: true,
-        data: this.data,
         hasDiscuss: true,
     });
     assert.containsNone(
@@ -134,7 +122,7 @@ QUnit.test('do not add livechat in the sidebar on visitor opening his chat', asy
             context: {
                 mockedUserId: false,
             },
-            channel_id: 10,
+            channel_id: imLivechatChannelId1,
         },
     });
     await nextAnimationFrame();
@@ -148,25 +136,20 @@ QUnit.test('do not add livechat in the sidebar on visitor opening his chat', asy
 QUnit.test('do not add livechat in the sidebar on visitor typing', async function (assert) {
     assert.expect(2);
 
-    const currentUser = this.data['res.users'].records.find(user =>
-        user.id === this.data.currentUserId
-    );
-    currentUser.im_status = 'online';
-    this.data['im_livechat.channel'].records.push({
-        id: 10,
-        user_ids: [this.data.currentUserId],
+    const pyEnv = await startServer();
+    pyEnv['res.users'].write([pyEnv.currentUserId], { im_status: 'online' });
+    const imLivechatChannelId1 = pyEnv['im_livechat.channel'].create({
+        user_ids: [pyEnv.currentUserId],
     });
-    this.data['mail.channel'].records.push({
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'livechat',
-        id: 10,
         is_pinned: false,
-        livechat_channel_id: 10,
-        livechat_operator_id: this.data.currentPartnerId,
-        channel_partner_ids: [this.data.publicPartnerId, this.data.currentPartnerId],
+        livechat_channel_id: imLivechatChannelId1,
+        livechat_operator_id: pyEnv.currentPartnerId,
+        channel_partner_ids: [pyEnv.publicPartnerId, pyEnv.currentPartnerId],
     });
     const { env } = await start({
         autoOpenDiscuss: true,
-        data: this.data,
         hasDiscuss: true,
     });
     assert.containsNone(
@@ -176,12 +159,12 @@ QUnit.test('do not add livechat in the sidebar on visitor typing', async functio
     );
 
     // simulate livechat visitor typing
-    const channel = this.data['mail.channel'].records.find(channel => channel.id === 10);
+    const channel = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     await env.services.rpc({
         route: '/im_livechat/notify_typing',
         params: {
             context: {
-                mockedPartnerId: this.publicPartnerId,
+                mockedPartnerId: pyEnv.publicPartnerId,
             },
             is_typing: true,
             uuid: channel.uuid,
@@ -198,32 +181,26 @@ QUnit.test('do not add livechat in the sidebar on visitor typing', async functio
 QUnit.test('add livechat in the sidebar on visitor sending first message', async function (assert) {
     assert.expect(4);
 
-    const currentUser = this.data['res.users'].records.find(user =>
-        user.id === this.data.currentUserId
-    );
-    currentUser.im_status = 'online';
-    this.data['res.country'].records.push({
+    const pyEnv = await startServer();
+    pyEnv['res.users'].write([pyEnv.currentUserId], { im_status: 'online' });
+    const resCountryId1 = pyEnv['res.country'].create({
         code: 'be',
-        id: 10,
         name: "Belgium",
     });
-    this.data['im_livechat.channel'].records.push({
-        id: 10,
-        user_ids: [this.data.currentUserId],
+    const imLivechatChannelId1 = pyEnv['im_livechat.channel'].create({
+        user_ids: [pyEnv.currentUserId],
     });
-    this.data['mail.channel'].records.push({
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         anonymous_name: "Visitor (Belgium)",
         channel_type: 'livechat',
-        country_id: 10,
-        id: 10,
+        country_id: resCountryId1,
         is_pinned: false,
-        livechat_channel_id: 10,
-        livechat_operator_id: this.data.currentPartnerId,
-        channel_partner_ids: [this.data.publicPartnerId, this.data.currentPartnerId],
+        livechat_channel_id: imLivechatChannelId1,
+        livechat_operator_id: pyEnv.currentPartnerId,
+        channel_partner_ids: [pyEnv.publicPartnerId, pyEnv.currentPartnerId],
     });
     const { env } = await start({
         autoOpenDiscuss: true,
-        data: this.data,
         hasDiscuss: true,
     });
     assert.containsNone(
@@ -233,7 +210,7 @@ QUnit.test('add livechat in the sidebar on visitor sending first message', async
     );
 
     // simulate livechat visitor sending a message
-    const channel = this.data['mail.channel'].records.find(channel => channel.id === 10);
+    const channel = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     await afterNextRender(async () => env.services.rpc({
         route: '/mail/chat_post',
         params: {
@@ -264,35 +241,33 @@ QUnit.test('add livechat in the sidebar on visitor sending first message', async
 QUnit.test('livechats are sorted by last activity time in the sidebar: most recent at the top', async function (assert) {
     assert.expect(6);
 
-    this.data['mail.channel'].records.push(
+    const pyEnv = await startServer();
+    const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([
         {
             anonymous_name: "Visitor 11",
             channel_type: 'livechat',
-            id: 11,
-            livechat_operator_id: this.data.currentPartnerId,
-            channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
+            livechat_operator_id: pyEnv.currentPartnerId,
+            channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
             last_interest_dt: datetime_to_str(new Date(2021, 0, 1)), // less recent one
         },
         {
             anonymous_name: "Visitor 12",
             channel_type: 'livechat',
-            id: 12,
-            livechat_operator_id: this.data.currentPartnerId,
-            channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
+            livechat_operator_id: pyEnv.currentPartnerId,
+            channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
             last_interest_dt: datetime_to_str(new Date(2021, 0, 2)), // more recent one
         },
-    );
+    ]);
     const { messaging } = await start({
         autoOpenDiscuss: true,
-        data: this.data,
         hasDiscuss: true,
     });
     const livechat11 = messaging.models['Thread'].findFromIdentifyingData({
-        id: 11,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const livechat12 = messaging.models['Thread'].findFromIdentifyingData({
-        id: 12,
+        id: mailChannelId2,
         model: 'mail.channel',
     });
     const initialLivechats = document.querySelectorAll('.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategoryItem');
@@ -338,21 +313,20 @@ QUnit.test('livechats are sorted by last activity time in the sidebar: most rece
 QUnit.test('invite button should be present on livechat', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push(
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create(
         {
             anonymous_name: "Visitor 11",
             channel_type: 'livechat',
-            id: 11,
-            livechat_operator_id: this.data.currentPartnerId,
-            channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
+            livechat_operator_id: pyEnv.currentPartnerId,
+            channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
         },
     );
     await start({
         autoOpenDiscuss: true,
-        data: this.data,
         discuss: {
             params: {
-                default_active_id: 'mail.channel_11',
+                default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
         hasDiscuss: true,

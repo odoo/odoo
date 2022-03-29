@@ -3,44 +3,38 @@
 import { insert, insertAndReplace, link } from '@mail/model/model_field_command';
 import {
     afterNextRender,
-    beforeEach,
     dragenterFiles,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('thread_view_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('thread_view_tests.js');
 
 QUnit.test('dragover files on thread with composer', async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push(
+    const pyEnv = await startServer();
+    const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([
         {
             email: "john@example.com",
-            id: 9,
             name: "John",
         },
         {
             email: "fred@example.com",
-            id: 10,
             name: "Fred",
         },
-    );
-    this.data['mail.channel'].records.push({
+    ]);
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        id: 100,
-        channel_partner_ids: [this.data.currentPartnerId, 9, 10],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1, resPartnerId2],
         name: "General",
         public: 'public',
     });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { createThreadViewComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 100,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -61,35 +55,33 @@ QUnit.test('dragover files on thread with composer', async function (assert) {
 QUnit.test('message list desc order', async function (assert) {
     assert.expect(5);
 
-    for (let i = 0; i <= 60; i++) {
-        this.data['mail.message'].records.push({
-            body: "not empty",
-            model: 'mail.channel',
-            res_id: 100,
-        });
-    }
-    this.data['res.partner'].records.push(
+    const pyEnv = await startServer();
+    const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([
         {
             email: "john@example.com",
-            id: 9,
             name: "John",
         },
         {
             email: "fred@example.com",
-            id: 10,
             name: "Fred",
         },
-    );
-    this.data['mail.channel'].records.push({
+    ]);
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        id: 100,
-        channel_partner_ids: [this.data.currentPartnerId, 9, 10],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1, resPartnerId2],
         name: "General",
         public: 'public',
     });
-    const { afterEvent, createThreadViewComponent, messaging } = await start({ data: this.data });
+    for (let i = 0; i <= 60; i++) {
+        pyEnv['mail.message'].create({
+            body: "not empty",
+            model: 'mail.channel',
+            res_id: mailChannelId1,
+        });
+    }
+    const { afterEvent, createThreadViewComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 100,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -101,12 +93,12 @@ QUnit.test('message list desc order', async function (assert) {
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: () => createThreadViewComponent(threadViewer.threadView, undefined, { isFixedSize: true }),
-        message: "should wait until channel 100 loaded initial messages",
+        message: "should wait until channel 1 loaded initial messages",
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'messages-loaded' &&
                 threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 100
+                threadViewer.thread.id === mailChannelId1
             );
         },
     });
@@ -132,12 +124,12 @@ QUnit.test('message list desc order', async function (assert) {
             const messageList = document.querySelector('.o_ThreadView_messageList');
             messageList.scrollTop = messageList.scrollHeight - messageList.clientHeight;
         },
-        message: "should wait until channel 100 loaded more messages after scrolling to bottom",
+        message: "should wait until channel 1 loaded more messages after scrolling to bottom",
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'more-messages-loaded' &&
                 threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 100
+                threadViewer.thread.id === mailChannelId1
             );
         },
     });
@@ -160,35 +152,33 @@ QUnit.test('message list desc order', async function (assert) {
 QUnit.test('message list asc order', async function (assert) {
     assert.expect(5);
 
-    for (let i = 0; i <= 60; i++) {
-        this.data['mail.message'].records.push({
-            body: "not empty",
-            model: 'mail.channel',
-            res_id: 100,
-        });
-    }
-    this.data['res.partner'].records.push(
+    const pyEnv = await startServer();
+    const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([
         {
             email: "john@example.com",
-            id: 9,
             name: "John",
         },
         {
             email: "fred@example.com",
-            id: 10,
             name: "Fred",
         },
-    );
-    this.data['mail.channel'].records.push({
+    ]);
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        id: 100,
-        channel_partner_ids: [this.data.currentPartnerId, 9, 10],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1, resPartnerId2],
         name: "General",
         public: 'public',
     });
-    const { afterEvent, createThreadViewComponent, messaging } = await start({ data: this.data });
+    for (let i = 0; i <= 60; i++) {
+        pyEnv['mail.message'].create({
+            body: "not empty",
+            model: 'mail.channel',
+            res_id: mailChannelId1,
+        });
+    }
+    const { afterEvent, createThreadViewComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 100,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -199,12 +189,12 @@ QUnit.test('message list asc order', async function (assert) {
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: () => createThreadViewComponent(threadViewer.threadView, undefined, { isFixedSize: true }),
-        message: "should wait until channel 100 loaded initial messages",
+        message: "should wait until channel 1 loaded initial messages",
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'messages-loaded' &&
                 threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 100
+                threadViewer.thread.id === mailChannelId1
             );
         },
     });
@@ -227,12 +217,12 @@ QUnit.test('message list asc order', async function (assert) {
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: () => document.querySelector(`.o_ThreadView_messageList`).scrollTop = 0,
-        message: "should wait until channel 100 loaded more messages after scrolling to top",
+        message: "should wait until channel 1 loaded more messages after scrolling to top",
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'more-messages-loaded' &&
                 threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 100
+                threadViewer.thread.id === mailChannelId1
             );
         },
     });
@@ -257,20 +247,18 @@ QUnit.test('message list asc order', async function (assert) {
 QUnit.test('mark channel as fetched when a new message is loaded and as seen when focusing composer [REQUIRE FOCUS]', async function (assert) {
     assert.expect(7);
 
-    this.data['res.partner'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({
         email: "fred@example.com",
-        id: 10,
         name: "Fred",
     });
-    this.data['res.users'].records.push({
-        id: 10,
-        partner_id: 10,
+    const resUsersId1 = pyEnv['res.users'].create({
+        partner_id: resPartnerId1,
     });
-    this.data['mail.channel'].records.push({
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        id: 100,
         is_pinned: true,
-        channel_partner_ids: [this.data.currentPartnerId, 10],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
     const { afterEvent, createThreadViewComponent, env, messaging } = await start({
         data: this.data,
@@ -278,7 +266,7 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
             if (args.method === 'channel_fetched') {
                 assert.strictEqual(
                     args.args[0][0],
-                    100,
+                    mailChannelId1,
                     'channel_fetched is called on the right channel id'
                 );
                 assert.strictEqual(
@@ -290,7 +278,7 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
             } else if (route === '/mail/channel/set_last_seen_message') {
                 assert.strictEqual(
                     args.channel_id,
-                    100,
+                    mailChannelId1,
                     'set_last_seen_message is called on the right channel id'
                 );
                 assert.step('rpc:set_last_seen_message');
@@ -299,7 +287,7 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
         }
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 100,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -312,7 +300,7 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
         route: '/mail/chat_post',
         params: {
             context: {
-                mockedUserId: 10,
+                mockedUserId: resUsersId1,
             },
             message_content: "new message",
             uuid: thread.uuid,
@@ -329,7 +317,7 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
         message: "should wait until last seen by current partner message id changed after focusing the thread",
         predicate: ({ thread }) => {
             return (
-                thread.id === 100 &&
+                thread.id === mailChannelId1 &&
                 thread.model === 'mail.channel'
             );
         },
@@ -343,25 +331,21 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
 QUnit.test('mark channel as fetched and seen when a new message is loaded if composer is focused [REQUIRE FOCUS]', async function (assert) {
     assert.expect(3);
 
-    this.data['res.partner'].records.push({
-        id: 10,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
+    const resUsersId1 = pyEnv['res.users'].create({
+        partner_id: resPartnerId1,
     });
-    this.data['res.users'].records.push({
-        id: 10,
-        partner_id: 10,
-    });
-    this.data['mail.channel'].records.push({
-        id: 100,
-    });
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { afterEvent, createThreadViewComponent, env, messaging } = await start({
         data: this.data,
         mockRPC(route, args) {
-            if (args.method === 'channel_fetched' && args.args[0] === 100) {
+            if (args.method === 'channel_fetched' && args.args[0] === mailChannelId1) {
                 throw new Error("'channel_fetched' RPC must not be called for created channel as message is directly seen");
             } else if (route === '/mail/channel/set_last_seen_message') {
                 assert.strictEqual(
                     args.channel_id,
-                    100,
+                    mailChannelId1,
                     'set_last_seen_message is called on the right channel id'
                 );
                 assert.step('rpc:set_last_seen_message');
@@ -370,7 +354,7 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
         }
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 100,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -387,7 +371,7 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
             route: '/mail/chat_post',
             params: {
                 context: {
-                    mockedUserId: 10,
+                    mockedUserId: resUsersId1,
                 },
                 message_content: "<p>fdsfsd</p>",
                 uuid: thread.uuid,
@@ -396,7 +380,7 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
         message: "should wait until last seen by current partner message id changed after receiving a message while thread is focused",
         predicate: ({ thread }) => {
             return (
-                thread.id === 100 &&
+                thread.id === mailChannelId1 &&
                 thread.model === 'mail.channel'
             );
         },
@@ -410,21 +394,21 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
 QUnit.test('show message subject when subject is not the same as the thread name', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        id: 100,
         name: "General",
         public: 'public',
     });
-    this.data['mail.message'].records.push({
+    pyEnv['mail.message'].create({
         body: "not empty",
         model: 'mail.channel',
-        res_id: 100,
+        res_id: mailChannelId1,
         subject: "Salutations, voyageur",
     });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { createThreadViewComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 100,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -454,21 +438,21 @@ QUnit.test('show message subject when subject is not the same as the thread name
 QUnit.test('do not show message subject when subject is the same as the thread name', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        id: 100,
         name: "Salutations, voyageur",
         public: 'public',
     });
-    this.data['mail.message'].records.push({
+    pyEnv['mail.message'].create({
         body: "not empty",
         model: 'mail.channel',
-        res_id: 100,
+        res_id: mailChannelId1,
         subject: "Salutations, voyageur",
     });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { createThreadViewComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 100,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -489,23 +473,22 @@ QUnit.test('[technical] new messages separator on posting message', async functi
     // technical as we need to remove focus from text input to avoid `set_last_seen_message` call
     assert.expect(4);
 
-    this.data['mail.channel'].records = [{
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        id: 20,
         is_pinned: true,
         message_unread_counter: 0,
-        seen_message_id: 10,
         name: "General",
-    }];
-    this.data['mail.message'].records.push({
-        body: "first message",
-        id: 10,
-        model: "mail.channel",
-        res_id: 20,
     });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const mailMessageId1 = pyEnv['mail.message'].create({
+        body: "first message",
+        model: "mail.channel",
+        res_id: mailChannelId1,
+    });
+    pyEnv['mail.channel'].write([mailChannelId1], { seen_message_id: mailMessageId1 });
+    const { createThreadViewComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel'
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -550,33 +533,30 @@ QUnit.test('[technical] new messages separator on posting message', async functi
 QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', async function (assert) {
     assert.expect(6);
 
-    this.data['res.partner'].records.push({
-        id: 11,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({
         name: "Foreigner partner",
     });
-    this.data['res.users'].records.push({
-        id: 42,
+    const resUsersId1 = pyEnv['res.users'].create({
         name: "Foreigner user",
-        partner_id: 11,
+        partner_id: resPartnerId1,
     });
-    this.data['mail.channel'].records.push({
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        id: 20,
         is_pinned: true,
         message_unread_counter: 0,
         name: "General",
-        seen_message_id: 1,
         uuid: 'randomuuid',
     });
-    this.data['mail.message'].records.push({
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: "blah",
-        id: 1,
         model: "mail.channel",
-        res_id: 20,
+        res_id: mailChannelId1,
     });
-    const { afterEvent, createThreadViewComponent, env, messaging } = await start({ data: this.data });
+    pyEnv['mail.channel'].write([mailChannelId1], { seen_message_id: mailMessageId1 });
+    const { afterEvent, createThreadViewComponent, env, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel'
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -605,7 +585,7 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
             route: '/mail/chat_post',
             params: {
                 context: {
-                    mockedUserId: 42,
+                    mockedUserId: resUsersId1,
                 },
                 message_content: "hu",
                 uuid: thread.uuid,
@@ -614,7 +594,7 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
         message: "should wait until new message is received",
         predicate: ({ hint, threadViewer }) => {
             return (
-                threadViewer.thread.id === 20 &&
+                threadViewer.thread.id === mailChannelId1 &&
                 threadViewer.thread.model === 'mail.channel' &&
                 hint.type === 'message-received'
             );
@@ -635,7 +615,7 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
     assert.containsOnce(
         document.body,
         `.o_MessageList_separatorNewMessages ~ .o_Message[data-message-local-id="${
-            messaging.models['Message'].findFromIdentifyingData({ id: 2 }).localId
+            messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId1 + 1 }).localId
         }"]`,
         "'new messages' separator should be shown above new message received"
     );
@@ -646,7 +626,7 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
         message: "should wait until last seen by current partner message id changed after focusing the thread",
         predicate: ({ thread }) => {
             return (
-                thread.id === 20 &&
+                thread.id === mailChannelId1 &&
                 thread.model === 'mail.channel'
             );
         },
@@ -661,16 +641,16 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
 QUnit.test('new messages separator on posting message', async function (assert) {
     assert.expect(4);
 
-    this.data['mail.channel'].records = [{
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        id: 20,
         is_pinned: true,
         message_unread_counter: 0,
         name: "General",
-    }];
-    const { click, createThreadViewComponent, messaging } = await start({ data: this.data });
+    });
+    const { click, createThreadViewComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel'
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -709,30 +689,28 @@ QUnit.test('new messages separator on posting message', async function (assert) 
 QUnit.test('basic rendering of canceled notification', async function (assert) {
     assert.expect(8);
 
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['res.partner'].records.push({ id: 12, name: "Someone" });
-    this.data['mail.message'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
+    const resPartnerId1 = pyEnv['res.partner'].create({ name: "Someone" });
+    const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
-        id: 10,
         message_type: 'email',
         model: 'mail.channel',
-        notification_ids: [11],
-        res_id: 11,
+        res_id: mailChannelId1,
     });
-    this.data['mail.notification'].records.push({
+    pyEnv['mail.notification'].create({
         failure_type: 'SMTP',
-        id: 11,
-        mail_message_id: 10,
+        mail_message_id: mailMessageId1,
         notification_status: 'canceled',
         notification_type: 'email',
-        res_partner_id: 12,
+        res_partner_id: resPartnerId1,
     });
-    const { afterEvent, click, createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { afterEvent, click, createThreadViewComponent, messaging } = await start();
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
-            id: 11,
+            id: mailChannelId1,
             model: 'mail.channel',
         }),
     });
@@ -746,7 +724,7 @@ QUnit.test('basic rendering of canceled notification', async function (assert) {
             return (
                 hint.type === 'messages-loaded' &&
                 threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 11
+                threadViewer.thread.id === mailChannelId1
             );
         },
     });
@@ -798,27 +776,26 @@ QUnit.test('basic rendering of canceled notification', async function (assert) {
 QUnit.test('should scroll to bottom on receiving new message if the list is initially scrolled to bottom (asc order)', async function (assert) {
     assert.expect(2);
 
+    const pyEnv = await startServer();
     // Needed partner & user to allow simulation of message reception
-    this.data['res.partner'].records.push({
-        id: 11,
+    const resPartnerId1 = pyEnv['res.partner'].create({
         name: "Foreigner partner",
     });
-    this.data['res.users'].records.push({
-        id: 42,
+    const resUsersId1 = pyEnv['res.users'].create({
         name: "Foreigner user",
-        partner_id: 11,
+        partner_id: resPartnerId1,
     });
-    this.data['mail.channel'].records.push({ id: 20 });
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     for (let i = 0; i <= 10; i++) {
-        this.data['mail.message'].records.push({
+        pyEnv['mail.message'].create({
             body: "not empty",
             model: "mail.channel",
-            res_id: 20,
+            res_id: mailChannelId1,
         });
     }
-    const { afterEvent, createThreadViewComponent, env, messaging } = await start({ data: this.data });
+    const { afterEvent, createThreadViewComponent, env, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel'
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -851,7 +828,7 @@ QUnit.test('should scroll to bottom on receiving new message if the list is init
                 route: '/mail/chat_post',
                 params: {
                     context: {
-                        mockedUserId: 42,
+                        mockedUserId: resUsersId1,
                     },
                     message_content: "hello",
                     uuid: thread.uuid,
@@ -871,27 +848,26 @@ QUnit.test('should scroll to bottom on receiving new message if the list is init
 QUnit.test('should not scroll on receiving new message if the list is initially scrolled anywhere else than bottom (asc order)', async function (assert) {
     assert.expect(3);
 
+    const pyEnv = await startServer();
     // Needed partner & user to allow simulation of message reception
-    this.data['res.partner'].records.push({
-        id: 11,
+    const resPartnerId1 = pyEnv['res.partner'].create({
         name: "Foreigner partner",
     });
-    this.data['res.users'].records.push({
-        id: 42,
+    const resUsersId1 = pyEnv['res.users'].create({
         name: "Foreigner user",
-        partner_id: 11,
+        partner_id: resPartnerId1,
     });
-    this.data['mail.channel'].records.push({ id: 20 });
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     for (let i = 0; i <= 10; i++) {
-        this.data['mail.message'].records.push({
+        pyEnv['mail.message'].create({
             body: "not empty",
             model: "mail.channel",
-            res_id: 20,
+            res_id: mailChannelId1,
         });
     }
-    const { afterEvent, createThreadViewComponent, env, messaging } = await start({ data: this.data });
+    const { afterEvent, createThreadViewComponent, env, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel'
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -906,26 +882,26 @@ QUnit.test('should not scroll on receiving new message if the list is initially 
             undefined,
             { isFixedSize: true },
         ),
-        message: "should wait until channel 20 scrolled initially",
+        message: "should wait until channel 1 scrolled initially",
         predicate: data => threadViewer === data.threadViewer,
     });
     const initialMessageList = document.querySelector('.o_ThreadView_messageList');
     assert.strictEqual(
         initialMessageList.scrollTop,
         initialMessageList.scrollHeight - initialMessageList.clientHeight,
-        "should have scrolled to bottom of channel 20 initially"
+        "should have scrolled to bottom of channel 1 initially"
     );
 
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
         func: () => initialMessageList.scrollTop = 0,
-        message: "should wait until channel 20 processed manual scroll",
+        message: "should wait until channel 1 processed manual scroll",
         predicate: data => threadViewer === data.threadViewer,
     });
     assert.strictEqual(
         initialMessageList.scrollTop,
         0,
-        "should have scrolled to the top of channel 20 manually"
+        "should have scrolled to the top of channel 1 manually"
     );
 
     // simulate receiving a message
@@ -936,7 +912,7 @@ QUnit.test('should not scroll on receiving new message if the list is initially 
                 route: '/mail/chat_post',
                 params: {
                     context: {
-                        mockedUserId: 42,
+                        mockedUserId: resUsersId1,
                     },
                     message_content: "hello",
                     uuid: thread.uuid,
@@ -955,25 +931,24 @@ QUnit.test('should not scroll on receiving new message if the list is initially 
 QUnit.test("delete all attachments of message without content should no longer display the message", async function (assert) {
     assert.expect(2);
 
-    this.data['ir.attachment'].records.push({
-        id: 143,
+    const pyEnv = await startServer();
+    const irAttachmentId1 = pyEnv['ir.attachment'].create({
         mimetype: 'text/plain',
         name: "Blah.txt",
     });
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['mail.message'].records.push(
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
+    pyEnv['mail.message'].create(
         {
-            attachment_ids: [143],
-            id: 101,
+            attachment_ids: [irAttachmentId1],
             model: "mail.channel",
-            res_id: 11,
+            res_id: mailChannelId1,
         }
     );
-    const { afterEvent, click, createThreadViewComponent, messaging } = await start({ data: this.data, hasDialog: true });
+    const { afterEvent, click, createThreadViewComponent, messaging } = await start({ hasDialog: true });
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
-        thread: insert({ id: 11, model: 'mail.channel' }),
+        thread: insert({ id: mailChannelId1, model: 'mail.channel' }),
     });
     // wait for messages of the thread to be loaded
     await afterEvent({
@@ -986,7 +961,7 @@ QUnit.test("delete all attachments of message without content should no longer d
             return (
                 hint.type === 'messages-loaded' &&
                 threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 11
+                threadViewer.thread.id === mailChannelId1
             );
         },
     });
@@ -997,7 +972,7 @@ QUnit.test("delete all attachments of message without content should no longer d
     );
 
     await click(`.o_AttachmentCard[data-id="${
-        messaging.models['Attachment'].findFromIdentifyingData({ id: 143 }).localId
+        messaging.models['Attachment'].findFromIdentifyingData({ id: irAttachmentId1 }).localId
     }"] .o_AttachmentCard_asideItemUnlink`);
     await click('.o_AttachmentDeleteConfirm_confirmButton');
     assert.containsNone(
@@ -1010,26 +985,23 @@ QUnit.test("delete all attachments of message without content should no longer d
 QUnit.test('delete all attachments of a message with some text content should still keep it displayed', async function (assert) {
     assert.expect(2);
 
-    this.data['ir.attachment'].records.push({
-        id: 143,
+    const pyEnv = await startServer();
+    const irAttachmentId1 = pyEnv['ir.attachment'].create({
         mimetype: 'text/plain',
         name: "Blah.txt",
     });
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['mail.message'].records.push(
-        {
-            attachment_ids: [143],
-            body: "Some content",
-            id: 101,
-            model: "mail.channel",
-            res_id: 11,
-        },
-    );
-    const { afterEvent, click, createThreadViewComponent, messaging } = await start({ data: this.data, hasDialog: true });
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
+    pyEnv['mail.message'].create({
+        attachment_ids: [irAttachmentId1],
+        body: "Some content",
+        model: "mail.channel",
+        res_id: mailChannelId1,
+    });
+    const { afterEvent, click, createThreadViewComponent, messaging } = await start({ hasDialog: true });
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
-        thread: insert({ id: 11, model: 'mail.channel' }),
+        thread: insert({ id: mailChannelId1, model: 'mail.channel' }),
     });
     // wait for messages of the thread to be loaded
     await afterEvent({
@@ -1042,7 +1014,7 @@ QUnit.test('delete all attachments of a message with some text content should st
             return (
                 hint.type === 'messages-loaded' &&
                 threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 11
+                threadViewer.thread.id === mailChannelId1
             );
         },
     });
@@ -1053,7 +1025,7 @@ QUnit.test('delete all attachments of a message with some text content should st
     );
 
     await click(`.o_AttachmentCard[data-id="${
-        messaging.models['Attachment'].findFromIdentifyingData({ id: 143 }).localId
+        messaging.models['Attachment'].findFromIdentifyingData({ id: irAttachmentId1 }).localId
     }"] .o_AttachmentCard_asideItemUnlink`);
     await click('.o_AttachmentDeleteConfirm_confirmButton');
     assert.containsOnce(
@@ -1066,15 +1038,15 @@ QUnit.test('delete all attachments of a message with some text content should st
 QUnit.test('Post a message containing an email address followed by a mention on another line', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['res.partner'].records.push({
-        id: 25,
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
+    const resPartnerId1 = pyEnv['res.partner'].create({
         email: "testpartner@odoo.com",
         name: "TestPartner",
     });
-    const { click, createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
+    const { click, createThreadViewComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 11,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -1089,7 +1061,7 @@ QUnit.test('Post a message containing an email address followed by a mention on 
     await click('.o_Composer_buttonSend');
     assert.containsOnce(
         document.querySelector(`.o_Message_content`),
-        `.o_mail_redirect[data-oe-id="25"][data-oe-model="res.partner"]:contains("@TestPartner")`,
+        `.o_mail_redirect[data-oe-id="${resPartnerId1}"][data-oe-model="res.partner"]:contains("@TestPartner")`,
         "Conversation should have a message that has been posted, which contains partner mention"
     );
 });
@@ -1097,15 +1069,15 @@ QUnit.test('Post a message containing an email address followed by a mention on 
 QUnit.test(`Mention a partner with special character (e.g. apostrophe ')`, async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['res.partner'].records.push({
-        id: 1952,
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
+    const resPartnerId1 = pyEnv['res.partner'].create({
         email: "usatyi@example.com",
         name: "Pynya's spokesman",
     });
-    const { click, createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
+    const { click, createThreadViewComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 11,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -1119,7 +1091,7 @@ QUnit.test(`Mention a partner with special character (e.g. apostrophe ')`, async
     await click('.o_Composer_buttonSend');
     assert.containsOnce(
         document.querySelector(`.o_Message_content`),
-        `.o_mail_redirect[data-oe-id="1952"][data-oe-model="res.partner"]:contains("@Pynya's spokesman")`,
+        `.o_mail_redirect[data-oe-id="${resPartnerId1}"][data-oe-model="res.partner"]:contains("@Pynya's spokesman")`,
         "Conversation should have a message that has been posted, which contains partner mention"
     );
 });
@@ -1127,21 +1099,21 @@ QUnit.test(`Mention a partner with special character (e.g. apostrophe ')`, async
 QUnit.test('mention 2 different partners that have the same name', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['res.partner'].records.push(
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([
         {
-            id: 25,
             email: "partner1@example.com",
             name: "TestPartner",
-        }, {
-            id: 26,
+        },
+        {
             email: "partner2@example.com",
             name: "TestPartner",
         },
-    );
-    const { click, createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
+    ]);
+    const { click, createThreadViewComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 11,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -1158,12 +1130,12 @@ QUnit.test('mention 2 different partners that have the same name', async functio
     assert.containsOnce(document.body, '.o_Message_content', 'should have one message after posting it');
     assert.containsOnce(
         document.querySelector(`.o_Message_content`),
-        `.o_mail_redirect[data-oe-id="25"][data-oe-model="res.partner"]:contains("@TestPartner")`,
+        `.o_mail_redirect[data-oe-id="${resPartnerId1}"][data-oe-model="res.partner"]:contains("@TestPartner")`,
         "message should contain the first partner mention"
     );
     assert.containsOnce(
         document.querySelector(`.o_Message_content`),
-        `.o_mail_redirect[data-oe-id="26"][data-oe-model="res.partner"]:contains("@TestPartner")`,
+        `.o_mail_redirect[data-oe-id="${resPartnerId2}"][data-oe-model="res.partner"]:contains("@TestPartner")`,
         "message should also contain the second partner mention"
     );
 });
@@ -1171,13 +1143,13 @@ QUnit.test('mention 2 different partners that have the same name', async functio
 QUnit.test('mention a channel with space in the name', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({
-        id: 7,
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         name: "General good boy",
     });
-    const { click, createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
+    const { click, createThreadViewComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 7,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -1205,13 +1177,13 @@ QUnit.test('mention a channel with space in the name', async function (assert) {
 QUnit.test('mention a channel with "&" in the name', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({
-        id: 7,
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         name: "General & good",
     });
-    const { click, createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
+    const { click, createThreadViewComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 7,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -1239,13 +1211,13 @@ QUnit.test('mention a channel with "&" in the name', async function (assert) {
 QUnit.test('mention a channel on a second line when the first line contains #', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({
-        id: 7,
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         name: "General good",
     });
-    const { click, createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
+    const { click, createThreadViewComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 7,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -1274,13 +1246,13 @@ QUnit.test('mention a channel on a second line when the first line contains #', 
 QUnit.test('mention a channel when replacing the space after the mention by another char', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({
-        id: 7,
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         name: "General good",
     });
-    const { click, createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
+    const { click, createThreadViewComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 7,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -1311,20 +1283,19 @@ QUnit.test('mention a channel when replacing the space after the mention by anot
 QUnit.test('mention 2 different channels that have the same name', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.channel'].records.push(
+    const pyEnv = await startServer();
+    const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([
         {
-            id: 11,
             name: "my channel",
             public: 'public', // mentioning another channel is possible only from a public channel
         },
         {
-            id: 12,
             name: "my channel",
         },
-    );
-    const { click, createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
+    ]);
+    const { click, createThreadViewComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 11,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -1342,12 +1313,12 @@ QUnit.test('mention 2 different channels that have the same name', async functio
     assert.containsOnce(document.body, '.o_Message_content', 'should have one message after posting it');
     assert.containsOnce(
         document.querySelector(`.o_Message_content`),
-        `.o_channel_redirect[data-oe-id="11"][data-oe-model="mail.channel"]:contains("#my channel")`,
+        `.o_channel_redirect[data-oe-id="${mailChannelId1}"][data-oe-model="mail.channel"]:contains("#my channel")`,
         "message should contain the first channel mention"
     );
     assert.containsOnce(
         document.querySelector(`.o_Message_content`),
-        `.o_channel_redirect[data-oe-id="12"][data-oe-model="mail.channel"]:contains("#my channel")`,
+        `.o_channel_redirect[data-oe-id="${mailChannelId2}"][data-oe-model="mail.channel"]:contains("#my channel")`,
         "message should also contain the second channel mention"
     );
 });
@@ -1355,13 +1326,14 @@ QUnit.test('mention 2 different channels that have the same name', async functio
 QUnit.test('show empty placeholder when thread contains no message', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({ id: 11 });
-    const { afterEvent, createThreadViewComponent, messaging } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
+    const { afterEvent, createThreadViewComponent, messaging } = await start();
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
-            id: 11,
+            id: mailChannelId1,
             model: 'mail.channel',
         }),
     });
@@ -1375,7 +1347,7 @@ QUnit.test('show empty placeholder when thread contains no message', async funct
             return (
                 hint.type === 'messages-loaded' &&
                 threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 11
+                threadViewer.thread.id === mailChannelId1
             );
         },
     });
@@ -1394,20 +1366,18 @@ QUnit.test('show empty placeholder when thread contains no message', async funct
 QUnit.test('show empty placeholder when thread contains only empty messages', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['mail.message'].records.push(
-        {
-            id: 101,
-            model: "mail.channel",
-            res_id: 11,
-        },
-    );
-    const { afterEvent, createThreadViewComponent, messaging } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
+    pyEnv['mail.message'].create({
+        model: "mail.channel",
+        res_id: mailChannelId1,
+    });
+    const { afterEvent, createThreadViewComponent, messaging } = await start();
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
-            id: 11,
+            id: mailChannelId1,
             model: 'mail.channel',
         }),
     });
@@ -1421,7 +1391,7 @@ QUnit.test('show empty placeholder when thread contains only empty messages', as
             return (
                 hint.type === 'messages-loaded' &&
                 threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 11
+                threadViewer.thread.id === mailChannelId1
             );
         },
     });
@@ -1440,25 +1410,22 @@ QUnit.test('show empty placeholder when thread contains only empty messages', as
 QUnit.test('message with subtype should be displayed (and not considered as empty)', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({ id: 11 });
-    this.data['mail.message.subtype'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
+    const mailMessageSubtypeId1 = pyEnv['mail.message.subtype'].create({
         description: "Task created",
-        id: 10,
     });
-    this.data['mail.message'].records.push(
-        {
-            id: 101,
-            model: "mail.channel",
-            res_id: 11,
-            subtype_id: 10,
-        },
-    );
-    const { afterEvent, createThreadViewComponent, messaging } = await start({ data: this.data });
+    pyEnv['mail.message'].create({
+        model: "mail.channel",
+        res_id: mailChannelId1,
+        subtype_id: mailMessageSubtypeId1,
+    });
+    const { afterEvent, createThreadViewComponent, messaging } = await start();
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
-            id: 11,
+            id: mailChannelId1,
             model: 'mail.channel',
         }),
     });
@@ -1472,7 +1439,7 @@ QUnit.test('message with subtype should be displayed (and not considered as empt
             return (
                 hint.type === 'messages-loaded' &&
                 threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 11
+                threadViewer.thread.id === mailChannelId1
             );
         },
     });
@@ -1495,28 +1462,27 @@ QUnit.test('[technical] message list with a full page of empty messages should s
     // - auto-load more being triggered on scroll, not automatically when the 30 first messages are empty
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({
-        id: 11,
-    });
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     for (let i = 0; i <= 30; i++) {
-        this.data['mail.message'].records.push({
+        pyEnv['mail.message'].create({
             body: "not empty",
             model: "mail.channel",
-            res_id: 11,
+            res_id: mailChannelId1,
         });
     }
     for (let i = 0; i <= 30; i++) {
-        this.data['mail.message'].records.push({
+        pyEnv['mail.message'].create({
             model: "mail.channel",
-            res_id: 11,
+            res_id: mailChannelId1,
         });
     }
-    const { afterEvent, createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { afterEvent, createThreadViewComponent, messaging } = await start();
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
-            id: 11,
+            id: mailChannelId1,
             model: 'mail.channel',
         }),
     });
@@ -1530,7 +1496,7 @@ QUnit.test('[technical] message list with a full page of empty messages should s
             return (
                 hint.type === 'messages-loaded' &&
                 threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 11
+                threadViewer.thread.id === mailChannelId1
             );
         },
     });
@@ -1553,26 +1519,24 @@ QUnit.test('first unseen message should be directly preceded by the new message 
     // and the conditions from focus would otherwise shadow them.
     assert.expect(3);
 
+    const pyEnv = await startServer();
     // Needed partner & user to allow simulation of message reception
-    this.data['res.partner'].records.push({
-        id: 11,
+    const resPartnerId1 = pyEnv['res.partner'].create({
         name: "Foreigner partner",
     });
-    this.data['res.users'].records.push({
-        id: 42,
+    const resUsersId1 = pyEnv['res.users'].create({
         name: "Foreigner user",
-        partner_id: 11,
+        partner_id: resPartnerId1,
     });
-    this.data['mail.channel'].records = [{
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        id: 20,
         is_pinned: true,
         name: "General",
         uuid: 'channel20uuid',
-    }];
-    const { click, createThreadViewComponent, env, messaging } = await start({ data: this.data });
+    });
+    const { click, createThreadViewComponent, env, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel'
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -1593,7 +1557,7 @@ QUnit.test('first unseen message should be directly preceded by the new message 
         route: '/mail/chat_post',
         params: {
             context: {
-                mockedUserId: 42,
+                mockedUserId: resUsersId1,
             },
             message_content: "test",
             uuid: 'channel20uuid',
@@ -1622,10 +1586,11 @@ QUnit.test('first unseen message should be directly preceded by the new message 
 QUnit.test('composer should be focused automatically after clicking on the send button [REQUIRE FOCUS]', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({ id: 20 });
-    const { click, createThreadViewComponent, messaging } = await start({ data: this.data });
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
+    const { click, createThreadViewComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel'
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -1647,14 +1612,13 @@ QUnit.test('composer should be focused automatically after clicking on the send 
 QUnit.test('failure on loading messages should display error', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        id: 20,
         is_pinned: true,
         name: "General",
     });
     const { createThreadViewComponent, messaging } = await start({
-        data: this.data,
         async mockRPC(route, args) {
             if (route === '/mail/channel/messages') {
                 throw new Error();
@@ -1663,7 +1627,7 @@ QUnit.test('failure on loading messages should display error', async function (a
         },
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel'
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -1683,14 +1647,13 @@ QUnit.test('failure on loading messages should display error', async function (a
 QUnit.test('failure on loading messages should prompt retry button', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        id: 20,
         is_pinned: true,
         name: "General",
     });
     const { createThreadViewComponent, messaging } = await start({
-        data: this.data,
         async mockRPC(route, args) {
             if (route === '/mail/channel/messages') {
                 throw new Error();
@@ -1699,7 +1662,7 @@ QUnit.test('failure on loading messages should prompt retry button', async funct
         },
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel'
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -1723,22 +1686,20 @@ QUnit.test('failure on loading more messages should not alter message list displ
     // second call comes from load more and needs to fail in order to show the error alert
     // any later call should work so that retry button and load more clicks would now work
     let messageFetchShouldFail = false;
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        id: 20,
         is_pinned: true,
         name: "General",
     });
-    this.data['mail.message'].records.push(...[...Array(60).keys()].map(id => {
+    pyEnv['mail.message'].create([...Array(60).keys()].map(() => {
         return {
             body: 'coucou',
-            id,
             model: "mail.channel",
-            res_id: 20,
+            res_id: mailChannelId1,
         };
     }));
     const { click, createThreadViewComponent, messaging } = await start({
-        data: this.data,
         async mockRPC(route, args) {
             if (route === '/mail/channel/messages') {
                 if (messageFetchShouldFail) {
@@ -1749,7 +1710,7 @@ QUnit.test('failure on loading more messages should not alter message list displ
         },
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel'
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -1776,22 +1737,20 @@ QUnit.test('failure on loading more messages should display error and prompt ret
     // second call comes from load more and needs to fail in order to show the error alert
     // any later call should work so that retry button and load more clicks would now work
     let messageFetchShouldFail = false;
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        id: 20,
         is_pinned: true,
         name: "General",
     });
-    this.data['mail.message'].records.push(...[...Array(60).keys()].map(id => {
+    pyEnv['mail.message'].create([...Array(60).keys()].map(() => {
         return {
             body: 'coucou',
-            id,
             model: "mail.channel",
-            res_id: 20,
+            res_id: mailChannelId1,
         };
     }));
     const { click, createThreadViewComponent, messaging } = await start({
-        data: this.data,
         async mockRPC(route, args) {
             if (route === '/mail/channel/messages') {
                 if (messageFetchShouldFail) {
@@ -1802,7 +1761,7 @@ QUnit.test('failure on loading more messages should display error and prompt ret
         },
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel'
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -1838,22 +1797,20 @@ QUnit.test('Retry loading more messages on failed load more messages should load
     // second call comes from load more and needs to fail in order to show the error alert
     // any later call should work so that retry button and load more clicks would now work
     let messageFetchShouldFail = false;
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        id: 20,
         is_pinned: true,
         name: "General",
     });
-    this.data['mail.message'].records = [...Array(90).keys()].map(id => {
+    pyEnv['mail.message'].create([...Array(90).keys()].map(() => {
         return {
             body: 'coucou',
-            id,
             model: "mail.channel",
-            res_id: 20,
+            res_id: mailChannelId1,
         };
-    });
+    }));
     const { afterEvent, click, createThreadViewComponent, messaging } = await start({
-        data: this.data,
         async mockRPC(route, args) {
             if (route === '/mail/channel/messages') {
                 if (messageFetchShouldFail) {
@@ -1864,7 +1821,7 @@ QUnit.test('Retry loading more messages on failed load more messages should load
         },
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel'
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -1885,7 +1842,7 @@ QUnit.test('Retry loading more messages on failed load more messages should load
             return (
                 hint.type === 'more-messages-loaded' &&
                 threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 20
+                threadViewer.thread.id === mailChannelId1
             );
         },
     });
@@ -1894,28 +1851,26 @@ QUnit.test('Retry loading more messages on failed load more messages should load
 QUnit.test("highlight the message mentioning the current user inside the channel", async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({
         display_name: "Test Partner",
-        id: 7,
     });
-    this.data['res.users'].records.push({ partner_id: 7 });
-    this.data['mail.channel'].records.push({
+    pyEnv['res.users'].create({ partner_id: resPartnerId1 });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        id: 20,
         is_pinned: true,
         name: "General",
     });
-    this.data['mail.message'].records.push({
-        author_id: 7,
+    pyEnv['mail.message'].create({
+        author_id: resPartnerId1,
         body: "hello @Admin",
-        id: 100,
         model: 'mail.channel',
-        partner_ids: [this.data.currentPartnerId],
-        res_id: 20,
+        partner_ids: [pyEnv.currentPartnerId],
+        res_id: mailChannelId1,
     });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { createThreadViewComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel'
     });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -1934,29 +1889,27 @@ QUnit.test("highlight the message mentioning the current user inside the channel
 QUnit.test("not highlighting the message if not mentioning the current user inside the channel", async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({
         display_name: "testPartner",
         email: "testPartner@odoo.com",
-        id: 7,
     });
-    this.data['res.users'].records.push({ partner_id: 7 });
-    this.data['mail.channel'].records.push({
+    pyEnv['res.users'].create({ partner_id: resPartnerId1 });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        id: 20,
         is_pinned: true,
         name: "General",
     });
-    this.data['mail.message'].records.push({
-        author_id: this.data.currentPartnerId,
+    pyEnv['mail.message'].create({
+        author_id: pyEnv.currentPartnerId,
         body: "hello @testPartner",
-        id: 100,
         model: 'mail.channel',
-        partner_ids: [7],
-        res_id: 20,
+        partner_ids: [resPartnerId1],
+        res_id: mailChannelId1,
     });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { createThreadViewComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel'
     });
     const threadViewer = messaging.models['ThreadViewer'].create({

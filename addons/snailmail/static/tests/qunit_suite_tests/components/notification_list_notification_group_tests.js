@@ -1,16 +1,12 @@
 /** @odoo-module **/
 
-import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 import Bus from 'web.Bus';
 
 QUnit.module('snailmail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('notification_list_notification_group_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('notification_list_notification_group_tests.js');
 
 QUnit.test('mark as read', async function (assert) {
     assert.expect(2);
@@ -19,21 +15,22 @@ QUnit.test('mark as read', async function (assert) {
     // Actually, the server rely on the model "snailmail.letter" to identify the notification to cancel
     // The following code simulates the cancel of the notification without using "snailmail.letter" model
 
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create();
     // message that is expected to have a failure
-    this.data['mail.message'].records.push({
-        author_id: this.data.currentPartnerId,
-        id: 11,
+    const mailMessageId1 = pyEnv['mail.message'].create({
+        author_id: pyEnv.currentPartnerId,
         message_type: 'snailmail',
         model: 'mail.channel',
-        res_id: 31,
+        res_id: mailChannelId1,
     });
     // failure that is expected to be used in the test
-    this.data['mail.notification'].records.push({
-        mail_message_id: 11, // id of the related message
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1, // id of the related message
         notification_status: 'exception', // necessary value to have a failure
         notification_type: 'snail',
     });
-    const { afterNextRender, createNotificationListComponent } = await start({ data: this.data });
+    const { afterNextRender, createNotificationListComponent } = await start();
     await createNotificationListComponent();
     assert.containsOnce(
         document.body,
@@ -54,47 +51,47 @@ QUnit.test('mark as read', async function (assert) {
 QUnit.test('notifications grouped by notification_type', async function (assert) {
     assert.expect(11);
 
-    this.data['mail.message'].records.push(
+    const pyEnv = await startServer();
+    const resPartnerId1 = await pyEnv['res.partner'].create({});
+    const [mailMessageId1, mailMessageId2] = pyEnv['mail.message'].create([
         // first message that is expected to have a failure
         {
-            id: 11, // random unique id, will be used to link failure to message
             message_type: 'snailmail', // different type from second message
             model: 'res.partner', // same model as second message (and not `mail.channel`)
-            res_id: 31, // same res_id as second message
+            res_id: resPartnerId1, // same res_id as second message
             res_model_name: "Partner", // random related model name
         },
         // second message that is expected to have a failure
         {
-            id: 12, // random unique id, will be used to link failure to message
             message_type: 'email', // different type from first message
             model: 'res.partner', // same model as first message (and not `mail.channel`)
-            res_id: 31, // same res_id as first message
+            res_id: resPartnerId1, // same res_id as first message
             res_model_name: "Partner", // same related model name for consistency
-        }
-    );
-    this.data['mail.notification'].records.push(
+        },
+    ]);
+    pyEnv['mail.notification'].create([
         {
-            mail_message_id: 11, // id of the related first message
+            mail_message_id: mailMessageId1, // id of the related first message
             notification_status: 'exception', // necessary value to have a failure
             notification_type: 'snail', // different type from second failure
         },
         {
-            mail_message_id: 11,
+            mail_message_id: mailMessageId1,
             notification_status: 'exception',
             notification_type: 'snail',
         },
         {
-            mail_message_id: 12, // id of the related second message
+            mail_message_id: mailMessageId2, // id of the related second message
             notification_status: 'exception', // necessary value to have a failure
             notification_type: 'email', // different type from first failure
         },
         {
-            mail_message_id: 12,
+            mail_message_id: mailMessageId2,
             notification_status: 'exception',
             notification_type: 'email',
         },
-    );
-    const { createNotificationListComponent } = await start({ data: this.data });
+    ]);
+    const { createNotificationListComponent } = await start();
     await createNotificationListComponent();
 
     assert.containsN(
@@ -162,38 +159,36 @@ QUnit.test('grouped notifications by document model', async function (assert) {
     // document model.
     assert.expect(12);
 
-    this.data['mail.message'].records.push(
-        // first message that is expected to have a failure
+    const pyEnv = await startServer();
+    const [resPartnerId1, resPartnerId2] = await pyEnv['res.partner'].create([{}, {}]);
+    const [mailMessageId1, mailMessageId2] = pyEnv['mail.message'].create([
         {
-            id: 11, // random unique id, will be used to link failure to message
             message_type: 'snailmail', // message must be snailmail (goal of the test)
             model: 'res.partner', // same model as second message (and not `mail.channel`)
-            res_id: 31, // different res_id from second message
+            res_id: resPartnerId1, // same res_id as second message
             res_model_name: "Partner", // random related model name
         },
-        // second message that is expected to have a failure
         {
-            id: 12, // random unique id, will be used to link failure to message
             message_type: 'snailmail', // message must be snailmail (goal of the test)
             model: 'res.partner', // same model as first message (and not `mail.channel`)
-            res_id: 32, // different res_id from first message
+            res_id: resPartnerId2, // different res_id from first message
             res_model_name: "Partner", // same related model name for consistency
-        }
-    );
-    this.data['mail.notification'].records.push(
+        },
+    ]);
+    pyEnv['mail.notification'].create([
         // first failure that is expected to be used in the test
         {
-            mail_message_id: 11, // id of the related first message
+            mail_message_id: mailMessageId1, // id of the related first message
             notification_status: 'exception', // necessary value to have a failure
             notification_type: 'snail', // expected failure type for snailmail message
         },
         // second failure that is expected to be used in the test
         {
-            mail_message_id: 12, // id of the related second message
+            mail_message_id: mailMessageId2, // id of the related second message
             notification_status: 'exception', // necessary value to have a failure
             notification_type: 'snail', // expected failure type for snailmail message
-        }
-    );
+        },
+    ]);
     const bus = new Bus();
     bus.on('do-action', null, payload => {
         assert.step('do_action');
@@ -234,7 +229,7 @@ QUnit.test('grouped notifications by document model', async function (assert) {
         );
     });
 
-    const { createNotificationListComponent } = await start({ data: this.data, env: { bus } });
+    const { createNotificationListComponent } = await start({ env: { bus } });
     await createNotificationListComponent();
 
     assert.containsOnce(
