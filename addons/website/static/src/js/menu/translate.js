@@ -260,7 +260,7 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
 
         await this.translator.prependTo(document.body);
         // Apply data-oe-readonly on nested data.
-        $(savableSelector)
+        $('header').find(savableSelector)
             .filter(':has(' + savableSelector + ')')
             .attr('data-oe-readonly', true);
         await this.translator._startEditMode();
