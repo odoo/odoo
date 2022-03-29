@@ -3,27 +3,27 @@
 
     <t t-name="mail.ComposerSuggestion" owl="1">
         <t t-if="composerSuggestion">
-            <a class="o_ComposerSuggestion dropdown-item" t-att-class="{ 'active bg-300': props.isActive }" t-attf-class="{{ className }}" href="#" t-att-title="title()" role="menuitem" t-on-click="_onClick" t-ref="root">
+            <a class="o_ComposerSuggestion dropdown-item d-flex w-100 py-2 px-4" t-att-class="{ 'active bg-300': props.isActive }" t-attf-class="{{ className }}" href="#" t-att-title="title()" role="menuitem" t-on-click="_onClick" t-ref="root">
                 <t t-if="isCannedResponse">
-                    <span class="o_ComposerSuggestion_part1 text-truncate"><t t-esc="record.source"/></span>
-                    <span class="o_ComposerSuggestion_part2 text-truncate"><t t-esc="record.substitution"/></span>
+                    <strong class="o_ComposerSuggestion_part1 flex-shrink-0 mw-100 pr-2 text-truncate"><t t-esc="record.source"/></strong>
+                    <em class="o_ComposerSuggestion_part2 text-600 text-truncate"><t t-esc="record.substitution"/></em>
                 </t>
                 <t t-if="isChannel">
-                    <span class="o_ComposerSuggestion_part1 text-truncate"><t t-esc="record.name"/></span>
+                    <strong class="o_ComposerSuggestion_part1 flex-shrink-0 mw-100 pr-2 text-truncate"><t t-esc="record.name"/></strong>
                 </t>
                 <t t-if="isCommand">
-                    <span class="o_ComposerSuggestion_part1 text-truncate"><t t-esc="record.name"/></span>
-                    <span class="o_ComposerSuggestion_part2 text-truncate"><t t-esc="record.help"/></span>
+                    <strong class="o_ComposerSuggestion_part1 flex-shrink-0 mw-100 pr-2 text-truncate"><t t-esc="record.name"/></strong>
+                    <em class="o_ComposerSuggestion_part2 text-600 text-truncate"><t t-esc="record.help"/></em>
                 </t>
                 <t t-if="isPartner">
                     <PartnerImStatusIcon
-                        className="'o_ComposerSuggestion_partnerImStatusIcon mr-1'"
+                        className="'o_ComposerSuggestion_partnerImStatusIcon flex-shrink-0 mr-1'"
                         hasBackground="false"
                         partnerLocalId="record.localId"
                     />
-                    <span class="o_ComposerSuggestion_part1 text-truncate"><t t-esc="record.nameOrDisplayName"/></span>
+                    <strong class="o_ComposerSuggestion_part1 flex-shrink-0 mw-100 pr-2 text-truncate"><t t-esc="record.nameOrDisplayName"/></strong>
                     <t t-if="record.email">
-                        <span class="o_ComposerSuggestion_part2 text-truncate">(<t t-esc="record.email"/>)</span>
+                        <em class="o_ComposerSuggestion_part2 text-600 text-truncate">(<t t-esc="record.email"/>)</em>
                     </t>
                 </t>
             </a>
