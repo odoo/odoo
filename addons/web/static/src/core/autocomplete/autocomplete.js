@@ -3,7 +3,7 @@
 import { useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 
-const { Component, useExternalListener, useRef, useState } = owl;
+const { Component, onWillUnmount, useExternalListener, useRef, useState } = owl;
 
 export class AutoComplete extends Component {
     setup() {
@@ -26,6 +26,8 @@ export class AutoComplete extends Component {
 
         this.hotkey = useService("hotkey");
         this.hotkeysToRemove = [];
+
+        onWillUnmount(() => this.debouncedOnInput.cancel());
     }
 
     get isOpened() {

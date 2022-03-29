@@ -401,7 +401,7 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
             archs: {
-                "turtle,false,form": `<form><field name=\"parent_id\" domain=\"[('id', 'in', parent.turtles)]\"/></form>`,
+                "turtle,false,form": `<form><field name="parent_id" domain="[('id', 'in', parent.turtles)]"/></form>`,
             },
             mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/turtle/name_search") {
@@ -3733,7 +3733,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".o_field_widget[name=turtles] .o_pager");
     });
 
-    QUnit.skipWOWL("unselecting a line with missing required data", async function (assert) {
+    QUnit.test("unselecting a line with missing required data", async function (assert) {
         assert.expect(6);
 
         serverData.models.turtle.fields.turtle_foo.required = true;
@@ -3767,7 +3767,7 @@ QUnit.module("Fields", (hooks) => {
         // a missing required field
         await editInput(target, '.o_field_widget[name="turtle_int"] input', "12345");
 
-        // click elsewhere,
+        // click elsewhere
         await click(target.querySelector("label.o_form_label"));
         assert.containsNone(document.body, ".modal");
 
@@ -3996,7 +3996,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual($(".modal .o_data_row").length, 0, "the row should have been removed");
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "editable o2m with onchange and required field: delete an invalid line",
         async function (assert) {
             assert.expect(5);
@@ -4007,7 +4007,7 @@ QUnit.module("Fields", (hooks) => {
             serverData.models.partner.records[0].turtles = [1];
             serverData.models.turtle.records[0].product_id = 37;
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -4022,17 +4022,14 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
                 mockRPC(route, args) {
                     assert.step(args.method);
-                    return this._super.apply(this, arguments);
-                },
-                viewOptions: {
-                    mode: "edit",
                 },
             });
 
-            await click(form.$(".o_data_cell:first"));
-            form.$('.o_field_widget[name="product_id"] input').val("").trigger("keyup");
+            await clickEdit(target);
+            await click(target.querySelector(".o_data_cell"));
+            await editInput(target, ".o_field_widget[name=product_id] input", "");
             assert.verifySteps(["read", "read"], "no onchange should be done as line is invalid");
-            await click(form.$(".o_list_record_remove"));
+            await click(target.querySelector(".o_list_record_remove"));
             assert.verifySteps(["onchange"], "onchange should have been done");
         }
     );
@@ -9414,10 +9411,10 @@ QUnit.module("Fields", (hooks) => {
                         <tree editable="bottom">
                             <control>
                                 <create string="Add food" context="" />
-                                <create string=\"Add pizza\" context=\"{'default_display_name': 'pizza'}\"/>
+                                <create string="Add pizza" context="{'default_display_name': 'pizza'}"/>
                             </control>
                             <control>
-                                <create string=\"Add pasta\" context=\"{'default_display_name': 'pasta'}\"/>
+                                <create string="Add pasta" context="{'default_display_name': 'pasta'}"/>
                             </control>
                             <field name="display_name"/>
                         </tree>

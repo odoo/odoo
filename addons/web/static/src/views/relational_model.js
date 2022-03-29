@@ -15,10 +15,11 @@ import { isTruthy } from "@web/core/utils/xml";
 import { makeContext } from "@web/core/context";
 import { Model } from "@web/views/helpers/model";
 import { registry } from "@web/core/registry";
+import { escape } from "@web/core/utils/strings";
 import { session } from "@web/session";
 
 const { DateTime } = luxon;
-const { markRaw, toRaw, xml } = owl;
+const { markRaw, markup, toRaw, xml } = owl;
 
 const preloadedDataRegistry = registry.category("preloadedData");
 
@@ -94,7 +95,7 @@ export function stringToOrderBy(string) {
     });
 }
 /**
- * @param {any} modifier
+ * @param {Array[] | boolean} modifier
  * @param {Object} evalContext
  * @returns {boolean}
  */
@@ -360,7 +361,8 @@ export class Record extends DataPoint {
         this.onChanges = params.onChanges || (() => {});
 
         this._invalidFields = new Set();
-        this._requiredFields = new Set();
+        this._requiredFields = {};
+        this._setRequiredFields();
         this.preloadedData = {};
         this.preloadedDataCaches = {};
         this.isInQuickCreation = params.isInQuickCreation || false;
@@ -376,8 +378,6 @@ export class Record extends DataPoint {
         this._onWillSwitchMode = params.onRecordWillSwitchMode || (() => {});
 
         markRaw(this);
-
-        this._setRequiredFields();
     }
 
     // -------------------------------------------------------------------------
@@ -386,7 +386,6 @@ export class Record extends DataPoint {
 
     get evalContext() {
         if (!this.data) {
-            return {};
             throw new Error("you rascal");
         }
 
@@ -457,6 +456,29 @@ export class Record extends DataPoint {
         await toggleArchive(this.model, this.resModel, [this.resId], true);
         await this.load();
         this.model.notify();
+    }
+
+    checkValidity() {
+        for (const fieldName in this._requiredFields) {
+            const fieldType = this.fields[fieldName].type;
+            switch (fieldType) {
+                case "boolean":
+                case "float":
+                case "integer":
+                    continue;
+                case "one2many":
+                case "many2many":
+                    if (!this.isX2ManyValid(fieldName)) {
+                        this.setInvalidField(fieldName);
+                    }
+                    break;
+                default:
+                    if (this.isRequired(fieldName) && !this.data[fieldName]) {
+                        this.setInvalidField(fieldName);
+                    }
+            }
+        }
+        return !this._invalidFields.size;
     }
 
     async delete() {
@@ -555,12 +577,7 @@ export class Record extends DataPoint {
     }
 
     isInvalid(fieldName) {
-        for (const invalid of this._invalidFields) {
-            if (invalid.fieldName === fieldName) {
-                return true;
-            }
-        }
-        return false;
+        return this._invalidFields.has(fieldName);
     }
 
     /**
@@ -570,17 +587,8 @@ export class Record extends DataPoint {
      */
     isInvisible(fieldName) {
         const activeField = this.activeFields[fieldName];
-        if (!activeField.modifiers) {
-            return false;
-        }
-        const { invisible } = activeField.modifiers;
-        if (typeof invisible === "boolean") {
-            return invisible;
-        } else if (!invisible) {
-            return false;
-        } else {
-            return evalDomain(invisible, this.evalContext);
-        }
+        const { invisible } = activeField.modifiers || {};
+        return invisible ? evalDomain(invisible, this.evalContext) : false;
     }
 
     /**
@@ -590,8 +598,8 @@ export class Record extends DataPoint {
      */
     isReadonly(fieldName) {
         const activeField = this.activeFields[fieldName];
-        const { readonly } = activeField.modifiers;
-        return evalDomain(readonly, this.evalContext);
+        const { readonly } = activeField.modifiers || {};
+        return readonly ? evalDomain(readonly, this.evalContext) : false;
     }
 
     /**
@@ -600,15 +608,13 @@ export class Record extends DataPoint {
      * @returns {boolean}
      */
     isRequired(fieldName) {
-        for (const required of this._requiredFields) {
-            if (required.fieldName === fieldName) {
-                if (required.modifier) {
-                    return evalDomain(required.modifier, this.evalContext);
-                }
-                return true;
-            }
-        }
-        return false;
+        const required = this._requiredFields[fieldName];
+        return required ? evalDomain(required, this.evalContext) : false;
+    }
+
+    isX2ManyValid(fieldName) {
+        const value = this.data[fieldName];
+        return value.records.every((r) => r.checkValidity());
     }
 
     async load(params = {}) {
@@ -683,45 +689,11 @@ export class Record extends DataPoint {
      */
     async save(options = { stayInEdition: false, noReload: false }) {
         return this.model.mutex.exec(async () => {
-            if (this._requiredFields.size > 0) {
-                let requiredStringArr = [];
-                for (const required of this._requiredFields) {
-                    if (
-                        typeof this.data[required.fieldName] === "number" ||
-                        this.data[required.fieldName] ||
-                        (required.modifier && !evalDomain(required.modifier, this.evalContext))
-                    ) {
-                        continue;
-                    }
-                    this.setInvalidField(required.fieldName);
-                    // TODO only add debugMessage if debug mode is active.
-                    if (required.debugMessage) {
-                        requiredStringArr.push(required.fieldName + ":" + required.debugMessage);
-                    } else {
-                        requiredStringArr.push(required.fieldName);
-                    }
-                }
-                if (requiredStringArr.length > 0) {
-                    this.model.notificationService.add(requiredStringArr.join(", "), {
-                        title: this.model.env._t("Required fields: "),
-                        type: "danger",
-                    });
-                    return false;
-                }
-            }
-            if (this._invalidFields.size > 0) {
-                let invalidStringArr = [];
-                for (const invalid of this._invalidFields) {
-                    // TODO only add debugMessage if debug mode is active.
-                    if (invalid.debugMessage) {
-                        // for now, it is impossible to go here: will it be usefull?
-                        // if not: push in _invalidFields only fieldName and simplify related code
-                        invalidStringArr.push(invalid.fieldName + ":" + invalid.debugMessage);
-                    } else {
-                        invalidStringArr.push(invalid.fieldName);
-                    }
-                }
-                this.model.notificationService.add(invalidStringArr.join(", "), {
+            if (!this.checkValidity()) {
+                const invalidFields = [...this._invalidFields].map((fieldName) => {
+                    return `<li>${escape(fieldName)}</li>`;
+                });
+                this.model.notificationService.add(markup(`<ul>${invalidFields.join("")}</ul>`), {
                     title: this.model.env._t("Invalid fields: "),
                     type: "danger",
                 });
@@ -769,7 +741,7 @@ export class Record extends DataPoint {
     }
 
     setInvalidField(fieldName) {
-        this._invalidFields.add({ fieldName });
+        this._invalidFields.add(fieldName);
         this.model.notify();
     }
 
@@ -781,7 +753,10 @@ export class Record extends DataPoint {
         if (this.mode === mode) {
             return;
         }
-        await this._onWillSwitchMode(this, mode);
+        const preventSwitch = await this._onWillSwitchMode(this, mode);
+        if (preventSwitch === false) {
+            return;
+        }
         if (mode === "readonly") {
             for (const fieldName in this.activeFields) {
                 const field = this.fields[fieldName];
@@ -891,7 +866,7 @@ export class Record extends DataPoint {
             onChanges: async () => {
                 this._changes[fieldName] = list;
                 const proms = [];
-                if (activeField && activeField.onChange) {
+                if (activeField && activeField.onChange && this.isX2ManyValid(fieldName)) {
                     const changes = await this._onChange(fieldName);
                     const proms = [];
                     for (const [fieldName, value] of Object.entries(changes)) {
@@ -1053,12 +1028,7 @@ export class Record extends DataPoint {
     }
 
     _removeInvalidField(fieldName) {
-        for (const field of this._invalidFields) {
-            if (field.fieldName === fieldName) {
-                this._invalidFields.delete(field);
-                break;
-            }
-        }
+        this._invalidFields.delete(fieldName);
     }
 
     _sanitizeValues(values) {
@@ -1078,15 +1048,9 @@ export class Record extends DataPoint {
 
     _setRequiredFields() {
         for (const [fieldName, activeField] of Object.entries(this.activeFields)) {
-            const { modifiers, required } = activeField;
-            if (required) {
-                this._requiredFields.add({ fieldName });
-            }
+            const { modifiers } = activeField;
             if (modifiers && modifiers.required) {
-                this._requiredFields.add({
-                    fieldName,
-                    modifier: typeof modifiers.required !== "boolean" && modifiers.required,
-                });
+                this._requiredFields[fieldName] = modifiers.required;
             }
         }
     }
@@ -2021,20 +1985,24 @@ export class StaticList extends DataPoint {
         this.onRecordWillSwitchMode = async (record, mode) => {
             const editedRecord = this.editedRecord;
             this.editedRecord = null;
+            if (editedRecord === record && mode === "readonly") {
+                if (this.notYetValidated) {
+                    const virtualId = this.notYetValidated;
+                    this.notYetValidated = null;
+                    this.applyCommand(x2ManyCommands.delete(virtualId));
+                    delete this._cache[this._mapping[virtualId]]; // won't be used anymore
+                    this.records = this._getRecords();
+                    this.onChanges();
+                    this.model.notify();
+                    return false;
+                }
+                return record.checkValidity();
+            }
             if (editedRecord) {
                 await editedRecord.switchMode("readonly");
             }
             if (mode === "edit") {
                 this.editedRecord = record;
-            }
-            if (this.notYetValidated) {
-                const virtualId = this.notYetValidated;
-                this.notYetValidated = null;
-                this.applyCommand(x2ManyCommands.delete(virtualId));
-                delete this._cache[this._mapping[virtualId]]; // won't be used anymore
-                this.records = this._getRecords();
-                this.onChanges();
-                this.model.notify();
             }
         };
     }
@@ -2098,7 +2066,9 @@ export class StaticList extends DataPoint {
         this.limit++;
         this.applyCommand(x2ManyCommands.create(record.virtualId, symbolValues));
 
-        this._checkValidity(record);
+        if (!record.checkValidity()) {
+            this.notYetValidated = record.virtualId;
+        }
 
         this.records = this._getRecords();
         this.onChanges();
@@ -2309,23 +2279,6 @@ export class StaticList extends DataPoint {
     //--------------------------------------------------------------------------
 
     /**
-     * @param {Record} record
-     */
-    _checkValidity(record) {
-        this.notYetValidated = null;
-        // should be related to viewMode I think
-        for (const fieldName in this.activeFields) {
-            if (this.fields[fieldName].type === "boolean") {
-                continue;
-            }
-            if (record.isRequired(fieldName) && !record.data[fieldName]) {
-                this.notYetValidated = record.virtualId;
-                break;
-            }
-        }
-    }
-
-    /**
      * @param {Object} params
      * @returns {Record}
      */
@@ -2341,8 +2294,8 @@ export class StaticList extends DataPoint {
                 this.applyCommand(
                     x2ManyCommands.update(record.resId || record.virtualId, symbolValues)
                 );
-                if (record.virtualId === this.notYetValidated) {
-                    this._checkValidity(record);
+                if (this.notYetValidated === record.virtualId) {
+                    this.notYetValidated = null;
                 }
                 this.onChanges();
             },

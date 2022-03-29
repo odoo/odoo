@@ -12,7 +12,6 @@ import {
     nextTick,
     patchWithCleanup,
 } from "@web/../tests/helpers/utils";
-import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { toggleActionMenu, toggleMenuItem } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
@@ -4250,24 +4249,8 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("empty required fields cannot be saved", async function (assert) {
-        assert.expect(6);
-
         serverData.models.partner.fields.foo.required = true;
         delete serverData.models.partner.fields.foo.default;
-
-        const mock = (message, { title, type }) => {
-            assert.strictEqual(message, "foo", "should have a warning with correct message");
-            assert.strictEqual(
-                title,
-                "Required fields: ",
-                "should have a warning with correct title"
-            );
-            assert.strictEqual(type, "danger", "should have a warning of type 'danger'");
-            return () => {};
-        };
-        registry.category("services").add("notification", makeFakeNotificationService(mock), {
-            force: true,
-        });
 
         await makeView({
             type: "form",
@@ -4279,6 +4262,16 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_form_button_save"));
         assert.hasClass(target.querySelector("label.o_form_label"), "o_field_invalid");
         assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_field_invalid");
+        assert.containsOnce(target, ".o_notification");
+        assert.strictEqual(
+            target.querySelector(".o_notification_title").textContent,
+            "Invalid fields: "
+        );
+        assert.strictEqual(
+            target.querySelector(".o_notification_content").innerHTML,
+            "<ul><li>foo</li></ul>"
+        );
+        assert.hasClass(target.querySelector(".o_notification"), "border-danger");
 
         await editInput(target, ".o_field_widget[name=foo] input", "tralala");
         assert.containsNone(target, ".o_field_invalid");
