@@ -523,21 +523,20 @@ QUnit.module("Fields", (hooks) => {
         return changingCurrencyUpdatesTheField(assert, "monetary_field");
     });
 
-    QUnit.skipWOWL("MonetaryField with monetary field given in options", async function (assert) {
+    QUnit.test("MonetaryField with monetary field given in options", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.fields.float_field.type = "monetary";
-        this.data.partner.fields.company_currency_id = {
+        serverData.models.partner.fields.float_field.type = "monetary";
+        serverData.models.partner.fields.company_currency_id = {
             string: "Company Currency",
             type: "many2one",
             relation: "currency",
         };
-        this.data.partner.records[4].company_currency_id = 2;
-
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        serverData.models.partner.records[4].company_currency_id = 2;
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -545,19 +544,14 @@ QUnit.module("Fields", (hooks) => {
                 '<field name="company_currency_id"/>' +
                 "</sheet>" +
                 "</form>",
-            res_id: 5,
-            session: {
-                currencies: _.indexBy(this.data.currency.records, "id"),
-            },
+            resId: 5,
         });
 
         assert.strictEqual(
-            form.$(".o_field_monetary").html(),
-            "9.10&nbsp;€",
+            target.querySelector(".o_field_monetary").innerText,
+            "9.10\u00a0€",
             "field monetary should be formatted with correct currency"
         );
-
-        form.destroy();
     });
 
     QUnit.skipWOWL(

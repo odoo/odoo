@@ -12,29 +12,19 @@ export class MonetaryField extends Component {
         let isValid = true;
         let value = ev.target.value;
         try {
-            value = this.props.parse(value, { currencyId: this.currencyId });
+            value = this.props.parse(value, { currencyId: this.props.currencyId });
         } catch (e) {
             isValid = false;
             this.props.setAsInvalid(this.props.name);
-            if (this.__owl__.app.dev) console.warn(e.message);
         }
         if (isValid) {
             this.props.update(value);
         }
     }
 
-    get currencyId() {
-        if (this.props.record.activeFields[this.props.name].options.currency_field) {
-            return this.props.record.data[
-                this.props.record.activeFields[this.props.name].options.currency_field
-            ][0];
-        }
-        return this.props.record.data.currency_id && this.props.record.data.currency_id[0];
-    }
-
     get currency() {
-        if (!isNaN(this.currencyId) && this.currencyId in session.currencies) {
-            return session.currencies[this.currencyId];
+        if (!isNaN(this.props.currencyId) && this.props.currencyId in session.currencies) {
+            return session.currencies[this.props.currencyId];
         }
         return null;
     }
@@ -50,14 +40,14 @@ export class MonetaryField extends Component {
     get formattedValue() {
         return this.props.format(this.props.value, {
             digits: this.currencyDigits,
-            currencyId: this.currencyId,
+            currencyId: this.props.currencyId,
         });
     }
 
     get currencyDigits() {
         if (this.props.digits) return this.props.digits;
         if (!this.currency) return null;
-        return session.currencies[this.currencyId].digits;
+        return session.currencies[this.props.currencyId].digits;
     }
 
     get formattedInputValue() {
@@ -77,6 +67,7 @@ MonetaryField.displayName = _lt("Monetary");
 
 MonetaryField.props = {
     ...standardFieldProps,
+    currencyId: { type: Number, optional: true },
     inputType: { type: String, optional: true },
     digits: { type: Array, optional: true },
     setAsInvalid: { type: Function, optional: true },
@@ -88,6 +79,9 @@ MonetaryField.defaultProps = {
 
 MonetaryField.extractProps = function (fieldName, record, attrs) {
     return {
+        currencyId: attrs.options.currency_field
+            ? record.data[attrs.options.currency_field][0]
+            : (record.data.currency_id && record.data.currency_id[0]) || undefined,
         inputType: attrs.type,
         // Sadly, digits param was available as an option and an attr.
         // The option version could be removed with some xml refactoring.
