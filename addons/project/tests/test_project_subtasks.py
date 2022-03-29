@@ -7,6 +7,16 @@ from odoo.tests.common import Form
 
 @tagged('-at_install', 'post_install')
 class TestProjectSubtasks(TestProjectCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        # Enable the company setting
+        cls.env['res.config.settings'].create({
+            'group_subtask_project': True
+        }).execute()
+
     def test_task_display_project_with_default_form(self):
         """
             Create a task in the default task form should take the project set in the form or the default project in the context
@@ -194,11 +204,6 @@ class TestProjectSubtasks(TestProjectCommon):
         self.assertEqual(self.task_1.child_ids.stage_id.name, "New", "The stage of the child task should be the default one of the display project id, once set.")
 
     def test_copy_project_with_subtasks(self):
-        # Enable the company setting
-        self.env['res.config.settings'].create({
-            'group_subtask_project': True
-        }).execute()
-
         self.env['project.task'].with_context({'mail_create_nolog': True}).create({
             'name': 'Parent Task',
             'project_id': self.project_goats.id,
@@ -224,3 +229,24 @@ class TestProjectSubtasks(TestProjectCommon):
             'that is only the active subtasks are duplicated.')
         self.assertEqual(self.project_goats.task_count, task_count_in_project_goats, 'The number of tasks should be the same before and after the duplication of this project.')
         self.assertEqual(self.project_pigs.task_count, task_count_in_project_pigs + 1, 'The project pigs should an additional task after the duplication of the project goats.')
+
+    def test_subtask_creation_with_form(self):
+        """
+            1) test the creation of sub-tasks through the notebook
+            2) set a parent task on an existing task
+            3) test the creation of sub-sub-tasks
+            4) check the correct nb of sub-tasks is displayed in the 'sub-tasks' stat button and on the parent task kanban card
+            5) sub-tasks should be copied when the parent task is duplicated
+        """
+        with Form(self.task_1.with_context({'tracking_disable': True})) as task_form:
+            with task_form.child_ids.new() as subtask_form:
+                subtask_form.name = 'Test Subtask 1'
+                subtask_form.display_project_id = self.env['project.project']
+        child_subtask = self.task_1.child_ids[0]
+        with Form(child_subtask.with_context(tracking_disable=True)) as subtask_form:
+            with subtask_form.child_ids.new() as subsubtask_form:
+                subsubtask_form.name = 'Test Subtask/Subtask'
+        task = task_form.save()
+        self.assertEqual(task.subtask_count, 2, "Parent task should have 2 children")
+        task_2 = task.copy()
+        self.assertEqual(task_2.subtask_count, 2, "If the parent task is duplicated then the sub task should be copied")
