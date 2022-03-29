@@ -394,7 +394,7 @@ class TestChannelInternals(MailCommon):
 
         # Unsubscribe archived user from the private channels, but not from public channels and not from chat
         self.user_employee.active = False
-        (test_chat | self.test_channel).invalidate_cache(fnames=['channel_partner_ids'])
+        (test_chat | self.test_channel).invalidate_recordset(['channel_partner_ids'])
         self.assertEqual(test_channel_private.channel_partner_ids, test_partner)
         self.assertEqual(test_channel_group.channel_partner_ids, test_partner)
         self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)

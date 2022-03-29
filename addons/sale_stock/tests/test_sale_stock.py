@@ -100,7 +100,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         # and the fact this method is called multiple times in the same transaction test case.
         # Here, we update `qty_delivered` on the origin record, but the `new` records which are in cache with this order line
         # as origin are not updated, nor the fields that depends on it.
-        self.so.flush()
+        self.env.flush_all()
         for field in self.env['sale.order.line']._fields.values():
             for res_id in list(self.env.cache._data[field]):
                 if not res_id:
@@ -680,7 +680,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         so.warehouse_id = warehouse2
         # invalidate product cache to ensure qty_available is recomputed
         # bc warehouse isn't in the depends_context of qty_available
-        line.product_id.invalidate_cache()
+        self.env.invalidate_all()
         self.assertEqual(line.virtual_available_at_date, 5)
         self.assertEqual(line.free_qty_today, 5)
         self.assertEqual(line.qty_available_today, 5)

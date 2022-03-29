@@ -53,7 +53,7 @@ class TestMassMailing(TestMassMailCommon):
             msg_id='<123456.%s.%d@test.example.com>' % (customers[2]._name, customers[2].id),
             target_model=customers[2]._name, target_field=customers[2]._rec_name,
         )
-        mailing.flush()
+        mailing.flush_recordset()
 
         # check traces status
         traces = self.env['mailing.trace'].search([('model', '=', customers._name), ('res_id', 'in', customers.ids)])
@@ -108,13 +108,13 @@ class TestMassMailing(TestMassMailCommon):
 
         # simulate a click
         self.gateway_mail_click(mailing, recipients[0], 'https://www.odoo.be')
-        mailing.invalidate_cache()
+        mailing.invalidate_recordset()
         self.assertMailingStatistics(mailing, expected=5, delivered=5, sent=5, opened=1, clicked=1)
 
         # simulate a bounce
         self.assertEqual(recipients[1].message_bounce, 0)
         self.gateway_mail_bounce(mailing, recipients[1])
-        mailing.invalidate_cache()
+        mailing.invalidate_recordset()
         self.assertMailingStatistics(mailing, expected=5, delivered=4, sent=5, opened=1, clicked=1, bounced=1)
         self.assertEqual(recipients[1].message_bounce, 1)
 
@@ -232,7 +232,7 @@ class TestMassMailing(TestMassMailCommon):
         self.env['mail.blacklist'].action_remove_with_reason(
             recipients[2].email_normalized, "human error"
         )
-        self.env['mail.blacklist'].flush(['active'])
+        self.env['mail.blacklist'].flush_model(['active'])
 
         mailing.write({'mailing_domain': [('id', 'in', recipients.ids)]})
         with self.mock_mail_gateway(mail_unlink_sent=False):

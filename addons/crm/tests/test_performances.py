@@ -35,7 +35,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
             count=200
         )
         # commit probability and related fields
-        leads.flush()
+        leads.flush_recordset()
         self.assertInitialData()
 
         # assign probability to leads (bypass auto probability as purpose is not to test pls)
@@ -45,7 +45,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
             for lead in sliced_leads:
                 lead.probability = (idx + 1) * 10 * ((int(lead.priority) + 1) / 2)
         # commit probability and related fields
-        leads.flush()
+        leads.flush_recordset()
 
         with self.with_user('user_sales_manager'):
             self.env['res.users'].has_group('base.group_user')  # warmup the cache to avoid inconsistency between community an enterprise
@@ -61,7 +61,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         self.assertEqual(len(leads_st1) + len(leads_stc), len(leads))  # Make sure all lead are assigned
 
         # salespersons assign
-        self.members.invalidate_cache(fnames=['lead_month_count'])
+        self.members.invalidate_model(['lead_month_count'])
         self.assertMemberAssign(self.sales_team_1_m1, 11)  # 45 max on 2 days (3) + compensation (8.4)
         self.assertMemberAssign(self.sales_team_1_m2, 4)  # 15 max on 2 days (1) + compensation (2.8)
         self.assertMemberAssign(self.sales_team_1_m3, 4)  # 15 max on 2 days (1) + compensation (2.8)
@@ -80,7 +80,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
             count=100
         )
         # commit probability and related fields
-        leads.flush()
+        leads.flush_recordset()
         self.assertInitialData()
 
         # assign probability to leads (bypass auto probability as purpose is not to test pls)
@@ -90,7 +90,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
             for lead in sliced_leads:
                 lead.probability = (idx + 1) * 10 * ((int(lead.priority) + 1) / 2)
         # commit probability and related fields
-        leads.flush()
+        leads.flush_recordset()
 
         with self.with_user('user_sales_manager'):
             with self.assertQueryCount(user_sales_manager=584):
@@ -103,7 +103,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         self.assertEqual(len(leads_st1) + len(leads_stc), 100)
 
         # salespersons assign
-        self.members.invalidate_cache(fnames=['lead_month_count'])
+        self.members.invalidate_model(['lead_month_count'])
         self.assertMemberAssign(self.sales_team_1_m1, 11)  # 45 max on 2 days (3) + compensation (8.4)
         self.assertMemberAssign(self.sales_team_1_m2, 4)  # 15 max on 2 days (1) + compensation (2.8)
         self.assertMemberAssign(self.sales_team_1_m3, 4)  # 15 max on 2 days (1) + compensation (2.8)
@@ -127,7 +127,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
             count=_lead_count,
             email_dup_count=_email_dup_count)
         # commit probability and related fields
-        leads.flush()
+        leads.flush_recordset()
         self.assertInitialData()
 
         # assign for one month, aka a lot
@@ -172,7 +172,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
             for lead in sliced_leads:
                 lead.probability = (idx + 1) * 10 * ((int(lead.priority) + 1) / 2)
         # commit probability and related fields
-        leads.flush()
+        leads.flush_recordset()
 
         with self.with_user('user_sales_manager'):
             with self.assertQueryCount(user_sales_manager=6487):
@@ -184,7 +184,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         self.assertEqual(leads.user_id, sales_teams.member_ids)
 
         # salespersons assign
-        self.members.invalidate_cache(fnames=['lead_month_count'])
+        self.members.invalidate_model(['lead_month_count'])
         self.assertMemberAssign(self.sales_team_1_m1, 45)  # 45 max on one month
         self.assertMemberAssign(self.sales_team_1_m2, 15)  # 15 max on one month
         self.assertMemberAssign(self.sales_team_1_m3, 15)  # 15 max on one month

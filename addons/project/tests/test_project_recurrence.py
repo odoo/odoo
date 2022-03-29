@@ -232,7 +232,7 @@ class TestProjectrecurrence(TransactionCase):
         self.set_task_create_date(task_a.id, datetime(2020, 1, 1))
         self.set_task_create_date(task_b.id, datetime(2020, 1, 6))
         self.set_task_create_date(task_c.id, datetime(2020, 1, 13))
-        (task_a+task_b+task_c).invalidate_cache()
+        (task_a+task_b+task_c).invalidate_model()
 
         task_c.write({
             'name': 'my super updated task',

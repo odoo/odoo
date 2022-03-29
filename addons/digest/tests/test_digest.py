@@ -74,7 +74,7 @@ class TestDigest(mail_test.MailCommon):
                     # range limit and dropping out of the digest's selection thing
                     create_date=create_date,
                 )
-        messages.flush()
+        cls.env.flush_all()
 
     @users('admin')
     def test_digest_numbers(self):
@@ -83,7 +83,7 @@ class TestDigest(mail_test.MailCommon):
 
         # digest creates its mails in auto_delete mode so we need to capture
         # the formatted body during the sending process
-        digest.flush()
+        digest.flush_recordset()
         with self.mock_mail_gateway():
             digest.action_send()
 
@@ -122,21 +122,21 @@ class TestDigest(mail_test.MailCommon):
         self.assertEqual(digest.periodicity, 'daily')
 
         # no logs for employee -> should tone down periodicity
-        digest.flush()
+        digest.flush_recordset()
         with self.mock_mail_gateway():
             digest.action_send()
 
         self.assertEqual(digest.periodicity, 'weekly')
 
         # no logs for employee -> should tone down periodicity
-        digest.flush()
+        digest.flush_recordset()
         with self.mock_mail_gateway():
             digest.action_send()
 
         self.assertEqual(digest.periodicity, 'monthly')
 
         # no logs for employee -> should tone down periodicity
-        digest.flush()
+        digest.flush_recordset()
         with self.mock_mail_gateway():
             digest.action_send()
 
@@ -181,7 +181,7 @@ class TestDigest(mail_test.MailCommon):
 
         # logs for employee -> should not tone down
         logs = self.env['res.users.log'].with_user(SUPERUSER_ID).create({'create_uid': self.user_employee.id})
-        digest.flush()
+        digest.flush_recordset()
         with self.mock_mail_gateway():
             digest.action_send()
 
@@ -192,19 +192,19 @@ class TestDigest(mail_test.MailCommon):
         })
 
         # logs for employee are more than 3 days old -> should tone down
-        digest.flush()
+        digest.flush_recordset()
         with self.mock_mail_gateway():
             digest.action_send()
         self.assertEqual(digest.periodicity, 'weekly')
 
         # logs for employee are more than 2 weeks old -> should tone down
-        digest.flush()
+        digest.flush_recordset()
         with self.mock_mail_gateway():
             digest.action_send()
         self.assertEqual(digest.periodicity, 'monthly')
 
         # logs for employee are less than 1 month old -> should not tone down
-        digest.flush()
+        digest.flush_recordset()
         with self.mock_mail_gateway():
             digest.action_send()
         self.assertEqual(digest.periodicity, 'monthly')
@@ -253,7 +253,7 @@ class TestUnsubscribe(HttpCaseWithUserDemo):
         self.authenticate(None, None)
         response = self._url_unsubscribe(token=self.user_demo_unsubscribe_token, user_id=self.user_demo.id)
         self.assertEqual(response.status_code, 200)
-        self.test_digest.invalidate_cache()
+        self.test_digest.invalidate_recordset()
         self.assertNotIn(self.user_demo, self.test_digest.user_ids)
 
     def test_unsubscribe_public(self):

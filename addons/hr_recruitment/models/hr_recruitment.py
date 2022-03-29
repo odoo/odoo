@@ -220,7 +220,7 @@ class Applicant(models.Model):
 
     @api.depends('email_from', 'partner_phone', 'partner_mobile')
     def _compute_application_count(self):
-        self.flush(fnames=['email_from'])
+        self.flush_model(['email_from'])
         applicants = self.env['hr.applicant']
         for applicant in self:
             if applicant.email_from or applicant.partner_phone or applicant.partner_mobile:

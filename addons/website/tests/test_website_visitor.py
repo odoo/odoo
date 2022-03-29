@@ -271,14 +271,14 @@ class WebsiteVisitorTests(MockVisitor, HttpCaseWithUserDemo):
 
         # visit a page
         self.url_open(self.tracked_page.url)
-        visitor_portal.invalidate_cache(fnames=['website_track_ids'])
+        visitor_portal.invalidate_model(['website_track_ids'])
         # tracks are created
         self.assertEqual(len(visitor_portal.website_track_ids), 5, "There should be 5 tracked page for the portal user")
 
         # simulate the portal user comes back 8hours later
         visitor_portal.write({'last_connection_datetime': visitor_portal.last_connection_datetime - timedelta(hours=8)})
         self.url_open(self.tracked_page.url)
-        visitor_portal.invalidate_cache(fnames=['visit_count'])
+        visitor_portal.invalidate_model(['visit_count'])
         # check number of visits
         self.assertEqual(visitor_portal.visit_count, 2, "There should be 2 visits for the portal user")
 

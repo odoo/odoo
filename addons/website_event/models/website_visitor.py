@@ -38,7 +38,6 @@ class WebsiteVisitor(models.Model):
     @api.depends('event_registration_ids.email', 'event_registration_ids.mobile', 'event_registration_ids.phone')
     def _compute_email_phone(self):
         super(WebsiteVisitor, self)._compute_email_phone()
-        self.flush()
 
         for visitor in self.filtered(lambda visitor: not visitor.email or not visitor.mobile):
             linked_registrations = visitor.event_registration_ids.sorted(lambda reg: (reg.create_date, reg.id), reverse=False)

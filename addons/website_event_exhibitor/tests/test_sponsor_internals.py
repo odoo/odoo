@@ -17,48 +17,48 @@ class TestSponsorData(TestEventExhibitorCommon):
         with freeze_time(self.reference_now):
             event = self.env['event.event'].browse(self.event_0.id)
             sponsor = self.env['event.sponsor'].browse(self.sponsor_0.id)
-            event.invalidate_cache(fnames=['is_ongoing'])
+            event.invalidate_model(['is_ongoing'])
             self.assertTrue(sponsor.is_in_opening_hours)
             self.assertTrue(event.is_ongoing)
 
         # After hour_from (9 > 8)
         with freeze_time(datetime(2020, 7, 6, 7, 0, 0)):
-            event.invalidate_cache(fnames=['is_ongoing'])
-            sponsor.invalidate_cache(fnames=['is_in_opening_hours'])
+            event.invalidate_model(['is_ongoing'])
+            sponsor.invalidate_model(['is_in_opening_hours'])
             self.assertTrue(sponsor.is_in_opening_hours)
             self.assertTrue(event.is_ongoing)
 
         # At hour_from (8 = 8)
         with freeze_time(datetime(2020, 7, 6, 6, 0, 0)):
-            event.invalidate_cache(fnames=['is_ongoing'])
-            sponsor.invalidate_cache(fnames=['is_in_opening_hours'])
+            event.invalidate_model(['is_ongoing'])
+            sponsor.invalidate_model(['is_in_opening_hours'])
             self.assertTrue(sponsor.is_in_opening_hours)
             self.assertTrue(event.is_ongoing)
 
         # Started but not opened (7h59 < 8)
         with freeze_time(datetime(2020, 7, 6, 5, 59, 59)):
-            event.invalidate_cache(fnames=['is_ongoing'])
-            sponsor.invalidate_cache(fnames=['is_in_opening_hours'])
+            event.invalidate_model(['is_ongoing'])
+            sponsor.invalidate_model(['is_in_opening_hours'])
             self.assertFalse(sponsor.is_in_opening_hours)
             self.assertTrue(event.is_ongoing)
 
         # Evening event is not in opening hours (20 > 18)
         with freeze_time(datetime(2020, 7, 6, 18, 0, 0)):
-            event.invalidate_cache(fnames=['is_ongoing'])
-            sponsor.invalidate_cache(fnames=['is_in_opening_hours'])
+            event.invalidate_model(['is_ongoing'])
+            sponsor.invalidate_model(['is_in_opening_hours'])
             self.assertFalse(sponsor.is_in_opening_hours)
             self.assertTrue(event.is_ongoing)
 
         # First day begins later
         with freeze_time(datetime(2020, 7, 5, 6, 30, 0)):
-            event.invalidate_cache(fnames=['is_ongoing'])
-            sponsor.invalidate_cache(fnames=['is_in_opening_hours'])
+            event.invalidate_model(['is_ongoing'])
+            sponsor.invalidate_model(['is_in_opening_hours'])
             self.assertFalse(sponsor.is_in_opening_hours)
             self.assertFalse(event.is_ongoing)
 
         # End day finished sooner
         with freeze_time(datetime(2020, 7, 7, 13, 0, 1)):
-            event.invalidate_cache(fnames=['is_ongoing'])
-            sponsor.invalidate_cache(fnames=['is_in_opening_hours'])
+            event.invalidate_model(['is_ongoing'])
+            sponsor.invalidate_model(['is_in_opening_hours'])
             self.assertFalse(sponsor.is_in_opening_hours)
             self.assertFalse(event.is_ongoing)

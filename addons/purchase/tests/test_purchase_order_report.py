@@ -44,7 +44,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         f.purchase_id = po
         invoice = f.save()
         invoice.action_post()
-        po.flush()
+        po.flush_model()
 
         res_product1 = self.env['purchase.report'].search([
             ('order_id', '=', po.id),
@@ -80,7 +80,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
 
         po.button_confirm()
 
-        po.flush()
+        po.flush_model()
         report = self.env['purchase.report'].read_group(
             [('order_id', '=', po.id)],
             ['order_id', 'delay', 'delay_pass'],

@@ -111,7 +111,7 @@ class TestWebsitePriceList(TransactionCase):
         return self.get_pl(self.args.get('show'), self.args.get('current_pl'), self.args.get('country'))
 
     def get_pl(self, show_visible, current_pl_id, country_code):
-        self.website.invalidate_cache(['pricelist_ids'], [self.website.id])
+        self.website.invalidate_recordset(['pricelist_ids'])
         pl_ids = self.website._get_pl_partner_order(
             country_code,
             show_visible,
@@ -463,7 +463,7 @@ class TestWebsitePriceListHttp(HttpCaseWithUserPortal):
             reading that `property_product_pricelist`.
         '''
         test_company = self.env['res.company'].create({'name': 'Test Company'})
-        test_company.flush()
+        test_company.flush_recordset()
         self.env['product.pricelist'].create({
             'name': 'Backend Pricelist For "Test Company"',
             'website_id': False,

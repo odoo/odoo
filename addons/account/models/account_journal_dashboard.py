@@ -286,7 +286,7 @@ class account_journal(models.Model):
         #TODO need to check if all invoices are in the same currency than the journal!!!!
         elif self.type in ['sale', 'purchase']:
             title = _('Bills to pay') if self.type == 'purchase' else _('Invoices owed to you')
-            self.env['account.move'].flush(['amount_residual', 'currency_id', 'move_type', 'invoice_date', 'company_id', 'journal_id', 'date', 'state', 'payment_state'])
+            self.env['account.move'].flush_model()
 
             (query, query_args) = self._get_open_bills_to_pay_query()
             self.env.cr.execute(query, query_args)

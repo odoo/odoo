@@ -333,7 +333,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         # 1. Compute `res.partner.on_time_rate` regular non-stored comptued field
         partner_on_time_rate = po.partner_id.on_time_rate
         # 2. Invalidate the cache for that record and field, so it's not reused in the next step.
-        po.partner_id.invalidate_cache(fnames=["on_time_rate"], ids=po.partner_id.ids)
+        po.partner_id.invalidate_recordset(["on_time_rate"])
         # 3. Compute the related field `purchase.order.on_time_rate`
         po_on_time_rate = po.on_time_rate
         # 4. Check both are equals.

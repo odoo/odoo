@@ -47,7 +47,7 @@ class TestExpensesAccessRights(TestExpenseCommon):
                 }),
             ],
         })
-        expense_sheet.flush()
+        self.env.flush_all()
 
         self.assertRecordValues(expense_sheet, [{'state': 'draft'}])
 

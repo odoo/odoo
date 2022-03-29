@@ -96,7 +96,7 @@ class TestMenu(common.TransactionCase):
 
         # loading translation add missing specific translation
         Translation._load_module_terms(['website'], ['fr_FR'])
-        Menu.invalidate_cache(['name'])
+        Menu.invalidate_model(['name'])
         self.assertEqual(specific1.name, 'Menu in french',
                          'Load translation without overwriting keep existing translation')
         self.assertEqual(specific2.name, 'Menu en français',
@@ -104,7 +104,7 @@ class TestMenu(common.TransactionCase):
 
         # loading translation with overwrite sync all translations from menu template
         Translation._load_module_terms(['website'], ['fr_FR'], overwrite=True)
-        Menu.invalidate_cache(['name'])
+        Menu.invalidate_model(['name'])
         self.assertEqual(specific1.name, 'Menu en français',
                          'Load translation with overwriting update existing menu from template')
 

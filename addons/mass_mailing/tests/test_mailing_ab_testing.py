@@ -26,7 +26,8 @@ class TestMailingABTesting(MassMailCommon):
         })
         self.ab_testing_campaign = self.ab_testing_mailing_1.campaign_id
         self.ab_testing_mailing_ids = self.ab_testing_mailing_1 + self.ab_testing_mailing_2
-        self.ab_testing_mailing_ids.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     @users('user_marketing')
@@ -46,14 +47,14 @@ class TestMailingABTesting(MassMailCommon):
 
         self.ab_testing_mailing_1.mailing_trace_ids[:10].set_opened()
         self.ab_testing_mailing_2.mailing_trace_ids[:15].set_opened()
-        self.ab_testing_mailing_ids.invalidate_cache()
+        self.ab_testing_mailing_ids.invalidate_recordset()
 
         self.assertEqual(self.ab_testing_mailing_1.opened_ratio, 66)
         self.assertEqual(self.ab_testing_mailing_2.opened_ratio, 50)
 
         with self.mock_mail_gateway():
             self.ab_testing_mailing_2.action_send_winner_mailing()
-        self.ab_testing_mailing_ids.invalidate_cache()
+        self.ab_testing_mailing_ids.invalidate_recordset()
         winner_mailing = self.ab_testing_campaign.mailing_mail_ids.filtered(lambda mailing: mailing.ab_testing_pc == 100)
         self.assertEqual(winner_mailing.subject, 'A/B Testing V1')
 
@@ -78,14 +79,14 @@ class TestMailingABTesting(MassMailCommon):
 
         self.ab_testing_mailing_1.mailing_trace_ids[:10].set_opened()
         self.ab_testing_mailing_2.mailing_trace_ids[:15].set_opened()
-        self.ab_testing_mailing_ids.invalidate_cache()
+        self.ab_testing_mailing_ids.invalidate_recordset()
 
         self.assertEqual(self.ab_testing_mailing_1.opened_ratio, 66)
         self.assertEqual(self.ab_testing_mailing_2.opened_ratio, 50)
 
         with self.mock_mail_gateway():
             self.env.ref('mass_mailing.ir_cron_mass_mailing_ab_testing').sudo().method_direct_trigger()
-        self.ab_testing_mailing_ids.invalidate_cache()
+        self.ab_testing_mailing_ids.invalidate_recordset()
         winner_mailing = self.ab_testing_campaign.mailing_mail_ids.filtered(lambda mailing: mailing.ab_testing_pc == 100)
         self.assertEqual(winner_mailing.subject, 'A/B Testing V1')
 
@@ -99,7 +100,7 @@ class TestMailingABTesting(MassMailCommon):
             'ab_testing_winner_selection': 'manual',
             'ab_testing_schedule_datetime': schedule_datetime,
         })
-        ab_mailing.invalidate_cache()
+        ab_mailing.invalidate_recordset()
 
         # Check if the campaign is correclty created and the values set on the mailing are still the same
         self.assertTrue(ab_mailing.campaign_id, "A campaign id is present for the A/B test mailing")
@@ -127,13 +128,13 @@ class TestMailingABTesting(MassMailCommon):
 
         self.ab_testing_mailing_1.mailing_trace_ids[:10].set_opened()
         self.ab_testing_mailing_2.mailing_trace_ids[:15].set_opened()
-        self.ab_testing_mailing_ids.invalidate_cache()
+        self.ab_testing_mailing_ids.invalidate_recordset()
 
         self.assertEqual(self.ab_testing_mailing_1.opened_ratio, 66)
         self.assertEqual(self.ab_testing_mailing_2.opened_ratio, 50)
 
         with self.mock_mail_gateway():
             self.ab_testing_mailing_2.action_send_winner_mailing()
-        self.ab_testing_mailing_ids.invalidate_cache()
+        self.ab_testing_mailing_ids.invalidate_recordset()
         winner_mailing = self.ab_testing_campaign.mailing_mail_ids.filtered(lambda mailing: mailing.ab_testing_pc == 100)
         self.assertEqual(winner_mailing.subject, 'A/B Testing V2')

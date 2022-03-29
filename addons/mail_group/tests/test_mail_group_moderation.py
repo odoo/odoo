@@ -35,7 +35,6 @@ class TestMailGroupModeration(TestMailListCommon):
                 'email': 'banned_member@test.com',
                 'status': 'ban',
             })
-            moderation.flush()
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail_group.models.mail_group_message')
     @users('employee')

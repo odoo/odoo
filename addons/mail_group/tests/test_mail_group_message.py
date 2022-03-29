@@ -59,12 +59,12 @@ class TestMailGroupMessage(TestMailListCommon):
         with self.assertRaises(AccessError, msg='Non moderator should have access to only accepted message'):
             self.test_group_msg_1_pending.with_user(self.user_portal).check_access_rule('read')
 
-        self.test_group_msg_1_pending.invalidate_cache()
+        self.test_group_msg_1_pending.invalidate_recordset()
         self.assertEqual(self.test_group_msg_1_pending.with_user(self.user_employee).moderation_status, 'pending_moderation',
                          msg='Moderators should have access to pending message')
 
         # Message accepted
-        self.test_group_msg_2_accepted.invalidate_cache()
+        self.test_group_msg_2_accepted.invalidate_recordset()
         self.assertEqual(self.test_group_msg_2_accepted.with_user(self.user_portal).moderation_status, 'accepted',
                          msg='Portal should have access to accepted messages')
 
@@ -83,7 +83,7 @@ class TestMailGroupMessage(TestMailListCommon):
         with self.assertRaises(AccessError, msg='Non moderator should have access to only accepted message'):
             self.test_group_msg_1_pending.with_user(self.user_employee_2).check_access_rule('read')
 
-        self.test_group_msg_1_pending.invalidate_cache()
+        self.test_group_msg_1_pending.invalidate_recordset()
         self.assertEqual(self.test_group_msg_1_pending.with_user(self.user_employee).moderation_status, 'pending_moderation',
                          msg='Moderators should have access to pending message')
 
@@ -95,7 +95,7 @@ class TestMailGroupMessage(TestMailListCommon):
         self.assertEqual(self.test_group_msg_2_accepted.with_user(self.user_portal).moderation_status, 'accepted',
                          msg='Portal should have access to accepted messages')
 
-        self.test_group_msg_3_rejected.invalidate_cache()
+        self.test_group_msg_3_rejected.invalidate_recordset()
         self.assertEqual(self.test_group_msg_1_pending.with_user(self.user_admin).moderation_status, 'pending_moderation',
                          msg='Mail Group Administrator should have access to all messages')
 

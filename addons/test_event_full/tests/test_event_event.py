@@ -63,14 +63,14 @@ class TestEventEvent(TestEventFullCommon):
 
         # check time dependent computation: registrations started
         with freeze_time(self.reference_now + timedelta(hours=1)):
-            event.invalidate_cache(fnames=['is_finished', 'is_ongoing', 'event_registrations_started'])
+            event.invalidate_model(['is_finished', 'is_ongoing', 'event_registrations_started'])
             self.assertFalse(event.is_finished)
             self.assertFalse(event.is_ongoing)
             self.assertTrue(event.event_registrations_started)
 
         # check time dependent computation: during event
         with freeze_time(self.reference_now + timedelta(days=1, hours=1)):
-            event.invalidate_cache(fnames=['is_finished', 'is_ongoing', 'event_registrations_started'])
+            event.invalidate_model(['is_finished', 'is_ongoing', 'event_registrations_started'])
             self.assertFalse(event.is_finished)
             self.assertTrue(event.is_ongoing)
             self.assertTrue(event.event_registrations_started)

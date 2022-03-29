@@ -57,7 +57,7 @@ class One2manyCase(TransactionCase):
             return
         # Invalidate the cache and check again; this crashes if the value
         # of self.multi.lines in cache contains new records
-        self.multi.invalidate_cache()
+        self.env.invalidate_all()
         self.assertEqual(len(self.multi.lines), 9)
         self.assertIn("hello", self.multi.lines.mapped('name'))
 
@@ -180,7 +180,7 @@ class One2manyCase(TransactionCase):
             'res_model': record0._name,
             'res_id': record0.id,
         })
-        attachment.flush()
+        self.env.flush_all()
         with self.assertQueryCount(0):
             self.assertEqual(attachment.name, record0.display_name,
                              "field should be computed")
@@ -198,7 +198,7 @@ class One2manyCase(TransactionCase):
 
         # writing on res_id must recompute name and invalidate attachment_ids
         attachment.res_id = record1.id
-        attachment.flush()
+        self.env.flush_all()
         with self.assertQueryCount(0):
             self.assertEqual(attachment.name, record1.display_name,
                              "field should be recomputed")
@@ -247,7 +247,7 @@ class One2manyCase(TransactionCase):
 
         # delete parent, and check that recomputation ends
         parent.unlink()
-        parent.flush()
+        self.env.flush_all()
 
     def test_compute_stored_many2one_one2many(self):
         container = self.env['test_new_api.compute.container'].create({'name': 'Foo'})

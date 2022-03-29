@@ -148,7 +148,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             'res_model': 'mail.compose.message',
             'res_id': 0,
         })
-        attachment.flush()
+        attachment.flush_recordset()
         message = self.env['mail.message'].create({
             'attachment_ids': [(6, 0, attachment.ids)],
         })
@@ -218,7 +218,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             },
         )
         self.assertEqual(res.status_code, 200)
-        self.out_invoice.invalidate_cache(fnames=['message_ids'], ids=self.out_invoice.ids)
+        self.out_invoice.invalidate_recordset(['message_ids'])
         self.assertEqual(len(self.out_invoice.message_ids), 1)
         self.assertEqual(self.out_invoice.message_ids.body, "<p>test message 1</p>")
         self.assertFalse(self.out_invoice.message_ids.attachment_ids)
@@ -240,7 +240,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             },
         )
         self.assertEqual(res.status_code, 200)
-        self.out_invoice.invalidate_cache(fnames=['message_ids'], ids=self.out_invoice.ids)
+        self.out_invoice.invalidate_recordset(['message_ids'])
         self.assertEqual(len(self.out_invoice.message_ids), 2)
         self.assertEqual(self.out_invoice.message_ids[0].body, "<p>test message 2</p>")
         self.assertFalse(self.out_invoice.message_ids.attachment_ids)
@@ -276,7 +276,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             },
         )
         self.assertEqual(res.status_code, 200)
-        self.out_invoice.invalidate_cache(fnames=['message_ids'], ids=self.out_invoice.ids)
+        self.out_invoice.invalidate_recordset(['message_ids'])
         self.assertEqual(len(self.out_invoice.message_ids), 3)
         self.assertEqual(self.out_invoice.message_ids[0].body, "<p>test message 3</p>")
         self.assertEqual(len(self.out_invoice.message_ids[0].attachment_ids), 1)

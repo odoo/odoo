@@ -110,7 +110,7 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
             self._answer_question(q04, q04.suggested_answer_ids.ids[0], answer_token, csrf_token)
             self._answer_question(q05, [q05.suggested_answer_ids.ids[0], q05.suggested_answer_ids.ids[1], q05.suggested_answer_ids.ids[3]], answer_token, csrf_token)
 
-        user_inputs.invalidate_cache()
+        user_inputs.invalidate_recordset()
         # Check that certification is successfully passed
         self.assertEqual(user_inputs.scoring_percentage, 87.5)
         self.assertTrue(user_inputs.scoring_success)

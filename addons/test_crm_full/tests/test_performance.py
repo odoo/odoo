@@ -27,7 +27,7 @@ class CrmPerformanceCase(TestCrmFullCommon):
     def _flush_tracking(self):
         """ Force the creation of tracking values notably, and ensure tests are
         reproducible. """
-        self.env['base'].flush()
+        self.env.flush_all()
         self.cr.flush()
 
 

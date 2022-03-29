@@ -424,8 +424,8 @@ class PaymentAcquirer(models.Model):
 
     def _neutralize(self):
         super()._neutralize()
-        self.flush()
-        self.invalidate_cache()
+        self.flush_model()
+        self.invalidate_model()
         self.env.cr.execute("""
             UPDATE payment_acquirer SET state = 'disabled'
             WHERE state NOT IN ('test', 'disabled')
@@ -436,8 +436,8 @@ class PaymentAcquirer(models.Model):
         :param str provider: name of provider
         :param list fields: list of fields to nullify
         """
-        self.flush()
-        self.invalidate_cache()
+        self.flush_model()
+        self.invalidate_model()
         query = sql.SQL("""
             UPDATE payment_acquirer
             SET ({fields}) = ROW({vals})

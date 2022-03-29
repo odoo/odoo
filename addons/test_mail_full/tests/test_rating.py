@@ -114,7 +114,7 @@ class TestRatingFlow(TestMailFullCommon, TestMailFullRecipients):
         access_2 = record_rating._rating_get_access_token()
         last_rating = record_rating.rating_apply(5, token=access_2, feedback="This is the best record ever ! I wish I read the documentation before complaining !")
         last_rating.write_date = datetime(2022, 3, 1, 14, 00)
-        record_rating.rating_ids.flush(['write_date'])
+        record_rating.rating_ids.flush_model(['write_date'])
 
         self.assertEqual(record_rating.rating_last_value, 5, "The last rating is kept.")
         self.assertEqual(record_rating.rating_avg, 3, "The average should be equal to 3")
@@ -143,7 +143,7 @@ class TestRatingFlow(TestMailFullCommon, TestMailFullRecipients):
 
             new_ratings = record_ratings.rating_ids.filtered(lambda r: r.rating == 1)
             new_ratings.write_date = datetime(2022, 2, 1, 14, 00)
-            new_ratings.flush(['write_date'])
+            new_ratings.flush_model(['write_date'])
             with self.assertQueryCount(__system__=2):
                 record_ratings._compute_rating_last_value()
                 vals = [val == 5 for val in record_ratings.mapped('rating_last_value')]

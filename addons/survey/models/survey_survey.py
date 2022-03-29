@@ -770,7 +770,7 @@ class Survey(models.Model):
 
         if self.env.user.has_group('survey.group_survey_user'):
             self.sudo().write({'session_state': 'in_progress'})
-            self.sudo().flush(['session_state'])
+            self.sudo().flush_recordset(['session_state'])
 
     def _get_session_next_question(self, go_back):
         self.ensure_one()

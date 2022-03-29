@@ -67,7 +67,7 @@ class IrModel(models.Model):
             if 'is_mail_blacklist' in vals and any(rec.is_mail_blacklist > vals['is_mail_blacklist'] for rec in self):
                 raise UserError(_('Field "Mail Blacklist" cannot be changed to "False".'))
             res = super(IrModel, self).write(vals)
-            self.flush()
+            self.env.flush_all()
             # setup models; this reloads custom models in registry
             self.pool.setup_models(self._cr)
             # update database schema of models

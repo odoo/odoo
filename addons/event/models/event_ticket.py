@@ -110,7 +110,7 @@ class EventTicket(models.Model):
                         WHERE event_ticket_id IN %s AND state IN ('draft', 'open', 'done') AND active = true
                         GROUP BY event_ticket_id, state
                     """
-            self.env['event.registration'].flush(['event_id', 'event_ticket_id', 'state', 'active'])
+            self.env['event.registration'].flush_model(['event_id', 'event_ticket_id', 'state', 'active'])
             self.env.cr.execute(query, (tuple(self.ids),))
             for event_ticket_id, state, num in self.env.cr.fetchall():
                 results.setdefault(event_ticket_id, {})[state_field[state]] = num

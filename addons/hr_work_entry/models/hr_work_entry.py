@@ -142,7 +142,7 @@ class HrWorkEntry(models.Model):
         # use '()' to exlude the lower and upper bounds of the range.
         # Filter on date_start and date_stop (both indexed) in the EXISTS clause to
         # limit the resulting set size and fasten the query.
-        self.flush(['date_start', 'date_stop', 'employee_id', 'active'])
+        self.flush_model(['date_start', 'date_stop', 'employee_id', 'active'])
         query = """
             SELECT b1.id,
                    b2.id

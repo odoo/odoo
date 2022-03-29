@@ -64,7 +64,7 @@ class EventRegistration(models.Model):
         res = super(EventRegistration, self).write(vals)
 
         if not event_lead_rule_skip and to_update:
-            to_update.flush()  # compute notably partner-based fields if necessary
+            self.env.flush_all()  # compute notably partner-based fields if necessary
             to_update.sudo()._update_leads(vals, lead_tracked_vals)
 
         # handle triggers based on state

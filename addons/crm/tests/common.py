@@ -164,7 +164,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'team_id': cls.sales_team_1.id,
         })
         cls.lead_team_1_lost.action_set_lost()
-        (cls.lead_team_1_won + cls.lead_team_1_lost).flush()
+        (cls.lead_team_1_won + cls.lead_team_1_lost).flush_recordset()
 
         # email / phone data
         cls.test_email_data = [
@@ -434,7 +434,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             opp_lost = self.env['crm.lead']
 
         new_leads = lead_email_from + lead_email_normalized + lead_partner + opp_lost
-        new_leads.flush()  # compute notably probability
+        new_leads.flush_recordset()  # compute notably probability
         return customer, new_leads
 
     @contextmanager
@@ -722,4 +722,4 @@ class TestLeadConvertMassCommon(TestLeadConvertCommon):
             'stage_id': cls.stage_team1_2.id,
             'active': False,
         })
-        (cls.lead_w_partner + cls.lead_w_partner_company + cls.lead_w_contact + cls.lead_w_email + cls.lead_w_email_lost).flush()
+        cls.env.flush_all()

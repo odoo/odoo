@@ -139,7 +139,7 @@ class TestReInvoice(TestSaleCommon):
                 .create({})\
                 ._create_payments()
 
-        invoices.flush()
+        invoices.flush_model()
         self.assertRecordValues(invoices.team_id, [{'invoiced': 500.0}])
 
     def test_sales_price(self):

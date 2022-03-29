@@ -218,8 +218,8 @@ class PaymentTransaction(models.Model):
         # `amount` and `fees` fields for the created transactions. This forces the ORM to read the
         # values from the DB where there were stored using `float_repr`, which produces a result
         # consistent with the format expected by providers.
-        # E.g., tx.create(amount=1111.11) ; tx.invalidate_cache() -> tx.amount == 1111.11
-        txs.invalidate_cache(['amount', 'fees'])
+        # E.g., tx.create(amount=1111.11) ; tx.invalidate_recordset() -> tx.amount == 1111.11
+        txs.invalidate_recordset(['amount', 'fees'])
 
         return txs
 

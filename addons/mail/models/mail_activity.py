@@ -359,7 +359,7 @@ class MailActivity(models.Model):
         # check read access rights before checking the actual rules on the given ids
         super(MailActivity, self.with_user(access_rights_uid or self._uid)).check_access_rights('read')
 
-        self.flush(['res_model', 'res_id'])
+        self.flush_model(['res_model', 'res_id'])
         activities_to_check = []
         for sub_ids in self._cr.split_for_in_conditions(ids):
             self._cr.execute("""

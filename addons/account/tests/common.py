@@ -421,7 +421,7 @@ class AccountTestInvoicingCommon(TransactionCase):
         :param invoice:             An invoice.
         :param expected_amounts:    A map <move_id> -> <amount>
         """
-        invoice.invalidate_cache(['invoice_outstanding_credits_debits_widget'])
+        invoice.invalidate_recordset(['invoice_outstanding_credits_debits_widget'])
         widget_vals = json.loads(invoice.invoice_outstanding_credits_debits_widget)
 
         if widget_vals:
@@ -435,7 +435,7 @@ class AccountTestInvoicingCommon(TransactionCase):
         :param invoice:             An invoice.
         :param expected_amounts:    A map <move_id> -> <amount>
         """
-        invoice.invalidate_cache(['invoice_payments_widget'])
+        invoice.invalidate_recordset(['invoice_payments_widget'])
         widget_vals = json.loads(invoice.invoice_payments_widget)
 
         if widget_vals:

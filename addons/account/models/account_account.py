@@ -113,8 +113,8 @@ class AccountAccount(models.Model):
 
     @api.constrains('allowed_journal_ids')
     def _constrains_allowed_journal_ids(self):
-        self.env['account.move.line'].flush(['account_id', 'journal_id'])
-        self.flush(['allowed_journal_ids'])
+        self.env['account.move.line'].flush_model(['account_id', 'journal_id'])
+        self.flush_recordset(['allowed_journal_ids'])
         self._cr.execute("""
             SELECT aml.id
             FROM account_move_line aml
@@ -134,14 +134,14 @@ class AccountAccount(models.Model):
         if not self:
             return
 
-        self.env['account.account'].flush(['currency_id'])
-        self.env['account.journal'].flush([
+        self.env['account.account'].flush_model(['currency_id'])
+        self.env['account.journal'].flush_model([
             'currency_id',
             'default_account_id',
             'suspense_account_id',
         ])
-        self.env['account.payment.method'].flush(['payment_type'])
-        self.env['account.payment.method.line'].flush(['payment_method_id', 'payment_account_id'])
+        self.env['account.payment.method'].flush_model(['payment_type'])
+        self.env['account.payment.method.line'].flush_model(['payment_method_id', 'payment_account_id'])
 
         self._cr.execute('''
             SELECT
@@ -204,7 +204,8 @@ class AccountAccount(models.Model):
         if not self:
             return
 
-        self.flush(['company_id'])
+        self.env['account.move.line'].flush_model(['account_id', 'company_id'])
+        self.flush_recordset(['company_id'])
         self._cr.execute('''
             SELECT line.id
             FROM account_move_line line
@@ -220,7 +221,9 @@ class AccountAccount(models.Model):
         if not self:
             return
 
-        self.flush(['user_type_id'])
+        self.flush_recordset(['user_type_id'])
+        self.env['account.account.type'].flush_model(['type'])
+        self.env['account.journal'].flush_model(['type', 'default_account_id'])
         self._cr.execute('''
             SELECT account.id
             FROM account_account account
@@ -241,8 +244,10 @@ class AccountAccount(models.Model):
         if not accounts:
             return
 
-        self.flush(['reconcile'])
-        self.env['account.payment.method.line'].flush(['journal_id', 'payment_account_id'])
+        self.flush_recordset(['reconcile'])
+        self.env['account.journal'].flush_model(['company_id', 'default_account_id'])
+        self.env['res.company'].flush_model(['account_journal_payment_credit_account_id', 'account_journal_payment_debit_account_id'])
+        self.env['account.payment.method.line'].flush_model(['journal_id', 'payment_account_id'])
 
         self._cr.execute('''
             SELECT journal.id
@@ -670,7 +675,7 @@ class AccountGroup(models.Model):
 
     @api.constrains('code_prefix_start', 'code_prefix_end')
     def _constraint_prefix_overlap(self):
-        self.env['account.group'].flush()
+        self.flush_model()
         query = """
             SELECT other.id FROM account_group this
             JOIN account_group other
@@ -726,8 +731,8 @@ class AccountGroup(models.Model):
         account_ids = account_ids.ids if account_ids else []
         if not company_ids and not account_ids:
             return
-        self.env['account.group'].flush(self.env['account.group']._fields)
-        self.env['account.account'].flush(self.env['account.account']._fields)
+        self.flush_model()
+        self.env['account.account'].flush_model()
 
         account_where_clause = ''
         where_params = [tuple(company_ids)]
@@ -753,7 +758,7 @@ class AccountGroup(models.Model):
             FROM candidates_account_groups rel
             WHERE account_account.id = rel.account_id
         ''', where_params)
-        self.env['account.account'].invalidate_cache(fnames=['group_id'])
+        self.env['account.account'].invalidate_model(['group_id'])
 
     def _adapt_parent_account_group(self):
         """Ensure consistency of the hierarchy of account groups.
@@ -764,7 +769,7 @@ class AccountGroup(models.Model):
         """
         if not self:
             return
-        self.env['account.group'].flush(self.env['account.group']._fields)
+        self.flush_model()
         query = """
             WITH relation AS (
        SELECT DISTINCT FIRST_VALUE(parent.id) OVER (PARTITION BY child.id ORDER BY child.id, char_length(parent.code_prefix_start) DESC) AS parent_id,
@@ -784,8 +789,8 @@ class AccountGroup(models.Model):
              WHERE child.id = relation.child_id;
         """
         self.env.cr.execute(query, {'company_ids': tuple(self.company_id.ids)})
-        self.env['account.group'].invalidate_cache(fnames=['parent_id'])
-        self.env['account.group'].search([('company_id', 'in', self.company_id.ids)])._parent_store_update()
+        self.invalidate_model(['parent_id'])
+        self.search([('company_id', 'in', self.company_id.ids)])._parent_store_update()
 
 
 class AccountRoot(models.Model):

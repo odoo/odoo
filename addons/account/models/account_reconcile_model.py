@@ -466,7 +466,7 @@ class AccountReconcileModel(models.Model):
         '''
         # This functions uses SQL to compute its results. We need to flush before doing anything more.
         for model_name in ('account.bank.statement', 'account.bank.statement.line', 'account.move', 'account.move.line', 'res.company', 'account.journal', 'account.account'):
-            self.env[model_name].flush(self.env[model_name]._fields)
+            self.env[model_name].flush_model()
 
         results = {line.id: {'aml_ids': []} for line in st_lines}
 

@@ -108,11 +108,11 @@ class Followers(models.Model):
             'type': summary of partner 'usage' (portal, customer, internal user);
           }
         """
-        self.env['mail.followers'].flush(['partner_id', 'subtype_ids'])
-        self.env['mail.message.subtype'].flush(['internal'])
-        self.env['res.users'].flush(['notification_type', 'active', 'partner_id', 'groups_id'])
-        self.env['res.partner'].flush(['active', 'partner_share'])
-        self.env['res.groups'].flush(['users'])
+        self.env['mail.followers'].flush_model(['partner_id', 'subtype_ids'])
+        self.env['mail.message.subtype'].flush_model(['internal'])
+        self.env['res.users'].flush_model(['notification_type', 'active', 'partner_id', 'groups_id'])
+        self.env['res.partner'].flush_model(['active', 'partner_share'])
+        self.env['res.groups'].flush_model(['users'])
         # if we have records and a subtype: we have to fetch followers
         if records and subtype_id:
             query = """

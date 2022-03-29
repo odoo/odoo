@@ -129,7 +129,7 @@ class SurveyUserInput(models.Model):
             user_input.attempts_number = 1
 
         if attempts_to_compute:
-            self.env['survey.user_input'].flush()
+            self.flush_model(['email', 'invite_token', 'partner_id', 'state', 'survey_id', 'test_entry'])
 
             self.env.cr.execute("""
                 SELECT user_input.id,

@@ -367,7 +367,7 @@ class TestProcRule(TransactionCase):
         }])
         moves._action_confirm()
         # activate action of opening the replenishment view
-        self.env['report.stock.quantity'].flush()
+        self.env.flush_all()
         self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
         replenishments = self.env['stock.warehouse.orderpoint'].search([
             ('product_id', '=', product.id),

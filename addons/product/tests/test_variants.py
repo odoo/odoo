@@ -272,7 +272,7 @@ class TestVariants(common.TestProductCommon):
 
         template.product_variant_ids.action_archive()
         self.assertFalse(template.active)
-        template.invalidate_cache(['barcode'])
+        template.invalidate_model(['barcode'])
         self.assertEqual(template.barcode, 'test')
         template.product_variant_ids.action_unarchive()
         template.action_unarchive()
@@ -295,11 +295,11 @@ class TestVariants(common.TestProductCommon):
         variant_2.barcode = 'v2_barcode'
 
         variant_1.action_archive()
-        template.invalidate_cache(['barcode'])
+        template.invalidate_model(['barcode'])
         self.assertEqual(template.barcode, variant_2.barcode)  # 1 active variant --> barcode on template
 
         variant_1.action_unarchive()
-        template.invalidate_cache(['barcode'])
+        template.invalidate_model(['barcode'])
         self.assertFalse(template.barcode)  # 2 active variants --> no barcode on template
 
     def test_archive_all_variants(self):
@@ -676,8 +676,8 @@ class TestVariantsImages(common.TestProductCommon):
             'create_date': before,
             'write_date': before,
         })
-        self.template.invalidate_cache(['create_date', 'write_date'], self.template.ids)
-        self.variants.invalidate_cache(['create_date', 'write_date'], self.variants.ids)
+        self.template.invalidate_recordset(['create_date', 'write_date'])
+        self.variants.invalidate_recordset(['create_date', 'write_date'])
 
         f = io.BytesIO()
         Image.new('RGB', (800, 500), '#000000').save(f, 'PNG')

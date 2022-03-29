@@ -188,7 +188,7 @@ class TestTrackSuggestions(TestEventOnlineCommon):
 
             # remove keynote default, now based on tags
             track_5.write({'wishlisted_by_default': False})
-            # all_suggestions.invalidate_cache(fnames=['is_reminder_on'])
+            # all_suggestions.invalidate_model(['is_reminder_on'])
             track_suggestion = current_track._get_track_suggestions(limit=1)
             self.assertEqual(
                 track_suggestion, track_4,

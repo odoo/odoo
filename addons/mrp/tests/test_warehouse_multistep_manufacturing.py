@@ -134,7 +134,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         with Form(self.warehouse) as warehouse:
             warehouse.manufacture_steps = 'pbm_sam'
             warehouse.delivery_steps = 'pick_pack_ship'
-        self.warehouse.flush()
+        self.warehouse.flush_model()
         self.env.ref('stock.route_warehouse0_mto').active = True
         self.env['stock.quant']._update_available_quantity(self.raw_product, self.warehouse.lot_stock_id, 4.0)
         picking_customer = self.env['stock.picking'].create({
@@ -215,7 +215,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         cancel depends on the default values on each rule of the chain.
         """
         self.warehouse.manufacture_steps = 'pbm_sam'
-        self.warehouse.flush()
+        self.warehouse.flush_model()
         self.env['stock.quant']._update_available_quantity(self.raw_product, self.warehouse.lot_stock_id, 4.0)
         picking_customer = self.env['stock.picking'].create({
             'location_id': self.warehouse.lot_stock_id.id,

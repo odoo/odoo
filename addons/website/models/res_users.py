@@ -28,7 +28,7 @@ class ResUsers(models.Model):
     @api.constrains('login', 'website_id')
     def _check_login(self):
         """ Do not allow two users with the same login without website """
-        self.flush(['login', 'website_id'])
+        self.flush_model(['login', 'website_id'])
         self.env.cr.execute(
             """SELECT login
                  FROM res_users

@@ -19,7 +19,6 @@ class WebsiteVisitor(models.Model):
     @api.depends('partner_id.email_normalized', 'partner_id.mobile', 'lead_ids.email_normalized', 'lead_ids.mobile')
     def _compute_email_phone(self):
         super(WebsiteVisitor, self)._compute_email_phone()
-        self.flush()
 
         left_visitors = self.filtered(lambda visitor: not visitor.email or not visitor.mobile)
         leads = left_visitors.mapped('lead_ids').sorted('create_date', reverse=True)

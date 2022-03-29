@@ -1169,7 +1169,7 @@ class Article(models.Model):
         in the custom sql query. The query's output table and fields names does not match
         the model we are working on.
         """
-        self.env['knowledge.article'].flush()
+        self.flush_model()
 
         args = []
         base_where_domain = ''
@@ -1212,7 +1212,8 @@ class Article(models.Model):
         The articles can be filtered using the article_ids param.
 
         The member model is fully flushed before running the request. """
-        self.env['knowledge.article'].flush()
+        self.env['knowledge.article'].flush_model()
+        self.env['knowledge.article.member'].flush_model()
 
         args = [partner.id]
         base_where_domain = ''
@@ -1273,7 +1274,9 @@ class Article(models.Model):
         Please note that these additional fields are not sanitized, the caller
         has the responsibility to check that user can access those fields and
         that no injection is possible. """
-        self.env['knowledge.article'].flush()
+        self.env['res.partner'].flush_model()
+        self.env['knowledge.article'].flush_model()
+        self.env['knowledge.article.member'].flush_model()
 
         add_where_clause = ''
         args = []

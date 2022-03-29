@@ -239,7 +239,7 @@ You receive this email because you are:
                 self.browse(scheduler.id).execute()
             except Exception as e:
                 _logger.exception(e)
-                self.invalidate_cache()
+                self.env.invalidate_all()
                 self._warn_template_error(scheduler, e)
             else:
                 if autocommit and not getattr(threading.current_thread(), 'testing', False):

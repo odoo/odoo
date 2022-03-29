@@ -59,7 +59,7 @@ class TestMailTemplate(TestMailCommon, TestRecipients):
         # admin should receive emails
         cls.user_admin.write({'notification_type': 'email'})
         # Force the attachments of the template to be in the natural order.
-        cls.test_template.invalidate_cache(['attachment_ids'], ids=cls.test_template.ids)
+        cls.test_template.invalidate_recordset(['attachment_ids'])
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_template_send_email(self):

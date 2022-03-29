@@ -74,7 +74,7 @@ class TestCrmMailActivity(TestCrmCommon):
         test_leads[5].activity_schedule(act_type_xmlid='crm.initial_contact', date_deadline=deadline_in2d)
         (test_leads[1] | test_leads[3]).activity_schedule(act_type_xmlid='crm.initial_contact', date_deadline=deadline_was1d)
         (test_leads[2] | test_leads[4]).activity_schedule(act_type_xmlid='crm.call_for_demo', date_deadline=deadline_was2d)
-        test_leads.invalidate_cache()
+        test_leads.invalidate_recordset()
 
         expected_ids_asc = [2, 4, 1, 3, 5, 0, 8, 7, 9, 6]
         expected_leads_asc = self.env['crm.lead'].browse([test_leads[lid].id for lid in expected_ids_asc])

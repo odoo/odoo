@@ -134,7 +134,7 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
 
         # Check that calling 'action_view_invoice' return the same action despite the record rule
         action_user_1 = purchase_order_user2.with_user(self.purchase_user).action_view_invoice()
-        purchase_order_user2.invalidate_cache()
+        purchase_order_user2.invalidate_recordset()
         action_user_2 = purchase_order_user2.with_user(purchase_user_2).action_view_invoice()
         self.assertEqual(action_user_1, action_user_2)
 

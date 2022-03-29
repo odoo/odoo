@@ -52,7 +52,7 @@ class AccountPayment(models.Model):
         for payment_check in payment_checks:
             if not payment_check.check_number.isdecimal():
                 raise ValidationError(_('Check numbers can only consist of digits'))
-        self.flush()
+        self.env.flush_all()
         self.env.cr.execute("""
             SELECT payment.check_number, move.journal_id
               FROM account_payment payment

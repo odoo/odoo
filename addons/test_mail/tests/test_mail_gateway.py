@@ -319,7 +319,7 @@ class TestMailgateway(TestMailCommon):
 
         # archived partner -> no follower
         self.partner_1.active = False
-        self.partner_1.flush()
+        self.partner_1.flush_recordset()
         with self.mock_mail_gateway():
             record3 = self.format_and_process(
                 MAIL_TEMPLATE, self.partner_1.email_formatted, 'groups@test.com',
@@ -659,7 +659,7 @@ class TestMailgateway(TestMailCommon):
 
         # name order win
         self.test_record.message_unsubscribe(follower_user.partner_id.ids)
-        self.test_record.flush()
+        self.test_record.flush_recordset()
         record = self.format_and_process(MAIL_TEMPLATE, self.user_employee.email_formatted, 'groups@test.com', subject='FirstFoundWinner')
         self.assertEqual(record.create_uid, self.user_employee)
         self.assertEqual(record.message_ids[0].subject, 'FirstFoundWinner')
