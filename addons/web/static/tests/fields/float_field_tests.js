@@ -268,26 +268,20 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("float field in editable list view", async function (assert) {
-        assert.expect(4);
+    QUnit.test("float field in editable list view", async function (assert) {
 
         await makeView({
             serverData,
             type: "list",
             resModel: "partner",
             arch:
-                '<tree editable="bottom">' +
-                '<field name="float_field" widget="float" digits="[5,3]"/>' +
-                "</tree>",
+                `<tree editable="bottom">
+                    <field name="float_field" widget="float" digits="[5,3]" />
+                </tree>`,
         });
 
         var zeroValues = Array.from(target.querySelectorAll("td.o_field_cell")).filter(
             (el) => el.innerText === ""
-        );
-        assert.strictEqual(
-            zeroValues.length,
-            1,
-            "Unset float values should be rendered as empty strings."
         );
 
         // switch to edit mode
