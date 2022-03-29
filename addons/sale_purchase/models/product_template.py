@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
@@ -16,8 +16,9 @@ class ProductTemplate(models.Model):
 
     @api.constrains('service_to_purchase', 'seller_ids')
     def validate_service_to_purchase(self):
-        if self.service_to_purchase and not self.seller_ids:
-            raise ValidationError("Please define the vendor from whom you would like to purchase this service automatically.")
+        for template in self:
+            if template.service_to_purchase and not template.seller_ids:
+                raise ValidationError(_("Error with %s: Please define the vendor from whom you would like to purchase the service automatically.") % template.display_name)
 
     @api.onchange('type')
     def _onchange_type(self):
