@@ -11,13 +11,14 @@ class Job(models.Model):
     _inherit = ['mail.thread']
     _order = 'sequence'
 
+    active = fields.Boolean(default=True)
     name = fields.Char(string='Job Position', required=True, index='trigram', translate=True)
     sequence = fields.Integer(default=10)
     expected_employees = fields.Integer(compute='_compute_employees', string='Total Forecasted Employees', store=True,
         help='Expected number of employees for this job position after new recruitment.')
     no_of_employee = fields.Integer(compute='_compute_employees', string="Current Number of Employees", store=True,
         help='Number of employees currently occupying this job position.')
-    no_of_recruitment = fields.Integer(string='Expected New Employees', copy=False,
+    no_of_recruitment = fields.Integer(string='Target', copy=False,
         help='Number of new employees you expect to recruit.', default=1)
     no_of_hired_employee = fields.Integer(string='Hired Employees', copy=False,
         help='Number of hired employees for this job position during recruitment phase.')
@@ -26,10 +27,6 @@ class Job(models.Model):
     requirements = fields.Text('Requirements')
     department_id = fields.Many2one('hr.department', string='Department', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
-    state = fields.Selection([
-        ('recruit', 'Recruitment in Progress'),
-        ('open', 'Not Recruiting')
-    ], string='Status', readonly=True, required=True, tracking=True, copy=False, default='recruit', help="Set whether the recruitment process is open or closed for this job position.")
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, department_id)', 'The name of the job position must be unique per department in company!'),
@@ -56,16 +53,3 @@ class Job(models.Model):
         if 'name' not in default:
             default['name'] = _("%s (copy)") % (self.name)
         return super(Job, self).copy(default=default)
-
-    def set_recruit(self):
-        for record in self:
-            no_of_recruitment = 1 if record.no_of_recruitment == 0 else record.no_of_recruitment
-            record.write({'state': 'recruit', 'no_of_recruitment': no_of_recruitment})
-        return True
-
-    def set_open(self):
-        return self.write({
-            'state': 'open',
-            'no_of_recruitment': 0,
-            'no_of_hired_employee': 0
-        })
