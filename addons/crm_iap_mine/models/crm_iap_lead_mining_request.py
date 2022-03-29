@@ -198,11 +198,15 @@ class CRMLeadMiningRequest(models.Model):
         This will prepare the data to send to the server
         """
         self.ensure_one()
-        payload = {'lead_number': self.lead_number,
-                   'search_type': self.search_type,
-                   'countries': self.country_ids.mapped('code')}
-        if self.state_ids:
-            payload['states'] = self.state_ids.mapped('code')
+        payload = {
+            'lead_number': self.lead_number,
+            'search_type': self.search_type,
+            'countries': [{
+                'code': country.code,
+                'states': self.state_ids.filtered(lambda state: state in country.state_ids).mapped('code'),
+            } for country in self.country_ids],
+        }
+
         if self.filter_on_size:
             payload.update({'company_size_min': self.company_size_min,
                             'company_size_max': self.company_size_max})
@@ -255,7 +259,7 @@ class CRMLeadMiningRequest(models.Model):
             raise UserError(_("Your request could not be executed: %s", e))
 
     def _iap_contact_mining(self, params, timeout=300):
-        endpoint = self.env['ir.config_parameter'].sudo().get_param('reveal.endpoint', DEFAULT_ENDPOINT) + '/iap/clearbit/1/lead_mining_request'
+        endpoint = self.env['ir.config_parameter'].sudo().get_param('reveal.endpoint', DEFAULT_ENDPOINT) + '/iap/clearbit/2/lead_mining_request'
         return iap_tools.iap_jsonrpc(endpoint, params=params, timeout=timeout)
 
     def _create_leads_from_response(self, result):
