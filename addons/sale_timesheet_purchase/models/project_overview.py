@@ -32,7 +32,7 @@ class Project(models.Model):
                     'count': len(account_invoices),
                     'icon': 'fa fa-pencil-square-o',
                     'action': _to_action_data(
-                        action=self.env.ref('account.action_move_in_invoice_type'),
+                        action=self.env.ref('account.action_move_in_invoice_type').sudo(),
                         domain=[('id', 'in', account_invoices.ids)],
                         context={'create': False, 'edit': False, 'delete': False}
                     )})
