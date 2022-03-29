@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_import_action" model="ir.actions.client">
+        <field name="name">Import Chart of Accounts</field>
+        <field name="tag">import</field>
+        <field name="params" eval="{'model': 'account.account'}"/>
+    </record>
+
+    <record model="ir.ui.view" id="account_import_button">
+        <field name="name">Account Import Button</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_list"/>
+        <field name="arch" type="xml">
+            <tree position="attributes">
+                <attribute name="js_class">accountchart_tree_import</attribute>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="account_init_import_button">
+        <field name="name">Account Import Button</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.init_accounts_tree"/>
+        <field name="arch" type="xml">
+            <tree position="attributes">
+                <attribute name="js_class">accountchart_tree_import</attribute>
+            </tree>
+        </field>
+    </record>
+
+</odoo>
