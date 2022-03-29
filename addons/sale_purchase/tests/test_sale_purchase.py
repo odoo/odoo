@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged
 from odoo.addons.sale_purchase.tests.common import TestCommonSalePurchaseNoChart
 
@@ -255,3 +255,19 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
 
         po = self.env['purchase.order'].search([('partner_id', '=', self.partner_vendor_service.id)], order='id desc', limit=1)
         self.assertEqual(po.order_line.name, "[C01] Name01")
+
+    def test_service_to_purchase_constraint(self):
+        vals_list = [{
+            'name': 'SuperProduct 01',
+            'type': 'service',
+        }, {
+            'name': 'SuperProduct 02',
+            'type': 'service',
+            'service_to_purchase': True,
+        }]
+        with self.assertRaises(ValidationError):
+            self.env['product.product'].create(vals_list)
+
+        # Should not raise anything:
+        vals_list[1]['seller_ids'] = [(0, 0, {'partner_id': self.partner_a.id})]
+        self.env['product.product'].create(vals_list)

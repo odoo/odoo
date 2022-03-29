@@ -18,6 +18,7 @@ class ProductTemplate(models.Model):
     ]
 
     @api.constrains('service_to_purchase', 'seller_ids')
+<<<<<<< HEAD
     def _check_service_to_purchase(self):
         for template in self:
             if template.service_to_purchase and not template.seller_ids:
@@ -29,3 +30,21 @@ class ProductTemplate(models.Model):
         for template in self:
             if template.type != 'service' or template.expense_policy != 'no':
                 template.service_to_purchase = False
+=======
+    def validate_service_to_purchase(self):
+        for template in self:
+            if template.service_to_purchase and not template.seller_ids:
+                raise ValidationError(_("Error with %s: Please define the vendor from whom you would like to purchase the service automatically.") % template.display_name)
+
+    @api.onchange('type')
+    def _onchange_type(self):
+        res = super(ProductTemplate, self)._onchange_type()
+        if self.type != 'service':
+            self.service_to_purchase = False
+        return res
+
+    @api.onchange('expense_policy')
+    def _onchange_expense_policy(self):
+        if self.expense_policy != 'no':
+            self.service_to_purchase = False
+>>>>>>> 807510682c2... temp
