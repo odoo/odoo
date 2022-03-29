@@ -269,20 +269,14 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("float field in editable list view", async function (assert) {
-
         await makeView({
             serverData,
             type: "list",
             resModel: "partner",
-            arch:
-                `<tree editable="bottom">
+            arch: `<tree editable="bottom">
                     <field name="float_field" widget="float" digits="[5,3]" />
                 </tree>`,
         });
-
-        var zeroValues = Array.from(target.querySelectorAll("td.o_field_cell")).filter(
-            (el) => el.innerText === ""
-        );
 
         // switch to edit mode
         var cell = target.querySelector("tr.o_data_row td:not(.o_list_record_selector)");
