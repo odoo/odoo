@@ -39,24 +39,28 @@ class HrPlanActivityType(models.Model):
                 plan_type.summary = plan_type.activity_type_id.summary
 
     def get_responsible_id(self, employee):
+        warning = False
         if self.responsible == 'coach':
             if not employee.coach_id:
-                raise UserError(_('Coach of employee %s is not set.', employee.name))
+                warning = _('Coach of employee %s is not set.', employee.name)
             responsible = employee.coach_id.user_id
             if not responsible:
-                raise UserError(_('User of coach of employee %s is not set.', employee.name))
+                warning = _('User of coach of employee %s is not set.', employee.name)
         elif self.responsible == 'manager':
             if not employee.parent_id:
-                raise UserError(_('Manager of employee %s is not set.', employee.name))
+                warning = _('Manager of employee %s is not set.', employee.name)
             responsible = employee.parent_id.user_id
             if not responsible:
-                raise UserError(_("The manager of %s should be linked to a user.", employee.name))
+                warning = _("The manager of %s should be linked to a user.", employee.name)
         elif self.responsible == 'employee':
             responsible = employee.user_id
             if not responsible:
-                raise UserError(_('The employee %s should be linked to a user.', employee.name))
+                warning = _('The employee %s should be linked to a user.', employee.name)
         elif self.responsible == 'other':
             responsible = self.responsible_id
             if not responsible:
-                raise UserError(_('No specific user given on activity %s.', self.activity_type_id.name))
-        return responsible
+                warning = _('No specific user given on activity %s.', self.activity_type_id.name)
+        return {
+            'responsible': responsible,
+            'warning': warning,
+        }

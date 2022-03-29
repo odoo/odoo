@@ -108,8 +108,28 @@ odoo.define('hr.employee_chat', function (require) {
                 }
             }
             return actionMenuItems;
-        }
+        },
+
+        /**
+         * When we run Launch Plan list action, in case if we close the
+         * wizzard, the originally selected employees stay selected.
+         * 
+         * @override
+        */
+        async _executeButtonAction(actionData, recordData) {
+            const prom = new Promise((resolve, reject) => {
+                this.trigger_up('execute_action', {
+                    action_data: actionData,
+                    env: recordData,
+                    on_closed: () => this.isDestroyed() || actionData.context['action_plan'] ? Promise.resolve() : this.reload(),
+                    on_success: resolve,
+                    on_fail: () => this.update({}, { keepSelection: true, reload: false }).then(reject).guardedCatch(reject)
+                });
+            });
+            return this.alive(prom);
+        },
     });
+    
 
     const EmployeeListView = ListView.extend({
         config: _.extend({}, ListView.prototype.config, {

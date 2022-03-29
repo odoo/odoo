@@ -229,6 +229,9 @@
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
                 <tree string="Employees" multi_edit="1" sample="1" js_class="hr_employee_list">
+                    <header>
+                        <button name="%(plan_wizard_action)d" type="action" string="Launch Plan" context="{'action_plan': True}"/>
+                    </header>
                     <field name="name" readonly="1"/>
                     <field name="work_phone" class="o_force_ltr" readonly="1"/>
                     <field name="work_email"/>
