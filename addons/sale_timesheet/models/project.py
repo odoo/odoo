@@ -310,6 +310,10 @@ class Project(models.Model):
         return self.env['sale.order.line'].search([('order_id', 'in', sale_orders.ids), ('is_service', '=', True), ('is_downpayment', '=', False)], order='id asc')
 
     def _get_sold_items(self):
+        timesheet_encode_uom = self.env.company.timesheet_encode_uom_id
+        product_uom_unit = self.env.ref('uom.product_uom_unit')
+        product_uom_hour = self.env.ref('uom.product_uom_hour')
+
         sols = self._get_sale_order_lines()
         number_sale_orders = len(sols.order_id)
         sold_items = {
@@ -318,21 +322,28 @@ class Project(models.Model):
             'number_sols': len(sols),
             'total_sold': 0,
             'effective_sold': 0,
-            'company_unit_name': self.env.company.timesheet_encode_uom_id.name
+            'company_unit_name': timesheet_encode_uom.name
         }
-        product_uom_unit = self.env.ref('uom.product_uom_unit')
+
         for sol in sols:
             name = [x[1] for x in sol.name_get()] if number_sale_orders > 1 else sol.name
-            qty_delivered = sol.product_uom._compute_quantity(sol.qty_delivered, self.env.company.timesheet_encode_uom_id, raise_if_failure=False)
-            product_uom_qty = sol.product_uom._compute_quantity(sol.product_uom_qty, self.env.company.timesheet_encode_uom_id, raise_if_failure=False)
+
+            product_uom_convert = sol.product_uom
+            if product_uom_convert == product_uom_unit:
+                product_uom_convert = product_uom_hour
+            qty_delivered = product_uom_convert._compute_quantity(sol.qty_delivered, timesheet_encode_uom, raise_if_failure=False)
+            product_uom_qty = product_uom_convert._compute_quantity(sol.product_uom_qty, timesheet_encode_uom, raise_if_failure=False)
+            if product_uom_convert.category_id == timesheet_encode_uom.category_id:
+                product_uom_convert = timesheet_encode_uom
+
             if qty_delivered > 0 or product_uom_qty > 0:
                 sold_items['data'].append({
                     'name': name,
-                    'value': '%s / %s %s' % (formatLang(self.env, qty_delivered, 1), formatLang(self.env, product_uom_qty, 1), sol.product_uom.name if sol.product_uom == product_uom_unit else self.env.company.timesheet_encode_uom_id.name),
+                    'value': '%s / %s %s' % (formatLang(self.env, qty_delivered, 1), formatLang(self.env, product_uom_qty, 1), product_uom_convert.name),
                     'color': 'red' if qty_delivered > product_uom_qty else 'black'
                 })
                 #We only want to consider hours and days for this calculation, and eventually units if the service policy is not based on milestones
-                if sol.product_uom.category_id == self.env.company.timesheet_encode_uom_id.category_id or (sol.product_uom == product_uom_unit and sol.product_id.service_policy != 'delivered_manual'):
+                if sol.product_uom.category_id == timesheet_encode_uom.category_id or (sol.product_uom == product_uom_unit and sol.product_id.service_policy != 'delivered_manual'):
                     sold_items['total_sold'] += product_uom_qty
                     sold_items['effective_sold'] += qty_delivered
         remaining = sold_items['total_sold'] - sold_items['effective_sold']
