@@ -433,7 +433,7 @@ class Project(models.Model):
             action_data = _to_action_data('project.project', res_id=self.id,
                                           views=[[self.env.ref('project.edit_project').id, 'form']])
         else:
-            action_data = _to_action_data(action=self.env.ref('project.open_view_project_all_config').sudo(),
+            action_data = _to_action_data(action=self.env.ref('project.open_view_project_all_config'),
                                           domain=[('id', 'in', self.ids)])
 
         stat_buttons.append({
@@ -463,7 +463,7 @@ class Project(models.Model):
             'count': sum(self.mapped('task_count')),
             'icon': 'fa fa-tasks',
             'action': _to_action_data(
-                action=self.env.ref('project.action_view_task').sudo(),
+                action=self.env.ref('project.action_view_task'),
                 domain=tasks_domain,
                 context=tasks_context
             )
@@ -473,7 +473,7 @@ class Project(models.Model):
             'count': self.env['project.task'].search_count(late_tasks_domain),
             'icon': 'fa fa-tasks',
             'action': _to_action_data(
-                action=self.env.ref('project.action_view_task').sudo(),
+                action=self.env.ref('project.action_view_task'),
                 domain=late_tasks_domain,
                 context=tasks_context,
             ),
@@ -483,7 +483,7 @@ class Project(models.Model):
             'count': self.env['project.task'].search_count(overtime_tasks_domain),
             'icon': 'fa fa-tasks',
             'action': _to_action_data(
-                action=self.env.ref('project.action_view_task').sudo(),
+                action=self.env.ref('project.action_view_task'),
                 domain=overtime_tasks_domain,
                 context=tasks_context,
             ),
@@ -503,7 +503,7 @@ class Project(models.Model):
                     'count': len(sale_orders),
                     'icon': 'fa fa-dollar',
                     'action': _to_action_data(
-                        action=self.env.ref('sale.action_orders').sudo(),
+                        action=self.env.ref('sale.action_orders'),
                         domain=[('id', 'in', sale_orders.ids)],
                         context={'create': False, 'edit': False, 'delete': False}
                     )
@@ -520,7 +520,7 @@ class Project(models.Model):
                         'count': len(invoice_ids),
                         'icon': 'fa fa-pencil-square-o',
                         'action': _to_action_data(
-                            action=self.env.ref('account.action_move_out_invoice_type').sudo(),
+                            action=self.env.ref('account.action_move_out_invoice_type'),
                             domain=[('id', 'in', invoice_ids), ('move_type', '=', 'out_invoice')],
                             context={'create': False, 'delete': False}
                         )
@@ -551,7 +551,12 @@ def _to_action_data(model=None, *, action=None, views=None, res_id=None, domain=
     # pass in either action or (model, views)
     if action:
         assert model is None and views is None
-        act = clean_action(action.read()[0], env=action.env)
+        act = {
+            field: value
+            for field, value in action.sudo().read()[0].items()
+            if field in action._get_readable_fields()
+        }
+        act = clean_action(act, env=action.env)
         model = act['res_model']
         views = act['views']
     # FIXME: search-view-id, possibly help?
