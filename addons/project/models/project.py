@@ -227,7 +227,7 @@ class Project(models.Model):
     def _read_group_stage_ids(self, stages, domain, order):
         return self.env['project.project.stage'].search([], order=order)
 
-    name = fields.Char("Name", index='trigram', required=True, tracking=True, translate=True)
+    name = fields.Char("Name", index='trigram', required=True, tracking=True, translate=True, default_export_compatible=True)
     description = fields.Html()
     active = fields.Boolean(default=True,
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
@@ -1187,11 +1187,12 @@ class Task(models.Model):
     repeat_show_month = fields.Boolean(compute='_compute_repeat_visibility')
 
     # Account analytic
-    analytic_account_id = fields.Many2one('account.analytic.account', ondelete='set null',
+    analytic_account_id = fields.Many2one('account.analytic.account', ondelete='set null', compute='_compute_analytic_account_id', store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", check_company=True,
         help="Analytic account to which this task is linked for financial management. "
              "Use an analytic account to record cost and revenue on your task. "
              "If empty, the analytic account of the project will be used.")
+    is_analytic_account_id_changed = fields.Boolean('Is Analytic Account Manually Changed', compute='_compute_is_analytic_account_id_changed', store=True)
     project_analytic_account_id = fields.Many2one('account.analytic.account', string='Project Analytic Account', related='project_id.analytic_account_id')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string="Analytic Tags",
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", check_company=True)
@@ -1203,6 +1204,18 @@ class Task(models.Model):
     @property
     def SELF_WRITABLE_FIELDS(self):
         return PROJECT_TASK_WRITABLE_FIELDS
+
+    @api.depends('project_id.analytic_account_id')
+    def _compute_analytic_account_id(self):
+        self.env.remove_to_compute(self._fields['is_analytic_account_id_changed'], self)
+        for task in self:
+            if not task.is_analytic_account_id_changed:
+                task.analytic_account_id = task.project_id.analytic_account_id
+
+    @api.depends('analytic_account_id')
+    def _compute_is_analytic_account_id_changed(self):
+        for task in self:
+            task.is_analytic_account_id_changed = task.project_id and task.analytic_account_id != task.project_id.analytic_account_id
 
     @api.depends('project_id', 'parent_id')
     def _compute_is_private(self):

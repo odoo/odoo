@@ -67,12 +67,6 @@ kanbanExamplesRegistry.add('project', {
             'feedback is accepted %s and which feedback is moved to the %s column. %s'), greenBullet, _lt('"Refused"'), descriptionActivities),
         bullets: [greenBullet, redBullet],
     }, {
-        name: _lt('Getting Things Done (GTD)'),
-        columns: [_lt('Inbox'), _lt('Today'), _lt('This Week'), _lt('This Month'), _lt('Long Term')],
-        description: escFormat(_lt('Fill your Inbox easily with the email gateway. Periodically review your ' +
-            'Inbox and schedule tasks by moving them to other columns. Every day, you review the ' +
-            '%s column to move important tasks %s. Every Monday, you review the %s column. %s'), _lt('"This Week"'), _lt('"Today"'), _lt('"This Month"'), descriptionActivities),
-    }, {
         name: _lt('Consulting'),
         columns: [_lt('New Projects'), _lt('Resources Allocation'), _lt('In Progress'), _lt('Done')],
         description: escFormat(_lt('Manage the lifecycle of your project using the kanban view. Add newly acquired projects, assign them and use the %s and %s to define if the project is ready for the next step. %s'), greenBullet, redBullet, descriptionActivities),

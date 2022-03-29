@@ -262,7 +262,7 @@
             <field name="name">Cabinets</field>
             <field name="project_id" search="[('sale_line_id', '=', ref('sale_line_13'))]"/>
             <field name="is_reached">True</field>
-            <field name="sale_line_id" ref="sale_line_18"/>
+            <field name="sale_line_id" ref="sale_line_12"/>
             <field name="quantity_percentage">0.25</field>
         </record>
 
@@ -433,7 +433,7 @@
             <value model="project.project" search="[('sale_line_id', '=', ref('sale_line_13'))]"/>
             <value eval="{'sale_line_employee_ids': [
                 Command.create({
-                    'employee_id': ref('hr.employee_admin'),
+                    'employee_id': ref('hr.employee_mit'),
                     'sale_line_id': ref('sale_line_11'),
                     'cost': 220,
                 }),
