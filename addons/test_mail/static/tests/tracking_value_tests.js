@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import {
-    beforeEach,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 import FormView from 'web.FormView';
@@ -10,9 +10,7 @@ import testUtils from 'web.test_utils';
 
 QUnit.module('test_mail', {}, function () {
 QUnit.module('tracking_value_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-
+    beforeEach() {
         this.start = async params => {
             return start({
                 arch: `<form>
@@ -33,7 +31,6 @@ QUnit.module('tracking_value_tests.js', {
                             </div>
                         </form>`,
                 archs: { 'mail.message,false,list': '<tree/>' },
-                data: this.data,
                 hasView: true,
                 model: 'mail.test.track.all',
                 View: FormView,
@@ -47,8 +44,9 @@ QUnit.module('tracking_value_tests.js', {
 QUnit.test('basic rendering of tracking value (float type)', async function (assert) {
     assert.expect(8);
 
-    this.data['mail.test.track.all'].records.push({ float_field: 12.30, id: 1 });
-    const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
+    const pyEnv = await startServer();
+    const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ float_field: 12.30 });
+    const { afterNextRender, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
     await testUtils.fields.editInput(form.$('input[name=float_field]'), 45.67);
     await afterNextRender(() => testUtils.form.clickSave(form));
@@ -99,8 +97,9 @@ QUnit.test('basic rendering of tracking value (float type)', async function (ass
 QUnit.test('rendering of tracked field of type float: from non-0 to 0', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.track.all'].records.push({ float_field: 1, id: 1 });
-    const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
+    const pyEnv = await startServer();
+    const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ float_field: 1 });
+    const { afterNextRender, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
     await testUtils.fields.editInput(form.$('input[name=float_field]'), 0);
     await afterNextRender(() => testUtils.form.clickSave(form));
@@ -116,8 +115,9 @@ QUnit.test('rendering of tracked field of type float: from non-0 to 0', async fu
 QUnit.test('rendering of tracked field of type float: from 0 to non-0', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.track.all'].records.push({ float_field: 0, id: 1 });
-    const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
+    const pyEnv = await startServer();
+    const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ float_field: 0 });
+    const { afterNextRender, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
     await testUtils.fields.editInput(form.$('input[name=float_field]'), 1);
     await afterNextRender(() => testUtils.form.clickSave(form));
@@ -133,8 +133,9 @@ QUnit.test('rendering of tracked field of type float: from 0 to non-0', async fu
 QUnit.test('rendering of tracked field of type integer: from non-0 to 0', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.track.all'].records.push({ id: 1, integer_field: 1 });
-    const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
+    const pyEnv = await startServer();
+    const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ integer_field: 1 });
+    const { afterNextRender, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
     await testUtils.fields.editInput(form.$('input[name=integer_field]'), 0);
     await afterNextRender(() => testUtils.form.clickSave(form));
@@ -150,8 +151,9 @@ QUnit.test('rendering of tracked field of type integer: from non-0 to 0', async 
 QUnit.test('rendering of tracked field of type integer: from 0 to non-0', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.track.all'].records.push({ id: 1, integer_field: 0 });
-    const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
+    const pyEnv = await startServer();
+    const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ integer_field: 0 });
+    const { afterNextRender, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
     await testUtils.fields.editInput(form.$('input[name=integer_field]'), 1);
     await afterNextRender(() => testUtils.form.clickSave(form));
@@ -167,8 +169,9 @@ QUnit.test('rendering of tracked field of type integer: from 0 to non-0', async 
 QUnit.test('rendering of tracked field of type monetary: from non-0 to 0', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.track.all'].records.push({ id: 1, monetary_field: 1 });
-    const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
+    const pyEnv = await startServer();
+    const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ monetary_field: 1 });
+    const { afterNextRender, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
     await testUtils.fields.editSelect(form.$('div[name=monetary_field] > input'), 0);
     await afterNextRender(() => testUtils.form.clickSave(form));
@@ -184,8 +187,9 @@ QUnit.test('rendering of tracked field of type monetary: from non-0 to 0', async
 QUnit.test('rendering of tracked field of type monetary: from 0 to non-0', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.track.all'].records.push({ id: 1, monetary_field: 0 });
-    const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
+    const pyEnv = await startServer();
+    const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ monetary_field: 0 });
+    const { afterNextRender, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
     await testUtils.fields.editSelect(form.$('div[name=monetary_field] > input'), 1);
     await afterNextRender(() => testUtils.form.clickSave(form));
@@ -201,8 +205,9 @@ QUnit.test('rendering of tracked field of type monetary: from 0 to non-0', async
 QUnit.test('rendering of tracked field of type boolean: from true to false', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.track.all'].records.push({ boolean_field: true, id: 1 });
-    const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
+    const pyEnv = await startServer();
+    const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ boolean_field: true });
+    const { afterNextRender, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
     form.$('.custom-checkbox input').click();
     await afterNextRender(() => testUtils.form.clickSave(form));
@@ -218,8 +223,9 @@ QUnit.test('rendering of tracked field of type boolean: from true to false', asy
 QUnit.test('rendering of tracked field of type boolean: from false to true', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.track.all'].records.push({ id: 1 });
-    const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
+    const pyEnv = await startServer();
+    const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({});
+    const { afterNextRender, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
     form.$('.custom-checkbox input').click();
     await afterNextRender(() => testUtils.form.clickSave(form));
@@ -235,8 +241,9 @@ QUnit.test('rendering of tracked field of type boolean: from false to true', asy
 QUnit.test('rendering of tracked field of type char: from a string to empty string', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.track.all'].records.push({ char_field: 'Marc', id: 1 });
-    const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
+    const pyEnv = await startServer();
+    const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ char_field: 'Marc' });
+    const { afterNextRender, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
     await testUtils.fields.editInput(form.$('input[name=char_field]'), '');
     await afterNextRender(() => testUtils.form.clickSave(form));
@@ -252,8 +259,9 @@ QUnit.test('rendering of tracked field of type char: from a string to empty stri
 QUnit.test('rendering of tracked field of type char: from empty string to a string', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.track.all'].records.push({ char_field: '', id: 1 });
-    const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
+    const pyEnv = await startServer();
+    const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ char_field: '' });
+    const { afterNextRender, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
     await testUtils.fields.editInput(form.$('input[name=char_field]'), 'Marc');
     await afterNextRender(() => testUtils.form.clickSave(form));
@@ -269,8 +277,9 @@ QUnit.test('rendering of tracked field of type char: from empty string to a stri
 QUnit.test('rendering of tracked field of type date: from no date to a set date', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.track.all'].records.push({ date_field: false, id: 1 });
-    const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
+    const pyEnv = await startServer();
+    const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ date_field: false });
+    const { afterNextRender, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
     await testUtils.fields.editAndTrigger(form.$('.o_datepicker[name=date_field] .o_datepicker_input'), '12/14/2018', ['change']);
     await afterNextRender(() => testUtils.form.clickSave(form));
@@ -286,8 +295,9 @@ QUnit.test('rendering of tracked field of type date: from no date to a set date'
 QUnit.test('rendering of tracked field of type date: from a set date to no date', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.track.all'].records.push({ date_field: '2018-12-14', id: 1 });
-    const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
+    const pyEnv = await startServer();
+    const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ date_field: '2018-12-14' });
+    const { afterNextRender, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
     await testUtils.fields.editAndTrigger(form.$('.o_datepicker[name=date_field] .o_datepicker_input'), '', ['change']);
     await afterNextRender(() => testUtils.form.clickSave(form));
@@ -303,8 +313,9 @@ QUnit.test('rendering of tracked field of type date: from a set date to no date'
 QUnit.test('rendering of tracked field of type datetime: from no date and time to a set date and time', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.track.all'].records.push({ datetime_field: false, id: 1 });
-    const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
+    const pyEnv = await startServer();
+    const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ datetime_field: false });
+    const { afterNextRender, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
     await testUtils.fields.editAndTrigger(form.$('.o_datepicker[name=datetime_field] .o_datepicker_input'), '12/14/2018 13:42:28', ['change']);
     await afterNextRender(() => testUtils.form.clickSave(form));
@@ -320,8 +331,9 @@ QUnit.test('rendering of tracked field of type datetime: from no date and time t
 QUnit.test('rendering of tracked field of type datetime: from a set date and time to no date and time', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.track.all'].records.push({ datetime_field: '2018-12-14 13:42:28 ', id: 1 });
-    const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
+    const pyEnv = await startServer();
+    const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ datetime_field: '2018-12-14 13:42:28 ' });
+    const { afterNextRender, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
     await testUtils.fields.editAndTrigger(form.$('.o_datepicker[name=datetime_field] .o_datepicker_input'), '', ['change']);
     await afterNextRender(() => testUtils.form.clickSave(form));
@@ -337,8 +349,9 @@ QUnit.test('rendering of tracked field of type datetime: from a set date and tim
 QUnit.test('rendering of tracked field of type text: from some text to empty', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.track.all'].records.push({ id: 1, text_field: 'Marc' });
-    const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
+    const pyEnv = await startServer();
+    const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ text_field: 'Marc' });
+    const { afterNextRender, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
     await testUtils.fields.editInput(form.$('textarea[name=text_field]'), '');
     await afterNextRender(() => testUtils.form.clickSave(form));
@@ -354,8 +367,9 @@ QUnit.test('rendering of tracked field of type text: from some text to empty', a
 QUnit.test('rendering of tracked field of type text: from empty to some text', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.track.all'].records.push({ id: 1, text_field: '' });
-    const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
+    const pyEnv = await startServer();
+    const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ text_field: '' });
+    const { afterNextRender, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
     await testUtils.fields.editInput(form.$('textarea[name=text_field]'), 'Marc');
     await afterNextRender(() => testUtils.form.clickSave(form));
@@ -371,8 +385,9 @@ QUnit.test('rendering of tracked field of type text: from empty to some text', a
 QUnit.test('rendering of tracked field of type selection: from a selection to no selection', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.track.all'].records.push({ id: 1, selection_field: 'first' });
-    const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
+    const pyEnv = await startServer();
+    const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ selection_field: 'first' });
+    const { afterNextRender, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
     await testUtils.fields.editSelect(form.$('select[name=selection_field]'), '');
     await afterNextRender(() => testUtils.form.clickSave(form));
@@ -388,8 +403,9 @@ QUnit.test('rendering of tracked field of type selection: from a selection to no
 QUnit.test('rendering of tracked field of type selection: from no selection to a selection', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.track.all'].records.push({ id: 1 });
-    const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
+    const pyEnv = await startServer();
+    const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({});
+    const { afterNextRender, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
     await testUtils.fields.editSelect(form.$('select[name=selection_field]'), '"first"');
     await afterNextRender(() => testUtils.form.clickSave(form));
@@ -405,9 +421,10 @@ QUnit.test('rendering of tracked field of type selection: from no selection to a
 QUnit.test('rendering of tracked field of type many2one: from having a related record to no related record', async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({ display_name: 'Marc', id: 11 });
-    this.data['mail.test.track.all'].records.push({ id: 1, many2one_field_id: 11 });
-    const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ display_name: 'Marc' });
+    const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ many2one_field_id: resPartnerId1 });
+    const { afterNextRender, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
     await testUtils.fields.editAndTrigger(form.$('.o_field_many2one_selection input'), '', ['keyup']);
     await afterNextRender(() => testUtils.form.clickSave(form));
@@ -423,9 +440,10 @@ QUnit.test('rendering of tracked field of type many2one: from having a related r
 QUnit.test('rendering of tracked field of type many2one: from no related record to having a related record', async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({ display_name: 'Marc', id: 11 });
-    this.data['mail.test.track.all'].records.push({ id: 1 });
-    const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
+    const pyEnv = await startServer();
+    pyEnv['res.partner'].create({ display_name: 'Marc' });
+    const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({});
+    const { afterNextRender, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
     await testUtils.fields.many2one.clickOpenDropdown('many2one_field_id');
     await testUtils.fields.many2one.clickItem('many2one_field_id', 'Marc');

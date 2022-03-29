@@ -1,31 +1,23 @@
 /** @odoo-module **/
 
-import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('thread_preview_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('thread_preview_tests.js');
 
 QUnit.test('mark as read', async function (assert) {
     assert.expect(6);
 
-    this.data['mail.channel'].records.push({
-        id: 11,
-        message_unread_counter: 1,
-        seen_message_id: 99,
-    });
-    this.data['mail.message'].records.push({
-        id: 100,
-        model: 'mail.channel',
-        res_id: 11,
-    });
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({ message_unread_counter: 1 });
+    const [mailMessageId1] = pyEnv['mail.message'].create([
+        { model: 'mail.channel', res_id: mailChannelId1 },
+        { model: 'mail.channel', res_id: mailChannelId1 },
+    ]);
+    pyEnv['mail.channel'].write([mailChannelId1], { seen_message_id: mailMessageId1 });
 
     const { click, createMessagingMenuComponent } = await start({
-        data: this.data,
         hasChatWindow: true,
         async mockRPC(route, args) {
             if (route.includes('set_last_seen_message')) {

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { start } from '@mail/../tests/helpers/test_utils';
 import throttle from '@mail/utils/throttle';
 import { nextTick } from '@mail/utils/utils';
 
@@ -11,7 +11,6 @@ QUnit.module('utils', {}, function () {
 QUnit.module('throttle', {}, function () {
 QUnit.module('throttle_tests.js', {
     async beforeEach() {
-        await beforeEach(this);
         this.throttles = [];
     },
     afterEach() {
@@ -27,7 +26,6 @@ QUnit.test('single call', async function (assert) {
     assert.expect(6);
 
     const { env, messaging } = await start({
-        data: this.data,
         hasTimeControl: true,
     });
 
@@ -76,7 +74,6 @@ QUnit.test('2nd (throttled) call', async function (assert) {
     assert.expect(8);
 
     const { env, messaging } = await start({
-        data: this.data,
         hasTimeControl: true,
     });
 
@@ -136,7 +133,6 @@ QUnit.test('throttled call reinvocation', async function (assert) {
     assert.expect(11);
 
     const { env, messaging } = await start({
-        data: this.data,
         hasTimeControl: true,
     });
 
@@ -215,7 +211,6 @@ QUnit.test('flush throttled call', async function (assert) {
     assert.expect(9);
 
     const { env, messaging } = await start({
-        data: this.data,
         hasTimeControl: true,
     });
 
@@ -272,7 +267,6 @@ QUnit.test('cancel throttled call', async function (assert) {
     assert.expect(10);
 
     const { env, messaging } = await start({
-        data: this.data,
         hasTimeControl: true,
     });
 
@@ -339,7 +333,6 @@ QUnit.test('clear throttled call', async function (assert) {
     assert.expect(9);
 
     const { env, messaging } = await start({
-        data: this.data,
         hasTimeControl: true,
     });
 

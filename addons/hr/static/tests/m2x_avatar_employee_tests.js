@@ -2,8 +2,8 @@
 
 import {
     afterNextRender,
-    beforeEach,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 import FormView from 'web.FormView';
@@ -14,45 +14,37 @@ import { dom, mock } from 'web.test_utils';
 
 QUnit.module('hr', {}, function () {
     QUnit.module('M2XAvatarEmployee', {
-        async beforeEach() {
-            await beforeEach(this);
-
-            // reset the cache before each test
+        beforeEach() {
             Many2OneAvatarEmployee.prototype.partnerIds = {};
-
-            this.data['m2x.avatar.employee'].records.push(
-                { id: 1, employee_id: 11, employee_ids: [11, 23] },
-                { id: 2, employee_id: 7 },
-                { id: 3, employee_id: 11 },
-                { id: 4, employee_id: 23 },
-            );
-            this.data['hr.employee.public'].records.push(
-                { id: 11, name: "Mario", user_id: 11, user_partner_id: 11 },
-                { id: 7, name: "Luigi", user_id: 12, user_partner_id: 12 },
-                { id: 23, name: "Yoshi", user_id: 13, user_partner_id: 13 }
-            );
-            this.data['res.users'].records.push(
-                { id: 11, partner_id: 11 },
-                { id: 12, partner_id: 12 },
-                { id: 13, partner_id: 13 }
-            );
-            this.data['res.partner'].records.push(
-                { id: 11, display_name: "Mario" },
-                { id: 12, display_name: "Luigi" },
-                { id: 13, display_name: "Yoshi" }
-            );
         },
     });
 
     QUnit.test('many2one_avatar_employee widget in list view', async function (assert) {
         assert.expect(11);
 
+        const pyEnv = await startServer();
+        const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([
+            { display_name: "Mario" },
+            { display_name: "Luigi" },
+        ]);
+        const [resUsersId1, resUsersId2] = pyEnv['res.users'].create([
+            { partner_id: resPartnerId1 },
+            { partner_id: resPartnerId2 },
+        ]);
+        const [hrEmployeePublicId1, hrEmployeePublicId2] = pyEnv['hr.employee.public'].create([
+            { name: "Mario", user_id: resUsersId1, user_partner_id: resPartnerId1 },
+            { name: "Luigi", user_id: resUsersId2, user_partner_id: resPartnerId2 },
+        ]);
+        pyEnv['m2x.avatar.employee'].create([
+            { employee_id: hrEmployeePublicId1, employee_ids: [hrEmployeePublicId1, hrEmployeePublicId2] },
+            { employee_id: hrEmployeePublicId2 },
+            { employee_id: hrEmployeePublicId1 },
+        ]);
         const { widget: list } = await start({
             hasChatWindow: true,
             hasView: true,
             View: ListView,
             model: 'm2x.avatar.employee',
-            data: this.data,
             arch: '<tree><field name="employee_id" widget="many2one_avatar_employee"/></tree>',
             mockRPC(route, args) {
                 if (args.method === 'read') {
@@ -62,14 +54,14 @@ QUnit.module('hr', {}, function () {
             },
         });
 
-        assert.strictEqual(list.$('.o_data_cell span').text(), 'MarioLuigiMarioYoshi');
+        assert.strictEqual(list.$('.o_data_cell span').text(), 'MarioLuigiMario');
 
         // click on first employee
         await afterNextRender(() =>
             dom.click(list.$('.o_data_cell:nth(0) .o_m2o_avatar > img'))
         );
         assert.verifySteps(
-            ['read hr.employee.public 11'],
+            [`read hr.employee.public ${hrEmployeePublicId1}`],
             "first employee should have been read to find its partner"
         );
         assert.containsOnce(
@@ -88,7 +80,7 @@ QUnit.module('hr', {}, function () {
             dom.click(list.$('.o_data_cell:nth(1) .o_m2o_avatar > img')
         ));
         assert.verifySteps(
-            ['read hr.employee.public 7'],
+            [`read hr.employee.public ${hrEmployeePublicId2}`],
             "second employee should have been read to find its partner"
         );
         assert.containsN(
@@ -122,8 +114,13 @@ QUnit.module('hr', {}, function () {
     });
 
     QUnit.test('many2one_avatar_employee widget in kanban view', async function (assert) {
-        assert.expect(6);
+        assert.expect(3);
 
+        const pyEnv = await startServer();
+        const resPartnerId1 = pyEnv['res.partner'].create();
+        const resUsersId1 = pyEnv['res.users'].create({ partner_id: resPartnerId1 });
+        const hrEmployeePublicId1 = pyEnv['hr.employee.public'].create({ user_id: resUsersId1, user_partner_id: resPartnerId1 });
+        pyEnv['m2x.avatar.employee'].create({ employee_id: hrEmployeePublicId1, employee_ids: [hrEmployeePublicId1] });
         const { widget: kanban } = await start({
             hasView: true,
             View: KanbanView,
@@ -142,11 +139,8 @@ QUnit.module('hr', {}, function () {
         });
 
         assert.strictEqual(kanban.$('.o_kanban_record').text().trim(), '');
-        assert.containsN(kanban, '.o_m2o_avatar', 4);
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(0) > img').data('src'), '/web/image/hr.employee.public/11/avatar_128');
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(1) > img').data('src'), '/web/image/hr.employee.public/7/avatar_128');
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(2) > img').data('src'), '/web/image/hr.employee.public/11/avatar_128');
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(3) > img').data('src'), '/web/image/hr.employee.public/23/avatar_128');
+        assert.containsOnce(kanban, '.o_m2o_avatar');
+        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(0) > img').data('src'), `/web/image/hr.employee.public/${hrEmployeePublicId1}/avatar_128`);
 
         kanban.destroy();
     });
@@ -154,8 +148,9 @@ QUnit.module('hr', {}, function () {
     QUnit.test('many2one_avatar_employee: click on an employee not associated with a user', async function (assert) {
         assert.expect(6);
 
-        this.data['hr.employee.public'].records[0].user_id = false;
-        this.data['hr.employee.public'].records[0].user_partner_id = false;
+        const pyEnv = await startServer();
+        const hrEmployeePublicId1 = pyEnv['hr.employee.public'].create({ name: 'Mario' });
+        const m2xHrAvatarUserId1 = pyEnv['m2x.avatar.employee'].create({ employee_id: hrEmployeePublicId1 });
         const { widget: form } = await start({
             hasView: true,
             View: FormView,
@@ -168,7 +163,7 @@ QUnit.module('hr', {}, function () {
                 }
                 return this._super(...arguments);
             },
-            res_id: 1,
+            res_id: m2xHrAvatarUserId1,
             services: {
                 notification: {
                     notify(notification) {
@@ -197,8 +192,8 @@ QUnit.module('hr', {}, function () {
         await dom.click(form.$('.o_m2o_avatar > img'));
 
         assert.verifySteps([
-            'read m2x.avatar.employee 1',
-            'read hr.employee.public 11',
+            `read m2x.avatar.employee ${m2xHrAvatarUserId1}`,
+            `read hr.employee.public ${hrEmployeePublicId1}`,
         ]);
 
         form.destroy();
@@ -207,6 +202,16 @@ QUnit.module('hr', {}, function () {
     QUnit.test('many2many_avatar_employee widget in form view', async function (assert) {
         assert.expect(8);
 
+        const pyEnv = await startServer();
+        const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([{}, {}]);
+        const [resUsersId1, resUsersId2] = pyEnv['res.users'].create([{}, {}]);
+        const [hrEmployeePublicId1, hrEmployeePublicId2] = pyEnv['hr.employee.public'].create([
+            { user_id: resUsersId1, user_partner_id: resPartnerId1 },
+            { user_id: resUsersId2, user_partner_id: resPartnerId2 },
+        ]);
+        const m2xAvatarEmployeeId1 = pyEnv['m2x.avatar.employee'].create(
+            { employee_ids: [hrEmployeePublicId1, hrEmployeePublicId2] },
+        );
         const { widget: form } = await start({
             hasChatWindow: true,
             hasView: true,
@@ -220,23 +225,23 @@ QUnit.module('hr', {}, function () {
                 }
                 return this._super(...arguments);
             },
-            res_id: 1,
+            res_id: m2xAvatarEmployeeId1,
         });
 
         assert.containsN(form, '.o_field_many2manytags.avatar.o_field_widget .badge', 2,
             "should have 2 records");
         assert.strictEqual(form.$('.o_field_many2manytags.avatar.o_field_widget .badge:first img').data('src'),
-            '/web/image/hr.employee.public/11/avatar_128',
+            `/web/image/hr.employee.public/${hrEmployeePublicId1}/avatar_128`,
             "should have correct avatar image");
 
         await dom.click(form.$('.o_field_many2manytags.avatar .badge:first .o_m2m_avatar'));
         await dom.click(form.$('.o_field_many2manytags.avatar .badge:nth(1) .o_m2m_avatar'));
 
         assert.verifySteps([
-            "read m2x.avatar.employee 1",
-            'read hr.employee.public 11,23',
-            "read hr.employee.public 11",
-            "read hr.employee.public 23",
+            `read m2x.avatar.employee ${m2xAvatarEmployeeId1}`,
+            `read hr.employee.public ${hrEmployeePublicId1},${hrEmployeePublicId2}`,
+            `read hr.employee.public ${hrEmployeePublicId1}`,
+            `read hr.employee.public ${hrEmployeePublicId2}`,
         ]);
 
         assert.containsN(
@@ -252,12 +257,24 @@ QUnit.module('hr', {}, function () {
     QUnit.test('many2many_avatar_employee widget in list view', async function (assert) {
         assert.expect(10);
 
+        const pyEnv = await startServer();
+        const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([
+            { name: "Mario" },
+            { name: "Yoshi" },
+        ]);
+        const [resUsersId1, resUsersId2] = pyEnv['res.users'].create([{}, {}]);
+        const [hrEmployeePublicId1, hrEmployeePublicId2] = pyEnv['hr.employee.public'].create([
+            { user_id: resUsersId1, user_partner_id: resPartnerId1 },
+            { user_id: resUsersId2, user_partner_id: resPartnerId2 },
+        ]);
+        pyEnv['m2x.avatar.employee'].create(
+            { employee_ids: [hrEmployeePublicId1, hrEmployeePublicId2] },
+        );
         const { widget: list } = await start({
             hasChatWindow: true,
             hasView: true,
             View: ListView,
             model: 'm2x.avatar.employee',
-            data: this.data,
             arch: '<tree><field name="employee_ids" widget="many2many_avatar_employee"/></tree>',
             mockRPC(route, args) {
                 if (args.method === 'read') {
@@ -275,7 +292,7 @@ QUnit.module('hr', {}, function () {
             dom.click(list.$('.o_data_cell:nth(0) .o_m2m_avatar:first'))
         );
         assert.verifySteps(
-            ['read hr.employee.public 11,23', "read hr.employee.public 11"],
+            [`read hr.employee.public ${hrEmployeePublicId1},${hrEmployeePublicId2}`, `read hr.employee.public ${hrEmployeePublicId1}`],
             "first employee should have been read to find its partner"
         );
         assert.containsOnce(
@@ -294,7 +311,7 @@ QUnit.module('hr', {}, function () {
             dom.click(list.$('.o_data_cell:nth(0) .o_m2m_avatar:nth(1)')
             ));
         assert.verifySteps(
-            ['read hr.employee.public 23'],
+            [`read hr.employee.public ${hrEmployeePublicId2}`],
             "second employee should have been read to find its partner"
         );
         assert.containsN(
@@ -315,11 +332,20 @@ QUnit.module('hr', {}, function () {
     QUnit.test('many2many_avatar_employee widget in kanban view', async function (assert) {
         assert.expect(7);
 
+        const pyEnv = await startServer();
+        const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([{}, {}]);
+        const [resUsersId1, resUsersId2] = pyEnv['res.users'].create([{}, {}]);
+        const [hrEmployeePublicId1, hrEmployeePublicId2] = pyEnv['hr.employee.public'].create([
+            { user_id: resUsersId1, user_partner_id: resPartnerId1 },
+            { user_id: resUsersId2, user_partner_id: resPartnerId2 },
+        ]);
+        pyEnv['m2x.avatar.employee'].create(
+            { employee_ids: [hrEmployeePublicId1, hrEmployeePublicId2] },
+        );
         const { widget: kanban } = await start({
             hasView: true,
             View: KanbanView,
             model: 'm2x.avatar.employee',
-            data: this.data,
             arch: `
                 <kanban>
                     <templates>
@@ -347,19 +373,19 @@ QUnit.module('hr', {}, function () {
         assert.containsN(kanban, '.o_kanban_record:first .o_field_many2manytags img.o_m2m_avatar', 2,
             "should have 2 avatar images");
         assert.strictEqual(kanban.$('.o_kanban_record:first .o_field_many2manytags img.o_m2m_avatar:first').data('src'),
-            "/web/image/hr.employee.public/11/avatar_128",
+            `/web/image/hr.employee.public/${hrEmployeePublicId1}/avatar_128`,
             "should have correct avatar image");
         assert.strictEqual(kanban.$('.o_kanban_record:first .o_field_many2manytags img.o_m2m_avatar:eq(1)').data('src'),
-            "/web/image/hr.employee.public/23/avatar_128",
+            `/web/image/hr.employee.public/${hrEmployeePublicId2}/avatar_128`,
             "should have correct avatar image");
 
         await dom.click(kanban.$('.o_kanban_record:first .o_m2m_avatar:nth(0)'));
         await dom.click(kanban.$('.o_kanban_record:first .o_m2m_avatar:nth(1)'));
 
         assert.verifySteps([
-            "read hr.employee.public 11,23",
-            "read hr.employee.public 11",
-            "read hr.employee.public 23"
+            `read hr.employee.public ${hrEmployeePublicId1},${hrEmployeePublicId2}`,
+            `read hr.employee.public ${hrEmployeePublicId1}`,
+            `read hr.employee.public ${hrEmployeePublicId2}`
         ]);
 
         kanban.destroy();
@@ -368,14 +394,21 @@ QUnit.module('hr', {}, function () {
     QUnit.test('many2many_avatar_employee: click on an employee not associated with a user', async function (assert) {
         assert.expect(10);
 
-        this.data['hr.employee.public'].records[0].user_id = false;
-        this.data['hr.employee.public'].records[0].user_partner_id = false;
+        const pyEnv = await startServer();
+        const resPartnerId1 = pyEnv['res.partner'].create();
+        const resUsersId1 = pyEnv['res.users'].create();
+        const [hrEmployeePublicId1, hrEmployeePublicId2] = pyEnv['hr.employee.public'].create([
+            {},
+            { user_id: resUsersId1, user_partner_id: resPartnerId1 },
+        ]);
+        const m2xAvatarEmployeeId1 = pyEnv['m2x.avatar.employee'].create(
+            { employee_ids: [hrEmployeePublicId1, hrEmployeePublicId2] },
+        );
         const { widget: form } = await start({
             hasChatWindow: true,
             hasView: true,
             View: FormView,
             model: 'm2x.avatar.employee',
-            data: this.data,
             arch: '<form><field name="employee_ids" widget="many2many_avatar_employee"/></form>',
             mockRPC(route, args) {
                 if (args.method === 'read') {
@@ -383,7 +416,7 @@ QUnit.module('hr', {}, function () {
                 }
                 return this._super(...arguments);
             },
-            res_id: 1,
+            res_id: m2xAvatarEmployeeId1,
             services: {
                 notification: {
                     notify(notification) {
@@ -410,17 +443,17 @@ QUnit.module('hr', {}, function () {
         assert.containsN(form, '.o_field_many2manytags.avatar.o_field_widget .badge', 2,
             "should have 2 records");
         assert.strictEqual(form.$('.o_field_many2manytags.avatar.o_field_widget .badge:first img').data('src'),
-            '/web/image/hr.employee.public/11/avatar_128',
+            `/web/image/hr.employee.public/${hrEmployeePublicId1}/avatar_128`,
             "should have correct avatar image");
 
         await dom.click(form.$('.o_field_many2manytags.avatar .badge:first .o_m2m_avatar'));
         await dom.click(form.$('.o_field_many2manytags.avatar .badge:nth(1) .o_m2m_avatar'));
 
         assert.verifySteps([
-            'read m2x.avatar.employee 1',
-            'read hr.employee.public 11,23',
-            "read hr.employee.public 11",
-            "read hr.employee.public 23"
+            `read m2x.avatar.employee ${hrEmployeePublicId1}`,
+            `read hr.employee.public ${hrEmployeePublicId1},${hrEmployeePublicId2}`,
+            `read hr.employee.public ${hrEmployeePublicId1}`,
+            `read hr.employee.public ${hrEmployeePublicId2}`
         ]);
 
         assert.containsOnce(document.body, '.o_ChatWindowHeader_name',
