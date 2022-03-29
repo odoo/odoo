@@ -13,7 +13,9 @@ from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
+from odoo.addons.payment_stripe import utils as stripe_utils
 from odoo.addons.payment_stripe.const import HANDLED_WEBHOOK_EVENTS
+
 
 _logger = logging.getLogger(__name__)
 
@@ -142,7 +144,7 @@ class StripeController(http.Controller):
         :raise: :class:`werkzeug.exceptions.Forbidden` if the timestamp is too old or if the
                 signatures don't match
         """
-        webhook_secret = tx_sudo.acquirer_id._get_stripe_webhook_secret()
+        webhook_secret = stripe_utils.get_webhook_secret(tx_sudo.acquirer_id)
         if not webhook_secret:
             _logger.warning("ignored webhook event due to undefined webhook secret")
             return
