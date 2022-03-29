@@ -40,14 +40,14 @@
         </field>
     </record>
 
-    <record id="event_booth_view_tree" model="ir.ui.view">
-        <field name="name">event.booth.view.tree.inherit.sale</field>
+    <record id="event_booth_view_tree_from_event" model="ir.ui.view">
+        <field name="name">event.booth.view.tree.from.event.inherit.sale</field>
         <field name="model">event.booth</field>
-        <field name="inherit_id" ref="event_booth.event_booth_view_tree"/>
+        <field name="inherit_id" ref="event_booth.event_booth_view_tree_from_event"/>
         <field name="arch" type="xml">
-            <field name="booth_category_id" position="after">
+            <field name="partner_id" position="after">
                 <field name="currency_id" invisible="1"/>
-                <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total"/>
             </field>
         </field>
     </record>
@@ -59,6 +59,31 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
                 <field name="sale_order_id"/>
+            </xpath>
+            <xpath expr="//search/group/filter[@name='group_by_booth_category_id']" position="after">
+                <filter name="is_paid" context="{'group_by': 'is_paid'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_booth_view_graph" model="ir.ui.view">
+        <field name="name">event.booth.event.booth.view.graph.inherit.sale</field>
+        <field name="model">event.booth</field>
+        <field name="inherit_id" ref="event_booth.event_booth_view_graph"/>
+        <field name="arch" type="xml">
+            <xpath expr="//graph" position="inside">
+                <field name="price" type="measure"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_booth_view_pivot" model="ir.ui.view">
+        <field name="name">event.booth.event.booth.view.pivot.inherit.sale</field>
+        <field name="model">event.booth</field>
+        <field name="inherit_id" ref="event_booth.event_booth_view_pivot"/>
+        <field name="arch" type="xml">
+            <xpath expr="//pivot" position="inside">
+                <field name="price" type="measure"/>
             </xpath>
         </field>
     </record>
