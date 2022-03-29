@@ -128,6 +128,8 @@ function bootstrapToTable($editable) {
 
     // Now convert all containers with rows to tables.
     for (const container of [...editable.querySelectorAll('.container, .container-fluid, .o_fake_table')].filter(n => [...n.children].some(c => c.classList.contains('row')))) {
+        const containerWidth = _getWidth(container);
+
         // TABLE
         const table = _createTable(container.attributes);
         for (const child of [...container.childNodes]) {
@@ -188,7 +190,7 @@ function bootstrapToTable($editable) {
                 const columnSize = _getColumnSize(bootstrapColumn);
                 if (gridIndex + columnSize < 12) {
                     currentCol = grid[gridIndex];
-                    _applyColspan(currentCol, columnSize);
+                    _applyColspan(currentCol, columnSize, containerWidth);
                     if (columnIndex === bootstrapColumns.length - 1) {
                         // We handled all the columns but there is still space
                         // in the row. Insert the columns and fill the row.
@@ -199,7 +201,7 @@ function bootstrapToTable($editable) {
                 } else if (gridIndex + columnSize === 12) {
                     // Finish the row.
                     currentCol = grid[gridIndex];
-                    _applyColspan(currentCol, columnSize);
+                    _applyColspan(currentCol, columnSize, containerWidth);
                     currentRow.append(...grid.filter(td => td.getAttribute('colspan')));
                     if (columnIndex !== bootstrapColumns.length - 1) {
                         // The row was filled before we handled all of its
@@ -213,7 +215,7 @@ function bootstrapToTable($editable) {
                 } else {
                     // Fill the row with what was in the grid before it
                     // overflowed.
-                    _applyColspan(grid[gridIndex], 12 - gridIndex);
+                    _applyColspan(grid[gridIndex], 12 - gridIndex, containerWidth);
                     currentRow.append(...grid.filter(td => td.getAttribute('colspan')));
                     // Start a new row that starts with the current col.
                     const previousRow = currentRow;
@@ -221,7 +223,7 @@ function bootstrapToTable($editable) {
                     previousRow.after(currentRow);
                     grid = _createColumnGrid();
                     currentCol = grid[0];
-                    _applyColspan(currentCol, columnSize);
+                    _applyColspan(currentCol, columnSize, containerWidth);
                     gridIndex = columnSize;
                     if (columnIndex === bootstrapColumns.length - 1 && gridIndex < 12) {
                         // We handled all the columns but there is still space
@@ -229,7 +231,7 @@ function bootstrapToTable($editable) {
                         grid[gridIndex].setAttribute('colspan', 12 - gridIndex);
                         currentRow.append(...grid.filter(td => td.getAttribute('colspan')));
                         // Adapt width to colspan.
-                        _applyColspan(grid[gridIndex], 12 - gridIndex);
+                        _applyColspan(grid[gridIndex], 12 - gridIndex, containerWidth);
                     }
                 }
                 if (currentCol) {
@@ -247,7 +249,7 @@ function bootstrapToTable($editable) {
                         currentCol.append(child);
                     }
                     // Adapt width to colspan.
-                    _applyColspan(currentCol, +currentCol.getAttribute('colspan'));
+                    _applyColspan(currentCol, +currentCol.getAttribute('colspan'), containerWidth);
                 }
                 columnIndex++;
             }
@@ -392,6 +394,23 @@ function classToStyle($editable, cssRules) {
     writes.forEach(fn => fn());
 }
 /**
+ * Add styles to all table rows and columns, that are necessary for them to be
+ * responsive. This only works if columns have a max-width so the styles are
+ * only applied to columns where that is the case.
+ *
+ * @param {Element} editable
+ */
+function enforceTablesResponsivity(editable) {
+    for (const tr of editable.querySelectorAll('tr')) {
+        tr.style.setProperty('width', '100%');
+    }
+    for (const td of editable.querySelectorAll('td[style*="max-width"]')) {
+        td.setAttribute('width', '100%');
+        td.style.setProperty('width', '100%');
+        td.style.setProperty('display', 'inline-block');
+    }
+}
+/**
  * Convert the contents of an editable area (as a JQuery element) into content
  * that is widely compatible with email clients. If no CSS Rules are given, they
  * will be computed for the editable element's owner document.
@@ -456,11 +475,13 @@ async function toInline($editable, cssRules, $iframe) {
     cardToTable($editable);
     listGroupToTable($editable);
     addTables($editable);
-    formatTables($editable);
     normalizeColors($editable);
     const rootFontSizeProperty = getComputedStyle(editable.ownerDocument.documentElement).fontSize;
     const rootFontSize = parseFloat(rootFontSizeProperty.replace(/[^\d\.]/g, ''));
     normalizeRem($editable, rootFontSize);
+    responsiveToStaticForOutlook(editable);
+    enforceTablesResponsivity(editable);
+    formatTables($editable);
     await flattenBackgroundImages(editable);
 
     // Styles were applied inline, we don't need a style element anymore.
@@ -668,14 +689,14 @@ function formatTables($editable) {
         }
     }
     // Align items doesn't work on table rows.
-    for (const cell of editable.querySelectorAll('tr')) {
-        const alignItems = cell.style.alignItems;
+    for (const row of editable.querySelectorAll('tr')) {
+        const alignItems = row.style.alignItems;
         if (alignItems === 'flex-start') {
-            cell.style.verticalAlign = 'top';
+            row.style.verticalAlign = 'top';
         } else if (alignItems === 'center') {
-            cell.style.verticalAlign = 'middle';
+            row.style.verticalAlign = 'middle';
         } else if (alignItems === 'flex-end' || alignItems === 'baseline') {
-            cell.style.verticalAlign = 'bottom';
+            row.style.verticalAlign = 'bottom';
         }
     }
     // Tables don't properly inherit alignments from their ancestors in Outlook.
@@ -689,6 +710,11 @@ function formatTables($editable) {
                 table.style.setProperty('text-align', ancestor.style.textAlign);
             }
         }
+    }
+    // Hide replaced cells on Outlook
+    for (const toHide of editable.querySelectorAll('.mso-hide')) {
+        const style = toHide.getAttribute('style') || '';
+        toHide.setAttribute('style', `${style} mso-hide: all;`.trim());
     }
 }
 /**
@@ -840,6 +866,36 @@ function normalizeRem($editable, rootFontSize=16) {
 }
 
 /**
+ * This replaces column html with a dumbed down, Outlook-compliant version of
+ * them just for Outlook so while not responsive, these columns still display OK
+ * on Outlook.
+ *
+ * @param {Element} editable
+ */
+ function responsiveToStaticForOutlook(editable) {
+    // Replace the responsive tables with static ones for Outlook
+    for (const td of editable.querySelectorAll('td')) {
+        const tdStyle = td.getAttribute('style') || '';
+        const msoAttributes = [...td.attributes].filter(attr => attr.name !== 'style' && attr.name !== 'width');
+        const msoWidth = td.style.getPropertyValue('max-width');
+        const msoStyles = tdStyle.replace(/(^| |max-)width:[^;]*;\s*/g, '');
+        const outlookTd = document.createElement('td');
+        for (const attribute of msoAttributes) {
+            outlookTd.setAttribute(attribute.name, td.getAttribute(attribute.name));
+        }
+        if (msoWidth) {
+            outlookTd.setAttribute('width', ('' + msoWidth).replace('px', '').trim());
+            outlookTd.setAttribute('style', `${msoStyles}width: ${msoWidth};`);
+        } else {
+            outlookTd.setAttribute('style', msoStyles);
+        }
+        td.before(document.createComment(`[if mso]>${outlookTd.outerHTML.replace('</td>', '')}<![endif]`));
+        td.before(document.createComment('[if !mso]><!--'));
+        td.prepend(document.createComment('<![endif]'));
+        td.after(document.createComment(`[if mso]></td><![endif]`));
+    }
+}
+/**
  * Convert images of type svg to png.
  *
  * @param {JQuery} $editable
@@ -885,13 +941,14 @@ async function svgToPng($editable) {
  *
  * @param {Element} element
  * @param {number} colspan
+ * @param {number} tableWidth
  */
-function _applyColspan(element, colspan) {
+function _applyColspan(element, colspan, tableWidth) {
     element.setAttribute('colspan', colspan);
+    const widthPercentage = +element.getAttribute('colspan') / 12;
     // Round to 2 decimal places.
-    const width = (Math.round(+element.getAttribute('colspan') * 10000 / 12) / 100) + '%';
-    element.setAttribute('width', width);
-    element.style.setProperty('width', width);
+    const width = Math.round(tableWidth * widthPercentage * 100) / 100;
+    element.style.setProperty('max-width', width + 'px');
 }
 /**
  * Take a selector and return its specificity according to the w3 specification.

@@ -801,7 +801,7 @@ function getTableHtml(matrix) {
         matrix.map((row, iRow) => (
             `<tr>` +
             row.map((col, iCol) => (
-                `<td colspan="${col[0]}" width="${col[1]}%" style="width: ${col[1]}%;">` +
+                `<td colspan="${col[0]}">` +
                 (col.length === 3 ? col[2] : `(${iRow}, ${iCol})`) +
                 `</td>`
             )).join('') +
@@ -852,6 +852,23 @@ function getRegularTableHtml(nRows, nCols, colspan, width) {
     );
     return getTableHtml(matrix);
 }
+/**
+ * Take an HTML string and returns that string stripped from any HTML comments.
+ * By default, also removes the mso-hide class which is only there for outlook
+ * to hide elements when we use mso conditional comments.
+ *
+ * @param {string} html
+ * @param {boolean} [removeMsoHide=true]
+ * @returns {string}
+ */
+function removeComments(html, removeMsoHide=true) {
+    const cleanHtml = html.replace(/<!--(.*?)-->/g, '');
+    if (removeMsoHide) {
+        return cleanHtml.replaceAll(' class="mso-hide"', '').replace(/\s*mso-hide/g, '').replace(/mso-hide\s*/g, '');
+    } else {
+        return cleanHtml;
+    }
+}
 
 return {
     wysiwygData: wysiwygData,
@@ -865,6 +882,7 @@ return {
     getTableHtml: getTableHtml,
     getRegularGridHtml: getRegularGridHtml,
     getRegularTableHtml: getRegularTableHtml,
+    removeComments: removeComments,
 };
 
 
