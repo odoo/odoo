@@ -4,7 +4,7 @@
 {
     'name': "Events Booths Sales",
     'category': 'Marketing/Events',
-    'version': '1.0',
+    'version': '1.1',
     'summary': "Manage event booths sale",
     'description': """
 Sell your event booths and track payments on sale orders.

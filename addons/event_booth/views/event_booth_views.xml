@@ -166,19 +166,41 @@
                 <filter string="Unavailable" name="filter_booth_unavailable"
                     domain="[('state', '=', 'unavailable')]"/>
                 <group expand="0" string="Group By">
-                    <filter string="Booth Type" name="group_by_booth_category_id" context="{'group_by': 'booth_category_id'}"/>
+                    <filter name="group_by_state" context="{'group_by': 'state'}"/>
+                    <filter name="group_by_partner_id" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_by_booth_category_id" context="{'group_by': 'booth_category_id'}"/>
                     <filter string="Event" name="group_by_event_id" context="{'group_by': 'event_id'}"/>
                 </group>
             </search>
         </field>
     </record>
 
+    <record id="event_booth_view_graph" model="ir.ui.view">
+        <field name="name">event.booth.view.graph</field>
+        <field name="model">event.booth</field>
+        <field name="arch" type="xml">
+            <graph string="Event booth" sample="1" type="pie">
+                <field name="booth_category_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="event_booth_view_pivot" model="ir.ui.view">
+        <field name="name">event.booth.view.pivot</field>
+        <field name="model">event.booth</field>
+        <field name="arch" type="xml">
+            <pivot string="Event booth" sample="1">
+                <field name="booth_category_id" type="row"/>
+            </pivot>
+        </field>
+    </record>
+
     <record id="event_booth_action" model="ir.actions.act_window">
         <field name="name">Booths</field>
         <field name="res_model">event.booth</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,tree,form,graph,pivot</field>
         <field name="domain">[]</field>
-        <field name="context">{}</field>
+        <field name="context">{'search_default_group_by_state': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a Booth
@@ -191,9 +213,9 @@
     <record id="event_booth_action_from_event" model="ir.actions.act_window">
         <field name="name">Booths</field>
         <field name="res_model">event.booth</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,tree,form,graph,pivot</field>
         <field name="domain">[('event_id', '=', active_id)]</field>
-        <field name="context">{'default_event_id': active_id}</field>
+        <field name="context">{'default_event_id': active_id, 'search_default_group_by_state': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a Booth
