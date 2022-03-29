@@ -12,6 +12,7 @@ import { isBlock, rgbToHex } from '../../../lib/odoo-editor/src/utils/utils';
 const RE_COL_MATCH = /(^| )col(-[\w\d]+)*( |$)/;
 const RE_COMMAS_OUTSIDE_PARENTHESES = /,(?![^(]*?\))/g;
 const RE_OFFSET_MATCH = /(^| )offset(-[\w\d]+)*( |$)/;
+const RE_PADDING_MATCH = /[ ]*padding[^;]*;/g;
 const RE_PADDING = /([\d.]+)/;
 const RE_WHITESPACE = /[\s\u200b]*/;
 const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|'|\([^(),]+[,(])/;
@@ -368,8 +369,22 @@ function classToStyle($editable, cssRules) {
         }
         // Outlook
         if (node.nodeName === 'A' && node.classList.contains('btn') && !node.classList.contains('btn-link') && !node.children.length) {
-            writes.push(() => { node.prepend(document.createComment('[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%; mso-text-raise: 30pt;">&nbsp;</i><![endif]')); });
-            writes.push(() => { node.append(document.createComment('[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%;">&nbsp;</i><![endif]')); });
+            writes.push(() => {
+                node.before(document.createComment(`[if mso]>
+                    <table align="center" role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-radius: 6px; border-collapse: separate !important;">
+                        <tbody>
+                            <tr>
+                                <td style="${node.style.cssText.replace(RE_PADDING_MATCH, '')}" ${
+                                    node.parentElement.style.textAlign === 'center' ? 'align="center" ' : ''
+                                }bgcolor="${rgbToHex(node.style.backgroundColor)}">
+                <![endif]`));
+                node.after(document.createComment(`[if mso]>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                <![endif]`));
+            });
         } else if (node.nodeName === 'IMG' && node.classList.contains('mx-auto') && node.classList.contains('d-block')) {
             writes.push(() => { _wrap(node, 'p', 'o_outlook_hack', 'text-align:center;margin:0'); });
         }

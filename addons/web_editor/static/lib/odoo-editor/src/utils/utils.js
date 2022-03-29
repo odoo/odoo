@@ -2067,15 +2067,19 @@ export function enforceWhitespace(el, offset, direction, rule) {
 }
 
 export function rgbToHex(rgb = '') {
-    return (
-        '#' +
-        (rgb.match(/\d{1,3}/g) || [])
-            .map(x => {
-                x = parseInt(x).toString(16);
-                return x.length === 1 ? '0' + x : x;
-            })
-            .join('')
-    );
+    if (rgb.startsWith('#')) {
+        return rgb;
+    } else {
+        return (
+            '#' +
+            (rgb.match(/\d{1,3}/g) || [])
+                .map(x => {
+                    x = parseInt(x).toString(16);
+                    return x.length === 1 ? '0' + x : x;
+                })
+                .join('')
+        );
+    }
 }
 
 export function getRangePosition(el, document, options = {}) {
