@@ -4087,15 +4087,13 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("one2many, default_get and onchange (basic)", async function (assert) {
-        assert.expect(1);
-
+    QUnit.test("one2many, default_get and onchange (basic)", async function (assert) {
         serverData.models.partner.fields.p.default = [
             [6, 0, []], // replace with zero ids
         ];
         serverData.models.partner.onchanges = { p: true };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -4109,23 +4107,19 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             mockRPC(route, args) {
                 if (args.method === "onchange") {
-                    return Promise.resolve({
+                    return {
                         value: {
                             p: [
                                 [5], // delete all
                                 [0, 0, { foo: "from onchange" }], // create new
                             ],
                         },
-                    });
+                    };
                 }
-                return this._super(route, args);
             },
         });
 
-        assert.ok(
-            form.$("td:contains(from onchange)").length,
-            "should have 'from onchange' value in one2many"
-        );
+        assert.strictEqual(target.querySelector("td").innerText, "from onchange");
     });
 
     QUnit.skipWOWL("one2many and default_get (with date)", async function (assert) {
@@ -4133,7 +4127,7 @@ QUnit.module("Fields", (hooks) => {
 
         serverData.models.partner.fields.p.default = [[0, false, { date: "2017-10-08", p: [] }]];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -4148,20 +4142,18 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            form.$(".o_data_cell").text(),
+            target.querySelector(".o_data_cell").innerText,
             "10/08/2017",
             "should correctly display the date"
         );
     });
 
-    QUnit.skipWOWL("one2many and onchange (with integer)", async function (assert) {
-        assert.expect(4);
-
+    QUnit.test("one2many and onchange (with integer)", async function (assert) {
         serverData.models.turtle.onchanges = {
             turtle_int: function () {},
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -4176,32 +4168,23 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
             mockRPC(route, args) {
                 assert.step(args.method);
-                return this._super.apply(this, arguments);
             },
         });
         await clickEdit(target);
-
-        await click(form.$("td:contains(9)"));
-        await testUtils.fields.editInput(form.$('td input[name="turtle_int"]'), "3");
-
-        // the 'change' event is triggered on the input when we focus somewhere
-        // else, for example by clicking in the body.  However, if we try to
-        // programmatically click in the body, it does not trigger a change
-        // event, so we simply trigger it directly instead.
-        form.$('td input[name="turtle_int"]').trigger("change");
-
+        const td = target.querySelector("td");
+        assert.strictEqual(td.innerText, "9");
+        await click(td);
+        await editInput(target, 'td [name="turtle_int"] input', "3");
         assert.verifySteps(["read", "read", "onchange"]);
     });
 
-    QUnit.skipWOWL("one2many and onchange (with date)", async function (assert) {
-        assert.expect(7);
-
+    QUnit.test("one2many and onchange (with date)", async function (assert) {
         serverData.models.partner.onchanges = {
             date: function () {},
         };
         serverData.models.partner.records[0].p = [2];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -4216,19 +4199,26 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
             mockRPC(route, args) {
                 assert.step(args.method);
-                return this._super.apply(this, arguments);
             },
         });
         await clickEdit(target);
+        const td = target.querySelector("td");
+        assert.strictEqual(td.innerText, "01/25/2017");
 
-        await click(form.$("td:contains(01/25/2017)"));
-        await click(form.$(".o_datepicker_input"));
-        await testUtils.nextTick();
-        await click($(".bootstrap-datetimepicker-widget .picker-switch").first());
-        await click($(".bootstrap-datetimepicker-widget .picker-switch:eq(1)"));
-        await click($(".bootstrap-datetimepicker-widget .year:contains(2017)"));
-        await click($(".bootstrap-datetimepicker-widget .month").eq(1));
-        await click($(".day:contains(22)"));
+        await click(td);
+        await click(target.querySelector(".o_datepicker_input"));
+        await nextTick();
+        await click(document.body.querySelector(".bootstrap-datetimepicker-widget .picker-switch"));
+        await click(
+            document.body.querySelectorAll(".bootstrap-datetimepicker-widget .picker-switch")[1]
+        );
+        await click(
+            [...document.body.querySelectorAll(".bootstrap-datetimepicker-widget .year")].filter(
+                (el) => el.innerText === "2017"
+            )[0]
+        );
+        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .month")[1]);
+        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .day")[22]);
         await clickSave(target);
 
         assert.verifySteps(["read", "read", "onchange", "write", "read", "read"]);
