@@ -37,7 +37,7 @@ class AccountMove(models.Model):
         ('delivered_expired', 'This invoice is delivered and expired (expiry of the maximum term for communication of acceptance/refusal)'),
         ('failed_delivery', 'Delivery impossible, ES certify that it has received the invoice and that the file \
                         could not be delivered to the addressee') # ok we must do nothing
-    ], default='to_send', copy=False)
+    ], default='to_send', copy=False, string="FatturaPA Send State")
 
     l10n_it_stamp_duty = fields.Float(default=0, string="Dati Bollo", readonly=True, states={'draft': [('readonly', False)]})
 
