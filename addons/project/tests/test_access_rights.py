@@ -116,6 +116,7 @@ class TestCRUDVisibilityPortal(TestAccessRights):
     def setUp(self):
         super().setUp()
         self.project_pigs.privacy_visibility = 'portal'
+        self.env['base'].flush()
 
     @users('Portal user')
     def test_task_portal_no_read(self):
