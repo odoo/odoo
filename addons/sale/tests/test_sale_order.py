@@ -183,7 +183,7 @@ class TestSaleOrder(TestSaleCommon):
         # and the fact this method is called multiple times in the same transaction test case.
         # Here, we update `qty_delivered` on the origin record, but the `new` records which are in cache with this order line
         # as origin are not updated, nor the fields that depends on it.
-        self.sol_serv_order.flush()
+        self.env.flush_all()
         for field in self.env['sale.order.line']._fields.values():
             for res_id in list(self.env.cache._data[field]):
                 if not res_id:

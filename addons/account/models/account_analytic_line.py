@@ -17,7 +17,8 @@ class AccountAnalyticAccount(models.Model):
         if not analytic_accounts:
             return
 
-        self.flush(['company_id'])
+        self.flush_recordset(['company_id'])
+        self.env['account.move.line'].flush_model(['analytic_account_id', 'company_id'])
         self._cr.execute('''
             SELECT line.id
             FROM account_move_line line
@@ -89,7 +90,8 @@ class AccountAnalyticTag(models.Model):
         if not analytic_tags:
             return
 
-        self.flush(['company_id'])
+        self.flush_recordset(['company_id'])
+        self.env['account.move.line'].flush_model(['company_id'])
         self._cr.execute('''
             SELECT line.id
             FROM account_analytic_tag_account_move_line_rel tag_rel

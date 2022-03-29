@@ -55,8 +55,8 @@ class TestMessageValues(TestMailCommon):
         # We need to flush and invalidate the ORM cache since the record_name
         # is already cached from the creation. Otherwise it will leak inside
         # message_format.
-        message.flush()
-        message.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
         res = message.with_user(self.user_employee).message_format()
         self.assertEqual(res[0].get('record_name'), 'Test1')
 

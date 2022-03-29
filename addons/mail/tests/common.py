@@ -558,7 +558,7 @@ class MailCase(MockEmail):
 
     def flush_tracking(self):
         """ Force the creation of tracking values. """
-        self.env['base'].flush()
+        self.env.flush_all()
         self.cr.flush()
 
     # ------------------------------------------------------------

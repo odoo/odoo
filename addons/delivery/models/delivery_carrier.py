@@ -226,7 +226,7 @@ class DeliveryCarrier(models.Model):
         self.ensure_one()
 
         if self.debug_logging:
-            self.flush()
+            self.env.flush_all()
             db_name = self._cr.dbname
 
             # Use a new cursor to avoid rollback that could be caused by an upper method
@@ -384,8 +384,8 @@ class DeliveryCarrier(models.Model):
 
     def _neutralize(self):
         super()._neutralize()
-        self.flush()
-        self.invalidate_cache()
+        self.flush_model()
+        self.invalidate_model()
         self.env.cr.execute("""
             UPDATE delivery_carrier
             SET prod_environment = false, active = false

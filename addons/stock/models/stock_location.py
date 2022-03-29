@@ -216,13 +216,13 @@ class Location(models.Model):
                     })
 
         res = super(Location, self).write(values)
-        self.invalidate_cache(['warehouse_id'])
+        self.invalidate_model(['warehouse_id'])
         return res
 
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
-        self.invalidate_cache(['warehouse_id'])
+        self.invalidate_model(['warehouse_id'])
         return res
 
     def _get_putaway_strategy(self, product, quantity=0, package=None, packaging=None, additional_qty=None):

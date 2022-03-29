@@ -183,7 +183,7 @@ class AccruedExpenseRevenue(models.TransientModel):
                     move_lines.append(Command.create(values))
                     total_balance += amount
                 # must invalidate cache or o can mess when _create_invoices().action_post() of original order after this
-                order.order_line.invalidate_cache(fnames=fnames)
+                order.order_line.invalidate_model(fnames)
 
         if not self.company_id.currency_id.is_zero(total_balance):
             # globalized counterpart for the whole orders selection

@@ -18,8 +18,7 @@ class TestUi(TestSaleProductAttributeValueCommon, HttpCase):
         pricelist = cls.env.ref('product.list0')
         new_currency = cls._setup_currency(cls.currency_ratio)
         pricelist.currency_id = new_currency
-        pricelist.flush()
-
+        cls.env.flush_all()
 
     def test_01_admin_shop_sale_loyalty_tour(self):
         # pre enable "Show # found" option to avoid race condition...
@@ -247,7 +246,7 @@ class TestWebsiteSaleCoupon(TransactionCase):
         # 4. Test order not older than ICP validity -> Should not be removed
         ICP = self.env['ir.config_parameter']
         icp_validity = ICP.create({'key': 'website_sale_coupon.abandonned_coupon_validity', 'value': 5})
-        order.flush()
+        self.env.flush_all()
         query = """UPDATE %s SET write_date = %%s WHERE id = %%s""" % (order._table,)
         self.env.cr.execute(query, (fields.Datetime.to_string(fields.datetime.now() - timedelta(days=4, hours=2)), order.id))
         order._gc_abandoned_coupons()

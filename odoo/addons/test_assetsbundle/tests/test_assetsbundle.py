@@ -692,7 +692,7 @@ class TestAssetsBundleInBrowser(HttpCase):
             'arch': view_arch,
             'inherit_id': self.browse_ref('test_assetsbundle.bundle1').id,
         })
-        self.env.user.flush()
+        self.env.flush_all()
 
         self.browser_js(
             "/test_assetsbundle/js",
@@ -782,9 +782,9 @@ class TestAssetsBundleWithIRAMock(FileTouchable):
             # has really been modified. If we do not update the write_date to a posterior date, we are
             # not able to reproduce the case where we compile this bundle again without changing
             # anything.
-            self.env['ir.attachment'].flush(['checksum', 'write_date'])
+            self.env['ir.attachment'].flush_model(['checksum', 'write_date'])
             self.cr.execute("update ir_attachment set write_date=clock_timestamp() + interval '10 seconds' where id = (select max(id) from ir_attachment)")
-            self.env['ir.attachment'].invalidate_cache(['write_date'])
+            self.env['ir.attachment'].invalidate_model(['write_date'])
 
             # Compile a fourth time, without changes
             self._bundle(self._get_asset(), False, False)

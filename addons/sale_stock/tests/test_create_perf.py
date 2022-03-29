@@ -33,7 +33,7 @@ class TestPERF(common.TransactionCase):
 
         cls.salesmans = cls.env.ref('base.user_admin') | cls.env.ref('base.user_demo')
 
-        cls.env['base'].flush()
+        cls.env.flush_all()
 
     @users('admin')
     @warmup

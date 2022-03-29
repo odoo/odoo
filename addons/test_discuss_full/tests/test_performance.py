@@ -99,8 +99,8 @@ class TestDiscussFullPerformance(TransactionCase):
         self.env.company.sudo().name = 'YourCompany'
 
         self.maxDiff = None
-        self.users[0].flush()
-        self.users[0].invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
         with self.assertQueryCount(emp=83):
             init_messaging = self.users[0].with_user(self.users[0])._init_messaging()
 

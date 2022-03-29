@@ -53,7 +53,7 @@ class TestBurndownChart(TransactionCase):
             'type_ids': [Command.link(stage_id) for stage_id in stages.ids],
         })
         self.set_create_date('project_project', project.id, create_date)
-        project.invalidate_cache()
+        project.invalidate_model()
         task_a = self.env['project.task'].create({
             'name': 'Task A',
             'priority': 0,

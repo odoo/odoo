@@ -503,6 +503,7 @@ class AccountEdiFormat(models.Model):
                     vat_only_numeric = None
 
                 if vat_only_numeric:
+                    self.env['res.partner'].flush_model()
                     query = self.env['res.partner']._where_calc(extra_domain + [('active', '=', True)])
                     tables, where_clause, where_params = query.get_sql()
 

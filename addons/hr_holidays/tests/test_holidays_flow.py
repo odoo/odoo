@@ -165,7 +165,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             })
             hol2_user_group = hol2.with_user(self.user_hruser_id)
             # Check left days: - 1 virtual remaining day
-            hol_status_2_employee_group.invalidate_cache()
+            hol_status_2_employee_group.invalidate_model()
             _check_holidays_status(hol_status_2_employee_group, 2.0, 0.0, 2.0, 1.0)
 
             # HrManager validates the second step
@@ -181,7 +181,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                             'hr_holidays: refuse should lead to refuse state')
             # Check left days: 2 days left again
 
-            hol_status_2_employee_group.invalidate_cache(['max_leaves'])
+            hol_status_2_employee_group.invalidate_model(['max_leaves'])
             _check_holidays_status(hol_status_2_employee_group, 2.0, 0.0, 2.0, 2.0)
 
             self.assertEqual(hol2.state, 'refuse',

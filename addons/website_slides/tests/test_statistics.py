@@ -33,7 +33,7 @@ class TestChannelStatistics(common.SlidesCase):
         self.assertTrue(channel_asportal.partner_has_new_content)
 
         (self.slide | self.slide_2).write({'date_published': fields.Datetime.now() + relativedelta(days=-8)})
-        channel_asportal.invalidate_cache(['partner_has_new_content'])
+        channel_asportal.invalidate_recordset(['partner_has_new_content'])
         self.assertFalse(channel_asportal.partner_has_new_content)
 
     @mute_logger('odoo.models')
@@ -51,7 +51,7 @@ class TestChannelStatistics(common.SlidesCase):
         channel_publisher.action_add_member()
         self.assertEqual(channel_publisher.members_count, 1)
         channel_publisher._action_add_members(self.user_emp.partner_id)
-        channel_publisher.invalidate_cache(['partner_ids'])
+        channel_publisher.invalidate_recordset(['partner_ids'])
         self.assertEqual(channel_publisher.members_count, 2)
         self.assertEqual(channel_publisher.partner_ids, self.user_officer.partner_id | self.user_emp.partner_id)
 
@@ -69,7 +69,7 @@ class TestChannelStatistics(common.SlidesCase):
         self.assertEqual(channel_emp.completion, 0)
 
         slides_emp.action_mark_completed()
-        channel_emp.invalidate_cache()
+        channel_emp.invalidate_recordset()
         self.assertEqual(
             channel_emp.completion,
             math.ceil(100.0 * len(slides_emp) / len(channel_publisher.slide_content_ids)))
@@ -92,7 +92,7 @@ class TestChannelStatistics(common.SlidesCase):
     def test_channel_user_statistics_complete_check_member(self):
         slides = (self.slide | self.slide_2)
         slides.write({'is_preview': True})
-        slides.flush(['is_preview'])
+        slides.flush_model()
         slides_emp = slides.with_user(self.user_emp)
         slides_emp.read(['name'])
         with self.assertRaises(UserError):
@@ -102,7 +102,7 @@ class TestChannelStatistics(common.SlidesCase):
     def test_channel_user_statistics_view_check_member(self):
         slides = (self.slide | self.slide_2)
         slides.write({'is_preview': True})
-        slides.flush(['is_preview'])
+        slides.flush_model()
         slides_emp = slides.with_user(self.user_emp)
         slides_emp.read(['name'])
         with self.assertRaises(UserError):
@@ -115,7 +115,7 @@ class TestSlideStatistics(common.SlidesCase):
     def test_slide_user_statistics(self):
         channel_publisher = self.channel.with_user(self.user_officer)
         channel_publisher._action_add_members(self.user_emp.partner_id)
-        channel_publisher.invalidate_cache(['partner_ids'])
+        channel_publisher.invalidate_recordset(['partner_ids'])
 
         slide_emp = self.slide.with_user(self.user_emp)
         self.assertEqual(slide_emp.likes, 0)

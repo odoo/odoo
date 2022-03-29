@@ -19,7 +19,7 @@ class TestPurchaseMatrixUi(TestMatrixCommon):
         self.assertEqual(len(self.matrix_template.attribute_line_ids.product_template_value_ids), 8)
         self.env['purchase.order.line'].search([('product_id', 'in', self.matrix_template.product_variant_ids.ids)]).order_id.button_confirm()
 
-        self.matrix_template.flush()
+        self.matrix_template.flush_recordset()
         self.assertEqual(round(self.matrix_template.purchased_product_qty, 2), 56.8)
         for variant in self.matrix_template.product_variant_ids:
             # 5 and 9.2 because of no variant attributes

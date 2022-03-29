@@ -49,7 +49,7 @@ class TestDefaultTeam(TestSalesCommon):
     def test_default_team_fallback(self):
         """ Test fallback: domain, order """
         self.sales_team_1.member_ids = [(5,)]
-        self.sales_team_1.flush()
+        self.sales_team_1.flush_model()
 
         with self.with_user('user_sales_leads'):
             team = self.env['crm.team']._get_default_team_id()

@@ -72,36 +72,36 @@ class TestAccess(common.SlidesCase):
     def test_access_channel_publish(self):
         """ Unpublished channels and their content are visible only to eLearning people """
         self.channel.write({'is_published': False, 'enroll': 'public'})
-        self.channel.flush(['is_published', 'website_published', 'enroll'])
+        self.channel.flush_model()
 
         # channel available only to eLearning
-        self.channel.invalidate_cache(['name'])
+        self.channel.invalidate_model(['name'])
         self.channel.with_user(self.user_officer).read(['name'])
-        self.channel.invalidate_cache(['name'])
+        self.channel.invalidate_model(['name'])
         self.channel.with_user(self.user_manager).read(['name'])
         with self.assertRaises(AccessError):
-            self.channel.invalidate_cache(['name'])
+            self.channel.invalidate_model(['name'])
             self.channel.with_user(self.user_emp).read(['name'])
         with self.assertRaises(AccessError):
-            self.channel.invalidate_cache(['name'])
+            self.channel.invalidate_model(['name'])
             self.channel.with_user(self.user_portal).read(['name'])
         with self.assertRaises(AccessError):
-            self.channel.invalidate_cache(['name'])
+            self.channel.invalidate_model(['name'])
             self.channel.with_user(self.user_public).read(['name'])
 
         # slide available only to eLearning
-        self.channel.invalidate_cache(['name'])
+        self.channel.invalidate_model(['name'])
         self.slide.with_user(self.user_officer).read(['name'])
-        self.channel.invalidate_cache(['name'])
+        self.channel.invalidate_model(['name'])
         self.slide.with_user(self.user_manager).read(['name'])
         with self.assertRaises(AccessError):
-            self.slide.invalidate_cache(['name'])
+            self.slide.invalidate_model(['name'])
             self.slide.with_user(self.user_emp).read(['name'])
         with self.assertRaises(AccessError):
-            self.slide.invalidate_cache(['name'])
+            self.slide.invalidate_model(['name'])
             self.slide.with_user(self.user_portal).read(['name'])
         with self.assertRaises(AccessError):
-            self.slide.invalidate_cache(['name'])
+            self.slide.invalidate_model(['name'])
             self.slide.with_user(self.user_public).read(['name'])
 
         # even members cannot see unpublished content
@@ -110,10 +110,10 @@ class TestAccess(common.SlidesCase):
             'partner_id': self.user_emp.partner_id.id,
         })
         with self.assertRaises(AccessError):
-            self.channel.invalidate_cache(['name'])
+            self.channel.invalidate_model(['name'])
             self.channel.with_user(self.user_emp).read(['name'])
         with self.assertRaises(AccessError):
-            self.slide.invalidate_cache(['name'])
+            self.slide.invalidate_model(['name'])
             self.slide.with_user(self.user_emp).read(['name'])
 
         # publish channel but content unpublished (even if can be previewed) still unavailable
@@ -122,21 +122,21 @@ class TestAccess(common.SlidesCase):
             'is_preview': True,
             'is_published': False,
         })
-        self.channel.flush(['website_published'])
-        self.slide.flush(['is_preview', 'website_published'])
+        self.channel.flush_model()
+        self.slide.flush_model()
 
-        self.slide.invalidate_cache(['name'])
+        self.slide.invalidate_model(['name'])
         self.slide.with_user(self.user_officer).read(['name'])
-        self.slide.invalidate_cache(['name'])
+        self.slide.invalidate_model(['name'])
         self.slide.with_user(self.user_manager).read(['name'])
         with self.assertRaises(AccessError):
-            self.slide.invalidate_cache(['name'])
+            self.slide.invalidate_model(['name'])
             self.slide.with_user(self.user_emp).read(['name'])
         with self.assertRaises(AccessError):
-            self.slide.invalidate_cache(['name'])
+            self.slide.invalidate_model(['name'])
             self.slide.with_user(self.user_portal).read(['name'])
         with self.assertRaises(AccessError):
-            self.slide.invalidate_cache(['name'])
+            self.slide.invalidate_model(['name'])
             self.slide.with_user(self.user_public).read(['name'])
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
@@ -144,7 +144,7 @@ class TestAccess(common.SlidesCase):
         """ Slides with preview flag are always visible even to non members if published """
         self.channel.write({'enroll': 'invite'})
         self.slide.write({'is_preview': True})
-        self.slide.flush(['is_preview'])
+        self.slide.flush_model()
 
         self.slide.with_user(self.user_officer).read(['name'])
         self.slide.with_user(self.user_manager).read(['name'])
@@ -200,7 +200,7 @@ class TestAccessFeatures(common.SlidesCase):
             'is_published': True,
             'enroll_group_ids': [(4, self.ref('base.group_user'))]
         })
-        channel.invalidate_cache(['partner_ids'])
+        channel.invalidate_model(['partner_ids'])
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id'))
 
         new_user = self.env['res.users'].create({
@@ -208,7 +208,7 @@ class TestAccessFeatures(common.SlidesCase):
             'login': 'NewUser',
             'groups_id': [(6, 0, [self.ref('base.group_user')])]
         })
-        channel.invalidate_cache()
+        channel.invalidate_model()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id)
 
         new_user_2 = self.env['res.users'].create({
@@ -216,10 +216,10 @@ class TestAccessFeatures(common.SlidesCase):
             'login': 'NewUser2',
             'groups_id': [(5, 0)]
         })
-        channel.invalidate_cache()
+        channel.invalidate_model()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id)
         new_user_2.write({'groups_id': [(4, self.ref('base.group_user'))]})
-        channel.invalidate_cache()
+        channel.invalidate_model()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id | new_user_2.partner_id)
 
         new_user_3 = self.env['res.users'].create({
@@ -227,10 +227,10 @@ class TestAccessFeatures(common.SlidesCase):
             'login': 'NewUser3',
             'groups_id': [(5, 0)]
         })
-        channel.invalidate_cache()
+        channel.invalidate_model()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id | new_user_2.partner_id)
         self.env.ref('base.group_user').write({'users': [(4, new_user_3.id)]})
-        channel.invalidate_cache()
+        channel.invalidate_model()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id | new_user_2.partner_id | new_user_3.partner_id)
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
@@ -296,7 +296,7 @@ class TestAccessFeatures(common.SlidesCase):
 
         # superuser should always be able to publish even if they are not the responsible
         channel_superuser = self.channel.sudo()
-        channel_superuser.invalidate_cache(['can_upload', 'can_publish'])
+        channel_superuser.invalidate_recordset(['can_upload', 'can_publish'])
         self.assertTrue(channel_superuser.can_upload)
         self.assertTrue(channel_superuser.can_publish)
 

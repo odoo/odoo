@@ -73,7 +73,7 @@ class TestAccessRights(TransactionCase):
             (self.raoul, 'partner_ids', self.env['res.partner'], None),
             (self.portal, 'partner_ids', None, AccessError),
         ]:
-            event.invalidate_cache()
+            self.env.invalidate_all()
             with self.subTest("private read", user=user.display_name, field=field, error=error):
                 e = event.with_user(user)
                 if error:

@@ -17,7 +17,6 @@ class SaleOrder(models.Model):
                 order.margin = sum(order.order_line.mapped('margin'))
                 order.margin_percent = order.amount_untaxed and order.margin/order.amount_untaxed
         else:
-            self.env["sale.order.line"].flush(['margin'])
             # On batch records recomputation (e.g. at install), compute the margins
             # with a single read_group query for better performance.
             # This isn't done in an onchange environment because (part of) the data

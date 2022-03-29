@@ -1373,8 +1373,8 @@ class AccountMove(models.Model):
     def _compute_amount(self):
         stored_ids = tuple(self.ids)
         if stored_ids:
-            self.env['account.partial.reconcile'].flush(self.env['account.partial.reconcile']._fields)
-            self.env['account.payment'].flush(fnames=['is_matched'])
+            self.env['account.partial.reconcile'].flush_model()
+            self.env['account.payment'].flush_model(['is_matched'])
 
             queries = []
             for source_field, counterpart_field in (('debit', 'credit'), ('credit', 'debit')):
@@ -1825,7 +1825,7 @@ class AccountMove(models.Model):
         if not moves:
             return
 
-        self.flush(['name', 'journal_id', 'move_type', 'state'])
+        self.flush_model(['name', 'journal_id', 'move_type', 'state'])
 
         # /!\ Computed stored fields are not yet inside the database.
         self._cr.execute('''
@@ -1849,12 +1849,12 @@ class AccountMove(models.Model):
         if not moves:
             return
 
-        self.env["account.move"].flush([
+        self.env["account.move"].flush_model([
             "ref", "move_type", "invoice_date", "journal_id",
             "company_id", "partner_id", "commercial_partner_id",
         ])
-        self.env["account.journal"].flush(["company_id"])
-        self.env["res.partner"].flush(["commercial_partner_id"])
+        self.env["account.journal"].flush_model(["company_id"])
+        self.env["res.partner"].flush_model(["commercial_partner_id"])
 
         # /!\ Computed stored fields are not yet inside the database.
         self._cr.execute('''
@@ -1892,8 +1892,8 @@ class AccountMove(models.Model):
         # /!\ As this method is called in create / write, we can't make the assumption the computed stored fields
         # are already done. Then, this query MUST NOT depend of computed stored fields (e.g. balance).
         # It happens as the ORM makes the create with the 'no_recompute' statement.
-        self.env['account.move.line'].flush(self.env['account.move.line']._fields)
-        self.env['account.move'].flush(['journal_id'])
+        self.env['account.move.line'].flush_model()
+        self.env['account.move'].flush_model(['journal_id'])
         self._cr.execute('''
             WITH error_moves AS (
                 SELECT line.move_id,
@@ -4172,8 +4172,8 @@ class AccountMoveLine(models.Model):
         stored_lines = need_residual_lines.filtered('id')
 
         if stored_lines:
-            self.env['account.partial.reconcile'].flush(self.env['account.partial.reconcile']._fields)
-            self.env['res.currency'].flush(['decimal_places'])
+            self.env['account.partial.reconcile'].flush_model()
+            self.env['res.currency'].flush_model(['decimal_places'])
 
             aml_ids = tuple(stored_lines.ids)
             self._cr.execute('''
@@ -4698,16 +4698,24 @@ class AccountMoveLine(models.Model):
             result.append((line.id, name))
         return result
 
-    @api.model
-    def invalidate_cache(self, fnames=None, ids=None):
+    def invalidate_model(self, fnames=None):
         # Invalidate cache of related moves
         if fnames is None or 'move_id' in fnames:
             field = self._fields['move_id']
-            lines = self.env.cache.get_records(self, field) if ids is None else self.browse(ids)
+            lines = self.env.cache.get_records(self, field)
             move_ids = {id_ for id_ in self.env.cache.get_values(lines, field) if id_}
             if move_ids:
-                self.env['account.move'].invalidate_cache(ids=move_ids)
-        return super().invalidate_cache(fnames=fnames, ids=ids)
+                self.env['account.move'].browse(move_ids).invalidate_recordset()
+        return super().invalidate_model(fnames)
+
+    def invalidate_recordset(self, fnames=None):
+        # Invalidate cache of related moves
+        if fnames is None or 'move_id' in fnames:
+            field = self._fields['move_id']
+            move_ids = {id_ for id_ in self.env.cache.get_values(self, field) if id_}
+            if move_ids:
+                self.env['account.move'].browse(move_ids).invalidate_recordset()
+        return super().invalidate_recordset(fnames)
 
     # -------------------------------------------------------------------------
     # TRACKING METHODS

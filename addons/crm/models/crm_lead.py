@@ -1008,7 +1008,7 @@ class Lead(models.Model):
                 return _('Go, go, go! Congrats for your first deal.')
             return False
 
-        self.flush()  # flush fields to make sure DB is up to date
+        self.flush_model()  # flush fields to make sure DB is up to date
         query = """
             SELECT
                 SUM(CASE WHEN user_id = %(user_id)s THEN 1 ELSE 0 END) as total_won,
@@ -1480,8 +1480,8 @@ class Lead(models.Model):
         """
         self.ensure_one()
 
-        self.env['mail.message'].flush()
-        self.env['mail.followers'].flush()
+        self.env['mail.message'].flush_model()
+        self.env['mail.followers'].flush_model()
 
         # Get the active followers (followers whose partner post a message on the
         # leads in the last 30 days) which should be moved on the destination lead
@@ -2157,6 +2157,7 @@ class Lead(models.Model):
         transactions_count, transactions_failed_count = 0, 0
         cron_update_lead_start_date = datetime.now()
         auto_commit = not getattr(threading.current_thread(), 'testing', False)
+        self.flush_model()
         for probability, probability_lead_ids in probability_leads.items():
             for lead_ids_current in tools.split_every(PLS_UPDATE_BATCH_STEP, probability_lead_ids):
                 transactions_count += 1
@@ -2168,6 +2169,7 @@ class Lead(models.Model):
                 except Exception as e:
                     _logger.warning("Predictive Lead Scoring : update transaction failed. Error: %s" % e)
                     transactions_failed_count += 1
+        self.invalidate_model()
 
         _logger.info(
             "Predictive Lead Scoring : All automated probabilities updated (%d leads / %d transactions (%d failed) / %d seconds)" % (
@@ -2446,7 +2448,7 @@ class Lead(models.Model):
             args = [sql.Identifier(field) for field in pls_fields]
 
             # Get leads values
-            self.flush(['probability'])
+            self.flush_model()
             query = """SELECT id, probability, %s
                         FROM %s
                         WHERE %s order by team_id asc"""

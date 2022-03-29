@@ -770,7 +770,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
         # admin should receive emails
         self.user_admin.write({'notification_type': 'email'})
         # Force the attachments of the template to be in the natural order.
-        self.email_template.invalidate_cache(['attachment_ids'], ids=self.email_template.ids)
+        self.email_template.invalidate_recordset(['attachment_ids'])
 
         with self.mock_mail_gateway():
             test_record.with_user(self.user_employee).message_post_with_template(self.email_template.id, composition_mode='comment')

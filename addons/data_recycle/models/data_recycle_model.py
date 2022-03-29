@@ -105,7 +105,7 @@ class DataRecycleModel(models.Model):
         self.sudo()._notify_records_to_recycle()
 
     def _recycle_records(self, batch_commits=False):
-        self.flush()
+        self.env.flush_all()
         records_to_clean = []
         is_test = bool(config['test_enable'] or config['test_file'])
 

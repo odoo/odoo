@@ -548,9 +548,9 @@ class AccountPayment(models.Model):
             self.reconciled_statements_count = 0
             return
 
-        self.env['account.move'].flush()
-        self.env['account.move.line'].flush()
-        self.env['account.partial.reconcile'].flush()
+        self.env['account.move'].flush_model()
+        self.env['account.move.line'].flush_model()
+        self.env['account.partial.reconcile'].flush_model()
 
         self._cr.execute('''
             SELECT

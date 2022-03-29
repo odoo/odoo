@@ -81,7 +81,7 @@ class TestMailMail(TestMailCommon):
             if any(attachment.name in ('file 2', 'file 4') for attachment in self):
                 raise AccessError('No access')
 
-        mail.invalidate_cache(ids=mail.ids)
+        mail.invalidate_recordset()
 
         new_attachment = self.env['ir.attachment'].create({
             'name': 'new file',
@@ -113,13 +113,13 @@ class TestMailMail(TestMailCommon):
             self.assertEqual(len(mail.attachment_ids), 4)
 
             # Reset command
-            mail.invalidate_cache(ids=mail.ids)
+            mail.invalidate_recordset()
             mail.write({'unrestricted_attachment_ids': [Command.clear()]})
             self.assertEqual(len(mail.unrestricted_attachment_ids), 0)
             self.assertEqual(len(mail.attachment_ids), 2)
 
             # Read in SUDO
-            mail.invalidate_cache(ids=mail.ids)
+            mail.invalidate_recordset()
             self.assertEqual(mail.sudo().restricted_attachment_count, 2)
             self.assertEqual(len(mail.sudo().unrestricted_attachment_ids), 0)
 

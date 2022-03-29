@@ -245,9 +245,9 @@ class AdvancedFollowersTest(TestMailCommon):
         """ Test inactive are not added as followers in automated subscription """
         self.test_track.user_id = False
         self.user_admin.active = False
-        self.user_admin.flush()
+        self.user_admin.flush_recordset()
         self.partner_admin.active = False
-        self.partner_admin.flush()
+        self.partner_admin.flush_recordset()
 
         self.test_track.with_user(self.user_admin).message_post(body='Coucou hibou', message_type='comment')
         self.assertEqual(self.test_track.message_partner_ids, self.user_employee.partner_id)
@@ -452,7 +452,7 @@ class RecipientsNotificationTest(TestMailCommon):
              'partner_id': cls.common_partner.id,
             }
         ])
-        (cls.user_1 + cls.user_2).flush()
+        cls.env.flush_all()
 
     def assertRecipientsData(self, recipients_data, records, partners, partner_to_users=None):
         """ Custom assert as recipients structure is custom and may change due
@@ -570,7 +570,7 @@ class RecipientsNotificationTest(TestMailCommon):
              'partner_id': shared_partner.id,
             }
         ])
-        (user_2_1 + user_2_2 + user_2_3).flush()
+        (user_2_1 + user_2_2 + user_2_3).flush_recordset()
 
         # just ensure current share status
         self.assertFalse(shared_partner.partner_share)
@@ -633,7 +633,7 @@ class RecipientsNotificationTest(TestMailCommon):
         # ensure filtering on internal: should exclude Portal even if misconfiguration
         follower_portal = test_records[0].message_follower_ids.filtered(lambda fol: fol.partner_id == self.partner_portal).sudo()
         follower_portal.write({'subtype_ids': [(4, self.env.ref('mail.mt_note').id)]})
-        follower_portal.flush()
+        follower_portal.flush_recordset()
         recipients_data = self.env['mail.followers']._get_recipient_data(
             test_records[0], 'comment', self.env.ref('mail.mt_note').id,
             pids=(self.common_partner + self.partner_admin).ids

@@ -124,8 +124,8 @@ class View(models.Model):
             # but in reality the values were only meant to go on the specific
             # page. Invalidate all fields and not only those in vals because
             # other fields could have been changed implicitly too.
-            pages.flush(records=pages)
-            pages.invalidate_cache(ids=pages.ids)
+            pages.flush_recordset()
+            pages.invalidate_recordset()
 
             # If already a specific view for this generic view, write on it
             website_specific_view = view.search([

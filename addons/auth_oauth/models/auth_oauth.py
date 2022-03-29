@@ -23,6 +23,6 @@ class AuthOAuthProvider(models.Model):
 
     def _neutralize(self):
         super()._neutralize()
-        self.flush()
-        self.invalidate_cache()
+        self.flush_model(['enabled'])
         self.env.cr.execute("UPDATE auth_oauth_provider SET enabled = false")
+        self.invalidate_model(['enabled'])

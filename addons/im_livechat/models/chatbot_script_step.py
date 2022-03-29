@@ -297,7 +297,7 @@ class ChatbotScriptStep(models.Model):
 
             if chatbot_message:
                 chatbot_message.write({'user_raw_answer': message_body})
-                chatbot_message.flush()
+                self.env.flush_all()
 
         return self._fetch_next_step(mail_channel.chatbot_message_ids.user_script_answer_id)
 

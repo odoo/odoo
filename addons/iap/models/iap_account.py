@@ -38,7 +38,7 @@ class IapAccount(models.Model):
                 # preventing the process to continue any further.
 
                 # Flush the pending operations to avoid a deadlock.
-                self.flush()
+                self.env.flush_all()
                 IapAccount = self.with_env(self.env(cr=cr))
                 account = IapAccount.search(domain, order='id desc', limit=1)
                 if not account:
@@ -121,8 +121,8 @@ class IapAccount(models.Model):
 
     def _neutralize(self):
         super()._neutralize()
-        self.flush()
-        self.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
 
         self.env.cr.execute("""
             INSERT INTO ir_config_parameter(key, value)

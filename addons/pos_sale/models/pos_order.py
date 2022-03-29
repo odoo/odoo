@@ -63,7 +63,7 @@ class PosOrder(models.Model):
             # update the demand qty in the stock moves related to the sale order line
             # flush the qty_delivered to make sure the updated qty_delivered is used when
             # updating the demand value
-            so_lines.flush(['qty_delivered'])
+            so_lines.flush_recordset(['qty_delivered'])
             # track the waiting pickings
             waiting_picking_ids = set()
             for so_line in so_lines:

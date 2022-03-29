@@ -121,7 +121,8 @@ class AccountPaymentMethodLine(models.Model):
 
     @api.constrains('name')
     def _ensure_unique_name_for_journal(self):
-        self.flush(['name'])
+        self.flush_model(['name', 'journal_id', 'payment_method_id'])
+        self.env['account.payment.method'].flush_model(['payment_type'])
         self._cr.execute('''
             SELECT apml.name, apm.payment_type
             FROM account_payment_method_line apml

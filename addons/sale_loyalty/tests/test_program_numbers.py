@@ -233,8 +233,8 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         self.assertEqual(len(order.order_line.ids), 1, "We should not get the reduction line since we dont have 320$ tax excluded (cabinet is 320$ tax included)")
         sol1.tax_id.price_include = False
         sol1._compute_tax_id()
-        self.env['account.tax'].flush()
-        self.env['account.tax'].invalidate_cache(fnames=['price_include'])
+        self.env.flush_all()
+        self.env['account.tax'].invalidate_model(['price_include'])
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(len(order.order_line.ids), 2, "We should now get the reduction line since we have 320$ tax included (cabinet is 320$ tax included)")
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |

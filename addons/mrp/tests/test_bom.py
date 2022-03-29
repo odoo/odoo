@@ -424,7 +424,7 @@ class TestBoM(TestMrpCommon):
         # Use the float_repr to remove extra small decimal (and represent the front-end behavior)
         self.assertEqual(float_repr(float_round(kit_product_qty, precision_digits=precision.digits), precision_digits=precision.digits), '-384.00000')
 
-        self.product_2.invalidate_cache(fnames=['qty_available'], ids=self.product_2.ids)
+        self.product_2.invalidate_recordset(['qty_available'])
         kit_product_qty, _ = (self.product_2 + self.product_3).mapped("qty_available")  # With product_3 in the prefetch
         self.assertEqual(float_repr(float_round(kit_product_qty, precision_digits=precision.digits), precision_digits=precision.digits), '-384.00000')
 
@@ -1044,7 +1044,7 @@ class TestBoM(TestMrpCommon):
         customer_picking.action_confirm()
 
         # We check the created orderpoint
-        self.env['report.stock.quantity'].flush()
+        self.env.flush_all()
         self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
         orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', '=', product_gram.id)])
         manufacturing_route_id = self.ref('mrp.route_warehouse0_manufacture')

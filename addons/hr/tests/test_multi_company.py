@@ -24,8 +24,8 @@ class TestMultiCompany(TestHrCommon):
         cls.res_users_hr_officer.company_id = cls.company_1.id
         # flush and invalidate the cache, otherwise a full cache may prevent
         # access rights to be checked
-        cls.employees.flush()
-        cls.employees.invalidate_cache()
+        cls.env.flush_all()
+        cls.env.invalidate_all()
 
     def test_multi_company_report(self):
         content, content_type = self.env.ref('hr.hr_employee_print_badge').with_user(self.res_users_hr_officer).with_context(

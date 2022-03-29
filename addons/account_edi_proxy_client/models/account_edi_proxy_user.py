@@ -209,8 +209,8 @@ class AccountEdiProxyClientUser(models.Model):
 
     def _neutralize(self):
         super()._neutralize()
-        self.flush()
-        self.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
         self.env.cr.execute("""
             INSERT INTO ir_config_parameter(key, value)
             VALUES ('account_edi_proxy_client.demo', true)

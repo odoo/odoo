@@ -1659,7 +1659,7 @@ class TestMrpOrder(TestMrpCommon):
         )
         (move1 | move2 | move3)._action_confirm()
 
-        mo.invalidate_cache(['components_availability', 'components_availability_state'], mo.ids)
+        mo.invalidate_recordset(['components_availability', 'components_availability_state'])
         self.assertEqual(mo.components_availability, f'Exp {format_date(self.env, tommorrow)}')
         self.assertEqual(mo.components_availability_state, 'late')
 
@@ -1671,7 +1671,7 @@ class TestMrpOrder(TestMrpCommon):
         (move1 | move2 | move3)._set_quantities_to_reservation()
         (move1 | move2 | move3)._action_done()
 
-        mo.invalidate_cache(['components_availability', 'components_availability_state'], mo.ids)
+        mo.invalidate_recordset(['components_availability', 'components_availability_state'])
         self.assertEqual(mo.components_availability, 'Available')
         self.assertEqual(mo.components_availability_state, 'available')
 

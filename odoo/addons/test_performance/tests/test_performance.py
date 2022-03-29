@@ -128,12 +128,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # create N lines on rec1: O(N) queries
         with self.assertQueryCount(3):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec1.write({'line_ids': [Command.create({'value': 0})]})
         self.assertEqual(len(rec1.line_ids), 1)
 
         with self.assertQueryCount(5):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec1.write({'line_ids': [Command.create({'value': val}) for val in range(1, 12)]})
         self.assertEqual(len(rec1.line_ids), 12)
 
@@ -141,23 +141,23 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # update N lines: O(N) queries
         with self.assertQueryCount(6):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec1.write({'line_ids': [Command.update(line.id, {'value': 42}) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines)
 
         with self.assertQueryCount(26):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec1.write({'line_ids': [Command.update(line.id, {'value': 42 + line.id}) for line in lines[1:]]})
         self.assertEqual(rec1.line_ids, lines)
 
         # delete N lines: O(1) queries
         with self.assertQueryCount(14):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec1.write({'line_ids': [Command.delete(line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
 
         with self.assertQueryCount(12):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec1.write({'line_ids': [Command.delete(line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
         self.assertFalse(lines.exists())
@@ -167,12 +167,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # unlink N lines: O(1) queries
         with self.assertQueryCount(14):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec1.write({'line_ids': [Command.unlink(line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
 
         with self.assertQueryCount(12):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec1.write({'line_ids': [Command.unlink(line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
         self.assertFalse(lines.exists())
@@ -183,35 +183,35 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # link N lines from rec1 to rec2: O(1) queries
         with self.assertQueryCount(8):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec2.write({'line_ids': [Command.link(line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
         self.assertEqual(rec2.line_ids, lines[0])
 
         with self.assertQueryCount(8):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec2.write({'line_ids': [Command.link(line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
         self.assertEqual(rec2.line_ids, lines)
 
         with self.assertQueryCount(4):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec2.write({'line_ids': [Command.link(line.id) for line in lines[0]]})
         self.assertEqual(rec2.line_ids, lines)
 
         with self.assertQueryCount(4):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec2.write({'line_ids': [Command.link(line.id) for line in lines[1:]]})
         self.assertEqual(rec2.line_ids, lines)
 
         # empty N lines in rec2: O(1) queries
         with self.assertQueryCount(13):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec2.write({'line_ids': [Command.clear()]})
         self.assertFalse(rec2.line_ids)
 
         with self.assertQueryCount(3):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec2.write({'line_ids': [Command.clear()]})
         self.assertFalse(rec2.line_ids)
 
@@ -220,19 +220,19 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # set N lines in rec2: O(1) queries
         with self.assertQueryCount(8):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec2.write({'line_ids': [Command.set(lines[0].ids)]})
         self.assertEqual(rec1.line_ids, lines[1:])
         self.assertEqual(rec2.line_ids, lines[0])
 
         with self.assertQueryCount(6):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec2.write({'line_ids': [Command.set(lines.ids)]})
         self.assertFalse(rec1.line_ids)
         self.assertEqual(rec2.line_ids, lines)
 
         with self.assertQueryCount(4):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec2.write({'line_ids': [Command.set(lines.ids)]})
         self.assertEqual(rec2.line_ids, lines)
 
@@ -256,12 +256,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # create N tags on rec1: O(N) queries
         with self.assertQueryCount(4):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec1.write({'tag_ids': [Command.create({'name': 0})]})
         self.assertEqual(len(rec1.tag_ids), 1)
 
         with self.assertQueryCount(4):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec1.write({'tag_ids': [Command.create({'name': val}) for val in range(1, 12)]})
         self.assertEqual(len(rec1.tag_ids), 12)
 
@@ -269,23 +269,23 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # update N tags: O(N) queries
         with self.assertQueryCount(3):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec1.write({'tag_ids': [Command.update(tag.id, {'name': 'X'}) for tag in tags[0]]})
         self.assertEqual(rec1.tag_ids, tags)
 
         with self.assertQueryCount(3):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec1.write({'tag_ids': [Command.update(tag.id, {'name': 'X'}) for tag in tags[1:]]})
         self.assertEqual(rec1.tag_ids, tags)
 
         # delete N tags: O(1) queries
         with self.assertQueryCount(__system__=8, demo=8):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec1.write({'tag_ids': [Command.delete(tag.id) for tag in tags[0]]})
         self.assertEqual(rec1.tag_ids, tags[1:])
 
         with self.assertQueryCount(__system__=8, demo=8):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec1.write({'tag_ids': [Command.delete(tag.id) for tag in tags[1:]]})
         self.assertFalse(rec1.tag_ids)
         self.assertFalse(tags.exists())
@@ -295,12 +295,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # unlink N tags: O(1) queries
         with self.assertQueryCount(3):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec1.write({'tag_ids': [Command.unlink(tag.id) for tag in tags[0]]})
         self.assertEqual(rec1.tag_ids, tags[1:])
 
         with self.assertQueryCount(3):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec1.write({'tag_ids': [Command.unlink(tag.id) for tag in tags[1:]]})
         self.assertFalse(rec1.tag_ids)
         self.assertTrue(tags.exists())
@@ -309,55 +309,55 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # link N tags from rec1 to rec2: O(1) queries
         with self.assertQueryCount(3):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec2.write({'tag_ids': [Command.link(tag.id) for tag in tags[0]]})
         self.assertEqual(rec2.tag_ids, tags[0])
 
         with self.assertQueryCount(3):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec2.write({'tag_ids': [Command.link(tag.id) for tag in tags[1:]]})
         self.assertEqual(rec2.tag_ids, tags)
 
         with self.assertQueryCount(2):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec2.write({'tag_ids': [Command.link(tag.id) for tag in tags[1:]]})
         self.assertEqual(rec2.tag_ids, tags)
 
         # empty N tags in rec2: O(1) queries
         with self.assertQueryCount(3):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec2.write({'tag_ids': [Command.clear()]})
         self.assertFalse(rec2.tag_ids)
         self.assertTrue(tags.exists())
 
         with self.assertQueryCount(2):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec2.write({'tag_ids': [Command.clear()]})
         self.assertFalse(rec2.tag_ids)
 
         # set N tags in rec2: O(1) queries
         with self.assertQueryCount(3):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec2.write({'tag_ids': [Command.set(tags.ids)]})
         self.assertEqual(rec2.tag_ids, tags)
 
         with self.assertQueryCount(3):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec2.write({'tag_ids': [Command.set(tags[:8].ids)]})
         self.assertEqual(rec2.tag_ids, tags[:8])
 
         with self.assertQueryCount(4):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec2.write({'tag_ids': [Command.set(tags[4:].ids)]})
         self.assertEqual(rec2.tag_ids, tags[4:])
 
         with self.assertQueryCount(3):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec2.write({'tag_ids': [Command.set(tags.ids)]})
         self.assertEqual(rec2.tag_ids, tags)
 
         with self.assertQueryCount(2):
-            rec1.invalidate_cache()
+            self.env.invalidate_all()
             rec2.write({'tag_ids': [Command.set(tags.ids)]})
         self.assertEqual(rec2.tag_ids, tags)
 
@@ -430,11 +430,11 @@ class TestPerformance(SavepointCaseWithUserDemo):
             records.mapped('value')
 
         with self.assertQueryCount(__system__=2, demo=2):
-            records.invalidate_cache(['value'])
+            records.invalidate_model(['value'])
             records.mapped('value')
 
         with self.assertQueryCount(__system__=2, demo=2):
-            records.invalidate_cache(['value'])
+            records.invalidate_model(['value'])
             new_recs = records.browse(records.new(origin=record).id for record in records)
             new_recs.mapped('value')
 
@@ -463,7 +463,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
         expected = self.expected_read_group()
         # use read_group and check the expected result
         with self.assertQueryCount(__system__=2, demo=2):
-            model.invalidate_cache()
+            self.env.invalidate_all()
             result = model.read_group([], ['partner_id', 'value'], ['partner_id'])
             self.assertEqual(result, expected)
 
@@ -473,7 +473,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
         expected = self.expected_read_group()
         # use read_group and check the expected result
         with self.assertQueryCount(__system__=1, demo=1):
-            model.invalidate_cache()
+            self.env.invalidate_all()
             result = model.read_group([], ['partner_id', 'value'], ['partner_id'])
             self.assertEqual(len(result), len(expected))
             for res, exp in zip(result, expected):
@@ -564,8 +564,8 @@ class TestMapped(TransactionCase):
             {'name': 'foo%d' % index, 'line_ids': [Command.create({'value': index})]}
             for index in range(1000)
         ])
-        recs.flush()
-        recs.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
 
         # expected same performance as recs.line_ids.mapped('value')
         with self.assertQueryCount(3):

@@ -371,7 +371,7 @@ class AccountJournal(models.Model):
                 alias_values['alias_model_id'] = self.env['ir.model']._get('account.move').id
                 alias_values['alias_parent_model_id'] = self.env['ir.model']._get('account.journal').id
                 journal.alias_id = self.env['mail.alias'].sudo().create(alias_values)
-        self.invalidate_cache(['alias_name'], self.ids)
+        self.invalidate_recordset(['alias_name'])
 
     @api.depends('name')
     def _compute_alias_domain(self):
@@ -384,8 +384,9 @@ class AccountJournal(models.Model):
 
     @api.constrains('type_control_ids')
     def _constrains_type_control_ids(self):
-        self.env['account.move.line'].flush(['account_id', 'journal_id'])
-        self.flush(['type_control_ids'])
+        self.env['account.move.line'].flush_model(['account_id', 'journal_id'])
+        self.env['account.account'].flush_model(['user_type_id'])
+        self.flush_recordset(['type_control_ids'])
         self._cr.execute("""
             SELECT aml.id
             FROM account_move_line aml
@@ -400,8 +401,8 @@ class AccountJournal(models.Model):
 
     @api.constrains('account_control_ids')
     def _constrains_account_control_ids(self):
-        self.env['account.move.line'].flush(['account_id', 'journal_id'])
-        self.flush(['account_control_ids'])
+        self.env['account.move.line'].flush_model(['account_id', 'journal_id', 'display_type'])
+        self.flush_recordset(['account_control_ids'])
         self._cr.execute("""
             SELECT aml.id
             FROM account_move_line aml
@@ -429,7 +430,8 @@ class AccountJournal(models.Model):
         if not self:
             return
 
-        self.flush(['company_id'])
+        self.env['account.move'].flush_model(['company_id', 'journal_id'])
+        self.flush_recordset(['company_id'])
         self._cr.execute('''
             SELECT move.id
             FROM account_move move
@@ -457,9 +459,9 @@ class AccountJournal(models.Model):
         if not unique_codes:
             return
 
-        self.flush(['inbound_payment_method_line_ids', 'outbound_payment_method_line_ids', 'company_id'])
-        self.env['account.payment.method.line'].flush(['payment_method_id', 'journal_id'])
-        self.env['account.payment.method'].flush(['code'])
+        self.flush_model(['inbound_payment_method_line_ids', 'outbound_payment_method_line_ids', 'company_id'])
+        self.env['account.payment.method.line'].flush_model(['payment_method_id', 'journal_id'])
+        self.env['account.payment.method'].flush_model(['code'])
 
         if unique_codes:
             self._cr.execute('''

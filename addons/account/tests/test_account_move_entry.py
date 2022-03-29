@@ -358,7 +358,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
     def test_add_followers_on_post(self):
         # Add some existing partners, some from another company
         company = self.env['res.company'].create({'name': 'Oopo'})
-        company.flush()
+        company.flush_recordset()
         existing_partners = self.env['res.partner'].create([{
             'name': 'Jean',
             'company_id': company.id,
@@ -722,13 +722,13 @@ class TestAccountMove(AccountTestInvoicingCommon):
         return len(self.env.cache.get_records(model, field))
 
     def test_cache_invalidation(self):
-        self.env['account.move'].invalidate_cache()
+        self.env.invalidate_all()
         lines = self.test_move.line_ids
         # prefetch
         lines.mapped('move_id.name')
         # check account.move cache
         self.assertEqual(self._get_cache_count(), 1)
-        self.env['account.move.line'].invalidate_cache(ids=lines.ids)
+        lines.invalidate_recordset()
         self.assertEqual(self._get_cache_count(), 0)
 
     def test_misc_prevent_edit_tax_on_posted_moves(self):

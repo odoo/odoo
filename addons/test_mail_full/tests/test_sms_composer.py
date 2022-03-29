@@ -154,7 +154,7 @@ class TestSMSComposerComment(TestMailFullCommon, TestMailFullRecipients):
             with self.mockSMSGateway():
                 composer.action_send_sms()
 
-        self.test_record.flush()
+        self.test_record.flush_recordset()
         self.assertEqual(self.test_record.phone_nbr, self.random_numbers[0])
 
     def test_composer_comment_wo_partner_wo_value_update(self):

@@ -183,7 +183,7 @@ class KnowledgeCommonWData(KnowledgeCommon):
              'parent_id': cls.article_private_manager.id,
             }
         ])
-        cls.env['knowledge.article'].flush()
+        cls.env.flush_all()
 
 
 class KnowledgeArticlePermissionsCase(KnowledgeCommon):
@@ -395,4 +395,4 @@ class KnowledgeArticlePermissionsCase(KnowledgeCommon):
                            cls.article_write_contents + cls.article_write_contents_children + \
                            cls.article_read_contents + cls.article_read_contents_children + \
                            cls.article_write_desync + cls.article_read_desync
-        cls.env['knowledge.article'].flush()
+        cls.env.flush_all()

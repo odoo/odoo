@@ -102,7 +102,7 @@ class TestSurveyInvite(common.TestSurveyCommon):
     @users('survey_manager')
     def test_survey_invite_authentication_signup(self):
         self.env["ir.config_parameter"].sudo().set_param('auth_signup.invitation_scope', 'b2c')
-        self.survey.invalidate_cache()
+        self.env.invalidate_all()
         Answer = self.env['survey.user_input']
 
         self.survey.write({'access_mode': 'public', 'users_login_required': True})

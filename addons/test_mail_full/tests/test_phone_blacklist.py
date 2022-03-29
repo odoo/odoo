@@ -27,17 +27,17 @@ class TestPhoneBlacklist(TestMailFullCommon, TestMailFullRecipients):
             self.assertFalse(test_record.phone_sanitized_blacklisted)
 
             bl_record = self.env['phone.blacklist'].sudo().create([{'number': self.test_numbers_san[1]}])
-            test_record.invalidate_cache()
+            test_record.invalidate_recordset()
             self.assertTrue(test_record.phone_sanitized_blacklisted)
 
             self.env['phone.blacklist'].sudo().remove(self.test_numbers_san[1])
             self.assertFalse(bl_record.active)
-            test_record.invalidate_cache()
+            test_record.invalidate_recordset()
             self.assertFalse(test_record.phone_sanitized_blacklisted)
 
             self.env['phone.blacklist'].sudo().add(self.test_numbers_san[1])
             self.assertTrue(bl_record.active)
-            test_record.invalidate_cache()
+            test_record.invalidate_recordset()
             self.assertTrue(test_record.phone_sanitized_blacklisted)
 
             bl_record_2 = self.env['phone.blacklist'].sudo().create([{'number': self.test_numbers_san[1]}])
@@ -56,11 +56,11 @@ class TestPhoneBlacklist(TestMailFullCommon, TestMailFullRecipients):
             self.assertFalse(test_record.phone_sanitized_blacklisted)
 
             test_record._phone_set_blacklisted()
-            test_record.invalidate_cache()
+            test_record.invalidate_recordset()
             self.assertTrue(test_record.phone_sanitized_blacklisted)
 
             test_record._phone_reset_blacklisted()
-            test_record.invalidate_cache()
+            test_record.invalidate_recordset()
             self.assertFalse(test_record.phone_sanitized_blacklisted)
 
     def test_phone_sanitize_internals(self):

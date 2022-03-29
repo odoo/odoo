@@ -149,7 +149,7 @@ class LunchOrder(models.Model):
                 # This also forces us to invalidate the cache for topping_ids_2 and topping_ids_3 that
                 # could have changed through topping_ids_1 without the cache knowing about it
                 toppings = self._extract_toppings(values)
-                self.invalidate_cache(['topping_ids_2', 'topping_ids_3'])
+                self.invalidate_model(['topping_ids_2', 'topping_ids_3'])
                 values['topping_ids_1'] = [(6, 0, toppings)]
                 matching_lines = self._find_matching_lines({
                     'user_id': values.get('user_id', line.user_id.id),
@@ -207,7 +207,7 @@ class LunchOrder(models.Model):
         return True
 
     def _check_wallet(self):
-        self.flush()
+        self.env.flush_all()
         for line in self:
             if self.env['lunch.cashmove'].get_wallet_balance(line.user_id) < 0:
                 raise ValidationError(_('Your wallet does not contain enough money to order that. To add some money to your wallet, please contact your lunch manager.'))

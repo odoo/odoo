@@ -61,8 +61,8 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
     @users('Internal user')
     def test_project_allowed_internal_read(self):
         self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
-        self.project_pigs.flush()
-        self.project_pigs.invalidate_cache()
+        self.project_pigs.flush_model()
+        self.project_pigs.invalidate_model()
         self.project_pigs.with_user(self.env.user).name
 
     @users('Internal user', 'Portal user')
@@ -81,8 +81,8 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
     @users('Internal user')
     def test_task_allowed_internal_read(self):
         self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
-        self.task.flush()
-        self.task.invalidate_cache()
+        self.task.flush_model()
+        self.task.invalidate_model()
         self.task.with_user(self.env.user).name
 
     @users('Internal user', 'Portal user')
@@ -117,7 +117,7 @@ class TestCRUDVisibilityPortal(TestAccessRights):
     def setUp(self):
         super().setUp()
         self.project_pigs.privacy_visibility = 'portal'
-        self.env['base'].flush()
+        self.env.flush_all()
 
     @users('Portal user')
     def test_task_portal_no_read(self):
@@ -127,14 +127,14 @@ class TestCRUDVisibilityPortal(TestAccessRights):
     @users('Portal user')
     def test_task_allowed_portal_read(self):
         self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
-        self.task.flush()
-        self.task.invalidate_cache()
+        self.task.flush_model()
+        self.task.invalidate_model()
         self.task.with_user(self.env.user).name
 
     @users('Internal user')
     def test_task_internal_read(self):
-        self.task.flush()
-        self.task.invalidate_cache()
+        self.task.flush_model()
+        self.task.invalidate_model()
         self.task.with_user(self.env.user).name
 
 class TestCRUDVisibilityEmployees(TestAccessRights):
@@ -154,8 +154,8 @@ class TestCRUDVisibilityEmployees(TestAccessRights):
 
     @users('Internal user')
     def test_task_allowed_portal_read(self):
-        self.task.flush()
-        self.task.invalidate_cache()
+        self.task.flush_model()
+        self.task.invalidate_model()
         self.task.with_user(self.env.user).name
 
 class TestAllowedUsers(TestAccessRights):
@@ -222,8 +222,8 @@ class TestAllowedUsers(TestAccessRights):
         self.user.groups_id |= self.env.ref('project.group_project_user')
         self.assertNotIn(self.user.partner_id, self.project_pigs.message_partner_ids)
         self.task.message_subscribe(partner_ids=[self.user.partner_id.id])
-        self.project_pigs.invalidate_cache()
-        self.task.invalidate_cache()
+        self.project_pigs.invalidate_model()
+        self.task.invalidate_model()
         self.task.with_user(self.user).name = "I can edit a task!"
 
     def test_no_write_project(self):
@@ -290,7 +290,6 @@ class TestPortalProject(TestProjectPortalCommon):
     def test_followers_project_access_rights(self):
         pigs = self.project_pigs
         pigs.write({'privacy_visibility': 'followers'})
-        pigs.flush(['privacy_visibility'])
         # Do: Alfred reads project -> ko (employee ko followers)
         self.assertRaises(AccessError, pigs.with_user(self.user_projectuser).read, ['user_id'])
         # Test: no project task visible
@@ -308,7 +307,7 @@ class TestPortalProject(TestProjectPortalCommon):
 
         # Do: Alfred reads project -> ok (follower ok followers)
         donkey = pigs.with_user(self.user_projectuser)
-        donkey.invalidate_cache()
+        donkey.invalidate_model()
         donkey.read(['user_id'])
 
         # Do: Donovan reads project -> ko (public ko follower even if follower)

@@ -233,10 +233,10 @@ class Digest(models.Model):
                 try:
                     compute_value = digest[field_name + '_value']
                     # Context start and end date is different each time so invalidate to recompute.
-                    digest.invalidate_cache([field_name + '_value'])
+                    digest.invalidate_model([field_name + '_value'])
                     previous_value = previous_digest[field_name + '_value']
                     # Context start and end date is different each time so invalidate to recompute.
-                    previous_digest.invalidate_cache([field_name + '_value'])
+                    previous_digest.invalidate_model([field_name + '_value'])
                 except AccessError:  # no access rights -> just skip that digest details from that user's digest email
                     invalid_fields.append(field_name)
                     continue

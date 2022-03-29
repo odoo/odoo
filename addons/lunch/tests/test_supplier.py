@@ -50,7 +50,7 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
                 assert self.supplier_pizza_inn.available_today == result,\
                     'supplier pizza inn should %s considered available on %s' % ('be' if result else 'not be', value)
 
-            self.env['lunch.supplier'].invalidate_cache(['available_today'], [self.supplier_pizza_inn.id])
+            self.supplier_pizza_inn.invalidate_recordset(['available_today'])
 
     @common.users('cle-lunch-manager')
     def test_search_available_today(self):

@@ -880,7 +880,7 @@ class Slide(models.Model):
         ])
         if quiz_attempts_inc and existing_sudo:
             sql.increment_field_skiplock(existing_sudo, 'quiz_attempts_count')
-            SlidePartnerSudo.invalidate_cache(fnames=['quiz_attempts_count'], ids=existing_sudo.ids)
+            existing_sudo.invalidate_recordset(['quiz_attempts_count'])
 
         new_slides = self_sudo - existing_sudo.mapped('slide_id')
         return SlidePartnerSudo.create([{

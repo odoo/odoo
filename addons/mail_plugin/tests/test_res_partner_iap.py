@@ -25,7 +25,7 @@ class TestResPartnerIap(MailCommon):
         self.assertFalse(partner.iap_enrich_info)
 
         partner_iap = self.env["res.partner.iap"].create({"partner_id": partner.id, "iap_enrich_info": "test info"})
-        partner.invalidate_cache()
+        partner.invalidate_recordset()
         self.assertEqual(partner.iap_enrich_info, "test info")
 
         partner_iap.unlink()
@@ -36,7 +36,7 @@ class TestResPartnerIap(MailCommon):
         self.assertEqual(partner_iap.iap_enrich_info, "test info 2")
 
         partner.iap_enrich_info = "test info 3"
-        partner_iap.invalidate_cache()
+        partner_iap.invalidate_recordset()
         new_partner_iap = self.env["res.partner.iap"].search([("partner_id", "=", partner.id)])
         self.assertEqual(new_partner_iap, partner_iap, "Should have write on the existing one")
         self.assertEqual(partner_iap.iap_enrich_info, "test info 3")
@@ -48,7 +48,7 @@ class TestResPartnerIap(MailCommon):
             'iap_search_domain': 'qsd@example.com',
         })
 
-        partner.invalidate_cache()
+        partner.invalidate_recordset()
 
         self.assertEqual(partner.iap_enrich_info, 'enrichment information')
         self.assertEqual(partner.iap_search_domain, 'qsd@example.com')
@@ -72,6 +72,6 @@ class TestResPartnerIap(MailCommon):
         self.assertEqual(partner_iap.iap_search_domain, 'xyz@example.com')
 
         partner.iap_search_domain = "only write on domain"
-        partner_iap.invalidate_cache()
+        partner_iap.invalidate_recordset()
         self.assertEqual(partner_iap.iap_enrich_info, 'second information')
         self.assertEqual(partner_iap.iap_search_domain, 'only write on domain')

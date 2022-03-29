@@ -57,7 +57,7 @@ class TestLivechatUI(tests.HttpCase, TestLivechatCommon):
         self.assertEqual(channel.livechat_active, True, 'Livechat must be active while the chat window is not closed.')
 
         # Check that the chat request has been canceled.
-        chat_request.invalidate_cache()
+        chat_request.invalidate_recordset()
         self.assertEqual(chat_request.livechat_active, False, "The livechat request must be inactive as the visitor started himself a livechat session.")
 
     def test_chat_request_flow_with_rating_ui(self):

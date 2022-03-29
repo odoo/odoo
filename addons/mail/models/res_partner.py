@@ -35,7 +35,7 @@ class Partner(models.Model):
     def _get_needaction_count(self):
         """ compute the number of needaction of the current partner """
         self.ensure_one()
-        self.env['mail.notification'].flush(['is_read', 'res_partner_id'])
+        self.env['mail.notification'].flush_model(['is_read', 'res_partner_id'])
         self.env.cr.execute("""
             SELECT count(*) as needaction_count
             FROM mail_notification R

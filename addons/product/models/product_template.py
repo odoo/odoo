@@ -443,7 +443,7 @@ class ProductTemplate(models.Model):
         if 'active' in vals and not vals.get('active'):
             self.with_context(active_test=False).mapped('product_variant_ids').write({'active': vals.get('active')})
         if 'image_1920' in vals:
-            self.env['product.product'].invalidate_cache(fnames=[
+            self.env['product.product'].invalidate_model([
                 'image_1920',
                 'image_1024',
                 'image_512',
@@ -583,7 +583,7 @@ class ProductTemplate(models.Model):
         if not self:
             return
 
-        self.flush()
+        self.env.flush_all()
         Product = self.env["product.product"]
 
         variants_to_create = []
@@ -670,10 +670,10 @@ class ProductTemplate(models.Model):
 
         # prefetched o2m have to be reloaded (because of active_test)
         # (eg. product.template: product_variant_ids)
-        # We can't rely on existing invalidate_cache because of the savepoint
+        # We can't rely on existing invalidate because of the savepoint
         # in _unlink_or_archive.
-        self.flush()
-        self.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
         return True
 
     def _prepare_variant_values(self, combination):
