@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """
 ================
@@ -367,15 +367,16 @@ structure.
 
 """
 
+import fnmatch
+import io
 import logging
+import math
 import re
-import traceback
+import textwrap
 import token
 import tokenize
-import io
-import textwrap
+import traceback
 import werkzeug
-import math
 
 from markupsafe import Markup, escape
 from collections.abc import Sized, Mapping
@@ -447,6 +448,29 @@ T_CALL_SLOT = '0'
 def indent_code(code, level):
     """Indent the code to respect the python syntax."""
     return textwrap.indent(textwrap.dedent(code).strip(), ' ' * 4 * level)
+
+
+def keep_query(*keep_params, **additional_params):
+    """
+    Generate a query string keeping the current request querystring's parameters specified
+    in ``keep_params`` and also adds the parameters specified in ``additional_params``.
+
+    Multiple values query string params will be merged into a single one with comma seperated
+    values.
+
+    The ``keep_params`` arguments can use wildcards too, eg:
+
+        keep_query('search', 'shop_*', page=4)
+    """
+    if not keep_params and not additional_params:
+        keep_params = ('*',)
+    params = additional_params.copy()
+    qs_keys = list(request.httprequest.args) if request else []
+    for keep_param in keep_params:
+        for param in fnmatch.filter(qs_keys, keep_param):
+            if param not in additional_params and param in qs_keys:
+                params[param] = request.httprequest.args.getlist(param)
+    return werkzeug.urls.url_encode(params)
 
 ####################################
 ###        QWebException         ###
@@ -806,6 +830,7 @@ class IrQWeb(models.AbstractModel):
                 ceil=math.ceil,
                 env=self.env,
                 lang=self.env.context.get('lang'),
+                keep_query=keep_query,
             )
 
         return self.with_context(dev_mode='qweb' in tools.config['dev_mode'])
