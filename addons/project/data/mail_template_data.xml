@@ -29,12 +29,12 @@
             <field name="name">Task: Rating Request</field>
             <field name="model_id" ref="project.model_project_task"/>
             <field name="subject">{{ object.project_id.company_id.name }}: Satisfaction Survey</field>
-            <field name="email_from">{{ (object.rating_get_rated_partner_id().email_formatted if object.rating_get_rated_partner_id() else user.email_formatted) }}</field>
-            <field name="partner_to" >{{ object.rating_get_partner_id().id }}</field>
+            <field name="email_from">{{ (object._rating_get_operator().email_formatted if object._rating_get_operator() else user.email_formatted) }}</field>
+            <field name="partner_to" >{{ object._rating_get_partner().id }}</field>
             <field name="body_html" type="html">
 <div>
-    <t t-set="access_token" t-value="object.rating_get_access_token()"/>
-    <t t-set="partner" t-value="object.rating_get_partner_id()"/>
+    <t t-set="access_token" t-value="object._rating_get_access_token()"/>
+    <t t-set="partner" t-value="object._rating_get_partner()"/>
     <table border="0" cellpadding="0" cellspacing="0" width="590" style="width:100%; margin:0px auto;">
     <tbody>
         <tr><td valign="top" style="font-size: 13px;">
@@ -45,8 +45,8 @@
                 Hello,<br/><br/>
             </t>
             Please take a moment to rate our services related to the task "<strong t-out="object.name or ''">Planning and budget</strong>"
-            <t t-if="object.rating_get_rated_partner_id().name">
-                assigned to <strong t-out="object.rating_get_rated_partner_id().name or ''">Mitchell Admin</strong>.<br/>
+            <t t-if="object._rating_get_operator().name">
+                assigned to <strong t-out="object._rating_get_operator().name or ''">Mitchell Admin</strong>.<br/>
             </t>
             <t t-else="">
                 .<br/>
@@ -94,7 +94,7 @@
     </table>
 </div>
             </field>
-            <field name="lang">{{ object.rating_get_partner_id().lang }}</field>
+            <field name="lang">{{ object._rating_get_partner().lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
