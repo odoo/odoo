@@ -250,6 +250,8 @@ class SaleOrderOption(models.Model):
             lang=self.order_id.partner_id.lang,
         )
         self.name = product.get_product_multiline_description_sale()
+        if not self.uom_id or self.uom_id.category_id.id != product.uom_id.category_id.id:
+            self.uom_id = product.uom_id
         self._update_price_and_discount()
 
     def button_add_to_order(self):
