@@ -13,7 +13,7 @@ export class MonetaryField extends Component {
         let value = ev.target.value;
         try {
             value = this.props.parse(value, { currencyId: this.props.currencyId });
-        } catch (e) {
+        } catch {
             isValid = false;
             this.props.setAsInvalid(this.props.name);
         }
