@@ -249,6 +249,7 @@ class SaleOrderOption(models.Model):
         product = self.product_id.with_context(
             lang=self.order_id.partner_id.lang,
         )
+        self.uom_id = self.uom_id or product.uom_id
         self.name = product.get_product_multiline_description_sale()
         self._update_price_and_discount()
 

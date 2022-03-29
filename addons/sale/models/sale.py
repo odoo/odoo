@@ -209,8 +209,9 @@ class SaleOrder(models.Model):
     currency_id = fields.Many2one(related='pricelist_id.currency_id', depends=["pricelist_id"], store=True)
     analytic_account_id = fields.Many2one(
         'account.analytic.account', 'Analytic Account',
-        readonly=True, copy=False, check_company=True,  # Unrequired company
-        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        compute='_compute_analytic_account_id', store=True,
+        readonly=False, copy=False, check_company=True,  # Unrequired company
+        states={'sale': [('readonly', True)], 'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="The analytic account related to a sales order.")
 
@@ -324,6 +325,18 @@ class SaleOrder(models.Model):
                 order.expected_date = fields.Datetime.to_string(min(dates_list))
             else:
                 order.expected_date = False
+
+    @api.depends('partner_id', 'date_order')
+    def _compute_analytic_account_id(self):
+        for order in self:
+            if not order.analytic_account_id:
+                default_analytic_account = order.env['account.analytic.default'].sudo().account_get(
+                    partner_id=order.partner_id.id,
+                    user_id=order.env.uid,
+                    date=order.date_order,
+                    company_id=order.company_id.id,
+                )
+                order.analytic_account_id = default_analytic_account.analytic_id
 
     @api.onchange('expected_date')
     def _onchange_commitment_date(self):
@@ -1417,6 +1430,7 @@ class SaleOrderLine(models.Model):
     order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer', readonly=False)
     analytic_tag_ids = fields.Many2many(
         'account.analytic.tag', string='Analytic Tags',
+        compute='_compute_analytic_tag_ids', store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     analytic_line_ids = fields.One2many('account.analytic.line', 'so_line', string="Analytic lines")
     is_expense = fields.Boolean('Is expense', help="Is true if the sales order line comes from an expense or a vendor bills")
@@ -1592,6 +1606,19 @@ class SaleOrderLine(models.Model):
                     amount_to_invoice = price_subtotal - line.untaxed_amount_invoiced
 
             line.untaxed_amount_to_invoice = amount_to_invoice
+
+    @api.depends('product_id', 'order_id.date_order', 'order_id.partner_id')
+    def _compute_analytic_tag_ids(self):
+        for line in self:
+            if not line.analytic_tag_ids:
+                default_analytic_account = line.env['account.analytic.default'].sudo().account_get(
+                    product_id=line.product_id.id,
+                    partner_id=line.order_id.partner_id.id,
+                    user_id=self.env.uid,
+                    date=line.order_id.date_order,
+                    company_id=line.company_id.id,
+                )
+                line.analytic_tag_ids = default_analytic_account.analytic_tag_ids
 
     def _get_invoice_line_sequence(self, new=0, old=0):
         """
