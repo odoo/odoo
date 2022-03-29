@@ -3384,7 +3384,7 @@ var ThreadWidget = Widget.extend({
         var isAtBottom = this.isAtBottom();
         this.$('.o_mail_timestamp').each(function () {
             var date = $(this).data('date');
-            $(this).html(mailUtils.timeFromNow(date));
+            $(this).text(mailUtils.timeFromNow(date));
         });
         if (isAtBottom && !this.isAtBottom()) {
             this.scrollToBottom();
