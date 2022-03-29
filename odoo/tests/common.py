@@ -29,7 +29,7 @@ import time
 import unittest
 import warnings
 from collections import defaultdict
-from contextlib import contextmanager
+from contextlib import contextmanager, ExitStack
 from datetime import datetime, date
 from itertools import zip_longest as izip_longest
 from unittest.mock import patch
@@ -415,17 +415,24 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
     @contextmanager
     def _assertRaises(self, exception, *, msg=None):
         """ Context manager that clears the environment upon failure. """
-        with super(BaseCase, self).assertRaises(exception, msg=msg) as cm:
+        with ExitStack() as init:
             if hasattr(self, 'env'):
-                with self.env.cr.savepoint():
-                    if issubclass(exception, AccessError):
-                        # The savepoint() above calls flush(), which leaves the
-                        # record cache with lots of data.  This can prevent
-                        # access errors to be detected. In order to avoid this
-                        # issue, we clear the cache before proceeding.
-                        self.env.cr.clear()
-                    yield cm
-            else:
+                init.enter_context(self.env.cr.savepoint())
+                if issubclass(exception, AccessError):
+                    # The savepoint() above calls flush(), which leaves the
+                    # record cache with lots of data.  This can prevent
+                    # access errors to be detected. In order to avoid this
+                    # issue, we clear the cache before proceeding.
+                    self.env.cr.clear()
+
+            with ExitStack() as inner:
+                cm = inner.enter_context(super().assertRaises(exception, msg=msg))
+                # *moves* the cleanups from init to inner, this ensures the
+                # savepoint gets rolled back when `yield` raises `exception`,
+                # but still allows the initialisation to be protected *and* not
+                # interfered with by `assertRaises`.
+                inner.push(init.pop_all())
+
                 yield cm
 
     def assertRaises(self, exception, func=None, *args, **kwargs):
