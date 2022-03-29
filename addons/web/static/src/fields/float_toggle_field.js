@@ -5,11 +5,10 @@ import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
 export class FloatToggleField extends Component {
-
     // TODO perf issue (because of update round trip)
     // we probably want to have a state and a useEffect or onWillUpateProps
     onChange(ev) {
-        let currentIndex = this.props.range.indexOf(this.props.value)
+        let currentIndex = this.props.range.indexOf(this.props.value * this.props.factor);
         currentIndex++;
         if (currentIndex > this.props.range.length - 1) {
             currentIndex = 0;
@@ -22,7 +21,6 @@ export class FloatToggleField extends Component {
             digits: this.props.digits,
         });
     }
-
 }
 
 FloatToggleField.template = "web.FloatToggleField";
@@ -32,11 +30,13 @@ FloatToggleField.props = {
     setAsInvalid: { type: Function, optional: true },
     range: { type: Array, optional: true },
     factor: { type: Number, optional: true },
+    disableReadOnly: { type: Boolean, optional: true },
 };
 FloatToggleField.defaultProps = {
     setAsInvalid: () => {},
-    range:  [0.0, 0.5, 1.0],
+    range: [0.0, 0.5, 1.0],
     factor: 1,
+    disableReadOnly: false,
 };
 FloatToggleField.isEmpty = () => false;
 FloatToggleField.extractProps = (fieldName, record, attrs) => {
@@ -46,6 +46,7 @@ FloatToggleField.extractProps = (fieldName, record, attrs) => {
             record.fields[fieldName].digits,
         range: attrs.options.range,
         factor: attrs.options.factor,
+        disableReadOnly: Boolean(attrs.options.force_button),
     };
 };
 
