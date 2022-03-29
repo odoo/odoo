@@ -370,7 +370,7 @@ export class Record extends DataPoint {
 
         this._domains = {};
 
-        this.getParentEvalContext = params.getParentEvalContext;
+        this.getParentRecordContext = params.getParentRecordContext;
 
         this.selected = false;
         this.mode = params.mode || (this.resId ? state.mode || "readonly" : "edit");
@@ -384,7 +384,7 @@ export class Record extends DataPoint {
     // Getters
     // -------------------------------------------------------------------------
 
-    get evalContext() {
+    get dataContext() {
         // should not be called befor this.data is ready!
         const evalContext = {};
         for (const fieldName in this.activeFields) {
@@ -407,10 +407,17 @@ export class Record extends DataPoint {
             }
         }
         evalContext.id = this.resId || false;
-        if (this.getParentEvalContext) {
-            evalContext.parent = this.getParentEvalContext();
+        if (this.getParentRecordContext) {
+            evalContext.parent = this.getParentRecordContext();
         }
         return evalContext;
+    }
+
+    get evalContext() {
+        return {
+            // ...
+            ...this.dataContext,
+        };
     }
 
     /**
@@ -853,7 +860,7 @@ export class Record extends DataPoint {
             fields,
             activeFields,
             context: this.context,
-            getParentEvalContext: () => this.evalContext,
+            getParentRecordContext: () => this.dataContext,
             limit,
             orderBy,
             field: this.fields[fieldName],
@@ -1975,7 +1982,7 @@ export class StaticList extends DataPoint {
         this.notYetValidated = null;
         this.onChanges = params.onChanges || (() => {});
 
-        this.getParentEvalContext = params.getParentEvalContext;
+        this.getParentRecordContext = params.getParentRecordContext;
 
         this.editedRecord = null;
         this.onRecordWillSwitchMode = async (record, mode) => {
@@ -2015,6 +2022,13 @@ export class StaticList extends DataPoint {
             throw new Error("you rascal");
         }
         return this.currentIds.length;
+    }
+
+    get evalContext() {
+        return {
+            // ...
+            parent: this.getParentRecordContext(),
+        };
     }
 
     // ------------------------------------------------------------------------
@@ -2308,6 +2322,7 @@ export class StaticList extends DataPoint {
                 [this.context, this.field.context, params.context],
                 this.evalContext
             ),
+            getParentRecordContext: this.getParentRecordContext,
         });
         const id = record.resId || record.virtualId; // is resId sometimes changed after record creation? (for a record in a staticList)
 

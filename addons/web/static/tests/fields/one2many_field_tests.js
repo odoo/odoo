@@ -12408,7 +12408,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many column visiblity depends on onchange of parent field",
         async function (assert) {
             assert.expect(3);
@@ -12418,12 +12418,12 @@ QUnit.module("Fields", (hooks) => {
 
             serverData.models.partner.onchanges.p = function (obj) {
                 // set bar to true when line is added
-                if (obj.p.length > 1 && obj.p[1][2].foo === "New line") {
+                if (obj.p.length > 1 && obj.p[0][2].foo === "New line") {
                     obj.bar = true;
                 }
             };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -12441,27 +12441,18 @@ QUnit.module("Fields", (hooks) => {
             });
 
             // bar is false so there should be 1 column
-            assert.containsOnce(
-                form,
-                "th:not(.o_list_record_remove_header)",
-                "should be only 1 column ('foo') in the one2many"
-            );
-            assert.containsOnce(form, ".o_list_view .o_data_row", "should contain one row");
+            assert.containsOnce(target, ".o_list_renderer th:not(.o_list_record_remove_header)");
+            assert.containsOnce(target, ".o_list_renderer .o_data_row");
 
             await clickEdit(target);
 
             // add a new o2m record
             await addRow(target);
-            form.$(".o_field_one2many input:first").focus();
-            await testUtils.fields.editInput(form.$(".o_field_one2many input:first"), "New line");
-            await click(form.$el);
+            target.querySelector(".o_field_one2many input").focus(); // useless?
+            await editInput(target, ".o_field_one2many input", "New line");
+            await click(target, ".o_form_view");
 
-            assert.containsN(
-                form,
-                "th:not(.o_list_record_remove_header)",
-                2,
-                "should be 2 columns('foo' + 'int_field')"
-            );
+            assert.containsN(target, ".o_list_renderer th:not(.o_list_record_remove_header)", 2);
         }
     );
 

@@ -187,6 +187,14 @@ function matchCondition(record, condition) {
         return condition;
     }
     const [field, operator, value] = condition;
+
+    if (typeof field === "string") {
+        const names = field.split(".");
+        if (names.length >= 2) {
+            return matchCondition(record[names[0]], [names.slice(1).join("."), operator, value]);
+        }
+    }
+
     const fieldValue = typeof field === "number" ? field : record[field];
     switch (operator) {
         case "=":

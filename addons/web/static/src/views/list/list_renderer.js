@@ -10,7 +10,15 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 
-const { Component, onPatched, onWillPatch, useExternalListener, useRef, useState } = owl;
+const {
+    Component,
+    onPatched,
+    onWillPatch,
+    onWillUpdateProps,
+    useExternalListener,
+    useRef,
+    useState,
+} = owl;
 
 const formatterRegistry = registry.category("formatters");
 
@@ -50,6 +58,12 @@ export class ListRenderer extends Component {
             const activeRow = document.activeElement.closest(".o_data_row.o_selected_row");
             this.activeRowId = activeRow ? activeRow.dataset.id : null;
         });
+        onWillUpdateProps((nextProps) => {
+            this.allColumns = nextProps.archInfo.columns;
+            this.state.columns = this.allColumns.filter(
+                (col) => !col.optional || this.optionalActiveFields[col.name]
+            );
+        });
         onPatched(() => {
             const editedRecord = this.props.list.editedRecord;
             if (editedRecord && this.activeRowId !== editedRecord.id) {
@@ -68,7 +82,10 @@ export class ListRenderer extends Component {
     }
 
     focusCell(column) {
-        const index = this.state.columns.indexOf(column);
+        let index = this.state.columns.indexOf(column);
+        if (index === -1) {
+            index = 0;
+        }
         const columns = [
             ...this.state.columns.slice(index, this.state.columns.length),
             ...this.state.columns.slice(0, index),

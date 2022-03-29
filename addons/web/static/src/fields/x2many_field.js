@@ -35,10 +35,23 @@ export class X2ManyField extends Component {
 
     get rendererProps() {
         const archInfo = this.fieldInfo.views[this.viewMode];
+        let columns;
+        if (this.viewMode === "list") {
+            columns = archInfo.columns.filter((col) => {
+                if ("column_invisible" in col.modifiers) {
+                    const invisible = evalDomain(
+                        col.modifiers.column_invisible,
+                        this.list.evalContext
+                    );
+                    return !invisible;
+                }
+                return true;
+            });
+        }
         return {
             activeActions: this.activeActions,
             editable: this.props.record.isInEdition && archInfo.editable,
-            archInfo,
+            archInfo: { ...archInfo, columns },
             list: this.list,
             openRecord: this.openRecord.bind(this),
             onAdd: this.onAdd.bind(this),
