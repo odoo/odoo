@@ -26,7 +26,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
             self.project,
             self.project_profitability_items_empty)
 
-        expense_profitability = self.project._get_expenses_profitability_items()
+        expense_profitability = self.project._get_expenses_profitability_items(False)
 
         self.assertDictEqual(
             expense_profitability.get('revenues', {}),
@@ -56,7 +56,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         ])
         expense_sol = self.sale_order.order_line.filtered(lambda sol: sol.product_id == self.company_data['product_order_sales_price'])
 
-        expense_profitability = self.project._get_expenses_profitability_items()
+        expense_profitability = self.project._get_expenses_profitability_items(False)
         self.assertDictEqual(
             expense_profitability.get('revenues', {}),
             {'id': 'expenses', 'invoiced': 0.0, 'to_invoice': expense_sol.untaxed_amount_to_invoice},
@@ -67,7 +67,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         )
 
         self.assertDictEqual(
-            self.project._get_profitability_items(),
+            self.project._get_profitability_items(False),
             {
                 'revenues': {
                     'data': [expense_profitability['revenues']],
@@ -89,7 +89,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
             })._create_invoices(self.sale_order)
         invoice.action_post()
 
-        expense_profitability = self.project._get_expenses_profitability_items()
+        expense_profitability = self.project._get_expenses_profitability_items(False)
         self.assertDictEqual(
             expense_profitability.get('revenues', {}),
             {'id': 'expenses', 'invoiced': expense_sol.untaxed_amount_invoiced, 'to_invoice': 0.0},
@@ -98,14 +98,14 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         credit_note = invoice._reverse_moves()
         credit_note.action_post()
 
-        expense_profitability = self.project._get_expenses_profitability_items()
+        expense_profitability = self.project._get_expenses_profitability_items(False)
         self.assertDictEqual(
             expense_profitability.get('revenues', {}),
             {'id': 'expenses', 'invoiced': 0.0, 'to_invoice': expense_sol.untaxed_amount_to_invoice},
         )
 
         self.sale_order.action_cancel()
-        expense_profitability = self.project._get_expenses_profitability_items()
+        expense_profitability = self.project._get_expenses_profitability_items(False)
         self.assertDictEqual(
             expense_profitability.get('revenues', {}),
             {},
@@ -116,7 +116,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         )
 
         expense_sheet.refuse_sheet('Test Cancel Expense')
-        expense_profitability = self.project._get_expenses_profitability_items()
+        expense_profitability = self.project._get_expenses_profitability_items(False)
         self.assertDictEqual(
             expense_profitability.get('revenues', {}),
             {},
