@@ -28,34 +28,32 @@
                         </t>
                     </div>
                     <!-- Attachment aside -->
-                    <t t-if="(!attachmentCard.attachmentList.composerViewOwner or attachmentCard.attachment.isEditable)">
-                        <div class="o_AttachmentCard_aside position-relative rounded-right overflow-hidden" t-att-class="{ 'o-has-multiple-action d-flex flex-column': !attachmentCard.attachmentList.composerViewOwner and attachmentCard.attachment.isEditable }">
-                            <!-- Uploading icon -->
-                            <t t-if="attachmentCard.attachment.isUploading and attachmentCard.attachmentList.composerViewOwner">
-                                <div class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemUploading d-flex justify-content-center align-items-center w-100 h-100" title="Uploading">
-                                    <i class="fa fa-spin fa-spinner"/>
-                                </div>
-                            </t>
-                            <!-- Uploaded icon -->
-                            <t t-if="!attachmentCard.attachment.isUploading and attachmentCard.attachmentList.composerViewOwner">
-                                <div class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemUploaded d-flex justify-content-center align-items-center w-100 h-100 text-primary" title="Uploaded">
-                                    <i class="fa fa-check"/>
-                                </div>
-                            </t>
-                            <!-- Remove button -->
-                            <t t-if="attachmentCard.attachment.isEditable">
-                                <button class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemUnlink btn top-0 justify-content-center align-items-center d-flex w-100 h-100 rounded-0" t-attf-class="{{ attachmentCard.attachmentList.composerViewOwner ? 'o-pretty position-absolute btn-primary' : 'bg-300' }}" t-on-click="attachmentCard.onClickUnlink" title="Remove">
-                                    <i class="fa fa-trash"/>
-                                </button>
-                            </t>
-                            <!-- Download button -->
-                            <t t-if="!attachmentCard.attachmentList.composerViewOwner and !attachmentCard.attachment.isUploading">
-                                <button class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemDownload btn d-flex justify-content-center align-items-center w-100 h-100 rounded-0 bg-300" t-on-click="attachmentCard.attachment.onClickDownload" title="Download">
-                                    <i class="fa fa-download"/>
-                                </button>
-                            </t>
-                        </div>
-                    </t>
+                    <div class="o_AttachmentCard_aside position-relative rounded-right overflow-hidden" t-att-class="{ 'o-has-multiple-action d-flex flex-column': !attachmentCard.attachmentList.composerViewOwner and attachmentCard.attachment.isDeletable }">
+                        <!-- Uploading icon -->
+                        <t t-if="attachmentCard.attachment.isUploading and attachmentCard.attachmentList.composerViewOwner">
+                            <div class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemUploading d-flex justify-content-center align-items-center w-100 h-100" title="Uploading">
+                                <i class="fa fa-spin fa-spinner"/>
+                            </div>
+                        </t>
+                        <!-- Uploaded icon -->
+                        <t t-if="!attachmentCard.attachment.isUploading and attachmentCard.attachmentList.composerViewOwner">
+                            <div class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemUploaded d-flex justify-content-center align-items-center w-100 h-100 text-primary" title="Uploaded">
+                                <i class="fa fa-check"/>
+                            </div>
+                        </t>
+                        <!-- Remove button -->
+                        <t t-if="attachmentCard.attachment.isDeletable">
+                            <button class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemUnlink btn top-0 justify-content-center align-items-center d-flex w-100 h-100 rounded-0" t-attf-class="{{ attachmentCard.attachmentList.composerViewOwner ? 'o-pretty position-absolute btn-primary' : 'bg-300' }}" t-on-click="attachmentCard.onClickUnlink" title="Remove">
+                                <i class="fa fa-trash"/>
+                            </button>
+                        </t>
+                        <!-- Download button -->
+                        <t t-if="!attachmentCard.attachmentList.composerViewOwner and !attachmentCard.attachment.isUploading">
+                            <button class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemDownload btn d-flex justify-content-center align-items-center w-100 h-100 rounded-0 bg-300" t-on-click="attachmentCard.attachment.onClickDownload" title="Download">
+                                <i class="fa fa-download"/>
+                            </button>
+                        </t>
+                    </div>
                 </div>
             </div>
         </t>

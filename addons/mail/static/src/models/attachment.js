@@ -163,9 +163,9 @@ registerModel({
          * @private
          * @returns {boolean}
          */
-        _computeIsEditable() {
+        _computeIsDeletable() {
             if (!this.messaging) {
-                return;
+                return false;
             }
 
             if (this.messages.length && this.originThread && this.originThread.model === 'mail.channel') {
@@ -316,10 +316,10 @@ registerModel({
             required: true,
         }),
         /**
-         * States whether this attachment is editable.
+         * States whether this attachment is deletable.
          */
-        isEditable: attr({
-            compute: '_computeIsEditable',
+        isDeletable: attr({
+            compute: '_computeIsDeletable',
         }),
         /**
          * States id the attachment is an image.
