@@ -176,6 +176,13 @@ QUnit.module("Fields", (hooks) => {
                         turtle_bar: { string: "Bar", type: "boolean", default: true },
                         turtle_description: { string: "Description", type: "text" },
                         turtle_int: { string: "int", type: "integer", sortable: true },
+                        turtle_qux: {
+                            string: "Qux",
+                            type: "float",
+                            digits: [16, 1],
+                            required: true,
+                            default: 1.5,
+                        },
                         turtle_trululu: {
                             string: "Trululu",
                             type: "many2one",
@@ -4224,7 +4231,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["read", "read", "onchange", "write", "read", "read"]);
     });
 
-    QUnit.skipWOWL("one2many and onchange (with command DELETE_ALL)", async function (assert) {
+    QUnit.test("one2many and onchange (with command DELETE_ALL)", async function (assert) {
         assert.expect(5);
 
         serverData.models.partner.onchanges = {
@@ -4235,7 +4242,7 @@ QUnit.module("Fields", (hooks) => {
         };
         serverData.models.partner.records[0].p = [2];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -4250,48 +4257,34 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             mockRPC: function (method, args) {
                 if (args.method === "write") {
-                    assert.deepEqual(
-                        args.args[1].p,
-                        [
-                            [0, args.args[1].p[0][1], { display_name: "z" }],
-                            [2, 2, false],
-                        ],
-                        "correct commands should be sent"
-                    );
+                    assert.deepEqual(args.args[1].p, [
+                        [0, args.args[1].p[0][1], { display_name: "z" }],
+                        [2, 2, false],
+                    ]);
                 }
-                return this._super.apply(this, arguments);
             },
             resId: 1,
-            viewOptions: {
-                mode: "edit",
-            },
         });
-
-        assert.containsOnce(form, ".o_data_row", "o2m should contain one row");
+        await clickEdit(target);
+        assert.containsOnce(target, ".o_data_row");
 
         // empty o2m by triggering the onchange
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo]"), "trigger onchange");
-
-        assert.containsNone(form, ".o_data_row", "rows of the o2m should have been deleted");
+        await editInput(target, ".o_field_widget[name=foo] input", "trigger onchange");
+        assert.containsNone(target, ".o_data_row", "rows of the o2m should have been deleted");
 
         // add two new subrecords
         await addRow(target);
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=display_name]"), "x");
+        await editInput(target, ".o_field_widget[name=display_name] input", "x");
         await addRow(target);
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=display_name]"), "y");
-
-        assert.containsN(form, ".o_data_row", 2, "o2m should contain two rows");
+        await editInput(target, ".o_field_widget[name=display_name] input", "y");
+        assert.containsN(target, ".o_data_row", 2);
 
         // empty o2m by triggering the onchange
-        await testUtils.fields.editInput(
-            form.$(".o_field_widget[name=foo]"),
-            "trigger onchange again"
-        );
-
-        assert.containsNone(form, ".o_data_row", "rows of the o2m should have been deleted");
+        await editInput(target, ".o_field_widget[name=foo] input", "trigger onchange again");
+        assert.containsNone(target, ".o_data_row", "rows of the o2m should have been deleted");
 
         await addRow(target);
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=display_name]"), "z");
+        await editInput(target, ".o_field_widget[name=display_name] input", "z");
 
         await clickSave(target);
     });
@@ -4324,7 +4317,7 @@ QUnit.module("Fields", (hooks) => {
 
         serverData.models.partner.records[0].turtles = [3];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -4361,21 +4354,13 @@ QUnit.module("Fields", (hooks) => {
                         "correct commands should be sent (only send changed values)"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
             resId: 1,
-            viewOptions: {
-                mode: "edit",
-            },
         });
-
-        assert.containsOnce(form, ".o_data_row", "o2m should contain one row");
-
-        await click(form.$(".o_field_one2many .o_list_view tbody tr:first td:first"));
-        await testUtils.fields.editInput(
-            form.$(".o_field_one2many .o_list_view tbody tr:first input:first"),
-            "blurp"
-        );
+        await clickEdit(target);
+        assert.containsOnce(target, ".o_data_row");
+        await click(target.querySelector(".o_field_one2many td"));
+        await editInput(target, ".o_field_widget[name=display_name] input", "blurp");
 
         await clickSave(target);
     });

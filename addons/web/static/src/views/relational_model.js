@@ -2128,6 +2128,7 @@ export class StaticList extends DataPoint {
         this.limit = this.initialLimit;
 
         if (!this.count) {
+            this.records = [];
             return;
         }
 
@@ -2239,6 +2240,13 @@ export class StaticList extends DataPoint {
                 }
             } else if (DELETE_ALL === this._commands[0][0]) {
                 commands.shift();
+                if (!allFields) {
+                    for (const resId of this._serverIds) {
+                        if (!this.currentIds.includes(resId)) {
+                            commands.push(x2ManyCommands.delete(resId));
+                        }
+                    }
+                }
             }
             return commands;
         }
