@@ -25,6 +25,11 @@ addFakeModel('res.fake', {
     partner_ids: { relation: 'res.partner', string: "Related partners", type: 'one2many' },
 });
 
+addFakeModel('m2x.avatar.user', {
+    user_id: { type: 'many2one', relation: 'res.users' },
+    user_ids: { type: 'many2many', relation: 'res.users' },
+});
+
 //--------------------------------------------------------------------------
 // Insertion of fields
 //--------------------------------------------------------------------------
