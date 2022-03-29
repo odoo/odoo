@@ -64,7 +64,8 @@ $grid-gutter-width: $o-horizontal-padding * 2 !default;
 //
 // Define common padding and border radius sizes and more.
 
-$border-radius: 3px !default;
+$border-radius: $o-border-radius !default;
+$border-radius-lg: $o-border-radius-lg !default;
 $border-color: $o-gray-300 !default;
 
 $component-active-color: $o-brand-primary !default;
@@ -97,6 +98,10 @@ $headings-color: $o-main-headings-color !default;
 $table-accent-bg: rgba($black, .01) !default;
 $table-hover-bg: rgba($black, .04) !default;
 $table-border-color: $gray-200 !default;
+
+// Buttons
+//
+$btn-border-radius-lg: $border-radius !default;
 
 // Dropdowns
 //
@@ -151,6 +156,10 @@ $nav-pills-border-radius: 0 !default;
 $nav-pills-link-active-color: $white !default;
 $nav-pills-link-active-bg: $o-brand-primary !default;
 
+// Popovers
+
+$popover-border-radius: $border-radius !default;
+
 // Toasts
 
 $toast-max-width: 320px !default;
@@ -167,6 +176,8 @@ $modal-inner-padding: $o-horizontal-padding !default;
 
 $modal-lg: $o-modal-lg !default;
 $modal-md: $o-modal-md !default;
+
+$modal-content-border-radius: $border-radius !default;
 
 // Breadcrumbs
 
