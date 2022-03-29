@@ -2,13 +2,11 @@
 
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import { registry } from "@web/core/registry";
-import { click, getFixture } from "../helpers/utils";
+import { click, getFixture, nextTick } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
 let target;
-// WOWL remove after adapting tests
-let nextTick;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -251,11 +249,11 @@ QUnit.module("Fields", (hooks) => {
             await click(target.querySelector(".o_form_button_edit"));
 
             // Get all inputs
-            const floatFactorField = target.querySelector('.o_input[name="float_factor_field"]');
-            const floatInput = target.querySelector('.o_input[name="qux"]');
-            const integerInput = target.querySelector('.o_input[name="int_field"]');
-            const monetaryInput = target.querySelector('.o_input[name="monetary"]');
-            const percentageInput = target.querySelector('.o_input[name="percentage"]');
+            const floatFactorField = target.querySelector(".o_field_float_factor input");
+            const floatInput = target.querySelector(".o_field_float input");
+            const integerInput = target.querySelector(".o_field_integer input");
+            const monetaryInput = target.querySelector(".o_field_monetary input");
+            const percentageInput = target.querySelector(".o_field_percentage input");
 
             // Dispatch numpad "dot" and numpad "comma" keydown events to all inputs and check
             // Numpad "comma" is specific to some countries (Brazil...)
