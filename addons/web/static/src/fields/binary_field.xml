@@ -10,7 +10,7 @@
                 onRemove.bind="onFileRemove"
             />
         </t>
-        <t t-elif="file.data">
+        <t t-elif="file.data and props.isDownloadable">
             <FileDownloader file="file" onDownload.bind="onFileDownload"/>
         </t>
     </t>

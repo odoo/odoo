@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-// import { download } from "@web/core/network/download";
 import { makeMockXHR } from "../helpers/mock_services";
 import {
     click,
@@ -33,11 +32,32 @@ QUnit.module("Fields", (hooks) => {
                             trim: true,
                         },
                         document: { string: "Binary", type: "binary" },
+                        product_id: {
+                            string: "Product",
+                            type: "many2one",
+                            relation: "product",
+                            searchable: true,
+                        },
                     },
                     records: [
                         {
                             foo: "coucou.txt",
                             document: "coucou==\n",
+                        },
+                    ],
+                },
+                product: {
+                    fields: {
+                        name: { string: "Product Name", type: "char", searchable: true },
+                    },
+                    records: [
+                        {
+                            id: 37,
+                            display_name: "xphone",
+                        },
+                        {
+                            id: 41,
+                            display_name: "xpad",
                         },
                     ],
                 },
@@ -246,17 +266,23 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "BinaryField that is readonly in create mode does not download",
         async function (assert) {
-            assert.expect(4);
+            assert.expect(3);
 
-            // save the session function
-            // var oldGetFile = download;
-            // download = function (option) {
-            //     assert.step("We shouldn't be getting the file.");
-            //     return oldGetFile.bind(download)(option);
-            // };
+            async function download() {
+                assert.step("We shouldn't be getting the file.");
+            }
+            const MockXHR = makeMockXHR("", download);
+
+            patchWithCleanup(
+                browser,
+                {
+                    XMLHttpRequest: MockXHR,
+                },
+                { pure: true }
+            );
 
             serverData.models.partner.onchanges = {
                 product_id: function (obj) {
@@ -279,14 +305,15 @@ QUnit.module("Fields", (hooks) => {
             });
 
             await click(target, ".o_form_button_create");
-            // WOWL uncomment when unskipping this test
-            // await testUtils.fields.many2one.clickOpenDropdown("product_id");
-            // await testUtils.fields.many2one.clickHighlightedItem("product_id");
+            await click(target, ".o_field_many2one[name='product_id'] input");
+            await click(
+                target.querySelector(".o_field_many2one[name='product_id'] .dropdown-item")
+            );
 
-            assert.containsOnce(
+            assert.containsNone(
                 target,
                 '.o_field_widget[name="document"] a',
-                "The link to download the binary should be present"
+                "The link to download the binary should not be present"
             );
             assert.containsNone(
                 target,
@@ -294,12 +321,7 @@ QUnit.module("Fields", (hooks) => {
                 "The download icon should not be present"
             );
 
-            var link = target.querySelector('.o_field_widget[name="document"] a');
-            assert.ok(link.is(":hidden"), "the link element should not be visible");
-
-            assert.verifySteps([]); // We shouldn't have passed through steps
-
-            // download = oldGetFile;
+            assert.verifySteps([], "We shouldn't have passed through steps");
         }
     );
 });

@@ -27,42 +27,36 @@
             </t>
         </t>
         <t t-else="">
-            <div
-                class="o_field_many2one"
-                aria-atomic="true"
-                t-att-class="{ 'o_with_button': hasExternalButton }"
-            >
-                <div class="o_field_many2one_selection">
-                    <div class="o_input_dropdown">
-                        <AutoComplete
-                            value="displayName"
-                            placeholder="props.placeholder"
-                            sources="sources"
-                            onSelect.bind="onSelect"
-                            autoSelect="true"
-                            onInput.bind="onInput"
-                            onChange.bind="onChange"
-                        />
-                        <a role="button" class="o_dropdown_button" draggable="false" />
-                    </div>
-                    <t t-if="hasExternalButton">
-                        <button
-                            type="button"
-                            class="btn btn-secondary fa fa-external-link o_external_button"
-                            tabindex="-1"
-                            draggable="false"
-                            aria-label="External link"
-                            data-tooltip="External link"
-                            t-on-click="onExternalBtnClick"
-                        />
-                    </t>
+            <div class="o_field_many2one_selection">
+                <div class="o_input_dropdown">
+                    <AutoComplete
+                        value="displayName"
+                        placeholder="props.placeholder"
+                        sources="sources"
+                        onSelect.bind="onSelect"
+                        autoSelect="true"
+                        onInput.bind="onInput"
+                        onChange.bind="onChange"
+                    />
+                    <a role="button" class="o_dropdown_button" draggable="false" />
                 </div>
-                <div class="o_field_many2one_extra">
-                    <t t-foreach="extraLines" t-as="extraLine" t-key="extraLine_index">
-                        <br t-if="!extraLine_first" />
-                        <span t-esc="extraLine" />
-                    </t>
-                </div>
+                <t t-if="hasExternalButton">
+                    <button
+                        type="button"
+                        class="btn btn-secondary fa fa-external-link o_external_button"
+                        tabindex="-1"
+                        draggable="false"
+                        aria-label="External link"
+                        data-tooltip="External link"
+                        t-on-click="onExternalBtnClick"
+                    />
+                </t>
+            </div>
+            <div class="o_field_many2one_extra">
+                <t t-foreach="extraLines" t-as="extraLine" t-key="extraLine_index">
+                    <br t-if="!extraLine_first" />
+                    <span t-esc="extraLine" />
+                </t>
             </div>
         </t>
     </t>

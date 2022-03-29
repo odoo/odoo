@@ -71,10 +71,12 @@ BinaryField.props = {
     fileData: { type: String, optional: true },
     fileName: { type: String, optional: true },
     acceptedFileExtensions: { type: String, optional: true },
+    isDownloadable: { type: Boolean, optional: true },
 };
 BinaryField.defaultProps = {
     acceptedFileExtensions: "*",
     fileData: "",
+    isDownloadable: true,
 };
 BinaryField.template = "web.BinaryField";
 BinaryField.extractProps = (fieldName, record, attrs) => {
@@ -82,6 +84,7 @@ BinaryField.extractProps = (fieldName, record, attrs) => {
         fileData: record.data[fieldName] || "",
         fileName: record.data[attrs.filename] || "",
         acceptedFileExtensions: attrs.options.accepted_file_extensions,
+        isDownloadable: !(record.isReadonly(fieldName) && record.mode === "edit"),
         update: (file) => {
             record.update(fieldName, file.data || false);
             if (attrs.filename && attrs.filename !== fieldName) {
