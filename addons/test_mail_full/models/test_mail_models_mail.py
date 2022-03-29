@@ -54,5 +54,5 @@ class MailTestRating(models.Model):
     def _rating_apply_get_default_subtype_id(self):
         return self.env['ir.model.data']._xmlid_to_res_id("test_mail_full.mt_mail_test_rating_rating_done")
 
-    def rating_get_partner_id(self):
+    def _rating_get_partner(self):
         return self.customer_id

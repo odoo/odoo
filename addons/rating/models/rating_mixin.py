@@ -111,17 +111,25 @@ class RatingMixin(models.AbstractModel):
         """
         return ['&', '&', ('res_model', '=', self._name), ('res_id', 'in', self.ids), ('consumed', '=', True)]
 
-    def rating_get_partner_id(self):
+    def _rating_get_partner(self):
+        """ Return the customer (partner) that performs the rating.
+
+        :return record: res.partner singleton
+        """
         if hasattr(self, 'partner_id') and self.partner_id:
             return self.partner_id
         return self.env['res.partner']
 
-    def rating_get_rated_partner_id(self):
+    def _rating_get_operator(self):
+        """ Return the operator (partner) that is the person who is rated.
+
+        :return record: res.partner singleton
+        """
         if hasattr(self, 'user_id') and self.user_id.partner_id:
             return self.user_id.partner_id
         return self.env['res.partner']
 
-    def rating_get_access_token(self, partner=None):
+    def _rating_get_access_token(self, partner=None):
         """ Return access token linked to existing ratings, or create a new rating
         that will create the asked token. An explicit call to access rights is
         performed as sudo is used afterwards as this method could be used from
@@ -129,8 +137,8 @@ class RatingMixin(models.AbstractModel):
         self.check_access_rights('read')
         self.check_access_rule('read')
         if not partner:
-            partner = self.rating_get_partner_id()
-        rated_partner = self.rating_get_rated_partner_id()
+            partner = self._rating_get_partner()
+        rated_partner = self._rating_get_operator()
         ratings = self.rating_ids.sudo().filtered(lambda x: x.partner_id.id == partner.id and not x.consumed)
         if not ratings:
             rating = self.env['rating.rating'].sudo().create({
