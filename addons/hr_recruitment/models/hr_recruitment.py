@@ -10,6 +10,8 @@ from odoo.exceptions import AccessError, UserError
 
 from dateutil.relativedelta import relativedelta
 
+from lxml import etree
+
 AVAILABLE_PRIORITIES = [
     ('0', 'Normal'),
     ('1', 'Good'),
@@ -24,8 +26,12 @@ class RecruitmentSource(models.Model):
     _inherit = ['utm.source.mixin']
 
     email = fields.Char(related='alias_id.display_name', string="Email", readonly=True)
+    has_domain = fields.Char(compute='_compute_has_domain')
     job_id = fields.Many2one('hr.job', "Job", ondelete='cascade')
     alias_id = fields.Many2one('mail.alias', "Alias ID")
+
+    def _compute_has_domain(self):
+        self.has_domain = bool(self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
 
     def create_alias(self):
         campaign = self.env.ref('hr_recruitment.utm_campaign_job')
@@ -44,7 +50,16 @@ class RecruitmentSource(models.Model):
                 },
             }
             source.alias_id = self.env['mail.alias'].create(vals)
-            source.name = source.source_id.name
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        res = super().fields_view_get(view_id, view_type, toolbar, submenu)
+        if view_type == 'tree' and not bool(self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")):
+            arch = etree.fromstring(res['arch'])
+            email = arch.xpath("//field[@name='email']")[0]
+            email.getparent().remove(email)
+            res['arch'] = etree.tostring(arch, encoding='unicode')
+        return res
 
 class RecruitmentStage(models.Model):
     _name = "hr.recruitment.stage"
@@ -111,7 +126,7 @@ class Applicant(models.Model):
     _inherit = ['mail.thread.cc', 'mail.activity.mixin', 'utm.mixin']
     _mailing_enabled = True
 
-    name = fields.Char("Subject / Application Name", required=True, help="Email subject for applications sent via email", index='trigram')
+    name = fields.Char("Subject / Application", required=True, help="Email subject for applications sent via email", index='trigram')
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
     description = fields.Html("Description")
     email_from = fields.Char("Email", size=128, help="Applicant email", compute='_compute_partner_phone_email',
@@ -129,7 +144,7 @@ class Applicant(models.Model):
     categ_ids = fields.Many2many('hr.applicant.category', string="Tags")
     company_id = fields.Many2one('res.company', "Company", compute='_compute_company', store=True, readonly=False, tracking=True)
     user_id = fields.Many2one(
-        'res.users', "Recruiter", compute='_compute_user',
+        'res.users', "Recruiter", compute='_compute_user', domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
         tracking=True, store=True, readonly=False)
     date_closed = fields.Datetime("Hire Date", compute='_compute_date_closed', store=True, readonly=False, tracking=True)
     date_open = fields.Datetime("Assigned", readonly=True)
@@ -177,6 +192,12 @@ class Applicant(models.Model):
     medium_id = fields.Many2one(ondelete='set null')
     source_id = fields.Many2one(ondelete='set null')
     interviewer_id = fields.Many2one('res.users', string='Interviewer', domain="[('share', '=', False), ('company_ids', 'in', company_id)]")
+
+    @api.onchange('job_id')
+    def _onchange_job_id(self):
+        for applicant in self:
+            if applicant.job_id.name:
+                applicant.name = applicant.job_id.name
 
     @api.depends('date_open', 'date_closed')
     def _compute_day(self):
@@ -312,7 +333,7 @@ class Applicant(models.Model):
         for applicant in self:
             applicant.user_id = applicant.job_id.user_id.id or self.env.uid
 
-    @api.depends('partner_id')
+    @api.depends('partner_id', 'partner_id.email', 'partner_id.mobile', 'partner_id.phone')
     def _compute_partner_phone_email(self):
         for applicant in self:
             applicant.partner_phone = applicant.partner_id.phone
@@ -448,12 +469,24 @@ class Applicant(models.Model):
         }
         return res
 
-    def action_get_attachment_tree_view(self):
-        action = self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
-        action['context'] = {'default_res_model': self._name, 'default_res_id': self.ids[0]}
-        action['domain'] = str(['&', ('res_model', '=', self._name), ('res_id', 'in', self.ids)])
-        action['search_view_id'] = (self.env.ref('hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment').id, )
-        return action
+    def action_open_attachments(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'ir.attachment',
+            'name': _('Documents'),
+            'context': {
+                'default_res_model': 'hr.job',
+                'default_res_id': self.ids[0],
+                'show_partner_name': 1,
+            },
+            'view_mode': 'tree,form',
+            'views': [
+                (self.env.ref('hr_recruitment.ir_attachment_hr_recruitment_list_view').id, 'tree'),
+                (False, 'form'),
+            ],
+            'search_view_id': self.env.ref('hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment').ids,
+            'domain': [('res_model', '=', 'hr.applicant'), ('res_id', 'in', self.ids), ],
+        }
 
     def action_applications_email(self):
         # Security rules will apply when loading the view, here we just fetch the ids
@@ -477,6 +510,16 @@ class Applicant(models.Model):
             'context': {
                 'active_test': False
             },
+        }
+
+    def action_open_employee(self):
+        self.ensure_one()
+        return {
+            'name': _('Employee'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'hr.employee',
+            'view_mode': 'form',
+            'res_id': self.emp_id.id,
         }
 
     def _track_template(self, changes):
@@ -519,6 +562,14 @@ class Applicant(models.Model):
                     email_from = tools.formataddr((applicant.partner_name, email_from))
                 applicant._message_add_suggested_recipient(recipients, email=email_from, reason=_('Contact Email'))
         return recipients
+
+    def name_get(self):
+        if self.env.context.get('show_partner_name'):
+            return [
+                (applicant.id, applicant.partner_name or applicant.name)
+                for applicant in self
+            ]
+        return super().name_get()
 
     @api.model
     def message_new(self, msg, custom_values=None):
@@ -645,6 +696,18 @@ class Applicant(models.Model):
         if applicant_inactive:
             return applicant_inactive.archive_applicant()
         return res
+
+    def action_send_email(self):
+        return {
+            'name': _('Send Email'),
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'view_mode': 'form',
+            'res_model': 'applicant.send.mail',
+            'context': {
+                'default_applicant_ids': self.ids,
+            }
+        }
 
 
 class ApplicantCategory(models.Model):

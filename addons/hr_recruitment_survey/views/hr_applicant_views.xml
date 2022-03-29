@@ -18,7 +18,7 @@
         <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='archive_applicant']" position="before">
-                <button name="action_send_survey" string="SEND INTERVIEW" type="object"/>
+                <button name="action_send_survey" string="SEND INTERVIEW" type="object" attrs="{'invisible': ['|', ('active', '=', False), ('survey_id', '=', False)]}"/>
             </xpath>
             <xpath expr="//button[@name='action_makeMeeting']" position="after">
                 <button name="action_print_survey"
