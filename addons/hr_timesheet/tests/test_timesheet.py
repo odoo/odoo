@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import Command
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import AccessError, UserError
 
@@ -413,3 +414,23 @@ class TestTimesheet(TestCommonTimesheet):
         })
 
         self.assertEqual(timesheet.company_id.id, self.env.company.id)
+
+    def test_subtask_log_timesheet(self):
+        """ Test parent task takes into account the timesheets of its sub-tasks.
+            Test Case:
+            ----------
+            1) Create parent task
+            2) Create child/subtask task
+            3) Enter the 8 hour timesheet in the child task
+            4) Check subtask Effective hours in parent task
+        """
+        self.task1.child_ids = [Command.set([self.task2.id])]
+        self.env['account.analytic.line'].create({
+            'name': 'FirstTimeSheet',
+            'project_id': self.project_customer.id,
+            'task_id': self.task2.id,
+            'unit_amount': 8.0,
+            'employee_id': self.empl_employee2.id,
+        })
+        self.assertEqual(self.task1.subtask_effective_hours, 8, 'Hours Spent on Sub-tasks should be 8 hours in Parent Task')
+        self.task1.child_ids = [Command.clear()]
