@@ -9,11 +9,11 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields, http, SUPERUSER_ID, _
-from odoo.addons.http_routing.models.ir_qweb import keep_query
 from odoo.exceptions import UserError
 from odoo.http import request, content_disposition
 from odoo.osv import expression
 from odoo.tools import format_datetime, format_date, is_html_empty
+from odoo.addons.base.models.ir_qweb import keep_query
 
 _logger = logging.getLogger(__name__)
 
