@@ -179,15 +179,18 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 }
                 const parsedInput = event.detail.buffer && parse.float(event.detail.buffer) || 0;
                 if(lastId != selectedLine.cid)
-                    this._showDecreaseQuantityPopup();
+                    await this._showDecreaseQuantityPopup();
                 else if(currentQuantity < parsedInput)
                     this._setValue(event.detail.buffer);
                 else if(parsedInput < currentQuantity)
-                    this._showDecreaseQuantityPopup();
+                    await this._showDecreaseQuantityPopup();
             } else {
                 let { buffer } = event.detail;
                 let val = buffer === null ? 'remove' : buffer;
                 this._setValue(val);
+            }
+            if (this.env.pos.config.iface_customer_facing_display) {
+                this.env.pos.send_current_order_to_customer_facing_display();
             }
         }
         async _newOrderlineSelected() {
@@ -205,9 +208,6 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     var selected_orderline = this.currentOrder.get_selected_orderline();
                     selected_orderline.price_manually_set = true;
                     selected_orderline.set_unit_price(val);
-                }
-                if (this.env.pos.config.iface_customer_facing_display) {
-                    this.env.pos.send_current_order_to_customer_facing_display();
                 }
             }
         }
