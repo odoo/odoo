@@ -174,11 +174,11 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 }
                 const parsedInput = event.detail.buffer && parse.float(event.detail.buffer) || 0;
                 if(lastId != selectedLine.cid)
-                    this._showDecreaseQuantityPopup();
+                    await this._showDecreaseQuantityPopup();
                 else if(currentQuantity < parsedInput)
                     this._setValue(event.detail.buffer);
                 else if(parsedInput < currentQuantity)
-                    this._showDecreaseQuantityPopup();
+                    await this._showDecreaseQuantityPopup();
             } else {
                 let { buffer } = event.detail;
                 let val = buffer === null ? 'remove' : buffer;
@@ -187,6 +187,9 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     NumberBuffer.reset();
                     this.env.pos.numpadMode = 'quantity';
                 }
+            }
+            if (this.env.pos.config.iface_customer_facing_display) {
+                this.env.pos.send_current_order_to_customer_facing_display();
             }
         }
         _setValue(val) {
