@@ -100,7 +100,6 @@ class TestUi(TestUICommon):
 
     def test_course_member_employee(self):
         user_demo = self.user_demo
-        user_demo.flush()
         user_demo.write({
             'karma': 1,
             'groups_id': [(6, 0, self.env.ref('base.group_user').ids)]
@@ -114,7 +113,6 @@ class TestUi(TestUICommon):
 
     def test_course_member_elearning_officer(self):
         user_demo = self.user_demo
-        user_demo.flush()
         user_demo.write({
             'karma': 1,
             'groups_id': [(6, 0, (self.env.ref('base.group_user') | self.env.ref('website_slides.group_website_slides_officer')).ids)]
@@ -128,7 +126,6 @@ class TestUi(TestUICommon):
 
     def test_course_member_portal(self):
         user_portal = self.user_portal
-        user_portal.flush()
         user_portal.karma = 1
 
         self.browser_js(
@@ -140,7 +137,6 @@ class TestUi(TestUICommon):
     def test_full_screen_edition_website_publisher(self):
         # group_website_designer
         user_demo = self.env.ref('base.user_demo')
-        user_demo.flush()
         user_demo.write({
             'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website.group_website_publisher').id)]
         })
@@ -157,7 +153,6 @@ class TestUiPublisher(HttpCaseWithUserDemo):
 
     def test_course_publisher_elearning_manager(self):
         user_demo = self.user_demo
-        user_demo.flush()
         user_demo.write({
             'groups_id': [
                 (5, 0),
@@ -179,7 +174,6 @@ class TestUiPublisherYoutube(HttpCaseWithUserDemo):
     def test_course_member_yt_employee(self):
         # remove membership because we need to be able to join the course during the tour
         user_demo = self.user_demo
-        user_demo.flush()
         user_demo.write({
             'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id)]
         })
@@ -193,7 +187,6 @@ class TestUiPublisherYoutube(HttpCaseWithUserDemo):
 
     def test_course_publisher_elearning_manager(self):
         user_demo = self.user_demo
-        user_demo.flush()
         user_demo.write({
             'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website_slides.group_website_slides_manager').id)]
         })

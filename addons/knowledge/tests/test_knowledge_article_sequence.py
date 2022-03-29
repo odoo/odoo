@@ -59,7 +59,7 @@ class TestKnowledgeArticleSequence(KnowledgeCommon):
         cls.article_private2 = cls._create_private_article(cls, 'Article2', target_user=cls.user_employee)
 
         # flush everything to ease resequencing and date-based computation
-        cls.env['knowledge.article'].flush()
+        cls.env.flush_all()
 
     @users('employee')
     def test_initial_tree(self):

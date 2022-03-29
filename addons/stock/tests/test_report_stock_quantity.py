@@ -95,7 +95,7 @@ class TestReportStockQuantity(tests.TransactionCase):
             'date_deadline': fields.Datetime.now(),
         })
 
-        self.env['base'].flush()
+        self.env.flush_all()
         report = self.env['report.stock.quantity'].read_group(
             [('date', '>=', fields.Date.today()), ('date', '<=', fields.Date.today()), ('product_id', '=', self.product1.id)],
             ['product_qty', 'date', 'product_id', 'state'],
@@ -153,7 +153,7 @@ class TestReportStockQuantity(tests.TransactionCase):
         delivery_picking.action_confirm()
 
         # Trigger the manual orderpoint creation for missing product
-        self.env['stock.move'].flush()
+        self.env.flush_all()
         self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
 
         orderpoint = self.env['stock.warehouse.orderpoint'].search([
@@ -223,7 +223,7 @@ class TestReportStockQuantity(tests.TransactionCase):
         move01.quantity_done = 1
         move01._action_done()
 
-        self.env['stock.move'].flush()
+        self.env.flush_all()
 
         data = self.env['report.stock.quantity'].read_group(
             [('state', '=', 'forecast'), ('product_id', '=', product.id), ('date', '>=', two_days_ago), ('date', '<=', in_two_days)],

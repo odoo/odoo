@@ -30,7 +30,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.env.ref('test_new_api.discussion_0').write({'participants': [Command.link(self.user_demo.id)]})
         # YTI FIX ME: The cache shouldn't be inconsistent (rco is gonna fix it)
         # self.env.ref('test_new_api.discussion_0').participants -> 1 user
-        # self.env.ref('test_new_api.discussion_0').invalidate_cache()
+        # self.env.ref('test_new_api.discussion_0').invalidate()
         # self.env.ref('test_new_api.discussion_0').with_context(active_test=False).participants -> 2 users
         self.env.ref('test_new_api.message_0_1').write({'author': self.user_demo.id})
 
@@ -149,7 +149,7 @@ class TestFields(TransactionCaseWithUserDemo):
         """ check definition of custom computed fields """
         # Flush demo user before creating a new ir.model.fields to avoid
         # a deadlock
-        self.user_demo.flush()
+        self.env.flush_all()
         self.env['ir.model.fields'].create({
             'name': 'x_bool_false_computed',
             'model_id': self.env.ref('test_new_api.model_test_new_api_message').id,
@@ -317,7 +317,7 @@ class TestFields(TransactionCaseWithUserDemo):
         # switch message from discussion, and check again
 
         # See YTI FIXME
-        discussion1.invalidate_cache()
+        self.env.invalidate_all()
 
         discussion2 = discussion1.copy({'name': 'Another discussion'})
         message2 = discussion1.messages[0]
@@ -405,7 +405,7 @@ class TestFields(TransactionCaseWithUserDemo):
         # to test the below access error. Otherwise the above create calls set in the cache the information needed
         # to compute `company_type` ('is_company'), and doesn't need to trigger a read.
         # We need to force the read in order to test the security access
-        User.invalidate_cache()
+        self.env.invalidate_all()
         # group users as a recordset, and read them as user demo
         users = (user1 + user2 + user3).with_user(self.user_demo)
         user1, user2, user3 = users
@@ -506,7 +506,7 @@ class TestFields(TransactionCaseWithUserDemo):
     def test_12_cascade(self):
         """ test computed field depending on computed field """
         message = self.env.ref('test_new_api.message_0_0')
-        message.invalidate_cache()
+        self.env.invalidate_all()
         double_size = message.double_size
         self.assertEqual(double_size, message.size)
 
@@ -523,7 +523,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.env['ir.config_parameter'].set_param('test_new_api.full_name', 'name1,name2')
 
         # this must re-evaluate the field's dependencies
-        self.env['base'].flush()
+        self.env.flush_all()
         self.registry.setup_models(self.cr)
         self.assertEqual(self.registry.field_depends[Model.full_name], ('name1', 'name2'))
 
@@ -707,7 +707,7 @@ class TestFields(TransactionCaseWithUserDemo):
     def test_15_constraint(self):
         """ test new-style Python constraints """
         discussion = self.env.ref('test_new_api.discussion_0')
-        discussion.flush()
+        self.env.flush_all()
 
         # remove oneself from discussion participants: we can no longer create
         # messages in discussion
@@ -727,7 +727,6 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertTrue(discussion.messages)
         with self.assertRaises(ValidationError):
             discussion.name = "X"
-            discussion.flush()
 
     def test_15_constraint_inverse(self):
         """ test constraint method on normal field and field with inverse """
@@ -783,12 +782,12 @@ class TestFields(TransactionCaseWithUserDemo):
     def test_16_compute_unassigned_access_error(self):
         # create two records
         records = self.env['test_new_api.compute.unassigned'].create([{}, {}])
-        records.flush()
+        self.env.flush_all()
 
         # alter access rights: regular users cannot read 'records'
         access = self.env.ref('test_new_api.access_test_new_api_compute_unassigned')
         access.perm_read = False
-        access.flush()
+        self.env.flush_all()
 
         # switch to environment with user demo
         records = records.with_user(self.user_demo)
@@ -813,13 +812,13 @@ class TestFields(TransactionCaseWithUserDemo):
         #     - fetch records[1].bars -> access error
         records[0].foo = "assign"
         records[1].foo = "x"
-        records.flush()
+        self.env.flush_all()
 
         # try the other way around, too
-        records.env.cache.invalidate()
+        self.env.invalidate_all()
         records[0].foo = "x"
         records[1].foo = "assign"
-        records.flush()
+        self.env.flush_all()
 
     def test_20_float(self):
         """ test rounding of float fields """
@@ -828,14 +827,14 @@ class TestFields(TransactionCaseWithUserDemo):
 
         # 2.49609375 (exact float) must be rounded to 2.5
         record.write({'number': 2.49609375})
-        record.flush()
+        self.env.flush_all()
         self.cr.execute(query, [record.id, '2.5'])
         self.assertTrue(self.cr.rowcount)
         self.assertEqual(record.number, 2.5)
 
         # 1.1 (1.1000000000000000888178420 in float) must be 1.1 in database
         record.write({'number': 1.1})
-        record.flush()
+        self.env.flush_all()
         self.cr.execute(query, [record.id, '1.1'])
         self.assertTrue(self.cr.rowcount)
         self.assertEqual(record.number, 1.1)
@@ -861,7 +860,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertIn(record.amount, [ramount, samount], msg)
 
         # check the value in the database
-        record.flush()
+        self.env.flush_all()
         self.cr.execute('SELECT amount FROM test_new_api_mixed WHERE id=%s', [record.id])
         value = self.cr.fetchone()[0]
         self.assertEqual(value, samount, msg)
@@ -914,7 +913,7 @@ class TestFields(TransactionCaseWithUserDemo):
 
         def check(value):
             self.assertEqual(record.total, value)
-            record.flush()
+            self.env.flush_all()
             self.cr.execute('SELECT total FROM test_new_api_monetary_order WHERE id=%s', [record.id])
             [total] = self.cr.fetchone()
             self.assertEqual(total, value)
@@ -1154,7 +1153,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(demo_message.discussion.env, demo_env)
 
         # See YTI FIXME
-        message.discussion.invalidate_cache()
+        self.env.invalidate_all()
 
         # assign record's parent to a record in demo_env
         message.discussion = message.discussion.copy({'name': 'Copy'})
@@ -1271,7 +1270,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(bar.value1, 1)
         self.assertEqual(bar.value2, 2)
 
-        foo.invalidate_cache()
+        self.env.invalidate_all()
         bar.write({'value1': 3, 'value2': 4})
         self.assertEqual(foo.value1, 3)
         self.assertEqual(foo.value2, 4)
@@ -1389,7 +1388,7 @@ class TestFields(TransactionCaseWithUserDemo):
 
         # regression: duplicated records caused values to be browse(browse(id))
         recs = record.create({}) + record + record
-        recs.invalidate_cache()
+        self.env.invalidate_all()
         for rec in recs.with_user(user0):
             self.assertIsInstance(rec.tag_id.id, int)
 
@@ -1405,7 +1404,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(record.with_user(user2).foo, 'default')
 
         record.with_user(user0).with_company(company1).foo = 'beta'
-        record.invalidate_cache()
+        self.env.invalidate_all()
         self.assertEqual(record.with_user(user0).foo, 'main')
         self.assertEqual(record.with_user(user1).foo, 'beta')
         self.assertEqual(record.with_user(user2).foo, 'default')
@@ -1415,7 +1414,6 @@ class TestFields(TransactionCaseWithUserDemo):
         self.patch(type(record).foo, 'groups', 'base.group_system')
         with self.assertRaises(AccessError):
             record.with_user(user0).foo = 'forbidden'
-            record.flush()
 
         user0.write({'groups_id': [Command.link(self.env.ref('base.group_system').id)]})
         record.with_user(user0).foo = 'yes we can'
@@ -1429,7 +1427,6 @@ class TestFields(TransactionCaseWithUserDemo):
         })
         with self.assertRaises(AccessError):
             record.with_user(user0).foo = 'forbidden'
-            record.flush()
 
         # create company record and attribute
         company_record = self.env['test_new_api.company'].create({'foo': 'ABC'})
@@ -1489,14 +1486,14 @@ class TestFields(TransactionCaseWithUserDemo):
 
             # set default value to False
             Property._set_default(field_name, Model._name, False)
-            Property.flush()
-            Property.invalidate_cache()
+            self.env.flush_all()
+            self.env.invalidate_all()
             test_cases(field_name, operations, False)
 
             # set default value to truthy_values[0]
             Property._set_default(field_name, Model._name, truthy_values[0])
-            Property.flush()
-            Property.invalidate_cache()
+            self.env.flush_all()
+            self.env.invalidate_all()
             test_cases(field_name, operations, truthy_values[0])
 
         def test_cases(field_name, operations, default=None):
@@ -1901,7 +1898,7 @@ class TestFields(TransactionCaseWithUserDemo):
         move = self.env['test_new_api.move'].create({
             'line_ids': [Command.create({'quantity': 1}), Command.create({'quantity': 1})],
         })
-        move.flush()
+        self.env.flush_all()
         line = move.line_ids[0]
 
         new_move = move.new(origin=move)
@@ -1923,7 +1920,7 @@ class TestFields(TransactionCaseWithUserDemo):
         """ Check command on one2many field on new record. """
         move = self.env['test_new_api.move'].create({})
         line = self.env['test_new_api.move_line'].create({'move_id': move.id, 'quantity': 1})
-        move.flush()
+        self.env.flush_all()
 
         new_move = move.new(origin=move)
         new_line = line.new(origin=line)
@@ -2031,8 +2028,8 @@ class TestFields(TransactionCaseWithUserDemo):
         """ test the cache consistency of a many2many field with a domain """
         tag = self.env['test_new_api.multi.tag'].create({'name': 'bar'})
         record = self.env['test_new_api.multi'].create({'tags': tag.ids})
-        record.flush()
-        record.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
 
         self.assertEqual(type(record).tags.domain, [('name', 'ilike', 'a')])
 
@@ -2050,7 +2047,7 @@ class TestFields(TransactionCaseWithUserDemo):
     def test_70_x2many_write(self):
         discussion = self.env.ref('test_new_api.discussion_0')
         # See YTI FIXME
-        discussion.invalidate_cache()
+        self.env.invalidate_all()
 
         Message = self.env['test_new_api.message']
         # There must be 3 messages, 0 important
@@ -2083,8 +2080,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(demo_discussion.messages, discussion.messages)
 
         # See YTI FIXME
-        discussion.invalidate_cache()
-        demo_discussion.invalidate_cache()
+        self.env.invalidate_all()
 
         # add a message as user demo
         messages = demo_discussion.messages
@@ -2103,9 +2099,9 @@ class TestFields(TransactionCaseWithUserDemo):
         move1 = self.env['test_new_api.move'].create({})
         move2 = self.env['test_new_api.move'].create({})
         line = self.env['test_new_api.move_line'].create({'move_id': move1.id})
-        line.flush()
+        self.env.flush_all()
+        self.env.invalidate_all()
 
-        self.env.cache.invalidate()
         line.with_context(prefetch_fields=False).move_id
 
         # Setting 'move_id' updates the one2many field that is based on it,
@@ -2337,7 +2333,7 @@ class TestFields(TransactionCaseWithUserDemo):
             'name': 'image',
             'image_512': image_w,
         })
-        record.invalidate_cache(fnames=['image_512'], ids=record.ids)
+        record.invalidate_recordset(['image_512'])
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (512, 256))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image))).size, (4000, 2000))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (256, 128))
@@ -2345,7 +2341,7 @@ class TestFields(TransactionCaseWithUserDemo):
         record.write({
             'image_512': image_h,
         })
-        record.invalidate_cache(fnames=['image_512'], ids=record.ids)
+        record.invalidate_recordset(['image_512'])
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (256, 512))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image))).size, (2000, 4000))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (128, 256))
@@ -2355,7 +2351,7 @@ class TestFields(TransactionCaseWithUserDemo):
             'name': 'image',
             'image_256': image_w,
         })
-        record.invalidate_cache(fnames=['image_256'], ids=record.ids)
+        record.invalidate_recordset(['image_256'])
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (512, 256))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image))).size, (4000, 2000))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (256, 128))
@@ -2363,7 +2359,7 @@ class TestFields(TransactionCaseWithUserDemo):
         record.write({
             'image_256': image_h,
         })
-        record.invalidate_cache(fnames=['image_256'], ids=record.ids)
+        record.invalidate_recordset(['image_256'])
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (256, 512))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image))).size, (2000, 4000))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (128, 256))
@@ -2405,8 +2401,8 @@ class TestFields(TransactionCaseWithUserDemo):
 
         # created, flushed, and first read without context
         record = self.env['test_new_api.model_binary'].create({'binary': binary_value})
-        record.flush()
-        record.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
         record_no_bin_size = record.with_context(bin_size=False)
         record_bin_size = record.with_context(bin_size=True)
 
@@ -2416,8 +2412,8 @@ class TestFields(TransactionCaseWithUserDemo):
 
         # created, flushed, and first read with bin_size=False
         record_no_bin_size = self.env['test_new_api.model_binary'].with_context(bin_size=False).create({'binary': binary_value})
-        record_no_bin_size.flush()
-        record_no_bin_size.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
         record = self.env['test_new_api.model_binary'].browse(record.id)
         record_bin_size = record.with_context(bin_size=True)
 
@@ -2427,8 +2423,8 @@ class TestFields(TransactionCaseWithUserDemo):
 
         # created, flushed, and first read with bin_size=True
         record_bin_size = self.env['test_new_api.model_binary'].with_context(bin_size=True).create({'binary': binary_value})
-        record_bin_size.flush()
-        record_bin_size.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
         record = self.env['test_new_api.model_binary'].browse(record.id)
         record_no_bin_size = record.with_context(bin_size=False)
 
@@ -2440,8 +2436,8 @@ class TestFields(TransactionCaseWithUserDemo):
         record = self.env['test_new_api.model_binary'].create({'binary': binary_value})
         record_no_bin_size = record.with_context(bin_size=False)
         record_bin_size = record.with_context(bin_size=True)
-        record_bin_size.flush()
-        record_bin_size.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
 
         assertBinaryValue(record, binary_value)
         assertBinaryValue(record_no_bin_size, binary_value)
@@ -2449,8 +2445,8 @@ class TestFields(TransactionCaseWithUserDemo):
 
         # check computed binary field with arbitrary Python value
         record = self.env['test_new_api.model_binary'].create({})
-        record.flush()
-        record.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
         record_no_bin_size = record.with_context(bin_size=False)
         record_bin_size = record.with_context(bin_size=True)
 
@@ -2556,8 +2552,8 @@ class TestFields(TransactionCaseWithUserDemo):
 
     def test_99_prefetch_group(self):
         records = self.env['test_new_api.prefetch'].create([{} for _ in range(10)])
-        records.flush()
-        records.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
 
         with self.assertQueries(["""
             SELECT
@@ -2598,7 +2594,7 @@ class TestFields(TransactionCaseWithUserDemo):
             records.mapped('hansel')  # fetch all fields with prefetch='Hansel and Gretel'
             records.mapped('gretel')  # fetched already
 
-        records.invalidate_cache()
+        self.env.invalidate_all()
 
         with self.assertQueryCount(4):
             records.mapped('name')  # fetch all fields with prefetch=True
@@ -3689,8 +3685,8 @@ class test_shared_cache(TransactionCaseWithUserDemo):
         })
         self.assertEqual(task.total_amount, 1)
 
-        self.env['base'].flush()
-        task.invalidate_cache()  # Start fresh, as it would be the case on 2 different sessions.
+        self.env.flush_all()
+        self.env.invalidate_all()  # Start fresh, as it would be the case on 2 different sessions.
 
         task = task.with_user(self.user_demo)
         with common.Form(task) as task_form:
@@ -3932,8 +3928,8 @@ class TestPrecompute(common.TransactionCase):
 
         # warmup
         model.create({'partner_id': partners[0].id})
-        model.flush()
-        model.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
 
         # check the number of queries: 1 SELECT + 1 INSERT
         with self.assertQueryCount(2):
@@ -3946,8 +3942,8 @@ class TestPrecompute(common.TransactionCase):
 
         # warmup
         model.create({})
-        model.flush()
-        model.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
 
         fnames = [fname for fname, field in currency._fields.items() if field.prefetch]
         QUERIES = [

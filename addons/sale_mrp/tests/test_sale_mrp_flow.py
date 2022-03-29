@@ -1063,7 +1063,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         # Check that not enough enough quantities are available in the warehouse set in the SO
         # but there are enough quantities in Warehouse 1 for 1 kit_parent
         self.assertEqual(kit_parent_wh_order.virtual_available, 0)
-        kit_parent_wh_order.invalidate_cache()
+        self.env.invalidate_all()
         kit_parent_wh1 = self.kit_parent.with_context(warehouse=warehouse_1.id)
         self.assertEqual(kit_parent_wh1.virtual_available, 1)
 
@@ -1086,7 +1086,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         # But the quantity available in Warehouse 1 should stay 1
         kit_parent_wh_order = self.kit_parent.with_context(warehouse=so.warehouse_id.id)
         self.assertEqual(kit_parent_wh_order.virtual_available, 3)
-        kit_parent_wh_order.invalidate_cache()
+        self.env.invalidate_all()
         kit_parent_wh1 = self.kit_parent.with_context(warehouse=warehouse_1.id)
         self.assertEqual(kit_parent_wh1.virtual_available, 1)
 

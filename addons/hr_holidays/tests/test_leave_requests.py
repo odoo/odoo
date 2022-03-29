@@ -131,12 +131,12 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'number_of_days': 2,
             })
 
-            holiday_status.invalidate_cache()
+            holiday_status.invalidate_model()
             self._check_holidays_status(holiday_status, 2.0, 0.0, 2.0, 0.0)
 
             hol.with_user(self.user_hrmanager_id).action_approve()
 
-            holiday_status.invalidate_cache(['max_leaves'])
+            holiday_status.invalidate_model(['max_leaves'])
             self._check_holidays_status(holiday_status, 2.0, 2.0, 0.0, 0.0)
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')

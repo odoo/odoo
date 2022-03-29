@@ -838,7 +838,7 @@ class TestComputeOnchange(common.TransactionCase):
                 Command.create({'name': 'Z'}),
             ],
         })
-        record.flush()
+        self.env.flush_all()
         self.assertEqual(record.child_ids.mapped('name'), list('WXYZ'))
         self.assertEqual(record.cost, 22)
 
@@ -859,7 +859,7 @@ class TestComputeOnchange(common.TransactionCase):
     def test_onchange_editable_compute_one2many(self):
         # create a record with a computed editable field ('edit') on lines
         record = self.env['test_new_api.compute_editable'].create({'line_ids': [(0, 0, {'value': 7})]})
-        record.flush()
+        self.env.flush_all()
         line = record.line_ids
         self.assertRecordValues(line, [{'value': 7, 'edit': 7, 'count': 0}])
 
@@ -929,8 +929,8 @@ class TestComputeOnchange(common.TransactionCase):
             {'name': 'bar', 'count': 1},
             {'name': 'baz', 'count': 0},
         ])
-        record.flush()
-        record.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
         self.assertRecordValues(record.line_ids, [
             {'name': 'foo', 'count': 1},
             {'name': 'bar', 'count': 1},

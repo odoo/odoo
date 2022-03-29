@@ -218,7 +218,8 @@ class AccountTax(models.Model):
         if not self:
             return
 
-        self.flush(['company_id'])
+        self.env['account.move.line'].flush_model(['company_id', 'tax_line_id'])
+        self.flush_recordset(['company_id'])
         self._cr.execute('''
             SELECT line.id
             FROM account_move_line line

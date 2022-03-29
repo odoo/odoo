@@ -370,7 +370,7 @@ class TestTrackingInternals(TestMailCommon):
         self.assertTrue(msg_sudo.get('tracking_values'), "should have protected tracking values")
 
         # test editing the record with user not in the group of the field
-        self.record.invalidate_cache()
+        self.env.invalidate_all()
         self.record.clear_caches()
         record_form = Form(self.record.with_user(self.user_employee))
         record_form.name = 'TestDoNoCrash'

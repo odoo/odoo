@@ -30,7 +30,7 @@ class TestMonetaryAccess(TransactionCaseWithUserDemo):
         self.assertEqual(new_user.monetary, 1/3,
                          "Because of previous point, no rounding was done.")
 
-        new_user.invalidate_cache()
+        self.env.invalidate_all()
 
         self.assertEqual(new_user.currency_id.rounding, 0.01,
                          "We now get the correct currency.")

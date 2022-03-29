@@ -120,6 +120,6 @@ class TestSurveyFlowWithConditions(common.TestSurveyCommon, HttpCase):
 
         self._answer_page(page_0, answers, answer_token, csrf_token)
 
-        user_inputs.invalidate_cache()
+        user_inputs.invalidate_recordset()
         self.assertEqual(round(user_inputs.scoring_percentage), 60, "Three right answers out of five (the fourth one is still hidden)")
         self.assertFalse(user_inputs.scoring_success)

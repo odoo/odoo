@@ -35,7 +35,8 @@ class ChannelPartner(models.Model):
 
     @api.depends('channel_id.message_ids', 'seen_message_id')
     def _compute_message_unread(self):
-        self.flush()
+        self.env['mail.message'].flush_model()
+        self.flush_recordset(['channel_id', 'seen_message_id'])
         self.env.cr.execute("""
                  SELECT count(mail_message.id) AS count,
                         mail_channel_partner.id

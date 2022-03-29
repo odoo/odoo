@@ -183,7 +183,7 @@ record['name'] = record.name + 'X'""",
         self.assertEqual(lead.user_id, self.user_root, "Responsible should not change on creation of Lead with state from 'draft' to 'open'.")
         # change partner, recompute on lead should trigger the rule
         partner.write({'employee': True})
-        lead.flush()
+        self.env.flush_all()
         self.assertTrue(lead.employee, "Customer field should updated to True")
         self.assertEqual(lead.user_id, self.user_demo, "Responsible should be change on write of Lead when Customer becomes True.")
 
@@ -423,7 +423,7 @@ class TestCompute(common.TransactionCase):
         # automatically assigned to project, too
         task = self.env['test_base_automation.task'].create({'project_id': project.id})
         subtasks = task.create([{'parent_id': task.id} for _ in range(10)])
-        subtasks.flush()
+        subtasks.flush_model()
 
         # This test checks what happens when a stored recursive computed field
         # is marked to compute on many records, and automated actions are

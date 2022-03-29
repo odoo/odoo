@@ -344,7 +344,7 @@ class CRMRevealRule(models.Model):
             else:
                 views = self.env['crm.reveal.view'].search([('reveal_ip', '=', res['ip'])])
                 views.write({'reveal_state': 'not_found'})
-                views.flush()
+                views.flush_recordset()
 
         if result.get('credit_error'):
             self.env['crm.iap.lead.helpers'].notify_no_more_credit('reveal', self._name, 'reveal.already_notified')
@@ -355,7 +355,7 @@ class CRMRevealRule(models.Model):
                 ('reveal_ip', 'in', [ip for ip in all_ips if ip not in done_ips])
             ])
             views.write({'reveal_state': 'not_found'})
-            views.flush()
+            views.flush_recordset()
             # reset notified parameter to re-send credit notice if appears again
             self.env['ir.config_parameter'].sudo().set_param('reveal.already_notified', False)
         return True

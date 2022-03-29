@@ -343,6 +343,6 @@ class MailTemplate(models.Model):
 
     def _neutralize(self):
         super()._neutralize()
-        self.flush()
-        self.invalidate_cache()
+        self.flush_model()
+        self.invalidate_model()
         self.env.cr.execute("UPDATE mail_template SET mail_server_id=NULL")

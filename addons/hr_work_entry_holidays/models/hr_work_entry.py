@@ -32,8 +32,8 @@ class HrWorkEntry(models.Model):
         if not self:
             return False
 
-        self.flush(['date_start', 'date_stop', 'employee_id'])
-        self.env['hr.leave'].flush(['date_from', 'date_to', 'state', 'employee_id'])
+        self.flush_recordset(['date_start', 'date_stop', 'employee_id', 'active'])
+        self.env['hr.leave'].flush_model(['date_from', 'date_to', 'state', 'employee_id'])
 
         query = """
             SELECT

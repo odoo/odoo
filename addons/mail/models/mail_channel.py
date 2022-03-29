@@ -562,8 +562,8 @@ class Channel(models.Model):
 
         recipients_data = []
         if pids:
-            self.env['res.partner'].flush(fnames=['active', 'email', 'partner_share'])
-            self.env['res.users'].flush(fnames=['notification_type', 'partner_id'])
+            self.env['res.partner'].flush_model(['active', 'email', 'partner_share'])
+            self.env['res.users'].flush_model(['notification_type', 'partner_id'])
             sql_query = """
                 SELECT DISTINCT ON (partner.id) partner.id,
                        partner.partner_share,
@@ -899,7 +899,8 @@ class Channel(models.Model):
         if len(partners_to) > 2:
             raise UserError(_("A chat should not be created with more than 2 persons. Create a group instead."))
         # determine type according to the number of partner in the channel
-        self.flush()
+        self.flush_model()
+        self.env['mail.channel.partner'].flush_model()
         self.env.cr.execute("""
             SELECT P.channel_id
             FROM mail_channel C, mail_channel_partner P
@@ -1188,7 +1189,7 @@ class Channel(models.Model):
         """ Return the last message of the given channels."""
         if not self:
             return []
-        self.flush()
+        self.env['mail.message'].flush_model()
         self.env.cr.execute("""
             SELECT res_id AS id, MAX(id) AS message_id
             FROM mail_message

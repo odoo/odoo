@@ -109,7 +109,7 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
 
         # perform archive as user
         article_shared = self.article_shared.with_env(self.env)
-        article_shared.invalidate_cache(fnames=['child_ids'])  # context dependent
+        article_shared.invalidate_model(['child_ids'])  # context dependent
         shared_children = article_shared.child_ids
         writable_child, readonly_child = writable_child_su.with_env(self.env), readonly_child_su.with_env(self.env)
         self.assertEqual(len(shared_children), 2)
@@ -410,7 +410,7 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
         self.assertEqual(playground_articles.mapped('is_user_favorite'), [False, False, False])
 
         playground_articles[0].action_toggle_favorite()
-        playground_articles.invalidate_cache(fnames=['is_user_favorite'])
+        playground_articles.invalidate_model(['is_user_favorite'])
         self.assertEqual(playground_articles.mapped('is_user_favorite'), [True, False, False])
 
         # correct uid-based computation
@@ -437,7 +437,7 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
 
         # valid move: put second child of workspace under the first one
         workspace_children[1].move_to(parent_id=workspace_children[0].id)
-        workspace_children.flush()
+        workspace_children.flush_model()
         self.assertEqual(article_workspace.child_ids, workspace_children[0])
         self.assertEqual(article_workspace._get_descendants(), workspace_children)
         self.assertEqual(workspace_children.root_article_id, article_workspace)
@@ -450,7 +450,7 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
 
         # other valid move: first child is moved to private section
         workspace_children[0].move_to(parent_id=False, is_private=True)
-        workspace_children.flush()
+        workspace_children.flush_model()
         self.assertMembers(workspace_children[0], 'none', {self.partner_employee: 'write'})
         self.assertEqual(workspace_children[0].category, 'private')
         self.assertEqual(workspace_children[0].internal_permission, 'none')
@@ -475,7 +475,7 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
             'name': 'Child3 without parent name in its name',
             'parent_id': article_workspace.id,
         })
-        (self.workspace_children + new_root_child).flush()
+        new_root_child.flush_model()
 
         # ensure initial values
         self.assertTrue(article_workspace.is_user_favorite)
@@ -565,7 +565,9 @@ class TestKnowledgeArticleFields(KnowledgeCommonWData):
                 article.with_user(self.user_employee2).write({
                     'body': body_values[(index + 1) if index < (len(body_values)-1) else 0]
                 })
-                article.with_user(self.user_employee2).flush()
+                # the with_user() below is necessary for the test to succeed,
+                # and that's kind of a bad smell...
+                article.with_user(self.user_employee2).flush_model()
             self.assertEqual(article.last_edition_uid, self.user_employee2)
             self.assertEqual(article.last_edition_date, _reference_dt + timedelta(days=1))
 

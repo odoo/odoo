@@ -66,13 +66,13 @@ class ProductAttribute(models.Model):
                         _("You cannot change the Variants Creation Mode of the attribute %s because it is used on the following products:\n%s") %
                         (pa.display_name, ", ".join(pa.product_tmpl_ids.mapped('display_name')))
                     )
-        invalidate_cache = 'sequence' in vals and any(record.sequence != vals['sequence'] for record in self)
+        invalidate = 'sequence' in vals and any(record.sequence != vals['sequence'] for record in self)
         res = super(ProductAttribute, self).write(vals)
-        if invalidate_cache:
+        if invalidate:
             # prefetched o2m have to be resequenced
             # (eg. product.template: attribute_line_ids)
-            self.flush()
-            self.invalidate_cache()
+            self.env.flush_all()
+            self.env.invalidate_all()
         return res
 
     @api.ondelete(at_uninstall=False)
@@ -151,13 +151,13 @@ class ProductAttributeValue(models.Model):
                         (pav.display_name, ", ".join(pav.pav_attribute_line_ids.product_tmpl_id.mapped('display_name')))
                     )
 
-        invalidate_cache = 'sequence' in values and any(record.sequence != values['sequence'] for record in self)
+        invalidate = 'sequence' in values and any(record.sequence != values['sequence'] for record in self)
         res = super(ProductAttributeValue, self).write(values)
-        if invalidate_cache:
+        if invalidate:
             # prefetched o2m have to be resequenced
             # (eg. product.template.attribute.line: value_ids)
-            self.flush()
-            self.invalidate_cache()
+            self.env.flush_all()
+            self.env.invalidate_all()
         return res
 
     @api.ondelete(at_uninstall=False)
@@ -280,8 +280,8 @@ class ProductTemplateAttributeLine(models.Model):
             values['value_ids'] = [(5, 0, 0)]
         res = super(ProductTemplateAttributeLine, self).write(values)
         if 'active' in values:
-            self.flush()
-            self.env['product.template'].invalidate_cache(fnames=['attribute_line_ids'])
+            self.env.flush_all()
+            self.env['product.template'].invalidate_model(['attribute_line_ids'])
         # If coming from `create`, no need to update the values and the variants
         # before all lines are created.
         if self.env.context.get('update_product_template_attribute_values', True):

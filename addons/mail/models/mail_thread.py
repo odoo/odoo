@@ -153,7 +153,7 @@ class MailThread(models.AbstractModel):
             return [('id', 'not in', [res['res_id'] for res in followers.read(['res_id'])])]
 
     def _compute_has_message(self):
-        self.flush()
+        self.env['mail.message'].flush_model()
         self.env.cr.execute("""
             SELECT distinct res_id
               FROM mail_message mm
@@ -492,7 +492,7 @@ class MailThread(models.AbstractModel):
             record._message_track_post_template(changes)
         # this method is called after the main flush() and just before commit();
         # we have to flush() again in case we triggered some recomputations
-        self.flush()
+        self.env.flush_all()
 
     def _track_set_log_message(self, message):
         """ Link tracking to a message logged as body, in addition to subtype

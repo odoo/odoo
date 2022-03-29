@@ -248,7 +248,8 @@ class MassMailing(models.Model):
         if not self.ids:
             return
         # ensure traces are sent to db
-        self.flush()
+        self.env['mailing.trace'].flush_model()
+        self.env['mailing.mailing'].flush_model()
         self.env.cr.execute("""
             SELECT
                 m.id as mailing_id,

@@ -492,7 +492,7 @@ class HolidaysAllocation(models.Model):
         [('allocation_type', '=', 'accrual'), ('state', '=', 'validate'), ('accrual_plan_id', '!=', False), ('employee_id', '!=', False),
             '|', ('date_to', '=', False), ('date_to', '>', fields.Datetime.now()), ('lastcall', '<', this_year_first_day)])
         end_of_year_allocations._end_of_year_accrual()
-        end_of_year_allocations.flush()
+        end_of_year_allocations.flush_model()
         allocations = self.search(
         [('allocation_type', '=', 'accrual'), ('state', '=', 'validate'), ('accrual_plan_id', '!=', False), ('employee_id', '!=', False),
             '|', ('date_to', '=', False), ('date_to', '>', fields.Datetime.now()),

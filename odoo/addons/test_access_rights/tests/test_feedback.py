@@ -107,8 +107,8 @@ class TestACLFeedback(Feedback):
         })
         self.record = self.env['test_access_right.some_obj'].create({'val': 5})
         # values are in cache, clear them up for the test
-        ACL.flush()
-        ACL.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
 
     def test_no_groups(self):
         """ Operation is never allowed
@@ -390,8 +390,8 @@ Note: this might be a multi-company issue.
 Contact your administrator to request access if necessary.""" % (self.record.display_name, self.record.id, self.record.sudo().company_id.display_name, self.user.name, self.user.id)
         )
         p = self.env['test_access_right.parent'].create({'obj_id': self.record.id})
-        p.flush()
-        p.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
         with self.assertRaisesRegex(
             AccessError,
             r"Implicitly accessed through 'Object for testing related access rights' \(test_access_right.parent\)\.",

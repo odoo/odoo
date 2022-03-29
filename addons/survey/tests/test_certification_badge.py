@@ -75,7 +75,6 @@ class TestCertificationBadge(common.TestSurveyCommon):
                     'certification_give_badge': True,
                     'certification_badge_id': self.certification_badge.id
                 })
-                self.certification_survey.flush()
 
     def test_badge_configuration(self):
         """ Test badge synchronization """

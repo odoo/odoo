@@ -16,9 +16,9 @@ class AccountJournal(models.Model):
         if not self.company_id:
             return
 
-        self.env['account.payment.method'].flush(['code', 'payment_type'])
-        self.env['account.payment.method.line'].flush(['payment_method_id'])
-        self.env['payment.acquirer'].flush(['provider', 'state'])
+        self.env['account.payment.method'].flush_model(['code', 'payment_type'])
+        self.env['account.payment.method.line'].flush_model(['payment_method_id'])
+        self.env['payment.acquirer'].flush_model(['provider', 'state'])
 
         self._cr.execute('''
             SELECT acquirer.id

@@ -214,7 +214,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         )
 
         journals[0].code = 'OLD'
-        journals.flush()
+        journals.flush_recordset()
         journal_same_code = self.env['account.journal'].create([{
             'name': 'Journal0',
             'code': 'J0',

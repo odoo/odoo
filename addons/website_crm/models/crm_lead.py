@@ -14,7 +14,8 @@ class Lead(models.Model):
     def _compute_visitor_page_count(self):
         mapped_data = {}
         if self.ids:
-            self.flush(['visitor_ids'])
+            self.flush_model(['visitor_ids'])
+            self.env['website.track'].flush_model(['visitor_id'])
             sql = """ SELECT l.id as lead_id, count(*) as page_view_count
                         FROM crm_lead l
                         JOIN crm_lead_website_visitor_rel lv ON l.id = lv.crm_lead_id

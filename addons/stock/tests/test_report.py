@@ -79,7 +79,7 @@ class TestReports(TestReportsCommon):
             'location_id': stock.id,
             'inventory_quantity': 50
         }).action_apply_inventory()
-        self.env['stock.move'].flush()
+        self.env.flush_all()
         report_records_today = self.env['report.stock.quantity'].read_group(
             [('product_id', '=', product.id), ('date', '=', date.today())],
             ['product_qty'], [], lazy=False)
@@ -103,13 +103,13 @@ class TestReports(TestReportsCommon):
             'product_uom': product.uom_id.id,
             'product_uom_qty': 20.0,
         })
-        self.env['stock.move'].flush()
+        self.env.flush_all()
         report_records_tomorrow = self.env['report.stock.quantity'].read_group(
             [('product_id', '=', product.id), ('date', '=', date.today() + timedelta(days=1))],
             ['product_qty'], [])
         self.assertEqual(sum([r['product_qty'] for r in report_records_tomorrow]), 50.0)
         move_out._action_confirm()
-        self.env['stock.move'].flush()
+        self.env.flush_all()
         report_records_tomorrow = self.env['report.stock.quantity'].read_group(
             [('product_id', '=', product.id), ('date', '=', date.today() + timedelta(days=1))],
             ['product_qty', 'state'], ['state'], lazy=False)
@@ -131,7 +131,7 @@ class TestReports(TestReportsCommon):
             'product_uom_qty': 10.0,
         })
         move_in._action_confirm()
-        self.env['stock.move'].flush()
+        self.env.flush_all()
         report_records_tomorrow = self.env['report.stock.quantity'].read_group(
             [('product_id', '=', product.id), ('date', '=', date.today() + timedelta(days=1))],
             ['product_qty', 'state'], ['state'], lazy=False)
@@ -154,7 +154,7 @@ class TestReports(TestReportsCommon):
             'product_uom_qty': 30.0,
         })
         move_out._action_confirm()
-        self.env['stock.move'].flush()
+        self.env.flush_all()
         report_records_today = self.env['report.stock.quantity'].read_group(
             [('product_id', '=', product.id), ('date', '=', date.today())],
             ['product_qty', 'state'], ['state'], lazy=False)
@@ -215,7 +215,7 @@ class TestReports(TestReportsCommon):
             'product_uom_qty': 10.0,
         })
         move._action_confirm()
-        self.env['stock.move'].flush()
+        self.env.flush_all()
         report_records = self.env['report.stock.quantity'].read_group(
             [('product_id', '=', product.id), ('date', '=', date.today()), ('warehouse_id', '!=', False)],
             ['product_qty', 'state'], ['state'], lazy=False)
@@ -233,7 +233,7 @@ class TestReports(TestReportsCommon):
             'product_uom_qty': 10.0,
         })
         move._action_confirm()
-        self.env['stock.move'].flush()
+        self.env.flush_all()
         report_records = self.env['report.stock.quantity'].read_group(
             [('product_id', '=', product.id), ('date', '=', date.today())],
             ['product_qty', 'state'], ['state'], lazy=False)
@@ -257,7 +257,7 @@ class TestReports(TestReportsCommon):
             'location_id': stock.id,
         })
 
-        self.env['stock.move'].flush()
+        self.env.flush_all()
         report_records = self.env['report.stock.quantity'].read_group(
             [('product_id', '=', product.id), ('date', '=', date.today())],
             ['product_qty'], [], lazy=False)
@@ -276,7 +276,7 @@ class TestReports(TestReportsCommon):
         move_in.move_line_ids.location_dest_id = stock_real_loc.id
         move_in.move_line_ids.qty_done = 20.0
         move_in._action_done()
-        self.env['stock.move'].flush()
+        self.env.flush_all()
         report_records = self.env['report.stock.quantity'].read_group(
             [('product_id', '=', product.id), ('date', '=', date.today())],
             ['product_qty'], [], lazy=False)
@@ -295,7 +295,7 @@ class TestReports(TestReportsCommon):
         move_out._action_assign()
         move_out.move_line_ids.qty_done = 10.0
         move_out._action_done()
-        self.env['stock.move'].flush()
+        self.env.flush_all()
         report_records = self.env['report.stock.quantity'].read_group(
             [('product_id', '=', product.id), ('date', '=', date.today())],
             ['product_qty'], [], lazy=False)

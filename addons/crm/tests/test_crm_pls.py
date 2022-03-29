@@ -191,9 +191,6 @@ class TestCRMPLS(TransactionCase):
         # rebuild frequencies table and recompute automated_probability for all leads.
         Lead._cron_update_automated_probabilities()
 
-        # As the cron is computing and writing in SQL queries, we need to invalidate the cache
-        leads.invalidate_cache()
-
         self.assertEqual(tools.float_compare(leads[3].automated_probability, 33.49, 2), 0)
         self.assertEqual(tools.float_compare(leads[8].automated_probability, 7.74, 2), 0)
         lead_13_team_3_proba = leads[13].automated_probability
@@ -204,7 +201,6 @@ class TestCRMPLS(TransactionCase):
         # Proba should be different as "no team" is not considered as a separated team.
         leads_with_no_team.write({'team_id': False})
         Lead._cron_update_automated_probabilities()
-        leads.invalidate_cache()
         lead_13_no_team_proba = leads[13].automated_probability
         self.assertTrue(lead_13_team_3_proba != leads[13].automated_probability, "Probability for leads with no team should be different than if they where in their own team.")
         self.assertEqual(tools.float_compare(lead_13_no_team_proba, 36.65, 2), 0)
@@ -407,7 +403,6 @@ class TestCRMPLS(TransactionCase):
 
         # Force recompute - A priori, no need to do this as, for each won / lost, we increment tag frequency.
         Lead._cron_update_automated_probabilities()
-        leads_with_tags.invalidate_cache()
 
         lead_tag_1 = leads_with_tags[30]
         lead_tag_2 = leads_with_tags[90]
@@ -445,7 +440,6 @@ class TestCRMPLS(TransactionCase):
         leads.filtered(lambda lead: lead.id % 2 == 0).email_state = 'correct'
         leads.filtered(lambda lead: lead.id % 2 == 1).email_state = 'incorrect'
         Lead._cron_update_automated_probabilities()
-        leads_with_tags.invalidate_cache()
 
         self.assertEqual(tools.float_compare(leads[3].automated_probability, 4.21, 2), 0)
         self.assertEqual(tools.float_compare(leads[8].automated_probability, 0.23, 2), 0)
@@ -453,7 +447,6 @@ class TestCRMPLS(TransactionCase):
         # remove all pls fields
         self.env['ir.config_parameter'].sudo().set_param("crm.pls_fields", False)
         Lead._cron_update_automated_probabilities()
-        leads_with_tags.invalidate_cache()
 
         self.assertEqual(tools.float_compare(leads[3].automated_probability, 34.38, 2), 0)
         self.assertEqual(tools.float_compare(leads[8].automated_probability, 50.0, 2), 0)
@@ -461,7 +454,6 @@ class TestCRMPLS(TransactionCase):
         # check if the probabilities are the same with the old param
         self.env['ir.config_parameter'].sudo().set_param("crm.pls_fields", "country_id,state_id,email_state,phone_state,source_id")
         Lead._cron_update_automated_probabilities()
-        leads_with_tags.invalidate_cache()
 
         self.assertEqual(tools.float_compare(leads[3].automated_probability, 4.21, 2), 0)
         self.assertEqual(tools.float_compare(leads[8].automated_probability, 0.23, 2), 0)

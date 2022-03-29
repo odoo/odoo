@@ -304,7 +304,7 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
         # Note: strangely, the check
         # self.assertEqual(tx_sudo.invoice_ids, invoice)
         # doesn't work, and cache invalidation doesn't work either.
-        self.invoice.invalidate_cache(['transaction_ids'])
+        self.invoice.invalidate_recordset(['transaction_ids'])
         self.assertEqual(self.invoice.transaction_ids, tx_sudo)
 
     def test_transaction_wrong_flow(self):

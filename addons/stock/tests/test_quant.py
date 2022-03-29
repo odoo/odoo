@@ -794,5 +794,5 @@ class StockQuant(TransactionCase):
         # The quants merging is processed thanks to a SQL query (see StockQuant._merge_quants).
         # At that point, the ORM is not aware of the new value. So we need to invalidate the
         # cache to ensure that the value will be the newest
-        quant.invalidate_cache(fnames=['quantity'], ids=quant.ids)
+        quant.invalidate_recordset(['quantity'])
         self.assertEqual(quant.quantity, 11)

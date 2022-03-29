@@ -37,7 +37,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                          "should be flagged as forward operator child.")
 
         self.step_no_operator_dispatch.write({'triggering_answer_ids': [(6, 0, [self.step_dispatch_pricing.id])]})
-        self.chatbot_script.script_step_ids.invalidate_cache(['is_forward_operator_child'])
+        self.chatbot_script.script_step_ids.invalidate_recordset(['is_forward_operator_child'])
 
         self.assertEqual([step.is_forward_operator_child for step in self.chatbot_script.script_step_ids],
                          [False, False, False, False, False, False, False, True, False, False, False, False, False, False],

@@ -40,12 +40,12 @@ class TestWebsiteResetPassword(HttpCase):
             website_2.domain = "https://domain-not-used.fr"
 
             user.partner_id.website_id = 2
-            user.invalidate_cache()  # invalidate get_base_url
+            self.env.invalidate_all()  # invalidate get_base_url
 
             user.action_reset_password()
             self.assertIn(website_2.domain, user.signup_url)
 
-            user.invalidate_cache()
+            self.env.invalidate_all()
 
             user.partner_id.website_id = 1
             user.action_reset_password()
@@ -54,7 +54,7 @@ class TestWebsiteResetPassword(HttpCase):
             (website_1 + website_2).domain = ""
 
             user.action_reset_password()
-            user.invalidate_cache()
+            self.env.invalidate_all()
 
             self.start_tour(user.signup_url, 'website_reset_password', login=None)
 

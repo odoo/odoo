@@ -140,7 +140,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         # Same but both are sharing the same tax group.
 
         tax_20.tax_group_id = self.tax_group1
-        document.invalidate_cache(['tax_totals_json'])
+        document.invalidate_model(['tax_totals_json'])
 
         self.assertTaxTotals(document, {
             'amount_total': 3600,
@@ -252,7 +252,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         # Same but both are sharing the same tax group.
 
         tax_20.tax_group_id = self.tax_group1
-        document.invalidate_cache(['tax_totals_json'])
+        document.invalidate_model(['tax_totals_json'])
 
         self.assertTaxTotals(document, {
             'amount_total': 3620,
@@ -337,7 +337,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         # Same but both are sharing the same tax group.
 
         tax_30.tax_group_id = self.tax_group1
-        document.invalidate_cache(['tax_totals_json'])
+        document.invalidate_model(['tax_totals_json'])
 
         self.assertTaxTotals(document, {
             'amount_total': 2750,

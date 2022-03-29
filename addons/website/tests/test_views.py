@@ -774,7 +774,7 @@ class TestCowViewSaving(TestViewSavingCommon):
             'arch': '<div position="replace"><p>COMPARE</p></div>',
             'key': '_website_sale_comparison.product_add_to_compare',
         })])
-        Website.with_context(load_all_views=True).viewref('_website_sale_comparison.product_add_to_compare').invalidate_cache()
+        Website.with_context(load_all_views=True).viewref('_website_sale_comparison.product_add_to_compare').invalidate_model()
 
         # Simulate end of installation/update
         View._create_all_specific_views(['_website_sale_comparison'])
@@ -835,7 +835,7 @@ class TestCowViewSaving(TestViewSavingCommon):
 
         # Simulate website_sale update on top level view
         self._create_imd(self.base_view)
-        self.base_view.invalidate_cache()
+        self.base_view.invalidate_model()
         View._load_records([dict(xml_id='_website_sale.product', values={
             'website_meta_title': 'A bug got fixed by updating this field',
         })])
@@ -988,7 +988,7 @@ class TestCowViewSaving(TestViewSavingCommon):
 
         Translation._load_module_terms(['website'], ['en_US'], overwrite=True)
 
-        specific_view.invalidate_cache(['arch_db', 'arch'])
+        specific_view.invalidate_model(['arch_db', 'arch'])
         self.assertEqual(specific_view.with_context(lang='en_US').arch, '<div>hi</div>',
             "loading module translation copy translation from base to specific view")
 
@@ -1059,7 +1059,7 @@ class TestCowViewSaving(TestViewSavingCommon):
         Website = self.env['website']
         self._create_imd(self.inherit_view)
         # invalidate cache to recompute xml_id, or it will still be empty
-        self.inherit_view.invalidate_cache()
+        self.inherit_view.invalidate_model()
         base_view_2 = self.base_view.copy({'key': 'website.base_view2', 'arch': '<div>base2 content</div>'})
         self.base_view.with_context(website_id=1).write({'arch': '<div>website 1 content</div>'})
         specific_view = Website.with_context(load_all_views=True, website_id=1).viewref(self.base_view.key)
@@ -1145,7 +1145,7 @@ class Crawler(HttpCase):
         event_child_view.copy({'name': 'Filter by Category', 'inherit_id': event_child_view.id, 'key': '_website_event.event_category'})
         event_child_view.copy({'name': 'Filter by Country', 'inherit_id': event_child_view.id, 'key': '_website_event.event_location'})
 
-        View.flush()
+        self.env.flush_all()
 
         # Customize
         #   | Main Frontend Layout

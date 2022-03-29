@@ -105,9 +105,9 @@ class ProductProduct(models.Model):
             company_id = self.env.context['force_company']
         else:
             company_id = self.env.company.id
-        self.env['account.move.line'].flush(['price_unit', 'quantity', 'balance', 'product_id', 'display_type'])
-        self.env['account.move'].flush(['state', 'payment_state', 'move_type', 'invoice_date', 'company_id'])
-        self.env['product.template'].flush(['list_price'])
+        self.env['account.move.line'].flush_model(['price_unit', 'quantity', 'balance', 'product_id', 'display_type'])
+        self.env['account.move'].flush_model(['state', 'payment_state', 'move_type', 'invoice_date', 'company_id'])
+        self.env['product.template'].flush_model(['list_price'])
         sqlstr = """
                 WITH currency_rate AS ({})
                 SELECT

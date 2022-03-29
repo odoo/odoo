@@ -746,7 +746,7 @@ class MrpWorkorder(models.Model):
 
         :return: defaultdict with key as workorder id of self and value as related conflicted workorder
         """
-        self.flush(['state', 'date_planned_start', 'date_planned_finished', 'workcenter_id'])
+        self.flush_model(['state', 'date_planned_start', 'date_planned_finished', 'workcenter_id'])
         sql = """
             SELECT wo1.id, wo2.id
             FROM mrp_workorder wo1, mrp_workorder wo2

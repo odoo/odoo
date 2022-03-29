@@ -233,7 +233,7 @@ class EventEvent(models.Model):
                         WHERE event_id IN %s AND state IN ('draft', 'open', 'done') AND active = true
                         GROUP BY event_id, state
                     """
-            self.env['event.registration'].flush(['event_id', 'state', 'active'])
+            self.env['event.registration'].flush_model(['event_id', 'state', 'active'])
             self._cr.execute(query, (tuple(self.ids),))
             res = self._cr.fetchall()
             for event_id, state, num in res:
@@ -535,7 +535,7 @@ class EventEvent(models.Model):
         for res in events:
             if res.organizer_id:
                 res.message_subscribe([res.organizer_id.id])
-        events.flush()
+        self.env.flush_all()
         return events
 
     def write(self, vals):

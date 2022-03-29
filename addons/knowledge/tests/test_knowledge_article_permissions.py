@@ -199,7 +199,7 @@ class TestKnowledgeArticlePermissionsTools(KnowledgeArticlePermissionsCase):
 
         # downgrade write global perm to read
         writable_as1._set_internal_permission('none')
-        writable_as1.flush()  # ACLs are done using SQL
+        writable_as1.flush_model()  # ACLs are done using SQL
         self.assertMembers(
             writable_as1, 'none',
             {self.partner_portal: 'read',  # untouched by downgrade
@@ -222,7 +222,7 @@ class TestKnowledgeArticlePermissionsTools(KnowledgeArticlePermissionsCase):
 
         # downgrade write global perm to read
         writable_as1._set_internal_permission('read')
-        writable_as1.flush()  # ACLs are done using SQL
+        writable_as1.flush_model()  # ACLs are done using SQL
         self.assertMembers(
             writable_as1, 'read',
             {self.partner_portal: 'read', self.env.user.partner_id: 'write'},

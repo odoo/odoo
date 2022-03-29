@@ -29,11 +29,11 @@ class TestLeadEnrich(TestCrmCommon, MockIAPEnrich):
     def test_enrich_internals(self):
         leads = self.env['crm.lead'].browse(self.leads.ids)
         leads[0].write({'partner_name': 'Already set', 'email_from': 'test@test1'})
-        leads.flush()
+        leads.flush_recordset()
         with self.mockIAPEnrichGateway(email_data={'test1': {'country_code': 'AU', 'state_code': 'NSW'}}):
             leads.iap_enrich()
 
-        leads.flush()
+        leads.flush_recordset()
         self.assertEqual(leads[0].partner_name, 'Already set')
         self.assertEqual(leads[0].country_id, self.env.ref('base.au'))
         self.assertEqual(leads[0].state_id, self.env.ref('base.state_au_2'))

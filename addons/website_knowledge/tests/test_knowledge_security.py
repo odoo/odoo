@@ -41,7 +41,7 @@ class TestWKnowledgeSecurity(KnowledgeArticlePermissionsCase):
 
         # Read access gives access to favorite toggling
         article_shared.action_toggle_favorite()
-        article_shared.invalidate_cache(fnames=['is_user_favorite'])
+        article_shared.invalidate_model(['is_user_favorite'])
         self.assertTrue(article_shared.is_user_favorite)
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
@@ -59,5 +59,5 @@ class TestWKnowledgeSecurity(KnowledgeArticlePermissionsCase):
 
         # Read access gives access to favorite toggling
         article_hidden.action_toggle_favorite()
-        article_hidden.invalidate_cache(fnames=['is_user_favorite'])
+        article_hidden.invalidate_model(['is_user_favorite'])
         self.assertTrue(article_hidden.is_user_favorite)

@@ -626,17 +626,14 @@ class TestMailAPIPerformance(BaseMailPerformance):
         record = self.env['mail.performance.tracking'].create({'name': 'Zizizatestname'})
         with self.assertQueryCount(__system__=3, employee=3):
             record.write({'name': 'Zizizanewtestname'})
-            record.flush()
 
         with self.assertQueryCount(__system__=3, employee=3):
             record.write({'field_%s' % (i): 'Tracked Char Fields %s' % (i) for i in range(3)})
-            record.flush()
 
         with self.assertQueryCount(__system__=4, employee=4):
             record.write({'field_%s' % (i): 'Field Without Cache %s' % (i) for i in range(3)})
-            record.flush()
+            record.flush_recordset()
             record.write({'field_%s' % (i): 'Field With Cache %s' % (i) for i in range(3)})
-            record.flush()
 
     @users('__system__', 'employee')
     @warmup
@@ -694,7 +691,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         ])
 
         # `test_complex_mail_mail_send`
-        self.container.flush()
+        self.env.flush_all()
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('__system__', 'employee')
@@ -1050,8 +1047,8 @@ class TestMailComplexPerformance(BaseMailPerformance):
             for message in res:
                 self.assertEqual(len(message['attachment_ids']), 2)
 
-        messages.flush()
-        messages.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
 
         with self.assertQueryCount(employee=17):
             res = messages.message_format()
@@ -1078,8 +1075,8 @@ class TestMailComplexPerformance(BaseMailPerformance):
             res = messages.message_format()
             self.assertEqual(len(res), 6)
 
-        messages.flush()
-        messages.invalidate_cache()
+        self.env.flush_all()
+        self.env.invalidate_all()
 
         with self.assertQueryCount(employee=12):
             res = messages.message_format()

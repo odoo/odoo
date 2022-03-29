@@ -427,7 +427,7 @@ class MailMail(models.Model):
                     })
                     # `test_mail_bounce_during_send`, force immediate update to obtain the lock.
                     # see rev. 56596e5240ef920df14d99087451ce6f06ac6d36
-                    notifs.flush(fnames=['notification_status', 'failure_type', 'failure_reason'], records=notifs)
+                    notifs.flush_recordset(['notification_status', 'failure_type', 'failure_reason'])
 
                 # build an RFC2822 email.message.Message object and send it without queuing
                 res = None

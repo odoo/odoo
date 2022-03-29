@@ -356,8 +356,8 @@ class AccountTaxReportLine(models.Model):
             where account_account_tag_id in %(tag_ids_to_delete)s;
         """, {'tag_ids_to_delete': tuple(tag_ids_to_delete)})
 
-        self.env['account.move.line'].invalidate_cache(fnames=['tax_tag_ids'])
-        self.env['account.tax.repartition.line'].invalidate_cache(fnames=['tag_ids'])
+        self.env['account.move.line'].invalidate_model(['tax_tag_ids'])
+        self.env['account.tax.repartition.line'].invalidate_model(['tag_ids'])
 
         self.env['account.account.tag'].browse(tag_ids_to_delete).unlink()
 

@@ -56,8 +56,7 @@ class TestUi(HttpCaseWithUserDemo):
 
 
         # flush event to ensure having tickets available in the tests
-        self.event_2.flush()
-        self.event_3.flush()
+        self.env.flush_all()
 
         (self.env.ref('base.partner_admin') + self.partner_demo).write({
             'street': '215 Vine St',

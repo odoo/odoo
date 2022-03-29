@@ -77,7 +77,7 @@ class Users(models.Model):
 
         self.sudo().totp_secret = secret
         if request:
-            self.flush()
+            self.env.flush_all()
             # update session token so the user does not get logged out (cache cleared by change)
             new_token = self.env.user._compute_session_token(request.session.sid)
             request.session.session_token = new_token
@@ -96,7 +96,7 @@ class Users(models.Model):
         self.sudo().write({'totp_secret': False})
 
         if request and self == self.env.user:
-            self.flush()
+            self.env.flush_all()
             # update session token so the user does not get logged out (cache cleared by change)
             new_token = self.env.user._compute_session_token(request.session.sid)
             request.session.session_token = new_token

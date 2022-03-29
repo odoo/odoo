@@ -45,12 +45,8 @@ class TestPortalWizard(MailCommon):
         with self.assertRaises(AccessError, msg='Standard users should not be able to open the portal wizard'):
             self.env['portal.wizard'].with_context(active_ids=[self.partner.id]).with_user(self.user_employee).create({})
 
-        portal_wizard.invalidate_cache()
-
         with self.assertRaises(AccessError, msg='Standard users should not be able to open the portal wizard'):
             portal_wizard.with_user(self.user_employee).welcome_message
-
-        portal_wizard.user_ids.invalidate_cache()
 
         with self.assertRaises(AccessError, msg='Standard users should not be able to open the portal wizard'):
             portal_wizard.user_ids.with_user(self.user_employee).email

@@ -180,7 +180,7 @@ class SequenceMixin(models.AbstractModel):
             field=self._sequence_field,
         )
 
-        self.flush([self._sequence_field, 'sequence_number', 'sequence_prefix'])
+        self.flush_model([self._sequence_field, 'sequence_number', 'sequence_prefix'])
         self.env.cr.execute(query, param)
         return (self.env.cr.fetchone() or [None])[0]
 

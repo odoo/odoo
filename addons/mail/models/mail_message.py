@@ -290,8 +290,8 @@ class Message(models.Model):
         # check read access rights before checking the actual rules on the given ids
         super(Message, self.with_user(access_rights_uid or self._uid)).check_access_rights('read')
 
-        self.flush(['model', 'res_id', 'author_id', 'message_type', 'partner_ids'])
-        self.env['mail.notification'].flush(['mail_message_id', 'res_partner_id'])
+        self.flush_recordset(['model', 'res_id', 'author_id', 'message_type', 'partner_ids'])
+        self.env['mail.notification'].flush_model(['mail_message_id', 'res_partner_id'])
         for sub_ids in self._cr.split_for_in_conditions(ids):
             self._cr.execute("""
                 SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.message_type,
@@ -394,8 +394,8 @@ class Message(models.Model):
         # Read mail_message.ids to have their values
         message_values = dict((message_id, {}) for message_id in self.ids)
 
-        self.flush(['model', 'res_id', 'author_id', 'parent_id', 'message_type', 'partner_ids'])
-        self.env['mail.notification'].flush(['mail_message_id', 'res_partner_id'])
+        self.flush_recordset(['model', 'res_id', 'author_id', 'parent_id', 'message_type', 'partner_ids'])
+        self.env['mail.notification'].flush_model(['mail_message_id', 'res_partner_id'])
 
         if operation == 'read':
             self._cr.execute("""
@@ -1075,15 +1075,12 @@ class Message(models.Model):
 
     def _invalidate_documents(self, model=None, res_id=None):
         """ Invalidate the cache of the documents followed by ``self``. """
+        fnames = ['message_ids', 'message_needaction', 'message_needaction_counter']
         for record in self:
             model = model or record.model
             res_id = res_id or record.res_id
             if issubclass(self.pool[model], self.pool['mail.thread']):
-                self.env[model].invalidate_cache(fnames=[
-                    'message_ids',
-                    'message_needaction',
-                    'message_needaction_counter',
-                ], ids=[res_id])
+                self.env[model].browse(res_id).invalidate_recordset(fnames)
 
     def _get_search_domain_share(self):
         return ['&', '&', ('is_internal', '=', False), ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)]

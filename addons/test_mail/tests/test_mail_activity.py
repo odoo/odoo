@@ -159,11 +159,9 @@ class TestActivityFlow(TestActivityCommon):
             self.assertEqual(test_record.activity_state, 'planned')
 
             test_record.activity_ids.write({'date_deadline': date.today() - relativedelta(days=1)})
-            test_record.invalidate_cache()  # TDE note: should not have to do it I think
             self.assertEqual(test_record.activity_state, 'overdue')
 
             test_record.activity_ids.write({'date_deadline': date.today()})
-            test_record.invalidate_cache()  # TDE note: should not have to do it I think
             self.assertEqual(test_record.activity_state, 'today')
 
             # activity is done
@@ -258,13 +256,13 @@ class TestActivityFlow(TestActivityCommon):
         })
         with self.assertRaises(IntegrityError):
             activity.write({'res_model_id': False})
-            activity.flush()
+            self.env.flush_all()
         with self.assertRaises(IntegrityError):
             activity.write({'res_id': False})
-            activity.flush()
+            self.env.flush_all()
         with self.assertRaises(IntegrityError):
             activity.write({'res_id': 0})
-            activity.flush()
+            self.env.flush_all()
 
 
 @tests.tagged('mail_activity')
@@ -319,7 +317,7 @@ class TestActivityMixin(TestActivityCommon):
             # it therefore relies on the natural order of `activity_ids`, according to which activity comes first.
             # As we just created the activity, its not yet in the right order.
             # We force it by invalidating it so it gets fetched from database, in the right order.
-            self.test_record.invalidate_cache(['activity_ids'])
+            self.test_record.invalidate_recordset(['activity_ids'])
             self.assertEqual(self.test_record.activity_user_id, self.user_employee)
 
             act3 = self.test_record.activity_schedule(
@@ -331,10 +329,10 @@ class TestActivityMixin(TestActivityCommon):
             # it therefore relies on the natural order of `activity_ids`, according to which activity comes first.
             # As we just created the activity, its not yet in the right order.
             # We force it by invalidating it so it gets fetched from database, in the right order.
-            self.test_record.invalidate_cache(['activity_ids'])
+            self.test_record.invalidate_recordset(['activity_ids'])
             self.assertEqual(self.test_record.activity_user_id, self.user_employee)
 
-            self.test_record.invalidate_cache(ids=self.test_record.ids)
+            self.test_record.invalidate_recordset()
             self.assertEqual(self.test_record.activity_ids, act1 | act2 | act3)
 
             # Perform todo activities for admin

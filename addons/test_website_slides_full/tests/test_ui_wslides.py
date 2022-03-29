@@ -11,7 +11,6 @@ class TestUi(TestUICommon):
 
     def test_course_certification_employee(self):
         user_demo = self.user_demo
-        user_demo.flush()
         # Avoid Billing/Shipping address page
         user_demo.write({
             'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id)],

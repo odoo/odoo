@@ -459,4 +459,4 @@ class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, MockVisitor
             'room_participant_count': 9,
         })
 
-        self.event.flush()
+        self.env.flush_all()

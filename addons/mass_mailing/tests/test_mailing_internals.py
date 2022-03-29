@@ -221,13 +221,13 @@ class TestMassMailValues(MassMailCommon):
         })
         with self.assertRaises(IntegrityError):
             activity.write({'model': False})
-            activity.flush()
+            self.env.flush_all()
         with self.assertRaises(IntegrityError):
             activity.write({'res_id': False})
-            activity.flush()
+            self.env.flush_all()
         with self.assertRaises(IntegrityError):
             activity.write({'res_id': 0})
-            activity.flush()
+            self.env.flush_all()
 
     @freeze_time('2022-01-02')
     @patch.object(Cursor, 'now', lambda *args, **kwargs: datetime(2022, 1, 2))

@@ -75,7 +75,7 @@ class MailTemplatePreview(models.TransientModel):
             self._set_mail_attributes()
             self.error_msg = user_error.args[0]
         finally:
-            # Avoid to be change by a invalidate_cache call (in generate_mail), e.g. Quotation / Order report
+            # Avoid to be change by a cache invalidation (in generate_mail), e.g. Quotation / Order report
             for key, value in copy_depends_values.items():
                 self[key] = value
 

@@ -241,7 +241,7 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
 
         # We need to invalidate cache since it is not done automatically by the ORM
         # Our One2Many is linked to a res_id (int) for which the orm doesn't create an inverse
-        first_task.invalidate_cache()
+        self.env.invalidate_all()
 
         self.assertEqual(rating_good.rating_text, 'top')
         self.assertEqual(rating_bad.rating_text, 'ok')
@@ -258,7 +258,7 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
 
         # We need to invalidate cache since it is not done automatically by the ORM
         # Our One2Many is linked to a res_id (int) for which the orm doesn't create an inverse
-        first_task.invalidate_cache()
+        self.env.invalidate_all()
 
         rating_avg = (rating_good.rating + rating_bad.rating) / 2
         self.assertEqual(first_task.rating_count, 2, "Task should have two ratings associated with it")
@@ -274,7 +274,7 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
 
         # We need to invalidate cache since it is not done automatically by the ORM
         # Our One2Many is linked to a res_id (int) for which the orm doesn't create an inverse
-        first_task.invalidate_cache()
+        self.env.invalidate_all()
 
         self.assertEqual(rating_good.parent_res_id, self.project_goats.id)
         self.assertEqual(self.project_goats.rating_percentage_satisfaction, 50)
@@ -343,7 +343,7 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         with self.mock_mail_gateway():
             tasks.with_user(self.user_projectmanager).write({'stage_id': won_stage.id})
 
-        tasks.invalidate_cache(fnames=['rating_ids'])
+        tasks.invalidate_model(['rating_ids'])
         for task in tasks:
             self.assertEqual(len(task.rating_ids), 1, 'This task should have a generated rating when it arrives in the Won stage.')
             rating_request_message = task.message_ids[:1]
