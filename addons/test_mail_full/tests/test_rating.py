@@ -32,7 +32,7 @@ class TestRatingFlow(TestMailFullCommon, TestMailFullRecipients):
         record_rating = self.env['mail.test.rating'].browse(self.record_rating.ids)
 
         # prepare rating token
-        access_token = record_rating.rating_get_access_token()
+        access_token = record_rating._rating_get_access_token()
         record_rating.invalidate_cache(fnames=['rating_ids'])
 
         # check rating creation
@@ -51,7 +51,7 @@ class TestRatingFlow(TestMailFullCommon, TestMailFullRecipients):
         record_messages = record_rating.message_ids
 
         # prepare rating token
-        access_token = record_rating.rating_get_access_token()
+        access_token = record_rating._rating_get_access_token()
         record_rating.invalidate_cache(fnames=['rating_ids'])
 
         # apply a rate as note (first click)

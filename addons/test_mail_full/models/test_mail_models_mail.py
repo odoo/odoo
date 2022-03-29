@@ -51,5 +51,5 @@ class MailTestRating(models.Model):
             elif not rating.phone_nbr:
                 rating.phone_nbr = False
 
-    def rating_get_partner_id(self):
+    def _rating_get_partner(self):
         return self.customer_id

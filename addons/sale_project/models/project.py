@@ -386,11 +386,9 @@ class ProjectTask(models.Model):
             }
         return self.action_view_so()
 
-    def rating_get_partner_id(self):
+    def _rating_get_partner(self):
         partner = self.partner_id or self.sale_line_id.order_id.partner_id
-        if partner:
-            return partner
-        return super().rating_get_partner_id()
+        return partner or super()._rating_get_partner()
 
     @api.depends('sale_order_id.invoice_status', 'sale_order_id.order_line')
     def _compute_task_to_invoice(self):

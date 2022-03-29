@@ -2251,8 +2251,8 @@ class Task(models.Model):
             if rating_template:
                 task.rating_send_request(rating_template, lang=task.partner_id.lang, force_send=force_send)
 
-    def rating_get_partner_id(self):
-        res = super(Task, self).rating_get_partner_id()
+    def _rating_get_partner(self):
+        res = super(Task, self)._rating_get_partner()
         if not res and self.project_id.partner_id:
             return self.project_id.partner_id
         return res
@@ -2269,7 +2269,7 @@ class Task(models.Model):
     def _rating_get_parent_field_name(self):
         return 'project_id'
 
-    def rating_get_rated_partner_id(self):
+    def _rating_get_operator(self):
         """ Overwrite since we have user_ids and not user_id """
         tasks_with_one_user = self.filtered(lambda task: len(task.user_ids) == 1 and task.user_ids.partner_id)
         return tasks_with_one_user.user_ids.partner_id or self.env['res.partner']
