@@ -98,14 +98,14 @@
         <field name="name">[BOX 14] Total GST credit for purchases and expenses</field>
         <field name="parent_id" ref="tax_report_purchases_and_expenses"/>
         <field name="sequence" eval="4"/>
-        <field name="formula">((NZBOX11 * 3)/23)</field>
+        <field name="formula">((NZBOX11 * 3)/23) + NZBOX13</field>
         <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="tax_report_box15" model="account.tax.report.line">
         <field name="name">[BOX 15]  Difference between BOX10 and BOX14</field>
         <field name="sequence" eval="3"/>
-        <field name="formula">((((NZBOX5 - NZBOX6) * 3)/23) + NZBOX9) - ((NZBOX11 * 3)/23)</field>
+        <field name="formula">((((NZBOX5 - NZBOX6) * 3)/23) + NZBOX9) - (((NZBOX11 * 3)/23) + NZBOX13)</field>
         <field name="report_id" ref="tax_report"/>
     </record>
 
