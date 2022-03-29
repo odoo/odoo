@@ -1,17 +1,15 @@
 /** @odoo-module **/
 
 import {
-    beforeEach,
     createRootMessagingComponent,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('thread_icon_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-
+    beforeEach() {
         this.createThreadIcon = async (thread, target) => {
             await createRootMessagingComponent(thread.env, "ThreadIcon", {
                 props: { threadLocalId: thread.localId },
@@ -24,19 +22,18 @@ QUnit.module('thread_icon_tests.js', {
 QUnit.test('thread icon of a chat when correspondent is on leave & online', async function (assert) {
     assert.expect(2);
 
-    this.data['res.partner'].records.push({
-        id: 7,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({
         im_status: 'leave_online',
         name: 'Demo',
     });
-     this.data['mail.channel'].records.push({
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        id: 20,
-        channel_partner_ids: [this.data.currentPartnerId, 7],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     await this.createThreadIcon(thread, widget.el);
@@ -56,19 +53,18 @@ QUnit.test('thread icon of a chat when correspondent is on leave & online', asyn
 QUnit.test('thread icon of a chat when correspondent is on leave & away', async function (assert) {
     assert.expect(2);
 
-    this.data['res.partner'].records.push({
-        id: 7,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({
         im_status: 'leave_away',
         name: 'Demo',
     });
-     this.data['mail.channel'].records.push({
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        id: 20,
-        channel_partner_ids: [this.data.currentPartnerId, 7],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     await this.createThreadIcon(thread, widget.el);
@@ -88,19 +84,18 @@ QUnit.test('thread icon of a chat when correspondent is on leave & away', async 
 QUnit.test('thread icon of a chat when correspondent is on leave & offline', async function (assert) {
     assert.expect(2);
 
-    this.data['res.partner'].records.push({
-        id: 7,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({
         im_status: 'leave_offline',
         name: 'Demo',
     });
-     this.data['mail.channel'].records.push({
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        id: 20,
-        channel_partner_ids: [this.data.currentPartnerId, 7],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     await this.createThreadIcon(thread, widget.el);

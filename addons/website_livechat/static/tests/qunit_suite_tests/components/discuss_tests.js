@@ -1,47 +1,40 @@
 /** @odoo-module **/
 
 import {
-    beforeEach,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('website_livechat', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('discuss_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('discuss_tests.js');
 
 QUnit.test('rendering of visitor banner', async function (assert) {
     assert.expect(13);
 
-    this.data['res.country'].records.push({
-        id: 11,
+    const pyEnv = await startServer();
+    const resCountryId1 = pyEnv['res.country'].create({
         code: 'FAKE',
     });
-    this.data['website.visitor'].records.push({
-        id: 11,
-        country_id: 11,
+    const websiteVisitorId1 = pyEnv['website.visitor'].create({
+        country_id: resCountryId1,
         display_name: 'Visitor #11',
         history: 'Home → Contact',
         is_connected: true,
         lang_name: "English",
         website_name: "General website",
     });
-    this.data['mail.channel'].records.push({
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'livechat',
-        id: 11,
-        livechat_operator_id: this.data.currentPartnerId,
-        livechat_visitor_id: 11,
-        channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
+        livechat_operator_id: pyEnv.currentPartnerId,
+        livechat_visitor_id: websiteVisitorId1,
+        channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
     });
     await start({
         autoOpenDiscuss: true,
-        data: this.data,
         discuss: {
             context: {
-                active_id: 'mail.channel_11',
+                active_id: `mail.channel_${mailChannelId1}`,
             },
         },
         hasDiscuss: true,
@@ -116,32 +109,29 @@ QUnit.test('rendering of visitor banner', async function (assert) {
 QUnit.test('livechat with non-logged visitor should show visitor banner', async function (assert) {
     assert.expect(1);
 
-    this.data['res.country'].records.push({
-        id: 11,
+    const pyEnv = await startServer();
+    const resCountryId1 = pyEnv['res.country'].create({
         code: 'FAKE',
     });
-    this.data['website.visitor'].records.push({
-        id: 11,
-        country_id: 11,
+    const websiteVisitorId1 = pyEnv['website.visitor'].create({
+        country_id: resCountryId1,
         display_name: 'Visitor #11',
         history: 'Home → Contact',
         is_connected: true,
         lang_name: "English",
         website_name: "General website",
     });
-    this.data['mail.channel'].records.push({
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'livechat',
-        id: 11,
-        livechat_operator_id: this.data.currentPartnerId,
-        livechat_visitor_id: 11,
-        channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
+        livechat_operator_id: pyEnv.currentPartnerId,
+        livechat_visitor_id: websiteVisitorId1,
+        channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
     });
     await start({
         autoOpenDiscuss: true,
-        data: this.data,
         discuss: {
             context: {
-                active_id: 'mail.channel_11',
+                active_id: `mail.channel_${mailChannelId1}`,
             },
         },
         hasDiscuss: true,
@@ -156,37 +146,33 @@ QUnit.test('livechat with non-logged visitor should show visitor banner', async 
 QUnit.test('livechat with logged visitor should show visitor banner', async function (assert) {
     assert.expect(2);
 
-    this.data['res.country'].records.push({
-        id: 11,
+    const pyEnv = await startServer();
+    const resCountryId1 = pyEnv['res.country'].create({
         code: 'FAKE',
     });
-    this.data['res.partner'].records.push({
-        id: 12,
+    const resPartnerId1 = pyEnv['res.partner'].create({
         name: 'Partner Visitor',
     });
-    this.data['website.visitor'].records.push({
-        id: 11,
-        country_id: 11,
+    const websiteVisitorId1 = pyEnv['website.visitor'].create({
+        country_id: resCountryId1,
         display_name: 'Visitor #11',
         history: 'Home → Contact',
         is_connected: true,
         lang_name: "English",
-        partner_id: 12,
+        partner_id: resPartnerId1,
         website_name: "General website",
     });
-    this.data['mail.channel'].records.push({
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'livechat',
-        id: 11,
-        livechat_operator_id: this.data.currentPartnerId,
-        livechat_visitor_id: 11,
-        channel_partner_ids: [this.data.currentPartnerId, 12],
+        livechat_operator_id: pyEnv.currentPartnerId,
+        livechat_visitor_id: websiteVisitorId1,
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
     await start({
         autoOpenDiscuss: true,
-        data: this.data,
         discuss: {
             context: {
-                active_id: 'mail.channel_11',
+                active_id: `mail.channel_${mailChannelId1}`,
             },
         },
         hasDiscuss: true,
@@ -206,19 +192,18 @@ QUnit.test('livechat with logged visitor should show visitor banner', async func
 QUnit.test('livechat without visitor should not show visitor banner', async function (assert) {
     assert.expect(2);
 
-    this.data['res.partner'].records.push({ id: 11 });
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'livechat',
-        id: 11,
-        livechat_operator_id: this.data.currentPartnerId,
-        channel_partner_ids: [this.data.currentPartnerId, 11],
+        livechat_operator_id: pyEnv.currentPartnerId,
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
     await start({
         autoOpenDiscuss: true,
-        data: this.data,
         discuss: {
             context: {
-                active_id: 'mail.channel_11',
+                active_id: `mail.channel_${mailChannelId1}`,
             },
         },
         hasDiscuss: true,
@@ -238,13 +223,13 @@ QUnit.test('livechat without visitor should not show visitor banner', async func
 QUnit.test('non-livechat channel should not show visitor banner', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({ id: 11, name: "General" });
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({ name: "General" });
     await start({
         autoOpenDiscuss: true,
-        data: this.data,
         discuss: {
             context: {
-                active_id: 'mail.channel_11',
+                active_id: `mail.channel_${mailChannelId1}`,
             },
         },
         hasDiscuss: true,

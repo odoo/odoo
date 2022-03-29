@@ -2,18 +2,16 @@
 
 import {
     afterNextRender,
-    beforeEach,
     createRootMessagingComponent,
     nextAnimationFrame,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('thread_textual_typing_status_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-
+    beforeEach() {
         this.createThreadTextualTypingStatusComponent = async (thread, target) => {
             await createRootMessagingComponent(thread.env, "ThreadTextualTypingStatus", {
                 props: { threadLocalId: thread.localId },
@@ -26,14 +24,14 @@ QUnit.module('thread_textual_typing_status_tests.js', {
 QUnit.test('receive other member typing status "is typing"', async function (assert) {
     assert.expect(2);
 
-    this.data['res.partner'].records.push({ id: 17, name: 'Demo' });
-    this.data['mail.channel'].records.push({
-        id: 20,
-        channel_partner_ids: [this.data.currentPartnerId, 17],
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ name: 'Demo' });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     await this.createThreadTextualTypingStatusComponent(thread, widget.el);
@@ -49,9 +47,9 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
         widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/typing_status',
             payload: {
-                channel_id: 20,
+                channel_id: mailChannelId1,
                 is_typing: true,
-                partner_id: 17,
+                partner_id: resPartnerId1,
                 partner_name: "Demo",
             },
         }]);
@@ -66,14 +64,14 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
 QUnit.test('receive other member typing status "is typing" then "no longer is typing"', async function (assert) {
     assert.expect(3);
 
-    this.data['res.partner'].records.push({ id: 17, name: 'Demo' });
-    this.data['mail.channel'].records.push({
-        id: 20,
-        channel_partner_ids: [this.data.currentPartnerId, 17],
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ name: 'Demo' });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     await this.createThreadTextualTypingStatusComponent(thread, widget.el);
@@ -89,9 +87,9 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
         widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/typing_status',
             payload: {
-                channel_id: 20,
+                channel_id: mailChannelId1,
                 is_typing: true,
-                partner_id: 17,
+                partner_id: resPartnerId1,
                 partner_name: "Demo",
             },
         }]);
@@ -107,9 +105,9 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
         widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/typing_status',
             payload: {
-                channel_id: 20,
+                channel_id: mailChannelId1,
                 is_typing: false,
-                partner_id: 17,
+                partner_id: resPartnerId1,
                 partner_name: "Demo",
             },
         }]);
@@ -124,14 +122,16 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
 QUnit.test('assume other member typing status becomes "no longer is typing" after 60 seconds without any updated typing status', async function (assert) {
     assert.expect(3);
 
-    this.data['res.partner'].records.push({ id: 17, name: 'Demo' });
-    this.data['mail.channel'].records.push({
-        id: 20,
-        channel_partner_ids: [this.data.currentPartnerId, 17],
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ name: 'Demo' });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
-    const { env, messaging, widget } = await start({ data: this.data, hasTimeControl: true });
+    const { env, messaging, widget } = await start({
+        hasTimeControl: true,
+    });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     await this.createThreadTextualTypingStatusComponent(thread, widget.el);
@@ -147,9 +147,9 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
         widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/typing_status',
             payload: {
-                channel_id: 20,
+                channel_id: mailChannelId1,
                 is_typing: true,
-                partner_id: 17,
+                partner_id: resPartnerId1,
                 partner_name: "Demo",
             },
         }]);
@@ -171,17 +171,16 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
 QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer of assuming no longer typing', async function (assert) {
     assert.expect(4);
 
-    this.data['res.partner'].records.push({ id: 17, name: 'Demo' });
-    this.data['mail.channel'].records.push({
-        id: 20,
-        channel_partner_ids: [this.data.currentPartnerId, 17],
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ name: 'Demo' });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
     const { env, messaging, widget } = await start({
-        data: this.data,
         hasTimeControl: true,
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     await this.createThreadTextualTypingStatusComponent(thread, widget.el);
@@ -197,9 +196,9 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
         widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/typing_status',
             payload: {
-                channel_id: 20,
+                channel_id: mailChannelId1,
                 is_typing: true,
-                partner_id: 17,
+                partner_id: resPartnerId1,
                 partner_name: "Demo",
             },
         }]);
@@ -215,9 +214,9 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
     widget.call('bus_service', 'trigger', 'notification', [{
         type: 'mail.channel.partner/typing_status',
         payload: {
-            channel_id: 20,
+            channel_id: mailChannelId1,
             is_typing: true,
-            partner_id: 17,
+            partner_id: resPartnerId1,
             partner_name: "Demo",
         },
     }]);
@@ -240,18 +239,18 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
 QUnit.test('receive several other members typing status "is typing"', async function (assert) {
     assert.expect(6);
 
-    this.data['res.partner'].records.push(
-        { id: 10, name: 'Other10' },
-        { id: 11, name: 'Other11' },
-        { id: 12, name: 'Other12' }
-    );
-    this.data['mail.channel'].records.push({
-        id: 20,
-        channel_partner_ids: [this.data.currentPartnerId, 10, 11, 12],
+    const pyEnv = await startServer();
+    const [resPartnerId1, resPartnerId2, resPartnerId3] = pyEnv['res.partner'].create([
+        { name: 'Other 10' },
+        { name: 'Other 11' },
+        { name: 'Other 12' },
+    ]);
+    const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1, resPartnerId2, resPartnerId3],
     });
-    const { messaging, widget } = await start({ data: this.data });
+    const { messaging, widget } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: 20,
+        id: mailChannelId1,
         model: 'mail.channel',
     });
     await this.createThreadTextualTypingStatusComponent(thread, widget.el);
@@ -267,9 +266,9 @@ QUnit.test('receive several other members typing status "is typing"', async func
         widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/typing_status',
             payload: {
-                channel_id: 20,
+                channel_id: mailChannelId1,
                 is_typing: true,
-                partner_id: 10,
+                partner_id: resPartnerId1,
                 partner_name: "Other10",
             },
         }]);
@@ -285,9 +284,9 @@ QUnit.test('receive several other members typing status "is typing"', async func
         widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/typing_status',
             payload: {
-                channel_id: 20,
+                channel_id: mailChannelId1,
                 is_typing: true,
-                partner_id: 11,
+                partner_id: resPartnerId2,
                 partner_name: "Other11",
             },
         }]);
@@ -303,9 +302,9 @@ QUnit.test('receive several other members typing status "is typing"', async func
         widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/typing_status',
             payload: {
-                channel_id: 20,
+                channel_id: mailChannelId1,
                 is_typing: true,
-                partner_id: 12,
+                partner_id: resPartnerId3,
                 partner_name: "Other12",
             },
         }]);
@@ -321,9 +320,9 @@ QUnit.test('receive several other members typing status "is typing"', async func
         widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/typing_status',
             payload: {
-                channel_id: 20,
+                channel_id: mailChannelId1,
                 is_typing: false,
-                partner_id: 10,
+                partner_id: resPartnerId1,
                 partner_name: "Other10",
             },
         }]);
@@ -339,9 +338,9 @@ QUnit.test('receive several other members typing status "is typing"', async func
         widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel.partner/typing_status',
             payload: {
-                channel_id: 20,
+                channel_id: mailChannelId1,
                 is_typing: true,
-                partner_id: 10,
+                partner_id: resPartnerId1,
                 partner_name: "Other10",
             },
         }]);

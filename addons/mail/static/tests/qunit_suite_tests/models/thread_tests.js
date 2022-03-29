@@ -1,20 +1,16 @@
 /** @odoo-module **/
 
 import { insert } from '@mail/model/model_field_command';
-import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('models', {}, function () {
-QUnit.module('thread_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('thread_tests.js');
 
 QUnit.test('inbox & starred mailboxes', async function (assert) {
     assert.expect(10);
 
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
     const mailboxInbox = messaging.inbox;
     const mailboxStarred = messaging.starred;
     assert.ok(mailboxInbox, "should have mailbox inbox");
@@ -32,7 +28,7 @@ QUnit.test('inbox & starred mailboxes', async function (assert) {
 QUnit.test('create (channel)', async function (assert) {
     assert.expect(23);
 
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
     assert.notOk(messaging.models['Partner'].findFromIdentifyingData({ id: 9 }));
     assert.notOk(messaging.models['Partner'].findFromIdentifyingData({ id: 10 }));
     assert.notOk(messaging.models['Thread'].findFromIdentifyingData({
@@ -91,7 +87,7 @@ QUnit.test('create (channel)', async function (assert) {
 QUnit.test('create (chat)', async function (assert) {
     assert.expect(15);
 
-    const { messaging } = await start({ data: this.data });
+    const { messaging } = await start();
     assert.notOk(messaging.models['Partner'].findFromIdentifyingData({ id: 5 }));
     assert.notOk(messaging.models['Thread'].findFromIdentifyingData({
         id: 200,

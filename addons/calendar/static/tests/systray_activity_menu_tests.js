@@ -1,37 +1,33 @@
 /** @odoo-module **/
 
-import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { start, startServer } from '@mail/../tests/helpers/test_utils';
 import ActivityMenu from '@mail/js/systray/systray_activity_menu';
 
 import testUtils from 'web.test_utils';
 
 QUnit.module('calendar', {}, function () {
-QUnit.module('ActivityMenu', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('ActivityMenu');
 
 QUnit.test('activity menu widget:today meetings', async function (assert) {
     assert.expect(6);
 
-    this.data['calendar.attendee'].records.push({ id: 1, partner_id: this.data.currentPartnerId });
-    this.data['calendar.event'].records.push(
+    const pyEnv = await startServer();
+    const calendarAttendeeId1 = pyEnv['calendar.attendee'].create({ partner_id: pyEnv.currentPartnerId });
+    pyEnv['calendar.event'].create([
         {
             res_model: "calendar.event",
             name: "meeting1",
             start: "2018-04-20 06:30:00",
-            attendee_ids: [1],
+            attendee_ids: [calendarAttendeeId1],
         },
         {
             res_model: "calendar.event",
             name: "meeting2",
             start: "2018-04-20 09:30:00",
-            attendee_ids: [1],
+            attendee_ids: [calendarAttendeeId1],
         },
-    );
-
-    const { widget } = await start({ data: this.data });
+    ]);
+    const { widget } = await start();
 
     const activityMenu = new ActivityMenu(widget);
     await activityMenu.appendTo($('#qunit-fixture'));

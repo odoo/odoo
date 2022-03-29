@@ -1,20 +1,17 @@
 /** @odoo-module **/
 
 import {
-    beforeEach,
     start,
+    startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('discuss_sidebar_category_item_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-
+    beforeEach() {
         this.start = async params => {
             return start(Object.assign({}, params, {
                 autoOpenDiscuss: true,
-                data: this.data,
                 hasDiscuss: true,
             }));
         };
@@ -24,19 +21,19 @@ QUnit.module('discuss_sidebar_category_item_tests.js', {
 QUnit.test('livechat - avatar: should have a smiley face avatar for an anonymous livechat item', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         anonymous_name: "Visitor 11",
         channel_type: 'livechat',
-        id: 11,
-        livechat_operator_id: this.data.currentPartnerId,
-        channel_partner_ids: [this.data.currentPartnerId, this.data.currentPartnerId],
+        livechat_operator_id: pyEnv.currentPartnerId,
+        channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.currentPartnerId],
     });
     const { messaging } = await this.start();
 
     const livechatItem = document.querySelector(`
         .o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
-                id: 11,
+                id: mailChannelId1,
                 model: 'mail.channel',
             }).localId
         }"]
@@ -56,22 +53,21 @@ QUnit.test('livechat - avatar: should have a smiley face avatar for an anonymous
 QUnit.test('livechat - avatar: should have a partner profile picture for a livechat item linked with a partner', async function (assert) {
     assert.expect(2);
 
-    this.data['res.partner'].records.push({
-        id: 10,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({
         name: "Jean",
     });
-    this.data['mail.channel'].records.push({
+    const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'livechat',
-        id: 11,
-        livechat_operator_id: this.data.currentPartnerId,
-        channel_partner_ids: [this.data.currentPartnerId, 10],
+        livechat_operator_id: pyEnv.currentPartnerId,
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
     const { messaging } = await this.start();
 
     const livechatItem = document.querySelector(`
         .o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
-                id: 11,
+                id: mailChannelId1,
                 model: 'mail.channel',
             }).localId
         }"]
@@ -83,7 +79,7 @@ QUnit.test('livechat - avatar: should have a partner profile picture for a livec
     );
     assert.strictEqual(
         livechatItem.querySelector(`:scope .o_DiscussSidebarCategoryItem_image`).dataset.src,
-        '/web/image/res.partner/10/avatar_128',
+        `/web/image/res.partner/${resPartnerId1}/avatar_128`,
         'should have the partner profile picture as the avatar for partners'
     );
 });

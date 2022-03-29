@@ -1,35 +1,31 @@
 /** @odoo-module **/
 
-import { afterNextRender, beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { afterNextRender, start, startServer } from '@mail/../tests/helpers/test_utils';
 
 import Bus from 'web.Bus';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('thread_needaction_preview_tests.js', {
-    async beforeEach() {
-        await beforeEach(this);
-    },
-});
+QUnit.module('thread_needaction_preview_tests.js');
 
 QUnit.test('mark as read', async function (assert) {
     assert.expect(5);
 
-    this.data['mail.message'].records.push({
-        id: 21,
+    const pyEnv = await startServer();
+    const resPartnerId1 =  pyEnv['res.partner'].create();
+    const mailMessageId1 = pyEnv['mail.message'].create({
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
-        res_id: 11,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: resPartnerId1,
     });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 21,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: pyEnv.currentPartnerId,
     });
     const { afterEvent, click, createMessagingMenuComponent } = await start({
-        data: this.data,
         hasChatWindow: true,
         async mockRPC(route, args) {
             if (route.includes('mark_all_as_read')) {
@@ -38,7 +34,7 @@ QUnit.test('mark as read', async function (assert) {
                     args.kwargs.domain,
                     [
                         ['model', '=', 'res.partner'],
-                        ['res_id', '=', 11],
+                        ['res_id', '=', resPartnerId1],
                     ],
                     "should mark all as read the correct thread"
                 );
@@ -76,21 +72,21 @@ QUnit.test('mark as read', async function (assert) {
 QUnit.test('click on preview should mark as read and open the thread', async function (assert) {
     assert.expect(6);
 
-    this.data['mail.message'].records.push({
-        id: 21,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const mailMessageId1 = pyEnv['mail.message'].create({
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
-        res_id: 11,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: resPartnerId1,
     });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 21,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: pyEnv.currentPartnerId,
     });
     const { afterEvent, click, createMessagingMenuComponent } = await start({
-        data: this.data,
         hasChatWindow: true,
         async mockRPC(route, args) {
             if (route.includes('mark_all_as_read')) {
@@ -99,7 +95,7 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
                     args.kwargs.domain,
                     [
                         ['model', '=', 'res.partner'],
-                        ['res_id', '=', 11],
+                        ['res_id', '=', resPartnerId1],
                     ],
                     "should mark all as read the correct thread"
                 );
@@ -142,12 +138,26 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
 QUnit.test('click on expand from chat window should close the chat window and open the form view', async function (assert) {
     assert.expect(8);
 
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const mailMessageId1 = pyEnv['mail.message'].create({
+        model: 'res.partner',
+        needaction: true,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: resPartnerId1,
+    });
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
+        notification_status: 'sent',
+        notification_type: 'inbox',
+        res_partner_id: pyEnv.currentPartnerId,
+    });
     const bus = new Bus();
     bus.on('do-action', null, payload => {
         assert.step('do_action');
         assert.strictEqual(
             payload.action.res_id,
-            11,
+            resPartnerId1,
             "should redirect to the id of the thread"
         );
         assert.strictEqual(
@@ -156,21 +166,7 @@ QUnit.test('click on expand from chat window should close the chat window and op
             "should redirect to the model of the thread"
         );
     });
-    this.data['mail.message'].records.push({
-        id: 21,
-        model: 'res.partner',
-        needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
-        res_id: 11,
-    });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 21,
-        notification_status: 'sent',
-        notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
-    });
     const { afterEvent, click, createMessagingMenuComponent } = await start({
-        data: this.data,
         env: { bus },
         hasChatWindow: true,
     });
@@ -218,21 +214,21 @@ QUnit.test('[technical] opening a non-channel chat window should not call channe
     // window, because there is no server sync of fold state for them.
     assert.expect(3);
 
-    this.data['mail.message'].records.push({
-        id: 21,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const mailMessageId1 = pyEnv['mail.message'].create({
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
-        res_id: 11,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: resPartnerId1,
     });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 21,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: pyEnv.currentPartnerId,
     });
     const { afterEvent, click, createMessagingMenuComponent } = await start({
-        data: this.data,
         hasChatWindow: true,
         async mockRPC(route, args) {
             if (route.includes('channel_fold')) {
@@ -275,33 +271,31 @@ QUnit.test('[technical] opening a non-channel chat window should not call channe
 QUnit.test('preview should display last needaction message preview even if there is a more recent message that is not needaction in the thread', async function (assert) {
     assert.expect(2);
 
-    this.data['res.partner'].records.push({
-        id: 11,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({
         name: "Stranger",
     });
-    this.data['mail.message'].records.push({
-        author_id: 11,
+    const mailMessageId1 = pyEnv['mail.message'].create({
+        author_id: resPartnerId1,
         body: "I am the oldest but needaction",
-        id: 21,
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
-        res_id: 11,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: resPartnerId1,
     });
-    this.data['mail.message'].records.push({
-        author_id: this.data.currentPartnerId,
+    pyEnv['mail.message'].create({
+        author_id: pyEnv.currentPartnerId,
         body: "I am more recent",
-        id: 22,
         model: 'res.partner',
-        res_id: 11,
+        res_id: resPartnerId1,
     });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 21,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, createMessagingMenuComponent } = await start({ data: this.data, hasChatWindow: true });
+    const { afterEvent, createMessagingMenuComponent } = await start({ hasChatWindow: true });
     await createMessagingMenuComponent();
     await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
@@ -326,23 +320,23 @@ QUnit.test('preview should display last needaction message preview even if there
 QUnit.test('chat window header should not have unread counter for non-channel thread', async function (assert) {
     assert.expect(2);
 
-    this.data['res.partner'].records.push({ id: 11 });
-    this.data['mail.message'].records.push({
-        author_id: 11,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const mailMessageId1 = pyEnv['mail.message'].create({
+        author_id: resPartnerId1,
         body: 'not empty',
-        id: 21,
         model: 'res.partner',
         needaction: true,
-        needaction_partner_ids: [this.data.currentPartnerId],
-        res_id: 11,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: resPartnerId1,
     });
-    this.data['mail.notification'].records.push({
-        mail_message_id: 21,
+    pyEnv['mail.notification'].create({
+        mail_message_id: mailMessageId1,
         notification_status: 'sent',
         notification_type: 'inbox',
-        res_partner_id: this.data.currentPartnerId,
+        res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, click, createMessagingMenuComponent } = await start({ data: this.data, hasChatWindow: true });
+    const { afterEvent, click, createMessagingMenuComponent } = await start({ hasChatWindow: true });
     await createMessagingMenuComponent();
     await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
