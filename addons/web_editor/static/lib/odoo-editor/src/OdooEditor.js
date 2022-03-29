@@ -25,6 +25,7 @@ import {
     isColorGradient,
     nodeSize,
     preserveCursor,
+    setCursorStart,
     setSelection,
     startPos,
     toggleClass,
@@ -2403,15 +2404,38 @@ export class OdooEditor extends EventTarget {
                 this.deleteRange(selection);
             }
         }
-        if (ev.key === 'Backspace' && !ev.ctrlKey && !ev.metaKey) {
+        if (ev.key === 'Backspace') {
             // backspace
-            // We need to hijack it because firefox doesn't trigger a
-            // deleteBackward input event with a collapsed selection in front of
-            // a contentEditable="false" (eg: font awesome).
             const selection = this.document.getSelection();
-            if (selection.isCollapsed) {
-                ev.preventDefault();
-                this._applyCommand('oDeleteBackward');
+            if (!ev.ctrlKey && !ev.metaKey) {
+                if (selection.isCollapsed) {                    
+                    // We need to hijack it because firefox doesn't trigger a
+                    // deleteBackward input event with a collapsed selection in
+                    // front of a contentEditable="false" (eg: font awesome).
+                    ev.preventDefault();
+                    this._applyCommand('oDeleteBackward');
+                }
+            } else if (selection.isCollapsed && selection.anchorNode) {
+                const anchor = (selection.anchorNode.nodeType !== Node.TEXT_NODE && selection.anchorOffset) ?
+                    selection.anchorNode[selection.anchorOffset] : selection.anchorNode;
+                const element = closestBlock(anchor);
+                if (isEmptyBlock(element) && element.parentElement.children.length === 1) {
+                    // Prevent removing a <p> if it is the last element of its
+                    // parent.
+                    ev.preventDefault();
+                    if (element.tagName !== 'P') {
+                        // Replace an empty block which is not a <p> by a <p>
+                        const paragraph = this.document.createElement('P');
+                        const br = this.document.createElement('BR');
+                        paragraph.append(br);
+                        element.before(paragraph);
+                        const result = this._protect(() => element.remove());
+                        if (result !== UNBREAKABLE_ROLLBACK_CODE && result !== UNREMOVABLE_ROLLBACK_CODE) {
+                            setCursorStart(paragraph);
+                            this.historyStep();
+                        }
+                    }
+                }
             }
         } else if (ev.key === 'Tab') {
             // Tab
