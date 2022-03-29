@@ -100,6 +100,7 @@ class User(models.Model):
         recurrences -= synced_recurrences
         recurrences._sync_odoo2google(calendar_service)
         synced_events |= recurrences.calendar_event_ids - recurrences._get_outliers()
+        synced_events |= synced_recurrences.calendar_event_ids - synced_recurrences._get_outliers()
         events = self.env['calendar.event']._get_records_to_sync(full_sync=full_sync)
         (events - synced_events)._sync_odoo2google(calendar_service)
 
