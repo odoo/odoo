@@ -34,6 +34,7 @@
                     <filter string="Open" name="open_tasks" domain="[('is_closed', '=', False)]"/>
                     <filter string="Closed" name="closed_tasks" domain="[('is_closed', '!=', False)]"/>
                     <separator/>
+                    <filter string="Tasks Due Today" name="tasks_due_today" domain="[('date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter string="Late Tasks" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <separator/>
                     <filter name="rating_satisfied" string="Satisfied" domain="[('rating_avg', '&gt;=', 3.66)]" groups="project.group_project_rating"/>
@@ -1002,7 +1003,7 @@
                             <i class="fa fa-fw o_button_icon fa-frown-o text-danger" attrs="{'invisible': [('rating_avg', '&gt;=', 2.33)]}" title="Dissatisfied"/>
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="rating_avg_text" nolabel="1"/></span>
-                                <span class="o_stat_text">Rating</span>
+                                <span class="o_stat_text">Last Rating</span>
                             </div>
                         </button>
                         <!-- Dummy tag used to organize buttons -->
@@ -1159,6 +1160,7 @@
                         <page name="extra_info" string="Extra Info" groups="base.group_no_one">
                             <group>
                                 <group>
+                                    <field name="is_analytic_account_id_changed" invisible="1"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" context="{'default_partner_id': partner_id}"/>
                                     <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                     <field name="parent_id" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
