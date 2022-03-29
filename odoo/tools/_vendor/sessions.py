@@ -20,14 +20,13 @@ import os
 import re
 import tempfile
 from hashlib import sha1
-from os import path
+from os import path, replace as rename
 from pickle import dump
 from pickle import HIGHEST_PROTOCOL
 from pickle import load
 from time import time
 
 from werkzeug.datastructures import CallbackDict
-from werkzeug.posixemulation import rename
 
 _logger = logging.getLogger(__name__)
 _sha1_re = re.compile(r"^[a-f0-9]{40}$")
