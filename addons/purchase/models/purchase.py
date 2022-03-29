@@ -625,12 +625,12 @@ class PurchaseOrder(models.Model):
                    WHERE m.create_date >= %s
                      AND m.model = 'purchase.order'
                      AND m.message_type = 'notification'
-                     AND v.old_value_char = 'RFQ'
-                     AND v.new_value_char = 'RFQ Sent'
+                     AND v.old_value_char = %s
+                     AND v.new_value_char = %s
                      AND po.company_id = %s;
                 """
 
-        self.env.cr.execute(query, (one_week_ago, self.env.company.id))
+        self.env.cr.execute(query, (one_week_ago, _('RFQ'), _('RFQ Sent'), self.env.company.id))
         res = self.env.cr.fetchone()
         result['all_sent_rfqs'] = res[0] or 0
 
