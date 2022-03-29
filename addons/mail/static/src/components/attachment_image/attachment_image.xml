@@ -20,7 +20,7 @@
                             <i class="fa fa-spin fa-spinner"/>
                         </div>
                     </t>
-                    <t t-if="attachmentImage.attachment.isEditable">
+                    <t t-if="attachmentImage.attachment.isDeletable">
                         <div class="o_AttachmentImage_imageOverlay position-absolute top-0 bottom-0 start-0 end-0 text-right p-2 text-white opacity-0 opacity-100-hover">
                             <div class="o_AttachmentImage_action o_AttachmentImage_actionUnlink btn btn-sm btn-dark rounded opacity-75 opacity-100-hover"
                                 t-att-class="{'o-pretty': attachmentImage.attachmentList.composerViewOwner}" t-on-click="attachmentImage.onClickUnlink" title="Remove"
