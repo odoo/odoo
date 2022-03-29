@@ -385,10 +385,6 @@ export class Record extends DataPoint {
     // -------------------------------------------------------------------------
 
     get evalContext() {
-        if (!this.data) {
-            throw new Error("you rascal");
-        }
-
         // should not be called befor this.data is ready!
         const evalContext = {};
         for (const fieldName in this.activeFields) {
@@ -930,9 +926,7 @@ export class Record extends DataPoint {
     async _load(params = {}) {
         this._values = params.values || {};
         this._changes = params.changes || {};
-        this._rawChanges = {
-            ...this._changes,
-        };
+        this._rawChanges = { ...this._changes };
         const defaultValues = this._getDefaultValues();
         for (const fieldName in this.activeFields) {
             delete this._rawChanges[fieldName];
@@ -942,6 +936,8 @@ export class Record extends DataPoint {
                 const commands = this._changes[fieldName];
                 const staticList = this._cache[fieldName];
                 staticList.setCurrentIds(resIds, commands);
+                this._values[fieldName] = staticList;
+                this._changes[fieldName] = staticList;
                 this.data[fieldName] = staticList;
             } else {
                 // smth is wrong here for many2one maybe
