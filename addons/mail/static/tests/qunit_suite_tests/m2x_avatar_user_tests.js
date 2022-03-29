@@ -24,20 +24,12 @@ QUnit.module('mail', {}, function () {
             // reset the cache before each test
             Many2OneAvatarUser.prototype.partnerIds = {};
 
-            Object.assign(this.data, {
-                'foo': {
-                    fields: {
-                        user_id: { string: "User", type: 'many2one', relation: 'res.users' },
-                        user_ids: { string: "Users", type: "many2many", relation: 'res.users',  default:[] },
-                    },
-                    records: [
-                        { id: 1, user_id: 11, user_ids: [11, 23], },
-                        { id: 2, user_id: 7 },
-                        { id: 3, user_id: 11 },
-                        { id: 4, user_id: 23 },
-                    ],
-                },
-            });
+            this.data['m2x.avatar.user'].records.push(
+                { id: 1, user_id: 11, user_ids: [11, 23], },
+                { id: 2, user_id: 7 },
+                { id: 3, user_id: 11 },
+                { id: 4, user_id: 23 },
+            );
 
             this.data['res.partner'].records.push(
                 { id: 11, display_name: "Partner 1" },
@@ -61,7 +53,7 @@ QUnit.module('mail', {}, function () {
             hasChatWindow: true,
             hasView: true,
             View: ListView,
-            model: 'foo',
+            model: 'm2x.avatar.user',
             data: this.data,
             arch: '<tree><field name="user_id" widget="many2one_avatar_user"/></tree>',
         });
@@ -84,7 +76,7 @@ QUnit.module('mail', {}, function () {
             hasChatWindow: true,
             hasView: true,
             View: FormView,
-            model: 'foo',
+            model: 'm2x.avatar.user',
             data: this.data,
             arch: '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
             res_id: 1,
@@ -105,12 +97,12 @@ QUnit.module('mail', {}, function () {
         assert.expect(4);
 
         this.data['res.users'].records.push({ id: 15, name: "Tapu", partner_id: 11 },);
-        this.data.foo.records[2].user_ids = [11, 23, 7, 15];
+        this.data['m2x.avatar.user'].records[2].user_ids = [11, 23, 7, 15];
 
         const { widget: kanban } = await start({
             hasView: true,
             View: KanbanView,
-            model: 'foo',
+            model: 'm2x.avatar.user',
             data: this.data,
             arch: `
                 <kanban>
@@ -154,8 +146,8 @@ QUnit.module('mail', {}, function () {
         serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
 
         const views = {
-            'foo,false,form': '<form><field name="user_id" widget="many2one_avatar_user"/></form>',
-            'foo,false,search': '<search></search>',
+            'm2x.avatar.user,false,form': '<form><field name="user_id" widget="many2one_avatar_user"/></form>',
+            'm2x.avatar.user,false,search': '<search></search>',
         };
         const serverData = { models: this.data, views };
         const { widget: webClient } = await start({ hasWebClient: true, serverData });
@@ -163,7 +155,7 @@ QUnit.module('mail', {}, function () {
             res_id: 1,
             type: 'ir.actions.act_window',
             target: 'current',
-            res_model: 'foo',
+            res_model: 'm2x.avatar.user',
             'view_mode': 'form',
             'views': [[false, 'form']],
         });
@@ -197,8 +189,8 @@ QUnit.module('mail', {}, function () {
         serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
 
         const views = {
-            'foo,false,form': '<form><field name="user_id" widget="many2one_avatar_user"/></form>',
-            'foo,false,search': '<search></search>',
+            'm2x.avatar.user,false,form': '<form><field name="user_id" widget="many2one_avatar_user"/></form>',
+            'm2x.avatar.user,false,search': '<search></search>',
         };
         const serverData = { models: this.data, views };
         const { widget: webClient } = await start({ hasWebClient: true, serverData });
@@ -206,7 +198,7 @@ QUnit.module('mail', {}, function () {
             res_id: 1,
             type: 'ir.actions.act_window',
             target: 'current',
-            res_model: 'foo',
+            res_model: 'm2x.avatar.user',
             'view_mode': 'form',
             'views': [[false, 'form']],
         });
@@ -237,8 +229,8 @@ QUnit.module('mail', {}, function () {
         serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
 
         const views = {
-            'foo,false,form': '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
-            'foo,false,search': '<search></search>',
+            'm2x.avatar.user,false,form': '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
+            'm2x.avatar.user,false,search': '<search></search>',
         };
         const serverData = { models: this.data, views };
         const { widget: webClient } = await start({ hasWebClient: true, serverData });
@@ -246,7 +238,7 @@ QUnit.module('mail', {}, function () {
             res_id: 1,
             type: 'ir.actions.act_window',
             target: 'current',
-            res_model: 'foo',
+            res_model: 'm2x.avatar.user',
             'view_mode': 'form',
             'views': [[false, 'form']],
         });
@@ -281,8 +273,8 @@ QUnit.module('mail', {}, function () {
         serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
 
         const views = {
-            'foo,false,form': '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
-            'foo,false,search': '<search></search>',
+            'm2x.avatar.user,false,form': '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
+            'm2x.avatar.user,false,search': '<search></search>',
         };
         const serverData = { models: this.data, views };
         const { widget: webClient } = await start({ hasWebClient: true, serverData });
@@ -290,7 +282,7 @@ QUnit.module('mail', {}, function () {
             res_id: 1,
             type: 'ir.actions.act_window',
             target: 'current',
-            res_model: 'foo',
+            res_model: 'm2x.avatar.user',
             'view_mode': 'form',
             'views': [[false, 'form']],
         });
@@ -323,7 +315,7 @@ QUnit.module('mail', {}, function () {
         const { widget: list } = await start({
             hasView: true,
             View: ListView,
-            model: 'foo',
+            model: 'm2x.avatar.user',
             data: this.data,
             arch: '<tree><field name="user_id" widget="many2one_avatar_user"/></tree>',
             res_id: 1,
@@ -342,7 +334,7 @@ QUnit.module('mail', {}, function () {
         const { widget: kanban } = await start({
             hasView: true,
             View: KanbanView,
-            model: 'foo',
+            model: 'm2x.avatar.user',
             data: this.data,
             arch: `<kanban>
                         <templates>
@@ -369,7 +361,7 @@ QUnit.module('mail', {}, function () {
         const { widget: form } = await start({
             hasView: true,
             View: FormView,
-            model: 'foo',
+            model: 'm2x.avatar.user',
             data: this.data,
             arch: '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
             res_id: 1,
