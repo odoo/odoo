@@ -37,26 +37,20 @@ export class MonetaryField extends Component {
         return this.currency && this.currency.position;
     }
 
-    get formattedValue() {
-        return this.props.format(this.props.value, {
-            digits: this.currencyDigits,
-            currencyId: this.props.currencyId,
-        });
-    }
-
     get currencyDigits() {
         if (this.props.digits) return this.props.digits;
         if (!this.currency) return null;
         return session.currencies[this.props.currencyId].digits;
     }
 
-    get formattedInputValue() {
-        if (this.props.inputType === "number") {
+    get formattedValue() {
+        if (this.props.inputType === "number" && !this.props.readonly && this.props.value) {
             return this.props.value;
         }
         return this.props.format(this.props.value, {
             digits: this.currencyDigits,
-            noSymbol: true,
+            currencyId: this.props.currencyId,
+            noSymbol: !this.props.readonly,
         });
     }
 }

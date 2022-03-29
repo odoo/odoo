@@ -723,4 +723,77 @@ QUnit.module("Fields", (hooks) => {
 
         list.destroy();
     });
+
+    QUnit.test("float field with monetary widget and decimal precision", async function (assert) {
+        assert.expect(5);
+
+        serverData.models.partner.records = [
+            {
+                id: 1,
+                float_field: -8.89859,
+                currency_id: 1,
+            },
+        ];
+
+        patchWithCleanup(session, {
+            currencies: {
+                ...session.currencies,
+                1: {
+                    name: "USD",
+                    symbol: "$",
+                    position: "before",
+                    digits: [0, 1],
+                },
+            },
+        });
+
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch:
+                '<form string="Partners">' +
+                "<sheet>" +
+                '<field name="float_field" widget="monetary" options="{\'field_digits\': True}"/>' +
+                '<field name="currency_id" invisible="1"/>' +
+                "</sheet>" +
+                "</form>",
+            resId: 1,
+        });
+
+        // Non-breaking space between the currency and the amount
+        assert.strictEqual(
+            target.querySelector(".o_field_widget").textContent,
+            "$\u00a0-8.9",
+            "The value should be displayed properly."
+        );
+
+        await click(target.querySelector(".o_form_button_edit"));
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=float_field] input").value,
+            "-8.9",
+            "The input should be rendered without the currency symbol."
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=float_field] input").parentElement.firstChild
+                .textContent,
+            "$",
+            "The input should be preceded by a span containing the currency symbol."
+        );
+
+        await editInput(target, ".o_field_monetary input", "109.2458938598598");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=float_field] input").value,
+            "109.2",
+            "The value should should be formatted on blur."
+        );
+
+        await click(target.querySelector(".o_form_button_save"));
+        // Non-breaking space between the currency and the amount
+        assert.strictEqual(
+            target.querySelector(".o_field_widget").textContent,
+            "$\u00a0109.2",
+            "The new value should be rounded properly."
+        );
+    });
 });
