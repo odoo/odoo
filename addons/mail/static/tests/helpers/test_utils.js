@@ -805,12 +805,13 @@ async function start(param0 = {}) {
         }),
     }, param0.services);
 
-    if (!param0.data && !param0.serverData) {
+    if (!param0.data && (!param0.serverData || !param0.serverData.models)) {
         pyEnv = pyEnv || await startServer();
         const data = pyEnv.mockServer.data;
         Object.assign(data, TEST_USER_IDS);
         if (hasWebClient) {
-            param0.serverData = { models: data };
+            param0.serverData = param0.serverData || getActionManagerServerData();
+            param0.serverData.models = data;
         } else {
             param0.data = data;
         }
