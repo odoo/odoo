@@ -5060,12 +5060,12 @@ QUnit.module("Fields", (hooks) => {
         await addRow(target);
     });
 
-    QUnit.skipWOWL("one2many list edition, some basic functionality", async function (assert) {
+    QUnit.test("one2many list edition, some basic functionality", async function (assert) {
         assert.expect(3);
 
         serverData.models.partner.fields.foo.default = false;
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -5081,27 +5081,27 @@ QUnit.module("Fields", (hooks) => {
         });
         await clickEdit(target);
 
-        await click(form.$("tbody td.o_field_x2many_list_row_add a"));
+        await click(target, "tbody td.o_field_x2many_list_row_add a");
 
         assert.containsOnce(
-            form,
-            "td input.o_field_widget",
+            target,
+            "td .o_field_widget input",
             "should have created a row in edit mode"
         );
 
-        await testUtils.fields.editInput(form.$("td input.o_field_widget"), "a");
+        await editInput(target, "td .o_field_widget input", "a");
 
         assert.containsOnce(
-            form,
-            "td input.o_field_widget",
+            target,
+            "td .o_field_widget input",
             "should not have unselected the row after edition"
         );
 
-        await testUtils.fields.editInput(form.$("td input.o_field_widget"), "abc");
+        await editInput(target, "td .o_field_widget input", "abc");
         await clickSave(target);
 
         assert.strictEqual(
-            form.$("td:contains(abc)").length,
+            [...target.querySelectorAll("td")].filter((el) => el.innerText === "abc").length,
             1,
             "should have a row with the correct value"
         );
