@@ -4,14 +4,16 @@ import logging
 import uuid
 
 import requests
-from werkzeug.urls import url_join, url_encode
+from werkzeug.urls import url_encode, url_join
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
+from odoo.addons.payment_stripe import utils as stripe_utils
 from odoo.addons.payment_stripe.const import API_VERSION, PROXY_URL, WEBHOOK_HANDLED_EVENTS
-from odoo.addons.payment_stripe.controllers.onboarding import OnboardingController
 from odoo.addons.payment_stripe.controllers.main import StripeController
+from odoo.addons.payment_stripe.controllers.onboarding import OnboardingController
+
 
 _logger = logging.getLogger(__name__)
 
@@ -39,12 +41,12 @@ class PaymentAcquirer(models.Model):
         """ Check that the acquirer of a connected account can never been set to 'test'.
 
         This constraint is defined in the present module to allow the export of the translation
-        string of the `ValidationError` that can be raised by the internal module responsible for
-        Stripe Connect, although this constraint depends on a field that is defined in that external
-        module.
-        Additionally, having the field defined in the external module prevents from using it
-        as a trigger for this constraint. This is however not a problem because the field `state` is
-        used as trigger, and we always write on `state` when we write on the internal field.
+        string of the `ValidationError` should it be raised by modules that would fully implement
+        Stripe Connect.
+
+        Additionally, the field `state` is used as a trigger for this constraint to allow those
+        modules to indirectly trigger it when writing on custom fields. Indeed, by always writing on
+        `state` together with writing on those custom fields, the constraint would be triggered.
 
         :return: None
         """
@@ -58,7 +60,7 @@ class PaymentAcquirer(models.Model):
     def _stripe_has_connected_account(self):
         """ Return whether the acquirer is linked to a connected Stripe account.
 
-        Note: This method is overridden by the internal module responsible for Stripe Connect.
+        Note: This method serves as a hook for modules that would fully implement Stripe Connect.
         Note: self.ensure_one()
 
         :return: Whether the acquirer is linked to a connected Stripe account
@@ -77,7 +79,7 @@ class PaymentAcquirer(models.Model):
         the URL the user is redirected to when coming back on Odoo after the onboarding. If the link
         generation failed, redirect the user to the acquirer form.
 
-        Note: This method is overridden by the internal module responsible for Stripe Connect.
+        Note: This method serves as a hook for modules that would fully implement Stripe Connect.
         Note: self.ensure_one()
 
         :param int menu_id: The menu from which the user started the onboarding step, as an
@@ -173,7 +175,11 @@ class PaymentAcquirer(models.Model):
         self.ensure_one()
 
         url = url_join('https://api.stripe.com/v1/', endpoint)
-        headers = self._get_stripe_request_headers(endpoint)
+        headers = {
+            'AUTHORIZATION': f'Bearer {stripe_utils.get_secret_key(self)}',
+            'Stripe-Version': API_VERSION,  # SetupIntent requires a specific version.
+            **self._get_stripe_extra_request_headers(),
+        }
         try:
             response = requests.request(method, url, data=payload, headers=headers, timeout=60)
             # Stripe can send 4XX errors for payment failures (not only for badly-formed requests).
@@ -200,19 +206,15 @@ class PaymentAcquirer(models.Model):
             raise ValidationError("Stripe: " + _("Could not establish the connection to the API."))
         return response.json()
 
-    def _get_stripe_request_headers(self, endpoint):
-        """ Return the headers for the Stripe API request.
+    def _get_stripe_extra_request_headers(self):
+        """ Return the extra headers for the Stripe API request.
 
-        Note: This method is overridden by the internal module responsible for Stripe Connect.
+        Note: This method serves as a hook for modules that would fully implement Stripe Connect.
 
-        :param str endpoint: The Stripe endpoint that will be called
-        :returns: The request headers
+        :return: The extra request headers.
         :rtype: dict
         """
-        return {
-            'AUTHORIZATION': f'Bearer {self._get_stripe_secret_key()}',
-            'Stripe-Version': API_VERSION,  # SetupIntent needs a specific version
-        }
+        return {}
 
     def _get_default_payment_method_id(self):
         self.ensure_one()
@@ -220,44 +222,12 @@ class PaymentAcquirer(models.Model):
             return super()._get_default_payment_method_id()
         return self.env.ref('payment_stripe.payment_method_stripe').id
 
-    # === BUSINESS METHODS - STRIPE CONNECT CREDENTIALS === #
-
-    def _get_stripe_publishable_key(self):
-        """ Return the publishable key for Stripe.
-
-        Note: This method is overridden by the internal module responsible for Stripe Connect.
-
-        :return: The publishable key
-        :rtype: str
-        """
-        return self.stripe_publishable_key
-
-    def _get_stripe_secret_key(self):
-        """ Return the secret key for Stripe.
-
-        Note: This method is overridden by the internal module responsible for Stripe Connect.
-
-        :return: The secret key
-        :rtype: str
-        """
-        return self.stripe_secret_key
-
-    def _get_stripe_webhook_secret(self):
-        """ Return the webhook secret for Stripe.
-
-        Note: This method is overridden by the internal module responsible for Stripe Connect.
-
-        :returns: The webhook secret
-        :rtype: str
-        """
-        return self.stripe_webhook_secret
-
     # === BUSINESS METHODS - STRIPE CONNECT ONBOARDING === #
 
     def _stripe_fetch_or_create_connected_account(self):
         """ Fetch the connected Stripe account and create one if not already done.
 
-        Note: This method is overridden by the internal module responsible for Stripe Connect.
+        Note: This method serves as a hook for modules that would fully implement Stripe Connect.
 
         :return: The connected account
         :rtype: dict
@@ -269,7 +239,7 @@ class PaymentAcquirer(models.Model):
     def _stripe_prepare_connect_account_payload(self):
         """ Prepare the payload for the creation of a connected account in Stripe format.
 
-        Note: This method is overridden by the internal module responsible for Stripe Connect.
+        Note: This method serves as a hook for modules that would fully implement Stripe Connect.
         Note: self.ensure_one()
 
         :return: The Stripe-formatted payload for the creation request

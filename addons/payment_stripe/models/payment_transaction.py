@@ -9,8 +9,10 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment_stripe import utils as stripe_utils
 from odoo.addons.payment_stripe.const import INTENT_STATUS_MAPPING, PAYMENT_METHOD_TYPES
 from odoo.addons.payment_stripe.controllers.main import StripeController
+
 
 _logger = logging.getLogger(__name__)
 
@@ -35,7 +37,7 @@ class PaymentTransaction(models.Model):
 
         checkout_session = self._stripe_create_checkout_session()
         return {
-            'publishable_key': self.acquirer_id._get_stripe_publishable_key(),
+            'publishable_key': stripe_utils.get_publishable_key(self.acquirer_id),
             'session_id': checkout_session['id'],
         }
 
@@ -144,7 +146,7 @@ class PaymentTransaction(models.Model):
     def _get_common_stripe_session_values(self, pmt_values, customer):
         """ Return the Stripe Session values that are common to redirection and validation.
 
-        Note: This method is overridden by the internal module responsible for Stripe Connect.
+        Note: This method serves as a hook for modules that would fully implement Stripe Connect.
 
         :param dict pmt_values: The payment method types values
         :param dict customer: The Stripe customer to assign to the session
@@ -214,7 +216,7 @@ class PaymentTransaction(models.Model):
     def _stripe_prepare_payment_intent_payload(self):
         """ Prepare the payload for the creation of a payment intent in Stripe format.
 
-        Note: This method is overridden by the internal module responsible for Stripe Connect.
+        Note: This method serves as a hook for modules that would fully implement Stripe Connect.
         Note: self.ensure_one()
 
         :return: The Stripe-formatted payload for the payment intent request
