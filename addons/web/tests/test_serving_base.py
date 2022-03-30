@@ -1,17 +1,16 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
 import re
 from unittest.mock import patch
 import textwrap
-from datetime import datetime, timedelta
+from datetime import datetime
 from lxml import etree
 import logging
 
 from odoo.tests.common import BaseCase, HttpCase, tagged
 from odoo.tools import topological_sort
-from odoo.addons.web.controllers.main import HomeStaticTemplateHelpers
+from odoo.addons.web.controllers.utils import HomeStaticTemplateHelpers
 
 _logger = logging.getLogger(__name__)
 
@@ -49,7 +48,7 @@ class TestModulesLoading(BaseCase):
 class TestStaticInheritanceCommon(BaseCase):
 
     def setUp(self):
-        super(TestStaticInheritanceCommon, self).setUp()
+        super().setUp()
         # output is "manifest_glob" return
         self.asset_paths = [
             ('module_1_file_1', 'module_1', 'bundle_1'),
@@ -95,7 +94,7 @@ class TestStaticInheritanceCommon(BaseCase):
         self._reg_replace_ws = r"\s|\t"
 
     def tearDown(self):
-        super(TestStaticInheritanceCommon, self).tearDown()
+        super().tearDown()
         self._toggle_patchers('stop')
 
     # Custom Assert

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
@@ -7,7 +6,7 @@ from unittest.mock import patch
 
 from odoo import http
 from odoo.tests import common, tagged
-from odoo.addons.web.controllers.main import ExportXlsxWriter
+from odoo.addons.web.controllers.export import ExportXlsxWriter
 from odoo.addons.mail.tests.common import mail_new_test_user
 
 

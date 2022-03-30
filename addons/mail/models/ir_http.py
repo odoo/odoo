@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo
 from odoo import models
-from odoo.addons.web.controllers.main import HomeStaticTemplateHelpers
 from odoo.http import request
+from odoo.addons.web.controllers.utils import HomeStaticTemplateHelpers
 
 
 class IrHttp(models.AbstractModel):
