@@ -169,7 +169,7 @@ QUnit.test('layout with card details and filename and extension', async function
 QUnit.test('view attachment', async function (assert) {
     assert.expect(3);
 
-    const { createMessageComponent, messaging } = await start({ hasDialog: true });
+    const { click, createMessageComponent, messaging } = await start({ hasDialog: true });
     const attachment = messaging.models['Attachment'].create({
         filename: "test.png",
         id: 750,
@@ -189,7 +189,7 @@ QUnit.test('view attachment', async function (assert) {
         '.o_AttachmentImage img',
         "attachment should have an image part"
     );
-    await afterNextRender(() => document.querySelector('.o_AttachmentImage').click());
+    await click('.o_AttachmentImage');
     assert.containsOnce(
         document.body,
         '.o_Dialog',
@@ -205,7 +205,7 @@ QUnit.test('view attachment', async function (assert) {
 QUnit.test('close attachment viewer', async function (assert) {
     assert.expect(3);
 
-    const { createMessageComponent, messaging } = await start({ hasDialog: true });
+    const { click, createMessageComponent, messaging } = await start({ hasDialog: true });
     const attachment = messaging.models['Attachment'].create({
         filename: "test.png",
         id: 750,
@@ -226,16 +226,14 @@ QUnit.test('close attachment viewer', async function (assert) {
         "attachment should have an image part"
     );
 
-    await afterNextRender(() => document.querySelector('.o_AttachmentImage').click());
+    await click('.o_AttachmentImage');
     assert.containsOnce(
         document.body,
         '.o_AttachmentViewer',
         "an attachment viewer should have been opened once attachment image is clicked",
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_AttachmentViewer_headerItemButtonClose').click()
-    );
+    await click('.o_AttachmentViewer_headerItemButtonClose');
     assert.containsNone(
         document.body,
         '.o_Dialog',
@@ -246,7 +244,7 @@ QUnit.test('close attachment viewer', async function (assert) {
 QUnit.test('clicking on the delete attachment button multiple times should do the rpc only once', async function (assert) {
     assert.expect(2);
 
-    const { createMessageComponent, messaging } = await start({
+    const { click, createMessageComponent, messaging } = await start({
         hasDialog: true,
         async mockRPC(route, args) {
             if (route === '/mail/attachment/delete') {
@@ -270,9 +268,7 @@ QUnit.test('clicking on the delete attachment button multiple times should do th
     });
     await createMessageComponent(message);
 
-    await afterNextRender(() => {
-        document.querySelector('.o_AttachmentCard_asideItemUnlink').click();
-    });
+    await click('.o_AttachmentCard_asideItemUnlink');
 
     await afterNextRender(() => {
         document.querySelector('.o_AttachmentDeleteConfirm_confirmButton').click();
@@ -297,7 +293,7 @@ QUnit.test('[technical] does not crash when the viewer is closed before image lo
      */
     assert.expect(1);
 
-    const { createMessageComponent, messaging } = await start({ hasDialog: true });
+    const { click, createMessageComponent, messaging } = await start({ hasDialog: true });
     const attachment = messaging.models['Attachment'].create({
         filename: "test.png",
         id: 750,
@@ -311,11 +307,9 @@ QUnit.test('[technical] does not crash when the viewer is closed before image lo
         id: 100,
     });
     await createMessageComponent(message);
-    await afterNextRender(() => document.querySelector('.o_AttachmentImage').click());
+    await click('.o_AttachmentImage');
     const imageEl = document.querySelector('.o_AttachmentViewer_viewImage');
-    await afterNextRender(() =>
-        document.querySelector('.o_AttachmentViewer_headerItemButtonClose').click()
-    );
+    await click('.o_AttachmentViewer_headerItemButtonClose');
     // Simulate image becoming loaded.
     let successfulLoad;
     try {

@@ -137,7 +137,7 @@ QUnit.test('chat - sorting: should be sorted by last activity time', async funct
             last_interest_dt: datetime_to_str(new Date(2021, 0, 2)), // more recent one
         },
     ]);
-    const { messaging } = await start({
+    const { click, messaging } = await start({
         autoOpenDiscuss: true,
         hasDiscuss: true,
     });
@@ -170,7 +170,7 @@ QUnit.test('chat - sorting: should be sorted by last activity time', async funct
     // post a new message on the last channel
     await afterNextRender(() => initialChats[1].click());
     await afterNextRender(() => document.execCommand('insertText', false, "Blabla"));
-    await afterNextRender(() => document.querySelector('.o_Composer_buttonSend').click());
+    await click('.o_Composer_buttonSend');
     const newChats = document.querySelectorAll('.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategoryItem');
     assert.strictEqual(
         newChats.length,

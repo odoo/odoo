@@ -47,7 +47,7 @@ QUnit.test('[technical] messaging not created then becomes created', async funct
 QUnit.test('messaging not initialized', async function (assert) {
     assert.expect(2);
 
-    const { createMessagingMenuComponent } = await start({
+    const { click, createMessagingMenuComponent } = await start({
         async mockRPC(route) {
             if (route === '/mail/init_messaging') {
                 // simulate messaging never initialized
@@ -64,7 +64,7 @@ QUnit.test('messaging not initialized', async function (assert) {
         "should display loading icon on messaging menu when messaging not yet initialized"
     );
 
-    await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
+    await click(`.o_MessagingMenu_toggler`);
     assert.strictEqual(
         document.querySelector('.o_MessagingMenu_dropdownMenu').textContent,
         "Please wait...",
@@ -77,7 +77,7 @@ QUnit.test('messaging becomes initialized', async function (assert) {
 
     const messagingInitializedProm = makeTestPromise();
 
-    const { createMessagingMenuComponent } = await start({
+    const { click, createMessagingMenuComponent } = await start({
         async mockRPC(route) {
             const _super = this._super.bind(this, ...arguments); // limitation of class.js
             if (route === '/mail/init_messaging') {
@@ -88,7 +88,7 @@ QUnit.test('messaging becomes initialized', async function (assert) {
         waitUntilMessagingCondition: 'created',
     });
     await createMessagingMenuComponent();
-    await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
+    await click(`.o_MessagingMenu_toggler`);
 
     // simulate messaging becomes initialized
     await afterNextRender(() => messagingInitializedProm.resolve());
@@ -106,7 +106,7 @@ QUnit.test('messaging becomes initialized', async function (assert) {
 QUnit.test('basic rendering', async function (assert) {
     assert.expect(21);
 
-    const { createMessagingMenuComponent } = await start();
+    const { click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
     assert.strictEqual(
         document.querySelectorAll('.o_MessagingMenu').length,
@@ -141,7 +141,7 @@ QUnit.test('basic rendering', async function (assert) {
         "should not display any messaging menu dropdown by default"
     );
 
-    await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
+    await click(`.o_MessagingMenu_toggler`);
     assert.hasClass(
         document.querySelector('.o_MessagingMenu'),
         "show",
@@ -220,7 +220,7 @@ QUnit.test('basic rendering', async function (assert) {
         "should display no conversation in thread preview list"
     );
 
-    await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
+    await click(`.o_MessagingMenu_toggler`);
     assert.doesNotHaveClass(
         document.querySelector('.o_MessagingMenu'),
         "show",
@@ -262,10 +262,10 @@ QUnit.test('counter is taking into account failure notification', async function
 QUnit.test('switch tab', async function (assert) {
     assert.expect(15);
 
-    const { createMessagingMenuComponent } = await start();
+    const { click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
 
-    await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
+    await click(`.o_MessagingMenu_toggler`);
     assert.strictEqual(
         document.querySelectorAll(`.o_MessagingMenu_tabButton[data-tab-id="all"]`).length,
         1,
@@ -300,9 +300,7 @@ QUnit.test('switch tab', async function (assert) {
         "'channel' tab button should not be active"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_MessagingMenu_tabButton[data-tab-id="chat"]`).click()
-    );
+    await click(`.o_MessagingMenu_tabButton[data-tab-id="chat"]`);
     assert.notOk(
         document.querySelector(`
             .o_MessagingMenu_tabButton[data-tab-id="all"]
@@ -322,9 +320,7 @@ QUnit.test('switch tab', async function (assert) {
         "'channel' tab button should stay inactive"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_MessagingMenu_tabButton[data-tab-id="channel"]`).click()
-    );
+    await click(`.o_MessagingMenu_tabButton[data-tab-id="channel"]`);
     assert.notOk(
         document.querySelector(`
             .o_MessagingMenu_tabButton[data-tab-id="all"]
@@ -344,9 +340,7 @@ QUnit.test('switch tab', async function (assert) {
         "'channel' tab button should become active"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_MessagingMenu_tabButton[data-tab-id="all"]`).click()
-    );
+    await click(`.o_MessagingMenu_tabButton[data-tab-id="all"]`);
     assert.ok(
         document.querySelector(`
             .o_MessagingMenu_tabButton[data-tab-id="all"]
@@ -370,14 +364,10 @@ QUnit.test('switch tab', async function (assert) {
 QUnit.test('new message', async function (assert) {
     assert.expect(3);
 
-    const { createMessagingMenuComponent } = await start({ hasChatWindow: true });
+    const { click, createMessagingMenuComponent } = await start({ hasChatWindow: true });
     await createMessagingMenuComponent();
-    await afterNextRender(() =>
-        document.querySelector(`.o_MessagingMenu_toggler`).click()
-    );
-    await afterNextRender(() =>
-        document.querySelector(`.o_MessagingMenu_newMessageButton`).click()
-    );
+    await click(`.o_MessagingMenu_toggler`);
+    await click(`.o_MessagingMenu_newMessageButton`);
 
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatWindow`).length,
@@ -397,15 +387,13 @@ QUnit.test('new message', async function (assert) {
 QUnit.test('no new message when discuss is open', async function (assert) {
     assert.expect(3);
 
-    const { discussWidget, createMessagingMenuComponent } = await start({
+    const { click, discussWidget, createMessagingMenuComponent } = await start({
         autoOpenDiscuss: true,
         hasDiscuss: true,
     });
     await createMessagingMenuComponent();
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_MessagingMenu_toggler`).click()
-    );
+    await click(`.o_MessagingMenu_toggler`);
     assert.strictEqual(
         document.querySelectorAll(`.o_MessagingMenu_newMessageButton`).length,
         0,
@@ -441,10 +429,10 @@ QUnit.test('channel preview: basic rendering', async function (assert) {
         model: 'mail.channel', // necessary to link message to channel
         res_id: mailChannelId1, // id of related channel
     });
-    const { createMessagingMenuComponent } = await start();
+    const { click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
 
-    await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
+    await click(`.o_MessagingMenu_toggler`);
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu .o_ThreadPreview
@@ -539,12 +527,10 @@ QUnit.test('filtered previews', async function (assert) {
             res_id: mailChannelId2, // id of related channel
         },
     ]);
-    const { createMessagingMenuComponent, messaging } = await start();
+    const { click, createMessagingMenuComponent, messaging } = await start();
     await createMessagingMenuComponent();
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_MessagingMenu_toggler`).click()
-    );
+    await click(`.o_MessagingMenu_toggler`);
     assert.strictEqual(
         document.querySelectorAll(`.o_MessagingMenu_dropdownMenu .o_ThreadPreview`).length,
         2,
@@ -577,9 +563,7 @@ QUnit.test('filtered previews', async function (assert) {
         "should have preview of channel"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_MessagingMenu_tabButton[data-tab-id="chat"]').click()
-    );
+    await click('.o_MessagingMenu_tabButton[data-tab-id="chat"]');
     assert.strictEqual(
         document.querySelectorAll(`.o_MessagingMenu_dropdownMenu .o_ThreadPreview`).length,
         1,
@@ -612,9 +596,7 @@ QUnit.test('filtered previews', async function (assert) {
         "should not have preview of channel"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_MessagingMenu_tabButton[data-tab-id="channel"]').click()
-    );
+    await click('.o_MessagingMenu_tabButton[data-tab-id="channel"]');
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
@@ -650,9 +632,7 @@ QUnit.test('filtered previews', async function (assert) {
         "should have preview of channel"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_MessagingMenu_tabButton[data-tab-id="all"]').click()
-    );
+    await click('.o_MessagingMenu_tabButton[data-tab-id="all"]');
     assert.strictEqual(
         document.querySelectorAll(`.o_MessagingMenu_dropdownMenu .o_ThreadPreview`).length,
         2,
@@ -691,15 +671,11 @@ QUnit.test('open chat window from preview', async function (assert) {
 
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create();
-    const { createMessagingMenuComponent } = await start({ hasChatWindow: true });
+    const { click, createMessagingMenuComponent } = await start({ hasChatWindow: true });
     await createMessagingMenuComponent();
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_MessagingMenu_toggler`).click()
-    );
-    await afterNextRender(() =>
-        document.querySelector(`.o_MessagingMenu_dropdownMenu .o_ThreadPreview`).click()
-    );
+    await click(`.o_MessagingMenu_toggler`);
+    await click(`.o_MessagingMenu_dropdownMenu .o_ThreadPreview`);
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatWindow`).length,
         1,
@@ -717,12 +693,10 @@ QUnit.test('no code injection in message body preview', async function (assert) 
         model: "mail.channel",
         res_id: mailChannelId1,
     });
-    const { createMessagingMenuComponent } = await start();
+    const { click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_MessagingMenu_toggler`).click();
-    });
+    await click(`.o_MessagingMenu_toggler`);
     assert.containsOnce(
         document.body,
         '.o_MessagingMenu_dropdownMenu .o_ThreadPreview',
@@ -761,12 +735,10 @@ QUnit.test('no code injection in message body preview from sanitized message', a
         model: "mail.channel",
         res_id: mailChannelId1,
     });
-    const { createMessagingMenuComponent } = await start();
+    const { click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_MessagingMenu_toggler`).click();
-    });
+    await click(`.o_MessagingMenu_toggler`);
     assert.containsOnce(
         document.body,
         '.o_MessagingMenu_dropdownMenu .o_ThreadPreview',
@@ -805,12 +777,10 @@ QUnit.test('<br/> tags in message body preview are transformed in spaces', async
         model: "mail.channel",
         res_id: mailChannelId1,
     });
-    const { createMessagingMenuComponent } = await start();
+    const { click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_MessagingMenu_toggler`).click();
-    });
+    await click(`.o_MessagingMenu_toggler`);
     assert.containsOnce(
         document.body,
         '.o_MessagingMenu_dropdownMenu .o_ThreadPreview',
@@ -836,7 +806,7 @@ QUnit.test('<br/> tags in message body preview are transformed in spaces', async
 QUnit.test('rendering with OdooBot has a request (default)', async function (assert) {
     assert.expect(4);
 
-    const { createMessagingMenuComponent } = await start({
+    const { click, createMessagingMenuComponent } = await start({
         env: {
             browser: {
                 Notification: {
@@ -857,9 +827,7 @@ QUnit.test('rendering with OdooBot has a request (default)', async function (ass
         "should display a counter of '1' next to the messaging menu"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_MessagingMenu_toggler').click()
-    );
+    await click('.o_MessagingMenu_toggler');
     assert.containsOnce(
         document.body,
         '.o_NotificationRequest',
@@ -875,7 +843,7 @@ QUnit.test('rendering with OdooBot has a request (default)', async function (ass
 QUnit.test('rendering without OdooBot has a request (denied)', async function (assert) {
     assert.expect(2);
 
-    const { createMessagingMenuComponent } = await start({
+    const { click, createMessagingMenuComponent } = await start({
         env: {
             browser: {
                 Notification: {
@@ -892,9 +860,7 @@ QUnit.test('rendering without OdooBot has a request (denied)', async function (a
         "should not display a notification counter next to the messaging menu"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_MessagingMenu_toggler').click()
-    );
+    await click('.o_MessagingMenu_toggler');
     assert.containsNone(
         document.body,
         '.o_NotificationRequest',
@@ -905,7 +871,7 @@ QUnit.test('rendering without OdooBot has a request (denied)', async function (a
 QUnit.test('rendering without OdooBot has a request (accepted)', async function (assert) {
     assert.expect(2);
 
-    const { createMessagingMenuComponent } = await start({
+    const { click, createMessagingMenuComponent } = await start({
         env: {
             browser: {
                 Notification: {
@@ -922,9 +888,7 @@ QUnit.test('rendering without OdooBot has a request (accepted)', async function 
         "should not display a notification counter next to the messaging menu"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_MessagingMenu_toggler').click()
-    );
+    await click('.o_MessagingMenu_toggler');
     assert.containsNone(
         document.body,
         '.o_NotificationRequest',
@@ -935,7 +899,7 @@ QUnit.test('rendering without OdooBot has a request (accepted)', async function 
 QUnit.test('respond to notification prompt (denied)', async function (assert) {
     assert.expect(4);
 
-    const { createMessagingMenuComponent } = await start({
+    const { click, createMessagingMenuComponent } = await start({
         env: {
             browser: {
                 Notification: {
@@ -959,12 +923,8 @@ QUnit.test('respond to notification prompt (denied)', async function (assert) {
     });
     await createMessagingMenuComponent();
 
-    await afterNextRender(() =>
-        document.querySelector('.o_MessagingMenu_toggler').click()
-    );
-    await afterNextRender(() =>
-        document.querySelector('.o_NotificationRequest').click()
-    );
+    await click('.o_MessagingMenu_toggler');
+    await click('.o_NotificationRequest');
     assert.verifySteps([
         "should display a toast notification with the deny confirmation",
     ]);
@@ -975,9 +935,7 @@ QUnit.test('respond to notification prompt (denied)', async function (assert) {
         "should not display a notification counter next to the messaging menu"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_MessagingMenu_toggler').click()
-    );
+    await click('.o_MessagingMenu_toggler');
     assert.containsNone(
         document.body,
         '.o_NotificationRequest',
@@ -993,15 +951,11 @@ QUnit.test('Group chat should be displayed inside the chat section of the messag
         channel_type: 'group',
         is_pinned: true,
     });
-    const { createMessagingMenuComponent, messaging } = await start();
+    const { click, createMessagingMenuComponent, messaging } = await start();
     await createMessagingMenuComponent();
 
-    await afterNextRender(() =>
-        document.querySelector('.o_MessagingMenu_toggler').click()
-    );
-    await afterNextRender(() =>
-        document.querySelector(`.o_MessagingMenu_tabButton[data-tab-id="chat"]`).click()
-    );
+    await click('.o_MessagingMenu_toggler');
+    await click(`.o_MessagingMenu_tabButton[data-tab-id="chat"]`);
 
     assert.strictEqual(
         document.querySelectorAll(`

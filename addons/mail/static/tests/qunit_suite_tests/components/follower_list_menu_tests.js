@@ -2,7 +2,6 @@
 
 import { insert, link } from '@mail/model/model_field_command';
 import {
-    afterNextRender,
     createRootMessagingComponent,
     start,
     startServer,
@@ -64,7 +63,7 @@ QUnit.test('base rendering not editable', async function (assert) {
 QUnit.test('base rendering editable', async function (assert) {
     assert.expect(5);
 
-    const { messaging, widget } = await start();
+    const { click, messaging, widget } = await start();
     const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
@@ -92,9 +91,7 @@ QUnit.test('base rendering editable', async function (assert) {
         "followers dropdown should not be opened"
     );
 
-    await afterNextRender(() => {
-        document.querySelector('.o_FollowerListMenu_buttonFollowers').click();
-    });
+    await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
         document.body,
         '.o_FollowerListMenu_dropdown',
@@ -144,7 +141,7 @@ QUnit.test('click on "add followers" button', async function (assert) {
         pyEnv['res.partner'].write([payload.action.context.default_res_id], { message_follower_ids: [mailFollowerId1] });
         payload.options.on_close();
     });
-    const { messaging, widget } = await start({ env: { bus } });
+    const { click, messaging, widget } = await start({ env: { bus } });
     const thread = messaging.models['Thread'].create({
         hasWriteAccess: true,
         id: resPartnerId1,
@@ -168,9 +165,7 @@ QUnit.test('click on "add followers" button', async function (assert) {
         "Followers counter should be equal to 0"
     );
 
-    await afterNextRender(() => {
-        document.querySelector('.o_FollowerListMenu_buttonFollowers').click();
-    });
+    await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
         document.body,
         '.o_FollowerListMenu_dropdown',
@@ -182,9 +177,7 @@ QUnit.test('click on "add followers" button', async function (assert) {
         "followers dropdown should contain a 'Add followers' button"
     );
 
-    await afterNextRender(() => {
-        document.querySelector('.o_FollowerListMenu_addFollowersButton').click();
-    });
+    await click('.o_FollowerListMenu_addFollowersButton');
     assert.containsNone(
         document.body,
         '.o_FollowerListMenu_dropdown',
@@ -199,9 +192,7 @@ QUnit.test('click on "add followers" button', async function (assert) {
         "Followers counter should now be equal to 1"
     );
 
-    await afterNextRender(() => {
-        document.querySelector('.o_FollowerListMenu_buttonFollowers').click();
-    });
+    await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
         document.body,
         '.o_FollowerMenu_follower',
@@ -219,7 +210,7 @@ QUnit.test('click on remove follower', async function (assert) {
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    const { messaging, widget } = await start({
+    const { click, messaging, widget } = await start({
         async mockRPC(route, args) {
             if (route.includes('message_unsubscribe')) {
                 assert.step('message_unsubscribe');
@@ -248,9 +239,7 @@ QUnit.test('click on remove follower', async function (assert) {
     });
     await this.createFollowerListMenuComponent(thread, widget.el);
 
-    await afterNextRender(() => {
-        document.querySelector('.o_FollowerListMenu_buttonFollowers').click();
-    });
+    await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
         document.body,
         '.o_Follower',
@@ -262,9 +251,7 @@ QUnit.test('click on remove follower', async function (assert) {
         "should display a remove button"
     );
 
-    await afterNextRender(() => {
-        document.querySelector('.o_Follower_removeButton').click();
-    });
+    await click('.o_Follower_removeButton');
     assert.verifySteps(
         ['message_unsubscribe'],
         "clicking on remove button should call 'message_unsubscribe' route"
@@ -411,7 +398,7 @@ QUnit.test('Show "Add follower" and subtypes edition/removal buttons on all foll
 QUnit.test('Show "No Followers" dropdown-item if there are no followers and user dose not have write access', async function (assert) {
     assert.expect(1);
 
-    const { messaging, widget } = await start();
+    const { click, messaging, widget } = await start();
     const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
@@ -419,9 +406,7 @@ QUnit.test('Show "No Followers" dropdown-item if there are no followers and user
     });
 
     await this.createFollowerListMenuComponent(thread, widget.el);
-    await afterNextRender(() => {
-        document.querySelector('.o_FollowerListMenu_buttonFollowers').click();
-    });
+    await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
         document.body,
         '.o_FollowerListMenu_noFollowers.disabled',

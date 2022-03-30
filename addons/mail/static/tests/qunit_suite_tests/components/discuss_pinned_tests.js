@@ -41,7 +41,7 @@ QUnit.test('sidebar: pinned channel 2: open pinned channel', async function (ass
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { messaging } = await start({
+    const { click, messaging } = await start({
         autoOpenDiscuss: true,
         hasDiscuss: true,
     });
@@ -50,11 +50,9 @@ QUnit.test('sidebar: pinned channel 2: open pinned channel', async function (ass
         id: mailChannelId1,
         model: 'mail.channel',
     });
-    await afterNextRender(() =>
-        document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            threadGeneral.localId
-        }"]`).click()
-    );
+    await click(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
+        threadGeneral.localId
+    }"]`);
     assert.containsOnce(
         document.body,
         `.o_Discuss_thread[data-thread-local-id="${threadGeneral.localId}"]`,
@@ -70,7 +68,7 @@ QUnit.test('sidebar: pinned channel 3: open channel and leave it', async functio
         is_minimized: true,
         state: 'open',
     });
-    const { messaging } = await start({
+    const { click, messaging } = await start({
         autoOpenDiscuss: true,
         hasDiscuss: true,
         async mockRPC(route, args) {
@@ -88,15 +86,12 @@ QUnit.test('sidebar: pinned channel 3: open channel and leave it', async functio
         id: mailChannelId1,
         model: 'mail.channel',
     });
-    await afterNextRender(() =>
-        document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            threadGeneral.localId
-        }"]`).click()
-    );
+    await click(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
+        threadGeneral.localId
+    }"]`);
     assert.verifySteps([], "action_unfollow is not called yet");
-    await afterNextRender(() =>
-        document.querySelector('.o_DiscussSidebarCategoryItem_commandLeave').click()
-    );
+
+    await click('.o_DiscussSidebarCategoryItem_commandLeave');
     assert.verifySteps(
         [
             'action_unfollow'
@@ -120,7 +115,7 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { env, messaging } = await start({
+    const { click, env, messaging } = await start({
         autoOpenDiscuss: true,
         hasDiscuss: true,
     });
@@ -140,11 +135,9 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
         "1 channel is present in discuss sidebar and it is 'general'"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            threadGeneral.localId
-        }"]`).click()
-    );
+    await click(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
+        threadGeneral.localId
+    }"]`);
     assert.containsOnce(
         document.body,
         `.o_Discuss_thread[data-thread-local-id="${threadGeneral.localId}"]`,

@@ -149,7 +149,7 @@ QUnit.test('click on "follow" button', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { messaging, widget } = await start({
+    const { click, messaging, widget } = await start({
         async mockRPC(route, args) {
             if (route.includes('message_subscribe')) {
                 assert.step('rpc:message_subscribe');
@@ -173,9 +173,7 @@ QUnit.test('click on "follow" button', async function (assert) {
         "should have button follow"
     );
 
-    await afterNextRender(() => {
-        document.querySelector('.o_FollowButton_follow').click();
-    });
+    await click('.o_FollowButton_follow');
     assert.verifySteps([
         'rpc:message_subscribe',
     ]);
@@ -202,7 +200,7 @@ QUnit.test('click on "unfollow" button', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { messaging, widget } = await start({
+    const { click, messaging, widget } = await start({
         async mockRPC(route, args) {
             if (route.includes('message_unsubscribe')) {
                 assert.step('rpc:message_unsubscribe');
@@ -232,7 +230,7 @@ QUnit.test('click on "unfollow" button', async function (assert) {
         "should have button unfollow"
     );
 
-    await afterNextRender(() => document.querySelector('.o_FollowButton_unfollow').click());
+    await click('.o_FollowButton_unfollow');
     assert.verifySteps(['rpc:message_unsubscribe']);
     assert.containsOnce(
         document.body,
