@@ -262,7 +262,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
                 "a", "There should be a field facet with label 'a'");
         });
 
-        QUnit.skipWOWL('autocomplete input is trimmed', async function (assert) {
+        QUnit.test('autocomplete input is trimmed', async function (assert) {
             assert.expect(3);
 
             let searchReadCount = 0;

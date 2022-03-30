@@ -11,6 +11,7 @@ import {
     patchWithCleanup,
     triggerEvent,
     triggerEvents,
+    triggerScroll,
 } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
@@ -4152,8 +4153,11 @@ QUnit.module("Fields", (hooks) => {
         ]);
     });
 
-    QUnit.test("many2one dropdown disappears on scroll", async function (assert) {
-        assert.expect(2);
+    QUnit.skipWOWL("many2one dropdown disappears on scroll", async function (assert) {
+        assert.expect(4);
+
+        serverData.models.partner.records[0].display_name =
+            "Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery Loooooooooooooooooooooooooooooooooooooooooooong Naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaame";
 
         await makeView({
             type: "form",
@@ -4172,16 +4176,15 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_form_button_edit");
 
         await click(target, ".o_field_many2one input");
-        assert.isVisible(
-            target.querySelector(".o_field_many2one .dropdown-menu"),
-            "dropdown should be opened"
-        );
+        assert.containsOnce(target, ".o_field_many2one .dropdown-menu");
 
-        await triggerEvent(target, null, "scroll");
-        assert.isNotVisible(
-            target.querySelector(".o_field_many2one .dropdown-menu"),
-            "dropdown should be closed"
-        );
+        const dropdown = document.querySelector(".o_field_many2one .dropdown-menu");
+        await triggerScroll(dropdown, { left: 50 }, false);
+        assert.strictEqual(dropdown.scrollLeft, 50, "a scroll happened");
+        assert.containsOnce(target, ".o_field_many2one .dropdown-menu");
+
+        await triggerScroll(target, { top: 50 });
+        assert.containsNone(target, ".o_field_many2one .dropdown-menu");
     });
 
     QUnit.skipWOWL("x2many list sorted by many2one", async function (assert) {
