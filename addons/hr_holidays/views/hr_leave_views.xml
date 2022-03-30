@@ -219,6 +219,9 @@
                     <span attrs="{'invisible': [('holiday_type', '!=', 'company')]}">
                         The company has a different timezone than yours! Here dates and times are displayed in the company's timezone
                     </span>
+                    <span attrs="{'invisible': [('holiday_type', '!=', 'category')]}">
+                        Some employees in the category have a different timezone than the company's! Here dates and times are displayed in the company's timezone
+                    </span>
                     (<field name="tz"/>).
                 </div>
                 <field name="tz_mismatch" invisible="1"/>

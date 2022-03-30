@@ -528,7 +528,10 @@ class HolidaysRequest(models.Model):
     @api.depends_context('uid')
     def _compute_tz_mismatch(self):
         for leave in self:
-            leave.tz_mismatch = leave.tz != self.env.user.tz
+            if leave.holiday_type == 'category':
+                leave.tz_mismatch = bool(leave.category_id.employee_ids.filtered(lambda employee: employee.tz != leave.tz))
+            else:
+                leave.tz_mismatch = leave.tz != self.env.user.tz
 
     @api.depends('request_unit_custom', 'employee_id', 'holiday_type', 'department_id.company_id.resource_calendar_id.tz', 'mode_company_id.resource_calendar_id.tz')
     def _compute_tz(self):
@@ -541,6 +544,8 @@ class HolidaysRequest(models.Model):
             elif leave.holiday_type == 'department':
                 tz = leave.department_id.company_id.resource_calendar_id.tz
             elif leave.holiday_type == 'company':
+                tz = leave.mode_company_id.resource_calendar_id.tz
+            elif leave.holiday_type == 'category':
                 tz = leave.mode_company_id.resource_calendar_id.tz
             leave.tz = tz or self.env.company.resource_calendar_id.tz or self.env.user.tz or 'UTC'
 
