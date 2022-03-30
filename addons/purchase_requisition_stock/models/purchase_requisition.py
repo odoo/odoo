@@ -7,18 +7,13 @@ from odoo import fields, models
 class PurchaseRequisition(models.Model):
     _inherit = 'purchase.requisition'
 
-    def _get_picking_in(self):
-        pick_in = self.env.ref('stock.picking_type_in', raise_if_not_found=False)
-        company = self.env.company
-        if not pick_in or not pick_in.active or pick_in.sudo().warehouse_id.company_id.id != company.id:
-            pick_in = self.env['stock.picking.type'].search(
-                [('warehouse_id.company_id', '=', company.id), ('code', '=', 'incoming')],
-                limit=1,
-            )
-        return pick_in
+    def _default_picking_type_id(self):
+        return self.env['stock.picking.type'].search([('warehouse_id.company_id', '=', self.env.company.id), ('code', '=', 'incoming')], limit=1)
 
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', domain="[('company_id', '=', company_id)]")
-    picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', required=True, default=_get_picking_in, domain="['|',('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]")
+    picking_type_id = fields.Many2one(
+        'stock.picking.type', 'Operation Type', required=True, default=_default_picking_type_id,
+        domain="['|',('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]")
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group')
 
     def _prepare_tender_values(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
