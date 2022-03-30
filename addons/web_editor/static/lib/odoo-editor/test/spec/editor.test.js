@@ -3228,6 +3228,19 @@ X[]
                 });
             });
         });
+        describe('step', () => {
+            it('should allow insertion of nested contenteditable="true"', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<div contenteditable="false"></div>`,
+                    stepFunction: async editor => {
+                        const editable = '<div contenteditable="true">abc</div>';
+                        editor.editable.querySelector('div').innerHTML = editable;
+                        editor.historyStep();
+                    },
+                    contentAfter: `<div contenteditable="false"><div contenteditable="true">abc</div></div>`,
+                });
+            });
+        });
     });
 
     // Note that arrow keys test have a contentAfter that is not reflective of
