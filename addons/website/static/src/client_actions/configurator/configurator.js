@@ -591,6 +591,14 @@ class Configurator extends Component {
         this.action = useService('action');
         this.router = useService('router');
 
+        // Using the back button must update the router state.
+        window.addEventListener("popstate", () => {
+            const match = window.location.pathname.match(/\/website\/configurator\/(.*)$/);
+            const step = parseInt(match && match[1], 10) || 1;
+            // Do not use navigate because URL is already updated.
+            this.state.currentStep = step;
+        });
+        
         const initialStep = this.props.action.context.params && this.props.action.context.params.step;
         const store = reactive(new Store(), () => this.updateStorage(store));
 
