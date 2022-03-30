@@ -49,7 +49,6 @@ class SlidesPortalChatter(PortalChatter):
         domain = [
             ('model', '=', res_model),
             ('res_id', '=', res_id),
-            ('is_internal', '=', False),
             ('author_id', '=', request.env.user.partner_id.id),
             ('message_type', '=', 'comment'),
             ('id', '=', message_id)
