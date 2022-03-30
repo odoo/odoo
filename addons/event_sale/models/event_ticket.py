@@ -50,20 +50,16 @@ class EventTemplateTicket(models.Model):
     # context_dependent, core part of the pricelist mess
     # This field usage should be restricted to the UX, and any use in effective
     # price computation should be replaced by clear calls to the pricelist API
-    @api.depends_context('uom', 'qty', 'pricelist') # Cf product.price context dependencies
-    @api.depends('product_id', 'price')
+    @api.depends_context('uom', 'quantity', 'pricelist')  # Cf product._get_contextual_price() context dependencies
+    @api.depends('product_id', 'price')  # price is indirectly injected into product through context variable
     def _compute_price_reduce(self):
         for ticket in self:
-            product = ticket.product_id
-            pricelist = product.product_tmpl_id._get_contextual_pricelist()
-            lst_price = product.currency_id._convert(
-                product.lst_price,
-                pricelist.currency_id,
-                self.env.company,
-                fields.Datetime.now()
-            )
-            discount = (lst_price - product._get_contextual_price()) / lst_price if lst_price else 0.0
-            ticket.price_reduce = (1.0 - discount) * ticket.price
+            currency = ticket.product_id._get_contextual_pricelist().currency_id or self.env.company.currency_id
+            ticket.price_reduce = currency._convert(
+                ticket.product_id.with_context({
+                    **self._context,
+                    'record_being_sold': ticket.id,
+                })._get_contextual_price(), ticket.currency_id, ticket.company_id, fields.Date.today(), round=False)
 
     def _init_column(self, column_name):
         if column_name != "product_id":
@@ -117,22 +113,20 @@ class EventTicket(models.Model):
         string='Price include', compute='_compute_price_incl',
         digits='Product Price', readonly=False)
 
+    # Cf price_reduce dependencies
+    @api.depends_context('uom', 'quantity', 'pricelist')
+    @api.depends('price', 'product_id', 'product_id.taxes_id')
     def _compute_price_reduce_taxinc(self):
-        for event in self:
-            # sudo necessary here since the field is most probably accessed through the website
-            tax_ids = event.product_id.taxes_id.filtered(lambda r: r.company_id == event.event_id.company_id)
-            taxes = tax_ids.compute_all(event.price_reduce, event.event_id.company_id.currency_id, 1.0, product=event.product_id)
-            event.price_reduce_taxinc = taxes['total_included']
+        for ticket in self:
+            ticket.price_reduce_taxinc = ticket._tax_compute(ticket.price_reduce, ticket.currency_id)
 
     @api.depends('product_id', 'product_id.taxes_id', 'price')
     def _compute_price_incl(self):
-        for event in self:
-            if event.product_id and event.price:
-                tax_ids = event.product_id.taxes_id.filtered(lambda r: r.company_id == event.event_id.company_id)
-                taxes = tax_ids.compute_all(event.price, event.currency_id, 1.0, product=event.product_id)
-                event.price_incl = taxes['total_included']
+        for ticket in self:
+            if ticket.product_id and ticket.price:
+                ticket.price_incl = ticket._tax_compute(ticket.price, ticket.currency_id)
             else:
-                event.price_incl = 0
+                ticket.price_incl = 0
 
     @api.depends('product_id.active')
     def _compute_sale_available(self):
@@ -148,3 +142,10 @@ class EventTicket(models.Model):
         if self.product_id.description_sale:
             return '%s\n%s' % (self.product_id.description_sale, self.event_id.display_name)
         return super(EventTicket, self)._get_ticket_multiline_description()
+
+    def _tax_compute(self, price, currency):
+        """ Helper function to compute the price tax included for the event (self). """
+        self.ensure_one()
+        tax_ids = self.product_id.taxes_id.filtered(lambda r: r.company_id == self.event_id.company_id)
+        taxes = tax_ids.compute_all(price, currency, 1.0, product=self.product_id)
+        return taxes['total_included']

@@ -60,7 +60,7 @@ class TestWebsiteEventSaleCommon(TransactionCase):
             'pricelist_id': cls.pricelist.id,
         })
 
-        def create_pricelist(currency, name, policy):
+        def create_pricelist(currency, name, policy, min_quantity=0):
             return cls.env['product.pricelist'].create({
                 'currency_id': currency.id,
                 'discount_policy': policy,
@@ -68,6 +68,7 @@ class TestWebsiteEventSaleCommon(TransactionCase):
                     'applied_on': '3_global',
                     'compute_price': 'percentage',
                     'percent_price': 10,
+                    'min_quantity': min_quantity,
                 })],
                 'name': name,
                 'selectable': True,
@@ -77,3 +78,6 @@ class TestWebsiteEventSaleCommon(TransactionCase):
         cls.pricelist_without_discount = create_pricelist(currency=cls.env.company.currency_id, name='EUR Without Discount Included', policy='without_discount')
         cls.ex_pricelist_with_discount = create_pricelist(currency=cls.currency_test, name='EX With Discount Included', policy='with_discount')
         cls.ex_pricelist_without_discount = create_pricelist(currency=cls.currency_test, name='EX Without Discount Included', policy='without_discount')
+        # Name of a pricelist cannot be included in another one as they are selected with "contains" -> EUR2
+        cls.pricelist_min_qty_2_with_discount = create_pricelist(currency=cls.env.company.currency_id, name='EUR2 With Discount Included Min Qty 2', policy='with_discount', min_quantity=2)
+        cls.pricelist_min_qty_2_without_discount = create_pricelist(currency=cls.env.company.currency_id, name='EUR2 Without Discount Included Min Qty 2', policy='without_discount', min_quantity=2)

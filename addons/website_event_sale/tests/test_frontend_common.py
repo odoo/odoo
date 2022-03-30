@@ -29,17 +29,18 @@ class TestFrontendCommon(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
             'website_published': True,
         })
 
-        self.env['event.event.ticket'].create([{
+        event_product = self.env.ref('event_sale.product_product_event')
+        self.event_ticket_std, self.event_ticket_vip = self.env['event.event.ticket'].create([{
             'name': 'Standard',
             'event_id': self.event_2.id,
-            'product_id': self.env.ref('event_sale.product_product_event').id,
+            'product_id': event_product.id,
             'start_sale_datetime': (Datetime.today() - timedelta(days=5)).strftime('%Y-%m-%d 07:00:00'),
             'end_sale_datetime': (Datetime.today() + timedelta(90)).strftime('%Y-%m-%d'),
             'price': 1000.0,
         }, {
             'name': 'VIP',
             'event_id': self.event_2.id,
-            'product_id': self.env.ref('event_sale.product_product_event').id,
+            'product_id': event_product.id,
             'end_sale_datetime': (Datetime.today() + timedelta(90)).strftime('%Y-%m-%d'),
             'price': 1500.0,
         }])
@@ -75,3 +76,17 @@ class TestFrontendCommon(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
         })
 
         self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
+
+    def setup_tax_10(self, ticket):
+        ticket.product_id.write({
+            'taxes_id': [self.env['account.tax'].create({
+                'name': "Tax 10",
+                'amount': 10,
+            }).id],
+        })
+
+    def setup_display_tax_incl(self, pricelist=None):
+        self.env['res.config.settings'].create({'show_line_subtotals_tax_selection': 'tax_included'}).execute()
+        if pricelist:
+            # Changing tax setting update the discount policy, so we need to reset it
+            pricelist.discount_policy = 'without_discount'

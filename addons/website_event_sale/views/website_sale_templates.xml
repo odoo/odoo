@@ -90,4 +90,17 @@
         </xpath>
     </template>
 
+    <template id="event_ticket_price">
+        <del t-if="price_not_reduced > price and discount_policy == 'without_discount'"
+             class="text-danger me-1"
+             t-out="price_not_reduced"
+             t-options="{'widget': 'monetary', 'from_currency': currency.sudo(), 'display_currency': website.currency_id}"/>
+        <t t-if="price > 0">
+            <span t-out="price"
+                  t-options="{'widget': 'monetary', 'from_currency': currency.sudo(), 'display_currency': website.currency_id}"/>
+            /ticket
+        </t>
+        <span t-else="" class="fw-bold text-uppercase">Free</span>
+    </template>
+
 </odoo>

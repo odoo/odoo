@@ -61,3 +61,10 @@ class TestFrontendBuyTickets(TestFrontendCommon):
     def test_pricelists_different_currencies(self):
         self.start_tour("/", 'event_sale_pricelists_different_currencies', login='admin')
     # TO DO - add public test with new address when convert to web.tour format.
+
+    def test_pricelists_min_quantity_and_tax(self):
+        self.setup_tax_10(self.ticket)
+        self.setup_display_tax_incl()
+        # Changing tax setting update the discount policy, so we need to reset it
+        self.pricelist_min_qty_2_without_discount.discount_policy = 'without_discount'
+        self.start_tour("/", 'event_sale_pricelists_min_quantity_and_tax', login='admin')
