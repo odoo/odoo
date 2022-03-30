@@ -68,8 +68,9 @@ class GoogleEvent(abc.Set):
 
     @property
     def rrule(self):
-        if self.recurrence and 'RRULE:' in self.recurrence[0]:  # LUL TODO what if there are something else in the list?
-            return self.recurrence[0][6:]  # skip "RRULE:" in the rrule string
+        if self.recurrence and any('RRULE' in item for item in self.recurrence):
+            rrule = next(item for item in self.recurrence if 'RRULE' in item)
+            return rrule[6:]  # skip "RRULE:" in the rrule string
 
     def odoo_id(self, env):
         self.odoo_ids(env)  # load ids
