@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import hashlib
 import json
 import logging
@@ -10,7 +9,7 @@ from odoo import api, http, models
 from odoo.http import request
 from odoo.tools import file_open, image_process, ustr
 from odoo.tools.misc import str2bool
-from odoo.addons.web.controllers.main import HomeStaticTemplateHelpers
+from odoo.addons.web.controllers.utils import HomeStaticTemplateHelpers
 
 
 _logger = logging.getLogger(__name__)

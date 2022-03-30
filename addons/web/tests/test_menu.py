@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests.common import BaseCase
-from ..controllers import main
+from odoo.addons.web.controllers.utils import fix_view_modes
 
 
 class ActionMungerTest(BaseCase):
@@ -15,7 +14,7 @@ class ActionMungerTest(BaseCase):
         }
         changed = action.copy()
         del action['view_type']
-        main.fix_view_modes(changed)
+        fix_view_modes(changed)
 
         self.assertEqual(changed, action)
 
@@ -27,7 +26,7 @@ class ActionMungerTest(BaseCase):
             "view_id": False,
             "view_mode": "tree,form,calendar"
         }
-        main.fix_view_modes(action)
+        fix_view_modes(action)
 
         self.assertEqual(action, {
             "views": [[False, "list"], [False, "form"],
@@ -45,7 +44,7 @@ class ActionMungerTest(BaseCase):
             "view_id": False,
             "view_mode": "tree,form,calendar"
         }
-        main.fix_view_modes(action)
+        fix_view_modes(action)
 
         self.assertEqual(action, {
             "views": [[False, "list"], [False, "form"],
