@@ -469,7 +469,8 @@ class IrHttp(models.AbstractModel):
         content, headers, status = None, [], None
 
         if record._name == 'ir.attachment':
-            status, content, filename, mimetype, filehash = self._binary_ir_attachment_redirect_content(record, default_mimetype=default_mimetype)
+            status, content, default_filename, mimetype, filehash = self._binary_ir_attachment_redirect_content(record, default_mimetype=default_mimetype)
+            filename = filename or default_filename
         if not content:
             status, content, filename, mimetype, filehash = self._binary_record_content(
                 record, field=field, filename=filename, filename_field=filename_field,
