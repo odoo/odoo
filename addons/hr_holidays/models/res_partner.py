@@ -30,8 +30,10 @@ class ResPartner(models.Model):
         for partner in self:
             # in the rare case of multi-user partner, return the earliest possible return date
             dates = partner.mapped('user_ids.leave_date_to')
+            states = partner.mapped('user_ids.current_leave_state')
             date = sorted(dates)[0] if dates and all(dates) else False
+            state = sorted(states)[0] if states and all(states) else False
             partners_format.get(partner).update({
-                'out_of_office_date_end': date.strftime(DEFAULT_SERVER_DATE_FORMAT) if date else False,
+                'out_of_office_date_end': date.strftime(DEFAULT_SERVER_DATE_FORMAT) if state == 'validate' and date else False,
             })
         return partners_format
