@@ -23,6 +23,7 @@ export class ProgressBarField extends Component {
             }
         });
     }
+
     getInitialValue(part) {
         if (this.props[part]) {
             let value;
@@ -37,6 +38,12 @@ export class ProgressBarField extends Component {
             return value;
         }
         return part === "maxValue" ? 100 : this.props.record.data[this.props.name] || 0;
+    }
+
+    getHumanValue(part) {
+        return this.props.format(this.state[part], {
+            humanReadable: true,
+        });
     }
 
     /**

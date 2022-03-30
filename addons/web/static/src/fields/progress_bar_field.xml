@@ -8,10 +8,10 @@
                     <div class="o_progressbar_complete" t-att-style="'width: min(' + 100 * state.currentValue / state.maxValue + '%, 100%)'"></div>
                 </div>
                 <t t-if="props.maxValue">
-                    <div class="o_progressbar_value" t-esc="state.currentValue + ' / ' + state.maxValue"/>
+                    <div class="o_progressbar_value" t-esc="getHumanValue('currentValue') + ' / ' + getHumanValue('maxValue')"/>
                 </t>
                 <t t-else="">
-                    <span class="o_progressbar_value" t-esc="state.currentValue + '%'"/>
+                    <span class="o_progressbar_value" t-esc="getHumanValue('currentValue') + '%'"/>
                 </t>
             </div>
         </t>

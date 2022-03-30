@@ -204,7 +204,7 @@ QUnit.module("Fields", (hooks) => {
 
             assert.strictEqual(
                 target.querySelector(".o_progressbar_value").innerText,
-                "69 / 0.44444",
+                "69 / 0",
                 "New value should be different than initial after click"
             );
         }
@@ -239,7 +239,7 @@ QUnit.module("Fields", (hooks) => {
 
             assert.strictEqual(
                 target.querySelector(".o_progressbar_value").innerText,
-                "99 / 0.44444",
+                "99 / 0",
                 "Initial value should be correct"
             );
             // The view should be in edit mode by default
@@ -294,7 +294,7 @@ QUnit.module("Fields", (hooks) => {
 
             assert.strictEqual(
                 target.querySelector(".o_progressbar_value").innerText,
-                "99 / 0.44444",
+                "99 / 0",
                 "Initial value should be correct"
             );
             // The view should be in edit mode by default
@@ -316,7 +316,7 @@ QUnit.module("Fields", (hooks) => {
 
             assert.strictEqual(
                 target.querySelector(".o_progressbar_value").innerText,
-                "2000 / 69",
+                "2k / 69",
                 "New value should be different than initial after click"
             );
         }
@@ -345,7 +345,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.strictEqual(
             target.querySelector(".o_progressbar_value").innerText,
-            "99 / 0.44444",
+            "99 / 0",
             "Initial value should be correct"
         );
 
@@ -410,7 +410,7 @@ QUnit.module("Fields", (hooks) => {
 
             assert.strictEqual(
                 target.querySelector(".o_progressbar_value").innerText,
-                "1037%",
+                "1k%",
                 "New value should be different than initial after click"
             );
         }
