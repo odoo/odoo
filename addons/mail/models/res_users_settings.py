@@ -24,9 +24,9 @@ class ResUsersSettings(models.Model):
 
     @api.model
     def _find_or_create_for_user(self, user):
-        settings = user.res_users_settings_ids
+        settings = user.sudo().res_users_settings_ids
         if not settings:
-            settings = self.create({'user_id': user.id})
+            settings = self.sudo().create({'user_id': user.id})
         return settings
 
     def _res_users_settings_format(self):

@@ -1551,7 +1551,7 @@ class HttpCase(TransactionCase):
 
         return session
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, **kw):
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, **kw):
         """ Test js code running in the browser
         - optionnally log as 'login'
         - load page given by url_path
@@ -1583,6 +1583,9 @@ class HttpCase(TransactionCase):
             if self.browser.screencasts_dir:
                 self._logger.info('Starting screencast')
                 self.browser.start_screencast()
+            if cookies:
+                for name, value in cookies.items():
+                    self.browser.set_cookie(name, value, '/', HOST)
             self.browser.navigate_to(url, wait_stop=not bool(ready))
 
             # Needed because tests like test01.js (qunit tests) are passing a ready
