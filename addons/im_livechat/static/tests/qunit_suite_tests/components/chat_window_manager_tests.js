@@ -28,7 +28,7 @@ QUnit.test('closing a chat window with no message from admin side unpins it', as
             channel_type: "livechat",
             id: 10,
             is_pinned: true,
-            members: [this.data.currentPartnerId, 10],
+            channel_partner_ids: [this.data.currentPartnerId, 10],
             uuid: 'channel-10-uuid',
         },
     );

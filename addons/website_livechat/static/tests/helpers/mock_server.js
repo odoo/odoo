@@ -64,7 +64,7 @@ MockServer.include({
                 anonymous_name: visitor_name,
                 channel_type: 'livechat',
                 livechat_operator_id: this.currentPartnerId,
-                members,
+                channel_partner_ids: members,
                 public: 'private',
             });
             // notify operator

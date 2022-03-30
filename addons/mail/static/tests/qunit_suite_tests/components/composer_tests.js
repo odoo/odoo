@@ -177,7 +177,7 @@ QUnit.test('composer text input placeholder should contain correspondent name wh
     const resPartnerId1 = pyEnv['res.partner'].create({ name: 'Marc Demo' });
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        members: [pyEnv.currentPartnerId, resPartnerId1],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
     const { createComposerComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({

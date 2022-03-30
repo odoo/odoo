@@ -29,7 +29,7 @@ QUnit.test('livechat - avatar: should have a smiley face avatar for an anonymous
         channel_type: 'livechat',
         id: 11,
         livechat_operator_id: this.data.currentPartnerId,
-        members: [this.data.currentPartnerId, this.data.currentPartnerId],
+        channel_partner_ids: [this.data.currentPartnerId, this.data.currentPartnerId],
     });
     const { messaging } = await this.start();
 
@@ -64,7 +64,7 @@ QUnit.test('livechat - avatar: should have a partner profile picture for a livec
         channel_type: 'livechat',
         id: 11,
         livechat_operator_id: this.data.currentPartnerId,
-        members: [this.data.currentPartnerId, 10],
+        channel_partner_ids: [this.data.currentPartnerId, 10],
     });
     const { messaging } = await this.start();
 

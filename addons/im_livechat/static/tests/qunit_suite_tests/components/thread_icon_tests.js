@@ -30,7 +30,7 @@ QUnit.test('livechat: public website visitor is typing', async function (assert)
         channel_type: 'livechat',
         id: 20,
         livechat_operator_id: this.data.currentPartnerId,
-        members: [this.data.currentPartnerId, this.data.publicPartnerId],
+        channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
     const { messaging, widget } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({

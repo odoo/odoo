@@ -253,7 +253,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
     const resPartnerId1 = pyEnv['res.partner'].create({ display_name: "Recipient" });
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        members: [pyEnv.currentPartnerId, resPartnerId1],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
     const { createThreadViewComponent, messaging, widget } = await start();
     const currentPartner = messaging.models['Partner'].insert({
@@ -315,7 +315,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
     const resPartnerId1 = pyEnv['res.partner'].create({ display_name: "Recipient" });
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        members: [pyEnv.currentPartnerId, resPartnerId1],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
     const { createThreadViewComponent, messaging, widget } = await start();
     const currentPartner = messaging.models['Partner'].insert({
@@ -376,7 +376,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
     const resPartnerId1 = pyEnv['res.partner'].create({ display_name: "Recipient" });
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        members: [pyEnv.currentPartnerId, resPartnerId1],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
     const { createThreadViewComponent, messaging, widget } = await start();
     const currentPartner = messaging.models['Partner'].insert({
@@ -877,7 +877,7 @@ QUnit.test('open chat with author on avatar click should be disabled when curren
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        members: [pyEnv.currentPartnerId, resPartnerId1],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
         public: 'private',
     });
     pyEnv['mail.message'].create({
