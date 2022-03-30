@@ -12,8 +12,6 @@ class ImLivechatChannel(models.Model):
         visitor_sudo = self.env['website.visitor']._get_visitor_from_request()
         if visitor_sudo:
             mail_channel_vals['livechat_visitor_id'] = visitor_sudo.id
-            if not user_id:
-                mail_channel_vals['anonymous_name'] = visitor_sudo.display_name + (' (%s)' % visitor_sudo.country_id.name if visitor_sudo.country_id else '')
             # As chat requested by the visitor, delete the chat requested by an operator if any to avoid conflicts between two flows
             # TODO DBE : Move this into the proper method (open or init mail channel)
             chat_request_channel = self.env['mail.channel'].sudo().search([('livechat_visitor_id', '=', visitor_sudo.id), ('livechat_active', '=', True)])
