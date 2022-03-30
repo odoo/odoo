@@ -1579,8 +1579,8 @@ exports.Product = Backbone.Model.extend({
             return (! item.product_tmpl_id || item.product_tmpl_id[0] === self.product_tmpl_id) &&
                    (! item.product_id || item.product_id[0] === self.id) &&
                    (! item.categ_id || _.contains(category_ids, item.categ_id[0])) &&
-                   (! item.date_start || moment(item.date_start).isSameOrBefore(date)) &&
-                   (! item.date_end || moment(item.date_end).isSameOrAfter(date));
+                   (! item.date_start || moment.utc(item.date_start).isSameOrBefore(date)) &&
+                   (! item.date_end || moment.utc(item.date_end).isSameOrAfter(date));
         });
 
         var price = self.lst_price;
