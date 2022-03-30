@@ -21,7 +21,7 @@ QUnit.test('should display the channel invitation form after clicking on the inv
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        members: [pyEnv.currentPartnerId, resPartnerId1],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
         public: 'private',
     });
     const { click } = await start({
@@ -57,7 +57,7 @@ QUnit.test('should be able to search for a new user to invite from an existing c
     pyEnv['res.users'].create({ partner_id: resPartnerId2 });
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        members: [pyEnv.currentPartnerId, resPartnerId1],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
         public: 'private',
     });
     const { click } = await start({
@@ -94,7 +94,7 @@ QUnit.test('should be able to create a new group chat from an existing chat', as
     pyEnv['res.users'].create({ partner_id: resPartnerId2 });
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        members: [pyEnv.currentPartnerId, resPartnerId1],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
         public: 'private',
     });
     const { click } = await start({

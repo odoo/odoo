@@ -97,7 +97,7 @@ MockServer.include({
         // remove active test to ensure public partner is taken into account
         let members = this._getRecords(
             'res.partner',
-            [['id', 'in', mailChannel.members]],
+            [['id', 'in', mailChannel.channel_partner_ids]],
             { active_test: false },
         );
         members = members.filter(member => member.id !== mailChannel.livechat_operator_id);
@@ -163,17 +163,17 @@ MockServer.include({
     _mockImLivechatChannel_getLivechatMailChannelVals(id, anonymous_name, operator, user_id, country_id) {
         // partner to add to the mail.channel
         const operator_partner_id = operator.partner_id;
-        const members = [[4, operator_partner_id]];
+        const channel_partner_ids = [[4, operator_partner_id]];
         let visitor_user;
         if (user_id) {
             const visitor_user = this._getRecords('res.users', [['id', '=', user_id]])[0];
             if (visitor_user && visitor_user.active) {
                 // valid session user (not public)
-                members.push([4, visitor_user.partner_id.id]);
+                channel_partner_ids.push([4, visitor_user.partner_id.id]);
             }
         } else {
             // for simplicity of not having mocked channel.partner, add public partner here
-            members.push([4, this.publicPartnerId]);
+            channel_partner_ids.push([4, this.publicPartnerId]);
         }
         const membersName = [
             visitor_user ? visitor_user.display_name : anonymous_name,
@@ -186,7 +186,7 @@ MockServer.include({
             // defaults that would set it to true) and here operator and visitor
             // can't be differentiated in that regard.
             'is_pinned': false,
-            'members': members, // channel_partner_ids
+            'channel_partner_ids': channel_partner_ids,
             'livechat_active': true,
             'livechat_operator_id': operator_partner_id,
             'livechat_channel_id': id,
@@ -247,7 +247,7 @@ MockServer.include({
         const livechats = this._getRecords('mail.channel', [
             ['channel_type', '=', 'livechat'],
             ['is_pinned', '=', true],
-            ['members', 'in', partner.id],
+            ['channel_partner_ids', 'in', partner.id],
         ]);
         return [
             ...this._super(ids),

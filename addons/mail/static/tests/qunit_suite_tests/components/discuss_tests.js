@@ -611,7 +611,7 @@ QUnit.test('sidebar: basic chat rendering', async function (assert) {
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo" });
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat', // testing a chat is the goal of the test
-        members: [pyEnv.currentPartnerId, resPartnerId1], // expected partners
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1], // expected partners
         public: 'private', // expected value for testing a chat
     });
     const { messaging } = await this.start();
@@ -711,17 +711,17 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
     const [mailChannelId1, mailChannelId2, mailChannelId3] = pyEnv['mail.channel'].create([
         {
             channel_type: 'chat', // testing a chat is the goal of the test
-            members: [pyEnv.currentPartnerId, resPartnerId1], // expected partners
+            channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1], // expected partners
             public: 'private', // expected value for testing a chat
         },
         {
             channel_type: 'chat', // testing a chat is the goal of the test
-            members: [pyEnv.currentPartnerId, resPartnerId2], // expected partners
+            channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId2], // expected partners
             public: 'private', // expected value for testing a chat
         },
         {
             channel_type: 'chat', // testing a chat is the goal of the test
-            members: [pyEnv.currentPartnerId, resPartnerId3], // expected partners
+            channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId3], // expected partners
             public: 'private', // expected value for testing a chat
         }
     ]);
@@ -822,7 +822,7 @@ QUnit.test('sidebar: chat custom name', async function (assert) {
     pyEnv['mail.channel'].create({
         channel_type: 'chat', // testing a chat is the goal of the test
         custom_channel_name: "Marc", // testing a custom name is the goal of the test
-        members: [pyEnv.currentPartnerId, resPartnerId1], // expected partners
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1], // expected partners
         public: 'private', // expected value for testing a chat
     });
     await this.start();
@@ -2009,7 +2009,7 @@ QUnit.test('redirect to author (open chat)', async function (assert) {
         { name: "General" },
         {
             channel_type: 'chat', // testing a chat is the goal of the test
-            members: [pyEnv.currentPartnerId, resPartnerId1], // expected partners
+            channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1], // expected partners
             public: 'private', // expected value for testing a chat
         }
     ]);
@@ -3693,7 +3693,7 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
         { name: "General" },
         {
             channel_type: 'chat', // testing a chat is the goal of the test
-            members: [pyEnv.currentPartnerId, resPartnerId1], // expected partners
+            channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1], // expected partners
             public: 'private', // expected value for testing a chat
         }
     ]);

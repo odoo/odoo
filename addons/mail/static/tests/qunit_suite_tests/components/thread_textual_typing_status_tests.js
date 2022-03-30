@@ -29,7 +29,7 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
     this.data['res.partner'].records.push({ id: 17, name: 'Demo' });
     this.data['mail.channel'].records.push({
         id: 20,
-        members: [this.data.currentPartnerId, 17],
+        channel_partner_ids: [this.data.currentPartnerId, 17],
     });
     const { messaging, widget } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -69,7 +69,7 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
     this.data['res.partner'].records.push({ id: 17, name: 'Demo' });
     this.data['mail.channel'].records.push({
         id: 20,
-        members: [this.data.currentPartnerId, 17],
+        channel_partner_ids: [this.data.currentPartnerId, 17],
     });
     const { messaging, widget } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -127,7 +127,7 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
     this.data['res.partner'].records.push({ id: 17, name: 'Demo' });
     this.data['mail.channel'].records.push({
         id: 20,
-        members: [this.data.currentPartnerId, 17],
+        channel_partner_ids: [this.data.currentPartnerId, 17],
     });
     const { env, messaging, widget } = await start({ data: this.data, hasTimeControl: true });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -174,7 +174,7 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
     this.data['res.partner'].records.push({ id: 17, name: 'Demo' });
     this.data['mail.channel'].records.push({
         id: 20,
-        members: [this.data.currentPartnerId, 17],
+        channel_partner_ids: [this.data.currentPartnerId, 17],
     });
     const { env, messaging, widget } = await start({
         data: this.data,
@@ -247,7 +247,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
     );
     this.data['mail.channel'].records.push({
         id: 20,
-        members: [this.data.currentPartnerId, 10, 11, 12],
+        channel_partner_ids: [this.data.currentPartnerId, 10, 11, 12],
     });
     const { messaging, widget } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({

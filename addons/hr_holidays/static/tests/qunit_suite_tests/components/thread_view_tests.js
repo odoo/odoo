@@ -28,7 +28,7 @@ QUnit.test('out of office message on direct chat with out of office partner', as
     this.data['mail.channel'].records = [{
         channel_type: 'chat',
         id: 20,
-        members: [this.data.currentPartnerId, 11],
+        channel_partner_ids: [this.data.currentPartnerId, 11],
     }];
     const { createThreadViewComponent, messaging } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({

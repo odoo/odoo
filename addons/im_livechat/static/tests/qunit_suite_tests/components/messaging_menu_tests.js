@@ -22,7 +22,7 @@ QUnit.test('livechats should be in "chat" filter', async function (assert) {
         channel_type: 'livechat',
         id: 11,
         livechat_operator_id: this.data.currentPartnerId,
-        members: [this.data.currentPartnerId, this.data.publicPartnerId],
+        channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
     const { createMessagingMenuComponent, messaging } = await start({ data: this.data });
     await createMessagingMenuComponent();

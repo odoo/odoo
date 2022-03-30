@@ -328,7 +328,7 @@ QUnit.test('new message chat window should close on selecting the user if chat w
     pyEnv['mail.channel'].create({
         channel_type: "chat",
         is_minimized: true,
-        members: [pyEnv.currentPartnerId, resPartnerId1],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
         name: "Partner 131",
         public: 'private',
         state: 'open',
@@ -683,7 +683,7 @@ QUnit.test("Mobile: chat window shouldn't open automatically after receiving a n
         {
             channel_type: "chat",
             id: resPartnerId1,
-            members: [pyEnv.currentPartnerId, resPartnerId1],
+            channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
             uuid: 'channel-10-uuid',
         },
     ];
@@ -1217,7 +1217,7 @@ QUnit.test('open 2 folded chat windows: check shift operations are available', a
         channel_type: "chat",
         is_minimized: true,
         is_pinned: true,
-        members: [pyEnv.currentPartnerId, resPartnerId1],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
         state: 'folded',
     };
     pyEnv['mail.channel'].create([channel, chat]);
@@ -2054,7 +2054,7 @@ QUnit.test('new message separator is shown in a chat window of a chat on receivi
         channel_type: "chat",
         is_minimized: true,
         is_pinned: false,
-        members: [pyEnv.currentPartnerId, resPartnerId1],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
         uuid: 'channel-10-uuid',
     });
     pyEnv['mail.message'].create({
@@ -2101,7 +2101,7 @@ QUnit.test('new message separator is not shown in a chat window of a chat on rec
     const resUsersId1 = pyEnv['res.users'].create({ name: "Foreigner user", partner_id: resPartnerId1 });
     pyEnv['mail.channel'].create({
         channel_type: "chat",
-        members: [pyEnv.currentPartnerId, resPartnerId1],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
         uuid: 'channel-10-uuid',
     });
     const { env } = await this.start();
@@ -2134,7 +2134,7 @@ QUnit.test('focusing a chat window of a chat should make new message separator d
         channel_type: "chat",
         is_minimized: true,
         is_pinned: false,
-        members: [pyEnv.currentPartnerId, resPartnerId1],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
         message_unread_counter: 0,
         uuid: 'channel-10-uuid',
     });
@@ -2243,7 +2243,7 @@ QUnit.test('chat window should open when receiving a new DM', async function (as
     pyEnv['mail.channel'].create({
         channel_type: 'chat',
         is_pinned: false,
-        members: [pyEnv.currentPartnerId, resPartnerId1],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
         uuid: 'channel11uuid'
     });
     const { env } = await this.start();
@@ -2276,7 +2276,7 @@ QUnit.test('chat window should remain folded when new message is received', asyn
         channel_type: "chat",
         is_minimized: true,
         is_pinned: false,
-        members: [pyEnv.currentPartnerId, resPartnerId1],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
         state: 'folded',
         uuid: 'channel-10-uuid',
     });

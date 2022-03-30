@@ -34,7 +34,7 @@ QUnit.test('rendering of visitor banner', async function (assert) {
         id: 11,
         livechat_operator_id: this.data.currentPartnerId,
         livechat_visitor_id: 11,
-        members: [this.data.currentPartnerId, this.data.publicPartnerId],
+        channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
     await start({
         autoOpenDiscuss: true,
@@ -134,7 +134,7 @@ QUnit.test('livechat with non-logged visitor should show visitor banner', async 
         id: 11,
         livechat_operator_id: this.data.currentPartnerId,
         livechat_visitor_id: 11,
-        members: [this.data.currentPartnerId, this.data.publicPartnerId],
+        channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
     await start({
         autoOpenDiscuss: true,
@@ -179,7 +179,7 @@ QUnit.test('livechat with logged visitor should show visitor banner', async func
         id: 11,
         livechat_operator_id: this.data.currentPartnerId,
         livechat_visitor_id: 11,
-        members: [this.data.currentPartnerId, 12],
+        channel_partner_ids: [this.data.currentPartnerId, 12],
     });
     await start({
         autoOpenDiscuss: true,
@@ -211,7 +211,7 @@ QUnit.test('livechat without visitor should not show visitor banner', async func
         channel_type: 'livechat',
         id: 11,
         livechat_operator_id: this.data.currentPartnerId,
-        members: [this.data.currentPartnerId, 11],
+        channel_partner_ids: [this.data.currentPartnerId, 11],
     });
     await start({
         autoOpenDiscuss: true,

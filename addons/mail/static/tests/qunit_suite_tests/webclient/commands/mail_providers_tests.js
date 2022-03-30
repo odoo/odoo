@@ -69,11 +69,11 @@ QUnit.module('mail', {}, function () {
         const pyEnv = await startServer();
         pyEnv['mail.channel'].create({
             name: "general",
-            members: [pyEnv.currentPartnerId],
+            channel_partner_ids: [pyEnv.currentPartnerId],
         });
         pyEnv['mail.channel'].create({
             name: "project",
-            members: [pyEnv.currentPartnerId],
+            channel_partner_ids: [pyEnv.currentPartnerId],
         });
         const target = getFixture();
         await start({

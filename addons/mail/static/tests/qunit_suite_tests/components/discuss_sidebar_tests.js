@@ -17,7 +17,7 @@ QUnit.test('sidebar find shows channels matching search term', async function (a
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        members: [],
+        channel_partner_ids: [],
         name: 'test',
         public: 'public',
     });
@@ -69,7 +69,7 @@ QUnit.test('sidebar find shows channels matching search term even when user is m
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        members: [pyEnv.currentPartnerId],
+        channel_partner_ids: [pyEnv.currentPartnerId],
         name: 'test',
         public: 'public',
     });

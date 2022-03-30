@@ -25,7 +25,7 @@ QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
         channel_type: 'livechat',
         id: 11,
         livechat_operator_id: this.data.currentPartnerId,
-        members: [this.data.currentPartnerId, this.data.publicPartnerId],
+        channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
     const { messaging } = await start({
         autoOpenDiscuss: true,
@@ -81,7 +81,7 @@ QUnit.test('livechat in the sidebar: existing user with country', async function
         channel_type: 'livechat',
         id: 11,
         livechat_operator_id: this.data.currentPartnerId,
-        members: [this.data.currentPartnerId, 10],
+        channel_partner_ids: [this.data.currentPartnerId, 10],
     });
     await start({
         autoOpenDiscuss: true,
@@ -162,7 +162,7 @@ QUnit.test('do not add livechat in the sidebar on visitor typing', async functio
         is_pinned: false,
         livechat_channel_id: 10,
         livechat_operator_id: this.data.currentPartnerId,
-        members: [this.data.publicPartnerId, this.data.currentPartnerId],
+        channel_partner_ids: [this.data.publicPartnerId, this.data.currentPartnerId],
     });
     const { env } = await start({
         autoOpenDiscuss: true,
@@ -219,7 +219,7 @@ QUnit.test('add livechat in the sidebar on visitor sending first message', async
         is_pinned: false,
         livechat_channel_id: 10,
         livechat_operator_id: this.data.currentPartnerId,
-        members: [this.data.publicPartnerId, this.data.currentPartnerId],
+        channel_partner_ids: [this.data.publicPartnerId, this.data.currentPartnerId],
     });
     const { env } = await start({
         autoOpenDiscuss: true,
@@ -270,7 +270,7 @@ QUnit.test('livechats are sorted by last activity time in the sidebar: most rece
             channel_type: 'livechat',
             id: 11,
             livechat_operator_id: this.data.currentPartnerId,
-            members: [this.data.currentPartnerId, this.data.publicPartnerId],
+            channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
             last_interest_dt: datetime_to_str(new Date(2021, 0, 1)), // less recent one
         },
         {
@@ -278,7 +278,7 @@ QUnit.test('livechats are sorted by last activity time in the sidebar: most rece
             channel_type: 'livechat',
             id: 12,
             livechat_operator_id: this.data.currentPartnerId,
-            members: [this.data.currentPartnerId, this.data.publicPartnerId],
+            channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
             last_interest_dt: datetime_to_str(new Date(2021, 0, 2)), // more recent one
         },
     );
@@ -344,7 +344,7 @@ QUnit.test('invite button should be present on livechat', async function (assert
             channel_type: 'livechat',
             id: 11,
             livechat_operator_id: this.data.currentPartnerId,
-            members: [this.data.currentPartnerId, this.data.publicPartnerId],
+            channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
         },
     );
     await start({
