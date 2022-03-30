@@ -96,7 +96,7 @@ QUnit.test('openChat: open existing chat for user', async function (assert) {
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: "chat",
-        members: [pyEnv.currentPartnerId, resPartnerId1],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
         public: 'private',
     });
     const { messaging } = await start();

@@ -30,7 +30,7 @@ QUnit.test('livechat - counter: should not have a counter if the category is unf
         channel_type: 'livechat',
         id: 11,
         livechat_operator_id: this.data.currentPartnerId,
-        members: [this.data.currentPartnerId, this.data.publicPartnerId],
+        channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
     await this.start();
     assert.containsNone(
@@ -48,7 +48,7 @@ QUnit.test('livechat - counter: should not have a counter if the category is unf
         channel_type: 'livechat',
         id: 11,
         livechat_operator_id: this.data.currentPartnerId,
-        members: [this.data.currentPartnerId, this.data.publicPartnerId],
+        channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
         message_unread_counter: 10,
     });
     await this.start();
@@ -67,7 +67,7 @@ QUnit.test('livechat - counter: should not have a counter if category is folded 
         channel_type: 'livechat',
         id: 11,
         livechat_operator_id: this.data.currentPartnerId,
-        members: [this.data.currentPartnerId, this.data.publicPartnerId],
+        channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
     this.data['res.users.settings'].records.push({
         user_id: this.data.currentUserId,
@@ -90,7 +90,7 @@ QUnit.test('livechat - counter: should have correct value of unread threads if c
         channel_type: 'livechat',
         id: 11,
         livechat_operator_id: this.data.currentPartnerId,
-        members: [this.data.currentPartnerId, this.data.publicPartnerId],
+        channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
         message_unread_counter: 10,
     });
     this.data['res.users.settings'].records.push({
@@ -114,7 +114,7 @@ QUnit.test('livechat - states: close manually by clicking the title', async func
         channel_type: 'livechat',
         id: 11,
         livechat_operator_id: this.data.currentPartnerId,
-        members: [this.data.currentPartnerId, this.data.publicPartnerId],
+        channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
     this.data['res.users.settings'].records.push({
         user_id: this.data.currentUserId,
@@ -159,7 +159,7 @@ QUnit.test('livechat - states: open manually by clicking the title', async funct
         channel_type: 'livechat',
         id: 11,
         livechat_operator_id: this.data.currentPartnerId,
-        members: [this.data.currentPartnerId, this.data.publicPartnerId],
+        channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
     this.data['res.users.settings'].records.push({
         user_id: this.data.currentUserId,
@@ -204,7 +204,7 @@ QUnit.test('livechat - states: close should update the value on the server', asy
         channel_type: 'livechat',
         id: 11,
         livechat_operator_id: this.data.currentPartnerId,
-        members: [this.data.currentPartnerId, this.data.publicPartnerId],
+        channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
     this.data['res.users.settings'].records.push({
         user_id: this.data.currentUserId,
@@ -250,7 +250,7 @@ QUnit.test('livechat - states: open should update the value on the server', asyn
         channel_type: 'livechat',
         id: 11,
         livechat_operator_id: this.data.currentPartnerId,
-        members: [this.data.currentPartnerId, this.data.publicPartnerId],
+        channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
     this.data['res.users.settings'].records.push({
         user_id: this.data.currentUserId,
@@ -296,7 +296,7 @@ QUnit.test('livechat - states: close from the bus', async function (assert) {
         channel_type: 'livechat',
         id: 11,
         livechat_operator_id: this.data.currentPartnerId,
-        members: [this.data.currentPartnerId, this.data.publicPartnerId],
+        channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
     const { env, messaging } = await this.start();
 
@@ -338,7 +338,7 @@ QUnit.test('livechat - states: open from the bus', async function (assert) {
         channel_type: 'livechat',
         id: 11,
         livechat_operator_id: this.data.currentPartnerId,
-        members: [this.data.currentPartnerId, this.data.publicPartnerId],
+        channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
     this.data['res.users.settings'].records.push({
         user_id: this.data.currentUserId,
@@ -385,7 +385,7 @@ QUnit.test('livechat - states: category item should be invisible if the catgory 
         channel_type: 'livechat',
         id: 11,
         livechat_operator_id: this.data.currentPartnerId,
-        members: [this.data.currentPartnerId, this.data.publicPartnerId],
+        channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
     const { messaging } = await this.start();
 
@@ -426,7 +426,7 @@ QUnit.test('livechat - states: the active category item should be visble even if
         channel_type: 'livechat',
         id: 11,
         livechat_operator_id: this.data.currentPartnerId,
-        members: [this.data.currentPartnerId, this.data.publicPartnerId],
+        channel_partner_ids: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
     const { messaging } = await this.start();
 

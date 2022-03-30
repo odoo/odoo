@@ -34,7 +34,7 @@ QUnit.test('dragover files on thread with composer', async function (assert) {
     this.data['mail.channel'].records.push({
         channel_type: 'channel',
         id: 100,
-        members: [this.data.currentPartnerId, 9, 10],
+        channel_partner_ids: [this.data.currentPartnerId, 9, 10],
         name: "General",
         public: 'public',
     });
@@ -83,7 +83,7 @@ QUnit.test('message list desc order', async function (assert) {
     this.data['mail.channel'].records.push({
         channel_type: 'channel',
         id: 100,
-        members: [this.data.currentPartnerId, 9, 10],
+        channel_partner_ids: [this.data.currentPartnerId, 9, 10],
         name: "General",
         public: 'public',
     });
@@ -182,7 +182,7 @@ QUnit.test('message list asc order', async function (assert) {
     this.data['mail.channel'].records.push({
         channel_type: 'channel',
         id: 100,
-        members: [this.data.currentPartnerId, 9, 10],
+        channel_partner_ids: [this.data.currentPartnerId, 9, 10],
         name: "General",
         public: 'public',
     });
@@ -270,7 +270,7 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
         channel_type: 'chat',
         id: 100,
         is_pinned: true,
-        members: [this.data.currentPartnerId, 10],
+        channel_partner_ids: [this.data.currentPartnerId, 10],
     });
     const { afterEvent, createThreadViewComponent, env, messaging } = await start({
         data: this.data,

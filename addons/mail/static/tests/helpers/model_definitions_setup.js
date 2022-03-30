@@ -44,6 +44,11 @@ insertModelFields('mail.channel', {
         },
     },
     avatarCacheKey: { string: "Avatar Cache Key", type: "datetime" },
+    channel_partner_ids: {
+        default() {
+            return [this.currentPartnerId];
+        },
+    },
     channel_type: { default: 'channel' },
     custom_channel_name: { string: "Custom channel name", type: 'char' },
     fetched_message_id: { relation: 'mail.message', string: "Last Fetched", type: 'many2one' },
@@ -51,14 +56,6 @@ insertModelFields('mail.channel', {
     is_minimized: { string: "isMinimized", type: "boolean" },
     is_pinned: { default: true, string: "isPinned", type: "boolean" },
     last_interest_dt: { string: "Last Interest", type: "datetime" },
-    members: {
-        default() {
-            return [this.currentPartnerId];
-        },
-        relation: 'res.partner',
-        string: "Members",
-        type: 'many2many'
-    },
     message_unread_counter: { string: 'Unread counter', type: 'integer' },
     seen_message_id:  { relation: 'mail.message', string: "Last Seen", type: 'many2one' },
     state: { default: 'open', string: "FoldState", type: "char" },

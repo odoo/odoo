@@ -92,7 +92,7 @@ QUnit.test('chat - avatar: should have correct avatar', async function (assert) 
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo", im_status: 'offline' });
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        members: [pyEnv.currentPartnerId, resPartnerId1],
+        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
         public: 'private',
     });
     const { messaging } = await start({
