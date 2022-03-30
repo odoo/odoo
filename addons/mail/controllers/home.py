@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import ipaddress
 
 from odoo import _, SUPERUSER_ID
 from odoo.http import request
-from odoo.addons.web.controllers import main as web
+from odoo.addons.web.controllers.home import Home as WebHome
 
 def _admin_password_warn(uid):
     """ Admin still has `admin` password, flash a message via chatter.
@@ -34,7 +34,7 @@ def _admin_password_warn(uid):
             subtype_xmlid='mail.mt_comment'
         )
 
-class Home(web.Home):
+class Home(WebHome):
     def _login_redirect(self, uid, redirect=None):
         if request.params.get('login_success'):
             _admin_password_warn(uid)

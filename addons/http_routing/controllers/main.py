@@ -1,9 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.web.controllers.main import WebClient, Home, Session
+from odoo.addons.web.controllers.home import Home
+from odoo.addons.web.controllers.session import Session
+from odoo.addons.web.controllers.webclient import WebClient
 
 
 class Routing(Home):

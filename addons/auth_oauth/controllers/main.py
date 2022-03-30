@@ -16,7 +16,7 @@ from odoo.http import request
 from odoo import registry as registry_get
 
 from odoo.addons.auth_signup.controllers.main import AuthSignupHome as Home
-from odoo.addons.web.controllers.main import ensure_db, _get_login_redirect_url
+from odoo.addons.web.controllers.utils import ensure_db, _get_login_redirect_url
 
 
 _logger = logging.getLogger(__name__)

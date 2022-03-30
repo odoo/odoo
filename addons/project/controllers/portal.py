@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import OrderedDict
@@ -13,7 +12,7 @@ from odoo.tools import groupby as groupbyelem
 
 from odoo.osv.expression import OR, AND
 
-from odoo.addons.web.controllers.main import HomeStaticTemplateHelpers
+from odoo.addons.web.controllers.utils import HomeStaticTemplateHelpers
 
 
 class ProjectCustomerPortal(CustomerPortal):

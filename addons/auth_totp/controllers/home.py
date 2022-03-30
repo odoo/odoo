@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 import re
 
-import odoo.addons.web.controllers.main
 from odoo import http, _
 from odoo.exceptions import AccessDenied
 from odoo.http import request
+from odoo.addons.web.controllers import home as web_home
 
 TRUSTED_DEVICE_COOKIE = 'td_id'
 TRUSTED_DEVICE_AGE = 90*86400 # 90 days expiration
 
 
-class Home(odoo.addons.web.controllers.main.Home):
+class Home(web_home.Home):
     @http.route(
         '/web/login/totp',
         type='http', auth='public', methods=['GET', 'POST'], sitemap=False,
