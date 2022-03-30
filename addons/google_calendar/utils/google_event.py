@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from contextlib import suppress
 from odoo.tools import email_normalize
 import logging
 from typing import Iterator, Mapping
@@ -63,7 +63,7 @@ class GoogleEvent(abc.Set):
 
     @property
     def rrule(self):
-        if self.recurrence:
+        with suppress(StopIteration, TypeError):
             # Find the rrule in the list
             rrule = next(rr for rr in self.recurrence if 'RRULE:' in rr)
             return rrule[6:] # skip "RRULE:" in the rrule string
