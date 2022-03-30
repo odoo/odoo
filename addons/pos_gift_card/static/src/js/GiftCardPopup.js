@@ -1,8 +1,9 @@
 odoo.define("pos_gift_card.GiftCardPopup", function (require) {
   "use strict";
 
-  const { useState, useRef } = owl.hooks;
+  const { useState } = owl.hooks;
   const AbstractAwaitablePopup = require("point_of_sale.AbstractAwaitablePopup");
+  const { useBarcodeReader } = require("point_of_sale.custom_hooks");
   const Registries = require("point_of_sale.Registries");
 
   class GiftCardPopup extends AbstractAwaitablePopup {
@@ -17,6 +18,16 @@ odoo.define("pos_gift_card.GiftCardPopup", function (require) {
         amountToSet: 0,
         giftCardBarcode: "",
       });
+      useBarcodeReader(
+        {
+          gift_card: this._onGiftScan,
+        },
+        true
+      );
+    }
+
+    _onGiftScan(code) {
+      this.state.giftCardBarcode = code.base_code;
     }
 
     switchBarcodeView() {
