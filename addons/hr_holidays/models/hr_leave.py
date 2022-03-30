@@ -119,7 +119,7 @@ class HolidaysRequest(models.Model):
             new_values['request_date_to'] = values['date_to'].date()
         return new_values
 
-    active = fields.Boolean(default=True)
+    active = fields.Boolean(default=True, readonly=True)
     # description
     name = fields.Char('Description', compute='_compute_description', inverse='_inverse_description', search='_search_description', compute_sudo=False)
     private_name = fields.Char('Time Off Description', groups='hr_holidays.group_hr_holidays_user')
@@ -633,9 +633,9 @@ class HolidaysRequest(models.Model):
     @api.depends_context('uid')
     @api.depends('state', 'employee_id')
     def _compute_can_cancel(self):
-        today = fields.Datetime.today()
+        now = fields.Datetime.now()
         for leave in self:
-            leave.can_cancel = leave.id and leave.employee_id.user_id == self.env.user and leave.state == 'validate' and leave.date_from and leave.date_from > today
+            leave.can_cancel = leave.id and leave.employee_id.user_id == self.env.user and leave.state == 'validate' and leave.date_from and leave.date_from > now
 
     @api.depends('state')
     def _compute_is_hatched(self):
