@@ -1992,7 +1992,7 @@ class Form(object):
             return O2MProxy(self, field)
         return v
 
-    def _get_modifier(self, field, modifier, default=False, view=None, modmap=None, vals=None):
+    def _get_modifier(self, /, field, modifier, *, default=False, view=None, modmap=None, vals=None):
         if view is None:
             view = self._view
 
@@ -2407,7 +2407,7 @@ class O2MForm(Form):
             if hasattr(vals, '_changed'):
                 self._changed.update(vals._changed)
 
-    def _get_modifier(self, field, modifier, default=False, view=None, modmap=None, vals=None):
+    def _get_modifier(self, /, field, modifier, *, default=False, view=None, modmap=None, vals=None):
         if vals is None:
             vals = {**self._values, '•parent•': self._proxy._parent._values}
 
