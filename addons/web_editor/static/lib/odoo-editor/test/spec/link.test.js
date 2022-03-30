@@ -1,5 +1,6 @@
 import {
     BasicEditor,
+    click,
     insertText,
     insertParagraphBreak,
     insertLineBreak,
@@ -318,6 +319,32 @@ describe('Link', () => {
                     await insertText(editor, 'c');
                 },
                 contentAfter: '<p>a<a href="exist">b</a></p><p>c[]d</p>',
+            });
+        });
+        it('should restrict editing to link when clicked', async () => {
+            const initialContent = '<p>a<a href="#/"><span>b</span></a></p>';
+            const editFunction = editableLink => async editor => {
+                const a = editor.editable.querySelector('a');
+                await click(a, { clientX: a.getBoundingClientRect().left + 5 });
+                window.chai.expect(a.isContentEditable).to.be.equal(editableLink);
+            };
+            await testEditor(BasicEditor, {
+                contentBefore: initialContent,
+                stepFunction: editFunction(true),
+                contentAfter: '<p>a<a href="#/" contenteditable="true"><span>b</span></a></p>',
+            });
+            // The following is a regression test, checking that the link
+            // remains non-editable whenever the editable zone is contained by
+            // the link.
+            await testEditor(BasicEditor, {
+                contentBefore: initialContent,
+                stepFunction: editFunction(false),
+                contentAfter: '<p>a<a href="#/"><span contenteditable="true">b</span></a></p>',
+            }, {
+                isRootEditable: false,
+                getContentEditableAreas: function (editor) {
+                    return editor.editable.querySelectorAll('a span');
+                }
             });
         });
         // it('should select and replace all text and add the next char in bold', async () => {
