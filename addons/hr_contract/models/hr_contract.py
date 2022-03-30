@@ -98,7 +98,8 @@ class Contract(models.Model):
 
     @api.onchange('structure_type_id')
     def _onchange_structure_type_id(self):
-        if self.structure_type_id.default_resource_calendar_id:
+        default_calendar = self.structure_type_id.default_resource_calendar_id
+        if default_calendar and default_calendar.company_id == self.company_id:
             self.resource_calendar_id = self.structure_type_id.default_resource_calendar_id
 
     @api.constrains('employee_id', 'state', 'kanban_state', 'date_start', 'date_end')
