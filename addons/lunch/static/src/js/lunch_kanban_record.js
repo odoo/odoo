@@ -29,6 +29,8 @@ odoo.define('lunch.LunchKanbanRecord', function (require) {
                 this.trigger_up('open_wizard', {productId: this.recordData.product_id ? this.recordData.product_id.res_id: this.recordData.id});
             }
         },
+
+        _openRecord() {},
     });
 
     return LunchKanbanRecord;
