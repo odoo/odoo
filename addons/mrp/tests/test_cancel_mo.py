@@ -101,3 +101,39 @@ class TestMrpCancelMO(TestMrpCommon):
         self.assertEqual(manufacturing_order.exists().state, 'progress')
         with self.assertRaises(UserError):
             manufacturing_order.unlink()
+
+    def test_cancel_mo_with_workorder(self):
+        """
+            Create a manufacturing order without component and with a work order
+            and check that when you cancel the MO, the WO is also canceled.
+        """
+
+        bom = self.env['mrp.bom'].create({
+            'product_id': self.product_2.id,
+            'product_tmpl_id': self.product_2.product_tmpl_id.id,
+            'product_uom_id': self.product_2.uom_id.id,
+            'consumption': 'flexible',
+            'product_qty': 1.0,
+            'operation_ids': [
+                (0, 0, {'name': 'test_wo', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
+            ],
+            'type': 'normal',
+            'sequence': 2,
+            'bom_line_ids': []
+            })
+
+        # Create MO
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_2
+        production_form.bom_id = bom
+        manufacturing_order = production_form.save()
+
+        # Check that there is no component
+        self.assertFalse(manufacturing_order.move_raw_ids.id)
+
+        # Cancel the MO
+        manufacturing_order.action_cancel()
+
+        # Check that MO and WO are canceled
+        self.assertEqual(manufacturing_order.state, 'cancel', "MO should be in cancel state.")
+        self.assertEqual(manufacturing_order.workorder_ids.state, 'cancel', 'MO work orders must be cancelled as well.')

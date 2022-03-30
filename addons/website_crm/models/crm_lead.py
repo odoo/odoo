@@ -20,7 +20,7 @@ class Lead(models.Model):
                         JOIN crm_lead_website_visitor_rel lv ON l.id = lv.crm_lead_id
                         JOIN website_visitor v ON v.id = lv.website_visitor_id
                         JOIN website_track p ON p.visitor_id = v.id
-                        WHERE l.id in %s
+                        WHERE l.id in %s AND v.active = TRUE
                         GROUP BY l.id"""
             self.env.cr.execute(sql, (tuple(self.ids),))
             page_data = self.env.cr.dictfetchall()
