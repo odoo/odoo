@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from datetime import datetime
 
 from odoo import api, fields, models
@@ -61,10 +62,13 @@ class Partner(models.Model):
         """
         attendees_details = []
         meetings = self.env['calendar.event'].browse(meeting_ids)
-        meetings_attendees = meetings.mapped('attendee_ids')
+        all_attendees = meetings.attendee_ids
+        attendees_by_partner = defaultdict(lambda: self.env['calendar.attendee'])
+        for attendee in all_attendees:
+            attendees_by_partner[attendee.partner_id.id] += attendee
         for partner in self:
-            partner_info = partner.name_get()[0]
-            for attendee in meetings_attendees.filtered(lambda att: att.partner_id == partner):
+            partner_info = partner.display_name
+            for attendee in attendees_by_partner[partner.id]:
                 attendee_is_organizer = self.env.user == attendee.event_id.user_id and attendee.partner_id == self.env.user.partner_id
                 attendees_details.append({
                     'id': partner_info[0],

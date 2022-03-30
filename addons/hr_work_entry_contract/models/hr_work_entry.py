@@ -73,19 +73,42 @@ class HrWorkEntry(models.Model):
                 continue
             super(HrWorkEntry, work_entry)._compute_date_stop()
 
-    def _get_duration(self, date_start, date_stop):
-        if not date_start or not date_stop:
-            return 0
-        if self._get_duration_is_valid():
-            calendar = self.contract_id.resource_calendar_id
+    def _is_duration_computed_from_calendar(self):
+        self.ensure_one()
+        return self._get_duration_is_valid()
+
+    def _get_duration_batch(self):
+        super_work_entries = self.env['hr.work.entry']
+        result = {}
+        # {(date_start, date_stop): {calendar: employees}}
+        mapped_periods = defaultdict(lambda: defaultdict(lambda: self.env['hr.employee']))
+        for work_entry in self:
+            if not work_entry.date_start or not work_entry.date_stop or not work_entry._is_duration_computed_from_calendar():
+                super_work_entries |= work_entry
+                continue
+            date_start = work_entry.date_start
+            date_stop = work_entry.date_stop
+            calendar = work_entry.contract_id.resource_calendar_id
             if not calendar:
-                return 0
-            employee = self.contract_id.employee_id
-            contract_data = employee._get_work_days_data_batch(
-                date_start, date_stop, compute_leaves=False, calendar=calendar
-            )[employee.id]
-            return contract_data.get('hours', 0)
-        return super()._get_duration(date_start, date_stop)
+                result[work_entry.id] = 0.0
+                continue
+            employee = work_entry.contract_id.employee_id
+            mapped_periods[(date_start, date_stop)][calendar] |= employee
+
+        # {(date_start, date_stop): {calendar: {'hours': foo}}}
+        mapped_contract_data = defaultdict(lambda: defaultdict(lambda: {'hours': 0.0}))
+        for (date_start, date_stop), employees_by_calendar in mapped_periods.items():
+            for calendar, employees in employees_by_calendar.items():
+                mapped_contract_data[(date_start, date_stop)][calendar] = employees._get_work_days_data_batch(
+                    date_start, date_stop, compute_leaves=False, calendar=calendar)
+        result = super(HrWorkEntry, super_work_entries)._get_duration_batch()
+        for work_entry in self - super_work_entries:
+            date_start = work_entry.date_start
+            date_stop = work_entry.date_stop
+            calendar = work_entry.contract_id.resource_calendar_id
+            employee = work_entry.contract_id.employee_id
+            result[work_entry.id] = mapped_contract_data[(date_start, date_stop)][calendar][employee.id]['hours']
+        return result
 
     @api.model
     def _set_current_contract(self, vals):

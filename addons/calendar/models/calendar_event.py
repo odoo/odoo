@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from datetime import timedelta
 import math
 import logging
@@ -303,8 +304,9 @@ class Meeting(models.Model):
                 })
 
     def _compute_attendee(self):
+        mapped_attendees = self._find_attendee_batch()
         for meeting in self:
-            attendee = meeting._find_attendee()
+            attendee = mapped_attendees[meeting.id]
             meeting.attendee_status = attendee.state if attendee else 'needsAction'
 
     @api.constrains('start', 'stop', 'start_date', 'stop_date')
@@ -942,27 +944,46 @@ class Meeting(models.Model):
     # TOOLS
     # ------------------------------------------------------------
 
+    def _find_attendee_batch(self):
+        """ Return the first attendee where the user connected has been invited
+            or the attendee selected in the filter that is the owner
+            from all the meeting_ids in parameters.
+        """
+        result = defaultdict(lambda: self.env['calendar.attendee'])
+        self_attendees = self.attendee_ids.filtered(lambda a: a.partner_id == self.env.user.partner_id)
+        for attendee in self_attendees:
+            result[attendee.event_id.id] = attendee
+        remaining_events = self - self_attendees.event_id
+
+        events_checked_partners = self.env['calendar.filters'].search([
+            ('user_id', '=', self.env.user.id),
+            ('partner_id', 'in', remaining_events.attendee_ids.partner_id.ids),
+            ('partner_checked', '=', True)
+        ]).partner_id
+        filter_events = self.env['calendar.event']
+        for event in remaining_events:
+            event_partners = event.attendee_ids.partner_id
+            event_checked_partners = events_checked_partners & event_partners
+            if event.partner_id in event_checked_partners and event.partner_id in event_partners:
+                filter_events |= event
+                result[event.id] = event.attendee_ids.filtered(lambda attendee: attendee.partner_id == event.partner_id)[:1]
+        remaining_events -= filter_events
+
+        for event in remaining_events:
+            event_checked_partners = events_checked_partners & event_partners
+            attendee = event.attendee_ids.filtered(
+                lambda a: a.partner_id in event_checked_partners and a.state != "needsAction")
+            result[event.id] = attendee[:1]
+        return result
+
+    # YTI TODO MASTER: Remove deprecated method
     def _find_attendee(self):
         """ Return the first attendee where the user connected has been invited
             or the attendee selected in the filter that is the owner
             from all the meeting_ids in parameters.
         """
         self.ensure_one()
-
-        my_attendee = self.attendee_ids.filtered(lambda att: att.partner_id == self.env.user.partner_id)
-        if my_attendee:
-            return my_attendee[:1]
-
-        event_checked_attendees = self.env['calendar.filters'].search([
-            ('user_id', '=', self.env.user.id),
-            ('partner_id', 'in', self.attendee_ids.partner_id.ids),
-            ('partner_checked', '=', True)
-        ]).mapped('partner_id')
-        if self.partner_id in event_checked_attendees and self.partner_id in self.attendee_ids.partner_id:
-            return self.attendee_ids.filtered(lambda attendee: attendee.partner_id == self.partner_id)[:1]
-
-        attendee = self.attendee_ids.filtered(lambda att: att.partner_id in event_checked_attendees and att.state != "needsAction")
-        return attendee[:1]
+        return self._find_attendee_batch()[self.id]
 
     def _get_start_date(self):
         """Return the event starting date in the event's timezone.
