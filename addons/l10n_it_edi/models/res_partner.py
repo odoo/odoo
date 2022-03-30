@@ -36,10 +36,12 @@ class ResPartner(models.Model):
             return codice[2:13]
         return codice
 
-    @api.onchange('vat')
+    @api.onchange('vat', 'country_id')
     def _l10n_it_onchange_vat(self):
-        if not self.l10n_it_codice_fiscale:
+        if not self.l10n_it_codice_fiscale and (self.country_id.code == "IT" or (self.vat and self.vat.startswith("IT"))):
             self.l10n_it_codice_fiscale = self._l10n_it_normalize_codice_fiscale(self.vat)
+        elif self.country_id.code not in [False, "IT"]:
+            self.l10n_it_codice_fiscale = ""
 
     @api.constrains('l10n_it_codice_fiscale')
     def validate_codice_fiscale(self):
