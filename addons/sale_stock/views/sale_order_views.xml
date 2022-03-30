@@ -36,6 +36,9 @@
                     </div>
                     <field name="effective_date" attrs="{'invisible': [('effective_date', '=', False)]}"/>
                 </xpath>
+                <field name="effective_date" position="after">
+                    <field name="delivery_status" attrs="{'invisible': [('state', 'not in', ['sale', 'done'])]}"/>
+                </field>
                 <xpath expr="//page[@name='other_information']//field[@name='expected_date']" position="after">
                     <field name="show_json_popover" invisible="1"/>
                     <field string=" " name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
@@ -68,6 +71,13 @@
                 <xpath expr="//field[@name='team_id']" position="after">
                     <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" optional="hide"/>
                 </xpath>
+                <field name="invoice_status" position="before">
+                    <field name="effective_date" invisible="1"/>
+                    <field name="delivery_status" optional="hide" widget="badge"
+                        decoration-success="commitment_date and (commitment_date &gt; datetime.datetime.combine(datetime.date.today(), datetime.time(23,59,59)).to_utc().strftime('%Y-%m-%d %H:%M:%S') or delivery_status=='full' and effective_date &lt;= commitment_date)"
+                        decoration-danger="commitment_date and (commitment_date &lt; effective_date or commitment_date &lt; datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0)).to_utc().strftime('%Y-%m-%d %H:%M:%S') and delivery_status!='full' and effective_date &lt;= commitment_date)"
+                        decoration-warning="commitment_date and commitment_date &gt;= datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0)).to_utc().strftime('%Y-%m-%d %H:%M:%S') and commitment_date &lt;= datetime.datetime.combine(datetime.date.today(), datetime.time(23,59,59)).to_utc().strftime('%Y-%m-%d %H:%M:%S') and delivery_status!='full'"/>
+                </field>
             </field>
         </record>
 

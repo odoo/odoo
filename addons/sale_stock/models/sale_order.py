@@ -30,6 +30,11 @@ class SaleOrder(models.Model):
         check_company=True)
     picking_ids = fields.One2many('stock.picking', 'sale_id', string='Transfers')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
+    delivery_status = fields.Selection([
+        ('pending', 'Not Delivered'),
+        ('partial', 'Partially Delivered'),
+        ('full', 'Fully Delivered'),
+    ], string='Delivery Status', compute='_compute_delivery_status', store=True)
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
     effective_date = fields.Datetime("Effective Date", compute='_compute_effective_date', store=True, help="Completion date of the first delivery order.")
     expected_date = fields.Datetime( help="Delivery date you can promise to the customer, computed from the minimum lead time of "
@@ -65,6 +70,18 @@ class SaleOrder(models.Model):
             pickings = order.picking_ids.filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'customer')
             dates_list = [date for date in pickings.mapped('date_done') if date]
             order.effective_date = min(dates_list, default=False)
+
+    @api.depends('picking_ids', 'picking_ids.state')
+    def _compute_delivery_status(self):
+        for order in self:
+            if not order.picking_ids or all(p.state == 'cancel' for p in order.picking_ids):
+                order.delivery_status = False
+            elif all(p.state in ['done', 'cancel'] for p in order.picking_ids):
+                order.delivery_status = 'full'
+            elif any(p.state == 'done' for p in order.picking_ids):
+                order.delivery_status = 'partial'
+            else:
+                order.delivery_status = 'pending'
 
     @api.depends('picking_policy')
     def _compute_expected_date(self):
