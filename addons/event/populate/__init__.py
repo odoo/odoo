@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import controllers
-from . import models
-from . import populate
-from . import report
+from . import event_event
+from . import event_registration
+from . import event_ticket
