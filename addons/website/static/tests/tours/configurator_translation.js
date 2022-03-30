@@ -12,6 +12,17 @@ tour.register('configurator_translation', {
         content: "click next",
         trigger: 'button.o_configurator_show',
     },
+    // Make sure "Back" works
+    {
+        content: "use browser's Back",
+        trigger: 'a.o_change_website_type',
+        run: () => {
+            window.history.back();
+        },
+    }, {
+        content: "return to description screen",
+        trigger: 'button.o_configurator_show',
+    },
     // Description screen
     {
         content: "select a website type",

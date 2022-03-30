@@ -438,6 +438,13 @@ Object.assign(Configurator, {
 class Router {
     constructor() {
         this.location = window.location.pathname;
+        // Using the back button must update the router state.
+        const reactiveRouter = reactive(this);
+        const backListener = () => {
+            reactiveRouter.location = window.location.pathname;
+        };
+        window.addEventListener("popstate", backListener);
+        return reactiveRouter;
     }
 
     navigate(id) {
@@ -730,7 +737,7 @@ async function makeEnvironment() {
     updateStorage(state);
     const env = {
         state,
-        router: reactive(new Router()),
+        router: new Router(),
         services: Component.env.services,
     };
     await session.is_bound;
