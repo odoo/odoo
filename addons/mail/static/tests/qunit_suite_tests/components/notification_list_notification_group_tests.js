@@ -172,7 +172,7 @@ QUnit.test('grouped notifications by document', async function (assert) {
             notification_type: 'email', // expected failure type for email message
         }
     ]);
-    const { createNotificationListComponent } = await start({ hasChatWindow: true });
+    const { click, createNotificationListComponent } = await start({ hasChatWindow: true });
     await createNotificationListComponent();
 
     assert.containsOnce(
@@ -196,9 +196,7 @@ QUnit.test('grouped notifications by document', async function (assert) {
         "should have no chat window initially"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_NotificationGroup').click()
-    );
+    await click('.o_NotificationGroup');
     assert.containsOnce(
         document.body,
         '.o_ChatWindow',

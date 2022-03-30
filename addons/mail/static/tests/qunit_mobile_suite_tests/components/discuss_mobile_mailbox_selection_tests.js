@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import {
-    afterNextRender,
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
@@ -14,7 +13,7 @@ QUnit.module('discuss_mobile_mailbox_selection_tests.js');
 QUnit.test('select another mailbox', async function (assert) {
     assert.expect(7);
 
-    const { messaging } = await start({
+    const { click, messaging } = await start({
         autoOpenDiscuss: true,
         env: {
             browser: {
@@ -55,11 +54,9 @@ QUnit.test('select another mailbox', async function (assert) {
         "should have a button to open starred mailbox"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_DiscussMobileMailboxSelection_button[
-            data-mailbox-local-id="${messaging.starred.localId}"]
-        `).click()
-    );
+    await click(`.o_DiscussMobileMailboxSelection_button[
+        data-mailbox-local-id="${messaging.starred.localId}"]
+    `);
     assert.containsOnce(
         document.body,
         '.o_Discuss_thread',
@@ -78,7 +75,7 @@ QUnit.test('auto-select "Inbox" when discuss had channel as active thread', asyn
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
 
-    const { messaging } = await start({
+    const { click, messaging } = await start({
         autoOpenDiscuss: true,
         discuss: {
             context: {
@@ -102,7 +99,7 @@ QUnit.test('auto-select "Inbox" when discuss had channel as active thread', asyn
         "'channel' tab should be active initially when loading discuss with channel id as active_id"
     );
 
-    await afterNextRender(() => document.querySelector('.o_MobileMessagingNavbar_tab[data-tab-id="mailbox"]').click());
+    await click('.o_MobileMessagingNavbar_tab[data-tab-id="mailbox"]');
     assert.hasClass(
         document.querySelector('.o_MobileMessagingNavbar_tab[data-tab-id="mailbox"]'),
         'o-active',

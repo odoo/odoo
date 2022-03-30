@@ -109,7 +109,7 @@ QUnit.test('Notification Sent', async function (assert) {
         notification_type: 'email',
         res_partner_id: resPartnerId1,
     });
-    const { createThreadViewComponent, messaging } = await start();
+    const { click, createThreadViewComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -142,9 +142,7 @@ QUnit.test('Notification Sent', async function (assert) {
         "icon should represent email success"
     );
 
-    await afterNextRender(() => {
-        document.querySelector('.o_Message_notificationIconClickable').click();
-    });
+    await click('.o_Message_notificationIconClickable');
     assert.containsOnce(
         document.body,
         '.o_NotificationPopover',
@@ -623,7 +621,7 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
 QUnit.test('allow attachment delete on authored message', async function (assert) {
     assert.expect(5);
 
-    const { createMessageComponent, messaging } = await start({ hasDialog: true });
+    const { click, createMessageComponent, messaging } = await start({ hasDialog: true });
     const message = messaging.models['Message'].create({
         attachments: insertAndReplace({
             filename: "BLAH.jpg",
@@ -648,7 +646,7 @@ QUnit.test('allow attachment delete on authored message', async function (assert
         "should have delete attachment button"
     );
 
-    await afterNextRender(() => document.querySelector('.o_AttachmentImage_actionUnlink').click());
+    await click('.o_AttachmentImage_actionUnlink');
     assert.containsOnce(
         document.body,
         '.o_AttachmentDeleteConfirm',
@@ -660,9 +658,7 @@ QUnit.test('allow attachment delete on authored message', async function (assert
         "Confirmation dialog should contain the attachment delete confirmation text"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_AttachmentDeleteConfirm_confirmButton').click()
-    );
+    await click('.o_AttachmentDeleteConfirm_confirmButton');
     assert.containsNone(
         document.body,
         '.o_AttachmentCard',
@@ -799,7 +795,7 @@ QUnit.test('chat with author should be opened after clicking on his avatar', asy
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
-    const { createMessageComponent, messaging } = await start({ hasChatWindow: true });
+    const { click, createMessageComponent, messaging } = await start({ hasChatWindow: true });
     const message = messaging.models['Message'].create({
         author: insert({ id: resPartnerId1 }),
         id: 10,
@@ -816,9 +812,7 @@ QUnit.test('chat with author should be opened after clicking on his avatar', asy
         "author avatar should have the redirect style"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_Message_authorAvatar').click()
-    );
+    await click('.o_Message_authorAvatar');
     assert.containsOnce(
         document.body,
         '.o_ChatWindow_thread',
@@ -837,7 +831,7 @@ QUnit.test('chat with author should be opened after clicking on his im status ic
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
-    const { createMessageComponent, messaging } = await start({ hasChatWindow: true });
+    const { click, createMessageComponent, messaging } = await start({ hasChatWindow: true });
     const message = messaging.models['Message'].create({
         author: insert({ id: resPartnerId1, im_status: 'online' }),
         id: 10,
@@ -854,9 +848,7 @@ QUnit.test('chat with author should be opened after clicking on his im status ic
         "author im status icon should have the open chat style"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_Message_partnerImStatusIcon').click()
-    );
+    await click('.o_Message_partnerImStatusIcon');
     assert.containsOnce(
         document.body,
         '.o_ChatWindow_thread',

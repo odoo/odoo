@@ -2,7 +2,6 @@
 
 import { makeDeferred } from '@mail/utils/deferred';
 import {
-    afterNextRender,
     nextAnimationFrame,
     start,
     startServer,
@@ -23,7 +22,7 @@ QUnit.test('sidebar find shows channels matching search term', async function (a
         public: 'public',
     });
     const searchReadDef = makeDeferred();
-    await start({
+    const { click } = await start({
         autoOpenDiscuss: true,
         hasDiscuss: true,
         async mockRPC(route, args) {
@@ -34,9 +33,7 @@ QUnit.test('sidebar find shows channels matching search term', async function (a
             return res;
         },
     });
-    await afterNextRender(() =>
-        document.querySelector(`.o_DiscussSidebarCategory_commandAdd`).click()
-    );
+    await click(`.o_DiscussSidebarCategory_commandAdd`);
     document.querySelector(`.o_DiscussSidebarCategory_addingItem`).focus();
     document.execCommand('insertText', false, "test");
     document.querySelector(`.o_DiscussSidebarCategory_addingItem`)
@@ -77,7 +74,7 @@ QUnit.test('sidebar find shows channels matching search term even when user is m
         public: 'public',
     });
     const searchReadDef = makeDeferred();
-    await start({
+    const { click } = await start({
         autoOpenDiscuss: true,
         hasDiscuss: true,
         async mockRPC(route, args) {
@@ -88,9 +85,7 @@ QUnit.test('sidebar find shows channels matching search term even when user is m
             return res;
         },
     });
-    await afterNextRender(() =>
-        document.querySelector(`.o_DiscussSidebarCategory_commandAdd`).click()
-    );
+    await click(`.o_DiscussSidebarCategory_commandAdd`);
     document.querySelector(`.o_DiscussSidebarCategory_addingItem`).focus();
     document.execCommand('insertText', false, "test");
     document.querySelector(`.o_DiscussSidebarCategory_addingItem`)

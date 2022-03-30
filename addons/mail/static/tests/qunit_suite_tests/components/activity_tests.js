@@ -409,7 +409,7 @@ QUnit.test('activity details toggle', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start();
+    const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',
@@ -430,18 +430,14 @@ QUnit.test('activity details toggle', async function (assert) {
         "activity should have a details button"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_Activity_detailsButton').click()
-    );
+    await click('.o_Activity_detailsButton');
     assert.strictEqual(
         document.querySelectorAll('.o_Activity_details').length,
         1,
         "activity details should be visible after clicking on details button"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_Activity_detailsButton').click()
-    );
+    await click('.o_Activity_detailsButton');
     assert.strictEqual(
         document.querySelectorAll('.o_Activity_details').length,
         0,
@@ -469,7 +465,7 @@ QUnit.test('activity details layout', async function (assert) {
         state: 'planned',
         user_id: resUsersId1,
     });
-    const { createChatterContainerComponent } = await start();
+    const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',
@@ -490,9 +486,7 @@ QUnit.test('activity details layout', async function (assert) {
         "activity should have a details button"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_Activity_detailsButton').click()
-    );
+    await click('.o_Activity_detailsButton');
     assert.strictEqual(
         document.querySelectorAll('.o_Activity_details').length,
         1,
@@ -759,7 +753,7 @@ QUnit.test('activity click on mark as done', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start();
+    const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',
@@ -775,18 +769,14 @@ QUnit.test('activity click on mark as done', async function (assert) {
         "should have activity Mark as Done button"
     );
 
-    await afterNextRender(() => {
-        document.querySelector('.o_Activity_markDoneButton').click();
-    });
+    await click('.o_Activity_markDoneButton');
     assert.strictEqual(
         document.querySelectorAll('.o_ActivityMarkDonePopover').length,
         1,
         "should have opened the mark done popover"
     );
 
-    await afterNextRender(() => {
-        document.querySelector('.o_Activity_markDoneButton').click();
-    });
+    await click('.o_Activity_markDoneButton');
     assert.strictEqual(
         document.querySelectorAll('.o_ActivityMarkDonePopover').length,
         0,
@@ -807,7 +797,7 @@ QUnit.test('activity mark as done popover should focus feedback input on open [R
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start();
+    const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',
@@ -823,9 +813,7 @@ QUnit.test('activity mark as done popover should focus feedback input on open [R
         "should have activity Mark as Done button"
     );
 
-    await afterNextRender(() => {
-        document.querySelector('.o_Activity_markDoneButton').click();
-    });
+    await click('.o_Activity_markDoneButton');
     assert.strictEqual(
         document.querySelector('.o_ActivityMarkDonePopover_feedback'),
         document.activeElement,
@@ -941,7 +929,7 @@ QUnit.test('activity edition', async function (assert) {
         pyEnv['mail.activity'].write([mailActivityId1], { icon: 'fa-check' });
         payload.options.on_close();
     });
-    const { createChatterContainerComponent } = await start({ env: { bus } });
+    const { click, createChatterContainerComponent } = await start({ env: { bus } });
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',
@@ -972,9 +960,7 @@ QUnit.test('activity edition', async function (assert) {
         "should not have new activity icon when not edited yet"
     );
 
-    await afterNextRender(() => {
-        document.querySelector('.o_Activity_editButton').click();
-    });
+    await click('.o_Activity_editButton');
     assert.verifySteps(
         ['do_action'],
         "should have called 'schedule activity' action correctly"
@@ -1003,7 +989,7 @@ QUnit.test('activity click on cancel', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start({
+    const { click, createChatterContainerComponent } = await start({
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/unlink') {
                 assert.step('unlink');
@@ -1030,9 +1016,7 @@ QUnit.test('activity click on cancel', async function (assert) {
         "should have activity cancel button"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_Activity_cancelButton').click()
-    );
+    await click('.o_Activity_cancelButton');
     assert.verifySteps(
         ['unlink'],
         "should have called unlink rpc after clicking on cancel"
@@ -1058,15 +1042,13 @@ QUnit.test('activity mark done popover close on ESCAPE', async function (assert)
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start();
+    const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
 
-    await afterNextRender(() => {
-        document.querySelector('.o_Activity_markDoneButton').click();
-    });
+    await click('.o_Activity_markDoneButton');
     assert.containsOnce(
         document.body,
         '.o_ActivityMarkDonePopover',
@@ -1099,15 +1081,13 @@ QUnit.test('activity mark done popover click on discard', async function (assert
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start();
+    const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',
     });
 
-    await afterNextRender(() => {
-        document.querySelector('.o_Activity_markDoneButton').click();
-    });
+    await click('.o_Activity_markDoneButton');
     assert.containsOnce(
         document.body,
         '.o_ActivityMarkDonePopover',
@@ -1118,9 +1098,7 @@ QUnit.test('activity mark done popover click on discard', async function (assert
         '.o_ActivityMarkDonePopover_discardButton',
         "Popover component should contain the discard button"
     );
-    await afterNextRender(() =>
-        document.querySelector('.o_ActivityMarkDonePopover_discardButton').click()
-    );
+    await click('.o_ActivityMarkDonePopover_discardButton');
     assert.containsNone(
         document.body,
         '.o_ActivityMarkDonePopover',

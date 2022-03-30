@@ -513,7 +513,7 @@ QUnit.test('chatter updating', async function (assert) {
 QUnit.test('chatter should become enabled when creation done', async function (assert) {
     assert.expect(10);
 
-    await this.createView({
+    const { click } = await this.createView({
         hasView: true,
         // View params
         View: FormView,
@@ -567,9 +567,7 @@ QUnit.test('chatter should become enabled when creation done', async function (a
 
     document.querySelectorAll('.o_field_char')[0].focus();
     document.execCommand('insertText', false, "hello");
-    await afterNextRender(() => {
-        document.querySelector('.o_form_button_save').click();
-    });
+    await click('.o_form_button_save');
     assert.notOk(
         document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).disabled,
         "send message button should now be enabled"
@@ -777,7 +775,7 @@ QUnit.test('Form view not scrolled when switching record', async function (asser
     });
     pyEnv['mail.message'].create(messages);
 
-    await this.createView({
+    const { click } = await this.createView({
         hasView: true,
         // View params
         View: FormView,
@@ -829,9 +827,7 @@ QUnit.test('Form view not scrolled when switching record', async function (asser
         "The controller container should be scrolled to its bottom"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_pager_next').click()
-    );
+    await click('.o_pager_next');
     assert.strictEqual(
         document.querySelector('.breadcrumb-item.active').textContent,
         'Partner 2',
@@ -841,9 +837,7 @@ QUnit.test('Form view not scrolled when switching record', async function (asser
         "The top of the form view should be visible when switching record from pager"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_pager_previous').click()
-    );
+    await click('.o_pager_previous');
     assert.strictEqual(controllerContentEl.scrollTop, 0,
         "Form view's scroll position should have been reset when switching back to first record"
     );
@@ -872,7 +866,7 @@ QUnit.test('Attachments that have been unlinked from server should be visually u
             res_model: 'res.partner',
         },
     ]);
-    await this.createView({
+    const { click } = await this.createView({
         hasView: true,
         // View params
         View: FormView,
@@ -901,14 +895,10 @@ QUnit.test('Attachments that have been unlinked from server should be visually u
 
     // The attachment links are updated on (re)load,
     // so using pager is a way to reload the record "Partner1".
-    await afterNextRender(() =>
-        document.querySelector('.o_pager_next').click()
-    );
+    await click('.o_pager_next');
     // Simulate unlinking attachment 1 from Partner 1.
     pyEnv['ir.attachment'].write([irAttachmentId1], { res_id: 0 });
-    await afterNextRender(() =>
-        document.querySelector('.o_pager_previous').click()
-    );
+    await click('.o_pager_previous');
     assert.strictEqual(
         document.querySelector('.o_ChatterTopbar_buttonCount').textContent,
         '1',
@@ -921,7 +911,7 @@ QUnit.test('chatter just contains "creating a new record" message during the cre
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    await this.createView({
+    const { click } = await this.createView({
         hasView: true,
         View: FormView,
         model: 'res.partner',
@@ -935,9 +925,7 @@ QUnit.test('chatter just contains "creating a new record" message during the cre
         `,
     });
 
-    await afterNextRender(() => {
-        document.querySelector('.o_form_button_create').click();
-    });
+    await click('.o_form_button_create');
     assert.containsOnce(
         document.body,
         '.o_Message',
@@ -981,7 +969,7 @@ QUnit.test('[TECHNICAL] unfolded read more/less links should not fold on message
         model: 'res.partner',
         res_id: resPartnerId1,
     });
-    await this.createView({
+    const { click } = await this.createView({
         hasView: true,
         // View params
         View: FormView,
@@ -1011,9 +999,7 @@ QUnit.test('[TECHNICAL] unfolded read more/less links should not fold on message
         "Read More/Less link on message should be unfolded after a click from initial rendering (read less)"
     );
 
-    await afterNextRender(
-        () => document.querySelector('.o_Message').click(),
-    );
+    await click('.o_Message');
     assert.strictEqual(
         document.querySelector('.o_Message_readMoreLess').textContent,
         "Read Less",

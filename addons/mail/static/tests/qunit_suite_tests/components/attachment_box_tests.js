@@ -189,7 +189,7 @@ QUnit.test('view attachments', async function (assert) {
             res_model: 'res.partner',
         },
     ]);
-    const { createChatterContainerComponent, messaging } = await start({ hasDialog: true });
+    const { click, createChatterContainerComponent, messaging } = await start({ hasDialog: true });
     await createChatterContainerComponent({
         isAttachmentBoxVisibleInitially: true,
         threadId: resPartnerId1,
@@ -197,12 +197,10 @@ QUnit.test('view attachments', async function (assert) {
     });
     const firstAttachment = messaging.models['Attachment'].findFromIdentifyingData({ id: irAttachmentId1 });
 
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_AttachmentCard[data-id="${firstAttachment.localId}"]
-            .o_AttachmentCard_image
-        `).click()
-    );
+    await click(`
+        .o_AttachmentCard[data-id="${firstAttachment.localId}"]
+        .o_AttachmentCard_image
+    `);
     assert.containsOnce(
         document.body,
         '.o_Dialog',
@@ -224,9 +222,7 @@ QUnit.test('view attachments', async function (assert) {
         "attachment viewer should allow to see next attachment",
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_AttachmentViewer_buttonNavigationNext').click()
-    );
+    await click('.o_AttachmentViewer_buttonNavigationNext');
     assert.strictEqual(
         document.querySelector('.o_AttachmentViewer_name').textContent,
         'Blu.txt',
@@ -238,9 +234,7 @@ QUnit.test('view attachments', async function (assert) {
         "attachment viewer should allow to see next attachment",
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_AttachmentViewer_buttonNavigationNext').click()
-    );
+    await click('.o_AttachmentViewer_buttonNavigationNext');
     assert.strictEqual(
         document.querySelector('.o_AttachmentViewer_name').textContent,
         'Blah.txt',
@@ -259,7 +253,7 @@ QUnit.test('remove attachment should ask for confirmation', async function (asse
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await start({ hasDialog: true });
+    const { click, createChatterContainerComponent } = await start({ hasDialog: true });
     await createChatterContainerComponent({
         isAttachmentBoxVisibleInitially: true,
         threadId: resPartnerId1,
@@ -276,7 +270,7 @@ QUnit.test('remove attachment should ask for confirmation', async function (asse
         "attachment should have a delete button"
     );
 
-    await afterNextRender(() => document.querySelector('.o_AttachmentCard_asideItemUnlink').click());
+    await click('.o_AttachmentCard_asideItemUnlink');
     assert.containsOnce(
         document.body,
         '.o_AttachmentDeleteConfirm',
@@ -289,7 +283,7 @@ QUnit.test('remove attachment should ask for confirmation', async function (asse
     );
 
     // Confirm the deletion
-    await afterNextRender(() => document.querySelector('.o_AttachmentDeleteConfirm_confirmButton').click());
+    await click('.o_AttachmentDeleteConfirm_confirmButton');
     assert.containsNone(
         document.body,
         '.o_AttachmentCard',

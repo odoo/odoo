@@ -334,7 +334,7 @@ QUnit.test('composer state conserved when clicking on another topbar button', as
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    const { createChatterContainerComponent } = await start();
+    const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',
@@ -361,9 +361,7 @@ QUnit.test('composer state conserved when clicking on another topbar button', as
         "should have an attachments button in chatter menu"
     );
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_ChatterTopbar_buttonLogNote`).click();
-    });
+    await click(`.o_ChatterTopbar_buttonLogNote`);
     assert.containsOnce(
         document.body,
         `.o_ChatterTopbar_buttonLogNote.o-active`,
@@ -412,7 +410,7 @@ QUnit.test('rendering with multiple partner followers', async function (assert) 
             res_model: 'res.partner',
         },
     ]);
-    const { createChatterContainerComponent } = await start();
+    const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId3,
         threadModel: 'res.partner',
@@ -429,9 +427,7 @@ QUnit.test('rendering with multiple partner followers', async function (assert) 
         "should have followers button"
     );
 
-    await afterNextRender(() => {
-        document.querySelector('.o_FollowerListMenu_buttonFollowers').click();
-    });
+    await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
         document.body,
         '.o_FollowerListMenu_dropdown',
@@ -466,7 +462,7 @@ QUnit.test('log note/send message switching', async function (assert) {
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    const { createChatterContainerComponent } = await start();
+    const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',
@@ -492,9 +488,7 @@ QUnit.test('log note/send message switching', async function (assert) {
         "'Log Note' button should not be active"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
-    );
+    await click(`.o_ChatterTopbar_buttonSendMessage`);
     assert.hasClass(
         document.querySelector('.o_ChatterTopbar_buttonSendMessage'),
         'o-active',
@@ -506,9 +500,7 @@ QUnit.test('log note/send message switching', async function (assert) {
         "'Log Note' button should not be active"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_ChatterTopbar_buttonLogNote`).click()
-    );
+    await click(`.o_ChatterTopbar_buttonLogNote`);
     assert.doesNotHaveClass(
         document.querySelector('.o_ChatterTopbar_buttonSendMessage'),
         'o-active',
@@ -526,7 +518,7 @@ QUnit.test('log note toggling', async function (assert) {
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    const { createChatterContainerComponent } = await start();
+    const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',
@@ -542,18 +534,14 @@ QUnit.test('log note toggling', async function (assert) {
         "'Log Note' button should not be active"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_ChatterTopbar_buttonLogNote`).click()
-    );
+    await click(`.o_ChatterTopbar_buttonLogNote`);
     assert.hasClass(
         document.querySelector('.o_ChatterTopbar_buttonLogNote'),
         'o-active',
         "'Log Note' button should be active"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_ChatterTopbar_buttonLogNote`).click()
-    );
+    await click(`.o_ChatterTopbar_buttonLogNote`);
     assert.doesNotHaveClass(
         document.querySelector('.o_ChatterTopbar_buttonLogNote'),
         'o-active',
@@ -566,7 +554,7 @@ QUnit.test('send message toggling', async function (assert) {
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    const { createChatterContainerComponent } = await start();
+    const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',
@@ -582,18 +570,14 @@ QUnit.test('send message toggling', async function (assert) {
         "'Send Message' button should not be active"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
-    );
+    await click(`.o_ChatterTopbar_buttonSendMessage`);
     assert.hasClass(
         document.querySelector('.o_ChatterTopbar_buttonSendMessage'),
         'o-active',
         "'Send Message' button should be active"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
-    );
+    await click(`.o_ChatterTopbar_buttonSendMessage`);
     assert.doesNotHaveClass(
         document.querySelector('.o_ChatterTopbar_buttonSendMessage'),
         'o-active',

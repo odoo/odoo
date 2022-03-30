@@ -44,7 +44,7 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { insertText } = await this.start({
+    const { click, insertText } = await this.start({
         waitUntilEvent: {
             eventName: 'o-thread-view-hint-processed',
             message: "should wait until inbox displayed its messages",
@@ -62,19 +62,15 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
         '.o_Message',
         "should display a single message"
     );
-    await afterNextRender(() => document.querySelector('.o_Message').click());
-    await afterNextRender(() =>
-        document.querySelector('.o_MessageActionList_actionReply').click()
-    );
+    await click('.o_Message');
+    await click('.o_MessageActionList_actionReply');
     assert.containsOnce(
         document.body,
         '.o_Composer',
         "should have composer after clicking on reply to message"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_Composer_buttonEmojis`).click()
-    );
+    await click(`.o_Composer_buttonEmojis`);
     assert.containsOnce(
         document.body,
         '.o_EmojiList',
@@ -147,7 +143,7 @@ QUnit.test('reply: discard on discard button click', async function (assert) {
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    await this.start({
+    const { click } = await this.start({
         waitUntilEvent: {
             eventName: 'o-thread-view-hint-processed',
             message: "should wait until inbox displayed its messages",
@@ -165,11 +161,9 @@ QUnit.test('reply: discard on discard button click', async function (assert) {
         '.o_Message',
         "should display a single message"
     );
-    await afterNextRender(() => document.querySelector('.o_Message').click());
+    await click('.o_Message');
 
-    await afterNextRender(() =>
-        document.querySelector('.o_MessageActionList_actionReply').click()
-    );
+    await click('.o_MessageActionList_actionReply');
     assert.containsOnce(
         document.body,
         '.o_Composer',
@@ -181,9 +175,7 @@ QUnit.test('reply: discard on discard button click', async function (assert) {
         "composer should have a discard button"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_Composer_buttonDiscard`).click()
-    );
+    await click(`.o_Composer_buttonDiscard`);
     assert.containsNone(
         document.body,
         '.o_Composer',
@@ -209,7 +201,7 @@ QUnit.test('reply: discard on reply button toggle', async function (assert) {
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    await this.start({
+    const { click } = await this.start({
         waitUntilEvent: {
             eventName: 'o-thread-view-hint-processed',
             message: "should wait until inbox displayed its messages",
@@ -227,19 +219,15 @@ QUnit.test('reply: discard on reply button toggle', async function (assert) {
         '.o_Message',
         "should display a single message"
     );
-    await afterNextRender(() => document.querySelector('.o_Message').click());
 
-    await afterNextRender(() =>
-        document.querySelector('.o_MessageActionList_actionReply').click()
-    );
+    await click('.o_Message');
+    await click('.o_MessageActionList_actionReply');
     assert.containsOnce(
         document.body,
         '.o_Composer',
         "should have composer after clicking on reply to message"
     );
-    await afterNextRender(() =>
-        document.querySelector(`.o_MessageActionList_actionReply`).click()
-    );
+    await click(`.o_MessageActionList_actionReply`);
     assert.containsNone(
         document.body,
         '.o_Composer',
@@ -265,7 +253,7 @@ QUnit.test('reply: discard on click away', async function (assert) {
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    await this.start({
+    const { click } = await this.start({
         waitUntilEvent: {
             eventName: 'o-thread-view-hint-processed',
             message: "should wait until inbox displayed its messages",
@@ -283,11 +271,9 @@ QUnit.test('reply: discard on click away', async function (assert) {
         '.o_Message',
         "should display a single message"
     );
-    await afterNextRender(() => document.querySelector('.o_Message').click());
 
-    await afterNextRender(() =>
-        document.querySelector('.o_MessageActionList_actionReply').click()
-    );
+    await click('.o_Message');
+    await click('.o_MessageActionList_actionReply');
     assert.containsOnce(
         document.body,
         '.o_Composer',
@@ -302,18 +288,14 @@ QUnit.test('reply: discard on click away', async function (assert) {
         "reply composer should still be there after clicking inside itself"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_Composer_buttonEmojis`).click()
-    );
+    await click(`.o_Composer_buttonEmojis`);
     assert.containsOnce(
         document.body,
         '.o_EmojiList',
         "emoji list should be opened after clicking on emojis button"
     );
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_EmojiList_emoji`).click();
-    });
+    await click(`.o_EmojiList_emoji`);
     assert.containsNone(
         document.body,
         '.o_EmojiList',
@@ -325,9 +307,7 @@ QUnit.test('reply: discard on click away', async function (assert) {
         "reply composer should still be there after selecting an emoji (even though it is technically a click away, it should be considered inside)"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_Message`).click()
-    );
+    await click(`.o_Message`);
     assert.containsNone(
         document.body,
         '.o_Composer',
@@ -354,7 +334,7 @@ QUnit.test('"reply to" composer should log note if message replied to is a note'
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    await this.start({
+    const { click } = await this.start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.step('/mail/message/post');
@@ -388,11 +368,9 @@ QUnit.test('"reply to" composer should log note if message replied to is a note'
         '.o_Message',
         "should display a single message"
     );
-    await afterNextRender(() => document.querySelector('.o_Message').click());
 
-    await afterNextRender(() =>
-        document.querySelector('.o_MessageActionList_actionReply').click()
-    );
+    await click('.o_Message');
+    await click('.o_MessageActionList_actionReply');
     assert.strictEqual(
         document.querySelector('.o_Composer_buttonSend').textContent.trim(),
         "Log",
@@ -402,9 +380,7 @@ QUnit.test('"reply to" composer should log note if message replied to is a note'
     await afterNextRender(() =>
         document.execCommand('insertText', false, "Test")
     );
-    await afterNextRender(() =>
-        document.querySelector('.o_Composer_buttonSend').click()
-    );
+    await click('.o_Composer_buttonSend');
     assert.verifySteps(['/mail/message/post']);
 });
 
@@ -427,7 +403,7 @@ QUnit.test('"reply to" composer should send message if message replied to is not
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    await this.start({
+    const { click } = await this.start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.step('/mail/message/post');
@@ -461,11 +437,9 @@ QUnit.test('"reply to" composer should send message if message replied to is not
         '.o_Message',
         "should display a single message"
     );
-    await afterNextRender(() => document.querySelector('.o_Message').click());
 
-    await afterNextRender(() =>
-        document.querySelector('.o_MessageActionList_actionReply').click()
-    );
+    await click('.o_Message');
+    await click('.o_MessageActionList_actionReply');
     assert.strictEqual(
         document.querySelector('.o_Composer_buttonSend').textContent.trim(),
         "Send",
@@ -475,9 +449,7 @@ QUnit.test('"reply to" composer should send message if message replied to is not
     await afterNextRender(() =>
         document.execCommand('insertText', false, "Test")
     );
-    await afterNextRender(() =>
-        document.querySelector('.o_Composer_buttonSend').click()
-    );
+    await click('.o_Composer_buttonSend');
     assert.verifySteps(['/mail/message/post']);
 });
 

@@ -62,7 +62,7 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
 QUnit.test('base rendering when chatter has no record', async function (assert) {
     assert.expect(10);
 
-    const { createChatterContainerComponent } = await start();
+    const { click, createChatterContainerComponent } = await start();
     const chatterContainerComponent = await createChatterContainerComponent({
         threadModel: 'res.partner',
     }, { waitUntilMessagesLoaded: false });
@@ -106,9 +106,7 @@ QUnit.test('base rendering when chatter has no record', async function (assert) 
         "should not have the 'load more' button"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_Message').click()
-    );
+    await click('.o_Message');
     assert.strictEqual(
         document.querySelectorAll(`.o_MessageActionList`).length,
         1,
@@ -181,7 +179,7 @@ QUnit.test('show attachment box', async function (assert) {
             res_model: 'res.partner',
         },
     ]);
-    const { createChatterContainerComponent } = await start();
+    const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',
@@ -212,9 +210,7 @@ QUnit.test('show attachment box', async function (assert) {
         "should not have an attachment box in the chatter"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_ChatterTopbar_buttonAttachments`).click()
-    );
+    await click(`.o_ChatterTopbar_buttonAttachments`);
     assert.strictEqual(
         document.querySelectorAll(`.o_Chatter_attachmentBox`).length,
         1,
@@ -227,7 +223,7 @@ QUnit.test('composer show/hide on log note/send message [REQUIRE FOCUS]', async 
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    const { createChatterContainerComponent } = await start();
+    const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',
@@ -248,9 +244,7 @@ QUnit.test('composer show/hide on log note/send message [REQUIRE FOCUS]', async 
         "should not have a composer"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
-    );
+    await click(`.o_ChatterTopbar_buttonSendMessage`);
     assert.strictEqual(
         document.querySelectorAll(`.o_Chatter_composer`).length,
         1,
@@ -262,9 +256,7 @@ QUnit.test('composer show/hide on log note/send message [REQUIRE FOCUS]', async 
         "composer 'send message' in chatter should have focus just after being displayed"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_ChatterTopbar_buttonLogNote`).click()
-    );
+    await click(`.o_ChatterTopbar_buttonLogNote`);
     assert.strictEqual(
         document.querySelectorAll(`.o_Chatter_composer`).length,
         1,
@@ -276,27 +268,21 @@ QUnit.test('composer show/hide on log note/send message [REQUIRE FOCUS]', async 
         "composer 'log note' in chatter should have focus just after being displayed"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_ChatterTopbar_buttonLogNote`).click()
-    );
+    await click(`.o_ChatterTopbar_buttonLogNote`);
     assert.strictEqual(
         document.querySelectorAll(`.o_Chatter_composer`).length,
         0,
         "should have no composer anymore"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
-    );
+    await click(`.o_ChatterTopbar_buttonSendMessage`);
     assert.strictEqual(
         document.querySelectorAll(`.o_Chatter_composer`).length,
         1,
         "should have a composer"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
-    );
+    await click(`.o_ChatterTopbar_buttonSendMessage`);
     assert.strictEqual(
         document.querySelectorAll(`.o_Chatter_composer`).length,
         0,
@@ -385,7 +371,7 @@ QUnit.test('post message with "CTRL-Enter" keyboard shortcut', async function (a
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    const { createChatterContainerComponent } = await start();
+    const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',
@@ -396,9 +382,7 @@ QUnit.test('post message with "CTRL-Enter" keyboard shortcut', async function (a
         "should not have any message initially in chatter"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_ChatterTopbar_buttonSendMessage').click()
-    );
+    await click('.o_ChatterTopbar_buttonSendMessage');
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
         document.execCommand('insertText', false, "Test");
@@ -419,7 +403,7 @@ QUnit.test('post message with "META-Enter" keyboard shortcut', async function (a
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    const { createChatterContainerComponent } = await start();
+    const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',
@@ -430,9 +414,7 @@ QUnit.test('post message with "META-Enter" keyboard shortcut', async function (a
         "should not have any message initially in chatter"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_ChatterTopbar_buttonSendMessage').click()
-    );
+    await click('.o_ChatterTopbar_buttonSendMessage');
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
         document.execCommand('insertText', false, "Test");
@@ -456,7 +438,7 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async function 
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    const { createChatterContainerComponent } = await start();
+    const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',
@@ -467,9 +449,7 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async function 
         "should not have any message initially in chatter"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_ChatterTopbar_buttonSendMessage').click()
-    );
+    await click('.o_ChatterTopbar_buttonSendMessage');
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
         document.execCommand('insertText', false, "Test");
