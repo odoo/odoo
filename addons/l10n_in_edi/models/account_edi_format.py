@@ -80,10 +80,12 @@ class AccountEdiFormat(models.Model):
     def _l10n_in_edi_get_iap_buy_credits_message(self, company):
         base_url = "https://iap-sandbox.odoo.com/iap/1/credit" if not company.sudo().l10n_in_edi_production_env else ""
         url = self.env["iap.account"].get_credits_url(service_name="l10n_in_edi", base_url=base_url)
-        return markupsafe.Markup("""<p><b>%s</b></p><p>%s</p>""" % (
+        return markupsafe.Markup("""<p><b>%s</b></p><p>%s <a href="%s">%s</a></p>""") % (
             _("You have insufficient credits to send this document!"),
-            _("Please proceed to buy more credits <a href='%s'>here.</a>", url),
-        ))
+            _("Please buy more credits and retry: "),
+            url,
+            _("Buy Credits")
+        )
 
     def _post_invoice_edi(self, invoices):
         if self.code != "in_einvoice_1_03":
@@ -524,10 +526,8 @@ class AccountEdiFormat(models.Model):
         response = self._l10n_in_edi_connect_to_server(company, url_path="/iap/l10n_in_edi/1/authenticate", params=params)
         # validity data-time in Indian standard time(UTC+05:30) so remove that gap and store in odoo
         if "data" in response:
-            local_time = fields.Datetime.context_timestamp(
-                self.with_context(tz="Asia/Kolkata"),
-                fields.Datetime.to_datetime(response["data"]["TokenExpiry"]
-            ))
+            tz = pytz.timezone("Asia/Kolkata")
+            local_time = tz.localize(fields.Datetime.to_datetime(response["data"]["TokenExpiry"]))
             utc_time = local_time.astimezone(pytz.utc)
             company.sudo().l10n_in_edi_token_validity = fields.Datetime.to_string(utc_time)
             company.sudo().l10n_in_edi_token = response["data"]["AuthToken"]
