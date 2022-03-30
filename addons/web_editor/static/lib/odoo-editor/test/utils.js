@@ -267,7 +267,7 @@ export function customErrorMessage(assertLocation, value, expected) {
     return `[${assertLocation}]\nactual  : '${value}'\nexpected: '${expected}'\n\nStackTrace `;
 }
 
-export async function testEditor(Editor = OdooEditor, spec) {
+export async function testEditor(Editor = OdooEditor, spec, options = {}) {
     const testNode = document.createElement('div');
     document.querySelector('#editor-test-container').innerHTML = '';
     document.querySelector('#editor-test-container').appendChild(testNode);
@@ -278,7 +278,7 @@ export async function testEditor(Editor = OdooEditor, spec) {
     testNode.innerHTML = spec.contentBefore;
     const selection = parseTextualSelection(testNode);
 
-    const editor = new Editor(testNode, { toSanitize: false });
+    const editor = new Editor(testNode, Object.assign({ toSanitize: false }, options));
     editor.keyboardType = 'PHYSICAL';
     editor.testMode = true;
     if (selection) {
