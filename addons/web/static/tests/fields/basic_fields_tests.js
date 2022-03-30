@@ -4702,6 +4702,58 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('datetime field: hit enter should update value', async function (assert) {
+        /*
+        This test verifies that the field datetime is correctly computed when:
+            - we press enter to validate our entry
+            - we click outside the field to validate our entry
+            - we save
+        */
+        assert.expect(3);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="datetime"/></form>',
+            res_id: 1,
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+                time_format: '%H:%M:%S',
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+            session: {
+                getTZOffset: function () {
+                    return 120;
+                },
+            },
+        });
+
+        const datetime = form.el.querySelector('input[name="datetime"]');
+
+        // Enter a beginning of date and press enter to validate
+        await testUtils.fields.editInput(datetime, '01/08/22 14:30:40');
+        await testUtils.fields.triggerKeydown(datetime, 'enter');
+
+        const datetimeValue = `01/08/2022 14:30:40`;
+
+        assert.strictEqual(datetime.value, datetimeValue);
+
+        // Click outside the field to check that the field is not changed
+        await testUtils.dom.click(form.$el);
+        assert.strictEqual(datetime.value, datetimeValue);
+
+        // Save and check that it's still ok
+        await testUtils.form.clickSave(form);
+
+        const { textContent } = form.el.querySelector('span[name="datetime"]')
+        assert.strictEqual(textContent, datetimeValue);
+
+        form.destroy();
+    });
+
     QUnit.module('RemainingDays');
 
     QUnit.test('remaining_days widget on a date field in list view', async function (assert) {
