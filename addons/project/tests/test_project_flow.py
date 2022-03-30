@@ -5,6 +5,7 @@ from .test_project_base import TestProjectCommon
 from odoo import Command
 from odoo.tools import mute_logger
 from odoo.addons.mail.tests.common import MockEmail
+from odoo.exceptions import AccessError
 
 
 EMAIL_TPL = """Return-Path: <whatever-2a840@postmaster.twitter.com>
@@ -304,6 +305,20 @@ class TestProjectFlow(TestProjectCommon, MockEmail):
                 self.project_pigs[field]
             except Exception as e:
                 raise AssertionError("Error raised unexpectedly while computing a field of the project ! Exception : " + e.args[0])
+
+        # tasks with no project set should only be visible to the users assigned to them
+        task_without_project.user_ids = [Command.link(self.user_projectuser.id)]
+        task_without_project.with_user(self.user_projectuser).read(['name'])
+        with self.assertRaises(AccessError):
+            task_without_project.with_user(self.user_projectmanager).read(['name'])
+
+        # Tests that tasks assigned to the current user should be in the right default stage
+        task = self.env['project.task'].create({
+            'name': 'Test Task!',
+            'user_ids': [Command.link(self.env.user.id)],
+        })
+        stages = task._get_default_personal_stage_create_vals(self.env.user.id)
+        self.assertEqual(task.personal_stage_id.stage_id.name, stages[0].get('name'), "tasks assigned to the current user should be in the right default stage")
 
     def test_send_rating_review(self):
         project_settings = self.env["res.config.settings"].create({'group_project_rating': True})
