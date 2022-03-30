@@ -2832,7 +2832,7 @@ class _RelationalMulti(_Relational):
             'active' in corecords
             and self.context.get('active_test', record.env.context.get('active_test', True))
         ):
-            corecords = corecords.filtered('active').with_prefetch(prefetch_ids)
+            corecords = corecords.search([("id", "in", corecords._ids), ("active", "=", True)])
         return corecords
 
     def convert_to_read(self, value, record, use_name_get=True):
