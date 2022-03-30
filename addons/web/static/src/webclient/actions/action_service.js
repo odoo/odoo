@@ -1219,7 +1219,6 @@ function makeActionManager(env) {
      * @returns {Promise<Number>}
      */
     async function switchView(viewType, props = {}) {
-        await keepLast.add(Promise.resolve());
         const controller = controllerStack[controllerStack.length - 1];
         const view = _getView(viewType);
         if (!view) {
@@ -1230,6 +1229,7 @@ function makeActionManager(env) {
                 )
             );
         }
+        await keepLast.add(Promise.resolve());
         const newController = controller.action.controllers[viewType] || {
             jsId: `controller_${++id}`,
             Component: view.isLegacy ? view : View,
