@@ -485,9 +485,14 @@ class Meeting(models.Model):
         return values
 
     def _cancel_microsoft(self):
-        # only owner can delete => others refuse the event
+        """
+        Cancel an Microsoft event.
+        There are 2 cases:
+          1) the organizer is an Odoo user: he's the only one able to delete the Odoo event. Attendees can just decline.
+          2) the organizer is NOT an Odoo user: any attendee should remove the Odoo event.
+        """
         user = self.env.user
-        my_cancelled_records = self.filtered(lambda e: e.user_id == user)
-        super(Meeting, my_cancelled_records)._cancel_microsoft()
-        attendees = (self - my_cancelled_records).attendee_ids.filtered(lambda a: a.partner_id == user.partner_id)
+        records = self.filtered(lambda e: not e.user_id or e.user_id == user)
+        super(Meeting, records)._cancel_microsoft()
+        attendees = (self - records).attendee_ids.filtered(lambda a: a.partner_id == user.partner_id)
         attendees.do_decline()
