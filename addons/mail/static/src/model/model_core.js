@@ -50,10 +50,17 @@ export function addFields(modelName, fields) {
 }
 
 /**
+ * @typedef {Object} LifecycleHooksDefinition
+ * @property {function} [_created] Hook triggered after a record is created.
+ * @property {function} [_willCreate] Hook triggered when a record is going to be created.
+ * @property {function} [_willDelete] Hook triggered when a record is going to be deleted.
+ */
+
+/**
  * Adds the provided hooks to the model specified by the `modelName`.
  *
  * @param {string} modelName The name of the model to which to add the hooks.
- * @param {Object} hooks Hooks to be added. key = name, value = handler
+ * @param {LifecycleHooksDefinition} hooks Hooks to be added. key = name, value = handler
  */
 export function addLifecycleHooks(modelName, hooks) {
     if (!registry.has(modelName)) {
@@ -341,16 +348,29 @@ export function patchRecordMethods(modelName, recordMethods) {
 }
 
 /**
- * @param {Object} definition The JSON definition of the model to register.
- * @param {Object} [definition.fields]
- * @param {string[]} definition.identifyingFields
- * @param {Object} [definition.lifecycleHooks]
- * @param {Object} [definition.modelGetters] Deprecated; use fields instead.
- * @param {Object} [definition.modelMethods]
- * @param {string} definition.name
- * @param {OnChanges[]} [definition.onChanges]
- * @param {Object} [definition.recordGetters] Deprecated; use fields instead.
- * @param {Object} [definition.recordMethods]
+ * @typedef {Object} ModelDefinition
+ * @property {Object} [fields] Fields of the model.
+ * Keys are the name of the field, value are the field definition
+ * @property {Array<string|string[]>} identifyingFields Fields used to uniquely identify a record of this model.
+ * - [field1, fields2] means field1 AND field2
+ * - [[field1, field2]] means field1 OR field2.
+ * - [[field1], [field2, fields3]] means field1 AND (field2 OR field3).
+ * - [] means singleton
+ * @property {LifecycleHooksDefinition} [lifecycleHooks] Define lifecycle hooks.
+ * @property {Object} [modelGetters] Deprecated; use fields instead.
+ * @property {Object} [modelMethods] Static methods of the model.
+ * - Key is the name of the method and value is a function
+ * @property {string} name Name of the model.
+ * @property {import("@mail/model/model_onchange").OnChange[]} [onChanges] Register OnChange listenner
+ * @property {Object} [recordGetters] Deprecated; use fields instead.
+ * @property {Object} [recordMethods] Record methods of this model.
+ * - Key is the name of the method and value is a function
+ */
+
+/**
+ * Register a model definition.
+ *
+ * @param {ModelDefinition} modelDefinition
  */
 export function registerModel({ fields, identifyingFields, lifecycleHooks, modelGetters, modelMethods, name, onChanges, recordGetters, recordMethods }) {
     if (!name) {
