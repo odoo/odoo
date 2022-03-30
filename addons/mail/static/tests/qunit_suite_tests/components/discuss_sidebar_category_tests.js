@@ -151,11 +151,9 @@ QUnit.test('channel - command: should have view command when category is folded'
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
     });
-    await this.start();
+    const { click } = await this.start();
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`).click();
-    });
+    await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_header .o_DiscussSidebarCategory_commandView`).length,
         1,
@@ -201,11 +199,9 @@ QUnit.test('channel - states: close manually by clicking the title', async funct
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: true,
     });
-    const { messaging } = await this.start();
+    const { click, messaging } = await this.start();
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`).click();
-    });
+    await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
@@ -227,11 +223,9 @@ QUnit.test('channel - states: open manually by clicking the title', async functi
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
     });
-    const { messaging } = await this.start();
+    const { click, messaging } = await this.start();
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`).click();
-    });
+    await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
@@ -254,7 +248,7 @@ QUnit.test('channel - states: close should update the value on the server', asyn
         is_discuss_sidebar_category_channel_open: true,
     });
     const currentUserId = pyEnv.currentUserId;
-    const { env } = await this.start();
+    const { click, env } = await this.start();
 
     const initalSettings = await env.services.rpc({
         model: 'res.users.settings',
@@ -267,9 +261,7 @@ QUnit.test('channel - states: close should update the value on the server', asyn
         "the vaule in server side should be true"
     );
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`).click();
-    });
+    await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
     const newSettings = await env.services.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
@@ -292,7 +284,7 @@ QUnit.test('channel - states: open should update the value on the server', async
         is_discuss_sidebar_category_channel_open: false,
     });
     const currentUserId = pyEnv.currentUserId;
-    const { env } = await this.start();
+    const { click, env } = await this.start();
 
     const initalSettings = await env.services.rpc({
         model: 'res.users.settings',
@@ -305,9 +297,7 @@ QUnit.test('channel - states: open should update the value on the server', async
         "the vaule in server side should be false"
     );
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`).click();
-    });
+    await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
     const newSettings = await env.services.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
@@ -387,7 +377,7 @@ QUnit.test('channel - states: the active category item should be visble even if 
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { messaging } = await this.start();
+    const { click, messaging } = await this.start();
 
     assert.containsOnce(
         document.body,
@@ -410,10 +400,7 @@ QUnit.test('channel - states: the active category item should be visble even if 
     });
     assert.ok(channel.classList.contains('o-active'));
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`).click();
-    });
-
+    await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
@@ -425,12 +412,9 @@ QUnit.test('channel - states: the active category item should be visble even if 
         'the active channel item should remain even if the category is folded'
     );
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_DiscussSidebarMailbox[data-thread-local-id="${
-            messaging.inbox.localId
-        }"]`).click();
-    });
-
+    await click(`.o_DiscussSidebarMailbox[data-thread-local-id="${
+        messaging.inbox.localId
+    }"]`);
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
@@ -487,12 +471,8 @@ QUnit.test('chat - counter: should not have a counter if category is folded and 
         message_unread_counter: 0,
         public: 'private',
     });
-
-    await this.start();
-
-    await afterNextRender(() => {
-        document.querySelector(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`).click();
-    });
+    const { click } = await this.start();
+    await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_counter`).length,
         0,
@@ -516,11 +496,8 @@ QUnit.test('chat - counter: should have correct value of unread threads if categ
             public: 'private',
         },
     ]);
-    await this.start();
-
-    await afterNextRender(() => {
-        document.querySelector(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`).click();
-    });
+    const { click } = await this.start();
+    await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
     assert.strictEqual(
         document.querySelector(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_counter`).textContent,
         "2",
@@ -569,11 +546,8 @@ QUnit.test('chat - states: close manually by clicking the title', async function
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: true,
     });
-    const { messaging } = await this.start();
-
-    await afterNextRender(() => {
-        document.querySelector(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`).click();
-    });
+    const { click, messaging } = await this.start();
+    await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
@@ -599,11 +573,8 @@ QUnit.test('chat - states: open manually by clicking the title', async function 
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: false,
     });
-    const { messaging } = await this.start();
-
-    await afterNextRender(() => {
-        document.querySelector(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`).click();
-    });
+    const { click, messaging } = await this.start();
+    await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
@@ -626,7 +597,7 @@ QUnit.test('chat - states: close should call update server data', async function
         is_discuss_sidebar_category_chat_open: true,
     });
     const currentUserId = pyEnv.currentUserId;
-    const { env } = await this.start();
+    const { click, env } = await this.start();
 
     const initalSettings = await env.services.rpc({
         model: 'res.users.settings',
@@ -639,9 +610,7 @@ QUnit.test('chat - states: close should call update server data', async function
         "the value in server side should be true"
     );
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`).click();
-    });
+    await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
     const newSettings = await env.services.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
@@ -663,7 +632,7 @@ QUnit.test('chat - states: open should call update server data', async function 
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: false,
     });
-    const { env } = await this.start();
+    const { click, env } = await this.start();
 
     const initalSettings = await env.services.rpc({
         model: 'res.users.settings',
@@ -676,9 +645,7 @@ QUnit.test('chat - states: open should call update server data', async function 
         "the value in server side should be false"
     );
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`).click();
-    });
+    await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
     const newSettings = await env.services.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
@@ -770,7 +737,7 @@ QUnit.test('chat - states: the active category item should be visble even if the
         message_unread_counter: 0,
         public: 'private',
     });
-    const { messaging } = await this.start();
+    const { click, messaging } = await this.start();
 
     assert.containsOnce(
         document.body,
@@ -793,10 +760,7 @@ QUnit.test('chat - states: the active category item should be visble even if the
     });
     assert.ok(chat.classList.contains('o-active'));
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`).click();
-    });
-
+    await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
@@ -808,12 +772,9 @@ QUnit.test('chat - states: the active category item should be visble even if the
         'the active chat item should remain even if the category is folded'
     );
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_DiscussSidebarMailbox[data-thread-local-id="${
-            messaging.inbox.localId
-        }"]`).click();
-    });
-
+    await click(`.o_DiscussSidebarMailbox[data-thread-local-id="${
+        messaging.inbox.localId
+    }"]`);
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${

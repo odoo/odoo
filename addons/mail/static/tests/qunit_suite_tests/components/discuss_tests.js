@@ -320,7 +320,7 @@ QUnit.test('sidebar: default active inbox', async function (assert) {
 QUnit.test('sidebar: change item', async function (assert) {
     assert.expect(4);
 
-    const { messaging } = await this.start();
+    const { click, messaging } = await this.start();
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -338,13 +338,11 @@ QUnit.test('sidebar: change item', async function (assert) {
         "starred should be inactive by default"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_DiscussSidebarMailbox[data-thread-local-id="${
-                messaging.starred.localId
-            }"]
-        `).click()
-    );
+    await click(`
+        .o_DiscussSidebarMailbox[data-thread-local-id="${
+            messaging.starred.localId
+        }"]
+    `);
     assert.notOk(
         document.querySelector(`
             .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -393,7 +391,7 @@ QUnit.test('sidebar: inbox with counter', async function (assert) {
 QUnit.test('sidebar: add channel', async function (assert) {
     assert.expect(3);
 
-    await this.start();
+    const { click } = await this.start();
     assert.strictEqual(
         document.querySelectorAll(`
             .o_DiscussSidebar_categoryChannel
@@ -409,11 +407,7 @@ QUnit.test('sidebar: add channel', async function (assert) {
         `).title,
         "Add or join a channel");
 
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_commandAdd
-        `).click()
-    );
+    await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_commandAdd`);
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_addingItemInput`).length,
         1,
@@ -426,7 +420,7 @@ QUnit.test('sidebar: basic channel rendering', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({ name: "General" });
-    const { messaging } = await this.start();
+    const { click, messaging } = await this.start();
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item`).length,
         1,
@@ -483,9 +477,7 @@ QUnit.test('sidebar: basic channel rendering', async function (assert) {
         "should have a counter when equals 0 (default value)"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item`).click()
-    );
+    await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item`);
     channel = document.querySelector(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item`);
     assert.hasClass(
         channel,
@@ -847,7 +839,7 @@ QUnit.test('default thread rendering', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { messaging } = await this.start();
+    const { click, messaging } = await this.start();
     assert.strictEqual(
         document.querySelectorAll(`
             .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -909,13 +901,11 @@ QUnit.test('default thread rendering', async function (assert) {
         "Congratulations, your inbox is empty  New messages appear here."
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_DiscussSidebarMailbox[data-thread-local-id="${
-                messaging.starred.localId
-            }"]
-        `).click()
-    );
+    await click(`
+        .o_DiscussSidebarMailbox[data-thread-local-id="${
+            messaging.starred.localId
+        }"]
+    `);
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -938,13 +928,11 @@ QUnit.test('default thread rendering', async function (assert) {
         "No starred messages  You can mark any message as 'starred', and it shows up in this mailbox."
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_DiscussSidebarMailbox[data-thread-local-id="${
-                messaging.history.localId
-            }"]
-        `).click()
-    );
+    await click(`
+        .o_DiscussSidebarMailbox[data-thread-local-id="${
+            messaging.history.localId
+        }"]
+    `);
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -965,16 +953,14 @@ QUnit.test('default thread rendering', async function (assert) {
         "No history messages  Messages marked as read will appear in the history."
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_DiscussSidebarCategory_item[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId1,
-                    model: 'mail.channel',
-                }).localId
-            }"]
-        `).click()
-    );
+    await click(`
+        .o_DiscussSidebarCategory_item[data-thread-local-id="${
+            messaging.models['Thread'].findFromIdentifyingData({
+                id: mailChannelId1,
+                model: 'mail.channel',
+            }).localId
+        }"]
+    `);
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebarCategory_item[data-thread-local-id="${
@@ -1157,7 +1143,7 @@ QUnit.test('basic rendering of message', async function (assert) {
         model: 'mail.channel',
         res_id: mailChannelId1
     });
-    const { messaging } = await this.start({
+    const { click, messaging } = await this.start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -1211,9 +1197,8 @@ QUnit.test('basic rendering of message', async function (assert) {
         1,
         "should have date in header of message"
     );
-    await afterNextRender(() =>
-        document.querySelector('.o_Message').click()
-    );
+
+    await click('.o_Message');
     assert.strictEqual(
         message.querySelectorAll(`:scope .o_MessageActionList`).length,
         1,
@@ -1256,7 +1241,7 @@ QUnit.test('should not be able to reply to temporary/transient messages', async 
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    await this.start({
+    const { click } = await this.start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -1268,11 +1253,9 @@ QUnit.test('should not be able to reply to temporary/transient messages', async 
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
         document.execCommand('insertText', false, "/who");
     });
-    await afterNextRender(() =>
-        document.querySelector('.o_Composer_buttonSend').click()
-    );
+    await click('.o_Composer_buttonSend');
     // click on message to show actions on the transient message resulting from the "/who" command
-    await afterNextRender(() => document.querySelector('.o_Message').click());
+    await click('.o_Message');
     assert.containsNone(
         document.body,
         '.o_MessageActionList_actionReply',
@@ -1308,7 +1291,7 @@ QUnit.test('basic rendering of squashed message', async function (assert) {
             res_id: mailChannelId1, // id of related channel
         }
     ]);
-    const { messaging } = await this.start({
+    const { click, messaging } = await this.start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -1352,9 +1335,8 @@ QUnit.test('basic rendering of squashed message', async function (assert) {
         message2.querySelector(`:scope .o_Message_sidebar`).classList.contains('o-message-squashed'),
         "message 2 should have squashed sidebar"
     );
-    await afterNextRender(() =>
-        document.querySelector('.o_Message.o-squashed').click()
-    );
+
+    await click('.o_Message.o-squashed');
     assert.strictEqual(
         message2.querySelectorAll(`:scope .o_Message_sidebar .o_Message_date`).length,
         1,
@@ -1555,7 +1537,7 @@ QUnit.test('load more messages from channel', async function (assert) {
             res_id: mailChannelId1,
         });
     }
-    await this.start({
+    const { click } = await this.start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -1591,11 +1573,7 @@ QUnit.test('load more messages from channel', async function (assert) {
         "should have load more link"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_loadMore
-        `).click()
-    );
+    await click(`.o_Discuss_thread .o_ThreadView_messageList .o_MessageList_loadMore`);
     assert.strictEqual(
         document.querySelectorAll(`
             .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_message
@@ -2196,7 +2174,7 @@ QUnit.test('basic top bar rendering', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({ name: "General" });
-    const { messaging } = await this.start();
+    const { click, messaging } = await this.start();
     assert.strictEqual(
         document.querySelector(`
             .o_ThreadViewTopbar_threadName
@@ -2214,13 +2192,11 @@ QUnit.test('basic top bar rendering', async function (assert) {
         "should have disabled button 'Mark all read' in the top bar of inbox (no messages)"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_DiscussSidebarMailbox[data-thread-local-id="${
-                messaging.starred.localId
-            }"]
-        `).click()
-    );
+    await click(`
+        .o_DiscussSidebarMailbox[data-thread-local-id="${
+            messaging.starred.localId
+        }"]
+    `);
     assert.strictEqual(
         document.querySelector(`
             .o_ThreadViewTopbar_threadName
@@ -2238,16 +2214,14 @@ QUnit.test('basic top bar rendering', async function (assert) {
         "should have disabled button 'Unstar all' in the top bar of starred (no messages)"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_DiscussSidebarCategory_item[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId1,
-                    model: 'mail.channel',
-                }).localId
-            }"]
-        `).click()
-    );
+    await click(`
+        .o_DiscussSidebarCategory_item[data-thread-local-id="${
+            messaging.models['Thread'].findFromIdentifyingData({
+                id: mailChannelId1,
+                model: 'mail.channel',
+            }).localId
+        }"]
+    `);
     assert.strictEqual(
         document.querySelector(`
             .o_ThreadViewTopbar_threadName
@@ -2533,7 +2507,7 @@ QUnit.test('composer state: text save and restore', async function (assert) {
         { name: "General" },
         { name: "Special" },
     ]);
-    const { insertText } = await this.start({
+    const { click, insertText } = await this.start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -2542,23 +2516,17 @@ QUnit.test('composer state: text save and restore', async function (assert) {
     });
     // Write text in composer for #general
     await insertText('.o_ComposerTextInput_textarea', "A message");
-    await afterNextRender(() =>
-        document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-name="Special"]`).click()
-    );
+    await click(`.o_DiscussSidebarCategoryItem[data-thread-name="Special"]`);
     await insertText('.o_ComposerTextInput_textarea', "An other message");
     // Switch back to #general
-    await afterNextRender(() =>
-        document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-name="General"]`).click()
-    );
+    await click(`.o_DiscussSidebarCategoryItem[data-thread-name="General"]`);
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "A message",
         "should restore the input text"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-name="Special"]`).click()
-    );
+    await click(`.o_DiscussSidebarCategoryItem[data-thread-name="Special"]`);
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "An other message",
@@ -2667,7 +2635,7 @@ QUnit.test('post a simple message', async function (assert) {
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
     let postedMessageId;
-    const { messaging } = await this.start({
+    const { click, messaging } = await this.start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -2734,9 +2702,7 @@ QUnit.test('post a simple message', async function (assert) {
         "should have inserted text in editable"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_Composer_buttonSend').click()
-    );
+    await click('.o_Composer_buttonSend');
     assert.verifySteps(['message_post']);
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
@@ -3124,7 +3090,7 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId, // must be for current partner
     });
-    const { messaging } = await this.start({
+    const { click, messaging } = await this.start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.step('message_post');
@@ -3182,11 +3148,9 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
         " on Refactoring",
         "should display message originates from record 'Refactoring'"
     );
-    await afterNextRender(() => document.querySelector('.o_Message').click());
 
-    await afterNextRender(() =>
-        document.querySelector('.o_MessageActionList_actionReply').click()
-    );
+    await click('.o_Message');
+    await click('.o_MessageActionList_actionReply');
     assert.ok(
         document.querySelector('.o_Message').classList.contains('o-selected'),
         "message should be selected after clicking on reply icon"
@@ -3209,9 +3173,7 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
     await afterNextRender(() =>
         document.execCommand('insertText', false, "Test")
     );
-    await afterNextRender(() =>
-        document.querySelector('.o_Composer_buttonSend').click()
-    );
+    await click('.o_Composer_buttonSend');
     assert.verifySteps(['message_post']);
     assert.notOk(
         document.querySelector('.o_Composer'),
@@ -3264,7 +3226,7 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
             res_partner_id: pyEnv.currentPartnerId, // must be for current partner
         }
     ]);
-    const { messaging } = await this.start({
+    const { click, messaging } = await this.start({
         discuss: {
             params: {
                 default_active_id: 'mail.box_history',
@@ -3285,13 +3247,11 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
         "should have empty thread in history"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_DiscussSidebarMailbox[data-thread-local-id="${
-                messaging.inbox.localId
-            }"]
-        `).click()
-    );
+    await click(`
+        .o_DiscussSidebarMailbox[data-thread-local-id="${
+            messaging.inbox.localId
+        }"]
+    `);
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -3311,9 +3271,7 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
         "inbox mailbox should have 2 messages"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_ThreadViewTopbar_markAllReadButton').click()
-    );
+    await click('.o_ThreadViewTopbar_markAllReadButton');
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -3328,13 +3286,11 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
         "inbox mailbox should now be empty after mark as read"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_DiscussSidebarMailbox[data-thread-local-id="${
-                messaging.history.localId
-            }"]
-        `).click()
-    );
+    await click(`
+        .o_DiscussSidebarMailbox[data-thread-local-id="${
+            messaging.history.localId
+        }"]
+    `);
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -3383,7 +3339,7 @@ QUnit.test('mark a single message as read should only move this message to "Hist
             res_partner_id: pyEnv.currentPartnerId,
         }
     ]);
-    const { messaging } = await this.start({
+    const { click, messaging } = await this.start({
         discuss: {
             params: {
                 default_active_id: 'mail.box_history',
@@ -3405,13 +3361,11 @@ QUnit.test('mark a single message as read should only move this message to "Hist
         "history mailbox should initially be empty"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_DiscussSidebarMailbox[data-thread-local-id="${
-                messaging.inbox.localId
-            }"]
-        `).click()
-    );
+    await click(`
+        .o_DiscussSidebarMailbox[data-thread-local-id="${
+            messaging.inbox.localId
+        }"]
+    `);
     assert.hasClass(
         document.querySelector(`
             .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -3427,21 +3381,17 @@ QUnit.test('mark a single message as read should only move this message to "Hist
         2,
         "inbox mailbox should have 2 messages"
     );
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_Message[data-message-local-id="${
-                messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId1 }).localId
-            }"]
-        `).click()
-    );
 
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_Message[data-message-local-id="${
-                messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId1 }).localId
-            }"] .o_MessageActionList_actionMarkRead
-        `).click()
-    );
+    await click(`
+        .o_Message[data-message-local-id="${
+            messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId1 }).localId
+        }"]
+    `);
+    await click(`
+        .o_Message[data-message-local-id="${
+            messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId1 }).localId
+        }"] .o_MessageActionList_actionMarkRead
+    `);
     assert.containsOnce(
         document.body,
         '.o_Message',
@@ -3455,13 +3405,11 @@ QUnit.test('mark a single message as read should only move this message to "Hist
         "message still in inbox should be the one not marked as read"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_DiscussSidebarMailbox[data-thread-local-id="${
-                messaging.history.localId
-            }"]
-        `).click()
-    );
+    await click(`
+        .o_DiscussSidebarMailbox[data-thread-local-id="${
+            messaging.history.localId
+        }"]
+    `);
     assert.hasClass(
         document.querySelector(`
             .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -3501,7 +3449,7 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
         });
 
     }
-    const { afterEvent, messaging } = await this.start({
+    const { afterEvent, click, messaging } = await this.start({
         waitUntilEvent: {
             eventName: 'o-component-message-list-scrolled',
             message: "should wait until inbox scrolled to its last message initially",
@@ -3518,10 +3466,7 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
         },
     });
 
-    await afterNextRender(async () => {
-        const markAllReadButton = document.querySelector('.o_ThreadViewTopbar_markAllReadButton');
-        markAllReadButton.click();
-    });
+    await click('.o_ThreadViewTopbar_markAllReadButton');
     assert.containsNone(
         document.body,
         '.o_Message',
@@ -3752,7 +3697,7 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
             public: 'private', // expected value for testing a chat
         }
     ]);
-    await this.start();
+    const { click } = await this.start();
     assert.strictEqual(
         document.querySelectorAll(`
             .o_DiscussSidebarMailbox[data-thread-name="Inbox"]
@@ -3798,9 +3743,7 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
         "there should be no composer when active thread of discuss is mailbox 'Inbox'"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_DiscussSidebarCategory_item[data-thread-name="General"]`).click()
-    );
+    await click(`.o_DiscussSidebarCategory_item[data-thread-name="General"]`);
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebarCategory_item[data-thread-name="General"]
@@ -3824,9 +3767,7 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
         "composer of channel 'General' should no longer focused on click away"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_DiscussSidebarCategory_item[data-thread-name="Demo User"]`).click()
-    );
+    await click(`.o_DiscussSidebarCategory_item[data-thread-name="Demo User"]`);
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebarCategory_item[data-thread-name="Demo User"]

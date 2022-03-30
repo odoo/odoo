@@ -197,18 +197,14 @@ QUnit.test('add an emoji', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create();
-    const { createComposerComponent, messaging } = await start();
+    const { click, createComposerComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
     });
     await createComposerComponent(thread.composer);
-    await afterNextRender(() =>
-        document.querySelector('.o_Composer_buttonEmojis').click()
-    );
-    await afterNextRender(() =>
-        document.querySelector('.o_EmojiList_emoji[data-unicode="😊"]').click()
-    );
+    await click('.o_Composer_buttonEmojis');
+    await click('.o_EmojiList_emoji[data-unicode="😊"]');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "😊",
@@ -221,7 +217,7 @@ QUnit.test('add an emoji after some text', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create();
-    const { createComposerComponent, messaging } = await start();
+    const { click, createComposerComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
@@ -237,10 +233,8 @@ QUnit.test('add an emoji after some text', async function (assert) {
         "composer text input should have text only initially"
     );
 
-    await afterNextRender(() => document.querySelector('.o_Composer_buttonEmojis').click());
-    await afterNextRender(() =>
-        document.querySelector('.o_EmojiList_emoji[data-unicode="😊"]').click()
-    );
+    await click('.o_Composer_buttonEmojis');
+    await click('.o_EmojiList_emoji[data-unicode="😊"]');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "Blabla😊",
@@ -253,7 +247,7 @@ QUnit.test('add emoji replaces (keyboard) text selection', async function (asser
 
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create();
-    const { createComposerComponent, messaging } = await start();
+    const { click, createComposerComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
@@ -272,10 +266,8 @@ QUnit.test('add emoji replaces (keyboard) text selection', async function (asser
 
     // simulate selection of all the content by keyboard
     composerTextInputTextArea.setSelectionRange(0, composerTextInputTextArea.value.length);
-    await afterNextRender(() => document.querySelector('.o_Composer_buttonEmojis').click());
-    await afterNextRender(() =>
-        document.querySelector('.o_EmojiList_emoji[data-unicode="😊"]').click()
-    );
+    await click('.o_Composer_buttonEmojis');
+    await click('.o_EmojiList_emoji[data-unicode="😊"]');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "😊",
@@ -315,7 +307,7 @@ QUnit.test('use a canned response', async function (assert) {
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create();
     pyEnv['mail.shortcode'].create({ source: "hello", substitution: "Hello! How are you?" });
-    const { createComposerComponent, insertText, messaging } = await start();
+    const { click, createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
@@ -338,9 +330,7 @@ QUnit.test('use a canned response', async function (assert) {
         '.o_ComposerSuggestion',
         "should have a canned response suggestion"
     );
-    await afterNextRender(() =>
-        document.querySelector('.o_ComposerSuggestion').click()
-    );
+    await click('.o_ComposerSuggestion');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "Hello! How are you? ",
@@ -354,7 +344,7 @@ QUnit.test('use a canned response some text', async function (assert) {
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create();
     pyEnv['mail.shortcode'].create({ source: "hello", substitution: "Hello! How are you?" });
-    const { createComposerComponent, insertText, messaging } = await start();
+    const { click, createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
@@ -383,9 +373,7 @@ QUnit.test('use a canned response some text', async function (assert) {
         '.o_ComposerSuggestion',
         "should have a canned response suggestion"
     );
-    await afterNextRender(() =>
-        document.querySelector('.o_ComposerSuggestion').click()
-    );
+    await click('.o_ComposerSuggestion');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "bluhbluh Hello! How are you? ",
@@ -399,7 +387,7 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create();
     pyEnv['mail.shortcode'].create({ source: "hello", substitution: "Hello! How are you?" });
-    const { createComposerComponent, insertText, messaging } = await start();
+    const { click, createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
@@ -422,9 +410,7 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
         '.o_ComposerSuggestion',
         "should have a canned response suggestion"
     );
-    await afterNextRender(() =>
-        document.querySelector('.o_ComposerSuggestion').click()
-    );
+    await click('.o_ComposerSuggestion');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "Hello! How are you? ",
@@ -432,12 +418,8 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
     );
 
     // select emoji
-    await afterNextRender(() =>
-        document.querySelector('.o_Composer_buttonEmojis').click()
-    );
-    await afterNextRender(() =>
-        document.querySelector('.o_EmojiList_emoji[data-unicode="😊"]').click()
-    );
+    await click('.o_Composer_buttonEmojis');
+    await click('.o_EmojiList_emoji[data-unicode="😊"]');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "Hello! How are you? 😊",
@@ -475,7 +457,7 @@ QUnit.test('mention a channel', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", public: "groups" });
-    const { createComposerComponent, insertText, messaging } = await start();
+    const { click, createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
@@ -498,9 +480,7 @@ QUnit.test('mention a channel', async function (assert) {
         '.o_ComposerSuggestion',
         "should have a channel mention suggestion"
     );
-    await afterNextRender(() =>
-        document.querySelector('.o_ComposerSuggestion').click()
-    );
+    await click('.o_ComposerSuggestion');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "#General ",
@@ -513,7 +493,7 @@ QUnit.test('mention a channel after some text', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", public: "groups" });
-    const { createComposerComponent, insertText, messaging } = await start();
+    const { click, createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
@@ -545,9 +525,7 @@ QUnit.test('mention a channel after some text', async function (assert) {
         '.o_ComposerSuggestion',
         "should have a channel mention suggestion"
     );
-    await afterNextRender(() =>
-        document.querySelector('.o_ComposerSuggestion').click()
-    );
+    await click('.o_ComposerSuggestion');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "bluhbluh #General ",
@@ -560,7 +538,7 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", public: "groups" });
-    const { createComposerComponent, insertText, messaging } = await start();
+    const { click, createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
@@ -583,9 +561,7 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
         '.o_ComposerSuggestion',
         "should have a channel mention suggestion"
     );
-    await afterNextRender(() =>
-        document.querySelector('.o_ComposerSuggestion').click()
-    );
+    await click('.o_ComposerSuggestion');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "#General ",
@@ -593,12 +569,8 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
     );
 
     // select emoji
-    await afterNextRender(() =>
-        document.querySelector('.o_Composer_buttonEmojis').click()
-    );
-    await afterNextRender(() =>
-        document.querySelector('.o_EmojiList_emoji[data-unicode="😊"]').click()
-    );
+    await click('.o_Composer_buttonEmojis');
+    await click('.o_EmojiList_emoji[data-unicode="😊"]');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "#General 😊",
@@ -661,7 +633,7 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { insertText } = await start({
+    const { click, insertText } = await start({
         autoOpenDiscuss: true,
         discuss: {
             params: {
@@ -678,9 +650,7 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
     });
 
     await insertText('.o_ComposerTextInput_textarea', "/");
-    await afterNextRender(() =>
-        document.querySelector('.o_ComposerSuggestion').click()
-    );
+    await click('.o_ComposerSuggestion');
     await insertText('.o_ComposerTextInput_textarea', " is user?");
     assert.verifySteps([], "No rpc done");
 });
@@ -690,7 +660,7 @@ QUnit.test('use a command for a specific channel type', async function (assert) 
 
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create({ channel_type: 'chat' });
-    const { createComposerComponent, insertText, messaging } = await start();
+    const { click, createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
@@ -708,9 +678,7 @@ QUnit.test('use a command for a specific channel type', async function (assert) 
         "text content of composer should be empty initially"
     );
     await insertText('.o_ComposerTextInput_textarea', "/");
-    await afterNextRender(() =>
-        document.querySelector('.o_ComposerSuggestion').click()
-    );
+    await click('.o_ComposerSuggestion');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "/who ",
@@ -758,7 +726,7 @@ QUnit.test('add an emoji after a command', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create({ channel_type: 'channel' });
-    const { createComposerComponent, insertText, messaging } = await start();
+    const { click, createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
@@ -776,9 +744,7 @@ QUnit.test('add an emoji after a command', async function (assert) {
         "text content of composer should be empty initially"
     );
     await insertText('.o_ComposerTextInput_textarea', "/");
-    await afterNextRender(() =>
-        document.querySelector('.o_ComposerSuggestion').click()
-    );
+    await click('.o_ComposerSuggestion');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "/who ",
@@ -786,12 +752,8 @@ QUnit.test('add an emoji after a command', async function (assert) {
     );
 
     // select emoji
-    await afterNextRender(() =>
-        document.querySelector('.o_Composer_buttonEmojis').click()
-    );
-    await afterNextRender(() =>
-        document.querySelector('.o_EmojiList_emoji[data-unicode="😊"]').click()
-    );
+    await click('.o_Composer_buttonEmojis');
+    await click('.o_EmojiList_emoji[data-unicode="😊"]');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "/who 😊",
@@ -839,7 +801,7 @@ QUnit.test('mention a partner', async function (assert) {
     const pyEnv = await startServer();
     pyEnv['res.partner'].create({ email: "testpartner@odoo.com", name: "TestPartner" });
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { createComposerComponent, insertText, messaging } = await start();
+    const { click, createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -862,9 +824,7 @@ QUnit.test('mention a partner', async function (assert) {
         '.o_ComposerSuggestion',
         "should have a mention suggestion"
     );
-    await afterNextRender(() =>
-        document.querySelector('.o_ComposerSuggestion').click()
-    );
+    await click('.o_ComposerSuggestion');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "@TestPartner ",
@@ -878,7 +838,7 @@ QUnit.test('mention a partner after some text', async function (assert) {
     const pyEnv = await startServer();
     pyEnv['res.partner'].create({ email: "testpartner@odoo.com", name: "TestPartner" });
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { createComposerComponent, insertText, messaging } = await start();
+    const { click, createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -910,9 +870,7 @@ QUnit.test('mention a partner after some text', async function (assert) {
         '.o_ComposerSuggestion',
         "should have a mention suggestion"
     );
-    await afterNextRender(() =>
-        document.querySelector('.o_ComposerSuggestion').click()
-    );
+    await click('.o_ComposerSuggestion');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "bluhbluh @TestPartner ",
@@ -926,7 +884,7 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
     const pyEnv = await startServer();
     pyEnv['res.partner'].create({ email: "testpartner@odoo.com", name: "TestPartner" });
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { createComposerComponent, insertText, messaging } = await start();
+    const { click, createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -949,9 +907,7 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
         '.o_ComposerSuggestion',
         "should have a mention suggestion"
     );
-    await afterNextRender(() =>
-        document.querySelector('.o_ComposerSuggestion').click()
-    );
+    await click('.o_ComposerSuggestion');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "@TestPartner ",
@@ -959,12 +915,8 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
     );
 
     // select emoji
-    await afterNextRender(() =>
-        document.querySelector('.o_Composer_buttonEmojis').click()
-    );
-    await afterNextRender(() =>
-        document.querySelector('.o_EmojiList_emoji[data-unicode="😊"]').click()
-    );
+    await click('.o_Composer_buttonEmojis');
+    await click('.o_EmojiList_emoji[data-unicode="😊"]');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "@TestPartner 😊",
@@ -1104,7 +1056,7 @@ QUnit.test('composer text input cleared on message post', async function (assert
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { createComposerComponent, messaging } = await start({
+    const { click, createComposerComponent, messaging } = await start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.step('message_post');
@@ -1129,9 +1081,7 @@ QUnit.test('composer text input cleared on message post', async function (assert
     );
 
     // Send message
-    await afterNextRender(() =>
-        document.querySelector('.o_Composer_buttonSend').click()
-    );
+    await click('.o_Composer_buttonSend');
     assert.verifySteps(['message_post']);
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
@@ -1400,7 +1350,7 @@ QUnit.test('remove an attachment from composer does not need any confirmation', 
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { createComposerComponent, messaging } = await start();
+    const { click, createComposerComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -1428,9 +1378,7 @@ QUnit.test('remove an attachment from composer does not need any confirmation', 
         "should have only one attachment"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_AttachmentCard_asideItemUnlink').click()
-    );
+    await click('.o_AttachmentCard_asideItemUnlink');
     assert.containsNone(
         document.body,
         '.o_Composer .o_AttachmentCard',
@@ -1443,7 +1391,7 @@ QUnit.test('remove an uploading attachment', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { createComposerComponent, messaging } = await start({
+    const { click, createComposerComponent, messaging } = await start({
         async mockFetch(resource, init) {
             const res = this._super(...arguments);
             if (resource === '/mail/attachment/upload') {
@@ -1485,8 +1433,7 @@ QUnit.test('remove an uploading attachment', async function (assert) {
         "should have an uploading attachment"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_AttachmentCard_asideItemUnlink').click());
+    await click('.o_AttachmentCard_asideItemUnlink');
     assert.containsNone(
         document.body,
         '.o_Composer .o_AttachmentCard',
@@ -1549,7 +1496,7 @@ QUnit.test("Show a default status in the recipient status text when the thread d
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    await this.createView({
+    const { click } = await this.createView({
         hasView: true,
         // View params
         View: FormView,
@@ -1567,7 +1514,7 @@ QUnit.test("Show a default status in the recipient status text when the thread d
         `,
         res_id: resPartnerId1,
     });
-    await afterNextRender(() => document.querySelector('.o_ChatterTopbar_buttonSendMessage').click());
+    await click('.o_ChatterTopbar_buttonSendMessage');
     assert.strictEqual(
         document.querySelector('.o_Composer_followers').textContent.replace(/\s+/g, ''),
         "To:Followersofthisdocument",
@@ -1580,7 +1527,7 @@ QUnit.test("Show a thread name in the recipient status text.", async function (a
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "test name" });
-    const { messaging } = await this.createView({
+    const { click, messaging } = await this.createView({
         hasView: true,
         // View params
         View: FormView,
@@ -1600,7 +1547,7 @@ QUnit.test("Show a thread name in the recipient status text.", async function (a
     });
     // hack: provide awareness of name (not received in usual chatter flow)
     messaging.models['Thread'].insert({ id: resPartnerId1, model: 'res.partner', name: "test name" });
-    await afterNextRender(() => document.querySelector('.o_ChatterTopbar_buttonSendMessage').click());
+    await click('.o_ChatterTopbar_buttonSendMessage');
     assert.strictEqual(
         document.querySelector('.o_Composer_followers').textContent.replace(/\s+/g, ''),
         "To:Followersof\"testname\"",

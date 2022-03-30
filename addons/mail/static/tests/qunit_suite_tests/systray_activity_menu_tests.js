@@ -2,7 +2,6 @@
 
 import ActivityMenu from '@mail/js/systray/systray_activity_menu';
 import {
-    afterNextRender,
     start,
 } from '@mail/../tests/helpers/test_utils';
 
@@ -206,7 +205,7 @@ QUnit.test('activity menu widget: activity view icon', async function (assert) {
 QUnit.test('activity menu widget: close on messaging menu click', async function (assert) {
     assert.expect(2);
 
-    const { createMessagingMenuComponent, widget } = await start({
+    const { click, createMessagingMenuComponent, widget } = await start({
         async mockRPC(route, args) {
             if (args.method === 'systray_get_activities') {
                 return [];
@@ -226,9 +225,7 @@ QUnit.test('activity menu widget: close on messaging menu click', async function
         "activity menu should be shown after click on itself"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`.o_MessagingMenu_toggler`).click()
-    );
+    await click(`.o_MessagingMenu_toggler`);
     assert.doesNotHaveClass(
         activityMenu.el.querySelector('.o_mail_systray_dropdown'),
         'show',

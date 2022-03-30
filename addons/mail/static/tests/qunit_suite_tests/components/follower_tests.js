@@ -3,7 +3,6 @@
 import { insert, link } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred';
 import {
-    afterNextRender,
     createRootMessagingComponent,
     start,
     startServer,
@@ -194,7 +193,7 @@ QUnit.test('click on edit follower', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { messaging, widget } = await start({
+    const { click, messaging, widget } = await start({
         hasDialog: true,
         async mockRPC(route, args) {
             if (route.includes('/mail/read_subscription_data')) {
@@ -220,7 +219,7 @@ QUnit.test('click on edit follower', async function (assert) {
         "should display an edit button"
     );
 
-    await afterNextRender(() => document.querySelector('.o_Follower_editButton').click());
+    await click('.o_Follower_editButton');
     assert.verifySteps(
         ['fetch_subtypes'],
         "clicking on edit follower should fetch subtypes"
@@ -237,7 +236,7 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    const { messaging, widget } = await start({
+    const { click, messaging, widget } = await start({
         hasDialog: true,
         async mockRPC(route, args) {
             if (route.includes('/mail/read_subscription_data')) {
@@ -280,7 +279,7 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
         "should display an edit button"
     );
 
-    await afterNextRender(() => document.querySelector('.o_Follower_editButton').click());
+    await click('.o_Follower_editButton');
     assert.verifySteps(
         ['fetch_subtypes'],
         "clicking on edit follower should fetch subtypes"
@@ -291,9 +290,7 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
         "dialog allowing to edit follower subtypes should have been created"
     );
 
-    await afterNextRender(
-        () => document.querySelector('.o_FollowerSubtypeList_closeButton').click()
-    );
+    await click('.o_FollowerSubtypeList_closeButton');
     assert.containsNone(
         document.body,
         '.o_DialogManager_dialog',

@@ -668,7 +668,7 @@ QUnit.test('new messages separator on posting message', async function (assert) 
         message_unread_counter: 0,
         name: "General",
     }];
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { click, createThreadViewComponent, messaging } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel'
@@ -693,9 +693,7 @@ QUnit.test('new messages separator on posting message', async function (assert) 
 
     document.querySelector('.o_ComposerTextInput_textarea').focus();
     await afterNextRender(() => document.execCommand('insertText', false, "hey !"));
-    await afterNextRender(() =>
-        document.querySelector('.o_Composer_buttonSend').click()
-    );
+    await click('.o_Composer_buttonSend');
     assert.containsOnce(
         document.body,
         '.o_Message',
@@ -729,7 +727,7 @@ QUnit.test('basic rendering of canceled notification', async function (assert) {
         notification_type: 'email',
         res_partner_id: 12,
     });
-    const { afterEvent, createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { afterEvent, click, createThreadViewComponent, messaging } = await start({ data: this.data });
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
@@ -769,9 +767,7 @@ QUnit.test('basic rendering of canceled notification', async function (assert) {
         "notification icon shown on the message should represent email"
     );
 
-    await afterNextRender(() => {
-        document.querySelector('.o_Message_notificationIconClickable').click();
-    });
+    await click('.o_Message_notificationIconClickable');
     assert.containsOnce(
         document.body,
         '.o_NotificationPopover',
@@ -973,7 +969,7 @@ QUnit.test("delete all attachments of message without content should no longer d
             res_id: 11,
         }
     );
-    const { afterEvent, createThreadViewComponent, messaging } = await start({ data: this.data, hasDialog: true });
+    const { afterEvent, click, createThreadViewComponent, messaging } = await start({ data: this.data, hasDialog: true });
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
@@ -1000,14 +996,10 @@ QUnit.test("delete all attachments of message without content should no longer d
         "there should be 1 message displayed initially"
     );
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_AttachmentCard[data-id="${
-            messaging.models['Attachment'].findFromIdentifyingData({ id: 143 }).localId
-        }"] .o_AttachmentCard_asideItemUnlink`).click();
-    });
-    await afterNextRender(() =>
-        document.querySelector('.o_AttachmentDeleteConfirm_confirmButton').click()
-    );
+    await click(`.o_AttachmentCard[data-id="${
+        messaging.models['Attachment'].findFromIdentifyingData({ id: 143 }).localId
+    }"] .o_AttachmentCard_asideItemUnlink`);
+    await click('.o_AttachmentDeleteConfirm_confirmButton');
     assert.containsNone(
         document.body,
         '.o_Message',
@@ -1033,7 +1025,7 @@ QUnit.test('delete all attachments of a message with some text content should st
             res_id: 11,
         },
     );
-    const { afterEvent, createThreadViewComponent, messaging } = await start({ data: this.data, hasDialog: true });
+    const { afterEvent, click, createThreadViewComponent, messaging } = await start({ data: this.data, hasDialog: true });
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
@@ -1060,14 +1052,10 @@ QUnit.test('delete all attachments of a message with some text content should st
         "there should be 1 message displayed initially"
     );
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_AttachmentCard[data-id="${
-            messaging.models['Attachment'].findFromIdentifyingData({ id: 143 }).localId
-        }"] .o_AttachmentCard_asideItemUnlink`).click();
-    });
-    await afterNextRender(() =>
-        document.querySelector('.o_AttachmentDeleteConfirm_confirmButton').click()
-    );
+    await click(`.o_AttachmentCard[data-id="${
+        messaging.models['Attachment'].findFromIdentifyingData({ id: 143 }).localId
+    }"] .o_AttachmentCard_asideItemUnlink`);
+    await click('.o_AttachmentDeleteConfirm_confirmButton');
     assert.containsOnce(
         document.body,
         '.o_Message',
@@ -1084,7 +1072,7 @@ QUnit.test('Post a message containing an email address followed by a mention on 
         email: "testpartner@odoo.com",
         name: "TestPartner",
     });
-    const { createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
+    const { click, createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
@@ -1097,12 +1085,8 @@ QUnit.test('Post a message containing an email address followed by a mention on 
     await createThreadViewComponent(threadViewer.threadView);
     await insertText('.o_ComposerTextInput_textarea', "email@odoo.com\n");
     await insertText('.o_ComposerTextInput_textarea', "@Te");
-    await afterNextRender(() =>
-        document.querySelector('.o_ComposerSuggestion').click()
-    );
-    await afterNextRender(() => {
-        document.querySelector('.o_Composer_buttonSend').click();
-    });
+    await click('.o_ComposerSuggestion');
+    await click('.o_Composer_buttonSend');
     assert.containsOnce(
         document.querySelector(`.o_Message_content`),
         `.o_mail_redirect[data-oe-id="25"][data-oe-model="res.partner"]:contains("@TestPartner")`,
@@ -1119,7 +1103,7 @@ QUnit.test(`Mention a partner with special character (e.g. apostrophe ')`, async
         email: "usatyi@example.com",
         name: "Pynya's spokesman",
     });
-    const { createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
+    const { click, createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
@@ -1131,12 +1115,8 @@ QUnit.test(`Mention a partner with special character (e.g. apostrophe ')`, async
     });
     await createThreadViewComponent(threadViewer.threadView);
     await insertText('.o_ComposerTextInput_textarea', "@Pyn");
-    await afterNextRender(() =>
-        document.querySelector('.o_ComposerSuggestion').click()
-    );
-    await afterNextRender(() => {
-        document.querySelector('.o_Composer_buttonSend').click();
-    });
+    await click('.o_ComposerSuggestion');
+    await click('.o_Composer_buttonSend');
     assert.containsOnce(
         document.querySelector(`.o_Message_content`),
         `.o_mail_redirect[data-oe-id="1952"][data-oe-model="res.partner"]:contains("@Pynya's spokesman")`,
@@ -1159,7 +1139,7 @@ QUnit.test('mention 2 different partners that have the same name', async functio
             name: "TestPartner",
         },
     );
-    const { createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
+    const { click, createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
@@ -1174,7 +1154,7 @@ QUnit.test('mention 2 different partners that have the same name', async functio
     await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestion')[0].click());
     await insertText('.o_ComposerTextInput_textarea', "@Te");
     await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestion')[1].click());
-    await afterNextRender(() => document.querySelector('.o_Composer_buttonSend').click());
+    await click('.o_Composer_buttonSend');
     assert.containsOnce(document.body, '.o_Message_content', 'should have one message after posting it');
     assert.containsOnce(
         document.querySelector(`.o_Message_content`),
@@ -1195,7 +1175,7 @@ QUnit.test('mention a channel with space in the name', async function (assert) {
         id: 7,
         name: "General good boy",
     });
-    const { createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
+    const { click, createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
@@ -1208,12 +1188,8 @@ QUnit.test('mention a channel with space in the name', async function (assert) {
     await createThreadViewComponent(threadViewer.threadView);
 
     await insertText('.o_ComposerTextInput_textarea', "#");
-    await afterNextRender(() =>
-        document.querySelector('.o_ComposerSuggestion').click()
-    );
-    await afterNextRender(() => {
-        document.querySelector('.o_Composer_buttonSend').click();
-    });
+    await click('.o_ComposerSuggestion');
+    await click('.o_Composer_buttonSend');
     assert.containsOnce(
         document.querySelector('.o_Message_content'),
         '.o_channel_redirect',
@@ -1233,7 +1209,7 @@ QUnit.test('mention a channel with "&" in the name', async function (assert) {
         id: 7,
         name: "General & good",
     });
-    const { createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
+    const { click, createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
@@ -1246,12 +1222,8 @@ QUnit.test('mention a channel with "&" in the name', async function (assert) {
     await createThreadViewComponent(threadViewer.threadView);
 
     await insertText('.o_ComposerTextInput_textarea', "#");
-    await afterNextRender(() =>
-        document.querySelector('.o_ComposerSuggestion').click()
-    );
-    await afterNextRender(() => {
-        document.querySelector('.o_Composer_buttonSend').click();
-    });
+    await click('.o_ComposerSuggestion');
+    await click('.o_Composer_buttonSend');
     assert.containsOnce(
         document.querySelector('.o_Message_content'),
         '.o_channel_redirect',
@@ -1271,7 +1243,7 @@ QUnit.test('mention a channel on a second line when the first line contains #', 
         id: 7,
         name: "General good",
     });
-    const { createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
+    const { click, createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
@@ -1285,12 +1257,8 @@ QUnit.test('mention a channel on a second line when the first line contains #', 
 
     await insertText('.o_ComposerTextInput_textarea', "#blabla\n");
     await insertText('.o_ComposerTextInput_textarea', "#");
-    await afterNextRender(() => {
-        document.querySelector('.o_ComposerSuggestion').click();
-    });
-    await afterNextRender(() => {
-        document.querySelector('.o_Composer_buttonSend').click();
-    });
+    await click('.o_ComposerSuggestion');
+    await click('.o_Composer_buttonSend');
     assert.containsOnce(
         document.querySelector('.o_Message_content'),
         '.o_channel_redirect',
@@ -1310,7 +1278,7 @@ QUnit.test('mention a channel when replacing the space after the mention by anot
         id: 7,
         name: "General good",
     });
-    const { createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
+    const { click, createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
@@ -1323,15 +1291,11 @@ QUnit.test('mention a channel when replacing the space after the mention by anot
     await createThreadViewComponent(threadViewer.threadView);
 
     await insertText('.o_ComposerTextInput_textarea', "#");
-    await afterNextRender(() => {
-        document.querySelector('.o_ComposerSuggestion').click();
-    });
+    await click('.o_ComposerSuggestion');
     const text = document.querySelector(`.o_ComposerTextInput_textarea`).value;
     document.querySelector(`.o_ComposerTextInput_textarea`).value = text.slice(0, -1);
     await insertText('.o_ComposerTextInput_textarea', ", test");
-    await afterNextRender(() => {
-        document.querySelector('.o_Composer_buttonSend').click();
-    });
+    await click('.o_Composer_buttonSend');
     assert.containsOnce(
         document.querySelector('.o_Message_content'),
         '.o_channel_redirect',
@@ -1358,7 +1322,7 @@ QUnit.test('mention 2 different channels that have the same name', async functio
             name: "my channel",
         },
     );
-    const { createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
+    const { click, createThreadViewComponent, insertText, messaging } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
@@ -1374,7 +1338,7 @@ QUnit.test('mention 2 different channels that have the same name', async functio
     await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestion')[0].click());
     await insertText('.o_ComposerTextInput_textarea', "#my");
     await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestion')[1].click());
-    await afterNextRender(() => document.querySelector('.o_Composer_buttonSend').click());
+    await click('.o_Composer_buttonSend');
     assert.containsOnce(document.body, '.o_Message_content', 'should have one message after posting it');
     assert.containsOnce(
         document.querySelector(`.o_Message_content`),
@@ -1606,7 +1570,7 @@ QUnit.test('first unseen message should be directly preceded by the new message 
         name: "General",
         uuid: 'channel20uuid',
     }];
-    const { createThreadViewComponent, env, messaging } = await start({ data: this.data });
+    const { click, createThreadViewComponent, env, messaging } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel'
@@ -1620,9 +1584,7 @@ QUnit.test('first unseen message should be directly preceded by the new message 
     // send a command that leads to receiving a transient message
     document.querySelector('.o_ComposerTextInput_textarea').focus();
     await afterNextRender(() => document.execCommand('insertText', false, "/who"));
-    await afterNextRender(() => {
-        document.querySelector('.o_Composer_buttonSend').click();
-    });
+    await click('.o_Composer_buttonSend');
 
     // composer is focused by default, we remove that focus
     document.querySelector('.o_ComposerTextInput_textarea').blur();
@@ -1661,7 +1623,7 @@ QUnit.test('composer should be focused automatically after clicking on the send 
     assert.expect(1);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
+    const { click, createThreadViewComponent, messaging } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel'
@@ -1674,9 +1636,7 @@ QUnit.test('composer should be focused automatically after clicking on the send 
     await createThreadViewComponent(threadViewer.threadView);
     document.querySelector('.o_ComposerTextInput_textarea').focus();
     await afterNextRender(() => document.execCommand('insertText', false, "Dummy Message"));
-    await afterNextRender(() => {
-        document.querySelector('.o_Composer_buttonSend').click();
-    });
+    await click('.o_Composer_buttonSend');
     assert.hasClass(
         document.querySelector('.o_Composer'),
         'o-focused',
@@ -1777,7 +1737,7 @@ QUnit.test('failure on loading more messages should not alter message list displ
             res_id: 20,
         };
     }));
-    const { createThreadViewComponent, messaging } = await start({
+    const { click, createThreadViewComponent, messaging } = await start({
         data: this.data,
         async mockRPC(route, args) {
             if (route === '/mail/channel/messages') {
@@ -1800,7 +1760,7 @@ QUnit.test('failure on loading more messages should not alter message list displ
     await createThreadViewComponent(threadViewer.threadView, undefined, { waitUntilMessagesLoaded: false });
 
     messageFetchShouldFail = true;
-    await afterNextRender(() => document.querySelector('.o_MessageList_loadMore').click());
+    await click('.o_MessageList_loadMore');
     assert.containsN(
         document.body,
         '.o_Message',
@@ -1830,7 +1790,7 @@ QUnit.test('failure on loading more messages should display error and prompt ret
             res_id: 20,
         };
     }));
-    const { createThreadViewComponent, messaging } = await start({
+    const { click, createThreadViewComponent, messaging } = await start({
         data: this.data,
         async mockRPC(route, args) {
             if (route === '/mail/channel/messages') {
@@ -1853,7 +1813,7 @@ QUnit.test('failure on loading more messages should display error and prompt ret
     await createThreadViewComponent(threadViewer.threadView, undefined, { waitUntilMessagesLoaded: false });
 
     messageFetchShouldFail = true;
-    await afterNextRender(() => document.querySelector('.o_MessageList_loadMore').click());
+    await click('.o_MessageList_loadMore');
     assert.containsOnce(
         document.body,
         '.o_MessageList_alertLoadingFailed',
@@ -1892,7 +1852,7 @@ QUnit.test('Retry loading more messages on failed load more messages should load
             res_id: 20,
         };
     });
-    const { afterEvent, createThreadViewComponent, messaging } = await start({
+    const { afterEvent, click, createThreadViewComponent, messaging } = await start({
         data: this.data,
         async mockRPC(route, args) {
             if (route === '/mail/channel/messages') {
@@ -1914,7 +1874,7 @@ QUnit.test('Retry loading more messages on failed load more messages should load
     });
     await createThreadViewComponent(threadViewer.threadView, undefined, { waitUntilMessagesLoaded: false });
     messageFetchShouldFail = true;
-    await afterNextRender(() => document.querySelector('.o_MessageList_loadMore').click());
+    await click('.o_MessageList_loadMore');
 
     messageFetchShouldFail = false;
     await afterEvent({

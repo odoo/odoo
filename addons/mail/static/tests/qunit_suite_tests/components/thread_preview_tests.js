@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { afterNextRender, beforeEach, start } from '@mail/../tests/helpers/test_utils';
+import { beforeEach, start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -46,9 +46,7 @@ QUnit.test('mark as read', async function (assert) {
         "should have an unread counter"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_ThreadPreview_markAsRead').click()
-    );
+    await click('.o_ThreadPreview_markAsRead');
     assert.verifySteps(
         ['set_last_seen_message'],
         "should have marked the thread as seen"

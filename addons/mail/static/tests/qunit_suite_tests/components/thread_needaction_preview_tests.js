@@ -28,7 +28,7 @@ QUnit.test('mark as read', async function (assert) {
         notification_type: 'inbox',
         res_partner_id: this.data.currentPartnerId,
     });
-    const { afterEvent, createMessagingMenuComponent } = await start({
+    const { afterEvent, click, createMessagingMenuComponent } = await start({
         data: this.data,
         hasChatWindow: true,
         async mockRPC(route, args) {
@@ -61,9 +61,7 @@ QUnit.test('mark as read', async function (assert) {
         "should have 1 mark as read button"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_ThreadNeedactionPreview_markAsRead').click()
-    );
+    await click('.o_ThreadNeedactionPreview_markAsRead');
     assert.verifySteps(
         ['mark_all_as_read'],
         "should have marked the thread as read"
@@ -91,7 +89,7 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
         notification_type: 'inbox',
         res_partner_id: this.data.currentPartnerId,
     });
-    const { afterEvent, createMessagingMenuComponent } = await start({
+    const { afterEvent, click, createMessagingMenuComponent } = await start({
         data: this.data,
         hasChatWindow: true,
         async mockRPC(route, args) {
@@ -129,9 +127,7 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
         "should have no chat window initially"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_ThreadNeedactionPreview').click()
-    );
+    await click('.o_ThreadNeedactionPreview');
     assert.verifySteps(
         ['mark_all_as_read'],
         "should have marked the message as read on clicking on the preview"
@@ -173,7 +169,7 @@ QUnit.test('click on expand from chat window should close the chat window and op
         notification_type: 'inbox',
         res_partner_id: this.data.currentPartnerId,
     });
-    const { afterEvent, createMessagingMenuComponent } = await start({
+    const { afterEvent, click, createMessagingMenuComponent } = await start({
         data: this.data,
         env: { bus },
         hasChatWindow: true,
@@ -192,9 +188,8 @@ QUnit.test('click on expand from chat window should close the chat window and op
         '.o_ThreadNeedactionPreview',
         "should have a preview initially"
     );
-    await afterNextRender(() =>
-        document.querySelector('.o_ThreadNeedactionPreview').click()
-    );
+
+    await click('.o_ThreadNeedactionPreview');
     assert.containsOnce(
         document.body,
         '.o_ChatWindow',
@@ -206,9 +201,7 @@ QUnit.test('click on expand from chat window should close the chat window and op
         "should have an expand button"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_ChatWindowHeader_commandExpand').click()
-    );
+    await click('.o_ChatWindowHeader_commandExpand');
     assert.containsNone(
         document.body,
         '.o_ChatWindow',
@@ -238,7 +231,7 @@ QUnit.test('[technical] opening a non-channel chat window should not call channe
         notification_type: 'inbox',
         res_partner_id: this.data.currentPartnerId,
     });
-    const { afterEvent, createMessagingMenuComponent } = await start({
+    const { afterEvent, click, createMessagingMenuComponent } = await start({
         data: this.data,
         hasChatWindow: true,
         async mockRPC(route, args) {
@@ -271,9 +264,7 @@ QUnit.test('[technical] opening a non-channel chat window should not call channe
         "should have no chat window initially"
     );
 
-    await afterNextRender(() =>
-        document.querySelector('.o_ThreadNeedactionPreview').click()
-    );
+    await click('.o_ThreadNeedactionPreview');
     assert.containsOnce(
         document.body,
         '.o_ChatWindow',
@@ -351,7 +342,7 @@ QUnit.test('chat window header should not have unread counter for non-channel th
         notification_type: 'inbox',
         res_partner_id: this.data.currentPartnerId,
     });
-    const { afterEvent, createMessagingMenuComponent } = await start({ data: this.data, hasChatWindow: true });
+    const { afterEvent, click, createMessagingMenuComponent } = await start({ data: this.data, hasChatWindow: true });
     await createMessagingMenuComponent();
     await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
@@ -361,9 +352,7 @@ QUnit.test('chat window header should not have unread counter for non-channel th
             return threadCache.thread.model === 'mail.box' && threadCache.thread.id === 'inbox';
         },
     }));
-    await afterNextRender(() =>
-        document.querySelector('.o_ThreadNeedactionPreview').click()
-    );
+    await click('.o_ThreadNeedactionPreview');
     assert.containsOnce(
         document.body,
         '.o_ChatWindow',
