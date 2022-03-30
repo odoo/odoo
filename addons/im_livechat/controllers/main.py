@@ -88,7 +88,6 @@ class LivechatController(http.Controller):
                 country_code = request.session.geoip.get('country_code', "")
                 country = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1) if country_code else None
                 if country:
-                    anonymous_name = "%s (%s)" % (anonymous_name, country.name)
                     country_id = country.id
 
         if previous_operator_id:
