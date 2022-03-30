@@ -845,7 +845,8 @@
                         <!-- Dummy tag used to organize buttons, englobing the 3 buttons modifies the width of the button -->
                         <span id="start_rating_buttons" invisible="1"/>
                         <field name="rating_avg" invisible="1"/>
-                        <button name="action_open_ratings" type="object" attrs="{'invisible': [('rating_count', '=', 0)]}" class="oe_stat_button" groups="project.group_project_rating">
+                        <field name="rating_active" invisible="1"/>
+                        <button name="action_open_ratings" type="object" attrs="{'invisible': ['|', ('rating_count', '=', 0), ('rating_active', '=', False)]}" class="oe_stat_button" groups="project.group_project_rating">
                             <i class="fa fa-fw o_button_icon fa-smile-o text-success" attrs="{'invisible': [('rating_avg', '&lt;', 3.66)]}" title="Satisfied"/>
                             <i class="fa fa-fw o_button_icon fa-meh-o text-warning" attrs="{'invisible': ['|', ('rating_avg', '&lt;', 2.33), ('rating_avg', '&gt;=', 3.66)]}" title="Okay"/>
                             <i class="fa fa-fw o_button_icon fa-frown-o text-danger" attrs="{'invisible': [('rating_avg', '&gt;=', 2.33)]}" title="Dissatisfied"/>
@@ -1104,6 +1105,7 @@
                     <field name="allow_subtasks"/>
                     <field name="child_text"/>
                     <field name="is_private"/>
+                    <field name="rating_active"/>
                     <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger", "normal": "muted"}'/>
                     <templates>
                     <t t-name="kanban-box">
@@ -1159,7 +1161,7 @@
                                     <div class="oe_kanban_bottom_left">
                                         <field name="priority" widget="priority"/>
                                         <field name="activity_ids" widget="kanban_activity"/>
-                                        <b t-if="record.rating_count.raw_value &gt; 0" groups="project.group_project_rating">
+                                        <b t-if="record.rating_active.raw_value and record.rating_count.raw_value &gt; 0" groups="project.group_project_rating">
                                             <span style="font-weight:bold;" class="fa fa-fw mt4 fa-smile-o text-success" t-if="record.rating_avg.raw_value &gt;= 3.66" title="Average Rating: Satisfied" role="img" aria-label="Happy face"/>
                                             <span style="font-weight:bold;" class="fa fa-fw mt4 fa-meh-o text-warning" t-elif="record.rating_avg.raw_value &gt;= 2.33" title="Average Rating: Okay" role="img" aria-label="Neutral face"/>
                                             <span style="font-weight:bold;" class="fa fa-fw mt4 fa-frown-o text-danger" t-else="" title="Average Rating: Dissatisfied" role="img" aria-label="Sad face"/>
@@ -1204,10 +1206,11 @@
                     <field name="activity_ids" string="Next Activity" widget="list_activity" optional="show"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show" context="{'project_id': project_id}"/>
+                    <field name="rating_active" invisible="1"/>
                     <field name="rating_last_text" string="Rating" decoration-danger="rating_last_text == 'ko'"
                         decoration-warning="rating_last_text == 'ok'" decoration-success="rating_last_text == 'top'"
-                        attrs="{'invisible': [('rating_last_text', '=', 'none')]}"
-                        class="font-weight-bold" widget="badge" optional="hide"/>
+                        attrs="{'invisible': ['|', ('rating_active', '=', False), ('rating_last_text', '=', 'none')]}"
+                        class="font-weight-bold" widget="badge" optional="hide" groups="project.group_project_rating"/>
                     <field name="kanban_state" widget="state_selection" optional="show" options="{'hide_label': True}" nolabel="1"/>
                     <field name="stage_id" invisible="context.get('set_visible',False)" optional="show" readonly="not context.get('default_project_id')"/>
                     <field name="recurrence_id" invisible="1" />
