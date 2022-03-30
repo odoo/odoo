@@ -5,15 +5,16 @@
     const schedulers = new Set();
 
     function hookIntoScheduler(scheduler) {
-        const { stop: originalStop } = scheduler;
-        scheduler.stop = function stop() {
-            const wasRunning = this.isRunning;
-            originalStop.call(this);
-            if (wasRunning) {
-                while (stopPromises.length) {
-                    stopPromises.pop().resolve();
+        const { flush: originalFlush } = scheduler;
+        scheduler.flush = function flush() {
+            originalFlush.call(this, ...arguments);
+            window.requestAnimationFrame(() => {
+                if ([...schedulers].every(({ tasks }) => tasks.size === 0)) {
+                    while (stopPromises.length) {
+                        stopPromises.pop().resolve();
+                    }
                 }
-            }
+            });
         };
     }
 
@@ -49,10 +50,15 @@
         const timeoutProm = new Promise((resolve, reject) => {
             timeoutNoRender = setTimeout(() => {
                 let error = startError;
-                if ([...schedulers].some(({ isRunning }) => isRunning)) {
+                const runningSchedulers = [...schedulers].filter(({ tasks }) => tasks.size > 0);
+                if (runningSchedulers.length) {
                     error = stopError;
                 }
-                console.error(error);
+                console.error(
+                    error,
+                    runningSchedulers.map((s) => [...s.tasks].map((f) => [f, f.node.status])),
+                    runningSchedulers
+                );
                 reject(error);
             }, timeoutDelay);
         });
@@ -76,7 +82,7 @@
         await new Promise(function (resolve) {
             setTimeout(() => window.requestAnimationFrame(() => resolve()));
         });
-        if ([...schedulers].some(({ isRunning }) => isRunning)) {
+        if ([...schedulers].some(({ tasks }) => tasks.size > 0)) {
             await afterNextRender(() => {}, timeoutDelay);
         }
     };

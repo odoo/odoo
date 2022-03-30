@@ -990,9 +990,9 @@ QUnit.module("Search", (hooks) => {
         const asustekPromise = promise;
         await click(getCategory(target, 1));
 
-        // 'asustek' should be selected, but there should still be 3 records
+        // 'asustek' should not be selected yet, but there should still be 3 records
         assert.containsOnce(target, ".o_search_panel_category_value .active");
-        assert.containsOnce(target, ".o_search_panel_category_value:nth(1) .active");
+        assert.containsOnce(target, ".o_search_panel_category_value:first .active");
 
         assert.deepEqual(getDomain(), [["bar", "=", true]]);
 
@@ -1001,9 +1001,9 @@ QUnit.module("Search", (hooks) => {
         const agrolaitPromise = promise;
         await click(getCategory(target, 2));
 
-        // 'agrolait' should be selected, but there should still be 3 records
+        // 'agrolait' should not be selected yet, but there should still be 3 records
         assert.containsOnce(target, ".o_search_panel_category_value .active");
-        assert.containsOnce(target, ".o_search_panel_category_value:nth(2) .active");
+        assert.containsOnce(target, ".o_search_panel_category_value:first .active");
 
         assert.deepEqual(getDomain(), [["bar", "=", true]]);
 
@@ -1012,7 +1012,7 @@ QUnit.module("Search", (hooks) => {
         await nextTick();
 
         assert.containsOnce(target, ".o_search_panel_category_value .active");
-        assert.containsOnce(target, ".o_search_panel_category_value:nth(2) .active");
+        assert.containsOnce(target, ".o_search_panel_category_value:first .active");
 
         assert.deepEqual(getDomain(), ["&", ["bar", "=", true], ["company_id", "child_of", 3]]);
 
@@ -2251,7 +2251,7 @@ QUnit.module("Search", (hooks) => {
 
             const webclient = await createWebClient({
                 serverData,
-                async mockRPC(route, {method}) {
+                async mockRPC(route, { method }) {
                     if (/search_panel_/.test(method || route)) {
                         assert.step(method || route);
                     }

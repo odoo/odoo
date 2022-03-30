@@ -2,7 +2,7 @@
 
 import { clear } from '@mail/model/model_field_command';
 
-const { onWillDestroy, onWillUpdateProps, useComponent } = owl;
+const { onWillDestroy, onWillUpdateProps, useComponent, onMounted } = owl;
 
 /**
  * This hook provides support for saving the reference of the component directly
@@ -16,10 +16,12 @@ const { onWillDestroy, onWillUpdateProps, useComponent } = owl;
 export function useComponentToModel({ fieldName, modelName }) {
     const component = useComponent();
     const { modelManager } = component.env.services.messaging;
-    const record = modelManager.models[modelName].get(component.props.localId);
-    if (record) {
-        record.update({ [fieldName]: component });
-    }
+    onMounted(() => {
+        const record = modelManager.models[modelName].get(component.props.localId);
+        if (record) {
+            record.update({ [fieldName]: component });
+        }
+    });
     onWillUpdateProps(nextProps => {
         const currentRecord = modelManager.models[modelName].get(component.props.localId);
         const nextRecord = modelManager.models[modelName].get(nextProps.localId);

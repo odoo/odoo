@@ -102,6 +102,7 @@ export function useModel(ModelClass, params, options = {}) {
         model.orm = orm;
         const searchParams = getSearchParams(props);
         await model.load(searchParams);
+        model.notify();
         if (useSampleModel && !model.hasData()) {
             sampleORM =
                 sampleORM || buildSampleORM(component.props.resModel, component.props.fields, user);
@@ -117,7 +118,7 @@ export function useModel(ModelClass, params, options = {}) {
     });
     onWillUpdateProps((nextProps) => {
         useSampleModel = false;
-        return load(nextProps);
+        load(nextProps);
     });
 
     useSetupView({

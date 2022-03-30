@@ -1521,9 +1521,11 @@ export class PivotModel extends Model {
             metaData.fields[fieldName] &&
             metaData.fields[fieldName].type === "boolean"
         ) {
-            return value === undefined ?
-                this.env._t('None')
-                : (value ? this.env._t('Yes') : this.env._t('No'));
+            return value === undefined
+                ? this.env._t("None")
+                : value
+                ? this.env._t("Yes")
+                : this.env._t("No");
         }
         if (value === false) {
             return this.env._t("None");
