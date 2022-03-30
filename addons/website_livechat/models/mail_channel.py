@@ -72,9 +72,11 @@ class MailChannel(models.Model):
         """Override to mark the visitor as still connected.
         If the message sent is not from the operator (so if it's the visitor or
         odoobot sending closing chat notification, the visitor last action date is updated."""
-        message = super(MailChannel, self).message_post(**kwargs)
-        message_author_id = message.author_id
-        visitor = self.livechat_visitor_id
-        if len(self) == 1 and visitor and message_author_id != self.livechat_operator_id:
-            visitor._update_visitor_last_visit()
-        return message
+        messages = super().message_post(**kwargs)
+        for message in messages:
+            rec = self.browse(message.res_id)
+            message_author = message.author_id
+            visitor = rec.livechat_visitor_id
+            if visitor and message_author != rec.livechat_operator_id:
+                visitor._update_visitor_last_visit()
+        return messages

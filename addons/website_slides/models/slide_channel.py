@@ -547,18 +547,17 @@ class Channel(models.Model):
             super(Channel, to_activate).toggle_active()
 
     @api.returns('mail.message', lambda value: value.id)
-    def message_post(self, *, parent_id=False, subtype_id=False, **kwargs):
+    def message_post(self, *, parent_id=False, subtype_id=False, message_type='notification', **kwargs):
         """ Temporary workaround to avoid spam. If someone replies on a channel
         through the 'Presentation Published' email, it should be considered as a
         note as we don't want all channel followers to be notified of this answer. """
-        self.ensure_one()
-        if kwargs.get('message_type') == 'comment' and not self.can_review:
+        if message_type == 'comment' and any(not rec.can_review for rec in self):
             raise AccessError(_('Not enough karma to review'))
         if parent_id:
             parent_message = self.env['mail.message'].sudo().browse(parent_id)
             if parent_message.subtype_id and parent_message.subtype_id == self.env.ref('website_slides.mt_channel_slide_published'):
                 subtype_id = self.env.ref('mail.mt_note').id
-        return super(Channel, self).message_post(parent_id=parent_id, subtype_id=subtype_id, **kwargs)
+        return super(Channel, self).message_post(parent_id=parent_id, subtype_id=subtype_id, message_type=message_type, **kwargs)
 
     # ---------------------------------------------------------
     # Business / Actions

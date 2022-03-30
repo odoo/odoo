@@ -610,7 +610,7 @@ class Channel(models.Model):
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, message_type='notification', **kwargs):
-        self.filtered(lambda channel: channel.is_chat or channel.channel_type == 'group').mapped('channel_last_seen_partner_ids').sudo().write({
+        self.filtered(lambda channel: channel.is_chat or channel.channel_type == 'group').channel_last_seen_partner_ids.sudo().write({
             'is_pinned': True,
             'last_interest_dt': fields.Datetime.now(),
         })
