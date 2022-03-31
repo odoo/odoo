@@ -149,7 +149,7 @@ QUnit.test('attachment loading is delayed', async function (assert) {
         hasTimeControl: true,
         loadingBaseDelayDuration: 100,
         async mockRPC(route) {
-            if (route.includes('ir.attachment/search_read')) {
+            if (route.includes('/mail/thread/data')) {
                 await makeTestPromise(); // simulate long loading
             }
             return this._super(...arguments);
@@ -191,7 +191,7 @@ QUnit.test('attachment counter while loading attachments', async function (asser
     this.data['res.partner'].records.push({ id: 100 });
     await this.start({
         async mockRPC(route) {
-            if (route.includes('ir.attachment/search_read')) {
+            if (route.includes('/mail/thread/data')) {
                 await makeTestPromise(); // simulate long loading
             }
             return this._super(...arguments);
@@ -233,7 +233,7 @@ QUnit.test('attachment counter transition when attachments become loaded)', asyn
     await this.start({
         async mockRPC(route) {
             const _super = this._super.bind(this, ...arguments); // limitation of class.js
-            if (route.includes('ir.attachment/search_read')) {
+            if (route.includes('/mail/thread/data')) {
                 await attachmentPromise;
             }
             return _super();
