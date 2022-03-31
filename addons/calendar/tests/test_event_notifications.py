@@ -160,6 +160,7 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
                 'partner_ids': [fields.Command.link(self.partner.id)],
                 'alarm_ids': [fields.Command.link(alarm.id)],
             })
+            self.event.flush()  # flush is required to make partner_ids be present in the event
 
         capt.records.ensure_one()
         self.assertLessEqual(capt.records.call_at, now)

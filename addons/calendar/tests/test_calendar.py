@@ -4,7 +4,7 @@ import datetime
 
 from datetime import datetime, timedelta, time
 
-from odoo import fields
+from odoo import fields, Command
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 import pytz
 import re
@@ -359,3 +359,19 @@ class TestCalendar(SavepointCaseWithUserDemo):
         self.assertEqual(len(event.attendee_ids), 2)
         self.assertTrue(self.partner_demo in event.attendee_ids.mapped('partner_id'))
         self.assertTrue(self.env.user.partner_id in event.attendee_ids.mapped('partner_id'))
+
+    def test_discuss_videocall(self):
+        self.event_tech_presentation._set_discuss_videocall_location()
+        self.assertFalse(self.event_tech_presentation.videocall_channel_id.id, 'No channel should be set before the route is accessed')
+        # create the first channel
+        self.event_tech_presentation._create_videocall_channel()
+        self.assertNotEqual(self.event_tech_presentation.videocall_channel_id.id, False)
+
+        partner1 = self.env['res.partner'].create({'name': 'Bob', 'email': u'bob@gm.co'})
+        partner2 = self.env['res.partner'].create({'name': 'Jack', 'email': u'jack@gm.co'})
+        new_partners = [partner1.id, partner2.id]
+        # invite partners to meeting
+        self.event_tech_presentation.write({
+            'partner_ids': [Command.link(new_partner) for new_partner in new_partners]
+        })
+        self.assertTrue(set(new_partners) == set(self.event_tech_presentation.videocall_channel_id.channel_partner_ids.ids), 'new partners must be invited to the channel')
