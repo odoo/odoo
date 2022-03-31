@@ -148,7 +148,7 @@ class Http(models.AbstractModel):
 
         view = template and request.env['website'].get_template(template)
         if view and view.track:
-            request.env['website.visitor']._handle_webpage_dispatch(response, website_page)
+            request.env['website.visitor']._handle_webpage_dispatch(website_page)
 
         return False
 

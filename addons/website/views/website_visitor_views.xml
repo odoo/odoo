@@ -212,7 +212,6 @@
                     </div>
                     <group id="general_info">
                         <group string="Details">
-                            <field name="active" invisible="1"/>
                             <field name="is_connected" invisible="1"/>
                             <field name="partner_id"/>
                             <field name="email"/>
@@ -270,8 +269,6 @@
                 <filter string="Contacts" name="filter_type_customer" domain="[('partner_id', '!=', False)]"/>
                 <separator/>
                 <filter string="Connected" name="filter_is_connected" domain="[('last_connection_datetime', '&gt;', datetime.datetime.now() - datetime.timedelta(minutes=5))]"/>
-                <separator/>
-                <filter string="Archived" name="filter_is_archived" domain="[('active', '=', False)]"/>
                 <separator/>
                 <group string="Group By">
                     <filter string="Country" name="group_by_country" context="{'group_by': 'country_id'}"/>

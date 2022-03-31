@@ -45,9 +45,6 @@ publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend(
                 product_id: productId,
             }
         }).then(function (res) {
-            if (res && res.visitor_uuid) {
-                utils.set_cookie('visitor_uuid', res.visitor_uuid);
-            }
             utils.set_cookie(cookieName, productId, 30 * 60);
         });
     },

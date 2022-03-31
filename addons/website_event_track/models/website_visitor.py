@@ -53,15 +53,10 @@ class WebsiteVisitor(models.Model):
         domain = super()._inactive_visitors_domain()
         return expression.AND([domain, [('event_track_visitor_ids', '=', False)]])
 
-    def _link_to_partner(self, partner, update_values=None):
-        """ Propagate partner update to track_visitor records """
-        if partner:
-            track_visitor_wo_partner = self.event_track_visitor_ids.filtered(lambda track_visitor: not track_visitor.partner_id)
-            if track_visitor_wo_partner:
-                track_visitor_wo_partner.partner_id = partner
-        super(WebsiteVisitor, self)._link_to_partner(partner, update_values=update_values)
-
-    def _link_to_visitor(self, target):
+    def _merge_visitor(self, target):
         """ Override linking process to link wishlist to the final visitor. """
         self.event_track_visitor_ids.visitor_id = target.id
-        return super(WebsiteVisitor, self)._link_to_visitor(target)
+        track_visitor_wo_partner = self.event_track_visitor_ids.filtered(lambda track_visitor: not track_visitor.partner_id)
+        if track_visitor_wo_partner:
+            track_visitor_wo_partner.partner_id = target.partner_id
+        return super()._merge_visitor(target)

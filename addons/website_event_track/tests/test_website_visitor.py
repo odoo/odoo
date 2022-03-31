@@ -25,6 +25,7 @@ class WebsiteVisitorTestsEventTrack(TestEventOnlineCommon, WebsiteVisitorTests):
             'country_id': self.env.ref('base.be').id,
             'website_id': 1,
             'last_connection_datetime': datetime.now() - timedelta(days=8),
+            'access_token': 'f9d2b93591d6f602e5e8afa238e35a6c',
             'event_track_visitor_ids': [(0, 0, {
                 'track_id': track_1.id,
                 'is_wishlisted': True
@@ -60,7 +61,7 @@ class WebsiteVisitorTestsEventTrack(TestEventOnlineCommon, WebsiteVisitorTests):
             'is_wishlisted': True,
         }])
 
-        linked_visitor._link_to_visitor(main_visitor)
+        linked_visitor._merge_visitor(main_visitor)
 
         self.assertVisitorDeactivated(linked_visitor, main_visitor)
 

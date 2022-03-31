@@ -104,16 +104,16 @@ class TestWebsitePerformance(UtilPerf):
     def test_15_perf_sql_queries_page(self):
         # standard tracked website.page
         self.page.track = True
-        self.assertEqual(self._get_url_hot_query(self.page.url), 14)
-        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 18)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 7)
+        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 11)
         self.menu.unlink()
-        self.assertEqual(self._get_url_hot_query(self.page.url), 14)
-        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 18)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 7)
+        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 11)
 
     def test_20_perf_sql_queries_homepage(self):
         # homepage "/" has its own controller
-        self.assertEqual(self._get_url_hot_query('/'), 14)
-        self.assertEqual(self._get_url_hot_query('/', cache=False), 16)
+        self.assertEqual(self._get_url_hot_query('/'), 7)
+        self.assertEqual(self._get_url_hot_query('/', cache=False), 9)
 
     def test_30_perf_sql_queries_page_no_layout(self):
         # website.page with no call to layout templates

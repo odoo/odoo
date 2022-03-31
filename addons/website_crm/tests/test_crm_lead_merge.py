@@ -22,11 +22,13 @@ class TestLeadVisitorMerge(TestLeadMergeCommon):
         TestLeadMergeCommon.merge_fields.append('visitor_ids')
 
         visitors = self.env['website.visitor'].sudo().create([
-            {'name': 'Visitor 1',
-             'lead_ids': [(4, self.lead_w_partner_company.id)],
+            {
+                'access_token': 'f9d2ffa0427d4e4b1d740cf5eb3cdc20',
+                'lead_ids': [(4, self.lead_w_partner_company.id)],
             },
-            {'name': 'Visitor 2',
-             'lead_ids': [(4, self.lead_w_partner.id)],
+            {
+                'access_token': 'f9d2c3f741a79200487728eac989e678',
+                'lead_ids': [(4, self.lead_w_partner.id)],
             }
         ])
         self.assertEqual(self.lead_w_partner_company.visitor_ids, visitors[0])
