@@ -524,7 +524,10 @@ return AbstractRenderer.extend({
 
                 // On double click, edit the event
                 element.on('dblclick', function () {
-                    self.trigger_up('edit_event', {id: event.id});
+                    self.trigger_up('edit_event', {
+                        id: event.id,
+                        title: event.extendedProps.record.display_name
+                    });
                 });
                 }
             },
