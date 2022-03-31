@@ -499,3 +499,29 @@ class TestStockProductionLot(TestStockCommon):
         new_date = datetime.today() + timedelta(days=15)
         quant.with_user(self.demo_user).with_context(inventory_mode=True).write({'removal_date': new_date})
         self.assertEqual(quant.removal_date, new_date)
+
+    def test_apply_lot_date_on_sml(self):
+        """
+        When assigning a lot to a SML, if the lot has an expiration date,
+        the latter should be applied on the SML
+        """
+        exp_date = fields.Datetime.today() + relativedelta(days=15)
+
+        lot = self.env['stock.production.lot'].create({
+            'name': 'Lot 1',
+            'product_id': self.apple_product.id,
+            'expiration_date': fields.Datetime.to_string(exp_date),
+            'company_id': self.env.company.id,
+        })
+
+        sml = self.env['stock.move.line'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'product_id': self.apple_product.id,
+            'qty_done': 3,
+            'product_uom_id': self.apple_product.uom_id.id,
+            'lot_id': lot.id,
+            'company_id': self.env.company.id,
+        })
+
+        self.assertEqual(sml.expiration_date, exp_date)
