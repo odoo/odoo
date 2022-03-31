@@ -1113,9 +1113,12 @@ class Channel(models.Model):
         return channel_info
 
     @api.model
-    def create_group(self, partners_to, default_display_mode=False):
-        """ Create a group channel.
+    def create_group(self, partners_to, default_display_mode=False, name=''):
+        """ Creates a group channel.
+
             :param partners_to : list of res.partner ids to add to the conversation
+            :param str default_display_mode: how the channel will be displayed by default
+            :param str name: group name. default name is computed client side from the list of members if no name is set
             :returns: channel_info of the created channel
             :rtype: dict
         """
@@ -1123,7 +1126,7 @@ class Channel(models.Model):
             'channel_last_seen_partner_ids': [Command.create({'partner_id': partner_id}) for partner_id in partners_to],
             'channel_type': 'group',
             'default_display_mode': default_display_mode,
-            'name': '',  # default name is computed client side from the list of members
+            'name': name,
             'public': 'private',
         })
         channel._broadcast(partners_to)
