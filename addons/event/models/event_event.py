@@ -573,3 +573,9 @@ class EventEvent(models.Model):
         ])
         if ended_events:
             ended_events.action_set_done()
+
+    def _check_auto_confirmation(self):
+        for event in self:
+            if not event.auto_confirm or (not event.seats_available and event.seats_limited):
+                return False
+        return True

@@ -280,3 +280,12 @@ class TestEventSale(TestEventSaleCommon):
         self.assertEqual(event.seats_expected, 1)
         self.sale_order.action_cancel()
         self.assertEqual(event.seats_expected, 0)
+
+    @users('user_salesman')
+    def test_auto_confirm(self):
+        """ This test ensures that auto_confirmation happens only after so confirmation (payment) """
+        self.register_person.action_make_registration()
+        registration = self.register_person.event_registration_ids.event_id.registration_ids
+        self.assertEqual(registration.state, 'draft', "Registration should be in 'draft' state")
+        registration.sale_order_id.sudo().action_confirm()
+        self.assertEqual(registration.state, 'open', "Registration should be in 'open' state")

@@ -186,10 +186,7 @@ class EventRegistration(models.Model):
         return ret_list
 
     def _check_auto_confirmation(self):
-        if any(not registration.event_id.auto_confirm or
-               (not registration.event_id.seats_available and registration.event_id.seats_limited) for registration in self):
-            return False
-        return True
+        return self.event_id._check_auto_confirmation()
 
     # ------------------------------------------------------------
     # ACTIONS / BUSINESS

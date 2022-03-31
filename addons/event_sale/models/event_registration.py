@@ -131,3 +131,7 @@ class EventRegistration(models.Model):
             'has_to_pay': not self.is_paid,
         })
         return res
+
+    def _check_auto_confirmation(self):
+        return super()._check_auto_confirmation() and\
+             (not self.sale_order_id or all(so.state != 'draft' for so in self.sale_order_id))
