@@ -4153,7 +4153,7 @@ QUnit.module("Fields", (hooks) => {
         ]);
     });
 
-    QUnit.skipWOWL("many2one dropdown disappears on scroll", async function (assert) {
+    QUnit.test("many2one dropdown disappears on scroll", async function (assert) {
         assert.expect(4);
 
         serverData.models.partner.records[0].display_name =

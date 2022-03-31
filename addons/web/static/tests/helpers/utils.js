@@ -322,6 +322,7 @@ export async function triggerScroll(
         });
         target.scrollTo(scrollCoordinates);
         target.dispatchEvent(new UIEvent("scroll"));
+        await nextTick();
         if (!canPropagate || !Object.entries(coordinates).length) return;
     }
     target.parentElement
