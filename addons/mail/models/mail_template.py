@@ -471,11 +471,17 @@ class MailTemplate(models.Model):
                 )
 
             # Add report in attachments: generate once for all template_res_ids
-            if template.report_template:
+
+            # Editado por MultidadosTI: Permite a escolha de um relatório enviado por contexo
+            # ao inves de utilizar o relatório relacionado ao template.
+
+            report_id = self._context.get('report_template_to_generate_email', template.report_template.id)
+
+            if report_id:
                 for res_id in template_res_ids:
                     attachments = []
                     report_name = self._render_template(template.report_name, template.model, res_id)
-                    report = template.report_template
+                    report = self.env['ir.actions.report'].browse(report_id)
                     report_service = report.report_name
 
                     if report.report_type in ['qweb-html', 'qweb-pdf']:
