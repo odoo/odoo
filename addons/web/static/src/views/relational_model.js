@@ -36,6 +36,18 @@ const DEFAULT_QUICK_CREATE_VIEW = {
         </form>`,
 };
 
+/**
+ * @typedef {import("@web/core/context").ContextDescription} ContextDescription
+ * @typedef {import("@web/core/context").ContextDescription} Context
+ */
+
+/**
+ * @typedef {{
+ *  parent?: RawContext;
+ *  make: () => Context;
+ * }} RawContext
+ */
+
 class WarningDialog extends Dialog {
     setup() {
         super.setup();
@@ -256,14 +268,25 @@ class DataPoint {
         this.resModel = params.resModel;
         this.fields = params.fields;
         this.activeFields = params.activeFields || {};
-        this.context = params.context;
 
+        this.rawContext = params.rawContext;
         this.setup(params, state);
     }
 
     // -------------------------------------------------------------------------
     // Getters
     // -------------------------------------------------------------------------
+
+    get context() {
+        const contexts = [];
+        let rawContext = this.rawContext;
+        while (rawContext) {
+            contexts.push(rawContext.make());
+            rawContext = rawContext.parent;
+        }
+
+        return Object.assign({}, ...contexts.reverse());
+    }
 
     get fieldNames() {
         return Object.keys(this.activeFields);
@@ -567,7 +590,10 @@ export class Record extends DataPoint {
     }
 
     getFieldContext(fieldName) {
-        return makeContext([this.context, this.activeFields[fieldName].context], this.evalContext);
+        return Object.assign(
+            this.context,
+            makeContext([this.activeFields[fieldName].context], this.evalContext)
+        );
     }
 
     getFieldDomain(fieldName) {
@@ -857,11 +883,15 @@ export class Record extends DataPoint {
             resModel: this.fields[fieldName].relation,
             fields,
             activeFields,
-            context: this.context,
             getParentRecordContext: () => this.dataContext,
             limit,
             orderBy,
-            field: this.fields[fieldName],
+            rawContext: {
+                parent: this.rawContext,
+                make: () => {
+                    return makeContext([activeField.context], this.evalContext);
+                },
+            },
             views,
             viewMode,
             onChanges: async () => {
@@ -1347,7 +1377,11 @@ export class DynamicRecordList extends DynamicList {
         if (record) {
             this.removeRecord(record);
         }
-        return this.createRecord({ activeFields, context, isInQuickCreation: true }, true);
+        const rawContext = {
+            parent: this.rawContext,
+            make: () => makeContext([context, {}]),
+        };
+        return this.createRecord({ activeFields, rawContext, isInQuickCreation: true }, true);
     }
 
     /**
@@ -1419,6 +1453,7 @@ export class DynamicRecordList extends DynamicList {
                     resId: data.id,
                     fields: this.fields,
                     activeFields: this.activeFields,
+                    rawContext: this.rawContext,
                     onRecordWillSwitchMode: this.onRecordWillSwitchMode,
                 });
                 await record.load({ values: data });
@@ -1457,10 +1492,10 @@ export class DynamicGroupList extends DynamicList {
             resModel: this.resModel,
             domain: this.domain,
             groupBy: this.groupBy.slice(1),
-            context: this.context,
             orderBy: this.orderBy,
             limit: this.limit,
             groupByInfo: this.groupByInfo,
+            rawContext: this.rawContext,
             onRecordWillSwitchMode: this.onRecordWillSwitchMode,
         };
     }
@@ -1512,6 +1547,7 @@ export class DynamicGroupList extends DynamicList {
             displayName,
             aggregates: {},
             groupByField: this.groupByField,
+            rawContext: this.rawContext,
             // FIXME
             // groupDomain: this.groupDomain,
         });
@@ -1787,7 +1823,7 @@ export class Group extends DataPoint {
             data: params.data,
             domain: Domain.and([params.domain, this.groupDomain]).toList(),
             groupBy: params.groupBy,
-            context: params.context,
+            rawContext: params.rawContext,
             orderBy: params.orderBy,
             resModel: params.resModel,
             activeFields: params.activeFields,
@@ -1900,7 +1936,7 @@ export class Group extends DataPoint {
         return this.model.createDataPoint("record", {
             resModel: this.resModel,
             resId: this.value,
-            context: this.context,
+            rawContext: this.rawContext,
             ...params,
         });
     }
@@ -1976,7 +2012,6 @@ export class StaticList extends DataPoint {
         this._cache = {};
         this._mapping = {}; // maps record.resId || record.virtualId to record.id
 
-        this.field = params.field;
         this.views = params.views || {};
         this.viewMode = params.viewMode;
 
@@ -2318,11 +2353,14 @@ export class StaticList extends DataPoint {
                 }
                 this.onChanges();
             },
+            rawContext: {
+                parent: this.rawContext,
+                make: () => {
+                    return makeContext([params.context], this.evalContext);
+                },
+            },
             ...params,
-            context: makeContext(
-                [this.context, this.field.context, params.context],
-                this.evalContext
-            ),
+
             getParentRecordContext: this.getParentRecordContext,
         });
         const id = record.resId || record.virtualId; // is resId sometimes changed after record creation? (for a record in a staticList)
@@ -2582,6 +2620,11 @@ export class RelationalModel extends Model {
         ) {
             rootParams.groupBy = [this.defaultGroupBy];
         }
+        rootParams.rawContext = {
+            make: () => {
+                return makeContext([rootParams.context], {});
+            },
+        };
         const state = this.root ? this.root.exportState() : {};
         const newRoot = this.createDataPoint(this.rootType, rootParams, state);
         this.isLoaded = this.keepLast.add(newRoot.load());

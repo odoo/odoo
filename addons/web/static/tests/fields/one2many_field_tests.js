@@ -5107,12 +5107,12 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many list, the context is properly evaluated and sent",
         async function (assert) {
             assert.expect(2);
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -5132,12 +5132,11 @@ QUnit.module("Fields", (hooks) => {
                         assert.strictEqual(context.hello, "world");
                         assert.strictEqual(context.abc, 10);
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
 
             await clickEdit(target);
-            await click(form.$("tbody td.o_field_x2many_list_row_add a"));
+            await click(target, "tbody td.o_field_x2many_list_row_add a");
         }
     );
 
@@ -5341,19 +5340,17 @@ QUnit.module("Fields", (hooks) => {
         await click($(".o_form_button_save"));
     });
 
-    QUnit.skipWOWL(
-        "new record, the context is properly evaluated and sent",
-        async function (assert) {
-            assert.expect(2);
+    QUnit.test("new record, the context is properly evaluated and sent", async function (assert) {
+        assert.expect(2);
 
-            serverData.models.partner.fields.int_field.default = 17;
-            var n = 0;
+        serverData.models.partner.fields.int_field.default = 17;
+        let n = 0;
 
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
                     <form>
                         <field name="int_field"/>
                         <field name="p" context="{'hello': 'world', 'abc': int_field}">
@@ -5362,28 +5359,26 @@ QUnit.module("Fields", (hooks) => {
                             </tree>
                         </field>
                     </form>`,
-                mockRPC(route, args) {
-                    if (args.method === "onchange") {
-                        n++;
-                        if (n === 2) {
-                            var context = args.kwargs.context;
-                            assert.strictEqual(context.hello, "world");
-                            assert.strictEqual(context.abc, 17);
-                        }
+            mockRPC(route, args) {
+                if (args.method === "onchange") {
+                    n++;
+                    if (n === 2) {
+                        var context = args.kwargs.context;
+                        assert.strictEqual(context.hello, "world");
+                        assert.strictEqual(context.abc, 17);
                     }
-                    return this._super.apply(this, arguments);
-                },
-            });
+                }
+            },
+        });
 
-            await click(form.$("tbody td.o_field_x2many_list_row_add a"));
-        }
-    );
+        await click(target, "tbody td.o_field_x2many_list_row_add a");
+    });
 
     QUnit.skipWOWL("parent data is properly sent on an onchange rpc", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.onchanges = { bar: function () {} };
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -5399,19 +5394,18 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
             mockRPC(route, args) {
                 if (args.method === "onchange") {
-                    var fieldValues = args.args[1];
+                    const fieldValues = args.args[1];
                     assert.strictEqual(
                         fieldValues.trululu.foo,
                         "yop",
                         "should have properly sent the parent foo value"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         await clickEdit(target);
-        await click(form.$("tbody td.o_field_x2many_list_row_add a"));
+        await click(target, "tbody td.o_field_x2many_list_row_add a");
         // use of owlCompatibilityExtraNextTick because we have an x2many field with a boolean field
         // (written in owl), so when we add a line, we sequentially render the list itself
         // (including the boolean field), so we have to wait for the next animation frame, and

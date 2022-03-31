@@ -247,7 +247,7 @@ export class ListView extends Component {
             if (this.model.root.editedRecord) {
                 await this.model.root.editedRecord.save();
             }
-            await this.model.root.createRecord(null, this.editable === "top");
+            await this.model.root.createRecord({}, this.editable === "top");
             this.render();
         } else {
             await this.props.createRecord();
