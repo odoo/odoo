@@ -19,12 +19,18 @@ QUnit.test('notification group basic layout', async function (assert) {
         res_id: mailChannelId1,
         res_model_name: "Channel", // random res model name, will be asserted in the test
     });
-    // failure that is expected to be used in the test
-    pyEnv['mail.notification'].create({
-        mail_message_id: mailMessageId1, // id of the related message
-        notification_status: 'exception', // necessary value to have a failure
-        notification_type: 'email', // expected failure type for email message
-    });
+    pyEnv['mail.notification'].create([
+        {
+            mail_message_id: mailMessageId1,
+            notification_status: 'exception',
+            notification_type: 'email',
+        },
+        {
+            mail_message_id: mailMessageId1,
+            notification_status: 'exception',
+            notification_type: 'email',
+        },
+    ]);
     const { createNotificationListComponent } = await start();
     await createNotificationListComponent();
     assert.containsOnce(
@@ -49,8 +55,8 @@ QUnit.test('notification group basic layout', async function (assert) {
     );
     assert.strictEqual(
         document.querySelector('.o_NotificationGroup_counter').textContent.trim(),
-        "(1)",
-        "should have only 1 notification in the group"
+        "(2)",
+        "should have 2 notifications in the group"
     );
     assert.containsOnce(
         document.body,
@@ -327,16 +333,25 @@ QUnit.test('different mail.channel are not grouped', async function (assert) {
         },
     ]);
     pyEnv['mail.notification'].create([
-        // first failure that is expected to be used in the test
         {
             mail_message_id: mailMessageId1, // id of the related first message
             notification_status: 'exception', // one possible value to have a failure
             notification_type: 'email', // expected failure type for email message
-        }, // second failure that is expected to be used in the test
+        },
+        {
+            mail_message_id: mailMessageId1,
+            notification_status: 'exception',
+            notification_type: 'email',
+        },
         {
             mail_message_id: mailMessageId2, // id of the related second message
             notification_status: 'bounce', // other possible value to have a failure
             notification_type: 'email', // expected failure type for email message
+        },
+        {
+            mail_message_id: mailMessageId2,
+            notification_status: 'bounce',
+            notification_type: 'email',
         },
     ]);
     const { createNotificationListComponent } = await start({
@@ -358,8 +373,8 @@ QUnit.test('different mail.channel are not grouped', async function (assert) {
     );
     assert.strictEqual(
         groups[0].querySelector('.o_NotificationGroup_counter').textContent.trim(),
-        "(1)",
-        "should have 1 notification in first group"
+        "(2)",
+        "should have 2 notifications in first group"
     );
     assert.containsOnce(
         groups[1],
@@ -368,8 +383,8 @@ QUnit.test('different mail.channel are not grouped', async function (assert) {
     );
     assert.strictEqual(
         groups[1].querySelector('.o_NotificationGroup_counter').textContent.trim(),
-        "(1)",
-        "should have 1 notification in second group"
+        "(2)",
+        "should have 2 notifications in second group"
     );
 
     await afterNextRender(() => groups[0].click());
@@ -401,17 +416,25 @@ QUnit.test('multiple grouped notifications by document model, sorted by the most
         },
     ]);
     pyEnv['mail.notification'].create([
-        // first failure that is expected to be used in the test
         {
             mail_message_id: mailMessageId1, // id of the related first message
             notification_status: 'exception', // one possible value to have a failure
             notification_type: 'email', // expected failure type for email message
         },
-        // second failure that is expected to be used in the test
+        {
+            mail_message_id: mailMessageId1,
+            notification_status: 'exception',
+            notification_type: 'email',
+        },
         {
             mail_message_id: mailMessageId2, // id of the related second message
             notification_status: 'bounce', // other possible value to have a failure
             notification_type: 'email', // expected failure type for email message
+        },
+        {
+            mail_message_id: mailMessageId2,
+            notification_status: 'bounce',
+            notification_type: 'email',
         },
     ]);
     const { createNotificationListComponent } = await start();
@@ -440,8 +463,8 @@ QUnit.test('multiple grouped notifications by document model, sorted by the most
     );
     assert.strictEqual(
         groups[0].querySelector('.o_NotificationGroup_counter').textContent.trim(),
-        "(1)",
-        "should have 1 notification in first group"
+        "(2)",
+        "should have 2 notifications in first group"
     );
     assert.containsOnce(
         groups[1],
@@ -460,8 +483,8 @@ QUnit.test('multiple grouped notifications by document model, sorted by the most
     );
     assert.strictEqual(
         groups[1].querySelector('.o_NotificationGroup_counter').textContent.trim(),
-        "(1)",
-        "should have 1 notification in second group"
+        "(2)",
+        "should have 2 notifications in second group"
     );
 });
 

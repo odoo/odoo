@@ -91,18 +91,26 @@ QUnit.test('notifications grouped by notification_type', async function (assert)
         }
     );
     this.data['mail.notification'].records.push(
-        // first failure that is expected to be used in the test
         {
             mail_message_id: 11, // id of the related first message
             notification_status: 'exception', // necessary value to have a failure
             notification_type: 'sms', // different type from second failure
         },
-        // second failure that is expected to be used in the test
+        {
+            mail_message_id: 11,
+            notification_status: 'exception',
+            notification_type: 'sms',
+        },
         {
             mail_message_id: 12, // id of the related second message
             notification_status: 'exception', // necessary value to have a failure
             notification_type: 'email', // different type from first failure
-        }
+        },
+        {
+            mail_message_id: 12,
+            notification_status: 'exception',
+            notification_type: 'email',
+        },
     );
     const { createNotificationListComponent } = await start({ data: this.data });
     await createNotificationListComponent();
@@ -131,8 +139,8 @@ QUnit.test('notifications grouped by notification_type', async function (assert)
     );
     assert.strictEqual(
         groups[0].querySelector('.o_NotificationGroup_counter').textContent.trim(),
-        "(1)",
-        "should have 1 notification in first group"
+        "(2)",
+        "should have 2 notifications in first group"
     );
     assert.strictEqual(
         groups[0].querySelector('.o_NotificationGroup_inlineText').textContent.trim(),
@@ -156,8 +164,8 @@ QUnit.test('notifications grouped by notification_type', async function (assert)
     );
     assert.strictEqual(
         groups[1].querySelector('.o_NotificationGroup_counter').textContent.trim(),
-        "(1)",
-        "should have 1 notification in second group"
+        "(2)",
+        "should have 2 notifications in second group"
     );
     assert.strictEqual(
         groups[1].querySelector('.o_NotificationGroup_inlineText').textContent.trim(),

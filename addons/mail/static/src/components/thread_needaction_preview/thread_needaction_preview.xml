@@ -27,9 +27,11 @@
                         <span class="o_ThreadNeedactionPreview_name text-truncate" t-att-class="{ 'o-mobile': messaging.device.isMobile }">
                             <t t-esc="threadNeedactionPreviewView.thread.displayName"/>
                         </span>
-                        <span class="o_ThreadNeedactionPreview_counter">
-                            (<t t-esc="threadNeedactionPreviewView.thread.needactionMessagesAsOriginThread.length"/>)
-                        </span>
+                        <t t-if="threadNeedactionPreviewView.thread.needactionMessagesAsOriginThread.length > 1">
+                            <span class="o_ThreadNeedactionPreview_counter">
+                                (<t t-esc="threadNeedactionPreviewView.thread.needactionMessagesAsOriginThread.length"/>)
+                            </span>
+                        </t>
                         <span class="o-autogrow"/>
                         <t t-if="threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread and threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread.date">
                             <span class="o_ThreadNeedactionPreview_date">
@@ -37,7 +39,7 @@
                             </span>
                         </t>
                     </div>
-                    <div class="o_ThreadNeedactionPreview_core">
+                    <div class="o_ThreadNeedactionPreview_core d-flex align-items-baseline">
                         <span class="o_ThreadNeedactionPreview_coreItem o_ThreadNeedactionPreview_inlineText text-truncate" t-att-class="{ 'o-empty': inlineLastNeedactionMessageAsOriginThreadBody.length === 0 }">
                             <t t-if="threadNeedactionPreviewView.messageAuthorPrefixView">
                                 <MessageAuthorPrefix localId="threadNeedactionPreviewView.messageAuthorPrefixView.localId"/>
