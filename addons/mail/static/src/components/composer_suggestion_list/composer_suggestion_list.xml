@@ -3,9 +3,9 @@
 
     <t t-name="mail.ComposerSuggestionList" owl="1">
         <t t-if="composerView">
-            <div class="o_ComposerSuggestionList" t-att-class="{ 'o-lowPosition': props.isBelow }" t-attf-class="{{ className }}" t-ref="root">
-                <div class="o_ComposerSuggestionList_drop" t-att-class="{ 'dropdown': props.isBelow, 'dropup': !props.isBelow }">
-                    <div class="o_ComposerSuggestionList_list dropdown-menu show">
+            <div class="o_ComposerSuggestionList position-absolute w-100" t-att-class="{ 'o-lowPosition bottom-0': props.isBelow }" t-attf-class="{{ className }}" t-ref="root">
+                <div class="o_ComposerSuggestionList_drop w-100" t-att-class="{ 'dropdown': props.isBelow, 'dropup': !props.isBelow }">
+                    <div class="o_ComposerSuggestionList_list dropdown-menu show w-100 overflow-auto">
                         <t t-foreach="composerView.mainSuggestions" t-as="suggestion" t-key="suggestion.localId">
                             <ComposerSuggestion
                                 composerViewLocalId="composerView.localId"
