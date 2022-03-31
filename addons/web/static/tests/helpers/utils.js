@@ -620,3 +620,28 @@ export const dragAndDrop = async (fromSelector, toSelector) => {
     triggerEvent(from, null, "mouseup", toPos);
     await triggerEvent(from, null, "click", toPos);
 };
+
+export async function clickDropdown(target, fieldName) {
+    const dropdownInput = target.querySelector(`div[name='${fieldName}'] .o_input_dropdown input`);
+    await click(dropdownInput);
+}
+
+export async function selectDropdownItem(target, fieldName, itemContent) {
+    await clickDropdown(target, fieldName);
+    const dropdownItems = target.querySelectorAll(
+        `div[name='${fieldName}'] .o_input_dropdown ul li`
+    );
+    const indexToClick = Array.from(dropdownItems)
+        .map((html) => html.textContent)
+        .indexOf(itemContent);
+    if (indexToClick === -1) {
+        throw new Error(`The element '${itemContent}' does not exist in the dropdown`);
+    }
+    await click(dropdownItems[indexToClick], null, "click");
+}
+
+export function getNodesTextContent(nodes) {
+    return Array.from(nodes)
+        .map((n) => n.textContent)
+        .join("");
+}
