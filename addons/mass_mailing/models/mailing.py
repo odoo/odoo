@@ -126,11 +126,6 @@ class MassMailing(models.Model):
     mailing_domain = fields.Char(
         string='Domain', compute='_compute_mailing_domain',
         readonly=False, store=True)
-    mailing_filter_id = fields.Many2one(
-        'mailing.filter', string='Favorite Filter',
-        domain="[('mailing_model_name', '=', mailing_model_name)]",
-        compute='_compute_mailing_filter_id', readonly=False, store=True)
-    mailing_filter_domain = fields.Char('Favorite filter domain', related='mailing_filter_id.mailing_domain')
     mail_server_available = fields.Boolean(
         compute='_compute_mail_server_available',
         help="Technical field used to know if the user has activated the outgoing mail server option in the settings")
@@ -138,6 +133,13 @@ class MassMailing(models.Model):
         default=_get_default_mail_server_id,
         help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.")
     contact_list_ids = fields.Many2many('mailing.list', 'mail_mass_mailing_list_rel', string='Mailing Lists')
+    # Mailing Filter
+    mailing_filter_id = fields.Many2one(
+        'mailing.filter', string='Favorite Filter',
+        domain="[('mailing_model_name', '=', mailing_model_name)]",
+        compute='_compute_mailing_filter_id', readonly=False, store=True)
+    mailing_filter_domain = fields.Char('Favorite filter domain', related='mailing_filter_id.mailing_domain')
+    mailing_filter_count = fields.Integer('# Favorite Filters', compute='_compute_mailing_filter_count')
     # A/B Testing
     ab_testing_completed = fields.Boolean(related='campaign_id.ab_testing_completed', store=True)
     ab_testing_description = fields.Html('A/B Testing Description', compute="_compute_ab_testing_description")
@@ -330,6 +332,15 @@ class MassMailing(models.Model):
                 mailing.reply_to = self.env.user.email_formatted
             elif mailing.reply_to_mode == 'update':
                 mailing.reply_to = False
+
+    @api.depends('mailing_model_id', 'mailing_domain')
+    def _compute_mailing_filter_count(self):
+        filter_data = self.env['mailing.filter']._read_group([
+            ('mailing_model_id', 'in', self.mailing_model_id.ids)
+        ], ['mailing_model_id'], ['mailing_model_id'])
+        mapped_data = {data['mailing_model_id'][0]: data['mailing_model_id_count'] for data in filter_data}
+        for mailing in self:
+            mailing.mailing_filter_count = mapped_data.get(mailing.mailing_model_id.id, 0)
 
     @api.depends('mailing_model_id')
     def _compute_mailing_model_real(self):

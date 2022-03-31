@@ -5,7 +5,10 @@
         <t t-jquery="div.o_field_many2one_selection" t-operation="append">
             <div class="o_mass_mailing_filter_container">
                 <div class="o_mass_mailing_save_filter_container pt-1">
-                    <i class="o_mass_mailing_add_filter fa fa-floppy-o px-3 py-1" data-toggle="dropdown" title="Add to favorite filters"/>
+                    <span class="o_mass_mailing_add_filter" data-toggle="dropdown" title="Add to favorite filters">
+                        <span class="o_mass_mailing_no_filter">Save as Favorite Filter</span>
+                        <i class="fa fa-floppy-o px-3 py-1"/>
+                    </span>
                     <div class="dropdown-menu dropdown-menu-right">
                         <span class="ml-2 text-muted">Create Favorite Filter</span><br/>
                         <div class="d-inline-flex">
