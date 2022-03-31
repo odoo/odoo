@@ -24,27 +24,20 @@ QUnit.module("Fields", (hooks) => {
             models: {
                 partner: {
                     fields: {
-                        int_field: { string: "int_field", type: "integer", sortable: true },
+                        int_field: { string: "int_field", type: "integer" },
                         user_id: { string: "User", type: "many2one", relation: "user" },
                     },
                     records: [
-                        {
-                            id: 1,
-                            int_field: 10,
-                            user_id: 17,
-                        },
-                        {
-                            id: 2,
-                            int_field: 9,
-                            user_id: 17,
-                        },
+                        { id: 1, user_id: 17 },
+                        { id: 2, user_id: 19 },
+                        { id: 3, user_id: 17 },
+                        { id: 4, user_id: false },
                     ],
                 },
                 user: {
                     fields: {
                         name: { string: "Name", type: "char" },
                         partner_ids: {
-                            string: "one2many partners field",
                             type: "one2many",
                             relation: "partner",
                             relation_field: "user_id",
@@ -54,7 +47,6 @@ QUnit.module("Fields", (hooks) => {
                         {
                             id: 17,
                             name: "Aline",
-                            partner_ids: [1, 2],
                         },
                         {
                             id: 19,
@@ -192,13 +184,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("basic list view flow", async function (assert) {
         assert.expect(4);
 
-        serverData.models.partner.records = [
-            { id: 1, user_id: 17 },
-            { id: 2, user_id: 19 },
-            { id: 3, user_id: 17 },
-            { id: 4, user_id: false },
-        ];
-
         await makeView({
             type: "list",
             serverData,
@@ -224,13 +209,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("basic flow in editable list view", async function (assert) {
-        serverData.models.partner.records = [
-            { id: 1, user_id: 17 },
-            { id: 2, user_id: 19 },
-            { id: 3, user_id: 17 },
-            { id: 4, user_id: false },
-        ];
-
         await makeView({
             type: "list",
             serverData,
