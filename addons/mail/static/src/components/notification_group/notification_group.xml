@@ -14,9 +14,11 @@
                         <span class="o_NotificationGroup_name text-truncate">
                             <t t-esc="notificationGroupView.notificationGroup.res_model_name"/>
                         </span>
-                        <span class="o_NotificationGroup_counter">
-                            (<t t-esc="notificationGroupView.notificationGroup.notifications.length"/>)
-                        </span>
+                        <t t-if="notificationGroupView.notificationGroup.notifications.length > 1">
+                            <span class="o_NotificationGroup_counter">
+                                (<t t-esc="notificationGroupView.notificationGroup.notifications.length"/>)
+                            </span>
+                        </t>
                         <span class="o-autogrow"/>
                         <t t-if="notificationGroupView.notificationGroup.date">
                             <span class="o_NotificationGroup_date">
@@ -24,7 +26,7 @@
                             </span>
                         </t>
                     </div>
-                    <div class="o_NotificationGroup_core">
+                    <div class="o_NotificationGroup_core d-flex align-items-baseline">
                         <span class="o_NotificationGroup_coreItem o_NotificationGroup_inlineText text-truncate">
                             <t t-if="notificationGroupView.notificationGroup.notification_type === 'email'">
                                 An error occurred when sending an email.

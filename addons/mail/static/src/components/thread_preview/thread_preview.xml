@@ -28,8 +28,8 @@
                         <span class="o_ThreadPreview_name text-truncate" t-att-class="{ 'o-mobile': messaging.device.isMobile, 'o-muted': threadPreviewView.thread.localMessageUnreadCounter === 0 }">
                             <t t-esc="threadPreviewView.thread.displayName"/>
                         </span>
-                        <t t-if="threadPreviewView.thread.localMessageUnreadCounter > 0">
-                            <span class="o_ThreadPreview_counter" t-att-class="{ 'o-muted': threadPreviewView.thread.localMessageUnreadCounter === 0 }">
+                        <t t-if="threadPreviewView.thread.localMessageUnreadCounter > 1">
+                            <span class="o_ThreadPreview_counter">
                                 (<t t-esc="threadPreviewView.thread.localMessageUnreadCounter"/>)
                             </span>
                         </t>
@@ -43,7 +43,7 @@
                             </span>
                         </t>
                     </div>
-                    <div class="o_ThreadPreview_core">
+                    <div class="o_ThreadPreview_core d-flex align-items-baseline">
                         <span class="o_ThreadPreview_coreItem o_ThreadPreview_inlineText text-truncate" t-att-class="{ 'o-empty': inlineLastMessageBody.length === 0 }">
                             <t t-if="threadPreviewView.messageAuthorPrefixView">
                                 <MessageAuthorPrefix localId="threadPreviewView.messageAuthorPrefixView.localId"/>
