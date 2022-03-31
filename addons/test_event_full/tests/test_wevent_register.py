@@ -37,10 +37,8 @@ class TestWEventRegister(TestWEventCommon):
         )
 
         # check visitor stored information
-        self.assertEqual(visitor.name, "Raoulette Poiluchette")
+        self.assertEqual(visitor.display_name, "Raoulette Poiluchette")
         self.assertEqual(visitor.event_registration_ids, new_registrations)
         self.assertEqual(visitor.partner_id, self.env['res.partner'])
         self.assertEqual(visitor.mobile, "0456112233")
         self.assertEqual(visitor.email, "raoulette@example.com")
-        self.assertFalse(visitor.parent_id)
-        self.assertTrue(visitor.active)

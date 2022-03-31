@@ -384,7 +384,6 @@ class EventTrackController(http.Controller):
         track = self._fetch_track(track_id, allow_sudo=True)
         force_create = set_reminder_on or track.wishlisted_by_default
         event_track_partner = track._get_event_track_visitors(force_create=force_create)
-        visitor_sudo = event_track_partner.visitor_id
 
         if not track.wishlisted_by_default:
             if not event_track_partner or event_track_partner.is_wishlisted == set_reminder_on:  # ignore if new state = old state
@@ -396,8 +395,6 @@ class EventTrackController(http.Controller):
             event_track_partner.is_blacklisted = not set_reminder_on
 
         result = {'reminderOn': set_reminder_on}
-        if request.httprequest.cookies.get('visitor_uuid', '') != visitor_sudo.access_token:
-            result['visitor_uuid'] = visitor_sudo.access_token
 
         return result
 

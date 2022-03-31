@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import random
+
 from odoo import fields, tests
 
 
@@ -39,7 +41,11 @@ class TestLivechatCommon(tests.TransactionCase):
             'country_id': self.env.ref('base.de').id,
             'website_id': self.env.ref('website.default_website').id,
             'partner_id': self.env.ref('base.user_demo').partner_id.id,
-        }] + [visitor_vals]*self.max_sessions_per_operator)
+            'access_token': self.env.ref('base.user_demo').partner_id.id,
+        }] + [
+            dict(visitor_vals, access_token='%032x' % random.randrange(16**32))
+            for _ in range(self.max_sessions_per_operator)
+        ])
         self.visitor_demo, self.visitor = self.visitors[0], self.visitors[1]
 
         base_url = self.livechat_channel.get_base_url()

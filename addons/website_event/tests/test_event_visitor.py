@@ -15,11 +15,11 @@ class TestEventVisitor(TestEventOnlineCommon, WebsiteVisitorTests):
     def test_clean_inactive_visitors_event(self):
         """ Visitors registered to events should not be deleted even if not connected recently. """
         active_visitors = self.env['website.visitor'].create([{
-            'name': 'Lead Douglas',
             'lang_id': self.env.ref('base.lang_en').id,
             'country_id': self.env.ref('base.be').id,
             'website_id': 1,
             'last_connection_datetime': datetime.now() - timedelta(days=8),
+            'access_token': 'f9d2af99f543874642f89bd334fa4a49',
             'event_registration_ids': [(0, 0, {
                 'event_id': self.event_0.id
             })]
@@ -50,7 +50,7 @@ class TestEventVisitor(TestEventOnlineCommon, WebsiteVisitorTests):
         self.assertEqual(self.event_0, main_visitor.event_registered_ids)
         self.assertEqual(event_1, linked_visitor.event_registered_ids)
 
-        linked_visitor._link_to_visitor(main_visitor)
+        linked_visitor._merge_visitor(main_visitor)
         self.assertVisitorDeactivated(linked_visitor, main_visitor)
 
         # main_visitor is now attending both events

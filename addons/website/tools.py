@@ -16,12 +16,13 @@ from odoo.tools.misc import DotDict, frozendict
 def MockRequest(
         env, *, path='/mockrequest/', routing=True, multilang=True,
         context=frozendict(), cookies=frozendict(), country_code=None,
-        website=None, sale_order_id=None, website_sale_current_pl=None,
+        website=None, remote_addr=HOST, environ_base=None,
+        # website_sale
+        sale_order_id=None, website_sale_current_pl=None,
 ):
 
     lang_code = context.get('lang', env.context.get('lang', 'en_US'))
     env = env(context=dict(context, lang=lang_code))
-
     request = Mock(
         # request
         httprequest=Mock(
@@ -31,12 +32,14 @@ def MockRequest(
             environ=dict(
                 EnvironBuilder(
                     path=path,
-                    base_url=HttpCase.base_url()
+                    base_url=HttpCase.base_url(),
+                    environ_base=environ_base,
                 ).get_environ(),
-                REMOTE_ADDR=HOST,
+                REMOTE_ADDR=remote_addr,
             ),
             cookies=cookies,
             referrer='',
+            remote_addr=remote_addr,
         ),
         type='http',
         future_response=odoo.http.FutureResponse(),

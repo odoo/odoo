@@ -452,7 +452,7 @@ class TestOnlineEventPerformance(EventPerformanceCase, UtilPerf):
         # website customer data
         with freeze_time(self.reference_now):
             self.authenticate(None, None)
-            with self.assertQueryCount(default=39):  # com runbot: 39 - ent runbot: 39
+            with self.assertQueryCount(default=34):  # com runbot: 34 - ent runbot: 34
                 self._test_url_open('/event')
 
     # @warmup

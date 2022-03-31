@@ -24,7 +24,7 @@ class TestWebsiteVisitor(TestCrmCommon, WebsiteVisitorTests):
     @users('user_sales_manager')
     def test_compute_email_phone(self):
         visitor_sudo = self.env['website.visitor'].sudo().create({
-            'name': 'Mega Visitor',
+            'access_token': 'f9d2c6f3b024320ac31248595ac7fcb6',
         })
         visitor = visitor_sudo.with_user(self.env.user)  # as of 13.0 salesmen cannot create visitors, only read them
         customer = self.test_partner.with_user(self.env.user)
@@ -75,11 +75,11 @@ class TestWebsiteVisitor(TestCrmCommon, WebsiteVisitorTests):
     def test_clean_inactive_visitors_crm(self):
         """ Visitors attached to leads should not be deleted even if not connected recently. """
         active_visitors = self.env['website.visitor'].create([{
-            'name': 'Lead Carl',
             'lang_id': self.env.ref('base.lang_en').id,
             'country_id': self.env.ref('base.be').id,
             'website_id': 1,
             'last_connection_datetime': datetime.now() - timedelta(days=8),
+            'access_token': 'f9d28aad05ebee0bca215837b129aa00',
             'lead_ids': [(0, 0, {
                 'name': 'Lead Carl'
             })]
@@ -96,7 +96,7 @@ class TestWebsiteVisitor(TestCrmCommon, WebsiteVisitorTests):
             self._prepare_linked_visitor_data()
         ])
         all_leads = (main_visitor + linked_visitor).lead_ids
-        linked_visitor._link_to_visitor(main_visitor)
+        linked_visitor._merge_visitor(main_visitor)
 
         self.assertVisitorDeactivated(linked_visitor, main_visitor)
 
