@@ -40,7 +40,6 @@
             <field name="name">product.template.stock.property.form.inherit</field>
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
-            <field name="groups_id" eval="[(4, ref('stock.group_stock_manager'))]"/>
             <field name="arch" type="xml">
                 <data>
                     <field name="list_price" position="after">
@@ -69,7 +68,6 @@
             <field name="name">product.product.normal.form.view.inherit</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="groups_id" eval="[(4, ref('stock.group_stock_manager'))]"/>
             <field name="arch" type="xml">
                 <data>
                     <field name="standard_price" position="replace">
@@ -89,7 +87,6 @@
             <field name="name">product.product.product.view.form.easy.inherit</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
-            <field name="groups_id" eval="[(4, ref('stock.group_stock_manager'))]"/>
             <field name="arch" type="xml">
                 <data>
                     <field name="standard_price" position="replace">
