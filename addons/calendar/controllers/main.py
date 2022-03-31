@@ -101,3 +101,15 @@ class CalendarController(http.Controller):
     @http.route('/calendar/notify_ack', type='json', auth="user")
     def notify_ack(self):
         return request.env['res.partner'].sudo()._set_calendar_last_notif_ack()
+
+    @http.route('/calendar/join_videocall/<string:access_token>', type='http', auth='public')
+    def calendar_join_videocall(self, access_token):
+        event = request.env['calendar.event'].sudo().search([('access_token', '=', access_token)])
+        if not event:
+            return request.not_found()
+
+        # if channel doesn't exist
+        if not event.videocall_channel_id:
+            event._create_videocall_channel()
+
+        return request.redirect(event.videocall_channel_id.invitation_url)

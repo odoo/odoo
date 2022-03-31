@@ -6,6 +6,7 @@ from datetime import timedelta
 import math
 import logging
 import pytz
+import uuid
 
 from odoo import api, fields, models, Command
 from odoo.osv.expression import AND
@@ -29,6 +30,8 @@ SORT_ALIASES = {
     'start': 'sort_start',
     'start_date': 'sort_start',
 }
+
+DISCUSS_ROUTE = 'calendar/join_videocall'
 
 def get_weekday_occurence(date):
     """
@@ -89,7 +92,10 @@ class Meeting(models.Model):
     partner_id = fields.Many2one(
         'res.partner', string='Scheduled by', related='user_id.partner_id', readonly=True)
     location = fields.Char('Location', tracking=True, help="Location of Event")
-    videocall_location = fields.Char('Meeting URL')
+    videocall_location = fields.Char('Meeting URL', compute='_compute_videocall_location', store=True, copy=True)
+    access_token = fields.Char('Invitation Token', store=True, copy=False)
+    videocall_source = fields.Selection([('discuss', 'Discuss'), ('custom', 'Custom')], compute='_compute_videocall_source')
+    videocall_channel_id = fields.Many2one('mail.channel', 'Discuss Channel')
     # visibility
     privacy = fields.Selection(
         [('public', 'Public'),
@@ -352,6 +358,36 @@ class Meeting(models.Model):
         for event in self:
             event.display_description = not is_html_empty(event.description)
 
+    @api.depends('videocall_source', 'access_token')
+    def _compute_videocall_location(self):
+        for event in self:
+            if event.videocall_source == 'discuss':
+                event._set_discuss_videocall_location()
+
+    @api.depends('videocall_location')
+    def _compute_videocall_source(self):
+        for event in self:
+            if event.videocall_location and DISCUSS_ROUTE in event.videocall_location:
+                event.videocall_source = 'discuss'
+            else:
+                event.videocall_source = 'custom'
+
+    def _set_discuss_videocall_location(self):
+        """
+        This method sets the videocall_location to a discuss route.
+        If no access_token exists for this event, we create one.
+        Note that recurring events will have different access_tokens.
+        This is done by design to prevent users not being able to join a discuss meeting because the base event of the recurrency was deleted.
+        """
+        if not self.access_token:
+            self.access_token = uuid.uuid4().hex
+        self.videocall_location = f"{self.get_base_url()}/{DISCUSS_ROUTE}/{self.access_token}"
+
+    @api.model
+    def get_discuss_videocall_location(self):
+        access_token = uuid.uuid4().hex
+        return f"{self.get_base_url()}/{DISCUSS_ROUTE}/{access_token}"
+
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
@@ -487,6 +523,14 @@ class Meeting(models.Model):
         if 'partner_ids' in values:
             values['attendee_ids'] = self._attendees_values(values['partner_ids'])
             update_alarms = True
+            if self.videocall_channel_id:
+                new_partner_ids = []
+                for command in values['partner_ids']:
+                    if command[0] == Command.LINK:
+                        new_partner_ids.append(command[1])
+                    elif command[0] == Command.SET:
+                        new_partner_ids.extend(command[2])
+                self.videocall_channel_id.add_members(new_partner_ids)
 
         time_fields = self.env['calendar.event']._get_time_fields()
         if any([values.get(key) for key in time_fields]) or 'alarm_ids' in values:
@@ -507,6 +551,8 @@ class Meeting(models.Model):
             else:
                 future_update_start = self.start if recurrence_update_setting == 'future_events' else None
                 time_values = {field: values.pop(field) for field in time_fields if field in values}
+                if 'access_token' in values:
+                    values.pop('access_token')  # prevents copying access_token to other events in recurrency
                 if recurrence_update_setting == 'all_events':
                     # Update all events: we create a new reccurrence and dismiss the existing events
                     self._rewrite_recurrence(values, time_values, recurrence_values)
@@ -642,9 +688,40 @@ class Meeting(models.Model):
         ]
         return attendee_commands
 
+    def _create_videocall_channel(self):
+        if self.recurrency:
+            # check if any of the events have videocall_channel_id, if not create one
+            event_with_channel = self.env['calendar.event'].search([
+                ('recurrence_id', '=', self.recurrence_id.id),
+                ('videocall_channel_id', '!=', False)
+            ], limit=1)
+            if event_with_channel:
+                self.videocall_channel_id = event_with_channel.videocall_channel_id
+                return
+        self.videocall_channel_id = self._create_videocall_channel_id(self.name, self.partner_ids.ids)
+        self.videocall_channel_id.channel_change_description(self.recurrence_id.name if self.recurrency else self.display_time)
+
+    def _create_videocall_channel_id(self, name, partner_ids):
+        videocall_channel_id = self.env['mail.channel'].create_group(partner_ids, default_display_mode='video_full_screen', name=name)
+        # if recurrent event, set channel to all other records of the same recurrency
+        if self.recurrency:
+            recurrent_events_without_channel = self.env['calendar.event'].search([
+                ('recurrence_id', '=', self.recurrence_id.id), ('videocall_channel_id', '=', False)
+            ])
+            recurrent_events_without_channel.videocall_channel_id = videocall_channel_id['id']
+        return videocall_channel_id['id']
+
     # ------------------------------------------------------------
     # ACTIONS
     # ------------------------------------------------------------
+
+    # dummy method. this method is intercepted in the frontend and the value is set locally
+    def set_discuss_videocall_location(self):
+        return True
+
+    # dummy method. this method is intercepted in the frontend and the value is set locally
+    def clear_videocall_location(self):
+        return True
 
     def action_open_calendar_event(self):
         if self.res_model and self.res_id:
@@ -684,6 +761,13 @@ class Meeting(models.Model):
             'view_id': False,
             'target': 'new',
             'context': compose_ctx,
+        }
+
+    def action_join_video_call(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'url': self.videocall_location,
+            'target': 'self' if self.videocall_source == 'discuss' else 'new'
         }
 
     def action_join_meeting(self, partner_id):
