@@ -104,6 +104,12 @@ class Project(models.Model):
             })
         return action_window
 
+    def action_get_list_view(self):
+        action = super().action_get_list_view()
+        if self.allow_billable:
+            action['views'] = [(self.env.ref('sale_project.project_milestone_view_tree').id, 'tree'), (False, 'form')]
+        return action
+
     def action_profitability_items(self, section_name, domain=None, res_id=False):
         if section_name in ['service_revenues', 'other_revenues']:
             view_types = ['list', 'kanban', 'form']
