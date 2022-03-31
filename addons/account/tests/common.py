@@ -24,6 +24,8 @@ class AccountTestInvoicingCommon(SavepointCase):
     def setUpClass(cls, chart_template_ref=None):
         super(AccountTestInvoicingCommon, cls).setUpClass()
 
+        assert 'post_install' in cls.test_tags, 'This test requires a CoA to be installed, it should be tagged "post_install"'
+
         if chart_template_ref:
             chart_template = cls.env.ref(chart_template_ref)
         else:

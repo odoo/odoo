@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.sale.tests.common import TestSaleCommon
+from odoo.tests.common import SavepointCase
 from odoo.tests import Form
+from odoo.tests import tagged
 
 
-class TestSaleStockOnly(TestSaleCommon):
-
-    @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+@tagged('post_install', '-at_install')
+class TestSaleStockOnly(SavepointCase):
 
     def test_automatic_assign(self):
         """
@@ -22,7 +20,7 @@ class TestSaleStockOnly(TestSaleCommon):
         self.env['stock.quant']._update_available_quantity(product, warehouse.lot_stock_id, 3)
 
         so_form = Form(self.env['sale.order'])
-        so_form.partner_id = self.partner_a
+        so_form.partner_id = self.env['res.partner'].create({'name': 'Res Partner Test'})
         with so_form.order_line.new() as line:
             line.product_id = product
             line.product_uom_qty = 3
