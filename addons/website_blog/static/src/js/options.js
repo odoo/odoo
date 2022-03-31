@@ -98,6 +98,10 @@ options.registry.BlogPostTagSelection = options.Class.extend({
      * @see this.selectClass for params
      */
     setTags(previewMode, widgetValue, params) {
+        if (this._preventNextSetTagsCall) {
+            this._preventNextSetTagsCall = false;
+            return;
+        }
         this.tagIDs = JSON.parse(widgetValue).map(tag => tag.id);
     },
     /**
@@ -121,6 +125,11 @@ options.registry.BlogPostTagSelection = options.Class.extend({
             'display_name': widgetValue,
         };
         this.tagIDs.push(newTagID);
+        // TODO Find a smarter way to achieve this.
+        // Because of the invocation order of methods, setTags will be called
+        // after createTag. This would reset the tagIds to the value before
+        // adding the newly created tag. It therefore needs to be prevented.
+        this._preventNextSetTagsCall = true;
     },
 
     //--------------------------------------------------------------------------
