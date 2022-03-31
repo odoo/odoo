@@ -413,4 +413,51 @@
             addSortButton();
         }
     });
+
+    // -----------------------------------------------------------------------------
+    // Add statistics
+    // -----------------------------------------------------------------------------
+
+    let passedEl;
+    let failedEl;
+    let skippedEl;
+    function insertStats() {
+        const toolbar = document.querySelector("#qunit-testrunner-toolbar .qunit-url-config");
+        const statsEl = document.createElement("label");
+        passedEl = document.createElement("span");
+        passedEl.classList.add("text-success", "ml-5", "mr-3");
+        statsEl.appendChild(passedEl);
+        failedEl = document.createElement("span");
+        failedEl.classList.add("text-danger", "mr-3");
+        statsEl.appendChild(failedEl);
+        skippedEl = document.createElement("span");
+        skippedEl.classList.add("text-dark");
+        statsEl.appendChild(skippedEl);
+        toolbar.appendChild(statsEl);
+    }
+
+    let testPassedCount = 0;
+    let testFailedCount = 0;
+    let testSkippedCount = 0;
+    QUnit.testDone(({ skipped, failed }) => {
+        if (!passedEl) {
+            insertStats();
+        }
+        if (!skipped) {
+            if (failed > 0) {
+                testFailedCount++;
+            } else {
+                testPassedCount++;
+            }
+        } else {
+            testSkippedCount++;
+        }
+        passedEl.innerText = `${testPassedCount} passed`;
+        if (testFailedCount > 0) {
+            failedEl.innerText = `${testFailedCount} failed`;
+        }
+        if (testSkippedCount > 0) {
+            skippedEl.innerText = `${testSkippedCount} skipped`;
+        }
+    });
 })();
