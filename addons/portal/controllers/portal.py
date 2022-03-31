@@ -225,6 +225,7 @@ class CustomerPortal(Controller):
         values = self._prepare_portal_layout_values()
         values['get_error'] = get_error
         values['allow_api_keys'] = bool(request.env['ir.config_parameter'].sudo().get_param('portal.allow_api_keys'))
+        values['open_deactivate_modal'] = False
 
         if request.httprequest.method == 'POST':
             values.update(self._update_password(
@@ -261,6 +262,30 @@ class CustomerPortal(Controller):
         request.session.session_token = new_token
 
         return {'success': {'password': True}}
+
+    @route('/my/deactivate_account', type='http', auth='user', website=True, methods=['POST'])
+    def deactivate_account(self, validation, password, **post):
+        values = self._prepare_portal_layout_values()
+        values['get_error'] = get_error
+        values['open_deactivate_modal'] = True
+
+        if validation != request.env.user.login:
+            values['errors'] = {'deactivate': 'validation'}
+        else:
+            try:
+                request.env['res.users']._check_credentials(password, {'interactive': True})
+                request.env.user.sudo()._deactivate_portal_user(**post)
+                request.session.logout()
+                return request.redirect('/web/login?message=%s' % urls.url_quote(_('Account deleted!')))
+            except AccessDenied:
+                values['errors'] = {'deactivate': 'password'}
+            except UserError as e:
+                values['errors'] = {'deactivate': {'other': str(e)}}
+
+        return request.render('portal.portal_my_security', values, headers={
+            'X-Frame-Options': 'SAMEORIGIN',
+            'Content-Security-Policy': "frame-ancestors 'self'",
+        })
 
     @http.route('/portal/attachment/add', type='http', auth='public', methods=['POST'], website=True)
     def attachment_add(self, name, file, res_model, res_id, access_token=None, **kwargs):

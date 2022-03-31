@@ -2,7 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.base.models.res_users import is_selection_groups, get_selection_groups
+from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase, Form, tagged
+from odoo.tools import mute_logger
 
 
 class TestUsers(TransactionCase):
@@ -115,6 +117,77 @@ class TestUsers(TransactionCase):
             "On user company change, if its partner_id has already a company_id,"
             "the company_id of the partner_id shall be updated"
         )
+
+    @mute_logger('odoo.sql_db')
+    def test_deactivate_portal_users_access(self):
+        """Test that only a portal users can deactivate his account."""
+        user_internal = self.env['res.users'].create({
+            'name': 'Internal',
+            'login': 'user_internal',
+            'password': 'password',
+            'groups_id': [self.env.ref('base.group_user').id],
+        })
+
+        with self.assertRaises(UserError, msg='Internal users should not be able to deactivate their account'):
+            user_internal._deactivate_portal_user()
+
+    @mute_logger('odoo.sql_db')
+    def test_deactivate_portal_users_archive_and_remove(self):
+        """Test that if the account can not be removed, it's archived instead
+        and sensitive information are removed.
+
+        In this test, the deletion of "portal_user" will succeed,
+        but the deletion of "portal_user_2" will fail.
+        """
+        User = self.env['res.users']
+        portal_user = User.create({
+            'name': 'Portal',
+            'login': 'portal_user',
+            'password': 'password',
+            'groups_id': [self.env.ref('base.group_portal').id],
+        })
+        portal_partner = portal_user.partner_id
+
+        portal_user_2 = User.create({
+            'name': 'Portal',
+            'login': 'portal_user_2',
+            'password': 'password',
+            'groups_id': [self.env.ref('base.group_portal').id],
+        })
+        portal_partner_2 = portal_user_2.partner_id
+
+        (portal_user | portal_user_2)._deactivate_portal_user()
+
+        self.assertTrue(portal_user.exists() and not portal_user.active, 'Should have archived the user 1')
+
+        self.assertEqual(portal_user.name, 'Portal', 'Should have kept the user name')
+        self.assertEqual(portal_user.partner_id.name, 'Portal', 'Should have kept the partner name')
+        self.assertNotEqual(portal_user.login, 'portal_user', 'Should have removed the user login')
+
+        asked_deletion_1 = self.env['res.users.deletion'].search([('user_id', '=', portal_user.id)])
+        asked_deletion_2 = self.env['res.users.deletion'].search([('user_id', '=', portal_user_2.id)])
+
+        self.assertTrue(asked_deletion_1, 'Should have added the user 1 in the deletion queue')
+        self.assertTrue(asked_deletion_2, 'Should have added the user 2 in the deletion queue')
+
+        # The deletion will fail for "portal_user_2",
+        # because of the absence of "ondelete=cascade"
+        self.cron = self.env['ir.cron'].create({
+            'name': 'Test Cron',
+            'user_id': portal_user_2.id,
+            'model_id': self.env.ref('base.model_res_partner').id,
+        })
+
+        self.env['res.users.deletion']._gc_portal_users()
+
+        self.assertFalse(portal_user.exists(), 'Should have removed the user')
+        self.assertFalse(portal_partner.exists(), 'Should have removed the partner')
+        self.assertEqual(asked_deletion_1.state, 'done', 'Should have marked the deletion as done')
+
+        self.assertTrue(portal_user_2.exists(), 'Should have kept the user')
+        self.assertTrue(portal_partner_2.exists(), 'Should have kept the partner')
+        self.assertEqual(asked_deletion_2.state, 'fail', 'Should have marked the deletion as failed')
+
 
 @tagged('post_install', '-at_install')
 class TestUsers2(TransactionCase):
