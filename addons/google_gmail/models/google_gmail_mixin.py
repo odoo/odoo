@@ -17,10 +17,10 @@ class GoogleGmailMixin(models.AbstractModel):
     _SERVICE_SCOPE = 'https://mail.google.com/'
 
     use_google_gmail_service = fields.Boolean('Gmail Authentication')
-    google_gmail_authorization_code = fields.Char(string='Authorization Code', groups='base.group_system')
-    google_gmail_refresh_token = fields.Char(string='Refresh Token', groups='base.group_system')
-    google_gmail_access_token = fields.Char(string='Access Token', groups='base.group_system')
-    google_gmail_access_token_expiration = fields.Integer(string='Access Token Expiration Timestamp', groups='base.group_system')
+    google_gmail_authorization_code = fields.Char(string='Authorization Code', groups='base.group_system', copy=False)
+    google_gmail_refresh_token = fields.Char(string='Refresh Token', groups='base.group_system', copy=False)
+    google_gmail_access_token = fields.Char(string='Access Token', groups='base.group_system', copy=False)
+    google_gmail_access_token_expiration = fields.Integer(string='Access Token Expiration Timestamp', groups='base.group_system', copy=False)
     google_gmail_uri = fields.Char(compute='_compute_gmail_uri', string='URI', help='The URL to generate the authorization code from Google', groups='base.group_system')
 
     @api.depends('google_gmail_authorization_code')
