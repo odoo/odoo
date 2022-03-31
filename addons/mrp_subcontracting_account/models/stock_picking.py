@@ -17,9 +17,3 @@ class StockPicking(models.Model):
         domain_subcontracting = [('id', 'in', (subcontracted_productions.move_raw_ids | subcontracted_productions.move_finished_ids).stock_valuation_layer_ids.ids)]
         domain = OR([domain, domain_subcontracting])
         return dict(action, domain=domain)
-
-    def _prepare_subcontract_mo_vals(self, subcontract_move, bom):
-        vals = super(StockPicking, self)._prepare_subcontract_mo_vals(subcontract_move, bom)
-        if bom.product_tmpl_id.cost_method in ('fifo', 'average'):
-            vals = dict(vals, extra_cost=subcontract_move._get_price_unit())
-        return vals
