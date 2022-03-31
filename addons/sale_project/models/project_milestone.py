@@ -19,10 +19,3 @@ class ProjectMilestone(models.Model):
     @api.model
     def _get_fields_to_export(self):
         return super()._get_fields_to_export() + ['allow_billable', 'quantity_percentage', 'sale_line_name']
-
-    def action_get_list_view(self):
-        view = super().action_get_list_view()
-        project = self.env['project.project'].browse(self.env.context.get('active_id'))
-        if project.allow_billable:
-            view['views'] = [(self.env.ref('sale_project.project_milestone_view_tree').id, 'tree'), (False, 'form')]
-        return view

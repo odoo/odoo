@@ -53,21 +53,3 @@ class ProjectMilestone(models.Model):
 
     def _get_data_list(self):
         return [ms._get_data() for ms in self]
-
-    def action_get_list_view(self):
-        return {
-            'name': _('Milestones'),
-            'view_mode': 'tree',
-            'res_model': 'project.milestone',
-            'views': [(self.env.ref('project.project_milestone_view_tree').id, 'tree'), (False, 'form')],
-            'type': 'ir.actions.act_window',
-            'domain': "[('project_id', '=', active_id)]",
-            'context': {**self.env.context, 'default_project_id': self.env.context.get('active_id')},
-            'help': """
-                <p class="o_view_nocontent_smiling_face">
-                No milestones found. Let's create one!
-                </p><p>
-                Track major progress points that must be reached to achieve success.
-                </p>
-            """,
-        }

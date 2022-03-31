@@ -706,6 +706,28 @@ class Project(models.Model):
             'context': {'search_default_group_date': 1, 'default_account_id': self.analytic_account_id.id}
         }
 
+    def action_get_list_view(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Milestones'),
+            'domain': [('project_id', '=', self.id)],
+            'res_model': 'project.milestone',
+            'views': [(self.env.ref('project.project_milestone_view_tree').id, 'tree')],
+            'view_mode': 'tree',
+            'help': _("""
+                <p class="o_view_nocontent_smiling_face">
+                    No milestones found. Let's create one!
+                </p><p>
+                    Track major progress points that must be reached to achieve success.
+                </p>
+            """),
+            'context': {
+                'default_project_id': self.id,
+                **self.env.context
+            }
+        }
+
     # ---------------------------------------------
     #  PROJECT UPDATES
     # ---------------------------------------------
