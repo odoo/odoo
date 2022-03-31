@@ -99,16 +99,20 @@ class AccountMove(models.Model):
 
 
                 price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-                if line.tax_ids and line.quantity:
-                    # We do not want to round the price unit since :
-                    # - It does not follow the currency precision
-                    # - It may include a discount
-                    # Since compute_all still rounds the total, we use an ugly workaround:
-                    # multiply then divide the price unit.
-                    price_unit *= line.quantity
-                    price_unit = line.tax_ids.with_context(round=False, force_sign=move._get_tax_force_sign()).compute_all(
-                        price_unit, currency=move.currency_id, quantity=1.0, is_refund=move.move_type == 'in_refund')['total_excluded']
-                    price_unit /= line.quantity
+                if line.tax_ids:
+                    if line.discount and line.quantity:
+                        # We do not want to round the price unit since :
+                        # - It does not follow the currency precision
+                        # - It may include a discount
+                        # Since compute_all still rounds the total, we use an ugly workaround:
+                        # multiply then divide the price unit.
+                        price_unit *= line.quantity
+                        price_unit = line.tax_ids.with_context(round=False, force_sign=move._get_tax_force_sign()).compute_all(
+                            price_unit, currency=move.currency_id, quantity=1.0, is_refund=move.move_type == 'in_refund')['total_excluded']
+                        price_unit /= line.quantity
+                    else:
+                        price_unit = line.tax_ids.compute_all(
+                            price_unit, currency=move.currency_id, quantity=1.0, is_refund=move.move_type == 'in_refund')['total_excluded']
 
                 price_unit_val_dif = price_unit - valuation_price_unit
                 price_subtotal = line.quantity * price_unit_val_dif
