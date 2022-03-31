@@ -966,7 +966,7 @@ QUnit.module("Views", (hooks) => {
             "web_read_group", // initial read_group
             "web_search_read", // initial search_read (first column)
             "web_search_read", // initial search_read (second column)
-            "load_views", // form view in quick create
+            "get_views", // form view in quick create
             "onchange", // quick create
             "create", // should perform a create to create the record
             "read", // read the created record
@@ -1090,7 +1090,7 @@ QUnit.module("Views", (hooks) => {
             "web_read_group", // initial read_group
             "web_search_read", // initial search_read (first column)
             "web_search_read", // initial search_read (second column)
-            "load_views", // form view in quick create
+            "get_views", // form view in quick create
             "onchange", // quick create
             "create", // should perform a create to create the record
             "read", // read the created record
@@ -1154,7 +1154,7 @@ QUnit.module("Views", (hooks) => {
             "web_read_group", // initial read_group
             "web_search_read", // initial search_read (first column)
             "web_search_read", // initial search_read (second column)
-            "load_views", // form view in quick create
+            "get_views", // form view in quick create
             "onchange", // quick create
             "onchange", // onchange due to 'foo' field change
         ]);
@@ -3043,7 +3043,7 @@ QUnit.module("Views", (hooks) => {
                 </kanban>`,
             groupBy: ["product_id"],
             async mockRPC(route, { method }) {
-                if (method === "load_views") {
+                if (method === "get_views") {
                     await prom;
                 }
             },

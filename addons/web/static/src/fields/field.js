@@ -214,51 +214,27 @@ Field.parseFieldNode = function (node, fields, viewType) {
         fieldInfo.attrs[attribute.name] = attribute.value;
     }
 
-    if (!fieldInfo.invisible && X2M_TYPES.includes(field.type)) {
-        if (field.views) {
-            fieldInfo.views = {};
-            for (let viewType in field.views) {
-                const subView = field.views[viewType];
-                viewType = viewType === "tree" ? "list" : viewType; // FIXME: get rid of this
-                const { ArchParser } = viewRegistry.get(viewType);
-                const archInfo = new ArchParser().parse(subView.arch, subView.fields);
-                fieldInfo.views[viewType] = {
-                    ...archInfo,
-                    fields: subView.fields,
-                };
-            }
-            let viewMode = fieldInfo.attrs.mode;
-            if (!viewMode) {
-                if (fieldInfo.views.list && !fieldInfo.views.kanban) {
-                    viewMode = "list";
-                } else if (!fieldInfo.views.list && fieldInfo.views.kanban) {
-                    viewMode = "kanban";
-                } else {
-                    viewMode = "list,kanban";
-                }
-            } else if (viewMode === "tree") {
-                viewMode = "list";
-            }
-            if (viewMode.indexOf(",") !== -1) {
-                // WOWL do this elsewhere or get env here?
-                viewMode = /** env.isSmall  ? "kanban" : */ "list";
-            }
-            fieldInfo.viewMode = viewMode;
+    if (fieldInfo.modifiers.invisible !== true && X2M_TYPES.includes(field.type)) {
+        const views = {};
+        for (const child of node.children) {
+            const viewType = child.tagName === "tree" ? "list" : child.tagName;
+            const { ArchParser } = viewRegistry.get(viewType);
+            const xmlSerializer = new XMLSerializer();
+            const subArch = xmlSerializer.serializeToString(child);
+            const archInfo = new ArchParser().parse(subArch, field.relatedFields);
+            views[viewType] = {
+                ...archInfo,
+                fields: field.relatedFields,
+            };
         }
-
+        fieldInfo.viewMode = Object.keys(views).find((v) => ["list", "kanban"].includes(v));
+        fieldInfo.views = views;
         fieldInfo.relation = field.relation; // not really necessary
 
-        const relatedFields = {};
-        // the idea is to have at least all the fields that are used in one of
-        // the views or "somewhere else" --> but all comodel fields could do the job here.
-        if (fieldInfo.FieldComponent.useSubView && fieldInfo.views) {
-            for (const viewType in fieldInfo.views) {
-                Object.assign(relatedFields, fieldInfo.views[viewType].fields);
-            }
-            // works because we look to things that do not vary in fields with viewType: type, relation,...
-        }
-        // add fields required by specific FieldComponents
-        Object.assign(relatedFields, fieldInfo.FieldComponent.fieldsToFetch);
+        const relatedFields = {
+            ...field.relatedFields,
+            ...fieldInfo.FieldComponent.fieldsToFetch,
+        };
         // special case for color field
         const colorField = fieldInfo.attrs.options.color_field;
         if (colorField) {

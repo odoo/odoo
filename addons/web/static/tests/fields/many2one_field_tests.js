@@ -798,7 +798,7 @@ QUnit.module("Fields", (hooks) => {
             assert.verifySteps([
                 "read",
                 "get_formview_id",
-                "load_views",
+                "get_views",
                 "read",
                 "write",
                 "read",
@@ -3884,7 +3884,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps([
             "onchange",
             "name_search", // to display results in the dropdown
-            "load_views", // list view in dialog
+            "get_views", // list view in dialog
             "web_search_read", // to display results in the dialog
         ]);
     });
@@ -3950,7 +3950,7 @@ QUnit.module("Fields", (hooks) => {
             "name_search", // empty search, triggered when the user clicks in the input
             "name_search", // to display results in the dropdown
             "name_search", // to get preselected ids matching the search
-            "load_views", // list view in dialog
+            "get_views", // list view in dialog
             "/web/dataset/search_read", // to display results in the dialog
             "/web/dataset/search_read", // after removal of dynamic filter
         ]);
@@ -4146,7 +4146,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps([
             "onchange",
             "name_search", // to display results in the dropdown
-            "load_views", // list view in dialog
+            "get_views", // list view in dialog
             "/web/dataset/search_read", // to display results in the dialog
             "/web/dataset/resequence", // resequencing lines
             "read",

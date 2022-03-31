@@ -167,7 +167,7 @@ QUnit.module("ViewDialogs", (hooks) => {
                 if (args.method === "get_formview_id") {
                     return Promise.resolve(false);
                 }
-                if (args.method === "load_views" && args.model === "instrument") {
+                if (args.method === "get_views" && args.model === "instrument") {
                     assert.deepEqual(
                         args.kwargs.context,
                         {
@@ -179,7 +179,7 @@ QUnit.module("ViewDialogs", (hooks) => {
                         "1 The correct _view_ref should have been sent to the server, first time"
                     );
                 }
-                if (args.method === "load_views" && args.model === "badassery") {
+                if (args.method === "get_views" && args.model === "badassery") {
                     assert.deepEqual(
                         args.kwargs.context,
                         {

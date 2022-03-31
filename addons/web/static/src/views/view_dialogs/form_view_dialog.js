@@ -39,16 +39,13 @@ export class FormViewDialog extends Dialog {
 
         onWillStart(async () => {
             if (!this.archInfo) {
-                const { form } = await this.viewService.loadViews({
+                const { fields, views } = await this.viewService.loadViews({
                     resModel: this.record ? this.record.resModel : this.props.resModel,
                     context: this.record ? this.record.context : this.props.context || {},
                     views: [[this.props.viewId || false, "form"]],
                 });
-                const archInfo = new FormArchParser().parse(form.arch, form.fields);
-                this.archInfo = {
-                    ...archInfo,
-                    fields: form.fields,
-                };
+                const archInfo = new FormArchParser().parse(views.form.arch, fields);
+                this.archInfo = { ...archInfo, fields };
             }
 
             if (!this.record) {

@@ -829,7 +829,7 @@ function makeActionManager(env) {
             loadIrFilters: action.views.some((v) => v[1] === "search"),
         };
         const prom = env.services.view.loadViews(loadViewParams, loadViewOptions);
-        const viewDescriptions = await keepLast.add(prom);
+        const { views: viewDescriptions } = await keepLast.add(prom);
         const domParser = new DOMParser();
         const views = [];
         for (const [, type] of action.views) {

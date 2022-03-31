@@ -641,7 +641,7 @@ QUnit.module("Fields", (hooks) => {
             },
             res_id: 1,
             mockRPC: function (route, args) {
-                if (args.method !== "load_views") {
+                if (args.method !== "get_views") {
                     assert.step(_.last(route.split("/")));
                 }
                 if (args.method === "write" && args.model === "partner") {
@@ -763,7 +763,7 @@ QUnit.module("Fields", (hooks) => {
                 "partner_type,false,search": '<search><field name="display_name"/></search>',
             },
             mockRPC: function (route, args) {
-                if (args.method !== "load_views") {
+                if (args.method !== "get_views") {
                     assert.step(_.last(route.split("/")));
                 }
                 if (args.method === "write") {
@@ -1483,7 +1483,7 @@ QUnit.module("Fields", (hooks) => {
                     "<search>" + '<field name="display_name" string="Name"/>' + "</search>",
             },
             mockRPC: function (route, args) {
-                if (args.method !== "load_views") {
+                if (args.method !== "get_views") {
                     assert.step(_.last(route.split("/")) + " on " + args.model);
                 }
                 if (args.model === "turtle") {
@@ -1620,7 +1620,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps([
             "read", // read initial record (on partner)
             "read", // read many2many turtles
-            "load_views", // load arch of turtles form view
+            "get_views", // load arch of turtles form view
             "read", // read missing field when opening record in modal form view
             "write", // when saving the modal
             "onchange", // onchange should be triggered on partner

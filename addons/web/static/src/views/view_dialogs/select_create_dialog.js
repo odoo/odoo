@@ -40,13 +40,16 @@ export class SelectCreateDialog extends Dialog {
 
         onWillStart(async () => {
             if (!("searchViewId" in this.props)) {
-                const { search } = await this.viewService.loadViews({
+                const { views } = await this.viewService.loadViews({
                     resModel: this.props.resModel,
                     context: this.props.context || {},
                     views: [[false, "search"]],
                 });
+                // FIXME AAB: what is this?? #02938023289424083
                 this.propsView.searchViewId =
-                    search.name !== this.props.resModel + " search" ? search.name : undefined;
+                    views.search.name !== this.props.resModel + " search"
+                        ? views.search.name
+                        : undefined;
             }
         });
     }

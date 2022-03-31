@@ -368,7 +368,8 @@ QUnit.module("ViewDialogs", (hooks) => {
         // await testUtils.dom.click($modal.find(".btn.btn-primary"));
     });
 
-    QUnit.test("SelectCreateDialog: save current search", async function (assert) {
+    QUnit.skipWOWL("SelectCreateDialog: save current search", async function (assert) {
+        // FIXME WOWL: grep #02938023289424083
         assert.expect(4);
 
         serverData.views = {

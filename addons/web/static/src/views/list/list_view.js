@@ -124,29 +124,15 @@ export class ListArchParser extends XMLParser {
                 }
             } else if (node.tagName === "groupby" && node.getAttribute("name")) {
                 const fieldName = node.getAttribute("name");
-                let { arch, fields: groupByFields } = fields[fieldName].views.groupby;
-                groupByFields = Object.assign(
-                    {
-                        id: {
-                            change_default: false,
-                            company_dependent: false,
-                            depends: [],
-                            manual: false,
-                            name: "id",
-                            readonly: true,
-                            required: false,
-                            searchable: true,
-                            sortable: true,
-                            store: true,
-                            string: "ID",
-                            type: "integer",
-                        },
-                    },
-                    groupByFields
-                );
-                const { activeFields, buttons } = groupListArchParser.parse(arch, groupByFields);
-                groupBy.buttons[fieldName] = buttons;
-                groupBy.fields[fieldName] = { activeFields, fields: groupByFields };
+                const xmlSerializer = new XMLSerializer();
+                const groupByArch = xmlSerializer.serializeToString(node);
+                const groupByFields = fields[fieldName].relatedFields;
+                const groupByArchInfo = groupListArchParser.parse(groupByArch, groupByFields);
+                groupBy.buttons[fieldName] = groupByArchInfo.buttons;
+                groupBy.fields[fieldName] = {
+                    activeFields: groupByArchInfo.activeFields,
+                    fields: groupByFields,
+                };
                 return false;
             } else if (node.tagName === "header") {
                 // AAB: not sure we need to handle invisible="1" button as the usecase seems way

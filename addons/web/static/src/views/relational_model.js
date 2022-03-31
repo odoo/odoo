@@ -25,17 +25,15 @@ const preloadedDataRegistry = registry.category("preloadedData");
 
 const { CREATE, UPDATE, DELETE, FORGET, LINK_TO, DELETE_ALL, REPLACE_WITH } = x2ManyCommands;
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection"];
+const DEFAULT_QUICK_CREATE_FIELDS = {
+    display_name: { string: "Display name", type: "char" },
+};
 const DEFAULT_QUICK_CREATE_VIEW = {
-    form: {
-        // note: the required modifier is written in the format returned by the server
-        arch: /* xml */ `
-            <form>
-                <field name="display_name" placeholder="Title" modifiers='{"required": true}' />
-            </form>`,
-        fields: {
-            display_name: { string: "Display name", type: "char" },
-        },
-    },
+    // note: the required modifier is written in the format returned by the server
+    arch: /* xml */ `
+        <form>
+            <field name="display_name" placeholder="Title" modifiers='{"required": true}' />
+        </form>`,
 };
 
 class WarningDialog extends Dialog {
@@ -1742,18 +1740,21 @@ export class DynamicGroupList extends DynamicList {
         this.isLoadingQuickCreate = true;
         const { quickCreateView: viewRef } = this.model;
         const { ArchParser } = registry.category("views").get("form");
-        let fieldsView = DEFAULT_QUICK_CREATE_VIEW;
+        let quickCreateFields = DEFAULT_QUICK_CREATE_FIELDS;
+        let quickCreateForm = DEFAULT_QUICK_CREATE_VIEW;
         if (viewRef) {
-            fieldsView = await this.model.keepLast.add(
+            const { fields, views } = await this.model.keepLast.add(
                 this.model.viewService.loadViews({
                     context: { ...this.context, form_view_ref: viewRef },
                     resModel: this.resModel,
                     views: [[false, "form"]],
                 })
             );
+            quickCreateFields = fields;
+            quickCreateForm = views.form;
         }
         this.isLoadingQuickCreate = false;
-        return new ArchParser().parse(fieldsView.form.arch, fieldsView.form.fields);
+        return new ArchParser().parse(quickCreateForm.arch, quickCreateFields);
     }
 }
 

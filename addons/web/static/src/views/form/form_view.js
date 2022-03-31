@@ -88,18 +88,27 @@ export async function loadSubViews(
         // (e.g. create: 0) to apply to sub views (same logic as the one applied by
         // the server for inline views)
         refinedContext.base_model_name = resModel;
-
-        const viewType = fieldInfo.viewMode;
-        const views = await viewService.loadViews({
+        let viewMode = fieldInfo.attrs.mode;
+        if (!viewMode) {
+            viewMode = "list,kanban";
+        } else if (viewMode === "tree") {
+            viewMode = "list";
+        }
+        if (viewMode.indexOf(",") !== -1) {
+            // WOWL do this elsewhere or get env here?
+            viewMode = /** env.isSmall  ? "kanban" : */ "list";
+        }
+        fieldInfo.viewMode = viewMode;
+        let viewType = fieldInfo.viewMode;
+        const { fields: subViewFields, views } = await viewService.loadViews({
             resModel: field.relation,
             views: [[false, viewType]],
             context: makeContext([fieldContext, userService.context, refinedContext]),
         });
-        const subView = views[viewType];
         const { ArchParser } = viewRegistry.get(viewType);
-        const archInfo = new ArchParser().parse(subView.arch, subView.fields);
-        fieldInfo.views[viewType] = { ...archInfo, fields: subView.fields };
-        fieldInfo.relatedFields = subView.fields;
+        const archInfo = new ArchParser().parse(views[viewType].arch, subViewFields);
+        fieldInfo.views[viewType] = { ...archInfo, fields: subViewFields };
+        fieldInfo.relatedFields = subViewFields;
     }
 }
 
