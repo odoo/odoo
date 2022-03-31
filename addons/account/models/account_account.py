@@ -575,6 +575,16 @@ class AccountAccount(models.Model):
                 _('You cannot remove/deactivate the account %s which is set on a customer or vendor.', account_name)
             )
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_linked_to_fiscal_position(self):
+        if self.env['account.fiscal.position.account'].search(['|', ('account_src_id', 'in', self.ids), ('account_dest_id', 'in', self.ids)], limit=1):
+            raise UserError(_('You cannot remove/deactivate the accounts "%s" which are set on the account mapping of a fiscal position.', ', '.join(f"{a.code} - {a.name}" for a in self)))
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_linked_to_tax_repartition_line(self):
+        if self.env['account.tax.repartition.line'].search([('account_id', 'in', self.ids)], limit=1):
+            raise UserError(_('You cannot remove/deactivate the accounts "%s" which are set on a tax repartition line.', ', '.join(f"{a.code} - {a.name}" for a in self)))
+
     def action_read_account(self):
         self.ensure_one()
         return {
