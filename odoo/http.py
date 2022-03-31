@@ -1067,6 +1067,9 @@ class Request:
         hm_expected = hmac.new(secret.encode('ascii'), msg, hashlib.sha1).hexdigest()
         return consteq(hm, hm_expected)
 
+    def default_context(self):
+        return dict(DEFAULT_SESSION['context'], lang=self.default_lang())
+
     def default_lang(self):
         """Returns default user language according to request specification
 
