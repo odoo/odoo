@@ -3,7 +3,7 @@
 
     <t t-name="web.EmailField" owl="1">
         <t t-if="props.readonly">
-            <a class="o_form_uri o_text_overflow" t-att-href="'mailto:'+props.value" t-esc="props.value"/>
+            <a class="o_form_uri o_text_overflow" t-att-href="props.value ? 'mailto:'+props.value : undefined" t-esc="props.value || ''"/>
         </t>
         <t t-else="">
             <input

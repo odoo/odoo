@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { Domain } from "@web/core/domain";
-import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import {
     combineAttributes,
@@ -9,7 +8,6 @@ import {
     createTextNode,
     transformStringForExpression,
 } from "@web/core/utils/xml";
-import { Field } from "@web/fields/field";
 
 /**
  * @typedef Compiler
@@ -35,6 +33,21 @@ const append = (parent, node) => {
     } else {
         parent.append(node);
     }
+};
+
+const appendAttf = (el, attr, string) => {
+    const attrKey = `t-attf-${attr}`;
+    const attrVal = el.getAttribute(attrKey);
+    el.setAttribute(attrKey, appendToExpr(attrVal, string));
+};
+
+const appendToExpr = (expr, string) => {
+    const re = /{{.*}}/;
+    const oldString = re.exec(expr);
+    if (oldString) {
+        string = `${oldString} ${string}`;
+    }
+    return `{{${string} }}`;
 };
 
 /**
@@ -95,6 +108,10 @@ const applyInvisible = (invisible, compiled, params) => {
     return compiled;
 };
 
+const tupleArrayToExpr = (tupleArray) => {
+    return `{${tupleArray.map(tuple => tuple.join(":")).join(",")}}`;
+};
+
 /**
  * @param {Element} el
  * @param {Element} compiled
@@ -109,7 +126,7 @@ const copyAttributes = (el, compiled) => {
     if (classes) {
         compiled.classList.add(...classes.split(/\s+/).filter(Boolean));
         if (isComponent) {
-            compiled.className = `'${compiled.className}'`;
+            compiled.setAttribute("class",`'${compiled.className}'`);
         }
     }
 
@@ -125,76 +142,29 @@ const copyAttributes = (el, compiled) => {
 };
 
 /**
- * there is no particular expecation of what should be a boolean
- * according to a view's arch
- * Sometimes it is 0 or one, True or False ; true or false
- * @return {boolean}
- */
-const evalIrUiViewModifier = (expr) => {
-    if (!expr) {
-        return false;
-    }
-    return evaluateExpr(expr, {
-        true: true,
-        false: false,
-    });
-};
-
-/**
  * @param {Element} el
  * @param {string} modifierName
  * @returns {boolean | boolean[]}
  */
 const getModifier = (el, modifierName) => {
-    // AAB: I think we don't need to check attributes "invisible", "required" and "readonly"
-    // directly, as the info is always put inside attribute "attrs" anyway
-    // let mod = el.getAttribute(modifierName);
-    // if (mod === null) {
+    // cf python side def transfer_node_to_modifiers
+    // modifiers' string are evaluated to their boolean or array form
     const modifiers = JSON.parse(el.getAttribute("modifiers") || "{}");
     const mod = modifierName in modifiers ? modifiers[modifierName] : false;
-    // }
-    // AAB: is this necessary for modifiers?
-    // if (!Array.isArray(mod) && !(typeof mod === "boolean")) {
-    //     mod = !!evalIrUiViewModifier(mod);
-    // }
-    return Array.isArray(mod) ? mod : !!mod; // convert 1/0 to true/false
+    return Array.isArray(mod) ? mod : !!mod;
 };
 
 /**
  * @param {any} node
  * @returns {string}
  */
-const getTagName = (node) => (node.tagName || "").toLowerCase();
+const getTagName = (node) => (node.tagName || "");
 
 /**
  * @param {any} node
  * @returns {string}
  */
 const getTitleTagName = (node) => getTagName(node)[0].toUpperCase() + getTagName(node).slice(1);
-
-/**
- * @param {Element} compiled
- * @param {Record<string, any>} params
- */
-const handleEmpty = (compiled, params) => {
-    // handle Empty field
-    if (compiled.nodeName === "label") {
-        const tAttClass = `o_form_label_empty:record.resId and isFieldEmpty(record,'${params.fieldName}')`;
-        appendAttr(compiled, "class", tAttClass);
-    }
-};
-
-/**
- * @param {Element} compiled
- * @param {Record<string, any>} params
- */
-const handleInvalid = (compiled, params) => {
-    // handle Invalid field
-    if (compiled.nodeName === "label") {
-        const tAttClass = `o_field_invalid: isFieldInvalid(record,'${params.fieldName}')`;
-        appendAttr(compiled, "class", tAttClass);
-    }
-};
 
 /**
  * @param {any} invisibleModifer
@@ -230,15 +200,6 @@ const isRelevantTextNode = (node) => isTextNode(node) && !!node.nodeValue.trim()
 const isTextNode = (node) => node.nodeType === 3;
 
 /**
- * @returns {Element}
- */
-const makeLabelTd = () => {
-    const labelTd = createElement("td");
-    labelTd.className = "o_td_label";
-    return labelTd;
-};
-
-/**
  * @param {string} title
  * @returns {Element}
  */
@@ -250,9 +211,7 @@ const makeSeparator = (title) => {
 };
 
 export class ViewCompiler {
-    constructor(activeFields) {
-        /** @type {Record<string, any>} */
-        this.activeFields = activeFields;
+    constructor() {
         /** @type {number} */
         this.id = 1;
         /** @type {Record<string, Element[]>} */
@@ -278,7 +237,7 @@ export class ViewCompiler {
      * @param {Record<string, any>} params
      * @returns {Element | Text | void}
      */
-    compileNode(node, params = {}) {
+    compileNode(node, params = {}, evalInvisible=true, copy=true) {
         if (isComment(node)) {
             return;
         }
@@ -291,9 +250,13 @@ export class ViewCompiler {
         } else if (isTextNode(node)) {
             return;
         }
-        const invisible = getModifier(node, "invisible");
-        if (isAlwaysInvisible(invisible, params)) {
-            return;
+
+        let invisible;
+        if (evalInvisible) {
+            invisible = getModifier(node, "invisible");
+            if (isAlwaysInvisible(invisible, params)) {
+                return;
+            }
         }
 
         const registryCompiler = this.compilers.find(
@@ -305,8 +268,12 @@ export class ViewCompiler {
             this.compileGenericNode;
 
         let compiledNode = compiler.call(this, node, params);
-        if (compiledNode) {
+
+        if (copy && compiledNode) {
             copyAttributes(node, compiledNode);
+        }
+
+        if (evalInvisible && compiledNode) {
             compiledNode = applyInvisible(invisible, compiledNode, params);
         }
         return compiledNode;
@@ -320,21 +287,6 @@ export class ViewCompiler {
         const labels = this.labels[fieldName] || [];
         this.labels[fieldName] = null;
         return labels;
-    }
-
-    /**
-     * @param {Element} el
-     * @param {Record<string, any>} params
-     * @returns {Element}
-     */
-    makeFieldLabel(el, params) {
-        let label = createElement("label");
-        label.className = "o_form_label";
-        const fieldName = el.getAttribute("name");
-
-        label = applyInvisible(getModifier(el, "invisible"), label, params);
-        this.pushLabel(fieldName, label);
-        return label;
     }
 
     /**
@@ -412,28 +364,21 @@ export class ViewCompiler {
      * @returns {Element}
      */
     compileButtonBox(el, params) {
-        params = Object.create(params);
-        // params.enableInvisible = true; // AAB: what do we do with this? Could be useful for studio, but...
         el.classList.remove("oe_button_box");
-
         const buttonBox = createElement("ButtonBox");
-        // because dropdown is a ul; so we need to wrap every element in a li
-        // const liWrappedSlot = createElement("t");
-        // liWrappedSlot.setAttribute("t-set-slot", "liWrapped");
-
-        // if (el.children.length) {
-        //     append(buttonBox, liWrappedSlot);
-        // }
+        let slotId = 0;
 
         for (const child of el.children) {
-            append(buttonBox, this.compileNode(child, params));
-            // const compiled = this.compileNode(child, params);
-            // if (compiled) {
-            //     const li = createElement("li");
-            //     li.className = "o_dropdown_item";
-            //     append(li, compiled.cloneNode(true));
-            //     append(liWrappedSlot, li);
-            // }
+            const invisible = getModifier(child, "invisible");
+            if (isAlwaysInvisible(invisible, params)) {
+                continue;
+            }
+            const mainSlot = createElement("t", {
+                "t-set-slot": `slot_${slotId++}`,
+                isVisible: invisible !== false ? `!evalDomain(record,${JSON.stringify(invisible)})`: true,
+            });
+            append(mainSlot, this.compileNode(child, params, false, true));
+            append(buttonBox, mainSlot);
         }
 
         return buttonBox;
@@ -471,22 +416,18 @@ export class ViewCompiler {
             field.setAttribute("type", `'${widgetName}'`);
         }
 
-        // handleReadonly(el, field); // AAB: done by the Field itself (s.t. it works in all views)
-        handleEmpty(field, { fieldName, widgetName });
-
         const labels = this.getLabels(fieldName);
         for (const label of labels) {
-            label.setAttribute("for", `${fieldId}`);
-            if (!label.textContent) {
-                if (fieldString) {
-                    label.textContent = fieldString;
-                } else {
-                    label.setAttribute("t-esc", `record.fields.${fieldName}.string`);
-                }
-            }
-            // handleReadonly(el, label); // AAB: seems unnecessary on labels
-            handleInvalid(label, { fieldName, widgetName });
-            handleEmpty(label, { fieldName, widgetName });
+            const props = [
+                ["id", `"${fieldId}"`],
+                ["fieldName", `"${fieldName}"`],
+                ["record", `record`],
+            ];
+            let labelText = label.textContent || fieldString;
+            labelText = labelText ? `"${labelText}"`: `record.fields.${fieldName}.string`;
+            props.push(["string", labelText]);
+            const formLabel = createElement("FormLabel", {"t-props": tupleArrayToExpr(props)});
+            label.replaceWith(formLabel);
         }
         return field;
     }
@@ -545,153 +486,101 @@ export class ViewCompiler {
      * @returns {Element}
      */
     compileGroup(el, params) {
-        let group;
         const isOuterGroup = [...el.children].some((c) => getTagName(c) === "group");
-        if (isOuterGroup) {
-            group = createElement("div");
-            group.className = "o_group";
-            if (el.hasAttribute("string")) {
-                append(group, makeSeparator(el.getAttribute("string")));
+        const formGroup = createElement(isOuterGroup ? "OuterGroup" : "InnerGroup");
+
+        let slotId = 0;
+        let sequence = 0;
+
+        if (el.hasAttribute("col")) {
+            formGroup.setAttribute("maxCols", el.getAttribute("col"));
+        }
+
+        if (el.hasAttribute("string")) {
+            const titleSlot = createElement("t",
+                { "t-set-slot": "title"},
+                [makeSeparator(el.getAttribute("string"))]);
+            append(formGroup, titleSlot);
+        }
+
+        let forceNewline = false;
+        for (const child of el.children) {
+            const tagName = getTagName(child);
+
+            if (tagName === "newline") {
+                forceNewline = true;
+                continue;
             }
 
-            const nbCols = el.hasAttribute("col")
-                ? parseInt(el.getAttribute("col"), 10)
-                : this.constructor.OUTER_GROUP_COL;
-            const colSize = Math.max(1, Math.round(12 / nbCols));
-
-            params = Object.create(params);
-            for (const child of el.childNodes) {
-                if (getTagName(child) === "newline") {
-                    append(group, createElement("br"));
-                    continue;
-                }
-                const compiled = this.compileNode(child, params);
-                if (compiled && !isTextNode(compiled)) {
-                    const colspan = el.hasAttribute("colspan")
-                        ? parseInt(el.getAttribute("colspan"), 10)
-                        : 1;
-                    if (isComponentNode(compiled)) {
-                        compiled.classList.add(`'o_group_col_${colSize * colspan}'`);
-                    } else {
-                        compiled.classList.add(`o_group_col_${colSize * colspan}`);
-                    }
-                    append(group, compiled);
-                }
-            }
-        } else {
-            const table = (group = createElement("table"));
-            table.className = "o_group o_inner_group o_group_col_6";
-            const tbody = createElement("tbody");
-            append(table, tbody);
-
-            const colAttr = el.hasAttribute("col")
-                ? parseInt(el.getAttribute("col"), 10)
-                : this.constructor.INNER_GROUP_COL;
-
-            if (el.hasAttribute("string")) {
-                const td = createElement("td");
-                td.setAttribute("colspan", colAttr);
-                td.setAttribute("style", "width: 100%");
-                append(td, makeSeparator(el.getAttribute("string")));
-                append(tbody, td);
+            const invisible = getModifier(child, "invisible");
+            if (isAlwaysInvisible(invisible, params)) {
+                continue;
             }
 
-            const rows = [];
-            let currentColspan = 0;
-            let currentRow = createElement("tr");
-            for (const child of el.childNodes) {
-                if (isComment(child)) {
-                    continue;
+            const mainSlot = createElement("t", {
+                "t-set-slot": `item_${slotId++}`,
+                type: "'item'",
+                sequence: sequence++,
+                "t-slot-scope": "scope"
+            });
+            let itemSpan = parseInt(child.getAttribute("colspan")|| "1", 10);
+
+            if (forceNewline) {
+                mainSlot.setAttribute("newline", true);
+                forceNewline = false;
+            }
+
+            let slotContent;
+            if (tagName === "field") {
+                const addLabel = child.hasAttribute("nolabel") ? child.getAttribute("nolabel") !== "1" : true;
+                slotContent = this.compileNode(child, params, false, true);
+                if (addLabel && !isOuterGroup) {
+                    itemSpan = itemSpan === 1 ? itemSpan + 1 : itemSpan;
+                    const fieldName = child.getAttribute("name");
+                    const props = [
+                        ["id", `${slotContent.getAttribute("id")}`],
+                        ["fieldName", `"${fieldName}"`],
+                        ["record", `record`],
+                        ["string", child.hasAttribute("string") ? `"${child.getAttribute("string")}"` : `record.fields.${fieldName}.string`]
+                    ];
+                    mainSlot.setAttribute("props", tupleArrayToExpr(props) );
+                    mainSlot.setAttribute("Component", "constructor.components.FormLabel");
+                    mainSlot.setAttribute("subType", "'item_component'");
                 }
-                if (getTagName(child) === "newline") {
-                    rows.push(currentRow);
-                    currentRow = createElement("tr");
-                    currentColspan = 0;
-                    continue;
+            } else {
+                if (child.classList.contains("o_td_label") || child.tagName === "label") {
+                    mainSlot.setAttribute("subType", "'label'");
+                    child.classList.remove("o_td_label");
+                }
+                slotContent = this.compileNode(child, params, false, true);
+            }
+
+            if (slotContent) {
+                if (invisible !== false) {
+                    mainSlot.setAttribute("isVisible", `!evalDomain(record,${JSON.stringify(invisible)})`);
+                }
+                if (itemSpan > 0) {
+                    mainSlot.setAttribute("itemSpan", `${itemSpan}`);
                 }
 
-                // LPE FIXME: support text here ?
-                if (isRelevantTextNode(child)) {
-                    continue;
-                } else if (isTextNode(child)) {
-                    continue;
-                }
-
-                let colspan = child.hasAttribute("colspan")
-                    ? parseInt(child.getAttribute("colspan"), 10)
-                    : 0;
-                const isLabeledField =
-                    getTagName(child) === "field" &&
-                    !evalIrUiViewModifier(child.getAttribute("nolabel"));
-                if (!colspan) {
-                    if (isLabeledField) {
-                        colspan = 2;
-                    } else {
-                        colspan = 1;
-                    }
-                }
-                currentColspan += colspan;
-
-                if (currentColspan > colAttr) {
-                    rows.push(currentRow);
-                    currentRow = createElement("tr");
-                    currentColspan = colspan;
-                }
-                // LPE FIXME implem colspan brols
-                //currentRow = createElement("tr");
-
-                const tds = [];
-                if (getTagName(child) === "field") {
-                    if (isAlwaysInvisible(getModifier(child, "invisible"), params)) {
-                        continue;
-                    }
-
-                    if (!evalIrUiViewModifier(child.getAttribute("nolabel"))) {
-                        const labelTd = makeLabelTd();
-                        const label = this.makeFieldLabel(child, params);
-                        label.className = "o_form_label";
-                        append(labelTd, label);
-                        tds.push(labelTd);
-                    }
-
-                    const field = this.compileNode(child, params);
-                    const fieldTd = createElement("td");
-                    // LPE FIXME: convert to class ?
-                    fieldTd.setAttribute("style", "width: 100%");
-                    append(fieldTd, field);
-
-                    tds.push(fieldTd);
-                } else if (getTagName(child) === "label") {
-                    const label = this.compileNode(child, params);
-                    if (label) {
-                        label.classList.add("o_form_label");
-                        const labelTd = makeLabelTd();
-                        append(labelTd, label);
-                        tds.push(labelTd);
+                const groupClassExpr = `scope && scope.className`;
+                if (isComponentNode(slotContent)) {
+                    if (child.tagName !== "button") {
+                        if (slotContent.hasAttribute("class")) {
+                            mainSlot.prepend(createElement("t", {"t-set": "addClass", "t-value": groupClassExpr}));
+                            combineAttributes(slotContent, "class", `(addClass ? " " + addClass : "")`, `+`);
+                        } else {
+                            slotContent.setAttribute("class", groupClassExpr);
+                        }
                     }
                 } else {
-                    const compiled = this.compileNode(child, params);
-                    if (compiled) {
-                        const td = createElement("td");
-                        if (compiled.nodeType !== 3) {
-                            if (compiled.classList.contains("o_td_label")) {
-                                compiled.classList.remove("o_td_label");
-                                td.className = "o_td_label";
-                            }
-                        }
-                        append(td, compiled);
-                        tds.push(td);
-                    }
+                    appendAttf(slotContent, "class", `${groupClassExpr} || ""`);
                 }
-                append(currentRow, tds);
+                append(mainSlot, slotContent);
+                append(formGroup, mainSlot);
             }
-            if (currentRow.childNodes.length) {
-                rows.push(currentRow);
-            }
-
-            append(tbody, rows);
         }
-        return group;
+        return formGroup;
     }
 
     /**
@@ -732,13 +621,14 @@ export class ViewCompiler {
      */
     compileLabel(el, params) {
         const forAttr = el.getAttribute("for");
-        // FIXME: this is the only place we use 'fields'. Maybe make it more simple?
-        if (forAttr && this.activeFields[forAttr]) {
+        // A label can contain or not the labelable Element it is referring to.
+        // If it doesn't, there is no `for=`
+        // Otherwise, the targetted element is somewhere else among its nextChildren
+        if (forAttr) {
             const label = createElement("label");
-            label.className = "o_form_label";
             const string = el.getAttribute("string");
             if (string) {
-                label.textContent = string;
+                append(label, createTextNode(string));
             }
             this.pushLabel(forAttr, label);
             return label;
@@ -846,12 +736,11 @@ export class ViewCompiler {
 /**
  * @param {typeof ViewCompiler} ViewCompiler
  * @param {string} templateKey
- * @param {Record<string, any>} activeFields
  * @param {Element} xmlDoc
  * @param {Record<string, any>} [params]
  * @returns {string}
  */
-export const useViewCompiler = (ViewCompiler, templateKey, activeFields, xmlDoc, params) => {
+export const useViewCompiler = (ViewCompiler, templateKey, xmlDoc, params) => {
     const component = useComponent();
 
     // Assigns special functions to the current component.
@@ -865,12 +754,6 @@ export const useViewCompiler = (ViewCompiler, templateKey, activeFields, xmlDoc,
             }
             return viewWidgetRegistry.get(widgetName);
         },
-        isFieldEmpty(record, fieldName) {
-            return Field.isEmpty(record, fieldName);
-        },
-        isFieldInvalid(record, fieldName) {
-            return record.isInvalid(fieldName);
-        },
     });
 
     // Creates a new compiled template if the given template key hasn't been
@@ -879,7 +762,7 @@ export const useViewCompiler = (ViewCompiler, templateKey, activeFields, xmlDoc,
         throw new Error("templateKey can not be Undefined!");
     }
     if (!templateIds[templateKey]) {
-        const compiledDoc = new ViewCompiler(activeFields).compile(xmlDoc, params);
+        const compiledDoc = new ViewCompiler().compile(xmlDoc, params);
         templateIds[templateKey] = xml`${compiledDoc.outerHTML}`;
         // DEBUG -- start
         console.group(`Compiled template (${templateIds[templateKey]}):`);
@@ -889,6 +772,3 @@ export const useViewCompiler = (ViewCompiler, templateKey, activeFields, xmlDoc,
     }
     return templateIds[templateKey];
 };
-
-ViewCompiler.INNER_GROUP_COL = 2;
-ViewCompiler.OUTER_GROUP_COL = 2;

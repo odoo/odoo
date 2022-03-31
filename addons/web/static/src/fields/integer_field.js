@@ -41,7 +41,7 @@ IntegerField.defaultProps = {
     inputType: "text",
     setAsInvalid: () => {},
 };
-IntegerField.isEmpty = () => false;
+IntegerField.isEmpty = (record, fieldName) => record.data[fieldName] === false ? true : false;
 IntegerField.extractProps = (fieldName, record, attrs) => {
     return {
         inputType: attrs.options.type,

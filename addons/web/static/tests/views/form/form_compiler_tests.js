@@ -63,32 +63,22 @@ QUnit.module("Form Compiler", () => {
                 </group>
             </form>`;
         const expected = /*xml*/ `
-            <div class="o_group">
-                <table class="o_group o_inner_group o_group_col_6">
-                    <tbody>
-                        <tr>
-                            <td class="o_td_label">
-                                <label class="o_form_label" for="field_display_name_1" t-esc="record.fields.display_name.string" t-att-class="{o_field_invalid: isFieldInvalid(record,'display_name'),o_form_label_empty:record.resId and isFieldEmpty(record,'display_name')}"/>
-                            </td>
-                            <td style="width: 100%">
-                                <Field id="'field_display_name_1'" name="'display_name'" record="record" archs="'views' in record.fields.display_name and record.fields.display_name.views"/>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="o_group o_inner_group o_group_col_6">
-                    <tbody>
-                        <tr>
-                            <td class="o_td_label">
-                                <label class="o_form_label" for="field_charfield_2" t-esc="record.fields.charfield.string" t-att-class="{o_field_invalid: isFieldInvalid(record,'charfield'),o_form_label_empty:record.resId and isFieldEmpty(record,'charfield')}"/>
-                            </td>
-                            <td style="width: 100%">
-                                <Field id="'field_charfield_2'" name="'charfield'" record="record" archs="'views' in record.fields.charfield and record.fields.charfield.views"/>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>`;
+            <OuterGroup>
+               <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" itemSpan="1">
+                  <InnerGroup class="scope &amp;&amp; scope.className">
+                     <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" props="{id:'field_display_name_1',fieldName:&quot;display_name&quot;,record:record,string:record.fields.display_name.string}" Component="constructor.components.FormLabel" subType="'item_component'" itemSpan="2">
+                        <Field id="'field_display_name_1'" name="'display_name'" record="record" archs="'views' in record.fields.display_name and record.fields.display_name.views" class="scope &amp;&amp; scope.className" />
+                     </t>
+                  </InnerGroup>
+               </t>
+               <t t-set-slot="item_1" type="'item'" sequence="1" t-slot-scope="scope" itemSpan="1">
+                  <InnerGroup class="scope &amp;&amp; scope.className">
+                     <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" props="{id:'field_charfield_2',fieldName:&quot;charfield&quot;,record:record,string:record.fields.charfield.string}" Component="constructor.components.FormLabel" subType="'item_component'" itemSpan="2">
+                        <Field id="'field_charfield_2'" name="'charfield'" record="record" archs="'views' in record.fields.charfield and record.fields.charfield.views" class="scope &amp;&amp; scope.className" />
+                     </t>
+                  </InnerGroup>
+               </t>
+            </OuterGroup>`;
 
         assert.areContentEquivalent(compileTemplate(arch), expected);
     });
@@ -128,23 +118,25 @@ QUnit.module("Form Compiler", () => {
         assert.areContentEquivalent(compileTemplate(arch), expected);
     });
 
-    QUnit.skipWOWL("properly compile invisible", async (assert) => {
+    QUnit.test("properly compile invisible", async (assert) => {
+        // cf python side: def transfer_node_to_modifiers
+        // modifiers' string are evaluated to their boolean or array form
+        // So the following arch may actually be written as:
+        // ```<form>
+        //      <field name="display_name" invisible="1" />
+        //      <div class="visible3" invisible="0"/>
+        //      <div modifiers="{'invisible': [['display_name', '=', 'take']]}"/>
+        //    </form>````
         const arch = /*xml*/ `
             <form>
-                <field name="display_name" invisible="1"/>
-                <field name="other_field" invisible="True"/>
-                <div class="nothere1" invisible="true"/>
-                <div class="visible1" invisible="0"/>
-                <div class="visible2" invisible="False"/>
-                <div class="visible3" invisible="false"/>
-                <div modifiers="{'invisible': [['display_name', '=', 'take']]}"/>
+                <field name="display_name" modifiers="{&quot;invisible&quot;: true}" />
+                <div class="visible3" modifiers="{&quot;invisible&quot;: false}"/>
+                <div modifiers="{&quot;invisible&quot;: [[&quot;display_name&quot;, &quot;=&quot;, &quot;take&quot;]]}"/>
             </form>`;
 
         const expected = /*xml*/ `
-            <div class="visible1"/>
-            <div class="visible2"/>
-            <div class="visible3"/>
-            <div t-if="!evalDomain(record,[['display_name','=','take']])"/>
+            <div class="visible3" />
+            <div t-if="!evalDomain(record,[[&quot;display_name&quot;,&quot;=&quot;,&quot;take&quot;]])" />
         `;
 
         assert.areContentEquivalent(compileTemplate(arch), expected);

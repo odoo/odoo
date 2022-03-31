@@ -44,6 +44,26 @@ function getFieldClassFromRegistry(viewType, fieldType, widget) {
     return DefaultField;
 }
 
+export function fieldVisualFeedback(record, fieldName) {
+    const Cls = record.activeFields[fieldName].FieldComponent;
+    const readonly = record.isReadonly(fieldName);
+    const inEdit = record.mode !== "readonly";
+
+    let empty = !record.isVirtual;
+    if ("isEmpty" in Cls) {
+        empty = empty && Cls.isEmpty(record, fieldName);
+    } else {
+        empty = empty && !record.data[fieldName];
+    }
+    empty = inEdit ? empty && readonly : empty;
+    return {
+        readonly,
+        required: record.isRequired(fieldName),
+        invalid: record.isInvalid(fieldName),
+        empty
+    };
+}
+
 export class Field extends Component {
     setup() {
         this.FieldComponent = this.props.record.activeFields[this.props.name].FieldComponent;
@@ -53,13 +73,13 @@ export class Field extends Component {
     }
 
     get classNames() {
+        const { readonly, required, invalid, empty } = fieldVisualFeedback(this.props.record, this.props.name);
         const classNames = {
             o_field_widget: true,
-            o_readonly_modifier: this.props.record.isReadonly(this.props.name),
-            o_required_modifier: this.props.record.isRequired(this.props.name),
-            o_field_invalid: this.props.record.isInvalid(this.props.name),
-            o_field_empty:
-                !this.props.record.isVirtual && Field.isEmpty(this.props.record, this.props.name),
+            o_readonly_modifier: readonly,
+            o_required_modifier: required,
+            o_field_invalid: invalid,
+            o_field_empty: empty,
             [`o_field_${this.type}`]: true,
             [this.props.class]: !!this.props.class,
         };
@@ -194,15 +214,6 @@ const EXCLUDED_ATTRS = [
     "invisible",
     "on_change",
 ];
-
-Field.isEmpty = function (record, fieldName) {
-    const cls = record.activeFields[fieldName].FieldComponent;
-    if ("isEmpty" in cls) {
-        return cls.isEmpty(record, fieldName);
-    }
-    return !record.data[fieldName];
-};
-// check if useful to expose this
 
 Field.parseFieldNode = function (node, fields, viewType) {
     const name = node.getAttribute("name");

@@ -11,6 +11,7 @@ import {
     makeDeferred,
     nextTick,
     patchWithCleanup,
+    selectDropdownItem,
 } from "@web/../tests/helpers/utils";
 import { toggleActionMenu, toggleMenuItem } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
@@ -1761,8 +1762,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
-        "readonly attrs on lines are re-evaluated on field change 2",
+    QUnit.test("readonly attrs on lines are re-evaluated on field change 2",
         async function (assert) {
             assert.expect(4);
 
@@ -1772,51 +1772,50 @@ QUnit.module("Views", (hooks) => {
                 trululu(record) {
                     // when trululu changes, push another record in product_ids.
                     // only push a second record once.
+
                     if (record.product_ids.map((command) => command[1]).includes(41)) {
                         return;
                     }
                     // copy the list to force it as different from the original
                     record.product_ids = record.product_ids.slice();
+                    record.product_ids.unshift([5]);
                     record.product_ids.push([4, 41, false]);
                 },
             };
 
-            this.data.product.records[0].name = "test";
+            serverData.models.product.records[0].name = "test";
             // This one is necessary to have a valid, rendered widget
-            this.data.product.fields.int_field = { type: "integer", string: "intField" };
+            serverData.models.product.fields.int_field = { type: "integer", string: "intField" };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
-                model: "partner",
+                resModel: "partner",
                 serverData,
                 arch: `
-            <form>
-                <field name="trululu"/>
-                <field name="product_ids" attrs="{'readonly': [['trululu', '=', False]]}">
-                    <tree editable="top"><field name="int_field" widget="handle" /><field name="name"/></tree>
-                </field>
-            </form>
-            `,
-                res_id: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
+                    <form>
+                        <field name="trululu"/>
+                        <field name="product_ids" attrs="{'readonly': [['trululu', '=', False]]}">
+                            <tree editable="top"><field name="int_field" widget="handle" /><field name="name"/></tree>
+                        </field>
+                    </form>
+                    `,
+                resId: 1,
             });
+            await click(target.querySelector(".o_form_button_edit"));
 
+            const form = target.querySelector(".o_form_view");
+
+            let m2oName = "first record";
             for (const value of [true, false, true, false]) {
                 if (value) {
-                    await testUtils.fields.many2one.clickOpenDropdown("trululu");
-                    await testUtils.fields.many2one.clickHighlightedItem("trululu");
+                    await selectDropdownItem(form, "trululu", m2oName);
                     assert.notOk(
                         $('.o_field_one2many[name="product_ids"]').hasClass("o_readonly_modifier"),
                         "lines should not be readonly"
                     );
+                    m2oName = "second record";
                 } else {
-                    await testUtils.fields.editAndTrigger(
-                        form.el.querySelector('.o_field_many2one[name="trululu"] input'),
-                        "",
-                        ["keyup"]
-                    );
+                    await editInput(form, '.o_field_many2one[name="trululu"] input', "");
                     assert.ok(
                         $('.o_field_one2many[name="product_ids"]').hasClass("o_readonly_modifier"),
                         "lines should be readonly"
@@ -1826,7 +1825,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "empty fields have o_form_empty class in readonly mode",
         async function (assert) {
             assert.expect(8);
@@ -1841,7 +1840,7 @@ QUnit.module("Views", (hooks) => {
                 }
             };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -1858,6 +1857,7 @@ QUnit.module("Views", (hooks) => {
                 resId: 2,
             });
 
+            const form = target.querySelector(".o_form_view");
             assert.containsN(
                 form,
                 ".o_field_widget.o_field_empty",
@@ -1871,7 +1871,7 @@ QUnit.module("Views", (hooks) => {
                 "should have 2 muted labels (for the empty fieds) in readonly"
             );
 
-            await click(form.el.querySelector(".o_form_button_edit"));
+            await click(form.querySelector(".o_form_button_edit"));
 
             assert.containsOnce(
                 form,
@@ -1884,7 +1884,7 @@ QUnit.module("Views", (hooks) => {
                 "in edit mode, only labels associated to empty readonly fields should have the o_form_label_empty class"
             );
 
-            await editInput(form.el, ".o_field_widget[name=foo] input", "test");
+            await editInput(form, ".o_field_widget[name=foo] input", "test");
 
             assert.containsNone(
                 form,
@@ -1897,7 +1897,7 @@ QUnit.module("Views", (hooks) => {
                 "after readonly modifier change, the o_form_label_empty class should have been removed"
             );
 
-            await editInput(form.el, ".o_field_widget[name=foo] input", "hello");
+            await editInput(form, ".o_field_widget[name=foo] input", "hello");
 
             assert.containsOnce(
                 form,
@@ -1912,7 +1912,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "empty fields' labels still get the empty class after widget rerender",
         async function (assert) {
             assert.expect(6);
@@ -1921,7 +1921,7 @@ QUnit.module("Views", (hooks) => {
             serverData.models.partner.records[1].foo = false; // 1 is record with id=2
             serverData.models.partner.records[1].display_name = false; // 1 is record with id=2
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -1935,6 +1935,8 @@ QUnit.module("Views", (hooks) => {
                 resId: 2,
             });
 
+            const form = target.querySelector(".o_form_view");
+
             assert.containsN(form, ".o_field_widget.o_field_empty", 2);
             assert.containsN(
                 form,
@@ -1943,7 +1945,7 @@ QUnit.module("Views", (hooks) => {
                 "should have 1 muted label (for the empty fied) in readonly"
             );
 
-            await click(form.el.querySelector(".o_form_button_edit"));
+            await click(form.querySelector(".o_form_button_edit"));
 
             assert.containsNone(
                 form,
@@ -1956,10 +1958,10 @@ QUnit.module("Views", (hooks) => {
                 "in edit mode, only labels associated to empty readonly fields should have the o_form_label_empty class"
             );
 
-            await editInput(form.el, ".o_field_widget[name=foo] input", "readonly");
-            await editInput(form.el, ".o_field_widget[name=foo] input", "edit");
-            await editInput(form.el, ".o_field_widget[name=display_name] input", "some name");
-            await editInput(form.el, ".o_field_widget[name=foo] input", "readonly");
+            await editInput(form, ".o_field_widget[name=foo] input", "readonly");
+            await editInput(form, ".o_field_widget[name=foo] input", "edit");
+            await editInput(form, ".o_field_widget[name=display_name] input", "some name");
+            await editInput(form, ".o_field_widget[name=foo] input", "readonly");
 
             assert.containsNone(
                 form,
@@ -6034,10 +6036,10 @@ QUnit.module("Views", (hooks) => {
         await click(form.el.querySelector(".oe_stat_button"));
     });
 
-    QUnit.skipWOWL("diplay a stat button outside a buttonbox", async function (assert) {
+    QUnit.test("diplay a stat button outside a buttonbox", async function (assert) {
         assert.expect(3);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -6052,27 +6054,28 @@ QUnit.module("Views", (hooks) => {
             resId: 2,
         });
 
+        const form = target.querySelector(".o_form_view");
         assert.containsOnce(
             form,
             "button .o_field_widget",
             "a field widget should be display inside the button"
         );
         assert.strictEqual(
-            form.el.querySelector("button .o_field_widget").children().length,
+            form.querySelector("button .o_field_widget").children.length,
             2,
             "the field widget should have 2 children, the text and the value"
         );
         assert.strictEqual(
-            parseInt(form.el.querySelector("button .o_field_widget .o_stat_value").innerText),
+            parseInt(form.querySelector("button .o_field_widget .o_stat_value").innerText),
             9,
             "the value rendered should be the same as the field value"
         );
     });
 
-    QUnit.skipWOWL("diplay something else than a button in a buttonbox", async function (assert) {
+    QUnit.test("diplay something else than a button in a buttonbox", async function (assert) {
         assert.expect(3);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -6088,8 +6091,9 @@ QUnit.module("Views", (hooks) => {
             resId: 2,
         });
 
+        const form = target.querySelector(".o_form_view");
         assert.strictEqual(
-            form.el.querySelector(".oe_button_box").children().length,
+            form.querySelector(".oe_button_box").children.length,
             2,
             "button box should contain two children"
         );
@@ -6105,12 +6109,12 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "invisible fields are not considered as visible in a buttonbox",
         async function (assert) {
             assert.expect(2);
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -6131,23 +6135,24 @@ QUnit.module("Views", (hooks) => {
                 resId: 2,
             });
 
+            const form = target.querySelector(".o_form_view");
             assert.strictEqual(
-                form.el.querySelector(".oe_button_box").children().length,
+                form.querySelector(".oe_button_box").children.length,
                 1,
                 "button box should contain only one child"
             );
             assert.hasClass(
-                form.el.querySelector(".oe_button_box"),
+                form.querySelector(".oe_button_box"),
                 "o_not_full",
                 "the buttonbox should not be full"
             );
         }
     );
 
-    QUnit.skipWOWL("display correctly buttonbox, in large size class", async function (assert) {
+    QUnit.test("display correctly buttonbox, in large size class", async function (assert) {
         assert.expect(1);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -6168,8 +6173,9 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
+        const form = target.querySelector(".o_form_view");
         assert.strictEqual(
-            form.el.querySelector(".oe_button_box").children().length,
+            form.querySelector(".oe_button_box").children.length,
             2,
             "button box should contain two children"
         );
@@ -6822,10 +6828,10 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("render stat button with string inline", async function (assert) {
+    QUnit.test("render stat button with string inline", async function (assert) {
         assert.expect(1);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -6839,7 +6845,8 @@ QUnit.module("Views", (hooks) => {
                 "</sheet>" +
                 "</form>",
         });
-        var $button = form.el.querySelector(
+        const form = target.querySelector(".o_form_view");
+        var $button = form.querySelector(
             ".o_form_view .o_form_sheet .oe_button_box .oe_stat_button span"
         );
         assert.strictEqual(
@@ -6996,37 +7003,52 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("correct amount of buttons", async function (assert) {
+    QUnit.test("correct amount of buttons", async function (assert) {
         assert.expect(7);
 
-        var self = this;
-        var buttons = Array(8).join(
+        let screenSize = 7;
+        const uiService = {
+            start(env) {
+                Object.defineProperty(env, "isSmall", {
+                    get() {
+                        return false;
+                    },
+                });
+                return {
+                    get size() { return screenSize; },
+                    isSmall: false,
+                };
+            }
+        };
+        registry.category("services").add('ui', uiService, {force: true});
+
+        const buttons = Array(8).join(
             '<button type="object" class="oe_stat_button" icon="fa-check-square">' +
                 '<field name="bar"/>' +
                 "</button>"
         );
-        var statButtonSelector = ".oe_stat_button:not(.dropdown-item, .dropdown-toggle)";
 
-        var createFormWithDeviceSizeClass = async function (size_class) {
-            return await makeView({
-                type: "form",
-                resModel: "partner",
-                data: self.data,
-                arch:
-                    "<form>" +
-                    '<div name="button_box" class="oe_button_box">' +
-                    buttons +
-                    "</div>" +
-                    "</form>",
-                resId: 2,
-                config: {
-                    device: { size_class: size_class },
-                },
-            });
-        };
+        // legacySelector = ".oe_stat_button:not(.dropdown-item, .dropdown-toggle)";
+        const statButtonSelector = ".o-form-buttonbox .oe_stat_button:not(.o_dropdown_more)";
 
-        var assertFormContainsNButtonsWithSizeClass = async function (size_class, n) {
-            var form = await createFormWithDeviceSizeClass(size_class);
+        const formView = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch:
+                "<form>" +
+                '<div name="button_box" class="oe_button_box">' +
+                buttons +
+                "</div>" +
+                "</form>",
+            resId: 2,
+        });
+
+        const form = target.querySelector(".o_form_view");
+        const assertFormContainsNButtonsWithSizeClass = async function (size_class, n) {
+            screenSize = size_class;
+            formView.render(true); // deep rendering
+            await nextTick();
             assert.containsN(
                 form,
                 statButtonSelector,
@@ -7800,10 +7822,10 @@ QUnit.module("Views", (hooks) => {
         await click(form.el.querySelector('.o_field_widget[name="trululu"] input'));
     });
 
-    QUnit.skipWOWL("form rendering with groups with col/colspan", async function (assert) {
+    QUnit.test("form rendering with groups with col/colspan", async function (assert) {
         assert.expect(45);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -7844,11 +7866,13 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
         });
 
-        var $parentGroup = form.el.querySelector(".parent_group");
-        var $group4 = form.el.querySelector(".group_4");
-        var $group3 = form.el.querySelector(".group_3");
-        var $group1 = form.el.querySelector(".group_1");
-        var $fieldGroup = form.el.querySelector(".field_group");
+        const form = target.querySelector(".o_form_view");
+
+        var $parentGroup = $(form.querySelector(".parent_group"));
+        var $group4 = $(form.querySelector(".group_4"));
+        var $group3 = $(form.querySelector(".group_3"));
+        var $group1 = $(form.querySelector(".group_1"));
+        var $fieldGroup = $(form.querySelector(".field_group"));
 
         // Verify outergroup/innergroup
         assert.strictEqual($parentGroup[0].tagName, "DIV", ".parent_group should be an outergroup");
@@ -8036,10 +8060,10 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("outer and inner groups string attribute", async function (assert) {
+    QUnit.test("outer and inner groups string attribute", async function (assert) {
         assert.expect(5);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -8059,9 +8083,10 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
         });
 
-        var $parentGroup = form.el.querySelector(".parent_group");
-        var $group1 = form.el.querySelector(".group_1");
-        var $group2 = form.el.querySelector(".group_2");
+        const form = target.querySelector(".o_form_view");
+        var $parentGroup = $(form.querySelector(".parent_group"));
+        var $group1 = $(form.querySelector(".group_1"));
+        var $group2 = $(form.querySelector(".group_2"));
 
         assert.containsN(form, "table.o_inner_group", 2, "should contain two inner groups");
         assert.strictEqual(
@@ -8086,10 +8111,10 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("form group with newline tag inside", async function (assert) {
+    QUnit.test("form group with newline tag inside", async function (assert) {
         assert.expect(6);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -8124,6 +8149,7 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
         });
 
+        const form = target.querySelector(".o_form_view");
         // Inner group
         assert.containsN(
             form,
@@ -8155,10 +8181,11 @@ QUnit.module("Views", (hooks) => {
         );
 
         // Outer group
+        const bottomGroupRect = form.querySelector(".bottom_group").getBoundingClientRect();
+        const topGroupRect = form.querySelector(".top_group").getBoundingClientRect();
+
         assert.ok(
-            form.el.querySelector(".bottom_group").position().top -
-                form.el.querySelector(".top_group").position().top >=
-                200,
+             bottomGroupRect.top  - topGroupRect.top >= 200,
             "outergroup children should not be on the same line"
         );
     });
@@ -10684,12 +10711,37 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         '"bare" buttons in template should not trigger button click',
         async function (assert) {
-            assert.expect(3);
+            assert.expect(4);
 
-            const form = await makeView({
+            const actionService = {
+                start() {
+                    return {
+                        doActionButton(args) {
+                            assert.step("doActionButton");
+                            delete args.onClose;
+                            assert.deepEqual(args, {
+                                "buttonContext": {},
+                                "context": {
+                                    "lang": "en",
+                                    "tz": "taht",
+                                    "uid": 7
+                                },
+                                "resId": 2,
+                                "resIds": [],
+                                "resModel": "partner",
+                                "special": "save"
+                            });
+                        }
+                    };
+                }
+            };
+
+            registry.category("services").add("action", actionService, {force: true});
+
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -10699,15 +10751,12 @@ QUnit.module("Views", (hooks) => {
                     '<button class="mybutton">westvleteren</button>' +
                     "</form>",
                 resId: 2,
-                intercepts: {
-                    execute_action: function () {
-                        assert.step("execute_action");
-                    },
-                },
             });
-            await click(form.el.querySelector(".o_form_view button.btn-primary"));
-            assert.verifySteps(["execute_action"]);
-            await click(form.el.querySelector(".o_form_view button.mybutton"));
+
+            const form = target.querySelector(".o_form_view");
+            await click(form.querySelector(".o_form_view .o_content button.btn-primary"));
+            assert.verifySteps(["doActionButton"]);
+            await click(form.querySelector(".o_form_view button.mybutton"));
             assert.verifySteps([]);
         }
     );

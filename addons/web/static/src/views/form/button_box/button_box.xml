@@ -2,14 +2,20 @@
 <templates xml:space="preserve">
 
 <t t-name="web.Form.ButtonBox" owl="1" >
-    <div class="o-form-buttonbox">
-        <t t-slot="default" />
-<!--         <ButtonBoxDropdown redrawButtons="dropdownRedrawButtons" t-ref="dropdown" menuClass="'o_dropdown_more'" t-att-class="'btn oe_stat_button o_button_more'">
-            <t t-set-slot="toggler">More</t>
-            <t t-set-slot="default">
-                <t t-slot="liWrapped" />
-            </t>
-        </ButtonBoxDropdown> -->
+    <t t-set="allButtons" t-value="getButtons()" />
+    <t t-set="visibleButtons" t-value="allButtons['visible']" />
+    <t t-set="additionalButtons" t-value="allButtons['additional']" />
+    <div class="o-form-buttonbox oe_button_box" t-attf-class="{{ visibleButtons.length >= getMaxButtons() ? 'o_full' : 'o_not_full' }}">
+        <t t-slot="{{ button_value }}" t-foreach="visibleButtons" t-as="button" t-key="button_value" />
+
+        <t t-if="additionalButtons.length" >
+            <Dropdown togglerClass="'btn o_button_more'" class="'btn oe_stat_button o_dropdown_more'">
+                <t t-set-slot="toggler">More</t>
+                <DropdownItem t-foreach="additionalButtons" t-as="button" t-key="button_value">
+                    <t t-slot="{{ button_value }}" />
+                </DropdownItem>
+            </Dropdown>
+        </t>
     </div>
 </t>
 
