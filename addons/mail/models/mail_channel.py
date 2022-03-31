@@ -89,6 +89,7 @@ class Channel(models.Model):
         required=True, default='groups',
         help='This group is visible by non members. Invisible groups can add members through the invite button.')
     group_public_id = fields.Many2one('res.groups', string='Authorized Group', compute='_compute_group_public_id', readonly=False, store=True)
+    invitation_url = fields.Char('Invitation URL', compute='_compute_invitation_url')
 
     _sql_constraints = [
         ('channel_type_not_null', 'CHECK(channel_type IS NOT NULL)', 'The channel type cannot be empty'),
@@ -182,6 +183,11 @@ class Channel(models.Model):
         channels = self.filtered(lambda channel: channel.channel_type == 'channel')
         channels.filtered(lambda channel: not channel.group_public_id).group_public_id = self.env.ref('base.group_user')
         (self - channels).group_public_id = None
+
+    @api.depends('uuid')
+    def _compute_invitation_url(self):
+        for channel in self:
+            channel.invitation_url = f"/chat/{channel.id}/{channel.uuid}"
 
     # ONCHANGE
 
