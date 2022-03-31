@@ -2,6 +2,7 @@
 
 import { FieldMany2One } from 'web.relational_fields';
 import core from 'web.core';
+import Domain from 'web.Domain';
 import fieldRegistry from 'web.field_registry';
 
 const _t = core._t;
@@ -67,8 +68,9 @@ const FieldMailingFilter = FieldMany2One.extend({
     },
 
     /**
-     * Updates the 'Add to favorite' / 'Remove' star icons' visibility based on
-     * the current state.
+     * Updates the 'Add to favorite' / 'Remove' icons' visibility based on the
+     * current state, and shows the custom message when no filter is available
+     * for the selected model.
      *
      * The filter can be saved if one of those conditions is matched:
      * - No favorite filter is currently set
@@ -80,12 +82,18 @@ const FieldMailingFilter = FieldMany2One.extend({
      * @private
      */
     _updateFilterIcons: function () {
-        const hasDomain = this.recordData[this.domainFieldName] && this.recordData[this.domainFieldName] !== '[]';
-        this.el.querySelector('.o_mass_mailing_filter_container').classList.toggle('invisible', !hasDomain);
+        const filterCount = this.recordData.mailing_filter_count;
+        this.el.querySelector('.o_mass_mailing_no_filter').classList.toggle('d-none', filterCount);
+        this.el.querySelector('.o_field_many2one_selection > .o_input_dropdown').classList.toggle('d-none', !filterCount);
+        // By default, domains in recordData are in string format, but adding / removing a leaf from domain widget converts
+        // value into object, so we use 'Domain' class to convert them in same (string) format, allowing proper comparison.
+        const recordDomain = new Domain(this.recordData[this.domainFieldName] || []).toString();
+        const filterDomain = new Domain(this.recordData.mailing_filter_domain || []).toString();
+        this.el.querySelector('.o_mass_mailing_filter_container').classList.toggle('d-none', recordDomain === '[]');
         const canSaveFilter = !this.recordData.mailing_filter_id
             || !this.$input.val().length
             || this.floating
-            || this.recordData.mailing_filter_domain !== this.recordData[this.domainFieldName];
+            || filterDomain !== recordDomain;
         this.el.querySelector('.o_mass_mailing_save_filter_container').classList.toggle('d-none', !canSaveFilter);
         this.el.querySelector('.o_mass_mailing_remove_filter').classList.toggle('d-none', canSaveFilter);
     },
@@ -158,7 +166,7 @@ const FieldMailingFilter = FieldMany2One.extend({
         // Prevent multiple clicks to avoid trying to deleting same record multiple times.
         ev.target.disabled = true;
         // Avoid calling any 'onchange' (that depends on filter and might reset the domain) immediately
-        // after filter is removed. It should have any side effects because we don't want to change
+        // after filter is removed. It shouldn't have any side effects because we don't want to change
         // anything in any case when filter is unliked with with this widget.
         this._setValue(false, {notifyChange: false});
         await this._rpc({
