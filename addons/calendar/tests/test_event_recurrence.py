@@ -288,6 +288,24 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             (datetime(2020, 3, 30, 0, 0), datetime(2020, 3, 30, 23, 59)),
         ])
 
+    def test_videocall_recurrency(self):
+        self.event._set_discuss_videocall_location()
+        self.event._apply_recurrence_values({
+            'interval': 1,
+            'rrule_type': 'weekly',
+            'mon': True,
+            'count': 2,
+        })
+
+        recurrent_events = self.event.recurrence_id.calendar_event_ids
+        detached_events = self.event.recurrence_id.calendar_event_ids - self.event
+        rec_events_videocall_locations = recurrent_events.mapped('videocall_location')
+        self.assertEqual(len(rec_events_videocall_locations), len(set(rec_events_videocall_locations)), 'Recurrent events should have different videocall locations')
+        self.assertEqual(not any(recurrent_events.videocall_channel_id), True, 'No channel should be set before the route is accessed')
+        # create the first channel
+        detached_events[0]._create_videocall_channel()
+        # after channel is created, all other events should have the same channel
+        self.assertEqual(detached_events[0].videocall_channel_id.id, self.event.videocall_channel_id.id)
 
 class TestUpdateRecurrentEvents(TestRecurrentEvents):
 

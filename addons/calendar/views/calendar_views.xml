@@ -104,7 +104,7 @@
         <field name="model">calendar.event</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <form string="Meetings">
+            <form string="Meetings" js_class="calendar_form">
                 <div attrs="{'invisible': [('recurrence_id','=',False)]}" class="alert alert-info oe_edit_only" role="status">
                     <p>Edit recurring event</p>
                     <field name="recurrence_update" widget="radio"/>
@@ -135,6 +135,7 @@
                         <div name="send_buttons" class="sm-2">
                             <button name="action_open_composer" help="Send Email to attendees" type="object" string=" EMAIL" icon="fa-envelope"/>
                         </div>
+                        <button name="action_join_video_call" class="btn-primary" help="Join Video Call" type="object" string="Join Video Call" attrs="{'invisible': [('videocall_location', '=', False)]}"/>
                     </div>
                     <div class="alert alert-warning o_form_header mt-2" attrs="{'invisible': [('invalid_email_partner_ids', '=', [])]}" role="status">
                         <p><strong>The following attendees have invalid email addresses and won't receive any email notifications:</strong></p>
@@ -162,7 +163,19 @@
                                 <group>
                                     <field name="alarm_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
                                     <field name="location" />
-                                    <field name="videocall_location"/>
+                                    <field name="videocall_location" class="oe_inline" string="Videocall URL" widget="CopyClipboardChar" force_save="1" attrs="{'readonly':[('videocall_source','=', 'discuss')]}"/>
+                                    <div colspan="12" class="d-flex justify-content-center">
+                                    <button name="clear_videocall_location" type="object" class="btn btn-link"
+                                        attrs="{'invisible': [('videocall_location', '=', False)]}" context="{'recurrence_update': recurrence_update}">
+                                         <span class="fa fa-times"></span><span> Clear meeting</span>
+                                    </button>
+                                    <button name="set_discuss_videocall_location" type="object" class="btn btn-link"
+                                        attrs="{'invisible':  [('videocall_location', '!=', False)]}" context="{'recurrence_update': recurrence_update}">
+                                         <span class="fa fa-plus"></span><span> Add Odoo meeting</span>
+                                    </button>
+                                    </div>
+                                    <field name="videocall_source" invisible="1"/>
+                                    <field name="access_token" invisible="1" force_save="1"/>
                                     <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                                 </group>
                             </group>
@@ -278,6 +291,7 @@
                        filters="1" widget="many2manyattendee" write_model="calendar.filters"
                        write_field="partner_id" filter_field="partner_checked" avatar_field="avatar_128"
                 />
+                <field name="videocall_location" widget="url" text="Join Video Call" options="{'icon': 'fa fa-lg fa-video-camera'}" attrs="{'invisible': [('videocall_location', '=', False)]}"/>
                 <field name="is_highlighted" invisible="1"/>
                 <field name="is_organizer_alone" invisible="1"/>
                 <field name="display_description" invisible="1"/>
