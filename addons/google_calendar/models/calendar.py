@@ -117,8 +117,7 @@ class Meeting(models.Model):
             stop = parse(google_event.end.get('date')) - relativedelta(days=1)
             # Stop date should be exclusive as defined here https://developers.google.com/calendar/v3/reference/events#resource
             # but it seems that's not always the case for old event
-            if stop < start:
-                stop = parse(google_event.end.get('date'))
+            stop = max(start, stop)  # For the cases that start date and end date were the same
             values['allday'] = True
         values['start'] = start
         values['stop'] = stop
