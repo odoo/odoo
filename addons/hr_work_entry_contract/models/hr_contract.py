@@ -1,6 +1,9 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import itertools
+import pytz
+
 from collections import defaultdict
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
@@ -10,7 +13,6 @@ from odoo.addons.resource.models.resource import datetime_to_string, string_to_d
 from odoo.osv import expression
 from odoo.exceptions import UserError
 
-import pytz
 
 class HrContract(models.Model):
     _inherit = 'hr.contract'
@@ -51,40 +53,56 @@ class HrContract(models.Model):
         return self.env.ref('hr_work_entry_contract.work_entry_type_leave')
 
     def _get_contract_work_entries_values(self, date_start, date_stop):
+        start_dt = pytz.utc.localize(date_start) if not date_start.tzinfo else date_start
+        end_dt = pytz.utc.localize(date_stop) if not date_stop.tzinfo else date_stop
+
         contract_vals = []
         bypassing_work_entry_type_codes = self._get_bypassing_work_entry_type_codes()
+        # {calendar: employees}
+        employees_by_calendar = defaultdict(lambda: self.env['hr.employee'])
+        for contract in self:
+            employees_by_calendar[contract.resource_calendar_id] |= contract.employee_id
+
+        all_resources = self.employee_id.resource_id
+
+        attendances_by_calendar = {
+            calendar: calendar._attendance_intervals_batch(
+                start_dt,
+                end_dt,
+                resources=employees.resource_id,
+                tz=pytz.timezone(calendar.tz)
+            ) for calendar, employees in employees_by_calendar.items()}
+
+        resource_calendar_leaves = self.env['resource.calendar.leaves'].search([
+            ('time_type', '=', 'leave'),
+            # ('calendar_id', '=', self.id), --> Get all the time offs
+            ('resource_id', 'in', [False] + all_resources.ids),
+            ('date_from', '<=', datetime_to_string(end_dt)),
+            ('date_to', '>=', datetime_to_string(start_dt)),
+            ('company_id', '=', self.env.company.id),
+        ])
+        # {resource: resource_calendar_leaves}
+        leaves_by_resource = defaultdict(lambda: self.env['resource.calendar.leaves'])
+        for leave in resource_calendar_leaves:
+            leaves_by_resource[leave.resource_id.id] |= leave
+
+        tz_dates = {}
         for contract in self:
             employee = contract.employee_id
             calendar = contract.resource_calendar_id
             resource = employee.resource_id
             tz = pytz.timezone(calendar.tz)
-            start_dt = pytz.utc.localize(date_start) if not date_start.tzinfo else date_start
-            end_dt = pytz.utc.localize(date_stop) if not date_stop.tzinfo else date_stop
 
-            attendances = calendar._attendance_intervals_batch(
-                start_dt, end_dt, resources=resource, tz=tz
-            )[resource.id]
+            attendances = attendances_by_calendar[calendar][resource.id]
 
             # Other calendars: In case the employee has declared time off in another calendar
             # Example: Take a time off, then a credit time.
             # YTI TODO: This mimics the behavior of _leave_intervals_batch, while waiting to be cleaned
             # in master.
             resources_list = [self.env['resource.resource'], resource]
-            resource_ids = [False, resource.id]
-            leave_domain = [
-                ('time_type', '=', 'leave'),
-                # ('calendar_id', '=', self.id), --> Get all the time offs
-                ('resource_id', 'in', resource_ids),
-                ('date_from', '<=', datetime_to_string(end_dt)),
-                ('date_to', '>=', datetime_to_string(start_dt)),
-                ('company_id', '=', self.env.company.id),
-            ]
             result = defaultdict(lambda: [])
-            tz_dates = {}
-            for leave in self.env['resource.calendar.leaves'].search(leave_domain):
+            for leave in itertools.chain(leaves_by_resource[False], leaves_by_resource[resource.id]):
                 for resource in resources_list:
-                    if leave.resource_id.id not in [False, resource.id]:
-                        continue
                     tz = tz if tz else pytz.timezone((resource or contract).tz)
                     if (tz, start_dt) in tz_dates:
                         start = tz_dates[(tz, start_dt)]
@@ -159,18 +177,24 @@ class HrContract(models.Model):
         """
         contract_vals = self._get_contract_work_entries_values(date_start, date_stop)
 
+        # {contract_id: ([dates_start], [dates_stop])}
+        mapped_contract_dates = defaultdict(lambda: ([], []))
+        for x in contract_vals:
+            mapped_contract_dates[x['contract_id']][0].append(x['date_start'])
+            mapped_contract_dates[x['contract_id']][1].append(x['date_stop'])
+
         for contract in self:
             # If we generate work_entries which exceeds date_start or date_stop, we change boundaries on contract
             if contract_vals:
                 #Handle empty work entries for certain contracts, could happen on an attendance based contract
                 #NOTE: this does not handle date_stop or date_start not being present in vals
-                dates_stop = [x['date_stop'] for x in contract_vals if x['contract_id'] == contract.id]
+                dates_stop = mapped_contract_dates[contract.id][1]
                 if dates_stop:
                     date_stop_max = max(dates_stop)
                     if date_stop_max > contract.date_generated_to:
                         contract.date_generated_to = date_stop_max
 
-                dates_start = [x['date_start'] for x in contract_vals if x['contract_id'] == contract.id]
+                dates_start = mapped_contract_dates[contract.id][0]
                 if dates_start:
                     date_start_min = min(dates_start)
                     if date_start_min < contract.date_generated_from:
@@ -179,6 +203,7 @@ class HrContract(models.Model):
         return contract_vals
 
     def _generate_work_entries(self, date_start, date_stop, force=False):
+        self = self.with_context(tracking_disable=True)
         canceled_contracts = self.filtered(lambda c: c.state == 'cancel')
         if canceled_contracts:
             raise UserError(
@@ -189,6 +214,13 @@ class HrContract(models.Model):
         date_stop = datetime.combine(fields.Datetime.to_datetime(date_stop), datetime.max.time())
 
         intervals_to_generate = defaultdict(lambda: self.env['hr.contract'])
+        # In case the date_generated_from == date_generated_to, move it to the date_start to
+        # avoid trying to generate several months/years of history for old contracts for which
+        # we've never generated the work entries.
+        self.filtered(lambda c: c.date_generated_from == c.date_generated_to).write({
+            'date_generated_from': date_start,
+            'date_generated_to': date_start,
+        })
         for contract in self:
             contract_start = fields.Datetime.to_datetime(contract.date_start)
             contract_stop = datetime.combine(fields.Datetime.to_datetime(contract.date_end or datetime.max.date()),
@@ -199,14 +231,6 @@ class HrContract(models.Model):
                 intervals_to_generate[(date_start_work_entries, date_stop_work_entries)] |= contract
                 continue
 
-            # In case the date_generated_from == date_generated_to, move it to the date_start to
-            # avoid trying to generate several months/years of history for old contracts for which
-            # we've never generated the work entries.
-            if contract.date_generated_from == contract.date_generated_to:
-                contract.write({
-                    'date_generated_from': date_start,
-                    'date_generated_to': date_start,
-                })
             # For each contract, we found each interval we must generate
             last_generated_from = min(contract.date_generated_from, contract_stop)
             if last_generated_from > date_start_work_entries:
