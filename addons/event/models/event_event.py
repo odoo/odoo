@@ -193,6 +193,7 @@ class EventEvent(models.Model):
     address_id = fields.Many2one(
         'res.partner', string='Venue', default=lambda self: self.env.company.partner_id.id,
         tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    address_search = fields.Many2one(related='address_id', string='Address', search='_search_address_search')
     address_inline = fields.Char(
         string='Venue (formatted for one line uses)', compute='_compute_address_inline',
         compute_sudo=True)
@@ -378,6 +379,22 @@ class EventEvent(models.Model):
                 event.date_tz = event.event_type_id.default_timezone
             if not event.date_tz:
                 event.date_tz = self.env.user.tz or 'UTC'
+
+    def _search_address_search(self, operator, value):
+        if operator != 'ilike' or not isinstance(value, str):
+            raise NotImplementedError(_('Operation not supported.'))
+
+        address_ids = self.env['res.partner']._search([
+            '|', '|', '|', '|', '|',
+            ('street', 'ilike', value),
+            ('street2', 'ilike', value),
+            ('city', 'ilike', value),
+            ('zip', 'ilike', value),
+            ('state_id', 'ilike', value),
+            ('country_id', 'ilike', value),
+        ])
+
+        return [('address_id', 'in', address_ids)]
 
     # seats
 
