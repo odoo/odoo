@@ -20,20 +20,12 @@ QUnit.module('hr', {}, function () {
             // reset the cache before each test
             Many2OneAvatarEmployee.prototype.partnerIds = {};
 
-            Object.assign(this.data, {
-                'foo': {
-                    fields: {
-                        employee_id: { string: "Employee", type: 'many2one', relation: 'hr.employee.public' },
-                        employee_ids: { string: "Employees", type: "many2many", relation: 'hr.employee.public' },
-                    },
-                    records: [
-                        { id: 1, employee_id: 11, employee_ids: [11, 23] },
-                        { id: 2, employee_id: 7 },
-                        { id: 3, employee_id: 11 },
-                        { id: 4, employee_id: 23 },
-                    ],
-                },
-            });
+            this.data['m2x.avatar.employee'].records.push(
+                { id: 1, employee_id: 11, employee_ids: [11, 23] },
+                { id: 2, employee_id: 7 },
+                { id: 3, employee_id: 11 },
+                { id: 4, employee_id: 23 },
+            );
             this.data['hr.employee.public'].records.push(
                 { id: 11, name: "Mario", user_id: 11, user_partner_id: 11 },
                 { id: 7, name: "Luigi", user_id: 12, user_partner_id: 12 },
@@ -59,7 +51,7 @@ QUnit.module('hr', {}, function () {
             hasChatWindow: true,
             hasView: true,
             View: ListView,
-            model: 'foo',
+            model: 'm2x.avatar.employee',
             data: this.data,
             arch: '<tree><field name="employee_id" widget="many2one_avatar_employee"/></tree>',
             mockRPC(route, args) {
@@ -135,7 +127,7 @@ QUnit.module('hr', {}, function () {
         const { widget: kanban } = await start({
             hasView: true,
             View: KanbanView,
-            model: 'foo',
+            model: 'm2x.avatar.employee',
             data: this.data,
             arch: `
                 <kanban>
@@ -167,7 +159,7 @@ QUnit.module('hr', {}, function () {
         const { widget: form } = await start({
             hasView: true,
             View: FormView,
-            model: 'foo',
+            model: 'm2x.avatar.employee',
             data: this.data,
             arch: '<form><field name="employee_id" widget="many2one_avatar_employee"/></form>',
             mockRPC(route, args) {
@@ -205,7 +197,7 @@ QUnit.module('hr', {}, function () {
         await dom.click(form.$('.o_m2o_avatar > img'));
 
         assert.verifySteps([
-            'read foo 1',
+            'read m2x.avatar.employee 1',
             'read hr.employee.public 11',
         ]);
 
@@ -219,7 +211,7 @@ QUnit.module('hr', {}, function () {
             hasChatWindow: true,
             hasView: true,
             View: FormView,
-            model: 'foo',
+            model: 'm2x.avatar.employee',
             data: this.data,
             arch: '<form><field name="employee_ids" widget="many2many_avatar_employee"/></form>',
             mockRPC(route, args) {
@@ -241,7 +233,7 @@ QUnit.module('hr', {}, function () {
         await dom.click(form.$('.o_field_many2manytags.avatar .badge:nth(1) .o_m2m_avatar'));
 
         assert.verifySteps([
-            "read foo 1",
+            "read m2x.avatar.employee 1",
             'read hr.employee.public 11,23',
             "read hr.employee.public 11",
             "read hr.employee.public 23",
@@ -264,7 +256,7 @@ QUnit.module('hr', {}, function () {
             hasChatWindow: true,
             hasView: true,
             View: ListView,
-            model: 'foo',
+            model: 'm2x.avatar.employee',
             data: this.data,
             arch: '<tree><field name="employee_ids" widget="many2many_avatar_employee"/></tree>',
             mockRPC(route, args) {
@@ -326,7 +318,7 @@ QUnit.module('hr', {}, function () {
         const { widget: kanban } = await start({
             hasView: true,
             View: KanbanView,
-            model: 'foo',
+            model: 'm2x.avatar.employee',
             data: this.data,
             arch: `
                 <kanban>
@@ -382,7 +374,7 @@ QUnit.module('hr', {}, function () {
             hasChatWindow: true,
             hasView: true,
             View: FormView,
-            model: 'foo',
+            model: 'm2x.avatar.employee',
             data: this.data,
             arch: '<form><field name="employee_ids" widget="many2many_avatar_employee"/></form>',
             mockRPC(route, args) {
@@ -425,7 +417,7 @@ QUnit.module('hr', {}, function () {
         await dom.click(form.$('.o_field_many2manytags.avatar .badge:nth(1) .o_m2m_avatar'));
 
         assert.verifySteps([
-            'read foo 1',
+            'read m2x.avatar.employee 1',
             'read hr.employee.public 11,23',
             "read hr.employee.public 11",
             "read hr.employee.public 23"
