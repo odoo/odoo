@@ -223,12 +223,16 @@ class StockQuant(models.Model):
                 fields.append('quantity')
             if 'reserved_quantity' not in fields:
                 fields.append('reserved_quantity')
+        if 'inventory_quantity_auto_apply' in fields and 'quantity' not in fields:
+            fields.append('quantity')
         result = super(StockQuant, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
         for group in result:
             if self.env.context.get('inventory_report_mode'):
                 group['inventory_quantity'] = False
             if 'available_quantity' in fields:
                 group['available_quantity'] = group['quantity'] - group['reserved_quantity']
+            if 'inventory_quantity_auto_apply' in fields:
+                group['inventory_quantity_auto_apply'] = group['quantity']
         return result
 
     def write(self, vals):
