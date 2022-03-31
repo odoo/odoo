@@ -87,6 +87,7 @@ class Meeting(models.Model):
         else:
             start = parse(google_event.start.get('date'))
             stop = parse(google_event.end.get('date')) - relativedelta(days=1)
+            stop = max(start, stop)  # For the cases that start date and end date were the same
             values['allday'] = True
         values['start'] = start
         values['stop'] = stop
