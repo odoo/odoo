@@ -44,5 +44,5 @@ class WebsiteVisitor(models.Model):
         self.ensure_one()
         if product_id and self.env['product.product'].browse(product_id)._is_variant_possible():
             domain = [('product_id', '=', product_id)]
-            website_track_values = {'product_id': product_id, 'visit_datetime': datetime.now()}
+            website_track_values = {'product_id': product_id}
             self._add_tracking(domain, website_track_values)

@@ -92,28 +92,24 @@ class WebsiteVisitor(models.Model):
                 notifications.append([operator.partner_id, 'website_livechat.send_chat_request', mail_channel_info])
             self.env['bus.bus']._sendmany(notifications)
 
-    def _link_to_visitor(self, target):
+    def _merge_visitor(self, target):
         """ Copy sessions of the secondary visitors to the main partner visitor. """
-        if target.partner_id:
-            target.mail_channel_ids |= self.mail_channel_ids
-        super(WebsiteVisitor, self)._link_to_visitor(target)
+        target.mail_channel_ids |= self.mail_channel_ids
+        self.mail_channel_ids.channel_partner_ids = [
+            (3, self.env.ref('base.public_partner').id),
+            (4, target.partner_id.id),
+        ]
+        return super()._merge_visitor(target)
 
-    def _link_to_partner(self, partner, update_values=None):
-        """ Adapt partner in members of related livechats """
-        if partner:
-            self.mail_channel_ids.channel_partner_ids = [
-                (3, self.env.ref('base.public_partner').id),
-                (4, partner.id),
-            ]
-        super(WebsiteVisitor, self)._link_to_partner(partner, update_values=update_values)
-
-    def _create_visitor(self):
-        visitor = super(WebsiteVisitor, self)._create_visitor()
-        mail_channel_uuid = json.loads(request.httprequest.cookies.get('im_livechat_session', '{}')).get('uuid')
-        if mail_channel_uuid:
-            mail_channel = request.env["mail.channel"].sudo().search([("uuid", "=", mail_channel_uuid)])
-            mail_channel.write({
-                'livechat_visitor_id': visitor.id,
-                'anonymous_name': visitor.display_name
-            })
-        return visitor
+    def _upsert_visitor(self, access_token, force_track_values=None):
+        visitor_id, upsert = super()._upsert_visitor(access_token, force_track_values=force_track_values)
+        if upsert == 'inserted':
+            visitor_sudo = self.sudo().browse(visitor_id)
+            mail_channel_uuid = json.loads(request.httprequest.cookies.get('im_livechat_session', '{}')).get('uuid')
+            if mail_channel_uuid:
+                mail_channel = request.env["mail.channel"].sudo().search([("uuid", "=", mail_channel_uuid)])
+                mail_channel.write({
+                    'livechat_visitor_id': visitor_sudo.id,
+                    'anonymous_name': visitor_sudo.display_name
+                })
+        return visitor_id, upsert

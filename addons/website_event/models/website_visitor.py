@@ -21,6 +21,16 @@ class WebsiteVisitor(models.Model):
         search="_search_event_registered_ids",
         groups="event.group_event_registration_desk")
 
+    @api.depends('partner_id, event_registration_ids.name')
+    def name_get(self):
+        """ If there is an event registration for an anonymous visitor, use that
+        registered attendee name as visitor name. """
+        res_dict = dict(super().name_get())
+        # sudo is needed for `event_registration_ids`
+        for visitor in self.sudo().filtered(lambda v: not v.partner_id and v.event_registration_ids):
+            res_dict[visitor.id] = visitor.event_registration_ids[-1].name
+        return list(res_dict.items())
+
     @api.depends('event_registration_ids')
     def _compute_event_registration_count(self):
         if self.ids:
@@ -46,12 +56,12 @@ class WebsiteVisitor(models.Model):
             if not visitor.mobile:
                 visitor.mobile = next((reg.mobile or reg.phone for reg in linked_registrations if reg.mobile or reg.phone), False)
 
-    @api.depends('parent_id', 'event_registration_ids')
+    @api.depends('event_registration_ids')
     def _compute_event_registered_ids(self):
         # include parent's registrations in a visitor o2m field. We don't add
         # child one as child should not have registrations (moved to the parent)
         for visitor in self:
-            all_registrations = visitor.event_registration_ids | visitor.parent_id.event_registration_ids
+            all_registrations = visitor.event_registration_ids
             visitor.event_registered_ids = all_registrations.mapped('event_id')
 
     def _search_event_registered_ids(self, operator, operand):
@@ -65,12 +75,7 @@ class WebsiteVisitor(models.Model):
             ('event_id', operator, operand)
         ])
         if all_registrations:
-            # search children, even archived one, to contact them
-            visitors = all_registrations.with_context(active_test=False).mapped('visitor_id')
-            children = self.env['website.visitor'].with_context(
-                active_test=False
-            ).sudo().search([('parent_id', 'in', visitors.ids)])
-            visitor_ids = (visitors + children).ids
+            visitor_ids = all_registrations.with_context(active_test=False).visitor_id.ids
         else:
             visitor_ids = []
 
@@ -81,16 +86,10 @@ class WebsiteVisitor(models.Model):
         domain = super()._inactive_visitors_domain()
         return expression.AND([domain, [('event_registration_ids', '=', False)]])
 
-    def _link_to_partner(self, partner, update_values=None):
-        """ Propagate partner update to registration records """
-        if partner:
-            registration_wo_partner = self.event_registration_ids.filtered(lambda registration: not registration.partner_id)
-            if registration_wo_partner:
-                registration_wo_partner.partner_id = partner
-        super(WebsiteVisitor, self)._link_to_partner(partner, update_values=update_values)
-
-    def _link_to_visitor(self, target):
+    def _merge_visitor(self, target):
         """ Override linking process to link registrations to the final visitor. """
-        self.event_registration_ids.write({'visitor_id': target.id})
-
-        return super(WebsiteVisitor, self)._link_to_visitor(target)
+        self.event_registration_ids.visitor_id = target.id
+        registration_wo_partner = self.event_registration_ids.filtered(lambda registration: not registration.partner_id)
+        if registration_wo_partner:
+            registration_wo_partner.partner_id = target.partner_id
+        return super()._merge_visitor(target)

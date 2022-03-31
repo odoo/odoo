@@ -16,7 +16,7 @@ class WebsiteVisitorTestsLivechat(WebsiteVisitorTests):
             self._prepare_linked_visitor_data()
         ])
         all_mail_channels = (main_visitor + linked_visitor).mail_channel_ids
-        linked_visitor._link_to_visitor(main_visitor)
+        linked_visitor._merge_visitor(main_visitor)
 
         self.assertVisitorDeactivated(linked_visitor, main_visitor)
 

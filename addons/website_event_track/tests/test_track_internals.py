@@ -145,8 +145,8 @@ class TestTrackSuggestions(TestEventOnlineCommon):
         }])
 
         emp_visitor = self.env['website.visitor'].create({
-            'name': 'Visitor',
-            'partner_id': self.user_employee.partner_id.id
+            'partner_id': self.user_employee.partner_id.id,
+            'access_token': self.user_employee.partner_id.id,
         })
         visitor_track = self.env['event.track.visitor'].create({
             'visitor_id': emp_visitor.id,

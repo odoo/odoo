@@ -48,14 +48,14 @@ class WebsiteVisitor(models.Model):
         domain = super()._inactive_visitors_domain()
         return expression.AND([domain, [('lead_ids', '=', False)]])
 
-    def _link_to_visitor(self, target):
+    def _merge_visitor(self, target):
         """ Link the leads to the main visitor to avoid them being lost. """
         if self.lead_ids:
             target.write({
                 'lead_ids': [(4, lead.id) for lead in self.lead_ids]
             })
 
-        return super(WebsiteVisitor, self)._link_to_visitor(target)
+        return super()._merge_visitor(target)
 
     def _prepare_message_composer_context(self):
         if not self.partner_id and self.lead_ids:
