@@ -3,6 +3,7 @@
 
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.addons.project.tests.test_project_profitability import TestProjectProfitabilityCommon
+from odoo.tests.common import tagged
 
 
 class TestProjectHrExpenseProfitabilityCommon(TestExpenseCommon):
@@ -30,6 +31,8 @@ class TestProjectHrExpenseProfitabilityCommon(TestExpenseCommon):
         self.assertEqual(expense_sheet.state, 'approve')
         return expense_sheet
 
+
+@tagged('post_install', '-at_install')
 class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProjectHrExpenseProfitabilityCommon):
 
     def test_project_profitability(self):
