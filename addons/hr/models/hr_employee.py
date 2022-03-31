@@ -225,6 +225,12 @@ class HrEmployeePrivate(models.Model):
             ids = super(HrEmployeePrivate, self.sudo())._search([('id', 'in', ids)])
         return ids
 
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        if self.check_access_rights('read', raise_exception=False):
+            return super(HrEmployeePrivate, self).read_group(domain, fields, groupby, offset, limit, orderby, lazy)
+        return self.env['hr.employee.public'].read_group(domain, fields, groupby, offset, limit, orderby, lazy)
+
     def get_formview_id(self, access_uid=None):
         """ Override this method in order to redirect many2one towards the right model depending on access_uid """
         if access_uid:
