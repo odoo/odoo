@@ -1,6 +1,6 @@
 <odoo>
     <template id="totp_portal_hook" name="TOTP Portal hook" inherit_id="portal.portal_my_security">
-        <xpath expr="//div[hasclass('o_portal_security_body')]">
+        <xpath expr="//section[@name='portal_change_password']" position="after">
             <!--
                 portal users don't have access to non-qweb views anymore, so
                 embed the target view as a *data island* of sorts, a JSON embed

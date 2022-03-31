@@ -44,5 +44,6 @@ from . import res_config
 from . import res_currency
 from . import res_company
 from . import res_users
+from . import res_users_deletion
 
 from . import decimal_precision
