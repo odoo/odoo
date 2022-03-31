@@ -4,6 +4,8 @@
 import odoo
 import odoo.tests
 
+from odoo.tests.common import new_test_user
+
 
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestUiCustomizeTheme(odoo.tests.HttpCase):
@@ -54,6 +56,26 @@ class TestUiCustomizeTheme(odoo.tests.HttpCase):
         self.assertEqual(Attachment.search_count([('url', '=', custom_url)]), 1, 'Should not left duplicates when deleting a website')
         self.assertTrue(so_attachment.exists(), 'Most attachment should not be deleted')
         self.assertFalse(so_attachment.website_id, 'Website should be removed')
+
+    def test_02_customize_asset_multiple_users(self):
+        ''' Customizing a theme results in a modified asset file being saved as
+            an attachment. Generally speaking a user can only modify his own
+            attachments. When customizing assets however, all website designers
+            should be able to modify this attachment.
+        '''
+        Website = self.env['website']
+
+        groups = 'base.group_user,website.group_website_designer'
+        asset_url = '/website/static/src/scss/options/colors/user_color_palette.scss'
+        website_default = Website.browse(1)
+
+        designer1 = new_test_user(self.env, login='Designer1', groups=groups, website_id=website_default.id)
+        designer2 = new_test_user(self.env, login='Designer2', groups=groups, website_id=website_default.id)
+
+        # Test if the second user can overwrite changes made by the first user
+        # without an AccessError exception being raised.
+        self.env(user=designer1)['web_editor.assets'].make_scss_customization(asset_url, {'o-color-3': '#ccc'})
+        self.env(user=designer2)['web_editor.assets'].make_scss_customization(asset_url, {'o-color-3': '#333'})
 
 
 @odoo.tests.tagged('-at_install', 'post_install')

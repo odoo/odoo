@@ -47,7 +47,8 @@ class Assets(models.AbstractModel):
         Extend to only return the attachments related to the current website.
         """
         website = self.env['website'].get_current_website()
-        res = super(Assets, self)._get_custom_attachment(custom_url, op=op)
+        is_designer = self.env.user.has_group('website.group_website_designer')
+        res = super(Assets, self.sudo(is_designer))._get_custom_attachment(custom_url, op=op)
         return res.with_context(website_id=website.id).filtered(lambda x: not x.website_id or x.website_id == website)
 
     def _get_custom_view(self, custom_url, op='='):
