@@ -637,6 +637,38 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertGoogleAPINotCalled()
 
     @patch_api
+    def test_recurrence_list_contains_more_items(self):
+        recurrence_id = 'oj44nep1ldf8a3ll02uip0c9aa'
+        values = {
+            'id': recurrence_id,
+            'description': 'Small mini desc',
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': 'Pricing new update',
+            'visibility': 'public',
+            'recurrence': ['EXDATE;TZID=Europe/Rome:20200113',
+                           'RRULE:FREQ=WEEKLY;COUNT=3;BYDAY=MO'],
+            'reminders': {'useDefault': True},
+            'start': {'date': '2020-01-6'},
+            'end': {'date': '2020-01-7'},
+        }
+        self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
+        recurrence = self.env['calendar.recurrence'].search([('google_id', '=', values.get('id'))])
+        self.assertTrue(recurrence, "it should have created a recurrence")
+        events = recurrence.calendar_event_ids.sorted('start')
+        self.assertEqual(len(events), 3, "it should have created a recurrence with 3 events")
+        self.assertTrue(all(events.mapped('recurrency')))
+        self.assertEqual(events[0].start_date, date(2020, 1, 6))
+        self.assertEqual(events[1].start_date, date(2020, 1, 13))
+        self.assertEqual(events[2].start_date, date(2020, 1, 20))
+        self.assertEqual(events[0].stop_date, date(2020, 1, 6))
+        self.assertEqual(events[1].stop_date, date(2020, 1, 13))
+        self.assertEqual(events[2].stop_date, date(2020, 1, 20))
+        self.assertEqual(events[0].google_id, '%s_20200106' % recurrence_id)
+        self.assertEqual(events[1].google_id, '%s_20200113' % recurrence_id)
+        self.assertEqual(events[2].google_id, '%s_20200120' % recurrence_id)
+        self.assertGoogleAPINotCalled()
+
+    @patch_api
     def test_simple_event_into_recurrency(self):
         """ Synched single events should be converted in recurrency without problems"""
         google_id = 'aaaaaaaaaaaa'

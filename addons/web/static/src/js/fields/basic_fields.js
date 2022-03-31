@@ -922,6 +922,7 @@ var FieldDate = InputField.extend({
 
     /**
      * Confirm the value on hit enter and re-render
+     * It will also remove the offset to get the UTC value
      *
      * @private
      * @override
@@ -930,7 +931,12 @@ var FieldDate = InputField.extend({
     async _onKeydown(ev) {
         this._super(...arguments);
         if (ev.which === $.ui.keyCode.ENTER) {
-            await this._setValue(this.$input.val());
+            let value = this.$input.val();
+            try {
+                value = this._parseValue(value);
+                value.add(-this.getSession().getTZOffset(value), "minutes");
+            } catch (err) {}
+            await this._setValue(value);
             this._render();
         }
     },
