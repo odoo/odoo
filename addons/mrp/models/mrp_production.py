@@ -1553,7 +1553,7 @@ class MrpProduction(models.Model):
                     backorder_sequence=next_seq
                 ))
 
-        backorders = self.env['mrp.production'].create(backorder_vals_list)
+        backorders = self.env['mrp.production'].with_context(skip_confirm=True).create(backorder_vals_list)
 
         index = 0
         production_to_backorders = {}
