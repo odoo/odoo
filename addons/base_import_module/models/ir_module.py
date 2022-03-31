@@ -65,8 +65,11 @@ class IrModule(models.Model):
             mode = 'update' if not force else 'init'
         else:
             assert terp.get('installable', True), "Module not installable"
-            self.create(dict(name=module, state='installed', imported=True, **values))
+            mod = self.create(dict(name=module, state='installed', imported=True, **values))
             mode = 'init'
+        mod._update_dependencies(terp.get('depends', []), terp.get('auto_install'))
+        mod._update_exclusions(terp.get('excludes', []))
+        mod._update_category(terp.get('category', 'Uncategorized'))
 
         for kind in ['data', 'init_xml', 'update_xml']:
             for filename in terp[kind]:
@@ -119,6 +122,8 @@ class IrModule(models.Model):
         success = []
         errors = dict()
         module_names = []
+        known_mods = self.search([])
+        known_mods_names = {m.name: m for m in known_mods}
         with zipfile.ZipFile(module_file, "r") as z:
             for zf in z.filelist:
                 if zf.file_size > MAX_FILE_SIZE:
@@ -135,7 +140,8 @@ class IrModule(models.Model):
                     for mod_name in dirs:
                         path = opj(module_dir, mod_name)
                         terp = load_information_from_description_file(mod_name, mod_path=path)
-                        dependencies_by_module[mod_name] = terp['depends']
+                        if mod_name not in known_mods_names:
+                            dependencies_by_module[mod_name] = terp['depends']
                     # Sort the modules so that if module A depends on module B,
                     # B is installed before A.
                     sorted_modules = topological_sort(dependencies_by_module)

@@ -358,6 +358,10 @@ class IrModuleModule(models.Model):
         # website.theme_id must be set before upgrade/install to trigger the load in ``write``
         website.theme_id = self
 
+        # load the theme and his ancestors (in case the theme has been imported)
+        for mod in self._theme_get_stream_themes():
+            mod._theme_load(website)
+
         # this will install 'self' if it is not installed yet
         self._theme_upgrade_upstream()
 
