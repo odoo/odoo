@@ -11,7 +11,8 @@ QUnit.module('thread_preview_tests.js', {
 });
 
 QUnit.test('mark as read', async function (assert) {
-    assert.expect(8);
+    assert.expect(6);
+
     this.data['mail.channel'].records.push({
         id: 11,
         message_unread_counter: 1,
@@ -40,11 +41,6 @@ QUnit.test('mark as read', async function (assert) {
         '.o_ThreadPreview_markAsRead',
         "should have the mark as read button"
     );
-    assert.containsOnce(
-        document.body,
-        '.o_ThreadPreview_counter',
-        "should have an unread counter"
-    );
 
     await afterNextRender(() =>
         document.querySelector('.o_ThreadPreview_markAsRead').click()
@@ -62,11 +58,6 @@ QUnit.test('mark as read', async function (assert) {
         document.body,
         '.o_ThreadPreview_markAsRead',
         "should no longer have the mark as read button"
-    );
-    assert.containsNone(
-        document.body,
-        '.o_ThreadPreview_counter',
-        "should no longer have an unread counter"
     );
     assert.containsNone(
         document.body,

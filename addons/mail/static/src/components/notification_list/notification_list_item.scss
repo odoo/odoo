@@ -22,10 +22,6 @@
     margin: map-get($spacers, 2);
 }
 
-@mixin o-mail-notification-list-item-core-layout {
-    display: flex;
-}
-
 @mixin o-mail-notification-list-item-core-item-layout {
     margin: map-get($spacers, 0) map-get($spacers, 2);
 
@@ -39,7 +35,7 @@
 }
 
 @mixin o-mail-notification-list-item-counter-layout() {
-    margin: map-get($spacers, 0) map-get($spacers, 2);
+    margin: map-get($spacers, 0) map-get($spacers, 1);
 }
 
 @mixin o-mail-notification-list-item-date-layout() {
@@ -48,7 +44,6 @@
 
 @mixin o-mail-notification-list-item-header-layout {
     display: flex;
-    margin-bottom: map-get($spacers, 1);
 }
 
 @mixin o-mail-notification-list-item-image-layout {
@@ -121,20 +116,15 @@ $o-mail-notification-list-item-muted-hover-background-color:
 }
 
 @mixin o-mail-notification-list-item-bold-style {
-    font-weight: bold;
+    font-weight: $font-weight-bold;
 
     &.o-muted {
-        font-weight: initial;
+        color: gray('600');
     }
 }
 
-@mixin o-mail-notification-list-item-core-style {
-    color: gray('500');
-}
-
 @mixin o-mail-notification-list-item-date-style() {
-    @include o-mail-notification-list-item-bold-style();
-    font-size: x-small;
+    font-size: $font-size-sm;
     color: gray('500');
 }
 
@@ -143,7 +133,7 @@ $o-mail-notification-list-item-muted-hover-background-color:
 }
 
 @mixin o-mail-notification-list-item-mark-as-read-style() {
-    opacity: 0;
+    color: gray('300');
 
     &:hover {
         color: gray('600');
