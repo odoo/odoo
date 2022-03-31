@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
+from odoo.tests.common import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestUBL(AccountEdiTestCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref='l10n_be.l10nbe_chart_template', edi_format_ref='l10n_be_edi.edi_efff_1'):
