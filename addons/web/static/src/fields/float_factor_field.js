@@ -4,7 +4,8 @@ import { registry } from "@web/core/registry";
 import { FloatField } from "./float_field";
 import { standardFieldProps } from "./standard_field_props";
 
-export class FloatFactorField extends owl.Component {
+const { Component } = owl;
+export class FloatFactorField extends Component {
     get floatFieldProps() {
         const result = {
             ...this.props,

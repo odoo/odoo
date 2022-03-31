@@ -2,9 +2,13 @@
 
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "./standard_field_props";
+import { useNumpadDecimal } from "./numpad_decimal_hook";
 
 const { Component } = owl;
 export class IntegerField extends Component {
+    setup() {
+        useNumpadDecimal();
+    }
     onChange(ev) {
         let isValid = true;
         let value = ev.target.value;

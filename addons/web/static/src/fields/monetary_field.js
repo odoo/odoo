@@ -4,10 +4,14 @@ import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
 import { session } from "@web/session";
+import { useNumpadDecimal } from "./numpad_decimal_hook";
 
 const { Component } = owl;
 
 export class MonetaryField extends Component {
+    setup() {
+        useNumpadDecimal();
+    }
     onChange(ev) {
         let isValid = true;
         let value = ev.target.value;

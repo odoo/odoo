@@ -3,10 +3,14 @@
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
+import { useNumpadDecimal } from "./numpad_decimal_hook";
 
 const { Component } = owl;
 
 export class PercentageField extends Component {
+    setup() {
+        useNumpadDecimal();
+    }
     /**
      * @param {Event} ev
      */

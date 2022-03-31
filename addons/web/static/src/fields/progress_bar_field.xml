@@ -16,7 +16,7 @@
             </div>
         </t>
         <t t-else="">
-            <div class="o_progressbar d-flex">
+            <div class="o_progressbar d-flex" t-ref="numpadDecimal">
                 <div class="o_progress" aria-valuemin="0" t-att-aria-valuemax="state.maxValue" t-att-aria-valuenow="state.currentValue">
                     <div class="o_progressbar_complete" t-att-style="'width: min(' + 100 * state.currentValue / state.maxValue + '%, 100%)'"></div>
                 </div>

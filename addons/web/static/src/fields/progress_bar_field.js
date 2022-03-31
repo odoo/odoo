@@ -5,11 +5,13 @@ import { _lt } from "@web/core/l10n/translation";
 import { debounce } from "@web/core/utils/timing";
 import { standardFieldProps } from "./standard_field_props";
 import { parseFloat } from "./parsers";
+import { useNumpadDecimal } from "./numpad_decimal_hook";
 
 const { Component, onWillUpdateProps, useState } = owl;
 
 export class ProgressBarField extends Component {
     setup() {
+        useNumpadDecimal();
         this.state = useState({
             currentValue: this.getInitialValue("currentValue"),
             maxValue: this.getInitialValue("maxValue"),

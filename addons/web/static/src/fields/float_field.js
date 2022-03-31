@@ -2,10 +2,12 @@
 
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "./standard_field_props";
+import { useNumpadDecimal } from "./numpad_decimal_hook";
 
 const { Component, onWillUpdateProps } = owl;
 export class FloatField extends Component {
     setup() {
+        useNumpadDecimal();
         this.defaultInputValue = this.getFormattedValue();
         onWillUpdateProps((nextProps) => {
             if (
