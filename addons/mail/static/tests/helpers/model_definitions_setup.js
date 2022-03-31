@@ -44,6 +44,7 @@ insertModelFields('mail.channel', {
         },
     },
     avatarCacheKey: { string: "Avatar Cache Key", type: "datetime" },
+    channel_type: { default: 'channel' },
     custom_channel_name: { string: "Custom channel name", type: 'char' },
     fetched_message_id: { relation: 'mail.message', string: "Last Fetched", type: 'many2one' },
     group_based_subscription: { string: "Group based subscription", type: "boolean" },
@@ -64,6 +65,7 @@ insertModelFields('mail.channel', {
     uuid: { default: () => _.uniqueId('mail.channel_uuid-') },
 });
 insertModelFields('mail.message', {
+    author_id: { default: TEST_USER_IDS.currentPartnerId },
     history_partner_ids: { relation: 'res.partner', string: "Partners with History", type: 'many2many' },
     is_discussion: { string: 'Discussion', type: 'boolean' },
     is_note: { string: "Discussion", type: 'boolean' },
@@ -81,6 +83,10 @@ insertModelFields('mail.tracking.value', {
 });
 insertModelFields('res.partner', {
     description: { string: 'description', type: 'text' },
+});
+insertModelFields('res.users.settings', {
+    is_discuss_sidebar_category_channel_open: { default: true },
+    is_discuss_sidebar_category_chat_open: { default: true },
 });
 
 //--------------------------------------------------------------------------

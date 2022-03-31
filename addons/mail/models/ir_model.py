@@ -113,18 +113,10 @@ class IrModel(models.Model):
                 ).items()
                 if not field_data.get('relation') or field_data['relation'] in model_names_to_fetch
             }
-            # exclude date/datetime and binary default values: dates will always be wrong since they are dynamic
-            # and binary values are not needed for now
-            default_values_by_fname = model.default_get([
-                fname for fname, field_data in fields_data_by_fname.items()
-                if field_data['type'] not in ['binary', 'date', 'datetime']
-            ])
             tracked_field_names = model._track_get_fields() if 'mail.thread' in model._inherit else []
             for fname, field_data in fields_data_by_fname.items():
                 if fname in tracked_field_names:
                     field_data['tracking'] = True
-                if fname in default_values_by_fname:
-                    field_data['default'] = default_values_by_fname[fname]
                 if fname in model._fields:
                     inverse_fields = [
                         field for field in model.pool.field_inverses[model._fields[fname]]
