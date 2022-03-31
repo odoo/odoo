@@ -231,6 +231,9 @@ async function getModelDefinitions() {
                     ? () => moment.utc().format('YYYY-MM-DD')
                     : () => moment.utc().format("YYYY-MM-DD HH:mm:ss");
                 field.default = defaultFieldValue;
+            } else if (fname === 'active' && !('default' in field)) {
+                // records are active by default.
+                field.default = true;
             }
         }
     }
