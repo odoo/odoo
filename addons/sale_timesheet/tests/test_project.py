@@ -2,9 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-
 from .common import TestCommonSaleTimesheet
+from odoo.tests import tagged
 
+
+@tagged('post_install', '-at_install')
 class TestProject(TestCommonSaleTimesheet):
     def test_fetch_sale_order_items(self):
         """ Test _fetch_sale_order_items and _get_sale_order_items methods
