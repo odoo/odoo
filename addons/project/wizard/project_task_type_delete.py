@@ -2,9 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
-
-import ast
+from odoo.tools.safe_eval import safe_eval
 
 
 class ProjectTaskTypeDelete(models.TransientModel):
@@ -66,7 +64,7 @@ class ProjectTaskTypeDelete(models.TransientModel):
         else:
             action = self.env["ir.actions.actions"]._for_xml_id("project.action_view_all_task")
 
-        context = dict(ast.literal_eval(action.get('context')), active_test=True)
+        context = dict(safe_eval(action.get('context'), {'uid': self.env.uid}), active_test=True)
         action['context'] = context
         action['target'] = 'main'
         return action
