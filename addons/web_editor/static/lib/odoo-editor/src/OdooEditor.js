@@ -2898,6 +2898,7 @@ export class OdooEditor extends EventTarget {
         } else if (clipboardHtml) {
             this.execCommand('insertHTML', this._prepareClipboardData(clipboardHtml));
         } else {
+            this.deleteRange();
             const text = ev.clipboardData.getData('text/plain');
             const splitAroundUrl = text.split(URL_REGEX);
             const linkAttributes = this.options.defaultLinkAttributes || {};
