@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import controllers
@@ -7,6 +6,7 @@ from . import wizard
 
 import odoo
 from odoo import api, SUPERUSER_ID
+from odoo.http import request
 from functools import partial
 
 
@@ -34,3 +34,7 @@ def uninstall_hook(cr, registry):
 def post_init_hook(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})
     env['ir.module.module'].update_theme_images()
+
+    if request:
+        env = env(context=request.default_context())
+        request.website_routing = env['website'].get_current_website().id
