@@ -816,6 +816,61 @@ class Users(models.Model):
         # use self.env.user here, because it has uid=SUPERUSER_ID
         return self.env.user.write({'password': new_passwd})
 
+    def _deactivate_portal_user(self, **post):
+        """Try to remove the current portal user.
+
+        This is used to give the opportunity to portal users to de-activate their accounts.
+        Indeed, as the portal users can easily create accounts, they will sometimes wish
+        it removed because they don't use this Odoo portal anymore.
+
+        Before this feature, they would have to contact the website or the support to get
+        their account removed, which could be tedious.
+        """
+        non_portal_users = self.filtered(lambda user: not user.share)
+        if non_portal_users:
+            raise AccessDenied(_(
+                'Only the portal users can delete their accounts. '
+                'The user(s) %s can not be deleted.',
+                ', '.join(non_portal_users.mapped('name')),
+            ))
+
+        ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
+
+        res_users_deletion_values = []
+
+        for user in self:
+            _logger.info(
+                'Account deletion asked for "%s" (#%i) from %s. '
+                'Archive the user and remove login information.',
+                user.login, user.id, ip,
+            )
+
+            user.write({
+                'login': f'__deleted_user_{user.id}_{time.time()}',
+                'password': '',
+                'api_key_ids': Command.clear(),
+            })
+
+            res_users_deletion_values.append({
+                'user_id': user.id,
+                'state': 'todo',
+            })
+
+        # Here we try to archive the user / partner, and then add the user in a deletion
+        # queue, to remove it from the database. As the deletion might fail (if the
+        # partner is related to an invoice e.g.) it's important to archive it here.
+        try:
+            # A user can not self-deactivate
+            self.with_user(SUPERUSER_ID).action_archive()
+        except Exception:
+            pass
+        try:
+            self.partner_id.action_archive()
+        except Exception:
+            pass
+        # Add users in the deletion queue
+        self.env['res.users.deletion'].create(res_users_deletion_values)
+
     def preference_save(self):
         return {
             'type': 'ir.actions.client',

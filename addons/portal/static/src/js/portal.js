@@ -237,6 +237,30 @@ publicWidget.registry.RemoveAPIKeyButton = publicWidget.Widget.extend({
     }
 });
 
+publicWidget.registry.portalSecurity = publicWidget.Widget.extend({
+    selector: '.o_portal_security_body',
+
+    /**
+     * @override
+     */
+    init: function () {
+        // Show the "deactivate your account" modal if needed
+        $('.modal.show#portal_deactivate_account_modal').removeClass('d-block').modal('show');
+
+        // Remove the error messages when we close the modal,
+        // so when we re-open it again we get a fresh new form
+        $('.modal#portal_deactivate_account_modal').on('hide.bs.modal', (event) => {
+            const $target = $(event.currentTarget);
+            $target.find('.alert').remove();
+            $target.find('.invalid-feedback').remove();
+            $target.find('.is-invalid').removeClass('is-invalid');
+        });
+
+        return this._super(...arguments);
+    },
+
+});
+
 /**
  * Wraps an RPC call in a check for the result being an identity check action
  * descriptor. If no such result is found, just returns the wrapped promise's
