@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { click, editInput, getFixture } from "../helpers/utils";
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -258,32 +259,32 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("click on email field link don't switch to edit mode", async function (assert) {
-        // testUtils.mock.patch(field_registry.map.email, {
-        //     _onClickLink: function (ev) {
-        //         assert.step(ev.target.nodeName + " clicked");
-        //         this._super.apply(this, arguments);
-        //     },
-        // });
-        // var form = await createView({
-        //     View: FormView,
-        //     model: 'partner',
-        //     data: this.data,
-        //     arch: '<form string="Partners">' +
-        //             '<sheet>' +
-        //                 '<group>' +
-        //                     '<field name="foo" widget="email"/>' +
-        //                 '</group>' +
-        //             '</sheet>' +
-        //         '</form>',
-        //     res_id: 1,
-        // });
-        // await testUtils.dom.click(form.el.querySelector('.o_field_email a'));
-        // assert.containsOnce(form.el, ".o_form_readonly", "form view is not in edit mode");
-        // await testUtils.dom.click(form.el.querySelector('.o_field_email'));
-        // assert.verifySteps(["A clicked", "DIV clicked"]);
-        // assert.containsOnce(form.el, ".o_form_editable", "form view is in edit mode");
-        // form.destroy();
-        // testUtils.mock.unpatch(field_registry.map.email);
+    QUnit.test("click on email field link don't switch to edit mode", async function (assert) {
+        // We must avoid the browser to open an email app
+        const linkOnClick = (ev) => {
+            assert.step(ev.target.nodeName + " clicked");
+            ev.preventDefault();
+        };
+        document.addEventListener("click", linkOnClick);
+        registerCleanup(() => document.removeEventListener("click", linkOnClick));
+
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch:
+                '<form string="Partners">' +
+                "<sheet>" +
+                "<group>" +
+                '<field name="foo" widget="email"/>' +
+                "</group>" +
+                "</sheet>" +
+                "</form>",
+            resId: 1,
+        });
+        await click(target.querySelector(".o_field_email a"));
+        assert.containsOnce(target, ".o_form_readonly", "form view is not in edit mode");
+        await click(target.querySelector(".o_field_email"));
+        assert.verifySteps(["A clicked", "DIV clicked"]);
     });
 });
