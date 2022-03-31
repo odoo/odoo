@@ -1015,7 +1015,7 @@ function destroy() {
  */
 function getWindow(element) {
   var ownerDocument = element.ownerDocument;
-  return ownerDocument ? ownerDocument.defaultView : window;
+  return ownerDocument && ownerDocument.defaultView ? ownerDocument.defaultView : window;
 }
 
 function attachToScrollParents(scrollParent, event, callback, scrollParents) {
