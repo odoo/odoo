@@ -34,10 +34,6 @@ export class ComposerSuggestion extends Component {
         return this.messaging && this.messaging.models['ComposerView'].get(this.props.composerViewLocalId);
     }
 
-    get record() {
-        return this.messaging && this.messaging.models[this.props.modelName].get(this.props.recordLocalId);
-    }
-
     /**
      * Returns a descriptive title for this suggestion. Useful to be able to
      * read both parts when they are overflowing the UI.
@@ -46,19 +42,19 @@ export class ComposerSuggestion extends Component {
      */
     title() {
         if (this.composerSuggestion.cannedResponse) {
-            return _.str.sprintf("%s: %s", this.record.source, this.record.substitution);
+            return _.str.sprintf("%s: %s", this.composerSuggestion.record.source, this.composerSuggestion.record.substitution);
         }
         if (this.composerSuggestion.thread) {
-            return this.record.name;
+            return this.composerSuggestion.record.name;
         }
         if (this.composerSuggestion.channelCommand) {
-            return _.str.sprintf("%s: %s", this.record.name, this.record.help);
+            return _.str.sprintf("%s: %s", this.composerSuggestion.record.name, this.composerSuggestion.record.help);
         }
         if (this.composerSuggestion.partner) {
-            if (this.record.email) {
-                return _.str.sprintf("%s (%s)", this.record.nameOrDisplayName, this.record.email);
+            if (this.composerSuggestion.record.email) {
+                return _.str.sprintf("%s (%s)", this.composerSuggestion.record.nameOrDisplayName, this.composerSuggestion.record.email);
             }
-            return this.record.nameOrDisplayName;
+            return this.composerSuggestion.record.nameOrDisplayName;
         }
         return "";
     }
@@ -110,7 +106,6 @@ Object.assign(ComposerSuggestion, {
         isActive: { type: Boolean, optional: true },
         localId: String,
         modelName: String,
-        recordLocalId: String,
     },
     template: 'mail.ComposerSuggestion',
 });
