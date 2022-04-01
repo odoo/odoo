@@ -72,7 +72,7 @@
                         <div class="o_AttachmentViewer_toolbarButton btn btn-dark p-3 rounded-0" t-att-class="{ o_disabled: attachmentViewer.scale === MIN_SCALE }" t-on-click="_onClickZoomOut" title="Zoom Out (-)" role="button">
                             <i class="fa fa-fw fa-minus" role="img"/>
                         </div>
-                        <div class="o_AttachmentViewer_toolbarButton btn btn-dark p-3 rounded-0" t-on-click="_onClickRotate" title="Rotate (r)" role="button">
+                        <div class="o_AttachmentViewer_toolbarButton btn btn-dark p-3 rounded-0" t-on-click="attachmentViewer.onClickRotate" title="Rotate (r)" role="button">
                             <i class="fa fa-fw fa-repeat" role="img"/>
                         </div>
                         <div class="o_AttachmentViewer_toolbarButton btn btn-dark p-3 rounded-0" t-on-click="_onClickPrint" title="Print" role="button">

@@ -17,6 +17,15 @@ registerModel({
             return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
         },
         /**
+         * Called when clicking on rotate icon.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickRotate(ev) {
+            ev.stopPropagation();
+            this.rotate();
+        },
+        /**
          * Rotate the image by 90 degrees to the right.
          */
         rotate() {
