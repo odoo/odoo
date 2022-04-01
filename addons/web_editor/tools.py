@@ -71,6 +71,12 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
         params['autoplay'] = autoplay and 1 or 0
         if autoplay:
             params['mute'] = 1
+            # The youtube js api is needed for autoplay on mobile. Note: this
+            # was added as a fix, old customers may have autoplay videos
+            # without this, which will make their video autoplay on desktop but
+            # not in mobile (so no behavior change was done in stable, this
+            # should not be migrated).
+            params['enablejsapi'] = 1
         if hide_controls:
             params['controls'] = 0
         if loop:
