@@ -17,6 +17,18 @@ registerModel({
             return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
         },
         /**
+         * Called when new image has been loaded
+         *
+         * @param {Event} ev
+         */
+        onLoadImage(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            ev.stopPropagation();
+            this.update({ isImageLoading: false });
+        },
+        /**
          * @private
          * @returns {string}
          */
