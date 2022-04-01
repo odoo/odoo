@@ -17,6 +17,15 @@ registerModel({
             return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
         },
         /**
+         * Called when clicking on download icon.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickDownload(ev) {
+            ev.stopPropagation();
+            this.attachment.download();
+        },
+        /**
          * @private
          * @returns {string}
          */

@@ -304,17 +304,6 @@ export class AttachmentViewer extends Component {
     }
 
     /**
-     * Called when clicking on download icon.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickDownload(ev) {
-        ev.stopPropagation();
-        this.attachmentViewer.attachment.download();
-    }
-
-    /**
      * @private
      * @param {MouseEvent} ev
      */
