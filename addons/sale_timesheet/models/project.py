@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+
 from collections import defaultdict
 
 from odoo import api, fields, models, _, _lt
 from odoo.osv import expression
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import format_amount, float_is_zero, formatLang
 
 # YTI PLEASE SPLIT ME
 class Project(models.Model):
@@ -306,6 +306,27 @@ class Project(models.Model):
         })
         return action
 
+    def action_profitability_items(self, section_name, domain=None, res_id=False):
+        self.ensure_one()
+        if section_name in ['billable_fixed', 'billable_time', 'billable_milestones', 'billable_manual', 'non_billable']:
+            action = self.action_billable_time_button()
+            action['name'] = _('Timesheets')
+            if domain:
+                action['domain'] = expression.AND([[('project_id', '=', self.id)], domain])
+            action['context'].update(search_default_groupby_timesheet_invoice_type=False, **self.env.context)
+            if res_id:
+                if 'views' in action:
+                    action['views'] = [
+                        (view_id, view_type)
+                        for view_id, view_type in action['views']
+                        if view_type == 'form'
+                    ] or [False, 'form']
+                action['view_mode'] = 'form'
+                if res_id:
+                    action['res_id'] = res_id
+            return action
+        return super().action_profitability_items(section_name, domain, res_id)
+
     # ----------------------------
     #  Project Updates
     # ----------------------------
@@ -315,51 +336,32 @@ class Project(models.Model):
         return {
             **panel_data,
             'analytic_account_id': self.analytic_account_id.id,
-            'sold_items': self._get_sold_items(),
-            'profitability_items': self._get_profitability_items(),
         }
-
-    def _get_sale_order_lines(self):
-        sale_orders = self._get_sale_orders()
-        return self.env['sale.order.line'].search([('order_id', 'in', sale_orders.ids), ('is_service', '=', True), ('is_downpayment', '=', False)], order='id asc')
-
-    def _get_sold_items(self):
-        sols = self._get_sale_order_lines()
-        number_sale_orders = len(sols.order_id)
-        sold_items = {
-            'allow_billable': self.allow_billable,
-            'data': [],
-            'number_sols': len(sols),
-            'total_sold': 0,
-            'effective_sold': 0,
-            'company_unit_name': self.env.company.timesheet_encode_uom_id.name
-        }
-        product_uom_unit = self.env.ref('uom.product_uom_unit')
-        for sol in sols:
-            name = [x[1] for x in sol.name_get()] if number_sale_orders > 1 else sol.name
-            qty_delivered = sol.product_uom._compute_quantity(sol.qty_delivered, self.env.company.timesheet_encode_uom_id, raise_if_failure=False)
-            product_uom_qty = sol.product_uom._compute_quantity(sol.product_uom_qty, self.env.company.timesheet_encode_uom_id, raise_if_failure=False)
-            if qty_delivered > 0 or product_uom_qty > 0:
-                sold_items['data'].append({
-                    'name': name,
-                    'value': '%s / %s %s' % (formatLang(self.env, qty_delivered, 1), formatLang(self.env, product_uom_qty, 1), sol.product_uom.name if sol.product_uom == product_uom_unit else self.env.company.timesheet_encode_uom_id.name),
-                    'color': 'red' if qty_delivered > product_uom_qty else 'black'
-                })
-                #We only want to consider hours and days for this calculation, and eventually units if the service policy is not based on milestones
-                if sol.product_uom.category_id == self.env.company.timesheet_encode_uom_id.category_id or (sol.product_uom == product_uom_unit and sol.product_id.service_policy != 'delivered_manual'):
-                    sold_items['total_sold'] += product_uom_qty
-                    sold_items['effective_sold'] += qty_delivered
-        remaining = sold_items['total_sold'] - sold_items['effective_sold']
-        sold_items['remaining'] = {
-            'value': remaining,
-            'color': 'red' if remaining < 0 else 'black',
-        }
-        return sold_items
 
     def _get_sale_order_items_query(self, domain_per_model=None):
         if domain_per_model is None:
-            domain_per_model = {}
+            domain_per_model = {'project.task': [('allow_billable', '=', True)]}
+        else:
+            domain_per_model['project.task'] = expression.AND([
+                domain_per_model.get('project.task', []),
+                [('allow_billable', '=', True)],
+            ])
         query = super()._get_sale_order_items_query(domain_per_model)
+
+        Timesheet = self.env['account.analytic.line']
+        timesheet_domain = [('project_id', 'in', self.ids), ('so_line', '!=', False), ('project_id.allow_billable', '=', True)]
+        if Timesheet._name in domain_per_model:
+            timesheet_domain = expression.AND([
+                domain_per_model.get(Timesheet._name, []),
+                timesheet_domain,
+            ])
+        timesheet_query = Timesheet._where_calc(timesheet_domain)
+        Timesheet._apply_ir_rules(timesheet_query, 'read')
+        timesheet_query_str, timesheet_params = timesheet_query.select(
+            f'{Timesheet._table}.project_id AS id',
+            f'{Timesheet._table}.so_line AS sale_line_id',
+        )
+
         EmployeeMapping = self.env['project.sale.line.employee.map']
         employee_mapping_domain = [('project_id', 'in', self.ids), ('project_id.allow_billable', '=', True), ('sale_line_id', '!=', False)]
         if EmployeeMapping._name in domain_per_model:
@@ -373,87 +375,162 @@ class Project(models.Model):
             f'{EmployeeMapping._table}.project_id AS id',
             f'{EmployeeMapping._table}.sale_line_id',
         )
+
         query._tables['project_sale_order_item'] = ' UNION '.join([
             query._tables['project_sale_order_item'],
+            timesheet_query_str,
             employee_mapping_query_str,
         ])
-        query._where_params += employee_mapping_params
+        query._where_params += timesheet_params + employee_mapping_params
         return query
 
-    def _get_profitability_items(self):
-        if not self.user_has_groups('project.group_project_manager'):
-            return {'data': []}
-        data = []
-        if self.allow_billable:
-            profitability = self._get_profitability_common()
-            margin_color = False
-            if not float_is_zero(profitability['margin'], precision_digits=0):
-                margin_color = profitability['margin'] > 0 and 'green' or 'red'
-            data += [{
-                'name': _("Revenues"),
-                'value': format_amount(self.env, profitability['revenues'], self.env.company.currency_id)
-            }, {
-                'name': _("Costs"),
-                'value': format_amount(self.env, profitability['costs'], self.env.company.currency_id)
-            }, {
-                'name': _("Margin"),
-                'color': margin_color,
-                'value': format_amount(self.env, profitability['margin'], self.env.company.currency_id)
-            }]
+    def _get_profitability_labels(self):
         return {
-            'action': self.allow_billable and self.allow_timesheets and "action_view_timesheet",
-            'allow_billable': self.allow_billable,
-            'data': data,
+            **super()._get_profitability_labels(),
+            'billable_fixed': _lt('Timesheets (Fixed Price)'),
+            'billable_time': _lt('Timesheets (Billed on Timesheets)'),
+            'billable_milestones': _lt('Timesheets (Billed on Milestones)'),
+            'billable_manual': _lt('Timesheets (Billed Manually)'),
+            'non_billable': _lt('Timesheets (Non Billable)'),
         }
 
-    def _get_profitability_common(self):
-        self.ensure_one()
-        result = {
-            'costs': 0.0,
-            'margin': 0.0,
-            'revenues': 0.0
+    def _get_profitability_sequence_per_invoice_type(self):
+        return {
+            **super()._get_profitability_sequence_per_invoice_type(),
+            'billable_fixed': 1,
+            'billable_time': 2,
+            'billable_milestones': 3,
+            'billable_manual': 4,
+            'non_billable': 5,
         }
 
-        profitability = self.env['project.profitability.report']._read_group(
-            [('project_id', '=', self.id)],
-            ['project_id',
-                'amount_untaxed_to_invoice',
-                'amount_untaxed_invoiced',
-                'expense_amount_untaxed_to_invoice',
-                'expense_amount_untaxed_invoiced',
-                'other_revenues',
-                'expense_cost',
-                'timesheet_cost',
-                'margin'],
-            ['project_id'], limit=1)
-        if profitability:
-            profitability = profitability[0]
-            result.update({
-                'costs': profitability['timesheet_cost'] + profitability['expense_cost'],
-                'margin': profitability['margin'],
-                'revenues': (profitability['amount_untaxed_invoiced'] + profitability['amount_untaxed_to_invoice'] +
-                                profitability['expense_amount_untaxed_invoiced'] + profitability['expense_amount_untaxed_to_invoice'] +
-                                profitability['other_revenues']),
-            })
-        return result
+    def _get_profitability_aal_domain(self):
+        domain = ['|', ('project_id', 'in', self.ids), ('so_line', 'in', self._fetch_sale_order_item_ids())]
+        return expression.AND([
+            super()._get_profitability_aal_domain(),
+            domain,
+        ])
 
-    def _get_stat_buttons(self):
-        buttons = super(Project, self)._get_stat_buttons()
-        if self.user_has_groups('hr_timesheet.group_hr_timesheet_approver'):
-            buttons.append({
-                'icon': 'clock-o',
-                'text': _lt('Billable Time'),
-                'number': '%s %%' % (self.billable_percentage),
-                'action_type': 'object',
-                'action': 'action_billable_time_button',
-                'additional_context': json.dumps({
-                    'active_id': self.id,
-                    'default_project_id': self.id
-                }),
-                'show': self.allow_timesheets and bool(self.analytic_account_id),
-                'sequence': 9,
-            })
-        return buttons
+    def _get_profitability_items_from_aal(self, profitability_items, with_action=True):
+        if not self.allow_timesheets:
+            total_invoiced = total_to_invoice = 0.0
+            revenue_data = []
+            for revenue in profitability_items['revenues']['data']:
+                if revenue['id'] in ['billable_fixed', 'billable_time', 'billable_milestones', 'billable_manual']:
+                    continue
+                total_invoiced += revenue['invoiced']
+                total_to_invoice += revenue['to_invoice']
+                revenue_data.append(revenue)
+            profitability_items['revenues'] = {
+                'data': revenue_data,
+                'total': {'to_invoice': total_to_invoice, 'invoiced': total_invoiced},
+            }
+            return profitability_items
+        aa_line_read_group = self.env['account.analytic.line'].sudo()._read_group(
+            self.sudo()._get_profitability_aal_domain(),
+            ['timesheet_invoice_type', 'timesheet_invoice_id', 'unit_amount', 'amount', 'ids:array_agg(id)'],
+            ['timesheet_invoice_type', 'timesheet_invoice_id'],
+            lazy=False)
+        can_see_timesheets = with_action and len(self) == 1 and self.user_has_groups('hr_timesheet.group_hr_timesheet_approver')
+        revenues_dict = {}
+        costs_dict = {}
+        total_revenues = {'invoiced': 0.0, 'to_invoice': 0.0}
+        total_costs = {'billed': 0.0, 'to_bill': 0.0}
+        for res in aa_line_read_group:
+            amount = res['amount']
+            invoice_type = res['timesheet_invoice_type']
+            cost = costs_dict.setdefault(invoice_type, {'billed': 0.0, 'to_bill': 0.0})
+            revenue = revenues_dict.setdefault(invoice_type, {'invoiced': 0.0, 'to_invoice': 0.0})
+            if amount < 0:  # cost
+                cost['billed'] += amount
+                total_costs['billed'] += amount
+            else:  # revenues
+                revenue['invoiced'] += amount
+                total_revenues['invoiced'] += amount
+            if can_see_timesheets and invoice_type not in ['other_costs', 'other_revenues']:
+                cost.setdefault('record_ids', []).extend(res['ids'])
+                revenue.setdefault('record_ids', []).extend(res['ids'])
+
+        action_name = None
+        if can_see_timesheets:
+            action_name = 'action_profitability_items'
+
+        def get_timesheets_action(invoice_type, record_ids):
+            action_params = {'name': action_name, 'type': 'object', 'section': invoice_type, 'domain': json.dumps([('id', 'in', record_ids)])}
+            if len(record_ids) == 1:
+                action_params['res_id'] = record_ids[0]
+            return action_params
+
+        sequence_per_invoice_type = self._get_profitability_sequence_per_invoice_type()
+
+        def convert_dict_into_profitability_data(d, cost=True):
+            profitability_data = []
+            key1, key2 = ['to_bill', 'billed'] if cost else ['to_invoice', 'invoiced']
+            for invoice_type, vals in d.items():
+                if not vals[key1] and not vals[key2]:
+                    continue
+                record_ids = vals.pop('record_ids', [])
+                data = {'id': invoice_type, 'sequence': sequence_per_invoice_type[invoice_type], **vals}
+                if record_ids:
+                    if invoice_type not in ['other_costs', 'other_revenues'] and can_see_timesheets:  # action to see the timesheets
+                        action = get_timesheets_action(invoice_type, record_ids)
+                        if not cost:
+                            action['context'] = json.dumps({'search_default_groupby_invoice': 1})
+                        data['action'] = action
+                profitability_data.append(data)
+            return profitability_data
+
+        def merge_profitability_data(a, b):
+            return {
+                'data': a['data'] + b['data'],
+                'total': {key: a['total'][key] + b['total'][key] for key in a['total'].keys() if key in b['total']}
+            }
+
+        for revenue in profitability_items['revenues']['data']:
+            revenue_id = revenue['id']
+            aal_revenue = revenues_dict.pop(revenue_id, {})
+            revenue['to_invoice'] += aal_revenue.get('to_invoice', 0.0)
+            revenue['invoiced'] += aal_revenue.get('invoiced', 0.0)
+            record_ids = aal_revenue.get('record_ids', [])
+            if can_see_timesheets and record_ids:
+                action = get_timesheets_action(revenue_id, record_ids)
+                action['context'] = json.dumps({'search_default_groupby_invoice': 1})
+                revenue['action'] = action
+
+        for cost in profitability_items['costs']['data']:
+            cost_id = cost['id']
+            aal_cost = costs_dict.pop(cost_id, {})
+            cost['to_bill'] += aal_cost.get('to_bill', 0.0)
+            cost['billed'] += aal_cost.get('billed', 0.0)
+            record_ids = aal_cost.get('record_ids', [])
+            if can_see_timesheets and record_ids:
+                cost['action'] = get_timesheets_action(cost_id, record_ids)
+
+        profitability_items['revenues'] = merge_profitability_data(
+            profitability_items['revenues'],
+            {'data': convert_dict_into_profitability_data(revenues_dict, False), 'total': total_revenues},
+        )
+        profitability_items['costs'] = merge_profitability_data(
+            profitability_items['costs'],
+            {'data': convert_dict_into_profitability_data(costs_dict), 'total': total_costs},
+        )
+        return profitability_items
+
+    def _get_service_policy_to_invoice_type(self):
+        return {
+            **super()._get_service_policy_to_invoice_type(),
+            'ordered_prepaid': 'billable_fixed',
+            'delivered_milestones': 'billable_milestones',
+            'delivered_timesheet': 'billable_time',
+            'delivered_manual': 'billable_manual',
+        }
+
+    def _get_profitability_items(self, with_action=True):
+        return self._get_profitability_items_from_aal(
+            super()._get_profitability_items(with_action),
+            with_action
+        )
+
 
 class ProjectTask(models.Model):
     _inherit = "project.task"

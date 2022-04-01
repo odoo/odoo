@@ -29,7 +29,7 @@ html .o_web_client > .o_action_manager > .o_action > .o_content > .o_controller_
     padding: $o-rightpanel-p-small $o-rightpanel-p $o-rightpanel-p*2 $o-rightpanel-p;
     border-left: 1px solid $gray-300;
     background-color: white;
-
+    min-width: 380px;
 
     .o_rightpanel_section {
         padding-bottom: $o-rightpanel-p;
@@ -47,6 +47,17 @@ html .o_web_client > .o_action_manager > .o_action > .o_content > .o_controller_
             padding-top: 0px;
         }
 
+        .o_rightpanel_button {
+            cursor: pointer;
+            font-size: small;
+            color: $o-brand-primary;
+
+            &:hover {
+                color: #001d1f;
+                text-decoration: none;
+            }
+        }
+
         .o_rightpanel_header {
             padding: $o-rightpanel-p-tiny 0 $o-rightpanel-p-small 0;
 
@@ -58,10 +69,7 @@ html .o_web_client > .o_action_manager > .o_action > .o_content > .o_controller_
             }
 
             .o_rightpanel_button {
-                cursor: pointer;
                 font-weight: bold;
-                font-size: small;
-                color: $o-brand-primary;
                 float: right;
                 padding-top: $o-rightpanel-p-tiny;
             }
@@ -131,6 +139,17 @@ html .o_web_client > .o_action_manager > .o_action > .o_content > .o_controller_
                     padding-left: $o-rightpanel-p-tiny;
                 }
             }
+
+            .o_rightpanel_subsection {
+                &:not(:last-child) {
+                    padding-bottom: 1rem;
+                }
+
+            }
+            table > tfoot {
+                font-weight: bold;
+                border-top: 1px solid black;
+            }
         }
 
         .o_rightpanel_hidden {
@@ -155,7 +174,7 @@ html .o_web_client > .o_action_manager > .o_action > .o_content > .o_controller_
                     margin-top: -4px;
                     margin-bottom: 0px;
                 }
-                
+
                 .oe_stat_button {
                     flex-basis: 33.333333%;
                     border-width: 1px;
@@ -175,7 +194,7 @@ html .o_web_client > .o_action_manager > .o_action > .o_content > .o_controller_
                 @media screen and (max-width: 1600px) {
                     .oe_stat_button {
                         flex-basis: 50%;
-                    
+
                         &:nth-child(2n){
                             border-right-width: 0px;
                         }

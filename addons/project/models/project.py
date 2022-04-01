@@ -10,7 +10,6 @@ from random import randint
 
 from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _, _lt
 from odoo.exceptions import UserError, ValidationError, AccessError
-from odoo.tools import format_amount
 from odoo.osv.expression import OR, AND
 from odoo.tools.misc import get_lang
 
@@ -713,6 +712,9 @@ class Project(models.Model):
     #  PROJECT UPDATES
     # ---------------------------------------------
 
+    def action_profitability_items(self, section_name, domain=None, res_id=False):
+        return {}
+
     def get_last_update_or_default(self):
         self.ensure_one()
         labels = dict(self._fields['last_update_status']._description_selection(self.env))
@@ -723,15 +725,45 @@ class Project(models.Model):
 
     def get_panel_data(self):
         self.ensure_one()
-        return {
+        if not self.user_has_groups('project.group_project_user'):
+            return {}
+        panel_data = {
             'user': self._get_user_values(),
             'milestones': self._get_milestones(),
             'buttons': sorted(self._get_stat_buttons(), key=lambda k: k['sequence']),
+            'currency_id': self.currency_id.id,
         }
+        if self._show_profitability():
+            profitability_items = self._get_profitability_items()
+            if self._get_profitability_sequence_per_invoice_type() and profitability_items and 'revenues' in profitability_items and 'costs' in profitability_items:  # sort the data values
+                profitability_items['revenues']['data'] = sorted(profitability_items['revenues']['data'], key=lambda k: k['sequence'])
+                profitability_items['costs']['data'] = sorted(profitability_items['costs']['data'], key=lambda k: k['sequence'])
+            panel_data['profitability_items'] = profitability_items
+            panel_data['profitability_labels'] = self._get_profitability_labels()
+        return panel_data
+
+    def _get_profitability_labels(self):
+        return {}
+
+    def _get_profitability_sequence_per_invoice_type(self):
+        return {}
 
     def _get_user_values(self):
         return {
             'is_project_user': self.user_has_groups('project.group_project_user'),
+        }
+
+    def _show_profitability(self):
+        self.ensure_one()
+        return True
+
+    def _get_profitability_aal_domain(self):
+        return [('account_id', 'in', self.analytic_account_id.ids)]
+
+    def _get_profitability_items(self, with_action=True):
+        return {
+            'revenues': {'data': [], 'total': {'invoiced': 0.0, 'to_invoice': 0.0}},
+            'costs': {'data': [], 'total': {'billed': 0.0, 'to_bill': 0.0}},
         }
 
     def _get_milestones(self):
@@ -787,16 +819,6 @@ class Project(models.Model):
                 }),
                 'show': True,
                 'sequence': 66,
-            })
-        if self.user_has_groups('analytic.group_analytic_accounting'):
-            buttons.append({
-                'icon': 'usd',
-                'text': _lt('Gross Margin'),
-                'number': format_amount(self.env, self.analytic_account_balance, self.company_id.currency_id),
-                'action_type': 'object',
-                'action': 'action_view_analytic_account_entries',
-                'show': bool(self.analytic_account_id),
-                'sequence': 24,
             })
         return buttons
 
