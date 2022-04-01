@@ -296,8 +296,6 @@ class IrModel(models.Model):
         return res
 
     def write(self, vals):
-        if '__last_update' in self._context:
-            self = self.with_context({k: v for k, v in self._context.items() if k != '__last_update'})
         if 'model' in vals and any(rec.model != vals['model'] for rec in self):
             raise UserError(_('Field "Model" cannot be modified on models.'))
         if 'state' in vals and any(rec.state != vals['state'] for rec in self):
