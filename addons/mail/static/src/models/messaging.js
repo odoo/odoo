@@ -322,14 +322,6 @@ registerModel({
         isNotificationPermissionDefault: attr({
             compute: '_computeIsNotificationPermissionDefault',
         }),
-        /**
-         * States whether the current environment is QUnit test. Useful to
-         * disable some features that are not possible to test due to
-         * technical limitations.
-         */
-        isQUnitTest: attr({
-            default: false,
-        }),
         locale: one('Locale', {
             default: insertAndReplace(),
             isCausal: true,
