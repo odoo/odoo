@@ -249,11 +249,11 @@ var LivechatButton = Widget.extend({
             def = Promise.resolve(JSON.parse(cookie));
         } else {
             this._messages = []; // re-initialize messages cache
-            def = session.rpc('/im_livechat/get_session', {
-                channel_id: this.options.channel_id,
-                anonymous_name: this.options.default_username,
-                previous_operator_id: this._get_previous_operator_id(),
-            }, { shadow: true });
+            def = session.rpc(
+                '/im_livechat/get_session',
+                this._prepareGetSessionParameters(),
+                { shadow: true },
+            );
         }
         def.then(function (livechatData) {
             if (!livechatData || !livechatData.operator_pid) {
@@ -339,6 +339,16 @@ var LivechatButton = Widget.extend({
             self._chatWindow.$el.css(cssProps);
             self.$el.hide();
         });
+    },
+    /**
+     * @private
+     */
+    _prepareGetSessionParameters: function () {
+        return {
+            channel_id: this.options.channel_id,
+            anonymous_name: this.options.default_username,
+            previous_operator_id: this._get_previous_operator_id(),
+        };
     },
     /**
      * @private

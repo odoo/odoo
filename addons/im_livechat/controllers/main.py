@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-
-from odoo import http,tools, _
+from odoo import http, tools, _
 from odoo.http import request
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 
@@ -30,9 +28,9 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/load_templates', type='json', auth='none', cors="*")
     def load_templates(self, **kwargs):
-        base_url = request.httprequest.base_url
         templates = [
             'im_livechat/static/src/legacy/public_livechat.xml',
+            'im_livechat/static/src/legacy/public_livechat_chatbot.xml',
         ]
         return [tools.file_open(tmpl, 'rb').read() for tmpl in templates]
 
@@ -50,31 +48,35 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/init', type='json', auth="public", cors="*")
     def livechat_init(self, channel_id):
-        available = len(request.env['im_livechat.channel'].sudo().browse(channel_id)._get_available_users())
+        operator_available = len(request.env['im_livechat.channel'].sudo().browse(channel_id)._get_available_users())
         rule = {}
-        if available:
-            # find the country from the request
-            country_id = False
-            country_code = request.session.geoip.get('country_code') if request.session.geoip else False
-            if country_code:
-                country_id = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1).id
-            # extract url
-            url = request.httprequest.headers.get('Referer')
-            # find the first matching rule for the given country and url
-            matching_rule = request.env['im_livechat.channel.rule'].sudo().match_rule(channel_id, url, country_id)
-            if matching_rule:
-                rule = {
-                    'action': matching_rule.action,
-                    'auto_popup_timer': matching_rule.auto_popup_timer,
-                    'regex_url': matching_rule.regex_url,
-                }
+        # find the country from the request
+        country_id = False
+        country_code = request.session.geoip.get('country_code') if request.session.geoip else False
+        if country_code:
+            country_id = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1).id
+        # extract url
+        url = request.httprequest.headers.get('Referer')
+        # find the first matching rule for the given country and url
+        matching_rule = request.env['im_livechat.channel.rule'].sudo().match_rule(channel_id, url, country_id)
+        if matching_rule and (not matching_rule.chatbot_script_id or matching_rule.chatbot_script_id.script_step_ids):
+            rule = {
+                'action': matching_rule.action,
+                'auto_popup_timer': matching_rule.auto_popup_timer,
+                'regex_url': matching_rule.regex_url,
+            }
+            if matching_rule.chatbot_script_id and (not matching_rule.chatbot_only_if_no_operator or
+               (not operator_available and matching_rule.chatbot_only_if_no_operator)) and matching_rule.chatbot_script_id.script_step_ids:
+                chatbot_script = matching_rule.chatbot_script_id
+                rule.update({'chatbot': chatbot_script._format_for_frontend()})
         return {
-            'available_for_me': available and (not rule or rule['action'] != 'hide_button'),
+            'available_for_me': (rule and rule.get('chatbot'))
+                                or operator_available and (not rule or rule['action'] != 'hide_button'),
             'rule': rule,
         }
 
     @http.route('/im_livechat/get_session', type="json", auth='public', cors="*")
-    def get_session(self, channel_id, anonymous_name, previous_operator_id=None, **kwargs):
+    def get_session(self, channel_id, anonymous_name, previous_operator_id=None, chatbot_script_id=None, **kwargs):
         user_id = None
         country_id = None
         # if the user is identifiy (eg: portal user on the frontend), don't use the anonymous name. The user will be added to session.
@@ -93,7 +95,16 @@ class LivechatController(http.Controller):
         if previous_operator_id:
             previous_operator_id = int(previous_operator_id)
 
-        return request.env["im_livechat.channel"].with_context(lang=False).sudo().browse(channel_id)._open_livechat_mail_channel(anonymous_name, previous_operator_id, user_id, country_id)
+        chatbot_script = False
+        if chatbot_script_id:
+            chatbot_script = request.env['chatbot.script'].sudo().browse(chatbot_script_id)
+
+        return request.env["im_livechat.channel"].with_context(lang=False).sudo().browse(channel_id)._open_livechat_mail_channel(
+            anonymous_name,
+            previous_operator_id=previous_operator_id,
+            chatbot_script=chatbot_script,
+            user_id=user_id,
+            country_id=country_id)
 
     @http.route('/im_livechat/feedback', type='json', auth='public', cors="*")
     def feedback(self, uuid, rate, reason=None, **kwargs):
