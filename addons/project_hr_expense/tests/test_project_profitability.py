@@ -47,11 +47,15 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
             self.project,
             self.project_profitability_items_empty)
 
+        sequence_per_invoice_type = self.project._get_profitability_sequence_per_invoice_type()
+        self.assertIn('expenses', sequence_per_invoice_type)
+        expense_sequence = sequence_per_invoice_type['expenses']
+
         self.assertDictEqual(
             self.project._get_profitability_items(False),
             {
                 'costs': {
-                    'data': [{'id': 'expenses', 'to_bill': 0.0, 'billed': -expense.untaxed_amount}],
+                    'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': 0.0, 'billed': -expense.untaxed_amount}],
                     'total': {'to_bill': 0.0, 'billed': -expense.untaxed_amount},
                 },
                 'revenues': {'data': [], 'total': {'to_invoice': 0.0, 'invoiced': 0.0}},

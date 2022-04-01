@@ -734,11 +734,18 @@ class Project(models.Model):
             'currency_id': self.currency_id.id,
         }
         if self._show_profitability():
-            panel_data['profitability_items'] = self._get_profitability_items()
+            profitability_items = self._get_profitability_items()
+            if self._get_profitability_sequence_per_invoice_type() and profitability_items and 'revenues' in profitability_items and 'costs' in profitability_items:  # sort the data values
+                profitability_items['revenues']['data'] = sorted(profitability_items['revenues']['data'], key=lambda k: k['sequence'])
+                profitability_items['costs']['data'] = sorted(profitability_items['costs']['data'], key=lambda k: k['sequence'])
+            panel_data['profitability_items'] = profitability_items
             panel_data['profitability_labels'] = self._get_profitability_labels()
         return panel_data
 
     def _get_profitability_labels(self):
+        return {}
+
+    def _get_profitability_sequence_per_invoice_type(self):
         return {}
 
     def _get_user_values(self):

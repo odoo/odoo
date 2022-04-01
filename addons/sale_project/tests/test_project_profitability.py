@@ -76,6 +76,8 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             invoice_type,
             ['billable_manual', 'service_revenues'],
             'invoice_type="billable_manual" if sale_timesheet is installed otherwise it is equal to "service_revenues"')
+        sequence_per_invoice_type = self.project._get_profitability_sequence_per_invoice_type()
+        self.assertIn('service_revenues', sequence_per_invoice_type)
         self.assertDictEqual(
             self.project._get_profitability_items(False),
             {
@@ -84,6 +86,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                         {
                             # id should be equal to "billable_manual" if "sale_timesheet" module is installed otherwise "service_revenues"
                             'id': invoice_type,
+                            'sequence': sequence_per_invoice_type[invoice_type],
                             'to_invoice': self.delivery_service_order_line.untaxed_amount_to_invoice,
                             'invoiced': self.delivery_service_order_line.untaxed_amount_invoiced,
                         },
@@ -128,6 +131,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                     'data': [
                         {
                             'id': invoice_type,
+                            'sequence': sequence_per_invoice_type[invoice_type],
                             'to_invoice': 0.0,
                             'invoiced': self.delivery_service_order_line.untaxed_amount_invoiced,
                         },
@@ -169,11 +173,13 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                     'data': [
                         {
                             'id': invoice_type,
+                            'sequence': sequence_per_invoice_type[invoice_type],
                             'to_invoice': sum(service_sols.mapped('untaxed_amount_to_invoice')),
                             'invoiced': sum(service_sols.mapped('untaxed_amount_invoiced')),
                         },
                         {
                             'id': 'other_revenues',
+                            'sequence': sequence_per_invoice_type['other_revenues'],
                             'to_invoice': material_order_line.untaxed_amount_to_invoice,
                             'invoiced': material_order_line.untaxed_amount_invoiced,
                         },
@@ -203,11 +209,13 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                     'data': [
                         {
                             'id': invoice_type,
+                            'sequence': sequence_per_invoice_type[invoice_type],
                             'to_invoice': sum(service_sols.mapped('untaxed_amount_to_invoice')),
                             'invoiced': manual_service_order_line.untaxed_amount_invoiced,
                         },
                         {
                             'id': 'other_revenues',
+                            'sequence': sequence_per_invoice_type['other_revenues'],
                             'to_invoice': material_order_line.untaxed_amount_to_invoice,
                             'invoiced': material_order_line.untaxed_amount_invoiced,
                         },

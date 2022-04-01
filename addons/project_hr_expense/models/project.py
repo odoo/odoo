@@ -66,6 +66,11 @@ class Project(models.Model):
         labels['expenses'] = _lt('Expenses')
         return labels
 
+    def _get_profitability_sequence_per_invoice_type(self):
+        sequence_per_invoice_type = super()._get_profitability_sequence_per_invoice_type()
+        sequence_per_invoice_type['expenses'] = 11
+        return sequence_per_invoice_type
+
     def _get_expenses_profitability_items(self, with_action=True):
         if not self.analytic_account_id:
             return {}
@@ -82,7 +87,7 @@ class Project(models.Model):
         expense_data = expenses_read_group[0]
         section_id = 'expenses'
         expense_profitability_items = {
-            'costs': {'id': section_id, 'billed': -expense_data['untaxed_amount'], 'to_bill': 0.0},
+            'costs': {'id': section_id, 'sequence': self._get_profitability_sequence_per_invoice_type()[section_id], 'billed': -expense_data['untaxed_amount'], 'to_bill': 0.0},
         }
         if can_see_expense:
             expense_profitability_items['action'] = {'name': 'action_profitability_items', 'type': 'object', 'section': section_id, 'domain': json.dumps([('id', 'in', expense_data['ids'])])}

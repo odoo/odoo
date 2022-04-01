@@ -42,6 +42,11 @@ class Project(models.Model):
         labels['manufacturing_order'] = _lt('Manufacturing Orders')
         return labels
 
+    def _get_profitability_sequence_per_invoice_type(self):
+        sequence_per_invoice_type = super()._get_profitability_sequence_per_invoice_type()
+        sequence_per_invoice_type['manufacturing_order'] = 10
+        return sequence_per_invoice_type
+
     def _get_profitability_aal_domain(self):
         return expression.AND([
             super()._get_profitability_aal_domain(),
@@ -60,6 +65,7 @@ class Project(models.Model):
             can_see_manufactoring_order = with_action and len(self) == 1 and self.user_has_groups('mrp.group_mrp_user')
             mrp_costs = {
                 'id': mrp_category,
+                'sequence': self._get_profitability_sequence_per_invoice_type()[mrp_category],
                 'billed': sum([res['amount'] for res in mrp_aal_read_group]),
                 'to_bill': 0.0,
             }

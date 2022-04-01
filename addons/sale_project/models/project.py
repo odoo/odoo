@@ -299,6 +299,13 @@ class Project(models.Model):
             'other_revenues': _lt('Material'),
         }
 
+    def _get_profitability_sequence_per_invoice_type(self):
+        return {
+            **super()._get_profitability_sequence_per_invoice_type(),
+            'service_revenues': 6,
+            'other_revenues': 7,
+        }
+
     def _get_service_policy_to_invoice_type(self):
         return {
             'ordered_prepaid': 'service_revenues',
@@ -372,8 +379,9 @@ class Project(models.Model):
                     if len(sol_ids) == 1:
                         action_params['res_id'] = sol_ids[0]
                     other_revenues['action'] = action_params
+        sequence_per_invoice_type = self._get_profitability_sequence_per_invoice_type()
         return {
-            'data': [{'id': invoice_type, **vals} for invoice_type, vals in revenues_dict.items()],
+            'data': [{'id': invoice_type, 'sequence': sequence_per_invoice_type[invoice_type], **vals} for invoice_type, vals in revenues_dict.items()],
             'total': {'to_invoice': total_to_invoice, 'invoiced': total_invoiced},
         }
 

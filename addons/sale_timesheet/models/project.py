@@ -394,6 +394,16 @@ class Project(models.Model):
             'non_billable': _lt('Timesheets (Non Billable)'),
         }
 
+    def _get_profitability_sequence_per_invoice_type(self):
+        return {
+            **super()._get_profitability_sequence_per_invoice_type(),
+            'billable_fixed': 1,
+            'billable_time': 2,
+            'billable_milestones': 3,
+            'billable_manual': 4,
+            'non_billable': 5,
+        }
+
     def _get_profitability_aal_domain(self):
         domain = ['|', ('project_id', 'in', self.ids), ('so_line', 'in', self._fetch_sale_order_item_ids())]
         return expression.AND([
@@ -451,6 +461,8 @@ class Project(models.Model):
                 action_params['res_id'] = record_ids[0]
             return action_params
 
+        sequence_per_invoice_type = self._get_profitability_sequence_per_invoice_type()
+
         def convert_dict_into_profitability_data(d, cost=True):
             profitability_data = []
             key1, key2 = ['to_bill', 'billed'] if cost else ['to_invoice', 'invoiced']
@@ -458,7 +470,7 @@ class Project(models.Model):
                 if not vals[key1] and not vals[key2]:
                     continue
                 record_ids = vals.pop('record_ids', [])
-                data = {'id': invoice_type, **vals}
+                data = {'id': invoice_type, 'sequence': sequence_per_invoice_type[invoice_type], **vals}
                 if record_ids:
                     if invoice_type not in ['other_costs', 'other_revenues'] and can_see_timesheets:  # action to see the timesheets
                         action = get_timesheets_action(invoice_type, record_ids)
