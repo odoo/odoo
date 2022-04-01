@@ -17,6 +17,15 @@ registerModel({
             return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
         },
         /**
+         * Called when clicking on print icon.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickPrint(ev) {
+            ev.stopPropagation();
+            this.print();
+        },
+        /**
          * Prompt the browser print of this attachment.
          */
         print() {

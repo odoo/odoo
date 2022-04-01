@@ -355,17 +355,6 @@ export class AttachmentViewer extends Component {
     }
 
     /**
-     * Called when clicking on print icon.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickPrint(ev) {
-        ev.stopPropagation();
-        this.attachmentViewer.print();
-    }
-
-    /**
      * Called when clicking on rotate icon.
      *
      * @private
