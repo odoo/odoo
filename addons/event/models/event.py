@@ -194,6 +194,13 @@ class EventEvent(models.Model):
         for event in self:
             event.seats_unconfirmed = event.seats_reserved = event.seats_used = event.seats_available = 0
         # aggregate registrations by event and by state
+        state_field = {
+            'draft': 'seats_unconfirmed',
+            'open': 'seats_reserved',
+            'done': 'seats_used',
+        }
+        base_vals = dict((fname, 0) for fname in state_field.values())
+        results = dict((event_id, dict(base_vals)) for event_id in self.ids)
         if self.ids:
             state_field = {
                 'draft': 'seats_unconfirmed',
@@ -208,10 +215,10 @@ class EventEvent(models.Model):
             self.env['event.registration'].flush(['event_id', 'state'])
             self._cr.execute(query, (tuple(self.ids),))
             for event_id, state, num in self._cr.fetchall():
-                event = self.browse(event_id)
-                event[state_field[state]] += num
-        # compute seats_available
+                results[event_id][state_field[state]] += num
+
         for event in self:
+            event.update(results.get(event._origin.id or event.id, base_vals))
             if event.seats_max > 0:
                 event.seats_available = event.seats_max - (event.seats_reserved + event.seats_used)
 
