@@ -2893,9 +2893,9 @@ QUnit.module("Fields", (hooks) => {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     const commands = args.args[1].p;
                     assert.deepEqual(commands, [
-                        [2, 1, false],
                         [4, 2, false],
                         [4, 4, false],
+                        [2, 1, false],
                     ]);
                 }
             },
@@ -3342,7 +3342,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("one2many list (editable): edition, part 2", async function (assert) {
-        assert.expect(8);
+        assert.expect(9);
 
         await makeView({
             type: "form",
@@ -3360,20 +3360,8 @@ QUnit.module("Fields", (hooks) => {
             mockRPC(route, args) {
                 if (args.method === "write") {
                     assert.deepEqual(args.args[1].p, [
-                        [
-                            0,
-                            "virtual_1",
-                            {
-                                foo: "kartoffel",
-                            },
-                        ],
-                        [
-                            0,
-                            "virtual_2",
-                            {
-                                foo: "gemuse",
-                            },
-                        ],
+                        [0, "virtual_2", { foo: "gemuse" }],
+                        [0, "virtual_1", { foo: "kartoffel" }],
                     ]);
                 }
             },
@@ -3387,7 +3375,8 @@ QUnit.module("Fields", (hooks) => {
 
         // click again on Add an item
         await addRow(target);
-        assert.strictEqual(target.querySelector("td .o_field_char").innerText, "kartoffel");
+        assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
+        assert.strictEqual(target.querySelectorAll("td .o_field_char")[1].innerText, "kartoffel");
         assert.containsOnce(target, ".o_selected_row > td input");
         assert.containsN(target, "tr.o_data_row", 2);
 
@@ -3395,8 +3384,8 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_selected_row > td input", "gemuse");
         await clickSave(target);
         assert.containsN(target, "tr.o_data_row", 2);
-        assert.strictEqual(target.querySelector("td .o_field_char").innerText, "kartoffel");
-        assert.strictEqual(target.querySelectorAll("td .o_field_char")[1].innerText, "gemuse");
+        assert.strictEqual(target.querySelector("td .o_field_char").innerText, "gemuse");
+        assert.strictEqual(target.querySelectorAll("td .o_field_char")[1].innerText, "kartoffel");
     });
 
     QUnit.test("one2many list (editable): edition, part 3", async function (assert) {
@@ -7001,11 +6990,11 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("one2many list editable = top", async function (assert) {
+    QUnit.test("one2many list editable = top", async function (assert) {
         assert.expect(6);
 
         serverData.models.turtle.fields.turtle_foo.default = "default foo turtle";
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -7022,27 +7011,26 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
             mockRPC(route, args) {
                 if (args.method === "write") {
-                    var commands = args.args[1].turtles;
+                    const commands = args.args[1].turtles;
                     assert.strictEqual(commands[0][0], 0, "first command is a create");
                     assert.strictEqual(commands[1][0], 4, "second command is a link to");
                 }
-                return this._super.apply(this, arguments);
             },
         });
         await clickEdit(target);
 
-        assert.containsOnce(form, ".o_data_row", "should start with one data row");
+        assert.containsOnce(target, ".o_data_row", "should start with one data row");
 
         await addRow(target);
 
-        assert.containsN(form, ".o_data_row", 2, "should have 2 data rows");
+        assert.containsN(target, ".o_data_row", 2, "should have 2 data rows");
         assert.strictEqual(
-            form.$("tr.o_data_row:first input").val(),
+            target.querySelector("tr.o_data_row input").value,
             "default foo turtle",
             "first row should be the new value"
         );
         assert.hasClass(
-            form.$("tr.o_data_row:first"),
+            target.querySelector("tr.o_data_row"),
             "o_selected_row",
             "first row should be selected"
         );
@@ -7050,11 +7038,11 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.skipWOWL("one2many list editable = bottom", async function (assert) {
+    QUnit.test("one2many list editable = bottom", async function (assert) {
         assert.expect(6);
         serverData.models.turtle.fields.turtle_foo.default = "default foo turtle";
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -7071,27 +7059,26 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
             mockRPC(route, args) {
                 if (args.method === "write") {
-                    var commands = args.args[1].turtles;
+                    const commands = args.args[1].turtles;
                     assert.strictEqual(commands[0][0], 4, "first command is a link to");
                     assert.strictEqual(commands[1][0], 0, "second command is a create");
                 }
-                return this._super.apply(this, arguments);
             },
         });
         await clickEdit(target);
 
-        assert.containsOnce(form, ".o_data_row", "should start with one data row");
+        assert.containsOnce(target, ".o_data_row", "should start with one data row");
 
         await addRow(target);
 
-        assert.containsN(form, ".o_data_row", 2, "should have 2 data rows");
+        assert.containsN(target, ".o_data_row", 2, "should have 2 data rows");
         assert.strictEqual(
-            form.$("tr.o_data_row:eq(1) input").val(),
+            target.querySelector("tr.o_data_row input").value,
             "default foo turtle",
             "second row should be the new value"
         );
         assert.hasClass(
-            form.$("tr.o_data_row:eq(1)"),
+            target.querySelectorAll("tr.o_data_row")[1],
             "o_selected_row",
             "second row should be selected"
         );
@@ -10172,130 +10159,6 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(form, ".some_button4");
     });
 
-    QUnit.skipWOWL(
-        "one2many column visiblity depends on onchange of parent field",
-        async function (assert) {
-            assert.expect(3);
-
-            serverData.models.partner.records[0].p = [2];
-            serverData.models.partner.records[0].bar = false;
-
-            serverData.models.partner.onchanges.p = function (obj) {
-                // set bar to true when line is added
-                if (obj.p.length > 1 && obj.p[1][2].foo === "New line") {
-                    obj.bar = true;
-                }
-            };
-
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
-                    <form>
-                        <field name="bar"/>
-                        <field name="p">
-                            <tree editable="bottom">
-                                <field name="foo"/>
-                                <field name="int_field" attrs="{'column_invisible': [('parent.bar', '=', False)]}"/>
-                            </tree>
-                        </field>
-                    </form>`,
-                resId: 1,
-            });
-
-            // bar is false so there should be 1 column
-            assert.containsOnce(
-                form,
-                "th:not(.o_list_record_remove_header)",
-                "should be only 1 column ('foo') in the one2many"
-            );
-            assert.containsOnce(form, ".o_list_view .o_data_row", "should contain one row");
-
-            await clickEdit(target);
-
-            // add a new o2m record
-            await addRow(target);
-            form.$(".o_field_one2many input:first").focus();
-            await testUtils.fields.editInput(form.$(".o_field_one2many input:first"), "New line");
-            await click(form.$el);
-
-            assert.containsN(
-                form,
-                "th:not(.o_list_record_remove_header)",
-                2,
-                "should be 2 columns('foo' + 'int_field')"
-            );
-        }
-    );
-
-    QUnit.skipWOWL("one2many column_invisible on view not inline", async function (assert) {
-        assert.expect(4);
-
-        serverData.models.partner.records[0].p = [2];
-        const form = await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
-                <form>
-                    <sheet>
-                        <group>
-                            <field name="product_id"/>
-                        </group>
-                        <notebook>
-                            <page string="Partner page">
-                                <field name="bar"/>
-                                <field name="p"/>
-                            </page>
-                        </notebook>
-                    </sheet>
-                </form>`,
-            resId: 1,
-            archs: {
-                "partner,false,list": `
-                    <tree>
-                        <field name="foo" attrs="{'column_invisible': [('parent.product_id', '!=', False)]}"/>
-                        <field name="bar" attrs="{'column_invisible': [('parent.bar', '=', False)]}"/>
-                    </tree>`,
-            },
-        });
-        assert.containsN(
-            form,
-            "th:not(.o_list_record_remove_header)",
-            2,
-            "should be 2 columns in the one2many"
-        );
-        await clickEdit(target);
-        await click(form.$('.o_field_many2one[name="product_id"] input'));
-        await click($("li.ui-menu-item a:contains(xpad)").trigger("mouseenter"));
-        await testUtils.owlCompatibilityExtraNextTick();
-        assert.containsOnce(
-            form,
-            "th:not(.o_list_record_remove_header)",
-            "should be 1 column when the product_id is set"
-        );
-        await testUtils.fields.editAndTrigger(
-            form.$('.o_field_many2one[name="product_id"] input'),
-            "",
-            "keyup"
-        );
-        await testUtils.owlCompatibilityExtraNextTick();
-        assert.containsN(
-            form,
-            "th:not(.o_list_record_remove_header)",
-            2,
-            "should be 2 columns in the one2many when product_id is not set"
-        );
-        await click(form.$('.o_field_boolean[name="bar"] input'));
-        await testUtils.owlCompatibilityExtraNextTick();
-        assert.containsOnce(
-            form,
-            "th:not(.o_list_record_remove_header)",
-            "should be 1 column after the value change"
-        );
-    });
-
     QUnit.skipWOWL("field context is correctly passed to x2m subviews", async function (assert) {
         assert.expect(2);
 
@@ -12412,7 +12275,7 @@ QUnit.module("Fields", (hooks) => {
 
             serverData.models.partner.onchanges.p = function (obj) {
                 // set bar to true when line is added
-                if (obj.p.length > 1 && obj.p[0][2].foo === "New line") {
+                if (obj.p.length > 1 && obj.p[1][2].foo === "New line") {
                     obj.bar = true;
                 }
             };

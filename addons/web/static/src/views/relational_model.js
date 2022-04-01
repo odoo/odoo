@@ -878,6 +878,7 @@ export class Record extends DataPoint {
         }
         const limit = views[viewMode] && views[viewMode].limit;
         const orderBy = views[viewMode] && views[viewMode].defaultOrder;
+        const editable = views[viewMode] && views[viewMode].editable;
 
         const list = this.model.createDataPoint("static_list", {
             resModel: this.fields[fieldName].relation,
@@ -886,6 +887,7 @@ export class Record extends DataPoint {
             getParentRecordContext: () => this.dataContext,
             limit,
             orderBy,
+            editable,
             rawContext: {
                 parent: this.rawContext,
                 make: () => {
@@ -2258,6 +2260,15 @@ export class StaticList extends DataPoint {
     getCommands(allFields = false) {
         if (this._commands.length) {
             const commands = [];
+            const hasGlobalCommand =
+                this._commands && [DELETE_ALL, REPLACE_WITH].includes(this._commands[0][0]);
+            if (!hasGlobalCommand) {
+                for (const resId of this._serverIds) {
+                    if (!this._commandsById[resId]) {
+                        commands.push(x2ManyCommands.linkTo(resId));
+                    }
+                }
+            }
             for (const command of this._commands) {
                 const code = command[0];
                 if ([CREATE, UPDATE].includes(code)) {
@@ -2270,21 +2281,17 @@ export class StaticList extends DataPoint {
                     } else {
                         values = this._initialValues[id];
                     }
-                    commands.push([code, id, values]);
+                    if (code === CREATE && this.editable === "top") {
+                        commands.unshift([code, id, values]);
+                    } else {
+                        commands.push([code, id, values]);
+                    }
                 } else {
                     commands.push(command);
                 }
             }
 
-            const hasGlobalCommand =
-                this._commands && [DELETE_ALL, REPLACE_WITH].includes(this._commands[0][0]);
-            if (!hasGlobalCommand) {
-                for (const resId of this._serverIds) {
-                    if (!this._commandsById[resId]) {
-                        commands.push(x2ManyCommands.linkTo(resId));
-                    }
-                }
-            } else if (DELETE_ALL === this._commands[0][0]) {
+            if (DELETE_ALL === this._commands[0][0]) {
                 commands.shift();
                 if (!allFields) {
                     for (const resId of this._serverIds) {
