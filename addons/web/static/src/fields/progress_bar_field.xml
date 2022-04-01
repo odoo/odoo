@@ -7,11 +7,11 @@
                 <div class="o_progress" aria-valuemin="0" t-att-aria-valuemax="state.maxValue" t-att-aria-valuenow="state.currentValue">
                     <div class="o_progressbar_complete" t-att-style="'width: min(' + 100 * state.currentValue / state.maxValue + '%, 100%)'"></div>
                 </div>
-                <t t-if="props.maxValue">
-                    <div class="o_progressbar_value" t-esc="getHumanValue('currentValue') + ' / ' + getHumanValue('maxValue')"/>
+                <t t-if="props.isPercentage">
+                    <span class="o_progressbar_value" t-esc="getFormattedValue('currentValue', true) + '%'"/>
                 </t>
                 <t t-else="">
-                    <span class="o_progressbar_value" t-esc="getHumanValue('currentValue') + '%'"/>
+                    <div class="o_progressbar_value" t-esc="getFormattedValue('currentValue', true) + ' / ' + getFormattedValue('maxValue', true)"/>
                 </t>
             </div>
         </t>
@@ -20,15 +20,29 @@
                 <div class="o_progress" aria-valuemin="0" t-att-aria-valuemax="state.maxValue" t-att-aria-valuenow="state.currentValue">
                     <div class="o_progressbar_complete" t-att-style="'width: min(' + 100 * state.currentValue / state.maxValue + '%, 100%)'"></div>
                 </div>
-                <t t-if="props.maxValue">
-                    <t t-if="props.isCurrentValueEditable">
+                <t t-if="props.isPercentage">
+                    <div class="d-flex">
+                        <input
+                            class="o_input o_progressbar_value"
+                            type="text"
+                            inputmode="numeric"
+                            t-att-value="getFormattedValue('currentValue') or ''"
+                            t-att-required="props.required"
+                            t-on-change="(ev) => this.onChangeValue(ev.target.value, 'currentValue')"
+                            t-on-keydown="(ev) => this.debouncedOnKeydownUpdate(ev, 'currentValue')"
+                        />
+                        <span>%</span>
+                    </div>
+                </t>
+                <t t-else="">
+                <t t-if="props.isCurrentValueEditable">
                         <input
                             class="o_progressbar_value o_input"
                             type="text"
                             inputmode="numeric"
-                            t-att-value="getInitialValue('currentValue')"
+                            t-att-value="getFormattedValue('currentValue')"
                             t-on-change="(ev) => this.onChangeValue(ev.target.value, 'currentValue')"
-                            t-on-keydown="(ev) => this.onKeyDownValue(ev, 'currentValue')"
+                            t-on-keydown="(ev) => this.debouncedOnKeydownUpdate(ev, 'currentValue')"
                         />
                     </t>
                     <t t-else="">
@@ -40,28 +54,14 @@
                             class="o_progressbar_value o_input"
                             type="text"
                             inputmode="numeric"
-                            t-att-value="getInitialValue('maxValue')"
+                            t-att-value="getFormattedValue('maxValue')"
                             t-on-change="(ev) => this.onChangeValue(ev.target.value, 'maxValue')"
-                            t-on-keydown="(ev) => this.onKeyDownValue(ev, 'maxValue')"
+                            t-on-keydown="(ev) => this.debouncedOnKeydownUpdate(ev, 'maxValue')"
                         />
                     </t>
                     <t t-else="">
                         <span class="o_progressbar_value" t-esc="state.maxValue"/>
                     </t>
-                </t>
-                <t t-else="">
-                    <div class="d-flex">
-                        <input
-                            class="o_input o_progressbar_value"
-                            type="text"
-                            inputmode="numeric"
-                            t-att-value="getInitialValue('currentValue') or ''"
-                            t-att-required="props.required"
-                            t-on-change="(ev) => this.onChangeValue(ev.target.value, 'currentValue')"
-                            t-on-keydown="(ev) => this.onKeyDownValue(ev, 'currentValue')"
-                        />
-                        <span>%</span>
-                    </div>
                 </t>
             </div>
         </t>

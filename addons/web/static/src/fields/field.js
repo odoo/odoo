@@ -116,7 +116,9 @@ export class Field extends Component {
             return value;
         }
         const formatterRegistry = registry.category("formatters");
-        if (formatterRegistry.contains(activeField.widget)) {
+        if (options.formatter && formatterRegistry.contains(options.formatter)) {
+            return formatterRegistry.get(options.formatter)(value, options);
+        } else if (formatterRegistry.contains(activeField.widget)) {
             return formatterRegistry.get(activeField.widget)(value, options);
         } else if (formatterRegistry.contains(field.type)) {
             return formatterRegistry.get(field.type)(value, options);
@@ -132,7 +134,9 @@ export class Field extends Component {
         const activeField = record.activeFields[this.props.name];
 
         const parserRegistry = registry.category("parsers");
-        if (parserRegistry.contains(activeField.widget)) {
+        if (options.parser && parserRegistry.contains(options.parser)) {
+            return parserRegistry.get(options.parser)(value, options);
+        } else if (parserRegistry.contains(activeField.widget)) {
             return parserRegistry.get(activeField.widget)(value, options);
         } else if (parserRegistry.contains(field.type)) {
             return parserRegistry.get(field.type)(value, options);

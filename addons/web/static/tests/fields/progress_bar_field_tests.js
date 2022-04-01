@@ -250,7 +250,7 @@ QUnit.module("Fields", (hooks) => {
             await click(target.querySelector(".o_progress"));
 
             const input = target.querySelector(".o_progressbar_value.o_input");
-            assert.strictEqual(input.value, "0.44444", "Initial value in input is correct");
+            assert.strictEqual(input.value, "0.44", "Initial value in input is correct");
 
             await editInput(target, ".o_progressbar_value.o_input", "69");
 
@@ -307,7 +307,7 @@ QUnit.module("Fields", (hooks) => {
             const currentVal = target.querySelectorAll(".o_progressbar_value.o_input")[0];
             const maxVal = target.querySelectorAll(".o_progressbar_value.o_input")[1];
             assert.strictEqual(currentVal.value, "99", "Initial value in input is correct");
-            assert.strictEqual(maxVal.value, "0.44444", "Initial value in input is correct");
+            assert.strictEqual(maxVal.value, "0.44", "Initial value in input is correct");
 
             await editInput(target, ".o_progressbar input:nth-of-type(1)", "2000");
             await editInput(target, ".o_progressbar input:nth-of-type(2)", "69");
@@ -404,7 +404,7 @@ QUnit.module("Fields", (hooks) => {
             const input = target.querySelector(".o_progressbar_value.o_input");
             assert.strictEqual(input.value, "99", "Initial value in input is correct");
 
-            await editInput(target, "input", "1#037:9");
+            await editInput(target, ".o_field_widget input", "1#037:9");
 
             await click(target.querySelector(".o_form_button_save"));
 

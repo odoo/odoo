@@ -81,7 +81,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("Numeric fields");
 
-    QUnit.debug(
+    QUnit.test(
         "Numeric fields: fields with keydown on numpad decimal key",
         async function (assert) {
             registry.category("services").remove("localization");
