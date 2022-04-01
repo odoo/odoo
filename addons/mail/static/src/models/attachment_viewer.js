@@ -8,6 +8,12 @@ registerModel({
     identifyingFields: ['dialogOwner'],
     recordMethods: {
         /**
+         * Close the dialog with this attachment viewer.
+         */
+        close() {
+            this.delete();
+        },
+        /**
          * Returns whether the given html element is inside this attachment viewer.
          *
          * @param {Element} element
