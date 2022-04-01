@@ -17,6 +17,15 @@ registerModel({
             return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
         },
         /**
+         * Display the previous attachment in the list of attachments.
+         */
+        previous() {
+            if (!this.dialogOwner || !this.dialogOwner.attachmentListOwnerAsAttachmentView) {
+                return;
+            }
+            this.dialogOwner.attachmentListOwnerAsAttachmentView.selectPreviousAttachment();
+        },
+        /**
          * @private
          * @returns {string}
          */
