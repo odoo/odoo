@@ -198,11 +198,17 @@ class Http(models.AbstractModel):
         # propagate to the global context of the tab. If the company of
         # the website is not in the allowed companies of the user, set
         # the main company of the user.
-        company_id = website._get_cached('company_id')
+        website_company_id = website._get_cached('company_id')
+        if user.id == website._get_cached('user_id'):
+            # avoid a read on res_company_user_rel in case of public user
+            allowed_company_ids = [website_company_id]
+        elif website_company_id in user.company_ids.ids:
+            allowed_company_ids = [website_company_id]
+        else:
+            allowed_company_ids = user.company_id.ids
+
         request.update_context(
-            allowed_company_ids=(
-                [company_id] if company_id in user.company_ids.ids else user.company_id.ids
-            ),
+            allowed_company_ids=allowed_company_ids,
             website_id=website.id,
             **cls._get_web_editor_context(),
         )
