@@ -3,7 +3,7 @@
 import { nextAnimationFrame } from '@mail/../tests/helpers/test_utils';
 
 import MockServer from 'web.MockServer';
-import { datetime_to_str } from 'web.time';
+import { date_to_str, datetime_to_str } from 'web.time';
 
 MockServer.include({
     /**
@@ -281,6 +281,10 @@ MockServer.include({
             const channel_id = args.args[1] || args.kwargs.channel_id;
             const limit = args.args[2] || args.kwargs.limit;
             return this._mockResPartnerSearchForChannelInvite(search_term, channel_id, limit);
+        }
+        // res.users method
+        if (args.model === 'res.users' && args.method === 'systray_get_activities') {
+            return this._mockResUsersSystrayGetActivities();
         }
         // mail.thread methods (can work on any model)
         if (args.method === 'message_subscribe') {
@@ -2093,7 +2097,46 @@ MockServer.include({
             ...directMessages,
         ];
     },
-
+    /**
+     * Simulates `systray_get_activities` on `res.users`.
+     *
+     * @private
+     */
+     _mockResUsersSystrayGetActivities() {
+        const activities = this._mockSearchRead('mail.activity', [[]], {});
+        const userActivitiesByModelName = {};
+        for (const activity of activities) {
+            const today = date_to_str(new Date());
+            if (today === activity['date_deadline']) {
+                activity['states'] = 'today';
+            } else if (today > activity['date_deadline']) {
+                activity['states'] = 'overdue';
+            } else {
+                activity['states'] = 'planned';
+            }
+        }
+        for (const activity of activities) {
+            const modelName = activity['res_model'];
+            if (!userActivitiesByModelName[modelName]) {
+                userActivitiesByModelName[modelName] = {
+                    model: modelName,
+                    name: modelName,
+                    overdue_count: 0,
+                    planned_count: 0,
+                    today_count: 0,
+                    total_count: 0,
+                    type: 'activity',
+                };
+            }
+            userActivitiesByModelName[modelName][`${activity['states']}_count`] += 1;
+            userActivitiesByModelName[modelName]['total_count'] += 1;
+            userActivitiesByModelName[modelName].actions = [{
+                icon: 'fa-clock-o',
+                name: 'Summary',
+            }];
+        }
+        return Object.values(userActivitiesByModelName);
+    },
     /**
      * Simulates `_find_or_create_for_user` on `res.users.settings`.
      *
