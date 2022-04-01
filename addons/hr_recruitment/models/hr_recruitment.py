@@ -150,7 +150,7 @@ class Applicant(models.Model):
     date_open = fields.Datetime("Assigned", readonly=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Appreciation", default='0')
-    job_id = fields.Many2one('hr.job', "Applied Job", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True)
+    job_id = fields.Many2one('hr.job', "Applied Job", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True, index=True)
     salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra advantages", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
     salary_expected_extra = fields.Char("Expected Salary Extra", help="Salary Expected by Applicant, extra advantages", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
     salary_proposed = fields.Float("Proposed Salary", group_operator="avg", help="Salary Proposed by the Organisation", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
@@ -257,7 +257,7 @@ class Applicant(models.Model):
     @api.depends('meeting_ids', 'meeting_ids.start')
     def _compute_meeting_display(self):
         applicant_with_meetings = self.filtered('meeting_ids')
-        (self - applicant_with_meetings).write({
+        (self - applicant_with_meetings).update({
             'meeting_display_text': _('No Meeting'),
             'meeting_display_date': ''
         })
