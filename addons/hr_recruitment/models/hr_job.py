@@ -95,10 +95,35 @@ class Job(models.Model):
             ('job_ids', '=', self.id)], order='sequence asc', limit=1)
 
     def _compute_new_application_count(self):
+        self.env.cr.execute(
+            """
+                WITH job_stage AS (
+                    SELECT DISTINCT ON (j.id) j.id AS job_id, s.id AS stage_id, s.sequence AS sequence
+                      FROM hr_job j
+                 LEFT JOIN hr_job_hr_recruitment_stage_rel rel
+                        ON rel.hr_job_id = j.id
+                      JOIN hr_recruitment_stage s
+                        ON s.id = rel.hr_recruitment_stage_id
+                        OR s.id NOT IN (
+                                        SELECT "hr_recruitment_stage_id"
+                                          FROM "hr_job_hr_recruitment_stage_rel"
+                                         WHERE "hr_recruitment_stage_id" IS NOT NULL
+                                        )
+                     WHERE j.id in %s
+                  ORDER BY 1, 3 asc
+                )
+                SELECT s.job_id, COUNT(a.id) AS new_applicant
+                  FROM hr_applicant a
+                  JOIN job_stage s
+                    ON s.job_id = a.job_id
+                   AND a.stage_id = s.stage_id
+              GROUP BY s.job_id
+            """, [tuple(self.ids), ]
+        )
+
+        new_applicant_count = dict(self.env.cr.fetchall())
         for job in self:
-            job.new_application_count = self.env["hr.applicant"].search_count(
-                [("job_id", "=", job.id), ("stage_id", "=", job._get_first_stage().id)]
-            )
+            job.new_application_count = new_applicant_count.get(job.id, 0)
 
     def _alias_get_creation_values(self):
         values = super(Job, self)._alias_get_creation_values()
