@@ -2,7 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.tools import html_escape
+from odoo.tools import email_normalize, html_escape, html2plaintext, plaintext2html
+
+from markupsafe import Markup
 
 
 class MailChannel(models.Model):
@@ -19,6 +21,8 @@ class MailChannel(models.Model):
     livechat_active = fields.Boolean('Is livechat ongoing?', help='Livechat session is active until visitor leave the conversation.')
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel')
     livechat_operator_id = fields.Many2one('res.partner', string='Operator', help="""Operator for this specific channel""")
+    chatbot_current_step_id = fields.Many2one('chatbot.script.step', string='Chatbot Current Step')
+    chatbot_message_ids = fields.One2many('chatbot.message', 'mail_channel_id', string='Chatbot Messages')
     country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")
 
     _sql_constraints = [('livechat_operator_id', "CHECK((channel_type = 'livechat' and livechat_operator_id is not null) or (channel_type != 'livechat'))",
@@ -173,3 +177,92 @@ class MailChannel(models.Model):
             'body_html': mail_body,
         })
         mail.send()
+
+    def _get_channel_history(self):
+        """
+        Converting message body back to plaintext for correct data formatting in HTML field.
+        """
+        return Markup('').join(
+            Markup('%s: %s<br/>') % (message.author_id.name or self.anonymous_name, html2plaintext(message.body))
+            for message in self.message_ids.sorted('id')
+        )
+
+    # =======================
+    # Chatbot
+    # =======================
+
+    def _chatbot_find_customer_values_in_messages(self, step_type_to_field):
+        """
+        Look for user's input in the channel's messages based on a dictionary
+        mapping the step_type to the field name of the model it will be used on.
+
+        :param dict step_type_to_field: a dict of step types to customer fields
+            to fill, like : {'question_email': 'email_from', 'question_phone': 'mobile'}
+        """
+        values = {}
+        filtered_message_ids = self.chatbot_message_ids.filtered(
+            lambda m: m.script_step_id.step_type in step_type_to_field.keys()
+        )
+        for message_id in filtered_message_ids:
+            field_name = step_type_to_field[message_id.script_step_id.step_type]
+            if not values.get(field_name):
+                values[field_name] = html2plaintext(message_id.user_raw_answer or '')
+
+        return values
+
+    def _chatbot_post_message(self, chatbot_script, body):
+        """ Small helper to post a message as the chatbot operator
+
+        :param record chatbot_script
+        :param string body: message HTML body """
+
+        return self.with_context(mail_create_nosubscribe=True).message_post(
+            author_id=chatbot_script.operator_partner_id.id,
+            body=body,
+            message_type='comment',
+            subtype_xmlid='mail.mt_comment',
+        )
+
+    def _chatbot_validate_email(self, email_address, chatbot_script):
+        email_address = html2plaintext(email_address)
+        email_normalized = email_normalize(email_address)
+
+        posted_message = False
+        error_message = False
+        if not email_normalized:
+            error_message = _(
+                "'%(input_email)s' does not look like a valid email. Can you please try again?",
+                input_email=email_address
+            )
+            posted_message = self._chatbot_post_message(chatbot_script, plaintext2html(error_message))
+
+        return {
+            'success': bool(email_normalized),
+            'posted_message': posted_message,
+            'error_message': error_message,
+        }
+
+    def _message_post_after_hook(self, message, msg_vals):
+        """
+        This method is called just before _notify_thread() method which is calling the _message_format()
+        method. We need a 'chatbot.message' record before it happens to correctly display the message.
+        It's created only if the mail channel is linked to a chatbot step.
+        """
+        if self.chatbot_current_step_id:
+            self.env['chatbot.message'].sudo().create({
+                'mail_message_id': message.id,
+                'mail_channel_id': self.id,
+                'script_step_id': self.chatbot_current_step_id.id,
+            })
+        return super(MailChannel, self)._message_post_after_hook(message, msg_vals)
+
+    def _chatbot_restart(self, chatbot_script):
+        self.write({
+            'chatbot_current_step_id': False
+        })
+
+        self.chatbot_message_ids.unlink()
+
+        return self._chatbot_post_message(
+            chatbot_script,
+            '<div class="o_mail_notification">%s</div>' % _('Restarting conversation...'))

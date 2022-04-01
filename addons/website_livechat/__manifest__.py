@@ -11,14 +11,19 @@ Allow website visitors to chat with the collaborators. This module also brings a
     'installable': True,
     'application': False,
     'auto_install': True,
+    'post_init_hook': '_post_init_website_livechat',
     'data': [
         'views/website_livechat.xml',
         'views/res_config_settings_views.xml',
+        'views/im_livechat_chatbot_script_view.xml',
         'views/website_livechat_view.xml',
         'views/website_visitor_views.xml',
         'security/ir.model.access.csv',
         'security/website_livechat.xml',
         'data/website_livechat_data.xml',
+    ],
+    'demo': [
+        'data/website_livechat_chatbot_demo.xml',
     ],
     'assets': {
         'mail.assets_discuss_public': [
@@ -30,8 +35,12 @@ Allow website visitors to chat with the collaborators. This module also brings a
             'im_livechat/static/src/legacy/public_livechat.js',
             'im_livechat/static/src/legacy/models/*',
             'im_livechat/static/src/legacy/widgets/*',
+            'im_livechat/static/src/legacy/public_livechat_chatbot.js',
+            'im_livechat/static/src/legacy/website_livechat_message_chatbot.js',
             'website_livechat/static/src/legacy/public_livechat.js',
+            'website_livechat/static/src/legacy/website_livechat_chatbot_test_script.js',
             'im_livechat/static/src/legacy/public_livechat.scss',
+            'im_livechat/static/src/legacy/public_livechat_chatbot.scss',
             'website_livechat/static/src/legacy/public_livechat.scss',
         ],
         'website.assets_editor': [
