@@ -1812,7 +1812,7 @@ class BaseModel(metaclass=MetaModel):
         :returns: at most ``limit`` records matching the search criteria
         :raise AccessError: * if user tries to bypass access rules for read on the requested object.
         """
-        return 1 if count else self.browse([1])
+        return 1 if count else self.__class__(self.env, (1,), (1,))
 
     #
     # display_name, name_get, name_create, name_search
