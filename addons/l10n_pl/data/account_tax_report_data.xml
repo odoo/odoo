@@ -166,14 +166,14 @@
     <record id="account_tax_report_line_do_przeniesienia" model="account.tax.report.line">
         <field name="name">Podatek - Do przeniesienia</field>
         <field name="sequence" eval="3"/>
-        <field name="formula">PLTAXC_04_16 + PLTAXC_05_18 + PLTAXC_06_20 + PLTAXC_09_24 + PLTAXC_10_26 + PLTAXC_11_28 + PLTAXC_12_32 + PLTAXD_02_42</field>
+        <field name="formula">PLTAXC_04_16 + PLTAXC_05_18 + PLTAXC_06_20 + PLTAXC_09_24 + PLTAXC_10_26 + PLTAXC_11_28 + PLTAXC_12_32 - PLTAXD_02_42</field>
         <field name="country_id" ref="base.pl"/>
     </record>
 
     <record id="account_tax_report_line_nad_naleznym" model="account.tax.report.line">
         <field name="name">Podatek - Nadwyżka naliczonego nad należnym</field>
         <field name="sequence" eval="1"/>
-        <field name="formula">PLTAXC_04_16 + PLTAXC_05_18 + PLTAXC_06_20 + PLTAXC_09_24 + PLTAXC_10_26 + PLTAXC_11_28 + PLTAXC_12_32 + PLTAXD_02_42</field>
+        <field name="formula">PLTAXC_04_16 + PLTAXC_05_18 + PLTAXC_06_20 + PLTAXC_09_24 + PLTAXC_10_26 + PLTAXC_11_28 + PLTAXC_12_32 - PLTAXD_02_42</field>
         <field name="parent_id" ref="account_tax_report_line_do_przeniesienia"/>
         <field name="country_id" ref="base.pl"/>
     </record>
@@ -181,7 +181,7 @@
     <record id="account_tax_report_line_do_US" model="account.tax.report.line">
         <field name="name">Podatek - Do wpłaty do US</field>
         <field name="sequence" eval="1"/>
-        <field name="formula">PLTAXC_04_16 + PLTAXC_05_18 + PLTAXC_06_20 + PLTAXC_09_24 + PLTAXC_10_26 + PLTAXC_11_28 + PLTAXC_12_32 + PLTAXD_02_42</field>
+        <field name="formula">PLTAXC_04_16 + PLTAXC_05_18 + PLTAXC_06_20 + PLTAXC_09_24 + PLTAXC_10_26 + PLTAXC_11_28 + PLTAXC_12_32 - PLTAXD_02_42</field>
         <field name="parent_id" ref="account_tax_report_line_nad_naleznym"/>
         <field name="country_id" ref="base.pl"/>
     </record>
