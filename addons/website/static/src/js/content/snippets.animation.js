@@ -5,6 +5,7 @@ odoo.define('website.content.snippets.animation', function (require) {
  * Provides a way to start JS code for snippets' initialization and animations.
  */
 
+const ajax = require('web.ajax');
 var Class = require('web.Class');
 var config = require('web.config');
 var core = require('web.core');
@@ -596,7 +597,55 @@ registry.Parallax = Animation.extend({
     },
 });
 
-registry.mediaVideo = publicWidget.Widget.extend({
+const MobileYoutubeAutoplayMixin = {
+    /**
+     * Takes care of any necessary setup for autoplaying video. In practice,
+     * this method will load the youtube iframe API for mobile environments
+     * because mobile environments don't support the youtube autoplay param
+     * passed in the url.
+     *
+     * @private
+     * @param {string} src - The source url of the video
+     */
+    _setupAutoplay: function (src) {
+        let promise = Promise.resolve();
+
+        this.isYoutubeVideo = src.indexOf('youtube') >= 0;
+        this.isMobileEnv = config.device.size_class <= config.device.SIZES.LG && config.device.touch;
+
+        if (this.isYoutubeVideo && this.isMobileEnv && !window.YT) {
+            const oldOnYoutubeIframeAPIReady = window.onYouTubeIframeAPIReady;
+            promise = new Promise(resolve => {
+                window.onYouTubeIframeAPIReady = () => {
+                    if (oldOnYoutubeIframeAPIReady) {
+                        oldOnYoutubeIframeAPIReady();
+                    }
+                    return resolve();
+                };
+            });
+            ajax.loadJS('https://www.youtube.com/iframe_api');
+        }
+
+        return promise;
+    },
+    /**
+     * @private
+     * @param {DOMElement} iframeEl - the iframe containing the video player
+     */
+    _triggerAutoplay: function (iframeEl) {
+        // YouTube does not allow to auto-play video in mobile devices, so we
+        // have to play the video manually.
+        if (this.isMobileEnv && this.isYoutubeVideo) {
+            new window.YT.Player(iframeEl, {
+                events: {
+                    onReady: ev => ev.target.playVideo(),
+                }
+            });
+        }
+    },
+};
+
+registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
     selector: '.media_iframe_video',
 
     /**
@@ -606,15 +655,36 @@ registry.mediaVideo = publicWidget.Widget.extend({
         // TODO: this code should be refactored to make more sense and be better
         // integrated with Odoo (this refactoring should be done in master).
 
-        var def = this._super.apply(this, arguments);
-        if (this.$target.children('iframe').length) {
-            // There already is an <iframe/>, do nothing. This is the normal
-            // case. The whole code that follows is only there to ensure
-            // compatibility with videos added before bug fixes or new Odoo
-            // versions where the <iframe/> element is properly saved.
-            return def;
+        const proms = [this._super.apply(this, arguments)];
+        let iframeEl = this.$target[0].querySelector(':scope > iframe');
+
+        // The following code is only there to ensure compatibility with
+        // videos added before bug fixes or new Odoo versions where the
+        // <iframe/> element is properly saved.
+        if (!iframeEl) {
+            iframeEl = this._generateIframe();
         }
 
+        if (!iframeEl) {
+            // Something went wrong: no iframe is present in the DOM and the
+            // widget was unable to create one on the fly.
+            return Promise.all(proms);
+        }
+
+        proms.push(this._setupAutoplay(iframeEl.getAttribute('src')));
+        return Promise.all(proms).then(() => {
+            this._triggerAutoplay(iframeEl);
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _generateIframe: function () {
         // Bug fix / compatibility: empty the <div/> element as all information
         // to rebuild the iframe should have been saved on the <div/> element
         this.$target.empty();
@@ -634,25 +704,23 @@ registry.mediaVideo = publicWidget.Widget.extend({
         var m = src.match(/^(?:https?:)?\/\/([^/?#]+)/);
         if (!m) {
             // Unsupported protocol or wrong URL format, don't inject iframe
-            return def;
+            return;
         }
         var domain = m[1].replace(/^www\./, '');
         var supportedDomains = ['youtu.be', 'youtube.com', 'youtube-nocookie.com', 'instagram.com', 'vine.co', 'player.vimeo.com', 'vimeo.com', 'dailymotion.com', 'player.youku.com', 'youku.com'];
         if (!_.contains(supportedDomains, domain)) {
             // Unsupported domain, don't inject iframe
-            return def;
+            return;
         }
-        this.$target.append($('<iframe/>', {
+        return this.$target.append($('<iframe/>', {
             src: src,
             frameborder: '0',
             allowfullscreen: 'allowfullscreen',
-        }));
-
-        return def;
+        }))[0];
     },
 });
 
-registry.backgroundVideo = publicWidget.Widget.extend({
+registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
     selector: '.o_background_video',
     xmlDependencies: ['/website/static/src/xml/website.background.video.xml'],
     disabledInEditableMode: false,
@@ -665,26 +733,13 @@ registry.backgroundVideo = publicWidget.Widget.extend({
 
         this.videoSrc = this.el.dataset.bgVideoSrc;
         this.iframeID = _.uniqueId('o_bg_video_iframe_');
-
-        this.isYoutubeVideo = this.videoSrc.indexOf('youtube') >= 0;
-        this.isMobileEnv = config.device.size_class <= config.device.SIZES.LG && config.device.touch;
-        if (this.isYoutubeVideo && this.isMobileEnv) {
-            this.videoSrc = this.videoSrc + "&enablejsapi=1";
-
-            if (!window.YT) {
-                var oldOnYoutubeIframeAPIReady = window.onYouTubeIframeAPIReady;
-                proms.push(new Promise(resolve => {
-                    window.onYouTubeIframeAPIReady = () => {
-                        if (oldOnYoutubeIframeAPIReady) {
-                            oldOnYoutubeIframeAPIReady();
-                        }
-                        return resolve();
-                    };
-                }));
-                $('<script/>', {
-                    src: 'https://www.youtube.com/iframe_api',
-                }).appendTo('head');
-            }
+        proms.push(this._setupAutoplay(this.videoSrc));
+        if (this.isYoutubeVideo && this.isMobileEnv && !this.videoSrc.includes('enablejsapi=1')) {
+            // Compatibility: when choosing an autoplay youtube video via the
+            // media manager, the API was not automatically enabled before but
+            // only enabled here in the case of background videos.
+            // TODO migrate those old cases so this code can be removed?
+            this.videoSrc += '&enablejsapi=1';
         }
 
         var throttledUpdate = _.throttle(() => this._adjustIframe(), 50);
@@ -785,16 +840,7 @@ registry.backgroundVideo = publicWidget.Widget.extend({
         $oldContainer.remove();
 
         this._adjustIframe();
-
-        // YouTube does not allow to auto-play video in mobile devices, so we
-        // have to play the video manually.
-        if (this.isMobileEnv && this.isYoutubeVideo) {
-            new window.YT.Player(this.iframeID, {
-                events: {
-                    onReady: ev => ev.target.playVideo(),
-                }
-            });
-        }
+        this._triggerAutoplay(this.$iframe[0]);
     },
 });
 
