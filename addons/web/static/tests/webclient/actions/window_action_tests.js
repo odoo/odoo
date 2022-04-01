@@ -14,6 +14,7 @@ import {
     click,
     getFixture,
     editInput,
+    getNodesTextContent,
     legacyExtraNextTick,
     makeDeferred,
     nextTick,
@@ -1157,20 +1158,19 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("can open a many2one external window", async function (assert) {
-        assert.expect(9);
+    QUnit.test("can open a many2one external window", async function (assert) {
         serverData.models.partner.records[0].bar = 2;
         serverData.views["partner,false,search"] = `
-      <search>
-        <group>
-          <filter name="foo" string="foo" context="{'group_by': 'foo'}"/>
-        </group>
-      </search>`;
+            <search>
+                <group>
+                    <filter name="foo" string="foo" context="{'group_by': 'foo'}"/>
+                </group>
+            </search>`;
         serverData.views["partner,false,form"] = `
-      <form>
-        <field name="foo"/>
-        <field name="bar"/>
-      </form>`;
+            <form>
+                <field name="foo"/>
+                <field name="bar"/>
+            </form>`;
         const mockRPC = async (route, args) => {
             assert.step(route);
             if (args && args.method === "get_formview_id") {
@@ -1180,22 +1180,19 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         // open first record in form view
-        await testUtils.dom.click($(target).find(".o_data_row:first"));
-        await legacyExtraNextTick();
+        await testUtils.dom.click(target.querySelector(".o_data_row .o_data_cell"));
         // click on edit
-        await testUtils.dom.click($(target).find(".o_control_panel .o_form_button_edit"));
-        await legacyExtraNextTick();
+        await testUtils.dom.click(target.querySelector(".o_control_panel .o_form_button_edit"));
         // click on external button for m2o
-        await testUtils.dom.click($(target).find(".o_external_button"));
-        await legacyExtraNextTick();
+        await testUtils.dom.click(target.querySelector(".o_external_button"));
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
             "/web/dataset/call_kw/partner/get_views",
-            "web_search_read",
+            "/web/dataset/call_kw/partner/web_search_read",
             "/web/dataset/call_kw/partner/read",
             "/web/dataset/call_kw/partner/get_formview_id",
-            "/web/dataset/call_kw/partner",
+            "/web/dataset/call_kw/partner/get_views",
             "/web/dataset/call_kw/partner/read",
         ]);
     });
@@ -1496,10 +1493,9 @@ QUnit.module("ActionManager", (hooks) => {
         await cpHelpers.saveFavorite(target);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "list with default_order and favorite filter with no orderedBy",
         async function (assert) {
-            assert.expect(5);
             serverData.views["partner,1,list"] =
                 '<tree default_order="foo desc"><field name="foo"/></tree>';
             serverData.actions[100] = {
@@ -1525,38 +1521,37 @@ QUnit.module("ActionManager", (hooks) => {
             const webClient = await createWebClient({ serverData });
             await doAction(webClient, 100);
             assert.strictEqual(
-                $(target).find(".o_list_view tr.o_data_row .o_data_cell").text(),
+                getNodesTextContent(target.querySelectorAll(".o_data_row .o_data_cell")),
                 "zoupyopplopgnapblip",
                 "record should be in descending order as default_order applies"
             );
+
             await cpHelpers.toggleFavoriteMenu(target);
             await cpHelpers.toggleMenuItem(target, "favorite filter");
-            await legacyExtraNextTick();
             assert.strictEqual(
-                $(target).find(".o_control_panel .o_facet_values").text().trim(),
+                target.querySelector(".o_control_panel .o_facet_values").innerText.trim(),
                 "favorite filter",
                 "favorite filter should be applied"
             );
             assert.strictEqual(
-                $(target).find(".o_list_view tr.o_data_row .o_data_cell").text(),
+                getNodesTextContent(target.querySelectorAll(".o_data_row .o_data_cell")),
                 "gnapblip",
                 "record should still be in descending order after default_order applied"
             );
+
             // go to formview and come back to listview
-            await click(target.querySelector(".o_list_view .o_data_row"));
-            await legacyExtraNextTick();
-            await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb a:eq(0)"));
-            await legacyExtraNextTick();
+            await click(target.querySelector(".o_list_view .o_data_row .o_data_cell"));
+            await testUtils.dom.click(target.querySelector(".o_control_panel .breadcrumb a"));
             assert.strictEqual(
-                $(target).find(".o_list_view tr.o_data_row .o_data_cell").text(),
+                getNodesTextContent(target.querySelectorAll(".o_data_row .o_data_cell")),
                 "gnapblip",
                 "order of records should not be changed, while coming back through breadcrumb"
             );
+
             // remove filter
             await cpHelpers.removeFacet(target, 0);
-            await legacyExtraNextTick();
             assert.strictEqual(
-                $(target).find(".o_list_view tr.o_data_row .o_data_cell").text(),
+                getNodesTextContent(target.querySelectorAll(".o_data_row .o_data_cell")),
                 "zoupyopplopgnapblip",
                 "order of records should not be changed, after removing current filter"
             );
@@ -1650,11 +1645,11 @@ QUnit.module("ActionManager", (hooks) => {
         assert.expect(18);
         serverData.models.partner.fields.bar.default = 1;
         serverData.views["partner,false,form"] = `
-      <form>
-        <field name="display_name"/>
-        <field name="foo"/>
-        <field name="bar" readonly="1"/>
-      </form>`;
+            <form>
+                <field name="display_name"/>
+                <field name="foo"/>
+                <field name="bar" readonly="1"/>
+            </form>`;
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
             if (args && args.method === "get_formview_action") {
@@ -1667,33 +1662,34 @@ QUnit.module("ActionManager", (hooks) => {
             }
         };
         const webClient = await createWebClient({ serverData, mockRPC });
+
         // execute an action and create a new record
         await doAction(webClient, 3);
         await click(target.querySelector(".o_list_button_add"));
-        await legacyExtraNextTick();
-        assert.containsOnce(target, ".o_form_view.o_form_editable");
+        assert.containsOnce(target, ".o_form_view .o_form_editable");
         assert.containsOnce(target, ".o_form_uri:contains(First record)");
         assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item").text(),
+            getNodesTextContent(target.querySelectorAll(".o_control_panel .breadcrumb-item")),
             "PartnersNew"
         );
+
         // set form view dirty and open m2o record
-        await testUtils.fields.editInput($(target).find('input[name="display_name"]'), "test");
-        await testUtils.fields.editInput($(target).find("input[name=foo]"), "val");
-        await testUtils.dom.click($(target).find(".o_form_uri:contains(First record)"));
-        await legacyExtraNextTick();
-        assert.containsOnce(target, ".o_form_view.o_form_readonly");
+        await editInput(target, '.o_field_widget[name="display_name"] input', "test");
+        await editInput(target, ".o_field_widget[name=foo] input", "val");
+        await click(target.querySelector(".o_form_uri"));
+        assert.containsOnce(target, ".o_form_view .o_form_readonly");
         assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item").text(),
+            getNodesTextContent(target.querySelectorAll(".o_control_panel .breadcrumb-item")),
             "PartnerstestFirst record"
         );
         // go back to test using the breadcrumbs
-        await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb-item:nth(1) a"));
-        await legacyExtraNextTick();
+        await testUtils.dom.click(
+            target.querySelectorAll(".o_control_panel .breadcrumb-item a")[1]
+        );
         // should be readonly and so saved
-        assert.containsOnce(target, ".o_form_view.o_form_readonly");
+        assert.containsOnce(target, ".o_form_view .o_form_readonly");
         assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item").text(),
+            getNodesTextContent(target.querySelectorAll(".o_control_panel .breadcrumb-item")),
             "Partnerstest"
         );
         assert.verifySteps([
@@ -1710,7 +1706,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.skipWOWL("execute a contextual action from a form view", async function (assert) {
+    QUnit.test("execute a contextual action from a form view", async function (assert) {
         assert.expect(4);
         const contextualAction = serverData.actions[8];
         contextualAction.context = "{}"; // need a context to evaluate
@@ -1731,13 +1727,11 @@ QUnit.module("ActionManager", (hooks) => {
         // execute an action and open a record
         await doAction(webClient, 3);
         assert.containsOnce(target, ".o_list_view");
-        await testUtils.dom.click($(target).find(".o_data_row:first"));
-        await legacyExtraNextTick();
+        await click(target.querySelector(".o_data_row .o_data_cell"));
         assert.containsOnce(target, ".o_form_view");
         // execute the custom action from the action menu
-        await testUtils.controlPanel.toggleActionMenu(target);
-        await testUtils.controlPanel.toggleMenuItem(target, "Favorite Ponies");
-        await legacyExtraNextTick();
+        await cpHelpers.toggleActionMenu(target);
+        await cpHelpers.toggleMenuItem(target, "Favorite Ponies");
         assert.containsOnce(target, ".o_list_view");
     });
 
@@ -1977,15 +1971,10 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "executing a window action with onchange warning does not hide it",
         async function (assert) {
-            assert.expect(2);
-
-            serverData.views["partner,false,form"] = `
-            <form>
-              <field name="foo"/>
-            </form>`;
+            serverData.views["partner,false,form"] = `<form><field name="foo"/></form>`;
             const mockRPC = (route, args) => {
                 if (args.method === "onchange") {
                     return Promise.resolve({
@@ -2002,16 +1991,14 @@ QUnit.module("ActionManager", (hooks) => {
 
             await doAction(webClient, 3);
 
-            await testUtils.dom.click(target.querySelector(".o_list_button_add"));
+            await click(target.querySelector(".o_list_button_add"));
             assert.containsOnce(
                 document.body,
                 ".modal.o_technical_modal",
                 "Warning modal should be opened"
             );
 
-            await testUtils.dom.click(
-                document.querySelector(".modal.o_technical_modal button.close")
-            );
+            await click(document.querySelector(".modal.o_technical_modal button.close"));
             assert.containsNone(
                 document.body,
                 ".modal.o_technical_modal",
