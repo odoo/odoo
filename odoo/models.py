@@ -3575,31 +3575,6 @@ class BaseModel(metaclass=MetaModel):
             raise ValueError("Expected singleton or no record: %s" % self)
         return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
-    def _check_concurrency(self):
-        if not (self._log_access and self._context.get(self.CONCURRENCY_CHECK_FIELD)):
-            return
-        check_clause = "(id = %s AND %s < COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp)"
-        for sub_ids in self._cr.split_for_in_conditions(self.ids):
-            nclauses = 0
-            params = []
-            for id in sub_ids:
-                id_ref = "%s,%s" % (self._name, id)
-                update_date = self._context[self.CONCURRENCY_CHECK_FIELD].pop(id_ref, None)
-                if update_date:
-                    nclauses += 1
-                    params.extend([id, update_date])
-            if not nclauses:
-                continue
-            query = "SELECT id FROM %s WHERE %s" % (self._table, " OR ".join([check_clause] * nclauses))
-            self._cr.execute(query, tuple(params))
-            res = self._cr.fetchone()
-            if res:
-                # mention the first one only to keep the error message readable
-                raise ValidationError(_(
-                    "A document was modified since you last viewed it (%s:%d)",
-                    self._description, res[0],
-                ))
-
     def _check_company(self, fnames=None):
         """ Check the companies of the values of the given field names.
 
@@ -3771,7 +3746,6 @@ class BaseModel(metaclass=MetaModel):
 
         self.check_access_rights('unlink')
         self.check_access_rule('unlink')
-        self._check_concurrency()
 
         from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
         for func in self._ondelete_methods:
@@ -4057,7 +4031,6 @@ class BaseModel(metaclass=MetaModel):
         if not self:
             return
 
-        self._check_concurrency()
         cr = self._cr
 
         # determine records that require updating parent_path
