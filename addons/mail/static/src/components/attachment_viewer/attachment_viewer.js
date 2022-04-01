@@ -93,15 +93,6 @@ export class AttachmentViewer extends Component {
     }
 
     /**
-     * Download the attachment.
-     *
-     * @private
-     */
-    _download() {
-        this.attachmentViewer.attachment.download();
-    }
-
-    /**
      * Determine whether the current image is rendered for the 1st time, and if
      * that's the case, display a spinner until loaded.
      *
@@ -317,7 +308,7 @@ export class AttachmentViewer extends Component {
      */
     _onClickDownload(ev) {
         ev.stopPropagation();
-        this._download();
+        this.attachmentViewer.attachment.download();
     }
 
     /**
