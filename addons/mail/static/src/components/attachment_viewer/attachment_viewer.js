@@ -349,17 +349,6 @@ export class AttachmentViewer extends Component {
     }
 
     /**
-     * Called when clicking on next icon.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickNext(ev) {
-        ev.stopPropagation();
-        this.attachmentViewer.next();
-    }
-
-    /**
      * Called when clicking on previous icon.
      *
      * @private

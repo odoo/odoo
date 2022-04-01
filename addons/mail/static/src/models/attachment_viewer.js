@@ -26,6 +26,15 @@ registerModel({
             this.dialogOwner.attachmentListOwnerAsAttachmentView.selectNextAttachment();
         },
         /**
+         * Called when clicking on next icon.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickNext(ev) {
+            ev.stopPropagation();
+            this.next();
+        },
+        /**
          * @private
          * @returns {string}
          */
