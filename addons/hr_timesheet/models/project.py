@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
-
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 
@@ -40,7 +38,7 @@ class Project(models.Model):
     timesheet_ids = fields.One2many('account.analytic.line', 'project_id', 'Associated Timesheets')
     timesheet_count = fields.Integer(compute="_compute_timesheet_count")
     timesheet_encode_uom_id = fields.Many2one('uom.uom', related='company_id.timesheet_encode_uom_id')
-    total_timesheet_time = fields.Integer(
+    total_timesheet_time = fields.Float(
         compute='_compute_total_timesheet_time',
         help="Total number of time (in the proper UoM) recorded in the project, rounded to the unit.")
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days')
@@ -128,32 +126,14 @@ class Project(models.Model):
 
     @api.depends('timesheet_ids')
     def _compute_total_timesheet_time(self):
-        timesheets_read_group = self.env['account.analytic.line'].read_group(
+        timesheet_read_group = self.env['account.analytic.line']._read_group(
             [('project_id', 'in', self.ids)],
-            ['project_id', 'unit_amount', 'product_uom_id'],
-            ['project_id', 'product_uom_id'],
-            lazy=False)
-        timesheet_time_dict = defaultdict(list)
-        uom_ids = set(self.timesheet_encode_uom_id.ids)
-
-        for result in timesheets_read_group:
-            uom_id = result['product_uom_id'] and result['product_uom_id'][0]
-            if uom_id:
-                uom_ids.add(uom_id)
-            timesheet_time_dict[result['project_id'][0]].append((uom_id, result['unit_amount']))
-
-        uoms_dict = {uom.id: uom for uom in self.env['uom.uom'].browse(uom_ids)}
-        for project in self:
-            # Timesheets may be stored in a different unit of measure, so first
-            # we convert all of them to the reference unit
-            # if the timesheet has no product_uom_id then we take the one of the project
-            total_time = sum([
-                unit_amount * uoms_dict.get(product_uom_id, project.timesheet_encode_uom_id).factor_inv
-                for product_uom_id, unit_amount in timesheet_time_dict[project.id]
-            ], 0.0)
-            # Now convert to the proper unit of measure set in the settings
-            total_time *= project.timesheet_encode_uom_id.factor
-            project.total_timesheet_time = int(round(total_time))
+            ['unit_amount', 'project_id'],
+            ['project_id']
+        )
+        timesheets_per_task = {res['project_id'][0]: res['unit_amount'] for res in timesheet_read_group}
+        for task in self:
+            task.total_timesheet_time = timesheets_per_task.get(task.id, 0.0)
 
     @api.depends('timesheet_ids')
     def _compute_timesheet_count(self):
