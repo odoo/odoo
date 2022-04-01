@@ -9,10 +9,12 @@ import {
     makeDeferred,
     nextTick,
     patchWithCleanup,
+    selectDropdownItem,
     triggerEvent,
     triggerEvents,
     triggerScroll,
 } from "../helpers/utils";
+import { applyFilter, toggleAddCustomFilter, toggleFilterMenu } from "../search/helpers";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -681,7 +683,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("many2ones in form views with search more", async function (assert) {
+    QUnit.test("many2ones in form views with search more", async function (assert) {
         assert.expect(3);
 
         for (let i = 5; i < 11; i++) {
@@ -724,21 +726,20 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target, ".o_form_button_edit");
 
-        await testUtils.fields.many2one.clickOpenDropdown("trululu");
-        await testUtils.fields.many2one.clickItem("trululu", "Search");
+        await selectDropdownItem(target, "trululu", "Search More...");
 
         assert.strictEqual($("tr.o_data_row").length, 9, "should display 9 records");
 
         const modal = document.body.querySelector(".modal");
 
-        await cpHelpers.toggleFilterMenu(modal);
-        await cpHelpers.toggleAddCustomFilter(modal);
+        await toggleFilterMenu(modal);
+        await toggleAddCustomFilter(modal);
         assert.strictEqual(
             modal.querySelector(".o_generator_menu_field").value,
             "datetime",
             "datetime field should be selected"
         );
-        await cpHelpers.applyFilter(modal);
+        await applyFilter(modal);
 
         assert.strictEqual($("tr.o_data_row").length, 0, "should display 0 records");
     });
