@@ -65,12 +65,21 @@ registerModel({
          * Called when clicking on image. Stop propagation of event to prevent
          * closing the dialog.
          *
-         * @param {MouseEvent} ev
+         * @param {MouseEvent} ev 
          */
         onClickImage(ev) {
             if (this.isDragging) {
                 return;
             }
+            ev.stopPropagation();
+        },
+        /**
+         * Called when clicking on embed video player. Stop propagation to prevent
+         * closing the dialog.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickVideo(ev) {
             ev.stopPropagation();
         },
         /**
