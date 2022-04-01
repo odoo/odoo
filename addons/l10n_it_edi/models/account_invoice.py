@@ -157,13 +157,6 @@ class AccountMove(models.Model):
         pdf = base64.b64encode(pdf).decode()
         pdf_name = re.sub(r'\W+', '', self.name) + '.pdf'
 
-        # tax map for 0% taxes which have no tax_line_id
-        tax_map = dict()
-        for line in self.line_ids:
-            for tax in line.tax_ids:
-                if tax.amount == 0.0:
-                    tax_map[tax] = tax_map.get(tax, 0.0) + line.price_subtotal
-
         # Constraints within the edi make local rounding on price included taxes a problem.
         # To solve this there is a <Arrotondamento> or 'rounding' field, such that:
         #   taxable base = sum(taxable base for each unit) + Arrotondamento
@@ -195,7 +188,6 @@ class AccountMove(models.Model):
             'document_type': document_type,
             'pdf': pdf,
             'pdf_name': pdf_name,
-            'tax_map': tax_map,
             'tax_details': tax_details,
         }
         return template_values
