@@ -3,6 +3,7 @@ odoo.define('website_livechat.tour_common', function(require) {
 
 var session = require('web.session');
 var LivechatButton = require('im_livechat.legacy.im_livechat.im_livechat').LivechatButton;
+var utils = require('web.utils');
 
 /**
  * Alter this method for test purposes.
@@ -31,10 +32,10 @@ LivechatButton.include({
                             payload: {
                                 id: self._livechat._id,
                                 message: {
-                                    id: -1,
+                                    id: self._messages.length + 1,
                                     author_id: [0, 'Website Visitor Test'],
                                     email_from: 'Website Visitor Test',
-                                    body: '<p>' + message.content + '</p>',
+                                    body: utils.Markup('<p>' + message.content + '</p>'),
                                     is_discussion: true,
                                     subtype_id: [1, "Discussions"],
                                     date: moment().format('YYYY-MM-DD HH:mm:ss'),

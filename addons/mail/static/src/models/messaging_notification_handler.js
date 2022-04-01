@@ -183,8 +183,9 @@ registerModel({
          * @param {Object} payload
          * @param {Thread} payload.channel
          * @param {integer} [payload.invited_by_user_id]
+         * @param {boolean} [payload.open_chat_window] if true, will pin the channel
          */
-        _handleNotificationChannelJoined({ channel: channelData, invited_by_user_id: invitedByUserId }) {
+        _handleNotificationChannelJoined({ channel: channelData, invited_by_user_id: invitedByUserId, open_chat_window: openChatWindow }) {
             const channel = this.messaging.models['Thread'].insert(this.messaging.models['Thread'].convertData(channelData));
             if (this.messaging.currentUser && invitedByUserId !== this.messaging.currentUser.id) {
                 // Current user was invited by someone else.
@@ -195,6 +196,13 @@ registerModel({
                     ),
                     type: 'info',
                 });
+            }
+
+            if (openChatWindow) {
+                // open chat upon being invited (if it was not already opened or folded)
+                if (channel.channel_type !== 'channel' && !this.messaging.device.isMobile && !channel.chatWindow) {
+                    this.messaging.chatWindowManager.openThread(channel);
+                }
             }
         },
         /**
