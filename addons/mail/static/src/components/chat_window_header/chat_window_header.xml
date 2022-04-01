@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.ChatWindowHeader" owl="1">
+    <t t-name="mail.ChatWindowHeader" owl="2">
         <t t-if="chatWindow">
             <div class="o_ChatWindowHeader" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-attf-class="{{ className }}" t-on-click="_onClick" t-ref="root">
                 <t t-if="props.hasCloseAsBackButton">

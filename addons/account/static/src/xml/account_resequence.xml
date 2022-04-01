@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
 
-    <div t-name="account.ResequenceRenderer" owl="1" class="d-block">
+    <div t-name="account.ResequenceRenderer" owl="2" class="d-block">
         <table t-if="data.changeLines.length" class="table table-sm">
             <thead><tr>
                 <th>Date</th>
@@ -14,7 +14,7 @@
         </table>
     </div>
 
-    <t t-name="account.ResequenceChangeLine" owl="1">
+    <t t-name="account.ResequenceChangeLine" owl="2">
         <tr>
             <td t-esc="props.changeLine.date"/>
             <td t-esc="props.changeLine.current_name"/>

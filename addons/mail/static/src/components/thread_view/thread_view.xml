@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.ThreadView" owl="1">
+    <t t-name="mail.ThreadView" owl="2">
         <t t-if="threadView">
             <div class="o_ThreadView" t-att-class="threadView.extraClass" t-attf-class="{{ className }}" t-att-data-correspondent-id="threadView.thread and threadView.thread.correspondent and threadView.thread.correspondent.id" t-att-data-thread-local-id="threadView.thread and threadView.thread.localId" t-on-focusin="props.onFocusin" t-ref="root">
                 <t t-if="threadView.topbar">

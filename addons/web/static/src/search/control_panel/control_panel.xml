@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.ControlPanel" owl="1">
+    <t t-name="web.ControlPanel" owl="2">
         <div class="o_control_panel">
             <div t-if="display['top']" class="o_cp_top">
                 <div t-if="display['top-left']" class="o_cp_top_left">
@@ -51,7 +51,7 @@
     <t t-name="web.Breadcrumbs" owl="1">
         <ol class="breadcrumb">
             <t t-foreach="env.config.breadcrumbs" t-as="breadcrumb" t-key="breadcrumb.jsId">
-                <t t-set="isPenultimate" t-value="breadcrumb_index === env.config.breadcrumbs.length - 2"/>
+                <t t-set="isPenuowl="2"" t-value="breadcrumb_index === env.config.breadcrumbs.length - 2"/>
                 <li t-if="!breadcrumb_last"
                     class="breadcrumb-item"
                     t-att-class="{ o_back_button: isPenultimate}"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="web.SwitchCompanyMenu" owl="1">
+<t t-name="web.SwitchCompanyMenu" owl="2">
     <Dropdown class="'o_switch_company_menu d-none d-md-block'" position="'bottom-end'">
         <t t-set-slot="toggler">
             <i class="fa fa-building d-lg-none"/>
@@ -17,7 +17,7 @@
 
 
 <t t-name="web.SwitchCompanyItem" owl="1">
-    <DropdownItem class="'p-0 bg-white'">
+    <DropdownItem class="'p-0 bg-wowl="2"
         <t t-set="isCompanySelected" t-value="selectedCompanies.includes(company.id)"/>
         <t t-set="isCurrent" t-value="company.id === companyService.currentCompany.id"/>
         <div class="d-flex" data-menu="company" t-att-data-company-id="company.id">

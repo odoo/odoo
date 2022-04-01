@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.DiscussContainer" owl="1">
+    <t t-name="mail.DiscussContainer" owl="2">
         <div class="o_DiscussContainer d-flex flex-grow-1 flex-column">
             <Discuss t-if="messaging and messaging.discuss and messaging.discuss.discussView and messaging.isInitialized" className="'flex-grow-1'" localId="messaging.discuss.discussView.localId"/>
             <div t-else="" class="o_DiscussContainer_spinner d-flex flex-grow-1 align-items-center justify-content-center">

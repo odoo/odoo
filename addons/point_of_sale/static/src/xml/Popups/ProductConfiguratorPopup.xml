@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="ProductConfiguratorPopup" owl="1">
+    <t t-name="ProductConfiguratorPopup" owl="2">
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-text popup-med product-configurator-popup">
                 <header class="title">
@@ -29,7 +29,7 @@
         </div>
     </t>
 
-    <t t-name="RadioProductAttribute" owl="1">
+    <t t-name="RadioProductAttribute" owl="2">
         <div class="configurator_radio">
             <div class="table">
                 <t t-foreach="values" t-as="value" t-key="value.id">
@@ -57,7 +57,7 @@
         </div>
     </t>
 
-    <t t-name="SelectProductAttribute" owl="1">
+    <t t-name="SelectProductAttribute" owl="2">
         <div>
             <t t-set="is_custom" t-value="false"/>
 
@@ -75,7 +75,7 @@
         </div>
     </t>
 
-    <t t-name="ColorProductAttribute" owl="1">
+    <t t-name="ColorProductAttribute" owl="2">
         <div>
             <t t-set="is_custom" t-value="false"/>
 

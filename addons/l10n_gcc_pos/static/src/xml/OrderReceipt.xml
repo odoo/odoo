@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+    <t t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="2">
 
         <xpath expr="//div[hasclass('pos-receipt-contact')]" position="after">
             <t t-if="receipt.is_gcc_country">
@@ -95,7 +95,7 @@
         </xpath>
     </t>
 
-    <t t-inherit="point_of_sale.OrderLinesReceipt" t-inherit-mode="extension" owl="1">
+    <t t-inherit="point_of_sale.OrderLinesReceipt" t-inherit-mode="extension" owl="2">
         <xpath expr="//t[@t-if='isSimple(line)']/div/span[hasclass('price_display')]" position="attributes">
             <attribute name="t-if">!receipt.is_gcc_country</attribute>
         </xpath>

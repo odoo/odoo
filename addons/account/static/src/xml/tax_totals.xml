@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
 
-    <t t-name="account.TaxGroupComponent" owl="1">
+    <t t-name="account.TaxGroupComponent" owl="2">
         <tr>
             <td class="o_td_label">
                 <label class="o_form_label o_tax_total_label" t-esc="props.taxGroup.tax_group_name"/>
@@ -38,7 +38,7 @@
         </tr>
     </t>
 
-    <div t-name="account.TaxTotalsField" owl="1">
+    <div t-name="account.TaxTotalsField" owl="2">
         <table t-if="totals.value" class="oe_right">
             <tbody>
                 <t t-foreach="totals.value.subtotals" t-as="subtotal" t-key="subtotal['name']">

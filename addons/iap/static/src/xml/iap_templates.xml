@@ -2,7 +2,7 @@
 <template id="template" xml:space="preserve">
 
     <!-- LAYOUT TEMPLATES -->
-    <div t-name="iap.redirect_to_odoo_credit" t-att-style="style" owl="1">
+    <div t-name="iap.redirect_to_odoo_credit" t-att-style="style" owl="2">
         <t t-if="props.errorData.body">
             <div t-raw="props.errorData.body"/>
         </t>
@@ -16,7 +16,7 @@
         </t>
     </div>
 
-    <div t-name="iap.InsufficientCreditFooter" owl="1">
+    <div t-name="iap.InsufficientCreditFooter" owl="2">
         <button class="btn btn-primary" t-on-click="buyCredits" t-esc="buttonMessage"/>
         <button class="btn" t-on-click="close">Cancel</button>
     </div>

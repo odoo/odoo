@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.ComposerSuggestion" owl="1">
+    <t t-name="mail.ComposerSuggestion" owl="2">
         <t t-if="composerSuggestion">
             <a class="o_ComposerSuggestion dropdown-item" t-att-class="{ 'active bg-300': props.isActive }" t-attf-class="{{ className }}" href="#" t-att-title="title()" role="menuitem" t-on-click="_onClick" t-ref="root">
                 <t t-if="isCannedResponse">

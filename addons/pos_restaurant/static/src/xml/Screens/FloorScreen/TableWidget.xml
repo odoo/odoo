@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="TableWidget" owl="1">
+    <t t-name="TableWidget" owl="2">
         <div t-if="!props.isSelected" class="table" t-on-click.stop="() => this.trigger('select-table', props.table)">
             <span class="table-cover" t-att-class="{ full: fill >= 1 }"></span>
             <span t-att-class="orderCountClass" t-att-hidden="orderCount === 0">

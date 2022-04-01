@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.ActivityMarkDonePopover" owl="1">
+    <t t-name="mail.ActivityMarkDonePopover" owl="2">
         <t t-if="activityMarkDonePopoverView">
             <div class="o_ActivityMarkDonePopover" t-attf-class="{{ className }}" t-on-keydown="activityMarkDonePopoverView.onKeydown" t-ref="root">
                 <textarea class="form-control o_ActivityMarkDonePopover_feedback mb-2" rows="3" placeholder="Write Feedback" t-on-blur="activityMarkDonePopoverView.onBlur" t-ref="feedbackTextarea"/>

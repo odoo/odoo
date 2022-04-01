@@ -17,7 +17,7 @@
 
     <span t-name="project.statusWithColor" t-att-class="'o_status_bubble mr-2 o_color_bubble_' + color"></span>
 
-    <div t-name="project.ControlPanel" t-inherit="web.Legacy.ControlPanel" t-inherit-mode="extension" owl="1">
+    <div t-name="project.ControlPanel" t-inherit="web.Legacy.ControlPanel" t-inherit-mode="extension" owl="2">
         <xpath expr="//ol[hasclass('breadcrumb')]" position="inside">
             <t t-call="project.ProjectControlPanelContent">
                 <t t-set="showProjectUpdate" t-value="show_project_update"/>
@@ -26,7 +26,7 @@
         </xpath>
     </div>
 
-    <t t-name="project.ProjectRightPanel" owl="1">
+    <t t-name="project.ProjectRightPanel" owl="2">
         <div t-if="project_id" class="o_rightpanel">
             <t t-call="project.StatButtonsSection"/>
             <t t-call="project.MilestoneSection"/>
@@ -35,7 +35,7 @@
         <div t-else=""/>
     </t>
 
-    <t t-name="project.StatButtonsSection" owl="1">
+    <t t-name="project.StatButtonsSection" owl="2">
         <div class="o_rightpanel_section">
             <div class="o_form_view">
                 <div class="oe_button_box o_full">
@@ -61,7 +61,7 @@
         </div>
     </t>
 
-    <t t-name="project.MilestoneSection" owl="1">
+    <t t-name="project.MilestoneSection" owl="2">
         <t t-set="milestones" t-value="state.data.milestones"/>
         <div class="o_rightpanel_section" name="milestone">
             <div class="o_rightpanel_header">
@@ -83,7 +83,7 @@
         </div>
     </t>
 
-    <t t-name="project.AddMilestone" owl="1">
+    <t t-name="project.AddMilestone" owl="2">
         <div class="o_add_milestone">
             <a t-on-click="onAddMilestoneClick">Add Milestone</a>
         </div>
@@ -104,7 +104,7 @@
             </div>
             <span class="o_rightpanel_right_col">
                 <a class="o_delete_icon" t-on-click="onDeleteMilestone" title="Delete Milestone"><i class="fa fa-trash"></i></a>
-            </span>
+            </span>owl="2"
         </div>
     </t>
     <t t-name="project.task.PrivateProjectName">

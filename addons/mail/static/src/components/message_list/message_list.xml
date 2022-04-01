@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.MessageList" owl="1">
+    <t t-name="mail.MessageList" owl="2">
         <t t-if="messageListView">
             <div class="o_MessageList" t-att-class="{ 'o-empty': messageListView.threadViewOwner.messages.length === 0 }" t-attf-class="{{ className }}" t-on-scroll="onScroll" t-ref="root">
                 <!-- No result messages -->
@@ -72,7 +72,7 @@
         </t>
     </t>
 
-    <t t-name="mail.MessageList.loadMore" owl="1">
+    <t t-name="mail.MessageList.loadMore" owl="2">
         <t t-if="messageListView.threadViewOwner.threadCache.isLoadingMore">
             <div class="o_MessageList_item o_MessageList_isLoadingMore">
                 <i class="o_MessageList_isLoadingMoreIcon fa fa-spin fa-circle-o-notch"/>

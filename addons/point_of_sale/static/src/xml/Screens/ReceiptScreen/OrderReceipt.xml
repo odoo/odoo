@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="OrderReceipt" owl="1">
+    <t t-name="OrderReceipt" owl="2">
         <div class="pos-receipt">
             <t t-if="receipt.company.logo">
                 <img class="pos-receipt-logo" t-att-src="receipt.company.logo" alt="Logo"/>
@@ -157,7 +157,7 @@
             </div>
         </div>
     </t>
-    <t t-name="OrderLinesReceipt" owl="1">
+    <t t-name="OrderLinesReceipt" owl="2">
         <t t-foreach="receipt.orderlines" t-as="line" t-key="line.id">
             <t t-if="isSimple(line)">
                 <div class="responsive-price">

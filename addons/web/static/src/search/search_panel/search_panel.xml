@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-<t t-name="web.SearchPanel" owl="1">
+<t t-name="web.SearchPanel" owl="2">
     <div class="o_search_panel" t-att-class="env.searchModel.searchPanelInfo.className" t-ref="root">
         <section t-foreach="sections" t-as="section" t-key="section.id"
             t-attf-class="o_search_panel_section o_search_panel_{{ section.type }}"
@@ -73,7 +73,7 @@
     </div>
 </t>
 
-<t t-name="web.SearchPanel.Category" owl="1">
+<t t-name="web.SearchPanel.Category" owl="2">
     <t t-foreach="values" t-as="valueId" t-key="valueId">
         <t t-set="value" t-value="section.values.get(valueId)"/>
         <li class="o_search_panel_category_value list-group-item border-0">
@@ -104,7 +104,7 @@
     </t>
 </t>
 
-<t t-name="web.SearchPanel.FiltersGroup" owl="1">
+<t t-name="web.SearchPanel.FiltersGroup" owl="2">
     <li t-foreach="[...values.keys()]" t-as="valueId" t-key="valueId"
         class="o_search_panel_filter_value list-group-item border-0"
         >

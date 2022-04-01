@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="pos_mercury.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+    <t t-name="pos_mercury.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="2">
         <xpath expr="//t[@t-foreach='receipt.paymentlines']" position="inside">
             <t t-if="line.mercury_data">
                 <div class="pos-receipt-left-padding">

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.Composer" owl="1">
+    <t t-name="mail.Composer" owl="2">
         <t t-if="composerView">
             <div class="o_Composer"
                 t-att-class="{
@@ -140,7 +140,7 @@
     </t>
 
     <t t-name="mail.Composer.actionButtons" owl="1">
-        <div class="o_Composer_actionButtons" t-att-class="{ 'o-composer-is-compact': composerView.isCompact }">
+        <div class="o_Composer_actionButtonsowl="2"-class="{ 'o-composer-is-compact': composerView.isCompact }">
             <t t-if="props.hasSendButton">
                 <button class="o_Composer_actionButton o_Composer_button o_Composer_buttonSend btn btn-primary"
                     t-att-class="{

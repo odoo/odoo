@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.PivotView.Buttons" owl="1">
+    <t t-name="web.PivotView.Buttons" owl="2">
         <div class="btn-group" role="toolbar" aria-label="Main actions">
             <t t-call="web.ReportViewMeasures">
                 <t t-set="measures" t-value="model.metaData.measures"/>
@@ -16,7 +16,7 @@
         </div>
     </t>
 
-    <t t-name="web.PivotView" owl="1">
+    <t t-name="web.PivotView" owl="2">
         <div t-att-class="props.className">
             <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''">
                 <t t-set-slot="control-panel-bottom-left">

@@ -5,7 +5,7 @@
         Create Sales Order
     </button>
 
-    <t t-inherit="project.ProjectRightPanel" t-inherit-mode="extension" owl="1">
+    <t t-inherit="project.ProjectRightPanel" t-inherit-mode="extension" owl="2">
         <xpath expr="//t[@t-call='project.StatButtonsSection']" position="after">
             <t t-call="sale_timesheet.SoldSection"/>
             <t t-call="sale_timesheet.TotalSoldSection"/>
@@ -13,7 +13,7 @@
         </xpath>
     </t>
 
-    <t t-name="sale_timesheet.SoldSection" owl="1">
+    <t t-name="sale_timesheet.SoldSection" owl="2">
         <t t-set="sold_items" t-value="state.data.sold_items"/>
         <t t-if="sold_items.number_sols and sold_items.allow_billable"> 
             <div name="sold" class="o_rightpanel_section">
@@ -33,7 +33,7 @@
         </t>
     </t>
 
-    <t t-name="sale_timesheet.TotalSoldSection" owl="1">
+    <t t-name="sale_timesheet.TotalSoldSection" owl="2">
         <t t-set="sold_items" t-value="state.data.sold_items"/>
         <t t-if="sold_items.allow_billable"> 
             <div name="total_sold" class="o_rightpanel_section">
@@ -61,7 +61,7 @@
         </t>
     </t>
     
-    <t t-name="sale_timesheet.ProfitabilitySection" owl="1">
+    <t t-name="sale_timesheet.ProfitabilitySection" owl="2">
         <t t-if="state.data.user.is_project_user &amp;&amp; state.data.profitability_items.data.length > 0 &amp;&amp; state.data.analytic_account_id">
             <t t-set="profitability_items" t-value="state.data.profitability_items"/>
             <div name="profitability" class="o_rightpanel_section">

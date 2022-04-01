@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-  <t t-name="web.NavBar" owl="1">
+  <t t-name="web.NavBar" owl="2">
     <header class="o_navbar" t-ref="root">
       <nav
         class="o_main_navbar"
@@ -41,7 +41,7 @@
 
   <t t-name="web.NavBar.AppsMenu" owl="1">
     <Dropdown hotkey="'h'" title="'Home Menu'" class="'o_navbar_apps_menu'">
-      <t t-set-slot="toggler">
+      <t t-set-slot="toggler">owl="2"
         <i class="oi oi-apps" />
       </t>
       <DropdownItem
@@ -60,7 +60,7 @@
   <t t-name="web.NavBar.SectionsMenu" owl="1">
     <div class="o_menu_sections d-none d-md-flex flex-grow-1 flex-shrink-1" t-ref="appSubMenus" role="menu">
 
-      <t t-foreach="sections" t-as="section" t-key="section.id">
+      <t t-foreach="sections" t-as="seowl="2"t-key="section.id">
         <t
           t-set="sectionsVisibleCount"
           t-value="(sections.length - currentAppSectionsExtra.length)"
@@ -113,7 +113,7 @@
   <t t-name="web.NavBar.SectionsMenu.Dropdown.MenuSlot" owl="1">
     <t t-foreach="items" t-as="item" t-key="item.id">
       <DropdownItem
-        t-if="!item.childrenTree.length"
+        t-if="!item.childrenTree.length"owl="2"
         href="getMenuItemHref(item)"
         class="'dropdown-item'"
         t-esc="item.name"
@@ -140,7 +140,7 @@
   <t t-name="web.NavBar.SectionsMenu.MoreDropdown" owl="1">
     <Dropdown class="'o_menu_sections_more'" title="'More Menu'" hotkey="hotkey">
       <t t-set-slot="toggler">
-        <i class="fa fa-plus"/>
+        <i class="fa fa-plus"/>owl="2"
       </t>
       <t t-foreach="sections" t-as="section" t-key="section.id">
 

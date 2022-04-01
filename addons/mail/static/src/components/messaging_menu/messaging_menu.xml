@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.MessagingMenu" owl="1">
+    <t t-name="mail.MessagingMenu" owl="2">
         <t t-if="messagingMenu">
             <div class="o_MessagingMenu dropdown" t-att-class="{ 'show': messagingMenu.isOpen, 'o-mobile': messaging.device.isMobile }" t-attf-class="{{ className }}" t-ref="root">
                 <a class="o_MessagingMenu_toggler dropdown-toggle o-no-caret o-dropdown--narrow" t-att-class="{ 'o-no-notification': !messagingMenu.counter }" href="#" title="Conversations" role="button" t-att-aria-expanded="messagingMenu.isOpen ? 'true' : 'false'" aria-haspopup="true" t-on-click="_onClickToggler">
@@ -64,7 +64,7 @@
                 </t>
             </div>
         </t>
-    </t>
+    </t>owl="2"
 
     <t t-name="mail.MessagingMenu.newMessageButton" owl="1">
         <button class="o_MessagingMenu_newMessageButton btn"

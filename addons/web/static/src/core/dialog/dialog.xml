@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.Dialog" owl="1">
+    <t t-name="web.Dialog" owl="2">
         <div class="o_dialog" t-att-class="{ o_inactive_modal: !props.isActive }" t-on-dialog-closed="close">
             <div role="dialog" class="modal d-block"
                 tabindex="-1"
@@ -28,7 +28,7 @@
         </div>
     </t>
 
-    <t t-name="web.DialogFooterDefault" owl="1">
+    <t t-name="web.DialogFooterDefault" owl="2">
         <button class="btn btn-primary" t-on-click="close">
             <t>Ok</t>
         </button>

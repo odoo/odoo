@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.WarningDialogBody" owl="1">
+    <t t-name="web.WarningDialogBody" owl="2">
       <div role="alert" class="o_dialog_warning">
         <p t-esc="message" style="white-space: pre-wrap;"/>
       </div>
     </t>
 
-    <t t-name="web.RedirectWarningDialogBody" owl="1">
+    <t t-name="web.RedirectWarningDialogBody" owl="2">
       <div role="alert">
         <p t-esc="message" style="white-space: pre-wrap;"/>
       </div>
     </t>
 
-    <t t-name="web.RedirectWarningDialogFooter" owl="1">
+    <t t-name="web.RedirectWarningDialogFooter" owl="2">
       <button  class="btn btn-primary" t-on-click="onClick"><t t-esc="env._t(buttonText)"/></button>
       <button  class="btn btn-secondary" t-on-click="onCancel">Cancel</button>
     </t>
 
-    <t t-name="web.Error504DialogBody" owl="1">
+    <t t-name="web.Error504DialogBody" owl="2">
         <div role="alert">
             <p style="white-space: pre-wrap;">
             The operation was interrupted. This usually means that the current operation is taking too much time.
@@ -26,7 +26,7 @@
         </div>
     </t>
 
-    <t t-name="web.SessionExpiredDialogBody" owl="1">
+    <t t-name="web.SessionExpiredDialogBody" owl="2">
       <div role="alert">
         <p style="white-space: pre-wrap;">
           Your Odoo session expired. The current page is about to be refreshed.
@@ -34,11 +34,11 @@
       </div>
     </t>
 
-    <t t-name="web.SessionExpiredDialogFooter" owl="1">
+    <t t-name="web.SessionExpiredDialogFooter" owl="2">
         <button class="btn btn-primary" t-on-click="onClick">Ok</button>
     </t>
 
-     <t t-name="web.ErrorDialogBody" owl="1">
+     <t t-name="web.ErrorDialogBody" owl="2">
       <div class="alert alert-warning clearfix" role="alert">
           <div class="float-right ml8 btn-group-vertical">
               <button class="btn btn-primary" t-on-click="onClickClipboard">
