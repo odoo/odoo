@@ -138,6 +138,12 @@ registerModel({
             printWindow.document.close();
         },
         /**
+         * Rotate the image by 90 degrees to the right.
+         */
+        rotate() {
+            this.update({ angle: this.angle + 90 });
+        },
+        /**
          * @private
          * @returns {string}
          */
