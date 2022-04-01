@@ -641,11 +641,12 @@ class Picking(models.Model):
     def onchange_locations(self):
         from_wh = self.location_id.get_warehouse()
         to_wh = self.location_dest_id.get_warehouse()
-        if self.picking_type_id.code == 'internal' and from_wh and to_wh and from_wh != to_wh:
+        is_immediate = self.immediate_transfer if self.id else self._context.get('default_immediate_transfer')
+        if self.picking_type_id.code == 'internal' and not is_immediate and from_wh and to_wh and from_wh != to_wh:
             return {'warning': {
                 'title': _("Warning"),
-                'message': _("You should not use an internal transfer to move some products between two warehouses. "
-                             "Instead, use two pickings: a delivery from %s and a receipt to %s") % (from_wh.display_name, to_wh.display_name),
+                'message': _("You should not use a planned internal transfer to move some products between two warehouses. "
+                             "Instead, use an immediate internal transfer or the resupply route.")
             }}
 
     @api.model
