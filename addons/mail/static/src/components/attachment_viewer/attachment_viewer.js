@@ -270,16 +270,6 @@ export class AttachmentViewer extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Called when clicking on cross icon.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickClose(ev) {
-        this.attachmentViewer.close();
-    }
-
-    /**
      * Called when clicking on download icon.
      *
      * @private
