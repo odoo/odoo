@@ -17,6 +17,15 @@ registerModel({
             return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
         },
         /**
+         * Called when clicking on embed video player. Stop propagation to prevent
+         * closing the dialog.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickVideo(ev) {
+            ev.stopPropagation();
+        },
+        /**
          * @private
          * @returns {string}
          */

@@ -405,17 +405,6 @@ export class AttachmentViewer extends Component {
     }
 
     /**
-     * Called when clicking on embed video player. Stop propagation to prevent
-     * closing the dialog.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickVideo(ev) {
-        ev.stopPropagation();
-    }
-
-    /**
      * Called when clicking on zoom in icon.
      *
      * @private

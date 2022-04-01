@@ -56,7 +56,7 @@
                         <iframe allow="autoplay; encrypted-media" class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_youtube w-75 h-100 bg-black border-0" t-att-src="attachmentViewer.attachment.defaultSource" height="315" width="560"/>
                     </t>
                     <t t-if="attachmentViewer.attachment.isVideo">
-                        <video class="o_AttachmentViewer_view o_AttachmentViewer_viewVideo w-75 h-75 bg-black" t-att-class="{ 'o-isMobile w-100 h-100': messaging.device.isMobile }" t-on-click="_onClickVideo" controls="controls">
+                        <video class="o_AttachmentViewer_view o_AttachmentViewer_viewVideo w-75 h-75 bg-black" t-att-class="{ 'o-isMobile w-100 h-100': messaging.device.isMobile }" t-on-click="attachmentViewer.onClickVideo" controls="controls">
                             <source t-att-data-type="attachmentViewer.attachment.mimetype" t-att-src="attachmentViewer.attachment.defaultSource"/>
                         </video>
                     </t>
