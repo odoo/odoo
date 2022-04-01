@@ -2,6 +2,7 @@
 
 from odoo import api, models, _
 from odoo.exceptions import UserError
+from odoo.osv import expression
 
 
 class SaleOrder(models.Model):
@@ -76,6 +77,7 @@ class SaleOrder(models.Model):
 
         return values
 
+<<<<<<< HEAD
     def _update_cart_line_values(self, order_line, update_values):
         """Remove event registrations on quantity decrease."""
         old_qty = order_line.product_uom_qty
@@ -86,6 +88,54 @@ class SaleOrder(models.Model):
 
         new_qty = order_line.product_uom_qty
         if new_qty < old_qty:
+=======
+    def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
+        OrderLine = self.env['sale.order.line']
+
+        try:
+            if add_qty:
+                add_qty = float(add_qty)
+        except ValueError:
+            add_qty = 1
+        try:
+            if set_qty:
+                set_qty = float(set_qty)
+        except ValueError:
+            set_qty = 0
+
+        if line_id:
+            line = OrderLine.browse(line_id)
+            ticket = line.event_ticket_id
+            old_qty = int(line.product_uom_qty)
+            if ticket.id:
+                self = self.with_context(event_ticket_id=ticket.id, fixed_price=1)
+        else:
+            ticket_domain = [('product_id', '=', product_id)]
+            if self.env.context.get("event_ticket_id"):
+                ticket_domain = expression.AND([ticket_domain, [('id', '=', self.env.context['event_ticket_id'])]])
+            ticket = self.env['event.event.ticket'].search(ticket_domain, limit=1)
+            old_qty = 0
+        new_qty = set_qty if set_qty else (add_qty or 0 + old_qty)
+
+        # case: buying tickets for a sold out ticket
+        values = {}
+        if ticket and ticket.seats_availability == 'limited' and ticket.seats_available <= 0:
+            values['warning'] = _('Sorry, The %(ticket)s tickets for the %(event)s event are sold out.') % {
+                'ticket': ticket.name,
+                'event': ticket.event_id.name}
+            new_qty, set_qty, add_qty = 0, 0, -old_qty
+        # case: buying tickets, too much attendees
+        elif ticket and ticket.seats_availability == 'limited' and new_qty > ticket.seats_available:
+            values['warning'] = _('Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s ticket for the %(event)s event.') % {
+                'remaining_seats': ticket.seats_available,
+                'ticket': ticket.name,
+                'event': ticket.event_id.name}
+            new_qty, set_qty, add_qty = ticket.seats_available, ticket.seats_available, 0
+        values.update(super(SaleOrder, self)._cart_update(product_id, line_id, add_qty, set_qty, **kwargs))
+
+        # removing attendees
+        if ticket and new_qty < old_qty:
+>>>>>>> 4e894077c24... temp
             attendees = self.env['event.registration'].search([
                 ('state', '!=', 'cancel'),
                 ('sale_order_id', '=', self.id),
