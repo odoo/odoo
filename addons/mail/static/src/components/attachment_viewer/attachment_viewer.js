@@ -336,17 +336,6 @@ export class AttachmentViewer extends Component {
     }
 
     /**
-     * Called when clicking on the header. Stop propagation of event to prevent
-     * closing the dialog.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickHeader(ev) {
-        ev.stopPropagation();
-    }
-
-    /**
      * Called when clicking on image. Stop propagation of event to prevent
      * closing the dialog.
      *
