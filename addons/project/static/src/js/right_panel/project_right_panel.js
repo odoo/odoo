@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
 import { AddMilestone, OpenMilestone } from '@project/js/right_panel/project_utils';
-import { formatFloat } from "@web/fields/formatters";
+import { formatFloat, formatMonetary } from "@web/fields/formatters";
 import { LegacyComponent } from "@web/legacy/legacy_component";
+import { session } from "@web/session";
 
 const { onWillStart, onWillUpdateProps, useState } = owl;
 
@@ -16,6 +17,10 @@ export default class ProjectRightPanel extends LegacyComponent {
                 milestones: {
                     data: []
                 },
+                profitability_items: {
+                    costs: { data: [], total: { billed: 0.0, to_bill: 0.0 } },
+                    revenues: { data: [], total: { invoiced: 0.0, to_invoice: 0.0 } },
+                },
                 user: {},
             }
         });
@@ -26,6 +31,23 @@ export default class ProjectRightPanel extends LegacyComponent {
 
     formatFloat(value) {
         return formatFloat(value, { digits: [false, 1] });
+    }
+
+    formatMonetary(value, options = {}) {
+        const valueFormatted = formatMonetary(value, {
+            currencyId: this.state.data.currency_id,
+            ...options,
+            'noSymbol': true,
+        });
+        const currency = session.currencies[this.state.data.currency_id];
+        if (!currency) {
+            return valueFormatted;
+        }
+        if (currency.position === "after") {
+            return `${valueFormatted} ${currency.symbol}`;
+        } else {
+            return `${currency.symbol} ${valueFormatted}`;
+        }
     }
 
     async _loadQwebContext() {
@@ -46,9 +68,24 @@ export default class ProjectRightPanel extends LegacyComponent {
 
     async onProjectActionClick(event) {
         event.stopPropagation();
-        let action = event.currentTarget.dataset.action;
-        const additionalContext = JSON.parse(event.currentTarget.dataset.additional_context || "{}");
-        if (event.currentTarget.dataset.type === "object") {
+        const dataset =  event.currentTarget.dataset;
+        let action = dataset.action;
+        const additionalContext = JSON.parse(dataset.additional_context || "{}");
+        if (dataset.type === "object") {
+            const args = [this.project_id];
+            if (dataset.section) {
+                args.push(dataset.section);
+            }
+            if (dataset.domain) {
+                args.push(JSON.parse(dataset.domain || '[]'));
+            }
+            if (dataset.resId) {
+                args.push(Number(dataset.resId));
+            }
+            let context = {};
+            if (dataset.context) {
+                context = dataset.context;
+            }
             action = await this.rpc({
                 // Use the call_button method in order to have an action
                 // with the correct view naming, i.e. list view is named
@@ -56,10 +93,10 @@ export default class ProjectRightPanel extends LegacyComponent {
                 route: '/web/dataset/call_button',
                 params: {
                     model: 'project.project',
-                    method: event.currentTarget.dataset.action,
-                    args: [this.project_id],
+                    method: action,
+                    args,
                     kwargs: {
-                        context: this.context
+                        context: Object.assign(this.context, context),
                     }
                 }
             });

@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from odoo import api, fields, models, _, _lt
+from odoo.osv import expression
 
 
 class Project(models.Model):
@@ -11,8 +14,10 @@ class Project(models.Model):
 
     @api.depends('analytic_account_id')
     def _compute_purchase_orders_count(self):
+        if not self.analytic_account_id:
+            self.purchase_orders_count = 0
+            return
         purchase_orders_data = self.env['purchase.order.line']._read_group([
-            ('account_analytic_id', '!=', False),
             ('account_analytic_id', 'in', self.analytic_account_id.ids)
         ], ['account_analytic_id', 'order_id:count_distinct'], ['account_analytic_id'])
         mapped_data = dict([(data['account_analytic_id'][0], data['order_id']) for data in purchase_orders_data])
@@ -43,6 +48,23 @@ class Project(models.Model):
             action_window['res_id'] = purchase_orders.id
         return action_window
 
+    def action_profitability_items(self, section_name, domain=None, res_id=False):
+        if section_name == 'purchase_order':
+            action = {
+                'name': _('Purchase Order Items'),
+                'type': 'ir.actions.act_window',
+                'res_model': 'purchase.order.line',
+                'views': [[False, 'tree'], [False, 'form']],
+                'domain': domain,
+                'context': {
+                    'create': False,
+                },
+            }
+            if res_id:
+                action['res_id'] = res_id
+            return action
+        return super().action_profitability_items(section_name, domain, res_id)
+
     # ----------------------------
     #  Project Updates
     # ----------------------------
@@ -60,3 +82,48 @@ class Project(models.Model):
                 'sequence': 36,
             })
         return buttons
+
+    def _get_profitability_aal_domain(self):
+        return expression.AND([
+            super()._get_profitability_aal_domain(),
+            ['|', ('move_id', '=', False), ('move_id.purchase_line_id', '=', False)],
+        ])
+
+    def _get_profitability_labels(self):
+        labels = super()._get_profitability_labels()
+        labels['purchase_order'] = _lt('Purchase Orders')
+        return labels
+
+    def _get_profitability_sequence_per_invoice_type(self):
+        sequence_per_invoice_type = super()._get_profitability_sequence_per_invoice_type()
+        sequence_per_invoice_type['purchase_order'] = 9
+        return sequence_per_invoice_type
+
+    def _get_profitability_items(self, with_action=True):
+        profitability_items = super()._get_profitability_items(with_action)
+        if self.analytic_account_id:
+            purchase_order_line_read = self.env['purchase.order.line'].sudo().search_read([
+                ('account_analytic_id', 'in', self.analytic_account_id.ids),
+                ('state', '!=', 'cancel'),
+                '|', ('qty_invoiced', '>', 0), ('qty_to_invoice', '>', 0),
+            ], ['qty_invoiced', 'qty_to_invoice', 'price_unit'])
+            if purchase_order_line_read:
+                amount_invoiced = amount_to_invoice = 0.0
+                purchase_order_line_ids = []
+                for pol_read in purchase_order_line_read:
+                    price_unit = pol_read['price_unit']
+                    amount_invoiced -= price_unit * pol_read['qty_invoiced'] if pol_read['qty_invoiced'] > 0 else 0.0
+                    amount_to_invoice -= price_unit * pol_read['qty_to_invoice'] if pol_read['qty_to_invoice'] > 0 else 0.0
+                    purchase_order_line_ids.append(pol_read['id'])
+                costs = profitability_items['costs']
+                section_id = 'purchase_order'
+                purchase_order_costs = {'id': section_id, 'sequence': self._get_profitability_sequence_per_invoice_type()[section_id], 'billed': amount_invoiced, 'to_bill': amount_to_invoice}
+                if with_action and purchase_order_line_ids and self.user_has_groups('purchase.group_purchase_user'):
+                    action = {'name': 'action_profitability_items', 'type': 'object', 'section': section_id, 'domain': json.dumps([('id', 'in', purchase_order_line_ids)])}
+                    if len(purchase_order_line_ids) == 1:
+                        action['res_id'] = purchase_order_line_ids[0]
+                    purchase_order_costs['action'] = action
+                costs['data'].append(purchase_order_costs)
+                costs['total']['billed'] += amount_invoiced
+                costs['total']['to_bill'] += amount_to_invoice
+        return profitability_items

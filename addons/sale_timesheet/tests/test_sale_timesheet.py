@@ -322,13 +322,13 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
         self.assertEqual(len(sale_order.project_ids), 2, "One project should have been created by the SO, when confirmed + the one coming from SO line 1 'task in global project'.")
         self.assertEqual(so_line_manual_global_project.task_id.sale_line_id, so_line_manual_global_project, "Task from a milestone product should be linked to its SO line too")
-        self.assertEqual(timesheet1.timesheet_invoice_type, 'billable_fixed', "Milestone timesheet goes in billable fixed category")
+        self.assertEqual(timesheet1.timesheet_invoice_type, 'billable_manual', "Milestone timesheet goes in billable manual category")
         self.assertTrue(float_is_zero(so_line_manual_global_project.qty_delivered, precision_digits=2), "Milestone Timesheeting should not incremented the delivered quantity on the SO line")
         self.assertEqual(so_line_manual_global_project.qty_to_invoice, 0.0, "Manual service should not be affected by timesheet on their created task.")
         self.assertEqual(so_line_manual_only_project.qty_to_invoice, 0.0, "Manual service should not be affected by timesheet on their created project.")
         self.assertEqual(sale_order.invoice_status, 'no', 'Sale Timesheet: "invoice on delivery" should not need to be invoiced on so confirmation')
 
-        self.assertEqual(timesheet1.timesheet_invoice_type, 'billable_fixed', "Timesheets linked to SO line with ordered product shoulbe be billable fixed since it is a milestone")
+        self.assertEqual(timesheet1.timesheet_invoice_type, 'billable_manual', "Timesheets linked to SO line with ordered product shoulbe be billable fixed since it is a prepaid product.")
         self.assertEqual(timesheet2.timesheet_invoice_type, 'non_billable', "Timesheets without SO should be be 'non-billable'")
         self.assertFalse(timesheet1.timesheet_invoice_id, "The timesheet1 should not be linked to the invoice")
         self.assertFalse(timesheet2.timesheet_invoice_id, "The timesheet2 should not be linked to the invoice")

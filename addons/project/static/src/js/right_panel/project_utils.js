@@ -7,7 +7,26 @@ import { useService } from "@web/core/utils/hooks";
 
 const { Component, onWillUpdateProps, useState } = owl;
 
-class MilestoneComponent extends Component {
+export class ProjectRightSidePanelComponent extends Component {
+    setup() {
+        super.setup();
+        this.contextValue = {};
+    }
+
+    async openLegacyFormDialog(params) {
+        const adapterParent = standaloneAdapter({ Component });
+        const dialog = new FormViewDialog(adapterParent, {
+            context: this.contextValue,
+            res_id: false,
+            ...params,
+        });
+        await dialog.open();
+        return dialog;
+    }
+}
+ProjectRightSidePanelComponent.components = { ComponentAdapter };
+
+class MilestoneComponent extends ProjectRightSidePanelComponent {
     setup() {
         super.setup();
         this.contextValue = Object.assign({}, {
@@ -15,30 +34,14 @@ class MilestoneComponent extends Component {
         }, this.props.context);
     }
 
-    get context() {
-        return this.contextValue;
-    }
-
-    set context(value) {
-        this.contextValue = Object.assign({}, {
-            'default_project_id': value.active_id,
-        }, value);
-    }
-
     async openLegacyFormDialog(params) {
-        const adapterParent = standaloneAdapter({ Component });
-        const dialog = new FormViewDialog(adapterParent, {
-            context: this.context,
+        return super.openLegacyFormDialog({
             res_model: "project.milestone",
-            res_id: false,
             on_saved: this.props.onMilestoneUpdate,
             ...params,
         });
-        await dialog.open();
-        return dialog;
     }
 }
-MilestoneComponent.components = { ComponentAdapter };
 
 export class AddMilestone extends MilestoneComponent {
     onAddMilestoneClick(event) {

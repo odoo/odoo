@@ -282,51 +282,35 @@ tour.register('sale_timesheet_tour', {
     trigger: ".o_project_updates_breadcrumb",
     content: 'Open Updates',
 }, {
-    trigger: ".o_rightpanel_title:eq(0):contains('Sold')",
-    content: 'Check the user sees Sold section',
+    trigger: ".o_rightpanel_title:eq(0):contains('Sales')",
+    content: 'Check the user sees Sales section',
     run: function () {},
 }, {
-    trigger: ".o_rightpanel_left_text:eq(0):contains('Prepaid Hours')",
-    content: 'Check the user sees Sold subsection',
-    run: function () {},
-}, {
-    trigger: ".o_rightpanel_title:eq(1):contains('Total Sold')",
-    content: 'Check the user sees Total Sold section',
+    trigger: ".o_rightpanel_data:eq(0):contains('Prepaid Hours')",
+    content: 'Check the user sees a line in the Sales section',
     run: function () {},
 }, {
     trigger: ".oe_button_box .o_stat_text:contains('Sales Orders')",
     content: 'Check the user sees Sales Orders Stat Button',
     run: function () {},
 }, {
-    trigger: ".o_rightpanel_header:eq(1) .o_rightpanel_right_col:contains('Hours')",
-    content: 'Check the user sees Hours title',
-    run: function () {},
-}, {
-    trigger: ".o_rightpanel_section:eq(2) .o_rightpanel_data_row:contains('Effective')",
-    content: 'Check the user sees Effective subsection row',
-    run: function () {},
-}, {
-    trigger: ".o_rightpanel_section:eq(2) .o_rightpanel_data_row:contains('Remaining')",
-    content: 'Check the user sees Remaining subsection row',
-    run: function () {},
-}, {
-    trigger: ".o_rightpanel_title:eq(2):contains('Profitability')",
+    trigger: ".o_rightpanel_title:eq(1):contains('Profitability')",
     content: 'Check the user sees Profitability section',
     run: function () {},
 }, {
-    trigger: ".o_rightpanel_section:eq(3) .o_rightpanel_data_row:contains('Revenues')",
+    trigger: ".o_rightpanel_section:eq(2) .o_rightpanel_data > .o_rightpanel_subsection:eq(0) > table > thead > tr > th:eq(0):contains('Revenues')",
     content: 'Check the user sees Profitability subsection row',
     run: function () {},
 }, {
-    trigger: ".o_rightpanel_section:eq(3) .o_rightpanel_data_row:contains('Costs')",
+    trigger: ".o_rightpanel_section:eq(2) .o_rightpanel_data > .o_rightpanel_subsection:eq(1) > table > thead > tr > th:eq(0):contains('Costs')",
     content: 'Check the user sees Profitability subsection row',
     run: function () {},
 }, {
-    trigger: ".o_rightpanel_section:eq(3) .o_rightpanel_data_row:contains('Margin')",
+    trigger: ".o_rightpanel_section:eq(2) .o_rightpanel_data > .o_rightpanel_subsection:eq(2) > table > thead > tr > th:eq(0):contains('Margin')",
     content: 'Check the user sees Profitability subsection row',
     run: function () {},
 }, {
-    trigger: ".o_rightpanel_title:eq(3):contains('Milestones')",
+    trigger: ".o_rightpanel_section .o_rightpanel_title:contains('Milestones')",
     content: 'Check the user sees Milestones section',
 }, {
     trigger: ".o_add_milestone a",
