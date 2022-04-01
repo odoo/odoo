@@ -26,13 +26,6 @@ export class ComposerSuggestion extends Component {
         return this.messaging && this.messaging.models['ComposerSuggestion'].get(this.props.localId);
     }
 
-    /**
-     * @returns {ComposerView}
-     */
-    get composerView() {
-        return this.messaging && this.messaging.models['ComposerView'].get(this.props.composerViewLocalId);
-    }
-
     get record() {
         return this.messaging && this.messaging.models[this.props.modelName].get(this.props.recordLocalId);
     }
@@ -72,14 +65,15 @@ export class ComposerSuggestion extends Component {
     _update() {
         if (
             this.root.el &&
-            this.composerView &&
-            this.composerView.hasToScrollToActiveSuggestion &&
+            this.composerSuggestion &&
+            this.composerSuggestion.composerViewOwner &&
+            this.composerSuggestion.composerViewOwner.hasToScrollToActiveSuggestion &&
             this.props.isActive
         ) {
             this.root.el.scrollIntoView({
                 block: 'center',
             });
-            this.composerView.update({ hasToScrollToActiveSuggestion: false });
+            this.composerSuggestion.composerViewOwner.update({ hasToScrollToActiveSuggestion: false });
         }
     }
 
@@ -93,7 +87,7 @@ export class ComposerSuggestion extends Component {
      */
     _onClick(ev) {
         ev.preventDefault();
-        this.composerView.onClickSuggestion(this.composerSuggestion);
+        this.composerSuggestion.composerViewOwner.onClickSuggestion(this.composerSuggestion);
     }
 
 }
@@ -103,7 +97,6 @@ Object.assign(ComposerSuggestion, {
         isActive: false,
     },
     props: {
-        composerViewLocalId: String,
         isActive: { type: Boolean, optional: true },
         localId: String,
         modelName: String,

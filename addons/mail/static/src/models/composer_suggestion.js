@@ -14,6 +14,19 @@ registerModel({
     name: 'ComposerSuggestion',
     identifyingFields: [['composerViewOwnerAsExtraSuggestion', 'composerViewOwnerAsMainSuggestion'], ['cannedResponse', 'channelCommand', 'partner', 'thread']],
     recordMethods: {
+         /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeComposerViewOwner() {
+            if (this.composerViewOwnerAsExtraSuggestion) {
+                return replace(this.composerViewOwnerAsExtraSuggestion);
+            }
+            if (this.composerViewOwnerAsMainSuggestion) {
+                return replace(this.composerViewOwnerAsMainSuggestion);
+            }
+            return clear();
+        },
         /**
          * @private
          * @returns {string}
@@ -58,6 +71,9 @@ registerModel({
         }),
         channelCommand: one('ChannelCommand', {
             readonly: true,
+        }),
+        composerViewOwner: one('ComposerView', {
+            compute: '_computeComposerViewOwner',
         }),
         composerViewOwnerAsExtraSuggestion: one('ComposerView', {
             inverse: 'extraSuggestions',
