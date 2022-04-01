@@ -34,31 +34,6 @@ export class ComposerSuggestion extends Component {
         return this.messaging && this.messaging.models['ComposerView'].get(this.props.composerViewLocalId);
     }
 
-    /**
-     * Returns a descriptive title for this suggestion. Useful to be able to
-     * read both parts when they are overflowing the UI.
-     *
-     * @returns {string}
-     */
-    title() {
-        if (this.composerSuggestion.cannedResponse) {
-            return _.str.sprintf("%s: %s", this.composerSuggestion.record.source, this.composerSuggestion.record.substitution);
-        }
-        if (this.composerSuggestion.thread) {
-            return this.composerSuggestion.record.name;
-        }
-        if (this.composerSuggestion.channelCommand) {
-            return _.str.sprintf("%s: %s", this.composerSuggestion.record.name, this.composerSuggestion.record.help);
-        }
-        if (this.composerSuggestion.partner) {
-            if (this.composerSuggestion.record.email) {
-                return _.str.sprintf("%s (%s)", this.composerSuggestion.record.nameOrDisplayName, this.composerSuggestion.record.email);
-            }
-            return this.composerSuggestion.record.nameOrDisplayName;
-        }
-        return "";
-    }
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------

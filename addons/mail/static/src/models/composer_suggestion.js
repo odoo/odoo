@@ -51,6 +51,28 @@ registerModel({
             }
             return clear();
         },
+        /**
+         * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeTitle() {
+            if (this.cannedResponse) {
+                return _.str.sprintf("%s: %s", this.record.source, this.record.substitution);
+            }
+            if (this.thread) {
+                return this.record.name;
+            }
+            if (this.channelCommand) {
+                return _.str.sprintf("%s: %s", this.record.name, this.record.help);
+            }
+            if (this.partner) {
+                if (this.record.email) {
+                    return _.str.sprintf("%s (%s)", this.record.nameOrDisplayName, this.record.email);
+                }
+                return this.record.nameOrDisplayName;
+            }
+            return clear();
+        },
     },
     fields: {
         cannedResponse: one('CannedResponse', {
@@ -81,6 +103,14 @@ registerModel({
         }),
         thread: one('Thread', {
             readonly: true,
+        }),
+        /**
+         * Descriptive title for this suggestion. Useful to be able to
+         * read both parts when they are overflowing the UI.
+         */
+        title: attr({
+            compute: '_computeTitle',
+            default: "",
         }),
     },
 });
