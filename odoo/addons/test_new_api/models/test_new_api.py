@@ -1617,3 +1617,11 @@ class Prefetch(models.Model):
     ron = fields.Float('Ron Weasley', prefetch='Harry Potter')
     hansel = fields.Integer('Hansel', prefetch="Hansel and Gretel")
     gretel = fields.Char('Gretel', prefetch="Hansel and Gretel")
+
+from odoo.addons.base.models import res_users
+res_users.USER_PRIVATE_FIELDS.append('test_private_field')
+
+class ResUsers(models.Model):
+    _inherit = 'res.users'
+
+    test_private_field = fields.Char()
