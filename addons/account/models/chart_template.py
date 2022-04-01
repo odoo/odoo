@@ -933,6 +933,32 @@ class AccountTaxTemplate(models.Model):
             val['tax_group_id'] = self.tax_group_id.id
         return val
 
+    def _get_tax_vals_complete(self, company):
+        """
+        Returns a dict of values to be used to create the tax corresponding to the template, assuming the
+        account.account objects were already created.
+        It differs from function _get_tax_vals because here, we replace the references to account.template by their
+        corresponding account.account ids ('cash_basis_transition_account_id' and 'account_id' in the invoice and
+        refund repartition lines)
+        (Used by upgrade/migrations/util/accounting)
+        """
+        vals = self._get_tax_vals(company, {})
+        vals.pop("children_tax_ids", None)
+
+        if self.cash_basis_transition_account_id.code:
+            cash_basis_account_id = self.env['account.account'].search([
+                ('code', '=like', self.cash_basis_transition_account_id.code + '%'),
+                ('company_id', '=', company.id)
+            ], limit=1)
+            if cash_basis_account_id:
+                vals.update({"cash_basis_transition_account_id": cash_basis_account_id.id})
+
+        vals.update({
+            "invoice_repartition_line_ids": self.invoice_repartition_line_ids._get_repartition_line_create_vals_complete(company),
+            "refund_repartition_line_ids": self.refund_repartition_line_ids._get_repartition_line_create_vals_complete(company),
+        })
+        return vals
+
     def _generate_tax(self, company):
         """ This method generate taxes from templates.
 
@@ -1066,10 +1092,7 @@ class AccountTaxRepartitionLineTemplate(models.Model):
     def get_repartition_line_create_vals(self, company):
         rslt = [(5, 0, 0)]
         for record in self:
-            tags_to_add = self.env['account.account.tag']
-            tags_to_add += record.plus_report_line_ids.mapped('tag_ids').filtered(lambda x: not x.tax_negate)
-            tags_to_add += record.minus_report_line_ids.mapped('tag_ids').filtered(lambda x: x.tax_negate)
-            tags_to_add += record.tag_ids
+            tags_to_add = record._get_tags_to_add()
 
             rslt.append((0, 0, {
                 'factor_percent': record.factor_percent,
@@ -1079,6 +1102,40 @@ class AccountTaxRepartitionLineTemplate(models.Model):
                 'use_in_tax_closing': record.use_in_tax_closing
             }))
         return rslt
+
+    def _get_repartition_line_create_vals_complete(self, company):
+        """
+        This function returns a list of values to create the repartition lines of a tax based on
+        one or several account.tax.repartition.line.template. It mimicks the function get_repartition_line_create_vals
+        but adds the missing field account_id (account.account)
+
+        Returns a list of (0,0, x) ORM commands to create the repartition lines starting with a (5,0,0)
+        command to clear the repartition.
+        """
+        rslt = self.get_repartition_line_create_vals(company)
+        for idx, template_line in zip(range(1, len(rslt)), self):  # ignore first ORM command ( (5, 0, 0) )
+            account_id = False
+            if template_line.account_id:
+                # take the first account.account which code begins with the correct code
+                account_id = self.env['account.account'].search([
+                    ('code', '=like', template_line.account_id.code + '%'),
+                    ('company_id', '=', company.id)
+                ], limit=1).id
+                if not account_id:
+                    _logger.warning("The account with code '%s' was not found but is supposed to be linked to a tax",
+                                    template_line.account_id.code)
+            rslt[idx][2].update({
+                "account_id": account_id,
+            })
+        return rslt
+
+    def _get_tags_to_add(self):
+        self.ensure_one()
+        tags_to_add = self.env["account.account.tag"]
+        tags_to_add += self.plus_report_line_ids.mapped("tag_ids").filtered(lambda x: not x.tax_negate)
+        tags_to_add += self.minus_report_line_ids.mapped("tag_ids").filtered(lambda x: x.tax_negate)
+        tags_to_add += self.tag_ids
+        return tags_to_add
 
 # Fiscal Position Templates
 
