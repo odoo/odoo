@@ -14,6 +14,19 @@ registerModel({
     name: 'ComposerSuggestion',
     identifyingFields: [['composerViewOwnerAsExtraSuggestion', 'composerViewOwnerAsMainSuggestion'], ['cannedResponse', 'channelCommand', 'partner', 'thread']],
     recordMethods: {
+         /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeComposerViewOwner() {
+            if (this.composerViewOwnerAsExtraSuggestion) {
+                return replace(this.composerViewOwnerAsExtraSuggestion);
+            }
+            if (this.composerViewOwnerAsMainSuggestion) {
+                return replace(this.composerViewOwnerAsMainSuggestion);
+            }
+            return clear();
+        },
         /**
          * @private
          * @returns {string}
@@ -51,6 +64,28 @@ registerModel({
             }
             return clear();
         },
+        /**
+         * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeTitle() {
+            if (this.cannedResponse) {
+                return _.str.sprintf("%s: %s", this.record.source, this.record.substitution);
+            }
+            if (this.thread) {
+                return this.record.name;
+            }
+            if (this.channelCommand) {
+                return _.str.sprintf("%s: %s", this.record.name, this.record.help);
+            }
+            if (this.partner) {
+                if (this.record.email) {
+                    return _.str.sprintf("%s (%s)", this.record.nameOrDisplayName, this.record.email);
+                }
+                return this.record.nameOrDisplayName;
+            }
+            return clear();
+        },
     },
     fields: {
         cannedResponse: one('CannedResponse', {
@@ -58,6 +93,9 @@ registerModel({
         }),
         channelCommand: one('ChannelCommand', {
             readonly: true,
+        }),
+        composerViewOwner: one('ComposerView', {
+            compute: '_computeComposerViewOwner',
         }),
         composerViewOwnerAsExtraSuggestion: one('ComposerView', {
             inverse: 'extraSuggestions',
@@ -81,6 +119,14 @@ registerModel({
         }),
         thread: one('Thread', {
             readonly: true,
+        }),
+        /**
+         * Descriptive title for this suggestion. Useful to be able to
+         * read both parts when they are overflowing the UI.
+         */
+        title: attr({
+            compute: '_computeTitle',
+            default: "",
         }),
     },
 });
