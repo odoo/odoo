@@ -36,6 +36,14 @@ registerModel({
             this.close();
         },
         /**
+         * Called when clicking on cross icon.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickClose(ev) {
+            this.close();
+        },
+        /**
          * @private
          * @returns {string}
          */
