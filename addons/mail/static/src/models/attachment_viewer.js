@@ -92,6 +92,15 @@ registerModel({
             this.next();
         },
         /**
+         * Called when clicking on previous icon.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickPrevious(ev) {
+            ev.stopPropagation();
+            this.previous();
+        },
+        /**
          * Called when clicking on embed video player. Stop propagation to prevent
          * closing the dialog.
          *
