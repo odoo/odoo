@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { useUpdate } from '@mail/component_hooks/use_update';
-import { replace } from '@mail/model/model_field_command';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
@@ -94,10 +93,7 @@ export class ComposerSuggestion extends Component {
      */
     _onClick(ev) {
         ev.preventDefault();
-        this.composerView.update({ activeSuggestion: replace(this.composerSuggestion) });
-        this.composerView.insertSuggestion();
-        this.composerView.closeSuggestions();
-        this.composerView.update({ doFocus: true });
+        this.composerView.onClickSuggestion(this.composerSuggestion);
     }
 
 }
