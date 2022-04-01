@@ -106,7 +106,6 @@ Object.assign(ComposerSuggestion, {
         composerViewLocalId: String,
         isActive: { type: Boolean, optional: true },
         localId: String,
-        modelName: String,
     },
     template: 'mail.ComposerSuggestion',
 });
