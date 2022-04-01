@@ -25,7 +25,7 @@
                         <span class="o_AttachmentViewer_nameText text-truncate" t-esc="attachmentViewer.attachment.displayName"/>
                     </div>
                     <div class="o-autogrow"/>
-                    <div class="o_AttachmentViewer_buttonDownload o_AttachmentViewer_headerItem o_AttachmentViewer_headerItemButton d-flex align-items-center px-3 o_cursor_pointer" t-on-click="_onClickDownload" role="button" title="Download">
+                    <div class="o_AttachmentViewer_buttonDownload o_AttachmentViewer_headerItem o_AttachmentViewer_headerItemButton d-flex align-items-center px-3 o_cursor_pointer" t-on-click="attachmentViewer.onClickDownload" role="button" title="Download">
                         <i class="o_AttachmentViewer_headerItemButtonIcon fa fa-download fa-fw" t-att-class="{ 'o-hasLabel me-2': messaging.device.sizeClass > env.device.SIZES.MD }" role="img"/>
                         <t t-if="messaging.device.sizeClass > env.device.SIZES.MD">
                             <span>Download</span>
@@ -78,7 +78,7 @@
                         <div class="o_AttachmentViewer_toolbarButton btn btn-dark p-3 rounded-0" t-on-click="_onClickPrint" title="Print" role="button">
                             <i class="fa fa-fw fa-print" role="img"/>
                         </div>
-                        <div class="o_AttachmentViewer_buttonDownload o_AttachmentViewer_toolbarButton btn btn-dark p-3 rounded-0 o_cursor_pointer" t-on-click="_onClickDownload" title="Download" role="button">
+                        <div class="o_AttachmentViewer_buttonDownload o_AttachmentViewer_toolbarButton btn btn-dark p-3 rounded-0 o_cursor_pointer" t-on-click="attachmentViewer.onClickDownload" title="Download" role="button">
                             <i class="fa fa-download fa-fw" role="img"/>
                         </div>
                     </div>
