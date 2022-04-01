@@ -112,3 +112,23 @@ $border-widths: (
     border-width: $border-width !important;
   }
 }
+
+// == Font Sizes
+//------------------------------------------------------------------------------
+// "Bootstrap v5 ready" utility-classes to handle font-size.
+// These classes definitions can be safely removed after migrating to BTS v5.
+
+$font-sizes: (
+  1: $h1-font-size,
+  2: $h2-font-size,
+  3: $h3-font-size,
+  4: $h4-font-size,
+  5: $h5-font-size,
+  6: $h6-font-size
+);
+
+@each $length, $size in $font-sizes {
+  .fs-#{$length} {
+    font-size: $size !important;
+  }
+}
