@@ -2,6 +2,7 @@
 
 from odoo import api, models, _
 from odoo.exceptions import UserError
+from odoo.osv import expression
 
 
 class SaleOrder(models.Model):
@@ -71,8 +72,10 @@ class SaleOrder(models.Model):
             if ticket.id:
                 self = self.with_context(event_ticket_id=ticket.id, fixed_price=1)
         else:
-            line = None
-            ticket = self.env['event.event.ticket'].search([('product_id', '=', product_id)], limit=1)
+            ticket_domain = [('product_id', '=', product_id)]
+            if self.env.context.get("event_ticket_id"):
+                ticket_domain = expression.AND([ticket_domain, [('id', '=', self.env.context['event_ticket_id'])]])
+            ticket = self.env['event.event.ticket'].search(ticket_domain, limit=1)
             old_qty = 0
         new_qty = set_qty if set_qty else (add_qty or 0 + old_qty)
 
