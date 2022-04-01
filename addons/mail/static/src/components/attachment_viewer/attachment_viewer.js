@@ -185,15 +185,6 @@ export class AttachmentViewer extends Component {
     }
 
     /**
-     * Rotate the image by 90 degrees to the right.
-     *
-     * @private
-     */
-    _rotate() {
-        this.attachmentViewer.update({ angle: this.attachmentViewer.angle + 90 });
-    }
-
-    /**
      * Stop dragging interaction of the user.
      *
      * @private
@@ -401,7 +392,7 @@ export class AttachmentViewer extends Component {
      */
     _onClickRotate(ev) {
         ev.stopPropagation();
-        this._rotate();
+        this.attachmentViewer.rotate();
     }
 
     /**
@@ -467,7 +458,7 @@ export class AttachmentViewer extends Component {
                 this._close();
                 break;
             case 'r':
-                this._rotate();
+                this.attachmentViewer.rotate();
                 break;
             case '+':
                 this._zoomIn();
