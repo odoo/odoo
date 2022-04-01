@@ -15,7 +15,7 @@ class Home(odoo.addons.web.controllers.main.Home):
     @http.route(
         '/web/login/totp',
         type='http', auth='public', methods=['GET', 'POST'], sitemap=False,
-        website=True, # website breaks the login layout...
+        website=True, multilang=False # website breaks the login layout...
     )
     def web_totp(self, redirect=None, **kwargs):
         if request.session.uid:
