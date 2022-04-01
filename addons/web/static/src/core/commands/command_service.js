@@ -1,7 +1,9 @@
 /** @odoo-module **/
 
+import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { CommandPaletteDialog } from "./command_palette_dialog";
+
 
 const { Component, xml } = owl;
 
@@ -68,6 +70,23 @@ export const commandService = {
         const registeredCommands = new Map();
         let nextToken = 0;
         let isPaletteOpened = false;
+
+        let [states, state_idx] = ["↑↑↓↓←→←→BA", 0]
+        let advance = (symbol) => {
+            state_idx = states[state_idx] === symbol ? state_idx + 1 : 0;
+            if (state_idx === states.length) env.services.effect.add({
+                type: "rainbow_man",
+                message: _lt("Good Job!"),
+            });
+        }
+        [
+            ["ArrowUp", '↑'], ["ArrowDown", '↓'],
+            ["ArrowLeft", '←'], ["ArrowRight", '→'],
+            ["a", 'A'], ["b", 'B'],
+        ].forEach(elem => hotkeyService.add(`control+${elem[0]}`, () => advance(elem[1]), {
+            bypassEditableProtection: true,
+            global: true,
+        }));
 
         hotkeyService.add("control+k", openMainPalette, {
             bypassEditableProtection: true,
