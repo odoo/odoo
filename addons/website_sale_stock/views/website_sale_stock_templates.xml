@@ -10,10 +10,12 @@
         </xpath>
     </template>
 
-  <template id="website_sale_stock_product" inherit_id="website_sale.product" priority="4">
-    <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="after">
-      <div class="availability_messages o_not_editable"/>
-    </xpath>
-  </template>
-
+    <template id="website_sale_stock_product" inherit_id="website_sale.product" priority="4">
+        <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="after">
+            <div class="availability_messages o_not_editable"/>
+        </xpath>
+        <xpath expr="//div[@id='product_details']" position="inside">
+            <input id="wsale_user_email" type="hidden" t-att-value="email"/>
+        </xpath>
+    </template>
 </odoo>

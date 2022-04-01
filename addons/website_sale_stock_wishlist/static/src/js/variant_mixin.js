@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import VariantMixin from "website_sale_stock.VariantMixin";
-import "website_sale.website_sale";
 import ajax from "web.ajax";
 import { qweb as QWeb } from "web.core";
 

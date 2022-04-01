@@ -11,7 +11,7 @@ class ProductProduct(models.Model):
     def _get_cart_qty(self, website=None):
         if not self.allow_out_of_stock_order:
             website = website or self.env['website'].get_current_website()
-            cart = website and request and website.sale_get_order() or None
+            cart = website and request and hasattr(request, 'website') and website.sale_get_order() or None
             if cart:
                 return sum(
                     cart._get_common_product_lines(product=self).mapped('product_uom_qty')

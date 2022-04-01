@@ -1,25 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import fields, models, _
+
+from odoo import models, _
 
 
 class ProductWishlist(models.Model):
     _inherit = "product.wishlist"
-
-    stock_notification = fields.Boolean(default=False, required=True)
-
-    def _add_to_wishlist(self, pricelist_id, currency_id, website_id, price, product_id, partner_id=False):
-        wish = super()._add_to_wishlist(
-            pricelist_id=pricelist_id,
-            currency_id=currency_id,
-            website_id=website_id,
-            price=price,
-            product_id=product_id,
-            partner_id=partner_id,
-        )
-        wish['stock_notification'] = wish.product_id._is_sold_out()
-
-        return wish
 
     def _send_availability_email(self):
         to_notify = self.env['product.wishlist'].search([('stock_notification', '=', True)])
@@ -32,16 +18,23 @@ class ProductWishlist(models.Model):
         # cannot group by product_id because it depend of website_id -> warehouse_id
         for wishlist in to_notify:
             product = wishlist.with_context(website_id=wishlist.website_id.id).product_id
-            if not product._is_sold_out():
-                body_html = self.env['ir.qweb']._render('website_sale_stock_wishlist.availability_email_body', {"wishlist": wishlist})
+            sold_out_cache = {}
+            if (wishlist.website_id, product) not in sold_out_cache:
+                sold_out_cache[(wishlist.website_id, product)] = product._is_sold_out()
+            if not sold_out_cache[(wishlist.website_id, product)]:
+                body_html = self.env['ir.qweb']._render('website_sale_stock.availability_email_body',
+                                                        {"wishlist": wishlist})
                 msg = self.env["mail.message"].sudo().new(dict(body=body_html, record_name=product.name))
                 full_mail = self.env["mail.render.mixin"]._render_encapsulate(
                     "mail.mail_notification_light",
                     body_html,
                     add_context=dict(message=msg, model_description=_("Wishlist")),
                 )
+                product_name = product.name
+                if product.product_template_attribute_value_ids:
+                    product_name += f" ({', '.join(product.product_template_attribute_value_ids.mapped('name'))})"
                 mail_values = {
-                    "subject": _("The product '%(product_name)s' is now available") % {'product_name': product.name},
+                    "subject": _("The %(product_name)s is now available") % {'product_name': product_name},
                     "email_from": (product.company_id.partner_id or self.env.user).email_formatted,
                     "email_to": wishlist.partner_id.email_formatted,
                     "body_html": full_mail,

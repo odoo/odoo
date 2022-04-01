@@ -16,6 +16,8 @@ Then it can be made specific at the product level.
         'sale_stock',
     ],
     'data': [
+        'data/template_email.xml',
+        'data/ir_cron_data.xml',
         'views/product_template_views.xml',
         'views/res_config_settings_views.xml',
         'views/website_sale_stock_templates.xml',
@@ -28,6 +30,9 @@ Then it can be made specific at the product level.
     'assets': {
         'web.assets_frontend': [
             'website_sale_stock/static/src/js/**/*',
+        ],
+        'web.assets_tests': [
+            'website_sale_stock/static/tests/tours/add_stock_email_notification.js',
         ],
     },
     'license': 'LGPL-3',

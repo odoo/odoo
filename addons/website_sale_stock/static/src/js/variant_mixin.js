@@ -1,14 +1,10 @@
-odoo.define('website_sale_stock.VariantMixin', function (require) {
-'use strict';
+/** @odoo-module alias=website_sale_stock.VariantMixin **/
 
-const {Markup} = require('web.utils');
-var VariantMixin = require('sale.VariantMixin');
-var publicWidget = require('web.public.widget');
-var ajax = require('web.ajax');
-var core = require('web.core');
-var QWeb = core.qweb;
-
-require('website_sale.website_sale');
+import { Markup } from 'web.utils';
+import VariantMixin from 'website_sale.VariantMixin';
+import ajax from 'web.ajax';
+import core from 'web.core';
+const QWeb = core.qweb;
 
 VariantMixin.loadStockXML = async () => {
     return ajax.loadXML('/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml', QWeb);
@@ -68,9 +64,6 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
     }
 
     return VariantMixin.loadStockXML().then(function (result) {
-        $('.oe_website_sale')
-            .find('.availability_message_' + combination.product_template)
-            .remove();
         combination.has_out_of_stock_message = $(combination.out_of_stock_message).text() !== '';
         combination.out_of_stock_message = Markup(combination.out_of_stock_message);
         const $message = $(QWeb.render(
@@ -80,29 +73,4 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
         $('div.availability_messages').html($message);
     });
 };
-
-publicWidget.registry.WebsiteSale.include({
-    /**
-     * Adds the stock checking to the regular _onChangeCombination method
-     * @override
-     */
-    _onChangeCombination: function () {
-        this._super.apply(this, arguments);
-        VariantMixin._onChangeCombinationStock.apply(this, arguments);
-    },
-    /**
-     * Recomputes the combination after adding a product to the cart
-     * @override
-     */
-    _onClickAdd(ev) {
-        return this._super.apply(this, arguments).then(() => {
-            if ($('div.availability_messages').length) {
-                this._getCombinationInfo(ev);
-            }
-        });
-    }
-});
-
-return VariantMixin;
-
-});
+export default VariantMixin;

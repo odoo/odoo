@@ -11,6 +11,12 @@
             </div>
             <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; width: 100%;">
                 <p t-esc="wishlist.product_id.name"/>
+                <p t-if="wishlist.product_id.product_template_attribute_value_ids"
+                   style="margin-left: 0.5em;">
+                    (<t
+                    t-out="', '.join(wishlist.product_id.product_template_attribute_value_ids.mapped('name'))"
+                    />)
+                </p>
                 <p style="margin-left: 0.5em; margin-right: 0.5em">-</p>
                 <p t-esc="wishlist.price" t-options="{'widget': 'monetary', 'display_currency': wishlist.currency_id}"/>
             </div>

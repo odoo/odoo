@@ -1,8 +1,17 @@
-/** @odoo-module **/
+/** @odoo-module alias=website_sale_wishlist.website_sale **/
 
 import { WebsiteSale } from 'website_sale.website_sale';
+import wSaleUtils from 'website_sale.utils';
 
 WebsiteSale.include({
+    events: Object.assign({}, WebsiteSale.prototype.events, {
+        'click .o_wsale_my_wish': '_onClickMyWish',
+        'click .o_add_wishlist, .o_add_wishlist_dyn': '_onClickAddWish',
+        'change input.product_id': '_onChangeVariant',
+        'change input.js_product_change': '_onChangeProduct',
+        'click .wishlist-section .o_wish_rm': '_onClickWishRemove',
+        'click .wishlist-section .o_wish_add': '_onClickWishAdd',
+    }),
     /**
      * Toggles the add to cart button depending on the possibility of the
      * current combination.
@@ -13,4 +22,282 @@ WebsiteSale.include({
         this._super(...arguments);
         $parent.find('button.o_wish_add').toggleClass('disabled', !isCombinationPossible);
     },
+    /**
+     * @constructor
+     */
+    init: function (parent) {
+        this._super.apply(this, arguments);
+        this.wishlistProductIDs = [];
+    },
+    /**
+     * Gets the current wishlist items.
+     * In editable mode, do nothing instead.
+     *
+     * @override
+     */
+    willStart: function () {
+        let self = this;
+        let def = this._super.apply(this, arguments);
+
+        let wishDef = $.get('/shop/wishlist', {
+            count: 1,
+        }).then(function (res) {
+            self.wishlistProductIDs = JSON.parse(res);
+        });
+
+        return Promise.all([def, wishDef]);
+    },
+    /**
+     * Updates the wishlist view (navbar) & the wishlist button (product page).
+     * In editable mode, do nothing instead.
+     *
+     * @override
+     */
+    start: function () {
+        let def = this._super.apply(this, arguments);
+
+        this._updateWishlistView();
+        // trigger change on only one input
+        if (this.$('input.js_product_change').length) { // manage "List View of variants"
+            this.$('input.js_product_change:checked').first().trigger('change');
+        } else {
+            this.$('input.product_id').first().trigger('change');
+        }
+
+        return def;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _addNewProducts: function ($el) {
+        let self = this;
+        let productID = $el.data('product-product-id');
+        if ($el.hasClass('o_add_wishlist_dyn')) {
+            productID = $el.parent().find('.product_id').val();
+            if (!productID) { // case List View Variants
+                productID = $el.parent().find('input:checked').first().val();
+            }
+            productID = parseInt(productID, 10);
+        }
+        let $form = $el.closest('form');
+        let templateId = $form.find('.product_template_id').val();
+        // when adding from /shop instead of the product page, need another selector
+        if (!templateId) {
+            templateId = $el.data('product-template-id');
+        }
+        $el.prop("disabled", true).addClass('disabled');
+        let productReady = this.selectOrCreateProduct($el.closest('form'), productID, templateId, false);
+        productReady.then(function (productId) {
+            productId = parseInt(productId, 10);
+
+            if (productId && !_.contains(self.wishlistProductIDs, productId)) {
+                return self._rpc({
+                    route: '/shop/wishlist/add', params: {
+                        product_id: productId,
+                    },
+                }).then(function () {
+                    self._productAddedToWishlist(productId, $el.closest('form'))
+                }).guardedCatch(function () {
+                    $el.prop("disabled", false).removeClass('disabled');
+                });
+            }
+        }).guardedCatch(function () {
+            $el.prop("disabled", false).removeClass('disabled');
+        });
+    },
+
+    _productAddedToWishlist: function(product_id, form) {
+        if (this.wishlistProductIDs.includes(product_id)) return;
+
+        this.wishlistProductIDs.push(product_id);
+        this._updateWishlistView();
+        const $navButton = $('header .o_wsale_my_wish').first();
+        wSaleUtils.animateClone($navButton, form, 25, 40);
+    },
+    /**
+     * @private
+     */
+    _updateWishlistView: function () {
+        const $wishButton = $('.o_wsale_my_wish');
+        if ($wishButton.hasClass('o_wsale_my_wish_hide_empty')) {
+            $wishButton.toggleClass('d-none', !this.wishlistProductIDs.length);
+        }
+        $wishButton.find('.my_wish_quantity').text(this.wishlistProductIDs.length);
+    },
+
+    /**
+     * @private
+     */
+    _removeWish: function (e, deferred_redirect) {
+        let tr = $(e.currentTarget).parents('tr');
+        let wish = tr.data('wish-id');
+        let product = tr.data('product-id');
+        let self = this;
+
+        this._rpc({
+            route: '/shop/wishlist/remove/' + wish,
+        }).then(function () {
+            $(tr).hide();
+        });
+
+        this.wishlistProductIDs = _.without(this.wishlistProductIDs, product);
+        if (this.wishlistProductIDs.length === 0) {
+            if (deferred_redirect) {
+                deferred_redirect.then(function () {
+                    self._redirectNoWish();
+                });
+            }
+        }
+        this._updateWishlistView();
+    },
+
+    /**
+     * @private
+     */
+    _addOrMoveWish: function (e) {
+        let $navButton = $('header .o_wsale_my_cart').first();
+        let tr = $(e.currentTarget).parents('tr');
+        let product = tr.data('product-id');
+        $('.o_wsale_my_cart').removeClass('d-none');
+        wSaleUtils.animateClone($navButton, tr, 25, 40);
+
+        if ($('#b2b_wish').is(':checked')) {
+            return this._addToCart(product, tr.find('add_qty').val() || 1);
+        } else {
+            let adding_deffered = this._addToCart(product, tr.find('add_qty').val() || 1);
+            this._removeWish(e, adding_deffered);
+            return adding_deffered;
+        }
+    },
+
+    /**
+     * @private
+     */
+    _addToCart: function (productID, qty) {
+        const $tr = this.$(`tr[data-product-id="${productID}"]`);
+        const productTrackingInfo = $tr.data('product-tracking-info');
+        if (productTrackingInfo) {
+            productTrackingInfo.quantity = qty;
+            $tr.trigger('add_to_cart_event', [productTrackingInfo]);
+        }
+        return this._rpc({
+            route: "/shop/cart/update_json", params: this._getCartUpdateJsonParams(productID, qty),
+        }).then(function (resp) {
+            if (resp.warning) {
+                if (!$('#data_warning').length) {
+                    $('.wishlist-section').prepend('<div class="mt16 alert alert-danger alert-dismissable" role="alert" id="data_warning"></div>');
+                }
+                let cart_alert = $('.wishlist-section').parent().find('#data_warning');
+                cart_alert.html('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">&times;</button> ' + resp.warning);
+
+            }
+            $('.my_cart_quantity').html(resp.cart_quantity || '<i class="fa fa-warning" /> ');
+        });
+    },
+
+    /**
+     * Get the cart update params.
+     *
+     * @param {string} productId
+     * @param {string} qty
+     */
+    _getCartUpdateJsonParams(productId, qty) {
+        return {
+            product_id: parseInt(productId, 10), add_qty: parseInt(qty, 10), display: false,
+        };
+    },
+
+    /**
+     * @private
+     */
+    _redirectNoWish: function () {
+        window.location.href = '/shop/cart';
+    },
+
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onClickMyWish: function () {
+        if (this.wishlistProductIDs.length === 0) {
+            this._updateWishlistView();
+            this._redirectNoWish();
+            return;
+        }
+        window.location = '/shop/wishlist';
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickAddWish: function (ev) {
+         this._addNewProducts($(ev.currentTarget));
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onChangeVariant: function (ev) {
+        let $input = $(ev.target);
+        let $parent = $input.closest('.js_product');
+        let $el = $parent.find("[data-action='o_wishlist']");
+        if (!_.contains(this.wishlistProductIDs, parseInt($input.val(), 10))) {
+            $el.prop("disabled", false).removeClass('disabled').removeAttr('disabled');
+        } else {
+            $el.prop("disabled", true).addClass('disabled').attr('disabled', 'disabled');
+        }
+        $el.data('product-product-id', parseInt($input.val(), 10));
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onChangeProduct: function (ev) {
+        let productID = ev.currentTarget.value;
+        let $el = $(ev.target).closest('.js_add_cart_variants').find("[data-action='o_wishlist']");
+
+        if (!_.contains(this.wishlistProductIDs, parseInt(productID, 10))) {
+            $el.prop("disabled", false).removeClass('disabled').removeAttr('disabled');
+        } else {
+            $el.prop("disabled", true).addClass('disabled').attr('disabled', 'disabled');
+        }
+        $el.data('product-product-id', productID);
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickWishRemove: function (ev) {
+        this._removeWish(ev, false);
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickWishAdd: function (ev) {
+        if (ev.currentTarget.classList.contains('disabled')) {
+            ev.preventDefault();
+            return;
+        }
+        let self = this;
+        this.$('.wishlist-section .o_wish_add').addClass('disabled');
+        this._addOrMoveWish(ev).then(function () {
+            self.$('.wishlist-section .o_wish_add').removeClass('disabled');
+        });
+    },
 });
+export default WebsiteSale

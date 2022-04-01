@@ -33,15 +33,14 @@ class WebsiteSaleWishlist(WebsiteSale):
             product_id,
             partner_id
         )
-
-        if not partner_id:
-            request.session['wishlist_ids'] = request.session.get('wishlist_ids', []) + [wish.id]
-
+        wish.displayed_in_cart = True
+        request.session.setdefault('wishlist_ids', []).append(wish.id)
         return wish
 
     @route(['/shop/wishlist'], type='http', auth="public", website=True, sitemap=False)
     def get_wishlist(self, count=False, **kw):
         values = request.env['product.wishlist'].with_context(display_default_code=False).current()
+        values = values.filtered(lambda wishlist: wishlist.displayed_in_cart)
         if count:
             return request.make_response(json.dumps(values.mapped('product_id').ids))
 
@@ -59,5 +58,8 @@ class WebsiteSaleWishlist(WebsiteSale):
                 request.session.modified = True
                 wish.sudo().unlink()
         else:
-            wish.unlink()
+            if wish.stock_notification:
+                wish.displayed_in_cart = False
+            else:
+                wish.unlink()
         return True
