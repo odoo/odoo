@@ -137,18 +137,6 @@ export class AttachmentViewer extends Component {
      *
      * @private
      */
-    _next() {
-        if (!this.attachmentViewer.dialogOwner || !this.attachmentViewer.dialogOwner.attachmentListOwnerAsAttachmentView) {
-            return;
-        }
-        this.attachmentViewer.dialogOwner.attachmentListOwnerAsAttachmentView.selectNextAttachment();
-    }
-
-    /**
-     * Display the previous attachment in the list of attachments.
-     *
-     * @private
-     */
     _previous() {
         if (!this.attachmentViewer.dialogOwner || !this.attachmentViewer.dialogOwner.attachmentListOwnerAsAttachmentView) {
             return;
@@ -368,7 +356,7 @@ export class AttachmentViewer extends Component {
      */
     _onClickNext(ev) {
         ev.stopPropagation();
-        this._next();
+        this.attachmentViewer.next();
     }
 
     /**
@@ -455,7 +443,7 @@ export class AttachmentViewer extends Component {
     _onKeydown(ev) {
         switch (ev.key) {
             case 'ArrowRight':
-                this._next();
+                this.attachmentViewer.next();
                 break;
             case 'ArrowLeft':
                 this._previous();
