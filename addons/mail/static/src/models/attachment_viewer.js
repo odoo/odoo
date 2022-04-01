@@ -17,6 +17,18 @@ registerModel({
             return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
         },
         /**
+         * Called when clicking on image. Stop propagation of event to prevent
+         * closing the dialog.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickImage(ev) {
+            if (this.isDragging) {
+                return;
+            }
+            ev.stopPropagation();
+        },
+        /**
          * @private
          * @returns {string}
          */

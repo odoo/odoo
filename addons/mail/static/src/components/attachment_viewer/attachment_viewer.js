@@ -347,20 +347,6 @@ export class AttachmentViewer extends Component {
     }
 
     /**
-     * Called when clicking on image. Stop propagation of event to prevent
-     * closing the dialog.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickImage(ev) {
-        if (this.attachmentViewer.isDragging) {
-            return;
-        }
-        ev.stopPropagation();
-    }
-
-    /**
      * Called when clicking on next icon.
      *
      * @private
