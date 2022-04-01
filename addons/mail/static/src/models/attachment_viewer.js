@@ -113,6 +113,31 @@ registerModel({
             this.dialogOwner.attachmentListOwnerAsAttachmentView.selectPreviousAttachment();
         },
         /**
+         * Prompt the browser print of this attachment.
+         */
+        print() {
+            const printWindow = window.open('about:blank', '_new');
+            printWindow.document.open();
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <script>
+                            function onloadImage() {
+                                setTimeout('printImage()', 10);
+                            }
+                            function printImage() {
+                                window.print();
+                                window.close();
+                            }
+                        </script>
+                    </head>
+                    <body onload='onloadImage()'>
+                        <img src="${this.imageUrl}" alt=""/>
+                    </body>
+                </html>`);
+            printWindow.document.close();
+        },
+        /**
          * @private
          * @returns {string}
          */
