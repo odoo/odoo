@@ -248,6 +248,15 @@ registerModel({
             });
         },
         /**
+         * @param {ComposerSuggestion} suggestion 
+         */
+        onClickSuggestion(suggestion) {
+            this.update({ activeSuggestion: replace(suggestion) });
+            this.insertSuggestion();
+            this.closeSuggestions();
+            this.update({ doFocus: true });
+        },
+        /**
          * @private
          * @param {KeyboardEvent} ev
          */
