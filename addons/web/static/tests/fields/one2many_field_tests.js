@@ -4487,22 +4487,10 @@ QUnit.module("Fields", (hooks) => {
         testUtils.mock.unpatch(AbstractField);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "editable one2many with sub widgets are rendered in readonly",
         async function (assert) {
-            assert.expect(2);
-
-            var editableWidgets = 0;
-            testUtils.mock.patch(AbstractField, {
-                init: function () {
-                    this._super.apply(this, arguments);
-                    if (this.mode === "edit") {
-                        editableWidgets++;
-                    }
-                },
-            });
-
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -4516,17 +4504,15 @@ QUnit.module("Fields", (hooks) => {
                         </field>
                     </form>`,
                 resId: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
             });
 
-            assert.strictEqual(editableWidgets, 1, "o2m is only widget in edit mode");
-            await click(form.$("tbody td.o_field_x2many_list_row_add a"));
+            await clickEdit(target);
+            assert.containsOnce(target, ".o_form_view .o_field_x2many_list_row_add ");
+            assert.containsNone(target, ".o_form_view input");
 
-            assert.strictEqual(editableWidgets, 3, "3 widgets currently in edit mode");
-
-            testUtils.mock.unpatch(AbstractField);
+            await click(target, "tbody td.o_field_x2many_list_row_add a");
+            assert.containsOnce(target, ".o_form_view .o_field_x2many_list_row_add ");
+            assert.containsN(target, ".o_form_view input", 2);
         }
     );
 
