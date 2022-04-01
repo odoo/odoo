@@ -54,9 +54,11 @@ class Project(models.Model):
                 total_amount_expense_invoiced += res['untaxed_amount_invoiced']
                 reinvoice_expense_ids += expense_data_per_product_id[product_id]
         section_id = 'expenses'
+        sequence = self._get_profitability_sequence_per_invoice_type()[section_id]
         expense_data = {
             'costs': {
                 'id': section_id,
+                'sequence': sequence,
                 'billed': -amount_billed,
                 'to_bill': 0.0,
             },
@@ -64,6 +66,7 @@ class Project(models.Model):
         if reinvoice_expense_ids:
             expense_data['revenues'] = {
                 'id': section_id,
+                'sequence': sequence,
                 'invoiced': total_amount_expense_invoiced,
                 'to_invoice': total_amount_expense_to_invoice,
             }
