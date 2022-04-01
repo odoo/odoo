@@ -101,6 +101,15 @@ registerModel({
             this.previous();
         },
         /**
+         * Called when clicking on print icon.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickPrint(ev) {
+            ev.stopPropagation();
+            this.print();
+        },
+        /**
          * Called when clicking on embed video player. Stop propagation to prevent
          * closing the dialog.
          *
