@@ -28,6 +28,9 @@ function factory(dependencies) {
          */
         static convertData(data) {
             const data2 = {};
+            if ('checksum' in data) {
+                data2.checksum = data.checksum;
+            }
             if ('filename' in data) {
                 data2.filename = data.filename;
             }
