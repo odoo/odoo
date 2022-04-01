@@ -591,11 +591,3 @@ class SaleOrderLine(models.Model):
                 # Trigger the Scheduler for Pickings
                 pickings_to_confirm.action_confirm()
         return True
-
-    def _update_line_quantity(self, values):
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        line_products = self.filtered(lambda l: l.product_id.type in ['product', 'consu'])
-        if line_products.mapped('qty_delivered') and float_compare(values['product_uom_qty'], max(line_products.mapped('qty_delivered')), precision_digits=precision) == -1:
-            raise UserError(_('You cannot decrease the ordered quantity below the delivered quantity.\n'
-                              'Create a return first.'))
-        super(SaleOrderLine, self)._update_line_quantity(values)
