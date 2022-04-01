@@ -124,17 +124,17 @@
             <record id="account_tax_report_line_do_przeniesienia" model="account.tax.report.line">
                 <field name="name">Podatek - Do przeniesienia</field>
                 <field name="sequence" eval="3"/>
-                <field name="formula">PLTAXC_04_16 + PLTAXC_05_18 + PLTAXC_06_20 + PLTAXC_09_24 + PLTAXC_10_26 + PLTAXC_11_28 + PLTAXC_12_32 + PLTAXD_02_42</field>
+                <field name="formula">PLTAXC - PLTAXD</field>
                 <field name="children_line_ids">
                     <record id="account_tax_report_line_nad_naleznym" model="account.tax.report.line">
                         <field name="name">Podatek - Nadwyżka naliczonego nad należnym</field>
                         <field name="sequence" eval="1"/>
-                        <field name="formula">PLTAXC_04_16 + PLTAXC_05_18 + PLTAXC_06_20 + PLTAXC_09_24 + PLTAXC_10_26 + PLTAXC_11_28 + PLTAXC_12_32 + PLTAXD_02_42</field>
+                        <field name="formula">PLTAXC - PLTAXD</field>
                         <field name="children_line_ids">
                             <record id="account_tax_report_line_do_US" model="account.tax.report.line">
                                 <field name="name">Podatek - Do wpłaty do US</field>
                                 <field name="sequence" eval="1"/>
-                                <field name="formula">PLTAXC_04_16 + PLTAXC_05_18 + PLTAXC_06_20 + PLTAXC_09_24 + PLTAXC_10_26 + PLTAXC_11_28 + PLTAXC_12_32 + PLTAXD_02_42</field>
+                                <field name="formula">PLTAXC - PLTAXD</field>
                                 <field name="children_line_ids">
                                     <record id="account_tax_report_line_kasy_rejestrujace" model="account.tax.report.line">
                                         <field name="name">Podatek - Wydatek na kasy rejestrujące</field>
@@ -146,6 +146,7 @@
                                     </record>
                                     <record id="account_tax_report_line_podatek_razem_c" model="account.tax.report.line">
                                         <field name="name">Podatek - Razem C</field>
+                                        <field name="code">PLTAXC</field>
                                         <field name="sequence" eval="3"/>
                                         <field name="formula">PLTAXC_04_16 + PLTAXC_05_18 + PLTAXC_06_20 + PLTAXC_09_24 + PLTAXC_10_26 + PLTAXC_11_28 + PLTAXC_12_32</field>
                                         <field name="children_line_ids">
@@ -211,6 +212,7 @@
                                     </record>
                                     <record id="account_tax_report_line_podatek_razem_d" model="account.tax.report.line">
                                         <field name="name">Podatek - Razem D</field>
+                                        <field name="code">PLTAXD</field>
                                         <field name="sequence" eval="4"/>
                                         <field name="children_line_ids">
                                             <record id="account_tax_report_line_podatek_deklaracji" model="account.tax.report.line">
