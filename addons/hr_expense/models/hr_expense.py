@@ -74,6 +74,11 @@ class HrExpense(models.Model):
         compute='_compute_from_product_id_company_id', store=True, readonly=False,
         domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'purchase'), ('price_include', '=', True)]", string='Taxes',
         help="The taxes should be \"Included In Price\"")
+<<<<<<< HEAD
+=======
+    # TODO SGV can be removed
+    untaxed_amount = fields.Float("Subtotal", store=True, compute='_compute_amount', digits='Account', copy=True)
+>>>>>>> 21be6af40a9... temp
     amount_residual = fields.Monetary(string='Amount Due', compute='_compute_amount_residual')
     total_amount = fields.Monetary("Total In Currency", compute='_compute_amount', store=True, currency_field='currency_id', tracking=True, readonly=False)
     company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='company_id.currency_id', readonly=True)
