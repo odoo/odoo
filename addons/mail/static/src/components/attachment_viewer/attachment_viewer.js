@@ -157,34 +157,6 @@ export class AttachmentViewer extends Component {
     }
 
     /**
-     * Prompt the browser print of this attachment.
-     *
-     * @private
-     */
-    _print() {
-        const printWindow = window.open('about:blank', '_new');
-        printWindow.document.open();
-        printWindow.document.write(`
-            <html>
-                <head>
-                    <script>
-                        function onloadImage() {
-                            setTimeout('printImage()', 10);
-                        }
-                        function printImage() {
-                            window.print();
-                            window.close();
-                        }
-                    </script>
-                </head>
-                <body onload='onloadImage()'>
-                    <img src="${this.attachmentViewer.imageUrl}" alt=""/>
-                </body>
-            </html>`);
-        printWindow.document.close();
-    }
-
-    /**
      * Rotate the image by 90 degrees to the right.
      *
      * @private
@@ -390,7 +362,7 @@ export class AttachmentViewer extends Component {
      */
     _onClickPrint(ev) {
         ev.stopPropagation();
-        this._print();
+        this.attachmentViewer.print();
     }
 
     /**
