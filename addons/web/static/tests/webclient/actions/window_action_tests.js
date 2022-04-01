@@ -62,8 +62,9 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.skipWOWL("sidebar is present in list view", async function (assert) {
+    QUnit.test("sidebar is present in list view", async function (assert) {
         assert.expect(4);
+
         serverData.models.partner.toolbar = {
             print: [{ name: "Print that record" }],
         };
@@ -79,7 +80,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         assert.containsNone(target, ".o_cp_action_menus");
-        await testUtils.dom.clickFirst($(target).find("input.custom-control-input"));
+        await click(target.querySelector("input.custom-control-input"));
         assert.isVisible(
             $(target).find('.o_cp_action_menus button.dropdown-toggle:contains("Print")')[0]
         );
