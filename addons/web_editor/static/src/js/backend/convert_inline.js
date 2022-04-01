@@ -346,16 +346,24 @@ function classToStyle($editable, cssRules) {
             delete css['font-family'];
         }
 
-        // Do not apply css that would override inline styles (which are prioritary).
-        let style = node.getAttribute('style') || '';
-        // Outlook doesn't support inline !important
-        style = style.replace(/!important/g,'');
+        const stylesObject = {};
         for (const [key, value] of Object.entries(css)) {
-            if (!(new RegExp(`(^|;)\\s*${key}`).test(style))) {
-                style = `${key}:${value};${style}`;
-            }
-        };
-        if (_.isEmpty(style)) {
+            stylesObject[key] = value;
+        }
+        // Inline styles override more general css.
+        for (const key of node.style) {
+            stylesObject[key] = node.style[key];
+        }
+        // Media list images should not have an inline height.
+        if (node.nodeName === 'IMG' && node.classList.contains('s_media_list_img')) {
+            delete stylesObject['height'];
+        }
+        // Protect aspect ratio when resizing in mobile.
+        if (node.nodeName === 'IMG' && stylesObject['width'] === '100%' && !('object-fit' in stylesObject)) {
+            stylesObject['object-fit'] = 'cover';
+        }
+        const style = [...Object.keys(stylesObject)].map(key => `${key}:${stylesObject[key]};`).join('');
+        if (!style.trim()) {
             writes.push(() => { node.removeAttribute('style'); });
         } else {
             writes.push(() => {
@@ -366,10 +374,6 @@ function classToStyle($editable, cssRules) {
             });
         }
 
-        // Media list images should not have an inline height
-        if (node.nodeName === 'IMG' && node.classList.contains('s_media_list_img')) {
-            writes.push(() => { node.style.removeProperty('height'); });
-        }
         // Apple Mail
         if (node.nodeName === 'TD' && !node.childNodes.length) {
             writes.push(() => { node.appendChild(document.createTextNode('&nbsp;')); });
