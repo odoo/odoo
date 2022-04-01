@@ -4,14 +4,7 @@ import testUtils from "web.test_utils";
 import core from "web.core";
 import AbstractAction from "web.AbstractAction";
 import { registry } from "@web/core/registry";
-import {
-    click,
-    getFixture,
-    legacyExtraNextTick,
-    patchWithCleanup,
-    makeDeferred,
-    nextTick,
-} from "../../helpers/utils";
+import { click, getFixture, patchWithCleanup, makeDeferred, nextTick } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 import { registerCleanup } from "../../helpers/cleanup";
 import { errorService } from "@web/core/errors/error_service";
@@ -105,23 +98,20 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("Button with `close` attribute closes dialog", async function (assert) {
-        assert.expect(19);
+    QUnit.test("Button with `close` attribute closes dialog", async function (assert) {
         serverData.views = {
             "partner,false,form": `
-        <form>
-          <header>
-            <button string="Open dialog" name="5" type="action"/>
-          </header>
-        </form>
-      `,
+                <form>
+                    <header>
+                        <button string="Open dialog" name="5" type="action"/>
+                    </header>
+                </form>`,
             "partner,view_ref,form": `
-          <form>
-            <footer>
-              <button string="I close the dialog" name="some_method" type="object" close="1"/>
-            </footer>
-          </form>
-      `,
+                <form>
+                    <footer>
+                        <button string="I close the dialog" name="some_method" type="object" close="1"/>
+                    </footer>
+                </form>`,
             "partner,false,search": "<search></search>",
         };
         serverData.actions[4] = {
@@ -164,8 +154,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/dataset/call_kw/partner/get_views",
             "/web/dataset/call_kw/partner/onchange",
         ]);
-        await legacyExtraNextTick();
-        assert.strictEqual($(".modal").length, 1, "It should display a modal");
+        assert.containsOnce(document.body, ".modal");
         await testUtils.dom.click(`button[name="some_method"]`);
         assert.verifySteps([
             "/web/dataset/call_kw/partner/create",
@@ -173,8 +162,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/dataset/call_button",
             "/web/dataset/call_kw/partner/read",
         ]);
-        await legacyExtraNextTick();
-        assert.strictEqual($(".modal").length, 0, "It should have closed the modal");
+        assert.containsNone(document.body, ".modal");
     });
 
     QUnit.test('on_attach_callback is called for actions in target="new"', async function (assert) {
