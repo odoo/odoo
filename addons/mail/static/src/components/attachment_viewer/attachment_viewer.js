@@ -224,17 +224,6 @@ export class AttachmentViewer extends Component {
     }
 
     /**
-     * Called when clicking on rotate icon.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickRotate(ev) {
-        ev.stopPropagation();
-        this.attachmentViewer.rotate();
-    }
-
-    /**
      * Called when clicking on zoom in icon.
      *
      * @private

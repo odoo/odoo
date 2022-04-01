@@ -110,6 +110,15 @@ registerModel({
             this.print();
         },
         /**
+         * Called when clicking on rotate icon.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickRotate(ev) {
+            ev.stopPropagation();
+            this.rotate();
+        },
+        /**
          * Called when clicking on embed video player. Stop propagation to prevent
          * closing the dialog.
          *
