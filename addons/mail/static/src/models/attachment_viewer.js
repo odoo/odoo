@@ -17,6 +17,15 @@ registerModel({
             return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
         },
         /**
+         * Called when clicking on previous icon.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickPrevious(ev) {
+            ev.stopPropagation();
+            this.previous();
+        },
+        /**
          * Display the previous attachment in the list of attachments.
          */
         previous() {

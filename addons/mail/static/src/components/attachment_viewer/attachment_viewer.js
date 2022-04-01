@@ -360,17 +360,6 @@ export class AttachmentViewer extends Component {
     }
 
     /**
-     * Called when clicking on previous icon.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickPrevious(ev) {
-        ev.stopPropagation();
-        this.attachmentViewer.previous();
-    }
-
-    /**
      * Called when clicking on print icon.
      *
      * @private

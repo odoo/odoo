@@ -84,7 +84,7 @@
                     </div>
                 </t>
                 <t t-if="attachmentViewer.attachments.length > 1">
-                    <div class="o_AttachmentViewer_buttonNavigation o_AttachmentViewer_buttonNavigationPrevious o_AttachmentViewer_buttonNavigationPreviousIcon btn btn-dark position-absolute top-0 bottom-0 start-0 align-items-center justify-content-center d-flex my-auto ms-3 rounded-circle" t-on-click="_onClickPrevious" title="Previous (Left-Arrow)" role="button">
+                    <div class="o_AttachmentViewer_buttonNavigation o_AttachmentViewer_buttonNavigationPrevious o_AttachmentViewer_buttonNavigationPreviousIcon btn btn-dark position-absolute top-0 bottom-0 start-0 align-items-center justify-content-center d-flex my-auto ms-3 rounded-circle" t-on-click="attachmentViewer.onClickPrevious" title="Previous (Left-Arrow)" role="button">
                         <span class="fa fa-chevron-left" role="img"/>
                     </div>
                     <div class="o_AttachmentViewer_buttonNavigation o_AttachmentViewer_buttonNavigationNext o_AttachmentViewer_buttonNavigationNextIcon btn btn-dark position-absolute top-0 bottom-0 end-0 align-items-center justify-content-center d-flex my-auto me-3 rounded-circle" t-on-click="_onClickNext" title="Next (Right-Arrow)" role="button">
