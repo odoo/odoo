@@ -589,10 +589,11 @@ class AccountPaymentRegister(models.TransientModel):
                     debit_lines = (liquidity_lines + counterpart_lines).filtered('debit')
                     credit_lines = (liquidity_lines + counterpart_lines).filtered('credit')
 
-                    payment.move_id.write({'line_ids': [
-                        (1, debit_lines[0].id, {'debit': debit_lines[0].debit + delta_balance}),
-                        (1, credit_lines[0].id, {'credit': credit_lines[0].credit + delta_balance}),
-                    ]})
+                    if debit_lines and credit_lines:
+                        payment.move_id.write({'line_ids': [
+                            (1, debit_lines[0].id, {'debit': debit_lines[0].debit + delta_balance}),
+                            (1, credit_lines[0].id, {'credit': credit_lines[0].credit + delta_balance}),
+                        ]})
         return payments
 
     def _post_payments(self, to_process, edit_mode=False):
