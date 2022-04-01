@@ -36,6 +36,7 @@ export class SelectCreateDialog extends Dialog {
             },
             noBreadcrumbs: true,
             searchViewId: this.props.searchViewId,
+            display: { searchPanel: false },
         };
 
         onWillStart(async () => {
