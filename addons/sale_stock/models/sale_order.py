@@ -495,6 +495,7 @@ class SaleOrderLine(models.Model):
             'company_id': self.order_id.company_id,
             'product_packaging_id': self.product_packaging_id,
             'sequence': self.sequence,
+            'to_refund': float_compare(self.product_uom_qty, 0, precision_rounding=self.product_uom.rounding) < 0,
         })
         return values
 
