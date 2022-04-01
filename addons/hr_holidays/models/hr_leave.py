@@ -305,7 +305,7 @@ class HolidaysRequest(models.Model):
     @api.constrains('holiday_status_id', 'number_of_days')
     def _check_allocation_duration(self):
         for holiday in self:
-            if holiday.holiday_status_id.requires_allocation == 'yes' and holiday.number_of_days > holiday.holiday_allocation_id.number_of_days:
+            if holiday.holiday_status_id.requires_allocation == 'yes' and holiday.holiday_allocation_id and holiday.number_of_days > holiday.holiday_allocation_id.number_of_days:
                 raise ValidationError(_("You have several allocations for those type and period.\nPlease split your request to fit in their number of days."))
 
     @api.depends_context('uid')
