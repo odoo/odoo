@@ -40,7 +40,7 @@ class Lead2OpportunityPartner(models.TransientModel):
                 result['user_id'] = lead.user_id.id
             if lead.team_id:
                 result['team_id'] = lead.team_id.id
-            if not partner_id and not lead.contact_name:
+            if not partner_id and not lead.contact_name and not result.get('action'):
                 result['action'] = 'nothing'
         return result
 
