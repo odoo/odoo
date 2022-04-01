@@ -23,6 +23,15 @@ registerModel({
             return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
         },
         /**
+         * Display the previous attachment in the list of attachments.
+         */
+        next() {
+            if (!this.dialogOwner || !this.dialogOwner.attachmentListOwnerAsAttachmentView) {
+                return;
+            }
+            this.dialogOwner.attachmentListOwnerAsAttachmentView.selectNextAttachment();
+        },
+        /**
          * Called when clicking on mask of attachment viewer.
          *
          * @param {MouseEvent} ev
