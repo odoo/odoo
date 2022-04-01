@@ -333,14 +333,6 @@
         data-allow-delete="true" data-fakem2m="true"/>
 </template>
 
-<template id="snippet_options_header_brand">
-    <we-select t-att-string="label" data-reload="/" t-att-data-dependencies="dependencies">
-        <we-button data-customize-website-views="" data-name="option_header_brand_none">None</we-button>
-        <we-button data-customize-website-views="website.option_header_brand_name">Text</we-button>
-        <we-button data-customize-website-views="website.option_header_brand_logo">Image</we-button>
-    </we-select>
-</template>
-
 <template id="snippet_options">
     <t t-call="web_editor.snippet_options">
         <t t-set="image_transform_dependencies" t-valuef="no_animation_opt"/>
@@ -869,23 +861,20 @@
             <we-button data-customize-website-views="website.header_language_selector_flag, website.header_language_selector_no_text">Flag</we-button>
             <we-button data-customize-website-views="website.header_language_selector_flag">Flag and Text</we-button>
         </we-select>
-        <t t-call="website.snippet_options_header_brand">
-            <t t-set="label">Logo Type</t>
-            <t t-set="dependencies" t-valuef="option_header_brand_none"/>
-        </t>
-    </div>
-    <div data-selector="#wrapwrap > header nav.navbar .navbar-brand img" data-no-check="true">
-        <t t-call="website.snippet_options_header_brand">
-            <t t-set="label">Type</t>
-        </t>
-
+        <we-select string="Logo" data-reload="/">
+            <we-button data-customize-website-views="" data-name="option_header_brand_none">None</we-button>
+            <we-button data-customize-website-views="website.option_header_brand_name">Text</we-button>
+            <we-button data-customize-website-views="website.option_header_brand_logo">Image</we-button>
+        </we-select>
         <we-input string="Height"
+                  class="o_we_sublevel_1"
                   data-dependencies="!option_header_brand_none"
                   data-customize-website-variable="null"
                   data-variable="logo-height"
                   data-unit="px"
                   data-save-unit="rem"/>
         <we-input string="Height (Scrolled)"
+                  class="o_we_sublevel_1"
                   data-name="option_logo_height_scrolled"
                   data-customize-website-variable="null"
                   data-variable="fixed-logo-height"
