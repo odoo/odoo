@@ -87,15 +87,6 @@ export class AttachmentViewer extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Close the dialog with this attachment viewer.
-     *
-     * @private
-     */
-    _close() {
-        this.attachmentViewer.delete();
-    }
-
-    /**
      * Determine whether the current image is rendered for the 1st time, and if
      * that's the case, display a spinner until loaded.
      *
@@ -290,7 +281,7 @@ export class AttachmentViewer extends Component {
         }
         // TODO: clicking on the background should probably be handled by the dialog?
         // task-2092965
-        this._close();
+        this.attachmentViewer.close();
     }
 
     /**
@@ -300,7 +291,7 @@ export class AttachmentViewer extends Component {
      * @param {MouseEvent} ev
      */
     _onClickClose(ev) {
-        this._close();
+        this.attachmentViewer.close();
     }
 
     /**
@@ -455,10 +446,10 @@ export class AttachmentViewer extends Component {
                 this._previous();
                 break;
             case 'Escape':
-                this._close();
+                this.attachmentViewer.close();
                 break;
             case 'q':
-                this._close();
+                this.attachmentViewer.close();
                 break;
             case 'r':
                 this._rotate();
