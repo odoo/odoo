@@ -123,11 +123,14 @@ class ProductTemplate(models.Model):
             'delivered_manual': ('delivery', 'manual'),
         }
 
+    def _get_general_to_service_map(self):
+        return {v: k for k, v in self._get_service_to_general_map().items()}
+
     def _get_service_to_general(self, service_policy):
         return self._get_service_to_general_map().get(service_policy, (False, False))
 
     def _get_general_to_service(self, invoice_policy, service_type):
-        general_to_service = {v: k for k, v in self._get_service_to_general_map().items()}
+        general_to_service = self._get_general_to_service_map()
         return general_to_service.get((invoice_policy, service_type), False)
 
     @api.onchange('service_policy')
