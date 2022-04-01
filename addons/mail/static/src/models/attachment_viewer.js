@@ -23,6 +23,19 @@ registerModel({
             return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
         },
         /**
+         * Called when clicking on mask of attachment viewer.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClick(ev) {
+            if (this.isDragging) {
+                return;
+            }
+            // TODO: clicking on the background should probably be handled by the dialog?
+            // task-2092965
+            this.close();
+        },
+        /**
          * @private
          * @returns {string}
          */

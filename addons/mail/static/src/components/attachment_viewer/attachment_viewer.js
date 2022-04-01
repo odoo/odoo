@@ -270,21 +270,6 @@ export class AttachmentViewer extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Called when clicking on mask of attachment viewer.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClick(ev) {
-        if (this.attachmentViewer.isDragging) {
-            return;
-        }
-        // TODO: clicking on the background should probably be handled by the dialog?
-        // task-2092965
-        this.attachmentViewer.close();
-    }
-
-    /**
      * Called when clicking on cross icon.
      *
      * @private
