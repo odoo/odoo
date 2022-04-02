@@ -3326,7 +3326,7 @@ msgstr "CUST"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__can_edit_body
 msgid "Can Edit Body"
-msgstr "يمكن تحرير الموضوع "
+msgstr "يمكن تحرير النص "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__can_edit_wizard
@@ -4098,7 +4098,7 @@ msgstr "اربط حساباتك المالية في ثوان. "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to_force_new
 msgid "Considers answers as new thread"
-msgstr "يعتبر الاجابات كمحادثة جديدة "
+msgstr "يعتبر الإجابات كمحادثة جديدة "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_template__tax_scope__consu
@@ -13658,6 +13658,18 @@ msgstr ""
 "الوضع الحالي لكشف حسابك البنكي:- جديد: قابل للتحرير كلياً مع مسودات قيود "
 "اليومية.- قيد المعالجة: لا يمكن تحريره بعد الآن مع قيود اليومية المرحّلة، "
 "جاهز للتسوية.- مُصدّق: كافة البنود مسوّاة. لم يتبق شيء لمعالجته. "
+
+#. module: account
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid "The date of some related entries is protected by a lock date"
+msgstr ""
+
+#. module: account
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid "The date selected is protected by a lock date"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0

@@ -3250,7 +3250,7 @@ msgstr "Schaltfläche"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_button
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__writeoff_button
 msgid "Button to generate counterpart entry"
-msgstr ""
+msgstr "Schaltfläche zum Erzeugen eines Gegeneintrags"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_country
@@ -13086,6 +13086,8 @@ msgid ""
 "Technical field to display a warning message in case starting balance is "
 "different than previous ending balance"
 msgstr ""
+"Technisches Feld zur Anzeige einer Warnmeldung, wenn der Anfangssaldo vom "
+"vorherigen Endsaldo abweicht"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_country_id
@@ -13784,6 +13786,18 @@ msgstr ""
 "vorläufigen Journalbuchungen.- In Bearbeitung: Nicht mehr bearbeitbar mit "
 "gebuchten Journalbuchungen, bereit für den Abgleich.- Validiert: Alle Zeilen"
 " sind abgeglichen. Es gibt nichts mehr zu bearbeiten."
+
+#. module: account
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid "The date of some related entries is protected by a lock date"
+msgstr ""
+
+#. module: account
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid "The date selected is protected by a lock date"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
@@ -16799,7 +16813,7 @@ msgstr "technisches Feld für Widget Steuer-Gruppen-benutzerdefiniertes Feld"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__previous_statement_id
 msgid "technical field to compute starting balance correctly"
-msgstr ""
+msgstr "technisches Feld zur korrekten Berechnung der Startbilanz"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form

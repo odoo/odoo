@@ -18,6 +18,7 @@
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # trendspotter <jirka.p@volny.cz>, 2022
+# Marek Záda, 2022
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: trendspotter <jirka.p@volny.cz>, 2022\n"
+"Last-Translator: Marek Záda, 2022\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -167,7 +168,7 @@ msgstr "(object._get_report_base_filename())"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "- Posted Entries Only"
-msgstr ""
+msgstr "Pouze zaúčtované položky"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -13519,6 +13520,18 @@ msgstr ""
 " vnitřní účetní doklady. - Zpracování: již nelze upravovat se zaúčtovanými "
 "vnitřními účetními dokladmi, připraveno k párování. - Ověření: Všechny řádky"
 " jsou odsouhlaseny. Nezbývá nic na zpracování."
+
+#. module: account
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid "The date of some related entries is protected by a lock date"
+msgstr ""
+
+#. module: account
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid "The date selected is protected by a lock date"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0

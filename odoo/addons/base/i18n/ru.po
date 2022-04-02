@@ -33,6 +33,7 @@
 # Irina Fedulova <istartlin@gmail.com>, 2021
 # Алексей Хомяков <alexey.homyakov@gmail.com>, 2021
 # Сергей Шебанин <sergey@shebanin.ru>, 2022
+# Иван Дроздов, 2022
 # 
 msgid ""
 msgstr ""
@@ -40,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2022\n"
+"Last-Translator: Иван Дроздов, 2022\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,6 +63,14 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Бухгалтерские отчёты для Австрии.\n"
+"================================\n"
+"\n"
+"  * Определяет следующие отчеты:\n"
+"      * Прибыль/Потери (§ Метод общей стоимости UGB 231)\n"
+"      * Бухгалтерский баланс (§ UGB 224)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at
@@ -343,6 +352,20 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Обзор:\n"
+"---------\n"
+"\n"
+"* Шаблон плана счетов и налогов для компаний в Японии.\n"
+"* Это, вероятно, не охватывает все необходимые учетные записи для компании. Ожидается, что вы будете добавлять / удалять / изменять учетные записи на основе этого шаблона.\n"
+"\n"
+"Примечание:\n"
+"-----\n"
+"\n"
+"* Фискальные позиции \"内税\" и \"外税\" были добавлены для удовлетворения особых требований, которые могут возникнуть в результате внедрения POS. [1] При нормальных обстоятельствах вам может вообще не понадобиться их использовать.\n"
+"\n"
+"[1] См. https://github.com/odoo/odoo/pull/6470 для деталей."
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -363,6 +386,9 @@ msgid ""
 "\n"
 "This module adds a custom Sales Team for the Point of Sale. This enables you to view and manage your point of sale sales with more ease.\n"
 msgstr ""
+"\n"
+"\n"
+"Этот модуль добавляет пользовательскую команду продаж для точки продаж. Это позволяет вам с большей легкостью просматривать продажи в точках продаж и управлять ими.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -375,6 +401,13 @@ msgid ""
 "- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Этот модуль добавляет в точку продаж несколько функций, специфичных для управления рестораном:\n"
+"- Печать счета: позволяет распечатать квитанцию до оплаты заказа.\n"
+"- Разделение счетов: позволяет разделить заказ на разные заказы.\n"
+"- Печать заказов на кухню: позволяет печатать обновления заказов на кухонных или барных принтерах\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_discount
@@ -385,6 +418,11 @@ msgid ""
 "discount to a customer.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Этот модуль позволяет кассиру быстро предоставлять клиенту\n"
+"скидку в процентах.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_loyalty
@@ -396,6 +434,12 @@ msgid ""
 "and get rewards.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Этот модуль позволяет вам определить программу лояльности в\n"
+"точке продаж, в рамках которой клиенты зарабатывают баллы лояльности\n"
+"и получают вознаграждения.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_epson_printer_restaurant
@@ -404,6 +448,10 @@ msgid ""
 "\n"
 "Use Epson Printers as Order Printers in the Point of Sale without the IoT Box\n"
 msgstr ""
+"\n"
+"\n"
+"Используйте принтеры Epson в качестве принтеров для заказов в точке продаж без управляющего узла IoT (интернета вещей)\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_epson_printer
@@ -412,6 +460,9 @@ msgid ""
 "\n"
 "Use Epson ePOS Printers without the IoT Box in the Point of Sale\n"
 msgstr ""
+"\n"
+"\n"
+"Используйте pos-принтеры Epson в точке продаж без управляющего узла IoT (интернета вещей)\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_renting_sign
@@ -420,6 +471,8 @@ msgid ""
 "            Bridge Sign functionalities with the Rental application\n"
 "        "
 msgstr ""
+"\n"
+"           Поддержка символа моста в приложении для аренды"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_timesheet
@@ -429,6 +482,9 @@ msgid ""
 "        - Track timesheet for a task from a ticket\n"
 "    "
 msgstr ""
+"\n"
+"- Позволяет настроить проект для команды службы поддержки\n"
+"- Отслеживание расписания для задачи из тикета"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports
@@ -461,6 +517,11 @@ msgid ""
 "        Also adds DATEV export options to general ledger\n"
 "    "
 msgstr ""
+"\n"
+"        Бухгалтерские отчёты для Германии\n"
+"        Содержит бухгалтерский баланс, отчеты о прибылях и убытках, отчеты по НДС и партнерские отчеты по НДС\n"
+"         Также добавляет параметры экспорта в главную книгу в формате DATEV\n"
+"         "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt_reports
@@ -503,6 +564,8 @@ msgid ""
 "        Accounting reports for Sweden\n"
 "    "
 msgstr ""
+"\n"
+"         Бухгалтерские отчёты для Швеции"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch_reports
@@ -30231,7 +30294,7 @@ msgstr ""
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "You don't have enough access rights to run this action."
-msgstr ""
+msgstr "У вас недостаточно прав доступа для выполнения этого действия."
 
 #. module: base
 #: code:addons/models.py:0
@@ -30239,6 +30302,7 @@ msgstr ""
 msgid ""
 "You don't have the rights to export data. Please contact an Administrator."
 msgstr ""
+"У вас нет прав на экспорт данных. Пожалуйста, свяжитесь с администратором."
 
 #. module: base
 #: code:addons/base/wizard/base_partner_merge.py:0
@@ -30343,7 +30407,7 @@ msgstr "Индекс"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__zip_required
 msgid "Zip Required"
-msgstr ""
+msgstr "Необходим почтовый индекс"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -30370,7 +30434,7 @@ msgstr ""
 #: code:addons/models.py:0
 #, python-format
 msgid "allowed for groups %s"
-msgstr ""
+msgstr "разрешено для групп%s"
 
 #. module: base
 #: code:addons/models.py:0
@@ -30619,6 +30683,8 @@ msgid ""
 "has been successfully installed.\n"
 "Users can choose his favorite language in their preferences."
 msgstr ""
+"был успешно установлен.\n"
+"Пользователи могут выбрать предпочтительный язык в своих настройках."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -30860,7 +30926,7 @@ msgstr "test read_group"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_xlsx_export
 msgid "test xlsx export"
-msgstr ""
+msgstr "test xlsx export"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_assetsbundle
@@ -30915,7 +30981,7 @@ msgstr "test-lint"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_populate
 msgid "test-populate"
-msgstr ""
+msgstr "test-populate"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_translation_import
@@ -30935,7 +31001,7 @@ msgstr "test_convert"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_search_panel
 msgid "test_search_panel"
-msgstr ""
+msgstr "test_search_panel"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__text
@@ -30973,7 +31039,7 @@ msgstr "неделю"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "year"
-msgstr ""
+msgstr "год"
 
 #. module: base
 #: model:res.country,name:base.ax

@@ -7275,7 +7275,7 @@ msgstr "Звіт правила запасу"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenishment_info
 msgid "Stock supplier replenishment information"
-msgstr ""
+msgstr "Інформація про поповнення запасів постачальника"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__detailed_type__product
@@ -9224,6 +9224,15 @@ msgstr "Вам потрібно надати партійний/серійний
 msgid "You should update this document to reflect your T&amp;C."
 msgstr ""
 "Вам слід оновити цей документ, щоб він відображав ваші терміни та умови."
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You should not use a planned internal transfer to move some products between"
+" two warehouses. Instead, use an immediate internal transfer or the resupply"
+" route."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0

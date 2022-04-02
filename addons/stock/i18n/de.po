@@ -1185,7 +1185,7 @@ msgstr "Rückstände"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__barcode
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Barcode"
-msgstr "Strichcode"
+msgstr "Barcode"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_wms_barcode_nomenclature_all
@@ -1195,7 +1195,7 @@ msgstr "Barcode-Nomenklatur"
 #. module: stock
 #: model:ir.model,name:stock.model_barcode_rule
 msgid "Barcode Rule"
-msgstr "Strichcoderegel"
+msgstr "Barcoderegel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_barcode
@@ -9405,6 +9405,15 @@ msgid "You should update this document to reflect your T&amp;C."
 msgstr ""
 "Sie sollten dieses Dokument aktualisieren, damit es Ihre "
 "Geschäftsbedingungen widerspiegelt."
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You should not use a planned internal transfer to move some products between"
+" two warehouses. Instead, use an immediate internal transfer or the resupply"
+" route."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0

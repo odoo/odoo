@@ -652,7 +652,7 @@ msgstr "<strong>Collo</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Product Barcode</strong>"
-msgstr "<strong>Codice a barre prodotto</strong>"
+msgstr "<strong>Barcode prodotto</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -715,7 +715,7 @@ msgstr "? Ciò potrebbe portare a incongruenze nel magazzino."
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_barcode_uniq
 msgid "A barcode can only be assigned to one package type !"
-msgstr "Un codice a barre può essere assegnato a un solo tipo di imballaggio!"
+msgstr "Un barcode può essere assegnato a un solo tipo di imballaggio!"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -1191,22 +1191,22 @@ msgstr "Ordini residui"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__barcode
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Barcode"
-msgstr "Codice a barre"
+msgstr "Barcode"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_wms_barcode_nomenclature_all
 msgid "Barcode Nomenclatures"
-msgstr "Nomenclature codice a barre"
+msgstr "Nomenclature barcode"
 
 #. module: stock
 #: model:ir.model,name:stock.model_barcode_rule
 msgid "Barcode Rule"
-msgstr "Regola codice a barre"
+msgstr "Regola barcode"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_barcode
 msgid "Barcode Scanner"
-msgstr "Lettore codice a barre"
+msgstr "Lettore barcode"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
@@ -4070,7 +4070,7 @@ msgstr "Ubicazione"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_location_barcode
 msgid "Location Barcode"
-msgstr "Codice a barre ubicazione"
+msgstr "Posizione Barcode"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__name
@@ -5166,17 +5166,17 @@ msgstr "Collo"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
 msgid "Package Barcode (PDF)"
-msgstr "Codice a barre del collo (PDF)"
+msgstr "Barcode del pacchetto (PDF)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_package_template
 msgid "Package Barcode (ZPL)"
-msgstr "Codice a barre del collo (ZPL)"
+msgstr "Barcode del pacchetto (ZPL)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode
 msgid "Package Barcode with Content"
-msgstr "Codice a barre del collo con contenuto"
+msgstr "Barcode della confezione con contenuto"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__package_capacity_ids
@@ -5492,7 +5492,7 @@ msgstr "Trattare a questa data per essere in tempo"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process operations faster with barcodes"
-msgstr "Elabora più velocemente le operazioni con i codici a barre"
+msgstr "Elabora più velocemente le operazioni con i barcode"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7657,7 +7657,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
 msgid "The barcode for a location must be unique per company !"
-msgstr "Il codice a barre di una ubicazione deve essere univoco per azienda."
+msgstr "Il barcode di una ubicazione deve essere univoco per azienda."
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -8108,7 +8108,7 @@ msgstr ""
 #: model:digest.tip,name:stock.digest_tip_stock_0
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_0
 msgid "Tip: Speed up inventory operations with barcodes"
-msgstr "Consiglio: velocizza le operazioni di inventario con i codici a barre"
+msgstr "Consiglio: velocizza le operazioni di inventario con i barcode"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__location_dest_id
@@ -9365,6 +9365,15 @@ msgstr "È necessario fornire un numero di lotto/serie per i prodotti %s."
 msgid "You should update this document to reflect your T&amp;C."
 msgstr ""
 "Aggiorni questo documento per riflettere le vostre Condizioni Generali."
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You should not use a planned internal transfer to move some products between"
+" two warehouses. Instead, use an immediate internal transfer or the resupply"
+" route."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0

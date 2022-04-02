@@ -8673,7 +8673,7 @@ msgstr "Leverancierslocaties"
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__view
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "View"
-msgstr "Bekijk"
+msgstr "Weergave"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -9334,7 +9334,7 @@ msgid ""
 "lot/serial numbers by doing an inventory adjustment."
 msgstr ""
 "Je hebt product(en) op voorraad die geen partij/serienummer hebben. Je kunt "
-"lot- /serienummers toewijzen door een voorraadaanpassing uit te voeren."
+"een partij/serienummers toewijzen door een voorraadaanpassing uit te voeren."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -9413,6 +9413,15 @@ msgstr "Je moet een partij/serienummer ingeven voor het product %s."
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid "You should update this document to reflect your T&amp;C."
 msgstr "Je moet dit document bijwerken om je T&C weer te geven."
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You should not use a planned internal transfer to move some products between"
+" two warehouses. Instead, use an immediate internal transfer or the resupply"
+" route."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
