@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
-
+import odoo.tools
 
 @common.tagged('post_install', '-at_install')
 class TestXMLRPC(common.HttpCase):
@@ -53,7 +53,7 @@ class TestXMLRPC(common.HttpCase):
         )
 
     def _json_call(self, *args):
-        self.opener.post("http://%s:%s/jsonrpc" % (common.HOST, common.PORT), json={
+        self.opener.post("http://%s:%s/jsonrpc" % (common.HOST, odoo.tools.config['http_port']), json={
             'jsonrpc': '2.0',
             'id': None,
             'method': 'call',
