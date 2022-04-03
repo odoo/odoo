@@ -22,25 +22,25 @@
 # snow wang <147156565@qq.com>, 2020
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
 # Manga Tsang <mts@odoo.com>, 2020
-# as co02 <asco02@163.com>, 2020
 # Gary Wei <Gary.wei@elico-corp.com>, 2020
 # xiaobin wu <bd5dml@gmail.com>, 2020
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2020
 # bf2549c5415a9287249cba2b8a5823c7, 2020
 # 黎伟杰 <674416404@qq.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # Felix Yuen <fyu@odoo.com>, 2020
 # wangting <39181819@qq.com>, 2020
 # Jeanphy <hzh0292@qq.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
+# Felix Yang <felixyangsh@aliyun.com>, 2020
 # fausthuang, 2020
 # Lei Xu <xulei8@qq.com>, 2020
 # 希 杜 <dx19910707@qq.com>, 2021
 # Titan Li <lghbeta@gmail.com>, 2021
 # Martin Trigaux, 2021
-# pgy866 <pgy866@163.com>, 2021
+# 深圳市耀影科技有限公司QQ1006399173 <web@yaoying.vip>, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2021
+# Jeffery CHEN <jeffery9@gmail.com>, 2021
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# as co02 <asco02@163.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -48,7 +48,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:30+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2021\n"
+"Last-Translator: as co02 <asco02@163.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -730,6 +730,7 @@ msgstr "将出现在打印的报表的右上角（报表页眉）"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
@@ -988,6 +989,7 @@ msgstr "日历视图未定义 'date_start'的属性。"
 #. openerp-web
 #: code:addons/web/static/src/js/core/dialog.js:0
 #: code:addons/web/static/src/js/core/dialog.js:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/js/fields/upgrade_fields.js:0
 #: code:addons/web/static/src/js/services/crash_manager.js:0
@@ -1990,6 +1992,9 @@ msgid ""
 "\n"
 "Tip: try to flip axis, filter further or reduce the number of measures."
 msgstr ""
+"为了与Excel兼容，如果有超过16384列的数据，则无法导出。\n"
+"\n"
+"提示：尝试翻转轴，进一步过滤或减少措施的数量。"
 
 #. module: web
 #. openerp-web
@@ -2198,7 +2203,7 @@ msgstr "非法的字段链"
 msgid ""
 "Invalid field chain. You may have used a non-existing field name or followed"
 " a non-relational field."
-msgstr ""
+msgstr "无效的字段链。你可能使用了一个不存在的字段名，或跟随一个非关系字段。"
 
 #. module: web
 #. openerp-web
@@ -2578,7 +2583,7 @@ msgstr "装饰器："
 msgid ""
 "Module %s not loaded or inexistent, or templates of addon being loaded (%s) "
 "are misordered"
-msgstr ""
+msgstr "模块%s未加载或不存在，或加载的ADDON模板（%s）被错误排序"
 
 #. module: web
 #. openerp-web
@@ -2752,7 +2757,7 @@ msgstr "无结果可供显示"
 #: code:addons/web/controllers/main.py:0
 #, python-format
 msgid "No template found to inherit from. Module %s and template name %s"
-msgstr ""
+msgstr "未找到用来继承的模板。模块 %s 和 模板 %s"
 
 #. module: web
 #. openerp-web
@@ -2864,7 +2869,7 @@ msgstr "Odoo警告"
 #, python-format
 msgid ""
 "Of the %d records selected, only the first %d have been archived/unarchived."
-msgstr ""
+msgstr "在所选的%d条记录中，只有前%d条已被归档/未归档。"
 
 #. module: web
 #. openerp-web
@@ -2914,7 +2919,7 @@ msgstr "只有员工可以访问此数据库，请与管理员联系。"
 #: code:addons/web/static/src/js/views/list/list_controller.js:0
 #, python-format
 msgid "Only the first %d records have been deleted (out of %d selected)"
-msgstr ""
+msgstr "只有前%d条记录被删除（在所选的%d条记录中）。"
 
 #. module: web
 #: code:addons/web/models/models.py:0
@@ -2922,7 +2927,7 @@ msgstr ""
 msgid ""
 "Only types %(supported_types)s are supported for category (found type "
 "%(field_type)s)"
-msgstr ""
+msgstr "只有类型 %(supported_types)s 支持分类 (找到类型 %(field_type)s)"
 
 #. module: web
 #: code:addons/web/models/models.py:0
@@ -2930,7 +2935,7 @@ msgstr ""
 msgid ""
 "Only types %(supported_types)s are supported for filter (found type "
 "%(field_type)s)"
-msgstr ""
+msgstr "只有类型 %(supported_types)s 支持筛选 (找到类型 %(field_type)s)"
 
 #. module: web
 #. openerp-web
@@ -3004,7 +3009,7 @@ msgstr "打开： "
 #: code:addons/web/static/src/js/views/list/list_renderer.js:0
 #, python-format
 msgid "Optional columns"
-msgstr ""
+msgstr "可选栏目"
 
 #. module: web
 #. openerp-web
@@ -3119,7 +3124,7 @@ msgstr "饼图"
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
 #, python-format
 msgid "Pie chart cannot mix positive and negative numbers. "
-msgstr ""
+msgstr "饼状图不能混合正数和负数。"
 
 #. module: web
 #. openerp-web
@@ -3199,6 +3204,8 @@ msgid ""
 "Please use the following communication for your payment : <b><span>\n"
 "                           INV/2020/07/0003</span></b>"
 msgstr ""
+"请使用以下通讯方式进行支付。 <b><span>\n"
+"                           INV/2020/07/0003</span></b>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.brand_promotion_message
@@ -3984,14 +3991,14 @@ msgstr "税号。 如果联系人需缴纳税款，请填写。 用于某些法�
 msgid ""
 "The content of this cell is too long for an XLSX file (more than %s "
 "characters). Please use the CSV format for this export."
-msgstr ""
+msgstr "对于XLSX文件，此单元格的内容太长（超过%s个字符）。请使用此导出的CSV格式。"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "The field is empty, there's nothing to save."
-msgstr ""
+msgstr "该领域是空的，没有什么可以保存。"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -4046,7 +4053,7 @@ msgstr "字段类型  '%s' 必须是一个关联到 'ir.attachment'模型的 man
 msgid ""
 "There are too many rows (%s rows, limit: %s) to export as Excel 2007-2013 "
 "(.xlsx) format. Consider splitting the export."
-msgstr ""
+msgstr "太多行(%s 行，限制：%s)而未能导出为 Excel 2007-2013 (.xlsx) 格式。考虑拆分导出。"
 
 #. module: web
 #. openerp-web
@@ -4067,7 +4074,7 @@ msgstr "上传你的文件时发生了问题"
 #: code:addons/web/static/src/js/widgets/date_picker.js:0
 #, python-format
 msgid "This date is in the future. Make sure this is what you expect."
-msgstr ""
+msgstr "这是将来的日期。确定是你所期望的。"
 
 #. module: web
 #. openerp-web
@@ -4113,7 +4120,7 @@ msgstr "这是内部报表的一个例子。"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "This update will only consider the records of the current page."
-msgstr ""
+msgstr "这个更新将只考虑当前页面的记录。"
 
 #. module: web
 #. openerp-web
@@ -4166,7 +4173,7 @@ msgstr "明天"
 #: code:addons/web/models/models.py:0
 #, python-format
 msgid "Too many items to display."
-msgstr ""
+msgstr "有太多的物品需要展示。"
 
 #. module: web
 #. openerp-web
@@ -4213,7 +4220,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
 #, python-format
 msgid "Try to change your domain to only display positive results"
-msgstr ""
+msgstr "尝试改变你的域名，只显示正面的结果"
 
 #. module: web
 #. openerp-web
@@ -4450,6 +4457,8 @@ msgstr "验证错误"
 #, python-format
 msgid "Values set here are company-specific."
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
 
 #. module: web
 #. openerp-web
@@ -4575,7 +4584,7 @@ msgstr "Windows/Linux"
 #: code:addons/web/static/src/js/fields/special_fields.js:0
 #, python-format
 msgid "Wrap raw html within an iframe"
-msgstr ""
+msgstr "在一个iframe中包裹原始html"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -4622,6 +4631,12 @@ msgstr "是"
 #, python-format
 msgid "Yesterday"
 msgstr "昨天"
+
+#. module: web
+#: code:addons/web/controllers/main.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr "您无权在此处上传附件。"
 
 #. module: web
 #. openerp-web
@@ -4677,7 +4692,7 @@ msgstr "您应该将Wkhtmltopdf的版本至少升级到0.12.0，以便正确显�
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Your Odoo session expired. The current page is about to be refreshed."
-msgstr ""
+msgstr "你的Odoo会话已过期。当前页面即将被刷新。"
 
 #. module: web
 #. openerp-web

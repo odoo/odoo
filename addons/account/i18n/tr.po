@@ -18,7 +18,6 @@
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2020
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2020
 # Martin Trigaux, 2020
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # Buket Şeker <buket_skr@hotmail.com>, 2020
 # Metin Akın <aknmetin@gmail.com>, 2020
 # abc Def <hdogan1974@gmail.com>, 2020
@@ -27,6 +26,7 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2021
 # Ediz Duman <neps1192@gmail.com>, 2021
 # Özlem Atalay <ozlema@eskayazilim.com.tr>, 2021
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -34,7 +34,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Özlem Atalay <ozlema@eskayazilim.com.tr>, 2021\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -579,6 +579,8 @@ msgid ""
 "<span class=\"oe_inline o_form_label mr-3 ml-5 oe_edit_only\" "
 "groups=\"base.group_multi_currency\"> in </span>"
 msgstr ""
+"<span class=\"oe_inline o_form_label mr-3 ml-5 oe_edit_only\" "
+"groups=\"base.group_multi_currency\"> içinde </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -586,6 +588,8 @@ msgid ""
 "<span class=\"oe_inline o_form_label mx-3 oe_read_only\" "
 "groups=\"base.group_multi_currency\"> in </span>"
 msgstr ""
+"<span class=\"oe_inline o_form_label mx-3 oe_read_only\" "
+"groups=\"base.group_multi_currency\"> içinde </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -6608,6 +6612,8 @@ msgid ""
 "Invoice and credit note repartition should have at least one tax repartition"
 " line."
 msgstr ""
+"Fatura ve alacak dekontu yeniden bölümü en az bir vergi yeniden bölümlenme "
+"satırına sahip olmalıdır."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -8578,7 +8584,7 @@ msgstr "Seçenekler"
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Or send a bill to %s@%s"
-msgstr ""
+msgstr "Veya %s@%s adresine fatura gönderin"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
@@ -12075,7 +12081,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The Bill/Refund date is required to validate this document."
-msgstr ""
+msgstr "Bu belgeyi doğrulamak için Fatura/İade tarihi gereklidir."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__country_code
@@ -12128,6 +12134,9 @@ msgid ""
 "%(journal_ids)s) as payment debit or credit account. This means that this "
 "account's type should be reconcilable."
 msgstr ""
+"Bu hesap% (journal_names)'nin günlüklerinde (kimlikler %(journal_ids)s) "
+"ödeme borcu veya alacak hesabı olarak yapılandırılır. Bu, bu hesabın türünün"
+" uzlaştırılabilir olması gerektiği anlamına gelir."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -12443,7 +12452,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The following regular expression is invalid to create a partner mapping: %s"
-msgstr ""
+msgstr "Ortak eşlemesi oluşturmak için aşağıdaki normal ifade geçersiz: %s"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -12493,13 +12502,13 @@ msgstr "Bir derginin banka hesabı sahibi firma olmalıdır ( %s )."
 #, python-format
 msgid ""
 "The invoice already contains lines, it was not updated from the attachment."
-msgstr ""
+msgstr "Fatura zaten satırlar içeriyor, ekten güncelleştirilmedi."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The invoice is not a draft, it was not updated from the attachment."
-msgstr ""
+msgstr "Fatura taslak değil, ekten güncelleştirilmedi."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -12691,6 +12700,9 @@ msgid ""
 " to work properly, invoice distribution lines should be arranged in the same"
 " order as the credit note distribution lines they correspond to."
 msgstr ""
+"Dağıtım satırlarının görüntülenme ve eşleşme sırası. İadelerin düzgün "
+"çalışması için fatura dağıtım satırları, karşılık geldiği alacak dekontu "
+"dağıtım satırlarıyla aynı sırada düzenlenmelidir."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__report_id
@@ -12746,6 +12758,8 @@ msgid ""
 "The recipient bank account link to this invoice is archived.\n"
 "So you cannot confirm the invoice."
 msgstr ""
+"Bu faturanın alıcı banka hesabı bağlantısı arşivlenmiştir.\n"
+"Yani faturayı onaylayamazsınız."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -12907,7 +12921,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The sequence format has changed."
-msgstr ""
+msgstr "Sıra biçimi değişti."
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
@@ -12926,6 +12940,8 @@ msgid ""
 "The sequence will never restart.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"Sıra hiçbir zaman yeniden başlatılacak.\n"
+"Bu durumda artan sayı '%(formatted_seq)s'dir."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12935,6 +12951,9 @@ msgid ""
 "The year detected here is '%(year)s' and the month is '%(month)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"Sıra her ayın başında 1'de yeniden başlatılır.\n"
+"Burada algılanan yıl '%(yıl)s' ve ay '%(ay)s'dir.\n"
+"Bu durumda artan sayı '%(formatted_seq)s'dir."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12944,6 +12963,9 @@ msgid ""
 "The year detected here is '%(year)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"Dizi her yılın başında 1'de yeniden başlayacaktır.\n"
+"Burada tespit edilen yıl '%(yıl)' dır.\n"
+"Bu durumda artan sayı '%(formatted_seq)s'dir."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
@@ -13260,6 +13282,8 @@ msgid ""
 "This matching rule is used when the user is not certain of all the "
 "information of the counterpart."
 msgstr ""
+"Bu eşleştirme kuralı, kullanıcı karşıdakinin tüm bilgilerinden emin "
+"olmadığında kullanılır."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13288,6 +13312,9 @@ msgid ""
 "including from the Technical menu in the Settings, in order to preserve "
 "storage space of your Odoo database."
 msgstr ""
+"Bu seçenek, Odoo veritabanınızın depolama alanını korumak için Ayarlar'daki "
+"Teknik menü de dahil olmak üzere gönderildikten sonra herhangi bir e-posta "
+"parçasını kalıcı olarak kaldırır."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template__chart_template_id
@@ -14241,6 +14268,12 @@ msgid ""
 "2/ then filter on 'Draft' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
+"Taslak günlük girişleri içeren bir günlüğü arşivleyemezsiniz.\n"
+"\n"
+"Devam etmek için:\n"
+"1/ Bu dergi formundan sağ üst düğmeye 'Dergi Girişleri' tıklayın\n"
+"2/ sonra 'Taslak' girişlerinde filtre uygulama\n"
+"3/ hepsini seçin ve eylem menüsünden yayınlayın veya silin"
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
@@ -14657,6 +14690,8 @@ msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
 "already been used to make accounting entries."
 msgstr ""
+"Muhasebe girişleri yapmak için zaten kullanılmış olan bir para biriminin "
+"ondalık basamak sayısını azaltamazsınız."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -14785,7 +14820,7 @@ msgstr "Yazarkasa yevmiyenizde bir 'İç Transfer Hesabı' tanımlamanız gereki
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The entry %s (id %s) is already posted."
-msgstr ""
+msgstr "Giriş %s (kimlik %s) deftere nakledilmiş."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14998,6 +15033,9 @@ msgid ""
 " Sales operations should go to 'sale' journals, and purchase operations to "
 "'purchase' ones."
 msgstr ""
+"Seçilen günlüğün fatura türünüzle uyumlu olmayan bir türü var. Satış "
+"operasyonları 'satış' günlüklerine, satınalma işlemleri ise 'satınalma' "
+"günlüklerine gitmelidir."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form

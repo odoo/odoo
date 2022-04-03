@@ -25,6 +25,7 @@
 # Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2020
 # Talal Albahra <talal.albahra@outlook.com>, 2020
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2021
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -32,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Mustafa J. Kadhem <safi2266@gmail.com>, 2021\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,6 +47,8 @@ msgid ""
 "'Expenses - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
 "''))"
 msgstr ""
+"'النفقات - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
+"'')) "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -53,6 +56,8 @@ msgid ""
 "<i class=\"text-muted oe_edit_only\">Use this reference as a subject prefix "
 "when submitting by email.</i>"
 msgstr ""
+"<i class=\"text-muted oe_edit_only\">استخدم هذا المرجع كبادئة كائن عنت "
+"الإرسال عن طريق البريد الإلكتروني.</i> "
 
 #. module: hr_expense
 #. openerp-web
@@ -228,13 +233,13 @@ msgstr "كافة تقارير المصروفات"
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_all
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses_all
 msgid "All My Expenses"
-msgstr ""
+msgstr "كافة نفقاتي "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all
 msgid "All Reports"
-msgstr ""
+msgstr "كافة التقارير "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__amount_residual
@@ -246,7 +251,7 @@ msgstr "المبلغ المستحق"
 #: code:addons/hr_expense/static/src/js/upload_mixin.js:0
 #, python-format
 msgid "An error occurred during the upload"
-msgstr ""
+msgstr "حدث خطأ أثناء عملية الرفع "
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__account_id
@@ -257,7 +262,7 @@ msgstr "يُتوقع وجود حساب مصروفات"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "An expense report must contain only lines from the same company."
-msgstr ""
+msgstr "يجب أن يحتوي تقرير النفقات على بنود من نفس الشركة. "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_account_id
@@ -284,12 +289,14 @@ msgstr "موافقة"
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_sheet_approve_action_server
 msgid "Approve Report"
-msgstr ""
+msgstr "الموافقة على التقرير "
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
 msgid "Approve the new expense reports submitted by the employees you manage."
 msgstr ""
+"قم بالموافقة على تقارير النفقات الجديدة المرسلة من قِبَل الموظفين الذين "
+"تديرهم. "
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__approved
@@ -311,7 +318,7 @@ msgstr "مؤرشف"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Attach Receipt"
-msgstr ""
+msgstr "إرفاق الإيصال "
 
 #. module: hr_expense
 #. openerp-web
@@ -422,12 +429,12 @@ msgstr "إنشاء تقرير مصروفات جديد"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Create expenses from incoming emails"
-msgstr ""
+msgstr "أنشئ نفقات من رسائل البريد الإلكتروني الواردة "
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "Create new expenses to get statistics."
-msgstr ""
+msgstr "أنشئ نفقات جديدة للحصول على الإحصاءات. "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_uid
@@ -481,12 +488,14 @@ msgstr "الوصف"
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "Did you try the mobile app?"
-msgstr ""
+msgstr "هل جربت تطبيق الهاتف المحمول؟ "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Digitalize your receipts with OCR and Artificial Intelligence"
 msgstr ""
+"قم برقمنة إيصالاتك باستخدام تقنية التعرف البصري على الأحرف والذكاء الاصطناعي"
+" "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_journal__display_name
@@ -512,6 +521,9 @@ msgid ""
 "picture of your receipt and let Odoo digitalizes it for you. The OCR and "
 "Artificial Intelligence will fill the data automatically."
 msgstr ""
+"لن تضطر إلى حمل تذاكر نفقاتك في جيوبك بعد الآن. فقط قم بالتقاط صورة من "
+"الإيصال، وسيقوم أودو برقمنته من أجلك. سوف تقوم خاصية تمييز الرموز ضوئياً "
+"والذكاء الاصطناعي بملء البيانات تلقائياً. "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -567,7 +579,7 @@ msgstr "الموافقة على المصروف"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_employee_tree_inherit_expense
 msgid "Expense Approver"
-msgstr ""
+msgstr "المُوافق على النفقة "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__date
@@ -578,7 +590,7 @@ msgstr "تاريخ المصروف"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Expense Digitalization (OCR)"
-msgstr ""
+msgstr "رقمنة النفقات (تمييز الرموز ضوئياً) "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__journal_id
@@ -593,7 +605,7 @@ msgstr "بنود المصروف"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__expense_manager_id
 msgid "Expense Manager"
-msgstr ""
+msgstr "مدير النفقات "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
@@ -657,7 +669,7 @@ msgstr "تقارير المصروفات المطلوب الموافقة عليه
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Expense products can be reinvoiced to your customers."
-msgstr ""
+msgstr "يمكن إعادة فوترة منتجات النفقات إلى عملائك. "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -684,6 +696,7 @@ msgstr "تم رفض تقرير المصروف"
 msgid ""
 "Expense reports regroup all the expenses incurred during a specific event."
 msgstr ""
+"تقوم تقارير النفقات بإعادة تجميع كافة النفقات الناجمة عن فعالية محددة. "
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_account_move_line__expense_id
@@ -762,7 +775,7 @@ msgstr "المصروفات المطلوب معالجتها"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_refused
 msgid "Explicitly Refused by manager or accountant"
-msgstr ""
+msgstr "تم الرفض بشكل صريح من قِبَل المدير أو المحاسب "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_follower_ids
@@ -809,13 +822,13 @@ msgstr "المعلومات العامة"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Generated Expense"
-msgstr ""
+msgstr "النفقة المنشأة "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Generated Expenses"
-msgstr ""
+msgstr "النفقات العامة "
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
@@ -898,12 +911,12 @@ msgstr "رسائل البريد الإلكتروني الواردة"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Invalid attachments!"
-msgstr ""
+msgstr "المرفقات غير صالحة! "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_editable
 msgid "Is Editable By Current User"
-msgstr ""
+msgstr "يمكن تحريره من قِبَل المستخدم الحالي "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_is_follower
@@ -1010,7 +1023,7 @@ msgstr "مصروفاتي"
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_unsubmitted
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses_to_submit
 msgid "My Expenses to Report"
-msgstr ""
+msgstr "نفقاتي بانتظار إعداد التقرير "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_all
@@ -1092,29 +1105,29 @@ msgstr "لم يتم توفير مرفق"
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_department_filtered
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "No data yet!"
-msgstr ""
+msgstr "لا توجد أي بيانات بعد! "
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "No expense products found. Let's create one!"
-msgstr ""
+msgstr "لم يتم العثور على منتجات نفقات. فلنقم بإنشاء واحد! "
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
 msgid "No expense report found. Let's create one!"
-msgstr ""
+msgstr "لم يتم العثور على تقرير نفقات. فلنقم بإنشاء واحد! "
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_pay
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_post
 msgid "No expense reports found"
-msgstr ""
+msgstr "لم يتم العثور على تقرير نفقات "
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
 msgid "No expense reports found. Let's create one!"
-msgstr ""
+msgstr "لم يتم العثور على تقارير نفقات. فلنقم بإنشاء واحد! "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__description
@@ -1229,7 +1242,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_sheet_post_action_server
 msgid "Post Entries"
-msgstr ""
+msgstr "ترحيل القيود "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1242,6 +1255,8 @@ msgid ""
 "Post the journal entries of the new expense reports approved by the "
 "employees' manager."
 msgstr ""
+"قم بترحيل قيود اليومية لتقارير النفقات الجديدة التي تمت الموافقة عليها من "
+"قِبَل مدير الموظف. "
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__post
@@ -1342,7 +1357,7 @@ msgstr "رقم الإشارة."
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_ref_editable
 msgid "Reference Is Editable By Current User"
-msgstr ""
+msgstr "المرجع قابل للتحرير من قِبَل المستخدم الحالي "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -1381,17 +1396,17 @@ msgstr "تسجيل دفعة"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_payroll_expense
 msgid "Reimburse Expenses in Payslip"
-msgstr ""
+msgstr "استرداد النفقات في Payslip "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Reimburse expenses in payslips"
-msgstr ""
+msgstr "استرداد النفقات في إيصالات الدفع "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Reimburse in Payslip"
-msgstr ""
+msgstr "الاسترداد في إيصال الدفع "
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_pay
@@ -1399,6 +1414,8 @@ msgid ""
 "Reimburse the employees who incurred these costs or simply register the "
 "corresponding payments."
 msgstr ""
+"قم برد الأموال للموظفين الذين نجمت عنهم هذه التكاليف أو قم بتسجيل المدفوعات "
+"المقابلة بكل بساطة. "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
@@ -1457,7 +1474,7 @@ msgstr "عينة"
 #: code:addons/hr_expense/static/src/xml/expense_qr_modal_template.xml:0
 #, python-format
 msgid "Scan this QR code to get the Odoo app:"
-msgstr ""
+msgstr "امسح رمز QR للحصول على تطبيق أودو: "
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
@@ -1466,6 +1483,8 @@ msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
 "If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
 msgstr ""
+"قم بتحديد المستخدم المسؤول عن الموافقة على \"نفقات\" هذا الموظف. \n"
+"إذا كان فارغاً، تتم الموافقة بواسطو مدير أو مانح الموافقة (يحدد في الإعدادات/المستخدمين). "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1488,7 +1507,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
 msgid "Send bills to OCR to generate expenses"
-msgstr ""
+msgstr "أرسل الفواتير لتمييز الرموز ضوئياً وإنشاء النفقات "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_configuration
@@ -1513,7 +1532,7 @@ msgstr "عرض كافة السجلات المُعين لها تاريخ إجرا
 msgid ""
 "Snap pictures of your receipts and let Odoo<br> automatically create "
 "expenses for you."
-msgstr ""
+msgstr "التقط صورة لإيصالاتك ودع أودو <br> ينشئ النفقات تلقائياً من أجلك. "
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
@@ -1587,13 +1606,13 @@ msgstr "يمكن للمحاسب تسجيل دفعة لتسديد مستحقات 
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "The current user has no related employee. Please, create one."
-msgstr ""
+msgstr "لا يوجد للمستخدم الحالي موظف مرتبط به. يرجى إنشاء واحد. "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "The expense reports were successfully approved."
-msgstr ""
+msgstr "تمت الموافقة على تقارير النفقات بنجاح. "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -1605,7 +1624,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
 msgid "The journal must be set on posted expense"
-msgstr ""
+msgstr "يجب تعيين تفتر اليومية للنفقة المُرحلة. "
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__journal_id
@@ -1621,13 +1640,13 @@ msgstr "طريقة السداد المستخدمة عند سداد المؤسس�
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "There are no expense reports to approve."
-msgstr ""
+msgstr "لا توجد تقارير نفقات للموافقة عليها. "
 
 #. module: hr_expense
 #: model:digest.tip,name:hr_expense.digest_tip_hr_expense_0
 #: model_terms:digest.tip,tip_description:hr_expense.digest_tip_hr_expense_0
 msgid "Tip: Snap pictures of your receipts with the remote app"
-msgstr ""
+msgstr "نصيحة: التقط صوراً لإيصالاتك باستخدام تطبيق التحكم عن بعد "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1647,7 +1666,7 @@ msgstr "للترحيل"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "To Report"
-msgstr ""
+msgstr "لإعداد التقارير "
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__draft
@@ -1741,7 +1760,7 @@ msgstr "عرض المرفقات"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "View Expense"
-msgstr ""
+msgstr "عرض النفقة "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1772,13 +1791,13 @@ msgstr "سجل تواصل الموقع"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not authorized to edit the reference of this expense report."
-msgstr ""
+msgstr "لا يسمح لك بتحرير مرجع تقرير النفقة. "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not authorized to edit this expense report."
-msgstr ""
+msgstr "لا يسمح لك بتحرير تقرير النفقة. "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1789,7 +1808,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "You can now submit it to the manager from the following link."
-msgstr ""
+msgstr "بإمكانك الآن إرساله إلى المدير من الرابط التالي. "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1813,7 +1832,7 @@ msgstr "يمكنك رفض مصروفات قسمك فقط"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can't mix sample expenses and regular ones"
-msgstr ""
+msgstr "لا يمكنك مزج عينات النفقات مع النفقات العادية "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1873,7 +1892,7 @@ msgstr "مصروفك"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Your expense has been successfully registered."
-msgstr ""
+msgstr "لقد تم تسجيل نفقتك بنجاح. "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -1905,27 +1924,27 @@ msgstr "كم"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "to be reimbursed"
-msgstr ""
+msgstr "لرد الأموال "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "to report"
-msgstr ""
+msgstr "لإعداد التقرير "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "under validation"
-msgstr ""
+msgstr "قيد التصديق "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "use OCR to fill data from a picture of the bill"
-msgstr ""
+msgstr "استخدم تمييز الرموز ضوئياً لملء البيانات من صورة لفاتورة "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/account_move.py:0
 #, python-format
 msgid "Payment Cancelled"
-msgstr ""
+msgstr "تم إلغاء الدفع "
