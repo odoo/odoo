@@ -14,12 +14,13 @@
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2021
 # Anto Nilsson <anton.nilsson@vertel.se>, 2021
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2021
-# STefan Rundgren <stefanrundgren@cellglas.com>, 2021
+# 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2021
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
 # Daniel Osser <danielosser@gmail.com>, 2021
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
-# Simon S, 2021
+# Simon S, 2022
+# Emanuel Bergsten, 2022
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Simon S, 2021\n"
+"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2022\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1586,7 +1587,7 @@ msgstr "Slutdatum"
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__has_tracking
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__product_tracking
 msgid "Ensure the traceability of a storable product in your warehouse."
-msgstr ""
+msgstr "Säkerställ spårbarheten för en lagringsförd produkt i ditt lager."
 
 #. module: mrp
 #. openerp-web
@@ -1598,12 +1599,12 @@ msgstr "Fel"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "Exception(s) occurred on the manufacturing order(s):"
-msgstr ""
+msgstr "Undantag uppstod på tillverkningsordern:"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "Exception(s):"
-msgstr ""
+msgstr "Undantag:"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -2091,6 +2092,14 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "It has already been unblocked."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid ""
+"It is not possible to unplan one single Work Order. You should unplan the "
+"Manufacturing Order instead in order to unplan all the linked operations."
 msgstr ""
 
 #. module: mrp
@@ -3525,7 +3534,7 @@ msgstr "Rapportering"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Reserved"
-msgstr ""
+msgstr "Reserverad"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__resource_id
@@ -4133,6 +4142,15 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The product has already been used at least once, editing its structure may "
+"lead to undesirable behaviours. You should rather archive the product and "
+"create a new one with a new bill of materials."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_qty_positive
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
@@ -4405,7 +4423,7 @@ msgstr "Spårbarhet"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_traceability_report
 msgid "Traceability Report"
-msgstr ""
+msgstr "Spårbarhetsrapport"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_tracking
@@ -5006,6 +5024,8 @@ msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
 msgstr ""
+"Du kan antingen ladda upp en fil från din dator eller ange en URL till din "
+"fil."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -5239,7 +5259,7 @@ msgstr "på"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "ordered instead of"
-msgstr ""
+msgstr "beställt istället för"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.production_message

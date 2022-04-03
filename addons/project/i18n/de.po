@@ -25,7 +25,7 @@
 # Bettina Pfeifer <bettina@dygytally.de>, 2021
 # Chris Egal <sodaswed@web.de>, 2021
 # Andreas Schmidt <schmigo@gmail.com>, 2021
-# Friederike Fasterling-Nesselbosch, 2021
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -262,6 +262,9 @@ msgid ""
 "    of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague \n"
 "    or # <b>mentions</b> to reach an entire team."
 msgstr ""
+"<b>Notizen</b> für die interne Kommunikation protokollieren <i>(die Personen, die diese Aufgabe verfolgen, werden nicht \n"
+"über die von Ihnen protokollierte Notiz benachrichtigt, es sei denn, Sie markieren sie ausdrücklich)</i>. Verwenden Sie <b>@-Erwähnungen</b>, um einen Kollegen anzupingen \n"
+"oder <b>#-Erwähnungen</b>, um ein ganzes Team zu erreichen."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -406,6 +409,8 @@ msgid ""
 "<span attrs=\"{'invisible': ['|', ('repeat_show_week', '=', False), "
 "('repeat_show_month', '=', False)]}\">of</span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('repeat_show_week', '=', False), "
+"('repeat_show_month', '=', False)]}\">of</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -593,7 +598,7 @@ msgstr "Administrator"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Agile Scrum"
-msgstr ""
+msgstr "Agile Scrum"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_id
@@ -1085,7 +1090,7 @@ msgstr "Währung"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "Current project of the task"
-msgstr ""
+msgstr "Aktuelles Projekt der Aufgabe"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
@@ -1146,12 +1151,12 @@ msgstr "Kundenbewertungen"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status
 msgid "Customer Ratings Status"
-msgstr ""
+msgstr "Status der Kundenbewertung"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_task
 msgid "Customer Ratings on Task"
-msgstr ""
+msgstr "Kundenbewertungen von Aufgaben"
 
 #. module: project
 #. openerp-web
@@ -1675,7 +1680,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Handoff"
-msgstr ""
+msgstr "Übergabe"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -2137,6 +2142,9 @@ msgid ""
 "acquired projects, assign them and use the %s and %s to define if the "
 "project is ready for the next step. %s"
 msgstr ""
+"Verwalten Sie den Lebenszyklus Ihres Projekts in der Kanban-Ansicht. Fügen "
+"Sie neue Projekte hinzu, weisen Sie sie zu und definieren Sie mit %s und %s,"
+" ob das Projekt für die nächste Phase bereit ist. %s"
 
 #. module: project
 #. openerp-web
@@ -2634,6 +2642,10 @@ msgid ""
 "colleagues that a task is ready for the next stage.%s Use the %s to indicate"
 " a problem or a need for discussion on a task.%s"
 msgstr ""
+"Priorisieren Sie Aufgaben mit Hilfe des %s- Symbols. %sVerwenden Sie die "
+"%s-Schaltfläche, um Ihren Kollegen mitzuteilen, dass eine Aufgabe für die "
+"nächste Phase bereit ist. %s Mit %s können Sie auf ein Problem oder "
+"Diskussionsbedarf bei einer Aufgabe hinweisen.%s"
 
 #. module: project
 #. openerp-web
@@ -2688,7 +2700,7 @@ msgstr "Projekt-Anzahl"
 #. module: project
 #: model:ir.model,name:project.model_project_delete_wizard
 msgid "Project Delete Wizard"
-msgstr ""
+msgstr "Assistent zum Löschen von Projekten"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__user_id
@@ -2709,7 +2721,7 @@ msgstr "Projektbezeichnung"
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
 msgid "Project Stage Delete Wizard"
-msgstr ""
+msgstr "Assistent zum Löschen von Projektphasen"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
@@ -3012,7 +3024,7 @@ msgstr "Wiederhole am"
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_on_month
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_on_month
 msgid "Repeat On Month"
-msgstr ""
+msgstr "Monatlich wiederholen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_on_year
@@ -3044,7 +3056,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_unit
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_unit
 msgid "Repeat Unit"
-msgstr ""
+msgstr "Wiederholungseinheit"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_week
@@ -3217,7 +3229,7 @@ msgstr "Titelbild setzen"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set a Rating Email Template on Stages"
-msgstr ""
+msgstr "Bewertungs-E-Mail-Vorlage für Phasen festlegen"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -3292,7 +3304,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint in Progress"
-msgstr ""
+msgstr "Sprint in Arbeit"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -4165,7 +4177,7 @@ msgstr "für Projekt:"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "in stage:"
-msgstr ""
+msgstr "in Phase:"
 
 #. module: project
 #: code:addons/project/models/project.py:0

@@ -19,6 +19,7 @@
 # Tasneem Sarhan <tsa@odoo.com>, 2020
 # Talal Albahra <talal.albahra@outlook.com>, 2020
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2021
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Mustafa J. Kadhem <safi2266@gmail.com>, 2021\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,6 +54,11 @@ msgid ""
 "                                Calendar Mismatch : The employee's calendar does not match its current contract calendar. This could lead to unexpected behaviors.\n"
 "                            </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('calendar_mismatch', '=', False)]}\" class=\"fa fa-exclamation-triangle text-danger o_calendar_warning pl-3\">\n"
+"                            </span>\n"
+"                            <span class=\"o_calendar_warning_tooltip text-danger\">\n"
+"                                 اختلاف التقويم : لا يتوافق تقويم الموظف مع تقويم العقد هذا. قد يؤدي ذلك إلى حدوث أفعال غير متوقعة.\n"
+"                            </span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
@@ -61,6 +67,9 @@ msgid ""
 "                                    In Contract Since\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text text-danger\" attrs=\"{'invisible' : [('contract_warning', '=', False)]}\" title=\"In Contract Since\">\n"
+"                                    في العقد منذ\n"
+"                                </span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
@@ -69,6 +78,9 @@ msgid ""
 "                                    Contracts\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text text-danger\">\n"
+"                                    العقود\n"
+"                                </span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
@@ -77,6 +89,9 @@ msgid ""
 "[('contract_warning', '=', True)]}\" title=\"In Contract Since\"> In "
 "Contract Since</span>"
 msgstr ""
+"<span class=\"o_stat_text text-success\" attrs=\"{'invisible' : "
+"[('contract_warning', '=', True)]}\" title=\"In Contract Since\"> في العقد "
+"منذ</span> "
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -146,7 +161,7 @@ msgstr "رقم الحساب البنكي"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__calendar_mismatch
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__calendar_mismatch
 msgid "Calendar Mismatch"
-msgstr ""
+msgstr "اختلاف في التقويم "
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__cancel
@@ -188,7 +203,7 @@ msgstr "تفاصيل العقد"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_departure_wizard_view_form
 msgid "Contract End Date"
-msgstr ""
+msgstr "تاريخ انتهاء العقد "
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__name
@@ -206,7 +221,7 @@ msgstr "نوع العقد"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_warning
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_employee_view_search
 msgid "Contract Warning"
-msgstr ""
+msgstr "تحذير العقد "
 
 #. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_pending
@@ -276,7 +291,7 @@ msgstr "العقد الحالي"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee__contract_id
 msgid "Current contract of the employee"
-msgstr ""
+msgstr "عقد الموظف الحالي "
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__default_resource_calendar_id
@@ -303,7 +318,7 @@ msgstr "معالج المغادرة"
 #, python-format
 msgid ""
 "Departure date can't be earlier than the start date of current contract."
-msgstr ""
+msgstr "لا يمكن أن يسبق تاريخ المغادرة تاريخ بدء العقد الحالي. "
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__display_name
@@ -328,7 +343,7 @@ msgstr "تعديل العقد"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Employed"
-msgstr ""
+msgstr "تم توظيفه "
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_employee
@@ -589,7 +604,7 @@ msgstr "عدد الرسائل الجديدة"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__hr_responsible_id
 msgid "Person responsible for validating the employee's contracts."
-msgstr ""
+msgstr "الشخص المسؤول عن تصديق عقود الموظفين. "
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__blocked
@@ -620,7 +635,7 @@ msgstr "معلومات المرتب"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__structure_type_id
 msgid "Salary Structure Type"
-msgstr ""
+msgstr "نوع هيكل الراتب "
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -630,7 +645,7 @@ msgstr "البحث في العقود"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_departure_wizard__set_date_end
 msgid "Set Contract End Date"
-msgstr ""
+msgstr "تعيين تاريخ انتهاء العقد "
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_departure_wizard_view_form
@@ -640,7 +655,7 @@ msgstr ""
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Show all records which have a next action date before today"
-msgstr ""
+msgstr "عرض كافة السجلات التي لها تاريخ إجراء تالي يسبق اليوم "
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_start
@@ -680,7 +695,7 @@ msgstr "حالة العقد"
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid "The contract of %s is about to expire."
-msgstr ""
+msgstr "عقد %s على وشك أن تنتهي صلاحيته. "
 
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_contract_pending

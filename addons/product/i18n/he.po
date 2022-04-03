@@ -8,7 +8,7 @@
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2020
 # ExcaliberX <excaliberx@gmail.com>, 2020
 # שהאב חוסיין <shhab89@gmail.com>, 2020
-# hed shefetr <hed@laylinetech.com>, 2020
+# hed shefer <hed@laylinetech.com>, 2020
 # Amit Spilman <amit@laylinetech.com>, 2020
 # Ofir Blum <ofir.blum@gmail.com>, 2020
 # Leandro Noijovich <eliel.sorcerer@gmail.com>, 2020
@@ -16,9 +16,9 @@
 # Yihya Hugirat <hugirat@gmail.com>, 2020
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
 # Lilach Gilliam <lilach@apprcase.com>, 2021
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
 # david danilov, 2021
 # Jonathan Spier, 2021
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Jonathan Spier, 2021\n"
+"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,7 +49,7 @@ msgstr "מס' מוצרים"
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "%(percentage)s %% discount and %(price)s surcharge"
-msgstr ""
+msgstr "%(percentage)s%% הנחה ו%(price)s היטל"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -272,7 +272,7 @@ msgstr "סוג פעילות"
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Add a quantity"
-msgstr ""
+msgstr "הוסף כמות"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
@@ -354,6 +354,7 @@ msgid ""
 "At most %d quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
 msgstr ""
+"לכל היותר %d ניתן להציג כמויות בו זמנית. הסר כמות נבחרת כדי להוסיף עוד כמות."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
@@ -913,6 +914,8 @@ msgid ""
 "Ending datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
+"תאריך התחלה וזמן אימות המחירון\n"
+"הערך המוצג תלוי באזור הזמן שהוגדר בהעדפות שלך."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
@@ -1010,7 +1013,7 @@ msgstr "מידע כללי"
 #: model:ir.actions.server,name:product.action_product_price_list_report
 #: model:ir.actions.server,name:product.action_product_template_price_list_report
 msgid "Generate Pricelist"
-msgstr ""
+msgstr "ייצר מחירון"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__packaging_ids
@@ -1183,7 +1186,7 @@ msgstr "ייבא תבנית עבור מחירוני ספקים"
 #: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "In Standard Price & AVCO: value of the product (automatically computed in AVCO).\n"
-"        In FIFO: value of the last unit that left the stock (automatically computed).\n"
+"        In FIFO: value of the next unit that will leave the stock (automatically computed).\n"
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
@@ -1486,7 +1489,7 @@ msgstr "סוג הפעילות הבאה"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
-msgstr ""
+msgstr "לא נמצא מחירון ספק"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
@@ -1614,7 +1617,7 @@ msgstr "אחוז מחיר"
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Please enter a positive whole number"
-msgstr ""
+msgstr "אנא הכנס מספר חיובי שלם"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -1734,7 +1737,7 @@ msgstr "שם מחירון"
 #: model:ir.model,name:product.model_report_product_report_pricelist
 #, python-format
 msgid "Pricelist Report"
-msgstr ""
+msgstr "דו\"ח מחירון"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -1747,7 +1750,7 @@ msgstr "כלל מחירון"
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 #, python-format
 msgid "Pricelist:"
-msgstr ""
+msgstr "מחירון:"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
@@ -1996,7 +1999,7 @@ msgstr "חפש מחיר מוצרים"
 #: code:addons/product/models/product.py:0
 #, python-format
 msgid "Products: %(category)s"
-msgstr ""
+msgstr "מוצרים: %(category)s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__lst_price
@@ -2031,7 +2034,7 @@ msgstr "יחידת מידה לרכש"
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Quantities:"
-msgstr ""
+msgstr "כמויות"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__min_qty
@@ -2043,7 +2046,7 @@ msgstr "כמות"
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Quantity already present (%d)."
-msgstr ""
+msgstr "הכמות כבר מוצגת (%d)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
@@ -2066,6 +2069,8 @@ msgid ""
 "Register the prices requested by your vendors for each product, based on the"
 " quantity and the period."
 msgstr ""
+"רשום את המחירים המבוקשים על ידי הספקים שלך עבור כל מוצר, בהתבסס על הכמות "
+"וזמן האספקה."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__product_tmpl_ids
@@ -2083,7 +2088,7 @@ msgstr "וריאנטים קשורים"
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Remove quantity"
-msgstr ""
+msgstr "הסר כמות"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_user_id
@@ -2238,6 +2243,8 @@ msgid ""
 "Starting datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
+"תאריך התחלה וזמן אימות המחירון\n"
+"הערך המוצג תלוי באזור הזמן שהוגדר בהעדפות שלך."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__activity_state
@@ -2412,6 +2419,17 @@ msgid "This comes from the product form."
 msgstr "זה בא מטופס המוצר."
 
 #. module: product
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
+msgstr ""
+"תצורה זו של מאפייני מוצר, ערכים ואי הכללות לא תוביל לשום וריאציה אפשרית. נא "
+"להעביר לארכיון או למחוק את המוצר שלך ישירות אם אתה מתכוון."
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
 msgid "This is the sum of the extra price of all attributes"
 msgstr "זהו סכום המחיר הנוסף של כל התכונות"
@@ -2442,6 +2460,9 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please set a precision between %s and 1."
 msgstr ""
+"דיוק עיגול זה גבוה מהדיוק העשרוני (%s ספרות).\n"
+"זה עלול לגרום לחוסר עקביות בחישובים.\n"
+"נא להגדיר דיוק בין %s ל-1."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -2817,6 +2838,10 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
 msgstr ""
+"אתה מגדיר דיוק עשרוני פחות מדויק מה-UOMs:\n"
+"%s\n"
+"זה עלול לגרום לחוסר עקביות בחישובים.\n"
+"נא להגדיל את העיגול של יחידות המידה הללו, או את הספרות של דיוק עשרוני זה."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -2926,6 +2951,7 @@ msgstr ""
 msgid ""
 "You cannot delete this product category, it is the default generic category."
 msgstr ""
+"אינך יכול למחוק את קטגוריית המוצרים הזו, זוהי קטגוריית ברירת המחדל הכללית."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

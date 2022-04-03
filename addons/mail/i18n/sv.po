@@ -18,12 +18,13 @@
 # Haojun Zou <apollo_zhj@msn.com>, 2021
 # Patrik Lermon <patrik.lermon@gmail.com>, 2021
 # Martin Trigaux, 2021
-# STefan Rundgren <stefanrundgren@cellglas.com>, 2021
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
+# 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
-# Victor Ekström, 2021
-# Simon S, 2021
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
+# Victor Ekström, 2022
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
+# Simon S, 2022
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -31,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2021\n"
+"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2022\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -582,7 +583,7 @@ msgstr "Dekoration för aktivitetsundantag"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_mixin
 msgid "Activity Mixin"
-msgstr ""
+msgstr "Aktivitets mixin"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_state
@@ -719,7 +720,7 @@ msgstr "Lägg till eller anslut till en kanal"
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Add this email address to white list of people"
-msgstr ""
+msgstr "Vitlista denna e-postadress"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_ids
@@ -801,7 +802,7 @@ msgstr "Alla"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
 msgid "Allowed Emails"
-msgstr ""
+msgstr "Tillåtna e-postadresser"
 
 #. module: mail
 #. openerp-web
@@ -809,27 +810,27 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__mail_moderation__status__allow
 #, python-format
 msgid "Always Allow"
-msgstr ""
+msgstr "Tillåt alltid"
 
 #. module: mail
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
-msgstr ""
+msgstr "En e-postadress krävs för find_or_create ska fungera"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/notification_group/notification_group.xml:0
 #, python-format
 msgid "An error occurred when sending an email."
-msgstr ""
+msgstr "Ett fel uppstod när e-post skulle skickas."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/models/user/user.js:0
 #, python-format
 msgid "An unexpected error occurred during the creation of the chat."
-msgstr ""
+msgstr "Ett oväntat fel uppstod när chatten skulle skapas."
 
 #. module: mail
 #. openerp-web
@@ -851,7 +852,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__model_id
 msgid "Applies to"
-msgstr ""
+msgstr "Gäller"
 
 #. module: mail
 #. openerp-web
@@ -876,6 +877,14 @@ msgid ""
 "Are you sure you want to discard %s mail delivery failures? You won't be "
 "able to re-send these mails later!"
 msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_blacklist.py:0
+#: code:addons/mail/models/mail_thread_blacklist.py:0
+#, python-format
+msgid "Are you sure you want to unblacklist this Email Address?"
+msgstr ""
+"Är du säker på att du vill ta bort denna e-postadress från svartlistan?"
 
 #. module: mail
 #. openerp-web
@@ -972,7 +981,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__author_avatar
 #: model:ir.model.fields,field_description:mail.field_mail_message__author_avatar
 msgid "Author's avatar"
-msgstr ""
+msgstr "Författares bild"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__group_public_id
@@ -1003,12 +1012,12 @@ msgstr "Automatisk prenumeration"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__automated
 msgid "Automated activity"
-msgstr ""
+msgstr "Automatiserad aktivitet"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_notify
 msgid "Automatic notification"
-msgstr ""
+msgstr "Automatisk notis"
 
 #. module: mail
 #. openerp-web
@@ -1038,19 +1047,19 @@ msgstr "Borta"
 #: code:addons/mail/static/src/components/moderation_ban_dialog/moderation_ban_dialog.xml:0
 #, python-format
 msgid "Ban"
-msgstr ""
+msgstr "Banna"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Ban this email address"
-msgstr ""
+msgstr "Banna denna e-postadress"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
 msgid "Banned Emails"
-msgstr ""
+msgstr "Bannade e-postadresser"
 
 #. module: mail
 #: model:ir.model,name:mail.model_base
@@ -1073,12 +1082,12 @@ msgstr "Svartlista"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_tree
 msgid "Blacklist Date"
-msgstr ""
+msgstr "Svartlistad datum"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_blacklist_action
 msgid "Blacklisted Email Addresses"
-msgstr ""
+msgstr "Svartlistade e-postadresser"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__body_html
@@ -1095,7 +1104,7 @@ msgstr "Bulk"
 #: code:addons/mail/static/src/widgets/common.xml:0
 #, python-format
 msgid "Bot"
-msgstr ""
+msgstr "Bott"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__message_bounce
@@ -1110,13 +1119,13 @@ msgstr "Studsa"
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__bounce
 #, python-format
 msgid "Bounced"
-msgstr ""
+msgstr "Studsade"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread_cc.py:0
 #, python-format
 msgid "CC Email"
-msgstr ""
+msgstr "E-postkopia"
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_call
@@ -1126,6 +1135,12 @@ msgstr "Samtal"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
 msgid "Can Write"
+msgstr "Kan skriva"
+
+#. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
 msgstr ""
 
 #. module: mail
@@ -1154,7 +1169,7 @@ msgstr "Avbryt E-post"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
 msgid "Cancel notification in failure"
-msgstr ""
+msgstr "Avbryt notis i fel"
 
 #. module: mail
 #. openerp-web
@@ -1172,13 +1187,13 @@ msgstr "Avbruten"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_shortcode
 msgid "Canned Response / Shortcode"
-msgstr ""
+msgstr "Standardiserade svar/kortkod"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__canned_response_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__canned_response_ids
 msgid "Canned Responses"
-msgstr ""
+msgstr "Standardiserade svar"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_cc
@@ -1188,7 +1203,7 @@ msgstr "Blindkopiemottagare"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_cc
 msgid "Carbon copy recipients"
-msgstr ""
+msgstr "Kopiamottagare"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_cc
@@ -1198,12 +1213,12 @@ msgstr "Kopiemottagare (platshållare kan användas här)"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__catchall_formatted
 msgid "Catchall"
-msgstr ""
+msgstr "Catchall"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__catchall_email
 msgid "Catchall Email"
-msgstr ""
+msgstr "E-postadress för catchall"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_cc
@@ -1223,7 +1238,7 @@ msgstr "Ändra bakgrundsfärgen för relaterade aktiviteter av den här typen."
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Changed"
-msgstr ""
+msgstr "Ändrad"
 
 #. module: mail
 #. openerp-web
@@ -1241,12 +1256,12 @@ msgstr "Säljkanal"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__channel_message_ids
 msgid "Channel Message"
-msgstr ""
+msgstr "Kanalmeddelande"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_moderation_menu
 msgid "Channel Moderation"
-msgstr ""
+msgstr "Kanalmoderering"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__channel_type
@@ -1256,14 +1271,14 @@ msgstr "Kanaltyp"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_moderation
 msgid "Channel black/white list"
-msgstr ""
+msgstr "Kanal svart- eller vitlista"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/discuss_sidebar_item/discuss_sidebar_item.xml:0
 #, python-format
 msgid "Channel settings"
-msgstr ""
+msgstr "Kanalinställningar"
 
 #. module: mail
 #. openerp-web
@@ -1284,7 +1299,7 @@ msgstr "Kanaler"
 #: model:ir.actions.act_window,name:mail.mail_channel_partner_action
 #: model:ir.ui.menu,name:mail.mail_channel_partner_menu
 msgid "Channels/Partner"
-msgstr ""
+msgstr "Kanaler/partners"
 
 #. module: mail
 #. openerp-web
@@ -1293,17 +1308,17 @@ msgstr ""
 #: code:addons/mail/static/src/components/messaging_menu/messaging_menu.xml:0
 #, python-format
 msgid "Chat"
-msgstr ""
+msgstr "Chatt"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__channel_type__chat
 msgid "Chat Discussion"
-msgstr ""
+msgstr "Chatt"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_shortcode_action
 msgid "Chat Shortcode"
-msgstr ""
+msgstr "Chatt kortkod"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__child_ids
@@ -1314,7 +1329,7 @@ msgstr "Undermeddelanden"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Choose an example"
-msgstr ""
+msgstr "Välj ett exempel"
 
 #. module: mail
 #. openerp-web
@@ -1333,21 +1348,21 @@ msgstr "Stäng"
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
 msgid "Close (Esc)"
-msgstr ""
+msgstr "Stäng (Esc)"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #, python-format
 msgid "Close chat window"
-msgstr ""
+msgstr "Stäng chattfönster"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #, python-format
 msgid "Close conversation"
-msgstr ""
+msgstr "Stäng konversation"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel_partner__fold_state__closed
@@ -1357,12 +1372,12 @@ msgstr "Avslutat"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated carbon copy recipients addresses"
-msgstr ""
+msgstr "Kommaseparerad lista med kopiamottagare"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated ids of recipient partners"
-msgstr ""
+msgstr "Kommaseparerade ID:n på mottagande partners"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__partner_to
@@ -1487,7 +1502,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__is_minimized
 msgid "Conversation is minimized"
-msgstr ""
+msgstr "Konversation har minimerats"
 
 #. module: mail
 #. openerp-web
@@ -1513,31 +1528,31 @@ msgstr "Skapa"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__next_activity
 msgid "Create Next Activity"
-msgstr ""
+msgstr "Skapa nästa aktivitet"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__create_uid
 msgid "Create Uid"
-msgstr ""
+msgstr "Skapa Uid"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Create new %(document)s"
-msgstr ""
+msgstr "Skapa nytt %(document)s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Create new %(document)s by sending an email to %(email_link)s"
-msgstr ""
+msgstr "Skapa nytt %(document)sgenom att skicka e-post till %(email_link)s"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/discuss/discuss.js:0
 #, python-format
 msgid "Create or search channel..."
-msgstr ""
+msgstr "Skapa eller sök kanal..."
 
 #. module: mail
 #. openerp-web
@@ -1549,7 +1564,7 @@ msgstr "Skapad"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Created By"
-msgstr ""
+msgstr "Skapad av"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__create_uid
@@ -1625,7 +1640,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__is_moderator
 msgid "Current user is a moderator of the channel"
-msgstr ""
+msgstr "Aktuell användare är moderator i kanalen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_bounced_content
@@ -1637,18 +1652,12 @@ msgstr "Anpassat studs-meddelande"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__custom_channel_name
 msgid "Custom channel name"
-msgstr ""
+msgstr "Anpassat namn på kanalen"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_message_res_partner_needaction_rel_notification_partner_required
 msgid "Customer is required for inbox / email notification"
-msgstr ""
-
-#. module: mail
-#: code:addons/mail/models/mail_notification.py:0
-#, python-format
-msgid "Can not update the message or recipient of a notification."
-msgstr ""
+msgstr "Kund krävs för notis i inkorg/e-post"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
@@ -1723,7 +1732,7 @@ msgstr "Standardvärden"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
 msgid "Default recipients"
-msgstr ""
+msgstr "Standardmottagare"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__use_default_to
@@ -1736,22 +1745,22 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_shortcode_action
 msgid "Define a new chat shortcode"
-msgstr ""
+msgstr "Ange en ny kortkod för chatt"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_label
 msgid "Delay Label"
-msgstr ""
+msgstr "Etikett för fördröjning"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_from
 msgid "Delay Type"
-msgstr ""
+msgstr "Typ av fördröjning"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_unit
 msgid "Delay units"
-msgstr ""
+msgstr "Enheter för fördröjning"
 
 #. module: mail
 #. openerp-web
@@ -1765,12 +1774,12 @@ msgstr "Ta bort"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete
 msgid "Delete Emails"
-msgstr ""
+msgstr "Radera e-post"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete_message
 msgid "Delete Message Copy"
-msgstr ""
+msgstr "Radera meddelandekopia"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__exception
@@ -1838,7 +1847,7 @@ msgstr ""
 #: code:addons/mail/static/src/widgets/discuss/discuss.xml:0
 #, python-format
 msgid "Discard selected messages"
-msgstr ""
+msgstr "Radera valda meddelanden"
 
 #. module: mail
 #. openerp-web
@@ -2033,7 +2042,7 @@ msgstr "Förfallodatum"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_date_deadline_range
 msgid "Due Date In"
-msgstr ""
+msgstr "Förfallodatum"
 
 #. module: mail
 #. openerp-web
@@ -2047,7 +2056,7 @@ msgstr "Förfaller om %d dagar"
 #: code:addons/mail/static/src/components/activity/activity.js:0
 #, python-format
 msgid "Due in %d days:"
-msgstr ""
+msgstr "Förfaller om %d dagar:"
 
 #. module: mail
 #. openerp-web
@@ -2065,7 +2074,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Dynamic Placeholder Generator"
-msgstr ""
+msgstr "Dynamisk Platshållargenerator"
 
 #. module: mail
 #. openerp-web
@@ -2550,7 +2559,7 @@ msgid "Following"
 msgstr "Följer"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:778
+#: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "Following invites are invalid as user groups do not match: %s"
 msgstr ""
@@ -2930,7 +2939,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Ignore all failures"
-msgstr ""
+msgstr "Ignorera alla misslyckanden"
 
 #. module: mail
 #. openerp-web
@@ -3002,13 +3011,13 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__recipient
 msgid "Invalid email address"
-msgstr ""
+msgstr "Ogiltig e-postadress"
 
 #. module: mail
 #: code:addons/mail/models/mail_blacklist.py:0
 #, python-format
 msgid "Invalid email address %r"
-msgstr ""
+msgstr "Ogiltig e-postadress %r"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -3026,13 +3035,6 @@ msgstr ""
 #, python-format
 msgid "Invalid primary email field on model %s"
 msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
-#, python-format
-msgid "Invitation"
-msgstr "Inbjudan"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:0
@@ -3053,7 +3055,7 @@ msgstr "Bjud in"
 #: code:addons/mail/static/src/models/thread/thread.js:0
 #, python-format
 msgid "Invite Follower"
-msgstr ""
+msgstr "Bjud in följare"
 
 #. module: mail
 #. openerp-web
@@ -3953,6 +3955,13 @@ msgid "Months"
 msgstr "Månader"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__my_activity_date_deadline
+#: model:ir.model.fields,field_description:mail.field_res_partner__my_activity_date_deadline
+#: model:ir.model.fields,field_description:mail.field_res_users__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Mina aktiviteters deadline"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__name
 #: model:ir.model.fields,field_description:mail.field_mail_channel__name
 #: model:ir.model.fields,field_description:mail.field_mail_followers__name
@@ -4068,16 +4077,9 @@ msgid "New messages appear here."
 msgstr "Nya meddelanden syns här."
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/widgets/discuss_invite_partner_dialog/discuss_invite_partner_dialog.js:0
-#, python-format
-msgid "New people"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 msgid "New values"
-msgstr ""
+msgstr "Nya värden"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__moderation_guidelines
@@ -4643,7 +4645,7 @@ msgstr "Parent Model"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_parent_thread_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "Överordnad post tråd ID"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_parent_model_id
@@ -4654,6 +4656,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"Överordnad modell innehåller alias. Modellen som innehåller aliasreferensen "
+"är inte nödvändigtvis den modell som ges av alias_model_id (exempel: projekt"
+" (parent_model) och aktivitet (modell))"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__parent_id
@@ -4738,7 +4743,7 @@ msgstr "Telefon"
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__copyvalue
 #: model:ir.model.fields,field_description:mail.field_mail_template__copyvalue
 msgid "Placeholder Expression"
-msgstr ""
+msgstr "Platshållaruttryck"
 
 #. module: mail
 #. openerp-web
@@ -4814,6 +4819,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Princip för att publicera ett meddelande på dokumentet med hjälp av mailgateway.\n"
+"- alla: alla kan posta\n"
+"- partner: endast autentiserade partner\n"
+"- följare: endast följare av det relaterade dokumentet eller medlemmar av följande kanaler\n"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__mass_post
@@ -5220,12 +5229,12 @@ msgstr ""
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_resend_message_action
 msgid "Resend mail"
-msgstr ""
+msgstr "Skicka e-post igen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Resend to selected"
-msgstr ""
+msgstr "Skicka igen till de valda"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend_wizard_id
@@ -5461,9 +5470,15 @@ msgid ""
 "Select the action to do on each mail and correct the email address if "
 "needed. The modified address will be saved on the corresponding contact."
 msgstr ""
+"Välj vilken åtgärd som ska vidtas för varje e-postmeddelande och korrigera "
+"e-postadressen om det behövs. Den ändrade adressen sparas på motsvarande "
+"kontakt."
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/thread_icon/thread_icon.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__public__groups
+#, python-format
 msgid "Selected group of users"
 msgstr ""
 
@@ -5478,7 +5493,7 @@ msgstr "Skicka"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend
 msgid "Send Again"
-msgstr ""
+msgstr "Skicka igen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__send_mail
@@ -5896,7 +5911,7 @@ msgstr "Den"
 #: code:addons/mail/models/ir_actions.py:0
 #, python-format
 msgid "The 'Due Date In' value can't be negative."
-msgstr ""
+msgstr "Förfallodatum kan inte vara negativt"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -5988,6 +6003,13 @@ msgid "The shortcut which must be replaced in the Chat Messages"
 msgstr ""
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/follower/follower.js:0
+#, python-format
+msgid "The subscription preferences were successfully applied."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__model_id
 #: model:ir.model.fields,help:mail.field_mail_template_preview__model_id
 msgid "The type of document this template can be used with"
@@ -6056,6 +6078,12 @@ msgid "This record has an exception activity."
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "This user can not be added in this channel"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Thread"
 msgstr "Tråd"
@@ -6100,6 +6128,7 @@ msgstr "Till:"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/message_list/message_list.js:0
 #: code:addons/mail/static/src/components/message_list/message_list.js:0
 #: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
@@ -6344,13 +6373,6 @@ msgid "Unstar all messages"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
-#, python-format
-msgid "Unsubscribed"
-msgstr ""
-
-#. module: mail
 #: code:addons/mail/models/mail_template.py:0
 #, python-format
 msgid "Unsupported report type %s found."
@@ -6376,7 +6398,7 @@ msgstr ""
 #: model:mail.activity.type,name:mail.mail_activity_data_upload_document
 #, python-format
 msgid "Upload Document"
-msgstr ""
+msgstr "Ladda upp dokument"
 
 #. module: mail
 #. openerp-web
@@ -6710,6 +6732,12 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on this field"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/models/user/user.js:0
 #, python-format
@@ -6759,6 +6787,14 @@ msgstr ""
 msgid ""
 "You cannot use anything else than unaccented latin characters in the alias "
 "address."
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_thread_blacklist.py:0
+#, python-format
+msgid ""
+"You do not have the access right to unblacklist emails. Please contact your "
+"administrator."
 msgstr ""
 
 #. module: mail
@@ -6833,7 +6869,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_paynow
 msgid "Your"
-msgstr ""
+msgstr "Din"
 
 #. module: mail
 #. openerp-web
@@ -6931,6 +6967,13 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/message/message.xml:0
+#, python-format
+msgid "channel"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_send_guidelines
 msgid "channel."
 msgstr ""
@@ -6941,6 +6984,7 @@ msgid "days"
 msgstr "dagar"
 
 #. module: mail
+#. openerp-web
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
@@ -6980,7 +7024,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been created from:"
-msgstr ""
+msgstr "har skapats från:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
@@ -7141,6 +7185,12 @@ msgstr ""
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
+msgid "unknown error"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
 msgid "unknown target model %s"
 msgstr ""
 
@@ -7160,17 +7210,3 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__weeks
 msgid "weeks"
 msgstr "veckor"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/follower/follower.js:0
-#, python-format
-msgid "The subscription preferences were successfully applied."
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/components/message/message.xml:0
-#, python-format
-msgid "channel"
-msgstr ""

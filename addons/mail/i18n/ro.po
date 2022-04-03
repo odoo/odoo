@@ -4,11 +4,11 @@
 # 
 # Translators:
 # sharkutz <sharkutz4life@yahoo.com>, 2020
+# Hongu Cosmin <cosmin513@gmail.com>, 2020
 # Cozmin Candea <office@terrabit.ro>, 2020
 # Martin Trigaux, 2020
-# Hongu Cosmin <cosmin513@gmail.com>, 2020
-# Dorin Hongu <dhongu@gmail.com>, 2020
-# Foldi Robert <foldirobert@nexterp.ro>, 2021
+# Foldi Robert <foldirobert@nexterp.ro>, 2022
+# Dorin Hongu <dhongu@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2022\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -875,6 +875,13 @@ msgstr ""
 "mai putea să retransmiteți aceste e-mailuri mai târziu!"
 
 #. module: mail
+#: code:addons/mail/models/mail_blacklist.py:0
+#: code:addons/mail/models/mail_thread_blacklist.py:0
+#, python-format
+msgid "Are you sure you want to unblacklist this Email Address?"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #: code:addons/mail/static/src/xml/activity.xml:0
@@ -1128,6 +1135,12 @@ msgstr "Apeluri"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
 msgid "Can Write"
 msgstr "Poate Scrie"
+
+#. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr "Nu se poate actualiza mesajul sau destinatarul unei notificări."
 
 #. module: mail
 #. openerp-web
@@ -1649,12 +1662,6 @@ msgstr "Nume Canal Personalizat"
 #: model:ir.model.constraint,message:mail.constraint_mail_message_res_partner_needaction_rel_notification_partner_required
 msgid "Customer is required for inbox / email notification"
 msgstr "Clientul trebuie să primească notificări inbox / email"
-
-#. module: mail
-#: code:addons/mail/models/mail_notification.py:0
-#, python-format
-msgid "Can not update the message or recipient of a notification."
-msgstr "Nu se poate actualiza mesajul sau destinatarul unei notificări."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
@@ -2578,7 +2585,7 @@ msgid "Following"
 msgstr "Urmărind"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:778
+#: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "Following invites are invalid as user groups do not match: %s"
 msgstr ""
@@ -3074,13 +3081,6 @@ msgstr ""
 #, python-format
 msgid "Invalid primary email field on model %s"
 msgstr "Câmp de e-mail principal nevalid pentru model %s"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
-#, python-format
-msgid "Invitation"
-msgstr "Invitație"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:0
@@ -4019,6 +4019,13 @@ msgid "Months"
 msgstr "Luni"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__my_activity_date_deadline
+#: model:ir.model.fields,field_description:mail.field_res_partner__my_activity_date_deadline
+#: model:ir.model.fields,field_description:mail.field_res_users__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__name
 #: model:ir.model.fields,field_description:mail.field_mail_channel__name
 #: model:ir.model.fields,field_description:mail.field_mail_followers__name
@@ -4132,13 +4139,6 @@ msgstr "Mesaje noi"
 #, python-format
 msgid "New messages appear here."
 msgstr "Mesajele noi vor apărea aici."
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/widgets/discuss_invite_partner_dialog/discuss_invite_partner_dialog.js:0
-#, python-format
-msgid "New people"
-msgstr "Persoană nouă"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -5563,7 +5563,10 @@ msgstr ""
 "corespunzător."
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/thread_icon/thread_icon.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__public__groups
+#, python-format
 msgid "Selected group of users"
 msgstr "Grup selectat de utilizatori"
 
@@ -6103,6 +6106,13 @@ msgid "The shortcut which must be replaced in the Chat Messages"
 msgstr "Comanda rapidă care trebuie înlocuită în mesajele de chat"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/follower/follower.js:0
+#, python-format
+msgid "The subscription preferences were successfully applied."
+msgstr "Preferințele de urmărire au fost aplicate cu succes."
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__model_id
 #: model:ir.model.fields,help:mail.field_mail_template_preview__model_id
 msgid "The type of document this template can be used with"
@@ -6180,6 +6190,12 @@ msgid "This record has an exception activity."
 msgstr "Această înregistrare are o activitate de excepție."
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "This user can not be added in this channel"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Thread"
 msgstr "Fir"
@@ -6224,6 +6240,7 @@ msgstr "Către:"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/message_list/message_list.js:0
 #: code:addons/mail/static/src/components/message_list/message_list.js:0
 #: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
@@ -6478,13 +6495,6 @@ msgstr "Eliminați steluța"
 #, python-format
 msgid "Unstar all messages"
 msgstr "Eliminați steluța la toate mesajele"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
-#, python-format
-msgid "Unsubscribed"
-msgstr "Dezabonat"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:0
@@ -6860,6 +6870,12 @@ msgstr ""
 "poștală."
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on this field"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/models/user/user.js:0
 #, python-format
@@ -6916,6 +6932,14 @@ msgid ""
 msgstr ""
 "Nu puteți folosi altceva decât caractere latine neaccentuate în adresa "
 "alias."
+
+#. module: mail
+#: code:addons/mail/models/mail_thread_blacklist.py:0
+#, python-format
+msgid ""
+"You do not have the access right to unblacklist emails. Please contact your "
+"administrator."
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -7094,6 +7118,13 @@ msgstr ""
 "este utilizată pentru a colecta răspunsuri și nu ar trebui utilizată pentru a contacta direct"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/message/message.xml:0
+#, python-format
+msgid "channel"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_send_guidelines
 msgid "channel."
 msgstr "."
@@ -7104,6 +7135,7 @@ msgid "days"
 msgstr "zile"
 
 #. module: mail
+#. openerp-web
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
@@ -7306,6 +7338,12 @@ msgstr "pentru a închide în"
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
+msgid "unknown error"
+msgstr "Eroare necunoscută"
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
 msgid "unknown target model %s"
 msgstr "modelul țintă necunoscut %s"
 
@@ -7325,17 +7363,3 @@ msgstr "valoare"
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__weeks
 msgid "weeks"
 msgstr "săptămâni"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/follower/follower.js:0
-#, python-format
-msgid "The subscription preferences were successfully applied."
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/components/message/message.xml:0
-#, python-format
-msgid "channel"
-msgstr ""
