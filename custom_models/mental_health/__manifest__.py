@@ -4,6 +4,7 @@
         'base',
     ],
     'data': [
+        'security/groups.xml',
         'data/ir.model.access.csv',
         'views/mental_health_notes_views.xml',
         'views/mental_health_notes_menus.xml',
