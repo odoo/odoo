@@ -5,6 +5,8 @@ class MentalHealthNotes(models.Model):
     _name = "mental_health.notes"
     _description = "A model to be used to write mental health notes"
 
+    #my_boolean_var = fields.Boolean("My Boolean Variable", groups='base.group_portal')
+    my_boolean_var = fields.Boolean("My Boolean Variable",groups='mental_health.my_tharapist_group')
     name = fields.Many2one(comodel_name='res.partner', required=True, copy=True)
     mode_of_therapy = fields.Selection(string='Mode of Therapy', required=True,
                                        selection=[('in_person', 'In Person'),
