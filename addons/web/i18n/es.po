@@ -6,13 +6,16 @@
 # RGB Consulting <odoo@rgbconsulting.com>, 2020
 # David Arnold <blaggacao@users.noreply.github.com>, 2020
 # Jon Perez <jop@odoo.com>, 2020
-# Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
+# Osiris Anael Roman Eras <osiris.roman@yachaytech.edu.ec>, 2020
 # Antonio Trueba, 2020
 # Jorge Luis Alfonso <jlalfonso21@gmail.com>, 2020
 # Martin Trigaux, 2021
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2021
 # Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021
+# Jonatan Gk, 2022
+# VivianMontana23 <vivianpvm@gmail.com>, 2022
+# marcescu, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:30+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021\n"
+"Last-Translator: marcescu, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -234,6 +237,8 @@ msgid ""
 "<span class=\"o_footer_copyright_name mr-2\">Copyright &amp;copy; Company "
 "name</span>"
 msgstr ""
+"<span class=\"o_footer_copyright_name mr-2\">Copyright &amp;copy; Nombre de "
+"la empresa</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -333,7 +338,7 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>Payment terms: 30 Days</span>"
-msgstr ""
+msgstr "<span>Plazo de pago: 30 días</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -712,6 +717,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
@@ -977,6 +983,7 @@ msgstr "La vista de calendario no tiene definido el atributo 'date_start'"
 #. openerp-web
 #: code:addons/web/static/src/js/core/dialog.js:0
 #: code:addons/web/static/src/js/core/dialog.js:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/js/fields/upgrade_fields.js:0
 #: code:addons/web/static/src/js/services/crash_manager.js:0
@@ -1291,7 +1298,7 @@ msgstr "No se pudo mostrar la imagen seleccionada."
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Could not display the specified image url."
-msgstr ""
+msgstr "No se puede mostrar el url de la imagen especifica."
 
 #. module: web
 #. openerp-web
@@ -1869,7 +1876,7 @@ msgstr "Enlace externo"
 #: code:addons/web/static/src/js/control_panel/control_panel_model_extension.js:0
 #, python-format
 msgid "Failed to evaluate search context"
-msgstr ""
+msgstr "No se logró evaluar el contexto de búsqueda"
 
 #. module: web
 #. openerp-web
@@ -2243,7 +2250,7 @@ msgstr "Kanban"
 #: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
 #, python-format
 msgid "Kanban: no action for type: "
-msgstr ""
+msgstr "Kanban: no hay acción para el tipo:"
 
 #. module: web
 #. openerp-web
@@ -2424,7 +2431,7 @@ msgstr "Mac"
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "MailDeliveryException"
-msgstr ""
+msgstr "MailDeliveryException"
 
 #. module: web
 #. openerp-web
@@ -2558,7 +2565,7 @@ msgstr "Acceso al  Modelo"
 #: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
 #, python-format
 msgid "Model Record Rules"
-msgstr ""
+msgstr "Reglas de registro del modelo"
 
 #. module: web
 #. openerp-web
@@ -2908,6 +2915,8 @@ msgstr "UnoAMuchos"
 msgid ""
 "Only employees can access this database. Please contact the administrator."
 msgstr ""
+"Solamente los empleados pueden acceder a esta base de datos. Por favor, "
+"contacte al administrador."
 
 #. module: web
 #. openerp-web
@@ -3008,7 +3017,7 @@ msgstr "Abrir: "
 #: code:addons/web/static/src/js/views/list/list_renderer.js:0
 #, python-format
 msgid "Optional columns"
-msgstr ""
+msgstr "Columnas opcionales"
 
 #. module: web
 #. openerp-web
@@ -3123,7 +3132,7 @@ msgstr "Gráfico circular"
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
 #, python-format
 msgid "Pie chart cannot mix positive and negative numbers. "
-msgstr ""
+msgstr "El gráfico circular no puede mezclar números positivos y negativos."
 
 #. module: web
 #. openerp-web
@@ -3839,7 +3848,7 @@ msgstr "¡Algo salió mal!"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Sort graph"
-msgstr ""
+msgstr "Ordenar gráfico"
 
 #. module: web
 #. openerp-web
@@ -4089,7 +4098,7 @@ msgstr "Hubo un problema subiendo el fichero"
 #: code:addons/web/static/src/js/widgets/date_picker.js:0
 #, python-format
 msgid "This date is in the future. Make sure this is what you expect."
-msgstr ""
+msgstr "Esta fecha es en el futuro. Asegúrese de que esto es lo que quiere."
 
 #. module: web
 #. openerp-web
@@ -4137,6 +4146,7 @@ msgstr "Esta es una muestra de un informe interno."
 #, python-format
 msgid "This update will only consider the records of the current page."
 msgstr ""
+"Esta actualización solamente considerará los registros de la página actual."
 
 #. module: web
 #. openerp-web
@@ -4189,7 +4199,7 @@ msgstr "Mañana"
 #: code:addons/web/models/models.py:0
 #, python-format
 msgid "Too many items to display."
-msgstr ""
+msgstr "Demasiados artículos que mostrar."
 
 #. module: web
 #. openerp-web
@@ -4433,7 +4443,7 @@ msgstr "Subiendo...(%s%%)"
 #: code:addons/web/static/src/js/views/kanban/kanban_column_quick_create.js:0
 #, python-format
 msgid "Use This For My Kanban"
-msgstr ""
+msgstr "Usar esto para mi kanban"
 
 #. module: web
 #. openerp-web
@@ -4476,7 +4486,7 @@ msgstr "Error de validación"
 #: code:addons/web/static/src/js/views/basic/basic_renderer.js:0
 #, python-format
 msgid "Values set here are company-specific."
-msgstr ""
+msgstr "Los valores establecidos aquí son específicos de la empresa."
 
 #. module: web
 #. openerp-web
@@ -4497,7 +4507,7 @@ msgstr "Ver %s"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "View Access Rights"
-msgstr ""
+msgstr "Ver derechos de acceso"
 
 #. module: web
 #. openerp-web
@@ -4519,7 +4529,7 @@ msgstr "Ver metadatos"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "View Record Rules"
-msgstr ""
+msgstr "Ver reglas de registro"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_ir_actions_act_window_view__view_mode
@@ -4602,7 +4612,7 @@ msgstr "Windows/Linux"
 #: code:addons/web/static/src/js/fields/special_fields.js:0
 #, python-format
 msgid "Wrap raw html within an iframe"
-msgstr ""
+msgstr "Envolver el html sin procesar en un iframe"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -4649,6 +4659,12 @@ msgstr "Sí"
 #, python-format
 msgid "Yesterday"
 msgstr "Ayer"
+
+#. module: web
+#: code:addons/web/controllers/main.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr "No está permitido para usted subir un archivo adjunto aquí."
 
 #. module: web
 #. openerp-web
@@ -4876,7 +4892,7 @@ msgstr "mayor o igual que"
 #: code:addons/web/static/src/xml/colorpicker.xml:0
 #, python-format
 msgid "hex"
-msgstr ""
+msgstr "hex"
 
 #. module: web
 #. openerp-web

@@ -12,7 +12,7 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2020
 # Melroy van den Berg <webmaster1989@gmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2165,6 +2165,17 @@ msgid "It has already been unblocked."
 msgstr "Het is al gedeblokkeerd."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid ""
+"It is not possible to unplan one single Work Order. You should unplan the "
+"Manufacturing Order instead in order to unplan all the linked operations."
+msgstr ""
+"Het is niet mogelijk om van één enkele werkorder de planning ongedaan te "
+"maken. Je moet de planning van de productieorder in plaats daarvan ongedaan "
+"maken om alle gekoppelde bewerkingen te annuleren."
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned
 msgid "Its Operations are Planned"
 msgstr "Zijn operaties zijn gepland"
@@ -4262,6 +4273,18 @@ msgid ""
 msgstr ""
 "De geplande einddatum van de werkorder kan niet vóór de geplande startdatum "
 "liggen. Corrigeer dit om de werkorder op te slaan."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The product has already been used at least once, editing its structure may "
+"lead to undesirable behaviours. You should rather archive the product and "
+"create a new one with a new bill of materials."
+msgstr ""
+"Het product is al minstens één keer gebruikt, het wijzigen van de structuur "
+"kan leiden tot ongewenst gedrag. Je kunt het product beter archiveren en een"
+" nieuwe aanmaken met een nieuwe stuklijst."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
