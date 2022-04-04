@@ -313,7 +313,7 @@ class IrActionsActWindowView(models.Model):
     _rec_name = 'view_id'
     _order = 'sequence,id'
 
-    sequence = fields.Integer()
+    sequence = fields.Integer(default=0)
     view_id = fields.Many2one('ir.ui.view', string='View')
     view_mode = fields.Selection(VIEW_TYPES, string='View Type', required=True)
     act_window_id = fields.Many2one('ir.actions.act_window', string='Action', ondelete='cascade')
