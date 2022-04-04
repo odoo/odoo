@@ -436,6 +436,18 @@ class HolidaysAllocation(models.Model):
                 # this is used to prorate the first number of days given to the employee
                 period_start = current_level._get_previous_date(allocation.lastcall)
                 period_end = current_level._get_next_date(allocation.lastcall)
+<<<<<<< HEAD
+=======
+                # If accruals are lost at the beginning of year, skip accrual until beginning of this year
+                if current_level.action_with_unused_accruals == 'lost':
+                    this_year_first_day = today + relativedelta(day=1, month=1)
+                    if period_end < this_year_first_day or period_start < period_end:
+                        allocation.lastcall = allocation.nextcall
+                        allocation.nextcall = nextcall
+                        continue
+                    else:
+                        period_start = max(period_start, this_year_first_day)
+>>>>>>> 7733e6a2c36... temp
                 # Also prorate this accrual in the event that we are passing from one level to another
                 if current_level_idx < (len(level_ids) - 1) and allocation.accrual_plan_id.transition_mode == 'immediately':
                     next_level = level_ids[current_level_idx + 1]
@@ -487,7 +499,7 @@ class HolidaysAllocation(models.Model):
         """
         # Get the current date to determine the start and end of the accrual period
         today = datetime.combine(fields.Date.today(), time(0, 0, 0))
-        this_year_first_day = (today + relativedelta(day=1, month=1)).date()
+        this_year_first_day = today + relativedelta(day=1, month=1)
         end_of_year_allocations = self.search(
         [('allocation_type', '=', 'accrual'), ('state', '=', 'validate'), ('accrual_plan_id', '!=', False), ('employee_id', '!=', False),
             '|', ('date_to', '=', False), ('date_to', '>', fields.Datetime.now()), ('lastcall', '<', this_year_first_day)])
