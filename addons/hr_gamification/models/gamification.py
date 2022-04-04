@@ -9,7 +9,7 @@ class GamificationBadgeUser(models.Model):
     """User having received a badge"""
     _inherit = 'gamification.badge.user'
 
-    employee_id = fields.Many2one('hr.employee', string='Employee')
+    employee_id = fields.Many2one('hr.employee', string='Employee', index=True)
 
     @api.constrains('employee_id')
     def _check_employee_related_user(self):
