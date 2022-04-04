@@ -141,8 +141,8 @@ function _updateScrollbar(ev) {
 // padding-right they add if the popup does not use a backdrop (especially
 // important for default cookie bar).
 
-const _baseShowElement = $.fn.modal.Constructor.prototype._showElement;
-$.fn.modal.Constructor.prototype._showElement = function () {
+const _baseShowElement = Modal.prototype._showElement;
+Modal.prototype._showElement = function () {
     _baseShowElement.apply(this, arguments);
 
     if (this._element.classList.contains('s_popup_no_backdrop')) {
@@ -161,8 +161,8 @@ $.fn.modal.Constructor.prototype._showElement = function () {
     }
 };
 
-const _baseHideModal = $.fn.modal.Constructor.prototype._hideModal;
-$.fn.modal.Constructor.prototype._hideModal = function () {
+const _baseHideModal = Modal.prototype._hideModal;
+Modal.prototype._hideModal = function () {
     _baseHideModal.apply(this, arguments);
 
     // Note: do this in all cases, not only for popup with the
@@ -177,26 +177,6 @@ $.fn.modal.Constructor.prototype._hideModal = function () {
         this._element.removeEventListener('load', this._odooLoadEventCaptureHandler, true);
         delete this._odooLoadEventCaptureHandler;
     }
-};
-
-const _baseSetScrollbar = $.fn.modal.Constructor.prototype._setScrollbar;
-$.fn.modal.Constructor.prototype._setScrollbar = function () {
-    if (this._element.classList.contains('s_popup_no_backdrop')) {
-        this._element.classList.toggle('s_popup_overflow_page', !!this._isOverflowingWindow);
-
-        if (!this._isOverflowingWindow) {
-            return;
-        }
-    }
-    return _baseSetScrollbar.apply(this, arguments);
-};
-
-const _baseGetScrollbarWidth = $.fn.modal.Constructor.prototype._getScrollbarWidth;
-$.fn.modal.Constructor.prototype._getScrollbarWidth = function () {
-    if (this._element.classList.contains('s_popup_no_backdrop') && !this._isOverflowingWindow) {
-        return 0;
-    }
-    return _baseGetScrollbarWidth.apply(this, arguments);
 };
 
 return PopupWidget;
