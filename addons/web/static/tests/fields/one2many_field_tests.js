@@ -4516,15 +4516,13 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("one2many editable list with onchange keeps the order", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("one2many editable list with onchange keeps the order", async function (assert) {
         serverData.models.partner.records[0].p = [1, 2, 4];
         serverData.models.partner.onchanges = {
             p: function () {},
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -4537,45 +4535,32 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
             resId: 1,
-            viewOptions: {
-                mode: "edit",
-            },
         });
-
-        assert.strictEqual(
-            form.$(".o_data_cell").text(),
-            "first recordsecond recordaaa",
-            "records should be display in the correct order"
+        await clickEdit(target);
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.innerText),
+            ["first record", "second record", "aaa"]
         );
 
-        await click(form.$(".o_data_row:first .o_data_cell"));
-        await testUtils.fields.editInput(
-            form.$(".o_selected_row .o_field_widget[name=display_name]"),
-            "new"
-        );
-        await click(form.$el);
-
-        assert.strictEqual(
-            form.$(".o_data_cell").text(),
-            "newsecond recordaaa",
-            "records should be display in the correct order"
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        await editInput(target, ".o_selected_row .o_field_widget[name=display_name] input", "new");
+        await click(target, ".o_form_view");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.innerText),
+            ["new", "second record", "aaa"]
         );
     });
 
-    QUnit.skipWOWL(
-        "one2many list (editable): readonly domain is evaluated",
-        async function (assert) {
-            assert.expect(2);
+    QUnit.test("one2many list (editable): readonly domain is evaluated", async function (assert) {
+        serverData.models.partner.records[0].p = [2, 4];
+        serverData.models.partner.records[1].product_id = false;
+        serverData.models.partner.records[2].product_id = 37;
 
-            serverData.models.partner.records[0].p = [2, 4];
-            serverData.models.partner.records[1].product_id = false;
-            serverData.models.partner.records[2].product_id = 37;
-
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
                     <form>
                         <field name="p">
                             <tree editable="top">
@@ -4584,31 +4569,27 @@ QUnit.module("Fields", (hooks) => {
                             </tree>
                         </field>
                     </form>`,
-                resId: 1,
-            });
+            resId: 1,
+        });
+        await clickEdit(target);
 
-            await clickEdit(target);
+        const rows = target.querySelectorAll(".o_field_x2many .o_data_row");
+        assert.hasClass(
+            rows[0].querySelector(".o_field_widget"),
+            "o_readonly_modifier",
+            "first record should have display_name in readonly mode"
+        );
+        assert.doesNotHaveClass(
+            rows[1].querySelector(".o_field_widget"),
+            "o_readonly_modifier",
+            "second record should not have display_name in readonly mode"
+        );
+    });
 
-            assert.hasClass(
-                form.$(".o_list_view tbody tr:eq(0) td:first"),
-                "o_readonly_modifier",
-                "first record should have display_name in readonly mode"
-            );
-
-            assert.doesNotHaveClass(
-                form.$(".o_list_view tbody tr:eq(1) td:first"),
-                "o_readonly_modifier",
-                "second record should not have display_name in readonly mode"
-            );
-        }
-    );
-
-    QUnit.skipWOWL("pager of one2many field in new record", async function (assert) {
-        assert.expect(3);
-
+    QUnit.test("pager of one2many field in new record", async function (assert) {
         serverData.models.partner.records[0].p = [];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -4621,17 +4602,16 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
         });
-
-        assert.containsNone(form, ".o_x2m_control_panel .o_pager", "o2m pager should be hidden");
+        assert.containsNone(target, ".o_x2m_control_panel .o_pager", "o2m pager should be hidden");
 
         // click to create a subrecord
-        await click(form.$("tbody td.o_field_x2many_list_row_add a"));
-        assert.containsOnce(form, "tr.o_data_row");
-
-        assert.containsNone(form, ".o_x2m_control_panel .o_pager", "o2m pager should be hidden");
+        await click(target, "tbody td.o_field_x2many_list_row_add a");
+        assert.containsOnce(target, "tr.o_data_row");
+        assert.containsNone(target, ".o_x2m_control_panel .o_pager", "o2m pager should be hidden");
     });
 
-    QUnit.skipWOWL("one2many list with a many2one", async function (assert) {
+    // AAB Not inline
+    QUnit.skipNotInline("one2many list with a many2one", async function (assert) {
         assert.expect(5);
 
         let checkOnchange = false;
@@ -4643,10 +4623,11 @@ QUnit.module("Fields", (hooks) => {
                 [1, 2, { product_id: [37, "xphone"] }], // update existing record
                 [0, 0, { product_id: [41, "xpad"] }],
             ];
-            //
         };
+        serverData.views = {};
+        serverData.views["partner,false,form"] = '<form><field name="product_id"/></form>';
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -4659,9 +4640,6 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
             resId: 1,
-            archs: {
-                "partner,false,form": '<form><field name="product_id"/></form>',
-            },
             mockRPC(route, args) {
                 if (args.method === "onchange" && checkOnchange) {
                     assert.deepEqual(
@@ -4673,41 +4651,21 @@ QUnit.module("Fields", (hooks) => {
                         "should trigger onchange with correct parameters"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
-
-        assert.strictEqual(
-            form.$("tbody td:contains(xphone)").length,
-            1,
-            "should have properly fetched the many2one nameget"
-        );
-        assert.strictEqual(
-            form.$("tbody td:contains(xpad)").length,
-            0,
-            "should not display 'xpad' anywhere"
-        );
+        assert.containsOnce(target, ".o_data_cell[title='xphone']");
+        assert.containsNone(target, ".o_data_cell[title='xpad']");
 
         await clickEdit(target);
-
-        await click(form.$("tbody td.o_field_x2many_list_row_add a"));
+        await click(target, "tbody td.o_field_x2many_list_row_add a");
 
         checkOnchange = true;
         await testUtils.fields.many2one.clickOpenDropdown("product_id");
         testUtils.fields.many2one.clickItem("product_id", "xpad");
 
-        await click($(".modal .modal-footer button:eq(0)"));
-
-        assert.strictEqual(
-            form.$("tbody td:contains(xpad)").length,
-            1,
-            "should display 'xpad' on a td"
-        );
-        assert.strictEqual(
-            form.$("tbody td:contains(xphone)").length,
-            1,
-            "should still display xphone"
-        );
+        await click(target.querySelector(".modal .modal-footer button"));
+        assert.containsOnce(target, ".o_data_cell[title='xphone']");
+        assert.containsOnce(target, ".o_data_cell[title='xpad']");
     });
 
     QUnit.skipWOWL("one2many list with inline form view", async function (assert) {
@@ -4715,7 +4673,7 @@ QUnit.module("Fields", (hooks) => {
 
         serverData.models.partner.records[0].p = [];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -4749,49 +4707,36 @@ QUnit.module("Fields", (hooks) => {
                         ],
                     ]);
                 }
-                return this._super(route, args);
             },
         });
-
         await clickEdit(target);
-
-        await click(form.$("tbody td.o_field_x2many_list_row_add a"));
+        await click(target, "tbody td.o_field_x2many_list_row_add a");
 
         // write in the many2one field, value = 37 (xphone)
         await testUtils.fields.many2one.clickOpenDropdown("product_id");
         await testUtils.fields.many2one.clickHighlightedItem("product_id");
 
         // write in the integer field
-        await testUtils.fields.editInput($(".modal .modal-body input.o_field_widget"), "123");
+        await editInput(target, ".modal .modal-body input.o_field_widget", "123");
 
         // save and close
-        await click($(".modal .modal-footer button:eq(0)"));
-
-        assert.strictEqual(
-            form.$("tbody td:contains(xphone)").length,
-            1,
-            "should display 'xphone' in a td"
-        );
+        await click(target.querySelector(".modal .modal-footer button"));
+        assert.containsOnce(target, ".o_data_cell[title='xphone']");
 
         // reopen the record in form view
-        await click(form.$("tbody td:contains(xphone)"));
+        await click(target, ".o_data_cell[title='xphone']");
+        assert.strictEqual(target.querySelector(".modal .modal-body input").value, "xphone");
 
-        assert.strictEqual(
-            $(".modal .modal-body input").val(),
-            "xphone",
-            "should display 'xphone' in an input"
-        );
-
-        await testUtils.fields.editInput($(".modal .modal-body input.o_field_widget"), "456");
+        await editInput(target, ".modal .modal-body input.o_field_widget", "456");
 
         // discard
-        await click($(".modal .modal-footer span:contains(Discard)"));
+        await click(target.querySelector(".modal .modal-footer span:contains(Discard)"));
 
         // reopen the record in form view
-        await click(form.$("tbody td:contains(xphone)"));
+        await click(target, ".o_data_cell[title='xphone']");
 
         assert.strictEqual(
-            $(".modal .modal-body input.o_field_widget").val(),
+            target.querySelector(".modal .modal-body input.o_field_widget").value,
             "123",
             "should display 123 (previous change has been discarded)"
         );
@@ -4801,19 +4746,15 @@ QUnit.module("Fields", (hooks) => {
         testUtils.fields.many2one.clickItem("product_id", "xpad");
 
         // save and close
-        await click($(".modal .modal-footer button:eq(0)"));
+        await click(target.querySelector(".modal .modal-footer button"));
 
-        assert.strictEqual(
-            form.$("tbody td:contains(xpad)").length,
-            1,
-            "should display 'xpad' in a td"
-        );
+        assert.containsOnce(target, ".o_data_cell[title='xpad']");
 
         // save the record
         await clickSave(target);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many list with inline form view with context with parent key",
         async function (assert) {
             assert.expect(2);
@@ -4822,7 +4763,7 @@ QUnit.module("Fields", (hooks) => {
             serverData.models.partner.records[0].product_id = 41;
             serverData.models.partner.records[1].product_id = 37;
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -4853,28 +4794,27 @@ QUnit.module("Fields", (hooks) => {
                             "should have correctly evaluated parent product_id field"
                         );
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
 
             await clickEdit(target);
             // open a modal
-            await click(form.$("tr.o_data_row:eq(0) td:contains(xphone)"));
+            await click(target.querySelector("tr.o_data_row td[title='xphone']"));
 
             // write in the many2one field
-            await click($(".modal .o_field_many2one input"));
+            await click(target, ".modal .o_field_many2one input");
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "value of invisible x2many fields is correctly evaluated in context",
         async function (assert) {
-            assert.expect(1);
+            assert.expect(2);
 
             serverData.models.partner.records[0].timmy = [12];
             serverData.models.partner.records[0].p = [2, 3];
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -4887,28 +4827,22 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
                 mockRPC(route, args) {
                     if (args.method === "name_search") {
-                        assert.deepEqual(
-                            args.kwargs.context,
-                            {
-                                p: [
-                                    [4, 2, false],
-                                    [4, 3, false],
-                                ],
-                                timmy: [[6, false, [12]]],
-                            },
-                            "values of x2manys should have been correctly evaluated in context"
-                        );
+                        const { p, timmy } = args.kwargs.context;
+                        assert.deepEqual(p, [
+                            [4, 2, false],
+                            [4, 3, false],
+                        ]);
+                        assert.deepEqual(timmy, [[6, false, [12]]]);
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
 
             await clickEdit(target);
-            await click(form.$(".o_field_widget[name=product_id] input"));
+            await click(target, ".o_field_widget[name=product_id] input");
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many list, editable, with many2one and with context with parent key",
         async function (assert) {
             assert.expect(1);
@@ -4916,7 +4850,7 @@ QUnit.module("Fields", (hooks) => {
             serverData.models.partner.records[0].p = [2];
             serverData.models.partner.records[1].product_id = 37;
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -4938,20 +4872,18 @@ QUnit.module("Fields", (hooks) => {
                             "should have correctly evaluated parent foo field"
                         );
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
 
             await clickEdit(target);
-
-            await click(form.$("tr.o_data_row:eq(0) td:contains(xphone)"));
+            await click(target.querySelector("tr.o_data_row td[title='xphone']"));
 
             // trigger a name search
-            await click(form.$("table td input"));
+            await click(target, "table td input");
         }
     );
 
-    QUnit.skipWOWL("one2many list, editable, with a date in the context", async function (assert) {
+    QUnit.test("one2many list, editable, with a date in the context", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.records[0].p = [2];
@@ -4981,7 +4913,6 @@ QUnit.module("Fields", (hooks) => {
                         "should have properly evaluated date key in context"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
@@ -4989,12 +4920,12 @@ QUnit.module("Fields", (hooks) => {
         await addRow(target);
     });
 
-    QUnit.skipWOWL("one2many field with context", async function (assert) {
+    QUnit.test("one2many field with context", async function (assert) {
         assert.expect(2);
 
-        var counter = 0;
+        let counter = 0;
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -5011,7 +4942,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
             mockRPC(route, args) {
                 if (args.method === "onchange") {
-                    var expected =
+                    const expected =
                         counter === 0
                             ? [[4, 2, false]]
                             : [
@@ -5025,13 +4956,12 @@ QUnit.module("Fields", (hooks) => {
                     );
                     counter++;
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         await clickEdit(target);
         await addRow(target);
-        await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), "hammer");
+        await editInput(target, '[name="turtle_foo"] input', "hammer");
         await addRow(target);
     });
 

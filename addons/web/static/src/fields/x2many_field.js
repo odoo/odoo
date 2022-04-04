@@ -135,6 +135,7 @@ export class X2ManyField extends Component {
             mode: "edit",
             viewMode: "form",
             resId: record.resId,
+            getParentRecordContext: record.getParentRecordContext,
         });
         await newRecord.load({
             values: record._values,

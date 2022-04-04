@@ -415,7 +415,7 @@ export class Record extends DataPoint {
                 evalContext[fieldName] = false;
             } else if (isX2Many(this.fields[fieldName])) {
                 const list = this._cache[fieldName];
-                evalContext[fieldName] = list.currentIds; // displayedIds???
+                evalContext[fieldName] = list.getContext();
                 // ---> implied to initialize (resIds, commands) currentIds before loading static list
             } else if (value && this.fields[fieldName].type === "date") {
                 evalContext[fieldName] = value.toFormat("yyyy-LL-dd");
@@ -862,6 +862,7 @@ export class Record extends DataPoint {
     }
 
     _createStaticList(fieldName) {
+        const field = this.fields[fieldName];
         const activeField = this.activeFields[fieldName];
         const { relatedFields = {}, views = {}, viewMode, FieldComponent } = activeField;
         const fields = {
@@ -882,6 +883,7 @@ export class Record extends DataPoint {
 
         const list = this.model.createDataPoint("static_list", {
             resModel: this.fields[fieldName].relation,
+            field,
             fields,
             activeFields,
             getParentRecordContext: () => this.dataContext,
@@ -930,6 +932,8 @@ export class Record extends DataPoint {
             const field = this.fields[fieldName];
             if (isNumeric(field)) {
                 defaultValues[fieldName] = 0;
+            } else if (["date", "datetime"].includes(field.type)) {
+                defaultValues[fieldName] = false;
             } else if (isX2Many(field)) {
                 defaultValues[fieldName] = [];
             } else {
@@ -2004,6 +2008,7 @@ export class StaticList extends DataPoint {
         this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
         this.initialLimit = this.limit;
         this.editable = params.editable || false; // ("bottom" or "top")
+        this.field = params.field;
 
         this.orderBy = params.orderBy || [];
 
@@ -2304,6 +2309,27 @@ export class StaticList extends DataPoint {
             return commands;
         }
         return null;
+    }
+
+    getContext() {
+        const commands = [];
+        if (this.field.type === "one2many") {
+            if (this.currentIds) {
+                for (const resId of this.currentIds) {
+                    const record = this._cache[this._mapping[resId]];
+                    if (record && record.isVirtual) {
+                        commands.push(x2ManyCommands.create(resId, record.data));
+                    } else {
+                        commands.push(x2ManyCommands.linkTo(resId));
+                    }
+                }
+            }
+        } else {
+            if (this.currentIds && this.currentIds.length) {
+                commands.push(x2ManyCommands.replaceWith(this.currentIds));
+            }
+        }
+        return commands;
     }
 
     async replaceWith(resIds) {
