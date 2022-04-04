@@ -847,15 +847,17 @@ function responsiveToStaticForOutlook(editable) {
     // Replace the responsive tables with static ones for Outlook
     const topLevelTds = [...editable.querySelectorAll('td')].filter(td => td.closest('td') === td);
     for (const td of topLevelTds) {
-        const convertedTopLevelTd = _convertTdForOutlook(td);
-        const mso = document.createComment(`[if mso]>${convertedTopLevelTd.outerHTML}<![endif]`);
+        const convertedTds = _convertTdForOutlook(td);
+        const mso = document.createComment(`[if mso]>${convertedTds.get(td).outerHTML}<![endif]`);
         td.before(mso);
         // Hide the original td in Outlook (mso-hide is used in formatTables
         // to apply a non-standard style that risks being lost when
         // modifying the dom if we set it here already).
-        td.classList.add('mso-hide');
-        td.before(document.createComment('[if !mso]><!'));
-        td.after(document.createComment('<![endif]'));
+        for (const original of convertedTds.keys()) {
+            original.classList.add('mso-hide');
+            original.before(document.createComment('[if !mso]><!'));
+            original.after(document.createComment('<![endif]'));
+        }
     }
 }
 
@@ -914,12 +916,16 @@ function _computeStyleAndSpecificityOnRules(cssRules) {
 }
 /**
  * This takes a column element and returns a clone of it that is compatible with
- * Outlook.
+ * Outlook (recursively iterates over its descendants).
  *
  * @param {Element} td
- * @returns {Element} the converted td
+ * @param {Map<Element, Element>} [convertedTds] Map from original to converted tds
+ * @returns {Map<Element, Element>} Map from original to converted tds
  */
-function _convertTdForOutlook(td) {
+function _convertTdForOutlook(td, convertedTds) {
+    if (!convertedTds) {
+        convertedTds = new Map();
+    }
     const tdStyle = td.getAttribute('style') || '';
     const msoAttributes = [...td.attributes].filter(attr => attr.name !== 'style' && attr.name !== 'width');
     const msoWidth = td.style.getPropertyValue('max-width');
@@ -938,12 +944,12 @@ function _convertTdForOutlook(td) {
     outlookTd.innerHTML = msoContents;
     const nextLevelTds = [...outlookTd.querySelectorAll('td')].filter(td => td.closest('td') === td);
     for (const nextLevelTd of nextLevelTds) {
-        const convertedNextLevelTd = _convertTdForOutlook(nextLevelTd);
-        nextLevelTd.before(convertedNextLevelTd);
+        convertedTds = _convertTdForOutlook(nextLevelTd, convertedTds);
+        nextLevelTd.before(convertedTds.get(nextLevelTd));
         nextLevelTd.remove();
     }
-    td.classList.add('mso-hide'); // Todo: move side effect
-    return outlookTd;
+    convertedTds.set(td, outlookTd);
+    return convertedTds;
 }
 /**
  * Return an array of twelve table cells as JQuery elements.
