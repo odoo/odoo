@@ -29,9 +29,14 @@ class AccountMove(models.Model):
             if self.company_id.partner_id.l10n_cl_sii_taxpayer_type == '1':
                 domain += [('code', '!=', '71')]  # Companies with VAT Affected doesn't have "Boleta de honorarios Electrónica"
             return domain
+        if self.move_type == 'in_refund':
+            internal_types_domain = ('internal_type', '=', 'credit_note')
+        else:
+            internal_types_domain = ('internal_type', 'in', ['invoice', 'debit_note', 'credit_note', 'invoice_in'])
         domain = [
             ('country_id.code', '=', 'CL'),
-            ('internal_type', 'in', ['invoice', 'debit_note', 'credit_note', 'invoice_in'])]
+            internal_types_domain,
+        ]
         if self.partner_id.l10n_cl_sii_taxpayer_type == '1' and self.partner_id_vat != '60805000-0':
             domain += [('code', 'not in', ['39', '70', '71', '914', '911'])]
         elif self.partner_id.l10n_cl_sii_taxpayer_type == '1' and self.partner_id_vat == '60805000-0':
