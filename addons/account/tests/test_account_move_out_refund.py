@@ -731,7 +731,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
 
         move_form = Form(self.invoice)
         # Change the date to get another rate: 1/3 instead of 1/2.
-        move_form.date = fields.Date.from_string('2016-01-01')
+        move_form.invoice_date = fields.Date.from_string('2016-01-01')
         move_form.save()
 
         self.assertInvoiceValues(self.invoice, [
@@ -764,6 +764,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
                 'currency_id': self.currency_data['currency'].id,
                 'amount_currency': -1410.0,
                 'credit': 470.0,
+                'date_maturity': fields.Date.from_string('2016-01-01'),
             },
         ], {
             **self.move_vals,
@@ -819,6 +820,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
                 'price_total': -260.006,
                 'amount_currency': -260.006,
                 'credit': 86.67,
+                'date_maturity': fields.Date.from_string('2016-01-01'),
             },
         ], {
             **self.move_vals,
@@ -861,6 +863,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
                 'price_total': -260.01,
                 'amount_currency': -260.01,
                 'credit': 260.01,
+                'date_maturity': fields.Date.from_string('2016-01-01'),
             },
         ], {
             **self.move_vals,
