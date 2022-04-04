@@ -4300,6 +4300,17 @@ class AccountMoveLine(models.Model):
             result.append((line.id, name))
         return result
 
+    @api.model
+    def invalidate_cache(self, fnames=None, ids=None):
+        # Invalidate cache of related moves
+        if fnames is None or 'move_id' in fnames:
+            field = self._fields['move_id']
+            lines = self.env.cache.get_records(self, field) if ids is None else self.browse(ids)
+            move_ids = {id_ for id_ in self.env.cache.get_values(lines, field) if id_}
+            if move_ids:
+                self.env['account.move'].invalidate_cache(ids=move_ids)
+        return super().invalidate_cache(fnames=fnames, ids=ids)
+
     # -------------------------------------------------------------------------
     # TRACKING METHODS
     # -------------------------------------------------------------------------
