@@ -646,3 +646,18 @@ class TestAccountMove(AccountTestInvoicingCommon):
                 'credit': value['debit'],
             })
         self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
+
+    def _get_cache_count(self, model_name='account.move', field_name='name'):
+        model = self.env[model_name]
+        field = model._fields[field_name]
+        return len(self.env.cache.get_records(model, field))
+
+    def test_cache_invalidation(self):
+        self.env['account.move'].invalidate_cache()
+        lines = self.test_move.line_ids
+        # prefetch
+        lines.mapped('move_id.name')
+        # check account.move cache
+        self.assertEqual(self._get_cache_count(), 1)
+        self.env['account.move.line'].invalidate_cache(ids=lines.ids)
+        self.assertEqual(self._get_cache_count(), 0)
