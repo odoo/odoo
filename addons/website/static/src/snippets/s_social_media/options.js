@@ -332,6 +332,7 @@ options.registry.SocialMedia = options.Class.extend({
     async _renderCustomXML(uiFragment) {
         const listEl = uiFragment.querySelector('we-list[data-render-list-items]');
         listEl.dataset.name = 'social_media_list';
+        listEl.dataset.addItemTitle = _t("Add New Social Network");
         delete listEl.generateIdForNewItems;
         delete listEl.newElementsToggled;
         listEl.dataset.newElementsNotToggleable = 'true';
