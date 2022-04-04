@@ -95,7 +95,6 @@ def add_banner(pdf_stream, text=None, logo=False, thickness=2 * cm):
     """
 
     old_pdf = PdfFileReader(pdf_stream, strict=False, overwriteWarnings=False)
-    old_pdf.getNumPages()
     packet = io.BytesIO()
     can = canvas.Canvas(packet)
     odoo_logo = Image.open(file_open('base/static/img/main_partner-image.png', mode='rb'))
@@ -134,6 +133,9 @@ def add_banner(pdf_stream, text=None, logo=False, thickness=2 * cm):
     new_pdf = PdfFileWriter()
     for p in range(old_pdf.getNumPages()):
         new_page = old_pdf.getPage(p)
+        # Remove annotations (if any), to prevent errors in PyPDF2
+        if '/Annots' in new_page:
+            del new_page['/Annots']
         new_page.mergePage(watermark_pdf.getPage(p))
         new_pdf.addPage(new_page)
 
