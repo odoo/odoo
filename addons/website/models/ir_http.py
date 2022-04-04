@@ -67,7 +67,8 @@ class Http(models.AbstractModel):
 
     @classmethod
     def clear_caches(cls):
-        super(Http, cls)._clear_routing_map()
+        if any(cls._rewrite_len.values()):
+            super(Http, cls)._clear_routing_map()
         return super(Http, cls).clear_caches()
 
     @classmethod
