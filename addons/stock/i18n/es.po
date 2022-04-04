@@ -18,6 +18,7 @@
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021
 # Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021
 # Jose Carmona <jrcarmona@gmail.com>, 2021
+# marcescu, 2022
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Jose Carmona <jrcarmona@gmail.com>, 2021\n"
+"Last-Translator: marcescu, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -467,7 +468,7 @@ msgstr "<span>Asignar números de serie</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "<span>Clear All</span>"
-msgstr ""
+msgstr "<span>Limpiar todo</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
@@ -1279,7 +1280,7 @@ msgstr "Escoja su fecha"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Clear Lines"
-msgstr ""
+msgstr "Limpiar líneas"
 
 #. module: stock
 #. openerp-web
@@ -1647,6 +1648,8 @@ msgid ""
 "Creating a new warehouse will automatically activate the Storage Locations "
 "setting"
 msgstr ""
+"Crear un nuevo almacén activará automáticamente los ajustes de ubicación de "
+"almacén"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__create_date
@@ -1840,6 +1843,9 @@ msgid ""
 "Define a minimum stock rule so that Odoo creates automatically requests for "
 "quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
+"Defina una regla de existencias mínimas para que Odoo cree solicitudes de "
+"cotizaciones u órdenes de fabricación de forma automática para reabastecer "
+"sus existencias."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -6801,14 +6807,9 @@ msgstr "El producto no está disponible en cantidad suficiente"
 #, python-format
 msgid ""
 "The quantity done for the product \"%s\" doesn't respect the rounding "
-"precision                                   defined on the unit of measure "
-"\"%s\". Please change the quantity done or the"
-"                                   rounding precision of your unit of "
-"measure."
+"precision defined on the unit of measure \"%s\". Please change the quantity "
+"done or the rounding precision of your unit of measure."
 msgstr ""
-"La cantidad realizada para el producto \"%s\" no respeta la precisión de "
-"redondeo definida en la unidad de medida \"%s\". Cambie la cantidad "
-"realizada o la precisión de redondeo de su unidad de medida."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -8051,6 +8052,8 @@ msgid ""
 "You can't desactivate the multi-location if you have more than once "
 "warehouse by company"
 msgstr ""
+"No puede desactivar las ubicaciones múltiples si tiene más de un almacén por"
+" empresa"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:0
@@ -8309,6 +8312,15 @@ msgstr ""
 #, python-format
 msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "Debe proporcionar un número de lote / serie para los productos %s."
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You should not use a planned internal transfer to move some products between"
+" two warehouses. Instead, use an immediate internal transfer or the resupply"
+" route."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0

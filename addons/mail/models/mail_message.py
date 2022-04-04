@@ -981,23 +981,6 @@ class Message(models.Model):
             else:
                 author = (0, message_sudo.email_from)
 
-            # Attachments
-            main_attachment = self.env['ir.attachment']
-            if message_sudo.attachment_ids and message_sudo.res_id and issubclass(self.pool[message_sudo.model], self.pool['mail.thread']):
-                main_attachment = self.env[message_sudo.model].sudo().browse(message_sudo.res_id).message_main_attachment_id
-            attachment_ids = []
-            for attachment in message_sudo.attachment_ids:
-                attachment_ids.append({
-                    'checksum': attachment.checksum,
-                    'id': attachment.id,
-                    'filename': attachment.name,
-                    'name': attachment.name,
-                    'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
-                    'is_main': main_attachment == attachment,
-                    'res_id': attachment.res_id,
-                    'res_model': attachment.res_model,
-                })
-
             # Tracking values
             tracking_value_ids = []
             for tracking in message_sudo.tracking_value_ids:
@@ -1023,7 +1006,7 @@ class Message(models.Model):
             vals.update({
                 'author_id': author,
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
-                'attachment_ids': attachment_ids,
+                'attachment_ids': message_sudo.attachment_ids._attachment_format(),
                 'tracking_value_ids': tracking_value_ids,
                 'record_name': record_name,
             })

@@ -1095,7 +1095,7 @@
         ]"/>
     </record>
     <record id="account_tax_template_s_iva0_sp_i" model="account.tax.template">
-        <field name="description">Intracomunitario exento servicios</field>
+        <field name="description">Intracomunitario exento (Servicios)</field>
         <field name="type_tax_use">sale</field>
         <field name="name">IVA 0% Prestación de servicios intracomunitario</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -1129,7 +1129,7 @@
         ]"/>
     </record>
     <record id="account_tax_template_s_iva_ns" model="account.tax.template">
-        <field name="description">No sujeto</field>
+        <field name="description">No sujeto (Servicios)</field>
         <field name="type_tax_use">sale</field>
         <field name="name">No sujeto Repercutido (Servicios)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -1163,7 +1163,7 @@
         ]"/>
     </record>
     <record id="account_tax_template_s_iva_ns_b" model="account.tax.template">
-        <field name="description">S_IVA_NS_B</field>
+        <field name="description">No sujeto (Bienes)</field>
         <field name="type_tax_use">sale</field>
         <field name="name">No sujeto Repercutido (Bienes)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -2142,7 +2142,7 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_iva0_ns_b" model="account.tax.template">
-        <field name="description">P_IVA0_NS_B</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA Soportado no sujeto (Bienes)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -2857,7 +2857,7 @@
         ]"/>
     </record>
     <record id="account_tax_template_s_iva0_ic" model="account.tax.template">
-        <field name="description">Intracomunitario exento (bienes)</field>
+        <field name="description">Intracomunitario exento (Bienes)</field>
         <field name="type_tax_use">sale</field>
         <field name="name">IVA 0% Entregas Intracomunitarias exentas</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>

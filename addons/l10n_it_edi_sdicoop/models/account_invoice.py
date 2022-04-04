@@ -13,8 +13,8 @@ DEFAULT_FACTUR_ITALIAN_DATE_FORMAT = '%Y-%m-%d'
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    l10n_it_edi_transaction = fields.Char(copy=False)
-    l10n_it_edi_attachment_id = fields.Many2one('ir.attachment', copy=False)
+    l10n_it_edi_transaction = fields.Char(copy=False, string="FatturaPA Transaction")
+    l10n_it_edi_attachment_id = fields.Many2one('ir.attachment', copy=False, string="FatturaPA Attachment")
 
     def send_pec_mail(self):
         self.ensure_one()

@@ -79,15 +79,15 @@
                   attrs="{'invisible': [('production_state','=', 'draft')], 'readonly': [('is_user_working', '=', True)]}"/>
                 <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')" attrs="{'invisible': [('production_state', 'in', ('draft', 'done'))]}"/>
                 <button name="button_start" type="object" string="Start" class="btn-success"
-                  attrs="{'invisible': ['|', '|', '|', ('production_state','in', ('draft', 'done')), ('working_state', '=', 'blocked'), ('state', '=', 'done'), ('is_user_working', '!=', False)]}"/>
+                  attrs="{'invisible': ['|', '|', '|', ('production_state','in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked'), ('state', '=', 'done'), ('is_user_working', '!=', False)]}"/>
                 <button name="button_pending" type="object" string="Pause" class="btn-warning"
-                  attrs="{'invisible': ['|', '|', ('production_state', 'in', ('draft', 'done')), ('working_state', '=', 'blocked'), ('is_user_working', '=', False)]}"/>
+                  attrs="{'invisible': ['|', '|', ('production_state', 'in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked'), ('is_user_working', '=', False)]}"/>
                 <button name="button_finish" type="object" string="Done" class="btn-success"
-                  attrs="{'invisible': ['|', '|', ('production_state', 'in', ('draft', 'done')), ('working_state', '=', 'blocked'), ('is_user_working', '=', False)]}"/>
+                  attrs="{'invisible': ['|', '|', ('production_state', 'in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked'), ('is_user_working', '=', False)]}"/>
                 <button name="%(mrp.act_mrp_block_workcenter_wo)d" type="action" string="Block" context="{'default_workcenter_id': workcenter_id}" class="btn-danger"
-                  attrs="{'invisible': ['|', ('production_state', 'in', ('draft', 'done')), ('working_state', '=', 'blocked')]}"/>
+                  attrs="{'invisible': ['|', ('production_state', 'in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked')]}"/>
                 <button name="button_unblock" type="object" string="Unblock" context="{'default_workcenter_id': workcenter_id}" class="btn-danger"
-                  attrs="{'invisible': ['|', ('production_state', 'in', ('draft', 'done')), ('working_state', '!=', 'blocked')]}"/>
+                  attrs="{'invisible': ['|', ('production_state', 'in', ('draft', 'done', 'cancel')), ('working_state', '!=', 'blocked')]}"/>
                 <button name="action_open_wizard" type="object" icon="fa-external-link" class="oe_edit_only"
                     context="{'default_workcenter_id': workcenter_id}"/>
                 <field name="show_json_popover" invisible="1"/>

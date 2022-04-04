@@ -1508,6 +1508,12 @@ msgid ""
 "    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
+"\n"
+"Machen Sie das Sperrdatum irreversibel:\n"
+"\n"
+"* Sie können für Berater keine strengeren Beschränkungen festlegen als für Benutzer. Daher muss das Sperrdatum für alle Benutzer vor dem Sperrdatum für Rechnungen liegen (oder diesem entsprechen).\n"
+"* Sie können keinen Zeitraum sperren, der noch nicht beendet ist. Daher muss das Sperrdatum für alle Benutzer vor dem letzten Tag des Vormonats liegen (oder diesem entsprechen).\n"
+"* Jedes neue Sperrdatum für alle Benutzer muss nach dem vorherigen liegen (oder diesem entsprechen)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud
@@ -1803,6 +1809,102 @@ msgid ""
 "    When validating a batch payment, the ABA file will be generated.  It can\n"
 "    be regenerated.  This file can then be uploaded to the bank.\n"
 msgstr ""
+"\n"
+"ABA Credit Transfer\n"
+"===================\n"
+"\n"
+"This module allows the generation of payment batches as ABA (Australian\n"
+"Bankers Association) text files.  The generated 'aba' file can be uploaded\n"
+"to many Australian banks.\n"
+"\n"
+"Setup\n"
+"-----\n"
+"\n"
+"- *Account > Configuration > invoicing > Journals*\n"
+"\n"
+"    If needed, create new journal or choose an existing journal with **Type**\n"
+"    set to *“Bank”*.\n"
+"\n"
+"    On **Advanced Settings**, ensure ABA Credit Transfer is ticked.\n"
+"\n"
+"    On the **Bank Account** tab, enter the **Account Number**.\n"
+"\n"
+"    On the same tab, ensure the ABA transfer information is set up.\n"
+"\n"
+"    **BSB** - Required, 6 digits, and will be auto formatted.\n"
+"\n"
+"    **Financial Institution Code** - Required (provided by bank or can be found\n"
+"    on Google).  It is three uppercase 3 characters.\n"
+"\n"
+"    **Supplying User Name** - Some banks allow this to be freeform, some banks\n"
+"    may reject the ABA file if the Supplying User Name is not as expected.  It\n"
+"    cannot be longer than 26 characters.\n"
+"\n"
+"    **APCA Identification Number** - User Identification number is bank\n"
+"    allocated.  It is 6 digits.\n"
+"\n"
+"    **Include Self Balancing Transaction** - Some institutions require that the\n"
+"    last be a self balancing transaction which is used as a verification.\n"
+"\n"
+"- *Accounting > Configuration > Payments > Bank Accounts*\n"
+"\n"
+"    Account will show up in list as the journal name.\n"
+"\n"
+"    Editing will show the **Account Number**.  This is important as it is used by\n"
+"    the ABA process.\n"
+"\n"
+"    **Bank** is optional.\n"
+"\n"
+"- *Contacts > Configuration > Bank Accounts > Bank Accounts*\n"
+"\n"
+"    Paying account will show up in list as the account number.\n"
+"\n"
+"    **Account Holder Name** - Can be entered here, if Required.  Generally not\n"
+"    validated by the banks on ABA file transfers, but may show up on the payee\n"
+"    bank statement against the payment.\n"
+"\n"
+"- Vendor bank accounts can be set up in the same place, however, it is\n"
+"  generally easier to set them up from the partner from for the Vendor.\n"
+"\n"
+"- *Accounting > Vendors > Vendors*\n"
+"\n"
+"    On **Accounting** tab, click on *\"View accounts detail\"* from where a\n"
+"    vendor bank account can be created or edited.\n"
+"\n"
+"    **Account Number** - Required, must be less than 9 digits.\n"
+"\n"
+"    **BSB** - Required, 6 digits, and will be auto formatted.\n"
+"\n"
+"    **Account Holder Name** - Optional.\n"
+"\n"
+"Use\n"
+"---\n"
+"\n"
+"- Create a vendor payment in the normal way.\n"
+"\n"
+"    Ensure the **Vendor** is one with a valid ABA payment account.\n"
+"\n"
+"    Choose the correct **Payment Journal** which is set for ABA payments.\n"
+"\n"
+"    Select **ABA Credit Transfer** radio button.\n"
+"\n"
+"    If the vendor has multiple bank account, you may need to select the\n"
+"    correct **Recipient Bank Account**.  Or if paying a vendor bill, it may\n"
+"    need the correct bank account associated with it.\n"
+"\n"
+"    Enter payment amount, etc.\n"
+"\n"
+"- *Vendors > Payments*\n"
+"\n"
+"    After payment(s) are confirmed, they will show up in the payments list.\n"
+"\n"
+"    Using filters, or sorting, select the payments to be included.  Under\n"
+"    *Actions* choose *Create batch payment*.\n"
+"\n"
+"- *Vendors > Batch Payments*\n"
+"\n"
+"    When validating a batch payment, the ABA file will be generated.  It can\n"
+"    be regenerated.  This file can then be uploaded to the bank.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_auto_transfer
@@ -2751,6 +2853,42 @@ msgid ""
 "2011). Those modules are also strictly licensed under AGPL V3 and today don't\n"
 "come with any additional paid permission for online use of 'private modules'.\n"
 msgstr ""
+"\n"
+"Basismodul für die brasilianische Lokalisierung\n"
+"==========================================\n"
+"\n"
+"Dieses Modul besteht aus:\n"
+"\n"
+"- Allgemeiner brasilianischer Kontenplan\n"
+"- Brasilianische Steuern wie z.B.:\n"
+"\n"
+"        - IPI\n"
+"        - ICMS\n"
+"        - PIS\n"
+"        - COFINS\n"
+"        - ISS\n"
+"        - IR\n"
+"        - IRPJ\n"
+"        - CSLL\n"
+"\n"
+"Das Feld tax_discount wurde auch in den Objekten account.tax.template und\n"
+"account.tax-Objekten hinzugefügt, um die korrekte Berechnung einiger brasilianischer Mehrwertsteuersätze\n"
+"wie z.B. ICMS zu gewährleisten. Der Assistent zur Erstellung von Kontenplänen wurde erweitert, um\n"
+"diese neuen Daten korrekt zu übertragen.\n"
+"\n"
+"Es ist jedoch wichtig zu beachten, dass diesem Modul viele Implementierungen fehlen, um\n"
+"Odoo in Brasilien richtig zu nutzen. Diese Implementierungen (wie zum Beispiel die elektronische\n"
+"Rechnungsstellung, die bereits einsatzbereit ist) werden von mehr als 15\n"
+"zusätzlichen Modulen des brasilianischen Launchpad-Lokalisierungsprojekts\n"
+"https://launchpad.net/openerp.pt-br-localiz und deren Abhängigkeiten im\n"
+"Bereich \"Extra addons\" bereitgestellt. Diese Module zielen darauf ab, nicht mit der bemerkenswerten\n"
+"Modularität von Odoo zu brechen, deshalb sind sie klein und zahlreich. Einer der\n"
+"Gründe für die Beibehaltung dieser Module ist, dass\n"
+"die brasilianischen Lokalisierungsverantwortlichen flexibel agieren können müssen, um die Lokalisierung abzuschließen, da die Unternehmen\n"
+"die verbleibenden gesetzlichen Anforderungen finanzieren (wie z.B. bald fiskalische Hauptbücher,\n"
+"Buchhaltungs-SPED, Steuer-SPED und PAF ECF, die im September noch fehlen\n"
+"2011).\n"
+"Diese Module sind ebenfalls streng unter der AGPL V3 lizenziert und werden heute nicht mehr mit einer zusätzlichen kostenpflichtigen Genehmigung für die Online-Nutzung von \"privaten Modulen\" versehen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_batch_payment
@@ -2831,6 +2969,25 @@ msgid ""
 "No modified version is certified and supported by Odoo SA.\n"
 "    "
 msgstr ""
+"\n"
+"Belgische Registrierkasse\n"
+"\n"
+"================================\n"
+"\n"
+"Dieses Modul verwandelt das Point-of-Sale-Modul in eine zertifizierte belgische Registrierkasse.\n"
+"\n"
+"Mehr Informationen:\n"
+"  * http://www.systemedecaisseenregistreuse.be/\n"
+"  * http://www.geregistreerdkassasysteem.be/\n"
+"\n"
+"Rechtliches\n"
+"-----\n"
+"**Der Gebruch von pos_blackbox_be Quellen ist nur für die odoo.com SaaS Plattform  für Version 13.0 \n"
+"zertifiziert.** Kontaktieren Sie Odoo SA bevor Sie das pos_blackbox_be Modul installieren.\n"
+"\n"
+"Eine verschlüsselte und zertifizierte Version der pos_blackbox_be kann auf\n"
+"Anfrage für On-Premise-Installationen zur Verfügung gestellt werden.\n"
+"Modifizierte Versionen sind nicht zertifiziert und werden von Odoo SA nicht unterstützt."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo
@@ -4662,6 +4819,13 @@ msgid ""
 "* Redirection to the Android/iOS mobile app when you click on an Odoo URL.\n"
 "    "
 msgstr ""
+"\n"
+"Mail Mobil\n"
+"===========\n"
+"Dieses Modul modifiziert das Mail-Addon, um Folgendes zu bieten:\n"
+"\n"
+"* Push-Benachrichtigungen an registrierte Geräte für Direktnachrichten, Chat-Nachrichten und Kanäle.\n"
+"* Weiterleitung zur mobilen Android/iOS-App, wenn Sie auf eine Odoo-URL klicken."
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_maintenance
@@ -6435,6 +6599,9 @@ msgid ""
 "The module adds Microsoft user in res user.\n"
 "===========================================\n"
 msgstr ""
+"\n"
+"Das Modul fügt Microsoft-Benutzer zu res user hinzu.\n"
+"===========================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_account
@@ -6581,6 +6748,16 @@ msgid ""
 "Set the payment reference type from the Sales Journal.\n"
 "    "
 msgstr ""
+"\n"
+"Dies ist das Odoo-Modul zur Verwaltung der Buchhaltung in Finnland.\n"
+"============================================================\n"
+"\n"
+"Nachdem Sie dieses Modul installiert haben, haben Sie Zugriff auf :\n"
+"* Finnischen Kontenplan\n"
+"* Steuerliche Positionen\n"
+"* Zahlungsreferenztypen für Rechnungen (Finnische Standardreferenz & Finnische Gläubigerreferenz (RF))\n"
+"\n"
+"Legen Sie die Zahlungsreferenzart aus dem Verkaufsjournal fest."
 
 #. module: base
 #: model:ir.module.module,description:base.module_uom
@@ -7237,6 +7414,11 @@ msgid ""
 "of this module is to allow the display of a customer portal without having\n"
 "a dependency towards website editing and customization capabilities."
 msgstr ""
+"\n"
+"Dieses Modul fügt den benötigten Basiscode für ein vollständig integriertes Kundenportal hinzu.\n"
+"Es enthält die Basis-Controllerklasse und Basisvorlagen. Business-Add-ons fügen ihre spezifischen Vorlagen und Controller hinzu, um das Kundenportal zu erweitern.\n"
+"\n"
+"Dieses Modul enthält den meisten Code aus odoo v10 website_portal. Zweck dieses Moduls ist es, das Anzeigen des Kundenportals ohne Abhängigkeit zu den Websiten-Ausgabe- und -Anpassungskapazitäten zu ermöglichen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_barcode
@@ -7419,6 +7601,23 @@ msgid ""
 "- Check on bottom: ADP standard (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
 "    "
 msgstr ""
+"\n"
+"Mit diesem Modul können Sie Ihre Zahlungen auf vorgedrucktem Scheckpapier ausdrucken.\n"
+"Sie können die Ausgabe (Layout, Informationen zu den Schecks usw.) in den Firmeneinstellungen konfigurieren und die\n"
+"Schecknummerierung (wenn Sie vorgedruckte Schecks ohne Nummern verwenden) in den Journaleinstellungen verwalten.\n"
+"\n"
+"Unterstützte Formate\n"
+"-----------------\n"
+"Dieses Modul unterstützt die drei gängigsten Scheckformate und funktioniert sofort mit den verknüpften Schecks von checkdepot.net.\n"
+"\n"
+"Sehen Sie sich hier alle Schecks an: https://www.checkdepot.net/checks/laser/Odoo.htm\n"
+"\n"
+"Sie können wählen zwischen:\n"
+"\n"
+"- Scheck oben: Quicken / QuickBooks standard (https://www.checkdepot.net/checks/checkorder/laser_topcheck.htm)\n"
+"- Scheck mittig: Peachtree standard (https://www.checkdepot.net/checks/checkorder/laser_middlecheck.htm)\n"
+"- Scheck unten: ADP standard (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca_check_printing
@@ -8273,6 +8472,21 @@ msgid ""
 "* Show all costs associated to a vehicle or to a type of service\n"
 "* Analysis graph for costs\n"
 msgstr ""
+"\n"
+"Fahrzeuge, Leasing, Versicherungen, Kosten\n"
+"==================================\n"
+"Mit diesem Modul hilft Odoo Ihnen, all Ihre Fahrzeuge,\n"
+"dazugehörige Verträge und Dienstleistungen, Kosten\n"
+"und viele andere notwendige Funktionen zur Verwaltung Ihres Fuhrparks zu managen\n"
+"\n"
+"Hauptfunktionen\n"
+"-------------\n"
+"* Fahrzeuge zum Fuhrpark hinzufügen\n"
+"* Fahrzeugverträge verwalten\n"
+"* Erinnerung an auslaufende Verträge\n"
+"* Hinzufügen von Services, Tachowerten für alle Fahrzeuge\n"
+"* Anzeige aller Fahrzeug- und Servicekosten\n"
+"* Graph für Kostenanalyse\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mail_channel
@@ -9445,7 +9659,7 @@ msgstr "Ein Modul um Import und Export zu testen."
 #. module: base
 #: model:ir.module.module,description:base.module_test_populate
 msgid "A module to test populate."
-msgstr ""
+msgstr "Ein Modul für Testpopulation."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_new_api
@@ -9770,7 +9984,7 @@ msgstr "Account Taxcloud - Sale (Coupon)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_coupon_taxcloud_delivery
 msgid "Account Taxcloud - Sale (coupon) - Delivery"
-msgstr ""
+msgstr "Konto Taxcloud - Verkauf (Coupon) - Lieferung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_winbooks_import
@@ -11551,7 +11765,7 @@ msgstr "Registrierte Barkasse – Belgien"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_hr_l10n_be
 msgid "Belgian Registered Cash Register Employee module"
-msgstr ""
+msgstr "Belgisches Modul Registrierkasse Mitarbeiter"
 
 #. module: base
 #: model:res.country,name:base.be
@@ -13675,7 +13889,7 @@ msgstr "Kundenanpassungen"
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase_stock_enterprise
 msgid "Customized Dashboard for Purchase Stock"
-msgstr ""
+msgstr "Kundenspezifisches Dashboard für Kaufbestände"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view_custom
@@ -15192,7 +15406,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_crm_sale
 msgid "Event CRM Sale"
-msgstr ""
+msgstr "Veranstaltung CRM Verkauf"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_exhibitor
@@ -15448,7 +15662,7 @@ msgstr "Externe ID"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_model_data_name_nospaces
 msgid "External IDs cannot contain spaces"
-msgstr ""
+msgstr "Externe IDs können keine Leerzeichen enthalten"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__name
@@ -15795,7 +16009,7 @@ msgstr "Feldnamen müssen pro Modell eindeutig sein."
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Field tag must have a \"name\" attribute defined"
-msgstr ""
+msgstr "Der Feld-Tag muss mit dem Attribut \"name\" definiert sein."
 
 #. module: base
 #: code:addons/model.py:0
@@ -15863,6 +16077,12 @@ msgid ""
 "Technical Details:\n"
 "%s"
 msgstr ""
+"Datei %r kann aufgrund einer fehlerhaften Datei nicht importiert werden.\n"
+"\n"
+"Dieses Problem kann durch doppelte Einträge verursacht werden, die sich auf das gleiche Feld beziehen. Bitte überprüfen Sie den Inhalt der Datei, die Sie zu importieren versuchen.\n"
+"\n"
+"Technische Details:\n"
+"%s"
 
 #. module: base
 #: code:addons/base/wizard/base_import_language.py:0
@@ -16651,7 +16871,7 @@ msgstr "Google-Benutzer"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_recaptcha
 msgid "Google reCAPTCHA integration"
-msgstr ""
+msgstr "Google reCAPTCHA Integration"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_18
@@ -18196,7 +18416,7 @@ msgstr "Ungültige Aggregationsfunktion %r."
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Invalid composed field %(definition)s in %(use)s"
-msgstr ""
+msgstr "Ungültiges zusammengesetztes Feld in %(definition)s in %(use)s"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -18666,7 +18886,7 @@ msgstr "Einstandskosten"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_landed_costs
 msgid "Landed Costs On MO"
-msgstr ""
+msgstr "Wareneinstandskosten bei Fertigungsauftrag"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_landed_costs
@@ -19365,7 +19585,7 @@ msgstr "Protokolle"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Long"
-msgstr ""
+msgstr "Lang"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_loyalty
@@ -19426,7 +19646,7 @@ msgstr "MRP II - Ablauf"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder_expiry
 msgid "MRP Workorder Expiry"
-msgstr ""
+msgstr "MRP Arbeitsauftrag Ablauf"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_mrp
@@ -19478,7 +19698,7 @@ msgstr "Mail Enterprise"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_mobile
 msgid "Mail Mobile"
-msgstr ""
+msgstr "Mail Mobil"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_mail_server
@@ -19843,7 +20063,7 @@ msgstr "Fertigung"
 #: model:ir.module.module,shortdesc:base.module_mrp_product_expiry
 #: model:ir.module.module,summary:base.module_mrp_product_expiry
 msgid "Manufacturing Expiry"
-msgstr ""
+msgstr "Ablauf Fertigung"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp
@@ -23234,6 +23454,129 @@ msgid ""
 "\n"
 "Create a great \"About us\" page by presenting your team efficiently.\n"
 msgstr ""
+"Events, Trainings & Webinare organisieren\n"
+"-------------------------------------\n"
+"\n"
+"### Planen, Promoten, Verkaufen, Organisieren\n"
+"\n"
+"Organisieren, bewerben und verkaufen Sie Veranstaltungen online. Ob Sie nun Meetings, Konferenzen, Schulungen oder Webinare organisieren, Odoo bietet Ihnen alle Funktionen, die Sie für die Verwaltung Ihrer Events benötigen.\n"
+"\n"
+"Atemberaubende Veranstaltungsseiten erstellen\n"
+"--------------------------\n"
+"\n"
+"### Alte WYSIWYG-Editoren loswerden\n"
+"\n"
+"Erstellen Sie schöne Veranstaltungsseiten durch Drag & Drop von durchdachten *'Building Blocks'*. Veröffentlichen Sie Fotos, Redner, Termine usw.\n"
+"\n"
+"Odoo's einzigartiger *'edit inline'* Ansatz macht die Erstellung von Websites überraschend einfach. Möchten Sie einen Redner vorstellen? Den Preis für ein Ticket ändern? Ein Banner aktualisieren? Sponsoren werben?\" - Einfach klicken und ändern.\n"
+"\n"
+"Tickets online verkaufen\n"
+"-------------------\n"
+"\n"
+"### Automatisieren Sie den Registrierungs- und Zahlungsprozess\n"
+"\n"
+"Verkaufen Sie Tickets für Ihre Veranstaltung mit der Multi-Ticketing-Funktion. Veranstaltungen können gratis oder kostenpflichtig sein. Die Teilnehmer können je nach Konfiguration online per Kreditkarte oder auf Rechnung bezahlen.\n"
+"\n"
+"Steigern Sie Ihren Umsatz mit Frühbucherpreisen, Sonderkonditionen für Mitglieder oder Zusatzleistungen bei mehreren Tickets.\n"
+"\n"
+"Eine saubere Google Analytics-Integration\n"
+"------------------------------------\n"
+"\n"
+"### Kontrollen Sie Ihren Sales Funnel mit Google Analytics\n"
+"\n"
+"Verschaffen Sie sich einen klaren Überblick über Ihren Sales Funnel. Die Google Analytics-Tracker von Odoo sind standardmäßig so konfiguriert, dass sie alle Ereignisse im Zusammenhang mit Warenkörben, Call-to-Actions usw. verfolgen.\n"
+"\n"
+"Da die Odoo-Marketing-Tools (Massenmailing, Kampagnen usw.) auch mit Google Analytics verknüpft sind, erhalten Sie einen vollständigen Überblick über Ihr Unternehmen.\n"
+"\n"
+"Events effizient bewerben\n"
+"--------------------------\n"
+"\n"
+"### Massenmailing & Social Media\n"
+"\n"
+"Nutzen Sie die Segmentierung, die Integration sozialer Netzwerke und die Massenversandfunktionen, um Ihre Veranstaltungen bei der richtigen Zielgruppe zu bewerben. Richten Sie automatisierte E-Mails an Teilnehmer ein, um sie kurzfristig zu informieren.\n"
+"\n"
+"Designer-freundliche Themes\n"
+"------------------------\n"
+"\n"
+"### Designer lieben die Arbeit mit Odoo\n"
+"\n"
+"Themes sind großartig und einfach zu gestalten. Sie brauchen nichts zu programmieren, um neue Seiten, Themes oder Bausteine zu erstellen. Wir verwenden eine saubere HTML-Struktur, ein [bootstrap](http://getbootstrap.com/) CSS und unsere Modularität ermöglicht es, Ihre Themes leicht anderswo einzusetzen.\n"
+"\n"
+"Dank des Bausteinkonzepts bleibt die Website auch dann sauber, wenn die Endnutzer neue Inhalte erstellen.\n"
+"\n"
+"Rücken Sie Ihre Events in den Fokus\n"
+"----------------------------\n"
+"\n"
+"### SEO-Tools immer Griffbereit\n"
+"\n"
+"Die SEO-Tools sind sofort einsatzbereit und müssen nicht konfiguriert werden. Odoo schlägt Schlüsselwörter entsprechend der meist gesuchten Begriffe in Google vor, Google Analytics verfolgt Warenkörbe und Sitemaps werden automatisch erstellt.\n"
+"\n"
+"Wir erstellen sogar automatisch strukturierte Inhalte, um Ihre Veranstaltungen und Produkte effizient in Google zu bewerben.\n"
+"\n"
+"Soziale Medien nutzen\n"
+"---------------------\n"
+"\n"
+"### Optimieren: von Werbung zu Geschäftsabschlüssen\n"
+"\n"
+"Erstellen Sie neue Landing Pages ganz einfach mit der Inline-Editing-Funktion von Odoo. Schicken Sie Besucher Ihrer verschiedenen Marketing-Kampagnen auf Event-Landing Pages, um die Konversionen zu optimieren.\n"
+"\n"
+"Und vieles mehr...\n"
+"----------------\n"
+"\n"
+"### Planen\n"
+"\n"
+"-   Veranstaltungskalender\n"
+"-   Veröffentlichung von Dokumenten\n"
+"-   Ressourcenallokation\n"
+"-   Einkäufe automatisieren (Catering...)\n"
+"-   Mehrere Standorte und Organisatoren\n"
+"-   Mobiles Interface\n"
+"\n"
+"### Verkaufen\n"
+"\n"
+"-   Online- oder Offline-Verkäufe\n"
+"-   Automatische Rechnungsstellung\n"
+"-   Stornierungsbedingungen\n"
+"-   Sonderpreise für Mitglieder\n"
+"-   Dashboards und Reporting\n"
+"\n"
+"### Organisieren\n"
+"\n"
+"-   Erweiterte Planung\n"
+"-   Ausweise drucken\n"
+"-   Follow-up-E-Mails automatisieren\n"
+"-   min/max Kapazitäten\n"
+"-   Kurse und Ressourcen verwalten\n"
+"-   Mitgliedergruppe anlegen\n"
+"-   Zufriedenheitsumfragen automatisieren\n"
+"\n"
+"Voll integriert mit anderen Apps\n"
+"---------------------------------\n"
+"\n"
+"### Hunderte von Open Source-Apps gratis\n"
+"\n"
+"\n"
+"### eCommerce\n"
+"\n"
+"Produkte anpreisen, online verkaufen, das Einkaufserlebnis der Besucher optimieren.\n"
+"\n"
+"\n"
+"### Blogs\n"
+"\n"
+"Nachrichten schreiben, neue Besucher gewinnen, Kunden binden.\n"
+"\n"
+"### Unser Team\n"
+"\n"
+"Erstellen Sie eine großartige \"Über uns\"-Seite, indem Sie Ihr Team effizient präsentieren.\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project
@@ -24557,7 +24900,7 @@ msgstr "Quiz zu Tracks"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_quiz
 msgid "Quizzes on tracks"
-msgstr ""
+msgstr "Quiz zu Videos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_quotation_builder
@@ -24784,7 +25127,7 @@ msgstr "Regel aufzeichnen"
 #. module: base
 #: model:ir.module.module,summary:base.module_timer
 msgid "Record time"
-msgstr ""
+msgstr "Zeit erfassen"
 
 #. module: base
 #: code:addons/models.py:0 code:addons/models.py:0
@@ -25420,7 +25763,7 @@ msgstr "Verkauf"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_account_accountant
 msgid "Sale Accounting"
-msgstr ""
+msgstr "Buchhaltung Vertrieb"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_sale_intrastat
@@ -25736,7 +26079,7 @@ msgstr "Suchen..."
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Searchpanel item with select multi cannot have a domain."
-msgstr ""
+msgstr "Suchpanel-Element mit select multi kann keine Domain haben."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__secondary_color
@@ -26167,7 +26510,7 @@ msgstr "Wunschliste des Käufers"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Short"
-msgstr ""
+msgstr "Kurz"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall__show_all
@@ -27201,7 +27544,7 @@ msgstr "Tests für read_group"
 #. module: base
 #: model:ir.module.module,description:base.module_test_search_panel
 msgid "Tests for the search panel python methods"
-msgstr ""
+msgstr "Tests für die Python-Methoden des Suchpanels"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_converter
@@ -27998,6 +28341,11 @@ msgid ""
 "modules build on mail (sms, snailmail, mail_enterprise) are set as dependencies\n"
 "in order to test the whole mail codebase. "
 msgstr ""
+"Dieses Modul enthält Tests zum Thema E-Mail. Diese sind\n"
+"in einem separaten Modul vorhanden, da es Modelle enthält, die nur zur Durchführung von\n"
+"Tests unabhängig von den funktionalen Aspekten der anderen Modelle dienen. Außerdem sind die meisten\n"
+"Module, die auf Mail basieren (sms, snailmail, mail_enterprise), als Abhängigkeiten festgelegt\n"
+"gesetzt, um die gesamte Mail-Codebasis testen zu können. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mass_mailing
@@ -28547,6 +28895,8 @@ msgstr "Baum"
 #, python-format
 msgid "Tree child can only have one of %(tags)s tag (not %(wrong_tag)s)"
 msgstr ""
+"Ein untergeordneter Teil der Struktur kann nur einen %(tags)s-Tag haben "
+"(nicht %(wrong_tag)s)"
 
 #. module: base
 #: model:res.country,name:base.tt
@@ -29708,7 +30058,7 @@ msgstr "Web"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_web_cohort
 msgid "Web Cohort Tests"
-msgstr ""
+msgstr "Web Cohort Tests"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_editor

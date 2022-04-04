@@ -2740,6 +2740,48 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('image fields are correctly rendered with one dimension set', async function (assert) {
+        assert.expect(6);
+
+        this.data.partner.fields.picture = { string: 'Picture', type: 'binary' };
+        this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
+        this.data.partner.records[0].document = 'myimage1';
+        this.data.partner.records[0].picture = 'myimage2';
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                '<field name="document" widget="image" options="{\'size\': [180, 0]}"/> ' +
+                '<field name="picture" widget="image" options="{\'size\': [0, 270]}"/> ' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route.startsWith('data:image/png;base64,myimage')) {
+                    return Promise.resolve('wow');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.containsOnce(form, 'div[name="document"] > img', "the widget should contain an image");
+        assert.hasAttrValue(form.$('div[name="document"] > img'), 'width', "180",
+            "the image should correctly set its attributes");
+        const image1Style = form.$('div[name="document"] > img').attr('style');
+        assert.ok(['max-width: 180px', 'height: auto', 'max-height: 100%'].every(e => image1Style.includes(e)),
+            "the image should correctly set its style");
+
+        assert.containsOnce(form, 'div[name="picture"] > img', "the widget should contain an image");
+        assert.hasAttrValue(form.$('div[name="picture"] > img'), 'height', "270",
+            "the image should correctly set its attributes");
+        const image2Style = form.$('div[name="picture"] > img').attr('style');
+        assert.ok(['max-height: 270px', 'width: auto', 'max-width: 100%'].every(e => image2Style.includes(e)),
+            "the image should correctly set its style");
+
+        form.destroy();
+    });
+
     QUnit.test('image fields are correctly replaced when given an incorrect value', async function (assert) {
         assert.expect(7);
 
@@ -2973,6 +3015,39 @@ QUnit.module('basic_fields', {
             "the image should correctly set its attributes");
         assert.strictEqual(form.$('div[name="foo"] > img').css('max-width'), "90px",
             "the image should correctly set its attributes");
+        form.destroy();
+    });
+
+    QUnit.test('image fields are correctly rendered with one dimension set', async function (assert) {
+        assert.expect(6);
+
+        this.data.partner.fields.tortue = {string: "Tortue", type: "char", default: "a"};
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                '<field name="foo" widget="image_url" options="{\'size\': [180, 0]}"/> ' +
+                '<field name="tortue" widget="image_url" options="{\'size\': [0, 270]}"/> ' +
+                '</form>',
+            res_id: 6,
+        });
+
+        assert.containsOnce(form, 'div[name="foo"] > img', "the widget should contain an image");
+        assert.hasAttrValue(form.$('div[name="foo"] > img'), 'width', "180",
+            "the image should correctly set its attributes");
+        const image1Style = form.$('div[name="foo"] > img').attr('style');
+        assert.ok(['max-width: 180px', 'height: auto', 'max-height: 100%'].every(e => image1Style.includes(e)),
+            "the image should correctly set its style");
+
+        assert.containsOnce(form, 'div[name="tortue"] > img', "the widget should contain an image");
+        assert.hasAttrValue(form.$('div[name="tortue"] > img'), 'height', "270",
+            "the image should correctly set its attributes");
+        const image2Style = form.$('div[name="tortue"] > img').attr('style');
+        assert.ok(['max-height: 270px', 'width: auto', 'max-width: 100%'].every(e => image2Style.includes(e)),
+            "the image should correctly set its style");
+
         form.destroy();
     });
 
@@ -4624,6 +4699,58 @@ QUnit.module('basic_fields', {
         $.each($('.day:not(:last-child):not(:nth-child(2))'), function (index, value) {
             assert.doesNotHaveClass(value, 'disabled', 'other days must stay clickable');
         });
+        form.destroy();
+    });
+
+    QUnit.test('datetime field: hit enter should update value', async function (assert) {
+        /*
+        This test verifies that the field datetime is correctly computed when:
+            - we press enter to validate our entry
+            - we click outside the field to validate our entry
+            - we save
+        */
+        assert.expect(3);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="datetime"/></form>',
+            res_id: 1,
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+                time_format: '%H:%M:%S',
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+            session: {
+                getTZOffset: function () {
+                    return 120;
+                },
+            },
+        });
+
+        const datetime = form.el.querySelector('input[name="datetime"]');
+
+        // Enter a beginning of date and press enter to validate
+        await testUtils.fields.editInput(datetime, '01/08/22 14:30:40');
+        await testUtils.fields.triggerKeydown(datetime, 'enter');
+
+        const datetimeValue = `01/08/2022 14:30:40`;
+
+        assert.strictEqual(datetime.value, datetimeValue);
+
+        // Click outside the field to check that the field is not changed
+        await testUtils.dom.click(form.$el);
+        assert.strictEqual(datetime.value, datetimeValue);
+
+        // Save and check that it's still ok
+        await testUtils.form.clickSave(form);
+
+        const { textContent } = form.el.querySelector('span[name="datetime"]')
+        assert.strictEqual(textContent, datetimeValue);
+
         form.destroy();
     });
 

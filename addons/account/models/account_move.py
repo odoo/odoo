@@ -2061,7 +2061,7 @@ class AccountMove(models.Model):
 
     def _creation_subtype(self):
         # OVERRIDE
-        if self.move_type in ('out_invoice', 'out_refund', 'out_receipt'):
+        if self.move_type in ('out_invoice', 'out_receipt'):
             return self.env.ref('account.mt_invoice_created')
         else:
             return super(AccountMove, self)._creation_subtype()
@@ -5089,6 +5089,7 @@ class AccountMoveLine(models.Model):
         # Force the values of the move line in the context to avoid issues
         ctx = dict(self.env.context)
         ctx.pop('active_id', None)
+        ctx.pop('default_journal_id', None)
         ctx['active_ids'] = self.ids
         ctx['active_model'] = 'account.move.line'
         action['context'] = ctx

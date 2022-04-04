@@ -57,7 +57,13 @@ class Meeting(models.Model):
         if google_event.is_cancelled():
             return {'active': False}
 
-        alarm_commands = self._odoo_reminders_commands(google_event.reminders.get('overrides') or default_reminders)
+        # default_reminders is never () it is set to google's default reminder (30 min before)
+        # we need to check 'useDefault' for the event to determine if we have to use google's
+        # default reminder or not
+        reminder_command = google_event.reminders.get('overrides')
+        if not reminder_command:
+            reminder_command = google_event.reminders.get('useDefault') and default_reminders or ()
+        alarm_commands = self._odoo_reminders_commands(reminder_command)
         attendee_commands, partner_commands = self._odoo_attendee_commands(google_event)
         values = {
             'name': google_event.summary or _("(No title)"),

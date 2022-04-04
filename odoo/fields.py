@@ -3404,7 +3404,7 @@ class Many2many(_RelationalMulti):
     column2 = None                      # column of table referring to comodel
     auto_join = False                   # whether joins are generated upon search
     limit = None                        # optional limit to use upon read
-    ondelete = None                     # optional ondelete for the column2 fkey
+    ondelete = 'cascade'                # optional ondelete for the column2 fkey
 
     def __init__(self, comodel_name=Default, relation=Default, column1=Default,
                  column2=Default, string=Default, **kwargs):
@@ -3419,17 +3419,15 @@ class Many2many(_RelationalMulti):
 
     def _setup_regular_base(self, model):
         super(Many2many, self)._setup_regular_base(model)
-        # 3 cases:
-        # 1) The ondelete attribute is not defined, we assign it a sensible default
-        # 2) The ondelete attribute is defined and its definition makes sense
-        # 3) The ondelete attribute is explicitly defined as 'set null' for a m2m,
+        # 2 cases:
+        # 1) The ondelete attribute is defined and its definition makes sense
+        # 2) The ondelete attribute is explicitly defined as 'set null' for a m2m,
         #    this is considered a programming error.
-        self.ondelete = self.ondelete or 'cascade'
-        if self.ondelete == 'set null':
+        if self.ondelete not in ('cascade', 'restrict'):
             raise ValueError(
                 "The m2m field %s of model %s declares its ondelete policy "
-                "as being 'set null'. Only 'restrict' and 'cascade' make sense."
-                % (self.name, model._name)
+                "as being %r. Only 'restrict' and 'cascade' make sense."
+                % (self.name, model._name, self.ondelete)
             )
         if self.store:
             if not (self.relation and self.column1 and self.column2):
@@ -3497,6 +3495,8 @@ class Many2many(_RelationalMulti):
             """.format(rel=self.relation, id1=self.column1, id2=self.column2)
             cr.execute(query, ['RELATION BETWEEN %s AND %s' % (model._table, comodel._table)])
             _schema.debug("Create table %r: m2m relation between %r and %r", self.relation, model._table, comodel._table)
+            model.pool.post_init(self.update_db_foreign_keys, model)
+            return True
 
         model.pool.post_init(self.update_db_foreign_keys, model)
 

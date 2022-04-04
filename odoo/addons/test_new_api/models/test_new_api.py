@@ -1362,3 +1362,40 @@ class TriggerRight(models.Model):
     def _compute_left_size(self):
         for record in self:
             record.left_size = len(record.left_ids)
+
+
+class Crew(models.Model):
+    _name = 'test_new_api.crew'
+    _description = 'All yaaaaaarrrrr by ship'
+    _table = 'test_new_api_crew'
+
+    # this actually represents the union of two relations pirate/ship and
+    # prisoner/ship, where some of the many2one fields can be NULL
+    pirate_id = fields.Many2one('test_new_api.pirate')
+    prisoner_id = fields.Many2one('test_new_api.prisoner')
+    ship_id = fields.Many2one('test_new_api.ship')
+
+
+class Ship(models.Model):
+    _name = 'test_new_api.ship'
+    _description = 'Yaaaarrr machine'
+
+    name = fields.Char('Name')
+    pirate_ids = fields.Many2many('test_new_api.pirate', 'test_new_api_crew', 'ship_id', 'pirate_id')
+    prisoner_ids = fields.Many2many('test_new_api.prisoner', 'test_new_api_crew', 'ship_id', 'prisoner_id')
+
+
+class Pirate(models.Model):
+    _name = 'test_new_api.pirate'
+    _description = 'Yaaarrr'
+
+    name = fields.Char('Name')
+    ship_ids = fields.Many2many('test_new_api.ship', 'test_new_api_crew', 'pirate_id', 'ship_id')
+
+
+class Prisoner(models.Model):
+    _name = 'test_new_api.prisoner'
+    _description = 'Yaaarrr minions'
+
+    name = fields.Char('Name')
+    ship_ids = fields.Many2many('test_new_api.ship', 'test_new_api_crew', 'prisoner_id', 'ship_id')

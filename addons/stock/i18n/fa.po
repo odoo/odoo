@@ -15,9 +15,9 @@
 # Hamid Darabi, 2020
 # Sepehr Khoshnood <sepehr.kho@gmail.com>, 2020
 # Hamed Mohammadi <hamed@dehongi.com>, 2021
-# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021
 # Far Har <fhari1234@gmail.com>, 2021
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2021
+# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: M.Hossein S.Farvashani <Farvashani@gmail.com>, 2021\n"
+"Last-Translator: Mohsen Mohammadi <iammohsen.123@gmail.com>, 2022\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -396,7 +396,7 @@ msgstr "<span>تخصیص شماره سریال</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "<span>Clear All</span>"
-msgstr ""
+msgstr "<span>پاک کردن همه</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
@@ -6478,10 +6478,8 @@ msgstr ""
 #, python-format
 msgid ""
 "The quantity done for the product \"%s\" doesn't respect the rounding "
-"precision                                   defined on the unit of measure "
-"\"%s\". Please change the quantity done or the"
-"                                   rounding precision of your unit of "
-"measure."
+"precision defined on the unit of measure \"%s\". Please change the quantity "
+"done or the rounding precision of your unit of measure."
 msgstr ""
 
 #. module: stock
@@ -7817,6 +7815,15 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You need to supply a Lot/Serial number for products %s."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You should not use a planned internal transfer to move some products between"
+" two warehouses. Instead, use an immediate internal transfer or the resupply"
+" route."
 msgstr ""
 
 #. module: stock

@@ -73,7 +73,7 @@
                 <t t-if="_avatar">
                     <t t-if="user_id.image_256" t-set="avatar_source" t-value="image_data_uri(user_id.image_256)"/>
                     <t t-else="" t-set="avatar_source" t-value="'/web/static/src/img/placeholder.png'"/>
-                    <img t-att-src="avatar_source" t-attf-class="rounded-circle #{_avatar_class}" width="24" height="24" alt="" loading="eager"/>
+                    <img t-att-src="avatar_source" t-attf-class="rounded-circle o_object_fit_cover #{_avatar_class}" width="24" height="24" alt="" loading="eager"/>
                 </t>
                 <i t-if="_icon" t-attf-class="fa fa-1x fa-fw fa-user-circle-o #{_icon_class}"/>
                 <span t-if="_user_name" t-attf-class="#{_user_name_class}" t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>

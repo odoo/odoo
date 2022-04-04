@@ -3,7 +3,7 @@
 
 from datetime import timedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -86,8 +86,7 @@ class SaleOrder(models.Model):
     def update_prices(self):
         self.ensure_one()
         res = super().update_prices()
-        for line in self.sale_order_option_ids:
-            line.price_unit = self.pricelist_id.get_product_price(line.product_id, line.quantity, self.partner_id, uom_id=line.uom_id.id)
+        self.sale_order_option_ids._update_price_and_discount()
         return res
 
     @api.onchange('sale_order_template_id')
@@ -150,9 +149,12 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
+        if self.env.su:
+            self = self.with_user(SUPERUSER_ID)
+
         for order in self:
             if order.sale_order_template_id and order.sale_order_template_id.mail_template_id:
-                self.sale_order_template_id.mail_template_id.send_mail(order.id)
+                order.sale_order_template_id.mail_template_id.send_mail(order.id)
         return res
 
     def get_access_action(self, access_uid=None):
@@ -208,6 +210,26 @@ class SaleOrderOption(models.Model):
     quantity = fields.Float('Quantity', required=True, digits='Product Unit of Measure', default=1)
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of optional products.")
 
+    def _update_price_and_discount(self):
+        for option in self:
+            if not option.product_id:
+                continue
+            # To compute the discount a so line is created in cache
+            values = option._get_values_to_add_to_order()
+            new_sol = option.env['sale.order.line'].new(values)
+            new_sol._onchange_discount()
+            option.discount = new_sol.discount
+            if option.order_id.pricelist_id and option.order_id.partner_id:
+                product = option.product_id.with_context(
+                    partner=option.order_id.partner_id,
+                    quantity=option.quantity,
+                    date=option.order_id.date_order,
+                    pricelist=option.order_id.pricelist_id.id,
+                    uom=option.uom_id.id,
+                    fiscal_position=option.env.context.get('fiscal_position')
+                )
+                option.price_unit = new_sol._get_display_price(product)
+
     @api.depends('line_id', 'order_id.order_line', 'product_id')
     def _compute_is_present(self):
         # NOTE: this field cannot be stored as the line_id is usually removed
@@ -226,22 +248,10 @@ class SaleOrderOption(models.Model):
             return
         product = self.product_id.with_context(
             lang=self.order_id.partner_id.lang,
-            partner=self.order_id.partner_id,
-            quantity=self.quantity,
-            date=self.order_id.date_order,
-            pricelist=self.order_id.pricelist_id.id,
-            uom=self.uom_id.id,
-            fiscal_position=self.env.context.get('fiscal_position')
         )
-        self.name = product.get_product_multiline_description_sale()
         self.uom_id = self.uom_id or product.uom_id
-        # To compute the discount a so line is created in cache
-        values = self._get_values_to_add_to_order()
-        new_sol = self.env['sale.order.line'].new(values)
-        new_sol._onchange_discount()
-        self.discount = new_sol.discount
-        if self.order_id.pricelist_id and self.order_id.partner_id:
-            self.price_unit = new_sol._get_display_price(product)
+        self.name = product.get_product_multiline_description_sale()
+        self._update_price_and_discount()
 
     def button_add_to_order(self):
         self.add_option_to_order()

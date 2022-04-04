@@ -96,18 +96,12 @@ class AccountFrFec(models.TransientModel):
         """
         dom_tom_group = self.env.ref('l10n_fr.dom-tom')
         is_dom_tom = company.country_id.code in dom_tom_group.country_ids.mapped('code')
-        if is_dom_tom:
+        if not company.vat or is_dom_tom:
             return ''
-        elif company.country_id.code == 'FR':
-            if not company.vat:
-                raise UserError(_("Missing VAT number for company %s") % company.display_name)
-            elif len(company.vat) < 13 or not siren.is_valid(company.vat[4:13]):
-                raise UserError(_("Invalid VAT number for company %s") % company.display_name)
-            else:
-                return company.vat[4:13]
+        elif company.country_id.code == 'FR' and len(company.vat) >= 13 and siren.is_valid(company.vat[4:13]):
+            return company.vat[4:13]
         else:
-            return '' if not company.vat else company.vat
-
+            return company.vat
 
     def generate_fec(self):
         self.ensure_one()

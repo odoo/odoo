@@ -266,7 +266,7 @@ class DateTimeConverter(models.AbstractModel):
 
         if options.get('time_only'):
             format_func = babel.dates.format_time
-            return pycompat.to_text(format_func(value, format=pattern, locale=locale))
+            return pycompat.to_text(format_func(value, format=pattern, tzinfo=tzinfo, locale=locale))
         if options.get('date_only'):
             format_func = babel.dates.format_date
             return pycompat.to_text(format_func(value, format=pattern, locale=locale))

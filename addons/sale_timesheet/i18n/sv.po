@@ -11,8 +11,9 @@
 # Martin Trigaux, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
-# Simon S, 2021
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
+# Robin Calvin, 2022
+# Simon S, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2021\n"
+"Last-Translator: Simon S, 2022\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -129,7 +130,7 @@ msgstr "<span class=\"o_label\">Översikt</span>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "<span class=\"o_stat_text\">Recorded</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Loggade</span>"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -253,7 +254,7 @@ msgstr ""
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "Before"
-msgstr ""
+msgstr "Före"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__allow_billable
@@ -562,7 +563,7 @@ msgstr "Anställd"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__employee_rate
 msgid "Employee rate"
-msgstr ""
+msgstr "Anställdas pris"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__employee_id
@@ -589,7 +590,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__fixed_rate
 msgid "Project rate"
-msgstr ""
+msgstr "Projektpris"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
@@ -1119,7 +1120,7 @@ msgstr "Redo"
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "Recorded"
-msgstr ""
+msgstr "Loggade"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1156,7 +1157,7 @@ msgstr "Kundorder"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__sale_line_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__sale_line_id
 msgid "Sale Order Item"
-msgstr ""
+msgstr "Säljorderobjekt"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__sale_line_id
@@ -1361,6 +1362,12 @@ msgid ""
 "(= consultancy), but at a different rate because of their level of "
 "seniority."
 msgstr ""
+"Projektpris är perfekt om du fakturerar en tjänst till ett fast pris per "
+"arbetad timme eller dag, oavsett vilken anställd som utfört tjänsten. "
+"Anställdas pris är att föredra om dina anställda levererar samma tjänst till"
+" olika priser. Exempelvis kan juniora och seniora konsulter leverera samma "
+"tjänst (konsulttjänst), men till olika priser på grund av deras varierande "
+"erfarenhet."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -1650,6 +1657,8 @@ msgid ""
 "When billing tasks individually, a Sales Order will be created from each task. It is perfect if you would like to bill different services to different customers at different rates. \n"
 " When billing the whole project, a Sales Order will be created from the project instead. This option is better if you would like to bill all the tasks of a given project to a specific customer either at a fixed rate, or at an employee rate."
 msgstr ""
+"När du fakturerar aktiviteter individuellt skapas en försäljningsorder för varje uppgift. Det är perfekt om du vill fakturera olika tjänster till olika kunder till olika priser. \n"
+"När du fakturerar hela projektet skapas en försäljningsorder från projektet i stället. Det här alternativet är bättre om du vill fakturera alla uppgifter i ett visst projekt till en specifik kund, antingen till ett fast pris eller till anställdas pris."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__wizard_id

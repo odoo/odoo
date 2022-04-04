@@ -637,6 +637,18 @@ class Picking(models.Model):
                     'message': partner.picking_warn_msg
                 }}
 
+    @api.onchange('location_id', 'location_dest_id', 'picking_type_id')
+    def onchange_locations(self):
+        from_wh = self.location_id.get_warehouse()
+        to_wh = self.location_dest_id.get_warehouse()
+        is_immediate = self.immediate_transfer if self.id else self._context.get('default_immediate_transfer')
+        if self.picking_type_id.code == 'internal' and not is_immediate and from_wh and to_wh and from_wh != to_wh:
+            return {'warning': {
+                'title': _("Warning"),
+                'message': _("You should not use a planned internal transfer to move some products between two warehouses. "
+                             "Instead, use an immediate internal transfer or the resupply route.")
+            }}
+
     @api.model
     def create(self, vals):
         defaults = self.default_get(['name', 'picking_type_id'])
@@ -648,19 +660,22 @@ class Picking(models.Model):
         # As the on_change in one2many list is WIP, we will overwrite the locations on the stock moves here
         # As it is a create the format will be a list of (0, 0, dict)
         moves = vals.get('move_lines', []) + vals.get('move_ids_without_package', [])
-        if moves and vals.get('location_id') and vals.get('location_dest_id'):
+        if moves and ((vals.get('location_id') and vals.get('location_dest_id')) or vals.get('partner_id')):
             for move in moves:
                 if len(move) == 3 and move[0] == 0:
-                    move[2]['location_id'] = vals['location_id']
-                    move[2]['location_dest_id'] = vals['location_dest_id']
-                    # When creating a new picking, a move can have no `company_id` (create before
-                    # picking type was defined) or a different `company_id` (the picking type was
-                    # changed for an another company picking type after the move was created).
-                    # So, we define the `company_id` in one of these cases.
-                    picking_type = self.env['stock.picking.type'].browse(vals['picking_type_id'])
-                    if 'picking_type_id' not in move[2] or move[2]['picking_type_id'] != picking_type.id:
-                        move[2]['picking_type_id'] = picking_type.id
-                        move[2]['company_id'] = picking_type.company_id.id
+                    if vals.get('location_id') and vals.get('location_dest_id'):
+                        move[2]['location_id'] = vals['location_id']
+                        move[2]['location_dest_id'] = vals['location_dest_id']
+                        # When creating a new picking, a move can have no `company_id` (create before
+                        # picking type was defined) or a different `company_id` (the picking type was
+                        # changed for an another company picking type after the move was created).
+                        # So, we define the `company_id` in one of these cases.
+                        picking_type = self.env['stock.picking.type'].browse(vals['picking_type_id'])
+                        if 'picking_type_id' not in move[2] or move[2]['picking_type_id'] != picking_type.id:
+                            move[2]['picking_type_id'] = picking_type.id
+                            move[2]['company_id'] = picking_type.company_id.id
+                    if vals.get('partner_id'):
+                        move[2]['partner_id'] = vals.get('partner_id')
         # make sure to write `schedule_date` *after* the `stock.move` creation in
         # order to get a determinist execution of `_set_scheduled_date`
         scheduled_date = vals.pop('scheduled_date', False)
@@ -700,6 +715,8 @@ class Picking(models.Model):
             after_vals['location_id'] = vals['location_id']
         if vals.get('location_dest_id'):
             after_vals['location_dest_id'] = vals['location_dest_id']
+        if 'partner_id' in vals:
+            after_vals['partner_id'] = vals['partner_id']
         if after_vals:
             self.mapped('move_lines').filtered(lambda move: not move.scrapped).write(after_vals)
         if vals.get('move_lines'):

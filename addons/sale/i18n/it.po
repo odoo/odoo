@@ -5,14 +5,14 @@
 # Translators:
 # Luigi Di Naro <gigidn@gmail.com>, 2020
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2020
-# Luigia Cimmino Caserta <lcc@odoo.com>, 2020
 # efraimbiffi <eab@odoo.com>, 2020
+# Luigia Cimmino Caserta <lcc@odoo.com>, 2020
 # Paolo Valier, 2020
 # David Minneci <david@numeko.it>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Martin Trigaux, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Stefano Consolaro <stefano.consolaro@mymage.it>, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -296,7 +296,7 @@ msgstr ""
 "        Buongiorno,\n"
 "        <br/><br/>\n"
 "        % set transaction = object.get_portal_last_transaction()\n"
-"        L'ordine <strong>${object.name}</strong> di importo pari a <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        l'ordine <strong>${object.name}</strong> di importo pari a <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "        % if object.state == 'sale' or (transaction and transaction.state in ('done', 'authorized')) :\n"
 "            è stato confermato.<br/>\n"
 "            Grazie per la fiducia accordataci!\n"
@@ -369,7 +369,7 @@ msgstr ""
 "            </tr>\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%;\" align=\"right\"><strong>Imponibile:</strong></td>\n"
+"                <td style=\"width: 30%;\" align=\"right\"><strong>Totale parziale:</strong></td>\n"
 "                <td style=\"width: 10%;\" align=\"right\">${format_amount(object.amount_untaxed, object.currency_id)}</td>\n"
 "            </tr>\n"
 "        </table>\n"
@@ -379,7 +379,7 @@ msgstr ""
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>Imponibile:</strong></td>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>Totale parziale:</strong></td>\n"
 "                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\">${format_amount(object.amount_untaxed, object.currency_id)}</td>\n"
 "            </tr>\n"
 "        </table>\n"
@@ -723,7 +723,7 @@ msgstr "<strong class=\"d-block mb-1\">Indirizzo di spedizione:</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"mr16\">Subtotal</strong>"
-msgstr "<strong class=\"mr16\">Imponibile</strong>"
+msgstr "<strong class=\"mr16\">Totale parziale</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -743,7 +743,7 @@ msgstr "<strong>Scadenza:</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr "<strong>Note su posizione fiscale:</strong>"
+msgstr "<strong>Nota su posizione fiscale:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -777,7 +777,7 @@ msgstr "<strong>Firma</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content_totals_table
 msgid "<strong>Subtotal</strong>"
-msgstr "<strong>Imponibile</strong>"
+msgstr "<strong>Totale parziale</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -861,8 +861,8 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
-"Seleziona il tipo di formato negli ordini di vendita e forza la quantità ad "
-"essere un multiplo del numero di unità contenute nel formato"
+"Possibilità di selezionare il tipo di confezione negli ordini di vendita e "
+"di forzare una quantità come multiplo del numero di unità della confezione."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1127,7 +1127,7 @@ msgstr ""
 "Incrementa le vendite con due tipi di programmi sconto: promozioni e codici "
 "sconto. È possibile impostare particolari condizioni su prodotti, clienti, "
 "importo minimo di acquisto, periodo. I riconoscimenti possono essere sconti "
-"(in % o importo) oppure prodotti gratuiti. "
+"(in % o importo) oppure prodotti gratuiti."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move__campaign_id
@@ -1535,7 +1535,7 @@ msgstr "Data:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
 msgid "Deduct down payments"
-msgstr ""
+msgstr "Detrai anticipi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2004,7 +2004,7 @@ msgstr "Raggruppa per"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_pricelist
 msgid "Has Pricelist Changed"
-msgstr ""
+msgstr "Ha listino prezzi cambiato"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
@@ -2191,7 +2191,7 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
-"Entrate da fatturazione per il mese corrente. È l'importo che il canale di "
+"Ricavo da fatturazione per il mese corrente. È l'importo che il canale di "
 "vendita ha fatturato questo mese, utilizzato per calcolare il rapporto di "
 "progressione tra entrate correnti e obiettivo nella vista kanban."
 
@@ -2472,7 +2472,7 @@ msgstr "Pagamento manuale"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__service_type__manual
 msgid "Manually set quantities on order"
-msgstr "Quantità impostate manualmente nell'ordine"
+msgstr "Impostazione manuale quantità ordine"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__service_type
@@ -2483,8 +2483,8 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
 "Impostazione manuale quantità ordine: fattura basata sulle quantità inserite manualmente, senza la creazione di un conto analitico.\n"
-"Fogli ore sul contratto: fattura basata sulle ore registrate nel relativo foglio ore. \n"
-"Creazione lavoro e registrazione ore: crea un lavoro alla conferma dell'ordine di vendita e registra le ore lavorative. "
+"Fogli ore su contratto: fattura basata sulle ore registrate nel relativo foglio ore.\n"
+"Creazione lavoro e registrazione ore: crea un lavoro alla conferma dell'ordine di vendita registrando le ore lavorative."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_margin
@@ -3030,7 +3030,7 @@ msgstr "Prezzo ridotto imposte inc."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__price_subtotal
 msgid "Price Subtotal"
-msgstr "Imponibile prezzo"
+msgstr "Totale parziale prezzo"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__pricelist_id
@@ -3387,19 +3387,19 @@ msgstr "Utente responsabile"
 msgid ""
 "Revenue target for the current month (untaxed total of confirmed invoices)."
 msgstr ""
-"Obiettivo per l'entrata del mese corrente (totale imponibile delle fatture "
+"Obiettivo per il ricavo del mese corrente (totale imponibile delle fatture "
 "confermate)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 msgid "Revenues"
-msgstr "Entrate"
+msgstr "Ricavi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__invoiced_amount
 msgid "Revenues generated by the campaign"
-msgstr "Entrate generate dalla campagna"
+msgstr "Ricavi generati dalla campagna"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
@@ -3935,7 +3935,7 @@ msgstr "Chiave privata Stripe"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_subtotal
 msgid "Subtotal"
-msgstr "Imponibile"
+msgstr "Totale parziale"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
@@ -4148,6 +4148,8 @@ msgid ""
 "The rate of the currency to the currency of rate 1 applicable at the date of"
 " the order"
 msgstr ""
+"Il tasso di cambio per la valuta con tasso pari a 1 applicabile alla data "
+"dell'ordine"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -4238,11 +4240,11 @@ msgid ""
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
 "Questo resoconto esegue analisi su preventivi e ordini di vendita. Le "
-"analisi controllano le entrate ordinandole per diversi criteri di gruppo "
-"(addetto vendite, partner, prodotto ecc...). Utilizzare il resoconto per "
-"eseguire analisi su vendite non ancora fatturate. Per analizzare il volume "
-"di affari deve essere utilizzato il resoconto di analisi delle fatture "
-"dell'applicazione di contabilità."
+"analisi controllano i ricavi da vendite ordinandoli per diversi criteri di "
+"gruppo (addetto vendite, partner, prodotto ecc...). Utilizzare il resoconto "
+"per eseguire analisi su vendite non ancora fatturate. Per analizzare il "
+"volume di affari deve essere utilizzato il resoconto di analisi delle "
+"fatture dell'applicazione di contabilità."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -4253,12 +4255,12 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"Questo resoconto esegue analisi sui preventivi. Le analisi controllano le "
-"entrate ordinandole per diversi criteri di gruppo (addetto vendite, partner,"
-" prodotto ecc...). Utilizzare il resoconto per eseguire analisi su vendite "
-"non ancora fatturate. Per analizzare il volume di affari deve essere "
-"utilizzato il resoconto di analisi delle fatture dell'applicazione di "
-"contabilità."
+"Questo resoconto esegue analisi sui preventivi. Le analisi controllano i "
+"ricavi da vendite ordinandoli per diversi criteri di gruppo (addetto "
+"vendite, partner, prodotto ecc...). Utilizzare il resoconto per eseguire "
+"analisi su vendite non ancora fatturate. Per analizzare il volume di affari "
+"deve essere utilizzato il resoconto di analisi delle fatture "
+"dell'applicazione di contabilità."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -4270,7 +4272,7 @@ msgid ""
 "Invoice Analysis report in the Accounting application."
 msgstr ""
 "Questo resoconto esegue analisi sugli ordini di vendita. Le analisi "
-"controllano le entrate ordinandole per diversi criteri di gruppo (addetto "
+"controllano i ricavi ordinandoli per diversi criteri di gruppo (addetto "
 "vendite, partner, prodotto ecc...). Utilizzare il resoconto per eseguire "
 "analisi su vendite non ancora fatturate. Per analizzare il volume di affari "
 "deve essere utilizzato il resoconto di analisi delle fatture "
@@ -4594,7 +4596,7 @@ msgid ""
 "You should rather set the quantity to 0."
 msgstr ""
 "Impossibile rimuovere una riga dopo la conferma dell'ordine di vendita.\n"
-"Impostare invece a 0 la quantità."
+"È preferibile impostare la quantità a 0."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice

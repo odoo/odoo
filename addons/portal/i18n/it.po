@@ -5,14 +5,10 @@
 # Translators:
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2020
 # Martin Trigaux, 2020
-# Lorenzo Battistini <lb@takobi.online>, 2020
 # Simone Bernini <simone@aperturelabs.it>, 2020
-# Massimo Bianchi <bianchi.massimo@gmail.com>, 2020
 # Paolo Valier, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
-# Francesco Foresti <francesco.foresti@ooops404.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
-# Friederike Fasterling-Nesselbosch, 2021
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -181,12 +177,12 @@ msgstr ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
 "<tbody>\n"
-"    <!-- HEADER -->\n"
+"    <!-- INTESTAZIONE -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Il tuo account</span><br/>\n"
+"                    <span style=\"font-size: 10px;\">Account personale</span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
 "                        ${object.user_id.name}\n"
 "                    </span>\n"
@@ -199,20 +195,21 @@ msgstr ""
 "            </table>\n"
 "        </td>\n"
 "    </tr>\n"
-"    <!-- CONTENT -->\n"
+"    <!-- CONTENUTO -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
 "                        Gentile ${object.user_id.name or ''},<br/> <br/>\n"
-"                        Di seguito le credenziali di accesso al sito web di ${object.user_id.company_id.name}:<br/>\n"
+"                        è stato reso disponibile l'accesso al portale di ${object.user_id.company_id.name}.<br/>\n"
+"                        I dati per accedere all'account sono:\n"
 "                        <ul>\n"
-"                            <li>Username: ${object.user_id.login or ''}</li>\n"
-"                            Sito Web: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"                            <li>Nome utente: ${object.user_id.login or ''}</li>\n"
+"                            <li>Portale: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
 "                            <li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
 "                        </ul>\n"
-"                        Puoi impostare o modificare la password al seguente link:\n"
+"                        La password può essere impostata o modificata tramite il seguente URL:\n"
 "                        <ul>\n"
 "                            <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
 "                        </ul>\n"
@@ -225,7 +222,7 @@ msgstr ""
 "            </table>\n"
 "        </td>\n"
 "    </tr>\n"
-"    <!-- FOOTER -->\n"
+"    <!-- PIÈ DI PAGINA -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
@@ -249,11 +246,11 @@ msgstr ""
 "</tbody>\n"
 "</table>\n"
 "</td></tr>\n"
-"<!-- POWERED BY -->\n"
+"<!-- FORNITO DA -->\n"
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style=\"color: #875A7B;\">Odoo</a>\n"
+"        Fornito da <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style=\"color: #875A7B;\">Odoo</a>\n"
 "      </td></tr>\n"
 "    </table>\n"
 "</td></tr>\n"
@@ -298,7 +295,7 @@ msgstr "Aggiungi contatti ai quali condividere il documento..."
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_share__note
 msgid "Add extra content to display in the email"
-msgstr "Aggiungi contenuti extra da visualizzare nell'e-mail"
+msgstr "Aggiunge contenuti supplementari da visualizzare nella e-mail"
 
 #. module: portal
 #: code:addons/portal/controllers/mail.py:0
@@ -368,7 +365,7 @@ msgstr "Città"
 #: code:addons/portal/static/src/xml/portal_signature.xml:0
 #, python-format
 msgid "Click here to see your document."
-msgstr "Clicca qui per vedere il tuo documento."
+msgstr "Fai clic per vedere il documento."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -473,7 +470,7 @@ msgstr "URL del portale clienti"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "Dear"
-msgstr "Spett.le"
+msgstr "Gentile"
 
 #. module: portal
 #. openerp-web
@@ -643,7 +640,7 @@ msgstr "Link"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
 msgid "Login User"
-msgstr "Utente di Accesso"
+msgstr "Utente di accesso"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
@@ -1115,7 +1112,7 @@ msgstr "Scrivi un messaggio..."
 #: code:addons/portal/wizard/portal_share.py:0
 #, python-format
 msgid "You are invited to access %s"
-msgstr "Sei stato/a invitato/a ad accedere a %s"
+msgstr "Sei invitato/a ad accedere a %s"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -1207,4 +1204,4 @@ msgstr "seleziona..."
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "to post a comment."
-msgstr "per inviare un commento."
+msgstr "per pubblicare un commento."

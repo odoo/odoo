@@ -12,7 +12,7 @@ from dateutil.relativedelta import relativedelta
 from itertools import groupby
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_compare, float_round, float_is_zero, format_datetime
 from odoo.tools.misc import format_date
 
@@ -709,6 +709,13 @@ class MrpProduction(models.Model):
         else:
             self.workorder_ids = False
 
+    @api.constrains('product_id', 'move_raw_ids')
+    def _check_production_lines(self):
+        for production in self:
+            for move in production.move_raw_ids:
+                if production.product_id == move.product_id:
+                    raise ValidationError(_("The component %s should not be the same as the product to produce.") % production.product_id.display_name)
+
     def write(self, vals):
         if 'workorder_ids' in self:
             production_to_replan = self.filtered(lambda p: p.is_planned)
@@ -1322,6 +1329,7 @@ class MrpProduction(models.Model):
     def action_cancel(self):
         """ Cancels production order, unfinished stock moves and set procurement
         orders in exception """
+        self.workorder_ids.filtered(lambda x: x.state not in ['done', 'cancel']).action_cancel()
         if not self.move_raw_ids:
             self.state = 'cancel'
             return True
@@ -1345,7 +1353,6 @@ class MrpProduction(models.Model):
             if finish_moves:
                 production._log_downside_manufactured_quantity({finish_move: (production.product_uom_qty, 0.0) for finish_move in finish_moves}, cancel=True)
 
-        self.workorder_ids.filtered(lambda x: x.state not in ['done', 'cancel']).action_cancel()
         finish_moves = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         raw_moves = self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
 

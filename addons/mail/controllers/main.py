@@ -126,6 +126,14 @@ class MailController(http.Controller):
         url = '/web?#%s' % url_encode(url_params)
         return werkzeug.utils.redirect(url)
 
+    @http.route('/mail/thread/data', methods=['POST'], type='json', auth='user')
+    def mail_thread_data(self, thread_model, thread_id, request_list, **kwargs):
+        res = {}
+        thread = request.env[thread_model].with_context(active_test=False).search([('id', '=', thread_id)])
+        if 'attachments' in request_list:
+            res['attachments'] = thread.env['ir.attachment'].search([('res_id', '=', thread.id), ('res_model', '=', thread._name)], order='id desc')._attachment_format(commands=True)
+        return res
+
     @http.route('/mail/read_followers', type='json', auth='user')
     def read_followers(self, res_model, res_id):
         request.env['mail.followers'].check_access_rights("read")

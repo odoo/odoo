@@ -9,7 +9,6 @@
 # BATKHUYAG Ganbold <gbatkhuyag@gmail.com>, 2020
 # nurbakhit nurka <nurbakhit@bumanit.mn>, 2020
 # Ubuntu Erka <erdenebold10@gmail.com>, 2020
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2020
 # Suren Ch <oyunsuren.ch@gmail.com>, 2020
 # Khoschuluu Khuderchuluu <khoschuluu@gmail.com>, 2020
 # Martin Trigaux, 2020
@@ -22,8 +21,9 @@
 # tumenjargal hadbaatar <tumenjargal7903@gmail.com>, 2021
 # Bayarkhuu Bataa, 2021
 # Munkhbaatar g <muuguu17@gmail.com>, 2021
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2021
 # Sanjaajamts Badamjunai <b.sanjaajamtsfc@gmail.com>, 2021
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022
+# hish, 2022
 # 
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Sanjaajamts Badamjunai <b.sanjaajamtsfc@gmail.com>, 2021\n"
+"Last-Translator: hish, 2022\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1370,7 +1370,7 @@ msgstr "Агуулга"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Continue Inventory"
-msgstr "Тооллого үргэлжүүлэх"
+msgstr "Тооллого үргэлжлүүлэх"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__product_uom_category_id
@@ -2140,7 +2140,7 @@ msgstr "Савлагааны агуулгын мэдээллийг харуул�
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "Do you confirm you want to scrap"
-msgstr ""
+msgstr "Та нөөцийн хүрэлцээгүй бараанаас дотоод зарлага хийвэл"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6685,21 +6685,16 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 msgid "The product is not available in sufficient quantity"
-msgstr ""
+msgstr "Уг барааны хувьд хангалттай нөөц алга,"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
 "The quantity done for the product \"%s\" doesn't respect the rounding "
-"precision                                   defined on the unit of measure "
-"\"%s\". Please change the quantity done or the"
-"                                   rounding precision of your unit of "
-"measure."
+"precision defined on the unit of measure \"%s\". Please change the quantity "
+"done or the rounding precision of your unit of measure."
 msgstr ""
-"\"%s\" барааг дуусгаж буй тоо хэмжээ нь \"%s\" хэмжих нэгжид тодорхойлогдсон"
-" оронгийн нарийвчлалд нийцэхгүй байна. Дуусгаж буй тоо хэмжээг өөрчлөх эсвэл"
-" хэмжих нэгжийн оронгийн нарийвчлалыг өөрчилнө үү."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7898,8 +7893,8 @@ msgid ""
 "You cannot cancel a stock move that has been set to 'Done'. Create a return "
 "in order to reverse the moves which took place."
 msgstr ""
-"You cannot cancel a stock move that has been set to 'Дууссан' төлөвтэй "
-"барааны хөдөлгөөнийг цуцлах боломжгүй. Түүний оронд буцаалт хийж болно."
+"'Дууссан' төлөвтэй барааны хөдөлгөөнийг цуцлах боломжгүй. Барааны "
+"хөдөлгөөнийг буцаахын тулд буцаалт хийнэ үү."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -7996,7 +7991,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
-msgstr "'Дууссан' төлөвтэй барааны хөдөлгөөний нөөцлөлтыг цуцлах боломжгүй."
+msgstr "'Дууссан' төлөвтэй барааны хөдөлгөөний нөөцлөлтийг цуцлах боломжгүй."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -8104,6 +8099,15 @@ msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "Та %s бараануудад цувралын дугаар сонгож өгнө үү."
 
 #. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You should not use a planned internal transfer to move some products between"
+" two warehouses. Instead, use an immediate internal transfer or the resupply"
+" route."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "You still have ongoing operations for picking types %s in warehouse %s"
@@ -8192,12 +8196,12 @@ msgstr "ж: PO0032"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "from location"
-msgstr "Гарах байрлал"
+msgstr "гарах байрлал"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 msgid "in"
-msgstr "дотор"
+msgstr "байрлал"
 
 #. module: stock
 #. openerp-web

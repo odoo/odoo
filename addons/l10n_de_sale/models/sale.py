@@ -28,6 +28,8 @@ class SaleOrder(models.Model):
                 data.append((_('Customer Reference'), record.client_order_ref))
             if record.user_id:
                 data.append((_("Salesperson"), record.user_id.name))
+            if 'incoterm' in record._fields and record.incoterm:
+                data.append((_("Incoterm"), record.incoterm.code))
 
     def _compute_l10n_de_document_title(self):
         for record in self:
