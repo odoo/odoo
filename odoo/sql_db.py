@@ -13,9 +13,12 @@ import itertools
 import logging
 import os
 import time
+import threading
 import uuid
 import warnings
 
+from datetime import timedelta, datetime
+from inspect import currentframe
 import psycopg2
 import psycopg2.extras
 import psycopg2.extensions
@@ -58,9 +61,6 @@ if pv(psycopg2.__version__) < pv('2.7'):
 
     psycopg2.extensions.register_adapter(str, adapt_string)
 
-from datetime import timedelta
-import threading
-from inspect import currentframe
 
 
 def flush_env(cr, *, clear=True):
@@ -576,6 +576,7 @@ class TestCursor(BaseCursor):
     _cursors_stack = []
     def __init__(self, cursor, lock):
         super().__init__()
+        self._now = None
         self._closed = False
         self._cursor = cursor
         # we use a lock to serialize concurrent requests
@@ -630,6 +631,12 @@ class TestCursor(BaseCursor):
 
     def __getattr__(self, name):
         return getattr(self._cursor, name)
+
+    def now(self):
+        """ Return the transaction's timestamp ``datetime.now()``. """
+        if self._now is None:
+            self._now = datetime.now()
+        return self._now
 
 
 class PsycoConnection(psycopg2.extensions.connection):
