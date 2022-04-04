@@ -2930,9 +2930,6 @@ class MailThread(models.AbstractModel):
     # DISCORDUSS API
     # ------------------------------------------------------
 
-    def _message_update_content_after_hook(self, message):
-        """ Hook to add custom behavior after having updated the message content. """
-
     def _message_add_reaction_after_hook(self, message, content):
         """ Hook to add custom behavior after having added a reaction to a message. """
 
@@ -2940,7 +2937,7 @@ class MailThread(models.AbstractModel):
         """ Hook to add custom behavior after having removed a reaction from a message. """
 
     # ------------------------------------------------------
-    # WRAPPERS AND TOOLS
+    # THREAD MESSAGE UPDATE
     # ------------------------------------------------------
 
     def message_change_thread(self, new_thread, new_parent_message=False):
@@ -2982,6 +2979,9 @@ class MailThread(models.AbstractModel):
         msg_vals["subtype_id"] = None
         msg_not_comment.write(msg_vals)
         return True
+
+    def _message_update_content_after_hook(self, message):
+        """ Hook to add custom behavior after having updated the message content. """
 
     # ------------------------------------------------------
     # CONTROLLERS
