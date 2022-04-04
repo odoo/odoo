@@ -2850,9 +2850,9 @@ class BaseModel(metaclass=MetaModel):
                     return field.column_type[1] + (" NOT NULL" if field.required else "")
 
                 tools.create_model_table(cr, self._table, self._description, [
-                    (name, make_type(field), field.string)
-                    for name, field in self._fields.items()
-                    if name != 'id' and field.store and field.column_type
+                    (field.name, make_type(field), field.string)
+                    for field in sorted(self._fields.values(), key=lambda f: f.column_order)
+                    if field.name != 'id' and field.store and field.column_type
                 ])
 
             if self._parent_store:
@@ -2868,7 +2868,7 @@ class BaseModel(metaclass=MetaModel):
             columns = tools.table_columns(cr, self._table)
             fields_to_compute = []
 
-            for field in self._fields.values():
+            for field in sorted(self._fields.values(), key=lambda f: f.column_order):
                 if not field.store:
                     continue
                 if field.manual and not update_custom_fields:

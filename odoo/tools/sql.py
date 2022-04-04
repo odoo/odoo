@@ -6,6 +6,7 @@
 import logging
 import psycopg2
 import odoo.sql_db
+from collections import defaultdict
 from contextlib import closing
 
 _schema = logging.getLogger('odoo.schema')
@@ -49,6 +50,17 @@ def table_kind(cr, tablename):
     """
     cr.execute(query, (tablename,))
     return cr.fetchone()[0] if cr.rowcount else None
+
+# prescribed column order by type size: 4 bytes, 1 byte, 8 bytes, variable size
+# (values have been chosen to minimize padding in rows; unknown column types
+# are considered variable size and put last)
+SQL_ORDER_BY_TYPE = defaultdict(lambda: 6, {
+    'int4': 1,        # 4 bytes
+    'date': 2,        # 4 bytes
+    'bool': 3,        # 1 byte
+    'float8': 4,      # 8 bytes
+    'timestamp': 5,   # 8 bytes
+})
 
 def create_model_table(cr, tablename, comment=None, columns=()):
     """ Create the table for a model. """

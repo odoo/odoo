@@ -14,14 +14,14 @@ CREATE TABLE ir_act_client (primary key(id)) INHERITS (ir_actions);
 
 CREATE TABLE res_users (
     id serial NOT NULL,
-    active boolean default True,
-    login varchar(64) NOT NULL UNIQUE,
-    password varchar default null,
     -- No FK references below, will be added later by ORM
     -- (when the destination rows exist)
     company_id integer, -- references res_company,
     partner_id integer, -- references res_partner,
+    active boolean default True,
     create_date timestamp without time zone,
+    login varchar(64) NOT NULL UNIQUE,
+    password varchar default null,
     primary key(id)
 );
 
@@ -86,11 +86,11 @@ CREATE TABLE ir_model_data (
     create_date timestamp without time zone DEFAULT (now() at time zone 'UTC'),
     write_date timestamp without time zone DEFAULT (now() at time zone 'UTC'),
     write_uid integer,
+    res_id integer,
     noupdate boolean DEFAULT False,
     name varchar NOT NULL,
     module varchar NOT NULL,
     model varchar NOT NULL,
-    res_id integer,
     primary key(id)
 );
 
@@ -113,9 +113,9 @@ CREATE TABLE res_company (
 
 CREATE TABLE res_partner (
     id serial,
-    name varchar,
     company_id integer,
     create_date timestamp without time zone,
+    name varchar,
     primary key(id)
 );
 

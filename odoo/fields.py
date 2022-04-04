@@ -21,7 +21,7 @@ import pytz
 from .tools import (
     float_repr, float_round, float_compare, float_is_zero, html_sanitize, human_size,
     pg_varchar, ustr, OrderedSet, pycompat, sql, date_utils, unique,
-    image_process, merge_sequences,
+    image_process, merge_sequences, SQL_ORDER_BY_TYPE,
 )
 from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
@@ -936,6 +936,11 @@ class Field(MetaField('DummyField', (object,), {})):
     #
     # Update database schema
     #
+
+    @property
+    def column_order(self):
+        """ Prescribed column order in table. """
+        return 0 if self.column_type is None else SQL_ORDER_BY_TYPE[self.column_type[0]]
 
     def update_db(self, model, columns):
         """ Update the database schema to implement this field.
