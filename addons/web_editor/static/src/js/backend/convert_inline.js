@@ -472,6 +472,22 @@ function toInline($editable, cssRules, $iframe) {
         };
     };
 
+    // Todo: remove in master
+    const oLayout = editable.querySelector('.o_layout');
+    if (oLayout) {
+        const style = document.createElement('style');
+        style.textContent = `
+            @media screen and (max-width: 1135px) {
+                td {
+                    max-width: inherit !important;
+                }
+                td > img:only-child {
+                    min-width: 100% !important;
+                }
+            }
+        `;
+        editable.prepend(style);
+    }
     attachmentThumbnailToLinkImg($editable);
     fontToImg($editable);
     classToStyle($editable, cssRules);
