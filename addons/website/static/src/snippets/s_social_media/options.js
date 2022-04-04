@@ -155,6 +155,17 @@ options.registry.SocialMedia = options.Class.extend({
             // Place the link at the correct position
             this.$target[0].appendChild(anchorEl);
         }
+
+        // Restore whitespaces around the links
+        this.$target[0].normalize();
+        const finalLinkEls = this.$target[0].querySelectorAll(':scope > a');
+        if (finalLinkEls.length) {
+            finalLinkEls[0].previousSibling.textContent = '\n';
+            for (const linkEl of finalLinkEls) {
+                linkEl.after(document.createTextNode('\n'));
+            }
+        }
+
         this._handleNoMediaAlert();
     },
 
