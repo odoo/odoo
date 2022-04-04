@@ -5,13 +5,13 @@
     'name': 'Skills Certification',
     'category': 'Hidden',
     'version': '1.0',
-    'summary': 'Add certification to resumé of your employees',
+    'summary': 'Add certification to Resumes of your employees',
     'description':
         """
 Certification and Skills for HR
 ===============================
 
-This module adds certification to resumé for employees.
+This module adds certification to Resumes for employees.
         """,
     'depends': ['hr_skills', 'survey'],
     'data': [
