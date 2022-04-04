@@ -1318,7 +1318,7 @@
                           event_open_popup="true" quick_add="false" show_unusual_days="True"
                           js_class="project_calendar"
                           scales="month,year">
-                    <field name="project_id" widget="project_private_task" filters="1" color="color"/>
+                    <field name="project_id" widget="project_private_task"/>
                     <field name="user_ids" widget="many2many_avatar_user"/>
                     <field name="partner_id" attrs="{'invisible': [('partner_id', '=', False)]}"/>
                     <field name="priority" widget="priority"/>
@@ -1338,6 +1338,10 @@
             <field name="arch" type="xml">
                 <xpath expr="//calendar" position="attributes">
                     <attribute name="color">project_color</attribute>
+                </xpath>
+                <xpath expr="//field[@name='project_id']" position="attributes">
+                    <attribute name="filters">1</attribute>
+                    <attribute name="color">color</attribute>
                 </xpath>
             </field>
         </record>
