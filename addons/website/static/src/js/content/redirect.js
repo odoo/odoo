@@ -12,13 +12,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!window.frameElement) {
         const websiteId = document.documentElement.dataset.websiteId;
         const {pathname, search} = window.location;
-        const params = new URLSearchParams(search).toString();
+        let params = new URLSearchParams(search);
+        const enableEditor = params.get('enable_editor');
+        params.delete('enable_editor');
+        params = params.toString();
+        const backendPath = `/web#action=website.website_editor&path=${encodeURIComponent(params ? `${pathname}?${params.toString()}` : pathname)}&website_id=${websiteId}`;
 
-        const autoredirectToBackendAction = false;
+        const autoredirectToBackendAction = !!enableEditor;
         if (autoredirectToBackendAction) {
             document.body.innerHTML = '';
-            window.location.replace(`/web#action=website.website_editor&path=${encodeURIComponent(params ? `${pathname}?${params}` : pathname)}&website_id=${websiteId}`);
-    } else {
+            window.location.replace(`${backendPath}${enableEditor ? '&enable_editor=1' : ''}`);
+        } else {
             const frontendToBackendNavEl = document.createElement('div');
             frontendToBackendNavEl.classList.add('o_frontend_to_backend_nav');
 
@@ -29,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
             frontendToBackendNavEl.appendChild(backendAppsButtonEl);
 
             const backendEditButtonEl = document.createElement('a');
-            backendEditButtonEl.href = `/web#action=website.website_editor&path=${encodeURIComponent(params ? `${pathname}?${params}` : pathname)}&website_id=${websiteId}`;
+            backendEditButtonEl.href = `${backendPath}&enable_editor=1`;
             backendEditButtonEl.title = _t("Edit your page content");
             backendEditButtonEl.classList.add('o_frontend_to_backend_edit_btn', 'fa', 'fa-pencil-square-o');
             frontendToBackendNavEl.appendChild(backendEditButtonEl);
