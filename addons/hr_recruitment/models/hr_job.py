@@ -117,6 +117,7 @@ class Job(models.Model):
                   JOIN job_stage s
                     ON s.job_id = a.job_id
                    AND a.stage_id = s.stage_id
+                   AND a.active IS TRUE
               GROUP BY s.job_id
             """, [tuple(self.ids), ]
         )
