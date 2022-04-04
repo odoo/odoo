@@ -38,7 +38,7 @@ class TestPERF(common.TransactionCase):
     @users('admin')
     @warmup
     def test_empty_sale_order_creation_perf(self):
-        with self.assertQueryCount(admin=34):
+        with self.assertQueryCount(admin=33):
             self.env['sale.order'].create({
                 'partner_id': self.partners[0].id,
                 'user_id': self.salesmans[0].id,
@@ -48,7 +48,7 @@ class TestPERF(common.TransactionCase):
     @warmup
     def test_empty_sales_orders_batch_creation_perf(self):
         # 1 SO insert, 2 SOL insert, 1 SO sequence fetch, 1 warehouse fetch, 3 followers queries ?
-        with self.assertQueryCount(admin=38):
+        with self.assertQueryCount(admin=37):
             self.env['sale.order'].create([{
                 'partner_id': self.partners[0].id,
                 'user_id': self.salesmans[0].id,
@@ -59,7 +59,7 @@ class TestPERF(common.TransactionCase):
     def test_dummy_sales_orders_batch_creation_perf(self):
         """ Dummy SOlines (notes/sections) should not add any custom queries other than their insert"""
         # + 4 SOL insert
-        with self.assertQueryCount(admin=40):
+        with self.assertQueryCount(admin=39):
             self.env['sale.order'].create([{
                 'partner_id': self.partners[0].id,
                 'user_id': self.salesmans[0].id,
@@ -73,7 +73,7 @@ class TestPERF(common.TransactionCase):
     @warmup
     def test_light_sales_orders_batch_creation_perf_without_taxes(self):
         self.products[0].taxes_id = [Command.set([])]
-        with self.assertQueryCount(admin=51):
+        with self.assertQueryCount(admin=48):
             self.env['sale.order'].create([{
                 'partner_id': self.partners[0].id,
                 'user_id': self.salesmans[0].id,
