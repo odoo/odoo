@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 <t t-name="website.EditWebsiteSystray" owl="1">
-    <div class="o_edit_website_container o_edit_website_container">
+    <div class="o_edit_website_container" t-att-class="{ o_translatable: translatable }">
         <a href="#" accesskey="a" t-on-click="startEdit">
-            <span class="fa mr-2" t-att-class="{ 'fa-refresh fa-spin': this.state.isLoading, 'fa-pencil': !this.state.isLoading }"/>
-            Edit
+            <span t-if="translatable" class="fa fa-pencil mr-2"/>
+            <span t-else="" class="fa mr-2" t-att-class="{ 'fa-refresh fa-spin': this.state.isLoading, 'fa-pencil': !this.state.isLoading }"/>
+            <t t-esc="label"/>
         </a>
     </div>
 </t>
