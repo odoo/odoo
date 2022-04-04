@@ -19,9 +19,9 @@ tour.register("default_shape_gets_palette_colors", {
     wTourUtils.changeOption('ColoredLevelBackground', 'Shape'),
     {
         content: "Check that shape does not have a background-image in its inline style",
-        trigger: '#wrap .s_text_image .o_we_shape',
+        trigger: 'iframe #wrap .s_text_image .o_we_shape',
         run: () => {
-            const shape = $('#wrap .s_text_image .o_we_shape')[0];
+            const shape = $('#main_iframe').contents().find('#wrap .s_text_image .o_we_shape')[0];
             if (shape.style.backgroundImage) {
                 console.error("error The default shape has a background-image in its inline style (should rely on the class)");
             }

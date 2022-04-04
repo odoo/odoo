@@ -134,9 +134,10 @@ function clickOnEdit(position = "bottom") {
  * @param {*} position
  */
 function clickOnSnippet(snippet, position = "bottom") {
+    const snippetClass = snippet.id || snippet;
     return {
-        trigger: snippet.id ? `#wrapwrap .${snippet.id}` : snippet,
-        extra_trigger: "body.editor_enable",
+        trigger: `iframe #wrapwrap .${snippetClass}`,
+        extra_trigger: "iframe body.editor_enable",
         content: Markup(_t("<b>Click on a snippet</b> to access its options menu.")),
         position: position,
         run: "click",
@@ -164,8 +165,8 @@ function clickOnSave(position = "bottom") {
  */
 function clickOnText(snippet, element, position = "bottom") {
     return {
-        trigger: snippet.id ? `#wrapwrap .${snippet.id} ${element}` : snippet,
-        extra_trigger: "body.editor_enable",
+        trigger: snippet.id ? `iframe #wrapwrap .${snippet.id} ${element}` : snippet,
+        extra_trigger: "iframe body.editor_enable",
         content: Markup(_t("<b>Click on a text</b> to start editing it.")),
         position: position,
         run: "text",
@@ -180,14 +181,14 @@ function clickOnText(snippet, element, position = "bottom") {
  */
 function dragNDrop(snippet, position = "bottom") {
     return {
-        trigger: `#oe_snippets .oe_snippet[name="${snippet.name}"] .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
-        extra_trigger: "body.editor_enable.editor_has_snippets",
+        trigger: `#oe_snippets .oe_snippet:has( > [data-snippet='${snippet.id}']) .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
+        extra_trigger: ".o_website_editor .editor_enable.editor_has_snippets",
         moveTrigger: '.oe_drop_zone',
         content: Markup(_.str.sprintf(_t("Drag the <b>%s</b> building block and drop it at the bottom of the page."), snippet.name)),
         position: position,
         // Normally no main snippet can be dropped in the default footer but
         // targeting it allows to force "dropping at the end of the page".
-        run: "drag_and_drop #wrapwrap > footer",
+        run: "drag_and_drop iframe #wrapwrap > footer",
     };
 }
 
@@ -211,7 +212,7 @@ function goToTheme(position = "bottom") {
 
 function selectHeader(position = "bottom") {
     return {
-        trigger: `header#top`,
+        trigger: `iframe header#top`,
         content: Markup(_t(`<b>Click</b> on this header to configure it.`)),
         position: position,
         run: "click",
@@ -220,7 +221,7 @@ function selectHeader(position = "bottom") {
 
 function selectSnippetColumn(snippet, index = 0, position = "bottom") {
      return {
-        trigger: `#wrapwrap .${snippet.id} .row div[class*="col-lg-"]:eq(${index})`,
+        trigger: `iframe #wrapwrap .${snippet.id} .row div[class*="col-lg-"]:eq(${index})`,
         content: Markup(_t("<b>Click</b> on this column to access its options.")),
          position: position,
         run: "click",

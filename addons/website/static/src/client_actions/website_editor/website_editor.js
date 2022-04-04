@@ -43,8 +43,10 @@ export class WebsiteEditorClientAction extends Component {
                 this.websiteService.contentWindow = this.iframe.el.contentWindow;
 
                 this.iframe.el.contentWindow.addEventListener('beforeunload', () => {
-                    this.iframefallback.el.contentDocument.body.replaceWith(this.iframe.el.contentDocument.body.cloneNode(true));
-                    $().getScrollingElement(this.iframefallback.el.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;
+                    if (!this.websiteContext.edition) {
+                        this.iframefallback.el.contentDocument.body.replaceWith(this.iframe.el.contentDocument.body.cloneNode(true));
+                        $().getScrollingElement(this.iframefallback.el.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;
+                    }
                 });
 
                 this.iframe.el.contentWindow.addEventListener('PUBLIC-ROOT-READY', (event) => {

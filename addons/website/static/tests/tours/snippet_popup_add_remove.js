@@ -8,11 +8,11 @@ tour.register('snippet_popup_add_remove', {
 }, [{
     content: 'Drop s_popup snippet',
     trigger: '#oe_snippets .oe_snippet:has( > [data-snippet="s_popup"]) .oe_snippet_thumbnail',
-    run: "drag_and_drop #wrap",
+    run: "drag_and_drop iframe #wrap",
 }, {
     content: 'Edit s_popup snippet',
     in_modal: false,
-    trigger: '#wrap.o_editable [data-snippet="s_popup"] .row > div', // Click deep in the snippet structure
+    trigger: 'iframe #wrap.o_editable [data-snippet="s_popup"] .row > div', // Click deep in the snippet structure
 }, {
     content: 'Check s_popup setting are loaded, wait panel is visible',
     in_modal: false,
@@ -25,6 +25,6 @@ tour.register('snippet_popup_add_remove', {
 }, {
     content: 'Check the s_popup was removed',
     in_modal: false,
-    trigger: '#wrap.o_editable:not(:has([data-snippet="s_popup"]))',
+    trigger: 'iframe #wrap.o_editable:not(:has([data-snippet="s_popup"]))',
     run: () => null,
 }]);

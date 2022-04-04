@@ -51,7 +51,7 @@ tour.register('snippet_social_media', {
     },
     {
         content: "Check if the result is correct before removing",
-        trigger: ".s_social_media" +
+        trigger: "iframe .s_social_media" +
                  ":has(a:eq(0)[href='/website/social/twitter'])" +
                  ":has(a:eq(1)[href='/website/social/linkedin'])" +
                  ":has(a:eq(2)[href='/website/social/youtube'])" +
@@ -69,7 +69,7 @@ tour.register('snippet_social_media', {
     },
     {
         content: "Ensure paypal icon is found",
-        trigger: ".s_social_media" +
+        trigger: "iframe .s_social_media" +
                  ":has(a:eq(5)[href='https://www.paypal.com/abc']:has(i.fa-paypal))",
     },
     {
@@ -84,7 +84,7 @@ tour.register('snippet_social_media', {
     },
     {
         content: "Check if the result is correct after removing",
-        trigger: ".s_social_media" +
+        trigger: "iframe .s_social_media" +
                  ":has(a:eq(0)[href='/website/social/twitter'])" +
                  ":has(a:eq(1)[href='/website/social/linkedin'])" +
                  ":has(a:eq(2)[href='/website/social/youtube'])" +

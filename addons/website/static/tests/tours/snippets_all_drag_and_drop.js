@@ -59,6 +59,9 @@ for (const snippet of snippetsNames) {
         snippetSteps.splice(3, 2, {
             content: `Hide the ${snippet} popup`,
             trigger: "iframe .s_popup_close",
+        }, {
+            content: `Make sure ${snippet} is hidden`,
+            trigger: "iframe body:not(.modal-open)",
         });
     }
     steps = steps.concat(snippetSteps);

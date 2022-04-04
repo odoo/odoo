@@ -91,7 +91,7 @@ tour.register('automatic_editor_on_new_website', {
     },
     {
         content: "Check that the editor is loaded",
-        trigger: 'body.editor_enable',
+        trigger: 'iframe body.editor_enable',
         timeout: 30000,
         run: () => null, // it's a check
     },
