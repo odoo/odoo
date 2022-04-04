@@ -1,5 +1,4 @@
-odoo.define('web.bootstrap.extensions', function () {
-'use strict';
+/** @odoo-module alias=web.bootstrap.extensions **/
 
 /**
  * The bootstrap library extensions and fixes should be done here to avoid
@@ -16,33 +15,33 @@ odoo.define('web.bootstrap.extensions', function () {
  * We cannot disable sanitization because bootstrap uses tooltip/popover
  * DOM attributes in an "unsafe" way.
  */
-var bsSanitizeWhiteList = $.fn.tooltip.Constructor.Default.whiteList;
+let bsSanitizeAllowList = Tooltip.Default.allowList;
 
-bsSanitizeWhiteList['*'].push('title', 'style', /^data-[\w-]+/);
+bsSanitizeAllowList['*'].push('title', 'style', /^data-[\w-]+/);
 
-bsSanitizeWhiteList.header = [];
-bsSanitizeWhiteList.main = [];
-bsSanitizeWhiteList.footer = [];
+bsSanitizeAllowList.header = [];
+bsSanitizeAllowList.main = [];
+bsSanitizeAllowList.footer = [];
 
-bsSanitizeWhiteList.caption = [];
-bsSanitizeWhiteList.col = ['span'];
-bsSanitizeWhiteList.colgroup = ['span'];
-bsSanitizeWhiteList.table = [];
-bsSanitizeWhiteList.thead = [];
-bsSanitizeWhiteList.tbody = [];
-bsSanitizeWhiteList.tfooter = [];
-bsSanitizeWhiteList.tr = [];
-bsSanitizeWhiteList.th = ['colspan', 'rowspan'];
-bsSanitizeWhiteList.td = ['colspan', 'rowspan'];
+bsSanitizeAllowList.caption = [];
+bsSanitizeAllowList.col = ['span'];
+bsSanitizeAllowList.colgroup = ['span'];
+bsSanitizeAllowList.table = [];
+bsSanitizeAllowList.thead = [];
+bsSanitizeAllowList.tbody = [];
+bsSanitizeAllowList.tfooter = [];
+bsSanitizeAllowList.tr = [];
+bsSanitizeAllowList.th = ['colspan', 'rowspan'];
+bsSanitizeAllowList.td = ['colspan', 'rowspan'];
 
-bsSanitizeWhiteList.address = [];
-bsSanitizeWhiteList.article = [];
-bsSanitizeWhiteList.aside = [];
-bsSanitizeWhiteList.blockquote = [];
-bsSanitizeWhiteList.section = [];
+bsSanitizeAllowList.address = [];
+bsSanitizeAllowList.article = [];
+bsSanitizeAllowList.aside = [];
+bsSanitizeAllowList.blockquote = [];
+bsSanitizeAllowList.section = [];
 
-bsSanitizeWhiteList.button = ['type'];
-bsSanitizeWhiteList.del = [];
+bsSanitizeAllowList.button = ['type'];
+bsSanitizeAllowList.del = [];
 
 /**
  * Returns an extended version of bootstrap default whitelist for sanitization,
@@ -56,25 +55,25 @@ bsSanitizeWhiteList.del = [];
  * @returns {Object} /!\ the returned whitelist is made from a *shallow* copy of
  *      the default whitelist, extended with given whitelist.
  */
-function makeExtendedSanitizeWhiteList(extensions) {
-    var whiteList = _.clone($.fn.tooltip.Constructor.Default.whiteList);
+export function makeExtendedSanitizeWhiteList(extensions) {
+    let allowList = Object.assign({}, Tooltip.Default.allowList);
     Object.keys(extensions).forEach(key => {
-        whiteList[key] = (whiteList[key] || []).concat(extensions[key]);
+        allowList[key] = (allowList[key] || []).concat(extensions[key]);
     });
-    return whiteList;
+    return allowList;
 }
 
 /* Bootstrap tooltip defaults overwrite */
-$.fn.tooltip.Constructor.Default.placement = 'auto';
-$.fn.tooltip.Constructor.Default.fallbackPlacement = ['bottom', 'right', 'left', 'top'];
-$.fn.tooltip.Constructor.Default.html = true;
-$.fn.tooltip.Constructor.Default.trigger = 'hover';
-$.fn.tooltip.Constructor.Default.container = 'body';
-$.fn.tooltip.Constructor.Default.boundary = 'window';
-$.fn.tooltip.Constructor.Default.delay = { show: 1000, hide: 0 };
+Tooltip.Default.placement = 'auto';
+Tooltip.Default.fallbackPlacement = ['bottom', 'right', 'left', 'top'];
+Tooltip.Default.html = true;
+Tooltip.Default.trigger = 'hover';
+Tooltip.Default.container = 'body';
+Tooltip.Default.boundary = 'window';
+Tooltip.Default.delay = { show: 1000, hide: 0 };
 
-var bootstrapShowFunction = $.fn.tooltip.Constructor.prototype.show;
-$.fn.tooltip.Constructor.prototype.show = function () {
+const bootstrapShowFunction = Tooltip.prototype.show;
+Tooltip.prototype.show = function () {
     // Overwrite bootstrap tooltip method to prevent showing 2 tooltip at the
     // same time
     $('.tooltip').remove();
@@ -91,8 +90,8 @@ $.fn.tooltip.Constructor.prototype.show = function () {
 
 /* Bootstrap scrollspy fix for non-body to spy */
 
-const bootstrapSpyRefreshFunction = $.fn.scrollspy.Constructor.prototype.refresh;
-$.fn.scrollspy.Constructor.prototype.refresh = function () {
+const bootstrapSpyRefreshFunction = ScrollSpy.prototype.refresh;
+ScrollSpy.prototype.refresh = function () {
     bootstrapSpyRefreshFunction.apply(this, arguments);
     if (this._scrollElement === window || this._config.method !== 'offset') {
         return;
@@ -106,33 +105,10 @@ $.fn.scrollspy.Constructor.prototype.refresh = function () {
 /**
  * In some cases, we need to keep the first element of navbars selected.
  */
-const bootstrapSpyProcessFunction = $.fn.scrollspy.Constructor.prototype._process;
-$.fn.scrollspy.Constructor.prototype._process = function () {
+const bootstrapSpyProcessFunction = ScrollSpy.prototype._process;
+ScrollSpy.prototype._process = function () {
     bootstrapSpyProcessFunction.apply(this, arguments);
     if (this._activeTarget === null && this._config.alwaysKeepFirstActive) {
         this._activate(this._targets[0]);
     }
 };
-
-/* Bootstrap modal scrollbar compensation on non-body */
-const bsSetScrollbarFunction = $.fn.modal.Constructor.prototype._setScrollbar;
-$.fn.modal.Constructor.prototype._setScrollbar = function () {
-    const $scrollable = $().getScrollingElement();
-    if (document.body.contains($scrollable[0])) {
-        $scrollable.compensateScrollbar(true);
-    }
-    return bsSetScrollbarFunction.apply(this, arguments);
-};
-const bsResetScrollbarFunction = $.fn.modal.Constructor.prototype._resetScrollbar;
-$.fn.modal.Constructor.prototype._resetScrollbar = function () {
-    const $scrollable = $().getScrollingElement();
-    if (document.body.contains($scrollable[0])) {
-        $scrollable.compensateScrollbar(false);
-    }
-    return bsResetScrollbarFunction.apply(this, arguments);
-};
-
-return {
-    makeExtendedSanitizeWhiteList: makeExtendedSanitizeWhiteList,
-};
-});
