@@ -316,12 +316,12 @@ class Lead(models.Model):
     @api.depends('user_id')
     def _compute_date_open(self):
         for lead in self:
-            lead.date_open = fields.Datetime.now() if lead.user_id else False
+            lead.date_open = self.env.cr.now() if lead.user_id else False
 
     @api.depends('stage_id')
     def _compute_date_last_stage_update(self):
         for lead in self:
-            lead.date_last_stage_update = fields.Datetime.now()
+            lead.date_last_stage_update = self.env.cr.now()
 
     @api.depends('create_date', 'date_open')
     def _compute_day_open(self):
@@ -852,7 +852,7 @@ class Lead(models.Model):
         context.setdefault('default_team_id', self.team_id.id)
         # Set date_open to today if it is an opp
         default = default or {}
-        default['date_open'] = fields.Datetime.now() if self.type == 'opportunity' else False
+        default['date_open'] = self.env.cr.now() if self.type == 'opportunity' else False
         # Do not assign to an archived user
         if not self.user_id.active:
             default['user_id'] = False
@@ -1526,8 +1526,8 @@ class Lead(models.Model):
         new_team_id = team_id if team_id else self.team_id.id
         upd_values = {
             'type': 'opportunity',
-            'date_open': fields.Datetime.now(),
-            'date_conversion': fields.Datetime.now(),
+            'date_open': self.env.cr.now(),
+            'date_conversion': self.env.cr.now(),
         }
         if customer != self.partner_id:
             upd_values['partner_id'] = customer.id if customer else False
