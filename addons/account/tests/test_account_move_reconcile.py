@@ -1192,6 +1192,39 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             },
         ])
 
+    def test_reconcile_rounding_issue(self):
+        rate = 1/1.5289
+        currency = self.setup_multi_currency_data(default_values={
+            'name': 'XXX',
+            'symbol': 'XXX',
+            'currency_unit_label': 'XX',
+            'currency_subunit_label': 'X',
+            'rounding': 0.01,
+        }, rate2016=rate, rate2017=rate)['currency']
+
+        # Create an invoice 26.45 XXX = 40.43 USD
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': currency.id,
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product_a.id,
+                'price_unit': 23.0,
+                'tax_ids': [(6, 0, self.company_data['default_tax_sale'].ids)],
+            })],
+        })
+        invoice.action_post()
+
+        # Pay it with 100.0 USD
+        self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({'amount': 100.0, 'currency_id': self.company_data['currency'].id})\
+            ._create_payments()
+
+        self.assertTrue(invoice.payment_state in ('in_payment', 'paid'))
+
     # -------------------------------------------------------------------------
     # Test creation of extra journal entries during the reconciliation to
     # deal with taxes that are exigible on payment (cash basis).

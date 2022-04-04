@@ -1012,9 +1012,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         self.assertEqual(inv1_receivable.full_reconcile_id, inv2_receivable.full_reconcile_id)
         self.assertEqual(inv1_receivable.full_reconcile_id, payment_receivable.full_reconcile_id)
 
-        exchange_rcv = inv1_receivable.full_reconcile_id.exchange_move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
-        self.assertEqual(exchange_rcv.amount_currency, 0.01)
-
         self.assertTrue(inv1.payment_state in ('in_payment', 'paid'), "Invoice should be paid")
         self.assertEqual(inv2.payment_state, 'paid')
 
@@ -1081,14 +1078,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         self.assertTrue(inv1_receivable.full_reconcile_id.exists())
         self.assertEqual(inv1_receivable.full_reconcile_id, inv2_receivable.full_reconcile_id)
         self.assertEqual(inv1_receivable.full_reconcile_id, payment_receivable.full_reconcile_id)
-
-        # Before saas-13.4, there was no exchange difference entry generated because the amount was
-        # wrongly converted in the _amount_residual method at the invoice date like this:
-        # 315.15 * (600.0 / 540.25) = 515.15 * 1.110596946 = 350.004627487 ~= 350.0
-        # Now, the conversion is made using the payment rate using the _convert method and the
-        # encoded currency rate:
-        # 315.15 * 1.1106 = 350.00559 ~= 350.01
-        self.assertTrue(inv1_receivable.full_reconcile_id.exchange_move_id)
 
         self.assertTrue(inv1.payment_state in ('in_payment', 'paid'), "Invoice should be paid")
         self.assertEqual(inv2.payment_state, 'paid')
@@ -1201,8 +1190,5 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         self.assertTrue(inv1_receivable.full_reconcile_id.exists())
         self.assertEqual(inv1_receivable.full_reconcile_id, payment_receivable.full_reconcile_id)
         self.assertEqual(move_balance_receiv.full_reconcile_id, inv1_receivable.full_reconcile_id)
-
-        exchange_rcv = inv1_receivable.full_reconcile_id.exchange_move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
-        self.assertEqual(exchange_rcv.amount_currency, 0.01)
 
         self.assertTrue(inv1.payment_state in ('in_payment', 'paid'), "Invoice should be paid")
