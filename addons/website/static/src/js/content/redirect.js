@@ -20,11 +20,19 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!window.frameElement) {
         const websiteId = document.documentElement.dataset.websiteId;
         const {pathname, search} = window.location;
+        const params = new URLSearchParams(search);
+        const enableEditor = params.get('enable_editor');
+        params.delete('enable_editor');
+        let newSearch = params.toString();
+        if (newSearch) {
+            newSearch = '?' + newSearch;
+        }
+        const backendPath = `/web#action=website.website_preview&path=${encodeURIComponent(`${pathname}${newSearch}`)}&website_id=${websiteId}`;
 
-        const autoredirectToBackendAction = false;
+        const autoredirectToBackendAction = !!enableEditor;
         if (autoredirectToBackendAction) {
             document.body.innerHTML = '';
-            window.location.replace(`/web#action=website.website_preview&path=${encodeURIComponent(`${pathname}${search}`)}&website_id=${websiteId}`);
+            window.location.replace(`${backendPath}${enableEditor ? '&enable_editor=1' : ''}`);
         } else {
             // FIXME this UI does not respect access rights yet but we will
             // probably end up doing it in XML instead of JS anyway.
@@ -50,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
             frontendToBackendNavEl.appendChild(backendAppsButtonEl);
 
             const backendEditButtonEl = document.createElement('a');
-            backendEditButtonEl.href = `/web#action=website.website_preview&path=${encodeURIComponent(`${pathname}${search}`)}&website_id=${websiteId}`;
+            backendEditButtonEl.href = `${backendPath}&enable_editor=1`;
             backendEditButtonEl.textContent = _t("Edit");
             backendEditButtonEl.title = _t("Edit your page content");
             backendEditButtonEl.classList.add('o_frontend_to_backend_edit_btn');
@@ -60,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
             frontendToBackendNavEl.appendChild(backendEditButtonEl);
 
             if (editInBackendUserDropdownLinkEl) {
-                editInBackendUserDropdownLinkEl.href = backendEditButtonEl.href;
+                editInBackendUserDropdownLinkEl.href = backendPath;
             }
 
             document.body.appendChild(frontendToBackendNavEl);
