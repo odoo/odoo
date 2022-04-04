@@ -428,7 +428,7 @@ class TestOnlineEventPerformance(EventPerformanceCase, UtilPerf):
         # website customer data
         with freeze_time(self.reference_now):
             self.authenticate('user_eventmanager', 'user_eventmanager')
-            with self.assertQueryCount(default=69):  # tef only: 68 (+1 ent)
+            with self.assertQueryCount(default=52):  # tef only: 51 (+1 ent)
                 self._test_url_open('/event/%i' % self.test_event.id)
 
     @warmup
@@ -436,7 +436,7 @@ class TestOnlineEventPerformance(EventPerformanceCase, UtilPerf):
         # website customer data
         with freeze_time(self.reference_now):
             self.authenticate(None, None)
-            with self.assertQueryCount(default=47):  # tef only: 47
+            with self.assertQueryCount(default=31):
                 self._test_url_open('/event/%i' % self.test_event.id)
 
     @warmup
@@ -444,7 +444,7 @@ class TestOnlineEventPerformance(EventPerformanceCase, UtilPerf):
         # website customer data
         with freeze_time(self.reference_now):
             self.authenticate('user_eventmanager', 'user_eventmanager')
-            with self.assertQueryCount(default=53):  # tef only: 52 (+1 ent)
+            with self.assertQueryCount(default=50):  # tef only: 49
                 self._test_url_open('/event')
 
     @warmup
@@ -452,7 +452,7 @@ class TestOnlineEventPerformance(EventPerformanceCase, UtilPerf):
         # website customer data
         with freeze_time(self.reference_now):
             self.authenticate(None, None)
-            with self.assertQueryCount(default=34):  # tef only: 34
+            with self.assertQueryCount(default=30):
                 self._test_url_open('/event')
 
     # @warmup
