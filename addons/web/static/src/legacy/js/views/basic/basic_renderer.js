@@ -42,6 +42,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         // This attribute lets us know if there is a handle widget on a field,
         // and on which field it is set.
         this.handleField = null;
+        this.viewEditable = params.viewEditable;
     },
     /**
      * @override
@@ -736,7 +737,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
             // Distinct readonly from renderer and readonly from modifier,
             // renderer can be readonly while modifier not.
             // This is needed as modifiers are set after first render
-            hasReadonlyModifier: modifiers.readonly,
+            hasReadonlyModifier: modifiers.readonly || this.viewEditable === false,
             mode: modifiers.readonly ? 'readonly' : mode,
             viewType: this.viewType,
         };
