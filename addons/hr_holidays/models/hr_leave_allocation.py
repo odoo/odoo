@@ -425,7 +425,7 @@ class HolidaysAllocation(models.Model):
                 period_end = current_level._get_next_date(allocation.lastcall)
                 # If accruals are lost at the beginning of year, skip accrual until beginning of this year
                 if current_level.action_with_unused_accruals == 'lost':
-                    this_year_first_day = (today + relativedelta(day=1, month=1)).date()
+                    this_year_first_day = today + relativedelta(day=1, month=1)
                     if period_end < this_year_first_day or period_start < period_end:
                         allocation.lastcall = allocation.nextcall
                         allocation.nextcall = nextcall
@@ -457,7 +457,7 @@ class HolidaysAllocation(models.Model):
         """
         # Get the current date to determine the start and end of the accrual period
         today = datetime.combine(fields.Date.today(), time(0, 0, 0))
-        this_year_first_day = (today + relativedelta(day=1, month=1)).date()
+        this_year_first_day = today + relativedelta(day=1, month=1)
         end_of_year_allocations = self.search(
         [('allocation_type', '=', 'accrual'), ('state', '=', 'validate'), ('accrual_plan_id', '!=', False), ('employee_id', '!=', False),
             '|', ('date_to', '=', False), ('date_to', '>', fields.Datetime.now()), ('lastcall', '<', this_year_first_day)])
