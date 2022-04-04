@@ -134,7 +134,6 @@ const Wysiwyg = Widget.extend({
             savedVideo.classList.add(...videoSpecificClasses);
             return savedVideo;
         };
-
         this.odooEditor = new OdooEditor(this.$editable[0], Object.assign({
             _t: _t,
             toolbar: this.toolbar.$el[0],

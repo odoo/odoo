@@ -14,6 +14,8 @@
     </div>
     <WebsiteEditorComponent t-if="websiteContext.edition"
         reloadIframe.bind="this.reloadIframe"/>
+    <WebsiteTranslator t-if="websiteContext.translation"
+        reloadIframe.bind="this.reloadIframe"/>
 </t>
 
 <div t-name="website.homepage_editor_welcome_message" class="container text-center o_homepage_editor_welcome_message">

@@ -6,6 +6,7 @@ import { BlockUI } from "@web/core/ui/block_ui";
 import core from 'web.core';
 
 import { WebsiteEditorComponent } from '../../components/editor/editor';
+import { WebsiteTranslator } from '../../components/translator/translator';
 
 const { Component, onWillStart, useEffect, useRef, useState } = owl;
 
@@ -30,7 +31,11 @@ export class WebsiteEditorClientAction extends Component {
             this.websiteService.currentWebsiteId = this.websiteId;
             this.websiteService.context.showNewContentModal = this.props.action.context.params && this.props.action.context.params.display_new_content;
             this.websiteService.context.edition = this.props.action.context.params && !!this.props.action.context.params.enable_editor;
-            return () => this.websiteService.currentWebsiteId = null;
+            this.websiteService.context.translation = this.props.action.context.params && !!this.props.action.context.params.edit_translations;
+            return () => {
+                this.websiteService.currentWebsiteId = null;
+                this.websiteService.websiteRootInstance = undefined;
+            };
         }, () => [this.props.action.context.params]);
 
         useEffect(() => {
@@ -122,6 +127,10 @@ export class WebsiteEditorClientAction extends Component {
     }
 }
 WebsiteEditorClientAction.template = 'website.WebsiteEditorClientAction';
-WebsiteEditorClientAction.components = { WebsiteEditorComponent, BlockUI };
+WebsiteEditorClientAction.components = {
+    WebsiteEditorComponent,
+    WebsiteTranslator,
+    BlockUI,
+};
 
 registry.category('actions').add('website_editor', WebsiteEditorClientAction);

@@ -14,14 +14,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const {pathname, search} = window.location;
         let params = new URLSearchParams(search);
         const enableEditor = params.get('enable_editor');
+        const editTranslations = params.get('edit_translations');
         params.delete('enable_editor');
         params = params.toString();
         const backendPath = `/web#action=website.website_editor&path=${encodeURIComponent(params ? `${pathname}?${params.toString()}` : pathname)}&website_id=${websiteId}`;
 
-        const autoredirectToBackendAction = !!enableEditor;
+        const autoredirectToBackendAction = enableEditor || editTranslations;
         if (autoredirectToBackendAction) {
             document.body.innerHTML = '';
-            window.location.replace(`${backendPath}${enableEditor ? '&enable_editor=1' : ''}`);
+            if (enableEditor) {
+                window.location.replace(`${backendPath}&enable_editor=1`);
+            } else if (editTranslations) {
+                window.location.replace(`${backendPath}&edit_translations=1`);
+            } else {
+                window.location.replace(backendPath);
+            }
         } else {
             const frontendToBackendNavEl = document.createElement('div');
             frontendToBackendNavEl.classList.add('o_frontend_to_backend_nav');

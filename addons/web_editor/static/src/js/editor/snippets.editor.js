@@ -1273,7 +1273,9 @@ var SnippetsMenu = Widget.extend({
             this.$('.o_we_customize_snippet_btn').addClass('active').prop('disabled', false);
             this.$('o_we_ui_loading').addClass('d-none');
             $(this.customizePanel).removeClass('d-none');
-            return Promise.all(defs).then(this._addToolbar.bind(this));
+            this.$('#o_we_editor_toolbar_container').hide();
+            this.$('#o-we-editor-table-container').addClass('d-none');
+            return;
         }
         this.invisibleDOMPanelEl = document.createElement('div');
         this.invisibleDOMPanelEl.classList.add('o_we_invisible_el_panel');
@@ -1512,7 +1514,9 @@ var SnippetsMenu = Widget.extend({
         // widgets, etc. Then wait for full resolution of the mutex as widgets
         // may have triggered some final edition requests that need to be
         // processed before actual "clean for save" and saving.
-        await this._activateSnippet(false);
+        if (!this.options.enableTranslation) {
+            await this._activateSnippet(false);
+        }
         await this._mutex.getUnlockedDef();
 
         // Next, notify that we want the DOM to be cleaned (e.g. in website this
@@ -3379,10 +3383,10 @@ var SnippetsMenu = Widget.extend({
         const range = selection && selection.rangeCount && selection.getRangeAt(0);
         if (!range ||
             !$(range.commonAncestorContainer).parents('#wrapwrap, .iframe-editor-wrapper .o_editable').length ||
-            $(range.commonAncestorContainer).parent('[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"])').length ||
+            $(range.commonAncestorContainer).parent('[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-id])').length ||
             (e && $(e.target).closest('.fa, img').length ||
             this.options.wysiwyg.lastMediaClicked && $(this.options.wysiwyg.lastMediaClicked).is('.fa, img')) ||
-            (this.options.wysiwyg.lastElement && !this.options.wysiwyg.lastElement.isContentEditable)
+            (!this.options.enableTranslation && this.options.wysiwyg.lastElement && !this.options.wysiwyg.lastElement.isContentEditable)
         ) {
             $toolbarContainer.hide();
         } else {

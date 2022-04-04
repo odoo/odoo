@@ -199,6 +199,7 @@
             'website/static/src/js/utils.js',
             'website/static/src/client_actions/configurator/configurator.js',
             'website/static/src/client_actions/configurator/configurator.scss',
+            'website/static/src/components/translator/*',
         ],
         'web.qunit_suite_tests': [
             'website/static/tests/dashboard_tests.js',
@@ -278,7 +279,6 @@
             'website/static/src/js/menu/edit.js',
             'website/static/src/js/menu/mobile_view.js',
             'website/static/src/js/menu/seo.js',
-            'website/static/src/js/menu/translate.js',
             'website/static/src/js/set_view_track.js',
             'website/static/src/js/tours/homepage.js',
             'website/static/src/js/tours/tour_utils.js',
@@ -293,6 +293,7 @@
             'website/static/src/components/editor/editor.xml',
             'website/static/src/client_actions/*/*.xml',
             'website/static/src/systray_items/*.xml',
+            'website/static/src/components/translator/*.xml',
         ],
         'website.test_bundle': [
             '/web/static/lib/qweb/qweb2.js',

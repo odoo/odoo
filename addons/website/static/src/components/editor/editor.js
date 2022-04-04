@@ -25,9 +25,17 @@ export class WebsiteEditorComponent extends Component {
 
         useEffect(isPublicRootReady => {
             if (isPublicRootReady) {
-                this.state.showWysiwyg = true;
+                this.publicRootReady();
             }
         }, () => [this.websiteContext.isPublicRootReady]);
+    }
+
+    publicRootReady() {
+        if (this.websiteService.currentWebsite.metadata.translatable) {
+            this.websiteContext.edition = false;
+        } else {
+            this.state.showWysiwyg = true;
+        }
     }
 
     wysiwygReady() {
@@ -38,7 +46,7 @@ export class WebsiteEditorComponent extends Component {
     willReload(widgetEl) {
         if (widgetEl) {
             widgetEl.querySelectorAll('#oe_manipulators').forEach(el => el.remove());
-            widgetEl.querySelectorAll('we-input input').forEach((input, index) => {
+            widgetEl.querySelectorAll('we-input input').forEach(input => {
                 input.setAttribute('value', input.closest('we-input').dataset.selectStyle || '');
             });
             this.loadingDummy = markup(widgetEl.innerHTML);
@@ -61,8 +69,12 @@ export class WebsiteEditorComponent extends Component {
         document.body.classList.remove('editor_has_snippets');
         this.websiteContext.snippetsLoaded = false;
         setTimeout(() => {
-            this.websiteContext.edition = false;
+            this.destroyAfterTransition();
         }, 400);
+    }
+
+    destroyAfterTransition() {
+        this.websiteContext.edition = false;
     }
 }
 WebsiteEditorComponent.components = { WysiwygAdapterComponent };
