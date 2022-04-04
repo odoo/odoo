@@ -1652,7 +1652,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         move_form = Form(self.invoice)
         # Change the date to get another rate: 1/3 instead of 1/2.
-        move_form.date = fields.Date.from_string('2016-01-01')
+        move_form.invoice_date = fields.Date.from_string('2016-01-01')
         move_form.save()
 
         self.assertInvoiceValues(self.invoice, [
@@ -1685,6 +1685,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'currency_id': self.currency_data['currency'].id,
                 'amount_currency': 1410.0,
                 'debit': 470.0,
+                'date_maturity': fields.Date.from_string('2016-01-01'),
             },
         ], {
             **self.move_vals,
@@ -1740,6 +1741,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'price_total': -260.006,
                 'amount_currency': 260.006,
                 'debit': 86.67,
+                'date_maturity': fields.Date.from_string('2016-01-01'),
             },
         ], {
             **self.move_vals,
@@ -1782,6 +1784,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'price_total': -260.01,
                 'amount_currency': 260.01,
                 'debit': 260.01,
+                'date_maturity': fields.Date.from_string('2016-01-01'),
             },
         ], {
             **self.move_vals,
@@ -2405,7 +2408,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         move = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
-            'invoice_date': fields.Date.from_string('2016-01-01'),
+            'invoice_date': fields.Date.from_string('2017-01-15'),
             'date': fields.Date.from_string('2015-01-01'),
             'currency_id': self.currency_data['currency'].id,
             'invoice_payment_term_id': self.pay_terms_a.id,
@@ -2492,7 +2495,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'amount_currency': 1430.0,
                 'debit': 715.0,
                 'credit': 0.0,
-                'date_maturity': fields.Date.from_string('2016-01-01'),
+                'date_maturity': fields.Date.from_string('2017-01-15'),
             },
         ], {
             **self.move_vals,
