@@ -67,7 +67,9 @@ class Http(models.AbstractModel):
 
     @classmethod
     def clear_caches(cls):
-        super(Http, cls)._clear_routing_map()
+        domain = [('redirect_type', 'in', ('308', '404'))]
+        if request.env['website.rewrite'].sudo().search(domain, limit=1):
+            super(Http, cls)._clear_routing_map()
         return super(Http, cls).clear_caches()
 
     @classmethod
