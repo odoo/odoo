@@ -295,7 +295,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL(
         "fieldmany2many tags with color: rendering and edition",
         async function (assert) {
-            assert.expect(28);
+            // assert.expect(28);
 
             serverData.models.partner.records[0].timmy = [12, 14];
             serverData.models.partner_type.records.push({ id: 13, display_name: "red", color: 8 });
@@ -305,188 +305,185 @@ QUnit.module("Fields", (hooks) => {
                 serverData,
                 arch:
                     "<form>" +
-                    "<field name=\"timmy\" widget=\"many2many_tags\" options=\"{'color_field': 'color', 'no_create_edit': True}\"/>" +
+                    "<field name=\"timmy\" widget=\"many2many_tags\" options=\"{'color_field': 'color', 'no_create_edit': True }\"/>" +
                     "</form>",
                 resId: 1,
-                mockRPC: (route, { args, method, model }) => {
-                    if (route === "/web/dataset/call_kw/partner/write") {
-                        var commands = args[1].timmy;
-                        assert.strictEqual(commands.length, 1, "should have generated one command");
-                        assert.strictEqual(
-                            commands[0][0],
-                            6,
-                            "generated command should be REPLACE WITH"
-                        );
-                        assert.ok(
-                            _.isEqual(_.sortBy(commands[0][2], _.identity.bind(_)), [12, 13]),
-                            "new value should be [12, 13]"
-                        );
-                    }
-                    if (method === "read" && model === "partner_type") {
-                        assert.deepEqual(
-                            args[1],
-                            ["display_name", "color"],
-                            "should read the color field"
-                        );
-                    }
-                },
+                /*
+            mockRPC: (route, { args, method, model }) => {
+                if (route === "/web/dataset/call_kw/partner/write") {
+                    var commands = args[1].timmy;
+                    assert.strictEqual(commands.length, 1, "should have generated one command");
+                    assert.strictEqual(
+                        commands[0][0],
+                        6,
+                        "generated command should be REPLACE WITH"
+                    );
+                    assert.ok(
+                        _.isEqual(_.sortBy(commands[0][2], _.identity.bind(_)), [12, 13]),
+                        "new value should be [12, 13]"
+                    );
+                }
+                if (method === "read" && model === "partner_type") {
+                    assert.deepEqual(
+                        args[1],
+                        ["display_name", "color"],
+                        "should read the color field"
+                    );
+                }
+            },*/
             });
-            assert.containsN(target, ".o_field_many2many_tags .badge", 2, "should contain 2 tags");
-            assert.strictEqual(
-                target.querySelector(".badge .o_tag_badge_text").innerText,
-                "gold",
-                "should have fetched and rendered gold partner tag"
-            );
-            assert.strictEqual(
-                target.querySelectorAll(".badge .o_tag_badge_text")[1].innerText,
-                "silver",
-                "should have fetched and rendered silver partner tag"
-            );
-            assert.hasClass(
-                target.querySelector(".badge"),
-                "o_tag_color_2",
-                "should have correctly set the color"
-            );
 
-            await click(target.querySelector(".o_form_button_edit"));
+            /*
+        assert.containsN(target, ".o_field_many2many_tags .badge", 2, "should contain 2 tags");
+        assert.strictEqual(
+            target.querySelector(".badge .o_tag_badge_text").innerText,
+            "gold",
+            "should have fetched and rendered gold partner tag"
+        );
+        assert.strictEqual(
+            target.querySelectorAll(".badge .o_tag_badge_text")[1].innerText,
+            "silver",
+            "should have fetched and rendered silver partner tag"
+        );
+        assert.hasClass(
+            target.querySelector(".badge"),
+            "o_tag_color_2",
+            "should have correctly set the color"
+        );
 
-            assert.containsN(
-                target,
-                ".o_field_many2many_tags .badge",
-                2,
-                "should still contain 2 tags in edit mode"
-            );
-            assert.ok(
-                target.querySelector(".o_tag_color_2 .o_tag_badge_text").innerText === "gold",
-                'first tag should still contain "gold" and be color 2 in edit mode'
-            );
-            assert.containsN(
-                target,
-                ".o_field_many2many_tags .o_delete",
-                2,
-                "tags should contain a delete button"
-            );
+        await click(target.querySelector(".o_form_button_edit"));
 
-            // add an other existing tag
-            var input = target.querySelector(".o_field_many2many_tags input");
-            const autocomplete = target.querySelector("div[name='timmy'] .o-autocomplete.dropdown");
-            await click(autocomplete);
-            assert.strictEqual(
-                autocomplete.querySelectorAll("li").length,
-                2,
-                "autocomplete dropdown should have 2 entry"
-            );
-            assert.strictEqual(
-                autocomplete.querySelector("li a").innerText,
-                "red",
-                "autocomplete dropdown should contain 'red'"
-            );
-            await click(autocomplete.querySelector("li a"));
-            //await testUtils.fields.many2one.clickHighlightedItem("timmy");
-            assert.containsN(
-                target,
-                ".o_field_many2many_tags .badge .dropdown-toggle",
-                3,
-                "should contain 3 tags"
-            );
-            assert.strictEqual(
-                target.querySelectorAll(".o_field_many2many_tags .badge .o_tag_badge_text")[2]
-                    .innerText,
-                "red",
-                "should contain newly added tag 'red'"
-            );
-            assert.hasClass(
-                target.querySelectorAll(".badge")[2],
-                "o_tag_color_8",
-                "should have fetched the color of added tag"
-            );
+        assert.containsN(
+            target,
+            ".o_field_many2many_tags .badge",
+            2,
+            "should still contain 2 tags in edit mode"
+        );
+        assert.ok(
+            target.querySelector(".o_tag_color_2 .o_tag_badge_text").innerText === "gold",
+            'first tag should still contain "gold" and be color 2 in edit mode'
+        );
+        assert.containsN(
+            target,
+            ".o_field_many2many_tags .o_delete",
+            2,
+            "tags should contain a delete button"
+        );
 
-            // remove tag with id 14
-            await click(
-                target.querySelector(".o_field_many2many_tags .badge[data-id=14] .o_delete")
-            );
-            assert.containsN(
-                target,
-                ".o_field_many2many_tags .badge .dropdown-toggle",
-                2,
-                "should contain 2 tags"
-            );
-            assert.ok(
-                !target.querySelector(
-                    '.o_field_many2many_tags .badge .dropdown-toggle:contains("silver")'
-                ).length,
-                "should not contain tag 'silver' anymore"
-            );
+        // add an other existing tag
+        var input = target.querySelector(".o_field_many2many_tags input");
+        const autocomplete = target.querySelector("div[name='timmy'] .o-autocomplete.dropdown");
+        await click(autocomplete);
+        assert.strictEqual(
+            autocomplete.querySelectorAll("li").length,
+            2,
+            "autocomplete dropdown should have 2 entry"
+        );
+        assert.strictEqual(
+            autocomplete.querySelector("li a").innerText,
+            "red",
+            "autocomplete dropdown should contain 'red'"
+        );
+        await click(autocomplete.querySelector("li a"));
+        //await testUtils.fields.many2one.clickHighlightedItem("timmy");
+        assert.containsN(
+            target,
+            ".o_field_many2many_tags .badge .dropdown-toggle",
+            3,
+            "should contain 3 tags"
+        );
+        assert.strictEqual(
+            target.querySelectorAll(".o_field_many2many_tags .badge .o_tag_badge_text")[2]
+                .innerText,
+            "red",
+            "should contain newly added tag 'red'"
+        );
+        assert.hasClass(
+            target.querySelectorAll(".badge")[2],
+            "o_tag_color_8",
+            "should have fetched the color of added tag"
+        );
 
-            // save the record (should do the write RPC with the correct commands)
-            await click(target.querySelector(".o_form_button_save"));
+        // remove tag with id 14
+        await click(target.querySelector(".o_field_many2many_tags .badge[data-id=14] .o_delete"));
+        assert.containsN(
+            target,
+            ".o_field_many2many_tags .badge .dropdown-toggle",
+            2,
+            "should contain 2 tags"
+        );
+        assert.ok(
+            !target.querySelector(
+                '.o_field_many2many_tags .badge .dropdown-toggle:contains("silver")'
+            ).length,
+            "should not contain tag 'silver' anymore"
+        );
 
-            // checkbox 'Hide in Kanban'
-            input = target.querySelector(
-                ".o_field_many2many_tags .badge[data-id=13] .dropdown-toggle"
-            ); // selects 'red' tag
-            await click(input);
-            var checkBox = target.querySelector(
-                ".o_field_many2many_tags .badge[data-id=13] .custom-checkbox input"
-            );
-            assert.strictEqual(
-                checkBox.length,
-                1,
-                "should have a checkbox in the colorpicker dropdown menu"
-            );
-            assert.notOk(
-                checkBox.is(":checked"),
-                "should have unticked checkbox in colorpicker dropdown menu"
-            );
+        // save the record (should do the write RPC with the correct commands)
+        await click(target.querySelector(".o_form_button_save"));
 
-            await click(target, ".o_tag_dropdown input[type='checkbox']");
+        // checkbox 'Hide in Kanban'
+        input = target.querySelector(".o_field_many2many_tags .badge[data-id=13] .dropdown-toggle"); // selects 'red' tag
+        await click(input);
+        var checkBox = target.querySelector(
+            ".o_field_many2many_tags .badge[data-id=13] .custom-checkbox input"
+        );
+        assert.strictEqual(
+            checkBox.length,
+            1,
+            "should have a checkbox in the colorpicker dropdown menu"
+        );
+        assert.notOk(
+            checkBox.is(":checked"),
+            "should have unticked checkbox in colorpicker dropdown menu"
+        );
 
-            input = target.querySelector(
-                ".o_field_many2many_tags .badge[data-id=13] .dropdown-toggle"
-            ); // refresh
-            await click(input);
-            checkBox = target.querySelector(
-                ".o_field_many2many_tags .badge[data-id=13] .custom-checkbox input"
-            ); // refresh
-            assert.equal(
-                input.parentElement.data("color"),
-                "0",
-                "should become transparent when toggling on checkbox"
-            );
-            assert.ok(
-                checkBox.is(":checked"),
-                "should have a ticked checkbox in colorpicker dropdown menu after mousedown"
-            );
+        await click(target, ".o_tag_dropdown input[type='checkbox']");
 
-            await click(target, ".o_tag_dropdown input[type='checkbox']");
+        input = target.querySelector(".o_field_many2many_tags .badge[data-id=13] .dropdown-toggle"); // refresh
+        await click(input);
+        checkBox = target.querySelector(
+            ".o_field_many2many_tags .badge[data-id=13] .custom-checkbox input"
+        ); // refresh
+        assert.equal(
+            input.parentElement.data("color"),
+            "0",
+            "should become transparent when toggling on checkbox"
+        );
+        assert.ok(
+            checkBox.is(":checked"),
+            "should have a ticked checkbox in colorpicker dropdown menu after mousedown"
+        );
 
-            input = target.querySelector(
-                ".o_field_many2many_tags .badge[data-id=13] .dropdown-toggle"
-            ); // refresh
-            await click(input);
-            checkBox = target.querySelector(
-                ".o_field_many2many_tags .badge[data-id=13] .custom-checkbox input"
-            ); // refresh
-            assert.equal(
-                input.parentElement.data("color"),
-                "8",
-                "should revert to old color when toggling off checkbox"
-            );
-            assert.notOk(
-                checkBox.is(":checked"),
-                "should have an unticked checkbox in colorpicker dropdown menu after 2nd click"
-            );
+        await click(target, ".o_tag_dropdown input[type='checkbox']");
 
-            // TODO: it would be nice to test the behaviors of the autocomplete dropdown
-            // (like refining the research, creating new tags...), but ui-autocomplete
-            // makes it difficult to test
+        input = target.querySelector(".o_field_many2many_tags .badge[data-id=13] .dropdown-toggle"); // refresh
+        await click(input);
+        checkBox = target.querySelector(
+            ".o_field_many2many_tags .badge[data-id=13] .custom-checkbox input"
+        ); // refresh
+        assert.equal(
+            input.parentElement.data("color"),
+            "8",
+            "should revert to old color when toggling off checkbox"
+        );
+        assert.notOk(
+            checkBox.is(":checked"),
+            "should have an unticked checkbox in colorpicker dropdown menu after 2nd click"
+        );
+
+        // TODO: it would be nice to test the behaviors of the autocomplete dropdown
+        // (like refining the research, creating new tags...), but ui-autocomplete
+        // makes it difficult to test
+
+        */
         }
     );
 
     QUnit.skipWOWL("fieldmany2many tags in tree view", async function (assert) {
         assert.expect(3);
 
-        var list = await makeView({
+        await makeView({
             type: "list",
             resModel: "partner",
             serverData,
@@ -495,14 +492,14 @@ QUnit.module("Fields", (hooks) => {
                 '<field name="timmy" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
                 "</tree>",
         });
-        assert.containsN(list, ".o_field_many2many_tags .badge", 2, "there should be 2 tags");
-        assert.containsNone(list, ".badge.dropdown-toggle", "the tags should not be dropdowns");
+        assert.containsN(target, ".o_field_many2many_tags .badge", 2, "there should be 2 tags");
+        assert.containsNone(target, ".badge.dropdown-toggle", "the tags should not be dropdowns");
 
         /*testUtils.mock.intercept(list, "switch_view", function (event) {
             assert.strictEqual(event.data.view_type, "form", "should switch to form view");
         });*/
         // click on the tag: should do nothing and open the form view
-        click(list.el.querySelector(".o_field_many2many_tags .badge:first"));
+        click(target.el.querySelector(".o_field_many2many_tags .badge:first"));
     });
 
     QUnit.skipWOWL("fieldmany2many tags view a domain", async function (assert) {
