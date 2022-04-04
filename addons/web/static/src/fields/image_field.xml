@@ -3,14 +3,30 @@
 
     <t t-name="web.ImageField" owl="1">
         <t t-if="!props.readonly">
-            <FileUploader
-                acceptedFileExtensions="props.acceptedFileExtensions"
-                fileUploadStyle="sizeStyle"
-                isEmpty="!props.value || !state.isValid"
-                onUploaded.bind="onFileUploaded"
-                onRemove.bind="onFileRemove"
-                type="'image'"
-            />
+            <div class="position-relative" aria-atomic="true" t-att-style="sizeStyle">
+                <div class="o_form_image_controls">
+                    <FileUploader
+                        acceptedFileExtensions="props.acceptedFileExtensions"
+                        onUploaded.bind="onFileUploaded"
+                        type="'image'"
+                    >
+                        <t t-set-slot="toggler">
+                            <button
+                                class="fa fa-pencil fa-lg float-left o_select_file_button"
+                                data-tooltip="Edit"
+                                aria-label="Edit"
+                            />
+                        </t>
+                        <button
+                            t-if="props.value and state.isValid"
+                            class="fa fa-trash-o fa-lg float-right o_clear_file_button"
+                            data-tooltip="Clear"
+                            aria-label="Clear"
+                            t-on-click="onFileRemove"
+                        />
+                    </FileUploader>
+                </div>
+            </div>
         </t>
         <img
             class="img img-fluid"

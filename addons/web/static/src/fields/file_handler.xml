@@ -2,85 +2,25 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FileUploader" owl="1">
-        <t t-if="props.type === 'image'">
-            <div class="position-relative" aria-atomic="true" t-att-style="props.fileUploadStyle">
-                <t t-if="state.isUploading">
-                    <div class="btn btn-primary">Uploading...</div>
-                </t>
-                <t t-else="">
-                    <div class="o_form_image_controls">
-                        <button
-                            class="fa fa-pencil fa-lg float-left o_select_file_button"
-                            data-tooltip="Edit"
-                            aria-label="Edit"
-                            t-on-click="onSelectFileButtonClick"
-                        />
-                        <button
-                        t-if="!props.isEmpty"
-                            class="fa fa-trash-o fa-lg float-right o_clear_file_button"
-                            data-tooltip="Clear"
-                            aria-label="Clear"
-                            t-on-click="onClearFileButtonClick"
-                        />
-                    </div>
-                </t>
-                <div t-attf-class="o_hidden_input_file {{ props.fileUploadClass or '' }}" aria-atomic="true">
-                    <input
-                        type="file"
-                        class="o_input_file"
-                        t-ref="fileInput"
-                        t-att="{'multiple': props.multiUpload ? 'multiple' : false, 'accept': props.acceptedFileExtensions or '*'}"
-                        t-on-change="onFileChange"
-                    />
-                </div>
-            </div>
-        </t>
-        <t t-else="">
-            <t t-if="state.isUploading">
-                <div class="btn btn-primary">Uploading...</div>
-            </t>
-            <t t-elif="props.file.data">
-                <label class="m-0">
-                    <span class="mx-2" t-esc="props.file.name"/>
-                    <input
-                        type="file"
-                        class="o_input_file o_hidden"
-                        t-ref="fileInput"
-                        t-att="{'multiple': props.multiUpload ? 'multiple' : false, 'accept': props.acceptedFileExtensions or '*'}"
-                        t-on-change="onFileChange"
-                    />
-                    <button
-                        class="btn btn-secondary fa fa-pencil o_select_file_button"
-                        data-tooltip="Edit"
-                        aria-label="Edit"
-                        t-on-click="onSelectFileButtonClick"
-                    />
-                    <button
-                        class="btn btn-secondary fa fa-trash o_clear_file_button"
-                        data-tooltip="Clear"
-                        aria-label="Clear"
-                        t-on-click="onClearFileButtonClick"
-                    />
-                </label>
-            </t>
-            <t t-else="">
-                <label class="o_select_file_button btn btn-primary">
-                    <span>Upload your file</span>
-                    <input
-                        type="file"
-                        class="o_input_file o_hidden"
-                        t-ref="fileInput"
-                        t-att="{'multiple': props.multiUpload ? 'multiple' : false, 'accept': props.acceptedFileExtensions or '*'}"
-                        t-on-change="onFileChange"
-                    />
-                </label>
-            </t>
-        </t>
+        <span>
+            <span t-if="state.isUploading" class="btn btn-primary" t-esc="'Uploading...'"/>
+            <span t-else="" t-on-click.prevent="onSelectFileButtonClick">
+                <t t-slot="toggler"/>
+            </span>
+            <t t-slot="default"/>
+            <input
+                type="file"
+                t-ref="fileInput"
+                t-attf-class="o_input_file o_hidden {{ props.fileUploadClass or '' }}"
+                t-att="{'multiple': props.multiUpload ? 'multiple' : false, 'accept': props.acceptedFileExtensions or '*'}"
+                t-on-change="onFileChange"
+            />
+        </span>
     </t>
 
     <t t-name="web.FileDownloader" owl="1">
         <span t-esc="props.file.name"/>
-        <a class="o_form_uri mx-2" href="javascript:void(0)" t-on-click="onDownloadButtonClick">
+        <a class="o_form_uri mx-2" href="javascript:void(0)" t-on-click.prevent="onDownloadButtonClick">
             <span class="fa fa-download"/>
         </a>
     </t>

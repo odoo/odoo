@@ -34,10 +34,10 @@ export class FileUploader extends Component {
     setup() {
         this.notification = useService("notification");
         this.id = `o_fileupload_${++FileUploader.nextId}`;
+        this.fileInputRef = useRef("fileInput");
         this.state = useState({
             isUploading: false,
         });
-        this.fileInputRef = useRef("fileInput");
     }
 
     get maxUploadSize() {
@@ -47,63 +47,42 @@ export class FileUploader extends Component {
      * @param {Event} ev
      */
     async onFileChange(ev) {
-        if (ev.target.files.length) {
-            const file = ev.target.files[0];
-            if (file.size > this.maxUploadSize) {
-                this.notification.add(
-                    sprintf(
-                        this.env._t("The selected file exceed the maximum file size of %s."),
-                        formatFloat(this.maxUploadSize, { humanReadable: true })
-                    ),
-                    {
-                        title: this.env._t("File upload"),
-                        type: "danger",
-                    }
-                );
-            }
-            this.state.isUploading = true;
-            const data = await getDataURLFromFile(file);
-            if (!file.size) {
-                console.warn(`Error while uploading file : ${file.name}`);
-                this.notification.add(
-                    this.env._t("There was a problem while uploading your file."),
-                    { type: "danger" }
-                );
-            }
-            this.props.onUploaded({
-                name: file.name,
-                size: file.size,
-                type: file.type,
-                data: data.split(",")[1],
-                objectUrl: file.type === "application/pdf" ? URL.createObjectURL(file) : null,
-            });
-            this.state.isUploading = false;
+        if (!ev.target.files.length) return;
+        const file = ev.target.files[0];
+        if (file.size > this.maxUploadSize) {
+            this.notification.add(
+                sprintf(
+                    this.env._t("The selected file exceed the maximum file size of %s."),
+                    formatFloat(this.maxUploadSize, { humanReadable: true })
+                ),
+                {
+                    title: this.env._t("File upload"),
+                    type: "danger",
+                }
+            );
         }
+        this.state.isUploading = true;
+        const data = await getDataURLFromFile(file);
+        if (!file.size) {
+            console.warn(`Error while uploading file : ${file.name}`);
+            this.notification.add(this.env._t("There was a problem while uploading your file."), {
+                type: "danger",
+            });
+        }
+        this.props.onUploaded({
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            data: data.split(",")[1],
+            objectUrl: file.type === "application/pdf" ? URL.createObjectURL(file) : null,
+        });
+        this.state.isUploading = false;
     }
+
     onSelectFileButtonClick() {
         this.fileInputRef.el.click();
     }
-    onClearFileButtonClick() {
-        this.fileInputRef.el.value = "";
-        this.props.onRemove();
-    }
 }
-FileUploader.defaultProps = {
-    isEmpty: false,
-};
-FileUploader.props = {
-    onUploaded: Function,
-    onRemove: Function,
-    file: { type: Object, optional: true },
-    fileUploadClass: { type: String, optional: true },
-    fileUploadStyle: { type: String, optional: true },
-    fileUploadAction: { type: String, optional: true },
-    isEmpty: { type: Boolean, optional: true },
-    multiUpload: { type: Boolean, optional: true },
-    acceptedFileExtensions: { type: String, optional: true },
-    required: { type: Boolean, optional: true },
-    type: { type: String, optional: true },
-};
 FileUploader.template = "web.FileUploader";
 FileUploader.nextId = 0;
 

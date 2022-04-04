@@ -3,12 +3,40 @@
 
     <t t-name="web.PdfViewerField" owl="1">
         <t t-if="!props.readonly">
-            <FileUploader
-                file="file"
-                onUploaded.bind="onFileUploaded"
-                onRemove.bind="onFileRemove"
-                acceptedFileExtensions="'.pdf'"
-            />
+            <t t-if="file.data">
+                <FileUploader
+                    acceptedFileExtensions="'.pdf'"
+                    file="file"
+                    onUploaded.bind="onFileUploaded"
+                >
+                    <t t-set-slot="toggler">
+                        <span class="mx-2" t-esc="file.name"/>
+                        <button
+                            class="btn btn-secondary fa fa-pencil o_select_file_button"
+                            data-tooltip="Edit"
+                            aria-label="Edit"
+                        />
+                    </t>
+                    <button
+                        class="btn btn-secondary fa fa-trash o_clear_file_button"
+                        data-tooltip="Clear"
+                        aria-label="Clear"
+                        t-on-click="onFileRemove"
+                    />
+                </FileUploader>                    
+            </t>
+            <t t-else="">
+                <label class="o_select_file_button btn btn-primary">
+                    <FileUploader
+                        acceptedFileExtensions="'.pdf'"
+                        onUploaded.bind="onFileUploaded"
+                    >
+                        <t t-set-slot="toggler">
+                            <span t-esc="'Upload your file'"/>
+                        </t>
+                    </FileUploader>
+                </label>
+            </t>
         </t>
         <t t-if="file.data">
             <iframe class="o_pdfview_iframe"
