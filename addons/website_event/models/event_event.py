@@ -171,7 +171,7 @@ class Event(models.Model):
     def _compute_time_data(self):
         """ Compute start and remaining time. Do everything in UTC as we compute only
         time deltas here. """
-        now_utc = utc.localize(fields.Datetime.now().replace(microsecond=0))
+        now_utc = utc.localize(self.env.cr.now().replace(microsecond=0))
         for event in self:
             date_begin_utc = utc.localize(event.date_begin, is_dst=False)
             date_end_utc = utc.localize(event.date_end, is_dst=False)

@@ -15,14 +15,14 @@ class TestUi(tests.HttpCase):
 
         self.design_fair_event = self.env['event.event'].create({
             'name': 'Design Fair New York',
-            'date_begin': fields.Datetime.now() - relativedelta(days=15),
-            'date_end': fields.Datetime.now() + relativedelta(days=15),
+            'date_begin': self.env.cr.now() - relativedelta(days=15),
+            'date_end': self.env.cr.now() + relativedelta(days=15),
             'event_ticket_ids': [(0, 0, {
                 'name': 'Free',
-                'start_sale_datetime': fields.Datetime.now() - relativedelta(days=15)
+                'start_sale_datetime': self.env.cr.now() - relativedelta(days=15)
             }), (0, 0, {
                 'name': 'Other',
-                'start_sale_datetime': fields.Datetime.now() - relativedelta(days=15)
+                'start_sale_datetime': self.env.cr.now() - relativedelta(days=15)
             })],
             'website_published': True,
             'question_ids': [(0, 0, {

@@ -358,7 +358,7 @@ class Track(models.Model):
     def _compute_track_time_data(self):
         """ Compute start and remaining time for track itself. Do everything in
         UTC as we compute only time deltas here. """
-        now_utc = utc.localize(fields.Datetime.now().replace(microsecond=0))
+        now_utc = utc.localize(self.env.cr.now().replace(microsecond=0))
         for track in self:
             if not track.date:
                 track.is_track_live = track.is_track_soon = track.is_track_today = track.is_track_upcoming = track.is_track_done = False
@@ -382,7 +382,7 @@ class Track(models.Model):
     def _compute_cta_time_data(self):
         """ Compute start and remaining time for track itself. Do everything in
         UTC as we compute only time deltas here. """
-        now_utc = utc.localize(fields.Datetime.now().replace(microsecond=0))
+        now_utc = utc.localize(self.env.cr.now().replace(microsecond=0))
         for track in self:
             if not track.website_cta:
                 track.is_website_cta_live = track.website_cta_start_remaining = False

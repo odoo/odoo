@@ -50,5 +50,5 @@ class EventMeetingRoom(models.Model):
             ("is_pinned", "=", False),
             ("active", "=", True),
             ("room_participant_count", "=", 0),
-            ("room_last_activity", "<", fields.Datetime.now() - self._DELAY_CLEAN),
+            ("room_last_activity", "<", self.env.cr.now() - self._DELAY_CLEAN),
         ]).active = False

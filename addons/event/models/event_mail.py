@@ -140,8 +140,8 @@ class EventMailScheduler(models.Model):
                 scheduler.mail_state = 'running'
 
     def execute(self):
+        now = self.env.cr.now()
         for scheduler in self:
-            now = fields.Datetime.now()
             if scheduler.interval_type == 'after_sub':
                 new_registrations = scheduler.event_id.registration_ids.filtered_domain(
                     [('state', 'not in', ('cancel', 'draft'))]
@@ -230,7 +230,7 @@ You receive this email because you are:
     def schedule_communications(self, autocommit=False):
         schedulers = self.search([
             ('mail_done', '=', False),
-            ('scheduled_date', '<=', fields.Datetime.now())
+            ('scheduled_date', '<=', self.env.cr.now())
         ])
 
         for scheduler in schedulers:
@@ -259,7 +259,7 @@ class EventMailRegistration(models.Model):
     mail_sent = fields.Boolean('Mail Sent')
 
     def execute(self):
-        now = fields.Datetime.now()
+        now = self.env.cr.now()
         todo = self.filtered(lambda reg_mail:
             not reg_mail.mail_sent and \
             reg_mail.registration_id.state in ['open', 'done'] and \

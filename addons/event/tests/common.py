@@ -94,7 +94,7 @@ class EventCase(common.TransactionCase):
     @classmethod
     def _create_registrations(cls, event, reg_count):
         # create some registrations
-        create_date = fields.Datetime.now()
+        create_date = cls.env.cr.now()
         registrations = cls.env['event.registration'].create([{
             'create_date': create_date,
             'event_id': event.id,

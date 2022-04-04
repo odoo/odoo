@@ -250,10 +250,11 @@ class EventEvent(models.Model):
 
     @api.depends('date_tz', 'start_sale_datetime')
     def _compute_event_registrations_started(self):
+        now = self.env.cr.now()
         for event in self:
             event = event._set_tz_context()
             if event.start_sale_datetime:
-                current_datetime = fields.Datetime.context_timestamp(event, fields.Datetime.now())
+                current_datetime = fields.Datetime.context_timestamp(event, now)
                 start_sale_datetime = fields.Datetime.context_timestamp(event, event.start_sale_datetime)
                 event.event_registrations_started = (current_datetime >= start_sale_datetime)
             else:
@@ -269,9 +270,10 @@ class EventEvent(models.Model):
           * any ticket is available for sale (seats available) if any;
           * seats are unlimited or seats are available;
         """
+        now = self.env.cr.now()
         for event in self:
             event = event._set_tz_context()
-            current_datetime = fields.Datetime.context_timestamp(event, fields.Datetime.now())
+            current_datetime = fields.Datetime.context_timestamp(event, now)
             date_end_tz = event.date_end.astimezone(pytz.timezone(event.date_tz or 'UTC')) if event.date_end else False
             event.event_registrations_open = event.event_registrations_started and \
                 (date_end_tz >= current_datetime if date_end_tz else True) and \
@@ -318,7 +320,7 @@ class EventEvent(models.Model):
 
     @api.depends('date_begin', 'date_end')
     def _compute_is_ongoing(self):
-        now = fields.Datetime.now()
+        now = self.env.cr.now()
         for event in self:
             event.is_ongoing = event.date_begin <= now < event.date_end
 
@@ -327,7 +329,7 @@ class EventEvent(models.Model):
             raise ValueError(_('This operator is not supported'))
         if not isinstance(value, bool):
             raise ValueError(_('Value should be True or False (not %s)'), value)
-        now = fields.Datetime.now()
+        now = self.env.cr.now()
         if (operator == '=' and value) or (operator == '!=' and not value):
             domain = [('date_begin', '<=', now), ('date_end', '>', now)]
         else:
@@ -347,12 +349,13 @@ class EventEvent(models.Model):
 
     @api.depends('date_end')
     def _compute_is_finished(self):
+        now = self.env.cr.now()
         for event in self:
             if not event.date_end:
                 event.is_finished = False
                 continue
             event = event._set_tz_context()
-            current_datetime = fields.Datetime.context_timestamp(event, fields.Datetime.now())
+            current_datetime = fields.Datetime.context_timestamp(event, now)
             datetime_end = fields.Datetime.context_timestamp(event, event.date_end)
             event.is_finished = datetime_end <= current_datetime
 
@@ -361,7 +364,7 @@ class EventEvent(models.Model):
             raise ValueError(_('This operator is not supported'))
         if not isinstance(value, bool):
             raise ValueError(_('Value should be True or False (not %s)'), value)
-        now = fields.Datetime.now()
+        now = self.env.cr.now()
         if (operator == '=' and value) or (operator == '!=' and not value):
             domain = [('date_end', '<=', now)]
         else:
@@ -595,7 +598,7 @@ class EventEvent(models.Model):
             cal = vobject.iCalendar()
             cal_event = cal.add('vevent')
 
-            cal_event.add('created').value = fields.Datetime.now().replace(tzinfo=pytz.timezone('UTC'))
+            cal_event.add('created').value = self.env.cr.now().replace(tzinfo=pytz.timezone('UTC'))
             cal_event.add('dtstart').value = event.date_begin.astimezone(pytz.timezone(event.date_tz))
             cal_event.add('dtend').value = event.date_end.astimezone(pytz.timezone(event.date_tz))
             cal_event.add('summary').value = event.name
@@ -609,7 +612,7 @@ class EventEvent(models.Model):
     def _gc_mark_events_done(self):
         """ move every ended events in the next 'ended stage' """
         ended_events = self.env['event.event'].search([
-            ('date_end', '<', fields.Datetime.now()),
+            ('date_end', '<', self.env.cr.now()),
             ('stage_id.pipe_end', '=', False),
         ])
         if ended_events:

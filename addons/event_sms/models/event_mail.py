@@ -38,8 +38,8 @@ class EventMailScheduler(models.Model):
         super(EventMailScheduler, self - sms_mails)._compute_template_model_id()
 
     def execute(self):
+        now = self.env.cr.now()
         for scheduler in self:
-            now = fields.Datetime.now()
             if scheduler.interval_type != 'after_sub' and scheduler.notification_type == 'sms':
                 # before or after event -> one shot email
                 if scheduler.mail_done:
@@ -65,7 +65,7 @@ class EventMailRegistration(models.Model):
     _inherit = 'event.mail.registration'
 
     def execute(self):
-        now = fields.Datetime.now()
+        now = self.env.cr.now()
         todo = self.filtered(lambda reg_mail:
             not reg_mail.mail_sent and \
             reg_mail.registration_id.state in ['open', 'done'] and \

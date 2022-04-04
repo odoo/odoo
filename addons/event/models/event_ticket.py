@@ -74,9 +74,10 @@ class EventTicket(models.Model):
 
     @api.depends('end_sale_datetime', 'event_id.date_tz')
     def _compute_is_expired(self):
+        now = self.env.cr.now()
         for ticket in self:
             ticket = ticket._set_tz_context()
-            current_datetime = fields.Datetime.context_timestamp(ticket, fields.Datetime.now())
+            current_datetime = fields.Datetime.context_timestamp(ticket, now)
             if ticket.end_sale_datetime:
                 end_sale_datetime = fields.Datetime.context_timestamp(ticket, ticket.end_sale_datetime)
                 ticket.is_expired = end_sale_datetime < current_datetime
@@ -148,10 +149,11 @@ class EventTicket(models.Model):
 
     def is_launched(self):
         # TDE FIXME: in master, make a computed field, easier to use
+        now = self.env.cr.now()
         self.ensure_one()
         if self.start_sale_datetime:
             ticket = self._set_tz_context()
-            current_datetime = fields.Datetime.context_timestamp(ticket, fields.Datetime.now())
+            current_datetime = fields.Datetime.context_timestamp(ticket, now)
             start_sale_datetime = fields.Datetime.context_timestamp(ticket, ticket.start_sale_datetime)
             return start_sale_datetime <= current_datetime
         else:

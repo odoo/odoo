@@ -108,7 +108,7 @@ class EventTrackController(http.Controller):
             ])
 
         # fetch data to display with TZ set for both event and tracks
-        now_tz = utc.localize(fields.Datetime.now().replace(microsecond=0), is_dst=False).astimezone(timezone(event.date_tz))
+        now_tz = utc.localize(self.env.cr.now().replace(microsecond=0), is_dst=False).astimezone(timezone(event.date_tz))
         today_tz = now_tz.date()
         event = event.with_context(tz=event.date_tz or 'UTC')
         tracks_sudo = event.env['event.track'].sudo().search(search_domain, order='is_published desc, date asc')

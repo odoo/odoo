@@ -159,7 +159,7 @@ class Sponsor(models.Model):
                 # localize now, begin and end datetimes in event tz
                 dt_begin = sponsor.event_id.date_begin.astimezone(event_tz)
                 dt_end = sponsor.event_id.date_end.astimezone(event_tz)
-                now_utc = utc.localize(fields.Datetime.now().replace(microsecond=0))
+                now_utc = utc.localize(self.env.cr.now().replace(microsecond=0))
                 now_tz = now_utc.astimezone(event_tz)
 
                 # compute opening hours

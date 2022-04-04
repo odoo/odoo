@@ -30,7 +30,7 @@ class Event(models.Model):
         at the time of the related sale.order would mean thousands of extra requests as we would
         have to do one conversion per sale.order (and a sale.order is created every time
         we sell a single event ticket). """
-        date_now = fields.Datetime.now()
+        dt_now = self.env.cr.now()
         sale_price_by_event = {}
         if self.ids:
             event_subtotals = self.env['sale.order.line']._read_group(
@@ -66,7 +66,7 @@ class Event(models.Model):
                     price_subtotal,
                     currency_by_id[currency_id],
                     company_by_event[event_id],
-                    date_now)
+                    dt_now)
                 if event_id in sale_price_by_event:
                     sale_price_by_event[event_id] += sale_price
                 else:

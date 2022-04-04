@@ -86,10 +86,11 @@ class EventRegistration(models.Model):
 
     @api.depends('state')
     def _compute_date_closed(self):
+        now = self.env.cr.now()
         for registration in self:
             if not registration.date_closed:
                 if registration.state == 'done':
-                    registration.date_closed = fields.Datetime.now()
+                    registration.date_closed = now
                 else:
                     registration.date_closed = False
 
@@ -298,9 +299,9 @@ class EventRegistration(models.Model):
 
     def get_date_range_str(self, lang_code=False):
         self.ensure_one()
-        today = fields.Datetime.now()
+        now = self.env.cr.now()
         event_date = self.event_begin_date
-        diff = (event_date.date() - today.date())
+        diff = (event_date.date() - now.date())
         if diff.days <= 0:
             return _('today')
         elif diff.days == 1:
@@ -309,7 +310,7 @@ class EventRegistration(models.Model):
             return _('in %d days') % (diff.days, )
         elif (diff.days < 14):
             return _('next week')
-        elif event_date.month == (today + relativedelta(months=+1)).month:
+        elif event_date.month == (now + relativedelta(months=+1)).month:
             return _('next month')
         else:
             return _('on %(date)s', date=format_date(self.env, self.event_begin_date, lang_code=lang_code, date_format='medium'))
