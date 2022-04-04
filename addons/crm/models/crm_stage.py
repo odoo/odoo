@@ -32,6 +32,10 @@ class Stage(models.Model):
             ctx.pop('default_team_id')
         return super(Stage, self.with_context(ctx)).default_get(fields)
 
+    @api.model
+    def _get_team_count(self):
+        return self.env['crm.team'].search_count([])
+
     name = fields.Char('Stage Name', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1, help="Used to order stages. Lower is better.")
     is_won = fields.Boolean('Is Won Stage?')
@@ -42,8 +46,11 @@ class Stage(models.Model):
         help='This stage is folded in the kanban view when there are no records in that stage to display.')
 
     # This field for interface only
-    team_count = fields.Integer('team_count', compute='_compute_team_count')
+    team_count = fields.Integer(
+        'team_count',
+        compute='_compute_team_count',
+        default=_get_team_count,
+    )
 
     def _compute_team_count(self):
-        for stage in self:
-            stage.team_count = self.env['crm.team'].search_count([])
+        self.update({'team_count': self._get_team_count()})
