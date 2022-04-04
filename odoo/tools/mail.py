@@ -208,6 +208,11 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
             })
         else:
             kwargs['remove_tags'] = tags_to_kill + tags_to_remove
+    else:
+        kwargs.update({
+            'embedded': False,
+            'scripts': False,
+        })
 
     if sanitize_attributes and etree.LXML_VERSION >= (3, 1, 0):  # lxml < 3.1.0 does not allow to specify safe_attrs. We keep all attributes in order to keep "style"
         if strip_classes:

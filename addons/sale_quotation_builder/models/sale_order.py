@@ -8,7 +8,7 @@ from odoo.tools.translate import html_translate
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    website_description = fields.Html('Website Description', sanitize_attributes=False, translate=html_translate, sanitize_form=False)
+    website_description = fields.Html('Website Description', translate=html_translate, sanitize_attributes=False, sanitize_tags=False, sanitize_form=False)
 
     @api.onchange('partner_id')
     def onchange_update_description_lang(self):
@@ -40,7 +40,7 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-    website_description = fields.Html('Website Description', sanitize=False, translate=html_translate, sanitize_form=False)
+    website_description = fields.Html('Website Description', translate=html_translate, sanitize_attributes=False, sanitize_tags=False, sanitize_form=False)
 
     @api.model
     def create(self, values):
@@ -62,7 +62,7 @@ class SaleOrderLine(models.Model):
 class SaleOrderOption(models.Model):
     _inherit = "sale.order.option"
 
-    website_description = fields.Html('Website Description', sanitize_attributes=False, translate=html_translate)
+    website_description = fields.Html('Website Description', translate=html_translate, sanitize_attributes=False, sanitize_tags=False)
 
     @api.onchange('product_id', 'uom_id')
     def _onchange_product_id(self):

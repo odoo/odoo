@@ -8,7 +8,7 @@ from odoo.tools.translate import html_translate
 class SaleOrderTemplate(models.Model):
     _inherit = "sale.order.template"
 
-    website_description = fields.Html('Website Description', translate=html_translate, sanitize_attributes=False, sanitize_form=False)
+    website_description = fields.Html('Website Description', translate=html_translate, sanitize_attributes=False, sanitize_tags=False, sanitize_form=False)
 
     def open_template(self):
         self.ensure_one()

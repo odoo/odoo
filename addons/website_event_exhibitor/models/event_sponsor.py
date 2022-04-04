@@ -42,7 +42,7 @@ class Sponsor(models.Model):
         string="Sponsor Type", default="sponsor")
     website_description = fields.Html(
         'Description', compute='_compute_website_description',
-        sanitize_attributes=False, sanitize_form=True, translate=html_translate,
+        sanitize_attributes=False, sanitize_tags=False, sanitize_form=True, translate=html_translate,
         readonly=False, store=True)
     # contact information
     partner_id = fields.Many2one('res.partner', 'Partner', required=True, auto_join=True)

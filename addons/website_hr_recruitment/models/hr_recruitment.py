@@ -54,7 +54,7 @@ class Job(models.Model):
         return (default_description._render() if default_description else "")
 
     website_published = fields.Boolean(help='Set if the application is published on the website of the company.')
-    website_description = fields.Html('Website description', translate=html_translate, sanitize_attributes=False, default=_get_default_website_description, prefetch=False, sanitize_form=False)
+    website_description = fields.Html('Website description', translate=html_translate, sanitize_attributes=False, sanitize_tags=False, sanitize_form=False, default=_get_default_website_description, prefetch=False)
 
     def _compute_website_url(self):
         super(Job, self)._compute_website_url()
