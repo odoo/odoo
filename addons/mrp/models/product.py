@@ -158,13 +158,17 @@ class ProductProduct(models.Model):
                 if not qty_per_kit:
                     continue
                 rounding = component.uom_id.rounding
-                component_res = res.get(component.id, {
-                    "virtual_available": float_round(component.virtual_available, precision_rounding=rounding),
-                    "qty_available": float_round(component.qty_available, precision_rounding=rounding),
-                    "incoming_qty": float_round(component.incoming_qty, precision_rounding=rounding),
-                    "outgoing_qty": float_round(component.outgoing_qty, precision_rounding=rounding),
-                    "free_qty": float_round(component.free_qty, precision_rounding=rounding),
-                })
+                component_res = (
+                    res.get(component.id)
+                    if component.id in res
+                    else {
+                        "virtual_available": float_round(component.virtual_available, precision_rounding=rounding),
+                        "qty_available": float_round(component.qty_available, precision_rounding=rounding),
+                        "incoming_qty": float_round(component.incoming_qty, precision_rounding=rounding),
+                        "outgoing_qty": float_round(component.outgoing_qty, precision_rounding=rounding),
+                        "free_qty": float_round(component.free_qty, precision_rounding=rounding),
+                    }
+                )
                 ratios_virtual_available.append(component_res["virtual_available"] / qty_per_kit)
                 ratios_qty_available.append(component_res["qty_available"] / qty_per_kit)
                 ratios_incoming_qty.append(component_res["incoming_qty"] / qty_per_kit)
