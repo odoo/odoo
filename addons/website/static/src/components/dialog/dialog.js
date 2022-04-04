@@ -14,6 +14,10 @@ export class WebsiteDialog extends Dialog {
         this.closeOnClick = this.props.closeOnClick === false ? false : true;
     }
 
+    get showSecondaryButton() {
+        return this.props.showSecondaryButton;
+    }
+
     primaryClick() {
         if (this.props.primaryClick) {
             this.props.primaryClick();
@@ -42,6 +46,9 @@ WebsiteDialog.props = {
     secondaryClick: { type: Function, optional: true },
     closeOnClick: { type: Boolean, optional: true },
     close: { type: Function, optional: true },
+};
+WebsiteDialog.defaultProps = {
+    showSecondaryButton: true,
 };
 WebsiteDialog.bodyTemplate = "website.DialogBody";
 WebsiteDialog.footerTemplate = "website.DialogFooter";

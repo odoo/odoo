@@ -21,7 +21,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
      */
     setup() {
         super.setup();
-        const options = this.props.options || {};
+        this.options = this.props.options || {};
 
         this.websiteService = useWowlService('website');
         this.userService = useWowlService('user');
@@ -32,8 +32,8 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         this.oeStructureSelector = '#wrapwrap .oe_structure[data-oe-xpath][data-oe-id]';
         this.oeFieldSelector = '#wrapwrap [data-oe-field]';
         this.oeCoverSelector = '#wrapwrap .s_cover[data-res-model], #wrapwrap .o_record_cover_container[data-res-model]';
-        if (options.savableSelector) {
-            this.savableSelector = options.savableSelector;
+        if (this.props.savableSelector) {
+            this.savableSelector = this.props.savableSelector;
         } else {
             this.savableSelector = `${this.oeStructureSelector}, ${this.oeFieldSelector}, ${this.oeCoverSelector}`;
         }
@@ -56,6 +56,9 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 // Disable OdooEditor observer's while setting up classes
                 this.widget.odooEditor.observerUnactive();
                 this._addEditorMessages();
+                if (this.props.beforeEditorActive) {
+                    await this.props.beforeEditorActive(this.$editable);
+                }
                 this._setObserver();
 
                 if (this.props.snippetSelector) {
@@ -104,6 +107,9 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
      * @returns {*}
      */
     editableElements($wrapwrap) {
+        if (this.props.editableElements) {
+            return this.props.editableElements();
+        }
         return $wrapwrap.find('[data-oe-model]')
             .not('.o_not_editable')
             .filter(function () {
@@ -180,6 +186,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             powerboxCommands: this._getSnippetsCommands(),
             showEmptyElementHint: false,
             getReadOnlyAreas: this._getReadOnlyAreas.bind(this),
+            ...this.props.wysiwygOptions,
         };
     }
     /**

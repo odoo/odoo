@@ -8,7 +8,7 @@
     <button class="btn btn-primary" t-on-click="primaryClick">
         <t t-esc="primaryTitle"/>
     </button>
-    <button class="btn btn-secondary" t-on-click="secondaryClick">
+    <button t-if="showSecondaryButton" class="btn btn-secondary" t-on-click="secondaryClick">
         <t t-esc="secondaryTitle"/>
     </button>
 </t>

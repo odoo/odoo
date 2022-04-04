@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
-<div t-name="website.TranslatorInfoDialog">
+<div t-name="website.TranslatorInfoDialog" owl="1">
     <p>You are about to enter the translation mode.</p>
     <p>Here are the visuals used to help you translate efficiently:</p>
     <ul class="oe_translate_examples">
@@ -11,5 +11,9 @@
         In this mode, you can only translate texts. To change the structure of the page, you must edit the master page.
         Each modification on the master page is automatically applied to all translated versions.
     </p>
+</div>
+
+<div t-name="website.AttributeTranslateDialog" owl="1">
+    <div t-ref="form-container"/>
 </div>
 </templates>

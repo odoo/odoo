@@ -84,7 +84,7 @@ export const websiteService = {
                 if (!document) {
                     return;
                 }
-                const { mainObject, seoObject, isPublished, canPublish, editableInBackend } = document.documentElement.dataset;
+                const { mainObject, seoObject, isPublished, canPublish, editableInBackend, translatable } = document.documentElement.dataset;
                 currentMetadata = {
                     path: document.location.href,
                     mainObject: unslugHtmlDataObject(mainObject),
@@ -93,6 +93,7 @@ export const websiteService = {
                     canPublish: canPublish === 'True',
                     editableInBackend: editableInBackend === 'True',
                     title: document.title,
+                    translatable: !!translatable,
                 };
                 websiteSystrayRegistry.trigger('CONTENT-UPDATED');
             },
@@ -121,13 +122,15 @@ export const websiteService = {
             get wysiwygLoaded() {
                 return !!Wysiwyg;
             },
-            goToWebsite({ websiteId, path } = {}) {
+            goToWebsite({ websiteId, path, edition, translation } = {}) {
                 action.doAction('website.website_preview', {
                     clearBreadcrumbs: true,
                     additionalContext: {
                         params: {
                             website_id: websiteId,
                             path,
+                            enable_editor: edition,
+                            edit_translations: translation,
                         },
                     },
                 });
