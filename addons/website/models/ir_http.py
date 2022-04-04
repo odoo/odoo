@@ -453,26 +453,25 @@ class Http(models.AbstractModel):
         return session_info
 
     @classmethod
-    def _is_allowed_cookie(cls, cookie_type, cookie_name):
+    def _is_allowed_cookie(cls, cookie_type, cookie_name="undefined"):
         result = super()._is_allowed_cookie(cookie_type, cookie_name)
 
-        if cookie_type not in ["required", "preference", "marketing", "statistic"]:
-            logger.warning("Cookie %s of type %s is unknown." % (cookie_name, cookie_type))
+        if cookie_type not in ["required", "optional"]:
+            logger.warning("Cookie %s of type %s is unknown.", cookie_name, cookie_type)
             cookie_type = 'required'
 
         if cookie_type == 'required':
-            return True and result
+            return result
 
-        website = request.env['website'].get_current_website()
-        consents = json_scriptsafe.loads(request.httprequest.cookies.get('cookies_consent', '{}'))
-        if not consents:
-            return not website.cookies_bar and result
+        # If user has not rejected optional cookies, they are accepted by default
+        accepted_cookie_types = json_scriptsafe.loads(request.httprequest.cookies.get('accepted_cookie_types', '{"required": true, "optional": true}'))
 
-        if cookie_type in consents:
-            return consents[cookie_type] and result
+        if cookie_type in accepted_cookie_types:
+            return accepted_cookie_types[cookie_type] and result
 
-        logger.warning("Cookie %s of type %s not found in consents." % (cookie_name, cookie_type))
-        return True and result
+        logger.warning("Cookie %s of type %s not found in consents.", cookie_name, cookie_type)
+        return result
+
 
 class ModelConverter(ir_http.ModelConverter):
 

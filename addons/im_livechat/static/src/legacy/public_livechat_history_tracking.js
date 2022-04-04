@@ -17,7 +17,7 @@ if (!_.contains(urlHistory, page)) {
     while (urlHistory.length > HISTORY_LIMIT) {
         urlHistory.shift();
     }
-    utils.set_cookie(LIVECHAT_COOKIE_HISTORY, JSON.stringify(urlHistory), 60 * 60 * 24); // 1 day cookie
+    utils.set_cookie(LIVECHAT_COOKIE_HISTORY, JSON.stringify(urlHistory), 60 * 60 * 24, 'optional'); // 1 day cookie
 }
 
 });

@@ -49,7 +49,7 @@ publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend(
             if (res && res.visitor_uuid) {
                 wUtils.setVisitor(res.visitor_uuid);
             }
-            utils.set_cookie(cookieName, productId, 30 * 60);
+            utils.set_cookie(cookieName, productId, 30 * 60, 'optional');
         });
     },
 

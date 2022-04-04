@@ -7,25 +7,101 @@
     </t>
     <t t-name="website.cookies_bar.text_primary">
         <p class="o_cookies_bar_text_primary">
-            We use cookies to provide you a better user experience. See our <a href="/cookie-policy">Cookie Policy</a>.
+            We use cookies to provide you a better user experience.
         </p>
     </t>
     <t t-name="website.cookies_bar.text_secondary">
         <p class="o_cookies_bar_text_secondary">
-            We use them to store info about your habits on our website. It will helps us to provide you the very best experience and customize what you see. <br/>
-            By clicking on this banner, you give us permission to collect data.
+            We use them to store info about your habits on <t t-out="websiteName"/>. It will helps us to provide you the very best experience and customize what you see. <br/>
+            By using the website, you give us permission to collect data.
         </p>
+    </t>
+    <t t-name="website.cookies_bar.text_primary_choice">
+        <p class="o_cookies_bar_text_primary">
+            Allow the use of cookies from <t t-out="websiteName"/> on this browser?
+        </p>
+    </t>
+    <t t-name="website.cookies_bar.text_secondary_choice">
+        <p class="o_cookies_bar_text_secondary">
+            We use cookies to provide improved experience on <t t-out="websiteName"/>. You can learn more about our cookies and how we use them in our <a href="/cookie-policy" class="o_cookies_bar_text_policy">Cookie Policy</a>.
+        </p>
+    </t>
+    <t t-name="website.cookies_bar.discrete_choice">
+        <section class="o_colored_level o_cc o_cc1">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 m-2">
+                        <t t-call="website.cookies_bar.text_primary_choice"/>
+                        <t t-call="website.cookies_bar.text_secondary_choice"/>
+                    </div>
+                    <div class="col-lg-3 container d-flex align-items-center">
+                        <div class="row">
+                            <div class="col-lg-12 d-flex align-items-center">
+                                <a href="#" id="cookies-consent-all" role="button"
+                                   class="js_close_popup o_cookies_bar_accept_all btn btn-primary mb-1 px-2 py-1">Allow all cookies</a>
+                            </div>
+                            <div class="col-lg-12 d-flex align-items-center">
+                                <a href="#" id="cookies-consent-essential" role="button"
+                                   class="js_close_popup o_cookies_bar_accept_essential btn btn-link mt-1 px-2 py-1">Allow only essential cookies</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </t>
+    <t t-name="website.cookies_bar.classic_choice">
+        <section class="o_colored_level o_cc o_cc1 pt8 pb16">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 align-items-center">
+                        <t t-call="website.cookies_bar.text_title"/>
+                        <t t-call="website.cookies_bar.text_primary_choice"/>
+                        <t t-call="website.cookies_bar.text_secondary_choice"/>
+                    </div>
+                    <div class="col-lg-3 container d-flex align-items-center">
+                        <div class="row">
+                            <div class="col-lg-12 d-flex align-items-center">
+                                <a href="#" id="cookies-consent-all" role="button"
+                                   class="js_close_popup o_cookies_bar_accept_all btn btn-primary mb-1 px-2 py-1">Allow all cookies</a>
+                            </div>
+                            <div class="col-lg-12 d-flex align-items-center">
+                                <a href="#" id="cookies-consent-essential" role="button"
+                                   class="js_close_popup o_cookies_bar_accept_essential btn btn-link mt-1 px-2 py-1">Allow only essential cookies</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </t>
+    <t t-name="website.cookies_bar.popup_choice">
+        <section class="o_colored_level o_cc o_cc1 p-5">
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <img t-attf-src="/web/image/website/#{websiteId}/logo/250x250" class="img img-fluid mb-4" alt="Website Logo"/>
+                        <t t-call="website.cookies_bar.text_title"/>
+                        <t t-call="website.cookies_bar.text_primary_choice"/>
+                        <t t-call="website.cookies_bar.text_secondary_choice"/>
+                        <a href="#" id="cookies-consent-all" role="button"
+                           class="js_close_popup o_cookies_bar_accept_all btn btn-primary mr-1 px-2 py-1">Allow all cookies</a>
+                        <a href="#" id="cookies-consent-essential" role="button"
+                           class="js_close_popup o_cookies_bar_accept_essential btn btn-link ml-1 px-2 py-1">Allow only essential cookies</a>                    </div>
+                </div>
+            </div>
+        </section>
     </t>
     <t t-name="website.cookies_bar.discrete">
         <section class="o_colored_level o_cc o_cc1">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 pt16">
-                        <p>We use cookies to provide you a better user experience.</p>
+                        <t t-call="website.cookies_bar.text_primary"/>
                     </div>
                     <div class="col-lg-4 pt16 text-right">
-                        <a href="#" class="js_cookie_consent_config o_cookies_bar_text_config btn btn-link btn-sm">Configure</a>
-                        <a href="#" role="button" class="js_cookie_consent_all o_cookies_bar_text_button btn btn-primary btn-sm">I agree</a>
+                        <a href="/cookie-policy" class="o_cookies_bar_text_policy btn btn-link btn-sm">Cookie Policy</a>
+                        <a href="#" role="button" class="js_close_popup o_cookies_bar_text_button btn btn-primary btn-sm">I agree</a>
                     </div>
                 </div>
             </div>
@@ -41,8 +117,8 @@
                         <t t-call="website.cookies_bar.text_secondary"/>
                     </div>
                     <div class="col-lg-3 offset-lg-3">
-                        <a href="#" role="button" class="js_cookie_consent_all o_cookies_bar_text_button btn btn-primary btn-block">I agree</a>
-                        <a href="#" class="js_cookie_consent_config o_cookies_bar_text_config btn btn-link btn-block">Configure</a>
+                        <a href="#" role="button" class="js_close_popup o_cookies_bar_text_button btn btn-primary btn-block">I agree</a>
+                        <a href="/cookie-policy" class="o_cookies_bar_text_policy btn btn-link btn-block">Cookie Policy</a>
                     </div>
                 </div>
             </div>
@@ -57,8 +133,8 @@
                         <t t-call="website.cookies_bar.text_title"/>
                         <t t-call="website.cookies_bar.text_primary"/>
                         <t t-call="website.cookies_bar.text_secondary"/>
-                        <a href="#" class="js_cookie_consent_config o_cookies_bar_text_config btn btn-link">Configure</a>
-                        <a href="#" role="button" class="js_cookie_consent_all o_cookies_bar_text_button btn btn-primary">I agree</a>
+                        <a href="/cookie-policy" class=" o_cookies_bar_text_policy btn btn-link mr-2">Cookie Policy</a>
+                        <a href="#" role="button" class="js_close_popup o_cookies_bar_text_button btn btn-primary">I agree</a>
                     </div>
                 </div>
             </div>

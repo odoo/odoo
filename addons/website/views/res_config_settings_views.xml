@@ -107,6 +107,9 @@
                                 <div class="text-muted">
                                     Display a customizable cookies bar on your website
                                 </div>
+                                <div class="mt-2" attrs="{'invisible': [('website_cookies_bar', '=', False)]}">
+                                    <field name="website_extended_cookies_consent" class="o_light_label" widget="radio" options="{'horizontal': true}"/>
+                                </div>
                             </div>
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box" id="shared_user_account_setting" groups="website.group_multi_website">

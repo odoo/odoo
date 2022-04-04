@@ -45,7 +45,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
 
             // Add Survey cookie to retrieve the survey if you quit the page and restart the survey.
             if (!utils.get_cookie('survey_' + self.options.surveyToken)) {
-                utils.set_cookie('survey_' + self.options.surveyToken, self.options.answerToken, 60*60*24);
+                utils.set_cookie('survey_' + self.options.surveyToken, self.options.answerToken, 60*60*24, 'optional');
             }
 
             // Init fields

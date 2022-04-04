@@ -58,6 +58,9 @@ class ResConfigSettings(models.TransientModel):
     website_cookies_bar = fields.Boolean(
         related='website_id.cookies_bar',
         readonly=False)
+    website_extended_cookies_consent = fields.Selection(
+        related='website_id.extended_cookies_consent',
+        readonly=False)
     google_analytics_key = fields.Char(
         'Google Analytics Key',
         related='website_id.google_analytics_key',

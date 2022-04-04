@@ -7,7 +7,7 @@ const publicWidget = require('web.public.widget');
 const utils = require('web.utils');
 
 const PopupWidget = publicWidget.Widget.extend({
-    selector: '.s_popup:not(.s_cookiesbar)',
+    selector: '.s_popup',
     events: {
         'click .js_close_popup': '_onCloseClick',
         'hide.bs.modal': '_onHideModal',
@@ -98,7 +98,7 @@ const PopupWidget = publicWidget.Widget.extend({
      */
     _onHideModal: function () {
         const nbDays = this.$el.find('.modal').data('consentsDuration');
-        utils.set_cookie(this.$el.attr('id'), true, nbDays * 24 * 60 * 60);
+        utils.set_cookie(this.$el.attr('id'), true, nbDays * 24 * 60 * 60, 'required');
         this._popupAlreadyShown = true;
 
         this.$target.find('.media_iframe_video iframe').each((i, iframe) => {
@@ -198,6 +198,42 @@ $.fn.modal.Constructor.prototype._getScrollbarWidth = function () {
     }
     return _baseGetScrollbarWidth.apply(this, arguments);
 };
+
+// Extending the popup widget with cookiebar functionality.
+// This allows for refusing optional cookies for now and can be
+// extended to picking which cookies categories are accepted.
+publicWidget.registry.cookies_bar = PopupWidget.extend({
+    cookieDurationDays: 365,
+    events: Object.assign({}, PopupWidget.prototype.events, {
+        'click #cookies-consent-essential': '_onConsentEssentialClick',
+        'click #cookies-consent-all': '_onConsentAllClick',
+    }),
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+    /**
+     * @private
+     * @param acceptOptional Whether optional cookies were accepted or not
+     */
+    _onAcceptClick: function (acceptOptional) {
+        utils.set_cookie('accepted_cookie_types',
+            JSON.stringify({'required': true, 'optional': acceptOptional}),
+            this.cookieDurationDays * 24 * 60 * 60, 'required');
+    },
+    /**
+     * @private
+     */
+    _onConsentAllClick: function () {
+        this._onAcceptClick(true);
+    },
+    /**
+     * @private
+     */
+    _onConsentEssentialClick: function () {
+        this._onAcceptClick(false);
+    },
+});
 
 return PopupWidget;
 });

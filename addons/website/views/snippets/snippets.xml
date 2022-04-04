@@ -1225,10 +1225,15 @@
 
     <!-- Cookies Bar -->
     <div data-selector="#website_cookies_bar" data-js="CookiesBar" data-target=".modal">
-        <we-select string="Layout" class="o_we_inline">
+        <we-select string="Layout" class="o_we_inline" t-if="current_website.extended_cookies_consent == 'no_choice'">
             <we-button data-select-class="o_cookies_discrete" data-select-layout="discrete" data-trigger="position_bottom,s_popup_size_full">Discrete</we-button>
             <we-button data-select-class="o_cookies_classic" data-select-layout="classic" data-trigger="position_bottom,s_popup_size_full">Classic</we-button>
             <we-button data-name="layout_popup_opt" data-select-class="o_cookies_popup" data-select-layout="popup" data-trigger="position_middle,s_popup_size_md">Popup</we-button>
+        </we-select>
+        <we-select string="Layout" class="o_we_inline" t-if="current_website.extended_cookies_consent == 'optional_choice'">
+            <we-button data-select-class="o_cookies_discrete" data-select-layout="discrete_choice" data-trigger="position_bottom,s_popup_size_full">Discrete</we-button>
+            <we-button data-select-class="o_cookies_classic" data-select-layout="classic_choice" data-trigger="position_bottom,s_popup_size_full">Classic</we-button>
+            <we-button data-select-class="o_cookies_popup" data-select-layout="popup_choice"  data-trigger="position_middle,s_popup_size_md" data-name="layout_popup_opt">Popup</we-button>
         </we-select>
     </div>
 

@@ -276,9 +276,7 @@ function sendRequest(route, params) {
     form.submit();
 }
 
-function setVisitor(value) {
-    return utils.set_cookie('visitor_uuid', value, 'statistic')
-}
+
 
 /**
  * Converts a base64 SVG into a base64 PNG.
@@ -356,6 +354,10 @@ async function svgToPNG(src) {
     }).then(loadedImgEl => toPNGViaCanvas(loadedImgEl));
 }
 
+function setVisitor(value) {
+    return utils.set_cookie('visitor_uuid', value, 'optional');
+}
+
 return {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
@@ -363,7 +365,7 @@ return {
     prompt: prompt,
     sendRequest: sendRequest,
     websiteDomain: websiteDomain,
-    setVisitor: setVisitor,
     svgToPNG: svgToPNG,
+    setVisitor: setVisitor,
 };
 });

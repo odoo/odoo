@@ -5,7 +5,6 @@ odoo.define('website_event_track_quiz.event.quiz', function (require) {
 var publicWidget = require('web.public.widget');
 var core = require('web.core');
 var session = require('web.session');
-var utils = require('web.utils');
 var wUtils = require('website.utils');
 
 var QWeb = core.qweb;

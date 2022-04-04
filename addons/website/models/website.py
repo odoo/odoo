@@ -71,6 +71,14 @@ class Website(models.Model):
     default_lang_id = fields.Many2one('res.lang', string="Default Language", default=_default_language, required=True)
     auto_redirect_lang = fields.Boolean('Autoredirect Language', default=True, help="Should users be redirected to their browser's language")
     cookies_bar = fields.Boolean('Cookies Bar', help="Display a customizable cookies bar on your website.")
+    extended_cookies_consent = fields.Selection(
+        selection=[
+            ('no_choice', 'Only "I Agree"'),
+            ('optional_choice', 'Ask consent for optional cookies'),
+        ],
+        string='Extended Cookies Consent',
+        help='The cookie bar either informs visitors about using cookies or gives them the possiblity to reject optional cookies.',
+        default='no_choice')
     configurator_done = fields.Boolean(help='True if configurator has been completed or ignored')
 
     def _default_social_facebook(self):

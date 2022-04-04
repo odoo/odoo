@@ -165,17 +165,22 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         return null;
     },
     /**
-     * Create a new cookie with the provided name and value
-     *
-     * @private
-     * @param name the cookie's name
-     * @param value the cookie's value
-     * @param ttl the cookie's time to live, 1 year by default, set to -1 to delete
+     * Create a cookie with the provided parameters.
+     * @param {String} name the name of the cookie
+     * @param {String} value the value stored in the cookie
+     * @param {Integer} ttl time to live of the cookie in millis. -1 to erase the cookie.
+     * @param {String} type the type of the cookies ('required' as default value)
      */
-    set_cookie: function (name, value, ttl) {
-        if (!this.name) { return; }
-        ttl = ttl || 24*60*60*365;
-        utils.set_cookie(this.name + '|' + name, value, ttl);
+    set_cookie: function (name, value, ttl, type = 'required') {
+        ttl = ttl || 24 * 60 * 60 * 365;
+        if (this.checkCookie(type, name)) {
+            document.cookie = [
+                name + '=' + value,
+                'path=/',
+                'max-age=' + ttl,
+                'expires=' + new Date(new Date().getTime() + ttl * 1000).toGMTString()
+            ].join(';');
+        }
     },
     /**
      * Load additional web addons of that instance and init them

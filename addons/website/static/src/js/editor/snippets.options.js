@@ -2470,24 +2470,28 @@ options.registry.CookiesBar = options.registry.SnippetPopup.extend({
      * @see this.selectClass for parameters
      */
     selectLayout: function (previewMode, widgetValue, params) {
-        let websiteId;
+        let websiteId, websiteName, websiteNameData;
         this.trigger_up('context_get', {
             callback: function (ctx) {
                 websiteId = ctx['website_id'];
             },
         });
 
+        websiteNameData = $('#data_website_name');
+        websiteName = websiteNameData ? websiteNameData[0].getAttribute('data-website-name') : _t('this website');
+
         const $template = $(qweb.render(`website.cookies_bar.${widgetValue}`, {
             websiteId: websiteId,
+            websiteName: websiteName,
         }));
 
         const $content = this.$target.find('.modal-content');
         const selectorsToKeep = [
             '.o_cookies_bar_text_button',
-            '.o_cookies_bar_text_config',
             '.o_cookies_bar_text_title',
             '.o_cookies_bar_text_primary',
             '.o_cookies_bar_text_secondary',
+            '.o_cookies_bar_text_policy'
         ];
 
         if (this.$savedSelectors === undefined) {

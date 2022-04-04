@@ -3,7 +3,6 @@ odoo.define('website_event_track.website_event_track_reminder', function (requir
 
 var core = require('web.core');
 var _t = core._t;
-var utils = require('web.utils');
 var wUtils = require('website.utils');
 var publicWidget = require('web.public.widget');
 

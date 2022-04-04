@@ -65,7 +65,7 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
             this._renderMessages();
             this.call('bus_service', 'addChannel', this._livechat.getUUID());
             this.call('bus_service', 'startPolling');
-            utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this._livechat.toData()), true), 60 * 60);
+            utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this._livechat.toData()), true), 60 * 60, 'required');
             this._openingChat = false;
         });
     },
