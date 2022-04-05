@@ -245,21 +245,6 @@ async function getModelDefinitions() {
     return modelDefinitions;
 }
 
-async function getInitialServerData() {
-    const data = { ...TEST_USER_IDS };
-    const modelDefinitions = await modelDefinitionsPromise;
-    const recordsToInsertRegistry = registry.category('mail.model.definitions').category('recordsToInsert');
-    for (const [modelName, fields] of modelDefinitions) {
-        const records = [];
-        if (recordsToInsertRegistry.contains(modelName)) {
-            // prevent tests from mutating the records.
-            records.push(...JSON.parse(JSON.stringify(recordsToInsertRegistry.get(modelName))));
-        }
-        data[modelName] = { fields, records };
-    }
-    return data;
-}
-
 let pyEnv;
 /**
  * Creates an environment that can be used to setup test data as well as
@@ -269,9 +254,20 @@ let pyEnv;
  * server (creation, deletion, update of records...)
  */
  export async function startServer() {
+    const data = { ...TEST_USER_IDS };
+    const modelDefinitions = await modelDefinitionsPromise;
+    const recordsToInsertRegistry = registry.category('mail.model.definitions').category('recordsToInsert');
+    for (const [modelName, fields] of modelDefinitions) {
+        const records = [];
+        if (recordsToInsertRegistry.contains(modelName)) {
+            // prevent tests from mutating the records.
+            records.push(...JSON.parse(JSON.stringify(recordsToInsertRegistry.get(modelName))));
+        }
+        data[modelName] = { fields: { ...fields }, records };
+    }
     pyEnv = new Proxy(
         {
-            mockServer: new MockServer(await getInitialServerData(), {}),
+            mockServer: new MockServer(data, {}),
             ...TEST_USER_IDS,
         },
         {
@@ -347,23 +343,6 @@ let pyEnv;
 //------------------------------------------------------------------------------
 // Public: test lifecycle
 //------------------------------------------------------------------------------
-
-async function beforeEach(self) {
-    const data = await getInitialServerData();
-    Object.assign(self, {
-        data,
-        widget: undefined
-    });
-
-    Object.defineProperty(self, 'messaging', {
-        get() {
-            if (!this.env || !this.env.services.messaging) {
-                return undefined;
-            }
-            return this.env.services.messaging.modelManager.messaging;
-        },
-    });
-}
 
 function getAfterEvent({ messagingBus }) {
     /**
@@ -1035,7 +1014,6 @@ function pasteFiles(el, files) {
 
 export {
     afterNextRender,
-    beforeEach,
     createRootMessagingComponent,
     dragenterFiles,
     dropFiles,
