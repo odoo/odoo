@@ -2,7 +2,12 @@
 
 import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
-import { combineAttributes, createElement, createTextNode, transformStringForExpression } from "@web/core/utils/xml";
+import {
+    combineAttributes,
+    createElement,
+    createTextNode,
+    transformStringForExpression,
+} from "@web/core/utils/xml";
 import { Field } from "@web/fields/field";
 
 /**
@@ -751,7 +756,7 @@ export class ViewCompiler {
         }
 
         for (const child of el.children) {
-            if (child.nodeName !== "page"){
+            if (child.nodeName !== "page") {
                 continue;
             }
             const invisible = getModifier(child, "invisible");
@@ -763,7 +768,9 @@ export class ViewCompiler {
             append(noteBook, pageSlot);
 
             const pageId = `page_${this.id++}`;
-            const pageTitle = transformStringForExpression(child.getAttribute("string") || child.getAttribute("name"));
+            const pageTitle = transformStringForExpression(
+                child.getAttribute("string") || child.getAttribute("name")
+            );
             pageSlot.setAttribute("t-set-slot", pageId);
             pageSlot.setAttribute("title", pageTitle);
 
@@ -864,6 +871,9 @@ export const useViewCompiler = (ViewCompiler, templateKey, activeFields, xmlDoc,
 
     // Creates a new compiled template if the given template key hasn't been
     // compiled already.
+    if (templateKey === undefined) {
+        throw new Error("templateKey can not be Undefined!");
+    }
     if (!templateIds[templateKey]) {
         const compiledDoc = new ViewCompiler(activeFields).compile(xmlDoc, params);
         templateIds[templateKey] = xml`${compiledDoc.outerHTML}`;

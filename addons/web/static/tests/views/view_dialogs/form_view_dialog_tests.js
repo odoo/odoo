@@ -100,6 +100,49 @@ QUnit.module("ViewDialogs", (hooks) => {
         );
     });
 
+    QUnit.test("modifiers are considered on multiple <footer/> tags", async function (assert) {
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <field name="bar"/>
+                    <footer attrs="{'invisible': [('bar','=',False)]}">
+                        <button>Hello</button>
+                        <button>World</button>
+                    </footer>
+                    <footer attrs="{'invisible': [('bar','!=',False)]}">
+                        <button>Foo</button>
+                    </footer>
+                </form>`,
+        };
+        const webClient = await createWebClient({ serverData });
+        webClient.env.services.dialog.add(FormViewDialog, {
+            resModel: "partner",
+            resId: 1,
+        });
+
+        await nextTick();
+
+        assert.deepEqual(
+            getVisibleButtonTexts(),
+            ["Hello", "World"],
+            "only the first button section should be visible"
+        );
+
+        await click(target.querySelector(".o_field_boolean input"));
+
+        assert.deepEqual(
+            getVisibleButtonTexts(),
+            ["Foo"],
+            "only the second button section should be visible"
+        );
+
+        function getVisibleButtonTexts() {
+            return [...target.querySelectorAll(".modal-footer button")].map((x) =>
+                x.innerHTML.trim()
+            );
+        }
+    });
+
     QUnit.skipWOWL("formviewdialog buttons in footer are not duplicated", async function (assert) {
         serverData.models.partner.fields.poney_ids = {
             string: "Poneys",

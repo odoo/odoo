@@ -4,14 +4,11 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { FormRenderer } from "@web/views/form/form_renderer";
 import { FormArchParser, loadSubViews } from "@web/views/form/form_view";
-import { ViewCompiler } from "../helpers/view_compiler";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useModel } from "../helpers/model";
 import { RelationalModel } from "../relational_model";
 
-const { onWillStart, useRef, xml } = owl;
-
-const templateFooter = Object.create(null);
+const { onWillStart, useRef } = owl;
 
 export class FormViewDialog extends Dialog {
     setup() {
@@ -70,26 +67,19 @@ export class FormViewDialog extends Dialog {
             this.readonly = !this.record.isInEdition;
             this.multiSelect = this.record.resId === false && !this.props.disableMultipleSelection;
 
-            this.extractFooter();
-        });
-    }
-
-    extractFooter() {
-        //FIXME: Maybe we need to check if multiple footer
-        if (this.archInfo.xmlDoc.querySelector("footer")) {
-            const footerXmlDoc = this.archInfo.xmlDoc.querySelector("footer");
-            const templateKey = footerXmlDoc.outerXml;
-            //Check templateKey is not undefined ?
-
-            if (!templateFooter[templateKey]) {
-                const compiledDoc = new ViewCompiler(this.archInfo.fields).compile(footerXmlDoc);
-                templateFooter[templateKey] = xml`${compiledDoc.outerHTML}`;
+            this.footerArchInfo = [];
+            while (this.archInfo.xmlDoc.querySelector("footer")) {
+                const footerXmlDoc = this.archInfo.xmlDoc.querySelector("footer");
+                const footerArch = new FormArchParser().parse(
+                    footerXmlDoc.outerHTML,
+                    this.archInfo.fields
+                );
+                footerArch.arch = footerArch.xmlDoc.outerHTML;
+                this.footerArchInfo.push(footerArch);
+                this.archInfo.xmlDoc.querySelector("footer").remove();
+                this.archInfo.arch = this.archInfo.xmlDoc.outerHTML;
             }
-
-            this.footerTemplate = templateFooter[templateKey];
-            this.archInfo.xmlDoc.querySelector("footer").remove();
-            this.archInfo.arch = this.archInfo.xmlDoc.outerXml;
-        }
+        });
     }
 
     discard() {
