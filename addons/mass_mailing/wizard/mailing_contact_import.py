@@ -94,7 +94,7 @@ class MailingContactImport(models.TransientModel):
             'tag': 'display_notification',
             'params': {
                 'message': (
-                    _('%i contacts.', len(unique_contacts))
+                    _('%i Contacts have been imported.', len(unique_contacts))
                     + (_(' %i duplicates have been ignored.', ignored) if ignored else '')
                 ),
                 'type': 'success',
