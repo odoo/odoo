@@ -225,6 +225,60 @@ class TestReconciliation(AccountingTestCase):
 
 @tagged('post_install', '-at_install')
 class TestReconciliationExec(TestReconciliation):
+    def test_reconcile_rounding_issue(self):
+        rate = 1 / 1.5289
+        tax_15 = self.env['account.tax'].create({
+            'name': "tax_15",
+            'amount_type': 'percent',
+            'amount': 15.0,
+        })
+        currency = self.env['res.currency'].create({
+            'name': 'XXX',
+            'symbol': 'XXX',
+            'rounding': 0.01,
+            'position': 'after',
+            'currency_unit_label': 'XX',
+            'currency_subunit_label': 'X',
+        })
+        self.env['res.currency.rate'].create({
+            'name': '2017-01-01',
+            'rate': rate,
+            'currency_id': currency.id,
+            'company_id': self.env.company.id,
+        })
+
+        # Create an invoice 26.45 XXX = 40.43 USD
+        invoice = self.env['account.move'].create({
+            'type': 'out_invoice',
+            'partner_id': self.partner_agrolait_id,
+            'currency_id': currency.id,
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product.id,
+                'price_unit': 23.0,
+                'tax_ids': [(6, 0, tax_15.ids)],
+            })],
+        })
+        invoice.action_post()
+
+        # Pay it with 100.0 EUR
+        payment = self.env['account.payment'].create({
+            'journal_id': self.bank_journal_euro.id,
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'payment_type': 'inbound',
+            'payment_date': '2017-01-01',
+            'amount': 100,
+            'currency_id': self.env.company.currency_id.id,
+            'partner_id': self.partner_agrolait_id,
+            'partner_type': 'customer',
+        })
+        payment.post()
+
+        credit_aml = payment.move_line_ids.filtered('credit')
+        invoice.js_assign_outstanding_line(credit_aml.id)
+
+        self.assertTrue(invoice.invoice_payment_state in ('in_payment', 'paid'))
 
     def test_statement_usd_invoice_eur_transaction_eur(self):
         customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_euro_id, 30, self.bank_journal_usd, 42, 30, self.currency_euro_id)

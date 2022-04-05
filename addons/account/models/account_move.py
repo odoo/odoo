@@ -3845,6 +3845,12 @@ class AccountMoveLine(models.Model):
             can find a debit and a credit to reconcile together. It returns the recordset of the
             account move lines that were not reconciled during the process.
         """
+        def fix_remaining_cent(currency, abs_residual, partial_amount):
+            if abs_residual - currency.rounding <= partial_amount <= abs_residual + currency.rounding:
+                return abs_residual
+            else:
+                return partial_amount
+
         (debit_moves + credit_moves).read([field])
         to_create = []
         cash_basis = debit_moves and debit_moves[0].account_id.internal_type in ('receivable', 'payable') or False
@@ -3889,6 +3895,10 @@ class AccountMoveLine(models.Model):
                 currency = debit_move.currency_id or credit_move.currency_id
                 currency_date = debit_move.currency_id and credit_move.date or debit_move.date
                 amount_reconcile_currency = company_currency._convert(amount_reconcile, currency, debit_move.company_id, currency_date)
+                amount_reconcile_currency = fix_remaining_cent(currency,
+                                                               debit_move.amount_currency,
+                                                               amount_reconcile_currency,
+                                                               )
                 currency = currency.id
 
             if cash_basis:
