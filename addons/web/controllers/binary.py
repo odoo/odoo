@@ -11,8 +11,9 @@ import unicodedata
 import odoo
 import odoo.modules.registry
 from odoo import http
-from odoo.modules import get_resource_path
+from odoo.exceptions import AccessError
 from odoo.http import request
+from odoo.modules import get_resource_path
 from odoo.tools import pycompat
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import file_open, file_path
@@ -131,6 +132,8 @@ class Binary(http.Controller):
                     'res_id': int(id)
                 })
                 attachment._post_add_create()
+            except AccessError:
+                args.append({'error': _("You are not allowed to upload an attachment here.")})
             except Exception:
                 args.append({'error': _("Something horrible happened")})
                 _logger.exception("Fail to upload attachment %s", ufile.filename)

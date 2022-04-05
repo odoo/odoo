@@ -257,17 +257,20 @@ class DiscussController(http.Controller):
         if channel_partner.env.user.share:
             # Only generate the access token if absolutely necessary (= not for internal user).
             vals['access_token'] = channel_partner.env['ir.attachment']._generate_access_token()
-        attachment = channel_partner.env['ir.attachment'].create(vals)
-        attachment._post_add_create()
-        attachmentData = {
-            'filename': ufile.filename,
-            'id': attachment.id,
-            'mimetype': attachment.mimetype,
-            'name': attachment.name,
-            'size': attachment.file_size
-        }
-        if attachment.access_token:
-            attachmentData['accessToken'] = attachment.access_token
+        try:
+            attachment = channel_partner.env['ir.attachment'].create(vals)
+            attachment._post_add_create()
+            attachmentData = {
+                'filename': ufile.filename,
+                'id': attachment.id,
+                'mimetype': attachment.mimetype,
+                'name': attachment.name,
+                'size': attachment.file_size
+            }
+            if attachment.access_token:
+                attachmentData['accessToken'] = attachment.access_token
+        except AccessError:
+            attachmentData = {'error': _("You are not allowed to upload an attachment here.")}
         return request.make_response(
             data=json.dumps(attachmentData),
             headers=[('Content-Type', 'application/json')]
