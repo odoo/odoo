@@ -401,7 +401,9 @@
             <field name="arch" type="xml">
                 <tree string="Invoices"
                       js_class="account_tree"
-                      sample="1">
+                      sample="1"
+                      decoration-info="state == 'draft'"
+                      decoration-muted="state == 'cancel'">
                     <header>
                         <button name="action_register_payment" type="object" string="Register Payment"
                             groups="account.group_account_user"
