@@ -35,6 +35,7 @@
                                     <a t-if="sale_item.action" class="o_rightpanel_button"
                                         t-on-click="onProjectActionClick"
                                         t-att-data-action="sale_item.action"
+                                        t-att-data-res_id="sale_item.res_id"
                                         t-att-data-additional_context="sale_item.additional_context"
                                     >
                                         <t t-esc="sol_name"/>
