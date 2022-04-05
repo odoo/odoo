@@ -63,12 +63,6 @@ class AccountJournal(models.Model):
         journals.filtered(lambda j: not j.check_sequence_id)._create_check_sequence()
         return journals
 
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
-        rec = super(AccountJournal, self).copy(default)
-        rec._create_check_sequence()
-        return rec
-
     def _create_check_sequence(self):
         """ Create a check sequence for the journal """
         for journal in self:
