@@ -1,0 +1,51 @@
+.o_field_image {
+    position: relative;
+
+    .o_form_image_controls {
+        @include o-position-absolute(0, 0);
+        width: 100%;
+        color: white;
+        background-color: $o-brand-primary;
+        opacity: 0;
+        transition: opacity ease 400ms;
+        min-width: 35px;
+
+        button.fa {
+            border: none;
+            background-color: transparent;
+            outline: 0 !important;
+        }
+        .fa {
+            padding: 4px;
+            margin: 5px;
+            cursor: pointer;
+        }
+    }
+
+    @include media-breakpoint-down(xs, $o-extra-grid-breakpoints) {
+        .o_form_image_controls {
+            position: initial;
+            opacity: 1;
+            .fa {
+                width: 50%;
+                padding: 6px;
+                margin: 0px;
+                text-align: center;
+                &.o_select_file_button{
+                    background: $o-brand-primary;
+                }
+                &.o_clear_file_button{
+                    background: theme-color('danger');
+                }
+            }
+        }
+    }
+
+    &:hover .o_form_image_controls {
+        opacity: 0.8;
+    }
+
+    &.o_field_invalid img {
+        border: 1px solid theme-color('danger');
+    }
+}
