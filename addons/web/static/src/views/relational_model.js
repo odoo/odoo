@@ -732,8 +732,8 @@ export class Record extends DataPoint {
         return this.model.mutex.exec(async () => {
             if (!this.checkValidity()) {
                 const invalidFields = [...this._invalidFields].map((fieldName) => {
-                    return `<li>${escape(fieldName)}</li>`;
-                });
+                    return `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`;
+                }, this);
                 this.model.notificationService.add(markup(`<ul>${invalidFields.join("")}</ul>`), {
                     title: this.model.env._t("Invalid fields: "),
                     type: "danger",

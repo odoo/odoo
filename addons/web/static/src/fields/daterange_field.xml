@@ -6,9 +6,8 @@
             <t t-esc="formattedValue" />
         </t>
         <t t-else="">
-            <div t-on-click.stop="" t-ref="root">
-                <input type="text" t-att-value="formattedValue" />
-            </div>
+            <input t-ref="root" type="text" t-att-value="formattedValue" t-on-change="onChangeInput" />
+            <i t-if="props.displayArrow" class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon" title="Arrow" />
         </t>
     </t>
 

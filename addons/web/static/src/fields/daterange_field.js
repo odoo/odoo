@@ -3,6 +3,7 @@
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { loadJS } from "@web/core/assets";
+import { useService } from "@web/core/utils/hooks";
 
 const { Component, onWillStart, useExternalListener, useRef, useEffect } = owl;
 const { DateTime } = luxon;
@@ -11,15 +12,17 @@ const formatters = registry.category("formatters");
 
 export class DateRangeField extends Component {
     setup() {
+        this.notification = useService("notification");
         this.root = useRef("root");
         this.isPickerShown = false;
+        this.pickerContainer;
 
         useExternalListener(window, "scroll", this.onWindowScroll, { capture: true });
         onWillStart(() => loadJS("/web/static/lib/daterangepicker/daterangepicker.js"));
         useEffect(
-            (isReadonly) => {
-                if (!isReadonly) {
-                    window.$(this.root.el).daterangepicker({
+            (el) => {
+                if (el) {
+                    window.$(el).daterangepicker({
                         timePicker: this.isDateTime,
                         timePicker24Hour: true,
                         timePickerIncrement: 5,
@@ -34,50 +37,63 @@ export class DateRangeField extends Component {
                         startDate: window.moment(this.formattedStartDate),
                         endDate: window.moment(this.formattedEndDate),
                     });
+                    this.pickerContainer = window.$(el).data("daterangepicker").container[0];
 
-                    window
-                        .$(this.root.el)
-                        .on("apply.daterangepicker", this.onPickerApply.bind(this));
-                    window.$(this.root.el).on("show.daterangepicker", this.onPickerShow.bind(this));
-                    window.$(this.root.el).on("hide.daterangepicker", this.onPickerHide.bind(this));
+                    window.$(el).on("apply.daterangepicker", this.onPickerApply.bind(this));
+                    window.$(el).on("show.daterangepicker", this.onPickerShow.bind(this));
+                    window.$(el).on("hide.daterangepicker", this.onPickerHide.bind(this));
 
                     this.pickerContainer.dataset.name = this.props.name;
                 }
 
                 return () => {
-                    if (!isReadonly) {
+                    if (el) {
                         this.pickerContainer.remove();
                     }
                 };
             },
-            () => [this.props.readonly]
+            () => [this.root.el]
         );
     }
 
     get isDateTime() {
         return this.props.formatType === "datetime";
     }
-
     get formattedValue() {
-        return formatters.get(this.props.formatType)(this.props.value, {
-            timezone: this.isDateTime,
-        });
+        return this.formatValue(this.props.formatType, this.props.value);
     }
 
     get formattedEndDate() {
-        return formatters.get(this.props.formatType)(this.props.endDate, {
-            timezone: this.isDateTime,
-        });
+        return this.formatValue(this.props.formatType, this.props.endDate);
     }
 
     get formattedStartDate() {
-        return formatters.get(this.props.formatType)(this.props.startDate, {
-            timezone: this.isDateTime,
-        });
+        return this.formatValue(this.props.formatType, this.props.startDate);
     }
 
-    get pickerContainer() {
-        return window.$(this.root.el).data("daterangepicker").container[0];
+    formatValue(format, value) {
+        let formattedValue;
+        try {
+            formattedValue = formatters.get(format)(value, {
+                timezone: this.isDateTime,
+            });
+        } catch {
+            this.props.setAsInvalid(this.props.name);
+        }
+        return formattedValue;
+    }
+
+    onChangeInput(ev) {
+        try {
+            let value;
+            value = this.props.parse(ev.target.value, {
+                parser: this.props.formatType,
+                timezone: true,
+            });
+            this.props.update(value);
+        } catch {
+            this.props.setAsInvalid(this.props.name);
+        }
     }
 
     onWindowScroll(ev) {
@@ -116,8 +132,10 @@ DateRangeField.extractProps = (fieldName, record, attrs) => {
     const relatedStartDate = attrs.options.related_start_date;
 
     return {
-        formatType: attrs.options.format_type || record.fields[fieldName].type,
+        displayArrow: Boolean(relatedEndDate),
         endDate: record.data[relatedEndDate || fieldName],
+        formatType: attrs.options.format_type || record.fields[fieldName].type,
+        setAsInvalid: record.setInvalidField.bind(record),
         startDate: record.data[relatedStartDate || fieldName],
         // pickerOptions: attrs.options.datepicker,
         async updateRange(start, end) {
