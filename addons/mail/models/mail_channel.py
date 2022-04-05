@@ -886,7 +886,7 @@ class Channel(models.Model):
                 AND P.partner_id IN %s
                 AND C.channel_type LIKE 'chat'
                 AND NOT EXISTS (
-                    SELECT *
+                    SELECT 1
                     FROM mail_channel_partner P2
                     WHERE P2.channel_id = C.id
                         AND P2.partner_id NOT IN %s
