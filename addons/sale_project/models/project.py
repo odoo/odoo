@@ -266,8 +266,8 @@ class Project(models.Model):
 
         def get_action(sol_id):
             """ Return the action vals to call it in frontend if the user can access to the SO related """
-            action = action_per_sol.get(sol_id)
-            return {'action': action, 'additional_context': json.dumps({'active_id': sol_id})} if action else {}
+            action, res_id = action_per_sol.get(sol_id, (None, None))
+            return {'action': action, 'res_id': res_id, 'additional_context': json.dumps({'active_id': sol_id})} if action else {}
 
         return [{
             **sol_read,

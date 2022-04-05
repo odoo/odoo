@@ -98,9 +98,14 @@ export default class ProjectRightPanel extends LegacyComponent {
                 }
             });
         }
-        this._doAction(action, {
-            additional_context: additionalContext
-        });
+        const options = {
+            additional_context: additionalContext,
+        };
+        if (dataset.res_id) {
+            options.res_id = Number(dataset.res_id);
+            options.view_type = 'form';
+        }
+        this._doAction(action, options);
     }
 
     _doAction(action, options) {
