@@ -3,7 +3,7 @@
 import ast
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, SUPERUSER_ID, _
 
 
 class Job(models.Model):
@@ -84,8 +84,16 @@ class Job(models.Model):
 
     @api.depends('application_ids.interviewer_id')
     def _compute_extended_interviewer_ids(self):
+        # Use SUPERUSER_ID as the search_read is protected in hr_referral
+        results_raw = self.env['hr.applicant'].with_user(SUPERUSER_ID).search_read([
+            ('job_id', 'in', self.ids),
+            ('interviewer_id', '!=', False)
+        ], ['interviewer_id', 'job_id'])
+        interviewers_by_job = defaultdict(set)
+        for result_raw in results_raw:
+            interviewers_by_job[result_raw['job_id'][0]].add(result_raw['interviewer_id'][0])
         for job in self:
-            job.extended_interviewer_ids = job.application_ids.interviewer_id
+            job.extended_interviewer_ids = [(6, 0, list(interviewers_by_job[job.id]))]
 
     def _compute_is_favorite(self):
         for job in self:
