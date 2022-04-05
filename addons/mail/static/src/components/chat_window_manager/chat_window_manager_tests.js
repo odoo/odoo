@@ -2416,6 +2416,122 @@ QUnit.test('chat window should remain folded when new message is received', asyn
     );
 });
 
+QUnit.test('chat window scroll position should remain the same after switching left', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+        is_minimized: true,
+        state: 'open',
+    });
+    this.data['mail.channel'].records.push({
+        id: 21,
+        is_minimized: true,
+        state: 'open',
+    });
+    for (let i = 0; i < 10; i++) {
+        this.data['mail.message'].records.push({
+            body: "not empty",
+            channel_ids: [20],
+        });
+    }
+    for (let i = 0; i < 10; i++) {
+        this.data['mail.message'].records.push({
+            body: "not empty",
+            channel_ids: [21],
+        });
+    }
+    await this.start();
+
+    const thread1LocalId = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    }).localId;
+    const thread2LocalId = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 21,
+        model: 'mail.channel',
+    }).localId;
+    document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread1LocalId}"] .o_ThreadView_messageList`).scrollTop = 100;
+    document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread2LocalId}"] .o_ThreadView_messageList`).scrollTop = 110;
+
+    await this.afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: () => document.querySelector('.o_ChatWindowHeader_commandShiftLeft').click(),
+        message: "Should wait until the scroll is adjusted after a command shift.",
+        predicate: ({ hint }) => {
+            return hint.type === 'adjust-scroll';
+        },
+    });
+    assert.strictEqual(
+        document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread2LocalId}"] .o_ThreadView_messageList`).scrollTop,
+        110,
+        "Scroll position should remain the same after a chat window shift"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread1LocalId}"] .o_ThreadView_messageList`).scrollTop,
+        100,
+        "Scroll position should remain the same after a chat window shift"
+    );
+});
+
+QUnit.test('chat window scroll position should remain the same after switching right', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+        is_minimized: true,
+        state: 'open',
+    });
+    this.data['mail.channel'].records.push({
+        id: 21,
+        is_minimized: true,
+        state: 'open',
+    });
+    for (let i = 0; i < 10; i++) {
+        this.data['mail.message'].records.push({
+            body: "not empty",
+            channel_ids: [20],
+        });
+    }
+    for (let i = 0; i < 10; i++) {
+        this.data['mail.message'].records.push({
+            body: "not empty",
+            channel_ids: [21],
+        });
+    }
+    await this.start();
+    const thread1LocalId = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    }).localId;
+    const thread2LocalId = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 21,
+        model: 'mail.channel',
+    }).localId;
+    document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread1LocalId}"] .o_ThreadView_messageList`).scrollTop = 100;
+    document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread2LocalId}"] .o_ThreadView_messageList`).scrollTop = 110;
+
+    await this.afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: () => document.querySelector('.o_ChatWindowHeader_commandShiftRight').click(),
+        message: "Should wait until the scroll is adjusted after a command shift.",
+        predicate: ({ hint }) => {
+            return hint.type === 'adjust-scroll';
+        },
+    });
+    assert.strictEqual(
+        document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread2LocalId}"] .o_ThreadView_messageList`).scrollTop,
+        110,
+        "Scroll position should remain the same after a chat window shift"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread1LocalId}"] .o_ThreadView_messageList`).scrollTop,
+        100,
+        "Scroll position should remain the same after a chat window shift"
+    );
+});
+
+
 });
 });
 });
