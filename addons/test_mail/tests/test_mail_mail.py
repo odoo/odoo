@@ -169,7 +169,7 @@ class TestMailMail(TestMailCommon):
                              email_cc=['test.cc.1@example.com', 'test.cc.2@example.com'])
         # Mail: currently cc are put as copy of all sent emails (aka spam)
         self.assertSentEmail(mail.env.user.partner_id, [self.user_employee.email_formatted],
-                             email_cc=['test.cc.1@example.com', 'test.cc.2@example.com'])
+                             email_cc=False)
         self.assertEqual(len(self._mails), 2)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -334,6 +334,7 @@ class TestMailMail(TestMailCommon):
         """ Test various use case with exceptions and errors and see how they are
         managed and stored at mail and notification level. """
         mail, notification = self.test_mail, self.test_notification
+        IrMailServer = self.env['ir.mail_server']
 
         self.env['ir.config_parameter'].set_param('mail.catchall.domain', self.alias_domain)
         self.env['ir.config_parameter'].set_param('mail.default.from', self.default_from)
@@ -344,33 +345,24 @@ class TestMailMail(TestMailCommon):
             mail.write({'email_to': email_to})
             with self.mock_mail_gateway():
                 mail.send(raise_exception=False)
-            self.assertEqual(mail.failure_reason, str(mail_mail.MAILMAIL_NO_RECIPIENTS))
-            if email_to == ' ':
-                self.assertEqual(mail.failure_type, 'mail_email_missing')
-            else:
-                self.assertFalse(mail.failure_type, 'Mail: missing email_to: no failure type, should be updated')
+            self.assertEqual(mail.failure_reason, IrMailServer.NO_VALID_RECIPIENT)
+            self.assertEqual(mail.failure_type, 'mail_email_missing')
             self.assertEqual(mail.state, 'exception')
-            if email_to == ' ':
-                self.assertEqual(notification.failure_reason, str(mail_mail.MAILMAIL_NO_RECIPIENTS))
-                self.assertEqual(notification.failure_type, 'mail_email_missing')
-                self.assertEqual(notification.notification_status, 'exception')
-            else:
-                self.assertFalse(notification.failure_reason, 'Mail: failure reason not propagated')
-                self.assertEqual(notification.failure_type, False, 'Mail: missing email_to: notification is wrongly set as sent')
-                self.assertEqual(notification.notification_status, 'sent', 'Mail: missing email_to: notification is wrongly set as sent')
+            self.assertEqual(notification.failure_reason, IrMailServer.NO_VALID_RECIPIENT)
+            self.assertEqual(notification.failure_type, 'mail_email_missing')
+            self.assertEqual(notification.notification_status, 'exception')
 
         # MailServer.send_email(): _prepare_email_message: invalid To
-        for email_to, failure_type in zip(self.emails_invalid,
-                                          ['mail_email_missing', 'mail_email_missing']):
+        for email_to in self.emails_invalid:
             self._reset_data()
             mail.write({'email_to': email_to})
             with self.mock_mail_gateway():
                 mail.send(raise_exception=False)
-            self.assertEqual(mail.failure_reason, str(mail_mail.MAILMAIL_NO_RECIPIENTS))
-            self.assertEqual(mail.failure_type, failure_type, 'Mail: invalid email_to: missing instead of invalid')
+            self.assertEqual(mail.failure_reason, IrMailServer.NO_VALID_RECIPIENT)
+            self.assertEqual(mail.failure_type, 'mail_email_invalid')
             self.assertEqual(mail.state, 'exception')
-            self.assertEqual(notification.failure_reason, str(mail_mail.MAILMAIL_NO_RECIPIENTS))
-            self.assertEqual(notification.failure_type, failure_type, 'Mail: invalid email_to: missing instead of invalid')
+            self.assertEqual(notification.failure_reason, IrMailServer.NO_VALID_RECIPIENT)
+            self.assertEqual(notification.failure_type, 'mail_email_invalid')
             self.assertEqual(notification.notification_status, 'exception')
 
         # MailServer.send_email(): _prepare_email_message: invalid To (ascii)
@@ -404,6 +396,7 @@ class TestMailMail(TestMailCommon):
         """ Test various use case with exceptions and errors and see how they are
         managed and stored at mail and notification level. """
         mail, notification = self.test_mail, self.test_notification
+        IrMailServer = self.env['ir.mail_server']
 
         mail.write({'email_from': 'test.user@test.example.com', 'email_to': False})
         partners_falsy = self.env['res.partner'].create([
@@ -423,32 +416,21 @@ class TestMailMail(TestMailCommon):
             for email in self.emails_valid
         ])
 
-        # void values
-        for partner in partners_falsy:
+        # void or wrong values
+        for partner, failure_type, failure_reason in zip(
+                partners_falsy + partners_invalid,
+                ['mail_email_missing'] * 3 + ['mail_email_invalid'] * 2,
+                [IrMailServer.NO_VALID_RECIPIENT] * 3 + [str(mail_mail.MAILMAIL_NO_RECIPIENTS)] * 2):
             self._reset_data()
             mail.write({'recipient_ids': [(5, 0), (4, partner.id)]})
             notification.write({'res_partner_id': partner.id})
             with self.mock_mail_gateway():
                 mail.send(raise_exception=False)
-            self.assertEqual(mail.failure_reason, str(mail_mail.MAILMAIL_NO_RECIPIENTS))
-            self.assertEqual(mail.failure_type, 'mail_email_invalid', 'Mail: void recipient partner: should be missing, not invalid')
+            self.assertEqual(mail.failure_reason, failure_reason)
+            self.assertEqual(mail.failure_type, failure_type)
             self.assertEqual(mail.state, 'exception')
-            self.assertEqual(mail.failure_reason, str(mail_mail.MAILMAIL_NO_RECIPIENTS))
-            self.assertEqual(notification.failure_type, 'mail_email_invalid', 'Mail: void recipient partner: should be missing, not invalid')
-            self.assertEqual(notification.notification_status, 'exception')
-
-        # wrong values
-        for partner in partners_invalid:
-            self._reset_data()
-            mail.write({'recipient_ids': [(5, 0), (4, partner.id)]})
-            notification.write({'res_partner_id': partner.id})
-            with self.mock_mail_gateway():
-                mail.send(raise_exception=False)
-            self.assertEqual(mail.failure_reason, str(mail_mail.MAILMAIL_NO_RECIPIENTS))
-            self.assertEqual(mail.failure_type, 'mail_email_invalid')
-            self.assertEqual(mail.state, 'exception')
-            self.assertEqual(notification.failure_reason, str(mail_mail.MAILMAIL_NO_RECIPIENTS))
-            self.assertEqual(notification.failure_type, 'mail_email_invalid')
+            self.assertEqual(mail.failure_reason, failure_reason)
+            self.assertEqual(notification.failure_type, failure_type)
             self.assertEqual(notification.notification_status, 'exception')
 
         # ascii ko
@@ -500,7 +482,9 @@ class TestMailMail(TestMailCommon):
         ])
 
         # valid to, missing email for recipient or wrong email for recipient
-        for partner in partners_falsy + partners_invalid:
+        for partner, failure_type in zip(
+                partners_falsy + partners_invalid,
+                ['mail_email_missing'] * 3 + ['mail_email_invalid'] * 2):
             self._reset_data()
             mail.write({'recipient_ids': [(5, 0), (4, partner.id)]})
             notification.write({'res_partner_id': partner.id})
@@ -510,7 +494,7 @@ class TestMailMail(TestMailCommon):
             self.assertFalse(mail.failure_type, 'Mail: at least one valid recipient, mail is sent to avoid send loops and spam')
             self.assertEqual(mail.state, 'sent', 'Mail: at least one valid recipient, mail is sent to avoid send loops and spam')
             self.assertEqual(notification.failure_reason, str(mail_mail.MAILMAIL_NO_RECIPIENTS))
-            self.assertEqual(notification.failure_type, 'mail_email_invalid', 'Mail: void email considered as invalid')
+            self.assertEqual(notification.failure_type, failure_type)
             self.assertEqual(notification.notification_status, 'exception')
 
         # update to have valid partner and invalid partner
@@ -525,7 +509,9 @@ class TestMailMail(TestMailCommon):
         })
 
         # missing to / invalid to
-        for email_to in self.emails_falsy + self.emails_invalid:
+        for email_to, failure_type in zip(
+                self.emails_falsy + self.emails_invalid,
+                ['mail_email_missing', 'mail_email_missing', 'mail_email_missing'] + ['mail_email_invalid', 'mail_email_invalid']):
             self._reset_data()
             notification2.write({'failure_reason': False, 'failure_type': False, 'notification_status': 'ready'})
             mail.write({'email_to': email_to})
@@ -538,7 +524,7 @@ class TestMailMail(TestMailCommon):
             self.assertFalse(notification.failure_type)
             self.assertEqual(notification.notification_status, 'sent')
             self.assertEqual(notification2.failure_reason, str(mail_mail.MAILMAIL_NO_RECIPIENTS))
-            self.assertEqual(notification2.failure_type, 'mail_email_invalid')
+            self.assertEqual(notification2.failure_type, failure_type)
             self.assertEqual(notification2.notification_status, 'exception')
 
         # buggy to (ascii)

@@ -526,6 +526,7 @@ class MailMail(models.Model):
         IrAttachment = self.env['ir.attachment']
         for mail_id in self.ids:
             success_pids = []
+            failure_reason = False
             failure_type = None
             processing_pid = None
             mail = None
@@ -575,9 +576,16 @@ class MailMail(models.Model):
 
                 # build an RFC2822 email.message.Message object and send it without queuing
                 res = None
-                # TDE note: could be great to pre-detect missing to/cc and skip sending it
-                # to go directly to failed state update
                 email_list = mail._send_prepare_outgoing_list()
+
+                # pre-detect missing to/cc and skip building email and sending to
+                # directly set to failed state
+                if not email_list or not any(email.get('email_to_origin') or email.get('email_cc') for email in email_list):
+                    failure_reason = IrMailServer.NO_VALID_RECIPIENT
+                    failure_type = "mail_email_missing"
+                elif not any(email.get('email_to') or email.get('email_cc') for email in email_list):
+                    failure_reason = IrMailServer.NO_VALID_RECIPIENT
+                    failure_type = "mail_email_invalid"
 
                 # send each sub-email
                 for email in email_list:
@@ -587,7 +595,7 @@ class MailMail(models.Model):
                         subject=mail.subject,
                         body=email['body'],
                         body_alternative=email['body_alternative'],
-                        email_cc=tools.email_split(mail.email_cc),
+                        email_cc=email['email_cc'],
                         reply_to=mail.reply_to,
                         attachments=attachments,
                         message_id=mail.message_id,
@@ -606,7 +614,7 @@ class MailMail(models.Model):
                     except AssertionError as error:
                         if str(error) == IrMailServer.NO_VALID_RECIPIENT:
                             # if we have a list of void emails for email_list -> email missing, otherwise generic email failure
-                            if not email.get('email_to') and failure_type != "mail_email_invalid":
+                            if not email.get('email_to_origin') and failure_type != "mail_email_invalid":
                                 failure_type = "mail_email_missing"
                             else:
                                 failure_type = "mail_email_invalid"
@@ -627,7 +635,7 @@ class MailMail(models.Model):
                     bool(res),
                     success_pids=success_pids,
                     notifications=notifications,
-                    failure_reason=MAILMAIL_NO_RECIPIENTS,
+                    failure_reason=failure_reason or MAILMAIL_NO_RECIPIENTS,
                     failure_type=failure_type,
                 )
             except MemoryError:
