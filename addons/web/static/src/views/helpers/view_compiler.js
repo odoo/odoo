@@ -678,11 +678,6 @@ export class ViewCompiler {
             for (const contents of child.children) {
                 append(pageSlot, this.compileNode(contents, params));
             }
-            // In owl 2 slots that have no content are not passed to the Component,
-            // so we force dummy content on the slot.
-            if (!pageSlot.children.length) {
-                append(pageSlot, createElement("span"));
-            }
         }
 
         return noteBook;
