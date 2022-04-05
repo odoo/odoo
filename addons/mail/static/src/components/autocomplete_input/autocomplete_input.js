@@ -17,6 +17,9 @@ export class AutocompleteInput extends Component {
     }
 
     _mounted() {
+        if (!this.root.el) {
+            return;
+        }
         if (this.props.isFocusOnMount) {
             this.root.el.focus();
         }
@@ -43,6 +46,9 @@ export class AutocompleteInput extends Component {
     }
 
     _willUnmount() {
+        if (!this.root.el) {
+            return;
+        }
         $(this.root.el).autocomplete('destroy');
     }
 
