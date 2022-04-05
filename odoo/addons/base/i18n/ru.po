@@ -30,9 +30,10 @@
 # Алексей Хомяков <alexey.homyakov@gmail.com>, 2020
 # Denis Baranov <baranov@itlibertas.com>, 2020
 # Sergei Ruzki <sergei.ruzki@gmail.com>, 2021
-# Ivan Yelizariev // IEL (ellui) <yelizariev@itpp.dev>, 2021
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2021
 # ILMIR <karamov@it-projects.info>, 2021
-# Сергей Шебанин <sergey@shebanin.ru>, 2021
+# Сергей Шебанин <sergey@shebanin.ru>, 2022
+# Иван Дроздов <hiraetari@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -40,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-23 15:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2021\n"
+"Last-Translator: Иван Дроздов <hiraetari@gmail.com>, 2022\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -94,6 +95,14 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Бухгалтерские отчёты для Австрии.\n"
+"================================\n"
+"\n"
+"  * Определяет следующие отчеты:\n"
+"      * Прибыль/Потери (§ Метод общей стоимости UGB 231)\n"
+"      * Бухгалтерский баланс (§ UGB 224)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_invoice_bba
@@ -113,6 +122,20 @@ msgid ""
 "        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Добавьте структурированную коммуникацию к счетам клиентов.\n"
+"--------------------------------------------------\n"
+"\n"
+"Использование структурированной связи BBA упрощает сверку счетов-фактур и платежей.\n"
+"Вы можете выбрать структурированное сообщение в качестве платежного сообщения в настройках выставления счетов/учета.\n"
+"Предлагаются два алгоритма:\n"
+"\n"
+"\" 1) Номер счета-фактуры +++RRR/RRRR/RRRDD+++\\n\"\n"
+"\" **R..R =** Номер счета, **DD =** Контрольные цифры\\n\"\n"
+"\" 2) Ссылка на клиента +++RRR/RRRR/SSSDD+++\\n\"\n"
+"\" **R..R =** Ссылка на клиента без нечисловых символов, **SSS =** Порядковый номер, **DD =** Контрольные цифры\\n\"\n"
+"\" \""
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_reprint
@@ -392,6 +415,20 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Обзор:\n"
+"---------\n"
+"\n"
+"* Шаблон плана счетов и налогов для компаний в Японии.\n"
+"* Это, вероятно, не охватывает все необходимые учетные записи для компании. Ожидается, что вы будете добавлять / удалять / изменять учетные записи на основе этого шаблона.\n"
+"\n"
+"Примечание:\n"
+"-----\n"
+"\n"
+"* Фискальные позиции \"内税\" и \"外税\" были добавлены для удовлетворения особых требований, которые могут возникнуть в результате внедрения POS. [1] При нормальных обстоятельствах вам может вообще не понадобиться их использовать.\n"
+"\n"
+"[1] См. https://github.com/odoo/odoo/pull/6470 для деталей."
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -412,6 +449,9 @@ msgid ""
 "\n"
 "This module adds a custom Sales Team for the Point of Sale. This enables you to view and manage your point of sale sales with more ease.\n"
 msgstr ""
+"\n"
+"\n"
+"Этот модуль добавляет пользовательскую команду продаж для точки продаж. Это позволяет вам с большей легкостью просматривать продажи в точках продаж и управлять ими.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -424,6 +464,13 @@ msgid ""
 "- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Этот модуль добавляет в точку продаж несколько функций, специфичных для управления рестораном:\n"
+"- Печать счета: позволяет распечатать квитанцию до оплаты заказа.\n"
+"- Разделение счетов: позволяет разделить заказ на разные заказы.\n"
+"- Печать заказов на кухню: позволяет печатать обновления заказов на кухонных или барных принтерах\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_discount
@@ -434,6 +481,11 @@ msgid ""
 "discount to a customer.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Этот модуль позволяет кассиру быстро предоставлять клиенту\n"
+"скидку в процентах.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_loyalty
@@ -445,6 +497,12 @@ msgid ""
 "and get rewards.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Этот модуль позволяет вам определить программу лояльности в\n"
+"точке продаж, в рамках которой клиенты зарабатывают баллы лояльности\n"
+"и получают вознаграждения.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_epson_printer_restaurant
@@ -453,6 +511,10 @@ msgid ""
 "\n"
 "Use Epson Printers as Order Printers in the Point of Sale without the IoT Box\n"
 msgstr ""
+"\n"
+"\n"
+"Используйте принтеры Epson в качестве принтеров для заказов в точке продаж без управляющего узла IoT (интернета вещей)\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_epson_printer
@@ -461,6 +523,9 @@ msgid ""
 "\n"
 "Use Epson ePOS Printers without the IoT Box in the Point of Sale\n"
 msgstr ""
+"\n"
+"\n"
+"Используйте pos-принтеры Epson в точке продаж без управляющего узла IoT (интернета вещей)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at
@@ -487,6 +552,8 @@ msgid ""
 "            Bridge Sign functionalities with the Rental application\n"
 "        "
 msgstr ""
+"\n"
+"           Поддержка символа моста в приложении для аренды"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_timesheet
@@ -496,6 +563,9 @@ msgid ""
 "        - Track timesheet for a task from a ticket\n"
 "    "
 msgstr ""
+"\n"
+"- Позволяет настроить проект для команды службы поддержки\n"
+"- Отслеживание расписания для задачи из тикета"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports
@@ -528,6 +598,11 @@ msgid ""
 "        Also adds DATEV export options to general ledger\n"
 "    "
 msgstr ""
+"\n"
+"        Бухгалтерские отчёты для Германии\n"
+"        Содержит бухгалтерский баланс, отчеты о прибылях и убытках, отчеты по НДС и партнерские отчеты по НДС\n"
+"         Также добавляет параметры экспорта в главную книгу в формате DATEV\n"
+"         "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt_reports
@@ -570,6 +645,8 @@ msgid ""
 "        Accounting reports for Sweden\n"
 "    "
 msgstr ""
+"\n"
+"         Бухгалтерские отчёты для Швеции"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch_reports
@@ -9200,7 +9277,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_payment_alipay
 #: model:ir.module.module,shortdesc:base.module_payment_alipay
 msgid "Alipay Payment Acquirer"
-msgstr ""
+msgstr "Платежная система Alipay"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
@@ -10087,7 +10164,7 @@ msgstr "Базовую язык `en_US` нельзя удалить."
 #. module: base
 #: model:ir.module.module,summary:base.module_payment
 msgid "Base Module for Payment Acquirers"
-msgstr ""
+msgstr "Базовый модуль для платежных систем"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model__state__base
@@ -15773,28 +15850,28 @@ msgstr "Изображение"
 #: model:ir.model.fields,field_description:base.field_res_partner__image_1024
 #: model:ir.model.fields,field_description:base.field_res_users__image_1024
 msgid "Image 1024"
-msgstr ""
+msgstr "Изображение 1024"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_image_mixin__image_128
 #: model:ir.model.fields,field_description:base.field_res_partner__image_128
 #: model:ir.model.fields,field_description:base.field_res_users__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "Изображение 128"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_image_mixin__image_256
 #: model:ir.model.fields,field_description:base.field_res_partner__image_256
 #: model:ir.model.fields,field_description:base.field_res_users__image_256
 msgid "Image 256"
-msgstr ""
+msgstr "Изображение 256"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_image_mixin__image_512
 #: model:ir.model.fields,field_description:base.field_res_partner__image_512
 #: model:ir.model.fields,field_description:base.field_res_users__image_512
 msgid "Image 512"
-msgstr ""
+msgstr "Изображение 512"
 
 #. module: base
 #: model:ir.model,name:base.model_image_mixin
@@ -21570,7 +21647,7 @@ msgstr "Платежи клиентов: вклад в Adyen"
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_alipay
 msgid "Payment Acquirer: Alipay Implementation"
-msgstr ""
+msgstr "Платежная система: поддержка Alipay"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_authorize
@@ -21595,7 +21672,7 @@ msgstr "Платежи клиентов: через Paypal"
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_payulatam
 msgid "Payment Acquirer: PayuLatam Implementation"
-msgstr ""
+msgstr "Платежная система: поддержка PayuLatam"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_payumoney
@@ -21605,7 +21682,7 @@ msgstr "Платеж покупателя: PayuMoney осуществлен"
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_sepa_direct_debit
 msgid "Payment Acquirer: Sepa Direct Debit"
-msgstr ""
+msgstr "Платежная система: поддержка Sepa Direct Debit"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_stripe
@@ -21657,7 +21734,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_payulatam
 msgid "PayuLatam Payment Acquirer"
-msgstr ""
+msgstr "Платежная система PayuLatam"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_payumoney
@@ -21667,7 +21744,7 @@ msgstr "PayuMoney платеж покупателя"
 #. module: base
 #: model:ir.module.module,description:base.module_payment_payulatam
 msgid "Payulatam payment acquirer"
-msgstr ""
+msgstr "Платежная система Payulatam"
 
 #. module: base
 #: model:res.country,name:base.pe
@@ -21717,7 +21794,7 @@ msgstr "Центр"
 #. module: base
 #: model:ir.module.module,summary:base.module_project_forecast
 msgid "Plan your resources on project tasks"
-msgstr ""
+msgstr "Планируйте свои ресурсы для задач проекта"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_planning
@@ -23764,7 +23841,7 @@ msgstr "Сенегал"
 #: model:ir.module.module,description:base.module_payment_sepa_direct_debit
 #: model:ir.module.module,shortdesc:base.module_payment_sepa_direct_debit
 msgid "Sepa Direct Debit Payment Acquirer"
-msgstr ""
+msgstr "Платежная система Sepa Direct Debit"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__grouping
@@ -24865,7 +24942,7 @@ msgstr "Тестирование основного процесса"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_test
 msgid "Test Payment Acquirer"
-msgstr ""
+msgstr "Тестовая платежная система "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_performance
@@ -27687,7 +27764,7 @@ msgstr ""
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "You don't have enough access rights to run this action."
-msgstr ""
+msgstr "У вас недостаточно прав доступа для выполнения этого действия."
 
 #. module: base
 #: code:addons/base/wizard/base_partner_merge.py:0
@@ -27828,7 +27905,7 @@ msgstr "бухучет, отчет, Литва"
 #: code:addons/models.py:0
 #, python-format
 msgid "allowed for groups %s"
-msgstr ""
+msgstr "разрешено для групп%s"
 
 #. module: base
 #: code:addons/base/models/res_currency.py:0
@@ -28189,7 +28266,7 @@ msgstr "test read_group"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_xlsx_export
 msgid "test xlsx export"
-msgstr ""
+msgstr "test xlsx export"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_assetsbundle

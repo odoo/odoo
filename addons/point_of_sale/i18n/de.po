@@ -24,7 +24,7 @@
 # Kevin Harrings <kha@odoo.com>, 2021
 # Martin Trigaux, 2021
 # Robert Förster <hello@suppliot.eu>, 2021
-# Friederike Fasterling-Nesselbosch, 2021
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
@@ -32,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-27 11:49+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1813,7 +1813,7 @@ msgstr "Für ungenaue Industrie-Touchscreens."
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Force Done"
-msgstr ""
+msgstr "Erzwingen Erledigt"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3757,7 +3757,7 @@ msgstr "Retourniert"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
-msgstr ""
+msgstr "Stornoanforderung an das Terminal gesendet"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4102,6 +4102,9 @@ msgid ""
 "errors. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
+"Einige Bestellungen konnten aufgrund von Konfigurationsfehlern nicht an den "
+"Server übermittelt werden. Sie können das Kassensystem verlassen, aber "
+"schließen Sie die Sitzung nicht, bevor das Problem behoben ist."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4112,6 +4115,10 @@ msgid ""
 "issues. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
+"Einige Bestellungen konnten aufgrund von Problemen mit der "
+"Internetverbindung nicht an den Server übermittelt werden. Sie können das "
+"Kassensystem verlassen, aber schließen Sie die Sitzung nicht, bevor das "
+"Problem behoben ist."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
@@ -4657,6 +4664,8 @@ msgid ""
 "There is no Chart of Accounts configured on the company. Please go to the "
 "invoicing settings to install a Chart of Accounts."
 msgstr ""
+"Es ist kein Kontenplan für das Unternehmen konfiguriert. Bitte bestimmen Sie"
+" einen Kontenplan über die Einstellungen für die Rechnungsstellung."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4893,6 +4902,7 @@ msgstr "Um neue Aufträge zu erfassen, starten Sie eine neue Sitzung."
 #, python-format
 msgid "To return product(s), you need to open a session in the POS %s"
 msgstr ""
+"Um Produkte zurückzugeben, müssen Sie eine Sitzung im Kassensystem öffnen %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_total
@@ -4996,6 +5006,9 @@ msgid ""
 "Please set corresponding tax account in each repartition line of the following taxes: \n"
 "%s"
 msgstr ""
+"Die Sitzung kann nicht geschlossen und validiert werden.\n"
+"Bitte setzen Sie das entsprechende Steuerkonto in jeder Aufteilungszeile der folgenden Steuern: \n"
+"%s"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
