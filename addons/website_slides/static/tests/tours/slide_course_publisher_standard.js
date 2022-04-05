@@ -45,6 +45,7 @@ tour.register('course_publisher_standard', {
     trigger: 'div[id="edit-page-menu"] a',
 }, {
     content: 'eLearning: double click image to edit it',
+    extra_trigger: 'body.editor_enable',
     trigger: 'img.o_wslides_course_pict',
     run: 'dblclick',
 }, {
