@@ -43,6 +43,8 @@ class TestGenISRReference(AccountTestInvoicingCommon):
 
         self.invoice.partner_bank_id = self.bank_acc_isr
         self.invoice.name = "INV/01234567890"
+        # Post invoice to have the expected amount due (amount_residual)
+        self.invoice.action_post()
 
         expected_isr = "000000000000000012345678903"
         expected_isr_spaced = "00 00000 00000 00001 23456 78903"
@@ -66,6 +68,8 @@ class TestGenISRReference(AccountTestInvoicingCommon):
         self.invoice.partner_bank_id = self.bank_acc_isr
 
         self.invoice.name = "INV/123456789012345678901234567890"
+        # Post invoice to have the expected amount due (amount_residual)
+        self.invoice.action_post()
 
         expected_isr = "567890123456789012345678901"
         expected_isr_spaced = "56 78901 23456 78901 23456 78901"

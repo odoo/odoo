@@ -57,7 +57,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         invoice = move_form.save()
 
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
-        self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_residual)
+        self.assertAlmostEqual(0, invoice.amount_residual)
         self.assertEqual(len(invoice.mapped("line_ids")), 2)
         self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 1)
 
@@ -82,7 +82,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         invoice = move_form.save()
 
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
-        self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_residual)
+        self.assertAlmostEqual(0, invoice.amount_residual)
         self.assertEqual(len(invoice.mapped("line_ids")), 2)
         self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 1)
 
@@ -107,7 +107,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         invoice = move_form.save()
 
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
-        self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_residual)
+        self.assertAlmostEqual(0, invoice.amount_residual)
         self.assertEqual(len(invoice.mapped("line_ids")), 2)
         self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 1)
 
