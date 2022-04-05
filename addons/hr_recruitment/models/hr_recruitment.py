@@ -191,7 +191,9 @@ class Applicant(models.Model):
     campaign_id = fields.Many2one(ondelete='set null')
     medium_id = fields.Many2one(ondelete='set null')
     source_id = fields.Many2one(ondelete='set null')
-    interviewer_id = fields.Many2one('res.users', string='Interviewer', domain="[('share', '=', False), ('company_ids', 'in', company_id)]")
+    interviewer_id = fields.Many2one(
+        'res.users', string='Interviewer', index=True,
+        domain="[('share', '=', False), ('company_ids', 'in', company_id)]")
 
     @api.onchange('job_id')
     def _onchange_job_id(self):
