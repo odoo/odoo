@@ -40,8 +40,8 @@ const DEFAULT_CSS_OBJECT = {
         color: '#212529',
         'font-family': 'Arial,Helvetica Neue,Helvetica,sans-serif',
     },
-    'p, p *, li, li *': {
-        'font-size': '14x',
+    'p, p > *, li, li > *': {
+        'font-size': '14px',
         color: '#212529',
         'font-family': 'Arial,Helvetica Neue,Helvetica,sans-serif',
     },
