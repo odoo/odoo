@@ -82,10 +82,7 @@ export default class ProjectRightPanel extends LegacyComponent {
             if (dataset.resId) {
                 args.push(Number(dataset.resId));
             }
-            let context = {};
-            if (dataset.context) {
-                context = dataset.context;
-            }
+            const context = dataset.context ? JSON.parse(dataset.context) : {};
             action = await this.rpc({
                 // Use the call_button method in order to have an action
                 // with the correct view naming, i.e. list view is named
