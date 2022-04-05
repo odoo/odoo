@@ -142,13 +142,14 @@ class IntegerConverter(models.AbstractModel):
         options = super(IntegerConverter, self).get_available_options()
         options.update(
             format_decimalized_number=dict(type='boolean', string=_('Decimalized number')),
+            precision_digits=dict(type='integer', string=_('Precision Digits')),
         )
         return options
 
     @api.model
     def value_to_html(self, value, options):
         if options.get('format_decimalized_number'):
-            return tools.format_decimalized_number(value)
+            return tools.format_decimalized_number(value, options.get('precision_digits', 1))
         return pycompat.to_text(self.user_lang().format('%d', value, grouping=True).replace(r'-', '-\N{ZERO WIDTH NO-BREAK SPACE}'))
 
 
