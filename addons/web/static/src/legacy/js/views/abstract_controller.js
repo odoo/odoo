@@ -281,6 +281,18 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         }
     },
     /**
+     * Hide an onboarding banner if present and visible
+     * @private
+     */
+    _hideBanner: function () {
+        if (this._$banner.length) {
+            const $bannerElement = this._$banner.filter('.o_onboarding_container.collapse.show');
+            if ($bannerElement.length) {
+                Collapse.getOrCreateInstance($bannerElement[0]).toggle();
+            }
+        }
+    },
+    /**
      * This method is the way a view can notifies the outside world that
      * something has changed.  The main use for this is to update the url, for
      * example with a new id.
@@ -523,6 +535,9 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             }, {
                 additional_context: _.extend({}, data.context)
             });
+        }
+        if (data.oHideBanner) {
+            self._hideBanner();
         }
     },
     /**

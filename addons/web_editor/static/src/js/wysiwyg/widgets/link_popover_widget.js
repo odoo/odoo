@@ -60,7 +60,7 @@ const LinkPopoverWidget = Widget.extend({
         });
         const tooltips = [];
         for (const el of this.$('[data-toggle="tooltip"]').toArray()) {
-            tooltips.push($(el).data('bs.tooltip'));
+            tooltips.push(Tooltip.getOrCreateInstance(el));
         }
         let popoverShown = true;
         this.$target.popover({
@@ -96,12 +96,13 @@ const LinkPopoverWidget = Widget.extend({
             }
         })
         .on('inserted.bs.popover.link_popover', () => {
-            this.$target.data('bs.popover').tip.classList.add('o_edit_menu_popover');
+            const popover = Popover.getInstance(this.target);
+            popover.tip.classList.add('o_edit_menu_popover');
         })
         .popover('show');
 
 
-        this.popover = this.$target.data('bs.popover');
+        this.popover = Popover.getInstance(this.target);
         this.$target.on('mousedown.link_popover', (e) => {
             if (!popoverShown) {
                 this.$target.popover('show');
