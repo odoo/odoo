@@ -118,7 +118,7 @@ class MailChannel(models.Model):
             SELECT id as id
             FROM mail_channel C
             WHERE NOT EXISTS (
-                SELECT *
+                SELECT 1
                 FROM mail_message M
                 WHERE M.res_id = C.id AND m.model = 'mail.channel'
             ) AND C.channel_type = 'livechat' AND livechat_channel_id IS NOT NULL AND
