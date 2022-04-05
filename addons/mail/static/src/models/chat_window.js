@@ -288,6 +288,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeNewMessageAutocompleteInputView() {
+            if (this.hasNewMessageForm) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {string}
          */
         _computeNewMessageFormInputPlaceholder() {
@@ -488,6 +498,11 @@ registerModel({
         }),
         name: attr({
             compute: '_computeName',
+        }),
+        newMessageAutocompleteInputView: one('AutocompleteInputView', {
+            compute: '_computeNewMessageAutocompleteInputView',
+            inverse: 'chatWindowOwnerAsNewMessage',
+            isCausal: true,
         }),
         /**
          * The content of placeholder for the autocomplete input of
