@@ -457,7 +457,7 @@
                 Show categories
             </button>
             <div class="collapse d-lg-block" id="wsale_products_categories_collapse">
-                <h6 class="o_categories_collapse_title"><b>Categories</b></h6>
+                <h6 class="o_categories_collapse_title"><span style="font-weight: bold;">Categories</span></h6>
                 <ul class="nav flex-column my-2">
                     <form>
                         <li class="nav-item">
@@ -515,7 +515,7 @@
                     <input t-if="category" type="hidden" name="category" t-att-value="category.id" />
                     <input type="hidden" name="search" t-att-value="search" />
                     <a t-if="attrib_values" t-att-href="keep('/shop'+ ('/category/'+slug(category)) if category else None, attrib=0)" class="btn btn-light btn-block py-0 mb-2">
-                        <small><b>Clear Filters</b></small><b class="pull-right">&#215;</b>
+                        <small><span style="font-weight: bold;">Clear Filters</span></small><b class="pull-right">&#215;</b>
                     </a>
                     <ul class="nav flex-column">
                         <t t-foreach="attributes" t-as="a">
@@ -563,7 +563,7 @@
         <xpath expr="//div[@id='products_grid_before']" position="inside">
             <div t-if="available_min_price != available_max_price" id="o_wsale_price_range_option">
                 <label class="m-0 h6 o_products_attributes_title">
-                    <b>Price Range</b>
+                    <span style="font-weight: bold;">Price Range</span>
                 </label>
                 <input type="range" multiple="multiple" class="custom-range range-with-input"
                        t-att-data-currency="pricelist.currency_id.symbol"
