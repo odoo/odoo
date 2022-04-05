@@ -251,6 +251,13 @@ class AccountEdiFormat(models.Model):
                         ' Original message from the SDI: %s', errors[idx]))
                     to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
                 else:
+                    # Add helpful text if duplicated filename error
+                    if '00002' in error_codes:
+                        idx = error_codes.index('00002')
+                        errors[idx] = _(
+                            'The filename is duplicated. Try again (or adjust the FatturaPA Filename sequence).'
+                            ' Original message from the SDI: %s', [errors[idx]]
+                        )
                     to_return[invoice] = {'error': self._format_error_message(_('The invoice has been refused by the Exchange System'), errors), 'blocking_level': 'error'}
                     invoice.l10n_it_edi_transaction = False
             elif state == 'notificaMancataConsegna':
