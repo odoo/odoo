@@ -441,6 +441,8 @@
             <div class="row">
                 <div class="col-6" name="company_address">
                     <span t-if="company.company_details" t-field="company.company_details"></span>
+                    <span t-else="" t-field="company.partner_id"
+                            t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
                 </div>
             </div>
         </div>
