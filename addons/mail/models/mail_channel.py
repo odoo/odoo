@@ -145,6 +145,7 @@ class Channel(models.Model):
         if new_members:
             self.env['mail.channel.partner'].create(new_members)
         if outdated:
+            outdated.refresh()
             outdated.unlink()
 
     def _search_channel_partner_ids(self, operator, operand):
