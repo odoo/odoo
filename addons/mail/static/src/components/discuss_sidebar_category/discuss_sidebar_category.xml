@@ -26,7 +26,7 @@
                 </div>
                 <div class="o_DiscussSidebarCategory_content">
                     <t t-if="category.isOpen">
-                        <t t-if="category.isAddingItem">
+                        <t t-if="category.addingItemAutocompleteInputView">
                             <div class="o_DiscussSidebarCategory_addingItem d-flex mb-2">
                                 <AutocompleteInput
                                     className="'o_DiscussSidebarCategory_addingItemInput flex-grow-1'"
