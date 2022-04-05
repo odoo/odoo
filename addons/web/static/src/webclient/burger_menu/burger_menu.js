@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { Transition } from "@web/core/transition";
 import { useService } from "@web/core/utils/hooks";
@@ -82,7 +81,6 @@ export class BurgerMenu extends Component {
 }
 BurgerMenu.template = "web.BurgerMenu";
 BurgerMenu.components = {
-    DropdownItem,
     BurgerUserMenu,
     MobileSwitchCompanyMenu,
     Transition,

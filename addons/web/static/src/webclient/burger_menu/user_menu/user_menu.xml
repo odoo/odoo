@@ -6,7 +6,7 @@
       <t t-foreach="getElements()" t-as="element" t-key="element_index">
           <t t-if="!element.hide">
               <t t-if="element.type == 'item'">
-                <a t-att-class="'dropdown-item'" t-att-href="element.href or ''" t-esc="element.description" t-on-click.stop.prevent="() => this._onItemClicked(element.callback)"/>
+                <a class="dropdown-item py-3 fs-4" t-att-href="element.href or ''" t-esc="element.description" t-on-click.stop.prevent="() => this._onItemClicked(element.callback)"/>
               </t>
               <div t-if="element.type == 'separator'" role="separator" class="dropdown-divider"/>
           </t>
