@@ -61,6 +61,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeMobileNewMessageInputAutocompleteView() {
+            if (this.messaging.device.isMobile && this.isMobileNewMessageToggled) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {string}
          */
         _computeMobileNewMessageInputPlaceholder() {
@@ -112,6 +122,11 @@ registerModel({
          mobileMessagingNavbarView: one('MobileMessagingNavbarView', {
             compute: '_computeMobileMessagingNavbarView',
             inverse: 'messagingMenu',
+            isCausal: true,
+        }),
+        mobileNewMessageInputAutocompleteView: one('AutocompleteInputView', {
+            compute: '_computeMobileNewMessageInputAutocompleteView',
+            inverse: 'messagingMenuOwnerAsMobileNewMessageInput',
             isCausal: true,
         }),
         mobileNewMessageInputPlaceholder: attr({
