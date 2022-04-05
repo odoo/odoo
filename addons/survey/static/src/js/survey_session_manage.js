@@ -17,6 +17,9 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         'click .o_survey_session_navigation_previous': '_onBack',
         'click .o_survey_session_close': '_onEndSessionClick',
     },
+    custom_events: {
+        update_next_page_tooltip: '_updateNextPageTooltip',
+    },
 
     /**
      * Overridden to set a few properties that come from the python template rendering.
@@ -28,6 +31,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
     start: function () {
         var self = this;
         this.fadeInOutTime = 500;
+        this.$('[data-toggle="tooltip"]').tooltip({ delay: 0 });
         return this._super.apply(this, arguments).then(function () {
             if (self.$el.data('isSessionClosed')) {
                 self._displaySessionClosedPage();
@@ -166,6 +170,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             this._setShowAnswers(true);
             // when showing results, stop refreshing answers
             clearInterval(this.resultsRefreshInterval);
+            this._updateNextPageTooltip({data: {nextPageTooltip: this.nextPageTooltip}});
             delete this.resultsRefreshInterval;
         } else if (['leaderboard', 'leaderboardFinal'].includes(screenToDisplay)
                    && !['leaderboard', 'leaderboardFinal'].includes(this.currentScreen)) {
@@ -189,11 +194,13 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         ev.preventDefault();
 
         var screenToDisplay = this._getPreviousScreen();
+        let nextPageTooltip = false;
 
         if (screenToDisplay === 'question') {
             this._setShowInputs(false);
         } else if (screenToDisplay === 'userInputs') {
             this._setShowAnswers(false);
+            nextPageTooltip = _t('Show Results');
             // resume refreshing answers if necessary
             if (!this.resultsRefreshInterval) {
                 this.resultsRefreshInterval = setInterval(this._refreshResults.bind(this), 2000);
@@ -201,6 +208,9 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         } else if (screenToDisplay === 'results') {
             if (this.leaderBoard) {
                 this.leaderBoard.hideLeaderboard();
+                nextPageTooltip = _t('Leaderboard');
+            } else {
+                nextPageTooltip = _t('Show Results');
             }
             // when showing results, stop refreshing answers
             clearInterval(this.resultsRefreshInterval);
@@ -210,6 +220,11 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
                 return;  // nothing to go back to, we're on the first question
             }
             this._nextQuestion(true);
+        }
+        // Sometimes, going back does simply hides the content(Chart or Leaderboard), so we
+        // simply update the tooltip for the next page in that case, without any extra RPC
+        if (nextPageTooltip) {
+            this._updateNextPageTooltip({data: {nextPageTooltip: nextPageTooltip}});
         }
 
         this.currentScreen = screenToDisplay;
@@ -457,6 +472,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         }).then(function (questionResults) {
             if (questionResults) {
                 self.attendeesCount = questionResults.attendees_count;
+                self.nextPageTooltip = questionResults.next_page_tooltip;
 
                 if (self.resultsChart && questionResults.question_statistics_graph) {
                     self.resultsChart.updateChart(JSON.parse(questionResults.question_statistics_graph));
@@ -655,6 +671,20 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         if (this.resultsChart) {
             this.resultsChart.setShowAnswers(showAnswers);
             this.resultsChart.updateChart();
+        }
+    },
+    /**
+     * Updates the tooltip for current page (on right arrow icon for 'Next' content).
+     * Sometimes, the whole page is not fetched and rendered, but is simply hidden/
+     * shown (for example, going back on Leaderboard, Chart Results). In such cases,
+     * this method can be called manually.
+     *
+     * @param {Object} ev
+     */
+    _updateNextPageTooltip(ev) {
+        const sessionNavigationNextEl = this.el.querySelector('.o_survey_session_navigation_next');
+        if (sessionNavigationNextEl && ev.data.nextPageTooltip) {
+            sessionNavigationNextEl.dataset.originalTitle = ev.data.nextPageTooltip;
         }
     }
 });

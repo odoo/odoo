@@ -7,7 +7,7 @@ import json
 from dateutil.relativedelta import relativedelta
 from werkzeug.exceptions import NotFound
 
-from odoo import fields, http
+from odoo import fields, http, _
 from odoo.http import request
 from odoo.tools import is_html_empty
 
@@ -31,6 +31,18 @@ class UserInputSession(http.Controller):
         if request.env.user.has_group("survey.group_survey_user"):
             return None, {'error': 'survey_session_not_launched', 'survey_id': survey.id}
         return None, {'error': 'survey_session_not_launched'}
+
+    def _fetch_next_page_tooltip(self, survey, is_leaderboard=False, show_results=False):
+        """ Fetch the status / type of next page, which is used as tooltip on the
+        right arrow (next slide) icon to the presenter """
+        next_question = survey._get_session_next_question(False)
+        if show_results and any(answer.answer_score for answer in survey.session_question_id.suggested_answer_ids):
+            return _("Show Results")
+        if not is_leaderboard and survey.session_question_id.is_scored_question and survey.session_question_id.scoring_type != 'no_scoring':
+            return _('Leaderboard')
+        if next_question:
+            return _("Next Section") if next_question.is_page else _("Next Question")
+        return False
 
     # ------------------------------------------------------------
     # SURVEY SESSION MANAGEMENT
@@ -139,7 +151,9 @@ class UserInputSession(http.Controller):
             ('create_date', '>=', survey.session_start_time)
         ])
 
-        return self._prepare_question_results_values(survey, user_input_lines)
+        values = self._prepare_question_results_values(survey, user_input_lines)
+        values['next_page_tooltip'] = self._fetch_next_page_tooltip(survey)
+        return values
 
     @http.route('/survey/session/leaderboard/<string:survey_token>', type='json', auth='user', website=True)
     def survey_session_leaderboard(self, survey_token, **kwargs):
@@ -154,10 +168,16 @@ class UserInputSession(http.Controller):
             # no open session
             return ''
 
-        return request.env['ir.qweb']._render('survey.user_input_session_leaderboard', {
+        leaderboard_results = request.env['ir.qweb']._render('survey.user_input_session_leaderboard', {
             'animate': True,
             'leaderboard': survey._prepare_leaderboard_values()
         })
+
+        # Add Next page status for Leaderboard
+        return {
+            'leaderboardResults': leaderboard_results,
+            'nextPageTooltip': self._fetch_next_page_tooltip(survey, is_leaderboard=True)
+        }
 
     # ------------------------------------------------------------
     # QUICK ACCESS SURVEY ROUTES
@@ -199,11 +219,19 @@ class UserInputSession(http.Controller):
             is_first_question = survey._is_first_page_or_question(survey.session_question_id)
             is_last_question = survey._is_last_page_or_question(most_voted_answers, survey.session_question_id)
 
+        # Tooltip for next page
+        next_page_tooltip = ''
+        if is_last_question and not any(answer.answer_score for answer in survey.session_question_id.suggested_answer_ids):
+            next_page_tooltip = _("Closing Words")
+        else:
+            next_page_tooltip = self._fetch_next_page_tooltip(survey, show_results=True)
+
         values = {
             'survey': survey,
             'is_last_question': is_last_question,
             'is_first_question': is_first_question,
             'is_session_closed': not survey.session_state,
+            'next_page_tooltip': next_page_tooltip
         }
 
         values.update(self._prepare_question_results_values(survey, request.env['survey.user_input.line']))
