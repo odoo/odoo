@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.exceptions import ValidationError
 from odoo import models, fields, api, _
-from odoo.osv import expression
+from odoo.tools.misc import formatLang
 
 SII_VAT = '60805000-0'
 
@@ -68,8 +68,7 @@ class AccountMove(models.Model):
                     if not ((tax_payer_type == '4' and latam_document_type_code in ['110', '111', '112']) or (
                             tax_payer_type == '3' and latam_document_type_code in ['39', '41', '61', '56'])):
                         raise ValidationError(_(
-                            'Document types for foreign customers must be export type (codes 110, 111 or 112) or you \
-                            should define the customer as an end consumer and use receipts (codes 39 or 41)'))
+                            'Document types for foreign customers must be export type (codes 110, 111 or 112) or you should define the customer as an end consumer and use receipts (codes 39 or 41)'))
             if rec.journal_id.type == 'purchase' and rec.journal_id.l10n_latam_use_documents:
                 if vat != SII_VAT and latam_document_type_code == '914':
                     raise ValidationError(_('The DIN document is intended to be used only with RUT 60805000-0'
@@ -134,22 +133,36 @@ class AccountMove(models.Model):
 
     def _l10n_cl_get_invoice_totals_for_report(self):
         self.ensure_one()
-        tax_ids_filter = tax_line_id_filter = None
         include_sii = self._l10n_cl_include_sii()
 
-        if include_sii:
-            tax_ids_filter = (lambda aml, tax: bool(tax.l10n_cl_sii_code != 14))
-            tax_line_id_filter = (lambda aml, tax: bool(tax.l10n_cl_sii_code != 14))
+        base_lines = self.line_ids.filtered(lambda x: not x.display_type and not x.exclude_from_invoice_tab)
+        tax_lines = self.line_ids.filtered(lambda x: not x.display_type and x.tax_repartition_line_id)
 
-        tax_lines_data = self._prepare_tax_lines_data_for_totals_from_invoice(
-            tax_ids_filter=tax_ids_filter, tax_line_id_filter=tax_line_id_filter)
+        base_line_vals_list = [x._convert_to_tax_base_line_dict() for x in base_lines]
+        if include_sii:
+            for vals in base_line_vals_list:
+                vals['taxes'] = vals['taxes'].flatten_taxes_hierarchy().filtered(lambda tax: tax.l10n_cl_sii_code != 14)
+
+        tax_line_vals_list = [x._convert_to_tax_line_dict() for x in tax_lines]
+        if include_sii:
+            tax_line_vals_list = [x for x in tax_line_vals_list if x['tax_repartition_line'].tax_id.l10n_cl_sii_code != 14]
+
+        tax_totals = self.env['account.tax']._prepare_tax_totals_json(
+            base_line_vals_list,
+            self.currency_id,
+            tax_lines=tax_line_vals_list,
+        )
 
         if include_sii:
-            amount_untaxed = self.currency_id.round(
-                self.amount_total - sum([x['tax_amount'] for x in tax_lines_data if 'tax_amount' in x]))
-        else:
-            amount_untaxed = self.amount_untaxed
-        return self._get_tax_totals(self.partner_id, tax_lines_data, self.amount_total, amount_untaxed, self.currency_id)
+            tax_totals['amount_total'] = self.amount_total
+            tax_totals['amount_untaxed'] = self.currency_id.round(
+                tax_totals['amount_total'] - sum([x['tax_amount'] for x in tax_line_vals_list if 'tax_amount' in x]))
+            tax_totals['formatted_amount_total'] = formatLang(self.env, tax_totals['amount_total'], currency_obj=self.currency_id)
+            tax_totals['formatted_amount_untaxed'] = formatLang(self.env, tax_totals['amount_untaxed'], currency_obj=self.currency_id)
+            if tax_totals['subtotals']:
+                tax_totals['subtotals'][0]['formatted_amount'] = tax_totals['formatted_amount_untaxed']
+
+        return tax_totals
 
     def _l10n_cl_include_sii(self):
         self.ensure_one()
