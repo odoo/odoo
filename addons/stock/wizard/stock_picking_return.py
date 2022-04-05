@@ -13,7 +13,7 @@ class ReturnPickingLine(models.TransientModel):
 
     product_id = fields.Many2one('product.product', string="Product", required=True, domain="[('id', '=', product_id)]")
     quantity = fields.Float("Quantity", digits='Product Unit of Measure', required=True)
-    uom_id = fields.Many2one('uom.uom', string='Unit of Measure', related='move_id.product_uom', readonly=False)
+    uom_id = fields.Many2one('uom.uom', string='Unit of Measure', related='product_id.uom_id')
     wizard_id = fields.Many2one('stock.return.picking', string="Wizard")
     move_id = fields.Many2one('stock.move', "Move")
 
@@ -85,7 +85,7 @@ class ReturnPicking(models.TransientModel):
                 quantity -= sum(move.move_line_ids.mapped('product_qty'))
             elif move.state in ('done'):
                 quantity -= move.product_qty
-        quantity = float_round(quantity, precision_rounding=stock_move.product_uom.rounding)
+        quantity = float_round(quantity, precision_rounding=stock_move.product_id.uom_id.rounding)
         return {
             'product_id': stock_move.product_id.id,
             'quantity': quantity,

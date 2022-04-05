@@ -4,7 +4,8 @@
 from ast import literal_eval
 from datetime import date
 from itertools import groupby
-from operator import itemgetter
+from operator import attrgetter, itemgetter
+from collections import defaultdict
 import time
 
 from odoo import api, fields, models, SUPERUSER_ID, _
@@ -417,17 +418,28 @@ class Picking(models.Model):
         - Done: if the picking is done.
         - Cancelled: if the picking is cancelled
         '''
+        picking_moves_state_map = defaultdict(dict)
+        picking_move_lines = defaultdict(set)
+        for move in self.env['stock.move'].search([('picking_id', 'in', self.ids)]):
+            picking_id = move.picking_id
+            move_state = move.state
+            picking_moves_state_map[picking_id.id].update({
+                'any_draft': picking_moves_state_map[picking_id.id].get('any_draft', False) or move_state == 'draft',
+                'all_cancel': picking_moves_state_map[picking_id.id].get('all_cancel', True) and move_state == 'cancel',
+                'all_cancel_done': picking_moves_state_map[picking_id.id].get('all_cancel_done', True) and move_state in ('cancel', 'done'),
+            })
+            picking_move_lines[picking_id.id].add(move.id)
         for picking in self:
-            if not picking.move_lines:
+            if not picking_moves_state_map[picking.id]:
                 picking.state = 'draft'
-            elif any(move.state == 'draft' for move in picking.move_lines):  # TDE FIXME: should be all ?
+            elif picking_moves_state_map[picking.id]['any_draft']:
                 picking.state = 'draft'
-            elif all(move.state == 'cancel' for move in picking.move_lines):
+            elif picking_moves_state_map[picking.id]['all_cancel']:
                 picking.state = 'cancel'
-            elif all(move.state in ['cancel', 'done'] for move in picking.move_lines):
+            elif picking_moves_state_map[picking.id]['all_cancel_done']:
                 picking.state = 'done'
             else:
-                relevant_move_state = picking.move_lines._get_relevant_state_among_moves()
+                relevant_move_state = self.env['stock.move'].browse(picking_move_lines[picking.id])._get_relevant_state_among_moves()
                 if picking.immediate_transfer and relevant_move_state not in ('draft', 'cancel', 'done'):
                     picking.state = 'assigned'
                 elif relevant_move_state == 'partially_available':
@@ -514,6 +526,15 @@ class Picking(models.Model):
             else:
                 picking.show_validate = True
 
+    @api.onchange('partner_id')
+    def onchange_partner_id(self):
+        for picking in self:
+            picking_id = isinstance(picking.id, int) and picking.id or getattr(picking, '_origin', False) and picking._origin.id
+            if picking_id:
+                moves = self.env['stock.move'].search([('picking_id', '=', picking_id)])
+                for move in moves:
+                    move.write({'partner_id': picking.partner_id.id})
+
     @api.onchange('picking_type_id', 'partner_id')
     def onchange_picking_type(self):
         if self.picking_type_id:
@@ -551,6 +572,18 @@ class Picking(models.Model):
                     'message': partner.picking_warn_msg
                 }}
 
+    @api.onchange('location_id', 'location_dest_id', 'picking_type_id')
+    def onchange_locations(self):
+        from_wh = self.location_id.get_warehouse()
+        to_wh = self.location_dest_id.get_warehouse()
+        is_immediate = self.immediate_transfer if self.id else self._context.get('default_immediate_transfer')
+        if self.picking_type_id.code == 'internal' and not is_immediate and from_wh and to_wh and from_wh != to_wh:
+            return {'warning': {
+                'title': _("Warning"),
+                'message': _("You should not use a planned internal transfer to move some products between two warehouses. "
+                             "Instead, use an immediate internal transfer or the resupply route.")
+            }}
+
     @api.model
     def create(self, vals):
         defaults = self.default_get(['name', 'picking_type_id'])
@@ -562,19 +595,22 @@ class Picking(models.Model):
         # As the on_change in one2many list is WIP, we will overwrite the locations on the stock moves here
         # As it is a create the format will be a list of (0, 0, dict)
         moves = vals.get('move_lines', []) + vals.get('move_ids_without_package', [])
-        if moves and vals.get('location_id') and vals.get('location_dest_id'):
+        if moves and ((vals.get('location_id') and vals.get('location_dest_id')) or vals.get('partner_id')):
             for move in moves:
                 if len(move) == 3 and move[0] == 0:
-                    move[2]['location_id'] = vals['location_id']
-                    move[2]['location_dest_id'] = vals['location_dest_id']
-                    # When creating a new picking, a move can have no `company_id` (create before
-                    # picking type was defined) or a different `company_id` (the picking type was
-                    # changed for an another company picking type after the move was created).
-                    # So, we define the `company_id` in one of these cases.
-                    picking_type = self.env['stock.picking.type'].browse(vals['picking_type_id'])
-                    if 'picking_type_id' not in move[2] or move[2]['picking_type_id'] != picking_type.id:
-                        move[2]['picking_type_id'] = picking_type.id
-                        move[2]['company_id'] = picking_type.company_id.id
+                    if vals.get('location_id') and vals.get('location_dest_id'):
+                        move[2]['location_id'] = vals['location_id']
+                        move[2]['location_dest_id'] = vals['location_dest_id']
+                        # When creating a new picking, a move can have no `company_id` (create before
+                        # picking type was defined) or a different `company_id` (the picking type was
+                        # changed for an another company picking type after the move was created).
+                        # So, we define the `company_id` in one of these cases.
+                        picking_type = self.env['stock.picking.type'].browse(vals['picking_type_id'])
+                        if 'picking_type_id' not in move[2] or move[2]['picking_type_id'] != picking_type.id:
+                            move[2]['picking_type_id'] = picking_type.id
+                            move[2]['company_id'] = picking_type.company_id.id
+                    if vals.get('partner_id'):
+                        move[2]['partner_id'] = vals.get('partner_id')
         # make sure to write `schedule_date` *after* the `stock.move` creation in
         # order to get a determinist execution of `_set_scheduled_date`
         scheduled_date = vals.pop('scheduled_date', False)
@@ -607,6 +643,8 @@ class Picking(models.Model):
             after_vals['location_id'] = vals['location_id']
         if vals.get('location_dest_id'):
             after_vals['location_dest_id'] = vals['location_dest_id']
+        if 'partner_id' in vals:
+            after_vals['partner_id'] = vals['partner_id']
         if after_vals:
             self.mapped('move_lines').filtered(lambda move: not move.scrapped).write(after_vals)
         if vals.get('move_lines'):
@@ -672,6 +710,21 @@ class Picking(models.Model):
         self.write({'is_locked': True})
         return True
 
+    def _prepare_stock_move_vals(self, line, picking):
+        return {
+            'name': _('New Move:') + line.product_id.display_name,
+            'product_id': line.product_id.id,
+            'product_uom_qty': line.qty_done,
+            'product_uom': line.product_uom_id.id,
+            'description_picking': line.description_picking,
+            'location_id': picking.location_id.id,
+            'location_dest_id': picking.location_dest_id.id,
+            'picking_id': picking.id,
+            'picking_type_id': picking.picking_type_id.id,
+            'restrict_partner_id': picking.owner_id.id,
+            'company_id': picking.company_id.id,
+        }
+
     def action_done(self):
         """Changes picking state to done by processing the Stock Moves of the Picking
 
@@ -710,19 +763,7 @@ class Picking(models.Model):
                 if moves:
                     ops.move_id = moves[0].id
                 else:
-                    new_move = self.env['stock.move'].create({
-                                                    'name': _('New Move:') + ops.product_id.display_name,
-                                                    'product_id': ops.product_id.id,
-                                                    'product_uom_qty': ops.qty_done,
-                                                    'product_uom': ops.product_uom_id.id,
-                                                    'description_picking': ops.description_picking,
-                                                    'location_id': pick.location_id.id,
-                                                    'location_dest_id': pick.location_dest_id.id,
-                                                    'picking_id': pick.id,
-                                                    'picking_type_id': pick.picking_type_id.id,
-                                                    'restrict_partner_id': pick.owner_id.id,
-                                                    'company_id': pick.company_id.id,
-                                                   })
+                    new_move = self.env['stock.move'].create(self._prepare_stock_move_vals(ops, pick))
                     ops.move_id = new_move.id
                     new_move = new_move._action_confirm()
                     todo_moves |= new_move
@@ -771,14 +812,15 @@ class Picking(models.Model):
         all_in = True
         pack_move_lines = self.move_line_ids.filtered(lambda ml: ml.package_id == package)
         keys = ['product_id', 'lot_id']
+        keys_ids = ["{}.id".format(fname) for fname in keys]
         precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
         grouped_quants = {}
-        for k, g in groupby(sorted(package.quant_ids, key=itemgetter(*keys)), key=itemgetter(*keys)):
+        for k, g in groupby(sorted(package.quant_ids, key=attrgetter(*keys_ids)), key=itemgetter(*keys)):
             grouped_quants[k] = sum(self.env['stock.quant'].concat(*list(g)).mapped('quantity'))
 
         grouped_ops = {}
-        for k, g in groupby(sorted(pack_move_lines, key=itemgetter(*keys)), key=itemgetter(*keys)):
+        for k, g in groupby(sorted(pack_move_lines, key=attrgetter(*keys_ids)), key=itemgetter(*keys)):
             grouped_ops[k] = sum(self.env['stock.move.line'].concat(*list(g)).mapped('product_qty'))
         if any(not float_is_zero(grouped_quants.get(key, 0) - grouped_ops.get(key, 0), precision_digits=precision_digits) for key in grouped_quants) \
                 or any(not float_is_zero(grouped_ops.get(key, 0) - grouped_quants.get(key, 0), precision_digits=precision_digits) for key in grouped_ops):
@@ -925,7 +967,7 @@ class Picking(models.Model):
             'view_id': view.id,
             'target': 'new',
             'res_id': wiz.id,
-            'context': self.env.context,
+            'context': dict(self.env.context),
         }
 
     def action_toggle_is_locked(self):
@@ -998,11 +1040,16 @@ class Picking(models.Model):
                     body=_('The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has been created.') % (
                         backorder_picking.id, backorder_picking.name))
                 moves_to_backorder.write({'picking_id': backorder_picking.id})
-                moves_to_backorder.mapped('package_level_id').write({'picking_id':backorder_picking.id})
+                moves_to_backorder.move_line_ids.package_level_id.write({'picking_id':backorder_picking.id})
                 moves_to_backorder.mapped('move_line_ids').write({'picking_id': backorder_picking.id})
-                backorder_picking.action_assign()
+                if backorder_picking._needs_automatic_assign():
+                    backorder_picking.action_assign()
                 backorders |= backorder_picking
         return backorders
+
+    def _needs_automatic_assign(self):
+        self.ensure_one()
+        return True
 
     def _log_activity_get_documents(self, orig_obj_changes, stream_field, stream, sorted_method=False, groupby_method=False):
         """ Generic method to log activity. To use with

@@ -26,7 +26,15 @@ class ReportStockQuantity(models.Model):
         tools.drop_view_if_exists(self._cr, 'report_stock_quantity')
         query = """
 CREATE or REPLACE VIEW report_stock_quantity AS (
-WITH forecast_qty AS (
+SELECT
+    MIN(id) as id,
+    product_id,
+    state,
+    date,
+    sum(product_qty) as product_qty,
+    company_id,
+    warehouse_id
+FROM (
     SELECT
         m.id,
         m.product_id,
@@ -36,8 +44,8 @@ WITH forecast_qty AS (
         END AS state,
         m.date_expected::date AS date,
         CASE
-            WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN -product_qty
-            WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN product_qty
+            WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN -m.product_qty
+            WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN m.product_qty
         END AS product_qty,
         m.company_id,
         CASE
@@ -54,7 +62,7 @@ WITH forecast_qty AS (
     LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
     WHERE
         pt.type = 'product' AND
-        product_qty != 0 AND
+        m.product_qty != 0 AND
         (whs.id IS NULL or whd.id IS NULL OR whs.id != whd.id) AND
         m.state NOT IN ('cancel', 'draft', 'done')
     UNION
@@ -89,10 +97,10 @@ WITH forecast_qty AS (
             ELSE m.date::date - interval '1 day'
         END, '1 day'::interval)::date date,
         CASE
-            WHEN ((whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit') AND m.state = 'done' THEN product_qty
-            WHEN ((whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit') AND m.state = 'done' THEN -product_qty
-            WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN -product_qty
-            WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN product_qty
+            WHEN ((whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit') AND m.state = 'done' THEN m.product_qty
+            WHEN ((whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit') AND m.state = 'done' THEN -m.product_qty
+            WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN -m.product_qty
+            WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN m.product_qty
         END AS product_qty,
         m.company_id,
         CASE
@@ -109,19 +117,9 @@ WITH forecast_qty AS (
     LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
     WHERE
         pt.type = 'product' AND
-        product_qty != 0 AND
+        m.product_qty != 0 AND
         (whs.id IS NULL or whd.id IS NULL OR whs.id != whd.id) AND
-        m.state NOT IN ('cancel', 'draft')
-)
-SELECT
-    MIN(id) as id,
-    product_id,
-    state,
-    date,
-    sum(product_qty) as product_qty,
-    company_id,
-    warehouse_id
-FROM forecast_qty
+        m.state NOT IN ('cancel', 'draft')) as forecast_qty
 GROUP BY product_id, state, date, company_id, warehouse_id
 );
 """

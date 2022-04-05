@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.tests.common import Form, SavepointCase
 
 
@@ -701,3 +701,29 @@ class TestInventory(SavepointCase):
         inventory_2.action_validate()
         # Expect line of inventory 1 is still up to date
         self.assertEqual(inventory_1.line_ids.outdated, False)
+
+    def test_inventory_line_duplicates(self):
+        """ Checks that creating duplicated inventory lines
+        raises a UserError.
+        """
+        inventory = self.env['stock.inventory'].create({
+            'name': 'Existing Inventory',
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product1.id)]
+        })
+
+        quant = self.env['stock.quant'].create({
+            'location_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'quantity': 10,
+        })
+        inventory.action_start()
+
+        dup_vals = [{
+            'inventory_id': inventory.id,
+            'product_id': self.product1.id,
+            'location_id': self.stock_location.id,
+        }]
+
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.env['stock.inventory.line'].create(dup_vals)

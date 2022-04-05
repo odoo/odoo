@@ -1570,8 +1570,8 @@ msgstr "Lokacije kupca"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL Connector"
-msgstr "DHL Konektor"
+msgid "DHL Express Connector"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -2937,17 +2937,24 @@ msgstr "Je moguće uređivati gotovu količinu"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to reserve more products of %s than you have in stock."
-msgstr "Nije moguće rezervisati više proizvoda %s nego što imate na zalihama."
+"It is not possible to unreserve more products of %s than you have in "
+"stock.The correction could unreserve some operations with problematics "
+"products."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
+"It is not possible to unreserve more products of %s than you have in stock. "
+"Contact an administrator."
 msgstr ""
-"Nije moguće ukloniti rezervaciju sa više proizvoda%s nego što imate na "
-"zalihama."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Try our automated action to fix it"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -6617,6 +6624,13 @@ msgstr "Brojač nepročitanih poruka"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Unreserve"
 msgstr "Ukloni rezervaciju"
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:0
+#: code:addons/stock/models/stock_inventory.py:0
+#, python-format
+msgid "Unsupported search on %s outside of an Inventory Adjustment"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action

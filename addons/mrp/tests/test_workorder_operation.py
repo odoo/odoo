@@ -424,6 +424,36 @@ class TestWorkOrderProcess(TestMrpCommon):
         door_wo_2.record_production()
         self.assertEqual(door_wo_2.state, 'done', "Workorder should be in done state.")
 
+    def test_unlink_workorder(self):
+        laptop = self.env.ref("product.product_product_25")
+        bom = self.env['mrp.bom'].browse(self.ref("mrp.mrp_bom_desk"))
+        bom.routing_id = self.env.ref("mrp.mrp_routing_1")
+
+        production_table_form = Form(self.env['mrp.production'])
+        production_table_form.product_id = laptop
+        production_table_form.bom_id = bom
+        production_table_form.product_qty = 2.0
+        production_table_form.product_uom_id = laptop.uom_id
+        production_table = production_table_form.save()
+        production_table.action_confirm()
+
+        production_table.button_plan()
+
+        self.assertEqual(len(production_table.workorder_ids), 3)
+
+        workorders = production_table.workorder_ids
+
+        for i in range(len(workorders)-1):
+            self.assertEqual(workorders[i].next_work_order_id, workorders[i+1])
+
+        production_table.workorder_ids[1].unlink()
+
+        self.assertEqual(len(production_table.workorder_ids), 2)
+
+        workorders = production_table.workorder_ids
+        for i in range(len(workorders)-1):
+            self.assertEqual(workorders[i].next_work_order_id, workorders[i+1])
+
 
     def test_01_without_workorder(self):
         """ Testing consume quants and produced quants without workorder """
@@ -1272,6 +1302,33 @@ class TestWorkOrderProcess(TestMrpCommon):
         self.assertEqual(line3.product_id, self.product_1)
         self.assertEqual(line3.qty_done, 4)
 
+    def test_change_production_qty(self):
+        """
+        This test checks the expected duration of a work order after the user has changed
+        the production quantity
+        """
+        factor = 2
+        self.bom_1.routing_id.operation_ids[1:].unlink()
+        self.bom_1.routing_id.operation_ids.workcenter_id.write({
+            'capacity': 1,
+            'time_start': 0,
+            'time_stop': 0,
+            'time_efficiency': 100,
+        })
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.bom_1.product_id
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_plan()
+
+        wizard = Form(self.env['change.production.qty'].with_context(default_mo_id=mo.id)).save()
+        wizard.product_qty = self.bom_1.product_qty * factor
+        wizard.change_prod_qty()
+
+        duration_expected = self.bom_1.routing_id.operation_ids.time_cycle_manual * self.bom_1.product_qty * factor
+        self.assertEqual(mo.workorder_ids.duration_expected, duration_expected)
+
 
 class TestRoutingAndKits(SavepointCase):
     @classmethod
@@ -1552,3 +1609,107 @@ class TestRoutingAndKits(SavepointCase):
         wo2.button_start()
         self.assertEqual(wo2.qty_producing, 10)
         self.assertEqual(wo2.finished_lot_id, lot1)
+
+    def test_confirm_twice(self):
+        """
+        Test that when confirming a production twice (mark as to do), the moves are only generated once
+        One assert and one "assertNotRaise"
+        """
+        product_inside = self.env['product.product'].create({'name': 'Wood'})
+        product = self.env['product.product'].create({'name': 'Woooden stick'})
+        bom = self.env['mrp.bom'].create({
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {'product_id': product_inside.id, 'product_qty': 1})]
+        })
+
+        production_table_form = Form(self.env['mrp.production'])
+        production_table_form.product_id = product
+        production_table_form.bom_id = bom
+        production_table_form.product_qty = 2.0
+        production_table = production_table_form.save()
+        # Confirm twice to generate the issue
+        production_table.action_confirm()
+        previous_move_finished_ids = production_table.move_finished_ids
+        production_table.action_confirm()
+        # The actual test
+        self.assertEqual(production_table.move_finished_ids, previous_move_finished_ids, "Confirming it twice should not generate another move finished id")
+        # Then we continue testing the business flow for double protection
+        # since there is a blocking traceback we want to ensure it doesn't appear
+        production_table.action_assign()
+        context = {'active_id': production_table.id, 'active_model': 'mrp.production'}
+        wizard = self.env['mrp.product.produce'].with_context(context).create({})
+
+        # Will raise Expected Singleton if we actually managed to confirm twice
+        wizard.do_produce()
+
+    def test_duplicate_planned_workorder_kit(self):
+        """
+        Test that when duplicating a planned work order that contains a kit as component, the kit is correctly
+        added in the components when planning the duplicated work order
+        Business flow :
+            Create a workcenter (required for routing)
+            Create product_component (component of kit)
+            Create product_kit (created using kit)
+            Create product_to_mo (product that will be manufactured)
+            Create a routing with 1 operation
+            Create bom for product_kit that is two times product_component with routing_one
+            Create bom for product_to_mo, that use product_kit as component with routing_one
+            Create a MO for that product_to_mo and plan it
+            ! There is one workorder for the product_kit created
+            Duplicate that MO and plan that
+            ! There is one workorder for the product_kit created
+
+        -- From BugFix, opw-2531877
+        """
+        workcenter = self.env['mrp.workcenter'].create({'name': 'Cuddly Workcenter'})
+        product_component = self.env['product.product'].create({'name': 'Stone', 'type': 'product'})
+        product_kit = self.env['product.product'].create({'name': 'Two Stones', 'type': 'product'})
+        product_to_mo = self.env['product.product'].create({'name': 'Totem', 'type': 'product'})
+
+        routing_one = self.env['mrp.routing'].create({
+            'name': 'Routing one',
+            'operation_ids': [(0, 0, {
+                'workcenter_id': workcenter.id,
+                'name': 'Pet it gently',
+                'time_cycle': 60,
+                'sequence': 5,
+            })]
+        })
+        bom_kit = self.env['mrp.bom'].create({
+            'product_id': product_kit.id,
+            'product_tmpl_id': product_kit.product_tmpl_id.id,
+            # NO ROUTING_ID
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {'product_id': product_component.id, 'product_qty': 2})]
+        })
+        main_bom = self.env['mrp.bom'].create({
+            'product_id': product_to_mo.id,
+            'product_tmpl_id': product_to_mo.product_tmpl_id.id,
+            'routing_id': routing_one.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'consumption': 'flexible',
+            'bom_line_ids': [(0, 0, {
+                'product_id': product_kit.id,
+                'bom_id': bom_kit.id,
+                'product_qty': 2.0,
+            })],
+        })
+        with Form(self.env['mrp.production']) as mo_form:
+            mo_form.product_id = product_to_mo
+            mo_form.bom_id = main_bom
+            mo_form.product_qty = 1.0
+            mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_plan()
+
+        # Duplicate MO
+        other_mo = mo.copy()
+        other_mo.action_confirm()
+        other_mo.button_plan()
+        self.assertEqual(other_mo.workorder_ids.raw_workorder_line_ids.product_id, mo.workorder_ids.raw_workorder_line_ids.product_id, "Copy of MO with same routing id -> Also create an operation")
+        self.assertEqual(len(other_mo.workorder_ids.raw_workorder_line_ids), len(mo.workorder_ids.raw_workorder_line_ids), "Copy of MO with same routing id -> Also create an operation")

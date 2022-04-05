@@ -15,7 +15,7 @@
 # ibinka lete <ilete@fpbidasoa.net>, 2020
 # Gorka Toledo <gorka.toledo@gmail.com>, 2020
 # Mikel Lizarralde <mikellizarralde@gmail.com>, 2020
-# Naomi Hidalgo <naomihid96@gmail.com>, 2020
+# 61590936fa9bf290362ee306eeabf363_944dd10 <a8bfd5a0b49b9c8455f33fc521764cc3_680674>, 2020
 # Victor Laskurain <blaskurain@binovo.es>, 2020
 # Maialen Rodriguez <maialenrodriguez98@gmail.com>, 2020
 # mgalarza005 <mikelgalarza99@gmail.com>, 2020
@@ -347,6 +347,13 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:0
+#, python-format
+msgid ""
+"A product with a kit-type bill of materials can not have a reordering rule."
 msgstr ""
 
 #. module: mrp
@@ -4726,6 +4733,14 @@ msgstr ""
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
+"You can not create a kit-type bill of materials for products that have at "
+"least one reordering rule."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
 msgstr ""
@@ -4824,6 +4839,14 @@ msgstr ""
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
 #, python-format
 msgid "You have to produce at least one %s."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid ""
+"You must indicate a non-zero amount consumed for at least one of your "
+"components"
 msgstr ""
 
 #. module: mrp

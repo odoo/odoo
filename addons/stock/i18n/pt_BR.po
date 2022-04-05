@@ -3,7 +3,7 @@
 # 	* stock
 # 
 # Translators:
-# rogeriojlle <rogerio.s.machado@gmail.com>, 2019
+# Rogerio Scholz Machado <rogerio.s.machado@gmail.com>, 2019
 # Marcelo Costa <marcelo@comdesk.com.br>, 2019
 # Mateus Pinheiro <smateusbp@gmail.com>, 2019
 # falexandresilva <falexandresilva@gmail.com>, 2019
@@ -1670,8 +1670,8 @@ msgstr "Local do Cliente"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL Connector"
-msgstr "Conector DHL"
+msgid "DHL Express Connector"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -3065,18 +3065,24 @@ msgstr "A quantidade é editável"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to reserve more products of %s than you have in stock."
+"It is not possible to unreserve more products of %s than you have in "
+"stock.The correction could unreserve some operations with problematics "
+"products."
 msgstr ""
-"Não é possível reservar mais produtos do %sque você possui em estoque."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
+"It is not possible to unreserve more products of %s than you have in stock. "
+"Contact an administrator."
 msgstr ""
-"Não é possível cancelar a reserva de mais produtos do %sque você possui em "
-"estoque."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Try our automated action to fix it"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -6901,6 +6907,13 @@ msgstr "Contador de mensagens não lidas"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Unreserve"
 msgstr "Falta de reserva"
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:0
+#: code:addons/stock/models/stock_inventory.py:0
+#, python-format
+msgid "Unsupported search on %s outside of an Inventory Adjustment"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action

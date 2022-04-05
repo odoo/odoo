@@ -12,7 +12,8 @@
 # sejun huang <sejun.huang@gmail.com>, 2019
 # 226408 台北 <226408@so8d.com>, 2020
 # Martin Trigaux, 2020
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# Shigurefox <tom.liang@omniwaresoft.com.tw>, 2021
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2020\n"
+"Last-Translator: Shigurefox <tom.liang@omniwaresoft.com.tw>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -846,7 +847,7 @@ msgstr "可用的產品"
 #: code:addons/stock/models/product.py:581
 #, python-format
 msgid "Available quantity should be set to zero before changing type"
-msgstr ""
+msgstr "在更改類型之前，可用數量應設置為零"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
@@ -1082,7 +1083,7 @@ msgstr "此時禁止更改此記錄的操作類型。"
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "Changing the product is only allowed in 'Draft' state."
-msgstr ""
+msgstr "僅允許在“草稿”狀態下更改產品。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1566,8 +1567,8 @@ msgstr "客戶位置"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL Connector"
-msgstr "DHL連接器"
+msgid "DHL Express Connector"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -1841,7 +1842,7 @@ msgstr "收貨說明"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__description_picking
 msgid "Description picking"
-msgstr ""
+msgstr "撿貨說明"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__partner_id
@@ -2033,7 +2034,7 @@ msgstr "Easypost 連接器"
 msgid ""
 "Editing quantities in an Inventory Adjustment location is forbidden,those "
 "locations are used as counterpart when correcting the quantities."
-msgstr ""
+msgstr "禁止在庫存調整位置編輯數量，這些位置在更正數量時用作副本。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -2155,7 +2156,7 @@ msgstr "篩選"
 #: model:ir.model.fields,field_description:stock.field_stock_assign_serial__next_serial_number
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial
 msgid "First SN"
-msgstr ""
+msgstr "第一個SN"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
@@ -2345,7 +2346,7 @@ msgstr "給予更專業的類別，更高的優先級讓它們顯示在列表的
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__sequence
 msgid "Gives the sequence of this line when displaying the warehouses."
-msgstr ""
+msgstr "顯示倉庫時給出此行的順序。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -2916,15 +2917,24 @@ msgstr "完成數量是否可以編輯"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to reserve more products of %s than you have in stock."
-msgstr "您不能保留超出庫存的%s 產品。"
+"It is not possible to unreserve more products of %s than you have in "
+"stock.The correction could unreserve some operations with problematics "
+"products."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
-msgstr "不能取消保超過庫存數量的 %s 產品。"
+"It is not possible to unreserve more products of %s than you have in stock. "
+"Contact an administrator."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Try our automated action to fix it"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -3119,7 +3129,7 @@ msgstr "鏈接的移動"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "List view of operations"
-msgstr ""
+msgstr "作業列表視圖"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__location_id
@@ -3175,7 +3185,7 @@ msgstr "位置：存儲到"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
 msgid "Location: When arrives to"
-msgstr ""
+msgstr "地點：到達時"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
@@ -3671,7 +3681,7 @@ msgstr "動作數量"
 #: model:ir.model.fields,field_description:stock.field_stock_assign_serial__next_serial_count
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial_count
 msgid "Number of SN"
-msgstr ""
+msgstr "SN號碼"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__lead_days
@@ -4201,7 +4211,7 @@ msgstr "正數庫存"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_reserved
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_reserved
 msgid "Pre-fill Detailed Operations"
-msgstr ""
+msgstr "預填詳細操作"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_ids
@@ -4395,7 +4405,7 @@ msgstr "產品路線報告"
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_tmpl_id
 #: model:ir.model.fields,field_description:stock.field_stock_rules_report__product_tmpl_id
 msgid "Product Template"
-msgstr "产品模板"
+msgstr "產品模板"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__type
@@ -4601,7 +4611,7 @@ msgstr "份"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
-msgstr ""
+msgstr "Quant 的創建受到限制，您無法進行此操作。"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -6237,7 +6247,7 @@ msgid ""
 "advised to change the Product Type since it can lead to inconsistencies. A "
 "better solution could be to archive the product and create a new one "
 "instead."
-msgstr ""
+msgstr "該產品已用於至少一次庫存移動。不建議更改產品類型，因為這會導致不一致。更好的解決方案可能是歸檔產品並創建一個新產品。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -6431,7 +6441,7 @@ msgstr "調撥允許您將產品從一個位置移動到另一個位置。"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
 msgid "Transfers for Groups"
-msgstr ""
+msgstr "Transfers for Groups"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -6457,7 +6467,7 @@ msgstr "觸發其他規則"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Trigger Another Rule If No Stock"
-msgstr ""
+msgstr "當沒有庫存，觸發另一個規則"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type
@@ -6567,7 +6577,7 @@ msgstr "未知包裹"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Unknown stream."
-msgstr ""
+msgstr "Unknown stream."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6599,6 +6609,13 @@ msgid "Unreserve"
 msgstr "取消預留"
 
 #. module: stock
+#: code:addons/stock/models/stock_inventory.py:0
+#: code:addons/stock/models/stock_inventory.py:0
+#, python-format
+msgid "Unsupported search on %s outside of an Inventory Adjustment"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 msgid "UoM"
@@ -6616,6 +6633,7 @@ msgstr "更新產品數量"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
+#: model:ir.actions.act_window,name:stock.dashboard_open_quants
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
@@ -6642,6 +6660,9 @@ msgid ""
 "                Depending on your product configuration, launching a replenishment may trigger a request for quotation,\n"
 "                a manufacturing order or a transfer."
 msgstr ""
+"使用此助手補充您的庫存。\n"
+"                根據您的產品配置，啟動補貨可能會觸發報價請求，\n"
+"                製造訂單或調撥。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6879,7 +6900,7 @@ msgstr "稱重的產品"
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
 "the default route when products pass through this warehouse."
-msgstr ""
+msgstr "當為這條路線選擇了一個倉庫時，這條路線應該被視為產品經過這個倉庫時的默認路線。"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__one
@@ -6891,12 +6912,12 @@ msgstr "當所有產品就緒時"
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
 "Product form."
-msgstr ""
+msgstr "勾選後，可以在“產品”表單的“庫存”選項卡中選擇路線。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
 msgid "When checked, the route will be selectable on the Product Category."
-msgstr ""
+msgstr "勾選後，可以在產品類別中選擇路線。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id

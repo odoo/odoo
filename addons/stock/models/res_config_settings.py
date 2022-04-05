@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, SUPERUSER_ID
 
 
 class ResConfigSettings(models.TransientModel):
@@ -17,7 +17,7 @@ class ResConfigSettings(models.TransientModel):
     group_stock_production_lot = fields.Boolean("Lots & Serial Numbers",
         implied_group='stock.group_production_lot')
     group_lot_on_delivery_slip = fields.Boolean("Display Lots & Serial Numbers on Delivery Slips",
-        implied_group='stock.group_lot_on_delivery_slip')
+        implied_group='stock.group_lot_on_delivery_slip', group='base.group_user,base.group_portal')
     group_stock_tracking_lot = fields.Boolean("Delivery Packages",
         implied_group='stock.group_tracking_lot')
     group_stock_tracking_owner = fields.Boolean("Consignment",
@@ -32,7 +32,7 @@ class ResConfigSettings(models.TransientModel):
     stock_mail_confirmation_template_id = fields.Many2one(related='company_id.stock_mail_confirmation_template_id', readonly=False)
     module_stock_sms = fields.Boolean("SMS Confirmation")
     module_delivery = fields.Boolean("Delivery Methods")
-    module_delivery_dhl = fields.Boolean("DHL USA")
+    module_delivery_dhl = fields.Boolean("DHL Express Connector")
     module_delivery_fedex = fields.Boolean("FedEx")
     module_delivery_ups = fields.Boolean("UPS")
     module_delivery_usps = fields.Boolean("USPS")
@@ -64,28 +64,28 @@ class ResConfigSettings(models.TransientModel):
             self.group_stock_multi_locations = True
 
     def set_values(self):
+        previous_group = self.default_get(['group_stock_multi_locations', 'group_stock_production_lot', 'group_stock_tracking_lot'])
+        was_operations_showed = self.env['stock.picking.type'].with_user(SUPERUSER_ID)._default_show_operations()
         res = super(ResConfigSettings, self).set_values()
 
         if not self.user_has_groups('stock.group_stock_manager'):
             return
 
-        """ If we are not in multiple locations, we can deactivate the internal
+        """ If we disable multiple locations, we can deactivate the internal
         operation types of the warehouses, so they won't appear in the dashboard.
         Otherwise, activate them.
         """
         warehouse_obj = self.env['stock.warehouse']
-        if self.group_stock_multi_locations:
+        if self.group_stock_multi_locations and not previous_group.get('group_stock_multi_locations'):
             # override active_test that is false in set_values
-            warehouses = warehouse_obj.with_context(active_test=True).search([])
-            active = True
-        else:
-            warehouses = warehouse_obj.search([
+            warehouse_obj.with_context(active_test=True).search([]).mapped('int_type_id').write({'active': True})
+        elif not self.group_stock_multi_locations and previous_group.get('group_stock_multi_locations'):
+            warehouse_obj.search([
                 ('reception_steps', '=', 'one_step'),
-                ('delivery_steps', '=', 'ship_only')])
-            active = False
-        warehouses.mapped('int_type_id').write({'active': active})
+                ('delivery_steps', '=', 'ship_only')]
+            ).mapped('int_type_id').write({'active': False})
 
-        if self.group_stock_multi_locations or self.group_stock_production_lot or self.group_stock_tracking_lot:
+        if not was_operations_showed and self.env['stock.picking.type'].with_user(SUPERUSER_ID)._default_show_operations():
             picking_types = self.env['stock.picking.type'].with_context(active_test=False).search([
                 ('code', '!=', 'incoming'),
                 ('show_operations', '=', False)

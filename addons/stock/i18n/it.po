@@ -23,6 +23,9 @@
 # Iacopo Simonelli <lsi@odoo.com>, 2020
 # David Minneci <david@numeko.it>, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2021
+# BigBlu <paolo.moroni@air-srl.com>, 2021
+# Alessandro Fiorino <alessandro.fiorino@digitaldomus.it>, 2021
+# Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
 msgstr ""
@@ -30,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -154,7 +157,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
 msgid "'Inventory - %s' % (object.name)"
-msgstr ""
+msgstr "'Inventario - %s' % (object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
@@ -206,6 +209,13 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the components and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
+"* Ubicazione fornitore: ubicazione virtuale che rappresenta l'ubicazione di origine per prodotti provenienti dai fornitori\n"
+"* Vista: ubicazione virtuale usata per creare una struttura gerarchica per il magazzino, aggregando le ubicazioni figlie; non può contenere direttamente prodotti\n"
+"* Ubicazione interna: ubicazioni fisiche all'interno dei propri magazzini\n"
+"* Ubicazione cliente: ubicazione virtuale che rappresenta l'ubicazione di destinazione per prodotti inviati ai clienti\n"
+"* Perdita di inventario: ubicazione virtuale che funge da controparte per le operazioni di inventario usate per correggere i livelli di giacenza (inventari fisici)\n"
+"* Produzione: ubicazione virtuale equivalente per le operazioni di produzione: utilizza i componenti e produce prodotti finiti\n"
+"* Ubicazione di transito: ubicazione equivalente che deve essere usata per operazioni interaziendali o tra magazzini"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -760,7 +770,7 @@ msgstr "Ubicazioni consentite"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__start_empty
 msgid "Allows to start with an empty inventory."
-msgstr ""
+msgstr "Consente di iniziare con un inventario vuoto."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__prefill_counted_quantity
@@ -1649,8 +1659,8 @@ msgstr "Ubicazioni cliente"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL Connector"
-msgstr "Connettore DHL"
+msgid "DHL Express Connector"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -2021,7 +2031,7 @@ msgstr "Abbandona"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_assign_serial
 msgid "Display Assign Serial"
-msgstr ""
+msgstr "Visualizza serie assegnata"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__display_complete
@@ -2129,6 +2139,9 @@ msgid ""
 "Editing quantities in an Inventory Adjustment location is forbidden,those "
 "locations are used as counterpart when correcting the quantities."
 msgstr ""
+"È vietata la modifica delle quantità in una ubicazione per rettifiche di "
+"inventario. Queste ubicazioni sono usate come controparte quando vengono "
+"corrette le quantità."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -2144,7 +2157,7 @@ msgstr "E-mail di conferma"
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_move_email_validation
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_move_email_validation
 msgid "Email Confirmation picking"
-msgstr ""
+msgstr "E-mail di conferma prelievo"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2155,7 +2168,7 @@ msgstr "Modello e-mail"
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_mail_confirmation_template_id
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_mail_confirmation_template_id
 msgid "Email Template confirmation picking"
-msgstr ""
+msgstr "Modello e-mail di conferma prelievo"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__stock_mail_confirmation_template_id
@@ -2166,7 +2179,7 @@ msgstr "E-mail inviata al cliente dopo che l'ordine è stato completato."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__start_empty
 msgid "Empty Inventory"
-msgstr ""
+msgstr "Inventario vuoto"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__tracking
@@ -2339,7 +2352,7 @@ msgstr "Consegne previste"
 #: model:ir.actions.act_window,name:stock.report_stock_quantity_action_product
 #: model:ir.ui.menu,name:stock.menu_forecast_inventory
 msgid "Forecasted Inventory"
-msgstr ""
+msgstr "Previsioni di inventario"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -2575,7 +2588,7 @@ msgstr "Icona"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_icon
 #: model:ir.model.fields,help:stock.field_stock_production_lot__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icona per indicare un'attività di eccezione."
+msgstr "Icona per indicare un'attività eccezione."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction
@@ -2722,6 +2735,8 @@ msgid ""
 "If you cancel this inventory adjustment, all its inventory adjustment lines "
 "will be lost. Are you sure you want to discard it ?"
 msgstr ""
+"Se la rettifica di inventario viene annullata, verranno perse tutte le righe"
+" di rettifica. Abbandonare veramente?"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_immediate_transfer
@@ -2812,7 +2827,7 @@ msgstr "Ubicazione di ingresso"
 #: code:addons/stock/models/stock_scrap.py:0
 #, python-format
 msgid "Insufficient Quantity"
-msgstr "Quantità insufficiente"
+msgstr "Quantità non sufficiente"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -2888,7 +2903,7 @@ msgstr "Dominio non valido per operando destro %s"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
 msgid "Inventoried Quantity"
-msgstr ""
+msgstr "Quantità inventariata"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__line_ids
@@ -3042,17 +3057,24 @@ msgstr "La quantità è modificabile"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to reserve more products of %s than you have in stock."
-msgstr "Non è possibile prenotare più prodotti di %s di quelli disponibili."
+"It is not possible to unreserve more products of %s than you have in "
+"stock.The correction could unreserve some operations with problematics "
+"products."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
+"It is not possible to unreserve more products of %s than you have in stock. "
+"Contact an administrator."
 msgstr ""
-"Non è possibile annullare la prenotazione di più di %s prodotti rispetto a "
-"quelli disponibili."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Try our automated action to fix it"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -3883,6 +3905,7 @@ msgstr ""
 #, python-format
 msgid "Only a stock manager can validate an inventory adjustment."
 msgstr ""
+"Solo un supervisore magazzino può validare una rettifica di inventario."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -4350,7 +4373,7 @@ msgstr "Giacenza positiva"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_reserved
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_reserved
 msgid "Pre-fill Detailed Operations"
-msgstr ""
+msgstr "Operazioni dettagliate precompilate"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_ids
@@ -5631,7 +5654,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__code
 msgid "Short Name"
-msgstr "Nome corto"
+msgstr "Nome breve"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__code
@@ -5749,6 +5772,7 @@ msgstr "Collo di origine :"
 #: model:ir.model.fields,help:stock.field_stock_inventory__product_ids
 msgid "Specify Products to focus your inventory on particular Products."
 msgstr ""
+"Specificare prodotti per concentrare l'inventario su particolari prodotti."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -5799,7 +5823,7 @@ msgstr "Giacenza"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_assign_serial
 msgid "Stock Assign Serial Numbers"
-msgstr ""
+msgstr "Assegnazione numeri di serie magazzino"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree
@@ -5856,12 +5880,12 @@ msgstr "Operazione di magazzino"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_destination
 msgid "Stock Package Destination"
-msgstr ""
+msgstr "Destinazione collo di magazzino"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_level
 msgid "Stock Package Level"
-msgstr ""
+msgstr "Livello collo di magazzino"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn
@@ -5905,12 +5929,12 @@ msgstr "Resoconto regole magazzino"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_track_confirmation
 msgid "Stock Track Confirmation"
-msgstr ""
+msgstr "Conferma tracciabilità giacenza"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_track_line
 msgid "Stock Track Line"
-msgstr ""
+msgstr "Riga tracciabilità giacenza"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_ids_without_package
@@ -6176,7 +6200,7 @@ msgstr ""
 #: code:addons/stock/static/src/js/inventory_validate_button_controller.js:0
 #, python-format
 msgid "The inventory has been validated"
-msgstr ""
+msgstr "L'inventario è stato validato"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_name_uniq
@@ -6346,6 +6370,8 @@ msgid ""
 "There is already one inventory adjustment line for this product, you should "
 "rather modify this one instead of creating a new one."
 msgstr ""
+"È già presente una riga di rettifica inventario per il prodotto. Invece di "
+"crearne una nuova è preferibile modificare l'esistente."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -6500,6 +6526,10 @@ msgid ""
 "better solution could be to archive the product and create a new one "
 "instead."
 msgstr ""
+"Questo prodotto è stato usato in uno o più movimenti di magazzino. È "
+"sconsigliato cambiare il tipo di prodotto, poichè ciò può portare ad "
+"incoerenze. Archiviare il prodotto e crearne uno nuovo rappresenta invece "
+"una soluzione migliore."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -6697,6 +6727,8 @@ msgstr "Trasferimenti"
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "Transfers allow you to move products from one location to another."
 msgstr ""
+"I trasferimenti consentono di spostare i prodotti da una ubicazione a "
+"un'altra."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
@@ -6748,7 +6780,7 @@ msgstr "Tipo di operazione"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_decoration
 #: model:ir.model.fields,help:stock.field_stock_production_lot__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo di attività di eccezione sul record."
+msgstr "Tipo di attività eccezione sul record."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
@@ -6837,7 +6869,7 @@ msgstr "Collo sconosciuto"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Unknown stream."
-msgstr ""
+msgstr "Stream sconosciuto."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6867,6 +6899,14 @@ msgstr "Numero messaggi non letti"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Unreserve"
 msgstr "Non riservare"
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:0
+#: code:addons/stock/models/stock_inventory.py:0
+#, python-format
+msgid "Unsupported search on %s outside of an Inventory Adjustment"
+msgstr ""
+"Ricerca su %s non supportata al di fuori di una rettifica di inventario"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
@@ -7089,12 +7129,12 @@ msgstr "Magazzini"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warn_insufficient_qty
 msgid "Warn Insufficient Quantity"
-msgstr "Avviso quantità insufficiente"
+msgstr "Avviso quantità non sufficiente"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warn_insufficient_qty_scrap
 msgid "Warn Insufficient Scrap Quantity"
-msgstr "Avviso quantità di scarti insufficiente"
+msgstr "Avviso quantità di scarti non sufficiente"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -7217,6 +7257,9 @@ msgid ""
 "for this field, Odoo generates a procurement to bring the forecasted "
 "quantity to the Max Quantity."
 msgstr ""
+"Quando le giacenze virtuali sono pari o scendono al di sotto della quantità "
+"minima, Odoo genera un approvvigionamento per portare la quantità prevista "
+"alla massima."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -7243,12 +7286,16 @@ msgstr ""
 msgid ""
 "When validating the transfer, the products will be assigned to this owner."
 msgstr ""
+"Durante la convalida del trasferimento, i prodotti vengono assegnati a "
+"questo proprietario."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__owner_id
 msgid ""
 "When validating the transfer, the products will be taken from this owner."
 msgstr ""
+"Durante la convalida del trasferimento, i prodotti vengono prelevati da "
+"questo proprietario."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__additional
@@ -7369,6 +7416,8 @@ msgid ""
 "You can only delete a draft inventory adjustment. If the inventory "
 "adjustment is not done, you can cancel it."
 msgstr ""
+"Possono essere eliminate solo rettifiche di inventario in bozza. Se la "
+"rettifica non è stata completata, è possibile annullarla."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7389,6 +7438,8 @@ msgid ""
 "You can't validate the inventory '%s', maybe this inventory has been already"
 " validated or isn't ready."
 msgstr ""
+"Impossibile validare l'inventario \"%s\", forse è già stato validato oppure "
+"non è pronto."
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -7456,7 +7507,7 @@ msgstr "Impossibile eliminare uno scarto già effettuato."
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "You cannot modify inventory loss quantity"
-msgstr ""
+msgstr "Impossibile modificare la quantità della perdita di inventario"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7579,6 +7630,8 @@ msgid ""
 "You have product(s) in stock that have no lot/serial number. You can assign "
 "lot/serial numbers by doing an inventory adjustment."
 msgstr ""
+"Sono presenti prodotti in giacenza che che non possiedono un numero di "
+"lotto/serie. È possibile assegnarlo effettuando una rettifica di inventario."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0

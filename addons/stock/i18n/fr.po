@@ -40,16 +40,18 @@
 # Maxence del Marmol <mdm@odoo.com>, 2019
 # Bertrand LATOUR <divoir@gmail.com>, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
-# Rémi CAZENAVE <remi@le-filament.com>, 2019
+# Rémi CAZENAVE, 2019
 # omaodoo <oma@odoo.com>, 2019
 # Laura Piraux <lap@odoo.com>, 2020
 # Alexandra Jubert <aju@odoo.com>, 2020
 # Goffin Simon <simon.goffin@outlook.com>, 2020
 # Martin Trigaux, 2020
-# Cécile Collart <cco@odoo.com>, 2020
 # Julien Goergen <jgo@odoo.com>, 2020
 # Pauline Thiry <pth@odoo.com>, 2020
 # Anthony Chaussin <chaussin.anthony@gmail.com>, 2021
+# Cécile Collart <cco@odoo.com>, 2021
+# Yann Papouin <ypa@decgroupe.com>, 2021
+# Thomas Deleval <thd@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -57,7 +59,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Anthony Chaussin <chaussin.anthony@gmail.com>, 2021\n"
+"Last-Translator: Thomas Deleval <thd@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1685,8 +1687,8 @@ msgstr "Emplacements clients"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL Connector"
-msgstr "Connecteur DHL"
+msgid "DHL Express Connector"
+msgstr "Connecteur DHL Express"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -3086,19 +3088,24 @@ msgstr "La quantité traitée est-elle modifiable ?"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to reserve more products of %s than you have in stock."
+"It is not possible to unreserve more products of %s than you have in "
+"stock.The correction could unreserve some operations with problematics "
+"products."
 msgstr ""
-"La quantité de %s réservée ne peut pas être supérieure à la quantité en "
-"stock."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
+"It is not possible to unreserve more products of %s than you have in stock. "
+"Contact an administrator."
 msgstr ""
-"La quantité de %s débloquée ne peut pas être supérieure à la quantité en "
-"stock."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Try our automated action to fix it"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -4554,7 +4561,7 @@ msgstr "Filtre sur les numéros de série"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
 #, python-format
 msgid "Product Moves"
-msgstr "Mouvements de produits"
+msgstr "Mouvements d'articles"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_line
@@ -6486,7 +6493,7 @@ msgstr ""
 "qui a été effectivement déplacée. Pour les autres mouvements, c'est la "
 "quantité de produits qu'il est prévu de déplacer. Abaisser cette quantité ne"
 " génère pas de reliquat. La modification de cette quantité sur les "
-"mouvements assignés affecte la réservation de marchandise, et doit être "
+"mouvements assignés affecte la réservation de marchandises, et doit être "
 "faite avec soin."
 
 #. module: stock
@@ -6698,10 +6705,11 @@ msgid ""
 " life, alert. Such dates are set automatically at lot/serial number creation"
 " based on values set on the product (in days)."
 msgstr ""
-"Les dates suivantes peuvent être suivies via les numéros de lot et de série "
-": date de péremption, date de retrait, date d'expiration et date d'alerte. "
-"Ces dates sont définies automatiquement lors de la création du numéro de "
-"lot/série en fonction de valeurs spécifiées pour chaque produit (en jours)."
+"Les dates suivantes peuvent être suivies via les numéros de lot et de "
+"série : date de péremption, date de retrait, date d'expiration et date "
+"d'alerte. Ces dates sont définies automatiquement lors de la création du "
+"numéro de lot/série en fonction de valeurs spécifiées pour chaque produit "
+"(en jours)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6955,6 +6963,13 @@ msgid "Unreserve"
 msgstr "Annuler la réservation"
 
 #. module: stock
+#: code:addons/stock/models/stock_inventory.py:0
+#: code:addons/stock/models/stock_inventory.py:0
+#, python-format
+msgid "Unsupported search on %s outside of an Inventory Adjustment"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 msgid "UoM"
@@ -6972,6 +6987,7 @@ msgstr "Mettre à jour la quantité d'articles"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
+#: model:ir.actions.act_window,name:stock.dashboard_open_quants
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button

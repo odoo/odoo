@@ -87,6 +87,12 @@ class StockMove(models.Model):
         .filtered(lambda ml: ml.qty_done == 0.0)\
         .write({'move_id': new_move, 'product_uom_qty': 0})
 
+    @api.model
+    def _prepare_merge_moves_distinct_fields(self):
+        distinct_fields = super()._prepare_merge_moves_distinct_fields()
+        distinct_fields.append('bom_line_id')
+        return distinct_fields
+
     @api.depends('raw_material_production_id.move_finished_ids.move_line_ids.lot_id')
     def _compute_order_finished_lot_ids(self):
         for move in self:
@@ -128,6 +134,9 @@ class StockMove(models.Model):
                 defaults['state'] = 'done'
                 defaults['product_uom_qty'] = 0.0
                 defaults['additional'] = True
+            elif production_id.state == 'draft':
+                defaults['group_id'] = production_id.procurement_group_id.id
+                defaults['reference'] = production_id.name
         return defaults
 
     def _action_assign(self):
@@ -273,7 +282,7 @@ class StockMove(models.Model):
                 # Then, we collect every relevant moves related to a specific component
                 # to know how many are considered delivered.
                 uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
-                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id)
+                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, round=False)
                 if not qty_per_kit:
                     continue
                 incoming_moves = bom_line_moves.filtered(filters['incoming_moves'])

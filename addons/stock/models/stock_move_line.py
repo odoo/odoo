@@ -28,9 +28,10 @@ class StockMoveLine(models.Model):
     product_id = fields.Many2one('product.product', 'Product', ondelete="cascade", check_company=True, domain="[('type', '!=', 'service'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True)
     product_qty = fields.Float(
-        'Real Reserved Quantity', digits=0,
+        'Real Reserved Quantity', digits=0, copy=False,
         compute='_compute_product_qty', inverse='_set_product_qty', store=True)
-    product_uom_qty = fields.Float('Reserved', default=0.0, digits='Product Unit of Measure', required=True)
+    product_uom_qty = fields.Float(
+        'Reserved', default=0.0, digits='Product Unit of Measure', required=True, copy=False)
     qty_done = fields.Float('Done', default=0.0, digits='Product Unit of Measure', copy=False)
     package_id = fields.Many2one(
         'stock.quant.package', 'Source Package', ondelete='restrict',
@@ -77,7 +78,7 @@ class StockMoveLine(models.Model):
             else:
                 line.lots_visible = line.product_id.tracking != 'none'
 
-    @api.depends('product_id', 'product_uom_id', 'product_uom_qty')
+    @api.depends('product_id', 'product_id.uom_id', 'product_uom_id', 'product_uom_qty')
     def _compute_product_qty(self):
         for line in self:
             line.product_qty = line.product_uom_id._compute_quantity(line.product_uom_qty, line.product_id.uom_id, rounding_method='HALF-UP')
@@ -254,7 +255,8 @@ class StockMoveLine(models.Model):
             ('lot_id', 'stock.production.lot'),
             ('package_id', 'stock.quant.package'),
             ('result_package_id', 'stock.quant.package'),
-            ('owner_id', 'res.partner')
+            ('owner_id', 'res.partner'),
+            ('product_uom_id', 'uom.uom')
         ]
         updates = {}
         for key, model in triggers:
@@ -315,7 +317,7 @@ class StockMoveLine(models.Model):
                 mls = mls.filtered(lambda ml: not float_is_zero(ml.qty_done - vals['qty_done'], precision_rounding=ml.product_uom_id.rounding))
             for ml in mls:
                 # undo the original move line
-                qty_done_orig = ml.move_id.product_uom._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id, rounding_method='HALF-UP')
+                qty_done_orig = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id, rounding_method='HALF-UP')
                 in_date = Quant._update_available_quantity(ml.product_id, ml.location_dest_id, -qty_done_orig, lot_id=ml.lot_id,
                                                       package_id=ml.result_package_id, owner_id=ml.owner_id)[1]
                 Quant._update_available_quantity(ml.product_id, ml.location_id, qty_done_orig, lot_id=ml.lot_id,
@@ -330,7 +332,8 @@ class StockMoveLine(models.Model):
                 package_id = updates.get('package_id', ml.package_id)
                 result_package_id = updates.get('result_package_id', ml.result_package_id)
                 owner_id = updates.get('owner_id', ml.owner_id)
-                quantity = ml.move_id.product_uom._compute_quantity(qty_done, ml.move_id.product_id.uom_id, rounding_method='HALF-UP')
+                product_uom_id = updates.get('product_uom_id', ml.product_uom_id)
+                quantity = product_uom_id._compute_quantity(qty_done, ml.move_id.product_id.uom_id, rounding_method='HALF-UP')
                 if not ml._should_bypass_reservation(location_id):
                     ml._free_reservation(product_id, location_id, quantity, lot_id=lot_id, package_id=package_id, owner_id=owner_id)
                 if not float_is_zero(quantity, precision_digits=precision):
@@ -416,9 +419,9 @@ class StockMoveLine(models.Model):
             precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             qty_done = float_round(ml.qty_done, precision_digits=precision_digits, rounding_method='HALF-UP')
             if float_compare(uom_qty, qty_done, precision_digits=precision_digits) != 0:
-                raise UserError(_('The quantity done for the product "%s" doesn\'t respect the rounding precision \
-                                  defined on the unit of measure "%s". Please change the quantity done or the \
-                                  rounding precision of your unit of measure.') % (ml.product_id.display_name, ml.product_uom_id.name))
+                raise UserError(_('The quantity done for the product "%s" doesn\'t respect the rounding precision '
+                                  'defined on the unit of measure "%s". Please change the quantity done or the '
+                                  'rounding precision of your unit of measure.') % (ml.product_id.display_name, ml.product_uom_id.name))
 
             qty_done_float_compared = float_compare(ml.qty_done, 0, precision_rounding=ml.product_uom_id.rounding)
             if qty_done_float_compared > 0:
@@ -564,16 +567,17 @@ class StockMoveLine(models.Model):
             # As the move's state is not computed over the move lines, we'll have to manually
             # recompute the moves which we adapted their lines.
             move_to_recompute_state = self.env['stock.move']
+            to_unlink_candidate_ids = set()
 
             rounding = self.product_uom_id.rounding
             for candidate in outdated_candidates:
                 if float_compare(candidate.product_qty, quantity, precision_rounding=rounding) <= 0:
                     quantity -= candidate.product_qty
-                    move_to_recompute_state |= candidate.move_id
                     if candidate.qty_done:
+                        move_to_recompute_state |= candidate.move_id
                         candidate.product_uom_qty = 0.0
                     else:
-                        candidate.unlink()
+                        to_unlink_candidate_ids.add(candidate.id)
                     if float_is_zero(quantity, precision_rounding=rounding):
                         break
                 else:
@@ -585,6 +589,7 @@ class StockMoveLine(models.Model):
                     candidate.product_uom_qty = self.product_id.uom_id._compute_quantity(quantity_split, candidate.product_uom_id, rounding_method='HALF-UP')
                     move_to_recompute_state |= candidate.move_id
                     break
+            self.env['stock.move.line'].browse(to_unlink_candidate_ids).unlink()
             move_to_recompute_state._recompute_state()
 
     def _should_bypass_reservation(self, location):

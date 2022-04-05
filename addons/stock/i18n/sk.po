@@ -8,12 +8,12 @@
 # Matus Krnac <matus.krnac@gmail.com>, 2019
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2019
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
-# Jan Prokop, 2019
 # gebri <gebri@inmail.sk>, 2020
 # Stefan Stieranka <stieranka@itec.sk>, 2020
 # Michal Matus <misko.matus@gmail.com>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# Jan Prokop, 2021
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
+"Last-Translator: Jan Prokop, 2021\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1587,8 +1587,8 @@ msgstr "Umiestnenia zákazníka"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL Connector"
-msgstr "Konektor DHL"
+msgid "DHL Express Connector"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -2964,15 +2964,24 @@ msgstr "Je realizované množstvo editovateľné"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to reserve more products of %s than you have in stock."
-msgstr "Nie je možné rezervovať viac produktov z %s ako máte na sklade."
+"It is not possible to unreserve more products of %s than you have in "
+"stock.The correction could unreserve some operations with problematics "
+"products."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
-msgstr "Nie je možné odrezervovať viac produktov z %s ako máte na sklade."
+"It is not possible to unreserve more products of %s than you have in stock. "
+"Contact an administrator."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Try our automated action to fix it"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -3222,7 +3231,7 @@ msgstr "Lokácie kde systém uskladní hotové výrobky."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
 msgid "Location: Store to"
-msgstr ""
+msgstr "Lokácia: uložiť do"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
@@ -6758,6 +6767,13 @@ msgid "Unreserve"
 msgstr "Odrezervovať"
 
 #. module: stock
+#: code:addons/stock/models/stock_inventory.py:0
+#: code:addons/stock/models/stock_inventory.py:0
+#, python-format
+msgid "Unsupported search on %s outside of an Inventory Adjustment"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 msgid "UoM"
@@ -6775,6 +6791,7 @@ msgstr "Aktualizovať množstvo produktu"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
+#: model:ir.actions.act_window,name:stock.dashboard_open_quants
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
@@ -6956,7 +6973,7 @@ msgstr "Skladisko na propagovanie"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Warehouse view location"
-msgstr ""
+msgstr "Lokácia pohľad skladu"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -7481,7 +7498,7 @@ msgstr "Môžete vrátiť iba jeden výdaj naraz."
 msgid ""
 "You need to activate storage locations to be able to do internal operation "
 "types."
-msgstr ""
+msgstr "Pre použitie interných prevodov je potrebné aktivovať lokácie skladu."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7518,7 +7535,7 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid "You still have some product in locations %s"
-msgstr ""
+msgstr "V lokácii %s sa ešte nachádzajú produkty"
 
 #. module: stock
 #. openerp-web

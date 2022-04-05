@@ -26,7 +26,7 @@
 # roye w <159820@qq.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
-# r <263737@qq.com>, 2019
+# rsh <263737@qq.com>, 2019
 # Martin Trigaux, 2019
 # ChinaMaker <liuct@chinamaker.net>, 2019
 # Manga Tsang <mts@odoo.com>, 2019
@@ -37,9 +37,10 @@
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # ryan ryan <itechr@outlook.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# Jeffery CHEN <jeffery9@gmail.com>, 2020
 # ljsrzc007 <ljsrzc007@gmail.com>, 2020
 # Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
+# Chris H, 2021
 # 
 msgid ""
 msgstr ""
@@ -47,7 +48,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021\n"
+"Last-Translator: Chris H, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1594,8 +1595,8 @@ msgstr "客户位置"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL Connector"
-msgstr "DHL 连接器"
+msgid "DHL Express Connector"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -2943,15 +2944,24 @@ msgstr "完成数量是否可以编辑"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to reserve more products of %s than you have in stock."
-msgstr "你不能保留超出库存的%s 产品。"
+"It is not possible to unreserve more products of %s than you have in "
+"stock.The correction could unreserve some operations with problematics "
+"products."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
-msgstr "不能取消保超过库存数量的 %s 产品。"
+"It is not possible to unreserve more products of %s than you have in stock. "
+"Contact an administrator."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Try our automated action to fix it"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -6625,6 +6635,13 @@ msgid "Unreserve"
 msgstr "取消保留"
 
 #. module: stock
+#: code:addons/stock/models/stock_inventory.py:0
+#: code:addons/stock/models/stock_inventory.py:0
+#, python-format
+msgid "Unsupported search on %s outside of an Inventory Adjustment"
+msgstr "不支持的搜索条件 在%s库存调整之外"
+
+#. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 msgid "UoM"
@@ -6642,6 +6659,7 @@ msgstr "更新产品数量"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
+#: model:ir.actions.act_window,name:stock.dashboard_open_quants
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button

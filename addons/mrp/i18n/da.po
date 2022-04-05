@@ -368,6 +368,14 @@ msgid "A Manufacturing Order is already done or cancelled."
 msgstr "En produktionsordre er allerede udført eller annulleret."
 
 #. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:0
+#, python-format
+msgid ""
+"A product with a kit-type bill of materials can not have a reordering rule."
+msgstr ""
+"Et produkt med en sæt-type stykliste kan ikke have en genbestillings-regel."
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "A workcenter cannot be an alternative of itself"
@@ -4903,6 +4911,16 @@ msgstr ""
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
+"You can not create a kit-type bill of materials for products that have at "
+"least one reordering rule."
+msgstr ""
+"Du kan ikke oprette et sæt-type stykliste for produkter som har mindst én "
+"genbestillings-regel."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
 msgstr ""
@@ -5014,6 +5032,16 @@ msgstr ""
 #, python-format
 msgid "You have to produce at least one %s."
 msgstr "Du har produceret mindst en %s."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid ""
+"You must indicate a non-zero amount consumed for at least one of your "
+"components"
+msgstr ""
+"Du skal angive et antal forbrugt der er forskellig fra nul, for mindst én af"
+" dine komponenter"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0

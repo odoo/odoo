@@ -157,6 +157,9 @@ class MrpWorkorder(models.Model):
             workorder.date_planned_finished = workorder.leave_id.date_to
 
     def _set_dates_planned(self):
+        if not self[0].date_planned_start or not self[0].date_planned_finished:
+            raise UserError(_("It is not possible to unplan one single Work Order. "
+                              "You should unplan the Manufacturing Order instead in order to unplan all the linked operations."))
         date_from = self[0].date_planned_start
         date_to = self[0].date_planned_finished
         self.mapped('leave_id').sudo().write({
@@ -242,6 +245,13 @@ class MrpWorkorder(models.Model):
         # Removes references to workorder to avoid Validation Error
         (self.mapped('move_raw_ids') | self.mapped('move_finished_ids')).write({'workorder_id': False})
         self.mapped('leave_id').unlink()
+        previous_wos = self.env['mrp.workorder'].search([
+            ('next_work_order_id', 'in', self.ids),
+            ('id', 'not in', self.ids)
+        ])
+        for pw in previous_wos:
+            while pw.next_work_order_id and pw.next_work_order_id in self:
+                pw.next_work_order_id = pw.next_work_order_id.next_work_order_id
         return super(MrpWorkorder, self).unlink()
 
     def _get_real_uom_qty(self, qty, to_production_uom=False):
