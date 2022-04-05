@@ -37,7 +37,7 @@
         .o_mobile_menu_toggle,
         .dropdown-toggle,
         .dropdown-item,
-        .o_menu_sections > .css_published {
+        .o_menu_sections > .js_publish_management {
             height: $o-navbar-height;
             @include o-hover-text-color(rgba($-color, .9), $-color);
         }
@@ -112,4 +112,8 @@
             padding: 10px;
         }
     }
+}
+
+.o_menu_sections > .js_publish_management {
+    @extend %-main-navbar-entry-spacing;
 }
