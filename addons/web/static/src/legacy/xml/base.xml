@@ -1392,8 +1392,8 @@
 </div>
 
 <div t-name="ExportDialog" class="o_export">
-    <div class="row o-export-panel">
-        <div class="col-12 col-md-6 d-flex o_left_panel">
+    <div class="row o-export-panel h-100">
+        <div class="o_left_panel col-12 col-md-6 h-100 d-flex flex-column flex-nowrap">
             <div class="form-check o_import_compat">
                 <input class="form-check-input" id="o-update-data" type="checkbox"/>
                 <label class="form-check-label" for="o-update-data">
@@ -1406,9 +1406,9 @@
             <div class="input-group mb-3">
                 <input type="search" class="form-control o_export_search_input" id="o-export-search-filter" placeholder="Search" />
             </div>
-            <div class="border o_left_field_panel"/>
+            <div class="o_left_field_panel flex-grow-1 px-2 overflow-auto border "/>
         </div>
-        <div class="col-12 col-md-6 d-flex o_right_panel mt-3 mt-md-0">
+        <div class="o_right_panel col-12 col-md-6 h-100 d-flex flex-column flex-nowrap mt-3 mt-md-0">
             <div class="o_export_format">
                 <strong>Export Format:</strong>
             </div>
@@ -1419,8 +1419,8 @@
                 <t t-call="Export.SaveList"/>
             </div>
             <div class="o_exported_lists"/>
-            <div class="border o_right_field_panel">
-                <ul class="o_fields_list list-unstyled"/>
+            <div class="o_right_field_panel flex-grow-1 px-2 overflow-auto border ">
+                <ul class="o_fields_list list-unstyled my-2"/>
             </div>
         </div>
     </div>
@@ -1428,9 +1428,9 @@
 <t t-name="Export.TreeItems">
     <t t-foreach="fields" t-as="field" t-key="field_index">
         <t t-set="has_child" t-value="field.children &amp;&amp; (field.id).split('/').length != 3" />
-        <div t-att-data-id="field.id" t-attf-class="o_export_tree_item #{has_child ? 'haschild o_expand' : ''}" tabindex="-1" role="treeitem"> <!-- tabindex make the div focusable -->
-            <span t-if="has_child" class="o_expand_parent fa fa-chevron-right" role="img" aria-label="Show sub-fields" title="Show sub-fields"/>
-            <div t-attf-class="o_tree_column">
+        <div t-att-data-id="field.id" t-attf-class="o_export_tree_item #{has_child ? 'haschild o_expand' : ''} o_cursor_pointer position-relative pl-3 " tabindex="-1" role="treeitem"> <!-- tabindex make the div focusable -->
+            <span t-if="has_child" class="o_expand_parent d-inline-block position-absolute top-0 left-0 mt-1 ml-n3 small fa fa-chevron-right" role="img" aria-label="Show sub-fields" title="Show sub-fields"/>
+            <div t-attf-class="o_tree_column text-wrap">
                 <t t-esc="field.string"/>
                 <t t-if="debug and field.id">
                     (<t t-esc="field.id"/>)
