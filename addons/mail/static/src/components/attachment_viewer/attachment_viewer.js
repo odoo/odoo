@@ -52,6 +52,9 @@ export class AttachmentViewer extends Component {
     }
 
     _mounted() {
+        if (!this.root.el) {
+            return;
+        }
         this.root.el.focus();
         this._handleImageLoad();
         this._hideUnwantedPdfJsButtons();

@@ -107,6 +107,9 @@ export class ChatWindow extends Component {
             // chat window is being deleted
             return;
         }
+        if (!this.root.el) {
+            return;
+        }
         if (this.chatWindow.isDoFocus) {
             this.chatWindow.update({ isDoFocus: false });
             if (this._inputRef.comp) {
