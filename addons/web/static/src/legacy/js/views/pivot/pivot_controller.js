@@ -93,7 +93,7 @@
             const context = this._getRenderButtonContext();
             this.$buttons = $(QWeb.render('PivotView.buttons', context));
             this.$buttons.click(this._onButtonClick.bind(this));
-            this.$buttons.find('button').tooltip();
+            this.$buttons.find('button[title]').tooltip();
             if ($node) {
                 this.$buttons.appendTo($node);
             }
