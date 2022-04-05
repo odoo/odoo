@@ -159,8 +159,8 @@ class ProductProduct(models.Model):
                     continue
                 rounding = component.uom_id.rounding
                 component_res = (
-                    res.get(component.id)
-                    if component.id in res
+                    qties.get(component.id)
+                    if component.id in qties
                     else {
                         "virtual_available": float_round(component.virtual_available, precision_rounding=rounding),
                         "qty_available": float_round(component.qty_available, precision_rounding=rounding),
