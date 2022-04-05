@@ -87,7 +87,7 @@ var DataExport = Dialog.extend({
                 cursor: 'grabbing',
                 handle: '.o_short_field',
                 forcePlaceholderSize: true,
-                placeholder: 'o-field-placeholder',
+                placeholder: 'o-field-placeholder bg-light border border-primary',
                 update: self.proxy('_resetTemplateField'),
             });
         });
@@ -144,7 +144,7 @@ var DataExport = Dialog.extend({
                 $('<li>', {'class': 'o_export_field', 'data-field_id': fieldID}).append(
                     $('<span>', {'class': "fa fa-sort o_short_field mx-1"}),
                     label.trim(),
-                    $('<span>', {'class': 'fa fa-trash m-1 float-end o_remove_field', 'title': _t("Remove field")})
+                    $('<span>', {'class': 'o_remove_field o_cursor_pointer fa fa-trash m-1 float-end ', 'title': _t("Remove field")})
                 )
             );
         }
@@ -256,7 +256,7 @@ var DataExport = Dialog.extend({
                 .after(QWeb.render('Export.TreeItems', {fields: records, debug: config.isDebug()}));
         } else {
             this.$('.o_left_field_panel').empty().append(
-                $('<div/>').addClass('o_field_tree_structure')
+                $('<div/>').addClass('o_field_tree_structure my-2')
                            .append(QWeb.render('Export.TreeItems', {fields: records, debug: config.isDebug()}))
             );
         }
@@ -265,7 +265,7 @@ var DataExport = Dialog.extend({
         this.$records = this.$('.o_export_tree_item');
         this.$records.each(function (i, el) {
             var $el = $(el);
-            $el.find('.o_tree_column').first().toggleClass('o_required', !!self.records[$el.data('id')].required);
+            $el.find('.o_tree_column').first().toggleClass('o_required font-weight-bolder', !!self.records[$el.data('id')].required);
         });
     },
     /**
