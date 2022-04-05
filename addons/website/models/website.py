@@ -872,13 +872,14 @@ class Website(models.Model):
         """
         self.ensure_one()
         if request.endpoint:
-            router = http.root.get_db_router(request.db).bind('')
+            router = http.root.get_db_router(request.db).bind_to_environ(request.httprequest.environ)
             arguments = dict(request.endpoint_arguments)
             for key, val in list(arguments.items()):
                 if isinstance(val, models.BaseModel):
                     if val.env.context.get('lang') != lang.code:
                         arguments[key] = val.with_context(lang=lang.code)
-            path = router.build(request.endpoint, arguments)
+            endpoint = router.match(path_info=request.httprequest.path, return_rule=True)[0].endpoint
+            path = router.build(endpoint, arguments)
         else:
             # The build method returns a quoted URL so convert in this case for consistency.
             path = urls.url_quote_plus(request.httprequest.path, safe='/')
