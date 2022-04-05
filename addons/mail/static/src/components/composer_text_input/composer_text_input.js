@@ -136,6 +136,9 @@ export class ComposerTextInput extends Component {
         if (!this.composerView) {
             return;
         }
+        if (!this.root.el) {
+            return;
+        }
         if (this.composerView.doFocus) {
             this.composerView.update({ doFocus: false });
             if (this.messaging.device.isMobile) {
