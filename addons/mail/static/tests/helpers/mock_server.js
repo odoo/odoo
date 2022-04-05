@@ -1888,10 +1888,10 @@ MockServer.include({
 
             // notify update of last_interest_dt
             const now = datetime_to_str(new Date());
-            this._mockWrite('mail.channel',
+            this._mockWrite('mail.channel', [
                 [channel.id],
                 { last_interest_dt: now },
-            );
+            ]);
             notifications.push({
                 type: 'mail.channel/last_interest_dt_changed',
                 payload: {
