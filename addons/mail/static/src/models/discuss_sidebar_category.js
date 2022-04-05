@@ -67,6 +67,16 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
+        _computeAddingItemAutocompleteInputView() {
+            if (this.isOpen && this.isAddingItem) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
         _computeFilteredCategoryItems() {
             let categoryItems = this.categoryItems;
             const searchValue = this.messaging.discuss.sidebarQuickSearchValue;
@@ -195,6 +205,11 @@ registerModel({
          */
         activeItem: one('DiscussSidebarCategoryItem', {
             compute: '_computeActiveItem',
+        }),
+        addingItemAutocompleteInputView: one('AutocompleteInputView', {
+            compute: '_computeAddingItemAutocompleteInputView',
+            inverse: 'discussSidebarCategoryOwnerAsAddingItem',
+            isCausal: true,
         }),
         /**
          * Determines how the autocomplete of this category should behave.
