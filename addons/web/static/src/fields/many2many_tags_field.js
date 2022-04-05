@@ -11,46 +11,36 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { Domain } from "@web/core/domain";
 import { useService } from "@web/core/utils/hooks";
+import { sprintf } from "@web/core/utils/strings";
 
 const { Component, useState } = owl;
 
 export class Many2ManyTagsField extends Component {
     setup() {
         this.state = useState({
-            hiddenTagsColors: {},
+            autocompleteValue: "",
         });
         this.orm = useService("orm");
     }
     get tags() {
         const colorField = this.props.colorField;
-        return this.props.value.records
-            .filter((record) => !colorField || record.data[colorField])
-            .map((record, i) => ({
-                id: record.data.id,
-                name: record.data.display_name,
-                colorIndex: record.data[colorField] || i,
-            }));
+        return this.props.value.records.map((record) => ({
+            id: record.id,
+            name: record.data.display_name,
+            colorIndex: record.data[colorField],
+        }));
     }
-    isTagHidden(tag) {
-        return !!this.state.hiddenTagsColors[tag.id];
-    }
-    tagColor(tag) {
-        return `o_tag_color_${this.isTagHidden(tag) ? 0 : tag.colorIndex}`;
+    tagColorClass(tag) {
+        return `o_tag_color_${tag.colorIndex}`;
     }
     switchTagColor(colorIndex, tag) {
-        const tagRecord = this.props.value.records.find((record) => record.data.id === tag.id);
-        this.props.update(colorIndex, tagRecord);
-        delete this.state.hiddenTagsColors[tag.id];
+        const tagRecord = this.props.value.records.find((record) => record.id === tag.id);
+        tagRecord.update(this.props.colorField, colorIndex);
     }
     onTagVisibilityChange(isHidden, tag) {
-        console.log(`should set isHiddenInKanban for tag ${tag} to: ${isHidden}`);
-        if (isHidden) {
-            this.state.hiddenTagsColors[tag.id] = this.props.value.records.find(
-                (record) => record.data.id === tag.id
-            ).data[this.props.colorField];
-        } else {
-            delete this.state.hiddenTagsColors[tag.id];
-        }
+        const tagRecord = this.props.value.records.find((record) => record.id === tag.id);
+        console.log(tag);
+        tagRecord.update(this.props.colorField, isHidden ? 0 : 1);
     }
 
     get sources() {
@@ -64,16 +54,19 @@ export class Many2ManyTagsField extends Component {
     }
 
     getDomain() {
-        return this.props.domain.toList(this.props.context);
+        return Domain.and([
+            this.props.domain,
+            Domain.not([["id", "in", this.props.value.currentIds]]),
+        ]).toList(this.props.context);
     }
 
     async loadTagsSource(request) {
         const records = await this.orm.call(this.props.relation, "name_search", [], {
             name: request,
-            args: [], // todo
             operator: "ilike",
+            args: this.getDomain(),
             // limit: this.props.searchLimit + 1,
-            context: this.props.record.getFieldContext(this.props.name),
+            context: this.props.context,
         });
 
         const options = records.map((result) => ({
@@ -81,23 +74,65 @@ export class Many2ManyTagsField extends Component {
             label: result[1],
         }));
 
+        if (
+            this.props.canQuickCreate &&
+            request.length &&
+            !this.tagExist(
+                request,
+                options.map((o) => o.label)
+            )
+        ) {
+            options.push({
+                label: sprintf(this.env._t(`Create "%s"`), escape(request)),
+                value: request,
+                classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create",
+                // action: this.onCreate.bind(this),
+                type: "create",
+            });
+        }
+
+        if (!options.length && this.props.canQuickCreate) {
+            options.push({
+                label: this.env._t("Start typing..."),
+                classList: "o_m2o_start_typing",
+                unselectable: true,
+            });
+        }
+
+        if (!options.length && !this.props.canQuickCreate) {
+            options.push({
+                label: this.env._t("No records"),
+                classList: "o_m2o_no_result",
+                unselectable: true,
+            });
+        }
+
         return options;
     }
 
-    onChange({ inputValue }) {
-        console.log("onChange", inputValue);
-        // if (!inputValue.length) {
-        //     this.props.update(false);
-        // }
+    tagExist(name, additionalTagNames) {
+        return [
+            ...this.props.value.records.map((r) => r.data.display_name),
+            ...additionalTagNames,
+        ].some((n) => n === name);
     }
+
     onInput({ inputValue }) {
-        console.log("onInput", inputValue);
-        // this.state.isFloating = !this.props.value || this.props.value[1] !== inputValue;
+        console.log(inputValue);
+        this.state.autocompleteValue = inputValue;
     }
 
     onSelect(option) {
-        console.log("onSelect", option);
-        console.log("value", this.props.value);
+        this.state.autocompleteValue = "";
+        if (option.type === "create") {
+            this.props
+                .addItem({
+                    context: this.props.context,
+                })
+                .then((record) => record.update("display_name", option.value));
+        } else {
+            this.props.linkItem({ resId: option.value });
+        }
     }
 }
 
@@ -111,17 +146,22 @@ Many2ManyTagsField.components = {
 Many2ManyTagsField.template = "web.Many2ManyTagsField";
 Many2ManyTagsField.defaultProps = {
     canEditColor: true,
+    canQuickCreate: true,
     update: () => {},
 };
 Many2ManyTagsField.props = {
     ...standardFieldProps,
     canEditColor: { type: Boolean, optional: true },
+    canQuickCreate: { type: Boolean, optional: true },
     colorField: { type: String, optional: true },
     placeholder: { type: String, optional: true },
     update: { type: Function, optional: true },
     relation: { type: String },
     domain: { type: Domain },
     context: { type: Object },
+    linkItem: { type: Function },
+    addItem: { type: Function },
+    record: { type: Object },
 };
 Many2ManyTagsField.RECORD_COLORS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 Many2ManyTagsField.displayName = _lt("Tags");
@@ -142,6 +182,10 @@ Many2ManyTagsField.extractProps = (fieldName, record, attrs) => {
         relation: record.activeFields[fieldName].relation,
         domain: record.getFieldDomain(fieldName),
         context: record.getFieldContext(fieldName),
+        canQuickCreate: !attrs.options.no_quick_create,
+        linkItem: record.data[fieldName].add.bind(record.data[fieldName]),
+        addItem: record.data[fieldName].addNew.bind(record.data[fieldName]),
+        record: record,
     };
 };
 

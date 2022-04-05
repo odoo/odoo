@@ -10,7 +10,7 @@
                     </t>
                     <div class="o_tag_dropdown">
                         <ColorList colors="constructor.RECORD_COLORS" onColorSelected="(id) => this.switchTagColor(id, tag)"/>
-                        <CheckBox value="isTagHidden(tag)" onChange.bind="(isChecked) => this.onTagVisibilityChange(isChecked, tag)">Hide in kanban</CheckBox>
+                        <CheckBox value="tag.colorIndex === 0" onChange.bind="(isChecked) => this.onTagVisibilityChange(isChecked, tag)">Hide in kanban</CheckBox>
                     </div>
                 </Dropdown>
             </t>
@@ -22,12 +22,11 @@
             <div class="o_input_dropdown">
                 <AutoComplete
                     t-if="!props.readonly"
-                    value="''"
+                    value="state.autocompleteValue"
                     placeholder="props.placeholder"
                     sources="sources"
                     onSelect.bind="onSelect"
                     onInput.bind="onInput"
-                    onChange.bind="onChange"
                 />
                 <a role="button" class="o_dropdown_button" draggable="false" />
             </div>    
@@ -35,7 +34,7 @@
     </t>
 
     <t t-name="badge_text" owl="1">
-        <span class="o_tag badge badge-pill" t-attf-class="{{tagColor(tag)}}" t-att-title="tag.name or 'tag' + tag_index">
+        <span class="o_tag badge badge-pill" t-attf-class="{{tagColorClass(tag)}}" t-att-title="tag.name or 'tag' + tag_index">
             <span class="o_tag_badge_text" t-esc="tag.name or 'tag' + tag_index"/>
             <a t-if="!props.readonly" href="#" class="fa fa-times ml-2 o_delete" title="Delete" aria-label="Delete"></a>
         </span>

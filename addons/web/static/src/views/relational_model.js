@@ -2145,6 +2145,8 @@ export class StaticList extends DataPoint {
         this.records = this._getRecords();
         this.onChanges();
         this.model.notify();
+
+        return record;
     }
 
     applyCommand(command) {
