@@ -294,7 +294,7 @@ class AccountAccount(models.Model):
             value = not value
         self._cr.execute("""
             SELECT id FROM account_account account
-            WHERE EXISTS (SELECT * FROM account_move_line aml WHERE aml.account_id = account.id LIMIT 1)
+            WHERE EXISTS (SELECT 1 FROM account_move_line aml WHERE aml.account_id = account.id LIMIT 1)
         """)
         return [('id', 'in' if value else 'not in', [r[0] for r in self._cr.fetchall()])]
 
