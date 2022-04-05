@@ -376,8 +376,6 @@ class MailMail(models.Model):
             try:
                 mail = self.browse(mail_id)
                 if mail.state != 'outgoing':
-                    if mail.state != 'exception' and mail.auto_delete:
-                        mail.sudo().unlink()
                     continue
 
                 # remove attachments if user send the link with the access_token
