@@ -9,13 +9,14 @@ import { standardFieldProps } from "./standard_field_props";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { SelectCreateDialog } from "../views/view_dialogs/select_create_dialog";
 
-const { Component, onWillUpdateProps, useState } = owl;
+const { Component, onWillDestroy, onWillUpdateProps, useState } = owl;
 
 export class Many2OneField extends Component {
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
         this.dialog = useService("dialog");
+        this.dialogClose = [];
 
         this.state = useState({
             isFloating: !this.props.value,
@@ -23,6 +24,10 @@ export class Many2OneField extends Component {
 
         onWillUpdateProps(async (nextProps) => {
             this.state.isFloating = !nextProps.value;
+        });
+
+        onWillDestroy(() => {
+            this.dialogClose.forEach((close) => close());
         });
     }
 
@@ -135,35 +140,37 @@ export class Many2OneField extends Component {
             context: this.props.record.getFieldContext(this.props.name),
         });
 
-        this.dialog.add(FormViewDialog, {
-            parent: this,
-            resId,
-            mode: this.props.readonly ? "readonly" : "edit",
-            context: this.props.record.getFieldContext(this.props.name),
-            resModel: this.props.relation,
-            viewId,
-            title: sprintf(
-                this.env._t("Open: %s"),
-                this.props.record.activeFields[this.props.name].string
-            ),
-        });
+        this.dialogClose.push(
+            this.dialog.add(FormViewDialog, {
+                resId,
+                mode: this.props.readonly ? "readonly" : "edit",
+                context: this.props.record.getFieldContext(this.props.name),
+                resModel: this.props.relation,
+                viewId,
+                title: sprintf(
+                    this.env._t("Open: %s"),
+                    this.props.record.activeFields[this.props.name].string
+                ),
+            })
+        );
     }
 
     onSearchMore() {
-        this.dialog.add(SelectCreateDialog, {
-            parent: this,
-            resModel: this.props.relation,
-            domain: this.getDomain(),
-            title: sprintf(
-                this.env._t("Search: %s"),
-                this.props.record.activeFields[this.props.name].string
-            ),
-            multiSelect: false,
-            onSelected: ([resId]) => {
-                this.props.update([resId]);
-            },
-            searchViewId: false,
-        });
+        this.dialogClose.push(
+            this.dialog.add(SelectCreateDialog, {
+                resModel: this.props.relation,
+                domain: this.getDomain(),
+                title: sprintf(
+                    this.env._t("Search: %s"),
+                    this.props.record.activeFields[this.props.name].string
+                ),
+                multiSelect: false,
+                onSelected: ([resId]) => {
+                    this.props.update([resId]);
+                },
+                searchViewId: false,
+            })
+        );
     }
     onCreate() {
         console.log("create");

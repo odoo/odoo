@@ -11,7 +11,7 @@ import { ListRenderer } from "@web/views/list/list_renderer";
 import { evalDomain } from "@web/views/relational_model";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
-const { Component } = owl;
+const { Component, onWillDestroy } = owl;
 
 const X2M_RENDERERS = {
     list: ListRenderer,
@@ -21,12 +21,16 @@ const X2M_RENDERERS = {
 export class X2ManyField extends Component {
     setup() {
         this.dialogService = useService("dialog");
+        this.dialogClose = [];
         this.fieldInfo = this.props.record.activeFields[this.props.name];
         // FIXME WOWL: is it normal to get here without fieldInfo.views?
         if (this.fieldInfo.views && this.fieldInfo.viewMode in this.fieldInfo.views) {
             this.Renderer = X2M_RENDERERS[this.fieldInfo.viewMode];
             this.viewMode = this.fieldInfo.viewMode;
         }
+        onWillDestroy(() => {
+            this.dialogClose.forEach((close) => close());
+        });
     }
 
     get list() {
@@ -141,22 +145,23 @@ export class X2ManyField extends Component {
             values: record._values,
             changes: record.getChanges(true),
         });
-        this.dialogService.add(FormViewDialog, {
-            parent: this,
-            archInfo: form, // FIXME: might not be there
-            record: newRecord,
-            save: () => {
-                Object.assign(record._values, newRecord._values);
-                Object.assign(record._changes, newRecord._changes); // don't work with x2many inside,...
-                record.data = { ...record._values, ...record._changes };
-                record.onChanges();
-                record.model.notify();
-            },
-            title: sprintf(
-                this.env._t("Open: %s"),
-                this.props.record.activeFields[this.props.name].string
-            ),
-        });
+        this.dialogClose.push(
+            this.dialogService.add(FormViewDialog, {
+                archInfo: form, // FIXME: might not be there
+                record: newRecord,
+                save: () => {
+                    Object.assign(record._values, newRecord._values);
+                    Object.assign(record._changes, newRecord._changes); // don't work with x2many inside,...
+                    record.data = { ...record._values, ...record._changes };
+                    record.onChanges();
+                    record.model.notify();
+                },
+                title: sprintf(
+                    this.env._t("Open: %s"),
+                    this.props.record.activeFields[this.props.name].string
+                ),
+            })
+        );
     }
 
     onAdd(context) {
@@ -177,28 +182,29 @@ export class X2ManyField extends Component {
                 mode: "edit",
                 viewMode: "form",
             });
-            this.dialogService.add(FormViewDialog, {
-                parent: this,
-                archInfo: form, // FIXME: might not be there
-                record,
-                save: () => {
-                    record.switchMode("readonly");
-                    this.list.addNew({
-                        context: makeContext([this.list.context, context]),
-                        resModel: this.list.resModel,
-                        fields: this.list.fields,
-                        activeFields: this.list.activeFields,
-                        views: this.list.views,
-                        mode: "readonly",
-                        values: record._values,
-                        changes: record._changes,
-                    });
-                },
-                title: sprintf(
-                    this.env._t("Open: %s"),
-                    this.props.record.activeFields[this.props.name].string
-                ),
-            });
+            this.dialogClose.push(
+                this.dialogService.add(FormViewDialog, {
+                    archInfo: form, // FIXME: might not be there
+                    record,
+                    save: () => {
+                        record.switchMode("readonly");
+                        this.list.addNew({
+                            context: makeContext([this.list.context, context]),
+                            resModel: this.list.resModel,
+                            fields: this.list.fields,
+                            activeFields: this.list.activeFields,
+                            views: this.list.views,
+                            mode: "readonly",
+                            values: record._values,
+                            changes: record._changes,
+                        });
+                    },
+                    title: sprintf(
+                        this.env._t("Open: %s"),
+                        this.props.record.activeFields[this.props.name].string
+                    ),
+                })
+            );
         }
     }
 }

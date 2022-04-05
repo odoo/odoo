@@ -24,7 +24,7 @@ import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 import { SimpleDialog } from "@web/core/dialog/dialog";
 
-const { Component, markup, useState, useRef, onWillStart, onMounted } = owl;
+const { Component, markup, useState, useRef, onWillDestroy, onWillStart, onMounted } = owl;
 const { COLORS } = ColorList;
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
@@ -89,6 +89,7 @@ KanbanCoverImageDialog.components = { SimpleDialog };
 export class KanbanRenderer extends Component {
     setup() {
         const { arch, cards, className, fields, xmlDoc, examples } = this.props.archInfo;
+        this.dialogClose = [];
         this.cards = cards;
         this.className = className;
         this.cardTemplate = useViewCompiler(KanbanCompiler, arch, fields, xmlDoc);
@@ -169,6 +170,9 @@ export class KanbanRenderer extends Component {
                 );
             }
             return false;
+        });
+        onWillDestroy(() => {
+            this.dialogClose.forEach((close) => close());
         });
     }
 
@@ -416,18 +420,19 @@ export class KanbanRenderer extends Component {
     }
 
     editGroup(group) {
-        this.dialog.add(FormViewDialog, {
-            parent: this,
-            resModel: group.resModel,
-            resId: group.value,
-            context: group.context,
-            mode: "edit",
-            title: sprintf(this.env._t("Edit: %s"), group.displayName),
-            save: async (record) => {
-                await record.save({ noReload: true });
-                await this.props.list.load();
-            },
-        });
+        this.dialogClose.push(
+            this.dialog.add(FormViewDialog, {
+                resModel: group.resModel,
+                resId: group.value,
+                context: group.context,
+                mode: "edit",
+                title: sprintf(this.env._t("Edit: %s"), group.displayName),
+                save: async (record) => {
+                    await record.save({ noReload: true });
+                    await this.props.list.load();
+                },
+            })
+        );
     }
 
     archiveGroup(group) {

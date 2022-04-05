@@ -13,18 +13,10 @@ export class Dialog extends Component {
             this.data.close();
         });
         useChildSubEnv({ inDialog: true });
-        //WOWL: To discuss
-        if (this.props.parent) {
-            const parent = owl.toRaw(this.props.parent);
-            parent.__owl__.willDestroy.push(() => {
-                this.close();
-            });
-        }
     }
 }
 Dialog.template = "web.Dialog";
 Dialog.props = {
-    parent: { type: Object, optional: true }, // WOWL: To discuss
     contentClass: { type: String, optional: true },
     fullscreen: { type: Boolean, optional: true },
     footer: { type: Boolean, optional: true },
