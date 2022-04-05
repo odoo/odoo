@@ -124,11 +124,7 @@ class Product(models.Model):
         products = self.filtered(lambda p: p.type != 'service')
         res = products._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
         for product in products:
-            product.qty_available = res[product.id]['qty_available']
-            product.incoming_qty = res[product.id]['incoming_qty']
-            product.outgoing_qty = res[product.id]['outgoing_qty']
-            product.virtual_available = res[product.id]['virtual_available']
-            product.free_qty = res[product.id]['free_qty']
+            product.update(res[product.id])
         # Services need to be set with 0.0 for all quantities
         services = self - products
         services.qty_available = 0.0
