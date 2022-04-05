@@ -24,54 +24,63 @@ const FONT_FAMILIES = [
     'Verdana, Geneva, sans-serif', // name: "Verdana"
 ].map(fontFamily => _normalizeFontFamily(fontFamily));
 const CSS_PREFIX = '.o_mail_wrapper';
-const DEFAULT_CSS = `
-    ${CSS_PREFIX} h1 {
-        font-size: 35px;
-        color: #212529;
-        font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
+const DEFAULT_CSS_OBJECT = {
+    h1: {
+        'font-size': '35px',
+        color: '#212529',
+        'font-family': 'Arial,Helvetica Neue,Helvetica,sans-serif',
+    },
+    h2: {
+        'font-size': '28px',
+        color: '#212529',
+        'font-family': 'Arial,Helvetica Neue,Helvetica,sans-serif',
+    },
+    h3: {
+        'font-size': '24.5px',
+        color: '#212529',
+        'font-family': 'Arial,Helvetica Neue,Helvetica,sans-serif',
+    },
+    'p, p *, li, li *': {
+        'font-size': '14x',
+        color: '#212529',
+        'font-family': 'Arial,Helvetica Neue,Helvetica,sans-serif',
+    },
+    'a:not(.btn), a.btn-link': {
+        'text-decoration-line': 'none',
+        color: '#276e72',
+    },
+    'a.btn-primary, a.btn-outline-primary, a.btn-fill-primary': {
+        'font-size': '12.25px',
+        color: '#FFFFFF',
+        'background-color': '#35979c',
+        'border-color': '#35979c',
+        'border-style': 'solid',
+        'border-width': '1px',
+    },
+    'a.btn-secondary, a.btn-outline-secondary, a.btn-fill-secondary': {
+        'font-size': '12.25px',
+        color: '#FFFFFF',
+        'background-color': '#685563',
+        'border-color': '#685563',
+        'border-style': 'solid',
+        'border-width': '1px',
+    },
+    hr: {
+        'border-top-color': '#212529',
+        'border-top-style': 'solid',
+        'border-top-width': '1px',
+        width: '100%',
     }
-    ${CSS_PREFIX} h2 {
-        font-size: 28px;
-        color: #212529;
-        font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
-    }
-    ${CSS_PREFIX} h3 {
-        font-size: 24.5px;
-        color: #212529;
-        font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
-    }
-    ${CSS_PREFIX} p {
-        font-size: 14px;
-        color: #212529;
-        font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
-    }
-    ${CSS_PREFIX} a:not(.btn) {
-        text-decoration-line: none;
-        color: #276e72
-    }
-    ${CSS_PREFIX} a[href].btn-primary {
-        font-size: 14px;
-        color: #FFFFFF;
-        background-color: #35979c;
-        border-color: #35979c;
-        border-style: solid;
-        border-width: 1px;
-    }
-    ${CSS_PREFIX} a[href].btn-secondary {
-        font-size: 14px;
-        color: #FFFFFF;
-        background-color: #685563;
-        border-color: #685563;
-        border-style: solid;
-        border-width: 1px;
-    }
-    ${CSS_PREFIX} hr {
-        border-top-color: #212529;
-        border-top-style: solid;
-        border-top-width: 1px;
-        width: 100%;
-    }
-`;
+};
+const DEFAULT_CSS = Object.keys(DEFAULT_CSS_OBJECT).map( // selectors
+    key => key.split(',').map( // each individual comma separated selector
+        selector => `${CSS_PREFIX} ${selector.trim()} {\n    ${ // selector {
+            Object.keys(DEFAULT_CSS_OBJECT[key]).map( // css properties
+                prop => `${prop}: ${DEFAULT_CSS_OBJECT[key][prop]}`) // [prop: value]
+                    .join(';\n    ')}\n}` // prop: value;
+    ).join('\n')
+).join('\n'); // css text
+
 const BTN_SIZE_STYLES = {
     'btn-sm': {
         'padding': '0.25rem 0.5rem',
@@ -96,10 +105,11 @@ const PRIORITY_STYLES = {
     'h3': ['font-family'],
     'p': ['font-family'],
     'a:not(.btn)': [],
-    'a[href].btn-primary': [],
-    'a[href].btn-secondary': [],
+    'a.btn-primary': [],
+    'a.btn-secondary': [],
     'hr': [],
 };
+const RE_CSS_TEXT_MATCH = /([^{]+)([^}]+)/;
 
 //--------------------------------------------------------------------------
 // Options
@@ -256,15 +266,18 @@ options.registry.DesignTab = options.Class.extend({
     async start() {
         const res = await this._super(...arguments);
         const $editable = this.options.wysiwyg.getEditable();
-        this.styleElement = $editable[0].ownerDocument.querySelector('#design-element');
-        if (!this.styleElement) {
+        this.document = $editable[0].ownerDocument;
+        this.styleElement = this.document.querySelector('#design-element');
+        if (this.styleElement) {
+            this.styleElement.textContent = this._splitCss(this.styleElement.textContent);
+        } else {
             // If a style element can't be found, create one and initialize it.
             this.styleElement = document.createElement('style');
             this.styleElement.setAttribute('id', 'design-element');
             // The style element needs to be within the layout of the email in
             // order to be saved along with it.
             $editable.find('.o_layout').prepend(this.styleElement);
-            this.styleElement.textContent = DEFAULT_CSS;
+            this.styleElement.textContent = this._splitCss(DEFAULT_CSS);
         }
         // When editing a stylesheet, its content is not updated so it won't be
         // saved along with the mailing. Therefore we need to write its cssText
@@ -272,11 +285,11 @@ options.registry.DesignTab = options.Class.extend({
         // two separate style elements: one that will be saved and one to hold
         // the stylesheet. Both need to be synchronized, which will be done via
         // `_commitCss`.
-        let sheetOwner = $editable[0].ownerDocument.querySelector('#sheet-owner');
+        let sheetOwner = this.document.querySelector('#sheet-owner');
         if (!sheetOwner) {
             sheetOwner = document.createElement('style');
             sheetOwner.setAttribute('id', 'sheet-owner');
-            $editable[0].ownerDocument.head.appendChild(sheetOwner);
+            this.document.head.appendChild(sheetOwner);
         }
         sheetOwner.disabled = true;
         sheetOwner.textContent = this.styleElement.textContent;
@@ -445,6 +458,31 @@ options.registry.DesignTab = options.Class.extend({
      */
     _getRule(selectorText) {
         return [...(this.styleSheet.cssRules || this.styleSheet.rules)].find(rule => rule.selectorText === selectorText);
+    },
+    /**
+     * Take a css text and splits each comma-separated selector into separate
+     * styles, applying the css prefix to each. Return the modified css text.
+     *
+     * @param {string} css
+     * @returns {string}
+     */
+    _splitCss(css) {
+        const styleElement = this.document.createElement('style');
+        styleElement.textContent = css;
+        // Temporarily insert the style element in the dom to have a stylesheet.
+        document.head.appendChild(styleElement);
+        const rules = [...styleElement.sheet.cssRules];
+        styleElement.remove();
+        const result = rules.map(rule => {
+            const [, fullSelector, styles] = rule.cssText.match(RE_CSS_TEXT_MATCH);
+            return fullSelector.split(',').map(selector => {
+                if (!selector.trim().startsWith(CSS_PREFIX)) {
+                    selector = `${CSS_PREFIX} ${selector.trim()}`;
+                }
+                return `${selector.trim()} {${styles.replace('{', '').trim()}}`;
+            }).join('');
+        }).join('');
+        return result;
     },
 });
 
