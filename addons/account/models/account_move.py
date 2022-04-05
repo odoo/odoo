@@ -1361,7 +1361,8 @@ class AccountMove(models.Model):
         'line_ids.amount_residual',
         'line_ids.amount_residual_currency',
         'line_ids.payment_id.state',
-        'line_ids.full_reconcile_id')
+        'line_ids.full_reconcile_id',
+        'state')
     def _compute_amount(self):
         stored_ids = tuple(self.ids)
         if stored_ids:
@@ -1437,7 +1438,7 @@ class AccountMove(models.Model):
                         total_tax_currency += line.amount_currency
                         total += line.balance
                         total_currency += line.amount_currency
-                    elif line.account_id.user_type_id.type in ('receivable', 'payable'):
+                    elif line.account_id.user_type_id.type in ('receivable', 'payable') and move.state == 'posted':
                         # Residual amount.
                         total_to_pay += line.balance
                         total_residual += line.amount_residual
