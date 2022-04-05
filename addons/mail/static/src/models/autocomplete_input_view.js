@@ -5,12 +5,15 @@ import { one } from '@mail/model/model_field';
 
 registerModel({
     name: 'AutocompleteInputView',
-    identifyingFields: ['chatWindowOwnerAsNewMessage'],
+    identifyingFields: [['chatWindowOwnerAsNewMessage', 'discussViewOwnerAsMobileAddItemHeader']],
     fields: {
         chatWindowOwnerAsNewMessage: one('ChatWindow', {
             inverse: 'newMessageAutocompleteInputView',
             readonly: true,
-            required: true,
+        }),
+        discussViewOwnerAsMobileAddItemHeader: one('DiscussView', {
+            inverse: 'mobileAddItemHeaderView',
+            readonly: true,
         }),
     },
 });
