@@ -839,13 +839,13 @@ X[]
                             </tbody></table>
                             <p>kl</p>`,
                         ),
-                        stepFunction: deleteForward,
+                        stepFunction: async editor => {
+                            await deleteForward(editor);
+                            triggerEvent(editor.editable, 'keydown', { key: 'Delete' });
+                        },
                         contentAfter: unformat(
                             `<p>ab</p>
-                            <table><tbody>
-                                <tr><td>cd</td><td>ef</td></tr>
-                                <tr><td>gh</td><td>ij[]</td></tr>
-                            </tbody></table>
+                                <p>[]<br></p>
                             <p>kl</p>`,
                         ),
                     });
@@ -2203,14 +2203,14 @@ X[]
                             </tbody></table>
                             <p>[]kl</p>`,
                         ),
-                        stepFunction: deleteBackward,
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                            triggerEvent(editor.editable, 'keydown', { key: 'Backspace' });
+                        },
                         contentAfter: unformat(
                             `<p>ab</p>
-                            <table><tbody>
-                                <tr><td>cd</td><td>ef</td></tr>
-                                <tr><td>gh</td><td>ij</td></tr>
-                            </tbody></table>
-                            <p>[]kl</p>`,
+                            <p>[]<br></p>
+                            <p>kl</p>`,
                         ),
                     });
                 });

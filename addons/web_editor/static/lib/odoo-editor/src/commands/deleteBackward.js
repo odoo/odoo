@@ -88,7 +88,8 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
             throw UNBREAKABLE_ROLLBACK_CODE;
         }
         if (this.isContentEditable &&
-            (isNotEditableNode(leftNode) && !inlineTextTagNames.has(leftNode.tagName))) {
+            ((isNotEditableNode(leftNode) && !inlineTextTagNames.has(leftNode.tagName)) ||
+                leftNode.tagName === 'TABLE')) {
             /**
              * Create a special contentEditable=false selection for non inline
              * elements
@@ -166,6 +167,9 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
                 }
             }
             parentEl.oDeleteBackward(parentOffset, alreadyMoved);
+            return;
+        } else if (this.previousSibling && this.previousSibling.tagName === 'TABLE') {
+            parentEl.oDeleteBackward(childNodeIndex(this), alreadyMoved);
             return;
         }
 
