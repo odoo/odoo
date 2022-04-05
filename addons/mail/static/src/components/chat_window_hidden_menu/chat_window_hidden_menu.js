@@ -28,11 +28,17 @@ export class ChatWindowHiddenMenu extends Component {
     }
 
     _mounted() {
+        if (!this.root.el) {
+            return;
+        }
         this._apply();
         document.addEventListener('click', this._onClickCaptureGlobal, true);
     }
 
     _patched() {
+        if (!this.root.el) {
+            return;
+        }
         this._apply();
     }
 
