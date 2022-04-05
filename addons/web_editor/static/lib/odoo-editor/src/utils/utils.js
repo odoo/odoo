@@ -962,13 +962,8 @@ export function isUnremovable(node) {
     if (node.nodeType !== Node.ELEMENT_NODE && node.nodeType !== Node.TEXT_NODE) {
         return true;
     }
-    const isEditableRoot =
-        node.isContentEditable &&
-        node.parentElement &&
-        !node.parentElement.isContentEditable &&
-        node.nodeName !== 'A'; // links can be their own contenteditable but should be removable by default.
     return (
-        isEditableRoot ||
+        node.oid === 'root' ||
         (node.nodeType === Node.ELEMENT_NODE &&
             (node.getAttribute('t-set') || node.getAttribute('t-call'))) ||
         (node.classList && node.classList.contains('oe_unremovable'))
