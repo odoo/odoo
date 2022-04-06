@@ -240,24 +240,12 @@ class AccountMove(models.Model):
                 return self._get_formatted_sequence()
         return super()._get_starting_sequence()
 
-    def _get_last_sequence(self, relaxed=False, with_prefix=None):
-        """ If use share sequences we need to recompute the sequence to add the proper document code prefix """
-        res = super()._get_last_sequence(relaxed=relaxed, with_prefix=with_prefix)
-        if res and self.journal_id.l10n_ar_share_sequences and self.l10n_latam_document_type_id.doc_code_prefix not in res:
-            res = self._get_formatted_sequence(number=self._l10n_ar_get_document_number_parts(
-                res.split()[-1], self.l10n_latam_document_type_id.code)['invoice_number'])
-        return res
 
     def _get_last_sequence_domain(self, relaxed=False):
         where_string, param = super(AccountMove, self)._get_last_sequence_domain(relaxed)
         if self.company_id.account_fiscal_country_id.code == "AR" and self.l10n_latam_use_documents:
-            if not self.journal_id.l10n_ar_share_sequences:
-                where_string += " AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s"
-                param['l10n_latam_document_type_id'] = self.l10n_latam_document_type_id.id or 0
-            elif self.journal_id.l10n_ar_share_sequences:
-                where_string += " AND l10n_latam_document_type_id in %(l10n_latam_document_type_ids)s"
-                param['l10n_latam_document_type_ids'] = tuple(self.l10n_latam_document_type_id.search(
-                    [('l10n_ar_letter', '=', self.l10n_latam_document_type_id.l10n_ar_letter)]).ids)
+            where_string += " AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s"
+            param['l10n_latam_document_type_id'] = self.l10n_latam_document_type_id.id or 0
         return where_string, param
 
     def _l10n_ar_get_amounts(self, company_currency=False):
