@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
 import unittest
 from itertools import zip_longest
 from lxml import etree as ET, html
@@ -217,6 +218,7 @@ class TestViewSaving(TestViewSavingCommon):
         # common text nodes should be be escaped client side
         replacement = u'world &amp;amp; &amp;lt;b&amp;gt;cie'
         view.save(replacement, xpath='/t/p')
+        view.write_date = datetime.now()
         self.assertIn(replacement, view.arch, 'common text node should not be escaped server side')
         self.assertIn(
             replacement,

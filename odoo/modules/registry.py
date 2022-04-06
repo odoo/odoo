@@ -24,9 +24,40 @@ from odoo.tools import (config, existing_tables, ignore,
                         Collector, OrderedSet)
 from odoo.tools.func import locked
 from odoo.tools.lru import LRU
+from odoo.tools import config
+from odoo.modules.shared_memory import SharedMemoryLRU
 
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger('odoo.schema')
+
+
+# By default it is a local LRU
+# But the PreforkServer will replace it by a SharedMemoryLRU before forking
+shared_cache = LRU(8192)  # TODO: decrease this number (also the ormcache) to avoid taking 2 memory than before
+
+def get_shared_cache():
+    return shared_cache
+
+def close_shared_cache():
+    if isinstance(shared_cache, SharedMemoryLRU):
+        shared_cache.close()
+
+def release_lock_shared_cache(pid):
+    if isinstance(shared_cache, SharedMemoryLRU):
+        shared_cache.hook_process_killed(pid)
+
+def unlink_shared_cache():
+    if isinstance(shared_cache, SharedMemoryLRU):
+        shared_cache.unlink()
+
+def create_shared_cache():
+    global shared_cache
+    if not isinstance(shared_cache, SharedMemoryLRU):
+        # TODO Logic in SharedMemory Class ?
+        # Take 10 % of the soft limit worker
+        byte_size = config['limit_memory_soft'] // 10
+        nb_entry = byte_size // SharedMemoryLRU.AVG_SIZE_OF_DATA
+        shared_cache = SharedMemoryLRU(nb_entry)
 
 
 class Registry(Mapping):

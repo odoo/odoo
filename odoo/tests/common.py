@@ -51,8 +51,8 @@ import odoo
 from odoo import api
 from odoo.models import BaseModel
 from odoo.exceptions import AccessError
-from odoo.modules.registry import Registry
 from odoo.osv import expression
+from odoo.modules.registry import Registry, get_shared_cache
 from odoo.osv.expression import normalize_domain, TRUE_LEAF, FALSE_LEAF
 from odoo.service import security
 from odoo.sql_db import BaseCursor, Cursor
@@ -830,6 +830,8 @@ class TransactionCase(BaseCase):
 
         self.addCleanup(self.registry.clear_caches)
         self.addCleanup(self.env.clear)
+        shared_cache = get_shared_cache()
+        self.addCleanup(shared_cache.clear)
 
         # flush everything in setUpClass before introducing a savepoint
         self.env.flush_all()

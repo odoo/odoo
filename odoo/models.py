@@ -50,6 +50,7 @@ from lxml import etree
 from lxml.builder import E
 
 import odoo
+from odoo.modules.registry import get_shared_cache
 from . import SUPERUSER_ID
 from . import api
 from . import tools
@@ -3897,6 +3898,21 @@ class BaseModel(metaclass=MetaModel):
         if self._log_access:
             vals.setdefault('write_uid', self.env.uid)
             vals.setdefault('write_date', self.env.cr.now())
+            tcache_staled = env.all.tcache_staled
+            tcache_staled['write'].add(self._name)
+            if self._name in tcache_staled['render']:
+                poluated_keys = tcache_staled['render'].pop(self._name)
+                _logger.info("t-cache pollution detected for %s, invalidate some keys (%s)", self._name, len(poluated_keys))  # TODO: remove this part or debug ?
+                c = get_shared_cache()
+                for key in poluated_keys:
+                    try:
+                        print(f"Remove {key} from the long terme cache")
+                        del c[key]
+                    except KeyError:
+                        print("key doesn't exist ?")
+                        pass
+
+
 
         field_values = []                           # [(field, value)]
         determine_inverses = defaultdict(list)      # {inverse: fields}

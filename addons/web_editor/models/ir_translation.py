@@ -29,6 +29,9 @@ class IrTranslation(models.Model):
         assert len(self) == 1 and self.type == 'model_terms'
         mname, fname = self.name.split(',')
         field = self.env[mname]._fields[fname]
+        # Update the write_date (and write_uid) of the related record to ensure that
+        # t-cache is correctly 'invalidate'.
+        self.env[field.model_name].browse(self.res_id).write({})
         if field.translate == xml_translate:
             # wrap value inside a div and parse it as HTML
             div = "<div>%s</div>" % encode(value)

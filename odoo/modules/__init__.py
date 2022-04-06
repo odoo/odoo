@@ -5,7 +5,7 @@
 
 """
 
-from . import db, graph, loading, migration, module, registry
+from . import db, graph, loading, migration, module, registry, shared_memory
 
 from odoo.modules.loading import load_modules, reset_modules_state
 

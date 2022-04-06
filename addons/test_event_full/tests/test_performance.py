@@ -52,7 +52,7 @@ class TestEventPerformance(EventPerformanceCase):
         batch_size = 20
 
         # simple without type involved + website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=5368):  # com runbot: 4943 - +1 tef - ent runbot 5368
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=5369):  # com runbot: 4944 - +1 tef - ent runbot 5369
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             event_values = [
                 dict(self.event_base_vals,
@@ -89,7 +89,7 @@ class TestEventPerformance(EventPerformanceCase):
         event_type = self.env['event.type'].browse(self.test_event_type.ids)
 
         # complex with type + website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=5480):  # com runbot: 5055 - +1 tef - ent runbot 5480
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=5481):  # com runbot: 5055 - +1 tef - ent runbot 5480
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             event_values = [
                 dict(self.event_base_vals,
@@ -128,7 +128,7 @@ class TestEventPerformance(EventPerformanceCase):
         has_social = 'social_menu' in self.env['event.event']  # otherwise view may crash in enterprise
 
         # no type, website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=667):  # com runbot: 566 - -1 tef - ent runbot: 666
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=668):  # com runbot: 567 - -1 tef - ent runbot: 667
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             # Require for `website_menu` to be visible
             # <div name="event_menu_configuration" groups="base.group_no_one">
@@ -150,7 +150,7 @@ class TestEventPerformance(EventPerformanceCase):
         has_social = 'social_menu' in self.env['event.event']  # otherwise view may crash in enterprise
 
         # type and website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=693):  # tef only: 593 - com runbot: 596 - ent runbot: 692
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=694):  # tef only: 603 - com runbot: 599 - ent runbot: 694
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             # Require for `website_menu` to be visible
             # <div name="event_menu_configuration" groups="base.group_no_one">
@@ -181,7 +181,7 @@ class TestEventPerformance(EventPerformanceCase):
     def test_event_create_single_notype_website(self):
         """ Test a single event creation """
         # simple without type involved + website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=352):  # com runbot: 326 - +1 tef - ent runbot 352
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=353):  # com runbot: 327 - +1 tef - ent runbot 353
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             event_values = dict(
                 self.event_base_vals,
@@ -212,7 +212,7 @@ class TestEventPerformance(EventPerformanceCase):
         event_type = self.env['event.type'].browse(self.test_event_type.ids)
 
         # complex with type + website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=387):  # com runbot: 361 - +1 tef - ent runbot 387
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=388):  # com runbot: 362 - +1 tef - ent runbot 388
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             event_values = dict(
                 self.event_base_vals,
