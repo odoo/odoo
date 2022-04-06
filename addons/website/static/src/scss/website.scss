@@ -222,7 +222,7 @@ $-seen-urls: ();
     @include o-apply-colors('menu');
     @include o-apply-colors('menu-custom');
     $-menu-color: o-color('menu-custom') or o-color('menu');
-    @if ($-menu-color and color-yiq($-menu-color) != $yiq-text-dark) {
+    @if ($-menu-color and color-contrast($-menu-color) != $color-contrast-dark) {
         @extend .navbar-dark;
     }
     @include o-add-gradient('menu-gradient');
@@ -1340,7 +1340,7 @@ span.list-inline-item.o_add_language:last-child {
         text-decoration: none;
 
         @if $-footer-color == $-copyright-color {
-            color: rgba(color-yiq($-footer-color), 0.5);
+            color: rgba(color-contrast($-footer-color), 0.5);
         }
 
         &:hover, &:focus {

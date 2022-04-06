@@ -264,7 +264,7 @@
                 } @else {
                     &, &::after {
                         background-color: nth($o-colors, $size);
-                        color: color-yiq(nth($o-colors, $size));
+                        color: color-contrast(nth($o-colors, $size), $min-contrast-ratio: 2.2);
                     }
                 }
             }

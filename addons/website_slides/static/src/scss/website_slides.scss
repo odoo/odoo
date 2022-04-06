@@ -95,7 +95,7 @@ $truncate-limits: 2, 3, 10;
             }
             @at-root a#{&} {
                 &:hover {
-                    color: color-yiq($background-color);
+                    color: color-contrast($background-color);
                     background-color: darken($background-color, 10%);
                 }
             }
@@ -310,7 +310,7 @@ $truncate-limits: 2, 3, 10;
         }
 
         &.active {
-            color: color-yiq($tab-active-color);
+            color: color-contrast($tab-active-color);
             background: $tab-active-color;
             border-color: $tab-active-color;
         }

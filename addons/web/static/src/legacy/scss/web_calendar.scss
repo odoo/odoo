@@ -409,7 +409,7 @@ $o-cw-filter-avatar-size: 20px;
                     color: black;
 
                     &.o_attendee_status_tentative {
-                        color: color-yiq($color);
+                        color: color-contrast($color);
                         background: repeating-linear-gradient(
                                     45deg,
                                     $color,
@@ -610,7 +610,7 @@ $o-cw-filter-avatar-size: 20px;
 
             &.ui-datepicker-current-day a {
                 background: $info;
-                color: color-yiq($info);
+                color: color-contrast($info);
                 font-weight: bold;
             }
 
@@ -894,7 +894,7 @@ $o-filter_colors: lighten(#000, 46.7%), #F06050, #F4A460, #F7CD1F, #6CC1ED, #814
 
             &.o_cw_custom_hover, &.o_cw_custom_highlight {
                 box-shadow: 0 12px 12px -5px rgba($color, 0.3);
-                color: color-yiq($color);
+                color: color-contrast($color);
                 z-index: 10!important;
                 opacity: 1;
                 right: 1px!important;
@@ -911,7 +911,7 @@ $o-filter_colors: lighten(#000, 46.7%), #F06050, #F4A460, #F7CD1F, #6CC1ED, #814
             }
         
             &.o_attendee_status_tentative {
-                color: color-yiq($color);
+                color: color-contrast($color);
                 .fc-bg {
                     background: repeating-linear-gradient(
                         45deg,
@@ -946,7 +946,7 @@ $o-filter_colors: lighten(#000, 46.7%), #F06050, #F4A460, #F7CD1F, #6CC1ED, #814
         .o_cw_filter_input_bg {
             border-color: $color;
             background: $color;
-            color: color-yiq($color);
+            color: color-contrast($color);
         }
     }
 
@@ -955,7 +955,7 @@ $o-filter_colors: lighten(#000, 46.7%), #F06050, #F4A460, #F7CD1F, #6CC1ED, #814
 
         .card-header, .card-header .popover-header {
             background-color: $color-subdle;
-            color: color-yiq($color-subdle);
+            color: color-contrast($color-subdle);
         }
 
         .card-header {
