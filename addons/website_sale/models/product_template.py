@@ -282,18 +282,6 @@ class ProductTemplate(models.Model):
         # The list_price is always the price of one.
         return taxes.compute_all(price, pricelist.currency_id, 1, product, partner)[tax_display]
 
-    def _create_first_product_variant(self, log_warning=False):
-        """Create if necessary and possible and return the first product
-        variant for this template.
-
-        :param log_warning: whether a warning should be logged on fail
-        :type log_warning: bool
-
-        :return: the first product variant or none
-        :rtype: recordset of `product.product`
-        """
-        return self._create_product_variant(self._get_first_possible_combination(), log_warning)
-
     def _get_image_holder(self):
         """Returns the holder of the image to use as default representation.
         If the product template has an image it is the product template,
