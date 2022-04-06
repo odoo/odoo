@@ -631,6 +631,7 @@ class SaleOrder(models.Model):
             'transaction_ids': [(6, 0, self.transaction_ids.ids)],
             'invoice_line_ids': [],
             'company_id': self.company_id.id,
+            'posted_before': False
         }
         return invoice_vals
 
