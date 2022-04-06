@@ -1591,9 +1591,10 @@ class TestOne2many(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_partner".id
             FROM "res_partner"
-            WHERE ("res_partner"."id" IN (
-                SELECT "partner_id" FROM "res_partner_bank" WHERE "partner_id" IS NOT NULL
-            ))
+            WHERE EXISTS (
+                SELECT 1 FROM "res_partner_bank" AS "res_partner__bank_ids"
+                WHERE "res_partner__bank_ids"."partner_id" = "res_partner".id
+            )
             ORDER BY "res_partner"."id"
         ''']):
             self.Partner.search([('bank_ids', '!=', False)], order='id')
@@ -1601,9 +1602,10 @@ class TestOne2many(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_partner".id
             FROM "res_partner"
-            WHERE ("res_partner"."id" NOT IN (
-                SELECT "partner_id" FROM "res_partner_bank" WHERE "partner_id" IS NOT NULL
-            ))
+            WHERE NOT EXISTS (
+                SELECT 1 FROM "res_partner_bank" AS "res_partner__bank_ids"
+                WHERE "res_partner__bank_ids"."partner_id" = "res_partner".id
+            )
             ORDER BY "res_partner"."id"
         ''']):
             self.Partner.search([('bank_ids', '=', False)], order='id')
