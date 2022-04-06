@@ -84,7 +84,7 @@ kbd {
 
 //== Backgound light colors variations (bootstrap extensions)
 @each $-name, $-bg-color in $theme-colors {
-  $-safe-text-color: color-yiq(mix($-bg-color, $o-view-background-color));
+  $-safe-text-color: color-contrast(mix($-bg-color, $o-view-background-color));
   @include bg-variant(".bg-#{$-name}-light", rgba(theme-color($-name), 0.5), $-safe-text-color);
 }
 
