@@ -4870,6 +4870,15 @@ var BasicModel = AbstractModel.extend({
         if (list.__data) {
             // the data have already been fetched (alonside the groups by the
             // call to 'web_read_group'), so we can bypass the search_read
+            // But the web_read_group returns the rawGroupBy field's value, which may not be present
+            // in the view. So we filter it out.
+            list.__data.records.forEach((rec) => {
+                Object.keys(rec).forEach(fName => {
+                    if (!fieldNames.includes(fName) && fName !== "id") {
+                        delete rec[fName];
+                    }
+                });
+            });
             prom = Promise.resolve(list.__data);
         } else {
             prom = this._rpc({
