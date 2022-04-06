@@ -6,7 +6,7 @@
 import logging
 import math
 
-from collections import namedtuple
+from collections import defaultdict, namedtuple
 
 from datetime import datetime, date, timedelta, time
 from dateutil.rrule import rrule, DAILY
@@ -884,20 +884,24 @@ class HolidaysRequest(models.Model):
         holidays = self.filtered(lambda request: request.holiday_type == 'employee')
         holidays._create_resource_leave()
         meeting_holidays = holidays.filtered(lambda l: l.holiday_status_id.create_calendar_meeting)
+        meetings = self.env['calendar.event']
         if meeting_holidays:
-            meeting_values = meeting_holidays._prepare_holidays_meeting_values()
-            meetings = self.env['calendar.event'].with_context(
-                no_mail_to_attendees=True,
-                active_model=self._name
-            ).create(meeting_values)
-            for holiday, meeting in zip(meeting_holidays, meetings):
-                holiday.meeting_id = meeting
+            meeting_values_for_user_id = meeting_holidays._prepare_holidays_meeting_values()
+            for user_id, meeting_values in meeting_values_for_user_id.items():
+                meetings += self.env['calendar.event'].with_user(user_id or self.env.uid).with_context(
+                                no_mail_to_attendees=True,
+                                active_model=self._name
+                            ).create(meeting_values)
+        Holiday = self.env['hr.leave']
+        for meeting in meetings:
+            Holiday.browse(meeting.res_id).meeting_id = meeting
 
     def _prepare_holidays_meeting_values(self):
-        result = []
+        result = defaultdict(list)
         company_calendar = self.env.company.resource_calendar_id
         for holiday in self:
             calendar = holiday.employee_id.resource_calendar_id or company_calendar
+            user = holiday.user_id
             if holiday.leave_type_request_unit == 'hour':
                 meeting_name = _("%s on Time Off : %.2f hour(s)") % (holiday.employee_id.name or holiday.category_id.name, holiday.number_of_hours_display)
             else:
@@ -906,19 +910,19 @@ class HolidaysRequest(models.Model):
                 'name': meeting_name,
                 'duration': holiday.number_of_days * (calendar.hours_per_day or HOURS_PER_DAY),
                 'description': holiday.notes,
-                'user_id': holiday.user_id.id,
+                'user_id': user.id,
                 'start': holiday.date_from,
                 'stop': holiday.date_to,
                 'allday': False,
                 'privacy': 'confidential',
-                'event_tz': holiday.user_id.tz,
+                'event_tz': user.tz,
                 'activity_ids': [(5, 0, 0)],
             }
             # Add the partner_id (if exist) as an attendee
-            if holiday.user_id and holiday.user_id.partner_id:
+            if user and user.partner_id:
                 meeting_values['partner_ids'] = [
-                    (4, holiday.user_id.partner_id.id)]
-            result.append(meeting_values)
+                    (4, user.partner_id.id)]
+            result[user.id].append(meeting_values)
         return result
 
     # YTI TODO: Remove me in master
