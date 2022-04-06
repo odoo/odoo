@@ -16,7 +16,6 @@ class LeaveReportCalendar(models.Model):
     start_datetime = fields.Datetime(string='From', readonly=True)
     stop_datetime = fields.Datetime(string='To', readonly=True)
     tz = fields.Selection(_tz_get, string="Timezone", readonly=True)
-    duration = fields.Float(string='Duration', readonly=True)
     employee_id = fields.Many2one('hr.employee', readonly=True)
     department_id = fields.Many2one('hr.department', readonly=True)
     job_id = fields.Many2one('hr.job', readonly=True)
