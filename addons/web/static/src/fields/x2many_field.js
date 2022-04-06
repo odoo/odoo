@@ -42,7 +42,7 @@ export class X2ManyField extends Component {
         let columns;
         if (this.viewMode === "list") {
             columns = archInfo.columns.filter((col) => {
-                if ("column_invisible" in col.modifiers) {
+                if (col.type === "field" && "column_invisible" in col.modifiers) {
                     const invisible = evalDomain(
                         col.modifiers.column_invisible,
                         this.list.evalContext

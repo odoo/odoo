@@ -5279,10 +5279,9 @@ QUnit.module("Fields", (hooks) => {
         await click(target, "tbody td.o_field_x2many_list_row_add a");
     });
 
-    QUnit.skipWOWL("parent data is properly sent on an onchange rpc", async function (assert) {
+    QUnit.test("parent data is properly sent on an onchange rpc", async function (assert) {
         assert.expect(1);
 
-        serverData.models.partner.onchanges = { bar: function () {} };
         await makeView({
             type: "form",
             resModel: "partner",
@@ -5311,15 +5310,9 @@ QUnit.module("Fields", (hooks) => {
 
         await clickEdit(target);
         await click(target, "tbody td.o_field_x2many_list_row_add a");
-        // use of owlCompatibilityExtraNextTick because we have an x2many field with a boolean field
-        // (written in owl), so when we add a line, we sequentially render the list itself
-        // (including the boolean field), so we have to wait for the next animation frame, and
-        // then we render the control panel (also in owl), so we have to wait again for the
-        // next animation frame
-        await testUtils.owlCompatibilityExtraNextTick();
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "parent data is properly sent on an onchange rpc (existing x2many record)",
         async function (assert) {
             assert.expect(4);
@@ -5329,7 +5322,7 @@ QUnit.module("Fields", (hooks) => {
             };
             serverData.models.partner.records[0].p = [1];
             serverData.models.partner.records[0].turtles = [2];
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -5353,32 +5346,29 @@ QUnit.module("Fields", (hooks) => {
                             [1, 1, { display_name: "new val" }],
                         ]);
                     }
-                    return this._super(...arguments);
-                },
-                viewOptions: {
-                    mode: "edit",
                 },
             });
+            await clickEdit(target);
+            assert.containsOnce(target, ".o_data_row");
 
-            assert.containsOnce(form, ".o_data_row");
+            await click(target.querySelector(".o_data_row .o_data_cell"));
+            assert.containsOnce(target, ".o_data_row.o_selected_row");
 
-            await click(form.$(".o_data_row .o_data_cell:first"));
-
-            assert.containsOnce(form, ".o_data_row.o_selected_row");
-            await testUtils.fields.editInput(
-                form.$(".o_selected_row .o_field_widget[name=display_name]"),
+            await editInput(
+                target,
+                ".o_selected_row .o_field_widget[name=display_name] input",
                 "new val"
             );
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "parent data is properly sent on an onchange rpc, new record",
         async function (assert) {
             assert.expect(4);
 
             serverData.models.turtle.onchanges = { turtle_bar: function () {} };
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -5401,27 +5391,20 @@ QUnit.module("Fields", (hooks) => {
                             "should have properly sent the parent foo value"
                         );
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
-            await click(form.$("tbody td.o_field_x2many_list_row_add a"));
-            // use of owlCompatibilityExtraNextTick because we have an x2many field with a boolean field
-            // (written in owl), so when we add a line, we sequentially render the list itself
-            // (including the boolean field), so we have to wait for the next animation frame, and
-            // then we render the control panel (also in owl), so we have to wait again for the
-            // next animation frame
-            await testUtils.owlCompatibilityExtraNextTick();
+            await click(target, "tbody td.o_field_x2many_list_row_add a");
             assert.verifySteps(["onchange", "onchange"]);
         }
     );
 
-    QUnit.skipWOWL("id in one2many obtained in onchange is properly set", async function (assert) {
+    QUnit.test("id in one2many obtained in onchange is properly set", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.onchanges.turtles = function (obj) {
             obj.turtles = [[5], [1, 3, { turtle_foo: "kawa" }]];
         };
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -5436,17 +5419,17 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        assert.strictEqual(
-            form.$("tr.o_data_row").text(),
-            "3kawa",
+        assert.deepEqual(
+            [...target.querySelectorAll("tr.o_data_row .o_data_cell")].map((el) => el.textContent),
+            ["3", "kawa"],
             "should have properly displayed id and foo field"
         );
     });
 
-    QUnit.skipWOWL("id field in one2many in a new record", async function (assert) {
+    QUnit.test("id field in one2many in a new record", async function (assert) {
         assert.expect(1);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -5468,20 +5451,18 @@ QUnit.module("Fields", (hooks) => {
                         "should send proper commands"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
-        await click(form.$("td.o_field_x2many_list_row_add a"));
-        await testUtils.fields.editInput(form.$('td input[name="turtle_foo"]'), "cat");
+        await click(target, "td.o_field_x2many_list_row_add a");
+        await editInput(target, 'td [name="turtle_foo"] input', "cat");
         await clickSave(target);
     });
 
     QUnit.skipWOWL("sub form view with a required field", async function (assert) {
-        assert.expect(2);
         serverData.models.partner.fields.foo.required = true;
         serverData.models.partner.fields.foo.default = null;
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -5500,18 +5481,14 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await clickEdit(target);
-        await click(form.$("tbody td.o_field_x2many_list_row_add a"));
-        await click($(".modal-footer button.btn-primary").first());
+        await click(target, "tbody td.o_field_x2many_list_row_add a");
+        await click(target.querySelector(".modal-footer button.btn-primary"));
 
-        assert.strictEqual($(".modal").length, 1, "should still have an open modal");
-        assert.strictEqual(
-            $(".modal tbody label.o_field_invalid").length,
-            1,
-            "should have displayed invalid fields"
-        );
+        assert.containsOnce(target, ".modal");
+        assert.containsOnce(target, ".modal tbody label.o_field_invalid");
     });
 
-    QUnit.skipWOWL("one2many list with action button", async function (assert) {
+    QUnit.test("one2many list with action button", async function (assert) {
         assert.expect(4);
 
         serverData.models.partner.records[0].p = [2];
@@ -5531,29 +5508,17 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
             resId: 1,
-            intercepts: {
-                execute_action: function (event) {
-                    assert.deepEqual(event.data.env.currentID, 2, "should call with correct id");
-                    assert.strictEqual(
-                        event.data.env.model,
-                        "partner",
-                        "should call with correct model"
-                    );
-                    assert.strictEqual(
-                        event.data.action_data.name,
-                        "method_name",
-                        "should call correct method"
-                    );
-                    assert.strictEqual(
-                        event.data.action_data.type,
-                        "object",
-                        "should have correct type"
-                    );
-                },
+        });
+        patchWithCleanup(form.env.services.action, {
+            doActionButton: (params) => {
+                assert.deepEqual(params.resId, 2);
+                assert.strictEqual(params.resModel, "partner");
+                assert.strictEqual(params.name, "method_name");
+                assert.strictEqual(params.type, "object");
             },
         });
 
-        await click(form.$(".o_list_button button"));
+        await click(target, ".o_list_button button");
     });
 
     QUnit.skipWOWL("one2many kanban with action button", async function (assert) {

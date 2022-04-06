@@ -391,6 +391,9 @@ export class Record extends DataPoint {
 
         this._domains = {};
 
+        this.relationField = params.relationField;
+        this.parentRecord = params.parentRecord;
+
         this.getParentRecordContext = params.getParentRecordContext;
 
         this.selected = false;
@@ -563,7 +566,7 @@ export class Record extends DataPoint {
         };
     }
 
-    getChanges(allFields = false) {
+    getChanges(allFields = false, parentChanges = false) {
         const changes = { ...(allFields ? this.data : this._changes) };
         for (const fieldName in changes) {
             const fieldType = this.fields[fieldName].type;
@@ -583,9 +586,16 @@ export class Record extends DataPoint {
                     : false;
             }
         }
+
+        const relationalFieldChanges = {};
+        if (allFields && parentChanges && this.relationField && this.parentRecord) {
+            relationalFieldChanges[this.relationField] = this.parentRecord.getChanges(allFields);
+        }
+
         return {
             ...this._rawChanges,
             ...changes,
+            ...relationalFieldChanges,
         };
     }
 
@@ -816,6 +826,7 @@ export class Record extends DataPoint {
 
     async update(fieldName, value) {
         await this._applyChange(fieldName, value);
+        this.onChanges();
         const activeField = this.activeFields[fieldName];
         const proms = [];
         if (activeField && activeField.onChange) {
@@ -838,7 +849,6 @@ export class Record extends DataPoint {
         }
         proms.push(this.loadPreloadedData());
         await Promise.all(proms);
-        this.onChanges();
         this._removeInvalidField(fieldName);
         this.model.notify();
     }
@@ -896,6 +906,8 @@ export class Record extends DataPoint {
                     return makeContext([activeField.context], this.evalContext);
                 },
             },
+            parentRecord: this,
+            relationField: field.relation_field,
             views,
             viewMode,
             onChanges: async () => {
@@ -1029,7 +1041,12 @@ export class Record extends DataPoint {
         const { domain, value: changes, warning } = await this.model.orm.call(
             this.resModel,
             "onchange",
-            [[], this.getChanges(true), fieldName ? [fieldName] : [], this._getOnchangeSpec()],
+            [
+                [],
+                this.getChanges(true, true),
+                fieldName ? [fieldName] : [],
+                this._getOnchangeSpec(),
+            ],
             { context: this.context }
         );
         if (warning) {
@@ -2009,6 +2026,8 @@ export class StaticList extends DataPoint {
         this.initialLimit = this.limit;
         this.editable = params.editable || false; // ("bottom" or "top")
         this.field = params.field;
+        this.relationField = params.relationField;
+        this.parentRecord = params.parentRecord;
 
         this.orderBy = params.orderBy || [];
 
@@ -2395,6 +2414,8 @@ export class StaticList extends DataPoint {
             ...params,
 
             getParentRecordContext: this.getParentRecordContext,
+            parentRecord: this.parentRecord,
+            relationField: this.relationField,
         });
         const id = record.resId || record.virtualId; // is resId sometimes changed after record creation? (for a record in a staticList)
 
