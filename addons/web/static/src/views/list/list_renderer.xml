@@ -23,7 +23,7 @@
                         <t t-set="list" t-value="props.list"/>
                     </t>
                     <tr t-if="props.activeActions">
-                        <td/>
+                        <td t-if="withHandleColumn"/>
                         <td t-if="props.activeActions.canCreate"
                             t-att-colspan="state.columns.length + 1"
                             class="o_field_x2many_list_row_add"

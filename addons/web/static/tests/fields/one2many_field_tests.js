@@ -50,8 +50,8 @@ async function clickSave(target) {
     await click(target.querySelector(".o_form_button_save"));
 }
 
-async function addRow(target) {
-    await click(target.querySelector(".o_field_x2many_list_row_add a"));
+async function addRow(target, selector) {
+    await click(target.querySelector(`${selector ? selector : ""} .o_field_x2many_list_row_add a`));
 }
 
 async function removeRow(target, index) {
@@ -1994,7 +1994,7 @@ QUnit.module("Fields", (hooks) => {
             );
 
             // add a one2many subrecord and check if the default value is correctly applied
-            await click(document.querySelector(".modal .o_field_x2many_list_row_add a"));
+            await addRow(target, ".modal");
 
             assert.containsN(document.body, ".modal .o_data_row", 2);
             assert.strictEqual(
@@ -9222,8 +9222,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    // WOWL to unskip after context ref
-    QUnit.skipWOWL("o2m add a line custom control create editable", async function (assert) {
+    QUnit.test("o2m add a line custom control create editable", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",

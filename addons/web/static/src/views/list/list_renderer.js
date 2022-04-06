@@ -45,6 +45,7 @@ export class ListRenderer extends Component {
                 (col) => !col.optional || this.optionalActiveFields[col.name]
             ),
         });
+        this.withHandleColumn = this.state.columns.some((col) => col.widget === "handle");
         useExternalListener(document, "click", this.onGlobalClick.bind(this)); // capture ?
         this.tableRef = useRef("table");
 
