@@ -46,20 +46,20 @@ msgid ""
 "%(date_start)s at %(time_start)s To\n"
 " %(date_end)s at %(time_end)s (%(timezone)s)"
 msgstr ""
-"%(date_start)s lúc %(time_start)s tới\n"
+"%(date_start)s lúc %(time_start)s Tới\n"
 " %(date_end)s lúc %(time_end)s (%(timezone)s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
-msgstr "%(day)s lúc (%(start)s tới %(end)s) (%(timezone)s)"
+msgstr "%(day)s lúc (%(start)s Tới %(end)s) (%(timezone)s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_attendee.py:0
 #, python-format
 msgid "%s has accepted invitation"
-msgstr "%s đã chấp nhận lời mời"
+msgstr "%s đã chấp thuận lời mời"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_attendee.py:0
@@ -695,13 +695,13 @@ msgstr "Một người dùng không thể có cùng một liên hệ hai lần. 
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #, python-format
 msgid "Accept"
-msgstr "Chấp nhận"
+msgstr "Chấp thuận"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__accepted
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__accepted
 msgid "Accepted"
-msgstr "Được chấp nhận"
+msgstr "Đã chấp thuận"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
@@ -711,7 +711,7 @@ msgstr "Tác vụ "
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction
 msgid "Action Needed"
-msgstr "Cần tác vụ"
+msgstr "Cần có Hành động"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_mail_activity_type__category
@@ -719,14 +719,14 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
-"Tác vụ có thể kích hoạt hành vi cụ thể như mở dạng xem lịch hoặc tự động "
-"đánh dấu là xong khi một tài liệu được tải lên"
+"Hành động có thể khởi chạy cách hàng xử cụ thể như mở giao diện lịch hoặc tự"
+" động đánh dấu hoàn thành khi một tài liệu được tải liên"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__active
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__active
 msgid "Active"
-msgstr "Đang hoạt động"
+msgstr "Có hiệu lực"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_ids
@@ -746,7 +746,7 @@ msgstr "Hoạt động Mixin"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_type
 msgid "Activity Type"
-msgstr "Loại hoạt động"
+msgstr "Kiểu Hoạt động"
 
 #. module: calendar
 #. openerp-web
@@ -794,12 +794,12 @@ msgstr "Tất cả sự kiện"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Archived"
-msgstr "Đã lưu"
+msgstr "Đã lưu trữ"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_attachment_count
 msgid "Attachment Count"
-msgstr "Số tệp đính kèm"
+msgstr "Số lượng đính kèm"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__partner_id
@@ -809,7 +809,7 @@ msgstr "Người tham dự"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_status
 msgid "Attendee Status"
-msgstr "Trạng thái người tham dự"
+msgstr "Tình trạng Tham dự"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_ids
@@ -820,7 +820,7 @@ msgstr "Người tham dự"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Availability"
-msgstr "Lịch trống"
+msgstr "Khả dụng"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__free
@@ -836,7 +836,7 @@ msgstr "Rảnh/Bận"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__base_event_id
 msgid "Base Event"
-msgstr "Sự kiện gốc "
+msgstr "Sự kiện cơ sở"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
@@ -870,18 +870,18 @@ msgstr "Lịch"
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
 msgid "Calendar Alarm"
-msgstr "Cảnh báo lịch"
+msgstr "Báo động Lịch"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
 msgid "Calendar Attendee Information"
-msgstr "Thông tin người tham dự lịch "
+msgstr "Thông tin Tham dự Lịch"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__calendar_event_ids
 msgid "Calendar Event"
-msgstr "Sự kiện lịch"
+msgstr "Sự kiện Lịch"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_filters
@@ -891,12 +891,12 @@ msgstr "Bộ lọc lịch "
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Calendar Invitation"
-msgstr "Lời mời lịch"
+msgstr "Mời tham dự"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity__calendar_event_id
 msgid "Calendar Meeting"
-msgstr "Cuộc họp lịch "
+msgstr "Họp theo Lịch"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_changedate
@@ -908,7 +908,7 @@ msgstr "Lịch: Ngày đã cập nhật"
 #: model:ir.cron,cron_name:calendar.ir_cron_scheduler_alarm
 #: model:ir.cron,name:calendar.ir_cron_scheduler_alarm
 msgid "Calendar: Event Reminder"
-msgstr "Lịch: Nhắc nhở sự kiện"
+msgstr "Lịch: Nhắc nhở Sự kiện"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_update
@@ -945,8 +945,8 @@ msgid ""
 "Choose what to do with other events in the recurrence. Updating All Events "
 "is not allowed when dates or time is modified"
 msgstr ""
-"Chọn việc cần làm cho những sự kiện khác có lịch lặp lại. Cập nhật Tất cả sự"
-" kiện không được phép khi ngày hoặc giờ được sửa đổi "
+"Chọn những việc cần làm với các sự kiện khác trong lần lặp lại. Không cho "
+"phép cập nhật Tất cả sự kiện khi ngày hoặc giờ được sửa đổi"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__color
@@ -956,7 +956,7 @@ msgstr "Màu sắc"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__common_name
 msgid "Common name"
-msgstr "Tên chung"
+msgstr "Tên phổ thông"
 
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.calendar_menu_config
@@ -984,7 +984,7 @@ msgstr "Liên hệ người tham dự"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__count
 msgid "Count"
-msgstr "Số lần"
+msgstr "Số bản ghi"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_uid
@@ -994,7 +994,7 @@ msgstr "Số lần"
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__create_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__create_uid
 msgid "Created by"
-msgstr "Tạo bởi"
+msgstr "Được tạo bởi"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_date
@@ -1027,13 +1027,13 @@ msgstr "Ngày"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Day of Month"
-msgstr "Thứ trong tháng"
+msgstr "Ngày trong Tháng"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__month_by__day
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__month_by__day
 msgid "Day of month"
-msgstr "Thứ trong tháng"
+msgstr "Ngày trong tháng"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__days
@@ -1054,13 +1054,13 @@ msgstr "Từ chối"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__declined
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__declined
 msgid "Declined"
-msgstr "Đã từ chối"
+msgstr "Đã Từ chối"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__description
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Description"
-msgstr "Mô tả"
+msgstr "Miêu tả"
 
 #. module: calendar
 #. openerp-web
@@ -1092,17 +1092,17 @@ msgstr "Tài liệu"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_id
 msgid "Document ID"
-msgstr "ID tài liệu"
+msgstr "ID Tài liệu"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model_id
 msgid "Document Model"
-msgstr "Mô hình tài liệu"
+msgstr "Model tài liệu"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model
 msgid "Document Model Name"
-msgstr "Tên mô hình tài liệu"
+msgstr "Tên Model tài liệu"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__dtstart
@@ -1131,12 +1131,12 @@ msgstr "EMAIL"
 #: code:addons/calendar/static/src/js/calendar_controller.js:0
 #, python-format
 msgid "Edit Recurrent event"
-msgstr "Sửa sự kiện định kỳ"
+msgstr "Sửa lịch định kỳ"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Edit recurring event"
-msgstr "Sửa sự kiện định kỳ"
+msgstr "Sửa lịch định kỳ"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__email
@@ -1147,12 +1147,12 @@ msgstr "Email"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1
 msgid "Email - 3 Hours"
-msgstr "Email - 3 giờ"
+msgstr "Email - Trước 3 Giờ"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_2
 msgid "Email - 6 Hours"
-msgstr "Email - 6 giờ"
+msgstr "Email - Trước 6 Giờ"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__mail_template_id
@@ -1162,7 +1162,7 @@ msgstr "Mẫu email"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__email
 msgid "Email of Invited Person"
-msgstr "Email của người được mời"
+msgstr "Email của Người được mời"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__partner_id
@@ -1199,17 +1199,17 @@ msgstr "Kết thúc vào"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm
 msgid "Event Alarm"
-msgstr "Cảnh báo sự kiện"
+msgstr "Báo động Sự kiện"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm_manager
 msgid "Event Alarm Manager"
-msgstr "Quản lý cảnh báo sự kiện"
+msgstr "Quản lý Báo động Sự kiện"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 msgid "Event Meeting Type"
-msgstr "Loại cuộc họp sự kiện"
+msgstr "Kiểu Sự kiện Lịch"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_recurrence
@@ -1219,7 +1219,7 @@ msgstr "Quy tắc lặp lại sự kiện"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
 msgid "Event Time"
-msgstr "Thời gian sự kiện"
+msgstr "Thời gian Sự kiện"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
@@ -1248,17 +1248,17 @@ msgstr "Đầu tiên, bạn phải xác định ngày cho lời mời."
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__follow_recurrence
 msgid "Follow Recurrence"
-msgstr "Theo dõi lịch định kỳ"
+msgstr "Theo dõi lặp lại"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_follower_ids
 msgid "Followers"
-msgstr "Người theo dõi"
+msgstr "Người dõi theo"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Người theo dõi (Đối tác)"
+msgstr "Người theo dõi (Các đối tác)"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__forever
@@ -1275,13 +1275,13 @@ msgstr "Thứ tư"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Free"
-msgstr "Miễn phí"
+msgstr "Rảnh"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__fri
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__fri
 msgid "Fri"
-msgstr "T6"
+msgstr "Thứ sáu"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__fri
@@ -1329,12 +1329,12 @@ msgstr "ID"
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Nếu chọn, các tin nhắn mới yêu cầu sự chú ý của bạn. "
+msgstr "Nếu đánh dấu kiểm, các thông điệp mới yêu cầu sự có mặt của bạn."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Nếu đánh dấu, một số tin nhắn bị lỗi khi gửi. "
+msgstr "Nếu có đánh dấu, một số thông điệp đã có lỗi gửi đi."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__active
@@ -1342,8 +1342,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
-"Nếu trường đang hoạt động bị đặt là sai, bạn sẽ có thể ẩn thông tin cảnh báo"
-" sự kiện mà không cần xóa sự kiện. "
+"Nếu trường Hiệu lực được thiết lập là false, thông tin báo động sự kiện có "
+"thể được ẩn đi mà không cần xoá nó."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__show_as
@@ -1367,7 +1367,7 @@ msgstr "Lời mời"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__access_token
 msgid "Invitation Token"
-msgstr "Mã token lời mời"
+msgstr "Token Lời mời"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1377,7 +1377,7 @@ msgstr "Chi tiết lời mời"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Invitation for"
-msgstr "Lời mời cho"
+msgstr "Mời tham dự"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
@@ -1397,7 +1397,7 @@ msgstr "Là người theo dõi"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
 msgid "Is the Event Highlighted"
-msgstr "Là sự kiện được đánh dấu"
+msgstr "Là một sự kiện Nổi bật"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_organizer_alone
@@ -1408,7 +1408,7 @@ msgstr "Chỉ có người tổ chức"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__-1
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__-1
 msgid "Last"
-msgstr "Cuối cùng"
+msgstr "Gần nhất"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm____last_update
@@ -1418,7 +1418,7 @@ msgstr "Cuối cùng"
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters____last_update
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence____last_update
 msgid "Last Modified on"
-msgstr "Sửa lần cuối vào"
+msgstr "Sửa lần cuối"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_uid
@@ -1438,13 +1438,13 @@ msgstr "Cập nhật lần cuối bởi"
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__write_date
 msgid "Last Updated on"
-msgstr "Cập nhật lần cuối vào"
+msgstr "Cập nhật lần cuối"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner__calendar_last_notif_ack
 #: model:ir.model.fields,field_description:calendar.field_res_users__calendar_last_notif_ack
 msgid "Last notification marked as read from base Calendar"
-msgstr "Thông báo gần nhất được đánh dấu đã đọc từ Lịch cơ sở"
+msgstr "Thông báo gần nhất được đánh dấu là đã đọc từ Lịch cơ sở"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__rrule_type
@@ -1460,12 +1460,12 @@ msgstr "Địa điểm"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__location
 msgid "Location of Event"
-msgstr "Địa điểm của sự kiện"
+msgstr "Địa điểm của Sự kiện"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Logo"
-msgstr "Logo"
+msgstr "Biểu tượng"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__mail_tz
@@ -1475,7 +1475,7 @@ msgstr "M.giờ thư"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Tệp đính kèm chính"
+msgstr "Đính kèm chính"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__user_id
@@ -1495,25 +1495,25 @@ msgstr "Cuộc họp"
 msgid ""
 "Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'"
 msgstr ""
-"Cuộc họp '%(name)s' bắt đầu vào '%(start_datetime)s' và kết thúc vào "
+"Cuộc hẹn '%(name)s' bắt đầu '%(start_datetime)s' và kết thúc "
 "'%(end_datetime)s'"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Meeting Details"
-msgstr "Chi tiết cuộc họp"
+msgstr "Chi tiết Cuộc gặp"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__name
 msgid "Meeting Subject"
-msgstr "Chủ đề cuộc họp"
+msgstr "Chủ đề Cuộc gặp"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_event_type
 #: model:ir.ui.menu,name:calendar.menu_calendar_event_type
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
 msgid "Meeting Types"
-msgstr "Loại cuộc họp"
+msgstr "Kiểu Cuộc gặp"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_location
@@ -1523,7 +1523,7 @@ msgstr "URL cuộc họp"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__event_id
 msgid "Meeting linked"
-msgstr "Cuộc họp đã liên kết"
+msgstr "Cuộc họp được liên kết"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_event
@@ -1535,17 +1535,17 @@ msgstr "Cuộc họp đã liên kết"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 #: model_terms:ir.ui.view,arch_db:calendar.view_partners_form
 msgid "Meetings"
-msgstr "Cuộc họp"
+msgstr "Cuộc gặp"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error
 msgid "Message Delivery error"
-msgstr "Gửi tin nhắn bị lỗi"
+msgstr "Thông báo gửi đi gặp lỗi"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_ids
 msgid "Messages"
-msgstr "Tin nhắn"
+msgstr "Thông điệp"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__minutes
@@ -1556,7 +1556,7 @@ msgstr "Phút"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__mon
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__mon
 msgid "Mon"
-msgstr "T2"
+msgstr "Thứ hai"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__mon
@@ -1578,7 +1578,7 @@ msgstr "Tháng"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "My Meetings"
-msgstr "Cuộc họp của tôi"
+msgstr "Cuộc gặp của tôi"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__name
@@ -1591,7 +1591,7 @@ msgstr "Tên"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__needsaction
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__needsaction
 msgid "Needs Action"
-msgstr "Cần hành động"
+msgstr "Cần có Hành động"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_mixin__activity_calendar_event_id
@@ -1623,27 +1623,27 @@ msgstr "Thông báo"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_5
 msgid "Notification - 1 Days"
-msgstr "Thông báo - 1 ngày"
+msgstr "Thông báo - Trước 1 Ngày"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_3
 msgid "Notification - 1 Hours"
-msgstr "Thông báo - 1 giờ"
+msgstr "Thông báo - Trước 1 Giờ"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_1
 msgid "Notification - 15 Minutes"
-msgstr "Thông báo - 15 phút"
+msgstr "Thông báo - Trước 15 Phút"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_4
 msgid "Notification - 2 Hours"
-msgstr "Thông báo - 2 giờ"
+msgstr "Thông báo - Trước 2 Giờ"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_2
 msgid "Notification - 30 Minutes"
-msgstr "Thông báo - 30 phút"
+msgstr "Thông báo - Trước 30 Phút"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__alarm_ids
@@ -1653,40 +1653,40 @@ msgstr "Thông báo gửi tới tất cả người tham dự để nhắc nhở
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số tác vụ"
+msgstr "Số lượng Hành động"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error_counter
 msgid "Number of errors"
-msgstr "Số lỗi"
+msgstr "Số lượng lỗi"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Số tin nhắn cần xử lý"
+msgstr "Số thông điệp cần có hành động"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Số tin nhắn gửi đi bị lỗi"
+msgstr "Số tin gửi đi bị lỗi"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__count
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__end_type__count
 msgid "Number of repetitions"
-msgstr "Số lần lặp lại"
+msgstr "Số lần tái diễn"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_unread_counter
 msgid "Number of unread messages"
-msgstr "Số tin nhắn chưa đọc"
+msgstr "Số thông điệp chưa đọc"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/js/services/calendar_notification_service.js:0
 #, python-format
 msgid "OK"
-msgstr "OK"
+msgstr "Đồng ý"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -1696,12 +1696,12 @@ msgstr "Chỉ người dùng nội bộ"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__confidential
 msgid "Only internal users"
-msgstr "Chỉ người dùng nội bộ"
+msgstr "Chỉ Người dùng nội bộ"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
 msgid "Open Calendar"
-msgstr "Mở lịch"
+msgstr "Mở Lịch"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__month_by
@@ -1722,12 +1722,12 @@ msgstr "Nhà tổ chức"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
 msgid "Participant"
-msgstr "Người tham gia"
+msgstr "Thành phần tham dự"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__partner_id
 msgid "Partner-related data of the user"
-msgstr "Dữ liệu liên quan tới đối tác của người dùng"
+msgstr "Đối tác liên hệ dữ liệu với tài khoản"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__privacy
@@ -1770,39 +1770,39 @@ msgstr "Công khai"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type
 msgid "Recurrence"
-msgstr "Định kỳ"
+msgstr "Tái diễn"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__recurrence_id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_id
 msgid "Recurrence Rule"
-msgstr "Quy tắc định kỳ"
+msgstr "Quy tắc lặp lại sự kiện"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__end_type
 msgid "Recurrence Termination"
-msgstr "Kết thúc định kỳ"
+msgstr "Kết thúc Tái diễn"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_update
 msgid "Recurrence Update"
-msgstr "Cập nhật lịch định kỳ"
+msgstr "Cập nhật lịch lặp lại"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrency
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Recurrent"
-msgstr "Định kỳ"
+msgstr "Lặp lại"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule
 msgid "Recurrent Rule"
-msgstr "Quy tắc định kỳ"
+msgstr "Quy tắc lặp lại"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration
 msgid "Remind Before"
-msgstr "Nhắc trước"
+msgstr "Nhắc nhở Trước"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__alarm_ids
@@ -1813,7 +1813,7 @@ msgstr "Nhắc nhở"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__count
 msgid "Repeat"
-msgstr "Lặp"
+msgstr "Lặp lại"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__interval
@@ -1845,23 +1845,23 @@ msgstr "Đặt lại lịch trình"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Responsible"
-msgstr "Phụ trách"
+msgstr "Người phụ trách"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__rrule
 msgid "Rrule"
-msgstr "Q.tắc đ.kỳ"
+msgstr "Quy tắc lặp"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__rrule_type
 msgid "Rrule Type"
-msgstr "Kiểu q.tắc đ.kỳ"
+msgstr "Loại quy tắc lặp"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__sat
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__sat
 msgid "Sat"
-msgstr "T7"
+msgstr "Thứ 7"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__sat
@@ -1877,13 +1877,13 @@ msgstr "Lên lịch trình bởi"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Search Meetings"
-msgstr "Tìm cuộc họp"
+msgstr "Tìm kiếm Cuộc gặp"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__2
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__2
 msgid "Second"
-msgstr "Thứ hai"
+msgstr "Giây"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1915,7 +1915,7 @@ msgstr "Hiển thị là"
 #: code:addons/calendar/static/src/js/services/calendar_notification_service.js:0
 #, python-format
 msgid "Snooze"
-msgstr "Tạm tắt"
+msgstr "Tạm dừng"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__start
@@ -1931,7 +1931,8 @@ msgstr "Ngày bắt đầu"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__start
 msgid "Start date of an event, without time for full days events"
-msgstr "Ngày bắt đầu của sự kiện, không có giờ đối với các sự kiện cả ngày"
+msgstr ""
+"Ngày bắt đầu của sự kiện, không có giờ đối với các sự kiện kéo dài cả ngày"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1941,17 +1942,17 @@ msgstr "Bắt đầu vào"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__state
 msgid "Status"
-msgstr "Trạng thái"
+msgstr "Tình trạng"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__state
 msgid "Status of the attendee's participation"
-msgstr "Tình trạng tham dự của người tham gia"
+msgstr "Tình trạng tham dự của Người tham dự"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Status:"
-msgstr "Trạng thái:"
+msgstr "Tình trạng:"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__stop
@@ -1961,7 +1962,9 @@ msgstr "Dừng"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__stop
 msgid "Stop date of an event, without time for full days events"
-msgstr "Ngày kết thúc của sự kiện, không có giờ đối với các sự kiện cả ngày"
+msgstr ""
+"Ngày kết thúc của một sự kiện, không có thời gian đối với các sự kiện diễn "
+"ra cả ngày"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -1983,12 +1986,12 @@ msgstr "Chủ nhật"
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
 msgid "Tag name already exists !"
-msgstr "Tên thẻ đã tồn tại!"
+msgstr "Tên tag đã tồn tại!"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
 msgid "Tags"
-msgstr "Thẻ"
+msgstr "Từ khóa"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__mail_template_id
@@ -1998,12 +2001,12 @@ msgstr "Mẫu được dùng để tạo nội dung thư nhắc nhở. "
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Tentative"
-msgstr "Dự kiến"
+msgstr "Thăm dò"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "The"
-msgstr "Ngày"
+msgstr " "
 
 #. module: calendar
 #. openerp-web
@@ -2013,8 +2016,8 @@ msgid ""
 "The activity is linked to a meeting. Deleting it will remove the meeting as "
 "well. Do you want to proceed ?"
 msgstr ""
-"Hoạt động này được liên kết với một cuộc họp. Xóa hoạt động này cũng sẽ xóa "
-"cả cuộc họp. Bạn có muốn tiến hành không? "
+"Hoạt động được liên kết với một sự kiện (lịch). Xoá nó sẽ đồng thời xoá sự "
+"kiện. Bạn có muốn tiếp tục?"
 
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
@@ -2023,21 +2026,21 @@ msgid ""
 "            other applications such as the employee leaves or the business\n"
 "            opportunities."
 msgstr ""
-"Lịch được chia sẻ giữa các nhân viên và tích hợp hoàn toàn với \n"
-"            các ứng dụng khác như nghỉ phép của nhân viên và các cơ hội \n"
-"            kinh doanh."
+"Lịch được chia sẻ giữa các nhân viên và được tích hợp đầy đủ với\n"
+"             các ứng dụng khác như Nghỉ của Nhân viên hoặc\n"
+"             cơ hội kinh doanh."
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_recurrence_month_day
 msgid "The day must be between 1 and 31"
-msgstr "Ngày phải nằm trong khoảng từ 1 tới 31"
+msgstr "Ngày phải nằm trong khoản từ 1 tới 31"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid ""
 "The ending date and time cannot be earlier than the starting date and time."
-msgstr "Ngày và thời gian kết thúc không thể sớm hơn ngày và giờ bắt đầu."
+msgstr "Ngày giờ kết thúc không thể sớm hơn ngày giờ bắt đầu."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
@@ -2049,13 +2052,13 @@ msgstr "Ngày kết thúc không thể sớm hơn ngày bắt đầu."
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "The interval cannot be negative."
-msgstr "Khoảng thời gian không thể là số âm"
+msgstr "Khoảng thời gian không được phép âm."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "The number of repetitions cannot be negative."
-msgstr "Số lần lặp lại không thể là số âm. "
+msgstr "Số lượng lặp lại không thể là số âm."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
@@ -2098,13 +2101,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__thu
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__thu
 msgid "Thu"
-msgstr "T5"
+msgstr "Thứ 5"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__thu
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__thu
 msgid "Thursday"
-msgstr "Thứ Năm"
+msgstr "Thứ năm"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__event_tz
@@ -2121,13 +2124,13 @@ msgstr "Múi giờ sử dụng để hiển thị thời gian trong mẫu thư"
 #: code:addons/calendar/models/res_users.py:0
 #, python-format
 msgid "Today's Meetings"
-msgstr "Cuộc họp hôm nay"
+msgstr "Cuộc gặp Hôm nay"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tue
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__tue
 msgid "Tue"
-msgstr "T3"
+msgstr "Thứ 3"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__tue
@@ -2138,7 +2141,7 @@ msgstr "Thứ Ba"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__alarm_type
 msgid "Type"
-msgstr "Loại"
+msgstr "Kiểu"
 
 #. module: calendar
 #. openerp-web
@@ -2148,7 +2151,7 @@ msgstr "Loại"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #, python-format
 msgid "Uncertain"
-msgstr "Không chắc "
+msgstr "Không chắc chắn"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__interval
@@ -2158,12 +2161,12 @@ msgstr "Đơn vị"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_unread
 msgid "Unread Messages"
-msgstr "Tin chưa đọc"
+msgstr "Thông điệp chưa đọc"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Bộ đếm tin chưa đọc"
+msgstr "Bộ đếm Thông điệp chưa đọc"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__until
@@ -2180,7 +2183,7 @@ msgstr "Người dùng"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__wed
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__wed
 msgid "Wed"
-msgstr "T4"
+msgstr "Thứ tư"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__wed
@@ -2221,7 +2224,7 @@ msgstr "Bạn không thể cập nhật lịch lặp lại mà không có sự k
 #: code:addons/calendar/models/calendar_attendee.py:0
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
-msgstr "Bạn không thể tạo bản sao người tham dự. "
+msgstr "Bạn không thể đúp thành phần tham dự."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
@@ -2238,7 +2241,7 @@ msgstr "ngày %s"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
-msgstr "ví dụ: Ăn trưa với đối tác"
+msgstr "vd Ăn trưa công việc"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
@@ -2262,7 +2265,7 @@ msgstr "vào %(weekday)s %(position)s"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "until %s"
-msgstr "cho đến %s"
+msgstr "tới %s"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder

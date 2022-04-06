@@ -1,13 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_presence
-# 
+#
 # Translators:
 # Martin Trigaux, 2021
 # Duy BQ <duybq86@gmail.com>, 2021
 # Dao Nguyen <trucdao.uel@gmail.com>, 2021
 # Vo Thanh Thuy, 2022
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
@@ -58,7 +58,7 @@ msgstr "Vắng mặt"
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_hr_employee_base
 msgid "Basic Employee"
-msgstr "Nhân viên cơ bản"
+msgstr "Người dùng cơ bản"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_company
@@ -74,24 +74,24 @@ msgstr "Soạn email"
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.ir_actions_server_action_open_presence_view
 msgid "Compute presence and open presence view"
-msgstr "Tính toán có mặt và mở dạng xem có mặt"
+msgstr "Tính toán hiện diện và mở giao diện hiện diện"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__create_uid
 msgid "Create Uid"
-msgstr "Tạo ID người dùng"
+msgstr "Tạo Uid"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__email_sent
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__email_sent
 msgid "Email Sent"
-msgstr "Email đã gửi"
+msgstr "Email được gửi"
 
 #. module: hr_presence
 #: model:ir.ui.menu,name:hr_presence.menu_hr_presence_view
 msgid "Employee Presence"
-msgstr "Nhân viên có mặt"
+msgstr "Hiện diện Nhân viên"
 
 #. module: hr_presence
 #: model:mail.template,name:hr_presence.mail_template_presence
@@ -101,7 +101,7 @@ msgstr "Nhân viên: Email vắng mặt"
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
 msgid "Employee: Presence Reminder"
-msgstr "Nhân viên: Nhắc nhở có mặt"
+msgstr "Nhân viên: nhắc nhở hiện diện"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
@@ -150,7 +150,7 @@ msgstr "Địa chỉ IP"
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__ip_connected
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__ip_connected
 msgid "Ip Connected"
-msgstr "Ip đã kết nối"
+msgstr "IP kết nối"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -168,7 +168,7 @@ msgstr "Đặt có mặt thủ công"
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Presence"
-msgstr "Có mặt"
+msgstr "Hiện diện"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__present
@@ -190,24 +190,24 @@ msgstr "Đặt là vắng mặt"
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
 msgid "Set as present"
-msgstr "Đặt là có mặt"
+msgstr "Thiết lập là hiện diện"
 
 #. module: hr_presence
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "There is no professional email address for this employee."
-msgstr "Không có địa chỉ email công việc cho nhân viên này."
+msgstr "Không có email được thiết lập cho nhân viên này."
 
 #. module: hr_presence
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "There is no professional mobile for this employee."
-msgstr "Không có số điện thoại di dộng công việc cho nhân viên này."
+msgstr "Không có số điện thoại di động được thiết lập cho nhân viên này."
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
 msgid "Time Off"
-msgstr "Nghỉ phép"
+msgstr "Nghỉ làm"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__to_define
@@ -219,7 +219,7 @@ msgstr "Cần xác định"
 #. module: hr_presence
 #: model:mail.template,subject:hr_presence.mail_template_presence
 msgid "Unexpected Absence"
-msgstr "Vắng mặt không mong đợi"
+msgstr "Vắng mặt không lý do"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log
@@ -233,4 +233,4 @@ msgstr "Lịch sử tài khoản"
 #, python-format
 msgid "You don't have the right to do this. Please contact an Administrator."
 msgstr ""
-"Bạn không có quyền thực hiện việc này. Vui lòng liên hệ với quản trị viên."
+"Bạn không có quyền để làm điều này. Vui lòng liên hệ với một Quản trị viên."

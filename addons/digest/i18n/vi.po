@@ -29,7 +29,7 @@ msgstr ""
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
 msgid "<span class=\"button\" id=\"button_open_report\">Open Report</span>"
-msgstr "<span class=\"button\" id=\"button_open_report\">Mở báo cáo</span>"
+msgstr "<span class=\"button\" id=\"button_open_report\">Mở Báo cáo</span>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
@@ -39,7 +39,7 @@ msgstr "<span class=\"odoo_link_text\">Odoo</span>"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
 msgid "<span style=\"color: #8f8f8f;\">Unsubscribe</span>"
-msgstr "<span style=\"color: #8f8f8f;\">Hủy đăng ký</span>"
+msgstr "<span style=\"color: #8f8f8f;\">Ngừng đăng ký nhận tin</span>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -55,23 +55,24 @@ msgstr "Đã kích hoạt"
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Add new users as recipient of a periodic email with key metrics"
 msgstr ""
-"Thêm người dùng mới làm người nhận email định kỳ với các số liệu chính"
+"Thêm người dùng mới vào danh sách nhận email tổng kết định kỳ với các chỉ "
+"tiêu quan trọng"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__group_id
 msgid "Authorized Group"
-msgstr "Nhóm có thẩm quyền"
+msgstr "Nhóm Có thẩm quyền"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__available_fields
 msgid "Available Fields"
-msgstr "Trường có sẵn"
+msgstr "Trường khả dụng"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Choose the metrics you care about"
-msgstr "Chọn số liệu mà bạn quan tâm"
+msgstr "Chọn các chỉ tiêu mà bạn quan tâm"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__company_id
@@ -81,12 +82,12 @@ msgstr "Công ty"
 #. module: digest
 #: model:ir.model,name:digest.model_res_config_settings
 msgid "Config Settings"
-msgstr "Cài đặt cấu hình"
+msgstr "Thiết lập Cấu hình"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Configure Digest Emails"
-msgstr "Cấu hình email tóm tắt"
+msgstr "Cấu hình Email Tổng kết"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
@@ -97,7 +98,7 @@ msgstr "Kết nối"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_res_users_connected
 msgid "Connected Users"
-msgstr "Người dùng đã kết nối"
+msgstr "Người dùng đã Kết nối"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -105,14 +106,14 @@ msgid ""
 "Create or edit the mail template: you may get computed KPI's value using "
 "these fields:"
 msgstr ""
-"Tạo hoặc chỉnh sửa mẫu thư: bạn có thể nhận được giá trị của KPI bằng các "
-"trường sau:"
+"Tạo hoặc sửa mẫu email: bạn có thể nhận các giá trị KPI được tính toán sử "
+"dụng các trường này:"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__create_uid
 #: model:ir.model.fields,field_description:digest.field_digest_tip__create_uid
 msgid "Created by"
-msgstr "Tạo bởi"
+msgstr "Được tạo bởi"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__create_date
@@ -133,23 +134,23 @@ msgstr "Hàng ngày"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Deactivate for everyone"
-msgstr "Vô hiệu hóa cho tất cả"
+msgstr "Vô hiệu đối với tất cả mọi người"
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__state__deactivated
 msgid "Deactivated"
-msgstr "Vô hiệu hóa"
+msgstr "Đã vô hiệu"
 
 #. module: digest
 #: model:ir.model,name:digest.model_digest_digest
 msgid "Digest"
-msgstr "Tóm tắt"
+msgstr "Tổng kết"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_res_config_settings__digest_id
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Digest Email"
-msgstr "Tóm tắt email"
+msgstr "Email Tổng kết"
 
 #. module: digest
 #: model:ir.actions.act_window,name:digest.digest_digest_action
@@ -159,7 +160,7 @@ msgstr "Tóm tắt email"
 #: model:ir.model.fields,field_description:digest.field_res_config_settings__digest_emails
 #: model:ir.ui.menu,name:digest.digest_menu
 msgid "Digest Emails"
-msgstr "Tóm tắt email"
+msgstr "Email Tổng kết"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -169,14 +170,14 @@ msgstr "Tên tóm tắt"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
 msgid "Digest Subscriptions"
-msgstr "Tóm tắt đăng ký"
+msgstr "Đăng ký nhận Tổng kết"
 
 #. module: digest
 #: model:ir.actions.act_window,name:digest.digest_tip_action
 #: model:ir.model,name:digest.model_digest_tip
 #: model:ir.ui.menu,name:digest.digest_tip_menu
 msgid "Digest Tips"
-msgstr "Mẹo tóm tắt"
+msgstr "Mẹo tổng kết"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__display_name
@@ -200,13 +201,14 @@ msgid ""
 "Have a question about a document? Click on the responsible user's picture to"
 " start a conversation. If his avatar has a green dot, he is online."
 msgstr ""
-"Có câu hỏi về tài liệu? Bấm vào ảnh của người phụ trách để trò chuyện. Ảnh "
-"đại diện màu xanh nghĩa là người đó đang trực tuyến."
+"Có câu hỏi về một tài liệu nào đó? Hãy bấm vào hình của người phụ trách để  "
+"bắt đầu một cuộc hội thoại. Nếu avatar của người phụ trách màu xanh, người "
+"ấy đang online."
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "How to customize your digest?"
-msgstr "Làm sao để tùy biến tóm tắt?"
+msgstr "Làm thế nào để tuỳ biến Tổng kết của bạn"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__id
@@ -217,13 +219,13 @@ msgstr "ID"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "In order to build your customized digest, follow these steps:"
-msgstr "Để tạo tóm tắt tùy chỉnh, hãy làm các bước sau:"
+msgstr "Để xây dựng tổng kết tuỳ chỉnh, hãy làm theo các bước sau:"
 
 #. module: digest
 #: code:addons/digest/controllers/portal.py:0
 #, python-format
 msgid "Invalid periodicity set on digest"
-msgstr "Khoảng định kỳ đặt cho tóm tắt không hợp lệ"
+msgstr "Chu kỳ không hợp lệ được thiết lập ở tổng kết"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__is_subscribed
@@ -234,7 +236,7 @@ msgstr "Người dùng đã đăng ký chưa"
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_tree
 msgid "KPI Digest"
-msgstr "Tóm tắt KPI"
+msgstr "Tổng kết KPI"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_tip_view_form
@@ -254,12 +256,12 @@ msgstr "KPI"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_mail_message_total_value
 msgid "Kpi Mail Message Total Value"
-msgstr "Tổng giá trị tin nhắn trong thư KPI"
+msgstr "KPI  Tổng giá trị Mail"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_res_users_connected_value
 msgid "Kpi Res Users Connected Value"
-msgstr "Giá trị kết nối của người dùng Kpi"
+msgstr "KPI Giá trị kết nối của người dùng"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
@@ -277,13 +279,13 @@ msgstr "30 ngày qua"
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Last 7 Days"
-msgstr "7 ngày qua"
+msgstr "7 ngày trước"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest____last_update
 #: model:ir.model.fields,field_description:digest.field_digest_tip____last_update
 msgid "Last Modified on"
-msgstr "Sửa lần cuối vào"
+msgstr "Sửa lần cuối"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__write_uid
@@ -295,12 +297,12 @@ msgstr "Cập nhật lần cuối bởi"
 #: model:ir.model.fields,field_description:digest.field_digest_digest__write_date
 #: model:ir.model.fields,field_description:digest.field_digest_tip__write_date
 msgid "Last Updated on"
-msgstr "Cập nhật lần cuối vào"
+msgstr "Cập nhật lần cuối"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_mail_message_total
 msgid "Messages"
-msgstr "Thông báo"
+msgstr "Thông điệp"
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__monthly
@@ -319,12 +321,12 @@ msgid ""
 "New users are automatically added as recipient of the following digest "
 "email."
 msgstr ""
-"Người dùng mới được tự động thêm vào dưới dạng người nhận email tóm tắt sau."
+"Người dùng mới được thêm tự động vào danh sách nhận email tổng kết sau đây."
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__next_run_date
 msgid "Next Send Date"
-msgstr "Ngày gửi tiếp theo"
+msgstr "Ngày Gửi Kế tiếp"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_section_mobile
@@ -340,13 +342,13 @@ msgstr "Định kỳ"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
 msgid "Powered by"
-msgstr "Cung cấp bởi"
+msgstr "Được hỗ trợ bởi"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Prefer a broader overview ?"
-msgstr "Muốn xem tổng quát hơn?"
+msgstr "Thích một tổng quan bao trùm hơn?"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_0
@@ -354,13 +356,13 @@ msgid ""
 "Press ALT in any screen to highlight shortcuts for every button in the "
 "screen. It is useful to process multiple documents in batch."
 msgstr ""
-"Bấm ALT ở vị trí bất kỳ trên màn hình để tô sáng phím tắt cho mọi nút trên "
-"màn hình. Tính năng này hữu dụng khi xử lý nhiều tài liệu cùng lúc."
+"Bấm ALT in any screen to highlight shortcuts for every button in the screen."
+" It is useful to process multiple documents in batch."
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__quarterly
 msgid "Quarterly"
-msgstr "Hàng quý"
+msgstr "Hàng Quý"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__user_ids
@@ -372,17 +374,17 @@ msgstr "Người nhận"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_section_mobile
 msgid "Run your business from anywhere with <b>Odoo Mobile</b>."
-msgstr "Vận hành công việc ở bất kỳ đâu bằng <b>Odoo Mobile</b>."
+msgstr "Vận hành công việc của bạn từ bất cứ nơi nào với <b>Odoo Mobile</b>."
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Select your KPIs in the KPI's tab."
-msgstr "Chọn KPI của bạn trong tab KPI."
+msgstr "Chọn KPI của bạn ở tab KPI"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Send Now"
-msgstr "Gửi ngay"
+msgstr "Gửi Ngay"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
@@ -407,13 +409,13 @@ msgstr "Trạng thái"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Subscribe"
-msgstr "Đăng ký"
+msgstr "Đăng ký nhận tin"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Switch to weekly Digests"
-msgstr "Chuyển sang tóm tắt hàng tuần"
+msgstr "Chuyển sang Tổng kết theo tuần"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__tip_description
@@ -476,18 +478,18 @@ msgid ""
 "Type \"@\" to notify someone in a message, or \"#\" to link to a channel. "
 "Try to notify @OdooBot to test the feature."
 msgstr ""
-"Gõ \"@\" để thông báo cho ai đó trong tin nhắn, hoặc \"#\" để liên kết với "
-"một kênh. Hãy thử thông báo @OdooBot để thử tính năng."
+"Gõ \"@\" để thông báo ai đó trong tin nhắn, hoặc \"#\" để liên kết đến một "
+"kênh. Thử thông báo @OdooBot để kiểm thử tính năng."
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Unsubscribe me"
-msgstr "Bỏ đăng ký tôi"
+msgstr "Ngừng theo dõi"
 
 #. module: digest
 #: model:ir.model.fields,help:digest.field_digest_tip__sequence
 msgid "Used to display digest tip in email template base on order"
-msgstr "Được sử dụng để hiển thị mẹo tóm tắt trong mẫu email theo thứ tự"
+msgstr "Được sử dụng để hiển thị mẹo tổng hợp trong mẫu email dựa theo thứ tự"
 
 #. module: digest
 #: model:ir.model,name:digest.model_res_users
@@ -497,13 +499,13 @@ msgstr "Người dùng"
 #. module: digest
 #: model:ir.model.fields,help:digest.field_digest_tip__user_ids
 msgid "Users having already received this tip"
-msgstr "Người dùng đã nhận được mẹo này"
+msgstr "Những người dùng đã nhận được mẹo này"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Want to customize this email?"
-msgstr "Muốn tùy chỉnh email này?"
+msgstr "Muốn tùy biến email này?"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
@@ -527,9 +529,9 @@ msgid ""
 "This is useful when computing a margin or a discount on a quotation, sale "
 "order or invoice."
 msgstr ""
-"Khi chỉnh sửa số, bạn có thể sử dụng công thức bằng cách gõ ký tự  `=` . "
-"Tính năng này hữu dụng khi tính toán lợi nhuận biên hoặc chiết khấu trong "
-"báo giá, đơn bán hàng hoặc hóa đơn. "
+"Khi sửa số, bạn có thể sử dụng công thức bằng cách gõ ký tự `=`. Điều này "
+"hữu ích khi tính toán biên lợi nhuận hoặc chiết khấu trên báo giá, đơn "
+"bánhoặc hóa đơn."
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_4
@@ -537,23 +539,24 @@ msgid ""
 "When following documents, use the pencil icon to fine-tune the information you want to receive.\n"
 "Follow a project / sales team to keep track of this project's tasks / this team's opportunities."
 msgstr ""
-"Khi theo dõi tài liệu, sử dụng biểu tượng bút chì để tinh chỉnh thông tin bạn muốn nhận được.\n"
-"Theo dõi một dự án / đội kinh doanh để quản lý nhiệm vụ của dự án này / các cơ hội của đội."
+"Khi theo dõi một tài liệu, sử dụng biểu tượng cây bút để tinh chỉnh các thông tin mà bạn muốn nhận.\n"
+"Theo dõi một dự án / đội bán hàng để theo vết các nhiệm vụ của dự án / cơ hội của đội bán hàng này."
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
 msgid "You have been successfully unsubscribed from"
-msgstr "Bạn đã hủy đăng ký thành công khỏi"
+msgstr "Bạn đã thành công trong việc bỏ theo dõi nhận tin từ"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "You may want to add new computed fields with Odoo Studio:"
-msgstr "Bạn có thể muốn thêm các trường được tính toán mới với Odoo Studio:"
+msgstr ""
+"Bạn có thể muốn thêm các trường kiểu tính toán (compute) bằng Odoo Studio:"
 
 #. module: digest
 #: model:digest.digest,name:digest.digest_digest_default
 msgid "Your Odoo Periodic Digest"
-msgstr "Tóm tắt định kỳ Odoo của bạn"
+msgstr "Tổng kết định kỳ của bạn"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -568,7 +571,7 @@ msgid ""
 "                                                and display it in the KPI's tab;"
 msgstr ""
 "đầu tiên tạo ra một trường boolean được gọi là \n"
-"                                          <code>kpi_myfield</code>\n"
+"                                          <code>kpi_myfield\n"
 "                                           và hiển thị nó trong tab của KPI;"
 
 #. module: digest
@@ -590,9 +593,9 @@ msgid ""
 "                                                <code>kpi_myfield_value</code>\n"
 "                                                that will compute your customized KPI."
 msgstr ""
-"sau đó tạo một trường được tính toán gọi là\n"
+"sau đó tạo một trường kiểu tính toán (compute) gọi là\n"
 "                                                  <code>kpi_myfield_value</code>\n"
-"                                                   để tính KPI tùy chỉnh của bạn."
+"                                                   Điều đó sẽ tính KPI tùy chỉnh của bạn."
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
@@ -609,4 +612,4 @@ msgid ""
 msgstr ""
 "bạn phải tạo 2 trường trên\n"
 "                                              đối tượng\n"
-"                                             <code>tóm tắt:</code>                                                  "
+"                                             <code>digest:</code>                                                  "
