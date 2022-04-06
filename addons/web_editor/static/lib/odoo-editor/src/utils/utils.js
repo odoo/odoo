@@ -965,7 +965,7 @@ export function isUnremovable(node) {
     return (
         node.oid === 'root' ||
         (node.nodeType === Node.ELEMENT_NODE &&
-            (node.getAttribute('t-set') || node.getAttribute('t-call'))) ||
+            (node.classList.contains('o_editable') || node.getAttribute('t-set') || node.getAttribute('t-call'))) ||
         (node.classList && node.classList.contains('oe_unremovable'))
     );
 }
