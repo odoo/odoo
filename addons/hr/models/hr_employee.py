@@ -147,9 +147,8 @@ class HrEmployeePrivate(models.Model):
 
     @api.model
     def load_views(self, views, options=None):
-        if self.check_access_rights('read', raise_exception=False):
-            return super(HrEmployeePrivate, self).load_views(views, options=options)
-        return self.env['hr.employee.public'].load_views(views, options=options)
+        self.check_access_rights('read')
+        return super(HrEmployeePrivate, self).load_views(views, options=options)
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
