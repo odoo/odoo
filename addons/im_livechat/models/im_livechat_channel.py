@@ -113,7 +113,7 @@ class ImLivechatChannel(models.Model):
         visitor_user = False
         if user_id:
             visitor_user = self.env['res.users'].browse(user_id)
-            if visitor_user and visitor_user.active:  # valid session user (not public)
+            if visitor_user and visitor_user.active and visitor_user != operator:  # valid session user (not public)
                 channel_partner_to_add.append((4, visitor_user.partner_id.id))
         return {
             'channel_partner_ids': channel_partner_to_add,
