@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
+
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, insertAndReplace } from '@mail/model/model_field_command';
@@ -10,8 +12,10 @@ registerModel({
     lifecycleHooks: {
         _created() {
             this._loadLocalSettings();
+            browser.addEventListener('storage', this._onStorage);
         },
         _willDelete() {
+            browser.removeEventListener('storage', this._onStorage);
             for (const timeout of Object.values(this.volumeSettingsTimeouts)) {
                 this.messaging.browser.clearTimeout(timeout);
             }
@@ -181,6 +185,16 @@ registerModel({
                     voiceActivationThreshold,
                     audioInputDeviceId,
                 });
+            }
+        },
+        /**
+         * @private
+         * @param {Event} ev
+         */
+        async _onStorage(ev) {
+            if (ev.key === 'mail_user_setting_voice_threshold') {
+                this.update({ voiceActivationThreshold: ev.newValue });
+                await this.messaging.rtc.updateVoiceActivation();
             }
         },
         /**
