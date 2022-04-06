@@ -332,7 +332,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * @returns {integer}
      */
     getTZOffset: function (date) {
-        return -new Date(date).getTimezoneOffset();
+        return -new Date(new Date(date).toISOString().replace('Z', '')).getTimezoneOffset();
     },
     //--------------------------------------------------------------------------
     // Public
