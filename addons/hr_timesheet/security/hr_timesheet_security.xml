@@ -86,5 +86,10 @@
             <field name="implied_ids" eval="[(4, ref('hr_timesheet.group_hr_timesheet_approver'))]"/>
         </record>
 
+        <record model="ir.rule" id="timesheets_analysis_report_comp_rule">
+            <field name="name">Timesheets Analysis Report multi-company</field>
+            <field name="model_id" ref="model_timesheets_analysis_report"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
     </data>
 </odoo>
