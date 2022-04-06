@@ -113,7 +113,6 @@ options.registry.SocialMedia = options.Class.extend({
                     } else {
                         // Copy existing style if there is already another link.
                         anchorEl = this.$target[0].querySelector(':scope > a').cloneNode(true);
-                        anchorEl.classList.remove('d-none');// TODO remove in master.
                         this._removeSocialMediaClasses(anchorEl);
                     }
                     const faIcon = isDbField ? `fa-${entry.media}` : 'fa-pencil';
@@ -122,9 +121,6 @@ options.registry.SocialMedia = options.Class.extend({
                         anchorEl.href = `/website/social/${entry.media}`;
                         anchorEl.classList.add(`s_social_media_${entry.media}`);
                     }
-                } else {
-                    // TODO remove this 'else' in master
-                    anchorEl.classList.remove('d-none');
                 }
             } else {
                 if (anchorEl) {
@@ -196,7 +192,7 @@ options.registry.SocialMedia = options.Class.extend({
                 placeholder: `https://${media || 'example'}.com/yourPage`,
                 undeletable: !!media,
                 notToggleable: !media,
-                selected: !el.classList.contains('d-none'), // TODO in master: selected:true
+                selected: true,
                 listPosition: listPosition++,
                 domPosition: domPosition++,
                 media: media,
