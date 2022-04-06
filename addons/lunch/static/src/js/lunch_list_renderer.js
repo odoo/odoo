@@ -27,7 +27,7 @@ var LunchListRenderer = ListRenderer.extend({
      */
     _renderRow: function (record) {
         var tr = this._super.apply(this, arguments);
-        tr.attr('data-product-id', record.data.id);
+        tr.attr('data-product-id', record.data.product_id.data.id);
         return tr;
     },
 
