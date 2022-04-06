@@ -8,6 +8,21 @@ from odoo.http import request
 from odoo.exceptions import ValidationError
 
 
+class WebsiteSale(website_sale_controller.WebsiteSale):
+
+    @http.route()
+    def cart_update_json(self, product_id, line_id=None, add_qty=None, set_qty=None, display=True, **kwargs):
+        product = request.env['product.product'].browse(product_id)
+
+        if not product.allow_out_of_stock_order and add_qty and product.type == 'product' and product.free_qty - product.cart_qty - add_qty < 0:
+            return {
+                "warning": _("Unfortunately, this product is out of stock, you cannot add it to your cart anymore")
+            }
+        return super().cart_update_json(product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty,
+                                        display=display, **kwargs)
+
+
+
 class PaymentPortal(website_sale_controller.PaymentPortal):
 
     @http.route()
