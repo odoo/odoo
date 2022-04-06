@@ -1432,7 +1432,7 @@ class Article(models.Model):
         self.ensure_one()
         member = self.env['knowledge.article.member'].search([('article_id', '=', self.id), ('partner_id', '=', partner.id)])
         return url_join(self.get_base_url(), "/knowledge/article/invite/%s/%s" % (member.id, member._get_invitation_hash()))
-    
+
     def _get_first_accessible_article(self):
         """ Returns the first accessible article for the current user.
         If user has favorites, return first favorite article. """

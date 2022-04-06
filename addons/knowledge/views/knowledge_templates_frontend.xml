@@ -31,24 +31,13 @@
                         </div>
                     </div>
                     <div t-att-class="('col-sm-10' if show_sidebar else 'col-sm-12') + ' p-0 overflow-auto'">
-                        <div t-if="not article">
-                            <div class="o_knowledge_header d-sm-flex flex-row justify-content-between border-bottom">
-                                <div class="d-flex align-items-center p-3">
-                                    <h3>Error</h3>
-                                </div>
-                            </div>
-                            <div class="p-3 text-center">
-                                <p class="o_view_nocontent_empty_folder">
-                                    <h2>Not found</h2>
-                                    <br />
-                                    <p>The requested article doesn't exist or you don't have the permission to access it.</p>
-                                </p>
-                            </div>
-                        </div>
-                        <div t-else="" class="d-flex flex-column h-100">
+                        <div class="d-flex flex-column h-100">
                             <!-- Article header -->
                             <div class="o_knowledge_header d-sm-flex flex-row justify-content-between border-bottom">
-                                <div class="d-flex align-items-center p-3">
+                                <div class="d-flex align-items-center p-3" t-if="not article">
+                                    <h3>Error</h3>
+                                </div>
+                                <div class="d-flex align-items-center p-3" t-else="">
                                     <!-- Title -->
                                     <span t-out="article.name" />
                                     <a href="#" class="o_favorites_toggle_button pl-1" t-att-data-article-id="article.id">
@@ -56,8 +45,25 @@
                                         <i t-else="" class="fa fa-star-o" />
                                     </a>
                                 </div>
+                                <!-- Log In -->
+                                <t t-call="portal.placeholder_user_sign_in">
+                                    <t t-set="_item_class" t-valuef="d-flex align-items-center p-2"/>
+                                    <t t-set="_link_class" t-valuef="nav-link font-weight-bold"/>
+                                </t>
+                                <t t-call="portal.user_dropdown">
+                                    <t t-set="_user_name" t-value="True"/>
+                                    <t t-set="_item_class" t-valuef="d-flex align-items-center p-2"/>
+                                    <t t-set="_link_class" t-valuef="nav-link font-weight-bold"/>
+                                </t>
                             </div>
-                            <div class="flex-grow-1 position-relative">
+                            <div class="p-3 text-center" t-if="not article">
+                                <p class="o_view_nocontent_empty_folder">
+                                    <h2>Not found</h2>
+                                    <br />
+                                    <p>The requested article does not exist or you do not have access to it.</p>
+                                </p>
+                            </div>
+                            <div class="flex-grow-1 position-relative" t-else="">
                                 <div class="o_scroll_view">
                                     <!-- Article Cover -->
                                     <div t-if="article.cover" class="o_knowledge_cover_image">
