@@ -180,6 +180,8 @@ class PosConfig(models.Model):
                                                    "In the meantime, you can use the 'Load Customers' button to load partners from database.")
     limited_partners_amount = fields.Integer(default=100)
     partner_load_background = fields.Boolean()
+    show_product_info_icon = fields.Boolean('Show Product Info Icon', default=True,
+                                    help="Show an i-icon on the top-left corner of the product.")
 
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):

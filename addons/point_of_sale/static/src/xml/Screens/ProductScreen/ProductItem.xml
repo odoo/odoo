@@ -7,7 +7,7 @@
                  t-att-data-product-id="props.product.id"
                  t-attf-aria-labelledby="article_product_{{props.product.id}}">
             <div class="product-img">
-                <i role="img" aria-label="Info" title="Info" class="product-info-button fa fa-info-circle"
+                <i t-if="env.pos.config.show_product_info_icon" role="img" aria-label="Info" title="Info" class="product-info-button fa fa-info-circle"
                     t-on-click.stop="onProductInfoClick"
                 />
                 <img t-att-src="imageUrl" t-att-alt="props.product.display_name" />
