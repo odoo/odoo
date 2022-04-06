@@ -6,9 +6,9 @@ import random
 
 from odoo import api, models, fields, _
 from odoo.addons.http_routing.models.ir_http import slug, unslug
+from odoo.addons.website.tools import text_from_html
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import html_translate
-from odoo.tools import html2plaintext
 
 
 class Blog(models.Model):
@@ -197,7 +197,7 @@ class BlogPost(models.Model):
             if blog_post.teaser_manual:
                 blog_post.teaser = blog_post.teaser_manual
             else:
-                content = html2plaintext(blog_post.content).replace('\n', ' ')
+                content = text_from_html(blog_post.content, True)
                 blog_post.teaser = content[:200] + '...'
 
     def _set_teaser(self):

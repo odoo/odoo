@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import contextlib
+import re
 from lxml import etree
 from unittest.mock import Mock, MagicMock, patch
 
@@ -144,7 +145,7 @@ def similarity_score(s1, s2):
     score -= len(set1.symmetric_difference(s2)) / (len(s1) + len(s2))
     return score
 
-def text_from_html(html_fragment):
+def text_from_html(html_fragment, collapse_whitespace=False):
     """
     Returns the plain non-tag text from an html
 
@@ -154,4 +155,7 @@ def text_from_html(html_fragment):
     """
     # lxml requires one single root element
     tree = etree.fromstring('<p>%s</p>' % html_fragment, etree.XMLParser(recover=True))
-    return ' '.join(tree.itertext())
+    content = ' '.join(tree.itertext())
+    if collapse_whitespace:
+        content = re.sub('\\s+', ' ', content).strip()
+    return content

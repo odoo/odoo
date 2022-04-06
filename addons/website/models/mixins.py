@@ -366,7 +366,6 @@ class WebsiteSearchableMixin(models.AbstractModel):
             for result, data in zip(self, results_data):
                 for html_field in html_fields:
                     if data[html_field]:
-                        text = text_from_html(data[html_field])
-                        text = re.sub('\\s+', ' ', text).strip()
+                        text = text_from_html(data[html_field], True)
                         data[html_field] = text
         return results_data
