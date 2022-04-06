@@ -2194,6 +2194,7 @@ var SnippetsMenu = Widget.extend({
     _computeSnippetTemplates: function (html) {
         var self = this;
         var $html = $(html);
+        this._patchForComputeSnippetTemplates($html);
         var $scroll = $html.siblings('#o_scroll');
 
         // TODO remove me in master: this is a hack that moves the logo options
@@ -2393,6 +2394,15 @@ var SnippetsMenu = Widget.extend({
         this.trigger_up('snippets_loaded', self.$el);
         $(this.el.ownerDocument.body).addClass('editor_has_snippets');
     },
+    /**
+     * Eases patching the XML definition for snippets and options in stable
+     * versions. Note: in the future, we will probably move to other ways to
+     * define snippets and options.
+     *
+     * @private
+     * @param {jQuery}
+     */
+    _patchForComputeSnippetTemplates($html) {},
     /**
      * Creates a snippet editor to associated to the given snippet. If the given
      * snippet already has a linked snippet editor, the function only returns
