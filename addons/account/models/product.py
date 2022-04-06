@@ -99,20 +99,20 @@ class ProductProduct(models.Model):
         # Apply fiscal position.
         if product_taxes and fiscal_position:
             product_taxes_after_fp = fiscal_position.map_tax(product_taxes)
+            flattened_taxes_after_fp = product_taxes_after_fp._origin.flatten_taxes_hierarchy()
+            flattened_taxes_before_fp = product_taxes._origin.flatten_taxes_hierarchy()
+            taxes_before_included = any(tax.price_include for tax in flattened_taxes_before_fp)
 
-            if set(product_taxes.ids) != set(product_taxes_after_fp.ids):
-                flattened_taxes_before_fp = product_taxes._origin.flatten_taxes_hierarchy()
-                if any(tax.price_include for tax in flattened_taxes_before_fp):
-                    taxes_res = flattened_taxes_before_fp.compute_all(
-                        product_price_unit,
-                        quantity=1.0,
-                        currency=currency,
-                        product=product,
-                        is_refund=is_refund_document,
-                    )
-                    product_price_unit = taxes_res['total_excluded']
+            if set(product_taxes.ids) != set(product_taxes_after_fp.ids) and taxes_before_included:
+                taxes_res = flattened_taxes_before_fp.compute_all(
+                    product_price_unit,
+                    quantity=1.0,
+                    currency=currency,
+                    product=product,
+                    is_refund=is_refund_document,
+                )
+                product_price_unit = taxes_res['total_excluded']
 
-                flattened_taxes_after_fp = product_taxes_after_fp._origin.flatten_taxes_hierarchy()
                 if any(tax.price_include for tax in flattened_taxes_after_fp):
                     taxes_res = flattened_taxes_after_fp.compute_all(
                         product_price_unit,
