@@ -434,7 +434,7 @@ class MailMail(models.Model):
                 # To avoid sending twice the same email, provoke the failure earlier
                 mail.write({
                     'state': 'exception',
-                    'failure_reason': _('Error without exception. Probably due do sending an email without computed recipients.'),
+                    'failure_reason': _('Error without exception. Probably due to sending an email without computed recipients.'),
                 })
                 # Update notification in a transient exception state to avoid concurrent
                 # update in case an email bounces while sending all emails related to current
@@ -445,7 +445,7 @@ class MailMail(models.Model):
                     ('notification_status', 'not in', ('sent', 'canceled'))
                 ])
                 if notifs:
-                    notif_msg = _('Error without exception. Probably due do concurrent access update of notification records. Please see with an administrator.')
+                    notif_msg = _('Error without exception. Probably due to concurrent access update of notification records. Please see with an administrator.')
                     notifs.sudo().write({
                         'notification_status': 'exception',
                         'failure_type': 'unknown',

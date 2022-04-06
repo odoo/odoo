@@ -244,7 +244,7 @@ class TestMailMail(TestMailCommon):
             mail.write({'email_to': email_to})
             with self.mock_mail_gateway():
                 mail.send(raise_exception=False)
-            self.assertIn('Error without exception. Probably due do sending an email without computed recipients.', mail.failure_reason)
+            self.assertIn('Error without exception. Probably due to sending an email without computed recipients.', mail.failure_reason)
             self.assertFalse(mail.failure_type, 'Mail: missing email_to: no failure type, should be updated')
             self.assertEqual(mail.state, 'exception')
             if email_to == ' ':
@@ -261,7 +261,7 @@ class TestMailMail(TestMailCommon):
             mail.write({'email_to': email_to})
             with self.mock_mail_gateway():
                 mail.send(raise_exception=False)
-            self.assertIn('Error without exception. Probably due do sending an email without computed recipients.', mail.failure_reason)
+            self.assertIn('Error without exception. Probably due to sending an email without computed recipients.', mail.failure_reason)
             self.assertFalse(mail.failure_type, 'Mail: invalid email_to: no failure type, should be updated')
             self.assertEqual(mail.state, 'exception')
             self.assertEqual(notification.failure_type, failure_type, 'Mail: invalid email_to: missing instead of invalid')
@@ -322,7 +322,7 @@ class TestMailMail(TestMailCommon):
             notification.write({'res_partner_id': partner.id})
             with self.mock_mail_gateway():
                 mail.send(raise_exception=False)
-            self.assertEqual(mail.failure_reason, 'Error without exception. Probably due do sending an email without computed recipients.')
+            self.assertEqual(mail.failure_reason, 'Error without exception. Probably due to sending an email without computed recipients.')
             self.assertFalse(mail.failure_type, 'Mail: void recipient partner: no failure type, should be updated')
             self.assertEqual(mail.state, 'exception')
             self.assertEqual(notification.failure_type, 'mail_email_invalid', 'Mail: void recipient partner: should be missing, not invalid')
@@ -335,7 +335,7 @@ class TestMailMail(TestMailCommon):
             notification.write({'res_partner_id': partner.id})
             with self.mock_mail_gateway():
                 mail.send(raise_exception=False)
-            self.assertEqual(mail.failure_reason, 'Error without exception. Probably due do sending an email without computed recipients.')
+            self.assertEqual(mail.failure_reason, 'Error without exception. Probably due to sending an email without computed recipients.')
             self.assertFalse(mail.failure_type, 'Mail: invalid recipient partner: no failure type, should be updated')
             self.assertEqual(mail.state, 'exception')
             self.assertEqual(notification.failure_type, 'mail_email_invalid')
