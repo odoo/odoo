@@ -285,7 +285,7 @@ class Project(models.Model):
         domain = self.sudo()._get_sale_items_domain()
         return {
             'total': self.env['sale.order.line'].sudo().search_count(domain),
-            'data': self.get_sale_items_data(domain, limit=10, with_action=with_action),
+            'data': self.get_sale_items_data(domain, limit=5, with_action=with_action),
         }
 
     def _show_profitability(self):
