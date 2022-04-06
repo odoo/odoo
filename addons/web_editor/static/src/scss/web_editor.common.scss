@@ -16,7 +16,7 @@
     @for $index from 1 through length($o-color-combinations) {
         $-bg-color: o-color(color('o-cc#{$index}-bg'));
 
-        $-text: color('o-cc#{$index}-text') or color-yiq(o-color('o-cc#{$index}-bg'));
+        $-text: color('o-cc#{$index}-text') or color-contrast(o-color('o-cc#{$index}-bg'));
         $-headings: color('o-cc#{$index}-headings') or $-text;
         $-h2: color('o-cc#{$index}-h2') or $-headings;
         $-h3: color('o-cc#{$index}-h3') or $-h2;
@@ -769,7 +769,7 @@ blockquote {
                 .nav-link.active,
                 .show > .nav-link {
                     background-color: $-btn-primary-color;
-                    color: color-yiq($-btn-primary-color);
+                    color: color-contrast($-btn-primary-color);
                 }
             }
             .dropdown-menu .dropdown-item { // Need to add +1 priority thanks to
@@ -778,10 +778,10 @@ blockquote {
                 &:active {
                     &, h6 { // Quick fix: sometimes we use h6 in dropdowns
                         @include gradient-bg($-btn-primary-color);
-                        color: color-yiq($-btn-primary-color) !important;
+                        color: color-contrast($-btn-primary-color) !important;
 
                         &:hover, &:focus {
-                            color: color-yiq($-btn-primary-color) !important;
+                            color: color-contrast($-btn-primary-color) !important;
                         }
                     }
                 }
@@ -791,7 +791,7 @@ blockquote {
 
                 &.active {
                     background-color: $-btn-primary-color;
-                    color: color-yiq($-btn-primary-color);
+                    color: color-contrast($-btn-primary-color);
                     border-color: $-btn-primary-color;
                 }
             }
