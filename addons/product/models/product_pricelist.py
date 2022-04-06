@@ -200,7 +200,9 @@ class Pricelist(models.Model):
                     price = product.price_compute(rule.base)[product.id]
 
                 if price is not False:
-                    price = rule._compute_price(price, price_uom, product, quantity=qty, partner=partner)
+                    # pass the date through the context for further currency conversions
+                    rule_with_date_context = rule.with_context(date=date)
+                    price = rule_with_date_context._compute_price(price, price_uom, product, quantity=qty, partner=partner)
                     suitable_rule = rule
                 break
             # Final price conversion into pricelist currency
@@ -646,6 +648,7 @@ class PricelistItem(models.Model):
            The unused parameters are there to make the full context available for overrides.
         """
         self.ensure_one()
+        date = self.env.context.get('date') or fields.Date.today()
         convert_to_price_uom = (lambda price: product.uom_id._compute_price(price, price_uom))
         if self.compute_price == 'fixed':
             price = convert_to_price_uom(self.fixed_price)
@@ -655,18 +658,30 @@ class PricelistItem(models.Model):
             # complete formula
             price_limit = price
             price = (price - (price * (self.price_discount / 100))) or 0.0
+            if self.base == 'standard_price':
+                price_currency = product.cost_currency_id
+            elif self.base == 'pricelist':
+                price_currency = self.currency_id  # Already converted before to the pricelist currency
+            else:
+                price_currency = product.currency_id
             if self.price_round:
                 price = tools.float_round(price, precision_rounding=self.price_round)
 
+            def convert_to_base_price_currency(amount):
+                return self.currency_id._convert(amount, price_currency, self.env.company, date, round=False)
+
             if self.price_surcharge:
-                price_surcharge = convert_to_price_uom(self.price_surcharge)
+                price_surcharge = convert_to_base_price_currency(self.price_surcharge)
+                price_surcharge = convert_to_price_uom(price_surcharge)
                 price += price_surcharge
 
             if self.price_min_margin:
-                price_min_margin = convert_to_price_uom(self.price_min_margin)
+                price_min_margin = convert_to_base_price_currency(self.price_min_margin)
+                price_min_margin = convert_to_price_uom(price_min_margin)
                 price = max(price, price_limit + price_min_margin)
 
             if self.price_max_margin:
-                price_max_margin = convert_to_price_uom(self.price_max_margin)
+                price_max_margin = convert_to_base_price_currency(self.price_max_margin)
+                price_max_margin = convert_to_price_uom(price_max_margin)
                 price = min(price, price_limit + price_max_margin)
         return price
