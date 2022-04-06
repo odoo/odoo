@@ -6,6 +6,17 @@ from odoo.exceptions import UserError
 from odoo import api, fields, models, _
 from odoo.osv import expression
 
+TIMESHEET_INVOICE_TYPES = [
+    ('billable_time', 'Billed on Timesheets'),
+    ('billable_fixed', 'Billed at a Fixed price'),
+    ('billable_milestones', 'Billed on Milestones'),
+    ('billable_manual', 'Billed Manually'),
+    ('non_billable', 'Non Billable Tasks'),
+    ('timesheet_revenues', 'Timesheet Revenues'),
+    ('service_revenues', 'Service Revenues'),
+    ('other_revenues', 'Other Revenues'),
+    ('other_costs', 'Other Costs'),
+]
 
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
@@ -14,16 +25,7 @@ class AccountAnalyticLine(models.Model):
         domain = super(AccountAnalyticLine, self)._default_sale_line_domain()
         return expression.OR([domain, [('qty_delivered_method', '=', 'timesheet')]])
 
-    timesheet_invoice_type = fields.Selection([
-        ('billable_time', 'Billed on Timesheets'),
-        ('billable_fixed', 'Billed at a Fixed price'),
-        ('billable_milestones', 'Billed on Milestones'),
-        ('billable_manual', 'Billed Manually'),
-        ('non_billable', 'Non Billable Tasks'),
-        ('timesheet_revenues', 'Timesheet Revenues'),
-        ('service_revenues', 'Service Revenues'),
-        ('other_revenues', 'Other Revenues'),
-        ('other_costs', 'Other Costs')], string="Billing Type",
+    timesheet_invoice_type = fields.Selection(TIMESHEET_INVOICE_TYPES, string="Billable Type",
             compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', compute="_compute_commercial_partner")
     timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
