@@ -171,6 +171,53 @@ class TestOnchangeProductId(TransactionCase):
         self.assertEqual(so.order_line[0].price_unit, 50, "Second date pricelist rule not applied")
         self.assertEqual(so.order_line[0].price_subtotal, so.order_line[0].price_unit * so.order_line[0].product_uom_qty, 'Total of SO line should be a multiplication of unit price and ordered quantity')
 
+    def test_fiscal_position_application_cross(self):
+        """
+            In EU, if you reach an amount of sales in a border country of yours,
+            you need to apply the tax in that country.
+            Check if prices are correctly applied in that case.        
+        """
+
+        tax_include_be = self.tax_model.create({
+            'name': "Include tax",
+            'amount': 21.00,
+            'price_include': True,
+        })
+        tax_include_fr = self.tax_model.create({
+            'name': "Exclude tax",
+            'amount': 19.00,
+            'price_include': True,
+        })
+
+        product_tmpl = self.product_tmpl_model.create({
+            'name': "Voiture",
+            'list_price': 121,
+            'taxes_id': [(6, 0, [tax_include_be.id])]
+        })
+
+        product_product = product_tmpl.product_variant_id
+
+        fpos = self.fiscal_position_model.create({
+            'name': "Cross Border France",
+            'sequence': 1
+        })
+
+        self.fiscal_position_tax_model.create({
+            "position_id": fpos.id,
+            "tax_src_id": tax_include_be.id,
+            "tax_dest_id": tax_include_fr.id
+        })
+        partner = self.res_partner_model.create({
+            "name": "Frenchy",
+            "property_account_position_id": fpos.id,
+        })
+        with Form(self.env['sale.order'].with_context(tracking_disable=True)) as order_form:
+            order_form.partner_id = partner
+            with order_form.order_line.new() as line_form:
+                line_form.product_id = product_product
+        order = order_form.save()
+        self.assertRecordValues(order.order_line, [{'price_unit': 121}])
+
     def test_pricelist_uom_discount(self):
         """ Test prices and discounts are correctly applied based on date and uom"""
         computer_case = self.env['product.product'].create({
