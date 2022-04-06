@@ -391,4 +391,4 @@ class SaleOrderLine(models.Model):
             record.name_short = record.product_id.with_context(display_default_code=False).display_name
 
     def get_description_following_lines(self):
-        return self.name.splitlines()[1:]
+        return self.with_context(from_website=True)._get_sale_order_line_multiline_description_variants().splitlines()[1:]
