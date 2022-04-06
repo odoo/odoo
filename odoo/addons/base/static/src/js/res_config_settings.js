@@ -187,8 +187,7 @@ var BaseSettingRenderer = FormRenderer.extend({
         this.searchInput.val("");
         _.each(this.modules, function (module) {
             module.settingView.addClass('o_hidden');
-            module.settingView.find('.o_setting_box').removeClass('o_hidden');
-            module.settingView.find('h2').removeClass('o_hidden');
+            module.settingView.find('h2, .o_setting_box, .o_setting_tip').removeClass('o_hidden');
             module.settingView.find('.settingSearchHeader').addClass('o_hidden');
             module.settingView.find('.o_settings_container').addClass('mt16').removeClass('mb-0');
         });
@@ -230,8 +229,7 @@ var BaseSettingRenderer = FormRenderer.extend({
         this.count = 0;
         _.each(this.modules, function (module) {
             self.inVisibleCount = 0;
-            module.settingView.find('.o_setting_box').addClass('o_hidden');
-            module.settingView.find('h2').addClass('o_hidden');
+            module.settingView.find('h2, .o_setting_box, .o_setting_tip').addClass('o_hidden');
             module.settingView.find('.settingSearchHeader').addClass('o_hidden');
             module.settingView.find('.o_settings_container').removeClass('mt16').addClass('mb-0');
 
