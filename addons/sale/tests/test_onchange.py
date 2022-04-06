@@ -77,49 +77,139 @@ class TestOnchangeProductId(TransactionCase):
             'name': "George"
         })
         tax_include_src = self.tax_model.create({
-            'name': "Include tax",
+            'name': "Include 21%",
             'amount': 21.00,
+            'amount_type': 'percent',
             'price_include': True,
         })
         tax_include_dst = self.tax_model.create({
-            'name': "Exclude tax",
+            'name': "Include 6%",
             'amount': 6.00,
+            'amount_type': 'percent',
             'price_include': True,
         })
-
-        product_tmpl = self.product_tmpl_model.create({
+        tax_exclude_src = self.tax_model.create({
+            'name': "Exclude 15%",
+            'amount': 15.00,
+            'amount_type': 'percent',
+            'price_include': False,
+        })
+        tax_exclude_dst = self.tax_model.create({
+            'name': "Exclude 21%",
+            'amount': 21.00,
+            'amount_type': 'percent',
+            'price_include': False,
+        })
+        product_tmpl_a = self.product_tmpl_model.create({
             'name': "Voiture",
             'list_price': 121,
             'taxes_id': [(6, 0, [tax_include_src.id])]
         })
 
-        product_product = product_tmpl.product_variant_id
+        product_tmpl_b = self.product_tmpl_model.create({
+            'name': "Voiture",
+            'list_price': 100,
+            'taxes_id': [(6, 0, [tax_exclude_src.id])]
+        })
 
-        fpos = self.fiscal_position_model.create({
-            'name': "fiscal position",
+        fpos_incl_incl = self.fiscal_position_model.create({
+            'name': "incl -> incl",
             'sequence': 1
         })
 
-        fpos_tax = self.fiscal_position_tax_model.create({
-            'position_id' :fpos.id,
+        self.fiscal_position_tax_model.create({
+            'position_id' :fpos_incl_incl.id,
             'tax_src_id': tax_include_src.id,
             'tax_dest_id': tax_include_dst.id
         })
 
+        fpos_excl_incl = self.fiscal_position_model.create({
+            'name': "excl -> incl",
+            'sequence': 2,
+        })
+
+        self.fiscal_position_tax_model.create({
+            'position_id' :fpos_excl_incl.id,
+            'tax_src_id': tax_exclude_src.id,
+            'tax_dest_id': tax_include_dst.id
+        })
+
+        fpos_incl_excl = self.fiscal_position_model.create({
+            'name': "incl -> excl",
+            'sequence': 3,
+        })
+
+        self.fiscal_position_tax_model.create({
+            'position_id' :fpos_incl_excl.id,
+            'tax_src_id': tax_include_src.id,
+            'tax_dest_id': tax_exclude_dst.id
+        })
+
+        fpos_excl_excl = self.fiscal_position_model.create({
+            'name': "excl -> excp",
+            'sequence': 4,
+        })
+
+        self.fiscal_position_tax_model.create({
+            'position_id' :fpos_excl_excl.id,
+            'tax_src_id': tax_exclude_src.id,
+            'tax_dest_id': tax_exclude_dst.id
+        })
+
         # Create the SO with one SO line and apply a pricelist and fiscal position on it
+        # Then check if price unit and price subtotal matches the expected values
+
+        # Test Mapping included to included
         order_form = Form(self.env['sale.order'].with_context(tracking_disable=True))
         order_form.partner_id = partner
         order_form.pricelist_id = pricelist
-        order_form.fiscal_position_id = fpos
+        order_form.fiscal_position_id = fpos_incl_incl
         with order_form.order_line.new() as line:
-            line.name = product_product.name
-            line.product_id = product_product
+            line.name = product_tmpl_a.product_variant_id.name
+            line.product_id = product_tmpl_a.product_variant_id
             line.product_uom_qty = 1.0
             line.product_uom = uom
         sale_order = order_form.save()
+        self.assertRecordValues(sale_order.order_line, [{'price_unit': 106, 'price_subtotal': 100}])
 
-        # Check the unit price of SO line
-        self.assertRecordValues(sale_order.order_line, [{'price_unit': 106}])
+        # Test Mapping excluded to included
+        order_form = Form(self.env['sale.order'].with_context(tracking_disable=True))
+        order_form.partner_id = partner
+        order_form.pricelist_id = pricelist
+        order_form.fiscal_position_id = fpos_excl_incl
+        with order_form.order_line.new() as line:
+            line.name = product_tmpl_b.product_variant_id.name
+            line.product_id = product_tmpl_b.product_variant_id
+            line.product_uom_qty = 1.0
+            line.product_uom = uom
+        sale_order = order_form.save()
+        self.assertRecordValues(sale_order.order_line, [{'price_unit': 100, 'price_subtotal': 94.34}])
+
+        # Test Mapping included to excluded
+        order_form = Form(self.env['sale.order'].with_context(tracking_disable=True))
+        order_form.partner_id = partner
+        order_form.pricelist_id = pricelist
+        order_form.fiscal_position_id = fpos_incl_excl
+        with order_form.order_line.new() as line:
+            line.name = product_tmpl_a.product_variant_id.name
+            line.product_id = product_tmpl_a.product_variant_id
+            line.product_uom_qty = 1.0
+            line.product_uom = uom
+        sale_order = order_form.save()
+        self.assertRecordValues(sale_order.order_line, [{'price_unit': 100, 'price_subtotal': 100}])
+
+        # Test Mapping excluded to excluded
+        order_form = Form(self.env['sale.order'].with_context(tracking_disable=True))
+        order_form.partner_id = partner
+        order_form.pricelist_id = pricelist
+        order_form.fiscal_position_id = fpos_excl_excl
+        with order_form.order_line.new() as line:
+            line.name = product_tmpl_b.product_variant_id.name
+            line.product_id = product_tmpl_b.product_variant_id
+            line.product_uom_qty = 1.0
+            line.product_uom = uom
+        sale_order = order_form.save()
+        self.assertRecordValues(sale_order.order_line, [{'price_unit': 100, 'price_subtotal': 100}])
 
     def test_pricelist_application(self):
         """ Test different prices are correctly applied based on dates """
