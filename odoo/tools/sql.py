@@ -51,15 +51,18 @@ def table_kind(cr, tablename):
     cr.execute(query, (tablename,))
     return cr.fetchone()[0] if cr.rowcount else None
 
-# prescribed column order by type size: 4 bytes, 1 byte, 8 bytes, variable size
-# (values have been chosen to minimize padding in rows; unknown column types
-# are considered variable size and put last)
-SQL_ORDER_BY_TYPE = defaultdict(lambda: 6, {
-    'int4': 1,        # 4 bytes
-    'date': 2,        # 4 bytes
-    'bool': 3,        # 1 byte
-    'float8': 4,      # 8 bytes
-    'timestamp': 5,   # 8 bytes
+# prescribed column order by type: columns aligned on 4 bytes, columns aligned
+# on 1 byte, columns aligned on 8 bytes(values have been chosen to minimize
+# padding in rows; unknown column types are put last)
+SQL_ORDER_BY_TYPE = defaultdict(lambda: 9, {
+    'int4': 1,          # 4 bytes aligned on 4 bytes
+    'varchar': 2,       # variable aligned on 4 bytes
+    'date': 3,          # 4 bytes aligned on 4 bytes
+    'text': 4,          # variable aligned on 4 bytes
+    'numeric': 5,       # variable aligned on 4 bytes
+    'bool': 6,          # 1 byte aligned on 1 byte
+    'timestamp': 7,     # 8 bytes aligned on 8 bytes
+    'float8': 8,        # 8 bytes aligned on 8 bytes
 })
 
 def create_model_table(cr, tablename, comment=None, columns=()):
