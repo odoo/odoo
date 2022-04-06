@@ -7,7 +7,7 @@ patch(ProjectRightPanel.prototype, '@sale_project/right_panel/project_right_pane
     async _loadAdditionalSalesOrderItems() {
         const offset = this.state.data.sale_items.data.length;
         const totalRecords = this.state.data.sale_items.total;
-        const limit = totalRecords - offset <= 10 ? totalRecords - offset : 10;
+        const limit = totalRecords - offset <= 5 ? totalRecords - offset : 5;
         const saleOrderItems = await this.rpc({
             model: 'project.project',
             method: 'get_sale_items_data',
