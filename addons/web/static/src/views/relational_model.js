@@ -2162,14 +2162,14 @@ export class StaticList extends DataPoint {
     /**
      * @param {RecordId} recordId
      */
-    delete(recordId) {
+    async delete(recordId) {
         const record = this._cache[recordId];
         if (record.isVirtual) {
             delete this._cache[recordId];
         }
         const id = record.resId || record.virtualId;
         this.applyCommand(x2ManyCommands.delete(id));
-
+        await this._loadRecords();
         this.records = this._getRecords();
         this.onChanges();
         this.model.notify();

@@ -5521,7 +5521,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_list_button button");
     });
 
-    QUnit.skipWOWL("one2many kanban with action button", async function (assert) {
+    QUnit.test("one2many kanban with action button", async function (assert) {
         assert.expect(4);
 
         serverData.models.partner.records[0].p = [2];
@@ -5547,29 +5547,17 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
             resId: 1,
-            intercepts: {
-                execute_action: function (event) {
-                    assert.deepEqual(event.data.env.currentID, 2, "should call with correct id");
-                    assert.strictEqual(
-                        event.data.env.model,
-                        "partner",
-                        "should call with correct model"
-                    );
-                    assert.strictEqual(
-                        event.data.action_data.name,
-                        "method_name",
-                        "should call correct method"
-                    );
-                    assert.strictEqual(
-                        event.data.action_data.type,
-                        "object",
-                        "should have correct type"
-                    );
-                },
+        });
+        patchWithCleanup(form.env.services.action, {
+            doActionButton: (params) => {
+                assert.deepEqual(params.resId, 2);
+                assert.strictEqual(params.resModel, "partner");
+                assert.strictEqual(params.name, "method_name");
+                assert.strictEqual(params.type, "object");
             },
         });
 
-        await click(form.$(".oe_kanban_action_button"));
+        await click(target, ".oe_kanban_action_button");
     });
 
     QUnit.skipWOWL(
@@ -5716,8 +5704,15 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(2);
 
         serverData.models.partner.records[0].turtles = [2, 3];
-
-        const form = await makeView({
+        serverData.views = {
+            "turtle,false,list": `
+                <tree>
+                    <field name="turtle_bar"/>
+                    <field name="display_name"/>
+                    <field name="partner_ids"/>
+                </tree>`,
+        };
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -5732,23 +5727,15 @@ QUnit.module("Fields", (hooks) => {
                     </group>
                 </form>`,
             resId: 1,
-            archs: {
-                "turtle,false,list": `
-                    <tree>
-                        <field name="turtle_bar"/>
-                        <field name="display_name"/>
-                        <field name="partner_ids"/>
-                    </tree>`,
-            },
         });
 
         assert.containsOnce(
-            form,
+            target,
             '.o_field_widget[name="turtles"] .o_list_view',
             "should display one2many list view in the modal"
         );
 
-        assert.containsN(form, ".o_data_row", 2, "should display the 2 turtles");
+        assert.containsN(target, ".o_data_row", 2, "should display the 2 turtles");
     });
 
     QUnit.skipWOWL("many2one and many2many in one2many", async function (assert) {
@@ -5862,16 +5849,14 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "many2manytag in one2many, onchange, some modifiers, and more than one page",
         async function (assert) {
-            assert.expect(9);
-
             serverData.models.partner.records[0].turtles = [1, 2, 3];
 
             serverData.models.partner.onchanges.turtles = function () {};
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -5885,17 +5870,18 @@ QUnit.module("Fields", (hooks) => {
                         </field>
                     </form>`,
                 resId: 1,
-                viewOptions: { mode: "edit" },
                 mockRPC(route, args) {
                     assert.step(args.method);
-                    return this._super.apply(this, arguments);
                 },
             });
-            assert.containsN(form, ".o_data_row", 2, "there should be only 2 rows displayed");
-            await clickFirst(form.$(".o_list_record_remove"));
-            await clickFirst(form.$(".o_list_record_remove"));
+            clickEdit(target);
+            assert.containsN(target, ".o_data_row", 2);
 
-            assert.containsOnce(form, ".o_data_row", "there should be just one remaining row");
+            await click(target.querySelector(".o_list_record_remove"));
+            assert.containsN(target, ".o_data_row", 2);
+
+            await click(target.querySelector(".o_list_record_remove"));
+            assert.containsOnce(target, ".o_data_row");
 
             assert.verifySteps([
                 "read", // initial read on partner
