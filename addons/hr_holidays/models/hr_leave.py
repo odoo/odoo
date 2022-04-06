@@ -350,10 +350,12 @@ class HolidaysRequest(models.Model):
                 '&',
                 ('date_to', '=', False),
                 ('date_from', '<=', max(self.mapped('date_from'))),
-            ], ['id', 'date_from', 'date_to', 'holiday_status_id', 'employee_id', 'number_of_days'], order="number_of_days desc, date_to, id"
+            ], ['id', 'date_from', 'date_to', 'holiday_status_id', 'employee_id', 'max_leaves', 'taken_leave_ids'], order="date_to, id"
         )
         allocations_dict = defaultdict(lambda: [])
         for allocation in allocations:
+            allocation['taken_leaves'] = self.env['hr.leave'].browse(allocation.pop('taken_leave_ids'))\
+                .filtered(lambda leave: leave.state in ['confirm', 'validate', 'validate1'])
             allocations_dict[(allocation['holiday_status_id'][0], allocation['employee_id'][0])].append(allocation)
 
         for leave in self:
@@ -361,12 +363,17 @@ class HolidaysRequest(models.Model):
                 found_allocation = False
                 date_to = leave.date_to.replace(tzinfo=UTC).astimezone(timezone(leave.tz)).date()
                 date_from = leave.date_from.replace(tzinfo=UTC).astimezone(timezone(leave.tz)).date()
+                leave_unit = 'number_of_%s_display' % ('hours' if leave.leave_type_request_unit == 'hour' else 'days')
                 for allocation in allocations_dict[(leave.holiday_status_id.id, leave.employee_id.id)]:
                     date_to_check = allocation['date_to'] >= date_to if allocation['date_to'] else True
                     date_from_check = allocation['date_from'] <= date_from
                     if (date_to_check and date_from_check):
-                        found_allocation = allocation['id']
-                        break
+                        allocation_taken_leaves = allocation['taken_leaves'] - leave
+                        allocation_taken_number_of_units = sum(allocation_taken_leaves.mapped(leave_unit))
+                        leave_number_of_units = leave[leave_unit]
+                        if allocation['max_leaves'] >= allocation_taken_number_of_units + leave_number_of_units:
+                            found_allocation = allocation['id']
+                            break
                 leave.holiday_allocation_id = self.env['hr.leave.allocation'].browse(found_allocation) if found_allocation else False
             else:
                 leave.holiday_allocation_id = False
