@@ -23,13 +23,13 @@ tour.register('onsite_payment_tour', {
         trigger: '.o_delivery_carrier_select:contains("On site")'
     }, {
         content: 'Click on on site payment acquirer',
-        trigger: '.o_payment_option_card:contains("On site payment")'
+        trigger: '.o_payment_option_card:contains("Pay in store when picking the product")'
     }, {
         content: 'Click the pay button',
         trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)'
     }, {
         content: 'Await the confirmation page',
-        trigger: 'span:contains("Confirmed")'
+        trigger: 'td:contains("Pay in store when picking the product")'
     }, {
         content: 'Head back to main page',
         trigger: '.nav-link:contains("Shop")'
@@ -65,13 +65,13 @@ tour.register('onsite_payment_tour', {
         trigger: '.o_delivery_carrier_select:contains("On site")'
     }, {
         content: 'Click on on site payment acquirer',
-        trigger: '.o_payment_option_card:contains("On site payment")'
+        trigger: '.o_payment_option_card:contains("Pay in store when picking the product")'
     }, {
         content: 'Click the pay button',
         trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)'
     }, {
         content: 'Await the confirmation page',
-        trigger: 'span:contains("Confirmed")'
+        trigger: 'td:contains("Pay in store when picking the product")'
     }, {
         content: 'Head back to main page',
         trigger: '.nav-link:contains("Shop")'
@@ -92,6 +92,6 @@ tour.register('onsite_payment_tour', {
         trigger: 'a:contains("Process Checkout")'
     }, {
         content: 'Assert pay on site is NOT an option',
-        trigger: 'body:not(:contains("On site payment"))'
+        trigger: 'body:not(:contains("Pay in store when picking the product"))'
     }
 ]);

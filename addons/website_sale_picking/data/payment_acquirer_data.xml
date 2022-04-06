@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="payment_acquirer_onsite" model="payment.acquirer">
-        <field name="name">On site payment</field>
+        <field name="name">Pay in store when picking the product</field>
         <field name="description" type="html">
             <p>
                 Allows your customers to pay in person, at your shops.
@@ -18,6 +18,7 @@
 
     <record id="onsite_delivery_product" model="product.product">
         <field name="name">On site picking</field>
+        <field name="description">Pay in store when picking the product</field>
         <field name="type">service</field>
         <field name="list_price">0</field>
         <field name="purchase_ok">false</field>

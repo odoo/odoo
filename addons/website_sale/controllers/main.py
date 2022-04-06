@@ -1051,6 +1051,7 @@ class WebsiteSale(http.Controller):
 
     def validate_transaction_for_order(self, transaction, sale_order):
         """
+        Perform final checks against the transaction & sale_order.
         Override me to apply payment unrelated checks & processing
         """
         return

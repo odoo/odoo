@@ -19,8 +19,8 @@ publicWidget.registry.websiteSaleDelivery.include({
         if(enabled){
             node.parentNode.parentNode.classList.remove('d-none');
             try{
-                $(node).click();
-            }catch (_){ // During a tour, if the button is clicked very quickly, it seems the code handling the payment click is not yet ready ?
+                $(node).trigger('click');
+            }catch (_){ // If the button is clicked very quickly, it seems the code handling the payment click is not yet ready.
                 node.checked = true;
             }
         }

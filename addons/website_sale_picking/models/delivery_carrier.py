@@ -1,5 +1,7 @@
-from odoo import models, fields, api
-from odoo.exceptions import UserError
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import models, fields
 
 
 class DeliveryCarrier(models.Model):
@@ -7,19 +9,11 @@ class DeliveryCarrier(models.Model):
 
     # Onsite delivery means the client comes to a physical store to get the products himself.
     delivery_type = fields.Selection(selection_add=[
-        ('onsite', 'On Site')
-    ], ondelete={'onsite': lambda record: record.write({'delivery_type': 'fixed'})})
+        ('onsite', 'Pickup in store')
+    ], ondelete={'onsite': 'set default'})
 
     # If set, the sales order shipping address will take this warehouse's address.
-    warehouse_id = fields.Many2one('stock.warehouse', 'Pick from')
-
-    @api.constrains('warehouse_id', 'company_id')
-    def _check_warehouse_same_company(self):
-        """
-            Don't allow the user to set a warehouse from a different company than the delivery carrier
-        """
-        if self.warehouse_id.company_id != self.company_id:
-            raise UserError('The warehouse must belong to the same company')
+    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', check_company=True)
 
     def onsite_rate_shipment(self, order):
         """
