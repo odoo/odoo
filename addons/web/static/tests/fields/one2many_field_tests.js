@@ -6,7 +6,6 @@ import {
     getFixture,
     nextTick,
     patchWithCleanup,
-    triggerEvent,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
