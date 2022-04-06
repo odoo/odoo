@@ -3,8 +3,7 @@
 // ------------------------------------------------------------------
 
 .o_EmojiList {
-    display: flex;
-    flex-flow: row wrap;
-    max-width: 200px;
+    // Could be replaced by "d-grid" class after migration to BS5
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
 }
-
