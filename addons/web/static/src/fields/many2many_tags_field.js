@@ -39,7 +39,6 @@ export class Many2ManyTagsField extends Component {
     }
     onTagVisibilityChange(isHidden, tag) {
         const tagRecord = this.props.value.records.find((record) => record.id === tag.id);
-        console.log(tag);
         tagRecord.update(this.props.colorField, isHidden ? 0 : 1);
     }
 
