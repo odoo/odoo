@@ -44,9 +44,9 @@ export default class ProjectRightPanel extends LegacyComponent {
             return valueFormatted;
         }
         if (currency.position === "after") {
-            return `${valueFormatted} ${currency.symbol}`;
+            return `${valueFormatted}\u00A0${currency.symbol}`;
         } else {
-            return `${currency.symbol} ${valueFormatted}`;
+            return `${currency.symbol}\u00A0${valueFormatted}`;
         }
     }
 
