@@ -6,10 +6,8 @@
   </t>
 
   <t t-name="web.FormViewDialogFooter" owl="1">
-    <t t-if="footerArchInfo.length">
-        <t t-foreach="footerArchInfo" t-as="footArch" t-key="footArch.arch">
-            <FormRenderer record="record" archInfo="footArch"/>
-        </t>
+    <t t-if="footerArchInfo">
+      <FormRenderer record="record" archInfo="footerArchInfo"/>
     </t>
     <t t-else="">
       <t t-if="!readonly and multiSelect">

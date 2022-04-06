@@ -2,6 +2,7 @@
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
+import { createElement } from "@web/core/utils/xml";
 import { FormRenderer } from "@web/views/form/form_renderer";
 import { FormArchParser, loadSubViews } from "@web/views/form/form_view";
 import { ViewButton } from "@web/views/view_button/view_button";
@@ -69,16 +70,14 @@ export class FormViewDialog extends Dialog {
             this.readonly = !this.record.isInEdition;
             this.multiSelect = this.record.resId === false && !this.props.disableMultipleSelection;
 
-            this.footerArchInfo = [];
-            while (this.archInfo.xmlDoc.querySelector("footer")) {
-                const footerXmlDoc = this.archInfo.xmlDoc.querySelector("footer");
-                const footerArch = new FormArchParser().parse(
-                    footerXmlDoc.outerHTML,
-                    this.archInfo.fields
+            if (this.archInfo.xmlDoc.querySelector("footer")) {
+                this.footerArchInfo = Object.assign({}, this.archInfo);
+                this.footerArchInfo.xmlDoc = createElement("t");
+                this.footerArchInfo.xmlDoc.append(
+                    ...[...this.archInfo.xmlDoc.querySelectorAll("footer")]
                 );
-                footerArch.arch = footerArch.xmlDoc.outerHTML;
-                this.footerArchInfo.push(footerArch);
-                this.archInfo.xmlDoc.querySelector("footer").remove();
+                this.footerArchInfo.arch = this.footerArchInfo.xmlDoc.outerHTML;
+                [...this.archInfo.xmlDoc.querySelectorAll("footer")].forEach((x) => x.remove());
                 this.archInfo.arch = this.archInfo.xmlDoc.outerHTML;
             }
         });
