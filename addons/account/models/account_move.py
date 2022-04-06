@@ -4300,7 +4300,17 @@ class AccountMoveLine(models.Model):
         for record in self:
             if not record.tax_repartition_line_id and not record.tax_ids :
                 # Invoices imported from other softwares might only have kept the tags, not the taxes.
-                record.tax_tag_invert = record.tax_tag_ids and record.move_id.is_inbound()
+                if record.tax_tag_ids:
+                    tax_rep_lines = self.env['account.tax.repartition.line'].search([('tag_ids', 'in', record.tax_tag_ids._origin.ids)])
+                    type_tax_use = tax_rep_lines.tax_id.mapped('type_tax_use')
+                    if len(type_tax_use) == 1:
+                        tax_type = type_tax_use[0]
+                        is_refund = (tax_type == 'sale' and record.debit) or (tax_type == 'purchase' and record.credit)
+                        record.tax_tag_invert = (tax_type == 'purchase' and is_refund) or (tax_type == 'sale' and not is_refund)
+                    else:
+                        record.tax_tag_invert = record.move_id.is_inbound()
+                else:
+                    record.tax_tag_invert = False
 
             elif record.move_id.move_type == 'entry':
                 # For misc operations, cash basis entries and write-offs from the bank reconciliation widget
