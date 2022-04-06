@@ -89,7 +89,7 @@ class TestCrmPerformance(CrmPerformanceCase):
     @warmup
     def test_lead_create_form_partner(self):
         """ Test a single lead creation using Form with a partner """
-        with freeze_time(self.reference_now), self.assertQueryCount(user_sales_leads=193):  # tcf only: 180 - com runbot: 180
+        with freeze_time(self.reference_now), self.assertQueryCount(user_sales_leads=197):  # tcf only: 180 - com runbot: 180
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             with Form(self.env['crm.lead']) as lead_form:
                 lead_form.partner_id = self.partners[0]
