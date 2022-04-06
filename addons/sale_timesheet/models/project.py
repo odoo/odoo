@@ -474,8 +474,7 @@ class Project(models.Model):
                 if record_ids:
                     if invoice_type not in ['other_costs', 'other_revenues'] and can_see_timesheets:  # action to see the timesheets
                         action = get_timesheets_action(invoice_type, record_ids)
-                        if not cost:
-                            action['context'] = json.dumps({'search_default_groupby_invoice': 1})
+                        action['context'] = json.dumps({'search_default_groupby_invoice': 1 if not cost and invoice_type == 'billable_time' else 0})
                         data['action'] = action
                 profitability_data.append(data)
             return profitability_data
@@ -494,7 +493,7 @@ class Project(models.Model):
             record_ids = aal_revenue.get('record_ids', [])
             if can_see_timesheets and record_ids:
                 action = get_timesheets_action(revenue_id, record_ids)
-                action['context'] = json.dumps({'search_default_groupby_invoice': 1})
+                action['context'] = json.dumps({'search_default_groupby_invoice': 1 if revenue_id == 'billable_time' else 0})
                 revenue['action'] = action
 
         for cost in profitability_items['costs']['data']:
