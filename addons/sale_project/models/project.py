@@ -111,7 +111,7 @@ class Project(models.Model):
                 'name': _('Sales Order Items'),
                 'type': 'ir.actions.act_window',
                 'res_model': 'sale.order.line',
-                'context': {'no_create': True},
+                'context': {'create': False, 'edit': False},
             }
             if res_id:
                 action['res_id'] = res_id
@@ -262,7 +262,7 @@ class Project(models.Model):
             limit=limit,
         )
         # filter to only get the action for the SOLs that the user can read
-        action_per_sol = sols._filter_access_rules_python('read')._get_action_per_item() if with_action else {}
+        action_per_sol = sols.sudo(False)._filter_access_rules_python('read')._get_action_per_item() if with_action else {}
 
         def get_action(sol_id):
             """ Return the action vals to call it in frontend if the user can access to the SO related """
@@ -296,7 +296,7 @@ class Project(models.Model):
         return {
             **super()._get_profitability_labels(),
             'service_revenues': _lt('Other Services'),
-            'other_revenues': _lt('Material'),
+            'other_revenues': _lt('Materials'),
         }
 
     def _get_profitability_sequence_per_invoice_type(self):
@@ -373,12 +373,20 @@ class Project(models.Model):
             if display_sol_action:
                 section_name = 'other_revenues'
                 other_revenues = revenues_dict.get(section_name, {})
-                sol_ids = other_revenues.pop('record_ids', [])
-                if sol_ids:
-                    action_params = {'name': 'action_profitability_items', 'type': 'object', 'section': section_name, 'domain': json.dumps(domain)}
-                    if len(sol_ids) == 1:
-                        action_params['res_id'] = sol_ids[0]
-                    other_revenues['action'] = action_params
+                sale_order_items = self.env['sale.order.line'] \
+                    .browse(other_revenues.pop('record_ids', [])) \
+                    ._filter_access_rules_python('read')
+                if sale_order_items:
+                    if sale_order_items:
+                        action_params = {
+                            'name': 'action_profitability_items',
+                            'type': 'object',
+                            'section': section_name,
+                            'domain': json.dumps([('id', 'in', sale_order_items.ids)]),
+                        }
+                        if len(sale_order_items) == 1:
+                            action_params['res_id'] = sale_order_items.id
+                        other_revenues['action'] = action_params
         sequence_per_invoice_type = self._get_profitability_sequence_per_invoice_type()
         return {
             'data': [{'id': invoice_type, 'sequence': sequence_per_invoice_type[invoice_type], **vals} for invoice_type, vals in revenues_dict.items()],
