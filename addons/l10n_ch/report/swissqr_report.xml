@@ -50,7 +50,7 @@
                             </div>
                             <div class="swissqr_text content">
                                 <span t-field="o.partner_bank_id.acc_number"/><br/>
-                                <span t-field="o.company_id.name"/><br/>
+                                <span t-esc="o.partner_bank_id.acc_holder_name or o.company_id.name"/><br/>
                                 <span t-field="o.company_id.street"/><br/>
                                 <span t-field="o.company_id.country_id.code"/>
                                 <span t-field="o.company_id.zip"/>
@@ -152,7 +152,7 @@
                             </div>
                             <div class="swissqr_text content">
                                 <span t-field="o.partner_bank_id.acc_number"/><br/>
-                                <span t-field="o.company_id.name"/><br/>
+                                <span t-esc="o.partner_bank_id.acc_holder_name or o.company_id.name"/><br/>
                                 <span t-field="o.company_id.street"/><br/>
                                 <span t-field="o.company_id.country_id.code"/>
                                 <span t-field="o.company_id.zip"/>
