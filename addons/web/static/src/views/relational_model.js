@@ -488,6 +488,10 @@ export class Record extends DataPoint {
     checkValidity() {
         for (const fieldName in this._requiredFields) {
             const fieldType = this.fields[fieldName].type;
+            if (!evalDomain(this._requiredFields[fieldName], this.evalContext)) {
+                this._removeInvalidField(fieldName);
+                continue;
+            }
             switch (fieldType) {
                 case "boolean":
                 case "float":
@@ -826,6 +830,7 @@ export class Record extends DataPoint {
 
     async update(fieldName, value) {
         await this._applyChange(fieldName, value);
+        this._removeInvalidField(fieldName);
         this.onChanges();
         const activeField = this.activeFields[fieldName];
         const proms = [];
@@ -849,7 +854,6 @@ export class Record extends DataPoint {
         }
         proms.push(this.loadPreloadedData());
         await Promise.all(proms);
-        this._removeInvalidField(fieldName);
         this.model.notify();
     }
 

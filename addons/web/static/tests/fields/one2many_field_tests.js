@@ -11,6 +11,7 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { registry } from "@web/core/registry";
+import { session } from "@web/session";
 
 const serviceRegistry = registry.category("services");
 
@@ -7013,9 +7014,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("one2many list editable, onchange and required field", async function (assert) {
-        assert.expect(8);
-
+    QUnit.test("one2many list editable, onchange and required field", async function (assert) {
         serverData.models.turtle.fields.turtle_foo.required = true;
         serverData.models.partner.onchanges = {
             turtles: function (obj) {
@@ -7025,7 +7024,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.records[0].int_field = 0;
         serverData.models.partner.records[0].turtles = [];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -7041,32 +7040,27 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             mockRPC(route, args) {
                 assert.step(args.method);
-                return this._super.apply(this, arguments);
             },
             resId: 1,
         });
         await clickEdit(target);
-
         assert.strictEqual(
-            form.$('.o_field_widget[name="int_field"]').val(),
-            "0",
-            "int_field should start with value 0"
+            target.querySelector('.o_field_widget[name="int_field"] input').value,
+            "0"
         );
+
         await addRow(target);
         assert.strictEqual(
-            form.$('.o_field_widget[name="int_field"]').val(),
-            "0",
-            "int_field should still be 0 (no onchange should have been done yet"
+            target.querySelector('.o_field_widget[name="int_field"] input').value,
+            "0"
         );
-
         assert.verifySteps(["read", "onchange"]);
 
-        await testUtils.fields.editInput(form.$('.o_field_widget[name="turtle_foo"]'), "some text");
+        await editInput(target, '.o_field_widget[name="turtle_foo"] input', "some text");
         assert.verifySteps(["onchange"]);
         assert.strictEqual(
-            form.$('.o_field_widget[name="int_field"]').val(),
-            "1",
-            "int_field should now be 1 (the onchange should have been done"
+            target.querySelector('.o_field_widget[name="int_field"] input').value,
+            "1"
         );
     });
 
@@ -7160,11 +7154,9 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many list editable: 'required' modifiers is properly working",
         async function (assert) {
-            assert.expect(3);
-
             serverData.models.partner.onchanges = {
                 turtles: function (obj) {
                     obj.int_field = obj.turtles.length;
@@ -7173,7 +7165,7 @@ QUnit.module("Fields", (hooks) => {
 
             serverData.models.partner.records[0].turtles = [];
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -7189,40 +7181,30 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
             });
             await clickEdit(target);
-
             assert.strictEqual(
-                form.$('.o_field_widget[name="int_field"]').val(),
-                "10",
-                "int_field should start with value 10"
+                target.querySelector('.o_field_widget[name="int_field"] input').value,
+                "10"
             );
 
             await addRow(target);
-
             assert.strictEqual(
-                form.$('.o_field_widget[name="int_field"]').val(),
-                "10",
-                "int_field should still be 10 (no onchange, because line is not valid)"
+                target.querySelector('.o_field_widget[name="int_field"] input').value,
+                "10"
             );
 
             // fill turtle_foo field
-            await testUtils.fields.editInput(
-                form.$('.o_field_widget[name="turtle_foo"]'),
-                "some text"
-            );
+            await editInput(target, '.o_field_widget[name="turtle_foo"] input', "some text");
 
             assert.strictEqual(
-                form.$('.o_field_widget[name="int_field"]').val(),
-                "1",
-                "int_field should be 1 (onchange triggered, because line is now valid)"
+                target.querySelector('.o_field_widget[name="int_field"] input').value,
+                "1"
             );
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many list editable: 'required' modifiers is properly working, part 2",
         async function (assert) {
-            assert.expect(3);
-
             serverData.models.partner.onchanges = {
                 turtles: function (obj) {
                     obj.int_field = obj.turtles.length;
@@ -7231,7 +7213,7 @@ QUnit.module("Fields", (hooks) => {
 
             serverData.models.partner.records[0].turtles = [];
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -7248,28 +7230,22 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
             });
             await clickEdit(target);
-
             assert.strictEqual(
-                form.$('.o_field_widget[name="int_field"]').val(),
-                "10",
-                "int_field should start with value 10"
+                target.querySelector('.o_field_widget[name="int_field"] input').value,
+                "10"
             );
 
             await addRow(target);
-
             assert.strictEqual(
-                form.$('.o_field_widget[name="int_field"]').val(),
-                "10",
-                "int_field should still be 10 (no onchange, because line is not valid)"
+                target.querySelector('.o_field_widget[name="int_field"] input').value,
+                "10"
             );
 
             // fill turtle_int field
-            await testUtils.fields.editInput(form.$('.o_field_widget[name="turtle_int"]'), "1");
-
+            await editInput(target, '.o_field_widget[name="turtle_int"] input', "1");
             assert.strictEqual(
-                form.$('.o_field_widget[name="int_field"]').val(),
-                "1",
-                "int_field should be 1 (onchange triggered, because line is now valid)"
+                target.querySelector('.o_field_widget[name="int_field"] input').value,
+                "1"
             );
         }
     );
@@ -7463,14 +7439,17 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("editable list: onchange that returns a warning", async function (assert) {
-        assert.expect(5);
-
+    QUnit.test("editable list: onchange that returns a warning", async function (assert) {
         serverData.models.turtle.onchanges = {
             display_name: function () {},
         };
 
-        await makeView({
+        const warning = {
+            title: "Warning",
+            message: "You must first select a partner",
+        };
+
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -7488,21 +7467,18 @@ QUnit.module("Fields", (hooks) => {
                     assert.step(args.method);
                     return Promise.resolve({
                         value: {},
-                        warning: {
-                            title: "Warning",
-                            message: "You must first select a partner",
-                        },
+                        warning,
                     });
                 }
-                return this._super.apply(this, arguments);
             },
-            viewOptions: {
-                mode: "edit",
-            },
-            intercepts: {
-                warning: function () {
-                    assert.step("warning");
-                },
+        });
+        await clickEdit(target);
+
+        patchWithCleanup(form.env.services.notification, {
+            add: (message, params) => {
+                assert.step(params.type);
+                assert.strictEqual(message, warning.message);
+                assert.strictEqual(params.title, warning.title);
             },
         });
 
@@ -7520,7 +7496,10 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(5);
 
         serverData.models.partner.records[0].timmy = [12];
-        const form = await makeView({
+
+        patchWithCleanup(session, { user_context: { someKey: "some value" } });
+
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -7541,6 +7520,7 @@ QUnit.module("Fields", (hooks) => {
                             active_field: 2,
                             bin_size: true,
                             someKey: "some value",
+                            uid: 7,
                         },
                         "sent context should be correct"
                     );
@@ -7566,20 +7546,14 @@ QUnit.module("Fields", (hooks) => {
                         "sent context should be correct"
                     );
                 }
-                return this._super.apply(this, arguments);
-            },
-            session: {
-                user_context: { someKey: "some value" },
-            },
-            viewOptions: {
-                mode: "edit",
-                context: { active_field: 2 },
             },
             resId: 1,
+            context: { active_field: 2 },
         });
+        await clickEdit(target);
 
-        await click(form.$(".o_data_cell:first"));
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=display_name]"), "abc");
+        await click(target.querySelector(".o_data_cell"));
+        await editInput(target, ".o_field_widget[name=display_name] input", "abc");
         await clickSave(target);
     });
 
