@@ -195,6 +195,7 @@ Field.parseFieldNode = function (node, fields, viewType) {
         props: {},
         rawAttrs: {},
         options: evaluateExpr(node.getAttribute("options") || "{}"),
+        viewMode: node.getAttribute("mode"),
     };
     fieldInfo.attrs = {
         options: fieldInfo.options,
@@ -231,7 +232,8 @@ Field.parseFieldNode = function (node, fields, viewType) {
                 fields: field.relatedFields,
             };
         }
-        fieldInfo.viewMode = Object.keys(views).find((v) => ["list", "kanban"].includes(v));
+        fieldInfo.viewMode =
+            fieldInfo.viewMode || Object.keys(views).find((v) => ["list", "kanban"].includes(v));
         fieldInfo.views = views;
         fieldInfo.relation = field.relation; // not really necessary
 

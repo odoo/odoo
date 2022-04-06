@@ -182,6 +182,7 @@ export class X2ManyField extends Component {
                 mode: "edit",
                 viewMode: "form",
             });
+            record.load(); //AAB TO DISCUSS
             this.dialogClose.push(
                 this.dialogService.add(FormViewDialog, {
                     archInfo: form, // FIXME: might not be there

@@ -2364,7 +2364,7 @@ export class StaticList extends DataPoint {
         this._serverIds = resIds;
         this._commandsById = {}; // to remove?
         this._commands = this._getNormalizedCommands([], commands); // modifies commands and this._commandsById in places
-        this.currentIds = this._getCurrentIds(this._serverIds, this._commands);
+        this.currentIds = this._getCurrentIds(this._serverIds, this._commands, true);
     }
 
     async sortBy(fieldName) {
@@ -2427,7 +2427,7 @@ export class StaticList extends DataPoint {
         return record;
     }
 
-    _getCurrentIds(currentIds, commands) {
+    _getCurrentIds(currentIds, commands, serverCommands = false) {
         let nextIds = [...currentIds];
         for (const command of commands) {
             const code = command[0];
@@ -2436,7 +2436,9 @@ export class StaticList extends DataPoint {
                 case 0: // create
                     if (nextIds.indexOf(id) === -1) {
                         const index =
-                            this.editable === "top" ? this.offset : this.offset + this.limit - 1;
+                            this.editable === "top" && !serverCommands
+                                ? this.offset
+                                : this.offset + this.limit - 1;
                         nextIds.splice(index, 0, id);
                     } else {
                         throw new Error("you rascal");

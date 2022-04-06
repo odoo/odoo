@@ -6,6 +6,7 @@ import {
     getFixture,
     nextTick,
     patchWithCleanup,
+    triggerEvent,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
@@ -6284,15 +6285,13 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.skipWOWL("nested x2many default values", async function (assert) {
-        assert.expect(3);
-
+    QUnit.test("nested x2many default values", async function (assert) {
         serverData.models.partner.fields.turtles.default = [
             [0, 0, { partner_ids: [[6, 0, [4]]] }],
             [0, 0, { partner_ids: [[6, 0, [1]]] }],
         ];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -6306,26 +6305,23 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
+        assert.containsN(target, ".o_field_x2many_list .o_data_row", 2);
         assert.containsN(
-            form,
-            ".o_list_view .o_data_row",
-            2,
-            "one2many list should contain 2 rows"
+            target,
+            '.o_field_x2many_list .o_field_many2many_tags[name="partner_ids"] .badge',
+            2
         );
-        assert.containsN(
-            form,
-            '.o_list_view .o_field_many2manytags[name="partner_ids"] .badge',
-            2,
-            "m2mtags should contain two tags"
-        );
-        assert.strictEqual(
-            form.$('.o_list_view .o_field_many2manytags[name="partner_ids"] .o_badge_text').text(),
-            "aaafirst record",
-            "tag names should have been correctly loaded"
+        assert.deepEqual(
+            [
+                ...target.querySelectorAll(
+                    '.o_field_x2many_list .o_field_many2many_tags[name="partner_ids"] .o_tag_badge_text'
+                ),
+            ].map((el) => el.textContent),
+            ["aaa", "first record"]
         );
     });
 
-    QUnit.skipWOWL("nested x2many (inline form view) and onchanges", async function (assert) {
+    QUnit.test("nested x2many (inline form view) and onchanges", async function (assert) {
         assert.expect(6);
 
         serverData.models.partner.onchanges.bar = function (obj) {
@@ -6351,7 +6347,7 @@ QUnit.module("Fields", (hooks) => {
             }
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -6371,18 +6367,19 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
         });
+        assert.containsNone(target, ".o_data_row");
 
-        assert.containsNone(form, ".o_data_row");
+        await click(target, ".o_field_widget[name=bar] input");
+        assert.containsOnce(target, ".o_data_row");
+        assert.strictEqual(target.querySelector(".o_data_row").textContent, "1 record");
 
-        await click(form.$(".o_field_widget[name=bar] input"));
-        assert.containsOnce(form, ".o_data_row");
-        assert.strictEqual(form.$(".o_data_row").text(), "1 record");
-
-        await click(form.$(".o_data_row:first"));
-
-        assert.containsOnce(document.body, ".modal .o_form_view");
-        assert.containsOnce(document.body, ".modal .o_form_view .o_data_row");
-        assert.strictEqual($(".modal .o_form_view .o_data_row").text(), "new turtle");
+        await click(target.querySelector(".o_data_row td"));
+        assert.containsOnce(target, ".modal .o_form_view");
+        assert.containsOnce(target, ".modal .o_form_view .o_data_row");
+        assert.strictEqual(
+            target.querySelector(".modal .o_form_view .o_data_row").textContent,
+            "new turtle"
+        );
     });
 
     QUnit.skipWOWL("nested x2many (non inline form view) and onchanges", async function (assert) {
@@ -6820,9 +6817,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.skipWOWL("focusing fields in one2many list", async function (assert) {
-        assert.expect(2);
-
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -6842,18 +6837,19 @@ QUnit.module("Fields", (hooks) => {
         });
         await clickEdit(target);
 
-        await click(form.$(".o_data_row:first td:first"));
+        await click(target.querySelector(".o_data_row td"));
         assert.strictEqual(
-            form.$('input[name="turtle_foo"]')[0],
-            document.activeElement,
-            "turtle foo field should have focus"
+            target.querySelector('[name="turtle_foo"] input'),
+            document.activeElement
         );
 
-        await testUtils.fields.triggerKeydown(form.$('input[name="turtle_foo"]'), "tab");
+        await testUtils.fields.triggerKeydown(
+            target.querySelector('[name="turtle_foo"] input'),
+            "tab"
+        );
         assert.strictEqual(
-            form.$('input[name="turtle_int"]')[0],
-            document.activeElement,
-            "turtle int field should have focus"
+            target.querySelector('[name="turtle_int"] input'),
+            document.activeElement
         );
     });
 
@@ -6953,12 +6949,10 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.skipWOWL('one2many list edition, no "Remove" button in modal', async function (assert) {
-        assert.expect(2);
-
+    QUnit.test('one2many list edition, no "Remove" button in modal', async function (assert) {
         serverData.models.partner.fields.foo.default = false;
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -6976,24 +6970,18 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
         await clickEdit(target);
-
-        await click(form.$("tbody td.o_field_x2many_list_row_add a"));
-        assert.containsOnce($(document), $(".modal"), "there should be a modal opened");
-        assert.containsNone(
-            $(".modal .modal-footer .o_btn_remove"),
-            'modal should not contain a "Remove" button'
-        );
+        await addRow(target);
+        assert.containsOnce(target, ".modal");
+        assert.containsNone(target, ".modal .modal-footer .o_btn_remove");
 
         // Discard a modal
-        await click($(".modal-footer .btn-secondary"));
+        await click(target.querySelector(".modal-footer .btn-secondary"));
 
         await clickDiscard(target);
     });
 
-    QUnit.skipWOWL('x2many fields use their "mode" attribute', async function (assert) {
-        assert.expect(1);
-
-        const form = await makeView({
+    QUnit.test('x2many fields use their "mode" attribute', async function (assert) {
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -7020,8 +7008,8 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.containsOnce(
-            form,
-            ".o_field_one2many .o_kanban_view",
+            target,
+            ".o_field_one2many .o_field_x2many_kanban",
             "should have rendered a kanban view"
         );
     });
