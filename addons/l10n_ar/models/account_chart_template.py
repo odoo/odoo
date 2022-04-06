@@ -28,7 +28,6 @@ class AccountChartTemplate(models.Model):
                         "l10n_ar_afip_pos_number": 1,
                         "l10n_ar_afip_pos_partner_id": company.partner_id.id,
                         "l10n_ar_afip_pos_system": 'II_IM',
-                        "l10n_ar_share_sequences": True,
                         "refund_sequence": False
                     })
         return res
