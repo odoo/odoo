@@ -1639,7 +1639,6 @@ class TestViews(ViewCase):
         })
         view3 = self.View.create({
             'name': 'jake',
-            'model': 'ir.ui.view',
             'inherit_id': view1.id,
             'priority': 17,
             'arch': """
@@ -1651,6 +1650,8 @@ class TestViews(ViewCase):
                 </footer>
             """
         })
+
+        self.assertEqual(view3.model, 'ir.ui.view', 'Model is copied from parent when not specified')
 
         view = self.View.with_context(check_view_ids=[view2.id, view3.id]).get_view(view2.id, 'form')
         self.assertEqual(

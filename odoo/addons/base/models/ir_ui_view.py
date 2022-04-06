@@ -522,7 +522,8 @@ actual arch.
             if 'arch_db' in values and not values['arch_db']:
                 # delete empty arch_db to avoid triggering _check_xml before _inverse_arch_base is called
                 del values['arch_db']
-
+            if 'model' not in values and values.get('inherit_id'):
+                values['model'] = self.browse(values['inherit_id']).model
             if not values.get('type'):
                 if values.get('inherit_id'):
                     values['type'] = self.browse(values['inherit_id']).type
