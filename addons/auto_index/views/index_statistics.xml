@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- list view of missing index actions log -->
+    <record model="ir.ui.view" id="auto_index_statistics_list">
+        <field name="name">Index statistics</field>
+        <field name="model">index.statistics</field>
+        <field name="arch" type="xml">
+            <tree string="some title">
+                <field name="table_name"/>
+                <field name="index_name"/>
+                <field name="idx_scan"/>
+                <field name="idx_tup_read"/>
+                <field name="idx_tup_fetch"/>
+                <field name="index_definition" optional="hidden"/>
+                <field name="index_size"/>
+                <field name="index_size_raw" optional="hidden"/>
+                <field name="is_unique"/>
+                <field name="is_primary"/>
+                <field name="is_clustered" optional=""/>
+                <button name="remove_index" string="Remove index" type="object"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="auto_index_statistics_search">
+        <field name="name">auto_index_statistics_search</field>
+        <field name="model">index.statistics</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="table_name"/>
+                <field name="index_name"/>
+                <field name="idx_scan"/>
+                <field name="idx_tup_read"/>
+                <field name="idx_tup_fetch"/>
+                <filter name="unused_index" string="Unused Index" domain="[('idx_scan','=',0),('idx_tup_read','=',0),('idx_tup_fetch','=',0),]" />
+                <filter name="large_unused_index" string="Large unused Index" domain="[('index_size_raw','>=',1000000),('idx_scan','=',0),('idx_tup_read','=',0),('idx_tup_fetch','=',0),]" />
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="auto_index_statistics">
+        <field name="name">Index statistics</field>
+        <field name="res_model">index.statistics</field>
+        <field name="context">{'search_default_unused_index': True}</field>
+    </record>
+
+    <menuitem parent="base.next_id_9" id="auto_index_statistics_menu" action="auto_index_statistics"/>
+<!--    <menuitem id="auto_index_statistics_menu" action="auto_index_statistics"/>-->
+
+     <record model="ir.actions.server" id="action_remove_unused_index">
+        <field name="name">Remove all unused indexes</field>
+        <field name="model_id" ref="model_index_statistics"/>
+        <field name="binding_model_id" ref="model_index_statistics" />
+        <field name="state">code</field>
+        <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
+        <field name="code">
+records.remove_all_unused_indexes()
+        </field>
+    </record>
+</odoo>

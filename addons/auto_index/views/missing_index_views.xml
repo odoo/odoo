@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- list view of missing indexes -->
+    <record model="ir.ui.view" id="auto_index_missing_index_list">
+        <field name="name">Missing index</field>
+        <field name="model">missing.index</field>
+        <field name="arch" type="xml">
+            <tree string="some title">
+                <field name="banane"/>
+                <field name="orange"/>
+                <field name="size_raw"/>
+                <field name="size" optional="hidden"/>
+                <field name="constraint" optional="hidden"/>
+                <field name="referenced_table" optional="hidden"/>
+                <button name="create_index" string="create index" type="object"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="auto_index_missing_index">
+        <field name="name">Missing index</field>
+        <field name="res_model">missing.index</field>
+    </record>
+
+    <!-- Top menu item -->
+    <menuitem parent="base.next_id_9" id="auto_index_missing_index_menu" action="auto_index_missing_index"/>
+<!--    <menuitem  id="auto_index_missing_index_menu" action="auto_index_missing_index"/>-->
+
+     <record model="ir.actions.server" id="action_create_all_large_index">
+        <field name="name">All large (>1Mb) FK indexes</field>
+        <field name="model_id" ref="model_missing_index"/>
+        <field name="binding_model_id" ref="model_missing_index" />
+        <field name="state">code</field>
+        <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
+        <field name="code">
+records.create_all_large_indexes()
+        </field>
+    </record>
+
+</odoo>

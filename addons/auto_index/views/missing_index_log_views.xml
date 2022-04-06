@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- list view of missing index actions log -->
+    <record model="ir.ui.view" id="auto_index_missing_index_log_list">
+        <field name="name">Missing index log</field>
+        <field name="model">missing.index_log</field>
+        <field name="arch" type="xml">
+            <tree string="some title">
+                <field name="index_command"/>
+                <field name="action"/>
+                <field name="create_date"/>
+                <field name="create_uid"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="auto_index_missing_index_log">
+        <field name="name">Missing index log</field>
+        <field name="res_model">missing.index_log</field>
+    </record>
+
+    <menuitem parent="base.next_id_9" id="auto_index_missing_index_log_menu" action="auto_index_missing_index_log"/>
+</odoo>
