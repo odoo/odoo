@@ -17,8 +17,6 @@ class AccountJournal(models.Model):
         'res.partner', 'AFIP POS Address', help='This is the address used for invoice reports of this POS',
         domain="['|', ('id', '=', company_partner), '&', ('id', 'child_of', company_partner), ('type', '!=', 'contact')]"
     )
-    l10n_ar_share_sequences = fields.Boolean(
-        'Unified Book', help='Use same sequence for documents with the same letter')
 
     def _get_l10n_ar_afip_pos_types_selection(self):
         """ Return the list of values of the selection field. """
@@ -100,8 +98,7 @@ class AccountJournal(models.Model):
         elif self.l10n_ar_afip_pos_system in ['FEERCEL', 'FEEWS', 'FEERCELP']:
             return expo_codes
 
-    @api.constrains('type', 'l10n_ar_afip_pos_system', 'l10n_ar_afip_pos_number', 'l10n_ar_share_sequences',
-                    'l10n_latam_use_documents')
+    @api.constrains('type', 'l10n_ar_afip_pos_system', 'l10n_ar_afip_pos_number', 'l10n_latam_use_documents')
     def _check_afip_configurations(self):
         """ Do not let the user update the journal if it already contains confirmed invoices """
         journals = self.filtered(lambda x: x.company_id.account_fiscal_country_id.code == "AR" and x.type in ['sale', 'purchase'])
@@ -122,11 +119,6 @@ class AccountJournal(models.Model):
 
         if to_review.filtered(lambda x: x.l10n_ar_afip_pos_number > 99999):
             raise ValidationError(_('Please define a valid AFIP POS number (5 digits max)'))
-
-    @api.onchange('l10n_ar_afip_pos_system')
-    def _onchange_l10n_ar_afip_pos_system(self):
-        """ On 'Pre-printed Invoice' the usual is to share sequences. On other types, do not share """
-        self.l10n_ar_share_sequences = bool(self.l10n_ar_afip_pos_system == 'II_IM')
 
     @api.onchange('l10n_ar_afip_pos_number', 'type')
     def _onchange_set_short_name(self):
