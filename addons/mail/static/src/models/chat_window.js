@@ -3,7 +3,7 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
-import { markEventHandled } from '@mail/utils/utils';
+import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'ChatWindow',
@@ -156,6 +156,35 @@ registerModel({
         onFocusInNewMessageFormInput(ev) {
             if (this.exists()) {
                 this.update({ isFocused: true });
+            }
+        },
+        /**
+         * @param {KeyboardEvent} ev
+         */
+        onKeydown(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            switch (ev.key) {
+                case 'Tab':
+                    ev.preventDefault();
+                    if (ev.shiftKey) {
+                        this.focusPreviousVisibleUnfoldedChatWindow();
+                    } else {
+                        this.focusNextVisibleUnfoldedChatWindow();
+                    }
+                    break;
+                case 'Escape':
+                    if (isEventHandled(ev, 'ComposerTextInput.closeSuggestions')) {
+                        break;
+                    }
+                    if (isEventHandled(ev, 'Composer.closeEmojisPopover')) {
+                        break;
+                    }
+                    ev.preventDefault();
+                    this.focusNextVisibleUnfoldedChatWindow();
+                    this.close();
+                    break;
             }
         },
         /**

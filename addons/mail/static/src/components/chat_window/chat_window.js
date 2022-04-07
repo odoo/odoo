@@ -2,7 +2,6 @@
 
 import { useUpdate } from '@mail/component_hooks/use_update';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { isEventHandled } from '@mail/utils/utils';
 
 const { Component } = owl;
 
@@ -189,38 +188,6 @@ export class ChatWindow extends Component {
             return;
         }
         this.chatWindow.update({ isFocused: false });
-    }
-
-    /**
-     * @private
-     * @param {KeyboardEvent} ev
-     */
-    _onKeydown(ev) {
-        if (!this.chatWindow) {
-            // prevent crash during delete
-            return;
-        }
-        switch (ev.key) {
-            case 'Tab':
-                ev.preventDefault();
-                if (ev.shiftKey) {
-                    this.chatWindow.focusPreviousVisibleUnfoldedChatWindow();
-                } else {
-                    this.chatWindow.focusNextVisibleUnfoldedChatWindow();
-                }
-                break;
-            case 'Escape':
-                if (isEventHandled(ev, 'ComposerTextInput.closeSuggestions')) {
-                    break;
-                }
-                if (isEventHandled(ev, 'Composer.closeEmojisPopover')) {
-                    break;
-                }
-                ev.preventDefault();
-                this.chatWindow.focusNextVisibleUnfoldedChatWindow();
-                this.chatWindow.close();
-                break;
-        }
     }
 
 }
