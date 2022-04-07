@@ -70,6 +70,7 @@
             # SCSS dependencies (the order is important)
             ('include', 'web._assets_helpers'),
             'web/static/src/legacy/scss/bootstrap_overridden.scss',
+            'web/static/src/libs/bootstrap/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/src/legacy/scss/import_bootstrap.scss',
             'web/static/src/legacy/scss/bootstrap_review.scss',
