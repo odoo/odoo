@@ -56,9 +56,11 @@ export class ProgressBarField extends Component {
     }
 
     onKeydownUpdate(ev, part) {
-        this.state[part] = this.props.parse(ev.target.value, {
-            parser: this.props[part].type,
-        });
+        try {
+            this.state[part] = this.props.parse(ev.target.value, {
+                parser: this.props[part].type,
+            });
+        } catch {}
     }
 }
 
