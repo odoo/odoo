@@ -159,6 +159,36 @@ registerModel({
             }
         },
         /**
+         * Save the scroll positions of the chat window in the store.
+         * This is useful in order to remount chat windows and keep previous
+         * scroll positions. This is necessary because when toggling on/off
+         * home menu, the chat windows have to be remade from scratch.
+         */
+        saveThreadScrollTop() {
+            if (
+                !this.threadView ||
+                !this.threadView.messageListView ||
+                !this.threadView.messageListView.component ||
+                !this.threadViewer
+            ) {
+                return;
+            }
+            if (
+                this.threadViewer.threadView &&
+                this.threadViewer.threadView.componentHintList.length > 0
+            ) {
+                // the current scroll position is likely incorrect due to the
+                // presence of hints to adjust it
+                return;
+            }
+            this.threadViewer.saveThreadCacheScrollHeightAsInitial(
+                this.threadView.messageListView.getScrollableElement().scrollHeight
+            );
+            this.threadViewer.saveThreadCacheScrollPositionsAsInitial(
+                this.threadView.messageListView.getScrollableElement().scrollTop
+            );
+        },
+        /**
          * Swap this chat window with the previous one.
          */
         shiftPrev() {

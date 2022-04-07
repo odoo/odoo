@@ -43,40 +43,6 @@ export class ChatWindow extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Save the scroll positions of the chat window in the store.
-     * This is useful in order to remount chat windows and keep previous
-     * scroll positions. This is necessary because when toggling on/off
-     * home menu, the chat windows have to be remade from scratch.
-     *
-     * @private
-     */
-    _saveThreadScrollTop() {
-        if (
-            !this.chatWindow ||
-            !this.chatWindow.threadView ||
-            !this.chatWindow.threadView.messageListView ||
-            !this.chatWindow.threadView.messageListView.component ||
-            !this.chatWindow.threadViewer
-        ) {
-            return;
-        }
-        if (
-            this.chatWindow.threadViewer.threadView &&
-            this.chatWindow.threadViewer.threadView.componentHintList.length > 0
-        ) {
-            // the current scroll position is likely incorrect due to the
-            // presence of hints to adjust it
-            return;
-        }
-        this.chatWindow.threadViewer.saveThreadCacheScrollHeightAsInitial(
-            this.chatWindow.threadView.messageListView.getScrollableElement().scrollHeight
-        );
-        this.chatWindow.threadViewer.saveThreadCacheScrollPositionsAsInitial(
-            this.chatWindow.threadView.messageListView.getScrollableElement().scrollTop
-        );
-    }
-
-    /**
      * @private
      */
     _update() {
@@ -153,14 +119,14 @@ export class ChatWindow extends Component {
      * @private
      */
     _onClickedHeader() {
-        if (this.messaging.device.isMobile) {
+        if (!this.chatWindow || this.messaging.device.isMobile) {
             return;
         }
         if (this.chatWindow.isFolded) {
             this.chatWindow.unfold();
             this.chatWindow.focus();
         } else {
-            this._saveThreadScrollTop();
+            this.chatWindow.saveThreadScrollTop();
             this.chatWindow.fold();
         }
     }
