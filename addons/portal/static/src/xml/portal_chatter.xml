@@ -114,7 +114,10 @@
 
     <!-- Chatter: internal toggle widget -->
     <t t-name="portal.chatter_internal_toggle">
-        <div t-attf-class="float-right o_portal_chatter_js_is_internal #{message.is_internal and 'o_portal_message_internal_on' or 'o_portal_message_internal_off'}"
+        <div t-if="message.is_message_subtype_note" class="float-right">
+            <button class="btn btn-secondary" title="Internal notes are only displayed to internal users." disabled="true">Internal Note</button>
+        </div>
+        <div t-else="" t-attf-class="float-right o_portal_chatter_js_is_internal #{message.is_internal and 'o_portal_message_internal_on' or 'o_portal_message_internal_off'}"
                 t-att-data-message-id="message.id"
                 t-att-data-is-internal="message.is_internal">
             <button class="btn btn-danger"
