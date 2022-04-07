@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture, nextTick } from "../helpers/utils";
+import { click, editInput, getFixture, getNodesTextContent, nextTick } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -292,23 +292,20 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
-        "fieldmany2many tags with color: rendering and edition",
-        async function (assert) {
-            // assert.expect(28);
+    QUnit.test("fieldmany2many tags with color: rendering and edition", async function (assert) {
+        assert.expect(26);
 
-            serverData.models.partner.records[0].timmy = [12, 14];
-            serverData.models.partner_type.records.push({ id: 13, display_name: "red", color: 8 });
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch:
-                    "<form>" +
-                    "<field name=\"timmy\" widget=\"many2many_tags\" options=\"{'color_field': 'color', 'no_create_edit': True }\"/>" +
-                    "</form>",
-                resId: 1,
-                /*
+        serverData.models.partner.records[0].timmy = [12, 14];
+        serverData.models.partner_type.records.push({ id: 13, display_name: "red", color: 8 });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch:
+                "<form>" +
+                "<field name=\"timmy\" widget=\"many2many_tags\" options=\"{'color_field': 'color', 'no_create_edit': True }\"/>" +
+                "</form>",
+            resId: 1,
             mockRPC: (route, { args, method, model }) => {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     var commands = args[1].timmy;
@@ -330,10 +327,8 @@ QUnit.module("Fields", (hooks) => {
                         "should read the color field"
                     );
                 }
-            },*/
-            });
-
-            /*
+            },
+        });
         assert.containsN(target, ".o_field_many2many_tags .badge", 2, "should contain 2 tags");
         assert.strictEqual(
             target.querySelector(".badge .o_tag_badge_text").innerText,
@@ -371,24 +366,26 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // add an other existing tag
-        var input = target.querySelector(".o_field_many2many_tags input");
-        const autocomplete = target.querySelector("div[name='timmy'] .o-autocomplete.dropdown");
-        await click(autocomplete);
+        await click(target.querySelector("div[name='timmy'] .o-autocomplete.dropdown input"));
+
+        const autocompleteDropdown = target.querySelector(".o-autocomplete--dropdown-menu");
+
         assert.strictEqual(
-            autocomplete.querySelectorAll("li").length,
+            autocompleteDropdown.querySelectorAll("li").length,
             2,
             "autocomplete dropdown should have 2 entry"
         );
+
         assert.strictEqual(
-            autocomplete.querySelector("li a").innerText,
+            autocompleteDropdown.querySelector("li a").innerText,
             "red",
             "autocomplete dropdown should contain 'red'"
         );
-        await click(autocomplete.querySelector("li a"));
-        //await testUtils.fields.many2one.clickHighlightedItem("timmy");
+
+        await click(autocompleteDropdown.querySelector("li a"));
         assert.containsN(
             target,
-            ".o_field_many2many_tags .badge .dropdown-toggle",
+            ".o_field_many2many_tags .dropdown-toggle .badge",
             3,
             "should contain 3 tags"
         );
@@ -404,81 +401,65 @@ QUnit.module("Fields", (hooks) => {
             "should have fetched the color of added tag"
         );
 
-        // remove tag with id 14
-        await click(target.querySelector(".o_field_many2many_tags .badge[data-id=14] .o_delete"));
+        // remove tag silver
+        await click(target.querySelectorAll(".o_field_many2many_tags .o_delete")[1]);
         assert.containsN(
             target,
-            ".o_field_many2many_tags .badge .dropdown-toggle",
+            ".o_field_many2many_tags .dropdown-toggle .badge",
             2,
             "should contain 2 tags"
         );
-        assert.ok(
-            !target.querySelector(
-                '.o_field_many2many_tags .badge .dropdown-toggle:contains("silver")'
-            ).length,
-            "should not contain tag 'silver' anymore"
+        const textContent = getNodesTextContent(
+            target.querySelectorAll(".o_field_many2many_tags  .dropdown-toggle .badge")
         );
-
+        assert.strictEqual(
+            textContent.includes("silver"),
+            false,
+            `should not contain tag 'silver' anymore but found: ${textContent}`
+        );
         // save the record (should do the write RPC with the correct commands)
         await click(target.querySelector(".o_form_button_save"));
 
         // checkbox 'Hide in Kanban'
-        input = target.querySelector(".o_field_many2many_tags .badge[data-id=13] .dropdown-toggle"); // selects 'red' tag
-        await click(input);
-        var checkBox = target.querySelector(
-            ".o_field_many2many_tags .badge[data-id=13] .custom-checkbox input"
-        );
-        assert.strictEqual(
-            checkBox.length,
-            1,
+        const badgeElement = target.querySelectorAll(
+            ".o_field_many2many_tags .dropdown-toggle .badge"
+        )[1]; // selects 'red' tag
+        await click(badgeElement);
+        assert.containsOnce(
+            target,
+            ".custom-checkbox input",
             "should have a checkbox in the colorpicker dropdown menu"
         );
+        const checkBox = target.querySelector(".o_field_many2many_tags .custom-checkbox input");
         assert.notOk(
-            checkBox.is(":checked"),
+            checkBox.checked,
             "should have unticked checkbox in colorpicker dropdown menu"
         );
 
         await click(target, ".o_tag_dropdown input[type='checkbox']");
 
-        input = target.querySelector(".o_field_many2many_tags .badge[data-id=13] .dropdown-toggle"); // refresh
-        await click(input);
-        checkBox = target.querySelector(
-            ".o_field_many2many_tags .badge[data-id=13] .custom-checkbox input"
-        ); // refresh
-        assert.equal(
-            input.parentElement.data("color"),
+        assert.strictEqual(
+            badgeElement.dataset.color,
             "0",
-            "should become transparent when toggling on checkbox"
+            "should become white/transparent when toggling on checkbox"
         );
         assert.ok(
-            checkBox.is(":checked"),
+            checkBox.checked,
             "should have a ticked checkbox in colorpicker dropdown menu after mousedown"
         );
 
         await click(target, ".o_tag_dropdown input[type='checkbox']");
 
-        input = target.querySelector(".o_field_many2many_tags .badge[data-id=13] .dropdown-toggle"); // refresh
-        await click(input);
-        checkBox = target.querySelector(
-            ".o_field_many2many_tags .badge[data-id=13] .custom-checkbox input"
-        ); // refresh
-        assert.equal(
-            input.parentElement.data("color"),
+        assert.strictEqual(
+            badgeElement.dataset.color,
             "8",
             "should revert to old color when toggling off checkbox"
         );
         assert.notOk(
-            checkBox.is(":checked"),
+            checkBox.checked,
             "should have an unticked checkbox in colorpicker dropdown menu after 2nd click"
         );
-
-        // TODO: it would be nice to test the behaviors of the autocomplete dropdown
-        // (like refining the research, creating new tags...), but ui-autocomplete
-        // makes it difficult to test
-
-        */
-        }
-    );
+    });
 
     QUnit.skipWOWL("fieldmany2many tags in tree view", async function (assert) {
         assert.expect(3);

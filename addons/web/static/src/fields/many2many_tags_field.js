@@ -21,13 +21,14 @@ export class Many2ManyTagsField extends Component {
             autocompleteValue: "",
         });
         this.orm = useService("orm");
+        this.previousColorsMap = {};
     }
     get tags() {
-        const colorField = this.props.colorField;
         return this.props.value.records.map((record) => ({
-            id: record.id,
+            id: record.id, // datapoint_X
+            resId: record.resId, // X
             name: record.data.display_name,
-            colorIndex: record.data[colorField],
+            colorIndex: record.data[this.props.colorField],
         }));
     }
     tagColorClass(tag) {
@@ -39,7 +40,13 @@ export class Many2ManyTagsField extends Component {
     }
     onTagVisibilityChange(isHidden, tag) {
         const tagRecord = this.props.value.records.find((record) => record.id === tag.id);
-        tagRecord.update(this.props.colorField, isHidden ? 0 : 1);
+        if (tagRecord.data[this.props.colorField] != 0) {
+            this.previousColorsMap[tagRecord.resId] = tagRecord.data[this.props.colorField];
+        }
+        tagRecord.update(
+            this.props.colorField,
+            isHidden ? 0 : this.previousColorsMap[tagRecord.resId] || 1
+        );
     }
 
     get sources() {
@@ -64,7 +71,6 @@ export class Many2ManyTagsField extends Component {
             name: request,
             operator: "ilike",
             args: this.getDomain(),
-            // limit: this.props.searchLimit + 1,
             context: this.props.context,
         });
 
@@ -83,14 +89,14 @@ export class Many2ManyTagsField extends Component {
         ) {
             options.push({
                 label: sprintf(this.env._t(`Create "%s"`), escape(request)),
-                value: request,
+                realLabel: request,
                 classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create",
                 // action: this.onCreate.bind(this),
                 type: "create",
             });
         }
 
-        if (!options.length && this.props.canQuickCreate) {
+        if (!request.length && this.props.canQuickCreate) {
             options.push({
                 label: this.env._t("Start typing..."),
                 classList: "o_m2o_start_typing",
@@ -117,21 +123,29 @@ export class Many2ManyTagsField extends Component {
     }
 
     onInput({ inputValue }) {
-        console.log(inputValue);
         this.state.autocompleteValue = inputValue;
     }
 
     onSelect(option) {
         this.state.autocompleteValue = "";
         if (option.type === "create") {
-            this.props
-                .addItem({
+            this.orm
+                .call(this.props.relation, "name_create", [option.realLabel], {
                     context: this.props.context,
                 })
-                .then((record) => record.update("display_name", option.value));
+                .then((data) => {
+                    const ids = [...this.props.value.currentIds, data[0]];
+                    this.props.value.replaceWith(ids);
+                });
         } else {
-            this.props.linkItem({ resId: option.value });
+            const ids = [...this.props.value.currentIds, option.value];
+            this.props.value.replaceWith(ids);
         }
+    }
+
+    onDelete(tag) {
+        const ids = this.props.value.currentIds.filter((id) => id !== tag.resId);
+        this.props.value.replaceWith(ids);
     }
 }
 
@@ -158,9 +172,6 @@ Many2ManyTagsField.props = {
     relation: { type: String },
     domain: { type: Domain },
     context: { type: Object },
-    linkItem: { type: Function },
-    addItem: { type: Function },
-    record: { type: Object },
 };
 Many2ManyTagsField.RECORD_COLORS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 Many2ManyTagsField.displayName = _lt("Tags");
@@ -182,9 +193,6 @@ Many2ManyTagsField.extractProps = (fieldName, record, attrs) => {
         domain: record.getFieldDomain(fieldName),
         context: record.getFieldContext(fieldName),
         canQuickCreate: !attrs.options.no_quick_create,
-        linkItem: record.data[fieldName].add.bind(record.data[fieldName]),
-        addItem: record.data[fieldName].addNew.bind(record.data[fieldName]),
-        record: record,
     };
 };
 

@@ -901,8 +901,9 @@ export class Record extends DataPoint {
             ...relatedFields,
             ...FieldComponent.fieldsToFetch,
         };
-        const activeFields =
-            (views[viewMode] && views[viewMode].activeFields) || FieldComponent.fieldsToFetch || {};
+        const activeFields = (views[viewMode] && views[viewMode].activeFields) || {
+            ...FieldComponent.fieldsToFetch,
+        };
         for (const fieldName in relatedFields) {
             if (relatedFields[fieldName].active) {
                 activeFields[fieldName] = relatedFields[fieldName];

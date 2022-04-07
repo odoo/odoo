@@ -18,7 +18,7 @@
                 <t t-call="badge_text"/>
             </t>
         </t>
-        <div class="o_field_many2many_selection" style="height: 800px;">
+        <div class="o_field_many2many_selection">
             <div class="o_input_dropdown">
                 <AutoComplete
                     t-if="!props.readonly"
@@ -34,9 +34,9 @@
     </t>
 
     <t t-name="badge_text" owl="1">
-        <span class="o_tag badge badge-pill" t-attf-class="{{tagColorClass(tag)}}" t-att-title="tag.name or 'tag' + tag_index">
+        <span class="o_tag badge badge-pill" t-attf-class="{{tagColorClass(tag)}}" t-att-data-color="tag.colorIndex" t-att-title="tag.name or 'tag' + tag_index">
             <span class="o_tag_badge_text" t-esc="tag.name or 'tag' + tag_index"/>
-            <a t-if="!props.readonly" href="#" class="fa fa-times ml-2 o_delete" title="Delete" aria-label="Delete"></a>
+            <a t-if="!props.readonly" style="z-index: 10;" t-on-click.stop="() => this.onDelete(tag)" href="#" class="fa fa-times ml-2 o_delete" title="Delete" aria-label="Delete"></a>
         </span>
     </t>
 

@@ -242,6 +242,7 @@ Field.parseFieldNode = function (node, fields, viewType) {
             ...fieldInfo.FieldComponent.fieldsToFetch,
         };
         // special case for color field
+        // GES: this is not nice, we will look for something better.
         const colorField = fieldInfo.attrs.options.color_field;
         if (colorField) {
             relatedFields[colorField] = { name: colorField, type: "integer", active: true };
