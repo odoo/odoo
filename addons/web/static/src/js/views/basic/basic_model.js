@@ -2584,6 +2584,9 @@ var BasicModel = AbstractModel.extend({
                 model: field.relation,
                 method: 'name_search',
                 args: ["", domain],
+                kwargs: {
+                    limit: 0,
+                },
                 context: context
             });
     },
