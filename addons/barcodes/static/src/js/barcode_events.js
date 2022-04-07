@@ -165,11 +165,11 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
         if (e.dispatched_by_barcode_reader)
             return;
         // Don't catch non-printable keys for which Firefox triggers a keypress
-        if (this.is_special_key(e))
-            return;
+        // if (this.is_special_key(e))
+        //     return;
         // Don't catch keypresses which could have a UX purpose
-        if (e.metaKey)
-            return;
+        // if (e.metaKey)
+        //     return;
         // Don't catch Return when nothing is buffered. This way users
         // can still use Return to 'click' on focused buttons or links.
         if (e.which === 13 && this.buffered_key_events.length === 0)
