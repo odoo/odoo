@@ -1870,7 +1870,7 @@ var BasicModel = AbstractModel.extend({
                         });
                     }
                 });
-                var def = self._readUngroupedList(list).then(function () {
+                var def = self._readUngroupedList(list).then(function (list) {
                     var x2ManysDef = self._fetchX2ManysBatched(list);
                     var referencesDef = self._fetchReferencesBatched(list);
                     return Promise.all([x2ManysDef, referencesDef]);
