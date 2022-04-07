@@ -399,7 +399,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         test_record = self.env['mail.test.ticket'].browse(self.test_record_full.id)
         test_template = self.env['mail.template'].browse(self.test_template_full.id)
 
-        with self.assertQueryCount(__system__=11, employee=12):
+        with self.assertQueryCount(__system__=12, employee=13):
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
@@ -426,7 +426,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
 
         test_record = self.env['mail.test.ticket'].browse(self.test_record_full.id)
         test_template = self.env['mail.template'].browse(self.test_template_full.id)
-        with self.assertQueryCount(__system__=12, employee=13):
+        with self.assertQueryCount(__system__=13, employee=14):
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
@@ -458,7 +458,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         test_record = self.env['mail.test.ticket'].browse(self.test_record_full.id)
         test_template = self.env['mail.template'].browse(self.test_template_full.id)
         customer = self.env['res.partner'].browse(self.customer.ids)
-        with self.assertQueryCount(__system__=32, employee=32):
+        with self.assertQueryCount(__system__=33, employee=33):
             composer_form = Form(
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
@@ -490,7 +490,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         test_record = self.env['mail.test.ticket'].browse(self.test_record_full.id)
         test_template = self.env['mail.template'].browse(self.test_template_full.id)
         customer = self.env['res.partner'].browse(self.customer.ids)
-        with self.assertQueryCount(__system__=33, employee=33):
+        with self.assertQueryCount(__system__=34, employee=34):
             composer_form = Form(
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
@@ -743,7 +743,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         record = self.container.with_user(self.env.user)
         template_id = self.env.ref('test_mail.mail_test_container_tpl').id
 
-        with self.assertQueryCount(__system__=62, employee=63):  # about 20 (19 ?) queries per additional customer group
+        with self.assertQueryCount(__system__=64, employee=66):  # about 20 (19 ?) queries per additional customer group
             record.message_post_with_template(template_id, message_type='comment', composition_mode='comment')
 
         self.assertEqual(record.message_ids[0].body, '<p>Adding stuff on %s</p>' % record.name)
@@ -925,7 +925,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         rec1 = rec.with_context(active_test=False)      # to see inactive records
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
 
-        with self.assertQueryCount(__system__=29, employee=30):
+        with self.assertQueryCount(__system__=31, employee=32):
             rec.write({
                 'name': 'Test2',
                 'customer_id': customer_id,
