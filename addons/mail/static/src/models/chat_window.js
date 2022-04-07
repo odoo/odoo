@@ -105,6 +105,16 @@ registerModel({
             this.manager.swap(this, lastVisible);
         },
         /**
+         * @param {MouseEvent} ev
+         */
+        onClickClose(ev) {
+            ev.stopPropagation();
+            if (!this.exists()) {
+                return;
+            }
+            this.close();
+        },
+        /**
          * Handles click on the "stop adding users" button.
          *
          * @param {MouseEvent} ev

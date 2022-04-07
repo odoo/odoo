@@ -49,18 +49,6 @@ export class ChatWindowHeader extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickClose(ev) {
-        ev.stopPropagation();
-        if (!this.chatWindow) {
-            return;
-        }
-        this.chatWindow.close();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     async _onClickCamera(ev) {
         ev.stopPropagation();
         if (this.chatWindow.thread.hasPendingRtcRequest) {
