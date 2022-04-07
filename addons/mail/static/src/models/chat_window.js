@@ -136,6 +136,22 @@ registerModel({
             this.expand();
         },
         /**
+         * Called when clicking on header of chat window. Usually folds the chat
+         * window.
+         */
+        onClickHeader(ev) {
+            if (!this.exists() || this.messaging.device.isMobile) {
+                return;
+            }
+            if (this.isFolded) {
+                this.unfold();
+                this.focus();
+            } else {
+                this.saveThreadScrollTop();
+                this.fold();
+            }
+        },
+        /**
          * Handles click on the "stop adding users" button.
          *
          * @param {MouseEvent} ev
