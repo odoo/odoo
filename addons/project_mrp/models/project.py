@@ -14,9 +14,18 @@ class Project(models.Model):
 
     def action_view_mrp_production(self):
         self.ensure_one()
-        action = self.analytic_account_id.action_view_mrp_production()
-        if self.production_count > 1:
-            action["view_mode"] = 'tree,form,kanban,calendar,pivot,graph'
+        action = self.env['ir.actions.actions']._for_xml_id('mrp.mrp_production_action')
+        action['domain'] = [('analytic_account_id', '=', self.analytic_account_id.id)]
+        action['context'] = {'default_analytic_account_id': self.analytic_account_id.id}
+        if self.production_count == 1:
+            action['view_mode'] = 'form'
+            action['res_id'] = self.analytic_account_id.production_ids.id
+            if 'views' in action:
+                action['views'] = [
+                    (view_id, view_type)
+                    for view_id, view_type in action['views']
+                    if view_type == 'form'
+                ] or [False, 'form']
         return action
 
     def action_view_mrp_bom(self):
