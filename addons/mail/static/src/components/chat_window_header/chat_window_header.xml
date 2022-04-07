@@ -29,7 +29,7 @@
                         <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandCamera" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-att-disabled="chatWindow.thread.hasPendingRtcRequest" t-on-click="_onClickCamera" title="Start a Video Call">
                             <i class="fa fa-video-camera"/>
                         </div>
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandPhone" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-att-disabled="chatWindow.thread.hasPendingRtcRequest" t-on-click="_onClickPhone" title="Start a Call">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandPhone" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-att-disabled="chatWindow.thread.hasPendingRtcRequest" t-on-click="chatWindow.onClickPhone" title="Start a Call">
                             <i class="fa fa-phone"/>
                         </div>
                     </t>

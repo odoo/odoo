@@ -73,18 +73,6 @@ export class ChatWindowHeader extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    async _onClickPhone(ev) {
-        ev.stopPropagation();
-        if (this.chatWindow.thread.hasPendingRtcRequest) {
-            return;
-        }
-        await this.chatWindow.thread.toggleCall();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     _onClickExpand(ev) {
         ev.stopPropagation();
         this.chatWindow.expand();

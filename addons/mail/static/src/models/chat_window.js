@@ -124,6 +124,16 @@ registerModel({
             }
         },
         /**
+         * @param {MouseEvent} ev
+         */
+        async onClickPhone(ev) {
+            ev.stopPropagation();
+            if (this.thread.hasPendingRtcRequest) {
+                return;
+            }
+            await this.thread.toggleCall();
+        },
+        /**
          * Handles click on the "add users" button.
          *
          * @param {MouseEvent} ev
