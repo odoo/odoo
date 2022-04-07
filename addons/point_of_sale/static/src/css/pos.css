@@ -3572,8 +3572,7 @@ td {
  */
 
  .pos .notification {
-    min-width: 250px;
-    max-width: 500px;
+    width: 350px;
     background-color: #333333AA;
     color: #fff;
     text-align: center;
@@ -3581,7 +3580,7 @@ td {
     padding: 16px;
     position: fixed;
     z-index: 1;
-    left: 50%;
+    left: calc((100% - 350px - 32px)/2);
     bottom: 5%;
     font-size: 17px;
 }
