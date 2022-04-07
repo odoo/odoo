@@ -74,7 +74,8 @@ class ProductTemplate(models.Model):
     @api.depends('price', 'list_price', 'base_unit_count')
     def _compute_base_unit_price(self):
         for template in self:
-            template.base_unit_price = template.base_unit_count and (template.price or template.list_price) / template.base_unit_count
+            template_price = (template.price or template.list_price) if template.id else template.list_price
+            template.base_unit_price = template.base_unit_count and template_price / template.base_unit_count
 
     @api.depends('uom_name', 'base_unit_id.name')
     def _compute_base_unit_name(self):
