@@ -272,7 +272,7 @@ class Project(models.Model):
         return [{
             **sol_read,
             **get_action(sol_read['id']),
-        } for sol_read in sols.read(['display_name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom'])]
+        } for sol_read in sols.with_context(with_price_unit=True).read(['display_name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom'])]
 
     def _get_sale_items_domain(self, additional_domain=None):
         sale_orders = self._get_sale_order_items().sudo().order_id
