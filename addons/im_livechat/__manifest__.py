@@ -70,6 +70,7 @@ Help your customers with this chat, and analyse their feedback.
         'web.qunit_suite_tests': [
             'im_livechat/static/tests/qunit_suite_tests/components/**/*.js',
             'im_livechat/static/src/legacy/public_livechat.js',
+            'im_livechat/static/src/legacy/public_livechat_constants.js',
             'im_livechat/static/src/legacy/models/*',
             'im_livechat/static/src/legacy/widgets/*',
             'im_livechat/static/src/legacy/public_livechat_chatbot.js',
@@ -175,6 +176,7 @@ Help your customers with this chat, and analyse their feedback.
             'bus/static/src/js/services/bus_service.js',
             'mail/static/src/js/utils.js',
             'im_livechat/static/src/legacy/public_livechat.js',
+            'im_livechat/static/src/legacy/public_livechat_constants.js',
             'im_livechat/static/src/legacy/models/*',
             'im_livechat/static/src/legacy/widgets/*',
             'im_livechat/static/src/legacy/public_livechat_chatbot.js',
