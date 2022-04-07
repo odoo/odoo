@@ -4700,6 +4700,7 @@ class AccountMoveLine(models.Model):
 
         :return: a tuple of 1) list of vals for partial reconcilation creation, 2) the list of vals for the exchange difference entries to be created
         '''
+<<<<<<< HEAD
         def get_odoo_rate(line):
             return recon_currency._get_conversion_rate(company_currency, recon_currency, line.company_id, line.date)
 
@@ -4708,6 +4709,13 @@ class AccountMoveLine(models.Model):
                 return None
             else:
                 return abs(line.amount_currency) / abs(line.balance)
+=======
+        def fix_remaining_cent(currency, abs_residual, partial_amount):
+            if abs_residual - currency.rounding <= partial_amount <= abs_residual + currency.rounding:
+                return abs_residual
+            else:
+                return partial_amount
+>>>>>>> 026dd5bedf4... temp
 
         debit_lines = iter(self.filtered(lambda line: line.balance > 0.0 or line.amount_currency > 0.0))
         credit_lines = iter(self.filtered(lambda line: line.balance < 0.0 or line.amount_currency < 0.0))
@@ -4941,10 +4949,40 @@ class AccountMoveLine(models.Model):
 
             # ==== Create partials ====
 
+<<<<<<< HEAD
             remaining_debit_amount -= partial_amount
             remaining_credit_amount += partial_amount
             remaining_debit_amount_curr -= partial_debit_amount_currency
             remaining_credit_amount_curr += partial_credit_amount_currency
+=======
+                min_debit_amount_residual_currency = credit_line.company_currency_id._convert(
+                    min_amount_residual,
+                    debit_line.currency_id,
+                    credit_line.company_id,
+                    credit_line.date,
+                )
+                min_debit_amount_residual_currency = fix_remaining_cent(
+                    debit_line.currency_id,
+                    debit_amount_residual_currency,
+                    min_debit_amount_residual_currency,
+                )
+                min_credit_amount_residual_currency = debit_line.company_currency_id._convert(
+                    min_amount_residual,
+                    credit_line.currency_id,
+                    debit_line.company_id,
+                    debit_line.date,
+                )
+                min_credit_amount_residual_currency = fix_remaining_cent(
+                    credit_line.currency_id,
+                    -credit_amount_residual_currency,
+                    min_credit_amount_residual_currency,
+                )
+
+            debit_amount_residual -= min_amount_residual
+            debit_amount_residual_currency -= min_debit_amount_residual_currency
+            credit_amount_residual += min_amount_residual
+            credit_amount_residual_currency += min_credit_amount_residual_currency
+>>>>>>> 026dd5bedf4... temp
 
             partials_vals_list.append({
                 'amount': partial_amount,
