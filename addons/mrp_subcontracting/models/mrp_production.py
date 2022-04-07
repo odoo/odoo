@@ -9,12 +9,22 @@ from odoo.tools.float_utils import float_compare, float_is_zero
 
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
+    _rec_names_search = ['name', 'incoming_picking.name']
 
     move_line_raw_ids = fields.One2many(
         'stock.move.line', string="Detail Component", readonly=False,
         inverse='_inverse_move_line_raw_ids', compute='_compute_move_line_raw_ids'
     )
     subcontracting_has_been_recorded = fields.Boolean("Has been recorded?", copy=False)
+
+    incoming_picking = fields.Many2one(related='move_finished_ids.move_dest_ids.picking_id')
+
+    @api.depends('name')
+    def name_get(self):
+        return [
+            (record.id, "%s (%s)" % (record.incoming_picking.name, record.name)) if record.bom_id.type == 'subcontract'
+            else (record.id, record.name) for record in self
+        ]
 
     @api.depends('move_raw_ids.move_line_ids')
     def _compute_move_line_raw_ids(self):
