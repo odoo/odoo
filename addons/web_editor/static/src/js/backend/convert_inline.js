@@ -340,6 +340,10 @@ function classToStyle($editable, cssRules) {
         if ('font-family' in css) {
             delete css['font-family'];
         }
+        // The "dir" attribute always has priority over the direction property.
+        if ('direction' in css && node.getAttribute('dir')) {
+            delete css['direction'];
+        }
 
         // Do not apply css that would override inline styles (which are prioritary).
         let style = node.getAttribute('style') || '';
@@ -431,6 +435,13 @@ function toInline($editable, cssRules, $iframe) {
             image.style.setProperty(attributeName, image.getAttribute(attributeName));
         };
     };
+
+    // Ensure the mailing has the direction of the editable (this change will be
+    // kept in both fields).
+    const oLayout = editable.querySelector('.o_layout');
+    if (oLayout) {
+        oLayout.setAttribute('dir', editable.getAttribute('dir'));
+    }
 
     attachmentThumbnailToLinkImg($editable);
     fontToImg($editable);
@@ -858,11 +869,12 @@ function _createTable(attributes = []) {
         }
     }
     if (table.classList.contains('o_layout')) {
-        // The top mailing element inherits the body's font size and line-height
-        // and should keep them.
+        // The top mailing element inherits the body's font size, line-height
+        // and text-align and should keep them.
         const layoutStyles = {...TABLE_STYLES};
         delete layoutStyles['font-size'];
         delete layoutStyles['line-height'];
+        delete layoutStyles['text-align'];
         Object.entries(layoutStyles).forEach(([att, value]) => table.style[att] = value)
     } else {
         for (const styleName in TABLE_STYLES) {

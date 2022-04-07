@@ -5,6 +5,7 @@ var config = require('web.config');
 var core = require('web.core');
 var FieldHtml = require('web_editor.field.html');
 var fieldRegistry = require('web.field_registry');
+const { localization } = require('@web/core/l10n/localization');
 var convertInline = require('web_editor.convertInline');
 
 var _t = core._t;
@@ -274,6 +275,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         var $newLayout = $('<div/>', {
             class: 'o_layout oe_unremovable oe_unmovable bg-200 ' + themeParams.className,
             'data-name': 'Mailing',
+            dir: localization.direction,
         }).append($new_wrapper);
 
         const $contents = themeParams.template;

@@ -5,6 +5,7 @@ var ajax = require('web.ajax');
 var basic_fields = require('web.basic_fields');
 var core = require('web.core');
 var wysiwygLoader = require('web_editor.loader');
+const { localization } = require('@web/core/l10n/localization');
 var field_registry = require('web.field_registry');
 const {QWebPlugin} = require('@web_editor/js/backend/QWebPlugin');
 // must wait for web/ to add the default html widget, otherwise it would override the web_editor one
@@ -358,7 +359,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                                     return '<style type="text/css">' + cssContent + '</style>';
                                 }).join('\n') + '\n' +
                             '</head>\n' +
-                            '<body class="o_in_iframe o_readonly" style="overflow: hidden;">\n' +
+                            `<body class="o_in_iframe o_readonly" style="overflow: hidden;" dir="${localization.direction}">\n` +
                                 '<div id="iframe_target">' + value + '</div>\n' +
                                 '<script type="text/javascript">' +
                                     'if (window.top.' + self._onUpdateIframeId + ') {' +
@@ -386,6 +387,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             });
         } else {
             this.$content = $('<div class="o_readonly"/>').html(value);
+            this.$content.attr('dir', localization.direction);
             this.$content.appendTo(this.$el);
             this._qwebPlugin = new QWebPlugin();
             this._qwebPlugin.sanitizeElement(this.$content[0]);
