@@ -14,6 +14,7 @@ from odoo import http, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
+from odoo.exceptions import UserError
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
@@ -110,8 +111,9 @@ class WebsiteForum(WebsiteProfile):
             # check that sorting is valid
             # retro-compatibily for V8 and google links
             try:
+                sorting = werkzeug.urls.url_unquote_plus(sorting)
                 Post._generate_order_by(sorting, None)
-            except ValueError:
+            except (UserError, ValueError):
                 sorting = False
 
         if not sorting:
