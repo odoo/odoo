@@ -3,7 +3,7 @@
 import publicWidget from 'web.public.widget';
 import utils from 'web.utils';
 
-import { LivechatButton } from 'im_livechat.legacy.im_livechat.im_livechat';
+import LivechatButton from 'im_livechat.legacy.im_livechat.LivechatButton';
 import WebsiteLivechat from 'im_livechat.legacy.im_livechat.model.WebsiteLivechat';
 
 /**

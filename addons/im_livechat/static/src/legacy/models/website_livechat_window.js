@@ -14,7 +14,7 @@ var LivechatWindow = AbstractThreadWindow.extend({
     }),
     /**
      * @override
-     * @param {im_livechat.legacy.im_livechat.im_livechat:LivechatButton} parent
+     * @param {im_livechat.legacy.im_livechat.LivechatButton} parent
      * @param {im_livechat.legacy.im_livechat.model.WebsiteLivechat} thread
      * @param {Object} [options={}]
      * @param {string} [options.headerBackgroundColor]
