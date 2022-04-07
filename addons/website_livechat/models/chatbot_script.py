@@ -14,8 +14,3 @@ class ChatbotScript(models.Model):
             'url': '/chatbot/%s/test' % self.id,
             'target': 'self',
         }
-
-    def _prepare_operator_partner_values(self, name, image):
-        res = super()._prepare_operator_partner_values(name, image)
-        res['is_published'] = True
-        return res

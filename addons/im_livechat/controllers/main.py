@@ -74,6 +74,48 @@ class LivechatController(http.Controller):
             'rule': rule,
         }
 
+    @http.route('/im_livechat/operator/<int:operator_id>/avatar',
+        type='http', auth="public", cors="*")
+    def livechat_operator_get_avatar(self, operator_id):
+        """ Custom route allowing to retrieve an operator's avatar.
+
+        This is done to bypass more complicated rules, notably 'website_published' when the website
+        module is installed.
+
+        Here, we assume that if you are a member of at least one im_livechat.channel, then it's ok
+        to make your avatar publicly available.
+
+        We also make the chatbot operator avatars publicly available. """
+
+        is_livechat_member = False
+        operator = request.env['res.partner'].sudo().browse(operator_id)
+        if operator.exists():
+            is_livechat_member = bool(request.env['im_livechat.channel'].sudo().search_count([
+                ('user_ids', 'in', operator.user_ids.ids)
+            ]))
+
+        if not is_livechat_member:
+            # we don't put chatbot operators as livechat members (because we don't have a user_id for them)
+            is_livechat_member = bool(request.env['chatbot.script'].sudo().search_count([
+                ('operator_partner_id', 'in', operator.ids)
+            ]))
+
+        status = 200
+        headers = []
+        # custom placeholer (a smiley face instead of the infamous camera)
+        image_placeholder = 'mail/static/src/img/smiley/avatar.jpg'
+
+        if is_livechat_member:
+            status, headers, image_base64 = request.env['ir.http'].sudo().binary_content(
+                model='res.partner', id=operator_id, field='avatar_128', default_mimetype='image/png')
+
+            if status in [301, 304]:
+                image_base64 = request.env['ir.http']._placeholder(image_placeholder)
+        else:
+            image_base64 = request.env['ir.http']._placeholder(image_placeholder)
+
+        return request.env['ir.http']._content_image_get_response(status, headers, image_base64)
+
     @http.route('/im_livechat/get_session', type="json", auth='public', cors="*")
     def get_session(self, channel_id, anonymous_name, previous_operator_id=None, chatbot_script_id=None, **kwargs):
         user_id = None

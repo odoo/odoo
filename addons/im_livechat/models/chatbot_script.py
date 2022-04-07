@@ -90,10 +90,11 @@ class ChatbotScript(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        operator_partners_values = [self._prepare_operator_partner_values(
-            vals['title'],
-            vals.get('image_1920', False),
-        ) for vals in vals_list if 'operator_partner_id' not in vals and 'title' in vals]
+        operator_partners_values = [{
+            'name': vals['title'],
+            'image_1920': vals.get('image_1920', False),
+            'active': False,
+        } for vals in vals_list if 'operator_partner_id' not in vals and 'title' in vals]
 
         operator_partners = self.env['res.partner'].create(operator_partners_values)
 
@@ -169,13 +170,6 @@ class ChatbotScript(models.Model):
 
         return posted_messages
 
-    def _prepare_operator_partner_values(self, name, image):
-        return {
-            'name': name,
-            'image_1920': image,
-            'active': False,
-        }
-
     def action_view_livechat_channels(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('im_livechat.im_livechat_channel_action')
@@ -190,15 +184,10 @@ class ChatbotScript(models.Model):
         """ Small utility method that formats the script into a dict usable by the frontend code. """
         self.ensure_one()
 
-        chatbot_avatar_url = '/mail/static/src/img/smiley/avatar.jpg'
-        if bool(self.image_128):
-            chatbot_avatar_url = f'/web/image/chatbot.script/{self.id}/image_128'
-
         return {
             'chatbot_script_id': self.id,
             'chatbot_name': self.title,
             'chatbot_operator_partner_id': self.operator_partner_id.id,
-            'chatbot_avatar_url': chatbot_avatar_url,
             'chatbot_welcome_steps': [
                 step._format_for_frontend()
                 for step in self._get_welcome_steps()

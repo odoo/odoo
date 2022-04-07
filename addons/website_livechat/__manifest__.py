@@ -11,7 +11,6 @@ Allow website visitors to chat with the collaborators. This module also brings a
     'installable': True,
     'application': False,
     'auto_install': True,
-    'post_init_hook': '_post_init_website_livechat',
     'data': [
         'views/website_livechat.xml',
         'views/res_config_settings_views.xml',
