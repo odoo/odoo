@@ -12,10 +12,12 @@
                 <field name="support_fees" invisible="1"/>
                 <field name="support_manual_capture" invisible="1"/>
                 <field name="support_tokenization" invisible="1"/>
+                <field name="support_express_checkout" invisible="1"/>
                 <field name="module_id" invisible="1"/>
                 <field name="module_state" invisible="1"/>
                 <field name="module_to_buy" invisible="1"/>
                 <field name="show_credentials_page" invisible="1"/>
+                <field name="show_allow_express_checkout" invisible="1"/>
                 <field name="show_allow_tokenization" invisible="1"/>
                 <field name="show_payment_icon_ids" invisible="1"/>
                 <field name="show_pre_msg" invisible="1"/>
@@ -83,6 +85,7 @@
                                     <field name="payment_icon_ids" attrs="{'invisible': [('show_payment_icon_ids', '=', False)]}" widget="many2many_tags"/>
                                     <field name="allow_tokenization" attrs="{'invisible': ['|', ('support_tokenization', '=', False), ('show_allow_tokenization', '=', False)]}"/>
                                     <field name="capture_manually" attrs="{'invisible': [('support_manual_capture', '=', False)]}"/>
+                                    <field name="allow_express_checkout" attrs="{'invisible': ['|', ('support_express_checkout', '=', False), ('show_allow_express_checkout', '=', False)]}"/>
                                 </group>
                                 <group string="Availability" name="availability">
                                     <field name="maximum_amount" widget="monetary" options="{'currency_field': 'main_currency_id'}"/>

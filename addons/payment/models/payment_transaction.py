@@ -485,6 +485,7 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
 
         processing_values = {
+            'tx_id': self.id,
             'acquirer_id': self.acquirer_id.id,
             'provider': self.provider,
             'reference': self.reference,

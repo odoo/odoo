@@ -39,6 +39,17 @@
                     </a>
                 </div>
             </xpath>
+            <field name="allow_express_checkout" position="replace">
+                <label for="allow_express_checkout"/>
+                <div class="o_row" col="2">
+                    <field name="allow_express_checkout"/>
+                <button string="Enable Apple Pay"
+                        type="object"
+                        name="action_stripe_verify_apple_pay_domain"
+                        class="btn btn-primary"
+                        attrs="{'invisible': [('allow_express_checkout', '!=', True)]}"/>
+                </div>
+            </field>
         </field>
     </record>
 

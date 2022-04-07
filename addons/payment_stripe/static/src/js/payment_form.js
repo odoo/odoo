@@ -45,4 +45,5 @@ odoo.define('payment_stripe.payment_form', require => {
     checkoutForm.include(stripeMixin);
     manageForm.include(stripeMixin);
 
+    return stripeMixin;
 });
