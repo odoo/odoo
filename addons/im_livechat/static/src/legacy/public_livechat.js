@@ -10,6 +10,7 @@ var time = require('web.time');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
 
+var { LIVECHAT_COOKIE_HISTORY, HISTORY_LIMIT, RATING_TO_EMOJI } = require('im_livechat.legacy.im_livechat.Constants');
 var WebsiteLivechat = require('im_livechat.legacy.im_livechat.model.WebsiteLivechat');
 var WebsiteLivechatMessage = require('im_livechat.legacy.im_livechat.model.WebsiteLivechatMessage');
 var WebsiteLivechatWindow = require('im_livechat.legacy.im_livechat.WebsiteLivechatWindow');
@@ -17,15 +18,6 @@ var WebsiteLivechatWindow = require('im_livechat.legacy.im_livechat.WebsiteLivec
 var _t = core._t;
 var QWeb = core.qweb;
 
-// Constants
-var LIVECHAT_COOKIE_HISTORY = 'im_livechat_history';
-var HISTORY_LIMIT = 15;
-
-var RATING_TO_EMOJI = {
-    "5": "😊",
-    "3": "😐",
-    "1": "😞"
-};
 
 // History tracking
 var page = window.location.href.replace(/^.*\/\/[^/]+/, '');
