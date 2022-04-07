@@ -2,16 +2,18 @@
 <templates xml:space="preserve">
 <t t-name="website.WebsitePreview" owl="1">
     <div class="o_website_preview" t-att-class="{ 'editor_enable editor_has_snippets': this.websiteContext.snippetsLoaded }">
-        <iframe t-att-src="iframeFallbackUrl"
-            t-att-class="{ 'd-none': this.websiteContext.edition }"
-            t-ref="iframefallback"/>
-        <iframe t-att-src="initialUrl"
-            class="o_iframe"
-            t-ref="iframe"
-            t-on-load="_onPageLoaded"/>
+        <div class="o_iframe_container" t-att-class="{ 'o_is_mobile': this.websiteContext.isMobile }">
+            <iframe t-att-src="iframeFallbackUrl"
+                t-att-class="{ 'd-none': this.websiteContext.edition }"
+                t-ref="iframefallback"/>
+            <iframe t-att-src="initialUrl"
+                class="o_iframe"
+                t-ref="iframe"
+                t-on-load="_onPageLoaded"/>
+        </div>
+        <WebsiteEditorComponent t-if="websiteContext.edition"
+            reloadIframe.bind="this.reloadIframe"/>
     </div>
-    <WebsiteEditorComponent t-if="websiteContext.edition"
-        reloadIframe.bind="this.reloadIframe"/>
 </t>
 
 <div t-name="website.homepage_editor_welcome_message" class="container text-center o_homepage_editor_welcome_message">
