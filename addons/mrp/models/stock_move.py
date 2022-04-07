@@ -420,7 +420,8 @@ class StockMove(models.Model):
             'reservation_date': self.reservation_date,
             'manual_consumption': self.bom_line_id.manual_consumption or self.product_id.tracking != 'none',
             'move_orig_ids': [Command.link(m.id) for m in self.mapped('move_orig_ids')],
-            'move_dest_ids': [Command.link(m.id) for m in self.mapped('move_dest_ids')]
+            'move_dest_ids': [Command.link(m.id) for m in self.mapped('move_dest_ids')],
+            'procure_method': self.procure_method,
         }
 
     def _get_source_document(self):
