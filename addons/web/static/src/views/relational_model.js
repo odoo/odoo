@@ -280,9 +280,20 @@ class DataPoint {
     get context() {
         const contexts = [];
         let rawContext = this.rawContext;
-        while (rawContext) {
-            contexts.push(rawContext.make());
+        if (!rawContext) {
+            return contexts;
+        }
+        contexts.push(rawContext.make());
+
+        while (rawContext.parent) {
             rawContext = rawContext.parent;
+            const context = rawContext.make();
+            for (const key in context) {
+                if (key.startsWith("default_")) {
+                    delete context[key];
+                }
+            }
+            contexts.push(context);
         }
 
         return Object.assign({}, ...contexts.reverse());
@@ -2206,8 +2217,6 @@ export class StaticList extends DataPoint {
     }
 
     async load() {
-        this.limit = this.initialLimit;
-
         if (!this.count) {
             this.records = [];
             return;
@@ -2293,44 +2302,50 @@ export class StaticList extends DataPoint {
     getCommands(allFields = false) {
         if (this._commands.length) {
             const commands = [];
-            const hasGlobalCommand =
-                this._commands && [DELETE_ALL, REPLACE_WITH].includes(this._commands[0][0]);
-            if (!hasGlobalCommand) {
-                for (const resId of this._serverIds) {
-                    if (!this._commandsById[resId]) {
+
+            const getRecordValues = (id) => {
+                const recordId = this._mapping[id];
+                if (recordId) {
+                    const record = this._cache[recordId];
+                    return record.getChanges(allFields);
+                } else {
+                    return this._initialValues[id];
+                }
+            };
+
+            const hasReplaceWithCommand = this._commands && REPLACE_WITH === this._commands[0][0];
+            if (hasReplaceWithCommand) {
+                commands.push(this._commands[0]);
+            }
+
+            for (const resId of this.currentIds) {
+                const dictCommand = this._commandsById[resId];
+                if (dictCommand) {
+                    if (dictCommand[CREATE]) {
+                        const id = (dictCommand[CREATE] || dictCommand[UPDATE])[1];
+                        commands.push(x2ManyCommands.create(id, getRecordValues(id)));
+                    } else if (dictCommand[UPDATE]) {
+                        const id = dictCommand[UPDATE][1];
+                        commands.push(x2ManyCommands.update(id, getRecordValues(id)));
+                    } else if (dictCommand[LINK_TO]) {
                         commands.push(x2ManyCommands.linkTo(resId));
                     }
+                } else if (!hasReplaceWithCommand) {
+                    commands.push(x2ManyCommands.linkTo(resId));
                 }
             }
+
             for (const command of this._commands) {
                 const code = command[0];
-                if ([CREATE, UPDATE].includes(code)) {
-                    const id = command[1];
-                    let values;
-                    const recordId = this._mapping[id];
-                    if (recordId) {
-                        const record = this._cache[recordId];
-                        values = record.getChanges(allFields);
-                    } else {
-                        values = this._initialValues[id];
-                    }
-                    if (code === CREATE && this.editable === "top") {
-                        commands.unshift([code, id, values]);
-                    } else {
-                        commands.push([code, id, values]);
-                    }
-                } else {
+                if ([DELETE].includes(code)) {
                     commands.push(command);
                 }
             }
 
-            if (DELETE_ALL === this._commands[0][0]) {
-                commands.shift();
-                if (!allFields) {
-                    for (const resId of this._serverIds) {
-                        if (!this.currentIds.includes(resId)) {
-                            commands.push(x2ManyCommands.delete(resId));
-                        }
+            if (DELETE_ALL === this._commands[0][0] && !allFields) {
+                for (const resId of this._serverIds) {
+                    if (!this.currentIds.includes(resId)) {
+                        commands.push(x2ManyCommands.delete(resId));
                     }
                 }
             }
