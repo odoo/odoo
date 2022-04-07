@@ -20,7 +20,6 @@ WebsiteLivechatMessage.include({
         this._super(...arguments);
 
         if (parent._isChatbot) {
-            this._chatbotAvatarUrl = parent._chatbot.chatbot_avatar_url;
             this._chatbotId = parent._chatbot.chatbot_script_id;
             this._chatbotName = parent._chatbot.chatbot_name;
             this._chatbotOperatorPartnerId = parent._chatbot.chatbot_operator_partner_id;
@@ -34,17 +33,6 @@ WebsiteLivechatMessage.include({
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
-
-    /**
-     * Small override to return a placeholder in case there is no image configured on the chatbot.
-     */
-    getAvatarSource: function () {
-        if (this._chatbotAvatarUrl && this.getAuthorID() === this._chatbotOperatorPartnerId) {
-            return this._chatbotAvatarUrl;
-        } else {
-            return this._super(...arguments);
-        }
-    },
 
     /**
      * Get chat bot script step ID
