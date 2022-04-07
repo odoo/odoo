@@ -10,6 +10,7 @@ class MrpProduction(models.Model):
     def _cal_price(self, consumed_moves):
         finished_move = self.move_finished_ids.filtered(lambda x: x.product_id == self.product_id and x.state not in ('done', 'cancel') and x.quantity_done > 0)
         # Take the price unit of the reception move
-        if finished_move.move_dest_ids.is_subcontract:
-            self.extra_cost = finished_move.move_dest_ids._get_price_unit()
+        dest_move = finished_move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
+        if dest_move.is_subcontract:
+            self.extra_cost = dest_move._get_price_unit()
         return super()._cal_price(consumed_moves=consumed_moves)
