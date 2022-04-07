@@ -458,29 +458,35 @@ class AccountMoveLine(models.Model):
                 sub.tax_repartition_line_id,
 
                 sub.base_amount,
-                ROUND(
-                    COALESCE(SIGN(sub.cumulated_base_amount) * sub.total_tax_amount * ABS(sub.cumulated_base_amount) / NULLIF(sub.total_base_amount, 0.0), 0.0),
-                    sub.comp_curr_prec
-                )
-                - LAG(ROUND(
-                    COALESCE(SIGN(sub.cumulated_base_amount) * sub.total_tax_amount * ABS(sub.cumulated_base_amount) / NULLIF(sub.total_base_amount, 0.0), 0.0),
-                    sub.comp_curr_prec
-                ), 1, 0.0)
-                OVER (
-                    PARTITION BY sub.tax_line_id ORDER BY sub.tax_id, sub.base_line_id
+                COALESCE(
+                    ROUND(
+                        COALESCE(SIGN(sub.cumulated_base_amount) * sub.total_tax_amount * ABS(sub.cumulated_base_amount) / NULLIF(sub.total_base_amount, 0.0), 0.0),
+                        sub.comp_curr_prec
+                    )
+                    - LAG(ROUND(
+                        COALESCE(SIGN(sub.cumulated_base_amount) * sub.total_tax_amount * ABS(sub.cumulated_base_amount) / NULLIF(sub.total_base_amount, 0.0), 0.0),
+                        sub.comp_curr_prec
+                    ), 1, 0.0)
+                    OVER (
+                        PARTITION BY sub.tax_line_id ORDER BY sub.tax_id, sub.base_line_id
+                    ),
+                    0.0
                 ) AS tax_amount,
 
                 sub.base_amount_currency,
-                ROUND(
-                    COALESCE(SIGN(sub.cumulated_base_amount_currency) * sub.total_tax_amount_currency * ABS(sub.cumulated_base_amount_currency) / NULLIF(sub.total_base_amount_currency, 0.0), 0.0),
-                    sub.curr_prec
-                )
-                - LAG(ROUND(
-                    COALESCE(SIGN(sub.cumulated_base_amount_currency) * sub.total_tax_amount_currency * ABS(sub.cumulated_base_amount_currency) / NULLIF(sub.total_base_amount_currency, 0.0), 0.0),
-                    sub.curr_prec
-                ), 1, 0.0)
-                OVER (
-                    PARTITION BY sub.tax_line_id ORDER BY sub.tax_id, sub.base_line_id
+                COALESCE(
+                    ROUND(
+                        COALESCE(SIGN(sub.cumulated_base_amount_currency) * sub.total_tax_amount_currency * ABS(sub.cumulated_base_amount_currency) / NULLIF(sub.total_base_amount_currency, 0.0), 0.0),
+                        sub.curr_prec
+                    )
+                    - LAG(ROUND(
+                        COALESCE(SIGN(sub.cumulated_base_amount_currency) * sub.total_tax_amount_currency * ABS(sub.cumulated_base_amount_currency) / NULLIF(sub.total_base_amount_currency, 0.0), 0.0),
+                        sub.curr_prec
+                    ), 1, 0.0)
+                    OVER (
+                        PARTITION BY sub.tax_line_id ORDER BY sub.tax_id, sub.base_line_id
+                    ),
+                    0.0
                 ) AS tax_amount_currency
             FROM base_tax_matching_all_amounts sub
         ''', group_taxes_params + where_params + where_params + where_params + fallback_params
