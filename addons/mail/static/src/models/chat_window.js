@@ -159,6 +159,16 @@ registerModel({
             }
         },
         /**
+         * Focus out the chat window.
+         */
+        onFocusout() {
+            if (!this.exists()) {
+                // ignore focus out due to record being deleted
+                return;
+            }
+            this.update({ isFocused: false });
+        },
+        /**
          * Swap this chat window with the previous one.
          */
         shiftPrev() {

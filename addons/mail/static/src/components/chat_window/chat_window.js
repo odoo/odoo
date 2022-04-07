@@ -179,19 +179,6 @@ export class ChatWindow extends Component {
     }
 
     /**
-     * Focus out the chat window.
-     *
-     * @private
-     */
-    _onFocusout() {
-        if (!this.chatWindow) {
-            // ignore focus out due to record being deleted
-            return;
-        }
-        this.chatWindow.update({ isFocused: false });
-    }
-
-    /**
      * @private
      * @param {KeyboardEvent} ev
      */
