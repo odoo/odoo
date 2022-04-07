@@ -1,11 +1,12 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdate } from '@mail/component_hooks/use_update';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { markEventHandled } from '@mail/utils/utils';
 
-const { Component, useRef } = owl;
+const { Component } = owl;
 
 export class ComposerTextInput extends Component {
 
@@ -15,6 +16,8 @@ export class ComposerTextInput extends Component {
     setup() {
         super.setup();
         useComponentToModel({ fieldName: 'textInputComponent', modelName: 'ComposerView' });
+        useRefToModel({ fieldName: 'mirroredTextareaRef', modelName: 'ComposerView', refName: 'mirroredTextarea' });
+        useRefToModel({ fieldName: 'textareaRef', modelName: 'ComposerView', refName: 'textarea' });
         /**
          * Updates the composer text input content when composer is mounted
          * as textarea content can't be changed from the DOM.
@@ -25,16 +28,6 @@ export class ComposerTextInput extends Component {
          * whether the current partner is typing something.
          */
         this._textareaLastInputValue = "";
-        /**
-         * Reference of the textarea. Useful to set height, selection and content.
-         */
-        this._textareaRef = useRef('textarea');
-        /**
-         * This is the invisible textarea used to compute the composer height
-         * based on the text content. We need it to downsize the textarea
-         * properly without flicker.
-         */
-        this._mirroredTextareaRef = useRef('mirroredTextarea');
     }
 
     //--------------------------------------------------------------------------
@@ -55,8 +48,8 @@ export class ComposerTextInput extends Component {
         this.composerView.composer.update({
             textInputContent: this._getContent(),
             textInputCursorEnd: this._getSelectionEnd(),
-            textInputCursorStart: this._getSelectionStart(),
-            textInputSelectionDirection: this._textareaRef.el.selectionDirection,
+            textInputCursorStart: this.composerView.textareaRef.el.selectionStart,
+            textInputSelectionDirection: this.composerView.textareaRef.el.selectionDirection,
         });
     }
 
@@ -71,7 +64,7 @@ export class ComposerTextInput extends Component {
      * @returns {string}
      */
     _getContent() {
-        return this._textareaRef.el.value;
+        return this.composerView.textareaRef.el.value;
     }
 
     /**
@@ -81,18 +74,7 @@ export class ComposerTextInput extends Component {
      * @returns {integer}
      */
     _getSelectionEnd() {
-        return this._textareaRef.el.selectionEnd;
-    }
-
-    /**
-     * Returns selection start position.
-     *
-     * @private
-     * @returns {integer}
-     *
-     */
-    _getSelectionStart() {
-        return this._textareaRef.el.selectionStart;
+        return this.composerView.textareaRef.el.selectionEnd;
     }
 
     /**
@@ -122,12 +104,12 @@ export class ComposerTextInput extends Component {
             if (this.messaging.device.isMobile) {
                 this.root.el.scrollIntoView();
             }
-            this._textareaRef.el.focus();
+            this.composerView.textareaRef.el.focus();
         }
         if (this.composerView.hasToRestoreContent) {
-            this._textareaRef.el.value = this.composerView.composer.textInputContent;
+            this.composerView.textareaRef.el.value = this.composerView.composer.textInputContent;
             if (this.composerView.isFocused) {
-                this._textareaRef.el.setSelectionRange(
+                this.composerView.textareaRef.el.setSelectionRange(
                     this.composerView.composer.textInputCursorStart,
                     this.composerView.composer.textInputCursorEnd,
                     this.composerView.composer.textInputSelectionDirection,
@@ -144,8 +126,8 @@ export class ComposerTextInput extends Component {
      * @private
      */
     _updateHeight() {
-        this._mirroredTextareaRef.el.value = this.composerView.composer.textInputContent;
-        this._textareaRef.el.style.height = (this._mirroredTextareaRef.el.scrollHeight) + "px";
+        this.composerView.mirroredTextareaRef.el.value = this.composerView.composer.textInputContent;
+        this.composerView.textareaRef.el.style.height = this.composerView.mirroredTextareaRef.el.scrollHeight + 'px';
     }
 
     //--------------------------------------------------------------------------
@@ -161,16 +143,6 @@ export class ComposerTextInput extends Component {
         }
         // clicking might change the cursor position
         this.saveStateInStore();
-    }
-
-    /**
-     * @private
-     */
-    _onFocusinTextarea() {
-        if (!this.composerView) {
-            return;
-        }
-        this.composerView.update({ isFocused: true });
     }
 
     /**
@@ -192,10 +164,10 @@ export class ComposerTextInput extends Component {
             return;
         }
         this.saveStateInStore();
-        if (this._textareaLastInputValue !== this._textareaRef.el.value) {
+        if (this._textareaLastInputValue !== this.composerView.textareaRef.el.value) {
             this.composerView.handleCurrentPartnerIsTyping();
         }
-        this._textareaLastInputValue = this._textareaRef.el.value;
+        this._textareaLastInputValue = this.composerView.textareaRef.el.value;
         this._updateHeight();
     }
 
@@ -254,9 +226,7 @@ export class ComposerTextInput extends Component {
             !ev.metaKey &&
             !ev.shiftKey
         ) {
-            if (this.props.onComposerTextInputSendShortcut) {
-                this.props.onComposerTextInputSendShortcut();
-            }
+            this.composerView.sendMessage();
             ev.preventDefault();
             return;
         }
@@ -267,9 +237,7 @@ export class ComposerTextInput extends Component {
             !ev.metaKey &&
             !ev.shiftKey
         ) {
-            if (this.props.onComposerTextInputSendShortcut) {
-                this.props.onComposerTextInputSendShortcut();
-            }
+            this.composerView.sendMessage();
             ev.preventDefault();
             return;
         }
@@ -280,9 +248,7 @@ export class ComposerTextInput extends Component {
             ev.metaKey &&
             !ev.shiftKey
         ) {
-            if (this.props.onComposerTextInputSendShortcut) {
-                this.props.onComposerTextInputSendShortcut();
-            }
+            this.composerView.sendMessage();
             ev.preventDefault();
             return;
         }
@@ -387,14 +353,6 @@ Object.assign(ComposerTextInput, {
         localId: String,
         hasMentionSuggestionsBelowPosition: {
             type: Boolean,
-            optional: true,
-        },
-        onComposerTextInputSendShortcut: {
-            type: Function,
-            optional: true,
-        },
-        onPaste: {
-            type: Function,
             optional: true,
         },
     },

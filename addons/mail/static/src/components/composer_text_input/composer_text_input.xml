@@ -3,14 +3,14 @@
 
     <t t-name="mail.ComposerTextInput" owl="1">
         <t t-if="composerView">
-            <div class="o_ComposerTextInput" t-attf-class="{{ className }}" t-on-paste="props.onPaste" t-ref="root">
+            <div class="o_ComposerTextInput" t-attf-class="{{ className }}" t-on-paste="composerView.onPasteTextInput" t-ref="root">
                 <t t-if="composerView.hasSuggestions">
                     <ComposerSuggestionList
                         composerViewLocalId="composerView.localId"
                         isBelow="props.hasMentionSuggestionsBelowPosition"
                     />
                 </t>
-                <textarea class="o_ComposerTextInput_textarea o_ComposerTextInput_textareaStyle" t-att-class="{ 'o-composer-is-compact': composerView.isCompact }" t-esc="composerView.composer.textInputContent" t-att-placeholder="composerView.composer.placeholder" t-on-click="_onClickTextarea" t-on-focusin="_onFocusinTextarea" t-on-focusout="_onFocusoutTextarea" t-on-keydown="_onKeydownTextarea" t-on-keyup="_onKeyupTextarea" t-on-input="_onInputTextarea" t-ref="textarea"/>
+                <textarea class="o_ComposerTextInput_textarea o_ComposerTextInput_textareaStyle" t-att-class="{ 'o-composer-is-compact': composerView.isCompact }" t-esc="composerView.composer.textInputContent" t-att-placeholder="composerView.composer.placeholder" t-on-click="_onClickTextarea" t-on-focusin="composerView.onFocusinTextarea" t-on-focusout="_onFocusoutTextarea" t-on-keydown="_onKeydownTextarea" t-on-keyup="_onKeyupTextarea" t-on-input="_onInputTextarea" t-ref="textarea"/>
                 <!--
                      This is an invisible textarea used to compute the composer
                      height based on the text content. We need it to downsize
