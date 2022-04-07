@@ -12,7 +12,7 @@
                         <i class="o_FollowerSubtypeList_closeButton close fa fa-times" aria-label="Close" t-on-click="_onClickCancel"/>
                     </header>
                     <main class="modal-body">
-                        <div class="o_FollowerSubtypeList_subtypes">
+                        <div class="o_FollowerSubtypeList_subtypes flex-column d-flex">
                             <t t-foreach="followerSubtypeList.followerSubtypeViews" t-as="followerSubtypeView" t-key="followerSubtypeView.localId">
                                 <FollowerSubtype
                                     className="'o_FollowerSubtypeList_subtype'"
