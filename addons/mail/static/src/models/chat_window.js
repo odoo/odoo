@@ -105,6 +105,16 @@ registerModel({
             this.manager.swap(this, lastVisible);
         },
         /**
+         * @param {MouseEvent} ev
+         */
+        async onClickCamera(ev) {
+            ev.stopPropagation();
+            if (this.thread.hasPendingRtcRequest) {
+                return;
+            }
+            await this.thread.toggleCall({ startWithVideo: true });
+        },
+        /**
          * Handles click on the "stop adding users" button.
          *
          * @param {MouseEvent} ev
