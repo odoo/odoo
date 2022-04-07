@@ -1718,7 +1718,7 @@ class Orderline extends PosModel {
         // 1) Flatten the taxes.
 
         var _collect_taxes = function(taxes, all_taxes){
-            taxes.sort(function (tax1, tax2) {
+            taxes = [...taxes].sort(function (tax1, tax2) {
                 return tax1.sequence - tax2.sequence;
             });
             _(taxes).each(function(tax){
