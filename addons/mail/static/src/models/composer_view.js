@@ -166,6 +166,15 @@ registerModel({
             this.composer.update(updateData);
         },
         /**
+         * Called when clicking on attachment button.
+         */
+        onClickAddAttachment() {
+            this.fileUploader.openBrowserFileUploader();
+            if (!this.messaging.device.isMobileDevice) {
+                this.update({ doFocus: true });
+            }
+        },
+        /**
          * Handles click on the emojis button.
          */
         onClickButtonEmojis() {
@@ -216,6 +225,12 @@ registerModel({
             this.update({ emojisPopoverView: clear() });
         },
         /**
+         * Called when clicking on "expand" button.
+         */
+        onClickFullComposer() {
+            this.openFullComposer();
+        },
+        /**
          * Handles click on the save link.
          *
          * @param {MouseEvent} ev
@@ -255,6 +270,21 @@ registerModel({
             this.insertSuggestion();
             this.closeSuggestions();
             this.update({ doFocus: true });
+        },
+        /**
+         * @param {KeyboardEvent} ev
+         */
+        onKeydown(ev) {
+            if (ev.key === 'Escape') {
+                if (isEventHandled(ev, 'ComposerTextInput.closeSuggestions')) {
+                    return;
+                }
+                if (isEventHandled(ev, 'Composer.closeEmojisPopover')) {
+                    return;
+                }
+                ev.preventDefault();
+                this.discard();
+            }
         },
         /**
          * @private
@@ -409,6 +439,28 @@ registerModel({
                     composer.update({ isPostingMessage: false });
                 }
             }
+        },
+        /**
+         * Send a message in the composer on related thread.
+         *
+         * Sending of the message could be aborted if it cannot be posted like if there are attachments
+         * currently uploading or if there is no text content and no attachments.
+         */
+        sendMessage() {
+            if (!this.composer.canPostMessage) {
+                if (this.composer.hasUploadingAttachment) {
+                    this.env.services['notification'].notify({
+                        message: this.env._t("Please wait while the file is uploading."),
+                        type: 'warning',
+                    });
+                }
+                return;
+            }
+            if (this.messageViewInEditing) {
+                this.updateMessage();
+                return;
+            }
+            this.postMessage();
         },
         /**
          * Sets the first suggestion as active. Main and extra records are

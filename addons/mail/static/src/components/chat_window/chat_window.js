@@ -2,7 +2,6 @@
 
 import { useUpdate } from '@mail/component_hooks/use_update';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { isEventHandled } from '@mail/utils/utils';
 
 const { Component } = owl;
 
@@ -41,40 +40,6 @@ export class ChatWindow extends Component {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
-    /**
-     * Save the scroll positions of the chat window in the store.
-     * This is useful in order to remount chat windows and keep previous
-     * scroll positions. This is necessary because when toggling on/off
-     * home menu, the chat windows have to be remade from scratch.
-     *
-     * @private
-     */
-    _saveThreadScrollTop() {
-        if (
-            !this.chatWindow ||
-            !this.chatWindow.threadView ||
-            !this.chatWindow.threadView.messageListView ||
-            !this.chatWindow.threadView.messageListView.component ||
-            !this.chatWindow.threadViewer
-        ) {
-            return;
-        }
-        if (
-            this.chatWindow.threadViewer.threadView &&
-            this.chatWindow.threadViewer.threadView.componentHintList.length > 0
-        ) {
-            // the current scroll position is likely incorrect due to the
-            // presence of hints to adjust it
-            return;
-        }
-        this.chatWindow.threadViewer.saveThreadCacheScrollHeightAsInitial(
-            this.chatWindow.threadView.messageListView.getScrollableElement().scrollHeight
-        );
-        this.chatWindow.threadViewer.saveThreadCacheScrollPositionsAsInitial(
-            this.chatWindow.threadView.messageListView.getScrollableElement().scrollTop
-        );
-    }
 
     /**
      * @private
@@ -153,14 +118,14 @@ export class ChatWindow extends Component {
      * @private
      */
     _onClickedHeader() {
-        if (this.messaging.device.isMobile) {
+        if (!this.chatWindow || this.messaging.device.isMobile) {
             return;
         }
         if (this.chatWindow.isFolded) {
             this.chatWindow.unfold();
             this.chatWindow.focus();
         } else {
-            this._saveThreadScrollTop();
+            this.chatWindow.saveThreadScrollTop();
             this.chatWindow.fold();
         }
     }
@@ -176,51 +141,6 @@ export class ChatWindow extends Component {
             return;
         }
         this.chatWindow.update({ isFocused: true });
-    }
-
-    /**
-     * Focus out the chat window.
-     *
-     * @private
-     */
-    _onFocusout() {
-        if (!this.chatWindow) {
-            // ignore focus out due to record being deleted
-            return;
-        }
-        this.chatWindow.update({ isFocused: false });
-    }
-
-    /**
-     * @private
-     * @param {KeyboardEvent} ev
-     */
-    _onKeydown(ev) {
-        if (!this.chatWindow) {
-            // prevent crash during delete
-            return;
-        }
-        switch (ev.key) {
-            case 'Tab':
-                ev.preventDefault();
-                if (ev.shiftKey) {
-                    this.chatWindow.focusPreviousVisibleUnfoldedChatWindow();
-                } else {
-                    this.chatWindow.focusNextVisibleUnfoldedChatWindow();
-                }
-                break;
-            case 'Escape':
-                if (isEventHandled(ev, 'ComposerTextInput.closeSuggestions')) {
-                    break;
-                }
-                if (isEventHandled(ev, 'Composer.closeEmojisPopover')) {
-                    break;
-                }
-                ev.preventDefault();
-                this.chatWindow.focusNextVisibleUnfoldedChatWindow();
-                this.chatWindow.close();
-                break;
-        }
     }
 
 }

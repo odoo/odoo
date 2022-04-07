@@ -3,7 +3,7 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
-import { markEventHandled } from '@mail/utils/utils';
+import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'ChatWindow',
@@ -104,6 +104,37 @@ registerModel({
             const lastVisible = this.manager.lastVisible;
             this.manager.swap(this, lastVisible);
         },
+        onClickFromChatWindowHiddenMenu() {
+            this.makeActive();
+            this.manager.closeHiddenMenu();
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        async onClickCamera(ev) {
+            ev.stopPropagation();
+            if (this.thread.hasPendingRtcRequest) {
+                return;
+            }
+            await this.thread.toggleCall({ startWithVideo: true });
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickClose(ev) {
+            ev.stopPropagation();
+            if (!this.exists()) {
+                return;
+            }
+            this.close();
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickExpand(ev) {
+            ev.stopPropagation();
+            this.expand();
+        },
         /**
          * Handles click on the "stop adding users" button.
          *
@@ -122,6 +153,30 @@ registerModel({
             if (this.threadViewer.threadView) {
                 this.threadViewer.threadView.addComponentHint('member-list-hidden');
             }
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        async onClickPhone(ev) {
+            ev.stopPropagation();
+            if (this.thread.hasPendingRtcRequest) {
+                return;
+            }
+            await this.thread.toggleCall();
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickShiftNext(ev) {
+            markEventHandled(ev, 'ChatWindowHeader.ClickShiftNext');
+            this.shiftNext();
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickShiftPrev(ev) {
+            markEventHandled(ev, 'ChatWindowHeader.ClickShiftPrev');
+            this.shiftPrev();
         },
         /**
          * Handles click on the "add users" button.
@@ -157,6 +212,75 @@ registerModel({
             if (this.exists()) {
                 this.update({ isFocused: true });
             }
+        },
+        /**
+         * Focus out the chat window.
+         */
+        onFocusout() {
+            if (!this.exists()) {
+                // ignore focus out due to record being deleted
+                return;
+            }
+            this.update({ isFocused: false });
+        },
+        /**
+         * @param {KeyboardEvent} ev
+         */
+        onKeydown(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            switch (ev.key) {
+                case 'Tab':
+                    ev.preventDefault();
+                    if (ev.shiftKey) {
+                        this.focusPreviousVisibleUnfoldedChatWindow();
+                    } else {
+                        this.focusNextVisibleUnfoldedChatWindow();
+                    }
+                    break;
+                case 'Escape':
+                    if (isEventHandled(ev, 'ComposerTextInput.closeSuggestions')) {
+                        break;
+                    }
+                    if (isEventHandled(ev, 'Composer.closeEmojisPopover')) {
+                        break;
+                    }
+                    ev.preventDefault();
+                    this.focusNextVisibleUnfoldedChatWindow();
+                    this.close();
+                    break;
+            }
+        },
+        /**
+         * Save the scroll positions of the chat window in the store.
+         * This is useful in order to remount chat windows and keep previous
+         * scroll positions. This is necessary because when toggling on/off
+         * home menu, the chat windows have to be remade from scratch.
+         */
+        saveThreadScrollTop() {
+            if (
+                !this.threadView ||
+                !this.threadView.messageListView ||
+                !this.threadView.messageListView.component ||
+                !this.threadViewer
+            ) {
+                return;
+            }
+            if (
+                this.threadViewer.threadView &&
+                this.threadViewer.threadView.componentHintList.length > 0
+            ) {
+                // the current scroll position is likely incorrect due to the
+                // presence of hints to adjust it
+                return;
+            }
+            this.threadViewer.saveThreadCacheScrollHeightAsInitial(
+                this.threadView.messageListView.getScrollableElement().scrollHeight
+            );
+            this.threadViewer.saveThreadCacheScrollPositionsAsInitial(
+                this.threadView.messageListView.getScrollableElement().scrollTop
+            );
         },
         /**
          * Swap this chat window with the previous one.

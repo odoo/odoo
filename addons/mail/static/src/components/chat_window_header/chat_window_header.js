@@ -1,10 +1,7 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import {
-    isEventHandled,
-    markEventHandled,
-} from '@mail/utils/utils';
+import { isEventHandled } from '@mail/utils/utils';
 
 const { Component } = owl;
 
@@ -43,69 +40,6 @@ export class ChatWindowHeader extends Component {
         if (this.props.onClicked) {
             this.props.onClicked({ chatWindow });
         }
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickClose(ev) {
-        ev.stopPropagation();
-        if (!this.chatWindow) {
-            return;
-        }
-        this.chatWindow.close();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    async _onClickCamera(ev) {
-        ev.stopPropagation();
-        if (this.chatWindow.thread.hasPendingRtcRequest) {
-            return;
-        }
-        await this.chatWindow.thread.toggleCall({ startWithVideo: true });
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    async _onClickPhone(ev) {
-        ev.stopPropagation();
-        if (this.chatWindow.thread.hasPendingRtcRequest) {
-            return;
-        }
-        await this.chatWindow.thread.toggleCall();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickExpand(ev) {
-        ev.stopPropagation();
-        this.chatWindow.expand();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickShiftPrev(ev) {
-        markEventHandled(ev, 'ChatWindowHeader.ClickShiftPrev');
-        this.chatWindow.shiftPrev();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickShiftNext(ev) {
-        markEventHandled(ev, 'ChatWindowHeader.ClickShiftNext');
-        this.chatWindow.shiftNext();
     }
 
 }

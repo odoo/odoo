@@ -12,16 +12,11 @@ export class ChatWindowHiddenMenu extends Component {
     setup() {
         super.setup();
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
-        this._onClickedChatWindow = this._onClickedChatWindow.bind(this);
         /**
          * Reference of the dropup list. Useful to auto-set max height based on
          * browser screen height.
          */
         this._listRef = useRef('list');
-        /**
-         * The intent of the toggle button depends on the last rendered state.
-         */
-        this._wasMenuOpen;
         onMounted(() => this._mounted());
         onPatched(() => this._patched());
         onWillUnmount(() => this._willUnmount());
@@ -59,7 +54,6 @@ export class ChatWindowHiddenMenu extends Component {
         }
         this._applyListHeight();
         this._applyOffset();
-        this._wasMenuOpen = this.messaging.chatWindowManager.isHiddenMenuOpen;
     }
 
     /**
@@ -98,29 +92,6 @@ export class ChatWindowHiddenMenu extends Component {
         if (!this.root.el || this.root.el.contains(ev.target)) {
             return;
         }
-        this.messaging.chatWindowManager.closeHiddenMenu();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickToggle(ev) {
-        if (this._wasMenuOpen) {
-            this.messaging.chatWindowManager.closeHiddenMenu();
-        } else {
-            this.messaging.chatWindowManager.openHiddenMenu();
-        }
-    }
-
-    /**
-     * @private
-     * @param {Object} detail
-     * @param {ChatWindow} detail.chatWindow
-     */
-    _onClickedChatWindow(detail) {
-        const chatWindow = detail.chatWindow;
-        chatWindow.makeActive();
         this.messaging.chatWindowManager.closeHiddenMenu();
     }
 
