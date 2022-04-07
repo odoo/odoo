@@ -104,16 +104,21 @@ class Project(models.Model):
         if self.analytic_account_id:
             purchase_order_line_read = self.env['purchase.order.line'].sudo().search_read([
                 ('account_analytic_id', 'in', self.analytic_account_id.ids),
-                ('state', '!=', 'cancel'),
-                '|', ('qty_invoiced', '>', 0), ('qty_to_invoice', '>', 0),
-            ], ['qty_invoiced', 'qty_to_invoice', 'price_unit'])
+                ('state', 'in', ['purchase', 'done']),
+                '|',
+                ('qty_invoiced', '>', 0),
+                '|', ('qty_to_invoice', '>', 0), ('product_uom_qty', '>', 0),
+            ], ['qty_invoiced', 'qty_to_invoice', 'product_uom_qty', 'price_unit'])
             if purchase_order_line_read:
                 amount_invoiced = amount_to_invoice = 0.0
                 purchase_order_line_ids = []
                 for pol_read in purchase_order_line_read:
                     price_unit = pol_read['price_unit']
                     amount_invoiced -= price_unit * pol_read['qty_invoiced'] if pol_read['qty_invoiced'] > 0 else 0.0
-                    amount_to_invoice -= price_unit * pol_read['qty_to_invoice'] if pol_read['qty_to_invoice'] > 0 else 0.0
+                    if pol_read['qty_to_invoice'] > 0:
+                        amount_to_invoice -= price_unit * pol_read['qty_to_invoice']
+                    else:
+                        amount_to_invoice -= price_unit * (pol_read['product_uom_qty'] - pol_read['qty_invoiced'])
                     purchase_order_line_ids.append(pol_read['id'])
                 costs = profitability_items['costs']
                 section_id = 'purchase_order'
