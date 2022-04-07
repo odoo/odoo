@@ -30,6 +30,7 @@ class SlidePartnerRelation(models.Model):
 class Slide(models.Model):
     _inherit = 'slide.slide'
 
+    name = fields.Char(compute='_compute_name', readonly=False, store=True)
     slide_category = fields.Selection(selection_add=[
         ('certification', 'Certification')
     ], ondelete={'certification': 'set default'})
@@ -46,16 +47,17 @@ class Slide(models.Model):
         ('check_certification_preview', "CHECK(slide_category != 'certification' OR is_preview = False)", "A slide of type certification cannot be previewed."),
     ]
 
+    @api.depends('survey_id')
+    def _compute_name(self):
+        for slide in self:
+            if not slide.name and slide.survey_id:
+                slide.name = slide.survey_id.title
+
     @api.depends('slide_category')
     def _compute_is_preview(self):
         for slide in self:
             if slide.slide_category == 'certification' or not slide.is_preview:
                 slide.is_preview = False
-
-    @api.onchange('survey_id')
-    def _on_change_survey_id(self):
-        if self.survey_id:
-            self.slide_category = 'certification'
 
     @api.depends('slide_category', 'source_type')
     def _compute_slide_type(self):
