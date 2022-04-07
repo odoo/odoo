@@ -386,6 +386,8 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
 
             wSaleUtils.updateCartNavBar(data);
             wSaleUtils.showWarning(data.warning);
+            // Propagating the change to the express checkout forms
+            core.bus.trigger('cart_amount_changed', data.amount, data.minor_amount);
         });
     },
     /**

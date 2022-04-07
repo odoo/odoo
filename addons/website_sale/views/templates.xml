@@ -1204,30 +1204,30 @@
                                     </div>
                                     <t t-call="website_sale.cart_lines"/>
                                     <div class="clearfix" />
-                                    <a role="button" href="/shop" class="btn btn-secondary mb32 d-none d-xl-inline-block">
-                                        <span class="fa fa-chevron-left" />
-                                        <span class="">Continue Shopping</span>
-                                    </a>
-                                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary float-end d-none d-xl-inline-block" href="/shop/checkout?express=1">
-                                        <span class="">Process Checkout</span>
-                                        <span class="fa fa-chevron-right" />
-                                    </a>
+                                    <div class="d-xl-none mb-2" id="o_cart_summary">
+                                        <t t-call="website_sale.short_cart_summary"/>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <a role="button" href="/shop" class="btn btn-secondary mb32">
+                                                <span class="fa fa-chevron-left" />
+                                                <span>Continue<span class="d-none d-md-inline"> Shopping</span></span>
+                                            </a>
+                                        </div>
+                                        <div class="d-flex flex-column" t-if="website_sale_order and website_sale_order.website_order_line">
+                                            <a role="button" class="btn btn-primary float-end" href="/shop/checkout?express=1">
+                                                <span>Process Checkout</span>
+                                                <span class="fa fa-chevron-right"/>
+                                            </a>
+                                            <t t-call="payment.express_checkout"/>
+                                        </div>
+                                    </div>
                                     <div class="oe_structure" id="oe_structure_website_sale_cart_1"/>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-xl-4" id="o_cart_summary">
+                        <div class="d-none d-xl-block col-xl-4" id="o_cart_summary">
                             <t t-call="website_sale.short_cart_summary"/>
-                            <div class="d-xl-none mt8">
-                                <a role="button" href="/shop" class="btn btn-secondary mb32">
-                                    <span class="fa fa-chevron-left" />
-                                    Continue<span class="d-none d-md-inline"> Shopping</span>
-                                </a>
-                                <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary float-end" href="/shop/checkout?express=1">
-                                    <span class="">Process Checkout</span>
-                                    <span class="fa fa-chevron-right" />
-                                </a>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -1858,8 +1858,8 @@
                                 <t t-call="website_sale.payment_confirmation_status"/>
                                 <div class="card mt-3">
                                   <div class="card-body">
-                                    <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
-                                    <div><b>Billing <t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b><span t-esc='order.partner_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/></div>
+                                    <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_invoice_id or only_services)" />
+                                    <div><b>Billing <t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b><span t-esc='order.partner_invoice_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/></div>
                                     <div t-if="not same_shipping and not only_services" groups="account.group_delivery_invoice_address"><b>Shipping: </b><span t-esc='order.partner_shipping_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"  class="address-inline"/></div>
                                   </div>
                                 </div>
@@ -1882,7 +1882,7 @@
 
     <template id="total">
         <div id="cart_total" t-att-class="extra_class or ''" t-if="website_sale_order and website_sale_order.website_order_line">
-            <table class="table">
+            <table class="table mb-0">
                   <tr id="empty">
                       <t t-if='not no_rowspan'><td rowspan="10" class="border-0"/></t>
                       <td class="col-md-2 col-3 border-0"></td>
