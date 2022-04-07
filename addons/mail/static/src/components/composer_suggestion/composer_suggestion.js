@@ -48,19 +48,6 @@ export class ComposerSuggestion extends Component {
         }
     }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onClick(ev) {
-        ev.preventDefault();
-        this.composerSuggestion.composerViewOwner.onClickSuggestion(this.composerSuggestion);
-    }
-
 }
 
 Object.assign(ComposerSuggestion, {

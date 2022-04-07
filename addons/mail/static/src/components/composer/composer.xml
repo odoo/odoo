@@ -77,8 +77,6 @@
                         }"
                         localId="composerView.localId"
                         hasMentionSuggestionsBelowPosition="props.hasMentionSuggestionsBelowPosition"
-                        onComposerTextInputSendShortcut="_onComposerTextInputSendShortcut"
-                        onPaste="_onPasteTextInput"
                         t-key="composerView.localId"
                     />
                     <div class="o_Composer_buttons" t-att-class="{ 'o-composer-is-compact': composerView.isCompact, 'o-mobile': messaging.device.isMobile, 'o-messaging-in-editing': composerView and composerView.messageViewInEditing }">
@@ -150,14 +148,14 @@
                     }"
                     t-att-disabled="!composerView.composer.canPostMessage ? 'disabled' : ''"
                     type="button"
-                    t-on-click="_onClickSend"
+                    t-on-click="composerView.onClickSend"
                 >
                     <t t-if="!messaging.device.isMobile"><t t-esc="composerView.sendButtonText"/></t>
                     <t t-else=""><i class="fa fa-paper-plane-o"/></t>
                 </button>
             </t>
             <t t-if="!messaging.device.isMobile and props.hasDiscardButton">
-                <button class="o_Composer_actionButton o-last o_Composer_button o_Composer_buttonDiscard btn btn-secondary" t-att-class="{ 'o-composer-is-compact': composerView.isCompact, 'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar }" type="button" t-on-click="_onClickDiscard">
+                <button class="o_Composer_actionButton o-last o_Composer_button o_Composer_buttonDiscard btn btn-secondary" t-att-class="{ 'o-composer-is-compact': composerView.isCompact, 'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar }" type="button" t-on-click="composerView.onClickDiscard">
                     Discard
                 </button>
             </t>
