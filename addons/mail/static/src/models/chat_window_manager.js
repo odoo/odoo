@@ -76,6 +76,16 @@ registerModel({
                 }
             }
         },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickHiddenMenuToggler(ev) {
+            if (this.isHiddenMenuOpen) {
+                this.closeHiddenMenu();
+            } else {
+                this.openHiddenMenu();
+            }
+        },
         openHiddenMenu() {
             this.update({ isHiddenMenuOpen: true });
         },
