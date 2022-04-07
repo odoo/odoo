@@ -28,8 +28,8 @@ export class DateRangeField extends Component {
                         timePickerIncrement: 5,
                         autoUpdateInput: false,
                         locale: {
-                            // applyLabel: this.env._t("Apply"),
-                            // cancelLabel: this.env._t("Cancel"),
+                            applyLabel: this.env._t("Apply"),
+                            cancelLabel: this.env._t("Cancel"),
                             format: this.isDateTime
                                 ? localization.dateTimeFormat
                                 : localization.dateFormat,
@@ -75,7 +75,7 @@ export class DateRangeField extends Component {
         let formattedValue;
         try {
             formattedValue = formatters.get(format)(value, {
-                timezone: this.isDateTime,
+                timezone: true,
             });
         } catch {
             this.props.setAsInvalid(this.props.name);
@@ -103,11 +103,13 @@ export class DateRangeField extends Component {
     }
 
     async onPickerApply(ev, picker) {
-        let start = DateTime.fromJSDate(picker.startDate.utc().toDate());
-        let end = DateTime.fromJSDate(picker.endDate.utc().toDate());
-        if (!this.isDateTime) {
-            start = start.startOf("day");
-            end = end.startOf("day");
+        let start, end;
+        if (this.isDateTime) {
+            start = DateTime.fromJSDate(picker.startDate.utc().toDate());
+            end = DateTime.fromJSDate(picker.endDate.utc().toDate());
+        } else {
+            start = DateTime.fromJSDate(picker.startDate.startOf("day").toDate());
+            end = DateTime.fromJSDate(picker.endDate.startOf("day").toDate());
         }
         console.log({
             "picker start": picker.startDate,
