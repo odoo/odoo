@@ -2141,6 +2141,9 @@ var MockServer = Class.extend({
                 const removedRecordIds = originalRecordIds.filter(recordId => Number.isInteger(recordId) && !relatedRecordIds.includes(recordId));
                 for (const removedRecordId of removedRecordIds) {
                     const removedRecord = this.data[comodelName].records.find(record => record.id === removedRecordId);
+                    if (!removedRecord) {
+                        continue;
+                    }
                     let inverseFieldNewValue = false;
                     if (Array.isArray(removedRecord[inverseFieldName])) {
                         inverseFieldNewValue = removedRecord[inverseFieldName].filter(id => id !== recordId);
