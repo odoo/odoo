@@ -9,14 +9,16 @@
     'description': """Stripe Payment Acquirer""",
     'depends': ['payment'],
     'data': [
+        'views/payment_stripe_templates.xml',
+        'views/payment_templates.xml',  # Only load the SDK on pages with a payment form.
         'views/payment_views.xml',
-        'views/payment_templates.xml',
-        'data/payment_acquirer_data.xml',
+        'data/payment_acquirer_data.xml',  # Depends on views/payment_stripe_templates.xml
     ],
     'application': True,
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
+            'payment_stripe/static/src/js/express_checkout_form.js',
             'payment_stripe/static/src/js/payment_form.js',
         ],
     },

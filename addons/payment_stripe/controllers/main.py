@@ -12,6 +12,7 @@ from werkzeug.exceptions import Forbidden
 from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
+from odoo.tools.misc import file_open
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_stripe import utils as stripe_utils
@@ -25,6 +26,7 @@ class StripeController(http.Controller):
     _checkout_return_url = '/payment/stripe/checkout_return'
     _validation_return_url = '/payment/stripe/validation_return'
     _webhook_url = '/payment/stripe/webhook'
+    _apple_pay_domain_association_url = '/.well-known/apple-developer-merchantid-domain-association'
     WEBHOOK_AGE_TOLERANCE = 10*60  # seconds
 
     @http.route(_checkout_return_url, type='http', auth='public', csrf=False)
@@ -237,3 +239,20 @@ class StripeController(http.Controller):
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("received notification with invalid signature")
             raise Forbidden()
+
+    @http.route(_apple_pay_domain_association_url, type='http', auth='public', csrf=False)
+    def stripe_apple_pay_get_domain_association_file(self):
+        """ Get the domain association file for Stripe's Apple Pay.
+
+        Stripe handles the process of "merchant validation" described in Apple's documentation for
+        Apple Pay on the Web. Stripe and Apple will access this route to check the content of the
+        file and verify that the web domain is registered.
+
+        See https://stripe.com/docs/stripe-js/elements/payment-request-button#verifying-your-domain-with-apple-pay.
+
+        :return: The content of the domain association file.
+        :rtype: str
+        """
+        return file_open(
+            'payment_stripe/static/files/apple-developer-merchantid-domain-association'
+        ).read()

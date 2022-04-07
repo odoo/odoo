@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+   <template id="express_checkout_form">
+        <div name="o_express_checkout_container"
+             t-attf-id="o_stripe_express_checkout_container_{{acquirer_sudo.id}}"
+             t-att-data-acquirer-id="acquirer_sudo.id"
+             t-att-data-provider="acquirer_sudo.provider"
+             t-att-data-stripe-publishable-key="acquirer_sudo.stripe_publishable_key"
+             t-att-data-country-code="acquirer_sudo.company_id.country_id.code"
+             class="w-100 mt-2"/>
+   </template>
+
+</odoo>

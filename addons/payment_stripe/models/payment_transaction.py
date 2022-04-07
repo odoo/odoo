@@ -35,11 +35,18 @@ class PaymentTransaction(models.Model):
         if self.provider != 'stripe' or self.operation == 'online_token':
             return res
 
-        checkout_session = self._stripe_create_checkout_session()
-        return {
-            'publishable_key': stripe_utils.get_publishable_key(self.acquirer_id),
-            'session_id': checkout_session['id'],
-        }
+        if self.operation == 'online_redirect':
+            checkout_session = self._stripe_create_checkout_session()
+            return {
+                'publishable_key': stripe_utils.get_publishable_key(self.acquirer_id),
+                'session_id': checkout_session['id'],
+            }
+        else:  # Express checkout.
+            payment_intent = self._stripe_create_payment_intent()
+            self.stripe_payment_intent = payment_intent['id']
+            return {
+                'client_secret': payment_intent['client_secret'],
+            }
 
     def _stripe_create_checkout_session(self):
         """ Create and return a Checkout Session.
@@ -203,14 +210,21 @@ class PaymentTransaction(models.Model):
         :return: The Payment Intent
         :rtype: dict
         """
-        if not self.token_id.stripe_payment_method:  # Pre-SCA token -> migrate it
-            self.token_id._stripe_sca_migrate_customer()
+        if self.operation in ['online_token', 'offline']:
+            if not self.token_id.stripe_payment_method:  # Pre-SCA token -> migrate it
+                self.token_id._stripe_sca_migrate_customer()
 
-        response = self.acquirer_id._stripe_make_request(
-            'payment_intents',
-            payload=self._stripe_prepare_payment_intent_payload(),
-            offline=self.operation == 'offline',
-        )
+            response = self.acquirer_id._stripe_make_request(
+                'payment_intents',
+                payload=self._stripe_prepare_payment_intent_payload(payment_by_token=True),
+                offline=self.operation == 'offline',
+            )
+        else:  # 'online_direct' (express checkout).
+            response = self.acquirer_id._stripe_make_request(
+                'payment_intents',
+                payload=self._stripe_prepare_payment_intent_payload(),
+            )
+
         if 'error' not in response:
             payment_intent = response
         else:  # A processing error was returned in place of the payment intent
@@ -223,25 +237,30 @@ class PaymentTransaction(models.Model):
 
         return payment_intent
 
-    def _stripe_prepare_payment_intent_payload(self):
+    def _stripe_prepare_payment_intent_payload(self, payment_by_token=False):
         """ Prepare the payload for the creation of a payment intent in Stripe format.
 
         Note: This method serves as a hook for modules that would fully implement Stripe Connect.
         Note: self.ensure_one()
 
+        :param boolean payment_by_token: Whether the payment is made by token or not.
         :return: The Stripe-formatted payload for the payment intent request
         :rtype: dict
         """
-        return {
+        payment_intent_payload = {
             'amount': payment_utils.to_minor_currency_units(self.amount, self.currency_id),
             'currency': self.currency_id.name.lower(),
-            'confirm': True,
-            'customer': self.token_id.acquirer_ref,
-            'off_session': True,
-            'payment_method': self.token_id.stripe_payment_method,
             'description': self.reference,
             'capture_method': 'manual' if self.acquirer_id.capture_manually else 'automatic',
         }
+        if payment_by_token:
+            payment_intent_payload.update(
+                confirm=True,
+                customer=self.token_id.acquirer_ref,
+                off_session=True,
+                payment_method=self.token_id.stripe_payment_method,
+            )
+        return payment_intent_payload
 
     def _send_refund_request(self, amount_to_refund=None, create_refund_transaction=True):
         """ Override of payment to send a refund request to Stripe.

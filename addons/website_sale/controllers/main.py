@@ -13,6 +13,7 @@ from odoo.fields import Command
 from odoo.http import request
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.payment.controllers.post_processing import PaymentPostProcessing
 from odoo.addons.website.controllers.main import QueryURL
@@ -149,6 +150,19 @@ class Website(main.Website):
         }
 
 class WebsiteSale(http.Controller):
+    _express_checkout_route = '/shop/express'
+
+    WRITABLE_PARTNER_FIELDS = [
+        'name',
+        'email',
+        'phone',
+        'street',
+        'street2',
+        'city',
+        'zip',
+        'country_id',
+        'state_id',
+    ]
 
     def _get_search_order(self, post):
         # OrderBy will be parsed in orm and so no direct sql injection
@@ -725,6 +739,7 @@ class WebsiteSale(http.Controller):
         if order:
             order.order_line.filtered(lambda l: not l.product_id.active).unlink()
             values['suggested_products'] = order._cart_accessories()
+            values.update(self._get_express_shop_payment_values(order))
 
         if post.get('type') == 'popover':
             # force no-cache so IE11 doesn't cache this XHR
@@ -808,6 +823,10 @@ class WebsiteSale(http.Controller):
             return values
 
         values['cart_quantity'] = order.cart_quantity
+        values['minor_amount'] = payment_utils.to_minor_currency_units(
+            order.amount_total, order.currency_id
+        ),
+        values['amount'] = order.amount_total
 
         if not display:
             return values
@@ -988,8 +1007,12 @@ class WebsiteSale(http.Controller):
                 Partner.browse(partner_id).sudo().write(checkout)
         return partner_id
 
-    def values_preprocess(self, order, mode, values):
-        # Convert the values for many2one fields to integer since they are used as IDs
+    def values_preprocess(self, values):
+        """ Convert the values for many2one fields to integer since they are used as IDs.
+
+        :param dict values: partner fields to pre-process.
+        :return dict: partner fields pre-processed.
+        """
         partner_fields = request.env['res.partner']._fields
         return {
             k: (bool(v) and int(v)) if k in partner_fields and partner_fields[k].type == 'many2one' else v
@@ -1069,7 +1092,7 @@ class WebsiteSale(http.Controller):
 
         # IF POSTED
         if 'submitted' in kw and request.httprequest.method == "POST":
-            pre_values = self.values_preprocess(order, mode, kw)
+            pre_values = self.values_preprocess(kw)
             errors, error_msg = self.checkout_form_validate(mode, kw, pre_values)
             post, errors, error_msg = self.values_postprocess(order, mode, pre_values, errors, error_msg)
 
@@ -1116,6 +1139,143 @@ class WebsiteSale(http.Controller):
         }
         render_values.update(self._get_country_related_render_values(kw, render_values))
         return request.render("website_sale.address", render_values)
+
+    @http.route(
+        _express_checkout_route, type='json', methods=['POST'], auth="public", website=True,
+        sitemap=False
+    )
+    def process_express_checkout(self, billing_address):
+        """ Records the partner information on the order when using express checkout flow.
+
+        Depending on whether the partner is registered and logged in, either creates a new partner
+        or uses an existing one that matches all received data.
+
+        :param dict billing_address: billing information sent by the express payment form.
+        :return int: The order's partner id.
+        """
+        order_sudo = request.website.sale_get_order()
+        public_partner = request.website.partner_id
+
+        # Update the partner with all the information
+        self._include_country_and_state_in_address(billing_address)
+
+        if order_sudo.partner_id == public_partner:
+            billing_partner_id = self._create_or_edit_partner(billing_address, type='invoice')
+            order_sudo.partner_id = billing_partner_id
+            # Pricelist are recomputed every time the partner is changed. We don't want to recompute
+            # the price with another pricelist at this state since the customer has already accepted
+            # the amount and validated the payment.
+            order_sudo.env.remove_to_compute(
+                order_sudo.env['sale.order']._fields['pricelist_id'], order_sudo
+            )
+            order_sudo.message_partner_ids = request.env['res.partner'].browse(billing_partner_id)
+        elif any(billing_address[k] != order_sudo.partner_invoice_id[k] for k in billing_address):
+            # Check if a child partner doesn't already exist with the same informations. The
+            # phone isn't always checked because it isn't sent in shipping information with
+            # Google Pay.
+            child_partner_id = self._find_child_partner(
+                order_sudo.partner_id.commercial_partner_id.id, billing_address
+            )
+            if child_partner_id:
+                order_sudo.partner_invoice_id = child_partner_id
+            else:
+                billing_partner_id = self._create_or_edit_partner(
+                    billing_address,
+                    type='invoice',
+                    parent_id=order_sudo.partner_id.id,
+                )
+                order_sudo.partner_invoice_id = billing_partner_id
+
+        # In a non-express flow, `sale_last_order_id` would be added in the session before the
+        # payment. As we skip all the steps with the express checkout, `sale_last_order_id` must be
+        # assigned to ensure the right behavior from `shop_payment_confirmation()`.
+        request.session['sale_last_order_id'] = order_sudo.id
+
+        return order_sudo.partner_id.id
+
+    def _find_child_partner(self, commercial_partner_id, address):
+        """ Find a child partner for a specified address
+
+        Compare all keys in the `address` dict with the same keys on the partner object and return
+        the id of the first partner that have the same value than in the dict for all the keys.
+
+        :param int commercial_partner_id: commercial partner for whom we need to find his children.
+        :param dict address: dictionary of address fields.
+        :return int: id of the first child partner that match the criteria, if any.
+        """
+        partners_sudo = request.env['res.partner'].with_context(show_address=1).sudo().search([
+            ('id', 'child_of', commercial_partner_id),
+        ])
+        for partner_sudo in partners_sudo:
+            if all(address[k] == partner_sudo[k] for k in address):
+                return partner_sudo.id
+        return False
+
+    def _include_country_and_state_in_address(self, address):
+        """ This function is used to include country_id and state_id in address.
+
+        Fetch country and state and include the records in address. The object is included to
+        simplify the comparison of addresses.
+
+        :param dict address: An address with country and state defined in ISO 3166.
+        :return None:
+        """
+        country = request.env["res.country"].search([
+            ('code', '=', address.pop('country')),
+        ], limit=1)
+        state = request.env["res.country.state"].search([
+            ('code', '=', address.pop('state')),
+        ], limit=1)
+        address.update(country_id=country, state_id=state)
+
+    def _create_or_edit_partner(self, partner_details, edit=False, **custom_values):
+        """ Create or update a partner
+
+        To create a partner, this controller usually calls `values_preprocess()`, then
+        `checkout_form_validate()`, then `values_postprocess()` and finally `_checkout_form_save()`.
+        Since these methods are very specific to the checkout form, this method makes it possible to
+        create  a partner for more specific flows like express payment, which does not require all
+        the checks carried out by the previous methods. Parts of code in this method come from those.
+
+        :param dict partner_details: The values needed to create the partner or to edit the partner.
+        :param bool edit: Whether edit an existing partner or create one, defaults to False.
+        :param dict custom_values: Optional custom values for the creation or edition.
+        :return int: The id of the partner created or edited
+        """
+        values = self.values_preprocess(partner_details)
+
+        # Ensure that we won't write on unallowed fields.
+        sanitized_values = {
+            k: v for k, v in values.items() if k in self.WRITABLE_PARTNER_FIELDS
+        }
+        sanitized_custom_values = {
+            k: v for k, v in custom_values.items()
+            if k in self.WRITABLE_PARTNER_FIELDS + ['partner_id', 'parent_id', 'type']
+        }
+
+        if request.website.specific_user_account:
+            sanitized_values['website_id'] = request.website.id
+
+        lang = request.lang.code if request.lang.code in request.website.mapped(
+            'language_ids.code'
+        ) else None
+        if lang:
+            sanitized_values['lang'] = lang
+
+        partner_id = sanitized_custom_values.get('partner_id')
+        if edit and partner_id:
+            request.env['res.partner'].browse(partner_id).sudo().write(sanitized_values)
+        else:
+            sanitized_values = dict(sanitized_values, **{
+                'company_id': request.website.company_id.id,
+                'team_id': request.website.salesteam_id and request.website.salesteam_id.id,
+                'user_id': request.website.salesperson_id.id,
+                **sanitized_custom_values
+            })
+            partner_id = request.env['res.partner'].sudo().with_context(
+                tracking_disable=True
+            ).create(sanitized_values).id
+        return partner_id
 
     def _get_country_related_render_values(self, kw, render_values):
         '''
@@ -1217,6 +1377,39 @@ class WebsiteSale(http.Controller):
     # Payment
     # ------------------------------------------------------
 
+    def _get_express_shop_payment_values(self, order, **kwargs):
+        logged_in = not request.website.is_public_user()
+        acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
+            order.company_id.id,
+            order.partner_id.id,
+            order.amount_total,
+            currency_id=order.currency_id.id,
+            is_express_checkout=True,
+            sale_order_id=order.id,
+            website_id=request.website.id,
+        )  # In sudo mode to read the fields of acquirers, order and partner (if not logged in)
+        fees_by_acquirer = {
+            acq_sudo: acq_sudo._compute_fees(
+                order.amount_total, order.currency_id, order.partner_id.country_id
+            ) for acq_sudo in acquirers_sudo.filtered('fees_active')
+        }
+        return {
+            # Payment express form values
+            'acquirers_sudo': acquirers_sudo,
+            'fees_by_acquirer': fees_by_acquirer,
+            'amount': order.amount_total,
+            'minor_amount': payment_utils.to_minor_currency_units(
+               order.amount_total, order.currency_id
+            ),
+            'merchant_name': request.website.name,
+            'currency': order.currency_id,
+            'partner_id': order.partner_id.id if logged_in else -1,
+            'payment_access_token': order._portal_ensure_token(),
+            'transaction_route': f'/shop/payment/transaction/{order.id}',
+            'express_route': self._express_checkout_route,
+            'landing_route': '/shop/payment/validate',
+        }
+
     def _get_shop_payment_values(self, order, **kwargs):
         logged_in = not request.env.user._is_public()
         acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
@@ -1310,8 +1503,8 @@ class WebsiteSale(http.Controller):
             assert order.id == request.session.get('sale_last_order_id')
 
         if transaction_id:
-            tx = request.env['payment.transaction'].sudo().browse(transaction_id)
-            assert tx in order.transaction_ids()
+            tx = request.env['payment.transaction'].sudo().browse(int(transaction_id))
+            assert tx in order.transaction_ids
         elif order:
             tx = order.get_portal_last_transaction()
         else:
@@ -1523,6 +1716,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
             'sale_order_id': order_id,  # Include the SO to allow Subscriptions to tokenize the tx
         })
         kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values
+        if not kwargs.get('amount'):
+            kwargs['amount'] = order_sudo.amount_total
         tx_sudo = self._create_transaction(
             custom_create_values={'sale_order_ids': [Command.set([order_id])]}, **kwargs,
         )
@@ -1534,6 +1729,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if last_tx:
             PaymentPostProcessing.remove_transactions(last_tx)
         request.session['__website_sale_last_tx_id'] = tx_sudo.id
+        if kwargs.pop('add_id_to_landing_route', False):
+            tx_sudo.landing_route += f'?transaction_id={tx_sudo.id}'
 
         self._validate_transaction_for_order(tx_sudo, order_id)
 
