@@ -25,9 +25,9 @@
                                 <div class="mt16">
                                     <div class="content-group" id="template_rfq_default">
                                         <label for="rfq_mail_template_id" class="col-lg-4 o_light_label"/>
-                                        <field name="rfq_mail_template_id" class="oe_inline"/>
+                                        <field name="rfq_mail_template_id" class="oe_inline" context="{'default_model': 'purchase.order'}"/>
                                         <label for="order_mail_template_id" class="col-lg-4 o_light_label"/>
-                                        <field name="order_mail_template_id" class="oe_inline"/>
+                                        <field name="order_mail_template_id" class="oe_inline" context="{'default_model': 'purchase.order'}"/>
                                     </div>
                                 </div>
                             </div>

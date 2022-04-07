@@ -2031,6 +2031,10 @@ class MailThread(models.AbstractModel):
         res_id = kwargs.get('res_id', self.ids and self.ids[0] or 0)
         res_ids = kwargs.get('res_id') and [kwargs['res_id']] or self.ids
 
+        template = self.env['mail.template'].browse(template_id).exists()
+        if not template:
+            template_id = False
+
         # Create the composer
         composer = self.env['mail.compose.message'].with_context(
             active_id=res_id,

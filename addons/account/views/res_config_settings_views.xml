@@ -193,9 +193,9 @@
                                     <div class="mt16">
                                         <div class="content-group" id="template_default">
                                             <label for="account_invoice_mail_template_id" class="col-lg-4 o_light_label"/>
-                                            <field name="account_invoice_mail_template_id" class="oe_inline"/>
+                                            <field name="account_invoice_mail_template_id" class="oe_inline" context="{'default_model': 'account.move'}"/>
                                             <label for="credit_note_mail_template_id" class="col-lg-4 o_light_label"/>
-                                            <field name="credit_note_mail_template_id" class="oe_inline"/>
+                                            <field name="credit_note_mail_template_id" class="oe_inline" context="{'default_model': 'account.move'}"/>
                                         </div>
                                     </div>
                                 </div>

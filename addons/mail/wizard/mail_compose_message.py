@@ -536,15 +536,15 @@ class MailComposer(models.TransientModel):
             - normal mode: return rendered values
             /!\ for x2many field, this onchange return command instead of ids
         """
-        if template_id and composition_mode == 'mass_mail':
-            template = self.env['mail.template'].browse(template_id)
+        template = self.env['mail.template'].browse(template_id).exists()
+        if template and composition_mode == 'mass_mail':
             fields = ['subject', 'body_html', 'email_from', 'reply_to', 'mail_server_id']
             values = dict((field, getattr(template, field)) for field in fields if getattr(template, field))
             if template.attachment_ids:
                 values['attachment_ids'] = [att.id for att in template.attachment_ids]
             if template.mail_server_id:
                 values['mail_server_id'] = template.mail_server_id.id
-        elif template_id:
+        elif template:
             values = self.generate_email_for_composer(
                 template_id, [res_id],
                 ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'attachment_ids', 'mail_server_id']
