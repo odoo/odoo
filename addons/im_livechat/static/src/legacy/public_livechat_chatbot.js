@@ -410,7 +410,7 @@ const QWeb = core.qweb;
         this.isTypingTimeout = setTimeout(() => {
             this._chatWindow.$('.o_mail_thread_content').append(
                 $(QWeb.render('im_livechat.legacy.chatbot.is_typing_message', {
-                    'chatbotImageSrc': this._chatbot.chatbot_avatar_url,
+                    'chatbotImageSrc': `/im_livechat/operator/${this._livechat.getOperatorPID()[0]}/avatar`,
                     'chatbotName': this._chatbot.chatbot_name,
                     'isWelcomeMessage': isWelcomeMessage,
                 }))
