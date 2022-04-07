@@ -13,26 +13,30 @@ const { useRef, useEffect } = owl;
  */
 export function useNumpadDecimal() {
     const decimalPoint = localization.decimalPoint;
+    const listeners = [];
     let ref = useRef("numpadDecimal");
+    const handler = (ev) => {
+        if (
+            !([".", ","].includes(ev.key) && ev.code === "NumpadDecimal") ||
+            ev.key === decimalPoint
+        ) {
+            return;
+        }
+        ev.preventDefault();
+        ev.target.value += decimalPoint;
+    };
     useEffect(
         (el) => {
-            const handler = (ev, input) => {
-                if (
-                    !([".", ","].includes(ev.key) && ev.code === "NumpadDecimal") ||
-                    ev.key === decimalPoint
-                ) {
-                    return;
-                }
-                ev.preventDefault();
-                input.value += decimalPoint;
-            };
             if (el) {
                 const inputs = el.nodeName === "INPUT" ? [el] : el.querySelectorAll("input");
                 inputs.forEach((input) => {
-                    input.addEventListener("keydown", (e) => handler(e, input));
-                    return () => input.removeEventListener("keydown", (e) => handler(e, input));
+                    listeners.push(input);
+                    input.addEventListener("keydown", handler);
                 });
             }
+            return () => {
+                listeners.forEach((input) => input.removeEventListener("keydown", handler));
+            };
         },
         () => [ref.el]
     );
