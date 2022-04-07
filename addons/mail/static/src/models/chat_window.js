@@ -104,6 +104,10 @@ registerModel({
             const lastVisible = this.manager.lastVisible;
             this.manager.swap(this, lastVisible);
         },
+        onClickFromChatWindowHiddenMenu() {
+            this.makeActive();
+            this.manager.closeHiddenMenu();
+        },
         /**
          * Handles click on the "stop adding users" button.
          *
