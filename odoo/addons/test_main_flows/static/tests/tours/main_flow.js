@@ -859,13 +859,13 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Quotations')"
     position: "bottom"
 }, {
     mobile: false,
-    trigger: ".o_data_row:first",
+    trigger: ".o_data_cell:contains('the_flow.customer')",
     extra_trigger: '.o_control_panel .breadcrumb:contains("Sales Orders")',
     content: _t("Go to the last sale order"),
     position: "right"
 }, {
     mobile: true,
-    trigger: ".o_kanban_record:first",
+    trigger: ".o_kanban_record .o_kanban_record_title:contains('the_flow.customer')",
     extra_trigger: '.o_control_panel .breadcrumb:contains("Sales Orders")',
     content: _t("Go to the last sale order"),
     position: "bottom"

@@ -841,10 +841,11 @@ class SaleOrder(models.Model):
         lines_to_recompute.discount = 0.0
         lines_to_recompute._compute_discount()
         self.show_update_pricelist = False
-        self.message_post(body=_(
-            "Product prices have been recomputed according to pricelist %s.",
-            self.pricelist_id._get_html_link(),
-        ))
+        if self.partner_id and self.id:
+            self.message_post(body=_(
+                "Product prices have been recomputed according to pricelist %s.",
+                self.pricelist_id._get_html_link(),
+            ))
 
     # INVOICING #
 
@@ -916,9 +917,9 @@ class SaleOrder(models.Model):
     def _get_invoice_grouping_keys(self):
         return ['company_id', 'partner_id', 'currency_id']
 
-    @api.model
-    def _nothing_to_invoice_error(self):
-        return UserError(_(
+    def _nothing_to_invoice_error_message(self):
+        self.ensure_one()
+        return _(
             "There is nothing to invoice!\n\n"
             "Reason(s) of this behavior could be:\n"
             "- You should deliver your products before invoicing them: Click on the \"truck\" icon "
@@ -927,7 +928,7 @@ class SaleOrder(models.Model):
             "\"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered "
             "quantities\". For Services, you should modify the Service Invoicing Policy to "
             "'Prepaid'."
-        ))
+        )
 
     def _get_invoiceable_lines(self, final=False):
         """Return the invoiceable lines for order `self`."""
@@ -1007,7 +1008,7 @@ class SaleOrder(models.Model):
             invoice_vals_list.append(invoice_vals)
 
         if not invoice_vals_list:
-            raise self._nothing_to_invoice_error()
+            raise UserError(order._nothing_to_invoice_error_message())
 
         # 2) Manage 'grouped' parameter: group by (partner_id, currency_id).
         if not grouped:
