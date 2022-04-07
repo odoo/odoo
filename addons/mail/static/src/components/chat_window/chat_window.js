@@ -22,7 +22,6 @@ export class ChatWindow extends Component {
         // the following are passed as props to children
         this._onAutocompleteSelect = this._onAutocompleteSelect.bind(this);
         this._onAutocompleteSource = this._onAutocompleteSource.bind(this);
-        this._onClickedHeader = this._onClickedHeader.bind(this);
         this._onFocusinThread = this._onFocusinThread.bind(this);
     }
 
@@ -109,25 +108,6 @@ export class ChatWindow extends Component {
             keyword: _.escape(req.term),
             limit: 10,
         });
-    }
-
-    /**
-     * Called when clicking on header of chat window. Usually folds the chat
-     * window.
-     *
-     * @private
-     */
-    _onClickedHeader() {
-        if (!this.chatWindow || this.messaging.device.isMobile) {
-            return;
-        }
-        if (this.chatWindow.isFolded) {
-            this.chatWindow.unfold();
-            this.chatWindow.focus();
-        } else {
-            this.chatWindow.saveThreadScrollTop();
-            this.chatWindow.fold();
-        }
     }
 
     /**

@@ -215,6 +215,14 @@ registerModel({
             this.discard();
         },
         /**
+         * Called when clicking on "discard" button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickDiscard(ev) {
+            this.discard();
+        },
+        /**
          * @private
          * @param {MouseEvent} ev
          */
@@ -257,6 +265,13 @@ registerModel({
             this.postMessage();
         },
         /**
+         * Called when clicking on "send" button.
+         */
+        onClickSend() {
+            this.sendMessage();
+            this.update({ doFocus: true });
+        },
+        /**
          * Handles click on the "stop replying" button.
          *
          * @param {MouseEvent} ev
@@ -274,6 +289,12 @@ registerModel({
             this.insertSuggestion();
             this.closeSuggestions();
             this.update({ doFocus: true });
+        },
+        onFocusinTextarea() {
+            if (!this.exists()) {
+                return;
+            }
+            this.update({ isFocused: true });
         },
         /**
          * @param {KeyboardEvent} ev
@@ -302,6 +323,15 @@ registerModel({
                 });
                 markEventHandled(ev, 'Composer.closeEmojisPopover');
             }
+        },
+        /**
+         * @param {ClipboardEvent} ev
+         */
+        async onPasteTextInput(ev) {
+            if (!ev.clipboardData || !ev.clipboardData.files) {
+                return;
+            }
+            await this.fileUploader.uploadFiles(ev.clipboardData.files);
         },
         /**
          * Open the full composer modal.
@@ -1226,6 +1256,12 @@ registerModel({
             readonly: true,
         }),
         /**
+         * This is the invisible textarea used to compute the composer height
+         * based on the text content. We need it to downsize the textarea
+         * properly without flicker.
+         */
+        mirroredTextareaRef: attr(),
+        /**
          * Determines the label on the send button of this composer view.
          */
         sendButtonText: attr({
@@ -1270,6 +1306,10 @@ registerModel({
         suggestionSearchTerm: attr({
             compute: '_computeSuggestionSearchTerm',
         }),
+        /**
+         * Reference of the textarea. Useful to set height, selection and content.
+         */
+        textareaRef: attr(),
         /**
          * States the OWL text input component of this composer view.
          */

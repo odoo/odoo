@@ -3,7 +3,7 @@
 
     <t t-name="mail.ComposerSuggestion" owl="1">
         <t t-if="composerSuggestion">
-            <a class="o_ComposerSuggestion dropdown-item d-flex w-100 py-2 px-4" t-att-class="{ 'active bg-300': props.isActive }" t-attf-class="{{ className }}" href="#" t-att-title="composerSuggestion.title" role="menuitem" t-on-click="_onClick" t-ref="root">
+            <a class="o_ComposerSuggestion dropdown-item d-flex w-100 py-2 px-4" t-att-class="{ 'active bg-300': props.isActive }" t-attf-class="{{ className }}" href="#" t-att-title="composerSuggestion.title" role="menuitem" t-on-click="composerSuggestion.onClick" t-ref="root">
                 <t t-if="composerSuggestion.cannedResponse">
                     <strong class="o_ComposerSuggestion_part1 flex-shrink-0 mw-100 pr-2 text-truncate"><t t-esc="composerSuggestion.record.source"/></strong>
                     <em class="o_ComposerSuggestion_part2 text-600 text-truncate"><t t-esc="composerSuggestion.record.substitution"/></em>

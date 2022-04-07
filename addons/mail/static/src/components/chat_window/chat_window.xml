@@ -17,7 +17,7 @@
                     chatWindowLocalId="chatWindow.localId"
                     hasCloseAsBackButton="props.hasCloseAsBackButton"
                     isExpandable="props.isExpandable"
-                    onClicked="_onClickedHeader"
+                    onClicked="chatWindow.onClickHeader"
                 />
                 <t t-if="chatWindow.thread and chatWindow.thread.hasMemberListFeature and chatWindow.isMemberListOpened">
                     <ChannelMemberList channelLocalId="chatWindow.thread.localId" className="'bg-white'"/>

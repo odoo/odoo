@@ -18,8 +18,6 @@ export class Composer extends Component {
         useComponentToModel({ fieldName: 'component', modelName: 'ComposerView' });
         useRefToModel({ fieldName: 'buttonEmojisRef', modelName: 'ComposerView', refName: 'buttonEmojis' });
         this._onDropZoneFilesDropped = this._onDropZoneFilesDropped.bind(this);
-        this._onComposerTextInputSendShortcut = this._onComposerTextInputSendShortcut.bind(this);
-        this._onPasteTextInput = this._onPasteTextInput.bind(this);
     }
 
     //--------------------------------------------------------------------------
@@ -38,33 +36,6 @@ export class Composer extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Called when clicking on "discard" button.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickDiscard(ev) {
-        this.composerView.discard();
-    }
-
-    /**
-     * Called when clicking on "send" button.
-     *
-     * @private
-     */
-    _onClickSend() {
-        this.composerView.sendMessage();
-        this.composerView.update({ doFocus: true });
-    }
-
-    /**
-     * @private
-     */
-    _onComposerTextInputSendShortcut() {
-        this.composerView.sendMessage();
-    }
-
-    /**
      * Called when some files have been dropped in the dropzone.
      *
      * @private
@@ -74,17 +45,6 @@ export class Composer extends Component {
     async _onDropZoneFilesDropped(detail) {
         await this.composerView.fileUploader.uploadFiles(detail.files);
         this.isDropZoneVisible.value = false;
-    }
-
-    /**
-     * @private
-     * @param {CustomEvent} ev
-     */
-    async _onPasteTextInput(ev) {
-        if (!ev.clipboardData || !ev.clipboardData.files) {
-            return;
-        }
-        await this.composerView.fileUploader.uploadFiles(ev.clipboardData.files);
     }
 
 }
