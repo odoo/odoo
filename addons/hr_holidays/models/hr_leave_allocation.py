@@ -135,6 +135,7 @@ class HolidaysAllocation(models.Model):
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', compute="_compute_from_holiday_status_id", store=True, readonly=False, domain="['|', ('time_off_type_id', '=', False), ('time_off_type_id', '=', holiday_status_id)]", tracking=True)
     max_leaves = fields.Float(compute='_compute_leaves')
     leaves_taken = fields.Float(compute='_compute_leaves')
+    leaves_left = fields.Float(compute='_compute_leaves')
     taken_leave_ids = fields.One2many('hr.leave', 'holiday_allocation_id', domain="[('state', 'in', ['confirm', 'validate1', 'validate'])]")
 
     _sql_constraints = [
@@ -199,6 +200,8 @@ class HolidaysAllocation(models.Model):
             allocation.leaves_taken = sum(taken_leave.number_of_hours_display if taken_leave.leave_type_request_unit == 'hour' else taken_leave.number_of_days\
                 for taken_leave in allocation.taken_leave_ids\
                 if taken_leave.state == 'validate')
+            allocation.leaves_left = allocation.max_leaves - sum(taken_leave.number_of_hours_display if taken_leave.leave_type_request_unit == 'hour' else taken_leave.number_of_days\
+                for taken_leave in allocation.taken_leave_ids)
 
     @api.depends('number_of_days')
     def _compute_number_of_days_display(self):

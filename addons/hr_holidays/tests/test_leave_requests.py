@@ -629,3 +629,45 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(allocation1.leaves_taken, 0.0, 'As this allocation does not have enough days, it should not be affected')
         self.assertEqual(allocation2.leaves_taken, 0.0, 'As this allocation does not have enough days, it should not be affected')
         self.assertEqual(allocation3.leaves_taken, 10.0, 'As this allocation has enough days, the leave days should be taken')
+
+    def test_several_allocations_split(self):
+        Allocation = self.env['hr.leave.allocation']
+        allocation_vals = {
+            'name': 'Allocation',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': self.holidays_type_2.id,
+            'state': 'confirm',
+            'date_from': '2022-01-01',
+            'date_to': '2022-12-31',
+        }
+        allocation_vals.update({'number_of_days': 4})
+        allocation4 = Allocation.create(allocation_vals)
+        allocation_vals.update({'number_of_days': 1})
+        allocation1 = Allocation.create(allocation_vals)
+        (allocation4 + allocation1).action_validate()
+
+        Leave = self.env['hr.leave'].with_user(self.user_employee_id)
+        leave_vals = {
+            'name': 'Holiday Request',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': self.holidays_type_2.id,
+        }
+        leave_vals.update({
+            'date_from': '2022-01-03',
+            'date_to': '2022-01-06',
+            'number_of_days': 4,
+        })
+        leave4 = Leave.create(leave_vals)
+        leave_vals.update({
+            'date_from': '2022-01-07',
+            'date_to': '2022-01-07',
+            'number_of_days': 1,
+        })
+        leave1 = Leave.create(leave_vals)
+
+        leaves = (leave4 + leave1).sudo()
+        leaves.action_approve()
+
+        self.assertEqual(allocation4.leaves_taken, leave4.number_of_days_display, 'As 4 days were available in this allocation, they should have been taken')
+        self.assertEqual(allocation1.leaves_taken, leave1.number_of_days_display, 'As no days were available in previous allocation, they should have been taken in this one')
+    
