@@ -7,11 +7,25 @@
         margin-right: $o-we-sidebar-width !important;
     }
 
-    > iframe {
-        @include o-position-absolute(0, 0, 0, 0);
+    iframe {
+        position: absolute;
+        border: none;
         width: 100%;
         height: 100%;
-        border: none;
+
+        &.o_is_mobile {
+            $mobile-preview-width: 416px;
+            $mobile-preview-height: 735px;
+
+            @include media-breakpoint-up(md) {
+                border-radius: 25px;
+                height: $mobile-preview-height;
+                width: $mobile-preview-width;
+                left: calc(50% - #{$mobile-preview-width} / 2);
+                top: calc(50% - #{$mobile-preview-height} / 2);
+                box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+            }
+        }
     }
 }
 

@@ -3,6 +3,9 @@
 
 <!-- Snippets menu -->
 <template id="snippets" inherit_id="web_editor.snippets" primary="True" groups="base.group_user">
+    <xpath expr="//button[@data-action='cancel']" position="before">
+        <button type="button" class="btn btn-secondary" data-action="mobile" title="Mobile Preview" accesskey="v"><span class="fa fa-mobile" style="font-size: 18px;"/></button>
+    </xpath>
     <xpath expr="//div[@id='snippets_menu']" position="inside">
         <button type="button" tabindex="3" class="o_we_customize_theme_btn text-uppercase"
                 groups="website.group_website_designer" accesskey="2">

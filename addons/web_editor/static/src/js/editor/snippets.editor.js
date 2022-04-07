@@ -1345,6 +1345,7 @@ var SnippetsMenu = Widget.extend({
         }, 50);
         this.$window.on('resize.snippets_menu', debouncedCoverUpdate);
         this.$body.on('content_changed.snippets_menu', debouncedCoverUpdate);
+        $(this.$body[0].ownerDocument.defaultView).on('resize.snippets_menu', debouncedCoverUpdate);
 
         // On keydown add a class on the active overlay to hide it and show it
         // again when the mouse moves
@@ -3393,8 +3394,8 @@ var SnippetsMenu = Widget.extend({
     /**
      * Preview on mobile.
      */
-    _onMobilePreviewClick: async function () {
-        throw new Error('implement me');
+    _onMobilePreviewClick: function () {
+        this.trigger_up('request_mobile_preview');
     },
     /**
      * Undo..
