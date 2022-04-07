@@ -22,8 +22,9 @@ SlidesUpload.SlideUploadDialog.include({
     * Will automatically set the title of the slide to the title of the chosen certification
     */
     _onChangeCertification: function (ev) {
-        if (ev.added && ev.added.text) {
-            this.$("input#name").val(ev.added.text);
+        const $inputElement = this.$("input#name");
+        if (ev.added && ev.added.text && !$inputElement.val().trim()) {
+            $inputElement.val(ev.added.text);
         }
     },
 
