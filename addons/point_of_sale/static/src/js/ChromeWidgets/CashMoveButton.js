@@ -23,11 +23,13 @@ odoo.define('point_of_sale.CashMoveButton', function (require) {
                     3000
                 );
             }
+            const cashier = this.env.pos.get('cashier');
             const extras = { formattedAmount, translatedType };
             await this.rpc({
                 model: 'pos.session',
                 method: 'try_cash_in_out',
                 args: [[this.env.pos.pos_session.id], type, amount, reason, extras],
+                context: { user_id: cashier.user_id ? cashier.user_id[0] : false },
             });
             if (this.env.pos.proxy.printer) {
                 const renderedReceipt = this.env.qweb.renderToString('point_of_sale.CashMoveReceipt', {
