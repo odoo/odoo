@@ -4269,7 +4269,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.strictEqual(
             target.querySelector(".o_notification_content").innerHTML,
-            "<ul><li>foo</li></ul>"
+            "<ul><li>Foo</li></ul>"
         );
         assert.hasClass(target.querySelector(".o_notification"), "border-danger");
 
