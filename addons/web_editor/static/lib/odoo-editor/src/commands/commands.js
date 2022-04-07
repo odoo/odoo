@@ -319,7 +319,10 @@ const styles = {
         is: editable => isSelectionFormat(editable, 'strikeThrough'),
         name: 'textDecorationLine',
         value: 'line-through',
-    }
+    },
+    switchDirection: {
+        is: editable => isSelectionFormat(editable, 'switchDirection'),
+    },
 }
 export function toggleFormat(editor, format) {
     const selection = editor.document.getSelection();
@@ -370,6 +373,15 @@ export function toggleFormat(editor, format) {
             setSelection(zws, 1);
         } else {
             setSelection(anchorNode, anchorOffset, focusNode, focusOffset);
+        }
+    } else if (format === 'switchDirection') {
+        const defaultDirection = editor.options.direction;
+        for (const block of new Set(selectedTextNodes.map(textNode => closestBlock(textNode)))) {
+            if (isAlreadyFormatted) {
+                block.removeAttribute('dir');
+            } else {
+                block.setAttribute('dir', defaultDirection === 'ltr' ? 'rtl' : 'ltr');
+            }
         }
     } else {
         applyInlineStyle(editor, el => {
@@ -494,6 +506,7 @@ export const editorCommands = {
     italic: editor => toggleFormat(editor, 'italic'),
     underline: editor => toggleFormat(editor, 'underline'),
     strikeThrough: editor => toggleFormat(editor, 'strikeThrough'),
+    switchDirection: editor => toggleFormat(editor, 'switchDirection'),
     removeFormat: editor => {
         editor.document.execCommand('removeFormat');
         for (const node of getTraversedNodes(editor.editable)) {

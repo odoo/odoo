@@ -11,6 +11,7 @@ const {ColorpickerWidget} = require('web.Colorpicker');
 const concurrency = require('web.concurrency');
 const { device } = require('web.config');
 const weContext = require('web_editor.context');
+const { localization } = require('@web/core/l10n/localization');
 const OdooEditorLib = require('@web_editor/../lib/odoo-editor/src/OdooEditor');
 const snippetsEditor = require('web_editor.snippet.editor');
 const Toolbar = require('web_editor.toolbar');
@@ -157,6 +158,7 @@ const Wysiwyg = Widget.extend({
             },
             commands: commands,
             plugins: options.editorPlugins,
+            direction: localization.direction || 'ltr',
         }, editorCollaborationOptions));
 
         document.addEventListener("mousemove", this._signalOnline, true);
@@ -1206,7 +1208,7 @@ const Wysiwyg = Widget.extend({
             }
         };
         if (!this.options.snippets) {
-            $toolbar.find('#justify, #table, #media-insert').remove();
+            $toolbar.find('#table, #media-insert').remove();
         }
         $toolbar.find('#create-link, #media-insert, #media-replace, #media-description').click(openTools);
         $toolbar.find('#image-shape div, #fa-spin').click(e => {

@@ -99,21 +99,25 @@
                 </ul>
             </div>
 
-            <div id="justify" class="btn-group dropdown">
-                <button type="button" class="btn dropdown-toggle"
-                    data-toggle="dropdown" title="Text align" tabindex="-1"
-                    data-original-title="Paragraph" aria-expanded="false">
-                    <i id="paragraphDropdownButton" class="fa fa-align-left fa-fw"></i>
-                </button>
-                <div class="dropdown-menu">
-                    <div class="btn-group">
-                        <div class="btn" id="justifyLeft" data-call='justifyLeft'><i class="fa fa-align-left fa-fw"></i></div>
-                        <div class="btn" id="justifyCenter" data-call='justifyCenter'><i class="fa fa-align-center fa-fw"></i></div>
-                        <div class="btn" id="justifyRight" data-call='justifyRight'><i class="fa fa-align-right fa-fw"></i></div>
-                        <div class="btn" id="justifyFull" data-call='justifyFull'><i class="fa fa-align-justify fa-fw"></i></div>
+            <div id="justify" class="btn-group">
+                <div class="btn-group dropdown">
+                    <button type="button" class="btn dropdown-toggle"
+                        data-toggle="dropdown" title="Text align" tabindex="-1"
+                        data-original-title="Paragraph" aria-expanded="false">
+                        <i id="paragraphDropdownButton" class="fa fa-align-left fa-fw"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <div class="btn-group">
+                            <div class="btn" id="justifyLeft" data-call='justifyLeft'><i class="fa fa-align-left fa-fw"></i></div>
+                            <div class="btn" id="justifyCenter" data-call='justifyCenter'><i class="fa fa-align-center fa-fw"></i></div>
+                            <div class="btn" id="justifyRight" data-call='justifyRight'><i class="fa fa-align-right fa-fw"></i></div>
+                            <div class="btn" id="justifyFull" data-call='justifyFull'><i class="fa fa-align-justify fa-fw"></i></div>
+                        </div>
                     </div>
                 </div>
+                <div id="switchdirection" data-call="switchDirection" title="Switch direction for this block" class="btn">↹</div>
             </div>
+
 
             <div id="list" class="btn-group">
                 <div id="unordered" data-call="toggleList" data-arg1="UL" title="Toggle unordered list" class="oe-toggle-unordered fa fa-list-ul fa-fw btn"></div>
