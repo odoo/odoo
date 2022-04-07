@@ -133,6 +133,8 @@ class Http(models.AbstractModel):
 
     @classmethod
     def _register_website_track(cls, response):
+        if request.env['ir.http'].is_a_bot():
+            return False
         if getattr(response, 'status_code', 0) != 200 or request.httprequest.headers.get('X-Disable-Tracking') == '1':
             return False
 
