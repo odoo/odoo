@@ -957,7 +957,7 @@ exports.PosModel = Backbone.Model.extend({
                     'limit': this.env.pos.config.limited_products_amount
                 },
                 context: { ...this.session.user_context, ...product_model.context() },
-            });
+            }, { shadow: true });
             product_model.loaded(this, products);
             page += 1;
         } while(products.length == this.config.limited_products_amount);
@@ -976,7 +976,7 @@ exports.PosModel = Backbone.Model.extend({
                     offset: this.env.pos.config.limited_partners_amount * i
                 },
                 context: this.env.session.user_context,
-            });
+            }, { shadow: true });
             this.env.pos.db.add_partners(PartnerIds);
             i += 1;
         } while(PartnerIds.length);
