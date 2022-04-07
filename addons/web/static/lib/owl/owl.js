@@ -1379,7 +1379,7 @@
         }
         const p = document.createElement("p");
         p.textContent = str;
-        return p.innerHTML;
+        return p.innerHTML.replace(/&nbsp;/g, String.fromCharCode(160));
     }
     /**
      * Returns a function, that, as long as it continues to be invoked, will not
