@@ -6,7 +6,7 @@ import session from 'web.session';
 import time from 'web.time';
 import utils from 'web.utils';
 
-import LivechatButton from 'im_livechat.legacy.im_livechat.im_livechat';
+import LivechatButton from 'im_livechat.legacy.im_livechat.LivechatButton';
 
 const _t = core._t;
 const QWeb = core.qweb;
@@ -19,7 +19,7 @@ const QWeb = core.qweb;
  * - When the user picks an option or answers to the chatbot, display a "chatbot is typing..."
  *   message for a couple seconds and then trigger the next step of the script
  */
- LivechatButton.LivechatButton.include({
+ LivechatButton.include({
     init: function () {
         this._super(...arguments);
 
