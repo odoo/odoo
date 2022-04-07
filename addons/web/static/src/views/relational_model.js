@@ -761,7 +761,7 @@ export class Record extends DataPoint {
                 this.data.id = this.resId;
                 this.resIds.push(this.resId);
             } else if (keys.length > 0) {
-                await this.model.orm.write(this.resModel, [this.resId], changes);
+                await this.model.orm.write(this.resModel, [this.resId], changes, this.context);
             }
             // Switch to the parent active fields
             if (this.parentActiveFields) {
@@ -907,7 +907,10 @@ export class Record extends DataPoint {
             rawContext: {
                 parent: this.rawContext,
                 make: () => {
-                    return makeContext([activeField.context], this.evalContext);
+                    return makeContext([activeField.context], {
+                        ...this.evalContext,
+                        ...list.evalContext,
+                    });
                 },
             },
             parentRecord: this,

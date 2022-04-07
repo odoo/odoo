@@ -7492,7 +7492,8 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["onchange", "warning", "onchange", "warning"]);
     });
 
-    QUnit.skipWOWL("editable list: contexts are correctly sent", async function (assert) {
+    // AAB TO DISCUSS MODIFICATION BIN_SIZE
+    QUnit.test("editable list: contexts are correctly sent", async function (assert) {
         assert.expect(5);
 
         serverData.models.partner.records[0].timmy = [12];
@@ -7522,7 +7523,7 @@ QUnit.module("Fields", (hooks) => {
                             someKey: "some value",
                             uid: 7,
                         },
-                        "sent context should be correct"
+                        "read partner context"
                     );
                 }
                 if (args.method === "read" && args.model === "partner_type") {
@@ -7531,9 +7532,11 @@ QUnit.module("Fields", (hooks) => {
                         {
                             key: "yop",
                             active_field: 2,
+                            bin_size: true,
                             someKey: "some value",
+                            uid: 7,
                         },
-                        "sent context should be correct"
+                        "read partner_type context"
                     );
                 }
                 if (args.method === "write") {
@@ -7542,8 +7545,9 @@ QUnit.module("Fields", (hooks) => {
                         {
                             active_field: 2,
                             someKey: "some value",
+                            uid: 7,
                         },
-                        "sent context should be correct"
+                        "write context"
                     );
                 }
             },
@@ -7557,7 +7561,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.skipWOWL("resetting invisible one2manys", async function (assert) {
+    QUnit.test("resetting invisible one2manys", async function (assert) {
         assert.expect(3);
 
         serverData.models.partner.records[0].turtles = [];
@@ -7565,7 +7569,7 @@ QUnit.module("Fields", (hooks) => {
             obj.turtles = [[5], [4, 1]];
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -7574,17 +7578,14 @@ QUnit.module("Fields", (hooks) => {
                     <field name="foo"/>
                     <field name="turtles" invisible="1"/>
                 </form>`,
-            viewOptions: {
-                mode: "edit",
-            },
             resId: 1,
             mockRPC(route, args) {
                 assert.step(args.method);
-                return this._super.apply(this, arguments);
             },
         });
+        await clickEdit(target);
 
-        await testUtils.fields.editInput(form.$('input[name="foo"]'), "abcd");
+        await editInput(target, '[name="foo"] input', "abcd");
         assert.verifySteps(["read", "onchange"]);
     });
 
