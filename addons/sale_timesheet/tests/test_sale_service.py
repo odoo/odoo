@@ -29,13 +29,8 @@ class TestSaleService(TestCommonSaleTimesheet):
             'product_uom_qty': 50,
         })
 
-        self.sale_order.order_line._compute_product_updatable()
         self.assertTrue(sale_order_line.product_updatable)
         self.sale_order.action_confirm()
-        self.sale_order.order_line._compute_product_updatable()
-
-        self.sale_order.action_confirm()
-        self.sale_order.order_line._compute_product_updatable()
         self.assertFalse(sale_order_line.product_updatable)
         self.assertEqual(self.sale_order.invoice_status, 'no', 'Sale Service: there should be nothing to invoice after validation')
 
