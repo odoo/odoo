@@ -28,7 +28,7 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @param {string} [params.data.state] if 'folded', the livechat is folded.
      *   This is ignored if `folded` is provided and is a boolean value.
      * @param {string} params.data.uuid the UUID of this livechat.
-     * @param {im_livechat.legacy.im_livechat.im_livechat:LivechatButton} params.parent
+     * @param {im_livechat.legacy.im_livechat.LivechatButton} params.parent
      */
     init: function (params) {
         this._super.apply(this, arguments);

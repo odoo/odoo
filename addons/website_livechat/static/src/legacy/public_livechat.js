@@ -2,7 +2,7 @@ odoo.define('website_livechat.legacy.website_livechat.livechat_request', functio
 "use strict";
 
 var utils = require('web.utils');
-var LivechatButton = require('im_livechat.legacy.im_livechat.im_livechat').LivechatButton;
+var LivechatButton = require('im_livechat.legacy.im_livechat.LivechatButton');
 const config = require('web.config');
 
 

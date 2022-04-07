@@ -1,9 +1,9 @@
 /** @odoo-module */
 
 import tour from "web_tour.tour";
-import LivechatButton from "im_livechat.legacy.im_livechat.im_livechat";
+import LivechatButton from "im_livechat.legacy.im_livechat.LivechatButton";
 
-LivechatButton.LivechatButton.include({
+LivechatButton.include({
     /**
      * Let us make it a bit faster than the default delay (3500ms).
      * Let us also debounce waiting for more user inputs for only 500ms.

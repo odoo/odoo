@@ -102,8 +102,8 @@
                     odoo.define('im_livechat.livesupport', function (require) {
             <t t-if="info['available']" t-translation="off">
                         var rootWidget = require('root.widget');
-                        var im_livechat = require('im_livechat.legacy.im_livechat.im_livechat');
-                        var button = new im_livechat.LivechatButton(
+                        var LivechatButton = require('im_livechat.legacy.im_livechat.LivechatButton');
+                        var button = new LivechatButton(
                             rootWidget,
                             "<t t-esc="info['server_url']"/>",
                             <t t-out="json.dumps(info.get('options', {}))"/>

@@ -13,7 +13,7 @@ var AbstractMessage = require('im_livechat.legacy.mail.model.AbstractMessage');
 var WebsiteLivechatMessage = AbstractMessage.extend({
 
     /**
-     * @param {im_livechat.legacy.im_livechat.im_livechat.LivechatButton} parent
+     * @param {im_livechat.legacy.im_livechat.LivechatButton} parent
      * @param {Object} data
      * @param {Object} options
      * @param {string} options.default_username
