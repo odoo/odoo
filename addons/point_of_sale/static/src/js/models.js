@@ -437,7 +437,7 @@ class PosGlobalState extends PosModel {
                     offset: page * this.config.limited_products_amount,
                     limit: this.config.limited_products_amount,
                 }],
-            });
+            }, { shadow: true });
             this._loadProductProduct(products);
             page += 1;
         } while(products.length == this.config.limited_products_amount);
@@ -459,7 +459,7 @@ class PosGlobalState extends PosModel {
                     },
                 ],
                 context: this.env.session.user_context,
-            });
+            }, { shadow: true });
             this.db.add_partners(partners);
             i += 1;
         } while(partners.length);
