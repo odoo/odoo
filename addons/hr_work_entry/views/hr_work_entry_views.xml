@@ -61,7 +61,7 @@
                             <field name="date_stop" attrs="{'readonly': [('state', '!=', 'draft')]}" />
                             <label for="duration" string="Period"/>
                             <div class="o_row">
-                                <field name="duration" nolabel="1" attrs="{'readonly': [('state', '!=', 'draft')]}" /><span class="ml8">Hours</span>
+                                <field name="duration" nolabel="1" widget="float_time" attrs="{'readonly': [('state', '!=', 'draft')]}" /><span class="ml8">Hours</span>
                             </div>
                             <field name="company_id" invisible="1"/>
                         </group>
@@ -78,11 +78,21 @@
             <tree multi_edit="1" sample="1">
                 <field name="name"/>
                 <field name="work_entry_type_id" options="{'no_create': True, 'no_open': True}"/>
-                <field name="duration" readonly="1"/>
+                <field name="duration" widget="float_time" readonly="1"/>
                 <field name="state"/>
                 <field name="date_start" string="Beginning" readonly="1"/>
                 <field name="date_stop" string="End" readonly="1"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="hr_work_entry_view_pivot" model="ir.ui.view">
+        <field name="name">hr.work.entry.pivot</field>
+        <field name="model">hr.work.entry</field>
+        <field name="arch" type="xml">
+            <pivot string="Work Entries" sample="1">
+                <field name="duration" widget="float_time" readonly="1"/>
+            </pivot>
         </field>
     </record>
 
