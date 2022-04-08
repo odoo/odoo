@@ -169,7 +169,7 @@ class Partner(models.Model):
 
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
     user_id = fields.Many2one('res.users', string='Salesperson',
-      help='The internal user in charge of this contact.')
+                              help='The internal user in charge of this contact.')
     vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.")
     same_vat_partner_id = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
     bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
@@ -177,7 +177,7 @@ class Partner(models.Model):
     comment = fields.Html(string='Notes')
 
     category_id = fields.Many2many('res.partner.category', column1='partner_id',
-                                    column2='category_id', string='Tags', default=_default_category)
+                                   column2='category_id', string='Tags', default=_default_category)
     active = fields.Boolean(default=True)
     employee = fields.Boolean(help="Check this box if this contact is an Employee.")
     function = fields.Char(string='Job Position')
@@ -187,16 +187,18 @@ class Partner(models.Model):
          ('delivery', 'Delivery Address'),
          ('other', 'Other Address'),
          ("private", "Private Address"),
-        ], string='Address Type',
+         ], string='Address Type',
         default='contact',
         help="Invoice & Delivery addresses are used in sales orders. Private addresses are only visible by authorized users.")
     # address fields
-    street = fields.Char()
-    street2 = fields.Char()
-    zip = fields.Char(change_default=True)
-    city = fields.Char()
-    state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', domain="[('country_id', '=?', country_id)]")
-    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
+    street = fields.Char(compute='_compute_street', store=True, readonly=False)
+    street2 = fields.Char(compute='_compute_street2', store=True, readonly=False)
+    zip = fields.Char(change_default=True, compute='_compute_zip', store=True, readonly=False)
+    city = fields.Char(compute='_compute_city', store=True, readonly=False)
+    state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', compute='_compute_state_id',
+                               store=True, readonly=False, domain="[('country_id', '=?', country_id)]")
+    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict', compute='_compute_country_id',
+                                 store=True, readonly=False)
     country_code = fields.Char(related='country_id.code', string="Country Code")
     partner_latitude = fields.Float(string='Geo Latitude', digits=(10, 7))
     partner_longitude = fields.Float(string='Geo Longitude', digits=(10, 7))
@@ -207,13 +209,13 @@ class Partner(models.Model):
     phone = fields.Char()
     mobile = fields.Char()
     is_company = fields.Boolean(string='Is a Company', default=False,
-        help="Check if the contact is a company, otherwise it is a person")
+                                help="Check if the contact is a company, otherwise it is a person")
     is_public = fields.Boolean(compute='_compute_is_public')
     industry_id = fields.Many2one('res.partner.industry', 'Industry')
     # company_type is only an interface field, do not use it in business logic
     company_type = fields.Selection(string='Company Type',
-        selection=[('person', 'Individual'), ('company', 'Company')],
-        compute='_compute_company_type', inverse='_write_company_type')
+                                    selection=[('person', 'Individual'), ('company', 'Company')],
+                                    compute='_compute_company_type', inverse='_write_company_type')
     company_id = fields.Many2one('res.company', 'Company', index=True)
     color = fields.Integer(string='Color Index', default=0)
     user_ids = fields.One2many('res.users', 'partner_id', string='Users', auto_join=True)
@@ -397,15 +399,27 @@ class Partner(models.Model):
         if self.parent_id:
             self.lang = self.parent_id.lang or self.env.context.get('default_lang') or self.env.lang
 
-    @api.onchange('country_id')
-    def _onchange_country_id(self):
-        if self.country_id and self.country_id != self.state_id.country_id:
-            self.state_id = False
+    def _compute_street(self):
+        pass
 
-    @api.onchange('state_id')
-    def _onchange_state(self):
-        if self.state_id.country_id:
-            self.country_id = self.state_id.country_id
+    def _compute_street2(self):
+        pass
+
+    def _compute_zip(self):
+        pass
+
+    def _compute_city(self):
+        pass
+
+    @api.depends('state_id')
+    def _compute_state_id(self):
+        for partner in self.filtered(lambda rec: rec.country_id and rec.country_id != rec.state_id.country_id):
+            partner.state_id = False
+
+    @api.depends('state_id')
+    def _compute_country_id(self):
+        for partner in self.filtered_domain([('state_id.country_id', '!=', False)]):
+            partner.country_id = partner.state_id.country_id
 
     @api.onchange('email')
     def onchange_email(self):
@@ -541,7 +555,7 @@ class Partner(models.Model):
         parent = self.parent_id
         address_fields = self._address_fields()
         if (parent.is_company or not parent.parent_id) and len(parent.child_ids) == 1 and \
-            any(self[f] for f in address_fields) and not any(parent[f] for f in address_fields):
+                any(self[f] for f in address_fields) and not any(parent[f] for f in address_fields):
             addr_vals = self._update_fields_values(address_fields)
             parent.update_address(addr_vals)
 
@@ -896,8 +910,8 @@ class Partner(models.Model):
                     if len(result) == len(adr_pref):
                         return result
                     to_scan = [c for c in record.child_ids
-                                 if c not in visited
-                                 if not c.is_company] + to_scan
+                               if c not in visited
+                               if not c.is_company] + to_scan
 
                 # Continue scanning at ancestor if current_partner is not a commercial entity
                 if current_partner.is_company or not current_partner.parent_id:
