@@ -13,6 +13,7 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { session } from "@web/session";
+import { registry } from "@web/core/registry";
 
 let serverData;
 let target;
@@ -3048,9 +3049,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL(
         "one2many kanban (editable): properly handle add-label node attribute",
         async function (assert) {
-            assert.expect(1);
-
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -3072,20 +3071,22 @@ QUnit.module("Fields", (hooks) => {
             });
 
             await clickEdit(target);
-            assert.strictEqual(
-                form.$('.o_field_one2many[name="turtles"] .o-kanban-button-new').text().trim(),
-                "Add turtle",
+            assert.deepEqual(
+                [
+                    ...target.querySelectorAll(
+                        '.o_field_one2many[name="turtles"] .o-kanban-button-new'
+                    ),
+                ].map((el) => el.textContent),
+                ["Add turtle"],
                 "In O2M Kanban, Add button should have 'Add turtle' label"
             );
         }
     );
 
-    QUnit.skipWOWL("one2many kanban: create action disabled", async function (assert) {
-        assert.expect(3);
-
+    QUnit.test("one2many kanban: create action disabled", async function (assert) {
         serverData.models.partner.records[0].p = [4];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -3107,30 +3108,30 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
         });
-
-        assert.ok(
-            !form.$(".o-kanban-button-new").length,
+        assert.containsNone(
+            target,
+            ".o-kanban-button-new",
             '"Add" button should not be available in readonly'
         );
 
         await clickEdit(target);
 
-        assert.ok(
-            !form.$(".o-kanban-button-new").length,
+        assert.containsNone(
+            target,
+            ".o-kanban-button-new",
             '"Add" button should not be available in edit'
         );
-        assert.ok(
-            form.$(".o_kanban_view .delete_icon").length,
+        assert.containsOnce(
+            target,
+            ".o_field_x2many_kanban .delete_icon",
             "delete icon should be visible in edit"
         );
     });
 
     QUnit.skipWOWL("one2many kanban: conditional create/delete actions", async function (assert) {
-        assert.expect(4);
-
         serverData.models.partner.records[0].p = [2, 4];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -3155,37 +3156,30 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
             resId: 1,
-            viewOptions: {
-                mode: "edit",
-            },
         });
-
+        await clickEdit(target);
         // bar is initially true -> create and delete actions are available
-        assert.containsOnce(form, ".o-kanban-button-new", '"Add" button should be available');
+        assert.containsOnce(target, ".o-kanban-button-new", '"Add" button should be available');
 
-        await click(form.$(".oe_kanban_global_click").first());
-
+        await click(target.querySelector(".oe_kanban_global_click"));
         assert.containsOnce(
-            document.body,
+            target,
             ".modal .modal-footer .o_btn_remove",
             "There should be a Remove Button inside modal"
         );
 
         await clickDiscard(target.querySelector(".modal"));
-
         // set bar false -> create and delete actions are no longer available
-        await click(form.$('.o_field_widget[name="bar"] input').first());
-
+        await click(target.querySelector('.o_field_widget[name="bar"] input'));
         assert.containsNone(
-            form,
+            target,
             ".o-kanban-button-new",
             '"Add" button should not be available as bar is False'
         );
 
-        await click(form.$(".oe_kanban_global_click").first());
-
+        await click(target.querySelector(".oe_kanban_global_click"));
         assert.containsNone(
-            document.body,
+            target,
             ".modal .modal-footer .o_btn_remove",
             "There should not be a Remove Button as bar field is False"
         );
@@ -3770,12 +3764,10 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, "tr.o_data_row");
     });
 
-    QUnit.skipWOWL("pressing enter in a o2m with a required empty field", async function (assert) {
-        assert.expect(4);
-
+    QUnit.test("pressing enter in a o2m with a required empty field", async function (assert) {
         serverData.models.turtle.fields.turtle_foo.required = true;
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -3792,16 +3784,15 @@ QUnit.module("Fields", (hooks) => {
             resId: 2,
             mockRPC(route, args) {
                 assert.step(args.method);
-                return this._super.apply(this, arguments);
             },
         });
 
         // edit mode, then click on Add an item, then press enter
         await clickEdit(target);
         await addRow(target);
-        await testUtils.fields.triggerKeydown(form.$('input[name="turtle_foo"]'), "enter");
+        await triggerEvent(target, '[name="turtle_foo"] input', "keydown", { key: "enter" });
         assert.hasClass(
-            form.$('input[name="turtle_foo"]'),
+            target.querySelector('[name="turtle_foo"]'),
             "o_field_invalid",
             "input should be marked invalid"
         );
@@ -3872,9 +3863,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.skipWOWL("editable o2m, pressing ESC discard current changes", async function (assert) {
-        assert.expect(5);
-
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -3889,16 +3878,15 @@ QUnit.module("Fields", (hooks) => {
             resId: 2,
             mockRPC(route, args) {
                 assert.step(args.method);
-                return this._super.apply(this, arguments);
             },
         });
 
         await clickEdit(target);
         await addRow(target);
-        assert.containsOnce(form, "tr.o_data_row", "there should be one data row");
+        assert.containsOnce(target, "tr.o_data_row");
 
-        await testUtils.fields.triggerKeydown(form.$('input[name="turtle_foo"]'), "escape");
-        assert.containsNone(form, "tr.o_data_row", "data row should have been discarded");
+        await triggerEvent(target, '[name="turtle_foo"] input', "keydown", { key: "escape" });
+        assert.containsNone(target, "tr.o_data_row");
         assert.verifySteps(["read", "onchange"]);
     });
 
@@ -4024,9 +4012,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("onchange in a one2many", async function (assert) {
-        assert.expect(1);
-
+    QUnit.test("onchange in a one2many", async function (assert) {
         serverData.models.partner.records.push({
             id: 3,
             foo: "relational record 1",
@@ -4034,7 +4020,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.records[1].p = [3];
         serverData.models.partner.onchanges = { p: true };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -4058,22 +4044,21 @@ QUnit.module("Fields", (hooks) => {
                         },
                     });
                 }
-                return this._super(route, args);
             },
         });
 
         await clickEdit(target);
-        await click(form.$(".o_field_one2many tbody td").first());
-        await testUtils.fields.editInput(
-            form.$(".o_field_one2many tbody td").first().find("input"),
+        await click(target.querySelector(".o_field_one2many tbody td"));
+        await editInput(
+            target.querySelector(".o_field_one2many tbody td input"),
+            null,
             "new value"
         );
         await clickSave(target);
 
         assert.strictEqual(
-            form.$(".o_field_one2many tbody td").first().text(),
-            "from onchange",
-            "display name of first record in o2m list should be 'new value'"
+            target.querySelector(".o_field_one2many tbody td").textContent,
+            "from onchange"
         );
     });
 
@@ -4112,9 +4097,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(target.querySelector("td").innerText, "from onchange");
     });
 
-    QUnit.skipWOWL("one2many and default_get (with date)", async function (assert) {
-        assert.expect(1);
-
+    QUnit.test("one2many and default_get (with date)", async function (assert) {
         serverData.models.partner.fields.p.default = [[0, false, { date: "2017-10-08", p: [] }]];
 
         await makeView({
@@ -4348,22 +4331,26 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.skipWOWL("one2many with CREATE onchanges correctly refreshed", async function (assert) {
+    QUnit.test("one2many with CREATE onchanges correctly refreshed", async function (assert) {
         assert.expect(5);
 
-        var delta = 0;
-        testUtils.mock.patch(AbstractField, {
-            init: function () {
-                delta++;
-                this._super.apply(this, arguments);
-            },
-            destroy: function () {
-                delta--;
-                this._super.apply(this, arguments);
-            },
-        });
-
-        var deactiveOnchange = true;
+        let delta = 0;
+        const fieldRegistry = registry.category("fields");
+        for (const [name, Field] of fieldRegistry.getEntries()) {
+            class DeltaField extends Field {
+                setup() {
+                    super.setup();
+                    owl.onWillStart(() => {
+                        delta++;
+                    });
+                    owl.onWillDestroy(() => {
+                        delta--;
+                    });
+                }
+            }
+            fieldRegistry.add(name, DeltaField, { force: true });
+        }
+        let deactiveOnchange = true;
 
         serverData.models.partner.records[0].turtles = [];
         serverData.models.partner.onchanges = {
@@ -4418,7 +4405,7 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -4433,52 +4420,41 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
             resId: 1,
-            viewOptions: {
-                mode: "edit",
-            },
         });
-
-        assert.containsNone(form, ".o_data_row", "o2m shouldn't contain any row");
+        await clickEdit(target);
+        assert.containsNone(target, ".o_data_row");
 
         await addRow(target);
         // trigger the first onchange
         deactiveOnchange = false;
-        await testUtils.fields.editInput(form.$('input[name="turtle_int"]'), "10");
+        await editInput(target, '[name="turtle_int"] input', "10");
         // put the list back in non edit mode
-        await click(form.$('input[name="foo"]'));
-        assert.strictEqual(
-            form.$(".o_data_row").text(),
-            "first10second-10",
-            "should correctly refresh the records"
+        await click(target, '[name="foo"] input');
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_row")].map((el) => el.textContent),
+            ["first10", "second-10"]
         );
 
         // trigger the second onchange
-        await click(form.$(".o_field_x2many_list tbody tr:first td:first"));
-        await testUtils.fields.editInput(form.$('input[name="turtle_int"]'), "20");
-
-        await click(form.$('input[name="foo"]'));
-        assert.strictEqual(
-            form.$(".o_data_row").text(),
-            "first20second-20",
-            "should correctly refresh the records"
+        await click(target.querySelector(".o_field_x2many_list tbody tr td"));
+        await editInput(target, '[name="turtle_int"] input', "20");
+        await click(target, '[name="foo"] input');
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_row")].map((el) => el.textContent),
+            ["first20", "second-20"]
         );
-
         assert.containsN(
-            form,
+            target,
             ".o_field_widget",
             delta,
             "all (non visible) field widgets should have been destroyed"
         );
 
         await clickSave(target);
-
-        assert.strictEqual(
-            form.$(".o_data_row").text(),
-            "first20second-20",
-            "should correctly refresh the records after save"
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_row")].map((el) => el.textContent),
+            ["first20", "second-20"]
         );
-
-        testUtils.mock.unpatch(AbstractField);
     });
 
     QUnit.test(

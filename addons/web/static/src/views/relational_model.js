@@ -2534,7 +2534,7 @@ export class StaticList extends DataPoint {
                     if (!this._initialValues) {
                         this._initialValues = {};
                     }
-                    this._initialValues[id] = command[2];
+                    this._initialValues[id] = this._parseServerValues(command[2]);
                 }
                 command[2] = symbolValues;
             }
@@ -2626,12 +2626,12 @@ export class StaticList extends DataPoint {
         const proms = [];
         for (const id of displayedIds) {
             const recordId = this._mapping[id];
-            if (!recordId) {
+            const createCommand = this._commandsById[id] && this._commandsById[id][CREATE];
+            if (!recordId || createCommand) {
                 const key = typeof id === "number" ? "resId" : "virtualId";
                 const record = this._createRecord({ [key]: id, mode: "readonly" });
                 let changes;
-                const commands = this._commandsById[id];
-                if (commands && commands[CREATE]) {
+                if (createCommand) {
                     changes = this._initialValues[id];
                 }
                 proms.push(record.load({ changes }));
