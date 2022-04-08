@@ -2134,7 +2134,7 @@ class AccountMove(models.Model):
                 values['total_amount_currency'] += sign * line.amount_currency
                 values['total_residual_currency'] += sign * line.amount_residual_currency
 
-            elif not line.tax_exigible and not line.reconciled:
+            elif not line.tax_exigible:
 
                 values['to_process_lines'] += line
                 currencies.add(line.currency_id or line.company_currency_id)
@@ -4600,7 +4600,7 @@ class AccountMoveLine(models.Model):
                 # to compute the residual amount for each of them.
                 # ==========================================================================
 
-                for line in move_values['to_process_lines']:
+                for line in move_values['to_process_lines'].filtered(lambda x: not x.reconciled):
 
                     vals = {
                         'currency_id': line.currency_id.id,

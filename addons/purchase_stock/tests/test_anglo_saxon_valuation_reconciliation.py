@@ -210,3 +210,125 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
 
         picking = self.env['stock.picking'].search([('purchase_id','=',purchase_order.id)])
         self.check_reconciliation(invoice, picking)
+
+    def test_reconcile_cash_basis_bill(self):
+        ''' Test the generation of the CABA move after bill payment
+        '''
+        cash_basis_base_account = self.env['account.account'].create({
+            'code': 'cash_basis_base_account',
+            'name': 'cash_basis_base_account',
+            'user_type_id': self.env.ref('account.data_account_type_revenue').id,
+            'company_id': self.company_data['company'].id,
+        })
+        self.company_data['company'].account_cash_basis_base_account_id = cash_basis_base_account
+
+        cash_basis_transfer_account = self.env['account.account'].create({
+            'code': 'cash_basis_transfer_account',
+            'name': 'cash_basis_transfer_account',
+            'user_type_id': self.env.ref('account.data_account_type_revenue').id,
+            'company_id': self.company_data['company'].id,
+        })
+
+        tax_account_1 = self.env['account.account'].create({
+            'code': 'tax_account_1',
+            'name': 'tax_account_1',
+            'user_type_id': self.env.ref('account.data_account_type_revenue').id,
+            'company_id': self.company_data['company'].id,
+        })
+
+        fake_country = self.env['res.country'].create({
+            'name': "The Island of the Fly",
+            'code': 'YY',
+        })
+
+        tax_tags = self.env['account.account.tag'].create({
+            'name': 'tax_tag_%s' % str(i),
+            'applicability': 'taxes',
+            'country_id': fake_country.id,
+        } for i in range(8))
+
+        cash_basis_tax_a_third_amount = self.env['account.tax'].create({
+            'name': 'tax_1',
+            'amount': 33.3333,
+            'company_id': self.company_data['company'].id,
+            'cash_basis_transition_account_id': cash_basis_transfer_account.id,
+            'tax_exigibility': 'on_payment',
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, tax_tags[0].ids)],
+                }),
+
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': tax_account_1.id,
+                    'tag_ids': [(6, 0, tax_tags[1].ids)],
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, tax_tags[2].ids)],
+                }),
+
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': tax_account_1.id,
+                    'tag_ids': [(6, 0, tax_tags[3].ids)],
+                }),
+            ],
+        })
+
+        product_A = self.env["product.product"].create(
+            {
+                "name": "Product A",
+                "type": "product",
+                "default_code": "prda",
+                "categ_id": self.stock_account_product_categ.id,
+                "taxes_id": [(5, 0, 0)],
+                "supplier_taxes_id": [(6, 0, cash_basis_tax_a_third_amount.ids)],
+                "lst_price": 100.0,
+                "standard_price": 10.0,
+                "property_account_income_id": self.company_data["default_account_revenue"].id,
+                "property_account_expense_id": self.company_data["default_account_expense"].id,
+            }
+        )
+        product_A.categ_id.write(
+            {
+                "property_account_creditor_price_difference_categ": False,
+                "property_valuation": "real_time",
+                "property_cost_method": "standard",
+            }
+        )
+
+        date_po_and_delivery = '2018-01-01'
+        purchase_order = self._create_purchase(product_A, date_po_and_delivery, set_tax=True, price_unit=300.0)
+        self._process_pickings(purchase_order.picking_ids, date=date_po_and_delivery)
+
+        bill = self._create_invoice_for_po(purchase_order, '2018-02-02')
+        bill.action_post()
+
+        # Register a payment creating the CABA journal entry on the fly and reconcile it with the tax line.
+        self.env['account.payment.register']\
+            .with_context(active_ids=bill.ids, active_model='account.move')\
+            .create({})\
+            ._create_payments()
+
+        partial_rec = bill.mapped('line_ids.matched_debit_ids')
+        caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
+
+        # Tax values based on payment
+        # Invoice amount 300
+        self.assertRecordValues(caba_move.line_ids, [
+            # pylint: disable=C0326
+            # Base amount:
+            {'debit': 0.0,    'credit': 150.0,      'amount_currency': -300.0,   'account_id': cash_basis_base_account.id},
+            {'debit': 150.0,      'credit': 0.0,    'amount_currency': 300.0,  'account_id': cash_basis_base_account.id},
+            # tax:
+            {'debit': 0.0,     'credit': 50.0,      'amount_currency': -100.0,   'account_id': cash_basis_transfer_account.id},
+            {'debit': 50.0,      'credit': 0.0,     'amount_currency': 100.0,  'account_id': tax_account_1.id},
+        ])
