@@ -18,10 +18,6 @@ export class ChatWindowHiddenMenu extends Component {
          * browser screen height.
          */
         this._listRef = useRef('list');
-        /**
-         * The intent of the toggle button depends on the last rendered state.
-         */
-        this._wasMenuOpen;
         onMounted(() => this._mounted());
         onPatched(() => this._patched());
         onWillUnmount(() => this._willUnmount());
@@ -59,7 +55,6 @@ export class ChatWindowHiddenMenu extends Component {
         }
         this._applyListHeight();
         this._applyOffset();
-        this._wasMenuOpen = this.messaging.chatWindowManager.isHiddenMenuOpen;
     }
 
     /**
@@ -106,7 +101,7 @@ export class ChatWindowHiddenMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickToggle(ev) {
-        if (this._wasMenuOpen) {
+        if (this.messaging.chatWindowManager.isHiddenMenuOpen) {
             this.messaging.chatWindowManager.closeHiddenMenu();
         } else {
             this.messaging.chatWindowManager.openHiddenMenu();
