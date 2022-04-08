@@ -39,8 +39,10 @@
                     <field name="state"
                            decoration-success="state in ('done', 'to_close')"
                            decoration-warning="state == 'progress'"
-                           decoration-info="state in ('confirmed', 'draft')"
-                           optional="show" widget="badge"/>
+                           decoration-info="state == 'confirmed'"
+                           decoration-danger="state == 'cancel'"
+                           decoration-muted="state == 'draft'"
+                           optional="show" widget="badge" class="text-dark"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                     <field name="delay_alert_date" invisible="1"/>
                     <field nolabel="1" name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('json_popover', '=', False)]}"/>
@@ -436,7 +438,7 @@
                                         <field nolabel="1" name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('json_popover', '=', False)]}"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <span t-attf-class="badge #{['cancel'].indexOf(record.state.raw_value) > -1 ? 'badge-secondary' : ['none'].indexOf(record.state.raw_value) > -1 ? 'badge-danger' : ['progress'].indexOf(record.state.raw_value) > -1 ? 'badge-warning' : ['done', 'to_close'].indexOf(record.state.raw_value) > -1 ? 'badge-success' : 'badge-primary'}"><t t-esc="record.state.value"/></span>
+                                        <span t-attf-class="badge #{['cancel'].indexOf(record.state.raw_value) > -1 ? 'badge-danger' : ['draft'].indexOf(record.state.raw_value) > -1 ? 'badge-muted' : ['progress'].indexOf(record.state.raw_value) > -1 ? 'badge-warning' : ['done', 'to_close'].indexOf(record.state.raw_value) > -1 ? 'badge-success' : 'badge-primary'}"><t t-esc="record.state.value"/></span>
                                     </div>
                                 </div>
                             </div>
