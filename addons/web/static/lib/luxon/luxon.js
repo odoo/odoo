@@ -970,7 +970,6 @@ var luxon = (function (exports) {
 
     _proto.formatDateTimeFromString = function formatDateTimeFromString(dt, fmt) {
       var _this = this;
-
       var knownEnglish = this.loc.listingMode() === "en",
           useDateTimeFormatter = this.loc.outputCalendar && this.loc.outputCalendar !== "gregory",
           string = function string(opts, extract) {

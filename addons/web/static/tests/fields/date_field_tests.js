@@ -1,6 +1,14 @@
 /** @odoo-module **/
 
-import { click, getFixture, patchTimeZone, triggerEvent, triggerEvents } from "../helpers/utils";
+import {
+    click,
+    getFixture,
+    patchWithCleanup,
+    patchTimeZone,
+    triggerEvent,
+    triggerEvents,
+} from "../helpers/utils";
+import { strftimeToLuxonFormat } from "@web/core/l10n/dates";
 import { makeView, setupViewRegistries } from "../views/helpers";
 import { registry } from "@web/core/registry";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
@@ -689,26 +697,20 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("DateField support internalization", async function (assert) {
+    QUnit.test("DateField support internationalization", async function (assert) {
         assert.expect(2);
-
-        const originalLocale = moment.locale();
 
         registry.category("services").remove("localization");
         registry
             .category("services")
             .add(
                 "localization",
-                makeFakeLocalizationService({ dateFormat: "%d. %b %Y", timeFormat: "%H:%M:%S" })
+                makeFakeLocalizationService({ dateFormat: strftimeToLuxonFormat("%d.%m/%Y") })
             );
 
-        moment.defineLocale("norvegianForTest", {
-            monthsShort: "jan._feb._mars_april_mai_juni_juli_aug._sep._okt._nov._des.".split("_"),
-            monthsParseExact: true,
-            dayOfMonthOrdinalParse: /\d{1,2}\./,
-            ordinal: "%d.",
+        patchWithCleanup(luxon.Settings, {
+            defaultLocale: "no",
         });
-        moment().locale("norvegianForTest");
 
         await makeView({
             type: "form",
@@ -727,7 +729,6 @@ QUnit.module("Fields", (hooks) => {
             dateViewForm,
             "input date field should be the same as it was in the view form"
         );
-
         await click(document.body.querySelector(".day[data-day*='/22/']"));
         const dateEditForm = target.querySelector(".o_datepicker_input").value;
         await click(target.querySelector(".o_form_button_save"));
@@ -736,9 +737,6 @@ QUnit.module("Fields", (hooks) => {
             dateEditForm,
             "date field should be the same as the one selected in the view form"
         );
-
-        moment.locale(originalLocale);
-        moment.updateLocale("norvegianForTest", null);
     });
 
     QUnit.test("DateField: hit enter should update value", async function (assert) {
