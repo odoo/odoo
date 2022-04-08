@@ -328,12 +328,13 @@ export class View extends Component {
             // FIXME: there's something inelegant here: display might come from
             // the View's defaultProps, in which case, modifying it in place
             // would have unwanted effects.
+            const viewDisplay = deepCopy(ViewClass.display);
             const display = { ...this.withSearchProps.display };
-            for (const key in ViewClass.display) {
+            for (const key in viewDisplay) {
                 if (typeof display[key] === "object") {
-                    Object.assign(display[key], ViewClass.display[key]);
+                    Object.assign(display[key], viewDisplay[key]);
                 } else if (!(key in display) || display[key]) {
-                    display[key] = ViewClass.display[key];
+                    display[key] = viewDisplay[key];
                 }
             }
             this.withSearchProps.display = display;

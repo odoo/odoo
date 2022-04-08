@@ -6700,30 +6700,35 @@ QUnit.module("Views", (hooks) => {
         await click(form.el.querySelector(".o_field_x2many_list_row_add a"));
     });
 
-    QUnit.skipWOWL("modifiers are considered on multiple <footer/> tags", async function (assert) {
-        assert.expect(2);
-
-        const form = await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch:
-                "<form>" +
-                '<field name="bar"/>' +
-                "<footer attrs=\"{'invisible': [('bar','=',False)]}\">" +
-                "<button>Hello</button>" +
-                "<button>World</button>" +
-                "</footer>" +
-                "<footer attrs=\"{'invisible': [('bar','!=',False)]}\">" +
-                "<button>Foo</button>" +
-                "</footer>" +
-                "</form>",
-            resId: 1,
-            viewOptions: {
-                footerToButtons: true,
-                mode: "edit",
+    QUnit.test("modifiers are considered on multiple <footer/> tags", async function (assert) {
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <field name="bar"/>
+                    <footer attrs="{'invisible': [('bar','=',False)]}">
+                        <button>Hello</button>
+                        <button>World</button>
+                    </footer>
+                    <footer attrs="{'invisible': [('bar','!=',False)]}">
+                        <button>Foo</button>
+                    </footer>
+                </form>`,
+            "partner,false,search": "<search></search>",
+        };
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Partner",
+                res_model: "partner",
+                res_id: 1,
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+                target: "new",
             },
-        });
+        };
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 1);
+        await nextTick();
 
         assert.deepEqual(
             getVisibleButtonTexts(),
@@ -6731,7 +6736,7 @@ QUnit.module("Views", (hooks) => {
             "only the first button section should be visible"
         );
 
-        await click(form.el.querySelector(".o_field_boolean input"));
+        await click(target.querySelector(".o_field_boolean input"));
 
         assert.deepEqual(
             getVisibleButtonTexts(),
@@ -6740,39 +6745,39 @@ QUnit.module("Views", (hooks) => {
         );
 
         function getVisibleButtonTexts() {
-            var $visibleButtons = form.$buttons.find("button:visible");
-            return _.map($visibleButtons, function (el) {
-                return el.innerHTML.trim();
-            });
+            return [...target.querySelectorAll(".o_form_view .modal-footer button")].map((x) =>
+                x.innerHTML.trim()
+            );
         }
     });
 
-    QUnit.skipWOWL("buttons in footer are moved to $buttons if necessary", async function (assert) {
-        assert.expect(4);
+    QUnit.test("buttons in footer are moved to $buttons if necessary", async function (assert) {
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <field name="foo"/>
+                    <footer>
+                        <button string="Create" type="object" class="infooter"/>
+                    </footer>
+                </form>`,
+            "partner,false,search": "<search></search>",
+        };
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Partner",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+                target: "new",
+            },
+        };
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 1);
+        await nextTick();
 
-        const form = await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch:
-                "<form>" +
-                '<field name="foo"/>' +
-                "<footer>" +
-                '<button string="Create" type="object" class="infooter"/>' +
-                "</footer>" +
-                "</form>",
-            resId: 1,
-            viewOptions: { footerToButtons: true },
-        });
-
-        assert.containsOnce(form.el.querySelector(".o_control_panel"), "button.infooter");
-        assert.containsNone(form.el.querySelector(".o_form_view"), "button.infooter");
-
-        // check that this still works after a reload
-        await testUtils.form.reload(form);
-
-        assert.containsOnce(form.el.querySelector(".o_control_panel"), "button.infooter");
-        assert.containsNone(form.el.querySelector(".o_form_view"), "button.infooter");
+        assert.containsOnce(target.querySelector(".o_form_view .modal-footer"), "button.infooter");
+        assert.containsNone(target.querySelector(".o_form_view .o_content"), "button.infooter");
     });
 
     QUnit.skipWOWL("open new record even with warning message", async function (assert) {

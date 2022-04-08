@@ -4,7 +4,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { makeContext } from "@web/core/context";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { XMLParser } from "@web/core/utils/xml";
+import { createElement, XMLParser } from "@web/core/utils/xml";
 import { ActionMenus } from "@web/search/action_menus/action_menus";
 import { usePager } from "@web/search/pager_hook";
 import { FormRenderer } from "@web/views/form/form_renderer";
@@ -154,6 +154,17 @@ export class FormView extends Component {
 
         // enable the archive feature in Actions menu only if the active field is in the view
         this.archiveEnabled = "active" in activeFields || "x_active" in activeFields;
+
+        if (this.archInfo.xmlDoc.querySelector("footer")) {
+            this.footerArchInfo = Object.assign({}, this.archInfo);
+            this.footerArchInfo.xmlDoc = createElement("t");
+            this.footerArchInfo.xmlDoc.append(
+                ...[...this.archInfo.xmlDoc.querySelectorAll("footer")]
+            );
+            this.footerArchInfo.arch = this.footerArchInfo.xmlDoc.outerHTML;
+            [...this.archInfo.xmlDoc.querySelectorAll("footer")].forEach((x) => x.remove());
+            this.archInfo.arch = this.archInfo.xmlDoc.outerHTML;
+        }
 
         useViewButtons(this.model, (clickParams) => {
             if (clickParams.special !== "cancel") {

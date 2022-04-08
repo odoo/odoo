@@ -70,15 +70,16 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["Close Action"]);
     });
 
-    QUnit.skipWOWL("footer buttons are moved to the dialog footer", async function (assert) {
+    QUnit.test("footer buttons are moved to the dialog footer", async function (assert) {
         assert.expect(3);
         serverData.views["partner,false,form"] = `
-      <form>
-        <field name="display_name"/>
-        <footer>
-          <button string="Create" type="object" class="infooter"/>
-        </footer>
-      </form>`;
+            <form>
+                <field name="display_name"/>
+                <footer>
+                    <button string="Create" type="object" class="infooter"/>
+                </footer>
+            </form>
+        `;
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 5);
         assert.containsNone(
@@ -191,16 +192,17 @@ QUnit.module("ActionManager", (hooks) => {
         delete core.action_registry.map.test;
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         'footer buttons are updated when having another action in target "new"',
         async function (assert) {
-            serverData.views["partner,false,form"] =
-                "<form>" +
-                '<field name="display_name"/>' +
-                "<footer>" +
-                '<button string="Create" type="object" class="infooter"/>' +
-                "</footer>" +
-                "</form>";
+            serverData.views["partner,false,form"] = `
+                <form>
+                    <field name="display_name"/>
+                    <footer>
+                        <button string="Create" type="object" class="infooter"/>
+                    </footer>
+                </form>
+            `;
             const webClient = await createWebClient({ serverData });
             await doAction(webClient, 5);
             assert.containsNone(target, '.o_technical_modal .modal-body button[special="save"]');
@@ -216,7 +218,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         'buttons of client action in target="new" and transition to MVC action',
         async function (assert) {
             const ClientAction = AbstractAction.extend({

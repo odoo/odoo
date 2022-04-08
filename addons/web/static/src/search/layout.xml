@@ -2,12 +2,35 @@
 <templates xml:space="preserve">
 
     <t t-name="web.Layout" owl="1">
+        <t t-if="env.inDialog">
+            <t t-call="web.DialogLayout"/>
+        </t>
+        <t t-else="">
+            <t t-call="web.StandardLayout"/>
+        </t>
+    </t>
+
+    <t t-name="web.StandardLayout" owl="1">
         <t t-component="components.ControlPanel" slots="controlPanelSlots" t-if="display.controlPanel"/>
         <div class="o_content overflow-auto" t-attf-class="{{props.className}}" t-att-class="{ o_component_with_search_panel: display.searchPanel }">
             <t t-component="components.Banner" t-if="components.Banner and display.banner"/>
             <t t-component="components.SearchPanel" t-if="display.searchPanel"/>
             <t t-slot="default"/>
         </div>
+    </t>
+
+    <t t-name="web.DialogLayout" owl="1">
+        <t t-call="web.DialogContentLayout">
+            <t t-set="bodyTemplate" t-value="'web.StandardLayout'"/>
+            <t t-set="renderFooter" t-value="true"/>
+            <t t-set="footerTemplate" t-value="'web.DialogLayoutFooter'"/>
+        </t>
+    </t>
+
+    <t t-name="web.DialogLayoutFooter" owl="1">
+        <t t-slot="control-panel-bottom-left">
+            <t t-call="web.DialogFooterDefault"/>
+        </t>
     </t>
 
 </templates>

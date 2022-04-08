@@ -5,7 +5,12 @@
         <div t-att-class="props.className" t-ref="root">
             <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''">
                 <t t-set-slot="control-panel-bottom-left">
-                    <t t-call="{{ constructor.buttonTemplate }}" />
+                    <t t-if="footerArchInfo and env.inDialog">
+                        <FormRenderer record="model.root" archInfo="footerArchInfo"/>
+                    </t>
+                    <t t-else="">
+                        <t t-call="{{ constructor.buttonTemplate }}"/>
+                    </t>
                     <t t-if="props.info.actionMenus and !model.root.isVirtual">
                         <ActionMenus
                             activeIds="[model.root.resId]"

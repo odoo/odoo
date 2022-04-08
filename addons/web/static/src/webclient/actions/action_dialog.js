@@ -21,6 +21,15 @@ class ActionDialog extends Dialog {
     setup() {
         super.setup();
         useOwnDebugContext();
+        useEffect(
+            () => {
+                if (this.props.actionType === "ir.actions.act_window") {
+                    const main = this.modalRef.el.querySelector("main.modal-body");
+                    main.classList.add("o_act_window");
+                }
+            },
+            () => []
+        );
     }
 }
 ActionDialog.components = { ...Dialog.components, DebugMenu };
@@ -64,6 +73,10 @@ class LegacyAdaptedActionDialog extends ActionDialog {
         );
     }
 }
+<<<<<<< HEAD
 LegacyAdaptedActionDialog.template = "web.LegacyAdaptedActionDialog";
+=======
+LegacyAdaptedActionDialog.dialogTemplate = "web.LegacyAdaptedActionDialogTemplate";
+>>>>>>> form_view: move buttons to the cp
 
 export { LegacyAdaptedActionDialog as ActionDialog };
