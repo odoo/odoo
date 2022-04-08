@@ -1211,8 +1211,9 @@ const Wysiwyg = Widget.extend({
         const restoreSelection = preserveCursor(this.odooEditor.document);
 
         const $node = $(params.node);
-        // We need to keep track of FA icon because media.js will _clear those classes
+        // We need to keep track of FA icon or video because media.js will _clear those classes
         const wasFontAwesome = $node.hasClass('fa');
+        const wasImageOrVideo = wysiwygUtils.isImg($node[0]);
         const $editable = $(OdooEditorLib.closestElement(range.startContainer, '.o_editable'));
         const model = $editable.data('oe-model');
         const field = $editable.data('oe-field');
@@ -1230,6 +1231,7 @@ const Wysiwyg = Widget.extend({
         mediaDialog.on('save', this, this._onMediaDialogSave.bind(this, {
             $node: $node,
             wasFontAwesome: wasFontAwesome,
+            wasImageOrVideo: wasImageOrVideo,
             htmlClass: params.htmlClass,
             restoreSelection: restoreSelection,
         }));
@@ -1256,7 +1258,7 @@ const Wysiwyg = Widget.extend({
             element.className += " " + params.htmlClass;
         }
         params.restoreSelection();
-        if (wysiwygUtils.isImg(params.$node[0]) || params.wasFontAwesome) {
+        if (params.wasImageOrVideo || params.wasFontAwesome) {
             params.$node.replaceWith(element);
             this.odooEditor.unbreakableStepUnactive();
             this.odooEditor.historyStep();
