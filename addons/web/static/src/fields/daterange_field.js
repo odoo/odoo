@@ -75,7 +75,7 @@ export class DateRangeField extends Component {
         let formattedValue;
         try {
             formattedValue = formatters.get(format)(value, {
-                timezone: true,
+                timezone: this.isDateTime,
             });
         } catch {
             this.props.setAsInvalid(this.props.name);
@@ -88,7 +88,7 @@ export class DateRangeField extends Component {
             let value;
             value = this.props.parse(ev.target.value, {
                 parser: this.props.formatType,
-                timezone: true,
+                timezone: this.isDateTime,
             });
             this.props.update(value);
         } catch {

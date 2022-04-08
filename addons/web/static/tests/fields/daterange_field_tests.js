@@ -1,6 +1,13 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture, patchTimeZone, triggerEvent } from "../helpers/utils";
+import {
+    click,
+    editInput,
+    getFixture,
+    patchTimeZone,
+    triggerEvent,
+    triggerScroll,
+} from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -540,7 +547,7 @@ QUnit.module("Fields", (hooks) => {
                 "date range picker should be opened"
             );
 
-            await triggerEvent(target, ".o_form_view", "scroll");
+            await triggerScroll(target, { top: 50 });
             assert.isNotVisible(
                 document.querySelector(".daterangepicker[data-name='datetime']"),
                 "date range picker should be closed"
