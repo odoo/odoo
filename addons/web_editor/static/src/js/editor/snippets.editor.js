@@ -368,6 +368,14 @@ var SnippetEditor = Widget.extend({
 
         // Now cover the element
         const offset = $target.offset();
+
+        // If the target is in an iframe, we need the iframe offset.
+        if ($target[0].ownerDocument.defaultView.frameElement) {
+            const { x, y } = $target[0].ownerDocument.defaultView.frameElement.getBoundingClientRect();
+            offset.left += x;
+            offset.top += y;
+        }
+
         var manipulatorOffset = this.$el.parent().offset();
         offset.top -= manipulatorOffset.top;
         offset.left -= manipulatorOffset.left;
@@ -1774,6 +1782,7 @@ var SnippetsMenu = Widget.extend({
         // Cleaning consecutive zone and up zones placed between floating or
         // inline elements. We do not like these kind of zones.
         $zones = this.getEditableArea().find('.oe_drop_zone:not(.oe_vertical)');
+        const iframeOffset = $zones[0] && $zones[0].ownerDocument.defaultView.frameElement.getBoundingClientRect();
         $zones.each(function () {
             var zone = $(this);
             var prev = zone.prev();
@@ -1793,6 +1802,17 @@ var SnippetsMenu = Widget.extend({
             } else if (dispPrev !== null && dispNext !== null
              && dispPrev.indexOf('inline') >= 0 && dispNext.indexOf('inline') >= 0) {
                 zone.remove();
+            }
+
+            if (iframeOffset) {
+                this.oldGetBoundingClientRect = this.getBoundingClientRect;
+                this.getBoundingClientRect = () => {
+                    const rect = this.oldGetBoundingClientRect();
+                    const { x, y } = iframeOffset;
+                    rect.x += x;
+                    rect.y += y;
+                    return rect;
+                };
             }
         });
     },
