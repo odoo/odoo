@@ -5,6 +5,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
+from odoo import Command
 from odoo.addons.event.tests.common import EventCase
 from odoo.addons.mail.tests.common import MockEmail
 from odoo.tools import formataddr, mute_logger
@@ -276,3 +277,59 @@ class TestMailSchedule(EventCase, MockEmail):
             fields_values={'subject': '%s: today' % test_event.name,
                            'email_from': self.user_eventmanager.company_id.email_formatted,
                           })
+
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    def test_unique_event_mail_ids(self):
+        # create event with default event_mail_ids lines
+        test_event = self.env['event.event'].with_user(self.user_eventmanager).create({
+            'name': "TestEvent",
+            'auto_confirm': True,
+            'date_begin': datetime.now(),
+            'date_end': datetime.now() + relativedelta(days=1),
+            'seats_max': 2,
+            'seats_limited': True,
+        })
+
+        event_mail_ids_initial = test_event.event_mail_ids
+        self._create_registrations(test_event, 1)
+
+        mail_done = test_event.event_mail_ids.filtered(lambda mail: mail.mail_done and mail.mail_registration_ids)
+
+        self.assertEqual(len(test_event.event_mail_ids), 3, "Should have 3 communication lines")
+        self.assertEqual(len(mail_done), 1, "Should have sent first mail immediately")
+
+        # change the event type that has event_type_mail_ids having one identical and one non-identical configuration
+        event_type = self.env['event.type'].create({
+            'name': "Go Sports",
+            'event_type_mail_ids': [
+                Command.create({
+                    'notification_type': 'mail',
+                    'interval_nbr': 0,
+                    'interval_unit': 'now',
+                    'interval_type': 'after_sub',
+                    'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_subscription')}),
+                Command.create({
+                    'notification_type': 'mail',
+                    'interval_nbr': 5,
+                    'interval_unit': 'hours',
+                    'interval_type': 'before_event',
+                    'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_reminder')}),
+            ]
+        })
+        test_event.event_type_id = event_type
+
+        self.assertTrue(mail_done in test_event.event_mail_ids, "Sent communication should not have been removed")
+        mail_not_done = event_mail_ids_initial - mail_done
+        self.assertFalse(test_event.event_mail_ids & mail_not_done, "Other default communication lines should have been removed")
+
+        self.assertEqual(len(test_event.event_mail_ids), 2, "Should now have only two communication lines")
+        mails_to_send = test_event.event_mail_ids - mail_done
+        duplicate_mails = mails_to_send.filtered(lambda mail:
+            mail.notification_type == 'mail' and\
+            mail.interval_nbr == 0 and\
+            mail.interval_unit == 'now' and\
+            mail.interval_type == 'after_sub' and\
+            mail.template_ref.id == self.env['ir.model.data']._xmlid_to_res_id('event.event_subscription'))
+
+        self.assertEqual(len(duplicate_mails), 0,
+            "The duplicate configuration (first one from event_type.event_type_mail_ids which has same configuration as the sent one) should not have been added")

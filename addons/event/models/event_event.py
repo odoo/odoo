@@ -460,11 +460,14 @@ class EventEvent(models.Model):
                 lambda mail: not(mail._origin.mail_done) and not(mail._origin.mail_registration_ids)
             )
             command = [Command.unlink(mail.id) for mail in mails_to_remove]
+
+            # lines to add: those which do not have the exact copy available in lines to keep
             if event.event_type_id.event_type_mail_ids:
-                command += [
-                    Command.create(line._prepare_event_mail_values())
-                    for line in event.event_type_id.event_type_mail_ids
-                ]
+                mails_to_keep_vals = {mail._prepare_event_mail_values() for mail in event.event_mail_ids - mails_to_remove}
+                for mail in event.event_type_id.event_type_mail_ids:
+                    mail_values = mail._prepare_event_mail_values()
+                    if mail_values not in mails_to_keep_vals:
+                        command.append(Command.create(mail_values._asdict()))
             if command:
                 event.event_mail_ids = command
 

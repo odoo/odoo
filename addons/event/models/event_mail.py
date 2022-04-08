@@ -5,6 +5,7 @@ import logging
 import random
 import threading
 
+from collections import namedtuple
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
@@ -59,14 +60,13 @@ class EventTypeMail(models.Model):
 
     def _prepare_event_mail_values(self):
         self.ensure_one()
-        return {
-            'notification_type': self.notification_type,
-            'interval_nbr': self.interval_nbr,
-            'interval_unit': self.interval_unit,
-            'interval_type': self.interval_type,
-            'template_ref': '%s,%i' % (self.template_ref._name, self.template_ref.id)
-        }
-
+        return namedtuple("MailValues", ['notification_type', 'interval_nbr', 'interval_unit', 'interval_type', 'template_ref'])(
+            self.notification_type,
+            self.interval_nbr,
+            self.interval_unit,
+            self.interval_type,
+            '%s,%i' % (self.template_ref._name, self.template_ref.id)
+        )
 
 class EventMailScheduler(models.Model):
     """ Event automated mailing. This model replaces all existing fields and
@@ -181,6 +181,16 @@ class EventMailScheduler(models.Model):
         if new:
             return self.env['event.mail.registration'].create(new)
         return self.env['event.mail.registration']
+
+    def _prepare_event_mail_values(self):
+        self.ensure_one()
+        return namedtuple("MailValues", ['notification_type', 'interval_nbr', 'interval_unit', 'interval_type', 'template_ref'])(
+            self.notification_type,
+            self.interval_nbr,
+            self.interval_unit,
+            self.interval_type,
+            '%s,%i' % (self.template_ref._name, self.template_ref.id)
+        )
 
     @api.model
     def _warn_template_error(self, scheduler, exception):
