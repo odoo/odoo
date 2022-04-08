@@ -122,6 +122,26 @@ class SequenceMixin(models.AbstractModel):
         self.ensure_one()
         return "", {}
 
+    def _get_next_sequence(self):
+        """ Determines and returns the next sequence. Could be useful to get the
+        next sequence without alterer the record.
+        :return: next sequence name
+        :rtype: str
+        """
+        last_sequence = self._get_last_sequence()
+        new = not last_sequence
+        if new:
+            last_sequence = self._get_last_sequence(relaxed=True) or self._get_starting_sequence()
+
+        format_str, format_values = self._get_sequence_format_param(last_sequence)
+        if new:
+            format_values['seq'] = 0
+            format_values['year'] = self[self._sequence_date_field].year % (10 ** format_values['year_length'])
+            format_values['month'] = self[self._sequence_date_field].month
+        format_values['seq'] = format_values['seq'] + 1
+
+        return format_str.format(**format_values)
+
     def _get_starting_sequence(self):
         """Get a default sequence number.
 
@@ -146,7 +166,6 @@ class SequenceMixin(models.AbstractModel):
         would only work when the numbering makes a new start (domain returns by
         _get_last_sequence_domain is [], i.e: a new year).
 
-        :param field_name: the field that contains the sequence.
         :param relaxed: this should be set to True when a previous request didn't find
             something without. This allows to find a pattern from a previous period, and
             try to adapt it for the new period.
@@ -228,23 +247,9 @@ class SequenceMixin(models.AbstractModel):
         This method ensures that the field is set both in the ORM and in the database.
         This is necessary because we use a database query to get the previous sequence,
         and we need that query to always be executed on the latest data.
-
-        :param field_name: the field that contains the sequence.
         """
         self.ensure_one()
-        last_sequence = self._get_last_sequence()
-        new = not last_sequence
-        if new:
-            last_sequence = self._get_last_sequence(relaxed=True) or self._get_starting_sequence()
-
-        format, format_values = self._get_sequence_format_param(last_sequence)
-        if new:
-            format_values['seq'] = 0
-            format_values['year'] = self[self._sequence_date_field].year % (10 ** format_values['year_length'])
-            format_values['month'] = self[self._sequence_date_field].month
-        format_values['seq'] = format_values['seq'] + 1
-
-        self[self._sequence_field] = format.format(**format_values)
+        self[self._sequence_field] = self._get_next_sequence()
         self._compute_split_sequence()
 
     def _is_last_from_seq_chain(self):
