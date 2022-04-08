@@ -177,7 +177,7 @@ class AccountEdiFormat(models.Model):
             if 'id_transaction' in response:
                 invoice.l10n_it_edi_transaction = response['id_transaction']
                 to_return[invoice].update({
-                    'error': _('The invoice was successfully transmitted to the Public Administration and we are waiting for confirmation.'),
+                    'error': _('The invoice was sent to FatturaPA, but we are still awaiting a response. Click the link above to check for an update.'),
                     'blocking_level': 'info',
                 })
         return to_return
@@ -214,7 +214,7 @@ class AccountEdiFormat(models.Model):
             state = response['state']
             if state == 'awaiting_outcome':
                 to_return[invoice] = {
-                    'error': _('The invoice was successfully transmitted to the Public Administration and we are waiting for confirmation'),
+                    'error': _('The invoice was sent to FatturaPA, but we are still awaiting a response. Click the link above to check for an update.'),
                     'blocking_level': 'info',
                 }
                 proxy_acks.append(id_transaction)
@@ -251,6 +251,13 @@ class AccountEdiFormat(models.Model):
                         ' Original message from the SDI: %s', errors[idx]))
                     to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
                 else:
+                    # Add helpful text if duplicated filename error
+                    if '00002' in error_codes:
+                        idx = error_codes.index('00002')
+                        errors[idx] = _(
+                            'The filename is duplicated. Try again (or adjust the FatturaPA Filename sequence).'
+                            ' Original message from the SDI: %s', [errors[idx]]
+                        )
                     to_return[invoice] = {'error': self._format_error_message(_('The invoice has been refused by the Exchange System'), errors), 'blocking_level': 'error'}
                     invoice.l10n_it_edi_transaction = False
             elif state == 'notificaMancataConsegna':
