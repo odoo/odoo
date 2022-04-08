@@ -6,12 +6,13 @@ import smtplib
 
 from OpenSSL.SSL import Error as SSLError
 from socket import gaierror, timeout
-from unittest.mock import call
+from unittest.mock import call, patch
 
-from odoo import api
+from odoo import api, Command
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.test_mail.tests.common import TestMailCommon
-from odoo.tests import common, tagged
+from odoo.exceptions import AccessError
+from odoo.tests import common, tagged, users
 from odoo.tools import mute_logger
 
 
@@ -60,6 +61,67 @@ class TestMailMail(TestMailCommon):
         self.test_mail.write({'failure_reason': False, 'failure_type': False, 'state': 'outgoing'})
         self.test_notification.write({'failure_type': False, 'notification_status': 'ready'})
 
+    @users('admin')
+    def test_mail_mail_attachment_access(self):
+        mail = self.env['mail.mail'].create({
+            'body_html': 'Test',
+            'email_to': 'test@example.com',
+            'partner_ids': [(4, self.user_employee.partner_id.id)],
+            'attachment_ids': [
+                (0, 0, {'name': 'file 1', 'datas': 'c2VjcmV0'}),
+                (0, 0, {'name': 'file 2', 'datas': 'c2VjcmV0'}),
+                (0, 0, {'name': 'file 3', 'datas': 'c2VjcmV0'}),
+                (0, 0, {'name': 'file 4', 'datas': 'c2VjcmV0'}),
+            ],
+        })
+
+        def _patched_check(self, *args, **kwargs):
+            if self.env.is_superuser():
+                return
+            if any(attachment.name in ('file 2', 'file 4') for attachment in self):
+                raise AccessError('No access')
+
+        mail.invalidate_cache(ids=mail.ids)
+
+        new_attachment = self.env['ir.attachment'].create({
+            'name': 'new file',
+            'datas': 'c2VjcmV0',
+        })
+
+        with patch.object(type(self.env['ir.attachment']), 'check', _patched_check):
+            # Sanity check
+            self.assertEqual(mail.restricted_attachment_count, 2)
+            self.assertEqual(len(mail.unrestricted_attachment_ids), 2)
+            self.assertEqual(mail.unrestricted_attachment_ids.mapped('name'), ['file 1', 'file 3'])
+
+            # Add a new attachment
+            mail.write({
+                'unrestricted_attachment_ids': [Command.link(new_attachment.id)],
+            })
+            self.assertEqual(mail.restricted_attachment_count, 2)
+            self.assertEqual(len(mail.unrestricted_attachment_ids), 3)
+            self.assertEqual(mail.unrestricted_attachment_ids.mapped('name'), ['file 1', 'file 3', 'new file'])
+            self.assertEqual(len(mail.attachment_ids), 5)
+
+            # Remove an attachment
+            mail.write({
+                'unrestricted_attachment_ids': [Command.unlink(new_attachment.id)],
+            })
+            self.assertEqual(mail.restricted_attachment_count, 2)
+            self.assertEqual(len(mail.unrestricted_attachment_ids), 2)
+            self.assertEqual(mail.unrestricted_attachment_ids.mapped('name'), ['file 1', 'file 3'])
+            self.assertEqual(len(mail.attachment_ids), 4)
+
+            # Reset command
+            mail.invalidate_cache(ids=mail.ids)
+            mail.write({'unrestricted_attachment_ids': [Command.clear()]})
+            self.assertEqual(len(mail.unrestricted_attachment_ids), 0)
+            self.assertEqual(len(mail.attachment_ids), 2)
+
+            # Read in SUDO
+            mail.invalidate_cache(ids=mail.ids)
+            self.assertEqual(mail.sudo().restricted_attachment_count, 2)
+            self.assertEqual(len(mail.sudo().unrestricted_attachment_ids), 0)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_mail_recipients(self):

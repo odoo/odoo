@@ -51,7 +51,13 @@
                                 </group>
                             </page>
                             <page string="Attachments" name="attachments">
-                                <field name="attachment_ids"/>
+                                <div class="alert alert-warning" role="alert"
+                                    attrs="{'invisible': [('restricted_attachment_count', '=', 0)]}">
+                                    You do not have access to <field name="restricted_attachment_count"/>
+                                    attachment(s) of this email.
+                                </div>
+                                <field name="unrestricted_attachment_ids"
+                                    domain="[('res_field','=', False)]"/>
                             </page>
                             <page string="Failure Reason" name="failure_reason" attrs="{'invisible': [('state', '!=', 'exception')]}">
                                 <field name="failure_reason"/>
