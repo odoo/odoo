@@ -6,6 +6,7 @@ var core = require('web.core');
 var FieldHtml = require('web_editor.field.html');
 var fieldRegistry = require('web.field_registry');
 var convertInline = require('web_editor.convertInline');
+const { initializeDesignTabCss } = require('mass_mailing.design_constants');
 
 var _t = core._t;
 
@@ -125,6 +126,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         this.$content.find('.o_layout').addBack().data('name', 'Mailing');
         // We don't want to drop snippets directly within the wysiwyg.
         this.$content.removeClass('o_editable');
+        initializeDesignTabCss(this.wysiwyg.getEditable());
     },
     /**
      * Returns true if the editable area is empty.
@@ -289,6 +291,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (themeParams.name === 'basic') {
             this.$content[0].focus();
         }
+        initializeDesignTabCss(this.wysiwyg.getEditable());
         this.wysiwyg.trigger('reload_snippet_dropzones');
         this.trigger_up('iframe_updated', { $iframe: this.wysiwyg.$iframe });
         this.wysiwyg.odooEditor.historyStep(true);

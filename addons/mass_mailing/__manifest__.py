@@ -88,6 +88,7 @@
             'mass_mailing/static/src/js/mailing_contact_view_list.js',
             'mass_mailing/static/src/js/mailing_filter_widget.js',
             'mass_mailing/static/src/js/mass_mailing.js',
+            'mass_mailing/static/src/js/mass_mailing_design_constants.js',
             'mass_mailing/static/src/js/mass_mailing_widget.js',
             'mass_mailing/static/src/js/mailing_mailing_view_form_full_width.js',
             'mass_mailing/static/src/js/unsubscribe.js',
