@@ -294,7 +294,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
             },
         })
         .then(function (result) {
-            $data.toggleClass("css_unpublished css_published");
+            $data.toggleClass("css_published", result).toggleClass("css_unpublished", !result);
             $data.find('input').prop("checked", result);
             $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
             if (result) {
