@@ -59,6 +59,7 @@
                 <field name="employee_id" type="row"/>
                 <field name="date" interval="month" type="col"/>
                 <field name="unit_amount" type="measure"/>
+                <field name="amount" string="Timesheet Costs"/>
             </pivot>
         </field>
     </record>
@@ -68,10 +69,23 @@
         <field name="model">account.analytic.line</field>
         <field name="arch" type="xml">
             <pivot string="Timesheets" sample="1">
+                <field name="date" interval="month" type="row"/>
                 <field name="timesheet_invoice_type" type="col"/>
                 <field name="unit_amount" type="measure" widget="timesheet_uom"/>
                 <field name="amount" string="Timesheet Costs"/>
             </pivot>
+        </field>
+    </record>
+
+    <record id="view_hr_timesheet_pivot_view_per_invoice" model="ir.ui.view">
+        <field name="name">account.analytic.line.pivot.per.invoice</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="view_hr_timesheet_line_pivot_billing_rate"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='timesheet_invoice_type']" position="attributes">
+                <attribute name="name">timesheet_invoice_id</attribute>
+            </xpath>
         </field>
     </record>
 
