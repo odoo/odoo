@@ -219,9 +219,10 @@ class StockWarehouseOrderpoint(models.Model):
                 'views': [(self.env.ref('product.product_normal_form_view').id, 'form')],
                 'context': {'form_view_initial_mode': 'edit'}
             }, _('Edit Product'))
+        now = datetime.now()
         notification = False
         if len(self) == 1:
-            notification = self._get_replenishment_order_notification()
+            notification = self._get_replenishment_order_notification(now)
         # Forced to call compute quantity because we don't have a link.
         self._compute_qty()
         self.filtered(lambda o: o.create_uid.id == SUPERUSER_ID and o.qty_to_order <= 0.0 and o.trigger == 'manual').unlink()
@@ -441,7 +442,21 @@ class StockWarehouseOrderpoint(models.Model):
             'trigger': 'manual',
         }
 
-    def _get_replenishment_order_notification(self):
+    def _get_replenishment_order_notification(self, written_after):
+        self.ensure_one()
+        move = self.env['stock.move'].search([
+            ('orderpoint_id', 'in', self.ids),
+            ('write_date', '>', written_after)
+        ], limit=1)
+        if move.picking_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('The inter-warehouse transfers have been generated'),
+                    'sticky': False,
+                }
+            }
         return False
 
     def _quantity_in_progress(self):
