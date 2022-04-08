@@ -1203,6 +1203,17 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {integer}
+         */
+        _computeDisplayCounter() {
+            if (this.mass_mailing && this.env.session.notification_type === 'email') {
+                return 0;
+            }
+            return this.localMessageUnreadCounter;
+        }
+
+        /**
+         * @private
          * @returns {string}
          */
         _computeDisplayName() {
@@ -1858,6 +1869,16 @@ function factory(dependencies) {
         }),
         creator: many2one('mail.user'),
         custom_channel_name: attr(),
+        /**
+         * Determines whether counter should be displayed or not.
+         */
+        displayCounter: attr({
+            compute: '_computeDisplayCounter',
+            dependencies: [
+                'localMessageUnreadCounter',
+                'mass_mailing',
+            ],
+        }),
         displayName: attr({
             compute: '_computeDisplayName',
             dependencies: [
