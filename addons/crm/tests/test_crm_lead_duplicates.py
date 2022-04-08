@@ -136,6 +136,63 @@ class TestLeadConvert(TestCrmCommon):
         self.assertEqual(lead_13 + lead_14, lead_14.duplicate_lead_ids)
 
     @users('user_sales_manager')
+    def test_potential_duplicates_with_phone(self):
+        customer = self.env['res.partner'].create({
+            'email': 'customer1@duplicate.example.com',
+            'mobile': '+32485001122',
+            'name': 'Customer1',
+            'phone': '(803)-456-6126',
+        })
+        base_lead = self.env['crm.lead'].create({
+            'name': 'Base Lead',
+            'partner_id': customer.id,
+            'type': 'lead',
+        })
+
+        self.assertEqual(base_lead.contact_name, customer.name)
+        self.assertEqual(base_lead.mobile, customer.mobile)
+        self.assertFalse(base_lead.partner_name)
+        self.assertEqual(base_lead.phone, customer.phone)
+
+        dup1_1 = self.env['crm.lead'].create({
+            'name': 'Base Lead Dup1',
+            'type': 'lead',
+            'phone': '456-6126',  # shorter version of base_lead
+            'partner_name': 'Partner Name 1',
+        })
+        dup1_2 = self.env['crm.lead'].create({
+            'name': 'Base Lead Dup2',
+            'mobile': '8034566126',
+            'partner_name': 'Partner Name 2',
+            'type': 'lead',
+        })
+        dup1_3 = self.env['crm.lead'].create({
+            'name': 'Base Lead Dup3',
+            'partner_name': 'Partner Name 3',
+            'phone': '(803)-456-6126',
+            'type': 'lead',
+        })
+        dup1_4 = self.env['crm.lead'].create({
+            'mobile': '0032485001122',
+            # 'mobile': '0485001122',  # note: does not work
+            'name': 'Base Lead Dup4',
+            'partner_name': 'Partner Name 4',
+            'phone': False,
+            'type': 'lead',
+        })
+
+        expected = base_lead + dup1_2 + dup1_3 + dup1_4  # dup1_1 is shorter than lead -> not a dupe
+        self.assertEqual(
+            base_lead.duplicate_lead_ids, expected,
+            'CRM: missing %s, extra %s' % ((expected - base_lead.duplicate_lead_ids).mapped('name'), (base_lead.duplicate_lead_ids - expected).mapped('name'))
+        )
+        expected = base_lead + dup1_1 + dup1_2 + dup1_3  # dup1_4 has mobile of customer, but no link with dup1_1
+        self.assertEqual(
+            dup1_1.duplicate_lead_ids, expected,
+            'CRM: missing %s, extra %s' % ((expected - dup1_1.duplicate_lead_ids).mapped('name'), (dup1_1.duplicate_lead_ids - expected).mapped('name'))
+        )
+
+    @users('user_sales_manager')
     def test_potential_duplicates_with_invalid_email(self):
         lead_1 = self.env['crm.lead'].create({
             'name': 'Lead 1',
