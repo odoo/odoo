@@ -253,6 +253,13 @@ registerModel({
             this.postMessage();
         },
         /**
+         * Called when clicking on "send" button.
+         */
+        onClickSend() {
+            this.sendMessage();
+            this.update({ doFocus: true });
+        },
+        /**
          * Handles click on the "stop replying" button.
          *
          * @param {MouseEvent} ev

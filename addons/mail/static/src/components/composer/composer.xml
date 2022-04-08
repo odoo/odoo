@@ -150,7 +150,7 @@
                     }"
                     t-att-disabled="!composerView.composer.canPostMessage ? 'disabled' : ''"
                     type="button"
-                    t-on-click="_onClickSend"
+                    t-on-click="composerView.onClickSend"
                 >
                     <t t-if="!messaging.device.isMobile"><t t-esc="composerView.sendButtonText"/></t>
                     <t t-else=""><i class="fa fa-paper-plane-o"/></t>

@@ -48,16 +48,6 @@ export class Composer extends Component {
     }
 
     /**
-     * Called when clicking on "send" button.
-     *
-     * @private
-     */
-    _onClickSend() {
-        this.composerView.sendMessage();
-        this.composerView.update({ doFocus: true });
-    }
-
-    /**
      * @private
      */
     _onComposerTextInputSendShortcut() {
