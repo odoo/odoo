@@ -17,7 +17,7 @@
     <td valign="center">
         <a t-if="has_button_access"
                 t-att-href="button_access['url']"
-                style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">
+                style="font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-width: 8px 12px 8px 12px; border-radius:3px">
             <t t-out="button_access['title']"/>
         </a>
         <t t-if="actions">
@@ -35,7 +35,7 @@
     </tr><tr>
     <td colspan="2" style="text-align:center;">
         <hr width="100%"
-            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0 12px 0;"/>
+            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;"/>
         <p t-if="subtype.internal" style="background-color: #f2dede; padding: 5px; margin-bottom: 16px;">
             <strong>Internal communication</strong>: Replying will post an internal note. Followers won't receive any email notification.
         </p>
