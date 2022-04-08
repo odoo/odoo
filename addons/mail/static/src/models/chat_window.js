@@ -105,6 +105,13 @@ registerModel({
             this.manager.swap(this, lastVisible);
         },
         /**
+         * @param {MouseEvent} ev
+         */
+        onClickExpand(ev) {
+            ev.stopPropagation();
+            this.expand();
+        },
+        /**
          * Handles click on the "stop adding users" button.
          *
          * @param {MouseEvent} ev

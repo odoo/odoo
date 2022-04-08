@@ -85,15 +85,6 @@ export class ChatWindowHeader extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickExpand(ev) {
-        ev.stopPropagation();
-        this.chatWindow.expand();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     _onClickShiftPrev(ev) {
         markEventHandled(ev, 'ChatWindowHeader.ClickShiftPrev');
         this.chatWindow.shiftPrev();
