@@ -199,7 +199,7 @@ class SaleOrder(models.Model):
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
 
-    pricelist_id = fields.Many2one(
+    pricelist_id = fields.Many2one(  # TODO in master, should be required !!!
         'product.pricelist', string='Pricelist', required=False, check_company=True,  # Unrequired company
         compute='_compute_pricelist_id', store=True, precompute=True, readonly=False,
         states=READONLY_FIELD_STATES,
@@ -594,6 +594,10 @@ class SaleOrder(models.Model):
                 ) if 'date_order' in vals else None
                 vals['name'] = self.env['ir.sequence'].next_by_code(
                     'sale.order', sequence_date=seq_date) or _('New')
+            if 'pricelist_id' in vals and not vals.get('pricelist_id'):
+                # Force precomputation of pricelist_id by popping the empty value
+                # to make sure pricelist_id field is always specified
+                vals.pop('pricelist_id')
 
         return super().create(vals_list)
 
