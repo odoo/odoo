@@ -5,111 +5,12 @@ const options = require('web_editor.snippets.options');
 const {ColorpickerWidget} = require('web.Colorpicker');
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
 const weUtils = require('web_editor.utils');
+const {
+    CSS_PREFIX, BTN_SIZE_STYLES,
+    DEFAULT_BUTTON_SIZE, PRIORITY_STYLES, FONT_FAMILIES,
+    getFontName, normalizeFontFamily, initializeDesignTabCss
+} = require('mass_mailing.design_constants');
 
-//--------------------------------------------------------------------------
-// Constants
-//--------------------------------------------------------------------------
-
-const _getFontName = fontFamily => fontFamily.split(',')[0].replace(/"/g, '').replace(/([a-z])([A-Z])/g, (v, a, b) => `${a} ${b}`).trim();
-const _normalizeFontFamily = fontFamily => fontFamily.replace(/"/g, '').replace(/, /g, ',');
-const FONT_FAMILIES = [
-    'Arial, "Helvetica Neue", Helvetica, sans-serif', // name: "Arial"
-    '"Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace', // name: "Courier New"
-    'Georgia, Times, "Times New Roman", serif', // name: "Georgia"
-    '"Helvetica Neue", Helvetica, Arial, sans-serif', // name: "Helvetica Neue"
-    '"Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif', // name: "Lucida Grande"
-    'Tahoma, Verdana, Segoe, sans-serif', // name: "Tahoma"
-    'TimesNewRoman, "Times New Roman", Times, Baskerville, Georgia, serif', // name: "Times New Roman"
-    '"Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Tahoma, sans-serif', // name: "Trebuchet MS"
-    'Verdana, Geneva, sans-serif', // name: "Verdana"
-].map(fontFamily => _normalizeFontFamily(fontFamily));
-const CSS_PREFIX = '.o_mail_wrapper';
-const DEFAULT_CSS_OBJECT = {
-    h1: {
-        'font-size': '35px',
-        color: '#212529',
-        'font-family': 'Arial,Helvetica Neue,Helvetica,sans-serif',
-    },
-    h2: {
-        'font-size': '28px',
-        color: '#212529',
-        'font-family': 'Arial,Helvetica Neue,Helvetica,sans-serif',
-    },
-    h3: {
-        'font-size': '24.5px',
-        color: '#212529',
-        'font-family': 'Arial,Helvetica Neue,Helvetica,sans-serif',
-    },
-    'p, p > *, li, li > *': {
-        'font-size': '14px',
-        color: '#212529',
-        'font-family': 'Arial,Helvetica Neue,Helvetica,sans-serif',
-    },
-    'a:not(.btn), a.btn-link': {
-        'text-decoration-line': 'none',
-        color: '#276e72',
-    },
-    'a.btn-primary, a.btn-outline-primary, a.btn-fill-primary': {
-        'font-size': '12.25px',
-        color: '#FFFFFF',
-        'background-color': '#35979c',
-        'border-color': '#35979c',
-        'border-style': 'solid',
-        'border-width': '1px',
-    },
-    'a.btn-secondary, a.btn-outline-secondary, a.btn-fill-secondary': {
-        'font-size': '12.25px',
-        color: '#FFFFFF',
-        'background-color': '#685563',
-        'border-color': '#685563',
-        'border-style': 'solid',
-        'border-width': '1px',
-    },
-    hr: {
-        'border-top-color': '#212529',
-        'border-top-style': 'solid',
-        'border-top-width': '1px',
-        width: '100%',
-    }
-};
-const DEFAULT_CSS = Object.keys(DEFAULT_CSS_OBJECT).map( // selectors
-    key => key.split(',').map( // each individual comma separated selector
-        selector => `${CSS_PREFIX} ${selector.trim()} {\n    ${ // selector {
-            Object.keys(DEFAULT_CSS_OBJECT[key]).map( // css properties
-                prop => `${prop}: ${DEFAULT_CSS_OBJECT[key][prop]}`) // [prop: value]
-                    .join(';\n    ')}\n}` // prop: value;
-    ).join('\n')
-).join('\n'); // css text
-
-const BTN_SIZE_STYLES = {
-    'btn-sm': {
-        'padding': '0.25rem 0.5rem',
-        'font-size': '0.875rem',
-        'line-height': '1.5rem',
-    },
-    'btn-lg': {
-        'padding': '0.5rem 1rem',
-        'font-size': '1.25rem',
-        'line-height': '1.5rem',
-    },
-    'btn-md': {
-        'padding': false, // Property must be removed.
-        'font-size': '14px',
-        'line-height': false, // Property must be removed.
-    },
-};
-const DEFAULT_BUTTON_SIZE = 'btn-md';
-const PRIORITY_STYLES = {
-    'h1': ['font-family'],
-    'h2': ['font-family'],
-    'h3': ['font-family'],
-    'p': ['font-family'],
-    'a:not(.btn)': [],
-    'a.btn-primary': [],
-    'a.btn-secondary': [],
-    'hr': [],
-};
-const RE_CSS_TEXT_MATCH = /([^{]+)([^}]+)/;
 
 //--------------------------------------------------------------------------
 // Options
@@ -261,7 +162,7 @@ options.userValueWidgetsRegistry['we-fontfamilypicker'] = SelectUserValueWidget.
             button.dataset.customizeCssProperty = fontFamily;
             button.dataset.cssProperty = 'font-family';
             button.dataset.selectorText = this.el.dataset.selectorText;
-            button.textContent = _getFontName(fontFamily);
+            button.textContent = getFontName(fontFamily);
             this.menuEl.appendChild(button);
         };
         return res;
@@ -284,18 +185,8 @@ options.registry.DesignTab = options.Class.extend({
         const res = await this._super(...arguments);
         const $editable = this.options.wysiwyg.getEditable();
         this.document = $editable[0].ownerDocument;
+        initializeDesignTabCss($editable);
         this.styleElement = this.document.querySelector('#design-element');
-        if (this.styleElement) {
-            this.styleElement.textContent = this._splitCss(this.styleElement.textContent);
-        } else {
-            // If a style element can't be found, create one and initialize it.
-            this.styleElement = document.createElement('style');
-            this.styleElement.setAttribute('id', 'design-element');
-            // The style element needs to be within the layout of the email in
-            // order to be saved along with it.
-            $editable.find('.o_layout').prepend(this.styleElement);
-            this.styleElement.textContent = this._splitCss(DEFAULT_CSS);
-        }
         // When editing a stylesheet, its content is not updated so it won't be
         // saved along with the mailing. Therefore we need to write its cssText
         // into it. However, when doing that we lose its reference. So we need
@@ -436,7 +327,7 @@ options.registry.DesignTab = options.Class.extend({
                     if (params.possibleValues && params.possibleValues[1] === FONT_FAMILIES[0]) {
                         // For font-family, we need to normalize it so it
                         // matches an option value.
-                        return rule && _normalizeFontFamily(rule.style.getPropertyValue('font-family'));
+                        return rule && normalizeFontFamily(rule.style.getPropertyValue('font-family'));
                     } else {
                         return rule && rule.style.getPropertyValue(params.cssProperty);
                     }
@@ -475,31 +366,6 @@ options.registry.DesignTab = options.Class.extend({
      */
     _getRule(selectorText) {
         return [...(this.styleSheet.cssRules || this.styleSheet.rules)].find(rule => rule.selectorText === selectorText);
-    },
-    /**
-     * Take a css text and splits each comma-separated selector into separate
-     * styles, applying the css prefix to each. Return the modified css text.
-     *
-     * @param {string} css
-     * @returns {string}
-     */
-    _splitCss(css) {
-        const styleElement = this.document.createElement('style');
-        styleElement.textContent = css;
-        // Temporarily insert the style element in the dom to have a stylesheet.
-        document.head.appendChild(styleElement);
-        const rules = [...styleElement.sheet.cssRules];
-        styleElement.remove();
-        const result = rules.map(rule => {
-            const [, fullSelector, styles] = rule.cssText.match(RE_CSS_TEXT_MATCH);
-            return fullSelector.split(',').map(selector => {
-                if (!selector.trim().startsWith(CSS_PREFIX)) {
-                    selector = `${CSS_PREFIX} ${selector.trim()}`;
-                }
-                return `${selector.trim()} {${styles.replace('{', '').trim()}}`;
-            }).join('');
-        }).join('');
-        return result;
     },
 });
 
