@@ -2153,7 +2153,7 @@ class MrpProduction(models.Model):
     def _pre_action_split_merge_hook(self, merge=False, split=False):
         if not merge and not split:
             return True
-        ope_str = merge and 'merge' or 'split'
+        ope_str = merge and _('merged') or _('split')
         if any(production.state not in ('draft', 'confirmed') for production in self):
             raise UserError(_("Only manufacturing orders in either a draft or confirmed state can be %s.", ope_str))
         if any(not production.bom_id for production in self):
