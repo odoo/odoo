@@ -519,7 +519,7 @@ def email_split_and_format(text):
         return []
     return [formataddr((name, email)) for (name, email) in email_split_tuples(text)]
 
-def email_normalize(text):
+def email_normalize(text, strict=True):
     """ Sanitize and standardize email address entries.
         A normalized email is considered as :
         - having a left part + @ + a right part (the domain can be without '.something')
@@ -528,12 +528,17 @@ def email_normalize(text):
         Ex:
         - Possible Input Email : 'Name <NaMe@DoMaIn.CoM>'
         - Normalized Output Email : 'name@domain.com'
+
+    :param bool strict: text should contain exactly one email (default behavior
+      and unique behavior before Odoo16);
+
+    :return: False if no email found (or if more than 1 email found when being
+      in strict mode); normalized email otherwise;
     """
     emails = email_split(text)
-    if not emails or len(emails) != 1:
+    if not emails or (strict and len(emails) != 1):
         return False
     return emails[0].lower()
-
 
 def email_domain_extract(email):
     """ Extract the company domain to be used by IAP services notably. Domain
