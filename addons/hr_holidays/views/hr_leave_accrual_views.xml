@@ -87,14 +87,17 @@
                             <field name="name"/>
                         </group>
                         <group>
+                            <field name="company_id" invisible="1"/>
                             <field name="time_off_type_id"/>
                         </group>
                         <group>
                             <field name="transition_mode" widget="radio" attrs="{'invisible': [('show_transition_mode', '=', False)]}"/>
                         </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        </group>
                     </group>
                     <span class="oe_grey" invisible="1">
-                        
                     </span>
                     <div class="o_hr_holidays_hierarchy">
                         <div class="o_hr_holidays_title">Rules</div>
@@ -190,6 +193,16 @@
                     </div>
                </sheet>
             </form>
+        </field>
+    </record>
+    <record id="hr_accrual_plan_view_search" model="ir.ui.view">
+        <field name="name">hr.leave.accrual.plan.search</field>
+        <field name="model">hr.leave.accrual.plan</field>
+        <field name="arch" type="xml">
+            <search string="Group By">
+                <filter string="Time Off Type" name='time_off_type_id' context="{'group_by':'time_off_type_id'}"/>
+                <filter string="Company" name='company_id' context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+            </search>
         </field>
     </record>
 

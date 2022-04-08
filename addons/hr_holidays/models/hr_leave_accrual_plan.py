@@ -10,11 +10,14 @@ class AccrualPlan(models.Model):
 
     name = fields.Char('Name', required=True)
     time_off_type_id = fields.Many2one('hr.leave.type', string="Time Off Type",
+        check_company=True,
         help="""Specify if this accrual plan can only be used with this Time Off Type.
                 Leave empty if this accrual plan can be used with any Time Off Type.""")
     employees_count = fields.Integer("Employees", compute='_compute_employee_count')
     level_ids = fields.One2many('hr.leave.accrual.level', 'accrual_plan_id', copy=True)
     allocation_ids = fields.One2many('hr.leave.allocation', 'accrual_plan_id')
+    company_id = fields.Many2one('res.company', string='Company',
+        compute="_compute_company_id", store="True", readonly=False)
     transition_mode = fields.Selection([
         ('immediately', 'Immediately'),
         ('end_of_accrual', "After this accrual's period")],
@@ -53,6 +56,14 @@ class AccrualPlan(models.Model):
         allocations_dict = {res['accrual_plan_id'][0]: res['employee_count'] for res in allocations_read_group}
         for plan in self:
             plan.employees_count = allocations_dict.get(plan.id, 0)
+
+    @api.depends('time_off_type_id.company_id')
+    def _compute_company_id(self):
+        for accrual_plan in self:
+            if accrual_plan.time_off_type_id:
+                accrual_plan.company_id = accrual_plan.time_off_type_id.company_id
+            else:
+                accrual_plan.company_id = self.env.company
 
     def action_open_accrual_plan_employees(self):
         self.ensure_one()
