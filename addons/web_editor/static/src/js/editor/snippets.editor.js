@@ -2028,9 +2028,11 @@ var SnippetsMenu = Widget.extend({
         await Promise.all(cleanForSavePromises);
 
         for (const snippetEditor of aliveEditors) {
+            // No need to clean the `this.snippetEditors` array as each
+            // individual destroy notifies this class instance to remove the
+            // element from the array.
             snippetEditor.destroy();
         }
-        this.snippetEditors.splice(0);
     },
     /**
      * Calls a given callback 'on' the given snippet and all its child ones if
