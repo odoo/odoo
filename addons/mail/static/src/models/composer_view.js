@@ -411,6 +411,28 @@ registerModel({
             }
         },
         /**
+         * Send a message in the composer on related thread.
+         *
+         * Sending of the message could be aborted if it cannot be posted like if there are attachments
+         * currently uploading or if there is no text content and no attachments.
+         */
+        sendMessage() {
+            if (!this.composer.canPostMessage) {
+                if (this.composer.hasUploadingAttachment) {
+                    this.env.services['notification'].notify({
+                        message: this.env._t("Please wait while the file is uploading."),
+                        type: 'warning',
+                    });
+                }
+                return;
+            }
+            if (this.messageViewInEditing) {
+                this.updateMessage();
+                return;
+            }
+            this.postMessage();
+        },
+        /**
          * Sets the first suggestion as active. Main and extra records are
          * considered together.
          */

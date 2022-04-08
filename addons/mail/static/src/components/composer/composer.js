@@ -35,35 +35,6 @@ export class Composer extends Component {
     }
 
     //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Post a message in the composer on related thread.
-     *
-     * Posting of the message could be aborted if it cannot be posted like if there are attachments
-     * currently uploading or if there is no text content and no attachments.
-     *
-     * @private
-     */
-    _postMessage() {
-        if (!this.composerView.composer.canPostMessage) {
-            if (this.composerView.composer.hasUploadingAttachment) {
-                this.env.services['notification'].notify({
-                    message: this.env._t("Please wait while the file is uploading."),
-                    type: 'warning',
-                });
-            }
-            return;
-        }
-        if (this.composerView.messageViewInEditing) {
-            this.composerView.updateMessage();
-            return;
-        }
-        this.composerView.postMessage();
-    }
-
-    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
@@ -104,7 +75,7 @@ export class Composer extends Component {
      * @private
      */
     _onClickSend() {
-        this._postMessage();
+        this.composerView.sendMessage();
         this.composerView.update({ doFocus: true });
     }
 
@@ -112,7 +83,7 @@ export class Composer extends Component {
      * @private
      */
     _onComposerTextInputSendShortcut() {
-        this._postMessage();
+        this.composerView.sendMessage();
     }
 
     /**
