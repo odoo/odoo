@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
+from dateutil.relativedelta import relativedelta
 
 class HrWorkEntryRegenerationWizard(models.TransientModel):
     _name = 'hr.work.entry.regeneration.wizard'
@@ -14,12 +15,18 @@ class HrWorkEntryRegenerationWizard(models.TransientModel):
     latest_available_date = fields.Date('Latest date', compute='_compute_latest_available_date')
     latest_available_date_message = fields.Char(readonly=True, store=False, default='')
     date_from = fields.Date('From', required=True, default=lambda self: self.env.context.get('date_start'))
-    date_to = fields.Date('To', required=True, default=lambda self: self.env.context.get('date_end'))
+    date_to = fields.Date('To', required=True, compute='_compute_date_to', store=True,
+            readonly=False, default=lambda self: self.env.context.get('date_end'))
     employee_id = fields.Many2one('hr.employee', 'Employee', required=True)
     validated_work_entry_ids = fields.Many2many('hr.work.entry', string='Work Entries Within Interval',
                                    compute='_compute_validated_work_entry_ids')
     search_criteria_completed = fields.Boolean(compute='_compute_search_criteria_completed')
     valid = fields.Boolean(compute='_compute_valid')
+
+    @api.depends('date_from')
+    def _compute_date_to(self):
+        for wizard in self:
+            wizard.date_to = wizard.date_from + relativedelta(months=+1, day=1, days=-1)
 
     @api.depends('employee_id')
     def _compute_earliest_available_date(self):
@@ -104,5 +111,3 @@ class HrWorkEntryRegenerationWizard(models.TransientModel):
         write_vals = {field: False for field in self._work_entry_fields_to_nullify()}
         work_entries.write(write_vals)
         self.employee_id.generate_work_entries(date_from, date_to, True)
-        action = self.env["ir.actions.actions"]._for_xml_id('hr_work_entry.hr_work_entry_action')
-        return action
