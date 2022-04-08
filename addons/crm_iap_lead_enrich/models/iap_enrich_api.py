@@ -35,4 +35,7 @@ class IapEnrichAPI(models.AbstractModel):
         params = {
             'domains': lead_emails,
         }
-        return self._contact_iap('/iap/clearbit/1/lead_enrichment_email', params=params)
+        response = self._contact_iap('/iap/clearbit/2/lead_enrichment_email', params=params)
+        if response.get('error') == 'insufficient_credit':
+            raise iap.InsufficientCreditError()
+        return response

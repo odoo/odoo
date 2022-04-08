@@ -32,7 +32,7 @@ class MockIAPEnrich(common.BaseCase):
             if default_data:
                 sim_result.update(default_data)
             # mock single sms sending
-            if local_endpoint == '/iap/clearbit/1/lead_enrichment_email':
+            if local_endpoint == '/iap/clearbit/2/lead_enrichment_email':
                 result = {}
                 for lead_id, email in params['domains'].items():
                     if sim_error and sim_error == 'credit':
