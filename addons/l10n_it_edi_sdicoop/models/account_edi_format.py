@@ -177,7 +177,7 @@ class AccountEdiFormat(models.Model):
             if 'id_transaction' in response:
                 invoice.l10n_it_edi_transaction = response['id_transaction']
                 to_return[invoice].update({
-                    'error': _('The invoice was successfully transmitted to the Public Administration and we are waiting for confirmation.'),
+                    'error': _('The invoice was sent to FatturaPA, but we are still awaiting a response. Click the link above to check for an update.'),
                     'blocking_level': 'info',
                 })
         return to_return
@@ -214,7 +214,7 @@ class AccountEdiFormat(models.Model):
             state = response['state']
             if state == 'awaiting_outcome':
                 to_return[invoice] = {
-                    'error': _('The invoice was successfully transmitted to the Public Administration and we are waiting for confirmation'),
+                    'error': _('The invoice was sent to FatturaPA, but we are still awaiting a response. Click the link above to check for an update.'),
                     'blocking_level': 'info',
                 }
                 proxy_acks.append(id_transaction)
