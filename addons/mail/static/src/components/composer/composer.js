@@ -38,16 +38,6 @@ export class Composer extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Called when clicking on "discard" button.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickDiscard(ev) {
-        this.composerView.discard();
-    }
-
-    /**
      * Called when clicking on "send" button.
      *
      * @private

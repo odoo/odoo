@@ -211,6 +211,14 @@ registerModel({
             this.discard();
         },
         /**
+         * Called when clicking on "discard" button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickDiscard(ev) {
+            this.discard();
+        },
+        /**
          * @private
          * @param {MouseEvent} ev
          */
