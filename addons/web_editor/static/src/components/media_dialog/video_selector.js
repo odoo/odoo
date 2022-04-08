@@ -150,10 +150,7 @@ export class VideoSelector extends Component {
                 options[option.id] = option.value;
             }
         }
-        const { embed_url: src, platform } = await this.rpc('/web_editor/video_url/data', {
-            video_url: url,
-            ...options,
-        });
+        const { embed_url: src, platform } = await this._getVideoURLData(url, options);
 
         if (!src) {
             this.state.errorMessage = this.env._t("The provided url is not valid");
@@ -179,6 +176,16 @@ export class VideoSelector extends Component {
             this.state.platform = platform;
             this.state.options = newOptions;
         }
+    }
+
+    /**
+     * Keep rpc call in distinct method make it patchable by test.
+     */
+    async _getVideoURLData(url, options) {
+        return await this.rpc('/web_editor/video_url/data', {
+            video_url: url,
+            ...options,
+        });
     }
 
     /**
