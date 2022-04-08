@@ -257,6 +257,21 @@ registerModel({
             this.update({ doFocus: true });
         },
         /**
+         * @param {KeyboardEvent} ev
+         */
+        onKeydown(ev) {
+            if (ev.key === 'Escape') {
+                if (isEventHandled(ev, 'ComposerTextInput.closeSuggestions')) {
+                    return;
+                }
+                if (isEventHandled(ev, 'Composer.closeEmojisPopover')) {
+                    return;
+                }
+                ev.preventDefault();
+                this.discard();
+            }
+        },
+        /**
          * @private
          * @param {KeyboardEvent} ev
          */

@@ -4,7 +4,6 @@ import { useComponentToModel } from '@mail/component_hooks/use_component_to_mode
 import { useDragVisibleDropZone } from '@mail/component_hooks/use_drag_visible_dropzone';
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { isEventHandled } from '@mail/utils/utils';
 
 const { Component } = owl;
 
@@ -125,23 +124,6 @@ export class Composer extends Component {
     async _onDropZoneFilesDropped(detail) {
         await this.composerView.fileUploader.uploadFiles(detail.files);
         this.isDropZoneVisible.value = false;
-    }
-
-    /**
-     * @private
-     * @param {KeyboardEvent} ev
-     */
-    _onKeydown(ev) {
-        if (ev.key === 'Escape') {
-            if (isEventHandled(ev, 'ComposerTextInput.closeSuggestions')) {
-                return;
-            }
-            if (isEventHandled(ev, 'Composer.closeEmojisPopover')) {
-                return;
-            }
-            ev.preventDefault();
-            this.composerView.discard();
-        }
     }
 
     /**
