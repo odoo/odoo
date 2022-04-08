@@ -260,7 +260,7 @@
                         <field name="show_update_pricelist" invisible="1"/>
                         <label for="pricelist_id" groups="product.group_product_pricelist"/>
                         <div groups="product.group_product_pricelist" class="o_row">
-                            <field name="pricelist_id" options="{'no_open':True,'no_create': True}"/>
+                            <field name="pricelist_id" required="1" options="{'no_open': True,'no_create': True}"/>
                             <button name="update_prices" type="object"
                                 string=" Update Prices"
                                 help="Recompute all prices based on this pricelist"
