@@ -10,17 +10,6 @@ class Partners(models.Model):
 
     user_livechat_username = fields.Char(compute='_compute_user_livechat_username')
 
-    def _get_channels_as_member(self):
-        channels = super()._get_channels_as_member()
-        channels |= self.env['mail.channel'].search([
-            ('channel_type', '=', 'livechat'),
-            ('channel_last_seen_partner_ids', 'in', self.env['mail.channel.partner'].sudo()._search([
-                ('partner_id', '=', self.id),
-                ('is_pinned', '=', True),
-            ])),
-        ])
-        return channels
-
     @api.depends('user_ids.livechat_username')
     def _compute_user_livechat_username(self):
         for partner in self:

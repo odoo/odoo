@@ -140,21 +140,21 @@ class Partner(models.Model):
     def _get_channels_as_member(self):
         """Returns the channels of the partner."""
         self.ensure_one()
-        channels = self.env['mail.channel']
-        # get the channels and groups
-        channels |= self.env['mail.channel'].search([
-            ('channel_type', 'in', ('channel', 'group')),
-            ('channel_partner_ids', 'in', [self.id]),
-        ])
-        # get the pinned direct messages
-        channels |= self.env['mail.channel'].search([
-            ('channel_type', '=', 'chat'),
-            ('channel_last_seen_partner_ids', 'in', self.env['mail.channel.partner'].sudo()._search([
-                ('partner_id', '=', self.id),
-                ('is_pinned', '=', True),
-            ])),
-        ])
-        return channels
+        return self.env['mail.channel'].search(expression.OR([
+            [
+                ('channel_type', 'in', ('channel', 'group')),
+                ('channel_last_seen_partner_ids', 'in', self.env['mail.channel.partner'].sudo()._search([
+                    ('partner_id', '=', self.id),
+                ])),
+            ],
+            [
+                ('channel_type', 'not in', ('channel', 'group')),
+                ('channel_last_seen_partner_ids', 'in', self.env['mail.channel.partner'].sudo()._search([
+                    ('partner_id', '=', self.id),
+                    ('is_pinned', '=', True),
+                ])),
+            ]
+        ]))
 
     @api.model
     def search_for_channel_invite(self, search_term, channel_id=None, limit=30):
