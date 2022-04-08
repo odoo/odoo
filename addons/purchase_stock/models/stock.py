@@ -237,10 +237,11 @@ class Orderpoint(models.Model):
 
         return result
 
-    def _get_replenishment_order_notification(self):
+    def _get_replenishment_order_notification(self, written_after):
         self.ensure_one()
         order = self.env['purchase.order.line'].search([
-            ('orderpoint_id', 'in', self.ids)
+            ('orderpoint_id', 'in', self.ids),
+            ('write_date', '>', written_after)
         ], limit=1).order_id
         if order:
             action = self.env.ref('purchase.action_rfq_form')
@@ -257,7 +258,7 @@ class Orderpoint(models.Model):
                     'sticky': False,
                 }
             }
-        return super()._get_replenishment_order_notification()
+        return super()._get_replenishment_order_notification(written_after)
 
     def _prepare_procurement_values(self, date=False, group=False):
         values = super()._prepare_procurement_values(date=date, group=group)
