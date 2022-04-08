@@ -161,9 +161,9 @@
                         </div>
                     </a>
                     <ul t-if="aside_slide.slide_resource_ids or aside_slide.question_ids" class="list-group px-2 mb-1 list-unstyled">
-                        <t t-foreach="aside_slide.slide_resource_ids" t-as="resource">
+                        <t t-foreach="aside_slide.slide_resource_ids" t-as="resource" t-if="resource.resource_type == 'url'">
                             <li class="pl-4">
-                                <a t-if="can_access and resource.link" t-att-href="resource.link" target="new" class="text-decoration-none small">
+                                <a t-if="can_access" t-att-href="resource.link" target="new" class="text-decoration-none small">
                                     <i class="fa fa-link mr-1"/><span t-field="resource.name"/>
                                 </a>
                                 <span t-else="" class="text-decoration-none text-muted small">
@@ -173,7 +173,7 @@
                         </t>
                         <div class="o_wslides_js_course_join pl-4" t-if="aside_slide.slide_resource_ids">
                             <t t-if="is_member or aside_slide.channel_id.can_publish">
-                                <li t-foreach="aside_slide.slide_resource_ids" t-as="resource">
+                                <li t-foreach="aside_slide.slide_resource_ids" t-as="resource" t-if="resource.resource_type == 'file'">
                                     <a t-attf-href="/web/content/slide.slide.resource/#{resource.id}/data?download=true" class="text-decoration-none small">
                                         <i class="fa fa-download mr-1"/><span t-field="resource.name"/>
                                     </a>
