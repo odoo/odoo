@@ -99,15 +99,6 @@ export class ChatWindowHeader extends Component {
         this.chatWindow.shiftPrev();
     }
 
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickShiftNext(ev) {
-        markEventHandled(ev, 'ChatWindowHeader.ClickShiftNext');
-        this.chatWindow.shiftNext();
-    }
-
 }
 
 Object.assign(ChatWindowHeader, {

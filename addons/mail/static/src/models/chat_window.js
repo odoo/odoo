@@ -124,6 +124,13 @@ registerModel({
             }
         },
         /**
+         * @param {MouseEvent} ev
+         */
+        onClickShiftNext(ev) {
+            markEventHandled(ev, 'ChatWindowHeader.ClickShiftNext');
+            this.shiftNext();
+        },
+        /**
          * Handles click on the "add users" button.
          *
          * @param {MouseEvent} ev
