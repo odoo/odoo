@@ -732,6 +732,7 @@ class SupplierInfo(models.Model):
     name = fields.Many2one(
         'res.partner', 'Vendor',
         ondelete='cascade', required=True,
+        auto_join=True,
         help="Vendor of this product", check_company=True)
     product_name = fields.Char(
         'Vendor Product Name',
