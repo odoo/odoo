@@ -2309,7 +2309,18 @@ export class StaticList extends DataPoint {
                     const record = this._cache[recordId];
                     return record.getChanges(allFields);
                 } else {
-                    return this._initialValues[id];
+                    const values = {};
+                    for (const fieldName in this._initialValues[id]) {
+                        const field = this.fields[fieldName];
+                        let fieldValue = this._initialValues[id][fieldName];
+                        if (isX2Many(field)) {
+                            if (fieldValue[0][0] === DELETE_ALL) {
+                                fieldValue = fieldValue.slice(1);
+                            }
+                        }
+                        values[fieldName] = fieldValue;
+                    }
+                    return values;
                 }
             };
 

@@ -3,8 +3,8 @@
 import { makeContext } from "@web/core/context";
 import { Pager } from "@web/core/pager/pager";
 import { registry } from "@web/core/registry";
-import { sprintf } from "@web/core/utils/strings";
 import { useService } from "@web/core/utils/hooks";
+import { sprintf } from "@web/core/utils/strings";
 import { standardFieldProps } from "@web/fields/standard_field_props";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { ListRenderer } from "@web/views/list/list_renderer";

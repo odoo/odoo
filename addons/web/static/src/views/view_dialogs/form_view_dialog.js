@@ -7,6 +7,7 @@ import { FormArchParser, loadSubViews } from "@web/views/form/form_view";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useModel } from "../helpers/model";
 import { RelationalModel } from "../relational_model";
+import { useViewButtons } from "@web/views/view_button/hook";
 
 const { onWillStart, useRef } = owl;
 
@@ -33,6 +34,7 @@ export class FormViewDialog extends Dialog {
         } else {
             this.model = this.record.model;
         }
+        useViewButtons(this.model);
 
         onWillStart(async () => {
             if (!this.archInfo) {
