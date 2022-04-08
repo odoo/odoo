@@ -29,6 +29,13 @@ class MailGuest(models.Model):
     timezone = fields.Selection(string="Timezone", selection=_tz_get)
     channel_ids = fields.Many2many(string="Channels", comodel_name='mail.channel', relation='mail_channel_partner', column1='guest_id', column2='channel_id', copy=False)
 
+    def _get_guest_from_context(self):
+        """Returns the current guest record from the context, if applicable."""
+        guest = self.env.context.get('guest')
+        if isinstance(guest, self.pool['mail.guest']):
+            return guest
+        return self.env['mail.guest']
+
     def _get_guest_from_request(self, request):
         parts = request.httprequest.cookies.get(self._cookie_name, '').split(self._cookie_separator)
         if len(parts) != 2:

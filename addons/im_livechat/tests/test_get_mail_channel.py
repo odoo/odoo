@@ -129,10 +129,10 @@ class TestGetMailChannel(TransactionCase):
             'email': 'michel@example.com',
             'livechat_username': 'Michel at your service',
         })
-        channel_info = self.livechat_channel.with_user(public_user)._open_livechat_mail_channel(anonymous_name='whatever')
+        channel_info = self.livechat_channel.with_user(public_user).sudo()._open_livechat_mail_channel(anonymous_name='whatever')
         channel = self.env['mail.channel'].browse(channel_info['id'])
         channel.with_user(operator).message_post(body='Hello', message_type='comment', subtype_xmlid='mail.mt_comment')
-        message_formats = channel.with_user(public_user)._channel_fetch_message()
+        message_formats = channel.with_user(public_user).sudo()._channel_fetch_message()
         self.assertEqual(len(message_formats), 1)
         self.assertEqual(message_formats[0]['author_id'][0], operator.partner_id.id)
         self.assertEqual(message_formats[0]['author_id'][1], operator.livechat_username)

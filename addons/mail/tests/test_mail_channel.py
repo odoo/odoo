@@ -43,7 +43,7 @@ class TestChannelAccessRights(MailCommon):
             'public': 'private'})
 
     @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.addons.base.models.ir_model', 'odoo.models')
-    @users('user_public')
+    @users('user_portal')
     def test_access_public(self):
         # Read public group -> ok
         self.env['mail.channel'].browse(self.group_public.id).read()
@@ -56,7 +56,7 @@ class TestChannelAccessRights(MailCommon):
             self.env['mail.channel'].browse(self.group_private.id).read()
 
         # Read a private group when being a member: ok
-        self.group_private.write({'channel_partner_ids': [(4, self.user_public.partner_id.id)]})
+        self.group_private.write({'channel_partner_ids': [(4, self.user_portal.partner_id.id)]})
         self.env['mail.channel'].browse(self.group_private.id).read()
 
         # Create group: ko, no access rights
