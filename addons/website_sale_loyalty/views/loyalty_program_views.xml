@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_promotion_type_config"
+        action="loyalty.loyalty_program_action"
+        name="Coupons &amp; Loyalty"
+        parent="website_sale.menu_catalog"
+        groups="sales_team.group_sale_manager"
+        sequence="50"
+    />
+
+    <record id="loyalty_program_view_form_inherit_website_sale_loyalty" model="ir.ui.view">
+        <field name="name">loyalty.program.view.form.inherit.website.sale.loyalty</field>
+        <field name="model">loyalty.program</field>
+        <field name="inherit_id" ref="loyalty.loyalty_program_view_form"/>
+        <field name="arch" type="xml">
+            <field name="currency_id" position="after">
+                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="loyalty_program_view_tree_inherit_website_sale_loyalty" model="ir.ui.view">
+        <field name="name">loyalty.program.view.tree.inherit.website.sale.loyalty</field>
+        <field name="model">loyalty.program</field>
+        <field name="inherit_id" ref="loyalty.loyalty_program_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="website_id" groups="website.group_multi_website"/>
+                <button name="action_program_share" string="Share" type="object" icon="fa-share-alt"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

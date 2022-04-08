@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_coupon.OrderWidget" t-inherit="point_of_sale.OrderWidget" t-inherit-mode="extension" owl="1">
+        <xpath expr="//OrderSummary" position="after">
+            <t t-set="loyaltyData" t-value="getActiveProgramsAndRewards()"/>
+            <div class="active-programs">
+                <div t-if="loyaltyData.activePrograms.length">
+                    <div class="title">Active Programs</div>
+                    <t t-foreach="loyaltyData.activePrograms" t-as="program" t-key="program.id">
+                        <div class="active-program">
+                            <t t-esc="program.name"/>
+                        </div>
+                    </t>
+                </div>
+                <div t-if="loyaltyData.activeCoupons.length">
+                    <div class="title">Active Coupons</div>
+                    <t t-foreach="loyaltyData.activeCoupons" t-as="coupon" t-key="coupon.code">
+                        <div class="active-coupon">
+                            <t t-esc="coupon.programName"/> (<t t-esc="coupon.code"/>)
+                        </div>
+                    </t>
+                </div>
+                <div t-if="loyaltyData.activeRewards.length">
+                    <div class="title">Active Rewards</div>
+                    <t t-foreach="loyaltyData.activeRewards" t-as="reward" t-key="reward.id">
+                        <div class="active-reward">
+                            <t t-esc="reward.name"/>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>
