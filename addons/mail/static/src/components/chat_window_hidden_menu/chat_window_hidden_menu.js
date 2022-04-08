@@ -98,18 +98,6 @@ export class ChatWindowHiddenMenu extends Component {
 
     /**
      * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickToggle(ev) {
-        if (this.messaging.chatWindowManager.isHiddenMenuOpen) {
-            this.messaging.chatWindowManager.closeHiddenMenu();
-        } else {
-            this.messaging.chatWindowManager.openHiddenMenu();
-        }
-    }
-
-    /**
-     * @private
      * @param {Object} detail
      * @param {ChatWindow} detail.chatWindow
      */
