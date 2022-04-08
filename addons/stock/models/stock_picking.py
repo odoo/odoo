@@ -9,7 +9,7 @@ from collections import defaultdict
 
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_datetime, format_date, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
@@ -203,6 +203,12 @@ class PickingType(models.Model):
     def _onchange_show_operations(self):
         if self.show_operations and self.code != 'incoming':
             self.show_reserved = True
+
+    @api.constrains('default_location_dest_id')
+    def _check_default_location(self):
+        for record in self:
+            if record.code == 'mrp_operation' and record.default_location_dest_id.scrap_location:
+                raise ValidationError(_("You cannot set a scrap location as the destination location for a manufacturing type operation."))
 
     def _get_action(self, action_xmlid):
         action = self.env["ir.actions.actions"]._for_xml_id(action_xmlid)

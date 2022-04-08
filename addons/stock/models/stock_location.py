@@ -7,7 +7,7 @@ from collections import defaultdict, OrderedDict
 from datetime import timedelta
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_compare
 
@@ -166,6 +166,12 @@ class Location(models.Model):
     def _onchange_usage(self):
         if self.usage not in ('internal', 'inventory'):
             self.scrap_location = False
+
+    @api.constrains('scrap_location')
+    def _check_scrap_location(self):
+        for record in self:
+            if record.scrap_location and self.env['stock.picking.type'].search([('code', '=', 'mrp_operation'), ('default_location_dest_id', '=', record.id)]):
+                raise ValidationError(_("You cannot set a location as a scrap location when it assigned as a destination location for a manufacturing type operation."))
 
     def write(self, values):
         if 'company_id' in values:
