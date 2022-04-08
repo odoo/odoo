@@ -522,6 +522,7 @@ class Lead(models.Model):
     def _compute_potential_lead_duplicates(self):
         MIN_EMAIL_LENGTH = 7
         MIN_NAME_LENGTH = 6
+        MIN_PHONE_LENGTH = 8
         SEARCH_RESULT_LIMIT = 21
 
         def return_if_relevant(model_name, domain):
@@ -542,20 +543,6 @@ class Lead(models.Model):
             res = model.search(domain, limit=SEARCH_RESULT_LIMIT)
             return res if len(res) < SEARCH_RESULT_LIMIT else model
 
-        def get_email_to_search(email):
-            """ Returns the full email address if the domain of the email address
-            is common (i.e: in the mail domain blacklist). Otherwise, returns
-            the domain of the email address. A minimal length is required to avoid
-            returning false positives records. """
-            if not email or len(email) < MIN_EMAIL_LENGTH:
-                return False
-            parts = email.rsplit('@', maxsplit=1)
-            if len(parts) > 1:
-                email_domain = parts[1]
-                if email_domain not in iap_tools._MAIL_DOMAIN_BLACKLIST:
-                    return '@' + email_domain
-            return email
-
         for lead in self:
             lead_id = lead._origin.id if isinstance(lead.id, models.NewId) else lead.id
             common_lead_domain = [
@@ -563,11 +550,11 @@ class Lead(models.Model):
             ]
 
             duplicate_lead_ids = self.env['crm.lead']
-            email_search = get_email_to_search(lead.email_from)
+            email_search = iap_tools.mail_prepare_for_domain_search(lead.email_from, min_email_length=MIN_EMAIL_LENGTH)
 
             if email_search:
                 duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
-                    ('email_from', 'ilike', email_search)
+                    '|', ('email_normalized', 'ilike', email_search), ('email_from', 'ilike', email_search)
                 ])
             if lead.partner_name and len(lead.partner_name) >= MIN_NAME_LENGTH:
                 duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
@@ -580,6 +567,14 @@ class Lead(models.Model):
             if lead.partner_id and lead.partner_id.commercial_partner_id:
                 duplicate_lead_ids |= lead.with_context(active_test=False).search(common_lead_domain + [
                     ("partner_id", "child_of", lead.partner_id.commercial_partner_id.id)
+                ])
+            if lead.phone and len(lead.phone) >= MIN_PHONE_LENGTH:
+                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
+                    ('phone_mobile_search', 'ilike', lead.phone)
+                ])
+            if lead.mobile and len(lead.mobile) >= MIN_PHONE_LENGTH:
+                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
+                    ('phone_mobile_search', 'ilike', lead.mobile)
                 ])
 
             lead.duplicate_lead_ids = duplicate_lead_ids + lead
