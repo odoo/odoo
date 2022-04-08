@@ -67,7 +67,7 @@ odoo.define('hr_work_entry_contract.WorkEntryControllerMixin', function(require)
         /*
             Private
         */
-       _renderWorkEntryButtons: function() {
+        _renderWorkEntryButtons: function() {
             return $('<span>').append(QWeb.render('hr_work_entry.work_entry_button', {
                 button_text: _t("Regenerate Work Entries"),
                 event_class: 'btn-regenerate-work-entries',
@@ -88,11 +88,15 @@ odoo.define('hr_work_entry_contract.WorkEntryControllerMixin', function(require)
         },
 
         _regenerateWorkEntries: function () {
+            const all_rows = Object.values(this.model.allRows);
+            const only_employee = all_rows.length === 1 ? all_rows[0].resId : null;
             this.do_action('hr_work_entry_contract.hr_work_entry_regeneration_wizard_action', {
                 additional_context: {
+                    default_employee_id: only_employee,
                     date_start: time.date_to_str(this.firstDay),
                     date_end: time.date_to_str(this.lastDay),
                 },
+                on_close: this.reload.bind(this),
             });
         },
 
