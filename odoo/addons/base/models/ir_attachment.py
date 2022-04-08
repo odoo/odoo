@@ -466,6 +466,27 @@ class IrAttachment(models.Model):
             records.check_access_rights(access_mode)
             records.check_access_rule(access_mode)
 
+    @api.model
+    def _filter_attachment_access(self, attachment_ids):
+        """Filter the given attachment to return only the records the current user have access to.
+
+        :param attachment_ids: List of attachment ids we want to filter
+        :return: <ir.attachment> the current user have access to
+        """
+        ret_attachments = self.env['ir.attachment']
+        attachments = self.browse(attachment_ids)
+        if not attachments.check_access_rights('read', raise_exception=False):
+            return ret_attachments
+
+        for attachment in attachments.sudo():
+            # Use SUDO here to not raise an error during the prefetch
+            # And then drop SUDO right to check if we can access it
+            try:
+                attachment.sudo(False).check('read')
+                ret_attachments |= attachment
+            except AccessError:
+                continue
+        return ret_attachments
 
     def _read_group_allowed_fields(self):
         return ['type', 'company_id', 'res_id', 'create_date', 'create_uid', 'name', 'mimetype', 'id', 'url', 'res_field', 'res_model']
