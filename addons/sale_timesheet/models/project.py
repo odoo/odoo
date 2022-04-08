@@ -286,23 +286,14 @@ class Project(models.Model):
 
     def action_billable_time_button(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("hr_timesheet.timesheet_action_all")
+        action = self.env["ir.actions.actions"]._for_xml_id("sale_timesheet.timesheet_action_from_sales_order_item")
         action.update({
             'context': {
                 'grid_range': 'week',
                 'search_default_groupby_timesheet_invoice_type': True,
-                'pivot_row_groupby': ['date:month'],
                 'default_project_id': self.id,
             },
             'domain': [('project_id', '=', self.id)],
-            'view_mode': 'tree,kanban,pivot,graph,form',
-            'views': [
-                [self.env.ref('hr_timesheet.timesheet_view_tree_user').id, 'tree'],
-                [self.env.ref('hr_timesheet.view_kanban_account_analytic_line').id, 'kanban'],
-                [self.env.ref('sale_timesheet.view_hr_timesheet_line_pivot_billing_rate').id, 'pivot'],
-                [self.env.ref('hr_timesheet.view_hr_timesheet_line_graph_all').id, 'graph'],
-                [self.env.ref('hr_timesheet.timesheet_view_form_user').id, 'form'],
-            ],
         })
         return action
 
@@ -310,10 +301,18 @@ class Project(models.Model):
         self.ensure_one()
         if section_name in ['billable_fixed', 'billable_time', 'billable_milestones', 'billable_manual', 'non_billable']:
             action = self.action_billable_time_button()
-            action['name'] = _('Timesheets')
             if domain:
                 action['domain'] = expression.AND([[('project_id', '=', self.id)], domain])
             action['context'].update(search_default_groupby_timesheet_invoice_type=False, **self.env.context)
+            pivot_view = False
+            if section_name == 'billable_time':
+                pivot_view = self.env.ref('sale_timesheet.view_hr_timesheet_pivot_view_per_invoice').id
+            else:
+                pivot_view = self.env.ref('sale_timesheet.timesheet_view_pivot_revenue').id
+            action['views'] = [
+                (view_id, view_type) if view_type != 'pivot' else (pivot_view, view_type)
+                for view_id, view_type in action['views']
+            ]
             if res_id:
                 if 'views' in action:
                     action['views'] = [
@@ -322,8 +321,7 @@ class Project(models.Model):
                         if view_type == 'form'
                     ] or [False, 'form']
                 action['view_mode'] = 'form'
-                if res_id:
-                    action['res_id'] = res_id
+                action['res_id'] = res_id
             return action
         return super().action_profitability_items(section_name, domain, res_id)
 
