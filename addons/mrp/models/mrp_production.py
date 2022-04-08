@@ -2044,7 +2044,6 @@ class MrpProduction(models.Model):
             'res_model': 'mrp.production',
             'view_mode': 'form',
             'res_id': production.id,
-            'target': 'main',
         }
 
     def _has_workorders(self):
