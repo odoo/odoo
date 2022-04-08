@@ -133,7 +133,7 @@ class Location(models.Model):
                         if days_until_next_inventory <= 0:
                             location.next_inventory_date = fields.Date.today() + timedelta(days=1)
                         else:
-                            location.next_inventory_date = location.last_inventory_date + timedelta(days=days_until_next_inventory)
+                            location.next_inventory_date = location.last_inventory_date + timedelta(days=location.cyclic_inventory_frequency)
                     else:
                         location.next_inventory_date = fields.Date.today() + timedelta(days=location.cyclic_inventory_frequency)
                 except OverflowError:
