@@ -212,7 +212,7 @@ export class Message extends Component {
             const index = this._lastReadMoreIndex++;
             // Insert link just before the first node
             const $readMoreLess = $('<a>', {
-                class: 'o_Message_readMoreLess',
+                class: 'o_Message_readMoreLess d-block',
                 href: '#',
                 text: READ_MORE,
             }).insertBefore(group[0]);
