@@ -243,6 +243,12 @@
         <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
     </record>
 
+    <record id="hr_leave_accrual_plan_rule_multi_company" model="ir.rule">
+        <field name="name">Accrual plan multi company rule</field>
+        <field name="model_id" ref="model_hr_leave_accrual_plan"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
     <record id="hr_leave_stress_day_rule_multi_company" model="ir.rule">
         <field name="name">Stress Day: multi company rule</field>
         <field name="model_id" ref="model_hr_leave_stress_day"/>
