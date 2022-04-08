@@ -73,7 +73,7 @@ class Channel(models.Model):
         'mail.channel.partner', 'channel_id', string='Last Seen',
         groups='base.group_user')
     rtc_session_ids = fields.One2many('mail.channel.rtc.session', 'channel_id', groups="base.group_system")
-    is_member = fields.Boolean('Is Member', compute='_compute_is_member', compute_sudo=True)
+    is_member = fields.Boolean('Is Member', compute='_compute_is_member', search='_search_is_member')
     member_count = fields.Integer(string="Member Count", compute='_compute_member_count', compute_sudo=True, help="Excluding guests from count.")
     group_ids = fields.Many2many(
         'res.groups', string='Auto Subscription',
@@ -166,10 +166,38 @@ class Channel(models.Model):
             ])
         )]
 
-    @api.depends('channel_partner_ids')
+    @api.depends_context('uid', 'guest')
+    @api.depends('channel_last_seen_partner_ids')
     def _compute_is_member(self):
+        if not self:
+            return
+        if self.env.user._is_public():
+            guest = self.env['mail.guest']._get_guest_from_context()
+            if not guest:
+                self.is_member = False
+                return
+            user_domain = [('guest_id', '=', guest.id)]
+        else:
+            user_domain = [('partner_id', '=', self.env.user.partner_id.id)]
+        members = self.env['mail.channel.partner'].sudo().search(expression.AND([[('channel_id', 'in', self.ids)], user_domain]))
+        is_member_channels = {member.channel_id for member in members}
         for channel in self:
-            channel.is_member = self.env.user.partner_id in channel.channel_partner_ids
+            channel.is_member = channel in is_member_channels
+
+    def _search_is_member(self, operator, operand):
+        is_in = (operator == '=' and operand) or (operator == '!=' and not operand)
+        if self.env.user._is_public():
+            guest = self.env['mail.guest']._get_guest_from_context()
+            if not guest:
+                return expression.FALSE_DOMAIN if is_in else expression.TRUE_DOMAIN
+            user_domain = [('guest_id', '=', guest.id)]
+        else:
+            user_domain = [('partner_id', '=', self.env.user.partner_id.id)]
+        return [(
+            'channel_last_seen_partner_ids',
+            'in' if is_in else 'not in',
+            self.env['mail.channel.partner'].sudo()._search(user_domain)
+        )]
 
     @api.depends('channel_partner_ids')
     def _compute_member_count(self):
