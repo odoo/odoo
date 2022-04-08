@@ -80,15 +80,6 @@ export class Composer extends Component {
     }
 
     /**
-     * Called when clicking on "expand" button.
-     *
-     * @private
-     */
-    _onClickFullComposer() {
-        this.composerView.openFullComposer();
-    }
-
-    /**
      * Called when clicking on "discard" button.
      *
      * @private

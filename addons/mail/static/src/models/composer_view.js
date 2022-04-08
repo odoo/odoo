@@ -216,6 +216,12 @@ registerModel({
             this.update({ emojisPopoverView: clear() });
         },
         /**
+         * Called when clicking on "expand" button.
+         */
+        onClickFullComposer() {
+            this.openFullComposer();
+        },
+        /**
          * Handles click on the save link.
          *
          * @param {MouseEvent} ev
