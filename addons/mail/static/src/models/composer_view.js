@@ -166,6 +166,15 @@ registerModel({
             this.composer.update(updateData);
         },
         /**
+         * Called when clicking on attachment button.
+         */
+        onClickAddAttachment() {
+            this.fileUploader.openBrowserFileUploader();
+            if (!this.messaging.device.isMobileDevice) {
+                this.update({ doFocus: true });
+            }
+        },
+        /**
          * Handles click on the emojis button.
          */
         onClickButtonEmojis() {

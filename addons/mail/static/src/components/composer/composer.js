@@ -68,18 +68,6 @@ export class Composer extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Called when clicking on attachment button.
-     *
-     * @private
-     */
-    _onClickAddAttachment() {
-        this.composerView.fileUploader.openBrowserFileUploader();
-        if (!this.messaging.device.isMobileDevice) {
-            this.composerView.update({ doFocus: true });
-        }
-    }
-
-    /**
      * Called when clicking on "expand" button.
      *
      * @private
