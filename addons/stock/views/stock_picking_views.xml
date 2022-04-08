@@ -246,7 +246,7 @@
                             icon="fa-arrows-v"
                             type="object"
                             help="List view of operations"
-                            groups="base.group_no_one"
+                            groups="stock.group_adv_location"
                             attrs="{'invisible': ['|', '&amp;', ('show_operations', '=', True), '|', ('is_locked', '=', True), ('state', '=', 'done'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}"
                             context="{'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref':'stock.view_move_picking_form', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
                             <div class="o_form_field o_stat_info">
