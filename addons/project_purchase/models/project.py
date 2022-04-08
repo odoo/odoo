@@ -58,10 +58,18 @@ class Project(models.Model):
                 'domain': domain,
                 'context': {
                     'create': False,
+                    'edit': False,
                 },
             }
             if res_id:
                 action['res_id'] = res_id
+                if 'views' in action:
+                    action['views'] = [
+                        (view_id, view_type)
+                        for view_id, view_type in action['views']
+                        if view_type == 'form'
+                    ] or [False, 'form']
+                action['view_mode'] = 'form'
             return action
         return super().action_profitability_items(section_name, domain, res_id)
 
