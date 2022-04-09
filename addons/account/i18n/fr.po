@@ -6,7 +6,6 @@
 # Olivier ANDRE <frsw194@gmail.com>, 2021
 # Geoffrey_GMF <gmf@odoo.com>, 2021
 # Rémi CAZENAVE, 2021
-# Martin Trigaux, 2021
 # Lucas Deliege <lud@odoo.com>, 2021
 # Alexandra Jubert <aju@odoo.com>, 2021
 # Jonathan Castillo <jcs@odoo.com>, 2021
@@ -14,8 +13,9 @@
 # Thomas Deleval <thd@odoo.com>, 2021
 # sakodoo <sak@odoo.com>, 2021
 # Julien Breton, 2022
-# Cécile Collart <cco@odoo.com>, 2022
 # Camille Dantinne <cmd@odoo.com>, 2022
+# Martin Trigaux, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Camille Dantinne <cmd@odoo.com>, 2022\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2520,6 +2520,8 @@ msgid ""
 "An error occurred when computing the inalterability. Impossible to get the "
 "unique previous posted journal entry."
 msgstr ""
+"Une erreur s'est produite lors du calcul de l'inaltérabilité. Impossible "
+"d'obtenir l'unique entrée de journal publiée précédemment."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -4113,7 +4115,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_panel
 msgid "Congratulations! You are all set."
-msgstr "Félicitations! Vous êtes prêt."
+msgstr "Félicitations ! Vous êtes prêt."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -4649,7 +4651,7 @@ msgstr "Compte créditeur"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
 msgid "Credit journal items that are matched with this journal item."
-msgstr ""
+msgstr "Pièces au crédit qui correspondent à cette pièce."
 
 #. module: account
 #: model:mail.template,name:account.email_template_edi_credit_note
@@ -6074,7 +6076,7 @@ msgstr "Première nouvelle séquence"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
 msgid "First invoice sent!"
-msgstr "Première Facture Envoyée"
+msgstr "Première Facture Envoyée !"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_fiscal_country_id
@@ -8456,7 +8458,7 @@ msgstr "Ca a l'air bien. Continuons."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
 msgid "Looks great!"
-msgstr "Parfait!"
+msgstr "Parfait !"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cash_rounding__loss_account_id
@@ -10456,6 +10458,8 @@ msgid ""
 "Posted journal entry must have an unique sequence number per company.\n"
 "Problematic numbers: %s\n"
 msgstr ""
+"L'opération diverse publiée doit avoir un numéro de séquence unique par entreprise.\n"
+"Numéros problématiques : %s\n"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__preceding_subtotal
@@ -12143,6 +12147,8 @@ msgid ""
 "Some journal items already exist in this journal but with accounts from "
 "different types than the allowed ones."
 msgstr ""
+"Certains mouvements comptables existent déjà dans ce journal mais avec des "
+"comptes de types différents de ceux autorisés."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -12393,7 +12399,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
 msgid "Step Completed!"
-msgstr "Etape complétée!"
+msgstr "Etape complétée !"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__string_to_hash
@@ -12827,7 +12833,7 @@ msgstr ""
 #: model:ir.model.constraint,message:account.constraint_account_tax_name_company_uniq
 #: model:ir.model.constraint,message:account.constraint_account_tax_template_name_company_uniq
 msgid "Tax names must be unique !"
-msgstr "Le nom de la taxe doit être unique!"
+msgstr "Le nom de la taxe doit être unique !"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_src_id
@@ -13421,6 +13427,8 @@ msgid ""
 "The Journal Entry sequence is not conform to the current format. Only the "
 "Advisor can change it."
 msgstr ""
+"La séquence de l'opération diverse n'est pas conforme au format actuel. Seul"
+" le conseiller peut le modifier."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13581,12 +13589,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
 msgid "The closing balance is different than the computed one!"
-msgstr "La balance de clôture est différent celui encodé!"
+msgstr "La balance de clôture est différent celui encodé !"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_account_code_company_uniq
 msgid "The code of the account must be unique per company !"
-msgstr "Le code du compte doit être unique par société!"
+msgstr "Le code du compte doit être unique par société !"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_payment_method_name_code_unique
@@ -14430,6 +14438,8 @@ msgid ""
 "There isn't any journal entry flagged for data inalterability yet for this "
 "journal."
 msgstr ""
+"Il n'y a pas encore d'opération diverse signalée pour l'inaltérabilité des "
+"données pour ce journal."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
@@ -16018,6 +16028,8 @@ msgid ""
 "You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %s (%s)"
 msgstr ""
+"Vous ne pouvez pas effectuer cette modification sur une écriture au journal rapprochée. Vous pouvez simplement modifier certains champs non légaux ou vous devez d'abord annuler le rapprochement.\n"
+"Ecriture de journal (id): %s (%s)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

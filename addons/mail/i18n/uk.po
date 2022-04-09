@@ -1488,6 +1488,16 @@ msgstr "Канал"
 #, python-format
 msgid ""
 "Channel \"%(channel_name)s\" only accepts members of group "
+"\"%(group_name)s\". Forbidden for: %(guest_names)s"
+msgstr ""
+"Канал \"%(channel_name)s\" приймає тільки членів групи \"%(group_name)s\". "
+"Заборонено для: %(guest_names)s"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid ""
+"Channel \"%(channel_name)s\" only accepts members of group "
 "\"%(group_name)s\". Forbidden for: %(partner_names)s"
 msgstr ""
 "Канал \"%(channel_name)s\" приймає лише членів групи \"%(group_name)s\". "
@@ -7787,6 +7797,12 @@ msgstr "Ви у приватній розмові з <b>@%s</b>."
 #, python-format
 msgid "You are in channel <b>#%s</b>."
 msgstr "Ви у каналі <b>#%s</b>."
+
+#. module: mail
+#: code:addons/mail/controllers/discuss.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr "У вас немає дозволу завантажувати тут прикріплення."
 
 #. module: mail
 #. openerp-web

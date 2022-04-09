@@ -64,7 +64,7 @@ msgstr "\"Hoy\""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__collaborator_count
 msgid "# Collaborators"
-msgstr ""
+msgstr "# Número de colaboradores"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -101,28 +101,28 @@ msgstr "%s Utilice el icono %s para organizar sus actividades diarias."
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "(+ %(child_count)s tasks)"
-msgstr ""
+msgstr "(+ %(child_count)s tareas)"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "(+ 1 task)"
-msgstr ""
+msgstr "(+ 1 tarea)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "(due"
-msgstr ""
+msgstr "(debido"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "(last project update),"
-msgstr ""
+msgstr "(última actualización del proyecto),"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "- reached on"
-msgstr ""
+msgstr "- alcanzado el"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__10
@@ -284,6 +284,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"fa fa-lock text-muted\"/><span class=\"text-muted\"> Private</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"fa fa-lock text-muted\"/><span class=\"text-muted\"> Privado</span>"
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -380,6 +382,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>\n"
 "                                <i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Arrow icon\" title=\"Arrow\" attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>\n"
+"                                <i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Arrow icon\" title=\"Arrow\" attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -406,6 +410,8 @@ msgid ""
 "<i class=\"o_project_task_project_field text-danger\" attrs=\"{'invisible': "
 "[('project_id', '!=', False)]}\">Private</i>"
 msgstr ""
+"<i class=\"o_project_task_project_field text-danger\" attrs=\"{'invisible': "
+"[('project_id', '!=', False)]}\">Privado</i>"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -416,7 +422,7 @@ msgstr "<p><em>Número de tareas: %(tasks_count)s</em></p>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-right\">Stage:</small>"
-msgstr ""
+msgstr "<small class=\"text-right\">Etapa:</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -430,7 +436,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"fa fa-clock-o mr-2\" title=\"Dates\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-clock-o mr-2\" title=\"Dates\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -438,6 +444,8 @@ msgid ""
 "<span class=\"fa fa-envelope-o mr-2\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
+"<span class=\"fa fa-envelope-o mr-2\" aria-label=\"Domain Alias\" "
+"title=\"Domain Alias\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -451,6 +459,9 @@ msgid ""
 "                                    Collaborators\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Colaboradores\n"
+"                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -481,6 +492,9 @@ msgid ""
 "                                Burndown Chart\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                Diagrama de quemado\n"
+"                            </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -504,6 +518,9 @@ msgid ""
 "                                        <span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
 "                                        <span class=\"font-weight-bold oe_edit_only\">Create tasks by sending an email to </span>"
 msgstr ""
+"<span class=\"oe_read_only\" attrs=\"{'invisible': [('alias_name', '!=', False)]}\">Crear tareas al enviar un correo electrónico a </span>\n"
+"                                        <span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Crear tareas al enviar un correo electrónico a </span>\n"
+"                                        <span class=\"font-weight-bold oe_edit_only\">Crear tareas al enviar un correo electrónico a </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -594,6 +611,8 @@ msgid ""
 "A collaborator cannot be selected more than once in the project sharing "
 "access. Please remove duplicate(s) and try again."
 msgstr ""
+"No se puede seleccionar un colaborador más de una vez en el acceso "
+"compartido del proyecto. Elimine los duplicado(s) e inténtelo de nuevo."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
@@ -700,7 +719,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Add contacts to share the project..."
-msgstr ""
+msgstr "Agregar contactos para compartir el proyecto...."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__note
@@ -765,7 +784,7 @@ msgstr "Todos"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All employees"
-msgstr ""
+msgstr "Todos los empleados"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__all
@@ -812,6 +831,9 @@ msgid ""
 "an analytic account to record cost and revenue on your task. If empty, the "
 "analytic account of the project will be used."
 msgstr ""
+"Cuenta analítica a la que se vincula esta tarea para la gestión financiera. "
+"Utilice una cuenta analítica para registrar los costos e ingresos de la "
+"tarea. Si está vacía, se utilizará la cuenta analítica del proyecto."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -821,7 +843,7 @@ msgstr "Analítica"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
 msgid "Analyze the performance of your tasks and your workers."
-msgstr ""
+msgstr "Analice el rendimiento de sus tareas y sus trabajadores."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__april
@@ -873,7 +895,7 @@ msgstr "¿Está seguro de que desea eliminar esas etapas?"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Arrow"
-msgstr ""
+msgstr "Flecha"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -960,6 +982,8 @@ msgid ""
 "At each stage, employees can block tasks or mark them as ready for the next step.\n"
 "                                    You can customize here the labels for each state."
 msgstr ""
+"En cada etapa, los empleados pueden bloquear las tareas o marcarlas como listas para el siguiente paso.\n"
+"                                    Aquí puede personalizar las etiquetas de cada estado."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_attachment_count
@@ -1003,6 +1027,9 @@ msgid ""
 " * Good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * Neutral or bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"Modificar automáticamente el estado del kanban cuando el cliente responda la encuesta de esta etapa.\n"
+"* Una valoración positiva del cliente actualizará el estado del kanban a \"listo para la nueva etapa\" (viñeta verde).\n"
+" * Una valoración media o negativa actualizará el estado del kanban a \"bloqueado\" (viñeta roja)\n"
 
 #. module: project
 #. openerp-web
@@ -1146,6 +1173,8 @@ msgid ""
 "Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer,\n"
 "     of a product, of a team, of a construction site, etc.</i>"
 msgstr ""
+"Elija un <b>nombre</b> para su proyecto. <i>Puede ser lo que usted quiera: el nombre de un cliente,\n"
+"     de un producto, de un equipo, de una construcción, etc.</i>"
 
 #. module: project
 #. openerp-web
@@ -1191,7 +1220,7 @@ msgstr "Colaboradores"
 #. module: project
 #: model:ir.model,name:project.model_project_collaborator
 msgid "Collaborators in project shared"
-msgstr ""
+msgstr "Colaboradores en proyectos compartidos"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
@@ -1221,6 +1250,11 @@ msgid ""
 " who print the t-shirt. Organize priorities amongst orders using the %s "
 "icon. %s"
 msgstr ""
+"Comuníquese con los clientes desde la tarea mediante el enlace de correo "
+"electrónico. Adjuntar diseños de logos a la tarea, de modo que la "
+"información fluya desde los diseñadores hasta los trabajadores que imprimen "
+"la camisa. Organice las prioridades entre las órdenes utilizando el icono %s"
+" . %s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -1863,6 +1897,9 @@ msgid ""
 " all documents or links to the task directly, to have all research "
 "information centralized. %s"
 msgstr ""
+"Cualquier persona puede proponer ideas y el editor marcará las mejores como "
+"%s. Adjuntar todos los documentos o enlaces directamente a la tarea con el "
+"fin de tener toda la información disponible de forma clara.  %s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
@@ -2098,6 +2135,11 @@ msgid ""
 "\n"
 "Don't forget to set up the email templates on the stages for which you want to get customer feedback."
 msgstr ""
+"¿Cómo obtener la retroalimentación de los clientes?\n"
+"- Valoración al cambiar de etapa: se enviará un correo electrónico cuando se pase una tarea a otra etapa.\n"
+"- Valoración periódica: se enviará un correo electrónico periódicamente.\n"
+"\n"
+"No olvide configurar las plantillas de correo en las etapas para las que desea obtener retroalimentación de los clientes."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -2381,7 +2423,7 @@ msgstr "Versión incidencia"
 #: code:addons/project/static/src/js/project_list.js:0
 #, python-format
 msgid "It seems that some tasks are part of a recurrence."
-msgstr ""
+msgstr "Parece que algunas tareas forman parte de una recurrencia."
 
 #. module: project
 #. openerp-web
@@ -2599,6 +2641,8 @@ msgid ""
 "Let's go back to the <b>kanban view</b> to have an overview of your next "
 "tasks."
 msgstr ""
+"Regresemos a su <b>vista kanban</b> para tener una vista general de sus "
+"próximas tareas."
 
 #. module: project
 #. openerp-web
@@ -3277,7 +3321,7 @@ msgstr "Porcentaje de calificaciones felices durante los últimos 30 días."
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
 msgid "Periodic rating"
-msgstr ""
+msgstr "Valoración periódica"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_ids
@@ -4333,7 +4377,7 @@ msgstr "Detener la recurrencia"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_count
 msgid "Sub-task Count"
-msgstr ""
+msgstr "Recuento de subtareas"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allow_subtasks
@@ -4431,7 +4475,7 @@ msgstr "Conteo de Tareas"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count_with_subtasks
 msgid "Task Count With Subtasks"
-msgstr ""
+msgstr "Recuento de tareas con subtareas"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
@@ -4445,13 +4489,13 @@ msgstr "Tarea Creada"
 #: model:ir.model.fields,field_description:project.field_project_task__allow_task_dependencies
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_task_dependencies
 msgid "Task Dependencies"
-msgstr ""
+msgstr "Dependencias de las tareas"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_dependency_change
 #: model:mail.message.subtype,name:project.mt_task_dependency_change
 msgid "Task Dependency Changes"
-msgstr ""
+msgstr "Cambios en la dependencia de las tareas"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
@@ -4858,6 +4902,8 @@ msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                    Chat in real-time or by email to collaborate efficiently."
 msgstr ""
+"Para ser más eficiente, utilice las actividades y estados para sus tareas.<br>\n"
+"                    Comuníquese en tiempo real o por correo electrónico para colaborar de manera eficaz"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action
@@ -4964,7 +5010,7 @@ msgstr "Desarchivar"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "Unassign Me"
-msgstr ""
+msgstr "Desasignarme"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
@@ -5016,7 +5062,7 @@ msgstr "Actualización"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Use %s and %s bullets to indicate the status of a task. %s"
-msgstr ""
+msgstr "Use las viñetas%s y %s para indicar el estado de una tarea. %s"
 
 #. module: project
 #. openerp-web
@@ -5028,7 +5074,7 @@ msgstr "Utilice <b>actividades</b> para organizar su trabajo diario."
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_enabled
 msgid "Use Email Alias"
-msgstr ""
+msgstr "Use el Alias de correo electrónico"
 
 #. module: project
 #: model:res.groups,name:project.group_project_rating
@@ -5080,6 +5126,8 @@ msgid ""
 "Use the chatter to <b>send emails</b> and communicate efficiently with your customers. \n"
 "    Add new people to the followers' list to make them aware of the main changes about this task."
 msgstr ""
+"Utilice el chatter para <b>enviar correos electrónicos</b> y comunicarse de manera eficiente con sus clientes \n"
+"    Agregue nuevas personas en la lista de seguidores para que estén al tanto de los cambios principales de esta tarea."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id
@@ -5236,7 +5284,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot %s %s fields in task."
-msgstr ""
+msgstr "No puede %s %s campos en la tarea."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5244,6 +5292,8 @@ msgstr ""
 msgid ""
 "You cannot archive recurring tasks. Please disable the recurrence first."
 msgstr ""
+"No puede dar archivo a tareas recurrentes. Primero, desactive la "
+"recurrencia."
 
 #. module: project
 #: code:addons/project/models/analytic_account.py:0
@@ -5259,7 +5309,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot create cyclic dependency."
-msgstr ""
+msgstr "No puede crear una dependencia cíclica."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5277,6 +5327,7 @@ msgstr ""
 msgid ""
 "You cannot delete recurring tasks. Please disable the recurrence first."
 msgstr ""
+"No puede eliminar tareas recurrentes. Primero, desactive la recurrencia."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -5311,13 +5362,13 @@ msgstr "Has sido asignado al"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You have not write access of %s field."
-msgstr ""
+msgstr "No tiene acceso de edición del %s campo."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "e.g. New Design"
-msgstr ""
+msgstr "por ejemplo, nuevo diseño"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -5332,7 +5383,7 @@ msgstr "p.ej. fiesta de oficina"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "for customer:"
-msgstr ""
+msgstr "para el cliente:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -5342,7 +5393,7 @@ msgstr "por proyecto:"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "in priority:"
-msgstr ""
+msgstr "con prioridad:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -5352,7 +5403,7 @@ msgstr "en etapa:"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "in status:"
-msgstr ""
+msgstr "con estado:"
 
 #. module: project
 #: code:addons/project/models/project.py:0

@@ -12,6 +12,7 @@
 # Vo Thanh Thuy, 2022
 # Thin Tran <trvathin@gmail.com>, 2022
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
+# Thinh Doan <thinh.t.doan@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022\n"
+"Last-Translator: Thinh Doan <thinh.t.doan@gmail.com>, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,7 +62,7 @@ msgstr " Loại %(lock_type)s có ngày khóa được cài ngày %(lock_date)s.
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
-msgstr "# Đã được đối soát"
+msgstr "# Đã được dối soát"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
@@ -76,12 +77,12 @@ msgstr "# Sổ phụ đã đối soát"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
 msgid "# of Digits"
-msgstr "# chữ số"
+msgstr "# chữ số thập phân"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line__number
 msgid "#Coins/Bills"
-msgstr "Số tiền/hóa đơn"
+msgstr "Mệnh giá/hóa đơn"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -149,7 +150,7 @@ msgstr "%s không bao gồm. Thuế"
 #: code:addons/account/models/product.py:0
 #, python-format
 msgid "%s Incl. Taxes"
-msgstr "%s Incl. Taxes"
+msgstr "%s Đã bao gồm Thuế"
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
@@ -166,12 +167,12 @@ msgstr "(object._get_report_base_filename())"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "- Posted Entries Only"
-msgstr "- Chỉ bút toán đã vào sổ"
+msgstr "- Các bút toán đã vào sổ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "- Posted and Draft Entries"
-msgstr "- Bút toán đã vào sổ và Nháp"
+msgstr "- Bút toán đã vào sổ và Bút toán Nháp"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -437,7 +438,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 msgid "<em>Draft Invoice</em>"
-msgstr "<em>Công nợ nháp</em>"
+msgstr "<em>Hóa đơn tạm tính</em>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -1123,7 +1124,7 @@ msgstr "<strong>Chứng từ Tham chiếu:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Source:</strong>"
-msgstr "<strong>Nguồn gốc:</strong>"
+msgstr "<strong>Hồ sơ gốc:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -1147,7 +1148,7 @@ msgid ""
 "                        Changing its rounding factor now will not change the rounding made on previous entries; possibly causing an inconsistency with the new ones."
 msgstr ""
 "<strong>Đơn vị tiền tệ này đã được sử dụng để tạo các bút toán kế toán.</strong> <br/>\n"
-"                        Thay đổi hệ số làm tròn bây giờ sẽ không thay đổi hệ số làm tròn được thực hiện trên các bút toán trước đó; có thể gây ra sự mâu thuẫn với những cái mới."
+"                        Thay đổi hệ số làm tròn bây giờ sẽ không thay đổi hệ số làm tròn được thực hiện trên các bút toán trước đó; có thể gây ra sự không đồng bộ với những hạch toán mới."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1176,7 +1177,7 @@ msgid ""
 "                your cash box, and then post entries when money comes in or\n"
 "                goes out of the cash box."
 msgstr ""
-"Một Két Tiền mặt cho phép bạn quản lý các bút toán tiền mặt trong sổ nhật\n"
+"Chức năng Cash Register / Quản lý Tiền mặt cho phép bạn quản lý các bút toán tiền mặt trong sổ nhật\n"
 "                ký tiền mặt. Chức năng này cung cấp một phương thức dễ dàng để theo dõi\n"
 "                các khoản thanh toán tiền mặt hàng ngày. Bạn có thể nhập tiền có trong\n"
 "                két tiền của bạn, và vào sổ các bút toán khi tiền vào hoặc\n"
@@ -1192,7 +1193,7 @@ msgstr "Điều khoản thanh toán chỉ được phép có 1 dòng thuộc lo�
 #: code:addons/account/models/res_partner_bank.py:0
 #, python-format
 msgid "A bank account can belong to only one journal."
-msgstr "Một tài khoản ngân hàng chỉ có thể thuộc về một tạp chí duy nhất."
+msgstr "Một tài khoản ngân hàng chỉ có thể thuộc về sổ nhật ký duy nhất."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -7411,7 +7412,7 @@ msgstr ""
 msgid ""
 "Invoice and credit note repartition should have at least one tax repartition"
 " line."
-msgstr ""
+msgstr "Hóa đơn và credit note nên có cùng thuế suất."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -10378,7 +10379,7 @@ msgstr ""
 #: code:addons/account/models/ir_module_module.py:0
 #, python-format
 msgid "Please update the Invoicing module before continuing."
-msgstr ""
+msgstr "Vui lòng cập nhật module Hóa đơn trước khi tiếp tục"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -13777,6 +13778,18 @@ msgstr ""
 "tất cả các bút toán nháp.- Đang xử lý: Không được chỉnh sửa nữa với các bút "
 "toán đã vào sổ, sẵn sàng để đối soát.- Đã xác nhận: Mọi thứ đều đã được đối "
 "soát. Không còn gì để xử lý nữa."
+
+#. module: account
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid "The date of some related entries is protected by a lock date"
+msgstr "Ngày ghi sổ của các hạch toán này trong kỳ đã được khóa sổ"
+
+#. module: account
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid "The date selected is protected by a lock date"
+msgstr "Ngày hạch toán trong kỳ đã khóa sổ"
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0

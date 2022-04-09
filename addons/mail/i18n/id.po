@@ -22,11 +22,11 @@
 # Deddy Ddr <deddy.ddr@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Bonny Useful <bonny.useful@gmail.com>, 2022
-# oon arfiandwi <oon.arfiandwi@gmail.com>, 2022
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022
 # Altela Eleviansyah Pramardhika <altela_pramardhika@yahoo.com>, 2022
 # whenwesober, 2022
 # Gusti Rini <gustirini@gmail.com>, 2022
+# oon arfiandwi <oon.arfiandwi@gmail.com>, 2022
 # Ryanto The <ry.the77@gmail.com>, 2022
 # 
 msgid ""
@@ -1468,6 +1468,14 @@ msgstr "Diubah"
 #, python-format
 msgid "Channel"
 msgstr "Saluran"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid ""
+"Channel \"%(channel_name)s\" only accepts members of group "
+"\"%(group_name)s\". Forbidden for: %(guest_names)s"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -6171,7 +6179,7 @@ msgstr "Kirim Sekarang"
 #: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
 #, python-format
 msgid "Send a message"
-msgstr ""
+msgstr "Kirim pesan"
 
 #. module: mail
 #. openerp-web
@@ -7644,6 +7652,12 @@ msgid "You are in channel <b>#%s</b>."
 msgstr "Anda berada di saluran <b>#%s</b>."
 
 #. module: mail
+#: code:addons/mail/controllers/discuss.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/models/discuss_sidebar_category_item/discuss_sidebar_category_item.js:0
 #, python-format
@@ -8277,7 +8291,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "unknown error"
-msgstr ""
+msgstr "eror tidak diketahui"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
