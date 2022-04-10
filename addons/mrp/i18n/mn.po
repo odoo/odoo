@@ -4,9 +4,8 @@
 # 
 # Translators:
 # Onii Onii <onii0223@yahoo.com>, 2020
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2020
+# hish, 2020
 # tserendavaa tsogtoo <tseegii011929@gmail.com>, 2020
-# Bayarkhuu Bataa, 2020
 # Minj P <pminj322@gmail.com>, 2020
 # Батболд <batbold.ts@gmail.com>, 2020
 # Khoschuluu Khuderchuluu <khoschuluu@gmail.com>, 2020
@@ -20,6 +19,7 @@
 # Munkhbaatar g <muuguu17@gmail.com>, 2021
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2021
 # Sanjaajamts Badamjunai <b.sanjaajamtsfc@gmail.com>, 2021
+# Bayarkhuu Bataa, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Sanjaajamts Badamjunai <b.sanjaajamtsfc@gmail.com>, 2021\n"
+"Last-Translator: Bayarkhuu Bataa, 2022\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2126,6 +2126,14 @@ msgid "It has already been unblocked."
 msgstr " Хэдийн хоригийг чөлөөлсөн"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid ""
+"It is not possible to unplan one single Work Order. You should unplan the "
+"Manufacturing Order instead in order to unplan all the linked operations."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned
 msgid "Its Operations are Planned"
 msgstr ""
@@ -3123,7 +3131,7 @@ msgstr "Төлөвлөлт"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Planning Issues"
-msgstr ""
+msgstr "Хоцролттой"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_plastic_laminate
@@ -4180,6 +4188,15 @@ msgid ""
 msgstr ""
 "Ажлын захиалгын төлөвлөсөн дуусах огноо нь төлөвлөсөн эхлэх өдрөөс өмнө байж"
 " болохгүй тул ажлын захиалгыг хадгалахын тулд үүнийг засна уу."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The product has already been used at least once, editing its structure may "
+"lead to undesirable behaviours. You should rather archive the product and "
+"create a new one with a new bill of materials."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
