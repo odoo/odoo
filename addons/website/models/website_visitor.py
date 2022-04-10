@@ -182,7 +182,7 @@ class WebsiteVisitor(models.Model):
         # This function can be called in json with mobile app.
         # In case of mobile app, no uid is set on the jsonRequest env.
         # In case of multi db, _env is None on request, and request.env unbound.
-        if not request:
+        if not (request and request.env and request.env.uid):
             return None
         Visitor = self.env['website.visitor'].sudo()
         visitor = Visitor
