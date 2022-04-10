@@ -161,6 +161,13 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
         this._stopSmoothScroll();
         this.autoScrollHandler = setInterval(
             () => {
+                // If the preview helper is inside the scroll target, dragging
+                // it will change the scrollTarget scroll dimensions. In that
+                // case, it is hidden during the scroll computation.
+                const previewIsVisible = ui.helper.is(':visible');
+                if (previewIsVisible && this.previewInScrollTarget) {
+                    ui.helper.addClass('d-none');
+                }
                 // Prevents Delta's from being different from 0 when scroll should not occur (except when
                 // helper is dragged outside of this.$scrollTarget's visible area as it increases
                 // this.$scrollTarget's scrollHeight).
@@ -210,6 +217,9 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
                         this.$scrollTarget.scrollLeft() +
                         this.horizontalDelta
                     );
+                }
+                if (previewIsVisible && this.previewInScrollTarget) {
+                    ui.helper.removeClass('d-none');
                 }
             },
             this.options.scrollTimerInterval
@@ -328,11 +338,34 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
      * @param {Object} ev The jQuery mousedown handler event parameter.
      */
     _onElementMouseDown(ev) {
-        const elementOffset = $(ev.target).offset();
-        this.options.jQueryDraggableOptions.cursorAt = {
-            top: ev.pageY - elementOffset.top,
-            left: ev.pageX - elementOffset.left,
-        };
+        if (typeof this.options.jQueryDraggableOptions.helper === 'function') {
+            const element = this.$element.has(ev.target)[0] || ev.target;
+            const draggableEl = element.cloneNode(true);
+            const helperEl = this.options.jQueryDraggableOptions.helper.call(
+                draggableEl
+            );
+
+            let appendToEl = document.body;
+            const appendToOption = this.options.jQueryDraggableOptions.appendTo;
+            if (appendToOption) {
+                appendToEl = appendToOption.length ? appendToOption[0] : appendToOption;
+            }
+
+            appendToEl.appendChild(helperEl);
+            const cursorAt = {
+                top: helperEl.clientHeight / 2,
+                left: helperEl.clientWidth / 2,
+            };
+            this.options.jQueryDraggableOptions.cursorAt = cursorAt;
+            this.$element.draggable('option', 'cursorAt', cursorAt);
+            appendToEl.removeChild(helperEl);
+        } else {
+            const elementOffset = $(ev.target).offset();
+            this.options.jQueryDraggableOptions.cursorAt = {
+                top: ev.pageY - elementOffset.top,
+                left: ev.pageX - elementOffset.left,
+            };
+        }
     },
     /**
      * Called when dragging the element.
@@ -362,6 +395,7 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
     _onSmoothDragStart(ev, ui, onDragStartCallBack) {
         this.scrollTargetIsDocument = this.$scrollTarget.is('html');
         this.scrollTargetIsParent = this.$scrollTarget.get(0).contains(this.$element.get(0));
+        this.previewInScrollTarget = this.$scrollTarget.get(0).contains(ui.helper.get(0));
         this._updatePositionOptions(ui);
         this._startSmoothScroll(ui);
         if (typeof onDragStartCallBack === 'function') {

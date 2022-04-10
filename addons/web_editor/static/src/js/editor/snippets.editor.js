@@ -192,16 +192,9 @@ var SnippetEditor = Widget.extend({
             this.dropped = false;
             const smoothScrollOptions = this.options.getScrollOptions({
                 jQueryDraggableOptions: {
-                    cursorAt: {
-                        left: 10,
-                        top: 10
-                    },
                     handle: '.o_move_handle',
-                    helper: () => {
-                        var $clone = this.$el.clone().css({width: '24px', height: '24px', border: 0});
-                        $clone.appendTo(this.$body).removeClass('d-none');
-                        return $clone;
-                    },
+                    appendTo: this.$target[0].parentElement,
+                    helper: this._createDragAndDropHelper.bind(this),
                     start: this._onDragAndDropStart.bind(this),
                     stop: (...args) => {
                         // Delay our stop handler so that some wysiwyg handlers
@@ -711,6 +704,38 @@ var SnippetEditor = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @private
+     * @returns {HTMLElement} A clone of the $target element to use as a preview
+     *      while dragging the snippet to another location.
+     */
+    _createDragAndDropHelper() {
+        const $drag = this.$target.clone(true);
+        const $originalCanvases = this.$target.find('canvas');
+        const $clonedCanvases = $drag.find('canvas');
+        const {height, width} = this.$target[0].getBoundingClientRect();
+
+        const previewArea = 100 * 200; // The standard preview size.
+        const blockArea = height * width;
+        const previewScale = (previewArea / blockArea) ** 0.5;
+
+        // To have a correct preview, canvases must be re-drawn
+        // on the clone.
+        for (let i = 0; i < $originalCanvases.length; i++) {
+            $clonedCanvases[i].getContext('2d').drawImage($originalCanvases[i], 0, 0);
+        }
+
+        $drag.css({
+            margin: 0,
+            width,
+            height,
+            'max-width': width,
+            'max-height': height,
+            transform: `scale(${previewScale}, ${previewScale})`,
+        });
+        $drag.addClass('o_cc o_cc1'); // Adds a background color to the preview for usability.
+        return $drag[0];
+    },
+    /**
      * Instantiates the snippet's options.
      *
      * @private
@@ -858,7 +883,7 @@ var SnippetEditor = Widget.extend({
      *
      * @private
      */
-    _onDragAndDropStart: function () {
+    _onDragAndDropStart: function (event, ui) {
         this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
         this.trigger_up('drag_and_drop_start');
         this.options.wysiwyg.odooEditor.automaticStepUnactive();
@@ -867,10 +892,6 @@ var SnippetEditor = Widget.extend({
         this._dropSiblings = {
             prev: self.$target.prev()[0],
             next: self.$target.next()[0],
-        };
-        self.size = {
-            width: self.$target.width(),
-            height: self.$target.height()
         };
         self.$target.after('<div class="oe_drop_clone" style="display: none;"/>');
         self.$target.detach();
@@ -899,10 +920,11 @@ var SnippetEditor = Widget.extend({
             $selectorChildren: $selectorChildren,
         });
 
-        this.$body.addClass('move-important');
+        this.$body.addClass('grabbing-important');
 
         this.$editable.find('.oe_drop_zone').droppable({
             over: function () {
+                ui.helper.addClass('d-none');
                 if (self.dropped) {
                     self.$target.detach();
                     $('.oe_drop_zone').removeClass('invisible');
@@ -916,6 +938,7 @@ var SnippetEditor = Widget.extend({
                     self.dropped = false;
                     self.$target.detach();
                     $(this).removeClass('invisible');
+                    ui.helper.removeClass('d-none');
                 }
             },
         });
@@ -964,7 +987,7 @@ var SnippetEditor = Widget.extend({
         var $from = $clone.parent();
 
         this.$el.removeClass('d-none');
-        this.$body.removeClass('move-important');
+        this.$body.removeClass('grabbing-important');
         $clone.remove();
 
         this.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
@@ -1128,6 +1151,7 @@ var SnippetsMenu = Widget.extend({
         'click .o_we_invisible_entry': '_onInvisibleEntryClick',
         'click #snippet_custom .o_rename_btn': '_onRenameBtnClick',
         'click #snippet_custom .o_delete_btn': '_onDeleteBtnClick',
+        'mouseup': '_onMouseUp',
         'mousedown': '_onMouseDown',
         'input .o_snippet_search_filter_input': '_onSnippetSearchInput',
         'click .o_snippet_search_filter_reset': '_onSnippetSearchResetClick',
@@ -1590,11 +1614,23 @@ var SnippetsMenu = Widget.extend({
      * @returns {Promise}
      */
     callPostSnippetDrop: async function ($target) {
+        // Ideally should be done at the very end to minimize the flicker
+        // transitioning from preview to actual content, here seems the best
+        // compromise as a generic solution (could be better if each snippet
+        // was in charge of removing their own preview elements?). In any case,
+        // it should be ensured that DOM is not added in the history.
+        $target.find('.s_preview').remove();
+        $target.find('.s_to_preview').removeClass('s_to_preview');
+        if ($target[0].classList.contains('s_loading_bg_effect_after_preview')) {
+            $target[0].classList.add('o_we_loading_bg_effect');
+        }
+
         // First call the onBuilt of all options of each item in the snippet
         // (and so build their editor instance first).
         await this._callForEachChildSnippet($target, function (editor, $snippet) {
             return editor.buildSnippet();
         });
+
         // The snippet is now fully built, notify the editor for changed
         // content.
         $target.trigger('content_changed');
@@ -1709,13 +1745,13 @@ var SnippetsMenu = Widget.extend({
                 var $zone = $(this);
                 var $children = $zone.find('> :not(.oe_drop_zone, .oe_drop_clone)');
 
-                if (!$zone.children().last().is('.oe_drop_zone')) {
+                if (!$zone.children().last().is('.oe_drop_zone, .ui-draggable-dragging')) {
                     data = testPreviousSibling($zone[0].lastChild, $zone)
                         || setDropZoneDirection($zone, $zone, $children.last());
                     self._insertDropzone($('<we-hook/>').appendTo($zone), data.vertical, data.style);
                 }
 
-                if (!$zone.children().first().is('.oe_drop_clone')) {
+                if (!$zone.children().first().is('.oe_drop_clone, .ui-draggable-dragging')) {
                     data = testPreviousSibling($zone[0].firstChild, $zone)
                         || setDropZoneDirection($zone, $zone, $children.first());
                     self._insertDropzone($('<we-hook/>').prependTo($zone), data.vertical, data.style);
@@ -1726,7 +1762,7 @@ var SnippetsMenu = Widget.extend({
             $selectorSiblings = $(_.uniq(($selectorSiblings || $()).add($selectorChildren.children()).get()));
         }
 
-        var noDropZonesSelector = '[data-invisible="1"], .o_we_no_overlay, :not(:visible)';
+        var noDropZonesSelector = '[data-invisible="1"], .o_we_no_overlay, :not(:visible), .ui-draggable-dragging, .ui-draggable-dragging *';
         if ($selectorSiblings) {
             $selectorSiblings.not(`.oe_drop_zone, .oe_drop_clone, ${noDropZonesSelector}`).each(function () {
                 var data;
@@ -2368,7 +2404,7 @@ var SnippetsMenu = Widget.extend({
             }, options.scrollBoundaries),
             jQueryDraggableOptions: Object.assign({
                 appendTo: this.$body,
-                cursor: 'move',
+                cursor: 'grabbing',
                 greedy: true,
                 scroll: false,
             }, options.jQueryDraggableOptions),
@@ -2384,10 +2420,12 @@ var SnippetsMenu = Widget.extend({
      * @param {jQuery} $hook
      * @param {boolean} [vertical=false]
      * @param {Object} [style]
+     * @param {Array} [classes]
      */
-    _insertDropzone: function ($hook, vertical, style) {
+    _insertDropzone: function ($hook, vertical, style, classes = []) {
+        const extraClasses = classes.length ? ' ' + classes.join(' ') : '';
         var $dropzone = $('<div/>', {
-            'class': 'oe_drop_zone oe_insert' + (vertical ? ' oe_vertical' : ''),
+            'class': 'oe_drop_zone oe_insert' + (vertical ? ' oe_vertical' : '') + extraClasses,
         });
         if (style) {
             $dropzone.css(style);
@@ -2402,8 +2440,8 @@ var SnippetsMenu = Widget.extend({
      * @param {jQuery} $snippets
      */
     _makeSnippetDraggable: function ($snippets) {
-        var self = this;
-        var $toInsert, dropped, $snippet;
+        const self = this;
+        let $toInsert, dropped, $snippet;
 
         let dragAndDropResolve;
         let $scrollingElement = $().getScrollingElement(this.ownerDocument);
@@ -2419,10 +2457,14 @@ var SnippetsMenu = Widget.extend({
                     dragSnip.querySelectorAll('.o_delete_btn, .o_rename_btn').forEach(
                         el => el.remove()
                     );
+                    this.classList.remove('o_snippet_clicked');
+                    this.classList.add('o_snippet_dragging');
                     return dragSnip;
                 },
                 start: function () {
                     self._hideSnippetTooltips();
+
+                    let $modal = $();
 
                     const prom = new Promise(resolve => dragAndDropResolve = () => resolve());
                     self._mutex.exec(() => prom);
@@ -2431,6 +2473,7 @@ var SnippetsMenu = Widget.extend({
 
                     self.$el.find('.oe_snippet_thumbnail').addClass('o_we_already_dragging');
                     self.options.wysiwyg.odooEditor.observerUnactive('dragAndDropCreateSnippet');
+                    self.$el.find('.o_panel_body').addClass('o_dragging');
 
                     dropped = false;
                     $snippet = $(this);
@@ -2450,6 +2493,20 @@ var SnippetsMenu = Widget.extend({
                     }
 
                     $toInsert = $baseBody.clone();
+
+                    // Load preview content
+                    const previewItemsToLoad = [];
+                    for (const previewEl of $toInsert[0].querySelectorAll('.s_preview, .s_to_preview')) {
+                        if (previewEl.dataset.src) {
+                            previewItemsToLoad.push(previewEl);
+                        }
+                        previewItemsToLoad.push(...previewEl.querySelectorAll('[data-src]'));
+                    }
+                    for (const itemEl of previewItemsToLoad) {
+                        itemEl.src = itemEl.dataset.src;
+                        delete itemEl.dataset.src;
+                    }
+
                     // Color-customize dynamic SVGs in dropped snippets with current theme colors.
                     [...$toInsert.find('img[src^="/web_editor/shape/"]')].forEach(dynamicSvg => {
                         const colorCustomizedURL = new URL(dynamicSvg.getAttribute('src'), window.location.origin);
@@ -2467,23 +2524,38 @@ var SnippetsMenu = Widget.extend({
                         return;
                     }
 
-                    self._activateInsertionZones($selectorSiblings, $selectorChildren);
+                    if ($toInsert[0].dataset.combineDropZones) {
+                        $selectorChildren.each(function () {
+                            const combineDropZones = this.childElementCount > 0;
+                            const extraClasses = combineDropZones ? ['o_full_drop_zone'] : [];
+                            self._insertDropzone($('<we-hook/>').appendTo(this), false, {}, extraClasses);
+                        });
+                    } else {
+                        self._activateInsertionZones($selectorSiblings, $selectorChildren);
+                    }
+
+                    if ($toInsert[0].dataset.showModalOnPreview) {
+                        $modal = $toInsert.find('.modal');
+                    }
 
                     self.getEditableArea().find('.oe_drop_zone').droppable({
                         over: function () {
                             if (dropped) {
+                                $modal.modal('hide');
                                 $toInsert.detach();
                                 $toInsert.addClass('oe_snippet_body');
                                 $('.oe_drop_zone').removeClass('invisible');
                             }
                             dropped = true;
                             $(this).first().after($toInsert).addClass('invisible');
+                            $modal.modal('show');
                             $toInsert.removeClass('oe_snippet_body');
                             self.trigger_up('drop_zone_over');
                         },
                         out: function () {
                             var prev = $toInsert.prev();
                             if (this === prev[0]) {
+                                $modal.modal('hide');
                                 dropped = false;
                                 $toInsert.detach();
                                 $(this).removeClass('invisible');
@@ -2510,6 +2582,8 @@ var SnippetsMenu = Widget.extend({
                     const doc = self.options.wysiwyg.odooEditor.document;
                     self.options.wysiwyg.odooEditor.automaticStepUnactive();
                     self.options.wysiwyg.odooEditor.automaticStepSkipStack();
+                    self.$el.find('.o_panel_body').removeClass('o_dragging');
+                    self.$el.find('.o_snippet_dragging').removeClass('o_snippet_dragging');
                     $toInsert.removeClass('oe_snippet_body');
                     self.draggableComponent.$scrollTarget.off('scroll.scrolling_element');
                     if (!dropped && ui.position.top > 3 && ui.position.left + ui.helper.outerHeight() < self.el.getBoundingClientRect().left) {
@@ -2545,6 +2619,11 @@ var SnippetsMenu = Widget.extend({
                         $toInsert.detach();
                     }
 
+                    // TODO the fact that we have to remove the added snippet to
+                    // then reenable the observe and then adding the snippet
+                    // back where it was... is the cause why some snippet
+                    // flicker on drop (like an iframe needing to be reloaded).
+                    // But how can this be solved?
                     self.options.wysiwyg.odooEditor.observerActive('dragAndDropCreateSnippet');
 
                     if (dropped) {
@@ -2821,11 +2900,11 @@ var SnippetsMenu = Widget.extend({
         this._activateSnippet(false);
     },
     /**
-    * Called when a snippet will move in the page.
-    *
-    * @private
-    */
-   _onSnippetDragAndDropStart: function () {
+     * Called when a snippet will move in the page.
+     *
+     * @private
+     */
+    _onSnippetDragAndDropStart: function () {
         this.snippetEditorDragging = true;
     },
     /**
@@ -3018,6 +3097,15 @@ var SnippetsMenu = Widget.extend({
         });
     },
     /**
+     * @private
+     */
+    _onMouseUp(ev) {
+        const clickedSnippet = this.el.querySelector('.oe_snippet.o_snippet_clicked');
+        if (clickedSnippet) {
+            clickedSnippet.classList.remove('o_snippet_clicked');
+        }
+    },
+    /**
      * Prevents pointer-events to change the focus when a pointer slide from
      * left-panel to the editable area.
      *
@@ -3041,6 +3129,7 @@ var SnippetsMenu = Widget.extend({
 
         const snippetEl = ev.target.closest('.oe_snippet');
         if (snippetEl && !snippetEl.querySelector('.o_we_already_dragging')) {
+            snippetEl.classList.add('o_snippet_clicked');
             this._showSnippetTooltip($(snippetEl));
         }
     },

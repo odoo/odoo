@@ -48,6 +48,7 @@ for (const snippet of snippetsNames) {
             trigger: ".modal-footer .btn-secondary",
         });
     } else if (['s_popup', 's_newsletter_subscribe_popup'].includes(snippet)) {
+        snippetSteps[1]['in_modal'] = false;
         snippetSteps[2]['in_modal'] = false;
         snippetSteps.splice(3, 2, {
             content: `Hide the ${snippet} popup`,
