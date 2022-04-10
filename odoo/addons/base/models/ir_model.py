@@ -10,6 +10,7 @@ from collections.abc import Mapping
 from operator import itemgetter
 
 from psycopg2 import sql
+from psycopg2.extras import Json
 
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -341,7 +342,7 @@ class IrModel(models.Model):
         """ Return the values to write to the database for the given model. """
         return {
             'model': model._name,
-            'name': model._description,
+            'name': Json({'en_US': model._description}),
             'order': model._order,
             'info': next(cls.__doc__ for cls in type(model).mro() if cls.__doc__),
             'state': 'manual' if model._custom else 'base',
@@ -906,11 +907,6 @@ class IrModelFields(models.Model):
 
         if vals and self:
             for item in self:
-                if item.state != 'manual':
-                    raise UserError(_('Properties of base fields cannot be altered in this manner! '
-                                      'Please modify them through Python code, '
-                                      'preferably through a custom addon!'))
-
                 if vals.get('model_id', item.model_id.id) != item.model_id.id:
                     raise UserError(_("Changing the model of a field is forbidden!"))
 
@@ -934,8 +930,8 @@ class IrModelFields(models.Model):
 
                 # We don't check the 'state', because it might come from the context
                 # (thus be set for multiple fields) and will be ignored anyway.
-                if obj is not None and field is not None:
-                    patched_models.add(obj._name)
+                # if obj is not None and field is not None:
+                #     patched_models.add(obj._name)
 
         # These shall never be written (modified)
         for column_name in ('model_id', 'model', 'state'):
@@ -987,8 +983,8 @@ class IrModelFields(models.Model):
             'model_id': model_id,
             'model': field.model_name,
             'name': field.name,
-            'field_description': field.string,
-            'help': field.help or None,
+            'field_description': Json({'en_US': field.string}),
+            'help': field.help and Json({'en_US': field.help}) or None,
             'ttype': field.type,
             'state': 'manual' if field.manual else 'base',
             'relation': field.comodel_name or None,
@@ -1224,7 +1220,7 @@ class IrModelSelection(models.Model):
 
         # create or update rows
         cols = ['field_id', 'value', 'name', 'sequence']
-        rows = [key + val for key, val in expected.items() if existing.get(key) != val]
+        rows = [key + (Json({'en_US': val[0]}), val[1]) for key, val in expected.items() if existing.get(key) != val]
         if rows:
             ids = upsert(cr, self._table, cols, rows, ['field_id', 'value'])
             self.pool.post_init(mark_modified, self.browse(ids), cols[2:])
@@ -1561,8 +1557,7 @@ class IrModelConstraint(models.Model):
                                 (SELECT id FROM ir_model WHERE model=%s),
                                 %s, %s, %s)
                         RETURNING id"""
-            cr.execute(query,
-                (conname, self.env.uid, self.env.uid, module, model._name, type, definition, message))
+            cr.execute(query, (conname, self.env.uid, self.env.uid, module, model._name, type, definition, Json({'en_US': message})))
             return self.browse(cr.fetchone()[0])
 
         cons_id = cons.pop('id')
@@ -1571,7 +1566,7 @@ class IrModelConstraint(models.Model):
                         SET write_date=now() AT TIME ZONE 'UTC',
                             write_uid=%s, type=%s, definition=%s, message=%s
                         WHERE id=%s"""
-            cr.execute(query, (self.env.uid, type, definition, message, cons_id))
+            cr.execute(query, (self.env.uid, type, definition, Json({'en_US': message}), cons_id))
         return self.browse(cons_id)
 
     def _reflect_constraints(self, model_names):

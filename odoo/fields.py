@@ -241,7 +241,6 @@ class Field(MetaField('DummyField', (object,), {})):
     translate = False                   # whether the field is translated
 
     column_type = None                  # database column type (ident, spec)
-    column_cast_from = ()               # column types that may be cast to this
     write_sequence = 0                  # field ordering for write()
 
     args = None                         # the parameters given to __init__()
@@ -990,17 +989,9 @@ class Field(MetaField('DummyField', (object,), {})):
             return
         if column['udt_name'] == self.column_type[0]:
             return
-        if column['udt_name'] in self.column_cast_from:
-            sql.convert_column(model._cr, model._table, self.name, self.column_type[1])
-        else:
-            newname = (self.name + '_moved{}').format
-            i = 0
-            while sql.column_exists(model._cr, model._table, newname(i)):
-                i += 1
-            if column['is_nullable'] == 'NO':
-                sql.drop_not_null(model._cr, model._table, self.name)
-            sql.rename_column(model._cr, model._table, self.name, newname(i))
-            sql.create_column(model._cr, model._table, self.name, self.column_type[1], self.string)
+        if column['is_nullable'] == 'NO':
+            sql.drop_not_null(cr, model._table, self.name)
+        sql.convert_column(model._cr, model._table, self.name, self.column_type[1], column['udt_name'])
 
     def update_db_notnull(self, model, column):
         """ Add or remove the NOT NULL constraint on ``self``.
@@ -1448,8 +1439,6 @@ class Float(Field):
     """
 
     type = 'float'
-    column_cast_from = ('int4', 'numeric', 'float8')
-
     _digits = None                      # digits argument passed to class initializer
     group_operator = 'sum'
 
@@ -1521,8 +1510,6 @@ class Monetary(Field):
     write_sequence = 10
 
     column_type = ('numeric', 'numeric')
-    column_cast_from = ('float8',)
-
     currency_field = None
     group_operator = 'sum'
 
@@ -1601,153 +1588,11 @@ class Monetary(Field):
 class _String(Field):
     """ Abstract class for string fields. """
     translate = False                   # whether the field is translated
-    prefetch = None
+    prefetch = True
     unaccent = True
-
-    def __init__(self, string=Default, **kwargs):
-        # translate is either True, False, or a callable
-        if 'translate' in kwargs and not callable(kwargs['translate']):
-            kwargs['translate'] = bool(kwargs['translate'])
-        super(_String, self).__init__(string=string, **kwargs)
-
-    def setup_nonrelated(self, model):
-        super().setup_nonrelated(model)
-        if self.prefetch is None:
-            # translated fields are not prefetched by default except for _rec_name
-            self.prefetch = not self.translate or model._rec_name == self.name
-
-    def setup_related(self, model):
-        super().setup_related(model)
-        if self.prefetch is None:
-            # translated fields are not prefetched by default except for _rec_name
-            self.prefetch = not self.translate or model._rec_name == self.name
-
-    _related_translate = property(attrgetter('translate'))
 
     def _description_translate(self, env):
         return bool(self.translate)
-
-    def get_trans_terms(self, value):
-        """ Return the sequence of terms to translate found in `value`. """
-        if not callable(self.translate):
-            return [value] if value else []
-        terms = []
-        self.translate(terms.append, value)
-        return terms
-
-    def get_text_content(self, term):
-        """ Return the textual content for the given term. """
-        func = getattr(self.translate, 'get_text_content', lambda term: term)
-        return func(term)
-
-    def get_trans_func(self, records):
-        """ Return a translation function `translate` for `self` on the given
-        records; the function call `translate(record_id, value)` translates the
-        field value to the language given by the environment of `records`.
-        """
-        if callable(self.translate):
-            rec_src_trans = records.env['ir.translation']._get_terms_translations(self, records)
-
-            def translate(record_id, value):
-                src_trans = rec_src_trans[record_id]
-                return self.translate(src_trans.get, value)
-
-        else:
-            rec_trans = records.env['ir.translation']._get_ids(
-                '%s,%s' % (self.model_name, self.name), 'model', records.env.lang, records.ids)
-
-            def translate(record_id, value):
-                return rec_trans.get(record_id) or value
-
-        return translate
-
-    def write(self, records, value):
-        # discard recomputation of self on records
-        records.env.remove_to_compute(self, records)
-
-        # update the cache, and discard the records that are not modified
-        cache = records.env.cache
-        cache_value = self.convert_to_cache(value, records)
-        records = cache.get_records_different_from(records, self, cache_value)
-        if not records:
-            return records
-        cache.update(records, self, [cache_value] * len(records))
-
-        if not self.store:
-            return records
-
-        real_recs = records.filtered('id')
-        if not real_recs._ids:
-            return records
-
-        update_column = True
-        update_trans = False
-        single_lang = len(records.env['res.lang'].get_installed()) <= 1
-        if self.translate:
-            lang = records.env.lang or None  # used in _update_translations below
-            if single_lang:
-                # a single language is installed
-                update_trans = True
-            elif callable(self.translate) or lang == 'en_US':
-                # update the source and synchronize translations
-                update_column = True
-                update_trans = True
-            elif lang != 'en_US' and lang is not None:
-                # update the translations only except if emptying
-                update_column = not cache_value
-                update_trans = True
-            # else: lang = None
-
-        # update towrite if modifying the source
-        if update_column:
-            towrite = records.env.all.towrite[self.model_name]
-            for rid in real_recs._ids:
-                # cache_value is already in database format
-                towrite[rid][self.name] = cache_value
-            if self.translate is True and cache_value:
-                tname = "%s,%s" % (records._name, self.name)
-                records.env['ir.translation']._set_source(tname, real_recs._ids, value)
-            if self.translate:
-                # invalidate the field in the other languages
-                cache.invalidate([(self, records.ids)])
-                cache.update(records, self, [cache_value] * len(records))
-
-        if update_trans:
-            if callable(self.translate):
-                # the source value of self has been updated, synchronize
-                # translated terms when possible
-                records.env['ir.translation']._sync_terms_translations(self, real_recs)
-
-            else:
-                # update translations
-                value = self.convert_to_column(value, records)
-                source_recs = real_recs.with_context(lang=None)
-                source_value = first(source_recs)[self.name]
-                if not source_value:
-                    source_recs[self.name] = value
-                    source_value = value
-                tname = "%s,%s" % (self.model_name, self.name)
-                if not value:
-                    records.env['ir.translation'].search([
-                        ('name', '=', tname),
-                        ('type', '=', 'model'),
-                        ('res_id', 'in', real_recs._ids)
-                    ]).unlink()
-                elif single_lang:
-                    records.env['ir.translation']._update_translations([dict(
-                        src=source_value,
-                        value=value,
-                        name=tname,
-                        lang=lang,
-                        type='model',
-                        state='translated',
-                        res_id=res_id) for res_id in real_recs._ids])
-                else:
-                    records.env['ir.translation']._set_ids(
-                        tname, 'model', lang, real_recs._ids, value, source_value,
-                    )
-
-        return records
 
 
 class Char(_String):
@@ -1767,8 +1612,6 @@ class Char(_String):
     :type translate: bool or callable
     """
     type = 'char'
-    column_cast_from = ('text',)
-
     size = None                         # maximum size of values (deprecated)
     trim = True                         # whether value is trimmed (only by web client)
 
@@ -1779,7 +1622,7 @@ class Char(_String):
 
     @property
     def column_type(self):
-        return ('varchar', pg_varchar(self.size))
+        return (self.translate and 'jsonb' or 'varchar', self.translate and 'jsonb' or pg_varchar(self.size))
 
     def update_db_column(self, model, column):
         if (
@@ -1820,8 +1663,13 @@ class Text(_String):
     :type translate: bool or callable
     """
     type = 'text'
-    column_type = ('text', 'text')
-    column_cast_from = ('varchar',)
+    prefetch = False
+
+    @property
+    def column_type(self):
+        ctype = self.translate and 'jsonb' or 'text'
+        return (ctype, ctype)
+
 
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
@@ -1843,8 +1691,7 @@ class Html(_String):
     :param bool strip_classes: whether to strip classes attributes (default: ``False``)
     """
     type = 'html'
-    column_type = ('text', 'text')
-    column_cast_from = ('varchar',)
+    prefetch = False
 
     sanitize = True                     # whether value must be sanitized
     sanitize_tags = True                # whether to sanitize tags (only a white list of attributes is accepted)
@@ -1875,6 +1722,11 @@ class Html(_String):
     _description_sanitize_style = property(attrgetter('sanitize_style'))
     _description_strip_style = property(attrgetter('strip_style'))
     _description_strip_classes = property(attrgetter('strip_classes'))
+
+    @property
+    def column_type(self):
+        ctype = self.translate and 'jsonb' or 'text'
+        return (ctype, ctype)
 
     def convert_to_column(self, value, record, values=None, validate=True):
         if value is None or value is False:
@@ -1916,16 +1768,11 @@ class Html(_String):
             r = r.decode()
         return r and Markup(r)
 
-    def get_trans_terms(self, value):
-        # ensure the translation terms are stringified, otherwise we can break the PO file
-        return list(map(str, super().get_trans_terms(value)))
-
 
 class Date(Field):
     """ Encapsulates a python :class:`date <datetime.date>` object. """
     type = 'date'
     column_type = ('date', 'date')
-    column_cast_from = ('timestamp',)
 
     start_of = staticmethod(date_utils.start_of)
     end_of = staticmethod(date_utils.end_of)
@@ -2024,7 +1871,6 @@ class Datetime(Field):
     """ Encapsulates a python :class:`datetime <datetime.datetime>` object. """
     type = 'datetime'
     column_type = ('timestamp', 'timestamp')
-    column_cast_from = ('date',)
 
     start_of = staticmethod(date_utils.start_of)
     end_of = staticmethod(date_utils.end_of)

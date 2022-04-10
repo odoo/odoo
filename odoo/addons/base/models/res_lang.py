@@ -260,13 +260,13 @@ class Lang(models.Model):
         self.ensure_one()
         self.active = False
 
-    def toggle_active(self):
+    def toggle_active(self, overwrite=False):
         super().toggle_active()
         # Automatically load translation
         active_lang = [lang.code for lang in self.filtered(lambda l: l.active)]
         if active_lang:
             mods = self.env['ir.module.module'].search([('state', '=', 'installed')])
-            mods._update_translations(active_lang)
+            mods._update_translations(active_lang, overwrite)
 
     @api.model_create_multi
     def create(self, vals_list):

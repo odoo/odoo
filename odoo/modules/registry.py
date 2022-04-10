@@ -458,7 +458,7 @@ class Registry(Mapping):
     def check_indexes(self, cr, model_names):
         """ Create or drop column indexes for the given models. """
         expected = [
-            (f"{Model._table}_{field.name}_index", Model._table, field.name, field.index)
+            (f"{Model._table}_{field.name}_index", Model._table, field)
             for model_name in model_names
             for Model in [self.models[model_name]]
             if Model._auto and not Model._abstract
@@ -472,10 +472,12 @@ class Registry(Mapping):
                    [tuple(row[0] for row in expected)])
         existing = {row[0] for row in cr.fetchall()}
 
-        if not self.has_trigram and any(row[3] == 'trigram' for row in expected):
+        if not self.has_trigram and any(row[2].index == 'trigram' for row in expected):
             self.has_trigram = sql.install_pg_trgm(cr)
 
-        for indexname, tablename, columnname, index in expected:
+        for indexname, tablename, field in expected:
+            columnname = field.name
+            index = field.index
             assert index in ('btree', 'btree_not_null', 'trigram', True, False, None)
             if index and indexname not in existing:
                 method = 'btree'
@@ -488,7 +490,10 @@ class Registry(Mapping):
                     operator = 'gin_trgm_ops'
                 try:
                     with cr.savepoint(flush=False):
-                        expression = f'"{columnname}" {operator}'
+                        if field.translate and field.index:
+                            expression = f'(jsonb_path_query_array("{columnname}", \'$.*\'::jsonpath)::text) {operator}'
+                        else:
+                            expression = f'"{columnname}" {operator}'
                         sql.create_index(cr, indexname, tablename, [expression], method, where)
                 except psycopg2.OperationalError:
                     _schema.error("Unable to add index for %s", self)

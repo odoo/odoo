@@ -128,7 +128,6 @@ from psycopg2.sql import Composable, SQL
 import odoo.modules
 from odoo.osv.query import Query, _generate_table_alias
 from odoo.tools import pycompat
-from odoo.tools.misc import get_lang
 from ..models import MAGIC_COLUMNS, BaseModel
 import odoo.tools as tools
 
@@ -970,6 +969,7 @@ class expression(object):
                         expr, params = self.__leaf_to_sql(leaf, model, alias)
                         push_result(expr, params)
 
+                # FP TODO: to improve for efficiency and use of index
                 elif field.translate is True and right:
                     need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
                     sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
@@ -979,11 +979,9 @@ class expression(object):
                         right = tuple(right)
 
                     unaccent = self._unaccent(field) if sql_operator.endswith('like') else lambda x: x
-
-                    left = unaccent(model._generate_translated_field(alias, left, self.query))
                     instr = unaccent('%s')
+                    left = unaccent('jsonb_path_query_array("%s"."%s", \'$.*\')::text' % (alias, left))
                     push_result(f"{left} {sql_operator} {instr}", [right])
-
                 else:
                     expr, params = self.__leaf_to_sql(leaf, model, alias)
                     push_result(expr, params)
