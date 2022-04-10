@@ -9,8 +9,6 @@
 # Jonathan Stein <cgs@image.dk>, 2020
 # Jesper Carstensen <jc@danodoo.dk>, 2020
 # Per Rasmussen <perhgrasmussen@gmail.com>, 2020
-# walther_b <wba@miracle.dk>, 2020
-# Martin Trigaux, 2020
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2020
 # jonas jensen <j.jensen@tcomp.dk>, 2020
 # Morten Schou <ms@msteknik.dk>, 2020
@@ -18,9 +16,11 @@
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2020
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Ejner Sønniksen <ejner@vkdata.dk>, 2020
-# lhmflexerp <lhm@flexerp.dk>, 2020
 # Mads Søndergaard, 2020
-# Mads Søndergaard <mads@vkdata.dk>, 2021
+# Mads Søndergaard, 2021
+# lhmflexerp <lhm@flexerp.dk>, 2022
+# Martin Trigaux, 2022
+# Walther Barnett <walther@gundogpro.dk>, 2022
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2021\n"
+"Last-Translator: Walther Barnett <walther@gundogpro.dk>, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -881,6 +881,14 @@ msgstr ""
 " stand til at gen-afsende disse mails senere!"
 
 #. module: mail
+#: code:addons/mail/models/mail_blacklist.py:0
+#: code:addons/mail/models/mail_thread_blacklist.py:0
+#, python-format
+msgid "Are you sure you want to unblacklist this Email Address?"
+msgstr ""
+"Er du sikker på at du vil ophæve blokeringen af denne e-mail adresse? "
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #: code:addons/mail/static/src/xml/activity.xml:0
@@ -1134,6 +1142,12 @@ msgstr "Ring"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
 msgid "Can Write"
 msgstr "Kan skrive"
+
+#. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr "Kan ikke opdatere beskeden eller modtageren af en notifikation."
 
 #. module: mail
 #. openerp-web
@@ -1652,12 +1666,6 @@ msgstr "Tilpasset kanal navn"
 #: model:ir.model.constraint,message:mail.constraint_mail_message_res_partner_needaction_rel_notification_partner_required
 msgid "Customer is required for inbox / email notification"
 msgstr "Kunde kræves for indbakke / email notifikation"
-
-#. module: mail
-#: code:addons/mail/models/mail_notification.py:0
-#, python-format
-msgid "Can not update the message or recipient of a notification."
-msgstr "Kan ikke opdatere beskeden eller modtageren af en notifikation."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
@@ -2582,7 +2590,7 @@ msgid "Following"
 msgstr "Following"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:778
+#: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "Following invites are invalid as user groups do not match: %s"
 msgstr ""
@@ -3076,13 +3084,6 @@ msgstr ""
 #, python-format
 msgid "Invalid primary email field on model %s"
 msgstr "Ugyldigt primær email felt på model %s"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
-#, python-format
-msgid "Invitation"
-msgstr "Invitation"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:0
@@ -4023,6 +4024,13 @@ msgid "Months"
 msgstr "Måneder"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__my_activity_date_deadline
+#: model:ir.model.fields,field_description:mail.field_res_partner__my_activity_date_deadline
+#: model:ir.model.fields,field_description:mail.field_res_users__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Mine Aktiviteter Deadline"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__name
 #: model:ir.model.fields,field_description:mail.field_mail_channel__name
 #: model:ir.model.fields,field_description:mail.field_mail_followers__name
@@ -4138,13 +4146,6 @@ msgstr "Nye meddelelser"
 #, python-format
 msgid "New messages appear here."
 msgstr "Nye meddelelser vises her."
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/widgets/discuss_invite_partner_dialog/discuss_invite_partner_dialog.js:0
-#, python-format
-msgid "New people"
-msgstr "Nye personer"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -5568,7 +5569,10 @@ msgstr ""
 "tilhørende kontakt."
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/thread_icon/thread_icon.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__public__groups
+#, python-format
 msgid "Selected group of users"
 msgstr "Valgte gruppe af brugere"
 
@@ -6101,6 +6105,13 @@ msgid "The shortcut which must be replaced in the Chat Messages"
 msgstr "Genvejen som skal erstattes i chat beskeder"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/follower/follower.js:0
+#, python-format
+msgid "The subscription preferences were successfully applied."
+msgstr "Abonnementspræferencerne blev anvendt."
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__model_id
 #: model:ir.model.fields,help:mail.field_mail_template_preview__model_id
 msgid "The type of document this template can be used with"
@@ -6177,6 +6188,12 @@ msgid "This record has an exception activity."
 msgstr "Dette datasæt har en undtagelses aktivitet."
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "This user can not be added in this channel"
+msgstr "Denne bruger kan ikke tilføjes til denne kanal"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Thread"
 msgstr "Tråd"
@@ -6221,6 +6238,7 @@ msgstr "Til:"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/message_list/message_list.js:0
 #: code:addons/mail/static/src/components/message_list/message_list.js:0
 #: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
@@ -6473,13 +6491,6 @@ msgstr "Fjern stjernemarkering fra alle"
 #, python-format
 msgid "Unstar all messages"
 msgstr "Fjern stjernemarkering fra alle beskeder"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
-#, python-format
-msgid "Unsubscribed"
-msgstr "Opsig abonnement"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:0
@@ -6853,6 +6864,12 @@ msgstr ""
 "Du kan markere enhver besked som 'stjernet', og den vises i denne postkasse."
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on this field"
+msgstr "Du kan ikke skrive i dette felt"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/models/user/user.js:0
 #, python-format
@@ -6908,6 +6925,16 @@ msgid ""
 "address."
 msgstr ""
 "Du kan ikke bruge andet en uaccenterede latinske tegn i kaldenavns adressen."
+
+#. module: mail
+#: code:addons/mail/models/mail_thread_blacklist.py:0
+#, python-format
+msgid ""
+"You do not have the access right to unblacklist emails. Please contact your "
+"administrator."
+msgstr ""
+"Du har ikke rettigheder til at ophæve e-mail blokeringer. Kontakt din "
+"administrator."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -7086,6 +7113,13 @@ msgstr ""
 "   bruges til at indsamle besvarelser og bør ikke bruges til direkte kontakt"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/message/message.xml:0
+#, python-format
+msgid "channel"
+msgstr "kanal"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_send_guidelines
 msgid "channel."
 msgstr "kanal."
@@ -7096,6 +7130,7 @@ msgid "days"
 msgstr "dage"
 
 #. module: mail
+#. openerp-web
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
@@ -7300,6 +7335,12 @@ msgstr "at lukke for"
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
+msgid "unknown error"
+msgstr "ukendt fejl"
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
 msgid "unknown target model %s"
 msgstr "ukendt mål model %s"
 
@@ -7319,17 +7360,3 @@ msgstr "værdi"
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__weeks
 msgid "weeks"
 msgstr "uger"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/follower/follower.js:0
-#, python-format
-msgid "The subscription preferences were successfully applied."
-msgstr "Abonnementspræferencerne blev anvendt."
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/components/message/message.xml:0
-#, python-format
-msgid "channel"
-msgstr "kanal"

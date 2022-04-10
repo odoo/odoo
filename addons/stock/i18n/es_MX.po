@@ -7,7 +7,7 @@
 # Cécile Collart <cco@odoo.com>, 2021
 # Jose Carmona <jrcarmona@gmail.com>, 2021
 # Iron Graterol, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2021\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1443,7 +1443,7 @@ msgid ""
 "button to handle the reservation manually."
 msgstr ""
 "No se pudieron reservar todos los productos solicitados. Utilice el botón "
-"\"Marcar como por hacer\" para gestionar la reserva manualmente."
+"\"Marcar como por realizar\" para gestionar la reserva manualmente."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking
@@ -2759,7 +2759,7 @@ msgstr "Altura (Z)"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__snoozed_until
 msgid "Hidden until next scheduler."
-msgstr "Oculto hasta el próximo programador."
+msgstr "Oculto hasta el próximo planificador."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__hide_picking_type
@@ -3850,7 +3850,7 @@ msgstr "Reabastecimiento manual"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_config_settings__module_procurement_jit__0
 msgid "Manually or based on automatic scheduler"
-msgstr "Manualmente o basado en programador automático"
+msgstr "Manualmente o según el planificador automático"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -3860,7 +3860,7 @@ msgstr "Fabricación"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Mark as Todo"
-msgstr "Marcar como por hacer"
+msgstr "Marcar como por realizar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -4849,7 +4849,7 @@ msgstr "Grupo de aprovisionamiento"
 #: model:ir.cron,cron_name:stock.ir_cron_scheduler_action
 #: model:ir.cron,name:stock.ir_cron_scheduler_action
 msgid "Procurement: run scheduler"
-msgstr "Aprovisionamiento: ejecutar programador"
+msgstr "Aprovisionamiento: ejecutar planificador"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__produce_line_ids
@@ -5150,7 +5150,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_putaway_rule
 msgid "Putaway Rule"
-msgstr "Regla de estrategia de traslado"
+msgstr "Regla de almacenamiento"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -5170,12 +5170,12 @@ msgstr "Regla de estrategia de traslado"
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
 #, python-format
 msgid "Putaway Rules"
-msgstr "Reglas de estrategia de traslado"
+msgstr "Reglas de almacenamiento"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Putaway:"
-msgstr "Estrategia de traslado"
+msgstr "Almacenamiento"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_putaway_tree
@@ -6175,7 +6175,7 @@ msgstr "Mostrar texto de lotes"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_mark_as_todo
 msgid "Show Mark As Todo"
-msgstr "Mostrar Marcar por hacer"
+msgstr "Mostrar Marcar por realizar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_operations
@@ -6618,7 +6618,7 @@ msgid ""
 "be displayed."
 msgstr ""
 "Campo técnico utilizado para calcular si se debe mostrar el botón \"Marcar "
-"por hacer\"."
+"por realizar\"."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_validate
@@ -6814,16 +6814,12 @@ msgstr "El producto no está disponible en cantidad suficiente"
 #, python-format
 msgid ""
 "The quantity done for the product \"%s\" doesn't respect the rounding "
-"precision                                   defined on the unit of measure "
-"\"%s\". Please change the quantity done or the"
-"                                   rounding precision of your unit of "
-"measure."
+"precision defined on the unit of measure \"%s\". Please change the quantity "
+"done or the rounding precision of your unit of measure."
 msgstr ""
 "La cantidad hecha para el producto \"%s\" no respeta la precisión de "
-"redondeo                                   definida en la unidad de medida "
-"\"%s\". Por favor, cambie la cantidad hecha o la"
-"                                   precisión de redondeo de su unidad de "
-"medida."
+"redondeo que se definió en la unidad de medida  \"%s\". Cambie la cantidad "
+"hecha o la precisión de redondeo de su unidad de medida."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7606,7 +7602,7 @@ msgstr "Ubicación de proveedor"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Vendor Locations"
-msgstr "Ubicaciones de vendedor"
+msgstr "Ubicaciones de proveedor"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__view
@@ -8325,6 +8321,18 @@ msgstr ""
 #, python-format
 msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "Debe proporcionar un número de lote / serie para los productos %s."
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You should not use a planned internal transfer to move some products between"
+" two warehouses. Instead, use an immediate internal transfer or the resupply"
+" route."
+msgstr ""
+"No debe usar un traslado interno planeado para mover algunos productos entre"
+" dos almacenes. En su lugar, utilice un traslado interno inmediato o la ruta"
+" de reabastecimiento."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
