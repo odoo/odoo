@@ -17,6 +17,7 @@
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2021
 # Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021
+# Camille Dantinne <cmd@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021\n"
+"Last-Translator: Camille Dantinne <cmd@odoo.com>, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1172,7 +1173,7 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_event_type_ticket__description
 msgid ""
 "A description of the ticket that you want to communicate to your customers."
-msgstr "Agrega una descripción del boleto para tus clientes."
+msgstr "Agrega una descripción de la entrada para tus clientes."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction
@@ -1711,9 +1712,9 @@ msgid ""
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
 msgstr ""
-"Define el número de boletos disponibles. Si tienes demasiados registros no "
-"podrás vender más boletos. Marca 0 para ignorar esta regla y hacer el número"
-" ilimitado."
+"Define el número de entradas disponibles. Si tienes demasiados registros no "
+"podrás vender más entradas. Marca 0 para ignorar esta regla y hacer el "
+"número ilimitado."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__description
@@ -1980,12 +1981,12 @@ msgstr "Plantilla de evento"
 #: model:ir.model,name:event.model_event_type_ticket
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_form_from_type
 msgid "Event Template Ticket"
-msgstr "Boleto de plantilla de evento"
+msgstr "Plantilla de entrada del evento"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_tree_from_type
 msgid "Event Template Tickets"
-msgstr "Plantilla de boletos del evento"
+msgstr "Plantilla de entradas del evento"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
@@ -1999,7 +2000,7 @@ msgstr "Plantilla del evento"
 #: model:ir.model.fields,field_description:event.field_event_event__event_ticket_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__event_ticket_id
 msgid "Event Ticket"
-msgstr "Boleto del evento"
+msgstr "Entrada del evento"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__event_type_id
@@ -2014,7 +2015,7 @@ msgstr "Registros al evento"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
 msgid "Event's Ticket"
-msgstr "Boleto para el evento"
+msgstr "Entrada para el evento"
 
 #. module: event
 #: model:ir.actions.server,name:event.event_mail_scheduler_ir_actions_server
@@ -2343,8 +2344,8 @@ msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
 msgid ""
 "If ticketing is used, contains the earliest starting sale date of tickets."
 msgstr ""
-"Si se usan boletos, contiene la fecha de inicio de venta de boletos más "
-"temprana."
+"Si se utiliza entradas, contiene la fecha más temprana de inicio de la venta"
+" de entradas."
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -2396,7 +2397,7 @@ msgstr "Introducción, CRM, gestión de ventas"
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "Invalid event / ticket choice"
-msgstr "Elección de evento / boleto inválida"
+msgstr "Elección de evento / entrada inválida"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sale_available
@@ -2736,13 +2737,13 @@ msgstr "Tipo de siguiente actividad"
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "No more available seats for this ticket"
-msgstr "No hay más asientos disponibles para este boleto"
+msgstr "No hay más asientos disponibles para esta entrada"
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "No more available seats for this ticket."
-msgstr "No hay más asientos disponibles para este boleto."
+msgstr "No hay más asientos disponibles para este entrada."
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
@@ -2856,7 +2857,7 @@ msgstr "Expositores en línea"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_sale
 msgid "Online Ticketing"
-msgstr "Venta de boletos en línea"
+msgstr "Venta de entradas en línea"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3087,7 +3088,7 @@ msgstr ""
 "Los registros están abiertos si:\n"
 "- el evento no ha terminado\n"
 "- hay asientos disponibles en el evento\n"
-"- los boletos son vendibles (si se utilizan boletos)"
+"- las entradas son vendibles (si se utilizan boletos)"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -3135,7 +3136,7 @@ msgid ""
 "                track registrations and participations, automate the confirmation emails, sell tickets, etc."
 msgstr ""
 "Programa y organiza tus eventos de forma eficiente:\n"
-"                lleva el seguimiento de registros y participaciones, automatiza los correos electrónicos de confirmación, vende boletos, etc."
+"                lleva el seguimiento de registros y participaciones, automatiza los correos electrónicos de confirmación, vende entradas, etc."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__scheduled_date
@@ -3396,7 +3397,7 @@ msgid ""
 "is used and all tickets are sold out, the event will be sold out."
 msgstr ""
 "El evento está agotado si ya no hay asientos disponibles para el evento. Si "
-"se utilizan boletos y todos están agotados, el evento estará agotado."
+"se utilizan entradas y todas están agotadas, el evento estará agotado."
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -3439,7 +3440,7 @@ msgid ""
 "This event is fully online and FREE, if you have paid for tickets, you should get a refund.<br>\n"
 "        It will require a good Internet connection to get the best video quality."
 msgstr ""
-"Este evento es totalmente en línea y GRATIS, si pagaste boletos, deberías recibir un reembolso.<br>\n"
+"Este evento es totalmente en línea y GRATIS, si pagaste entradas, deberías recibir un reembolso.<br>\n"
 "        Para obtener la mejor calidad de video, requerirás de una buena conexión a internet. "
 
 #. module: event
@@ -3501,12 +3502,12 @@ msgstr "Este paso está hecho. Haz clic para bloquear o poner en progreso."
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_form_from_event
 msgid "Ticket"
-msgstr "Boleto"
+msgstr "Entrada"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Ticket Type"
-msgstr "Tipo de boleto"
+msgstr "Tipo de entrada"
 
 #. module: event
 #. openerp-web
@@ -3516,13 +3517,13 @@ msgid ""
 "Ticket types allow you to distinguish your attendees. Let's <b>create</b> a "
 "new one."
 msgstr ""
-"Los tipos de boletos te permiten distinguir a tus asistentes. Vamos a "
+"Los tipos de entradas te permiten distinguir a tus asistentes. Vamos a "
 "<b>crear</b> uno nuevo."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__use_ticket
 msgid "Ticketing"
-msgstr "Generación de boletos"
+msgstr "Generación de entradas"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__event_type_ticket_ids
@@ -3530,7 +3531,7 @@ msgstr "Generación de boletos"
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Tickets"
-msgstr "Boletos"
+msgstr "Entradas"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_tz

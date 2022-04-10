@@ -17,9 +17,9 @@
 # Amit Spilman <amit@laylinetech.com>, 2020
 # Yves Goldberg <admin@ygol.com>, 2020
 # Lilach Gilliam <lilach@apprcase.com>, 2021
-# hed shefetr <hed@laylinetech.com>, 2021
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
+# hed shefer <hed@laylinetech.com>, 2021
 # david danilov, 2021
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: david danilov, 2021\n"
+"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -391,6 +391,8 @@ msgid ""
 "<span attrs=\"{'invisible': ['|', ('repeat_show_week', '=', False), "
 "('repeat_show_month', '=', False)]}\">of</span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('repeat_show_week', '=', False), "
+"('repeat_show_month', '=', False)]}\"> ב</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -552,6 +554,8 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
+"הוסף עמודות כדי לארגן את המשימות שלך <b>לשלבים</b><i>, למשל. חדש - בתהליך - "
+"בוצע.</i>"
 
 #. module: project
 #. openerp-web
@@ -887,7 +891,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Choose a task <b>name</b> <i>(e.g. Website Design, Purchase Goods...)</i>"
-msgstr ""
+msgstr "בחר <b>שם</b> משימה <i>(למשל עיצוב אתר, רכישת מוצרים...)</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__partner_city
@@ -1139,6 +1143,9 @@ msgid ""
 "made status messages for each step of the workflow. It helps to document "
 "your workflow: what should be done at which step."
 msgstr ""
+"התאם אישית את שמות המשימות בהתאם לפרויקט וצור הודעות סטטוס מותאמות אישית לכל"
+" שלב בזרימת העבודה. זה עוזר לתעד את זרימת העבודה שלך: מה צריך לעשות באיזה "
+"שלב."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
@@ -1149,7 +1156,7 @@ msgstr "יומי"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_month__date
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_on_month__date
 msgid "Date of the Month"
-msgstr ""
+msgstr "יום בחודש"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_year__date
@@ -1161,13 +1168,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_weekday
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_weekday
 msgid "Day Of The Week"
-msgstr ""
+msgstr "יום בשבוע"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_month__day
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_on_month__day
 msgid "Day of the Month"
-msgstr ""
+msgstr "יום בחודש"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_year__day
@@ -1243,7 +1250,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 #, python-format
 msgid "Delete Stage"
-msgstr ""
+msgstr "מחק שלב"
 
 #. module: project
 #. openerp-web
@@ -2025,7 +2032,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's start working on your task."
-msgstr ""
+msgstr "בוא נתחיל לעבוד על המשימה שלך."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
@@ -2577,6 +2584,9 @@ msgid ""
 "colleagues that a task is ready for the next stage.%s Use the %s to indicate"
 " a problem or a need for discussion on a task.%s"
 msgstr ""
+"תעדוף משימות באמצעות %sהסמל %s. השתמש בכפתור %s כדי ליידע את הקולגות שלך "
+"שמשימה מוכנה לשלב הבא. %sהשתמש בלחצן %sכדי לציין בעיה או צורך בדיון במשימה "
+"%s."
 
 #. module: project
 #. openerp-web
@@ -2587,6 +2597,8 @@ msgid ""
 "your colleagues that a task is ready for the next stage.%s Use the %s to "
 "signalize a problem or a need for discussion on a task.%s"
 msgstr ""
+"תעדוף משימות באמצעות %sהסמל %s. השתמש בכפתור %s כדי לאותת לעמיתיך שמשימה "
+"מוכנה לשלב הבא. %s השתמש ב-%s כדי לסמן בעיה או צורך בדיון במשימה.%s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__priority
@@ -2648,7 +2660,7 @@ msgstr "שם הפרויקט"
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
 msgid "Project Stage Delete Wizard"
-msgstr ""
+msgstr "אשף מחיקת שלב הפרויקט"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
@@ -2940,7 +2952,7 @@ msgstr "חזור כל"
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_month
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_month
 msgid "Repeat Month"
-msgstr ""
+msgstr "חזור חודשי"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -2951,7 +2963,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_on_month
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_on_month
 msgid "Repeat On Month"
-msgstr ""
+msgstr "חזור בחודש"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_on_year
@@ -2972,12 +2984,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_show_month
 msgid "Repeat Show Month"
-msgstr ""
+msgstr "חזור תצוגה בחודש"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_show_week
 msgid "Repeat Show Week"
-msgstr ""
+msgstr "חזור תצוגה בשבוע"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_unit
@@ -2989,7 +3001,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_week
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_week
 msgid "Repeat Week"
-msgstr ""
+msgstr "חזור בשבוע"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_number
@@ -3156,7 +3168,7 @@ msgstr "הגדר תמונת כריכה"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set a Rating Email Template on Stages"
-msgstr ""
+msgstr "הגדר תבנית דוא\"ל דירוג של שלבים"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -3214,7 +3226,7 @@ msgstr "פצל את המשימות שלך כדי לארגן את העבודה ש
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint Backlog"
-msgstr ""
+msgstr "ספרינט פיגור"
 
 #. module: project
 #. openerp-web
@@ -3272,12 +3284,12 @@ msgstr "שלבים"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stages_active
 msgid "Stages Active"
-msgstr ""
+msgstr "שלב פעיל"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stage_ids
 msgid "Stages To Delete"
-msgstr ""
+msgstr "שלב למחיקה"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -3645,7 +3657,7 @@ msgstr "השבוע"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__subsequent
 msgid "This and following tasks"
-msgstr ""
+msgstr "זה והמשימות הבאות"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
@@ -3680,7 +3692,7 @@ msgstr ""
 msgid ""
 "This will archive the stages and all the tasks they contain from the "
 "following projects:"
-msgstr ""
+msgstr "זה יאחסן את השלבים ואת כל המשימות שהם מכילים מהפרויקטים הבאים:"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__thu
@@ -3708,7 +3720,7 @@ msgstr ""
 #: model:digest.tip,name:project.digest_tip_project_0
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Tip: Customize tasks and stages according to the project"
-msgstr ""
+msgstr "טיפ: התאמה אישית של משימות ושלבים לפי הפרויקט"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -4041,6 +4053,8 @@ msgid ""
 "You cannot delete stages containing tasks. You can either archive them or "
 "first delete all of their tasks."
 msgstr ""
+"לא ניתן למחוק שלבים המכילים משימות. אתה יכול לאחסן אותם בארכיון או למחוק "
+"תחילה את כל המשימות שלהם."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -4048,6 +4062,7 @@ msgid ""
 "You cannot delete stages containing tasks. You should first delete all of "
 "their tasks."
 msgstr ""
+"לא ניתן למחוק שלבים המכילים משימות. תחילה עליך למחוק את כל המשימות שבהם."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -4067,7 +4082,7 @@ msgstr "לפרויקט:"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "in stage:"
-msgstr ""
+msgstr "בשלב:"
 
 #. module: project
 #: code:addons/project/models/project.py:0
