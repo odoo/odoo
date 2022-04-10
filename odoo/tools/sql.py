@@ -54,15 +54,16 @@ def table_kind(cr, tablename):
 # prescribed column order by type: columns aligned on 4 bytes, columns aligned
 # on 1 byte, columns aligned on 8 bytes(values have been chosen to minimize
 # padding in rows; unknown column types are put last)
-SQL_ORDER_BY_TYPE = defaultdict(lambda: 9, {
+SQL_ORDER_BY_TYPE = defaultdict(lambda: 16, {
     'int4': 1,          # 4 bytes aligned on 4 bytes
     'varchar': 2,       # variable aligned on 4 bytes
     'date': 3,          # 4 bytes aligned on 4 bytes
-    'text': 4,          # variable aligned on 4 bytes
-    'numeric': 5,       # variable aligned on 4 bytes
-    'bool': 6,          # 1 byte aligned on 1 byte
-    'timestamp': 7,     # 8 bytes aligned on 8 bytes
-    'float8': 8,        # 8 bytes aligned on 8 bytes
+    'jsonb': 4,         # variable aligned on 4 bytes
+    'text': 5,          # variable aligned on 4 bytes
+    'numeric': 6,       # variable aligned on 4 bytes
+    'bool': 7,          # 1 byte aligned on 1 byte
+    'timestamp': 8,     # 8 bytes aligned on 8 bytes
+    'float8': 9,        # 8 bytes aligned on 8 bytes
 })
 
 def create_model_table(cr, tablename, comment=None, columns=()):
@@ -117,22 +118,38 @@ def rename_column(cr, tablename, columnname1, columnname2):
     cr.execute('ALTER TABLE "{}" RENAME COLUMN "{}" TO "{}"'.format(tablename, columnname1, columnname2))
     _schema.debug("Table %r: renamed column %r to %r", tablename, columnname1, columnname2)
 
-def convert_column(cr, tablename, columnname, columntype):
+def convert_column(cr, tablename, columnname, columntype, fromtype=None):
     """ Convert the column to the given type. """
+    drop_index(cr, tablename+'_'+columnname+'_index', tablename)
+
+    if (fromtype != 'jsonb') and (columntype != 'jsonb'):
+        try:
+            with cr.savepoint(flush=False):
+                cr.execute('ALTER TABLE "{}" ALTER COLUMN "{}" TYPE {}'.format(tablename, columnname, columntype),
+                           log_exceptions=False)
+            _schema.debug("Table %r: column %r altered to type %s", tablename, columnname, columntype)
+            return
+        except psycopg2.errors.DatatypeMismatch:
+            pass
+
+    temp_name = columnname + '_old'
+    while column_exists(cr, tablename, temp_name):
+        temp_name += '_'
+    rename_column(cr, tablename, columnname, temp_name)
+    create_column(cr, tablename, columnname, columntype)
+    if fromtype=='jsonb':
+        query = 'UPDATE "{0}" SET "{1}"="{3}"->>\'en_US\'::{2};'
+    elif columntype=='jsonb':
+        query = 'UPDATE "{0}" SET "{1}"=json_build_object(\'en_US\', {3}::varchar);'
+    else:
+        query = 'UPDATE "{0}" SET "{1}"= {3}::{2};'
+    query += '\nALTER TABLE "{0}" DROP COLUMN {3} CASCADE;'
     try:
         with cr.savepoint(flush=False):
-            cr.execute('ALTER TABLE "{}" ALTER COLUMN "{}" TYPE {}'.format(tablename, columnname, columntype),
-                       log_exceptions=False)
-    except psycopg2.NotSupportedError:
-        # can't do inplace change -> use a casted temp column
-        query = '''
-            ALTER TABLE "{0}" RENAME COLUMN "{1}" TO __temp_type_cast;
-            ALTER TABLE "{0}" ADD COLUMN "{1}" {2};
-            UPDATE "{0}" SET "{1}"= __temp_type_cast::{2};
-            ALTER TABLE "{0}" DROP COLUMN  __temp_type_cast CASCADE;
-        '''
-        cr.execute(query.format(tablename, columnname, columntype))
-    _schema.debug("Table %r: column %r changed to type %s", tablename, columnname, columntype)
+            cr.execute(query.format(tablename, columnname, columntype, temp_name))
+        _schema.debug("Table %r: column %r changed to type %s", tablename, columnname, columntype)
+    except:
+        _schema.debug("Table %r: column %r created, old renamed to %s", tablename, columnname, temp_name)
 
 def set_not_null(cr, tablename, columnname):
     """ Add a NOT NULL constraint on the given column. """

@@ -1157,45 +1157,32 @@ def trans_load_data(cr, fileobj, fileformat, lang,
     """
     if verbose:
         _logger.info('loading translation file for language %s', lang)
-
-    env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
-
+    env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {'lang': lang})
+    if not env['res.lang']._lang_get(lang):
+        _logger.error("Couldn't read translation for lang '%s', language not found", lang)
+        return None
     try:
-        if not env['res.lang']._lang_get(lang):
-            _logger.error("Couldn't read translation for lang '%s', language not found", lang)
-            return None
-
-        # now, the serious things: we read the language file
         fileobj.seek(0)
         reader = TranslationFileReader(fileobj, fileformat=fileformat)
 
-        # read the rest of the file with a cursor-like object for fast inserting translations"
-        Translation = env['ir.translation']
-        irt_cursor = Translation._get_import_cursor(overwrite)
+        cr.execute("select module || '.' || name, res_id from ir_model_data")
+        xml_ids = dict(cr.fetchall())
+        for term in reader:
+            if not term.get('value'):
+                continue
+            if term['type']=='code':
+                continue
+            res_id = xml_ids.get(term['module']+'.'+term['imd_name'], False)
+            value = term.get('value')
+            obj = env[term['imd_model']].browse(res_id)
+            fname = term['name'].split(',')[1]
+            if (fname not in obj._fields) or not obj._fields[fname].store:
+                continue
+            if (term['type']=='model_terms') or not overwrite:
+                value = obj[fname].replace(term['src'], value)
+            if res_id and value:
+                obj._write({fname: value})
 
-        def process_row(row):
-            """Process a single PO (or POT) entry."""
-            # dictionary which holds values for this line of the csv file
-            # {'lang': ..., 'type': ..., 'name': ..., 'res_id': ...,
-            #  'src': ..., 'value': ..., 'module':...}
-            dic = dict.fromkeys(('type', 'name', 'res_id', 'src', 'value',
-                                 'comments', 'imd_model', 'imd_name', 'module'))
-            dic['lang'] = lang
-            dic.update(row)
-
-            # do not import empty values
-            if not create_empty_translation and not dic['value']:
-                return
-
-            irt_cursor.push(dic)
-
-        # First process the entries from the PO file (doing so also fills/removes
-        # the entries from the POT file).
-        for row in reader:
-            process_row(row)
-
-        irt_cursor.finish()
-        Translation.clear_caches()
         if verbose:
             _logger.info("translation file loaded successfully")
 
