@@ -267,7 +267,7 @@ msgstr "&amp;nbsp;"
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "(from"
-msgstr "(de"
+msgstr "(dans"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
@@ -1488,6 +1488,14 @@ msgstr "Changé"
 #, python-format
 msgid "Channel"
 msgstr "Canal"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid ""
+"Channel \"%(channel_name)s\" only accepts members of group "
+"\"%(group_name)s\". Forbidden for: %(guest_names)s"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -5105,7 +5113,7 @@ msgstr "Ouvrir dans Discuter"
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Open profile"
-msgstr ""
+msgstr "Ouvrir le profil"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_optout
@@ -7587,7 +7595,7 @@ msgstr "Type de Vue"
 #: code:addons/mail/static/src/components/discuss_sidebar_category/discuss_sidebar_category.xml:0
 #, python-format
 msgid "View or join channels"
-msgstr ""
+msgstr "Voir ou rejoindre les canaux"
 
 #. module: mail
 #. openerp-web
@@ -7755,6 +7763,12 @@ msgstr "Vous êtes en discussion privée avec <b>@%s</b>."
 #, python-format
 msgid "You are in channel <b>#%s</b>."
 msgstr "Vous êtes dans le salon <b>#%s</b>."
+
+#. module: mail
+#: code:addons/mail/controllers/discuss.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr "Vous n'êtes pas autorisé à télécharger une pièce jointe ici."
 
 #. module: mail
 #. openerp-web
@@ -8057,7 +8071,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "channel"
-msgstr ""
+msgstr "canal"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__days
@@ -8260,7 +8274,7 @@ msgstr "maintenant"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "on"
-msgstr "le"
+msgstr "dans"
 
 #. module: mail
 #. openerp-web

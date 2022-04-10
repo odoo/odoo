@@ -1442,6 +1442,16 @@ msgstr "Канал"
 #, python-format
 msgid ""
 "Channel \"%(channel_name)s\" only accepts members of group "
+"\"%(group_name)s\". Forbidden for: %(guest_names)s"
+msgstr ""
+"Канал \"%(channel_name)s\" приймає тільки членів групи \"%(group_name)s\". "
+"Заборонено для: %(guest_names)s"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid ""
+"Channel \"%(channel_name)s\" only accepts members of group "
 "\"%(group_name)s\". Forbidden for: %(partner_names)s"
 msgstr ""
 "Канал \"%(channel_name)s\" приймає лише членів групи \"%(group_name)s\". "
@@ -7757,6 +7767,12 @@ msgid "You are in channel <b>#%s</b>."
 msgstr "Ви у каналі <b>#%s</b>."
 
 #. module: mail
+#: code:addons/mail/controllers/discuss.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr "У вас немає дозволу завантажувати тут прикріплення."
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/models/discuss_sidebar_category_item/discuss_sidebar_category_item.js:0
 #, python-format
@@ -8115,7 +8131,7 @@ msgstr "напр. ACd5543a0b450ar4c7t95f1b6e8a39t543"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "e.g. Contact"
-msgstr ""
+msgstr "напр. Контакт"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup

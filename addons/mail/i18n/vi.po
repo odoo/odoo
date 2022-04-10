@@ -17,8 +17,8 @@
 # Thin Tran <trvathin@gmail.com>, 2022
 # Vo Thanh Thuy, 2022
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
-# Duy BQ <duybq86@gmail.com>, 2022
 # Martin Trigaux, 2022
+# Duy BQ <duybq86@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-07 12:07+0000\n"
 "PO-Revision-Date: 2016-08-05 13:05+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Duy BQ <duybq86@gmail.com>, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,6 +61,14 @@ msgstr "\"%s\" yêu cầu truy cập micro"
 #, python-format
 msgid "%(activity_name)s: %(summary)s assigned to you"
 msgstr "%(activity_name)s: %(summary)s được giao cho bạn"
+
+#. module: mail
+#: code:addons/mail/models/res_partner.py:0
+#, python-format
+msgid ""
+"%(email)s is not recognized as a valid email. This is required to create a "
+"new customer."
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
@@ -1437,6 +1445,14 @@ msgstr "Đã thay đổi"
 #, python-format
 msgid "Channel"
 msgstr "Kênh"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid ""
+"Channel \"%(channel_name)s\" only accepts members of group "
+"\"%(group_name)s\". Forbidden for: %(guest_names)s"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -7725,6 +7741,12 @@ msgstr "Bạn đang trong một cuộc hội thoại riêng tư với <b>@%s</b>
 #, python-format
 msgid "You are in channel <b>#%s</b>."
 msgstr "Bạn đang ở kênh <b>#%s</b>."
+
+#. module: mail
+#: code:addons/mail/controllers/discuss.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr "Bạn không có quyền tải lên file đính kèm ở đây."
 
 #. module: mail
 #. openerp-web

@@ -1946,12 +1946,16 @@ msgid ""
 "The template rendering a form submitted to redirect the user when making a "
 "payment"
 msgstr ""
+"La plantilla que representa un formulario enviado para redireccionar al "
+"usuario al realizar un pago"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__inline_form_view_id
 msgid ""
 "The template rendering the inline payment form when making a direct payment"
 msgstr ""
+"La plantilla que muestra el formulario de pago en línea cuando se realiza un"
+" pago directo"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1960,6 +1964,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s encountered an error "
 "(%(acq_name)s)."
 msgstr ""
+"Ocurrió un error en la transacción con referencia %(ref)s por %(amount)s "
+"(%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1968,6 +1974,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s has been authorized "
 "(%(acq_name)s)."
 msgstr ""
+"Se autorizó la transacción con referencia %(ref)s por %(amount)s "
+"(%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1984,6 +1992,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s is canceled "
 "(%(acq_name)s)."
 msgstr ""
+"Se canceló la transacción con referencia %(ref)s por %(amount)s "
+"(%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1992,6 +2002,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s is pending "
 "(%(acq_name)s)."
 msgstr ""
+"La transacción con referencia %(ref)s por %(amount)s esta pendiente "
+"(%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0
@@ -2016,6 +2028,9 @@ msgid ""
 "A payment token is an anonymous link to the payment method details saved in the\n"
 "acquirer's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
+"Controla si los clientes pueden guardar sus métodos de pago como tokens de pago\n"
+"Un token de pago es un enlace anónimo a los detalles de pago guardados en la\n"
+"base de datos del método de pago, lo que permite al cliente reutilizarlo para una próxima compra."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
@@ -2232,6 +2247,8 @@ msgid ""
 "You can't delete a payment method that is linked to an acquirer in the enabled or test state.\n"
 "Linked acquirer(s): %s"
 msgstr ""
+"No puede eliminar un método de pago vinculado a un método en el estado habilitado o de prueba.\n"
+"Métodos vinculado(s): %s"
 
 #. module: payment
 #: code:addons/payment/models/ir_ui_view.py:0
