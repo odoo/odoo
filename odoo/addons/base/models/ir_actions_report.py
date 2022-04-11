@@ -386,7 +386,8 @@ class IrActionsReport(models.Model):
             body = layout_with_lang._render({
                 'subst': False,
                 'body': Markup(lxml.html.tostring(node, encoding='unicode')),
-                'base_url': base_url
+                'base_url': base_url,
+                'report_xml_id' : self.xml_id
             })
             bodies.append(body)
             if node.get('data-oe-model') == self.model:
