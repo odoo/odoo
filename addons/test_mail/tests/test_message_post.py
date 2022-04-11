@@ -661,10 +661,11 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
             False, '', ' ',  # falsy
         ]
         expected_tos = [
-            # Currently semi-broken: sending to an incorrect email "Name" <address1, address2>
-            [f'"{self.partner_1.name}" <valid.lelitre@agrolait.com, valid.lelitre.cc@agrolait.com>',],
-            # Currently broken: sending to an incorrect email "Name" <"Name" <address>>
-            [f'"{self.partner_1.name}" <"Valid Lelitre" <valid.lelitre@agrolait.com>>',],
+            # Sends multi-emails
+            [f'"{self.partner_1.name}" <valid.lelitre@agrolait.com>',
+             f'"{self.partner_1.name}" <valid.lelitre.cc@agrolait.com>',],
+            # Avoid double encapsulation
+            [f'"{self.partner_1.name}" <valid.lelitre@agrolait.com>',],
             # sent "normally": formats email based on wrong / falsy email
             [f'"{self.partner_1.name}" <@wrong>',],
             [f'"{self.partner_1.name}" <@False>',],
