@@ -325,6 +325,51 @@ registerModel({
             }
         },
         /**
+         * @param {KeyboardEvent} ev
+         */
+        onKeydownTextareaEnter(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            if (this.hasSuggestions) {
+                ev.preventDefault();
+                return;
+            }
+            if (
+                this.sendShortcuts.includes('ctrl-enter') &&
+                !ev.altKey &&
+                ev.ctrlKey &&
+                !ev.metaKey &&
+                !ev.shiftKey
+            ) {
+                this.sendMessage();
+                ev.preventDefault();
+                return;
+            }
+            if (
+                this.sendShortcuts.includes('enter') &&
+                !ev.altKey &&
+                !ev.ctrlKey &&
+                !ev.metaKey &&
+                !ev.shiftKey
+            ) {
+                this.sendMessage();
+                ev.preventDefault();
+                return;
+            }
+            if (
+                this.sendShortcuts.includes('meta-enter') &&
+                !ev.altKey &&
+                !ev.ctrlKey &&
+                ev.metaKey &&
+                !ev.shiftKey
+            ) {
+                this.sendMessage();
+                ev.preventDefault();
+                return;
+            }
+        },
+        /**
          * @param {ClipboardEvent} ev
          */
         async onPasteTextInput(ev) {

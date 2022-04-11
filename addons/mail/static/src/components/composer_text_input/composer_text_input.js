@@ -202,55 +202,8 @@ export class ComposerTextInput extends Component {
                 break;
             // ENTER: submit the message only if the dropdown mention proposition is not displayed
             case 'Enter':
-                this._onKeydownTextareaEnter(ev);
+                this.composerView.onKeydownTextareaEnter(ev);
                 break;
-        }
-    }
-
-    /**
-     * @private
-     * @param {KeyboardEvent} ev
-     */
-    _onKeydownTextareaEnter(ev) {
-        if (!this.composerView) {
-            return;
-        }
-        if (this.composerView.hasSuggestions) {
-            ev.preventDefault();
-            return;
-        }
-        if (
-            this.composerView.sendShortcuts.includes('ctrl-enter') &&
-            !ev.altKey &&
-            ev.ctrlKey &&
-            !ev.metaKey &&
-            !ev.shiftKey
-        ) {
-            this.composerView.sendMessage();
-            ev.preventDefault();
-            return;
-        }
-        if (
-            this.composerView.sendShortcuts.includes('enter') &&
-            !ev.altKey &&
-            !ev.ctrlKey &&
-            !ev.metaKey &&
-            !ev.shiftKey
-        ) {
-            this.composerView.sendMessage();
-            ev.preventDefault();
-            return;
-        }
-        if (
-            this.composerView.sendShortcuts.includes('meta-enter') &&
-            !ev.altKey &&
-            !ev.ctrlKey &&
-            ev.metaKey &&
-            !ev.shiftKey
-        ) {
-            this.composerView.sendMessage();
-            ev.preventDefault();
-            return;
         }
     }
 
