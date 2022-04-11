@@ -645,3 +645,36 @@ export function getNodesTextContent(nodes) {
         .map((n) => n.textContent)
         .join("");
 }
+
+/**
+ * Click to open the dropdown on a many2one
+ */
+export async function clickOpenM2ODropdown(el, fieldName, selector) {
+    const m2oSelector = `${selector || ""} .o_field_many2one[name=${fieldName}] input`;
+    const matches = el.querySelectorAll(m2oSelector);
+    if (matches.length !== 1) {
+        throw new Error(
+            `cannot open m2o: selector ${selector} has been found ${matches.length} instead of 1`
+        );
+    }
+
+    await click(matches[0]);
+    return matches[0];
+}
+
+/**
+ * Click on the active (highlighted) selection in a m2o dropdown.
+ */
+// TO FIX
+export async function clickM2OHighlightedItem(el, fieldName, selector) {
+    const m2oSelector = `${selector || ""} .o_field_many2one[name=${fieldName}] input`;
+    // const $dropdown = $(m2oSelector).autocomplete('widget');
+    const matches = el.querySelectorAll(m2oSelector);
+    if (matches.length !== 1) {
+        throw new Error(
+            `cannot open m2o: selector ${selector} has been found ${matches.length} instead of 1`
+        );
+    }
+    // clicking on an li (no matter which one), will select the focussed one
+    return click(matches[0].querySelector("li"));
+}
