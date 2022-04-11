@@ -1,30 +1,20 @@
-/**
- * The purpose of this script is to copy the current URL of the website
- * into the URL form of the URL shortener (module website_links)
- * when the user clicks the link "Share this page" on top of the page.
- */
+/** @odoo-module  */
 
-odoo.define('website_links.website_links_menu', function (require) {
-'use strict';
+import { patch } from 'web.utils';
+import { NavBar } from '@web/webclient/navbar/navbar';
 
-var publicWidget = require('web.public.widget');
+const { onWillStart } = owl;
 
-const { registry } = require("@web/core/registry");
+patch(NavBar.prototype, 'website_links_navbar', {
+    setup() {
+        this._super();
 
-var WebsiteLinksMenu = publicWidget.Widget.extend({
-
-    /**
-     * @override
-     */
-    start: function () {
-        this.$el.attr('href', '/r?u=' + encodeURIComponent(window.location.href));
-        return this._super.apply(this, arguments);
+        onWillStart(() => {
+            this.websiteEditingMenus['website_links.menu_link_tracker'] = {
+                openWidget: () => this.websiteService.goToWebsite({ path: `/r?u=${encodeURIComponent(this.websiteService.contentWindow.location.href)}` }),
+                isDisplayed: () => this.websiteService.currentWebsite,
+                options: () => {},
+            };
+        });
     },
-});
-
-registry.category("website_navbar_widgets").add("WebsiteLinksMenu", {
-    Widget: WebsiteLinksMenu,
-    selector: '#o_website_links_share_page',
-});
-
 });
