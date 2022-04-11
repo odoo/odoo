@@ -3,7 +3,6 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import formataddr
 
 
 class SaleOrderCancel(models.TransientModel):
@@ -14,7 +13,7 @@ class SaleOrderCancel(models.TransientModel):
     @api.model
     def _default_email_from(self):
         if self.env.user.email:
-            return formataddr((self.env.user.name, self.env.user.email))
+            return self.env.user.email_formatted
         raise UserError(_("Unable to post message, please configure the sender's email address."))
 
     @api.model

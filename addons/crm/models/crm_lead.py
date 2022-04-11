@@ -15,7 +15,7 @@ from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 from odoo.tools.translate import _
-from odoo.tools import date_utils, email_re, email_split, is_html_empty, groupby
+from odoo.tools import date_utils, email_split, is_html_empty, groupby
 from odoo.tools.misc import get_lang
 
 from . import crm_stage
@@ -1974,14 +1974,27 @@ class Lead(models.Model):
         return super(Lead, self)._message_post_after_hook(message, msg_vals)
 
     def _message_partner_info_from_emails(self, emails, link_mail=False):
+        """ Try to propose a better recipient when having only an email by populating
+        it with the partner_name / contact_name field of the lead e.g. if lead
+        contact_name is "Raoul" and email is "raoul@raoul.fr", suggest
+        "Raoul" <raoul@raoul.fr> as recipient. """
         result = super(Lead, self)._message_partner_info_from_emails(emails, link_mail=link_mail)
-        for partner_info in result:
-            if not partner_info.get('partner_id') and (self.partner_name or self.contact_name):
-                emails = email_re.findall(partner_info['full_name'] or '')
-                email = emails and emails[0] or ''
-                if email and self.email_from and email.lower() == self.email_from.lower():
-                    partner_info['full_name'] = tools.formataddr((self.contact_name or self.partner_name, email))
-                    break
+        for email, partner_info in zip(emails, result):
+            if partner_info.get('partner_id') or not email or not (self.partner_name or self.contact_name):
+                continue
+            # reformat email if no name information
+            name_emails = tools.email_split_tuples(email)
+            name_from_email = name_emails[0][0] if name_emails else False
+            if name_from_email:
+                continue  # already containing name + email
+            name_from_email = self.partner_name or self.contact_name
+            emails_normalized = tools.email_normalize_all(email)
+            email_normalized = emails_normalized[0] if emails_normalized else False
+            if email.lower() == self.email_from.lower() or (email_normalized and self.email_normalized == email_normalized):
+                partner_info['full_name'] = tools.formataddr((
+                    name_from_email,
+                    ','.join(emails_normalized) if emails_normalized else email))
+                break
         return result
 
     def _phone_get_number_fields(self):
