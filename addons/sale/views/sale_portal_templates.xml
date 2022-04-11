@@ -483,8 +483,9 @@
                     <tbody class="sale_tbody">
 
                         <t t-set="current_subtotal" t-value="0"/>
+                        <t t-set="lines_to_report" t-value="sale_order._get_order_lines_to_report()"/>
 
-                        <t t-foreach="sale_order.order_line" t-as="line">
+                        <t t-foreach="lines_to_report" t-as="line">
 
                             <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
                             <t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
@@ -519,7 +520,7 @@
                                     <td t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                         <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.tax_id))"/>
                                     </td>
-                                    <td class="text-end">
+                                    <td t-if="not line.is_downpayment" class="text-end">
                                         <span class="oe_order_line_price_subtotal" t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
                                         <span class="oe_order_line_price_total" t-field="line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
                                     </td>
@@ -537,8 +538,7 @@
                                     </td>
                                 </t>
                             </tr>
-
-                            <tr t-if="current_section and (line_last or sale_order.order_line[line_index+1].display_type == 'line_section')"
+                            <tr t-if="current_section and (line_last or lines_to_report[line_index+1].display_type == 'line_section') and not line.is_downpayment"
                                 class="is-subtotal text-end">
                                 <td colspan="99">
                                     <strong class="mr16">Subtotal</strong>
