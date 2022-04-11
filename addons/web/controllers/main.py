@@ -1479,6 +1479,9 @@ class Binary(http.Controller):
         '/web/partner_image/<int:rec_id>/<string:field>',
         '/web/partner_image/<int:rec_id>/<string:field>/<string:model>/'], type='http', auth="public")
     def content_image_partner(self, rec_id, field='image_128', model='res.partner', **kwargs):
+        # read access for public user
+        if not request.uid:
+            request.uid = odoo.SUPERUSER_ID
         # other kwargs are ignored on purpose
         return self._content_image(id=rec_id, model='res.partner', field=field,
             placeholder='user_placeholder.jpg')
