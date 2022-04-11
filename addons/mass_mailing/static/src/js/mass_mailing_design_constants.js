@@ -31,6 +31,7 @@ export const PRIORITY_STYLES = {
     'hr': [],
 };
 export const RE_CSS_TEXT_MATCH = /([^{]+)([^}]+)/;
+export const RE_SELECTOR_ENDS_WITH_GT_STAR = />\s*\*\s*$/;
 
 /**
  * Take a css text and splits each comma-separated selector into separate
@@ -87,6 +88,6 @@ export const FONT_FAMILIES = [
 
 export default {
     CSS_PREFIX, BTN_SIZE_STYLES, DEFAULT_BUTTON_SIZE, PRIORITY_STYLES,
-    RE_CSS_TEXT_MATCH, FONT_FAMILIES,
+    RE_CSS_TEXT_MATCH, FONT_FAMILIES, RE_SELECTOR_ENDS_WITH_GT_STAR,
     splitCss, getFontName, normalizeFontFamily, initializeDesignTabCss,
 }
