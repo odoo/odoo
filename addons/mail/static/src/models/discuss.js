@@ -127,39 +127,6 @@ registerModel({
                 limit: 10,
             });
         },
-        /**
-         * Handles click on the mobile "new chat" button.
-         *
-         * @param {MouseEvent} ev
-         */
-        onClickMobileNewChatButton(ev) {
-            this.update({ isAddingChat: true });
-        },
-        /**
-         * Handles click on the mobile "new channel" button.
-         *
-         * @param {MouseEvent} ev
-         */
-        onClickMobileNewChannelButton(ev) {
-            this.update({ isAddingChannel: true });
-        },
-        /**
-         * Handles click on the "Start a meeting" button.
-         *
-         * @param {MouseEvent} ev
-         */
-        async onClickStartAMeetingButton(ev) {
-            const meetingChannel = await this.messaging.models['Thread'].createGroupChat({
-                default_display_mode: 'video_full_screen',
-                partners_to: [this.messaging.currentPartner.id],
-            });
-            meetingChannel.toggleCall({ startWithVideo: true });
-            await meetingChannel.open({ focus: false });
-            if (!meetingChannel.exists() || !this.threadView) {
-                return;
-            }
-            this.threadView.topbar.openInvitePopoverView();
-        },
         open() {
             this.update({ discussView: insertAndReplace() });
         },

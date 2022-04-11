@@ -11,35 +11,16 @@ export class DiscussMobileMailboxSelection extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {Discuss}
+     * @returns {DiscussView}
      */
-    get discuss() {
-        return this.messaging && this.messaging.discuss;
-    }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Called when clicking on a mailbox selection item.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClick(ev) {
-        const { mailboxLocalId } = ev.currentTarget.dataset;
-        const mailbox = this.messaging.models['Thread'].get(mailboxLocalId);
-        if (!mailbox) {
-            return;
-        }
-        mailbox.open();
+    get discussView() {
+        return this.messaging && this.messaging.models['DiscussView'].get(this.props.localId);
     }
 
 }
 
 Object.assign(DiscussMobileMailboxSelection, {
-    props: {},
+    props: { localId: String },
     template: 'mail.DiscussMobileMailboxSelection',
 });
 

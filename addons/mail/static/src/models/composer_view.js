@@ -325,6 +325,85 @@ registerModel({
             }
         },
         /**
+         * @param {KeyboardEvent} ev
+         */
+        onKeydownTextarea(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            switch (ev.key) {
+                case 'Escape':
+                    if (this.hasSuggestions) {
+                        ev.preventDefault();
+                        this.closeSuggestions();
+                        markEventHandled(ev, 'ComposerTextInput.closeSuggestions');
+                    }
+                    break;
+                // UP, DOWN, TAB: prevent moving cursor if navigation in mention suggestions
+                case 'ArrowUp':
+                case 'PageUp':
+                case 'ArrowDown':
+                case 'PageDown':
+                case 'Home':
+                case 'End':
+                case 'Tab':
+                    if (this.hasSuggestions) {
+                        // We use preventDefault here to avoid keys native actions but actions are handled in keyUp
+                        ev.preventDefault();
+                    }
+                    break;
+                // ENTER: submit the message only if the dropdown mention proposition is not displayed
+                case 'Enter':
+                    this.onKeydownTextareaEnter(ev);
+                    break;
+            }
+        },
+        /**
+         * @param {KeyboardEvent} ev
+         */
+        onKeydownTextareaEnter(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            if (this.hasSuggestions) {
+                ev.preventDefault();
+                return;
+            }
+            if (
+                this.sendShortcuts.includes('ctrl-enter') &&
+                !ev.altKey &&
+                ev.ctrlKey &&
+                !ev.metaKey &&
+                !ev.shiftKey
+            ) {
+                this.sendMessage();
+                ev.preventDefault();
+                return;
+            }
+            if (
+                this.sendShortcuts.includes('enter') &&
+                !ev.altKey &&
+                !ev.ctrlKey &&
+                !ev.metaKey &&
+                !ev.shiftKey
+            ) {
+                this.sendMessage();
+                ev.preventDefault();
+                return;
+            }
+            if (
+                this.sendShortcuts.includes('meta-enter') &&
+                !ev.altKey &&
+                !ev.ctrlKey &&
+                ev.metaKey &&
+                !ev.shiftKey
+            ) {
+                this.sendMessage();
+                ev.preventDefault();
+                return;
+            }
+        },
+        /**
          * @param {ClipboardEvent} ev
          */
         async onPasteTextInput(ev) {
