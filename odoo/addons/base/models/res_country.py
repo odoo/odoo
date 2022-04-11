@@ -148,6 +148,9 @@ class CountryGroup(models.Model):
     country_ids = fields.Many2many('res.country', 'res_country_res_country_group_rel',
                                    'res_country_group_id', 'res_country_id', string='Countries')
 
+    def test(self):
+        print(_('Base view'))
+
 
 class CountryState(models.Model):
     _description = "Country state"

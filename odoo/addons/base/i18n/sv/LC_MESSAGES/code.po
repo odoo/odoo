@@ -1,0 +1,5776 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base
+#
+# Translators:
+# Jan-Eric Lindh <jelindh@gmail.com>, 2018
+# Lord Cobol, 2018
+# Haojun Zou <apollo_zhj@msn.com>, 2018
+# Zou Haojun <haojunzou84@gmail.com>, 2018
+# lynnliuying <lynn.liu1971@gmail.com>, 2018
+# deeman <da.jkpg@gmail.com>, 2018
+# Dick Nilsson <stesch99@gmail.com>, 2018
+# lasch a <bmail440@gmail.com>, 2018
+# Martin Wilderoth <martin.wilderoth@linserv.se>, 2018
+# Kristoffer Grundström <hamnisdude@gmail.com>, 2018
+# Bengt Evertsson <zyberfart@gmail.com>, 2018
+# Robert Frykelius <robert.frykelius@linserv.se>, 2018
+# Daniel Forslund <daniel.forslund@gmail.com>, 2018
+# Christelle Wehbe <libanon_cristelle@hotmail.com>, 2018
+# Martin Trigaux, 2018
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2018
+# Kim Asplund <kim.asplund@gmail.com>, 2019
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~11.4\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2022-04-11 12:53+0200\n"
+"PO-Revision-Date: 2016-08-05 12:54+0000\n"
+"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2019\n"
+"Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: models/decimal_precision.py:57 models/res_currency.py:407
+#, fuzzy, python-format
+msgid "Warning for %s"
+msgstr "Varningar"
+
+#: models/decimal_precision.py:58
+#, python-format
+msgid ""
+"The precision has been reduced for %s.\n"
+"Note that existing data WON'T be updated by this change.\n"
+"\n"
+"As decimal precisions impact the whole system, this may cause critical "
+"issues.\n"
+"E.g. reducing the precision could disturb your financial balance.\n"
+"\n"
+"Therefore, changing decimal precisions in a running database is not "
+"recommended."
+msgstr ""
+
+#: models/ir_actions.py:179 models/ir_actions.py:181
+#, python-format
+msgid "Invalid model name %r in action definition."
+msgstr ""
+
+#: models/ir_actions.py:210
+#, python-format
+msgid "The modes in view_mode must not be duplicated: %s"
+msgstr ""
+
+#: models/ir_actions.py:212
+#, python-format
+msgid "No spaces allowed in view_mode: %r"
+msgstr ""
+
+#: models/ir_actions.py:457
+msgid "Recursion found in child server actions"
+msgstr ""
+
+#: models/ir_actions.py:610
+msgid "You don't have enough access rights to run this action."
+msgstr ""
+
+#: models/ir_actions.py:702
+msgid "many2many fields cannot be evaluated by reference"
+msgstr ""
+
+#: models/ir_actions_report.py:497
+#, python-format
+msgid ""
+"Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
+"number of subprocess reached. Message : %s"
+msgstr ""
+
+#: models/ir_actions_report.py:500
+#, python-format
+msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
+msgstr "Wkhtmltopdf misslyckades (felkos: %s). Meddelande: %s"
+
+#: models/ir_actions_report.py:745
+msgid "One of the documents you are trying to merge is encrypted"
+msgstr ""
+
+#: models/ir_actions_report.py:770
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still "
+"retrieve those PDFs by selecting each of the affected records individually, "
+"which will avoid merging."
+msgstr ""
+
+#: models/ir_actions_report.py:858
+msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
+msgstr "Kan inte hitta Wkhtmltopdf på detta system. PDF-filen kan inte skapas."
+
+#: models/ir_actions_report.py:865
+#, python-format
+msgid ""
+"The report's template '%s' is wrong, please contact your administrator. \n"
+"\n"
+"Can not separate file to save as attachment because the report's template "
+"does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div "
+"with 'article' classname."
+msgstr ""
+
+#: models/ir_attachment.py:71
+msgid "Only administrators can execute this action."
+msgstr ""
+
+#: models/ir_attachment.py:431 models/ir_attachment.py:442
+msgid "Sorry, you are not allowed to access this document."
+msgstr ""
+
+#: models/ir_attachment.py:476
+msgid "Sorry, you must provide fields to read on attachments"
+msgstr ""
+
+#: models/ir_attachment.py:479
+msgid "Sorry, the syntax 'name:agg(field)' is not available for attachments"
+msgstr ""
+
+#: models/ir_attachment.py:485
+msgid "Sorry, you are not allowed to access these fields on attachments."
+msgstr ""
+
+#: models/ir_cron.py:372
+msgid ""
+"Record cannot be modified right now: This cron task is currently being "
+"executed and may not be modified Please try again in a few minutes"
+msgstr ""
+
+#: models/ir_default.py:70
+#, python-format
+msgid "Invalid field %s.%s"
+msgstr ""
+
+#: models/ir_default.py:72
+#, python-format
+msgid "Invalid value for %s.%s: %s"
+msgstr ""
+
+#: models/ir_fields.py:213
+#, python-format
+msgid "Unknown value '%s' for boolean field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:215
+msgid "Use '1' for yes and '0' for no"
+msgstr ""
+
+#: models/ir_fields.py:225
+#, python-format
+msgid "'%s' does not seem to be an integer for field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:236
+#, python-format
+msgid "'%s' does not seem to be a number for field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:256
+#, python-format
+msgid "'%s' does not seem to be a valid date for field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:258 models/ir_fields.py:290
+#, python-format
+msgid "Use the format '%s'"
+msgstr ""
+
+#: models/ir_fields.py:288
+#, python-format
+msgid "'%s' does not seem to be a valid datetime for field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:332
+#, python-format
+msgid "Value '%s' not found in selection field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:367
+msgid "See all possible values"
+msgstr ""
+
+#: models/ir_fields.py:376
+msgid "database id"
+msgstr "databas-id"
+
+#: models/ir_fields.py:388
+#, python-format
+msgid "Invalid database id '%s' for the field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:392
+msgid "external id"
+msgstr "externt id"
+
+#: models/ir_fields.py:402
+msgid "name"
+msgstr "Namn"
+
+#: models/ir_fields.py:410
+#, fuzzy, python-format
+msgid ""
+"Found multiple matches for value '%s' in field '%%(field)s' (%d matches)"
+msgstr "Hittade flera matchningar för fält '%%(field)s' (%d matches)"
+
+#: models/ir_fields.py:419
+#, python-format
+msgid ""
+"Cannot create new '%s' records from their name alone. Please create those "
+"records manually and try importing again."
+msgstr ""
+
+#: models/ir_fields.py:423
+#, python-format
+msgid "Unknown sub-field '%s'"
+msgstr ""
+
+#: models/ir_fields.py:436
+#, python-format
+msgid ""
+"No matching record found for %(field_type)s '%(value)s' in field "
+"'%%(field)s' and the following error was encountered when we attempted to "
+"create one: %(error_message)s"
+msgstr ""
+
+#: models/ir_fields.py:438
+#, python-format
+msgid ""
+"No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:493
+msgid ""
+"Can not create Many-To-One records indirectly, import the field separately"
+msgstr ""
+
+#: models/ir_fields.py:496
+#, python-format
+msgid ""
+"Ambiguous specification for field '%(field)s', only provide one of name, "
+"external id or database id"
+msgstr ""
+
+#: models/ir_filters.py:36 models/res_partner.py:364 models/res_users.py:205
+#: models/res_users.py:632 models/res_users.py:634
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopia)"
+
+#: models/ir_filters.py:105
+#, python-format
+msgid ""
+"There is already a shared filter set as default for %(model)s, delete or "
+"change it before setting a new default"
+msgstr ""
+
+#: models/ir_mail_server.py:126
+#, python-format
+msgid "SSL private key is missing for %s."
+msgstr ""
+
+#: models/ir_mail_server.py:128
+#, python-format
+msgid "SSL certificate is missing for %s."
+msgstr ""
+
+#: models/ir_mail_server.py:134
+msgid ""
+"Please configure an email on the current user to simulate sending an email "
+"message via this outgoing server"
+msgstr ""
+
+#: models/ir_mail_server.py:148
+#, python-format
+msgid ""
+"The server refused the sender address (%(email_from)s) with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:153
+#, python-format
+msgid ""
+"The server refused the test recipient (%(email_to)s) with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:160
+#, python-format
+msgid "The server refused the test connection with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:166
+#, python-format
+msgid ""
+"Invalid server name !\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:168
+#, python-format
+msgid ""
+"No response received. Check server address and port number.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:170
+#, python-format
+msgid ""
+"The server has closed the connection unexpectedly. Check configuration "
+"served on this port number.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:172
+#, python-format
+msgid ""
+"Server replied with following exception:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:174
+#, python-format
+msgid ""
+"An option is not supported by the server:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:176
+#, python-format
+msgid ""
+"An SMTP exception occurred. Check port number and connection security type.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:178
+#, python-format
+msgid ""
+"An SSL exception occurred. Check connection security type.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:180
+#, python-format
+msgid ""
+"Connection Test Failed! Here is what we got instead:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:189
+#, fuzzy
+msgid "Connection Test Successful!"
+msgstr "Anslutsningssäkerhet"
+
+#: models/ir_mail_server.py:259 models/ir_mail_server.py:284
+#, python-format
+msgid ""
+"The private key or the certificate is not a valid file. \n"
+"%s"
+msgstr ""
+
+#: models/ir_mail_server.py:261 models/ir_mail_server.py:286
+#, python-format
+msgid ""
+"Could not load your certificate / private key. \n"
+"%s"
+msgstr ""
+
+#: models/ir_mail_server.py:290
+msgid "Missing SMTP Server"
+msgstr "Saknad SMTP-server"
+
+#: models/ir_mail_server.py:291
+msgid ""
+"Please define at least one SMTP server, or provide the SMTP parameters "
+"explicitly."
+msgstr ""
+
+#: models/ir_mail_server.py:297
+msgid ""
+"Your Odoo Server does not support SMTP-over-SSL. You could use STARTTLS "
+"instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
+"should do the trick."
+msgstr ""
+"Din Odoo-server stöder inte SMTP-över-SSL. Du skulle kunna använda STARTTLS "
+"istället. Om SSL behövs måste du uppgradera till Python >2.6 på serversidan."
+
+#: models/ir_mail_server.py:615
+#, python-format
+msgid ""
+"Mail delivery failed via SMTP server '%s'.\n"
+"%s: %s"
+msgstr ""
+
+#: models/ir_mail_server.py:617
+msgid "Mail Delivery Failed"
+msgstr "E-post-leverans misslyckades"
+
+#: models/ir_mail_server.py:701 models/ir_model.py:605 models/ir_model.py:684
+#: models/ir_model.py:692 models/res_partner.py:377
+msgid "Warning"
+msgstr "Varning"
+
+#: models/ir_mail_server.py:702
+msgid ""
+"Your server does not seem to support SSL, you may want to try STARTTLS "
+"instead"
+msgstr ""
+"Din server verkar inte ha stöd för SSL. Du kanske vill testa STARTTLS "
+"istället"
+
+#: models/ir_model.py:215
+msgid "The model name must start with 'x_'."
+msgstr ""
+
+#: models/ir_model.py:217
+msgid ""
+"The model name can only contain lowercase characters, digits, underscores "
+"and dots."
+msgstr ""
+
+#: models/ir_model.py:234
+#, python-format
+msgid ""
+"Unable to order by %s: fields used for ordering must be present on the model "
+"and stored."
+msgstr ""
+
+#: models/ir_model.py:277
+#, python-format
+msgid "Model '%s' contains module data and cannot be removed."
+msgstr ""
+
+#: models/ir_model.py:302
+msgid "Field \"Model\" cannot be modified on models."
+msgstr "Fält \"Model\" kan inte ändras på modeller."
+
+#: models/ir_model.py:304
+msgid "Field \"Type\" cannot be modified on models."
+msgstr "Fält \"Typ\" kan inte ändras på modeller."
+
+#: models/ir_model.py:306
+msgid "Field \"Transient Model\" cannot be modified on models."
+msgstr "Fält \"Transient Model\"  kan inte ändras på modeller."
+
+#: models/ir_model.py:563
+msgid "Custom fields must have a name that starts with 'x_' !"
+msgstr "Anpassade fält måste ha ett namn som börjar med 'x_' ."
+
+#: models/ir_model.py:567
+msgid ""
+"Field names can only contain characters, digits and underscores (up to 63)."
+msgstr ""
+
+#: models/ir_model.py:583
+#, python-format
+msgid "Unknown field name '%s' in related field '%s'"
+msgstr ""
+
+#: models/ir_model.py:586
+#, python-format
+msgid "Non-relational field name '%s' in related field '%s'"
+msgstr ""
+
+#: models/ir_model.py:595
+#, python-format
+msgid "Related field '%s' does not have type '%s'"
+msgstr ""
+
+#: models/ir_model.py:597
+#, python-format
+msgid "Related field '%s' does not have comodel '%s'"
+msgstr ""
+
+#: models/ir_model.py:618
+#, python-format
+msgid "Empty dependency in %r"
+msgstr ""
+
+#: models/ir_model.py:625
+#, python-format
+msgid "Unknown field %r in dependency %r"
+msgstr ""
+
+#: models/ir_model.py:627
+#, python-format
+msgid "Non-relational field %r in dependency %r"
+msgstr ""
+
+#: models/ir_model.py:658
+#, python-format
+msgid "Model %s does not exist"
+msgstr ""
+
+#: models/ir_model.py:659
+msgid "Please specify a valid model for the object relation"
+msgstr ""
+
+#: models/ir_model.py:685
+#, python-format
+msgid "The table %r if used for other, possibly incompatible fields."
+msgstr ""
+
+#: models/ir_model.py:692
+#, python-format
+msgid ""
+"The m2o field %s is required but declares its ondelete policy as being 'set "
+"null'. Only 'restrict' and 'cascade' make sense."
+msgstr ""
+
+#: models/ir_model.py:770
+#, python-format
+msgid "The field '%s' cannot be removed because the field '%s' depends on it."
+msgstr ""
+
+#: models/ir_model.py:797
+msgid "Cannot rename/delete fields that are still present in views:"
+msgstr ""
+
+#: models/ir_model.py:798
+#, python-format
+msgid "Fields: %s"
+msgstr ""
+
+#: models/ir_model.py:799
+#, python-format
+msgid "View: %s"
+msgstr ""
+
+#: models/ir_model.py:814
+msgid "This column contains module data and cannot be removed!"
+msgstr "Denna column innehåller modul data och kan inte tas bort!"
+
+#: models/ir_model.py:882
+#, python-format
+msgid "Model %s does not exist!"
+msgstr "Modulen %s finns inte!"
+
+#: models/ir_model.py:889
+#, python-format
+msgid "Many2one %s on model %s does not exist!"
+msgstr ""
+
+#: models/ir_model.py:911
+msgid "Changing the model of a field is forbidden!"
+msgstr "Förbjudet att ändring av fältets klasstillhörighet!"
+
+#: models/ir_model.py:914
+msgid ""
+"Changing the type of a field is not yet supported. Please drop it and create "
+"it again!"
+msgstr ""
+
+#: models/ir_model.py:928
+msgid "Can only rename one field at a time!"
+msgstr ""
+
+#: models/ir_model.py:1314 models/ir_model.py:1334 models/ir_model.py:1365
+msgid ""
+"Properties of base fields cannot be altered in this manner! Please modify "
+"them through Python code, preferably through a custom addon!"
+msgstr ""
+"Egenskaperna för basfälten kan inte ändras på detta sätt. Var vänlig och "
+"ändra dem med Pythonkod, eller via ett eget tillägg."
+
+#: models/ir_model.py:1439
+#, python-format
+msgid "The ondelete policy %r is not valid for field %r"
+msgstr ""
+
+#: models/ir_model.py:1484 models/ir_model.py:1622 models/ir_model.py:2040
+msgid "Administrator access is required to uninstall a module"
+msgstr ""
+
+#: models/ir_model.py:1771
+#, python-format
+msgid ""
+"You are not allowed to access '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr ""
+
+#: models/ir_model.py:1772
+#, python-format
+msgid ""
+"You are not allowed to modify '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr ""
+
+#: models/ir_model.py:1773
+#, python-format
+msgid ""
+"You are not allowed to create '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr ""
+
+#: models/ir_model.py:1774
+#, python-format
+msgid ""
+"You are not allowed to delete '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr ""
+
+#: models/ir_model.py:1779
+#, python-format
+msgid ""
+"This operation is allowed for the following groups:\n"
+"%(groups_list)s"
+msgstr ""
+
+#: models/ir_model.py:1781
+msgid "No group currently allows this operation."
+msgstr ""
+
+#: models/ir_model.py:1783 models/ir_rule.py:203
+msgid "Contact your administrator to request access if necessary."
+msgstr ""
+
+#: models/ir_model.py:1938
+msgid "Not enough access rights on the external ID:"
+msgstr ""
+
+#: models/ir_module.py:321
+msgid ""
+"You are trying to remove a module that is installed or will be installed."
+msgstr ""
+
+#: models/ir_module.py:368
+#, python-format
+msgid ""
+"Unable to install module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+"Kan inte installera modul \"%s\" för att ett externt beroend inte är "
+"uppfyllt: %s"
+
+#: models/ir_module.py:370
+#, python-format
+msgid ""
+"Unable to upgrade module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+"Kan inte uppgradera modul \"%s\" för att ett extern beroende är inte "
+"uppfyllt: %s"
+
+#: models/ir_module.py:372
+#, python-format
+msgid ""
+"Unable to process module \"%s\" because an external dependency is not met: %s"
+msgstr "Kan inte bearbeta modul \"%s\", ett externt beroende saknas: %s"
+
+#: models/ir_module.py:377
+msgid "Recursion error in modules dependencies !"
+msgstr "Rekursiva modulberoenden!"
+
+#: models/ir_module.py:391
+#, python-format
+msgid ""
+"You try to install module '%s' that depends on module '%s'.\n"
+"But the latter module is not available in your system."
+msgstr ""
+"Du försökte att installera modulen '%s' som beror på modulen '%s'.\n"
+"Men den senare är inte tillgänglig på ditt system."
+
+#: models/ir_module.py:438
+#, python-format
+msgid "Modules \"%s\" and \"%s\" are incompatible."
+msgstr ""
+
+#: models/ir_module.py:457
+#, python-format
+msgid "You are trying to install incompatible modules in category \"%s\":"
+msgstr ""
+
+#: models/ir_module.py:464
+msgid "Install"
+msgstr "Installera"
+
+#: models/ir_module.py:594
+msgid ""
+"Odoo is currently processing a scheduled action.\n"
+"Module operations are not possible at this time, please try again later or "
+"contact your system administrator."
+msgstr ""
+
+#: models/ir_module.py:630
+msgid "The `base` module cannot be uninstalled"
+msgstr ""
+
+#: models/ir_module.py:632
+msgid ""
+"One or more of the selected modules have already been uninstalled, if you "
+"believe this to be an error, you may try again later or contact support."
+msgstr ""
+
+#: models/ir_module.py:638
+msgid "Uninstall"
+msgstr "Avinstallera"
+
+#: models/ir_module.py:646
+msgid "Uninstall module"
+msgstr ""
+
+#: models/ir_module.py:687
+#, python-format
+msgid "Can not upgrade module '%s'. It is not installed."
+msgstr "Kan inte uppgradera modulen \"%s\". Den är inte installerad."
+
+#: models/ir_module.py:706
+#, python-format
+msgid ""
+"You try to upgrade the module %s that depends on the module: %s.\n"
+"But this module is not available in your system."
+msgstr ""
+"Du försöker uppgradera modulen %ssom är beroende av modulen: %s.\n"
+"Denna modul är dock inte tillgänglig på ditt system."
+
+#: models/ir_module.py:711
+msgid "Apply Schedule Upgrade"
+msgstr "Utför planerad uppgradering"
+
+#: models/ir_module.py:805
+msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr ""
+
+#: models/ir_module.py:806
+msgid ""
+"To enable it, make sure this directory exists and is writable on the server:"
+msgstr ""
+
+#: models/ir_module.py:833
+#, python-format
+msgid ""
+"The `%s` module appears to be unavailable at the moment, please try again "
+"later."
+msgstr ""
+
+#: models/ir_profile.py:101
+msgid ""
+"Profiling is not enabled on this database. Please contact an administrator."
+msgstr ""
+
+#: models/ir_property.py:88
+msgid "Invalid type"
+msgstr ""
+
+#: models/ir_qweb_fields.py:144
+msgid "Decimalized number"
+msgstr ""
+
+#: models/ir_qweb_fields.py:164
+#, fuzzy
+msgid "Rounding precision"
+msgstr "Avrundningsfaktor"
+
+#: models/ir_qweb_fields.py:209
+#, fuzzy
+msgid "Date format"
+msgstr "Datumformat"
+
+#: models/ir_qweb_fields.py:227
+#, fuzzy
+msgid "Pattern to format"
+msgstr "Pappersformat"
+
+#: models/ir_qweb_fields.py:228
+msgid "Optional timezone name"
+msgstr ""
+
+#: models/ir_qweb_fields.py:229
+#, fuzzy
+msgid "Display only the time"
+msgstr "Visningsnamn"
+
+#: models/ir_qweb_fields.py:230
+msgid "Hide seconds"
+msgstr ""
+
+#: models/ir_qweb_fields.py:231
+#, fuzzy
+msgid "Display only the date"
+msgstr "Visningsnamn"
+
+#: models/ir_qweb_fields.py:301
+msgid "Selection"
+msgstr "Urval"
+
+#: models/ir_qweb_fields.py:301
+msgid "By default the widget uses the field information"
+msgstr ""
+
+#: models/ir_qweb_fields.py:425
+#, fuzzy
+msgid "Original currency"
+msgstr "Originalvy"
+
+#: models/ir_qweb_fields.py:426
+#, fuzzy
+msgid "Display currency"
+msgstr "Visningsnamn"
+
+#: models/ir_qweb_fields.py:427
+msgid "Date"
+msgstr "Datum"
+
+#: models/ir_qweb_fields.py:427
+msgid ""
+"Date used for the original currency (only used for t-esc). by default use "
+"the current date."
+msgstr ""
+
+#: models/ir_qweb_fields.py:428
+msgid "Company"
+msgstr "Bolag"
+
+#: models/ir_qweb_fields.py:428
+msgid ""
+"Company used for the original currency (only used for t-esc). By default use "
+"the user company"
+msgstr ""
+
+#: models/ir_qweb_fields.py:437
+msgid "The value send to monetary field is not a number."
+msgstr ""
+
+#: models/ir_qweb_fields.py:535
+#, python-format
+msgid "The value (%s) passed should be positive"
+msgstr ""
+
+#: models/ir_qweb_fields.py:538
+msgid "The hour must be between 0 and 23"
+msgstr ""
+
+#: models/ir_qweb_fields.py:572
+msgid "Digital formatting"
+msgstr ""
+
+#: models/ir_qweb_fields.py:573
+#, fuzzy
+msgid "Date unit"
+msgstr "Datum"
+
+#: models/ir_qweb_fields.py:573
+msgid "Date unit used for comparison and formatting"
+msgstr ""
+
+#: models/ir_qweb_fields.py:574
+#, fuzzy
+msgid "Rounding unit"
+msgstr "Avrundningsfaktor"
+
+#: models/ir_qweb_fields.py:574
+msgid ""
+"Date unit used for the rounding. The value must be smaller than 'hour' if "
+"you use the digital formatting."
+msgstr ""
+
+#: models/ir_qweb_fields.py:578
+msgid "Long"
+msgstr ""
+
+#: models/ir_qweb_fields.py:579
+msgid "Short"
+msgstr ""
+
+#: models/ir_qweb_fields.py:580
+msgid "Narrow"
+msgstr ""
+
+#: models/ir_qweb_fields.py:581
+#, fuzzy
+msgid "Format"
+msgstr "Formulär"
+
+#: models/ir_qweb_fields.py:582
+msgid "Formatting: long, short, narrow (not used for digital)"
+msgstr ""
+
+#: models/ir_qweb_fields.py:587
+#, fuzzy
+msgid "Add direction"
+msgstr "Riktning"
+
+#: models/ir_qweb_fields.py:588
+msgid "Add directional information (not used for digital)"
+msgstr ""
+
+#: models/ir_qweb_fields.py:650
+#, fuzzy
+msgid "Reference date"
+msgstr "Referens"
+
+#: models/ir_qweb_fields.py:650
+msgid "Date to compare with the field value, by default use the current date."
+msgstr ""
+
+#: models/ir_qweb_fields.py:686
+#, fuzzy
+msgid "Barcode symbology"
+msgstr "Streckkoder"
+
+#: models/ir_qweb_fields.py:686
+msgid "Barcode type, eg: UPCA, EAN13, Code128"
+msgstr ""
+
+#: models/ir_qweb_fields.py:687
+msgid "Width"
+msgstr ""
+
+#: models/ir_qweb_fields.py:688
+msgid "Height"
+msgstr ""
+
+#: models/ir_qweb_fields.py:689
+#, fuzzy
+msgid "Human Readable"
+msgstr "Personalresurser"
+
+#: models/ir_qweb_fields.py:710
+#, fuzzy, python-format
+msgid "Barcode %s"
+msgstr "Streckkoder"
+
+#: models/ir_qweb_fields.py:724
+msgid "Name"
+msgstr "Namn"
+
+#: models/ir_qweb_fields.py:725
+msgid "Address"
+msgstr "Adress"
+
+#: models/ir_qweb_fields.py:726
+msgid "Phone"
+msgstr "Telefon"
+
+#: models/ir_qweb_fields.py:727
+msgid "Mobile"
+msgstr "Mobil"
+
+#: models/ir_qweb_fields.py:728
+msgid "Email"
+msgstr "E-post"
+
+#: models/ir_qweb_fields.py:729 models/ir_qweb_fields.py:780
+msgid "VAT"
+msgstr "Moms"
+
+#: models/ir_qweb_fields.py:733
+msgid "Space"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+#, fuzzy
+msgid "Comma"
+msgstr "Kommentar"
+
+#: models/ir_qweb_fields.py:733
+#, fuzzy
+msgid "Dash"
+msgstr "Anslagstavla"
+
+#: models/ir_qweb_fields.py:733
+msgid "Vertical bar"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+msgid "Slash"
+msgstr ""
+
+#: models/ir_qweb_fields.py:734
+msgid "Linebreak"
+msgstr ""
+
+#: models/ir_qweb_fields.py:737
+#, fuzzy
+msgid "Displayed fields"
+msgstr "Översatt fält"
+
+#: models/ir_qweb_fields.py:737
+msgid "List of contact fields to display in the widget"
+msgstr ""
+
+#: models/ir_qweb_fields.py:738
+#, fuzzy
+msgid "Address separator"
+msgstr "Adress format..."
+
+#: models/ir_qweb_fields.py:738
+msgid "Separator use to split the address from the display_name."
+msgstr ""
+
+#: models/ir_qweb_fields.py:739
+msgid "Hide badges"
+msgstr ""
+
+#: models/ir_qweb_fields.py:739
+msgid "Don't display the font awesome marker"
+msgstr ""
+
+#: models/ir_qweb_fields.py:740
+msgid "Use comma"
+msgstr ""
+
+#: models/ir_qweb_fields.py:740
+msgid "Use comma instead of the <br> tag to display the address"
+msgstr ""
+
+#: models/ir_qweb_fields.py:741
+msgid "Display phone icons"
+msgstr ""
+
+#: models/ir_qweb_fields.py:741
+msgid "Display the phone icons even if no_marker is True"
+msgstr ""
+
+#: models/ir_qweb_fields.py:742
+#, fuzzy
+msgid "Display country image"
+msgstr "Visningsnamn"
+
+#: models/ir_qweb_fields.py:742
+msgid "Display the country image if the field is present on the record"
+msgstr ""
+
+#: models/ir_rule.py:61
+msgid "Rules can not be applied on the Record Rules model."
+msgstr ""
+
+#: models/ir_rule.py:197
+#, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to access "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr ""
+
+#: models/ir_rule.py:198
+#, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to modify "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr ""
+
+#: models/ir_rule.py:199
+#, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to create "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr ""
+
+#: models/ir_rule.py:200
+#, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to delete "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr ""
+
+#: models/ir_rule.py:225
+#, fuzzy, python-format
+msgid "Records: %s"
+msgstr "Postregler"
+
+#: models/ir_rule.py:228
+#, fuzzy, python-format
+msgid "User: %s"
+msgstr "Användare"
+
+#: models/ir_rule.py:231
+#, python-format
+msgid ""
+"This restriction is due to the following rules:\n"
+"%s"
+msgstr ""
+
+#: models/ir_rule.py:233
+msgid "Note: this might be a multi-company issue."
+msgstr ""
+
+#: models/ir_sequence.py:17 models/ir_sequence.py:33
+msgid "Step must not be zero."
+msgstr ""
+
+#: models/ir_sequence.py:234
+#, python-format
+msgid "Invalid prefix or suffix for sequence '%s'"
+msgstr ""
+
+#: models/ir_translation.py:528
+msgid "Creating translation on non existing records"
+msgstr ""
+
+#: models/ir_translation.py:552
+#, python-format
+msgid ""
+"Translation is not valid:\n"
+"%s"
+msgstr ""
+
+#: models/ir_translation.py:726
+msgid ""
+"Translation features are unavailable until you install an extra translation."
+msgstr ""
+
+#: models/ir_translation.py:756
+msgid "Translate"
+msgstr "Översätt"
+
+#: models/ir_translation.py:854
+msgid "Technical Translations"
+msgstr "Tekniska Översättningar"
+
+#: models/ir_ui_menu.py:73
+msgid "Error! You cannot create recursive menus."
+msgstr ""
+
+#: models/ir_ui_view.py:397
+#, python-format
+msgid ""
+"Error while validating view:\n"
+"\n"
+"%(error)s"
+msgstr ""
+
+#: models/ir_ui_view.py:415
+#, python-format
+msgid "Invalid view %(name)s definition in %(file)s"
+msgstr ""
+
+#: models/ir_ui_view.py:427
+#, python-format
+msgid ""
+"Error while validating view near:\n"
+"\n"
+"%(fivelines)s\n"
+"%(error)s"
+msgstr ""
+
+#: models/ir_ui_view.py:441
+msgid ""
+"Inherited Qweb view cannot have 'Groups' define on the record. Use 'groups' "
+"attributes inside the view definition"
+msgstr ""
+
+#: models/ir_ui_view.py:448
+msgid "You cannot create recursive inherited views."
+msgstr ""
+
+#: models/ir_ui_view.py:484
+msgid "Missing view architecture."
+msgstr ""
+
+#: models/ir_ui_view.py:680
+#, python-format
+msgid "View '%(name)s' accessible only to groups %(groups)s "
+msgstr ""
+
+#: models/ir_ui_view.py:683
+#, python-format
+msgid "View '%(name)s' is private"
+msgstr ""
+
+#: models/ir_ui_view.py:1008 models/ir_ui_view.py:1240
+#, python-format
+msgid "Model not found: %(model)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1290
+#, python-format
+msgid "Tree child can only have one of %(tags)s tag (not %(wrong_tag)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1299
+#, python-format
+msgid "A <graph> can only contains <field> nodes, found a <%s>"
+msgstr ""
+
+#: models/ir_ui_view.py:1320
+msgid "Search tag can only contain one search panel"
+msgstr ""
+
+#: models/ir_ui_view.py:1330
+msgid "Field tag must have a \"name\" attribute defined"
+msgstr ""
+
+#: models/ir_ui_view.py:1352
+#, python-format
+msgid ""
+"Domain on non-relational field \"%(name)s\" makes no sense (domain:"
+"%(domain)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1367
+#, python-format
+msgid "Field \"%(field_name)s\" does not exist in model \"%(model_name)s\""
+msgstr ""
+
+#: models/ir_ui_view.py:1381
+#, python-format
+msgid "Attribute %(attribute)s evaluation expects a boolean, got %(value)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1407
+#, python-format
+msgid "Invalid special '%(value)s' in button"
+msgstr ""
+
+#: models/ir_ui_view.py:1412
+msgid "Button must have a name"
+msgstr ""
+
+#: models/ir_ui_view.py:1416
+#, python-format
+msgid "%(action_name)s is not a valid action on %(model_name)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1424
+#, python-format
+msgid "%(method)s on %(model)s is private and cannot be called from a button"
+msgstr ""
+
+#: models/ir_ui_view.py:1442
+#, python-format
+msgid "Invalid xmlid %(xmlid)s for button of type action."
+msgstr ""
+
+#: models/ir_ui_view.py:1445
+#, python-format
+msgid ""
+"%(xmlid)s is of type %(xmlid_model)s, expected a subclass of ir.actions."
+"actions"
+msgstr ""
+
+#: models/ir_ui_view.py:1452
+#, python-format
+msgid ""
+"Action %(action_reference)s (id: %(action_id)s) does not exist for button of "
+"type action."
+msgstr ""
+
+#: models/ir_ui_view.py:1474
+#, python-format
+msgid ""
+"Field '%(name)s' found in 'groupby' node can only be of type many2one, found "
+"%(type)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1498
+#, python-format
+msgid ""
+"Field '%(field)s' found in 'groupby' node does not exist in model %(model)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1509
+msgid "Searchpanel item with select multi cannot have a domain."
+msgstr ""
+
+#: models/ir_ui_view.py:1518
+msgid ""
+"Label tag must contain a \"for\". To match label style without corresponding "
+"field or button, use 'class=\"o_form_label\"'."
+msgstr ""
+
+#: models/ir_ui_view.py:1528
+msgid "Page direct ancestor must be notebook"
+msgstr ""
+
+#: models/ir_ui_view.py:1599
+#, python-format
+msgid "\"group_by\" value must be a string %(attribute)s=%(value)r"
+msgstr ""
+
+#: models/ir_ui_view.py:1607
+#, python-format
+msgid ""
+"Unknown field \"%(field)s\" in \"group_by\" value in %(attribute)s=%(value)r"
+msgstr ""
+
+#: models/ir_ui_view.py:1630
+#, python-format
+msgid "%(attribute)r value must be an integer (%(value)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1776
+#, python-format
+msgid "Invalid domain format %(expr)s in %(use)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1788
+#, python-format
+msgid "Non-relational field %(field)r in path %(field_path)r in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1796
+#, python-format
+msgid "Unknown field \"%(model)s.%(field)s\" in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1802
+#, python-format
+msgid "Unsearchable field %(field)r in path %(field_path)r in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:2072
+msgid "Can't compare more than two views."
+msgstr ""
+
+#: models/ir_ui_view.py:2099
+msgid "Previous Arch"
+msgstr ""
+
+#: models/ir_ui_view.py:2105
+#, fuzzy
+msgid "File Arch"
+msgstr "Fil"
+
+#: models/ir_ui_view.py:2115
+#, fuzzy
+msgid "Current Arch"
+msgstr "Valuta"
+
+#: models/ir_ui_view.py:2171
+#, python-format
+msgid ""
+"Name or id %(name_or_id)r in %(use)s must be present in view but is missing."
+msgstr ""
+
+#: models/ir_ui_view.py:2179
+#, fuzzy, python-format
+msgid "Field `%(name)s` does not exist"
+msgstr "Modulen %s finns inte!"
+
+#: models/ir_ui_view.py:2186
+#, python-format
+msgid "Invalid composed field %(definition)s in %(use)s"
+msgstr ""
+
+#: models/ir_ui_view.py:2193
+#, python-format
+msgid "Field %(name)r used in %(use)s must be present in view but is missing."
+msgstr ""
+
+#: models/ir_ui_view.py:2199
+#, python-format
+msgid ""
+"Field %(name)r used in %(use)s is present in view but is in select multi."
+msgstr ""
+
+#: models/report_paperformat.py:194
+msgid ""
+"You can select either a format or a specific page width/height, but not both."
+msgstr ""
+
+#: models/res_bank.py:73
+msgid "Normal"
+msgstr "Normal"
+
+#: models/res_company.py:25
+msgid ""
+"Duplicating a company is not allowed. Please create a new company instead."
+msgstr ""
+
+#: models/res_company.py:268
+msgid "You cannot create recursive companies."
+msgstr ""
+
+#: models/res_config.py:300
+msgid ""
+"\n"
+"\n"
+"This addon is already installed on your system"
+msgstr ""
+"\n"
+"\n"
+"Detta tillägg är redan installerat i ditt system"
+
+#: models/res_config.py:384
+msgid "Cannot duplicate configuration!"
+msgstr ""
+
+#: models/res_config.py:419
+msgid "Warning!"
+msgstr "Varning!"
+
+#: models/res_config.py:420
+#, python-format
+msgid ""
+"Disabling this option will also uninstall the following modules \n"
+"%s"
+msgstr ""
+
+#: models/res_config.py:625
+msgid "Only administrators can change the settings"
+msgstr "Endast administratörer kan ändra denna inställning"
+
+#: models/res_config.py:752
+msgid "Go to the configuration panel"
+msgstr "Gå till konfigurationspanelen"
+
+#: models/res_config.py:793
+msgid "Invalid template user. It seems it has been deleted."
+msgstr ""
+
+#: models/res_country.py:141
+msgid "The layout contains an invalid format key"
+msgstr ""
+
+#: models/res_country.py:152
+msgid "Base view"
+msgstr "Basvy"
+
+#: models/res_currency.py:173
+msgid "and"
+msgstr "and"
+
+#: models/res_currency.py:293
+#, python-format
+msgid "Unit per %s"
+msgstr ""
+
+#: models/res_currency.py:294
+#, python-format
+msgid "%s per Unit"
+msgstr ""
+
+#: models/res_currency.py:408
+msgid ""
+"The new rate is quite far from the previous rate.\n"
+"Incorrect currency rates may cause critical problems, make sure the rate is "
+"correct !"
+msgstr ""
+
+#: models/res_currency.py:428
+#, python-format
+msgid "%(rate_currency_name)s per %(company_currency_name)s"
+msgstr ""
+
+#: models/res_currency.py:429
+#, python-format
+msgid "%(company_currency_name)s per %(rate_currency_name)s"
+msgstr ""
+
+#: models/res_lang.py:72
+msgid "At least one language must be active."
+msgstr ""
+
+#: models/res_lang.py:80
+msgid ""
+"Invalid date/time format directive specified. Please refer to the list of "
+"allowed directives, displayed when you edit a language."
+msgstr ""
+
+#: models/res_lang.py:86
+msgid ""
+"The Separator Format should be like [,n] where 0 < n :starting from Unit "
+"digit. -1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
+"1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
+"106,500. Provided as the thousand separator in each case."
+msgstr ""
+
+#: models/res_lang.py:282
+msgid "Language code cannot be modified."
+msgstr ""
+
+#: models/res_lang.py:285
+msgid "Cannot deactivate a language that is currently used by users."
+msgstr ""
+
+#: models/res_lang.py:287
+msgid "Cannot deactivate a language that is currently used by contacts."
+msgstr ""
+
+#: models/res_lang.py:300
+msgid "Base Language 'en_US' can not be deleted."
+msgstr ""
+
+#: models/res_lang.py:303
+msgid "You cannot delete the language which is the user's preferred language."
+msgstr ""
+
+#: models/res_lang.py:305
+msgid ""
+"You cannot delete the language which is Active!\n"
+"Please de-activate the language first."
+msgstr ""
+"Du kan inte ta bort ett språk som är aktivt!\n"
+"Inaktivera språket först."
+
+#: models/res_lang.py:317
+#, python-format
+msgid "format() must be given exactly one %char format specifier"
+msgstr "format() måste vara exakt given %c"
+
+#: models/res_lang.py:341
+msgid ""
+"The languages that you selected have been successfully installed. Users can "
+"choose their favorite language in their preferences."
+msgstr ""
+
+#: models/res_partner.py:89
+msgid "You can not create recursive tags."
+msgstr ""
+
+#: models/res_partner.py:359
+msgid "You cannot create recursive Partner hierarchies."
+msgstr "Du kan inte skapa rekursiv företagsstrukturer."
+
+#: models/res_partner.py:378
+msgid ""
+"Changing the company of a contact should only be done if it was never "
+"correctly set. If an existing contact starts working for a new company then "
+"a new contact should be created under that new company. You can use the "
+"\"Discard\" button to abandon this change."
+msgstr ""
+
+#: models/res_partner.py:454
+msgid ""
+"One2Many fields cannot be synchronized as part of `commercial_fields` or "
+"`address fields`"
+msgstr ""
+
+#: models/res_partner.py:577
+#, python-format
+msgid ""
+"You cannot archive contacts linked to an active user.\n"
+"You first need to archive their associated user.\n"
+"\n"
+"Linked active users : %(names)s"
+msgstr ""
+
+#: models/res_partner.py:579 models/res_partner.py:648
+#, fuzzy
+msgid "Go to users"
+msgstr "Googleanvändare"
+
+#: models/res_partner.py:583
+#, python-format
+msgid ""
+"You cannot archive contacts linked to an active user.\n"
+"Ask an administrator to archive their associated user first.\n"
+"\n"
+"Linked active users :\n"
+"%(names)s"
+msgstr ""
+
+#: models/res_partner.py:646
+#, python-format
+msgid ""
+"You cannot delete contacts linked to an active user.\n"
+"You should rather archive them after archiving their associated user.\n"
+"\n"
+"Linked active users : %(names)s"
+msgstr ""
+
+#: models/res_partner.py:652
+#, python-format
+msgid ""
+"You cannot delete contacts linked to an active user.\n"
+"Ask an administrator to archive their associated user first.\n"
+"\n"
+"Linked active users :\n"
+"%(names)s"
+msgstr ""
+
+#: models/res_partner.py:811
+msgid "Couldn't create contact without email address!"
+msgstr "Kan inte skapa kontakt utan e-postadress!"
+
+#: models/res_partner.py:842
+msgid "An email is required for find_or_create to work"
+msgstr ""
+
+#: models/res_partner.py:846
+msgid "A valid email is required for find_or_create to work properly."
+msgstr ""
+
+#: models/res_partner.py:918
+#, fuzzy, python-format
+msgid "Partners: %(category)s"
+msgstr "Föräldrakategori"
+
+#: models/res_partner.py:977
+msgid "Import Template for Customers"
+msgstr ""
+
+#: models/res_users.py:96
+msgid "This method can only be accessed over HTTP"
+msgstr ""
+
+#: models/res_users.py:117
+#, fuzzy
+msgid "Security Control"
+msgstr "Säkerhet"
+
+#: models/res_users.py:212
+msgid "The name of the group can not start with \"-\""
+msgstr "Gruppens namn kan inte börja med \"-\""
+
+#: models/res_users.py:402
+msgid ""
+"Please use the change password wizard (in User Preferences or User menu) to "
+"change your own password."
+msgstr "Använd guiden Ändra Lösenord ( i menyn Användare)."
+
+#: models/res_users.py:464
+#, fuzzy, python-format
+msgid ""
+"Company %(company_name)s is not in the allowed companies for user "
+"%(user_name)s (%(company_allowed)s)."
+msgstr "Detta bolag är inte tillåtet för den här användaren"
+
+#: models/res_users.py:471
+msgid "The \"App Switcher\" action cannot be selected as home action."
+msgstr ""
+
+#: models/res_users.py:483
+msgid "The user cannot have more than one user types."
+msgstr ""
+
+#: models/res_users.py:533
+msgid "Invalid 'group by' parameter"
+msgstr "Felaktig 'Gruppera på'-parameter"
+
+#: models/res_users.py:541
+msgid "Invalid search criterion"
+msgstr ""
+
+#: models/res_users.py:557
+msgid "You cannot activate the superuser."
+msgstr ""
+
+#: models/res_users.py:559
+msgid "You cannot deactivate the user you're currently logged in as."
+msgstr ""
+
+#: models/res_users.py:611
+msgid ""
+"You can not remove the admin user as it is used internally for resources "
+"created by Odoo (updates, module installation, ...)"
+msgstr ""
+
+#: models/res_users.py:803
+msgid "Setting empty passwords is not allowed for security reasons!"
+msgstr "Att ha tomma lösenord är inte tillåtet av säkerhetskäl."
+
+#: models/res_users.py:864
+msgid "Users"
+msgstr "Användare"
+
+#: models/res_users.py:880
+msgid "Groups"
+msgstr "Grupper"
+
+#: models/res_users.py:892
+msgid "Access Rights"
+msgstr "Åtkomsträttigheter"
+
+#: models/res_users.py:904
+msgid "Record Rules"
+msgstr "Postregler"
+
+#: models/res_users.py:1010
+msgid "Too many login failures, please wait a bit before trying again."
+msgstr ""
+
+#: models/res_users.py:1560
+msgid "Other"
+msgstr ""
+
+#: models/res_users.py:1600
+msgid ""
+"Incorrect Password, try again or click on Forgot Password to reset your "
+"password."
+msgstr ""
+
+#: models/res_users.py:1647
+msgid "Before clicking on 'Change Password', you have to write a new password."
+msgstr ""
+
+#: models/res_users.py:1762
+msgid ""
+"You can not remove API keys unless they're yours or you are a system user"
+msgstr ""
+
+#: models/res_users.py:1826
+msgid "Only internal users can create API keys"
+msgstr ""
+
+#: wizard/base_export_language.py:19
+msgid "New Language (Empty translation template)"
+msgstr ""
+
+#: wizard/base_import_language.py:53
+#, python-format
+msgid ""
+"File %r not imported due to a malformed file.\n"
+"\n"
+"This issue can be caused by duplicates entries who are referring to the same "
+"field. Please check the content of the file you are trying to import.\n"
+"\n"
+"Technical Details:\n"
+"%s"
+msgstr ""
+
+#: wizard/base_import_language.py:60
+#, python-format
+msgid ""
+"File %r not imported due to format mismatch or a malformed file. (Valid "
+"formats are .csv, .po, .pot)\n"
+"\n"
+"Technical Details:\n"
+"%s"
+msgstr ""
+
+#: wizard/base_language_install.py:58
+msgid ""
+"The languages that you selected have been successfully "
+"installed.                            Users can choose their favorite "
+"language in their preferences."
+msgstr ""
+
+#: wizard/base_module_upgrade.py:67
+#, python-format
+msgid "The following modules are not installed or unknown: %s"
+msgstr ""
+
+#: wizard/base_partner_merge.py:305
+msgid ""
+"For safety reasons, you cannot merge more than 3 contacts together. You can "
+"re-open the wizard several times if needed."
+msgstr ""
+
+#: wizard/base_partner_merge.py:312
+msgid "You cannot merge a contact with one of his parent."
+msgstr ""
+
+#: wizard/base_partner_merge.py:315
+msgid ""
+"All contacts must have the same email. Only the Administrator can merge "
+"contacts with different emails."
+msgstr ""
+"Alla kontakter måste dela samma e-postadress. Endast administratören kan slå "
+"samman kontakter med skiljande e-postadresser."
+
+#: wizard/base_partner_merge.py:328
+msgid ""
+"Only the destination contact may be linked to existing Journal Items. Please "
+"ask the Administrator if you need to merge several contacts linked to "
+"existing Journal Items."
+msgstr ""
+
+#: wizard/base_partner_merge.py:412
+msgid "You have to specify a filter for your selection."
+msgstr ""
+
+#: wizard/base_update_translations.py:26
+#, python-format
+msgid "No language with code \"%s\" exists"
+msgstr "Inget språk med koden %s existerar"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Allow cashier to reprint receipts\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Tillåt kassör att skriva ut kvittokopia\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Overview:\n"
+#~ "---------\n"
+#~ "\n"
+#~ "* Chart of Accounts and Taxes template for companies in Japan.\n"
+#~ "* This probably does not cover all the necessary accounts for a company. "
+#~ "You are expected to add/delete/modify accounts based on this template.\n"
+#~ "\n"
+#~ "Note:\n"
+#~ "-----\n"
+#~ "\n"
+#~ "* Fiscal positions '内税' and '外税' have been added to handle special "
+#~ "requirements which might arise from POS implementation. [1]  You may not "
+#~ "need to use these at all under normal circumstances.\n"
+#~ "\n"
+#~ "[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Översikt:\n"
+#~ "---------\n"
+#~ "\n"
+#~ "* Kontoplaner och skatter mall för företag i Japan.\n"
+#~ "* Detta täcker förmodligen inte alla nödvändiga konton för ett bolag. Du "
+#~ "förväntas lägga till / ta bort / ändra konton baserat på denna mall.\n"
+#~ "\n"
+#~ "Notera:-----\n"
+#~ "* Fiscal positioner '内 税' och '外 税' har lagts till för att hantera "
+#~ "speciella krav som kan uppstå genom POS-implementering. [1] Du kanske "
+#~ "inte behöver använda dessa under normala förhållanden.\n"
+#~ "\n"
+#~ "[1] Se https://github.com/odoo/odoo/pull/6470 för detaljer."
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Revenue recognitions\n"
+#~ "====================\n"
+#~ "Manage revenue recognitions on product sales.\n"
+#~ "Keeps track of the revenue recognition installments, and creates "
+#~ "corresponding journal entries.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Intäktserkännanden\n"
+#~ "====================\n"
+#~ "Hantera erkännanden av intäkter på produktförsäljningar. \n"
+#~ "Övervakar intäkterna och skapar motsvarande\n"
+#~ "journalinlägg."
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "This module adds a custom Sales Channel for the point of sale to be able "
+#~ "to view and manage your point of sale sales with more ease.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Denna modul lägger till en anpassad säljkanal för kassan, för att ge dig "
+#~ "enklare hantering och överblick av kassaförsäljningen.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "This module adds several restaurant features to the Point of Sale:\n"
+#~ "- Bill Printing: Allows you to print a receipt before the order is paid\n"
+#~ "- Bill Splitting: Allows you to split an order into different orders\n"
+#~ "- Kitchen Order Printing: allows you to print orders updates to kitchen "
+#~ "or bar printers\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Denna modul lägger till flera restaurangfunktioner till kassan:\n"
+#~ "- Utskrift av nota: låter dig skriva ut ett kvitto innan ordern är "
+#~ "betald.\n"
+#~ "- Delning av nota: låter dig dela en order i flera.\n"
+#~ "- Utskrift av köksorder: låter dig skriva ut orderuppdatering till köket "
+#~ "eller baren.\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "This module allows the cashier to quickly give a percentage\n"
+#~ "sale discount to a customer.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Denna modul låter kassören ge en procentuell rabatt till kund.\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "This module allows you to define a loyalty program in\n"
+#~ "the point of sale, where the customers earn loyalty points\n"
+#~ "and get rewards.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Denna modul låter dig definiera ett lojalitetsprogram\n"
+#~ "i kassan, där kunder kan tjäna poäng och få bonusar.\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "[object with reference: %s - %s]"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "[objekt med referens: %s - %s]"
+
+#~ msgid ""
+#~ "\n"
+#~ "        - Allow to set project for Helpdesk team\n"
+#~ "        - Track timesheet for task from ticket\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ " - Låter supporten ange ett projekt\n"
+#~ " - Spåra tidrapport för aktivitet från ärende"
+
+#~ msgid ""
+#~ "\n"
+#~ "        A tax defined as python code consists in two snippets of python "
+#~ "code which are executed in a local environment containing data such as "
+#~ "the unit price, product or partner.\n"
+#~ "\n"
+#~ "        \"Applicable Code\" defines if the tax is to be applied.\n"
+#~ "\n"
+#~ "        \"Python Code\" defines the amount of the tax.\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "En skatt definieras som Python-kod består av två fragment av python kod "
+#~ "som körs i en lokal miljö som innehåller data såsom enhetspriset , "
+#~ "produkt eller partner.\n"
+#~ "\n"
+#~ "\" Tillämplig Kod \" definierar om skatten ska läggas till.\n"
+#~ "\n"
+#~ "\" Python Code \" definierar mängden av tax."
+
+#~ msgid ""
+#~ "\n"
+#~ "        Allows to use python code to define taxes"
+#~ msgstr ""
+#~ "\n"
+#~ "        Tillåter att använda python-kod för att definiera skatter"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Bill timesheets logged on helpdesk tickets.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "  Fakturera tid som loggats via supportärenden."
+
+#~ msgid ""
+#~ "\n"
+#~ "        Bridge between HR and Maintenance."
+#~ msgstr ""
+#~ "\n"
+#~ "        Brygga mellan HR och underhåll."
+
+#~ msgid ""
+#~ "\n"
+#~ "        Common drinks data for points of sale\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Vanliga dryckesdata för försäljningsställen"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Compute sales tax automatically using TaxCloud based on customer "
+#~ "address in United States.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Räkna automatiskt ut momsen med TaxCloud, baserat på kundens adress i USA."
+
+#~ msgid ""
+#~ "\n"
+#~ "        Electronic accounting reports\n"
+#~ "            - COA\n"
+#~ "            - Trial Balance\n"
+#~ "        DIOT Report\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Elektroniska bokföringsrapporter\n"
+#~ "  - COA\n"
+#~ "  - Försöksbalans\n"
+#~ " DIOT-rapport"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Enable a cache on products for a lower POS loading time."
+#~ msgstr ""
+#~ "\n"
+#~ "       Aktivera en cache på produkter för en kortare POS-laddningstid."
+
+#~ msgid ""
+#~ "\n"
+#~ "        Enable the SEPA features in the payments of expenses\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Aktivera SEPA-funktionen i betalning av utlägg"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Generate Electronic Invoice with Customs Number\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Generera en elektronisk faktura med tullens nummer"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Generate payment orders as recommended by the SEPA norm, thanks "
+#~ "to pain.001 messages. Supported pain version (countries) are "
+#~ "pain.001.001.03 (generic), pain.001.001.03.ch.02 (Switzerland) and "
+#~ "pain.001.003.03 (Germany). The generated XML file can then be uploaded to "
+#~ "your bank.\n"
+#~ "\n"
+#~ "        This module follow the implementation guidelines issued by the "
+#~ "European Payment Council.\n"
+#~ "        For more informations about the SEPA standards : http://www."
+#~ "iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Generera betalningsanmodan i enlighet med SEPA-normen, tack vara pain.001."
+#~ "messages. Den pain-version (länder) som stöds är pain.001.001.03 "
+#~ "(allmän), pain.001.001.03.ch.02 (Schweiz) och pain.001.003.03 (Tyskland). "
+#~ "Den genererade XML-filen kan sedan laddas upp till din bank.\n"
+#~ "\n"
+#~ "Denna modul följer implementationsriktlinjerna utfärdade av European "
+#~ "Payment Council.\n"
+#~ "För mer information om SEPA-standarder: http://www.iso20022.org/ and "
+#~ "http://www.europeanpaymentscouncil.eu/"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Make Call from all modules using the VOIP system."
+#~ msgstr ""
+#~ "\n"
+#~ "Ring samtal från alla moduler genom VOIP-system."
+
+#~ msgid ""
+#~ "\n"
+#~ "        Online Quotes for subscriptions products"
+#~ msgstr ""
+#~ "\n"
+#~ "Online-offerter för prenumerationsprodukter"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Print amount in words on checks issued for expenses\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Skriv ut belopp i ord på checkar utfärdade för utgifter"
+
+#~ msgid ""
+#~ "\n"
+#~ "        The purpose of this module is to implement \"sparse\" fields, i."
+#~ "e., fields\n"
+#~ "        that are mostly null. This implementation circumvents the "
+#~ "PostgreSQL\n"
+#~ "        limitation on the number of columns in a table. The values of all "
+#~ "sparse\n"
+#~ "        fields are stored in a \"serialized\" field in the form of a JSON "
+#~ "mapping.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Syftet med denna modul är att implementera \"sparse\"-fält, t.ex. fält\n"
+#~ "som är mest null. Denna implementation kringgår PostgreSQLs\n"
+#~ "begränsning på antalet kolumner i en tabell. Värdet på alla sparse-\n"
+#~ "fält lagras i ett \"steriliserat\" fält i formen av JSON."
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module adds support for barcodes scanning to the delivery "
+#~ "packages.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Denna modul lägger till stöd för scanning av streckkoder till paket."
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module adds support for barcodes scanning to the warehouse "
+#~ "management system.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Denna modul lägger till stöd för scanning av streckkoder till "
+#~ "lagerhanteringssystem."
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module is used for Online bank synchronization."
+#~ msgstr ""
+#~ "\n"
+#~ "Denna modul används för synkronisering mot onlinebank."
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module is used for Online bank synchronization. It provides "
+#~ "basic methods to synchronize bank statement.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Denna modul används för synkronisering mot onlinebank. Det "
+#~ "tillhandahåller grundläggande metoder att synkronisera kontoutdrag."
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module provides the core of the Odoo Mobile App.\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "Denna modul tillhandahåller grunden av Odoo mobil-app."
+
+#~ msgid ""
+#~ "\n"
+#~ "        Track equipment and manage maintenance requests."
+#~ msgstr ""
+#~ "\n"
+#~ "Spåra utrustning och hantera begäran om underhåll."
+
+#~ msgid ""
+#~ "\n"
+#~ "        Use Plaid.com to retrieve bank statements"
+#~ msgstr ""
+#~ "\n"
+#~ "Använd Plaid.com för att hämta kontoutdrag"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Use Plaid.com to retrieve bank statements.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Använd Plaid.com för att hämta kontoutdrag."
+
+#~ msgid ""
+#~ "\n"
+#~ "        Use interview forms during recruitment process.\n"
+#~ "        This module is integrated with the survey module\n"
+#~ "        to allow you to define interviews for different jobs.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Använd intervjuformulär under rekryteringsprocessen.\n"
+#~ "Denna modul är integrerad med undersökningsmodulen\n"
+#~ "för att låta dig definiera intervjuer för olika typer av tjänster."
+
+#~ msgid ""
+#~ "\n"
+#~ "  Publish your products on eBay"
+#~ msgstr ""
+#~ "\n"
+#~ "Publicera dina produkter på eBay"
+
+#~ msgid ""
+#~ "\n"
+#~ "Adds a reporting menu in products that computes sales, purchases, margins "
+#~ "and other interesting indicators based on invoices.\n"
+#~ "=============================================================================================================================\n"
+#~ "\n"
+#~ "The wizard to launch the report has several options to help you get the "
+#~ "data you need.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Lägger till en rapportmeny i produkter som beräknar försäljning, inköp, "
+#~ "marginaler och andra intressanta indikatorer som bygger på fakturor.\n"
+#~ "==============================================================================================================\n"
+#~ "\n"
+#~ "Guiden för att starta rapporten har flera alternativ för att hjälpa dig "
+#~ "att få den information du behöver.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Allow users to sign up and reset their password\n"
+#~ "===============================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Tillåt användare att registrera sig och återställa sitt lösenord\n"
+#~ "===============================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Ask questions, get answers, no distractions\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "Ställ frågor, få svar, inga distraktioner"
+
+#~ msgid ""
+#~ "\n"
+#~ "Delivery Costs\n"
+#~ "==============\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Transportkostnader\n"
+#~ "==============\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Our Team Page\n"
+#~ "=============\n"
+#~ "\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "Vår lagsida\n"
+#~ "==========\n"
+#~ "\n"
+#~ "        "
+
+#~ msgid "%A - Full weekday name."
+#~ msgstr "%A - Komplett veckodagsnamn"
+
+#~ msgid "%I - Hour (12-hour clock) [01,12].\""
+#~ msgstr "%I - Timme (12-timmarsklocka) [01,12].\""
+
+#~ msgid "%a - Abbreviated weekday name."
+#~ msgstr "%a - Förkortat veckodagnamn."
+
+#~ msgid "%b - Abbreviated month name."
+#~ msgstr "%b - Förkortat månadsnamn"
+
+#~ msgid ""
+#~ "'%s' contains too many dots. XML ids should not contain dots ! These are "
+#~ "used to refer to other modules data, as in module.reference_id"
+#~ msgstr ""
+#~ "'%s' innehåller för många punkter. XML-id:n ska inte innehålla några "
+#~ "punkter. Dessa används för att referera till moduldata, som i modul."
+#~ "referensid"
+
+#~ msgid "- groups ="
+#~ msgstr "- grupper ="
+
+#~ msgid ":B10    16  31 x 44 mm"
+#~ msgstr ":B10    16  31 x 44 mm"
+
+#~ msgid "<strong>Group</strong>"
+#~ msgstr "<strong>Groupp</strong>"
+
+#~ msgid "<strong>Idx</strong>"
+#~ msgstr "<strong>Idx</strong>"
+
+#~ msgid "<strong>Inherited</strong>"
+#~ msgstr "<strong>Ärvd</strong>"
+
+#~ msgid "<strong>Label</strong>"
+#~ msgstr "<strong>Etikett</strong>"
+
+#~ msgid "<strong>Menu :</strong>"
+#~ msgstr "<strong>Meny :</strong>"
+
+#~ msgid "<strong>Name</strong>"
+#~ msgstr "<strong>Namn</strong>"
+
+#~ msgid "<strong>Reports :</strong>"
+#~ msgstr "<strong>Raporter :</strong>"
+
+#~ msgid "<strong>Type</strong>"
+#~ msgstr "<strong>Typ</strong>"
+
+#~ msgid ""
+#~ "A group is a set of functional areas that will be assigned to the user in "
+#~ "order to give them access and rights to specific applications and tasks "
+#~ "in the system. You can create custom groups or edit the ones existing by "
+#~ "default in order to customize the view of the menu that users will be "
+#~ "able to see. Whether they can have a read, write, create and delete "
+#~ "access right can be managed from here."
+#~ msgstr ""
+#~ "En grupp är en mängd rättigheter som tilldelas en användare som gör det "
+#~ "möjligt att utföra specifika applikationer och uppgifter. Du kan skapa "
+#~ "anpassade grupper, eller redigare de befintliga för att anpassa den meny "
+#~ "användare ser. Deras möjilgheter att läsa, skriva, skapa och ta bort kan "
+#~ "hanteras här"
+
+#~ msgid "A user associated to the contact"
+#~ msgstr "En användare knuten till kontaten"
+
+#~ msgid "A0  5   841 x 1189 mm"
+#~ msgstr "A0  5   841 x 1189 mm"
+
+#~ msgid "A1  6   594 x 841 mm"
+#~ msgstr "A1  6   594 x 841 mm"
+
+#~ msgid "A2  7   420 x 594 mm"
+#~ msgstr "A2  7   420 x 594 mm"
+
+#~ msgid "A3  8   297 x 420 mm"
+#~ msgstr "A3  8   297 x 420 mm"
+
+#~ msgid "A4  0   210 x 297 mm, 8.26 x 11.69 inches"
+#~ msgstr "A4  0   210 x 297 mm, 8.26 x 11.69 inches"
+
+#~ msgid "A5  9   148 x 210 mm"
+#~ msgstr "A5  9   148 x 210 mm"
+
+#~ msgid "A6  10  105 x 148 mm"
+#~ msgstr "A6  10  105 x 148 mm"
+
+#~ msgid "A7  11  74 x 105 mm"
+#~ msgstr "A7  11  74 x 105 mm"
+
+#~ msgid "A8  12  52 x 74 mm"
+#~ msgstr "A8  12  52 x 74 mm"
+
+#~ msgid "A9  13  37 x 52 mm"
+#~ msgstr "A9  13  37 x 52 mm"
+
+#~ msgid "Accepted Users"
+#~ msgstr "Godkända användare"
+
+#~ msgid "Access"
+#~ msgstr "Åtkomst"
+
+#~ msgid "Access Controls"
+#~ msgstr "Behörighetskontroller"
+
+#~ msgid "Access Groups"
+#~ msgstr "Rättighetsgrupper"
+
+#~ msgid "Access Menu"
+#~ msgstr "Åtkomstmeny"
+
+#~ msgid "Account Charts"
+#~ msgstr "Kontoplan"
+
+#~ msgid "Account Holder"
+#~ msgstr "Kontoinnehavare"
+
+#~ msgid "Account No."
+#~ msgstr "Kontonummer"
+
+#~ msgid "Account Number"
+#~ msgstr "Kontonummer"
+
+#~ msgid "Accounting"
+#~ msgstr "Redovisning"
+
+#~ msgid "Accounting & Finance"
+#~ msgstr "Redovisning"
+
+#~ msgid "Accounting Reports"
+#~ msgstr "Redovisningsrapport"
+
+#~ msgid "Accounting and Finance"
+#~ msgstr "Bokföring"
+
+#~ msgid "Action"
+#~ msgstr "Åtgärd"
+
+#~ msgid "Action Name"
+#~ msgstr "Åtgärdsnamn"
+
+#~ msgid "Action Target"
+#~ msgstr "Händelsemål"
+
+#~ msgid "Action To Do"
+#~ msgstr "Åtgärd att utföra"
+
+#~ msgid "Action Type"
+#~ msgstr "Åtgärdstyp"
+
+#~ msgid "Action URL"
+#~ msgstr "Händelse-URL"
+
+#~ msgid "Actions"
+#~ msgstr "Åtgärder"
+
+#~ msgid "Active"
+#~ msgstr "Aktiv"
+
+#~ msgid "Add twitter scroller snippet in website builder"
+#~ msgstr "Lägg till twitter-block till webbplatsredigeraren"
+
+#~ msgid "Address Type"
+#~ msgstr "Adresstyp"
+
+#~ msgid "Administration"
+#~ msgstr "Administration"
+
+#~ msgid "Advanced Events"
+#~ msgstr "Avancerad Händelse"
+
+#~ msgid "Advanced Properties"
+#~ msgstr "Avancerade Egenskaper"
+
+#~ msgid "Affero GPL-3"
+#~ msgstr "Affero GPL-3"
+
+#~ msgid "Albania"
+#~ msgstr "Albanien"
+
+#~ msgid "Algeria"
+#~ msgstr "Algeriet"
+
+#~ msgid "All"
+#~ msgstr "Alla"
+
+#~ msgid "Allowed Companies"
+#~ msgstr "Tillåtna bolag"
+
+#~ msgid "Allows customization of a report."
+#~ msgstr "Tillåt rapportanpassningar"
+
+#~ msgid "American Samoa"
+#~ msgstr "Amerikanska Samoa"
+
+#~ msgid "Analytic Accounting"
+#~ msgstr "Objektsredovisning"
+
+#~ msgid "Angola"
+#~ msgstr "Angola"
+
+#~ msgid "Anguilla"
+#~ msgstr "Anguilla"
+
+#~ msgid "Antarctica"
+#~ msgstr "Antarktis"
+
+#~ msgid "Antigua and Barbuda"
+#~ msgstr "Antigua and Barbuda"
+
+#~ msgid "Application"
+#~ msgstr "Applikation"
+
+#~ msgid "Application Terms"
+#~ msgstr "Applikationstermer"
+
+#~ msgid "Apply"
+#~ msgstr "Verkställ"
+
+#~ msgid "Apply Scheduled Upgrades"
+#~ msgstr "Utför planerade uppgraderingar"
+
+#~ msgid "Appraisals"
+#~ msgstr "Utvärderingar"
+
+#~ msgid "Apps"
+#~ msgstr "Applikationer"
+
+#~ msgid "Apps To Export"
+#~ msgstr "Applikationer att exportera"
+
+#~ msgid "Apps to Update"
+#~ msgstr "Applikationer att uppgradera"
+
+#~ msgid "Apps:"
+#~ msgstr "Applikationer"
+
+#~ msgid "Architecture"
+#~ msgstr "Arkitektur"
+
+#~ msgid "Archived"
+#~ msgstr "Arkiverad"
+
+#~ msgid "Are you sure to execute the automatic merge of your contacts ?"
+#~ msgstr "Är du säker på att du vill sammanfoga dina kontakter automatiskt ?"
+
+#~ msgid ""
+#~ "Are you sure to execute the list of automatic merges of your contacts ?"
+#~ msgstr ""
+#~ "Är du säker på att du vill aktivera listan med automatiska "
+#~ "sammanslagningar av dina kontakter ?"
+
+#~ msgid "Argentina"
+#~ msgstr "Argentina"
+
+#~ msgid "Armenia"
+#~ msgstr "Armenien"
+
+#~ msgid "Aruba"
+#~ msgstr "Aruba"
+
+#~ msgid "Assets Management"
+#~ msgstr "Kapitalförvaltning (inventarier och finansiell)"
+
+#~ msgid "Associated reports"
+#~ msgstr "Associerade rapporter"
+
+#~ msgid "Associations Management"
+#~ msgstr "Organisationsadministration"
+
+#~ msgid "Attached To"
+#~ msgstr "Bifogad till"
+
+#~ msgid "Attachment"
+#~ msgstr "Bilaga"
+
+#~ msgid "Attachment Name"
+#~ msgstr "Namn på bifogat"
+
+#~ msgid "Attachments"
+#~ msgstr "Bilagor"
+
+#~ msgid "Attendance"
+#~ msgstr "Närvaro"
+
+#~ msgid "Attendances"
+#~ msgstr "Närvarande"
+
+#~ msgid "Australia"
+#~ msgstr "Australien"
+
+#~ msgid "Austria"
+#~ msgstr "Österrike"
+
+#~ msgid "Author"
+#~ msgstr "Upphovsman"
+
+#~ msgid "Author Name"
+#~ msgstr "Upphovsmans Namn"
+
+#~ msgid "Auto Search"
+#~ msgstr "Automatsökning"
+
+#~ msgid "Automated Action Rules"
+#~ msgstr "Automatiska åtgärdsregler"
+
+#~ msgid "Automatic Installation"
+#~ msgstr "Automatisk installation"
+
+#~ msgid "Automatic Merge Wizard"
+#~ msgstr "Guide för automatisk sammanslagning"
+
+#~ msgid "Azerbaijan"
+#~ msgstr "Azerbajdzjan"
+
+#~ msgid "B0  14  1000 x 1414 mm"
+#~ msgstr "B0  14  1000 x 1414 mm"
+
+#~ msgid "B1  15  707 x 1000 mm"
+#~ msgstr "B1  15  707 x 1000 mm"
+
+#~ msgid "B2  17  500 x 707 mm"
+#~ msgstr "B2  17  500 x 707 mm"
+
+#~ msgid "B3  18  353 x 500 mm"
+#~ msgstr "B3  18  353 x 500 mm"
+
+#~ msgid "B4  19  250 x 353 mm"
+#~ msgstr "B4  19  250 x 353 mm"
+
+#~ msgid "B5  1   176 x 250 mm, 6.93 x 9.84 inches"
+#~ msgstr "B5  1   176 x 250 mm, 6.93 x 9.84 inches"
+
+#~ msgid "B6  20  125 x 176 mm"
+#~ msgstr "B6  20  125 x 176 mm"
+
+#~ msgid "B7  21  88 x 125 mm"
+#~ msgstr "B7  21  88 x 125 mm"
+
+#~ msgid "B8  22  62 x 88 mm"
+#~ msgstr "B8  22  62 x 88 mm"
+
+#~ msgid "B9  23  33 x 62 mm"
+#~ msgstr "B9  23  33 x 62 mm"
+
+#~ msgid "Background"
+#~ msgstr "Bakgrund"
+
+#~ msgid "Bahamas"
+#~ msgstr "Bahamas"
+
+#~ msgid "Bahrain"
+#~ msgstr "Bahrain"
+
+#~ msgid "Bangladesh"
+#~ msgstr "Bangladesh"
+
+#~ msgid "Bank"
+#~ msgstr "Bank"
+
+#~ msgid "Bank Accounts"
+#~ msgstr "Bankkonton"
+
+#~ msgid "Bank Identifier Code"
+#~ msgstr "Bankidentifieringskod"
+
+#~ msgid "Bank Name"
+#~ msgstr "Bankens namn"
+
+#~ msgid "Bank account"
+#~ msgstr "Bankkonto"
+
+#~ msgid "Bank accounts related to this company"
+#~ msgstr "Bankkonton tillhörande detta bolag"
+
+#~ msgid "Banks"
+#~ msgstr "Banker"
+
+#~ msgid "Barbados"
+#~ msgstr "Barbados"
+
+#~ msgid "Barcode"
+#~ msgstr "Streckkod"
+
+#~ msgid "Base"
+#~ msgstr "Bas"
+
+#~ msgid "Base Field"
+#~ msgstr "Basfält"
+
+#~ msgid "Base Object"
+#~ msgstr "Basobjekt"
+
+#~ msgid "Belarus"
+#~ msgstr "Vitryssland"
+
+#~ msgid "Belgium"
+#~ msgstr "Belgien"
+
+#~ msgid "Belize"
+#~ msgstr "Belize"
+
+#~ msgid "Benin"
+#~ msgstr "Benin"
+
+#~ msgid "Bermuda"
+#~ msgstr "Bermudasöarna"
+
+#~ msgid "Bhutan"
+#~ msgstr "Bhutan"
+
+#~ msgid "Binary"
+#~ msgstr "Binär"
+
+#~ msgid "Blogs"
+#~ msgstr "Bloggar"
+
+#~ msgid "Bolivia"
+#~ msgstr "Bolivia"
+
+#~ msgid "Boolean"
+#~ msgstr "Boolean"
+
+#~ msgid "Botswana"
+#~ msgstr "Botswana"
+
+#~ msgid "Bottom Margin (mm)"
+#~ msgstr "Fotmarginal (mm)"
+
+#~ msgid "Bouvet Island"
+#~ msgstr "Bouvetön"
+
+#~ msgid "Brazil"
+#~ msgstr "Brasilien"
+
+#~ msgid "British Indian Ocean Territory"
+#~ msgstr "Brittiskt territorium i Indiska Oceanen"
+
+#~ msgid "Brunei Darussalam"
+#~ msgstr "Brunei Darussalam"
+
+#~ msgid "Bulgaria"
+#~ msgstr "Bulgaria"
+
+#~ msgid "Burkina Faso"
+#~ msgstr "Burkina Faso"
+
+#~ msgid "Burundi"
+#~ msgstr "Burundi"
+
+#~ msgid "By"
+#~ msgstr "Av"
+
+#~ msgid "C5E 24  163 x 229 mm"
+#~ msgstr "C5E 24  163 x 229 mm"
+
+#~ msgid "CRM"
+#~ msgstr "Säljstöd (CRM)"
+
+#~ msgid "CSV File"
+#~ msgstr "CSV-Fil"
+
+#~ msgid "Calendar"
+#~ msgstr "Kalender"
+
+#~ msgid "Cameroon"
+#~ msgstr "Kamerun"
+
+#~ msgid "Canada"
+#~ msgstr "Kanada"
+
+#~ msgid "Cancel"
+#~ msgstr "Avbryt"
+
+#~ msgid "Cancel Install"
+#~ msgstr "Avbryt installationen"
+
+#~ msgid "Cancel Uninstall"
+#~ msgstr "Avbryt avinstallation"
+
+#~ msgid "Cancel Upgrade"
+#~ msgstr "Avbryt uppgradering"
+
+#~ msgid "Cape Verde"
+#~ msgstr "Kap Verde"
+
+#~ msgid "Cascade"
+#~ msgstr "Kaskad"
+
+#~ msgid "Category"
+#~ msgstr "Kategori"
+
+#~ msgid "Cayman Islands"
+#~ msgstr "Caymanöarna"
+
+#~ msgid "Central African Republic"
+#~ msgstr "Centralafrikanska Republiken"
+
+#~ msgid "Chad"
+#~ msgstr "Tchad"
+
+#~ msgid "Change My Preferences"
+#~ msgstr "Ändra mina inställningar"
+
+#~ msgid "Change Password"
+#~ msgstr "Ändra lösenord"
+
+#~ msgid "Change password"
+#~ msgstr "Ändra lösenord"
+
+#~ msgid "Char"
+#~ msgstr "Tecken"
+
+#~ msgid "Chat With Your Website Visitors"
+#~ msgstr "Chatta med webbplatsens besökare"
+
+#~ msgid "Check if the contact is a company, otherwise it is a person"
+#~ msgstr "Sätt kryss om kontakten är ett bolag, annars är det en person"
+
+#~ msgid "Check this box if this contact is an Employee."
+#~ msgstr "Markera här om kontakten är en anställd"
+
+#~ msgid "Child Applications"
+#~ msgstr "Underkategori"
+
+#~ msgid "Child Companies"
+#~ msgstr "Dotterbolag"
+
+#~ msgid "Child Field"
+#~ msgstr "Underfält"
+
+#~ msgid "Chile"
+#~ msgstr "Chile"
+
+#~ msgid "China"
+#~ msgstr "Kina"
+
+#~ msgid "Christmas Island"
+#~ msgstr "Julön"
+
+#~ msgid "City"
+#~ msgstr "Stad"
+
+#~ msgid "Click on Update below to start the process..."
+#~ msgstr "Klicka på \"Uppdatera\" nedan för att starta bearbetningen..."
+
+#~ msgid "Client"
+#~ msgstr "Klient"
+
+#~ msgid "Close"
+#~ msgstr "Stäng"
+
+#~ msgid "Cocos (Keeling) Islands"
+#~ msgstr "Kokosöarna"
+
+#~ msgid "Code"
+#~ msgstr "Kod"
+
+#~ msgid "Colombia"
+#~ msgstr "Colombia"
+
+#~ msgid "Color Index"
+#~ msgstr "Färgindex"
+
+#~ msgid "Column 1"
+#~ msgstr "Kolumn 1"
+
+#~ msgid "Column 2"
+#~ msgstr "Kolumn 2"
+
+#~ msgid "Comm10E 25  105 x 241 mm, U.S. Common 10 Envelope"
+#~ msgstr "Comm10E 25  105 x 241 mm, U.S. Common 10 Envelope"
+
+#~ msgid ""
+#~ "Comma-separated list of allowed view modes, such as 'form', 'tree', "
+#~ "'calendar', etc. (Default: tree,form)"
+#~ msgstr ""
+#~ "Komma-separerad lista över godkända vymoder som t ex 'form', 'tree', "
+#~ "'calendar', etc. (Standard: tree,form)"
+
+#~ msgid "Comments"
+#~ msgstr "Kommentarer"
+
+#~ msgid "Commercial Entity"
+#~ msgstr "Kommersiell entitet"
+
+#~ msgid "Common Drinks data for points of sale"
+#~ msgstr "Vanliga dryckesdata för kassa"
+
+#~ msgid "Communication"
+#~ msgstr "OCR / Meddelande rad 1"
+
+#~ msgid "Companies"
+#~ msgstr "Bolag"
+
+#~ msgid "Companies count"
+#~ msgstr "Företag mängd"
+
+#~ msgid "Company Logo"
+#~ msgstr "Bolagslogo"
+
+#~ msgid "Company Name"
+#~ msgstr "Bolagsnamn"
+
+#~ msgid "Company Properties"
+#~ msgstr "företag Egenskaper"
+
+#~ msgid "Company Registry"
+#~ msgstr "Organisationsnummer"
+
+#~ msgid "Company Tagline"
+#~ msgstr "Bolagets slagord"
+
+#~ msgid "Company Type"
+#~ msgstr "Företags Typ"
+
+#~ msgid "Complete Address"
+#~ msgstr "Fullständig Adress"
+
+#~ msgid "Complete ID"
+#~ msgstr "Fullständigt ID"
+
+#~ msgid "Complete Name"
+#~ msgstr "Fullständigt namn"
+
+#~ msgid "Compute"
+#~ msgstr "Beräkna"
+
+#~ msgid "Condition"
+#~ msgstr "Villkor"
+
+#~ msgid "Config Wizard Steps"
+#~ msgstr "Konfigurera guidesteg"
+
+#~ msgid "Configuration"
+#~ msgstr "Konfiguration"
+
+#~ msgid "Configuration Wizards"
+#~ msgstr "Konfiggurationsguide"
+
+#~ msgid "Confirm"
+#~ msgstr "Bekräfta"
+
+#~ msgid "Congo"
+#~ msgstr "Kongo"
+
+#~ msgid "Constraint"
+#~ msgstr "Villkor"
+
+#~ msgid "Contact"
+#~ msgstr "Kontakt"
+
+#~ msgid "Contact / Address"
+#~ msgstr "Kontakt / Adress"
+
+#~ msgid "Contact Creation"
+#~ msgstr "Skapa kontakter"
+
+#~ msgid "Contact Form"
+#~ msgstr "Kontaktformulär"
+
+#~ msgid "Contact Name"
+#~ msgstr "Kontaktnamn"
+
+#~ msgid "Contact Tag"
+#~ msgstr "Kontakt Tag"
+
+#~ msgid "Contact Tags"
+#~ msgstr "Kontakt Taggar"
+
+#~ msgid "Contact Titles"
+#~ msgstr "Kontakttitlar"
+
+#~ msgid "Contacts"
+#~ msgstr "Kontakter"
+
+#~ msgid "Contacts & Addresses"
+#~ msgstr "Kontakter & Adresser"
+
+#~ msgid "Contacts Directory"
+#~ msgstr "Kontakt Katalog"
+
+#~ msgid "Context"
+#~ msgstr "Innehåll"
+
+#~ msgid "Context Value"
+#~ msgstr "Kontextvärde"
+
+#~ msgid "Contracts"
+#~ msgstr "Avtal"
+
+#~ msgid "Contributors"
+#~ msgstr "Bidragsgivare"
+
+#~ msgid "Cook Islands"
+#~ msgstr "Cooköarna"
+
+#~ msgid "Copied"
+#~ msgstr "Kopierad"
+
+#~ msgid "Costa Rica"
+#~ msgstr "Costa Rica"
+
+#~ msgid "Countries"
+#~ msgstr "Länder"
+
+#~ msgid "Country"
+#~ msgstr "Land"
+
+#~ msgid "Country Calling Code"
+#~ msgstr "Landskod"
+
+#~ msgid "Country Code"
+#~ msgstr "Landskod"
+
+#~ msgid "Country Group"
+#~ msgstr "Landsgrupp"
+
+#~ msgid "Country Groups"
+#~ msgstr "Landsgrupp"
+
+#~ msgid "Country Name"
+#~ msgstr "Land"
+
+#~ msgid "Country state"
+#~ msgstr "Län/delstat"
+
+#~ msgid "Create Access"
+#~ msgstr "Skapa åtkomst"
+
+#~ msgid "Create Access Right"
+#~ msgstr "Skapa rättigheter"
+
+#~ msgid "Create Date"
+#~ msgstr "Skapat datum"
+
+#~ msgid "Create Menu"
+#~ msgstr "Skapa meny"
+
+#~ msgid "Create _Menu"
+#~ msgstr "Skapa _Meny"
+
+#~ msgid "Create a Menu"
+#~ msgstr "Skapa en meny"
+
+#~ msgid "Create a new contact tag"
+#~ msgstr "Skapa ny kontakt tag"
+
+#~ msgid ""
+#~ "Create and manage users that will connect to the system. Users can be "
+#~ "deactivated should there be a period of time during which they will/"
+#~ "should not connect to the system. You can assign them groups in order to "
+#~ "give them specific access to the applications they need to use in the "
+#~ "system."
+#~ msgstr ""
+#~ "Skapa och hantera användare. Användare  kan bl a deaktiveras och genom "
+#~ "tilldelas grupper ges åtkomst till olika delar av systemet."
+
+#~ msgid "Create company"
+#~ msgstr "Skapa Företag"
+
+#~ msgid "Created Menus"
+#~ msgstr "Skapade menyer"
+
+#~ msgid "Created Views"
+#~ msgstr "Skapade vyer"
+
+#~ msgid "Created by"
+#~ msgstr "Skapad av"
+
+#~ msgid "Created on"
+#~ msgstr "Skapad den"
+
+#~ msgid "Creation"
+#~ msgstr "Skapa"
+
+#~ msgid "Creation Date"
+#~ msgstr "Registeringsdatum"
+
+#~ msgid "Credit Limit"
+#~ msgstr "Kreditgräns"
+
+#~ msgid "Croatia"
+#~ msgstr "Kroatien"
+
+#~ msgid "Cuba"
+#~ msgstr "Kuba"
+
+#~ msgid "Currencies"
+#~ msgstr "Valutor"
+
+#~ msgid "Currency Rate"
+#~ msgstr "Kurs"
+
+#~ msgid "Currency Rates"
+#~ msgstr "Valutakurs"
+
+#~ msgid "Current Company"
+#~ msgstr "Aktuellt Företag"
+
+#~ msgid "Current Line"
+#~ msgstr "Aktuell rad"
+
+#~ msgid "Current Rate"
+#~ msgstr "Aktuell kurs"
+
+#~ msgid "Current Window"
+#~ msgstr "Aktuellt fönster"
+
+#~ msgid "Current Year with Century: %(year)s"
+#~ msgstr "Nuvarande år med sekel: %(year)s"
+
+#~ msgid "Current Year without Century: %(y)s"
+#~ msgstr "Aktuellt år utan århundrade: %(y)s"
+
+#~ msgid "Custom"
+#~ msgstr "Anpassad"
+
+#~ msgid "Custom Field"
+#~ msgstr "Anpassade fält"
+
+#~ msgid "Custom Object"
+#~ msgstr "Skräddarsytt objekt"
+
+#~ msgid "Custom Shortcuts"
+#~ msgstr "Anpassade genvägar"
+
+#~ msgid "Customer References"
+#~ msgstr "Kundreferens"
+
+#~ msgid "Customers"
+#~ msgstr "Kunder"
+
+#~ msgid "Customers, Vendors, Partners,..."
+#~ msgstr "Kontakter, Återförsäljare, Partners"
+
+#~ msgid "Customized Views"
+#~ msgstr "Anpassade vyer"
+
+#~ msgid ""
+#~ "Customized views are used when users reorganize the content of their "
+#~ "dashboard views (via web client)"
+#~ msgstr ""
+#~ "Anpassade vyer används när användare organiserar om sina infopaneler (via "
+#~ "webb-klienten)."
+
+#~ msgid "Cyprus"
+#~ msgstr "Cypern"
+
+#~ msgid "Czech Republic"
+#~ msgstr "Tjeckien"
+
+#~ msgid "DLE 26 110 x 220 mm"
+#~ msgstr "DLE 26 110 x 220 mm"
+
+#~ msgid "Dashboards"
+#~ msgstr "Infopaneler"
+
+#~ msgid "Database"
+#~ msgstr "Databas"
+
+#~ msgid "Database Anonymization"
+#~ msgstr "Databas-anonymisering"
+
+#~ msgid "Database Data"
+#~ msgstr "Databas Data"
+
+#~ msgid "Database Name"
+#~ msgstr "Databasnamn"
+
+#~ msgid "Database Structure"
+#~ msgstr "Databasstruktur"
+
+#~ msgid "Date Created"
+#~ msgstr "Datum Skapad"
+
+#~ msgid "DateTime"
+#~ msgstr "Datum/Tid"
+
+#~ msgid "Day: %(day)s"
+#~ msgstr "Dagar: %(dag)ar"
+
+#~ msgid "Days"
+#~ msgstr "Dagar"
+
+#~ msgid "Decimal Precision Configuration"
+#~ msgstr "Decimal precision konfiguration"
+
+#~ msgid "Decimal Separator"
+#~ msgstr "Decimalseparator"
+
+#~ msgid "Deduplicate Contacts"
+#~ msgstr "Sammanfoga kontakter"
+
+#~ msgid "Deduplicate the other Contacts"
+#~ msgstr "Sammanfoga den andra kontakten"
+
+#~ msgid "Default Theme"
+#~ msgstr "Standardtema"
+
+#~ msgid "Default limit for the list view"
+#~ msgstr "Standardgräns för listvyn"
+
+#~ msgid "Default paper format ?"
+#~ msgstr "Standardpappersformat?"
+
+#~ msgid "Defined Reports"
+#~ msgstr "Definerade rapporter"
+
+#~ msgid "Definition"
+#~ msgstr "Definition"
+
+#~ msgid "Delete Access"
+#~ msgstr "Ta bort tillgång"
+
+#~ msgid "Delivery Costs"
+#~ msgstr "Leveranskostnad"
+
+#~ msgid "Demo Data"
+#~ msgstr "Demodata"
+
+#~ msgid "Denmark"
+#~ msgstr "Danmark"
+
+#~ msgid "Dependencies"
+#~ msgstr "Beroenden"
+
+#~ msgid "Dependency"
+#~ msgstr "Beroende"
+
+#~ msgid "Description"
+#~ msgstr "Beskrivning"
+
+#~ msgid "Design, send and track emails"
+#~ msgstr "Skapa, skicka och följ upp e-post"
+
+#~ msgid "Destination Contact"
+#~ msgstr "Mottagande kontakt"
+
+#~ msgid "Diagram"
+#~ msgstr "Diagram"
+
+#~ msgid "Directory"
+#~ msgstr "Katalog"
+
+#~ msgid "Discard"
+#~ msgstr "Ignorera"
+
+#~ msgid "Discuss"
+#~ msgstr "Diskutera"
+
+#~ msgid "Discussions, Mailing Lists, News"
+#~ msgstr "Diskussioner, E-post Listor, Nyheter"
+
+#~ msgid "Display"
+#~ msgstr "Visa"
+
+#~ msgid ""
+#~ "Display and manage the list of all countries that can be assigned to your "
+#~ "partner records. You can create or delete countries to make sure the ones "
+#~ "you are working on will be maintained."
+#~ msgstr ""
+#~ "Visa och hantera listan av alla länder som kan bli tilldelade dina "
+#~ "företagsuppgifter. Du kan skapa eller ta bort länder så att du är säker "
+#~ "på att de som du jobbar på kommer att underhållas."
+
+#~ msgid "Djibouti"
+#~ msgstr "Djibouti"
+
+#~ msgid "Doctor"
+#~ msgstr "Doktor"
+
+#~ msgid "Document"
+#~ msgstr "Dokument"
+
+#~ msgid "Document Management"
+#~ msgstr "Document Management"
+
+#~ msgid "Document model"
+#~ msgstr "Dokument modell"
+
+#~ msgid "Documentation"
+#~ msgstr "Dokumentation"
+
+#~ msgid "Domain"
+#~ msgstr "Domän"
+
+#~ msgid "Domain Value"
+#~ msgstr "Domänvärde"
+
+#~ msgid "Dominica"
+#~ msgstr "Dominikanska republiken"
+
+#~ msgid "Dominican Republic"
+#~ msgstr "Dominikanska Republiken"
+
+#~ msgid "Done"
+#~ msgstr "Klar"
+
+#~ msgid "Drop Shipping"
+#~ msgstr "Direktleverans"
+
+#~ msgid "Ecuador"
+#~ msgstr "Ecuador"
+
+#~ msgid "Edit Translations"
+#~ msgstr "Redigera Översättningar"
+
+#~ msgid "Education"
+#~ msgstr "Utbildning"
+
+#~ msgid "Egypt"
+#~ msgstr "Egypten"
+
+#~ msgid "El Salvador"
+#~ msgstr "El Salvador"
+
+#~ msgid "Email Address"
+#~ msgstr "E-postadress"
+
+#~ msgid "Email Gateway"
+#~ msgstr "E-postbrygga"
+
+#~ msgid "Email Preferences"
+#~ msgstr "E-postinställningar"
+
+#~ msgid "Employee"
+#~ msgstr "Anställd"
+
+#~ msgid "Employee Contracts"
+#~ msgstr "Anställningskontrakt"
+
+#~ msgid "Employee Directory"
+#~ msgstr "Katalog över anställda"
+
+#~ msgid "Employees"
+#~ msgstr "Anställda"
+
+#~ msgid "Equatorial Guinea"
+#~ msgstr "Ekvatorialguinea"
+
+#~ msgid "Eritrea"
+#~ msgstr "Eritrea"
+
+#~ msgid "Estonia"
+#~ msgstr "Estland"
+
+#~ msgid "Ethiopia"
+#~ msgstr "Etiopien"
+
+#~ msgid "Europe"
+#~ msgstr "Europa"
+
+#~ msgid "Events"
+#~ msgstr "Arrangemang"
+
+#~ msgid "Events Organization"
+#~ msgstr "Evenemangs organisering"
+
+#~ msgid "Events Sales"
+#~ msgstr "Evenemang Försäljning"
+
+#~ msgid "Examples"
+#~ msgstr "Exempel"
+
+#~ msgid "Exclude contacts having"
+#~ msgstr "Exkludera kontakter med"
+
+#~ msgid "Execution"
+#~ msgstr "Exekvering"
+
+#~ msgid "Executive 4   7.5 x 10 inches, 190.5 x 254 mm"
+#~ msgstr "Executive 4   7.5 x 10 inches, 190.5 x 254 mm"
+
+#~ msgid "Expenses"
+#~ msgstr "Kostnader"
+
+#~ msgid "Export"
+#~ msgstr "Exportera"
+
+#~ msgid "Export Complete"
+#~ msgstr "Export slutförd"
+
+#~ msgid "Export ID"
+#~ msgstr "Exportid"
+
+#~ msgid "Export Name"
+#~ msgstr "Export namn"
+
+#~ msgid "Export Settings"
+#~ msgstr "Exportinställningar"
+
+#~ msgid "Export Translation"
+#~ msgstr "Exportera översättning"
+
+#~ msgid "Export Translations"
+#~ msgstr "Exportera översättningar"
+
+#~ msgid "External ID"
+#~ msgstr "Externt ID"
+
+#~ msgid "External Identifier"
+#~ msgstr "Externt ID"
+
+#~ msgid "External Identifiers"
+#~ msgstr "Externa identiteter"
+
+#~ msgid "Extra"
+#~ msgstr "Extra"
+
+#~ msgid "Extra Rights"
+#~ msgstr "Extra Rättigheter"
+
+#~ msgid "Extra Tools"
+#~ msgstr "Extraverktyg"
+
+#~ msgid "Falkland Islands"
+#~ msgstr "Falklandsöarna"
+
+#~ msgid "Faroe Islands"
+#~ msgstr "Färöarna"
+
+#~ msgid "Fed. State"
+#~ msgstr "Fed. Stat"
+
+#~ msgid "Fed. States"
+#~ msgstr "Fed. Stater"
+
+#~ msgid "Field"
+#~ msgstr "Fält"
+
+#~ msgid "Field Help"
+#~ msgstr "Fält Hjälp"
+
+#~ msgid "Field Label"
+#~ msgstr "Fält ledtext"
+
+#~ msgid "Field Mappings"
+#~ msgstr "Fältmappning"
+
+#~ msgid "Field Name"
+#~ msgstr "Fältnamn"
+
+#~ msgid "Field Type"
+#~ msgstr "Fälttyp"
+
+#~ msgid "Fields"
+#~ msgstr "Fält"
+
+#~ msgid "Fields Description"
+#~ msgstr "Fältbeskrivningar"
+
+#~ msgid "Fiji"
+#~ msgstr "Fiji"
+
+#~ msgid "File Content"
+#~ msgstr "Filinnehåll"
+
+#~ msgid "File Format"
+#~ msgstr "Filformat"
+
+#~ msgid "File Name"
+#~ msgstr "Filnamn"
+
+#~ msgid "File Size"
+#~ msgstr "File Size"
+
+#~ msgid "Filter"
+#~ msgstr "Filtrera"
+
+#~ msgid "Filter Name"
+#~ msgstr "Filternamn"
+
+#~ msgid "Filter names must be unique"
+#~ msgstr "Filter namn måste vara unika"
+
+#~ msgid "Filter on my documents"
+#~ msgstr "Filtrera på mina dokument"
+
+#~ msgid "Filters"
+#~ msgstr "Filter"
+
+#~ msgid "Filters created by myself"
+#~ msgstr "Filter skapade av mig"
+
+#~ msgid "Filters shared with all users"
+#~ msgstr "Filter skapade av alla användare"
+
+#~ msgid "Filters visible only for one user"
+#~ msgstr "Filter synligt endast för en användare"
+
+#~ msgid "Financial and Analytic Accounting"
+#~ msgstr "Finansiell och analytisk bokföring"
+
+#~ msgid "Finished"
+#~ msgstr "Klart"
+
+#~ msgid "Finland"
+#~ msgstr "Finland"
+
+#~ msgid "Float"
+#~ msgstr "Flyttal"
+
+#~ msgid "Folio 27  210 x 330 mm"
+#~ msgstr "Folio 27  210 x 330 mm"
+
+#~ msgid "Footer text displayed at the bottom of all reports."
+#~ msgstr "Text som visas i foten på alla rapporter. "
+
+#~ msgid "For relationship fields, the technical name of the target model"
+#~ msgstr "För fät som anger relationer, det tekniska namet får målmodellen."
+
+#~ msgid "Format email address \"Name <email@domain>\""
+#~ msgstr "Format epost adress \"Namn <email@domän.se>\""
+
+#~ msgid "Formatted Email"
+#~ msgstr "Formaterad Epost"
+
+#~ msgid "Forum"
+#~ msgstr "Forum"
+
+#~ msgid "Forum, Documentation"
+#~ msgstr "Forum, Dokumentation"
+
+#~ msgid "France"
+#~ msgstr "France"
+
+#~ msgid "French Southern Territories"
+#~ msgstr "Franska sydterritorierna"
+
+#~ msgid "Friday"
+#~ msgstr "Fredag"
+
+#~ msgid "From"
+#~ msgstr "Från"
+
+#~ msgid "Full Access"
+#~ msgstr "Full åtkomst"
+
+#~ msgid "Full Access Right"
+#~ msgstr "Full Åtkomst Rättighet"
+
+#~ msgid "Full Name"
+#~ msgstr "Fullständigt namn"
+
+#~ msgid "Full Path"
+#~ msgstr "Fullständig sökväg"
+
+#~ msgid "Full Screen"
+#~ msgstr "Fullskärm"
+
+#~ msgid "Function"
+#~ msgstr "Funktion"
+
+#~ msgid "GPL Version 2"
+#~ msgstr "GPL Version 2"
+
+#~ msgid "GPL Version 3"
+#~ msgstr "GPL Version 3"
+
+#~ msgid "GPL-2 or later version"
+#~ msgstr "GPL-2 eller senare version"
+
+#~ msgid "GPL-3 or later version"
+#~ msgstr "GPL-3 eller senare version"
+
+#~ msgid "Gabon"
+#~ msgstr "Gabon"
+
+#~ msgid "Gambia"
+#~ msgstr "Gambia"
+
+#~ msgid "Gamification"
+#~ msgstr "Spelifikation"
+
+#~ msgid "Gantt"
+#~ msgstr "Gantt"
+
+#~ msgid "General"
+#~ msgstr "Allmänt"
+
+#~ msgid "General Information"
+#~ msgstr "Allmän information"
+
+#~ msgid "General Settings"
+#~ msgstr "Globala inställningar"
+
+#~ msgid "Generic"
+#~ msgstr "Generell"
+
+#~ msgid "Generic - Accounting"
+#~ msgstr "Allmän bokföring"
+
+#~ msgid "Georgia"
+#~ msgstr "Georgien"
+
+#~ msgid "Germany"
+#~ msgstr "Tyskland"
+
+#~ msgid "Ghana"
+#~ msgstr "Ghana"
+
+#~ msgid "Gibraltar"
+#~ msgstr "Gibraltar"
+
+#~ msgid "Global"
+#~ msgstr "Global"
+
+#~ msgid "Google Calendar"
+#~ msgstr "Google Calendar"
+
+#~ msgid "Google Drive™ integration"
+#~ msgstr "Google Drive™ integration"
+
+#~ msgid "Google Spreadsheet"
+#~ msgstr "Google Spreadsheet"
+
+#~ msgid "Graph"
+#~ msgstr "Diagram"
+
+#~ msgid "Greece"
+#~ msgstr "Greece"
+
+#~ msgid "Greenland"
+#~ msgstr "Grönland"
+
+#~ msgid "Grenada"
+#~ msgstr "Grenada"
+
+#~ msgid "Grid"
+#~ msgstr "Matris"
+
+#~ msgid "Group"
+#~ msgstr "Gruppera"
+
+#~ msgid "Group By"
+#~ msgstr "Gruppera på"
+
+#~ msgid "Group Name"
+#~ msgstr "Gruppnamn"
+
+#~ msgid "Group name"
+#~ msgstr "Gruppnamn"
+
+#~ msgid "Group of Contacts"
+#~ msgstr "Grupp av kontakter"
+
+#~ msgid "Groups (no group = global)"
+#~ msgstr "Grupper (ingen grupp = global)"
+
+#~ msgid "Guatemala"
+#~ msgstr "Guatemala"
+
+#~ msgid "Guinea"
+#~ msgstr "Guinea"
+
+#~ msgid "Guyana"
+#~ msgstr "Guyana"
+
+#~ msgid "HTML"
+#~ msgstr "HTML"
+
+#~ msgid "HTTP routing"
+#~ msgstr "HTTP-rutt"
+
+#~ msgid "Haiti"
+#~ msgstr "Haiti"
+
+#~ msgid "Help"
+#~ msgstr "Hjälp"
+
+#~ msgid "Helpdesk"
+#~ msgstr "Kundtjänst"
+
+#~ msgid "Helps you manage the timesheets."
+#~ msgstr "Hjälper dig att hantera dina tidsscheman"
+
+#~ msgid "Helps you manage your Events."
+#~ msgstr "Hjälper dig att hantera dina evenemang."
+
+#~ msgid "Helps you manage your expenses."
+#~ msgstr "Hjälper dig att hantera dina utlägg"
+
+#~ msgid "Helps you manage your payrolls."
+#~ msgstr "Hjälper dig att hantera dina lönelistor"
+
+#~ msgid ""
+#~ "Helps you manage your projects and tasks by tracking them, generating "
+#~ "plannings, etc..."
+#~ msgstr ""
+#~ "Hjälper dig att hantera dina projekt och uppgifter genom att följa upp, "
+#~ "skapa planer etc"
+
+#~ msgid "Helps you manage your recruitments."
+#~ msgstr "Hjälper dig att hantera dina rekryteringar"
+
+#~ msgid "Hidden"
+#~ msgstr "Dold"
+
+#~ msgid "History"
+#~ msgstr "Historik"
+
+#~ msgid "Holy See (Vatican City State)"
+#~ msgstr "Vatikanstaten"
+
+#~ msgid "Home Action"
+#~ msgstr "Åtgärd"
+
+#~ msgid "Honduras"
+#~ msgstr "Honduras"
+
+#~ msgid "Hong Kong"
+#~ msgstr "Hong Kong"
+
+#~ msgid "Hour 00->12: %(h12)s"
+#~ msgstr "Timmar 00->12: %(h12)s"
+
+#~ msgid "Hour 00->24: %(h24)s"
+#~ msgstr "Timmar 00->24: %(h24)s"
+
+#~ msgid "Hours"
+#~ msgstr "Timmar"
+
+#~ msgid "Hungary"
+#~ msgstr "Ungern"
+
+#~ msgid "IBAN Bank Accounts"
+#~ msgstr "IBAN-bankkonton"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "ID of the view defined in xml file"
+#~ msgstr "ID på vyn definierad i xml-filen"
+
+#~ msgid "ISO Code"
+#~ msgstr "ISO Kod"
+
+#~ msgid "ISO code"
+#~ msgstr "ISO kod"
+
+#~ msgid "Iceland"
+#~ msgstr "Island"
+
+#~ msgid "Icon"
+#~ msgstr "Ikon"
+
+#~ msgid "Icon URL"
+#~ msgstr "Ikon URL"
+
+#~ msgid "Ids"
+#~ msgstr "ID"
+
+#~ msgid "If no group is specified the rule is global and applied to everyone"
+#~ msgstr "Om du ingen grupp anges gäller regeln för alla"
+
+#~ msgid ""
+#~ "If set to true, the action will not be displayed on the right toolbar of "
+#~ "a form view."
+#~ msgstr ""
+#~ "Om sant, så kommer inte åtgärden att visas i verktygsfältet till höger i "
+#~ "formulärvyn."
+
+#~ msgid "If set, action binding only applies for this company"
+#~ msgstr "Om satt, åtgärden knyts bara till detta bolag"
+
+#~ msgid ""
+#~ "If you check this box, your customized translations will be overwritten "
+#~ "and replaced by the official ones."
+#~ msgstr ""
+#~ "Om du markerar denna så ersätter du din egen översättning med den "
+#~ "officiella."
+
+#~ msgid ""
+#~ "If you check this, then the second time the user prints with same "
+#~ "attachment name, it returns the previous report."
+#~ msgstr ""
+#~ "Om du markerar detta kommer föregående rapport returneras när användaren "
+#~ "skriver ut andra gången med samma bilagenamn."
+
+#~ msgid "Image"
+#~ msgstr "Bild"
+
+#~ msgid "Import / Export"
+#~ msgstr "Import / export"
+
+#~ msgid "Import Translation"
+#~ msgstr "Importera översättning"
+
+#~ msgid "In-App Purchases"
+#~ msgstr "Köp i appar"
+
+#~ msgid "Inactive"
+#~ msgstr "Inaktiv"
+
+#~ msgid "Inactive Users"
+#~ msgstr "Innaktiva Användare"
+
+#~ msgid "Indexed"
+#~ msgstr "Indexerad"
+
+#~ msgid "Indexed Content"
+#~ msgstr "Indexed Content"
+
+#~ msgid "India"
+#~ msgstr "India"
+
+#~ msgid "Individual"
+#~ msgstr "Individuell"
+
+#~ msgid "Indonesia"
+#~ msgstr "Indonesien"
+
+#~ msgid "Information"
+#~ msgstr "Information"
+
+#~ msgid "Inherited"
+#~ msgstr "Ärvd"
+
+#~ msgid "Inherited View"
+#~ msgstr "Ärvd vy"
+
+#~ msgid "Init Date"
+#~ msgstr "Startdatum"
+
+#~ msgid "Initial Setup Tools"
+#~ msgstr "Initiala konfigurationsverktyg"
+
+#~ msgid "Install Apps"
+#~ msgstr "Installera appar"
+
+#~ msgid "Install Language"
+#~ msgstr "Installera språk"
+
+#~ msgid "Installed"
+#~ msgstr "Installerad"
+
+#~ msgid "Instant Messaging Bus allow you to send messages to users, in live."
+#~ msgstr ""
+#~ "Direktmeddelandebussen tillåter dig skicka meddelanden till användare i "
+#~ "relatid."
+
+#~ msgid "Integer"
+#~ msgstr "Heltal"
+
+#~ msgid "Internal Groups"
+#~ msgstr "Intern Grupp"
+
+#~ msgid "Internal Notes"
+#~ msgstr "Interna anteckningar"
+
+#~ msgid "Internal Reference"
+#~ msgstr "Intern referens"
+
+#~ msgid "Internal Users"
+#~ msgstr "Intern Användare"
+
+#~ msgid "Internal note..."
+#~ msgstr "Intern anteckning..."
+
+#~ msgid "Interval Unit"
+#~ msgstr "Intervallenhet"
+
+#~ msgid "Inventory"
+#~ msgstr "Lager"
+
+#~ msgid "Inventory Management"
+#~ msgstr "Lagerhantering"
+
+#~ msgid "Inventory, Logistics, Warehousing"
+#~ msgstr "Inventarie, Logistik, Warehousing"
+
+#~ msgid "Invoice address"
+#~ msgstr "Fakturaadress"
+
+#~ msgid "Invoicing"
+#~ msgstr "Fakturering"
+
+#~ msgid "Invoicing & Payments"
+#~ msgstr "Fakturering & Betalningar"
+
+#~ msgid "Iran"
+#~ msgstr "Iran"
+
+#~ msgid "Iraq"
+#~ msgstr "Iraq"
+
+#~ msgid "Ireland"
+#~ msgstr "Irland"
+
+#~ msgid "Is Company"
+#~ msgstr "Är företag"
+
+#~ msgid "Is a Company"
+#~ msgstr "Är ett bolag"
+
+#~ msgid "Is a Customer"
+#~ msgstr "Är Kund"
+
+#~ msgid "Is a Vendor"
+#~ msgstr "Är Leverantör"
+
+#~ msgid "Isle of Man"
+#~ msgstr "Isle of Man"
+
+#~ msgid "Israel"
+#~ msgstr "Israel"
+
+#~ msgid "Italy"
+#~ msgstr "Italien"
+
+#~ msgid "Jamaica"
+#~ msgstr "Jamaica"
+
+#~ msgid "Japan"
+#~ msgstr "Japan"
+
+#~ msgid "Job Position"
+#~ msgstr "Tjänst"
+
+#~ msgid "Jordan"
+#~ msgstr "Jordan"
+
+#~ msgid "Kanban"
+#~ msgstr "Kanban"
+
+#~ msgid "Kazakhstan"
+#~ msgstr "Kazakstan"
+
+#~ msgid "Kenya"
+#~ msgstr "Kenya"
+
+#~ msgid "Key"
+#~ msgstr "Nyckel"
+
+#~ msgid "Key must be unique."
+#~ msgstr "Nyckeln måste vara unik."
+
+#~ msgid "Kiribati"
+#~ msgstr "Kiribati"
+
+#~ msgid "Kuwait"
+#~ msgstr "Kuwait"
+
+#~ msgid "Landscape"
+#~ msgstr "Liggande"
+
+#~ msgid "Language"
+#~ msgstr "Språk"
+
+#~ msgid "Language Import"
+#~ msgstr "Språkimport"
+
+#~ msgid "Language Name"
+#~ msgstr "Språknamnet"
+
+#~ msgid "Language Pack"
+#~ msgstr "Språkpaket"
+
+#~ msgid "Languages"
+#~ msgstr "Språk"
+
+#~ msgid "Laos"
+#~ msgstr "Laos"
+
+#~ msgid "Last Modification Date"
+#~ msgstr "Senaste ändringsdatum"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Senast redigerad"
+
+#~ msgid "Last Updated by"
+#~ msgstr "Senast uppdaterad av"
+
+#~ msgid "Last Updated on"
+#~ msgstr "Senast uppdaterad"
+
+#~ msgid "Latest Version"
+#~ msgstr "Senaste version"
+
+#~ msgid "Latest connection"
+#~ msgstr "Senaste inloggning"
+
+#~ msgid "Latvia"
+#~ msgstr "Lettland"
+
+#~ msgid "Launch"
+#~ msgstr "Lansera"
+
+#~ msgid "Launch Configuration Wizard"
+#~ msgstr "Starta konfigureringsguiden"
+
+#~ msgid "Leads, Opportunities, Activities"
+#~ msgstr "Leads, Möjligheter, Aktiviteter"
+
+#~ msgid "Leave Management"
+#~ msgstr "Semesterplanering"
+
+#~ msgid "Leaves"
+#~ msgstr "Frånvaro"
+
+#~ msgid "Lebanon"
+#~ msgstr "Libanon"
+
+#~ msgid "Ledger  28  431.8 x 279.4 mm"
+#~ msgstr "Ledger  28  431.8 x 279.4 mm"
+
+#~ msgid "Left Margin (mm)"
+#~ msgstr "Vänstermarginal (mm)"
+
+#~ msgid "Left-to-Right"
+#~ msgstr "Vänster till höger"
+
+#~ msgid "Legal    3   8.5 x 14 inches, 215.9 x 355.6 mm"
+#~ msgstr "Legal    3   8.5 x 14 inches, 215.9 x 355.6 mm"
+
+#~ msgid "Lesotho"
+#~ msgstr "Lesotho"
+
+#~ msgid "Letter 2 8.5 x 11 inches, 215.9 x 279.4 mm"
+#~ msgstr "Letter 2 8.5 x 11 inches, 215.9 x 279.4 mm"
+
+#~ msgid "Level"
+#~ msgstr "Nivå"
+
+#~ msgid "Liberia"
+#~ msgstr "Liberia"
+
+#~ msgid "Libya"
+#~ msgstr "Libyen"
+
+#~ msgid "License"
+#~ msgstr "Licens"
+
+#~ msgid "Liechtenstein"
+#~ msgstr "Liechtenstein"
+
+#~ msgid "Limit"
+#~ msgstr "Gräns"
+
+#~ msgid "Lines"
+#~ msgstr "Rader"
+
+#~ msgid "Lithuania"
+#~ msgstr "Litauen"
+
+#~ msgid "Load"
+#~ msgstr "Ladda"
+
+#~ msgid "Load a Translation"
+#~ msgstr "Läs in ett språk"
+
+#~ msgid "Locale Code"
+#~ msgstr "Lokal kod"
+
+#~ msgid "Localization"
+#~ msgstr "Lokalisering"
+
+#~ msgid "Log"
+#~ msgstr "Logg"
+
+#~ msgid "Login"
+#~ msgstr "Användarid"
+
+#~ msgid "Logs"
+#~ msgstr "Loggar"
+
+#~ msgid "Loyalty Program"
+#~ msgstr "Lojalitetsprogram"
+
+#~ msgid "Lunch"
+#~ msgstr "Lunch"
+
+#~ msgid "Luxembourg"
+#~ msgstr "Luxemburg"
+
+#~ msgid "Macau"
+#~ msgstr "Macao"
+
+#~ msgid "Madagascar"
+#~ msgstr "Madagaskar"
+
+#~ msgid "Madam"
+#~ msgstr "Fru"
+
+#~ msgid "Main Sequence"
+#~ msgstr "Huvudsekvens"
+
+#~ msgid "Maintainer"
+#~ msgstr "Underhållsansvarig"
+
+#~ msgid "Malawi"
+#~ msgstr "Malawi"
+
+#~ msgid "Malaysia"
+#~ msgstr "Malaysia"
+
+#~ msgid "Maldives"
+#~ msgstr "Maldiverna"
+
+#~ msgid "Mali"
+#~ msgstr "Mali"
+
+#~ msgid "Malta"
+#~ msgstr "Malta"
+
+#~ msgid "Manufacturing"
+#~ msgstr "Tillverkning"
+
+#~ msgid "Many2One"
+#~ msgstr "Many2One"
+
+#~ msgid "Margins in Sales Orders"
+#~ msgstr "Marginal på kundorder"
+
+#~ msgid "Marketing"
+#~ msgstr "Marknadsföring"
+
+#~ msgid "Marshall Islands"
+#~ msgstr "Marshallöarna"
+
+#~ msgid "Mauritania"
+#~ msgstr "Mauretanien"
+
+#~ msgid "Mauritius"
+#~ msgstr "Mauritius"
+
+#~ msgid "Medium-sized image"
+#~ msgstr "Mediumstorlek på bild"
+
+#~ msgid "Membership Management"
+#~ msgstr "Medlemsadministration"
+
+#~ msgid "Menu"
+#~ msgstr "Meny"
+
+#~ msgid "Menu Items"
+#~ msgstr "Menyrader"
+
+#~ msgid "Menu Name"
+#~ msgstr "Menynamn"
+
+#~ msgid "Menus"
+#~ msgstr "Menyer"
+
+#~ msgid "Menus Customization"
+#~ msgstr "Menyanpassning"
+
+#~ msgid "Merge Automatically"
+#~ msgstr "Automatisk sammanfogning"
+
+#~ msgid "Merge Automatically all process"
+#~ msgstr "Guide för automatisk sammanfogning"
+
+#~ msgid "Merge the following contacts"
+#~ msgstr "Slå samman följande kontakter"
+
+#~ msgid "Merge with Manual Check"
+#~ msgstr "Sammanslagning med manuella kontroller"
+
+#~ msgid "Message"
+#~ msgstr "Meddelande"
+
+#~ msgid "Mexico"
+#~ msgstr "Mexico"
+
+#~ msgid "Micronesia"
+#~ msgstr "Mikronesien"
+
+#~ msgid "Mime Type"
+#~ msgstr "Mime typ"
+
+#~ msgid "Minute: %(min)s"
+#~ msgstr "Minut: %(min)s"
+
+#~ msgid "Minutes"
+#~ msgstr "Minuter"
+
+#~ msgid "Misc"
+#~ msgstr "Övrigt"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "Diverse"
+
+#~ msgid "Miss"
+#~ msgstr "Fröken"
+
+#~ msgid "Mobile:"
+#~ msgstr "Mobil:"
+
+#~ msgid "Model"
+#~ msgstr "Modell"
+
+#~ msgid "Model Description"
+#~ msgstr "Modellbeskrivning"
+
+#~ msgid "Model Name"
+#~ msgstr "Objektnamn"
+
+#~ msgid "Model name of the object to open in the view window"
+#~ msgstr "Modellnamn för objektet som skall öppnas på vysidan"
+
+#~ msgid "Models"
+#~ msgstr "Objekt"
+
+#~ msgid "Module"
+#~ msgstr "Modul"
+
+#~ msgid "Module Category"
+#~ msgstr "Modulkategori"
+
+#~ msgid "Module Name"
+#~ msgstr "Modulnamn"
+
+#~ msgid "Module Update"
+#~ msgstr "Moduluppdatering"
+
+#~ msgid "Module Upgrade"
+#~ msgstr "Moduluppgradering"
+
+#~ msgid "Module Upgrade Install"
+#~ msgstr "Moduluppgradering"
+
+#~ msgid "Module dependency"
+#~ msgstr "Modulberoende"
+
+#~ msgid "Modules"
+#~ msgstr "Moduler"
+
+#~ msgid "Monaco"
+#~ msgstr "Monaco"
+
+#~ msgid "Monday"
+#~ msgstr "Måndag"
+
+#~ msgid "Mongolia"
+#~ msgstr "Mongoliet"
+
+#~ msgid "Montenegro"
+#~ msgstr "Montenegro"
+
+#~ msgid "Month: %(month)s"
+#~ msgstr "Månad: %(month)s"
+
+#~ msgid "Months"
+#~ msgstr "Månader"
+
+#~ msgid "Montserrat"
+#~ msgstr "Montserrat"
+
+#~ msgid "Morocco"
+#~ msgstr "Marocko"
+
+#~ msgid "Mozambique"
+#~ msgstr "Mozambique"
+
+#~ msgid "Multi Companies"
+#~ msgstr "Flerbolag"
+
+#~ msgid "Multi Currencies"
+#~ msgstr "Fler-valuta"
+
+#~ msgid "My Document(s)"
+#~ msgstr "Mina dokument"
+
+#~ msgid "My Partners"
+#~ msgstr "Mina företag"
+
+#~ msgid "My filters"
+#~ msgstr "Mina filter"
+
+#~ msgid "Myanmar"
+#~ msgstr "Myanmar"
+
+#~ msgid "Name:"
+#~ msgstr "Namn:"
+
+#~ msgid "Namibia"
+#~ msgstr "Namibia"
+
+#~ msgid "Nauru"
+#~ msgstr "Nauru"
+
+#~ msgid "Nepal"
+#~ msgstr "Nepal"
+
+#~ msgid "Netherlands"
+#~ msgstr "Nederländerna"
+
+#~ msgid "New Password"
+#~ msgstr "Nytt lösenord:"
+
+#~ msgid "New Window"
+#~ msgstr "Nytt fönster"
+
+#~ msgid "New Zealand"
+#~ msgstr "Nya Zeeland"
+
+#~ msgid "Next Execution Date"
+#~ msgstr "Nästa exekveringsdatum"
+
+#~ msgid "Next Number"
+#~ msgstr "Nästa nummer"
+
+#~ msgid "Next number of this sequence"
+#~ msgstr "Nästa nummer i sekvensen"
+
+#~ msgid "Nicaragua"
+#~ msgstr "Nicaragua"
+
+#~ msgid "Niger"
+#~ msgstr "Niger"
+
+#~ msgid "Nigeria"
+#~ msgstr "Nigeria"
+
+#~ msgid "Niue"
+#~ msgstr "Niue"
+
+#~ msgid "No gap"
+#~ msgstr "Inget slack"
+
+#~ msgid "No of Views"
+#~ msgstr "Antal visningar"
+
+#~ msgid "Non Updatable"
+#~ msgstr "Ej uppdateringsbar"
+
+#~ msgid "None"
+#~ msgstr "Inga"
+
+#~ msgid "Norfolk Island"
+#~ msgstr "Norfolköarna"
+
+#~ msgid "North Korea"
+#~ msgstr "Nordkorea"
+
+#~ msgid "Northern Mariana Islands"
+#~ msgstr "Norra Marianeröarna"
+
+#~ msgid "Norway"
+#~ msgstr "Norge"
+
+#~ msgid "Not Installed"
+#~ msgstr "Inte installerad"
+
+#~ msgid "Notes"
+#~ msgstr "Anteckningar"
+
+#~ msgid "Number of Apps"
+#~ msgstr "Antal Appar"
+
+#~ msgid "Number of Calls"
+#~ msgstr "Antal anrop"
+
+#~ msgid "Number of Companies"
+#~ msgstr "Antal Bolag"
+
+#~ msgid "Number of modules added"
+#~ msgstr "Antal tillagda moduler"
+
+#~ msgid "Number of modules updated"
+#~ msgstr "Antal uppdaterade moduler"
+
+#~ msgid "Object"
+#~ msgstr "Objekt"
+
+#~ msgid "Object Name"
+#~ msgstr "Objektnamn"
+
+#~ msgid "Object Relation"
+#~ msgstr "Objektrelation"
+
+#~ msgid "Object:"
+#~ msgstr "Objekt:"
+
+#~ msgid "Oman"
+#~ msgstr "Oman"
+
+#~ msgid "On Multiple Doc."
+#~ msgstr "På flera dokument"
+
+#~ msgid "Online Events"
+#~ msgstr "Uppkopplade evenemang"
+
+#~ msgid "Open Settings Menu"
+#~ msgstr "Öppna inställningsmenyn"
+
+#~ msgid "Open Window"
+#~ msgstr "Öppna fönster"
+
+#~ msgid "Open a Window"
+#~ msgstr "öppna ett fönster"
+
+#~ msgid "Option"
+#~ msgstr "Alternativ"
+
+#~ msgid ""
+#~ "Optional domain filtering of the destination data, as a Python expression"
+#~ msgstr "Valfri domänfiltrering av slutdatan, i form av ett Pythonuttryck"
+
+#~ msgid "Options"
+#~ msgstr "Alternativ"
+
+#~ msgid "Orientation"
+#~ msgstr "Orientering"
+
+#~ msgid "Other OSI Approved Licence"
+#~ msgstr "Övrig OSI-godkänd licens"
+
+#~ msgid "Other Partners"
+#~ msgstr "Övriga företag"
+
+#~ msgid "Outgoing Mail Server"
+#~ msgstr "Utgående e-postserver"
+
+#~ msgid "Outgoing Mail Servers"
+#~ msgstr "Utgående e-postservrar"
+
+#~ msgid "Overwrite Existing Terms"
+#~ msgstr "Skriv över nuvarande fraser"
+
+#~ msgid "Owner"
+#~ msgstr "Ägare"
+
+#~ msgid "PO File"
+#~ msgstr "PO fil"
+
+#~ msgid "Pakistan"
+#~ msgstr "Pakistan"
+
+#~ msgid "Palau"
+#~ msgstr "Palau"
+
+#~ msgid "Panama"
+#~ msgstr "Panama"
+
+#~ msgid "Paper size"
+#~ msgstr "Pappersstorlek"
+
+#~ msgid "Papua New Guinea"
+#~ msgstr "Papua Nya Guinea"
+
+#~ msgid "Paraguay"
+#~ msgstr "Paraguay"
+
+#~ msgid "Parameters"
+#~ msgstr "Parametrar"
+
+#~ msgid "Parent Company"
+#~ msgstr "Moderbolag"
+
+#~ msgid "Parent Menu"
+#~ msgstr "Överliggande meny"
+
+#~ msgid "Partner"
+#~ msgstr "Företag"
+
+#~ msgid "Partner Titles"
+#~ msgstr "Företagstitlar"
+
+#~ msgid "Partners"
+#~ msgstr "Företag"
+
+#~ msgid "Partners: "
+#~ msgstr "Företag: "
+
+#~ msgid "Password"
+#~ msgstr "Lösenord"
+
+#~ msgid "Payment Acquirer"
+#~ msgstr "Betalväxel"
+
+#~ msgid "Payroll"
+#~ msgstr "Lönehantering"
+
+#~ msgid "Payroll Accounting"
+#~ msgstr "Lön"
+
+#~ msgid "Persons"
+#~ msgstr "Personer"
+
+#~ msgid "Peru"
+#~ msgstr "Peru"
+
+#~ msgid "Philippines"
+#~ msgstr "Filippinerna"
+
+#~ msgid "Phone:"
+#~ msgstr "Telefon:"
+
+#~ msgid "Point of Sale"
+#~ msgstr "Kassa"
+
+#~ msgid "Point of Sale Discounts"
+#~ msgstr "Kassa Rabatt"
+
+#~ msgid "Point of Sale Receipt Reprinting"
+#~ msgstr "Kassakvitto kopia"
+
+#~ msgid "Poland"
+#~ msgstr "Polen"
+
+#~ msgid "Portal"
+#~ msgstr "Portal"
+
+#~ msgid "Portrait"
+#~ msgstr "Stående"
+
+#~ msgid "Portugal"
+#~ msgstr "Portugal"
+
+#~ msgid "Preferences"
+#~ msgstr "Preferenser"
+
+#~ msgid "Prefix"
+#~ msgstr "Prefix"
+
+#~ msgid "Prefix value of the record for the sequence"
+#~ msgstr "Prefix för löpnumret"
+
+#~ msgid "Present Your Team"
+#~ msgstr "Presentera Ditt Team"
+
+#~ msgid "Price Accuracy"
+#~ msgstr "Prisnoggranhet"
+
+#~ msgid "Print Invoice"
+#~ msgstr "Skriv ut faktura"
+
+#~ msgid "Priority"
+#~ msgstr "Prioritet (0=Mycket bråttom)"
+
+#~ msgid "Product Email Template"
+#~ msgstr "E-postmall för produkt "
+
+#~ msgid "Productivity"
+#~ msgstr "Produktivitet"
+
+#~ msgid "Products & Pricelists"
+#~ msgstr "Produkter & Prislistor"
+
+#~ msgid "Products Expiration Date"
+#~ msgstr "Produktens bäst före datum"
+
+#~ msgid "Project"
+#~ msgstr "Projekt"
+
+#~ msgid "Properties"
+#~ msgstr "Egenskaper"
+
+#~ msgid "Public"
+#~ msgstr "Publik"
+
+#~ msgid "Published Version"
+#~ msgstr "Publicerad version"
+
+#~ msgid "Puerto Rico"
+#~ msgstr "Puerto Rico"
+
+#~ msgid "Purchase"
+#~ msgstr "Inköp"
+
+#~ msgid "Purchase Management"
+#~ msgstr "Inköpshantering"
+
+#~ msgid "Purchase Orders, Receipts, Vendor Bills"
+#~ msgstr "Inköpsorder, Kvitton, Leverantörs Fakturor"
+
+#~ msgid "Purchases"
+#~ msgstr "Inköp"
+
+#~ msgid "Python Code"
+#~ msgstr "Pythonkod"
+
+#~ msgid "QWeb"
+#~ msgstr "QWeb"
+
+#~ msgid "Qatar"
+#~ msgstr "Qatar"
+
+#~ msgid "Rate"
+#~ msgstr "Kurs"
+
+#~ msgid "Rates"
+#~ msgstr "Kurser"
+
+#~ msgid "Read Access"
+#~ msgstr "Lästillgång"
+
+#~ msgid "Readonly"
+#~ msgstr "Skrivskyddad"
+
+#~ msgid "Record rules"
+#~ msgstr "Postregler"
+
+#~ msgid "Recruitment"
+#~ msgstr "Rekrytering"
+
+#~ msgid "Related Company"
+#~ msgstr "Kopplat bolag"
+
+#~ msgid "Related Partner"
+#~ msgstr "Relaterat företag"
+
+#~ msgid "Relation Field"
+#~ msgstr "Relationsfält"
+
+#~ msgid "Relation field"
+#~ msgstr "Relationsfält"
+
+#~ msgid "Reload from Attachment"
+#~ msgstr "Ladda om från bilagan"
+
+#~ msgid "Repeat Missed"
+#~ msgstr "Gör om missade"
+
+#~ msgid "Repeat every x."
+#~ msgstr "Repetera varje x."
+
+#~ msgid "Report"
+#~ msgstr "Rapport"
+
+#~ msgid "Report Type"
+#~ msgstr "Rapporttyp"
+
+#~ msgid "Report xml"
+#~ msgstr "Rapport xml"
+
+#~ msgid "Report/Template"
+#~ msgstr "Rapport/Mall"
+
+#~ msgid "Reporting"
+#~ msgstr "Rapportering"
+
+#~ msgid "Reports"
+#~ msgstr "Rapporter"
+
+#~ msgid "Required"
+#~ msgstr "Obligatorisk"
+
+#~ msgid "Resellers"
+#~ msgstr "Återförsäljare"
+
+#~ msgid "Resource"
+#~ msgstr "Resurs"
+
+#~ msgid "Resource ID"
+#~ msgstr "Resurs ID"
+
+#~ msgid "Resource Name"
+#~ msgstr "Resursnamn"
+
+#~ msgid "Restaurant"
+#~ msgstr "Restaurang"
+
+#~ msgid "Right Margin (mm)"
+#~ msgstr "Högermarginal (mm)"
+
+#~ msgid "Right-to-Left"
+#~ msgstr "Höger till vänster"
+
+#~ msgid "Romania"
+#~ msgstr "Rumänien"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "En regel måste ha minst en markerad åtkomstregel !"
+
+#~ msgid "Rules"
+#~ msgstr "Regler"
+
+#~ msgid "Run Manually"
+#~ msgstr "Kör Manuellt"
+
+#~ msgid "Russian Federation"
+#~ msgstr "Ryska federationen"
+
+#~ msgid "Rwanda"
+#~ msgstr "Rwanda"
+
+#~ msgid "SMTP Port"
+#~ msgstr "SMTP-port"
+
+#~ msgid "SMTP Server"
+#~ msgstr "SMTP-server"
+
+#~ msgid "SQL Constraint"
+#~ msgstr "SQL-villkor"
+
+#~ msgid "SSL/TLS"
+#~ msgstr "SSL/TLS"
+
+#~ msgid "Saint Lucia"
+#~ msgstr "Saint Lucia"
+
+#~ msgid "Saint Pierre and Miquelon"
+#~ msgstr "Saint Pierre and Miquelon"
+
+#~ msgid "Sale"
+#~ msgstr "Försäljning"
+
+#~ msgid "Sales"
+#~ msgstr "Försäljning"
+
+#~ msgid "Sales & Purchases"
+#~ msgstr "Kundorder och inköp"
+
+#~ msgid "Sales Channels"
+#~ msgstr "Försäljnings Kanal"
+
+#~ msgid "Sales Management"
+#~ msgstr "Kundorder"
+
+#~ msgid "Sales and MRP Management"
+#~ msgstr "Kundorder och MPS"
+
+#~ msgid "Salesperson"
+#~ msgstr "Säljare"
+
+#~ msgid "Samoa"
+#~ msgstr "Samoa"
+
+#~ msgid "San Marino"
+#~ msgstr "San Marino"
+
+#~ msgid "Saturday"
+#~ msgstr "lördag"
+
+#~ msgid "Saudi Arabia"
+#~ msgstr "Saudiarabien"
+
+#~ msgid "Save"
+#~ msgstr "Spara"
+
+#~ msgid "Scheduled Action"
+#~ msgstr "Schemalagd åtgärd"
+
+#~ msgid "Scheduled Actions"
+#~ msgstr "Schemalagda åtgärder"
+
+#~ msgid "Search"
+#~ msgstr "Sök"
+
+#~ msgid "Search Actions"
+#~ msgstr "Sökätgårder"
+
+#~ msgid "Search Partner"
+#~ msgstr "Sök efter partner"
+
+#~ msgid "Search View Ref."
+#~ msgstr "Sökvy ref."
+
+#~ msgid "Search modules"
+#~ msgstr "Sökmoduler"
+
+#~ msgid "Search..."
+#~ msgstr "Sök..."
+
+#~ msgid "Security and Authentication"
+#~ msgstr "Säkerhet och autenticering"
+
+#~ msgid "Select Proper Paper size"
+#~ msgstr "Välj korret pappersstorlek"
+
+#~ msgid "Selectable"
+#~ msgstr "Valbara"
+
+#~ msgid ""
+#~ "Selecting the \"Warning\" option will notify user with the message, "
+#~ "Selecting \"Blocking Message\" will throw an exception with the message "
+#~ "and block the flow. The Message has to be written in the next field."
+#~ msgstr ""
+#~ "Val av \"Varning\"-alternativet kommer att meddela användare med "
+#~ "meddelandet, välj \"Spärrmeddelande\" kommer att skapa ett undantag med "
+#~ "meddelandet och blockera flödet. Meddelande måste skrivas i nästa fält."
+
+#~ msgid "Self"
+#~ msgstr "Själv"
+
+#~ msgid "Senegal"
+#~ msgstr "Senegal"
+
+#~ msgid "Sequence"
+#~ msgstr "Sekvens"
+
+#~ msgid "Sequences"
+#~ msgstr "Sekvenser"
+
+#~ msgid "Sequences & Identifiers"
+#~ msgstr "Nummerserier och identifierare"
+
+#~ msgid "Serbia"
+#~ msgstr "Serbia"
+
+#~ msgid "Server"
+#~ msgstr "Server"
+
+#~ msgid "Server Action"
+#~ msgstr "Serveraktivitet"
+
+#~ msgid "Server Actions"
+#~ msgstr "Serveråtgärder"
+
+#~ msgid "Set NULL"
+#~ msgstr "Sätt till NULL"
+
+#~ msgid "Set as Todo"
+#~ msgstr "Ange som 'att göra'"
+
+#~ msgid "Settings"
+#~ msgstr "Inställningar"
+
+#~ msgid "Seychelles"
+#~ msgstr "Seychellerna"
+
+#~ msgid "Share Group"
+#~ msgstr "Delningsgrupp"
+
+#~ msgid "Share User"
+#~ msgstr "Dela användare"
+
+#~ msgid "Shared"
+#~ msgstr "Delad"
+
+#~ msgid "Shipping address"
+#~ msgstr "Leveransadress:"
+
+#~ msgid "Show active currencies"
+#~ msgstr "Visa aktiva valutor"
+
+#~ msgid "Show inactive currencies"
+#~ msgstr "Visa innaktiva valutor"
+
+#~ msgid "Sierra Leone"
+#~ msgstr "Sierra Leone"
+
+#~ msgid "Signature"
+#~ msgstr "Signatur"
+
+#~ msgid "Signup"
+#~ msgstr "Registrera"
+
+#~ msgid "Singapore"
+#~ msgstr "Singapore"
+
+#~ msgid "Size"
+#~ msgstr "Storlek"
+
+#~ msgid "Skip"
+#~ msgstr "Hoppa över"
+
+#~ msgid "Skip these contacts"
+#~ msgstr "Hoppa över dessa kontakter"
+
+#~ msgid "Slovenia"
+#~ msgstr "Slovenien"
+
+#~ msgid "Small-sized image"
+#~ msgstr "Småbilder"
+
+#~ msgid "Solomon Islands"
+#~ msgstr "Salomonöarna"
+
+#~ msgid "Somalia"
+#~ msgstr "Somalia"
+
+#~ msgid "Sometimes called BIC or Swift."
+#~ msgstr "Ofta kallad BIC eller Swift"
+
+#~ msgid "Sort"
+#~ msgstr "Sortera"
+
+#~ msgid "Source Object"
+#~ msgstr "Källobjekt"
+
+#~ msgid "Source Term"
+#~ msgstr "Källterm"
+
+#~ msgid "South Africa"
+#~ msgstr "Sydafrika"
+
+#~ msgid "South Korea"
+#~ msgstr "Sydkorea"
+
+#~ msgid "Spain"
+#~ msgstr "Spain"
+
+#~ msgid "Sri Lanka"
+#~ msgstr "Sri Lanka"
+
+#~ msgid "Start configuration"
+#~ msgstr "Påbörja konfigurationen"
+
+#~ msgid "State"
+#~ msgstr "Status"
+
+#~ msgid "State Code"
+#~ msgstr "Län"
+
+#~ msgid "State Name"
+#~ msgstr "Stat (namn)"
+
+#~ msgid "States"
+#~ msgstr "Stater"
+
+#~ msgid "Status"
+#~ msgstr "Status"
+
+#~ msgid "Step"
+#~ msgstr "Steg"
+
+#~ msgid "Stock"
+#~ msgstr "Stock"
+
+#~ msgid "Stored"
+#~ msgstr "Sparad"
+
+#~ msgid "Stored Filename"
+#~ msgstr "Sparat Filnamn"
+
+#~ msgid "Street"
+#~ msgstr "Gata"
+
+#~ msgid "Street 2..."
+#~ msgstr "Gata 2..."
+
+#~ msgid "Street..."
+#~ msgstr "Gata..."
+
+#~ msgid "Street2"
+#~ msgstr "Gata 2"
+
+#~ msgid "Submenus"
+#~ msgstr "Undermenyer"
+
+#~ msgid "Sudan"
+#~ msgstr "Sudan"
+
+#~ msgid "Suffix"
+#~ msgstr "Suffix"
+
+#~ msgid "Suffix value of the record for the sequence"
+#~ msgstr "Suffixvärde för löpnumret"
+
+#~ msgid "Summary"
+#~ msgstr "Sammandrag"
+
+#~ msgid "Sunday"
+#~ msgstr "Söndag"
+
+#~ msgid "Suriname"
+#~ msgstr "Surinam"
+
+#~ msgid "Survey"
+#~ msgstr "Enkät"
+
+#~ msgid "Surveys"
+#~ msgstr "Enkäter"
+
+#~ msgid "Swaziland"
+#~ msgstr "Swaziland"
+
+#~ msgid "Sweden"
+#~ msgstr "Sverige"
+
+#~ msgid "Switzerland"
+#~ msgstr "Schweiz"
+
+#~ msgid "Symbol"
+#~ msgstr "Symbol"
+
+#~ msgid "Symbol Position"
+#~ msgstr "Symbol Position"
+
+#~ msgid "Syria"
+#~ msgstr "Syrien"
+
+#~ msgid "System Properties"
+#~ msgstr "System Egenskaper"
+
+#~ msgid "System Update"
+#~ msgstr "Systemuppdatering"
+
+#~ msgid "TGZ Archive"
+#~ msgstr "TGZ-arkiv"
+
+#~ msgid "TIN"
+#~ msgstr "Skatteregistreingsnummer"
+
+#~ msgid "Tabloid 29 279.4 x 431.8 mm"
+#~ msgstr "Tabloid 29 279.4 x 431.8 mm"
+
+#~ msgid "Tag"
+#~ msgstr "Etikett"
+
+#~ msgid "Tag Name"
+#~ msgstr "Etikettnamn"
+
+#~ msgid "Tags"
+#~ msgstr "Taggar"
+
+#~ msgid "Tags..."
+#~ msgstr "Taggar..."
+
+#~ msgid "Taiwan"
+#~ msgstr "Taiwan"
+
+#~ msgid "Tajikistan"
+#~ msgstr "Tadzjikistan"
+
+#~ msgid "Tanzania"
+#~ msgstr "Tanzania"
+
+#~ msgid "Target Window"
+#~ msgstr "Målfönster"
+
+#~ msgid "Team Page"
+#~ msgstr "Team Sida"
+
+#~ msgid "Technical"
+#~ msgstr "Teknisk"
+
+#~ msgid "Technical Data"
+#~ msgstr "Teknisk data"
+
+#~ msgid "Technical Features"
+#~ msgstr "Tekniska funktioner"
+
+#~ msgid "Technical Name"
+#~ msgstr "Tekniskt namn"
+
+#~ msgid "Technical Settings"
+#~ msgstr "Tekniska inställningar"
+
+#~ msgid "Technical guide"
+#~ msgstr "Teknisk guide"
+
+#~ msgid "Template Name"
+#~ msgstr "Mallnamn"
+
+#~ msgid "Tests"
+#~ msgstr "Tester"
+
+#~ msgid "Text"
+#~ msgstr "Text"
+
+#~ msgid "Thailand"
+#~ msgstr "Thailand"
+
+#~ msgid ""
+#~ "The active field allows you to hide the category without removing it."
+#~ msgstr ""
+#~ "Aktivfält före det möjligt för dig att gömma kategorin utan att ta bort "
+#~ "den."
+
+#~ msgid "The code of the country must be unique !"
+#~ msgstr "Landskoden måste vara unik !"
+
+#~ msgid "The code of the language must be unique !"
+#~ msgstr "Språkkoden måste vara unik !"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "Bolagsnamnet måste vara unikt !"
+
+#~ msgid "The company this user is currently working for."
+#~ msgstr "Bolaget användaren arbetar för"
+
+#~ msgid "The currency code must be unique!"
+#~ msgstr "Valuta koden måste vara unik!"
+
+#~ msgid "The full name of the country."
+#~ msgstr "Landets fulla namn"
+
+#~ msgid "The model this field belongs to"
+#~ msgstr "Den modell detta fält tillhör"
+
+#~ msgid "The name of the country must be unique !"
+#~ msgstr "Namnet på landet måste vara unikt !"
+
+#~ msgid "The name of the language must be unique !"
+#~ msgstr "Namnet på språket måste vara unikt."
+
+#~ msgid "The next number of the sequence will be incremented by this number"
+#~ msgstr "Nästa nummer i sekvensen kommer att beräknas utgående från detta"
+
+#~ msgid ""
+#~ "The requested operation cannot be completed due to security restrictions. "
+#~ "Please contact your system administrator.\n"
+#~ "\n"
+#~ "(Document type: %s, Operation: %s)"
+#~ msgstr ""
+#~ "The requested operation cannot be completed due to security restrictions. "
+#~ "Please contact your system administrator.\n"
+#~ "\n"
+#~ "(Document type: %s, Operation: %s)"
+
+#~ msgid "The selected modules have been updated / installed !"
+#~ msgstr "De valda modulerna har uppdaterats / installerats!"
+
+#~ msgid "The technical name of the model this field belongs to"
+#~ msgstr "Tekniska namnet för den modell detta objekt tillhör."
+
+#~ msgid "Theme"
+#~ msgstr "Tema"
+
+#~ msgid "This ISO code is the name of po files to use for translations"
+#~ msgstr ""
+#~ "Denna ISO-kod är namnet på PO-filer som ska användas för översättningar"
+
+#~ msgid "This Window"
+#~ msgstr "Detta fönster"
+
+#~ msgid ""
+#~ "This is the filename of the attachment used to store the printing result. "
+#~ "Keep empty to not save the printed reports. You can use a python "
+#~ "expression with the object and time variables."
+#~ msgstr ""
+#~ "Filnamnet för den bilaga som innehåller utskriften. Sätt till tom för att "
+#~ "inte spara utskrifter. Man kan använda pythonuttryck med objekten object "
+#~ "och time."
+
+#~ msgid "Thousands Separator"
+#~ msgstr "Tusentalsseparator"
+
+#~ msgid "Thursday"
+#~ msgstr "torsdag"
+
+#~ msgid "Time Format"
+#~ msgstr "Tidsformat"
+
+#~ msgid "Timesheets"
+#~ msgstr "Tidrapporter"
+
+#~ msgid "Timezone"
+#~ msgstr "Tidson"
+
+#~ msgid "Title"
+#~ msgstr "Titel"
+
+#~ msgid "To"
+#~ msgstr "Till"
+
+#~ msgid "To Do"
+#~ msgstr "Att göra"
+
+#~ msgid "To Translate"
+#~ msgstr "Att Översätta"
+
+#~ msgid "To be installed"
+#~ msgstr "Kommer att installeras"
+
+#~ msgid "To be removed"
+#~ msgstr "Kommer att tas bort"
+
+#~ msgid "To be upgraded"
+#~ msgstr "Att uppgradera"
+
+#~ msgid "Todo"
+#~ msgstr "Att göra"
+
+#~ msgid "Togo"
+#~ msgstr "Togo"
+
+#~ msgid "Tokelau"
+#~ msgstr "Tokelau"
+
+#~ msgid "Tonga"
+#~ msgstr "Tonga"
+
+#~ msgid "Tools"
+#~ msgstr "Verktyg"
+
+#~ msgid "Top Margin (mm)"
+#~ msgstr "Toppmarginal (mm)"
+
+#~ msgid "Touchscreen Interface for Shops"
+#~ msgstr "Pekskärmsinterface för affärer"
+
+#~ msgid "Translatable"
+#~ msgstr "Översättningsbar"
+
+#~ msgid "Translated"
+#~ msgstr "Översatt"
+
+#~ msgid "Translated Terms"
+#~ msgstr "Översatta Termer"
+
+#~ msgid "Translation"
+#~ msgstr "Översättning"
+
+#~ msgid "Translation Value"
+#~ msgstr "Översättning"
+
+#~ msgid "Translation in Progress"
+#~ msgstr "Översättning pågår"
+
+#~ msgid "Translations"
+#~ msgstr "Översättningar"
+
+#~ msgid "Tree"
+#~ msgstr "Träd"
+
+#~ msgid "Trinidad and Tobago"
+#~ msgstr "Trinidad och Tobago"
+
+#~ msgid "Tuesday"
+#~ msgstr "tisdag"
+
+#~ msgid "Tunisia"
+#~ msgstr "Tunisien"
+
+#~ msgid "Turkey"
+#~ msgstr "Turkiet"
+
+#~ msgid "Turkey - Accounting"
+#~ msgstr "Turkiet - bokföring"
+
+#~ msgid "Turkmenistan"
+#~ msgstr "Turkmenistan"
+
+#~ msgid "Turks and Caicos Islands"
+#~ msgstr "Turks and Caicos Islands"
+
+#~ msgid "Tuvalu"
+#~ msgstr "Tuvalu"
+
+#~ msgid "Type"
+#~ msgstr "Typ"
+
+#~ msgid "Type:"
+#~ msgstr "Typ:"
+
+#~ msgid "URL"
+#~ msgstr "URL"
+
+#~ msgid "USA Minor Outlying Islands"
+#~ msgstr "USA Minor Outlying Islands"
+
+#~ msgid "Uganda"
+#~ msgstr "Uganda"
+
+#~ msgid "Ukraine"
+#~ msgstr "Ukraina"
+
+#~ msgid "Uncategorized"
+#~ msgstr "Okategoriserad"
+
+#~ msgid "Uninstallable"
+#~ msgstr "Avinstallerbar"
+
+#~ msgid "United Arab Emirates"
+#~ msgstr "Förenade Arabemiraten"
+
+#~ msgid "United Kingdom"
+#~ msgstr "Storbritannien"
+
+#~ msgid "United States"
+#~ msgstr "USA"
+
+#~ msgid "Unknown"
+#~ msgstr "Okänd"
+
+#~ msgid "Unknown error during import:"
+#~ msgstr "Okänt fel under import: "
+
+#~ msgid "Untranslated"
+#~ msgstr "Oöversatta"
+
+#~ msgid "Updatable"
+#~ msgstr "Uppdateringsbart"
+
+#~ msgid "Update"
+#~ msgstr "Uppdatera"
+
+#~ msgid "Update Apps List"
+#~ msgstr "Uppdatera listan med moduler"
+
+#~ msgid "Update Date"
+#~ msgstr "Uppdateringsdatum"
+
+#~ msgid "Update Module"
+#~ msgstr "Uppdatera modulen"
+
+#~ msgid "Update Module List"
+#~ msgstr "Uppdateringslista moduler"
+
+#~ msgid "Update Terms"
+#~ msgstr "Uppdateringsvillkor"
+
+#~ msgid "Updates"
+#~ msgstr "Uppdatera"
+
+#~ msgid "Upgrade"
+#~ msgstr "Uppgradera"
+
+#~ msgid "Url"
+#~ msgstr "Url"
+
+#~ msgid "Uruguay"
+#~ msgstr "Uruguay"
+
+#~ msgid "Usage"
+#~ msgstr "Användning"
+
+#~ msgid "Used to log into the system"
+#~ msgstr "Används för att logga in i systemet"
+
+#~ msgid ""
+#~ "Used to select automatically the right address according to the context "
+#~ "in sales and purchases documents."
+#~ msgstr ""
+#~ "Används för att automatiskt välja rätt adress beroende på innehållet i "
+#~ "försäljnings- eller inköpsdokumentet."
+
+#~ msgid "User"
+#~ msgstr "Användare"
+
+#~ msgid "User Interface"
+#~ msgstr "Användargränssnitt"
+
+#~ msgid "User Login"
+#~ msgstr "Användarinloggning"
+
+#~ msgid "Username"
+#~ msgstr "Användarnamn"
+
+#~ msgid "Users & Companies"
+#~ msgstr "Användare & Företag"
+
+#~ msgid "Uzbekistan"
+#~ msgstr "Uzbekistan"
+
+#~ msgid "Value"
+#~ msgstr "Värde"
+
+#~ msgid "Vanuatu"
+#~ msgstr "Vanuatu"
+
+#~ msgid "Vendors"
+#~ msgstr "Leverantörer"
+
+#~ msgid "Venezuela"
+#~ msgstr "Venezuela"
+
+#~ msgid "Version"
+#~ msgstr "Version"
+
+#~ msgid "Vietnam"
+#~ msgstr "Vietnam"
+
+#~ msgid "View"
+#~ msgstr "Visa"
+
+#~ msgid "View Architecture"
+#~ msgstr "Visa arkitektur"
+
+#~ msgid "View Name"
+#~ msgstr "Vynamn"
+
+#~ msgid "View Ref."
+#~ msgstr "Vy ref."
+
+#~ msgid "View Type"
+#~ msgstr "Typ av vy"
+
+#~ msgid "Views"
+#~ msgstr "Vyer"
+
+#~ msgid "Virgin Islands (British)"
+#~ msgstr "Jungfruöarna (brittiska)"
+
+#~ msgid "Virgin Islands (USA)"
+#~ msgstr "Virgin Islands (USA)"
+
+#~ msgid "Warehouse"
+#~ msgstr "Lager"
+
+#~ msgid ""
+#~ "We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl"
+#~ "+R)."
+#~ msgstr ""
+#~ "Vi rekommenderar att du laddar om menyn för att se de nya menyerna (ctrl-"
+#~ "T och ctrl-R)."
+
+#~ msgid "Web"
+#~ msgstr "Webb"
+
+#~ msgid "Website"
+#~ msgstr "Webbplats"
+
+#~ msgid "Website Builder"
+#~ msgstr "Webbplatsredigerare"
+
+#~ msgid "Website of Partner or Company"
+#~ msgstr "Företagets eller bolagets webbplats"
+
+#~ msgid "Wednesday"
+#~ msgstr "Onsdag"
+
+#~ msgid "Weeks"
+#~ msgstr "Veckor"
+
+#~ msgid "Western Sahara"
+#~ msgstr "Västsahara"
+
+#~ msgid ""
+#~ "Whether values for this field can be translated (enables the translation "
+#~ "mechanism for that field)"
+#~ msgstr ""
+#~ "Anger om värden i detta fält kan översättas (slår på "
+#~ "översättningsmekanismen för detta fält)."
+
+#~ msgid "Window Actions"
+#~ msgstr "Fönsteraktiviteter"
+
+#~ msgid "Wizard"
+#~ msgstr "Guide"
+
+#~ msgid "Wizards to be Launched"
+#~ msgstr "Guider som kommer startas"
+
+#~ msgid "Write Access"
+#~ msgstr "Skrivrättigheter"
+
+#~ msgid "Yemen"
+#~ msgstr "Jemen"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "Du kan inte ha två användare med samma användarid !"
+
+#~ msgid "You should try other search criteria."
+#~ msgstr "Du borde pröva andra sökkriterier"
+
+#~ msgid ""
+#~ "Your Contact Form\n"
+#~ "-----------------\n"
+#~ "\n"
+#~ "### Integrate contact forms with your leads\n"
+#~ "\n"
+#~ "This simple application integrates a contact form in your \"Contact us\" "
+#~ "page.\n"
+#~ "Forms submissions create leads automatically in <a href=\"https://www."
+#~ "odoo.com/page/crm\">Odoo CRM</a>.\n"
+#~ "\n"
+#~ "Easy Contact Page\n"
+#~ "-----------------\n"
+#~ "\n"
+#~ "Get your leads filled up automatically with your contact form "
+#~ "integration. This\n"
+#~ "application allows a better qualification of the lead which is perfect to "
+#~ "link\n"
+#~ "them to marketing campaigns.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Ditt kontaktformulär\n"
+#~ "-----------------------------\n"
+#~ "\n"
+#~ "### Integrera kontakter med dina affärsmöjligheter\n"
+#~ "\n"
+#~ "Denna enkla applikation integrerar ett kontaktformulär på din \"Kontakta "
+#~ "oss\"-sida.\n"
+#~ "Formuläret som skickas in landar automatiskt i <a href=\"https://www.odoo."
+#~ "com/page/crm\">Odoo CRM</a>.\n"
+#~ "\n"
+#~ "Lätt kontaktsida\n"
+#~ "-----------------------\n"
+#~ "\n"
+#~ "Fyll på med affärsmöjligheter automatiskt med integration av "
+#~ "kontaktformulär.\n"
+#~ "Denna applikation ger en bättre möjlighet till kvalificering av "
+#~ "möjligheten\n"
+#~ "vilket gör dem perfekta att leda till marknadskampanjer.\n"
+
+#~ msgid "ZIP"
+#~ msgstr "Postnummer"
+
+#~ msgid "Zambia"
+#~ msgstr "Zambia"
+
+#~ msgid "Zimbabwe"
+#~ msgstr "Zimbabwe"
+
+#~ msgid "Zip"
+#~ msgstr "Postnummer"
+
+#~ msgid "[('blue', 'Blue'),('yellow', 'Yellow')]"
+#~ msgstr "[('blå', 'Blå'),('gul', 'Gul')]"
+
+#~ msgid "_Import"
+#~ msgstr "_Importera"
+
+#~ msgid "_unknown"
+#~ msgstr "_unknown"
+
+#~ msgid "account_online_sync"
+#~ msgstr "account_online_sync"
+
+#~ msgid "account_plaid"
+#~ msgstr "account_plaid"
+
+#~ msgid "at"
+#~ msgstr "på"
+
+#~ msgid "base"
+#~ msgstr "bas"
+
+#~ msgid "base.language.export"
+#~ msgstr "base.language.export"
+
+#~ msgid "base.update.translations"
+#~ msgstr "base.update.translations"
+
+#~ msgid "binary"
+#~ msgstr "binär"
+
+#~ msgid "boolean"
+#~ msgstr "boolskt"
+
+#~ msgid "bpost Shipping"
+#~ msgstr "bpost frakt"
+
+#~ msgid "char"
+#~ msgstr "tecken"
+
+#~ msgid "choose"
+#~ msgstr "välj"
+
+#~ msgid "crm"
+#~ msgstr "crm"
+
+#~ msgid "date"
+#~ msgstr "datum"
+
+#~ msgid "datetime"
+#~ msgstr "datumtid"
+
+#~ msgid "documentation"
+#~ msgstr "dokumentation"
+
+#~ msgid "done"
+#~ msgstr "klar"
+
+#~ msgid "e.g. BE0477472701"
+#~ msgstr "e.g. SE5577472701"
+
+#~ msgid "e.g. English"
+#~ msgstr "t.ex. svenska"
+
+#~ msgid "e.g. Global Business Solutions"
+#~ msgstr "t.ex. Global Business Solutions"
+
+#~ msgid "e.g. Mr."
+#~ msgstr "t.ex. Herr"
+
+#~ msgid "e.g. Sales Director"
+#~ msgstr "t.ex. försäljningschef"
+
+#~ msgid "e.g. Update order quantity"
+#~ msgstr "t.ex. uppdatera orderkvantitet"
+
+#~ msgid "e.g. Your Bank Accounts, one per line"
+#~ msgstr "t.ex. dina bankkonton, en per rad"
+
+#~ msgid "e.g. en_US"
+#~ msgstr "t.ex. sv_SE"
+
+#~ msgid "e.g. www.odoo.com"
+#~ msgstr "t.ex. www.odoo.com"
+
+#~ msgid "eBay Connector"
+#~ msgstr "Anslutning till eBay"
+
+#~ msgid "eCommerce"
+#~ msgstr "E-handel"
+
+#~ msgid "eCommerce Delivery"
+#~ msgstr "E-handel leverans"
+
+#~ msgid "eCommerce Optional Products"
+#~ msgstr "E-handel valfria produkter"
+
+#~ msgid "email@yourcompany.com"
+#~ msgstr "e-post@mittbolag.se"
+
+#~ msgid "false"
+#~ msgstr "falskt"
+
+#~ msgid "format.address.mixin"
+#~ msgstr "format.address.mixin"
+
+#~ msgid "get"
+#~ msgstr "hämta"
+
+#~ msgid "html"
+#~ msgstr "html"
+
+#~ msgid "init"
+#~ msgstr "init"
+
+#~ msgid "integer"
+#~ msgstr "heltal"
+
+#~ msgid "internal note..."
+#~ msgstr "intern anteckning..."
+
+#~ msgid "ir.actions.act_url"
+#~ msgstr "ir.actions.act_url"
+
+#~ msgid "ir.actions.act_window"
+#~ msgstr "ir.actions.act_window"
+
+#~ msgid "ir.actions.act_window.view"
+#~ msgstr "ir.actions.act_window.view"
+
+#~ msgid "ir.actions.act_window_close"
+#~ msgstr "ir.actions.act_window_close"
+
+#~ msgid "ir.actions.actions"
+#~ msgstr "ir.actions.actions"
+
+#~ msgid "ir.actions.client"
+#~ msgstr "ir.actions.client"
+
+#~ msgid "ir.actions.report"
+#~ msgstr "ir.actions.report"
+
+#~ msgid "ir.actions.server"
+#~ msgstr "ir.actions.server"
+
+#~ msgid "ir.attachment"
+#~ msgstr "ir.attachment"
+
+#~ msgid "ir.autovacuum"
+#~ msgstr "ir.autovacuum"
+
+#~ msgid "ir.config_parameter"
+#~ msgstr "ir.config_parameter"
+
+#~ msgid "ir.default"
+#~ msgstr "ir.default"
+
+#~ msgid "ir.exports"
+#~ msgstr "ir.exports"
+
+#~ msgid "ir.exports.line"
+#~ msgstr "ir.exports.line"
+
+#~ msgid "ir.fields.converter"
+#~ msgstr "ir.fields.converter"
+
+#~ msgid "ir.logging"
+#~ msgstr "ir.logging"
+
+#~ msgid "ir.mail_server"
+#~ msgstr "ir.mail_server"
+
+#~ msgid "ir.model.access"
+#~ msgstr "ir.model.access"
+
+#~ msgid "ir.model.constraint"
+#~ msgstr "ir.model.constraint"
+
+#~ msgid "ir.model.data"
+#~ msgstr "ir.model.data"
+
+#~ msgid "ir.model.relation"
+#~ msgstr "ir.model.relation"
+
+#~ msgid "ir.property"
+#~ msgstr "ir.property"
+
+#~ msgid "ir.qweb"
+#~ msgstr "ir.qweb"
+
+#~ msgid "ir.qweb.field"
+#~ msgstr "ir.qweb.field"
+
+#~ msgid "ir.qweb.field.barcode"
+#~ msgstr "ir.qweb.field.barcode"
+
+#~ msgid "ir.qweb.field.contact"
+#~ msgstr "ir.qweb.field.contact"
+
+#~ msgid "ir.qweb.field.date"
+#~ msgstr "ir.qweb.field.date"
+
+#~ msgid "ir.qweb.field.datetime"
+#~ msgstr "ir.qweb.field.datetime"
+
+#~ msgid "ir.qweb.field.duration"
+#~ msgstr "ir.qweb.field.duration"
+
+#~ msgid "ir.qweb.field.float"
+#~ msgstr "ir.qweb.field.float"
+
+#~ msgid "ir.qweb.field.float_time"
+#~ msgstr "ir.qweb.field.float_time"
+
+#~ msgid "ir.qweb.field.html"
+#~ msgstr "ir.qweb.field.html"
+
+#~ msgid "ir.qweb.field.image"
+#~ msgstr "ir.qweb.field.image"
+
+#~ msgid "ir.qweb.field.integer"
+#~ msgstr "ir.qweb.field.integer"
+
+#~ msgid "ir.qweb.field.many2one"
+#~ msgstr "ir.qweb.field.many2one"
+
+#~ msgid "ir.qweb.field.monetary"
+#~ msgstr "ir.qweb.field.monetary"
+
+#~ msgid "ir.qweb.field.qweb"
+#~ msgstr "ir.qweb.field.qweb"
+
+#~ msgid "ir.qweb.field.relative"
+#~ msgstr "ir.qweb.field.relative"
+
+#~ msgid "ir.qweb.field.selection"
+#~ msgstr "ir.qweb.field.selection"
+
+#~ msgid "ir.qweb.field.text"
+#~ msgstr "ir.qweb.field.text"
+
+#~ msgid "ir.rule"
+#~ msgstr "ir.rule"
+
+#~ msgid "ir.sequence"
+#~ msgstr "ir.sequence"
+
+#~ msgid "ir.sequence.date_range"
+#~ msgstr "ir.sequence.date_range"
+
+#~ msgid "ir.translation"
+#~ msgstr "ir.translation"
+
+#~ msgid "ir.ui.menu"
+#~ msgstr "ir.ui.menu"
+
+#~ msgid "ir.ui.view"
+#~ msgstr "ir.ui.view"
+
+#~ msgid "ir.ui.view.custom"
+#~ msgstr "ir.ui.view.custom"
+
+#~ msgid "many2many"
+#~ msgstr "many2many"
+
+#~ msgid "many2one"
+#~ msgstr "many2one"
+
+#~ msgid "monetary"
+#~ msgstr "monetär"
+
+#~ msgid "n/a"
+#~ msgstr "n/a"
+
+#~ msgid "no"
+#~ msgstr "nej"
+
+#~ msgid "on"
+#~ msgstr "av"
+
+#~ msgid "one2many"
+#~ msgstr "one2many"
+
+#~ msgid "pos_cache"
+#~ msgstr "pos_cache"
+
+#~ msgid "pos_sale"
+#~ msgstr "pos_sale"
+
+#~ msgid "reference"
+#~ msgstr "referens"
+
+#~ msgid "report.base.report_irmodulereference"
+#~ msgstr "report.base.report_irmodulereference"
+
+#~ msgid "res.config"
+#~ msgstr "res.config"
+
+#~ msgid "res.config.installer"
+#~ msgstr "res.config.installer"
+
+#~ msgid "res.config.settings"
+#~ msgstr "res.config.settings"
+
+#~ msgid "res.partner.title"
+#~ msgstr "res.partner.title"
+
+#~ msgid "res.users.log"
+#~ msgstr "res.users.log"
+
+#~ msgid "selection"
+#~ msgstr "val"
+
+#~ msgid "test mimetypes-guessing"
+#~ msgstr "test mimetypes-guessing"
+
+#~ msgid "test of access rights and rules"
+#~ msgstr "test av åtkomsträttigheter och regler"
+
+#~ msgid "test read_group"
+#~ msgstr "test read_group"
+
+#~ msgid "test-assetsbundle"
+#~ msgstr "test-assetsbundle"
+
+#~ msgid "test-eval"
+#~ msgstr "test-eval"
+
+#~ msgid "test-exceptions"
+#~ msgstr "test-exceptions"
+
+#~ msgid "test-field-converter"
+#~ msgstr "test-field-converter"
+
+#~ msgid "test-import-export"
+#~ msgstr "test-import-export"
+
+#~ msgid "test-inherit"
+#~ msgstr "test-inherit"
+
+#~ msgid "test-inherits"
+#~ msgstr "test-inherits"
+
+#~ msgid "test-limits"
+#~ msgstr "test-limits"
+
+#~ msgid "test-uninstall"
+#~ msgstr "test-uninstall"
+
+#~ msgid "test_convert"
+#~ msgstr "test_convert"
+
+#~ msgid "text"
+#~ msgstr "text"
+
+#~ msgid "title"
+#~ msgstr "titel"
+
+#~ msgid "true"
+#~ msgstr "sant"
+
+#~ msgid "wizard.ir.model.menu.create"
+#~ msgstr "wizard.ir.model.menu.create"
+
+#~ msgid "yes"
+#~ msgstr "ja"
+
+#~ msgid "Åland Islands"
+#~ msgstr "Åland"

@@ -1,0 +1,7857 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base
+#
+# Translators:
+# Gert Valdek <gert@airobot.ee>, 2018
+# Wanradt Koell <wanradt@gmail.com>, 2018
+# Ants Peetsalu <ants@avalah.ee>, 2018
+# Egon Raamat <egon@avalah.ee>, 2018
+# Eneli Õigus <enelioigus@gmail.com>, 2018
+# Marek Pontus, 2018
+# Martin Aavastik <martin@avalah.ee>, 2018
+# Helen Sulaoja <helen@avalah.ee>, 2018
+# Rivo Zängov <eraser@eraser.ee>, 2018
+# Martin Trigaux, 2018
+# Arma Gedonsky <armagedonsky@hot.ee>, 2018
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2022-04-11 12:53+0200\n"
+"PO-Revision-Date: 2018-08-24 09:14+0000\n"
+"Last-Translator: Arma Gedonsky <armagedonsky@hot.ee>, 2018\n"
+"Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
+"Language: et\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: models/decimal_precision.py:57 models/res_currency.py:407
+#, fuzzy, python-format
+msgid "Warning for %s"
+msgstr "Hoiatused"
+
+#: models/decimal_precision.py:58
+#, python-format
+msgid ""
+"The precision has been reduced for %s.\n"
+"Note that existing data WON'T be updated by this change.\n"
+"\n"
+"As decimal precisions impact the whole system, this may cause critical "
+"issues.\n"
+"E.g. reducing the precision could disturb your financial balance.\n"
+"\n"
+"Therefore, changing decimal precisions in a running database is not "
+"recommended."
+msgstr ""
+
+#: models/ir_actions.py:179 models/ir_actions.py:181
+#, python-format
+msgid "Invalid model name %r in action definition."
+msgstr ""
+
+#: models/ir_actions.py:210
+#, python-format
+msgid "The modes in view_mode must not be duplicated: %s"
+msgstr ""
+
+#: models/ir_actions.py:212
+#, python-format
+msgid "No spaces allowed in view_mode: %r"
+msgstr ""
+
+#: models/ir_actions.py:457
+msgid "Recursion found in child server actions"
+msgstr ""
+
+#: models/ir_actions.py:610
+msgid "You don't have enough access rights to run this action."
+msgstr ""
+
+#: models/ir_actions.py:702
+msgid "many2many fields cannot be evaluated by reference"
+msgstr ""
+
+#: models/ir_actions_report.py:497
+#, python-format
+msgid ""
+"Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
+"number of subprocess reached. Message : %s"
+msgstr ""
+
+#: models/ir_actions_report.py:500
+#, python-format
+msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
+msgstr ""
+
+#: models/ir_actions_report.py:745
+msgid "One of the documents you are trying to merge is encrypted"
+msgstr ""
+
+#: models/ir_actions_report.py:770
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still "
+"retrieve those PDFs by selecting each of the affected records individually, "
+"which will avoid merging."
+msgstr ""
+
+#: models/ir_actions_report.py:858
+msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
+msgstr ""
+
+#: models/ir_actions_report.py:865
+#, python-format
+msgid ""
+"The report's template '%s' is wrong, please contact your administrator. \n"
+"\n"
+"Can not separate file to save as attachment because the report's template "
+"does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div "
+"with 'article' classname."
+msgstr ""
+
+#: models/ir_attachment.py:71
+msgid "Only administrators can execute this action."
+msgstr ""
+
+#: models/ir_attachment.py:431 models/ir_attachment.py:442
+msgid "Sorry, you are not allowed to access this document."
+msgstr "Vabadust, Sul puudub õigus ligipääsuks sellele dokumendile."
+
+#: models/ir_attachment.py:476
+msgid "Sorry, you must provide fields to read on attachments"
+msgstr ""
+
+#: models/ir_attachment.py:479
+msgid "Sorry, the syntax 'name:agg(field)' is not available for attachments"
+msgstr ""
+
+#: models/ir_attachment.py:485
+#, fuzzy
+msgid "Sorry, you are not allowed to access these fields on attachments."
+msgstr "Vabadust, Sul puudub õigus ligipääsuks sellele dokumendile."
+
+#: models/ir_cron.py:372
+msgid ""
+"Record cannot be modified right now: This cron task is currently being "
+"executed and may not be modified Please try again in a few minutes"
+msgstr ""
+
+#: models/ir_default.py:70
+#, python-format
+msgid "Invalid field %s.%s"
+msgstr ""
+
+#: models/ir_default.py:72
+#, python-format
+msgid "Invalid value for %s.%s: %s"
+msgstr ""
+
+#: models/ir_fields.py:213
+#, python-format
+msgid "Unknown value '%s' for boolean field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:215
+msgid "Use '1' for yes and '0' for no"
+msgstr ""
+
+#: models/ir_fields.py:225
+#, python-format
+msgid "'%s' does not seem to be an integer for field '%%(field)s'"
+msgstr "\"%s\" ei tundu olevat täisarv välja jaoks \"%%(field)s\""
+
+#: models/ir_fields.py:236
+#, python-format
+msgid "'%s' does not seem to be a number for field '%%(field)s'"
+msgstr "\"%s\" ei tundu olevat number välja jaoks \"%%(field)s\""
+
+#: models/ir_fields.py:256
+#, python-format
+msgid "'%s' does not seem to be a valid date for field '%%(field)s'"
+msgstr "\"%s\" ei tundu olevat kuupäev välja jaoks \"%%(field)s\""
+
+#: models/ir_fields.py:258 models/ir_fields.py:290
+#, python-format
+msgid "Use the format '%s'"
+msgstr ""
+
+#: models/ir_fields.py:288
+#, python-format
+msgid "'%s' does not seem to be a valid datetime for field '%%(field)s'"
+msgstr ""
+"\"%s\" ei tundu olevat üige kuupäev-kellaaeg välja jaoks  \"%%(field)s\""
+
+#: models/ir_fields.py:332
+#, python-format
+msgid "Value '%s' not found in selection field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:367
+msgid "See all possible values"
+msgstr "Vaata võimalikke väärtuseid"
+
+#: models/ir_fields.py:376
+msgid "database id"
+msgstr "andmebaasi id"
+
+#: models/ir_fields.py:388
+#, python-format
+msgid "Invalid database id '%s' for the field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:392
+msgid "external id"
+msgstr ""
+
+#: models/ir_fields.py:402
+msgid "name"
+msgstr "Nimi"
+
+#: models/ir_fields.py:410
+#, python-format
+msgid ""
+"Found multiple matches for value '%s' in field '%%(field)s' (%d matches)"
+msgstr ""
+
+#: models/ir_fields.py:419
+#, python-format
+msgid ""
+"Cannot create new '%s' records from their name alone. Please create those "
+"records manually and try importing again."
+msgstr ""
+
+#: models/ir_fields.py:423
+#, python-format
+msgid "Unknown sub-field '%s'"
+msgstr ""
+
+#: models/ir_fields.py:436
+#, python-format
+msgid ""
+"No matching record found for %(field_type)s '%(value)s' in field "
+"'%%(field)s' and the following error was encountered when we attempted to "
+"create one: %(error_message)s"
+msgstr ""
+
+#: models/ir_fields.py:438
+#, python-format
+msgid ""
+"No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:493
+msgid ""
+"Can not create Many-To-One records indirectly, import the field separately"
+msgstr ""
+
+#: models/ir_fields.py:496
+#, python-format
+msgid ""
+"Ambiguous specification for field '%(field)s', only provide one of name, "
+"external id or database id"
+msgstr ""
+
+#: models/ir_filters.py:36 models/res_partner.py:364 models/res_users.py:205
+#: models/res_users.py:632 models/res_users.py:634
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (koopia)"
+
+#: models/ir_filters.py:105
+#, python-format
+msgid ""
+"There is already a shared filter set as default for %(model)s, delete or "
+"change it before setting a new default"
+msgstr ""
+
+#: models/ir_mail_server.py:126
+#, python-format
+msgid "SSL private key is missing for %s."
+msgstr ""
+
+#: models/ir_mail_server.py:128
+#, python-format
+msgid "SSL certificate is missing for %s."
+msgstr ""
+
+#: models/ir_mail_server.py:134
+msgid ""
+"Please configure an email on the current user to simulate sending an email "
+"message via this outgoing server"
+msgstr ""
+
+#: models/ir_mail_server.py:148
+#, python-format
+msgid ""
+"The server refused the sender address (%(email_from)s) with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:153
+#, python-format
+msgid ""
+"The server refused the test recipient (%(email_to)s) with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:160
+#, python-format
+msgid "The server refused the test connection with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:166
+#, python-format
+msgid ""
+"Invalid server name !\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:168
+#, python-format
+msgid ""
+"No response received. Check server address and port number.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:170
+#, python-format
+msgid ""
+"The server has closed the connection unexpectedly. Check configuration "
+"served on this port number.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:172
+#, python-format
+msgid ""
+"Server replied with following exception:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:174
+#, python-format
+msgid ""
+"An option is not supported by the server:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:176
+#, python-format
+msgid ""
+"An SMTP exception occurred. Check port number and connection security type.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:178
+#, python-format
+msgid ""
+"An SSL exception occurred. Check connection security type.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:180
+#, python-format
+msgid ""
+"Connection Test Failed! Here is what we got instead:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:189
+#, fuzzy
+msgid "Connection Test Successful!"
+msgstr "Ühenduse turvalisus"
+
+#: models/ir_mail_server.py:259 models/ir_mail_server.py:284
+#, python-format
+msgid ""
+"The private key or the certificate is not a valid file. \n"
+"%s"
+msgstr ""
+
+#: models/ir_mail_server.py:261 models/ir_mail_server.py:286
+#, python-format
+msgid ""
+"Could not load your certificate / private key. \n"
+"%s"
+msgstr ""
+
+#: models/ir_mail_server.py:290
+msgid "Missing SMTP Server"
+msgstr ""
+
+#: models/ir_mail_server.py:291
+msgid ""
+"Please define at least one SMTP server, or provide the SMTP parameters "
+"explicitly."
+msgstr ""
+
+#: models/ir_mail_server.py:297
+msgid ""
+"Your Odoo Server does not support SMTP-over-SSL. You could use STARTTLS "
+"instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
+"should do the trick."
+msgstr ""
+
+#: models/ir_mail_server.py:615
+#, python-format
+msgid ""
+"Mail delivery failed via SMTP server '%s'.\n"
+"%s: %s"
+msgstr ""
+
+#: models/ir_mail_server.py:617
+msgid "Mail Delivery Failed"
+msgstr ""
+
+#: models/ir_mail_server.py:701 models/ir_model.py:605 models/ir_model.py:684
+#: models/ir_model.py:692 models/res_partner.py:377
+msgid "Warning"
+msgstr "Hoiatus"
+
+#: models/ir_mail_server.py:702
+msgid ""
+"Your server does not seem to support SSL, you may want to try STARTTLS "
+"instead"
+msgstr ""
+
+#: models/ir_model.py:215
+msgid "The model name must start with 'x_'."
+msgstr ""
+
+#: models/ir_model.py:217
+msgid ""
+"The model name can only contain lowercase characters, digits, underscores "
+"and dots."
+msgstr ""
+
+#: models/ir_model.py:234
+#, python-format
+msgid ""
+"Unable to order by %s: fields used for ordering must be present on the model "
+"and stored."
+msgstr ""
+
+#: models/ir_model.py:277
+#, python-format
+msgid "Model '%s' contains module data and cannot be removed."
+msgstr ""
+
+#: models/ir_model.py:302
+msgid "Field \"Model\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:304
+msgid "Field \"Type\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:306
+msgid "Field \"Transient Model\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:563
+msgid "Custom fields must have a name that starts with 'x_' !"
+msgstr "Kohandatud väljadel peab olema nimi mis algab 'x_'-ga !"
+
+#: models/ir_model.py:567
+msgid ""
+"Field names can only contain characters, digits and underscores (up to 63)."
+msgstr ""
+
+#: models/ir_model.py:583
+#, python-format
+msgid "Unknown field name '%s' in related field '%s'"
+msgstr ""
+
+#: models/ir_model.py:586
+#, python-format
+msgid "Non-relational field name '%s' in related field '%s'"
+msgstr ""
+
+#: models/ir_model.py:595
+#, python-format
+msgid "Related field '%s' does not have type '%s'"
+msgstr ""
+
+#: models/ir_model.py:597
+#, python-format
+msgid "Related field '%s' does not have comodel '%s'"
+msgstr ""
+
+#: models/ir_model.py:618
+#, python-format
+msgid "Empty dependency in %r"
+msgstr ""
+
+#: models/ir_model.py:625
+#, python-format
+msgid "Unknown field %r in dependency %r"
+msgstr ""
+
+#: models/ir_model.py:627
+#, python-format
+msgid "Non-relational field %r in dependency %r"
+msgstr ""
+
+#: models/ir_model.py:658
+#, python-format
+msgid "Model %s does not exist"
+msgstr ""
+
+#: models/ir_model.py:659
+msgid "Please specify a valid model for the object relation"
+msgstr ""
+
+#: models/ir_model.py:685
+#, python-format
+msgid "The table %r if used for other, possibly incompatible fields."
+msgstr ""
+
+#: models/ir_model.py:692
+#, python-format
+msgid ""
+"The m2o field %s is required but declares its ondelete policy as being 'set "
+"null'. Only 'restrict' and 'cascade' make sense."
+msgstr ""
+
+#: models/ir_model.py:770
+#, python-format
+msgid "The field '%s' cannot be removed because the field '%s' depends on it."
+msgstr ""
+
+#: models/ir_model.py:797
+msgid "Cannot rename/delete fields that are still present in views:"
+msgstr ""
+
+#: models/ir_model.py:798
+#, python-format
+msgid "Fields: %s"
+msgstr "Väljad: %s"
+
+#: models/ir_model.py:799
+#, python-format
+msgid "View: %s"
+msgstr ""
+
+#: models/ir_model.py:814
+msgid "This column contains module data and cannot be removed!"
+msgstr ""
+
+#: models/ir_model.py:882
+#, python-format
+msgid "Model %s does not exist!"
+msgstr ""
+
+#: models/ir_model.py:889
+#, python-format
+msgid "Many2one %s on model %s does not exist!"
+msgstr ""
+
+#: models/ir_model.py:911
+msgid "Changing the model of a field is forbidden!"
+msgstr ""
+
+#: models/ir_model.py:914
+msgid ""
+"Changing the type of a field is not yet supported. Please drop it and create "
+"it again!"
+msgstr ""
+
+#: models/ir_model.py:928
+msgid "Can only rename one field at a time!"
+msgstr ""
+
+#: models/ir_model.py:1314 models/ir_model.py:1334 models/ir_model.py:1365
+msgid ""
+"Properties of base fields cannot be altered in this manner! Please modify "
+"them through Python code, preferably through a custom addon!"
+msgstr ""
+
+#: models/ir_model.py:1439
+#, python-format
+msgid "The ondelete policy %r is not valid for field %r"
+msgstr ""
+
+#: models/ir_model.py:1484 models/ir_model.py:1622 models/ir_model.py:2040
+msgid "Administrator access is required to uninstall a module"
+msgstr "Mooduli deinstallimiseks on vajalik administraatori juurdepääs"
+
+#: models/ir_model.py:1771
+#, fuzzy, python-format
+msgid ""
+"You are not allowed to access '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr "Vabadust, Sul puudub õigus ligipääsuks sellele dokumendile."
+
+#: models/ir_model.py:1772
+#, fuzzy, python-format
+msgid ""
+"You are not allowed to modify '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr "Vabandust, Sul puudub õigus selle dokumendi muutmiseks."
+
+#: models/ir_model.py:1773
+#, fuzzy, python-format
+msgid ""
+"You are not allowed to create '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr "Vabandust, Sul puudub õigus sellise dokumendi loomiseks."
+
+#: models/ir_model.py:1774
+#, fuzzy, python-format
+msgid ""
+"You are not allowed to delete '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr "Vabadust, Sul puudub õigus selle dokumendi kustutamiseks."
+
+#: models/ir_model.py:1779
+#, python-format
+msgid ""
+"This operation is allowed for the following groups:\n"
+"%(groups_list)s"
+msgstr ""
+
+#: models/ir_model.py:1781
+msgid "No group currently allows this operation."
+msgstr ""
+
+#: models/ir_model.py:1783 models/ir_rule.py:203
+msgid "Contact your administrator to request access if necessary."
+msgstr ""
+
+#: models/ir_model.py:1938
+msgid "Not enough access rights on the external ID:"
+msgstr ""
+
+#: models/ir_module.py:321
+msgid ""
+"You are trying to remove a module that is installed or will be installed."
+msgstr ""
+
+#: models/ir_module.py:368
+#, python-format
+msgid ""
+"Unable to install module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+
+#: models/ir_module.py:370
+#, python-format
+msgid ""
+"Unable to upgrade module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+
+#: models/ir_module.py:372
+#, python-format
+msgid ""
+"Unable to process module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+
+#: models/ir_module.py:377
+msgid "Recursion error in modules dependencies !"
+msgstr "Rekursiooni viga moodulite sõltuvustes !"
+
+#: models/ir_module.py:391
+#, python-format
+msgid ""
+"You try to install module '%s' that depends on module '%s'.\n"
+"But the latter module is not available in your system."
+msgstr ""
+
+#: models/ir_module.py:438
+#, python-format
+msgid "Modules \"%s\" and \"%s\" are incompatible."
+msgstr ""
+
+#: models/ir_module.py:457
+#, python-format
+msgid "You are trying to install incompatible modules in category \"%s\":"
+msgstr ""
+
+#: models/ir_module.py:464
+msgid "Install"
+msgstr "Paigalda"
+
+#: models/ir_module.py:594
+msgid ""
+"Odoo is currently processing a scheduled action.\n"
+"Module operations are not possible at this time, please try again later or "
+"contact your system administrator."
+msgstr ""
+
+#: models/ir_module.py:630
+msgid "The `base` module cannot be uninstalled"
+msgstr ""
+
+#: models/ir_module.py:632
+msgid ""
+"One or more of the selected modules have already been uninstalled, if you "
+"believe this to be an error, you may try again later or contact support."
+msgstr ""
+
+#: models/ir_module.py:638
+msgid "Uninstall"
+msgstr "Eemalda"
+
+#: models/ir_module.py:646
+msgid "Uninstall module"
+msgstr "Eemalda moodul"
+
+#: models/ir_module.py:687
+#, python-format
+msgid "Can not upgrade module '%s'. It is not installed."
+msgstr "Ei saa uuendata moodulit '%s'. See pole paigaldatud"
+
+#: models/ir_module.py:706
+#, python-format
+msgid ""
+"You try to upgrade the module %s that depends on the module: %s.\n"
+"But this module is not available in your system."
+msgstr ""
+
+#: models/ir_module.py:711
+msgid "Apply Schedule Upgrade"
+msgstr ""
+
+#: models/ir_module.py:805
+msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr ""
+
+#: models/ir_module.py:806
+msgid ""
+"To enable it, make sure this directory exists and is writable on the server:"
+msgstr ""
+
+#: models/ir_module.py:833
+#, python-format
+msgid ""
+"The `%s` module appears to be unavailable at the moment, please try again "
+"later."
+msgstr ""
+
+#: models/ir_profile.py:101
+msgid ""
+"Profiling is not enabled on this database. Please contact an administrator."
+msgstr ""
+
+#: models/ir_property.py:88
+msgid "Invalid type"
+msgstr "Vigane liik"
+
+#: models/ir_qweb_fields.py:144
+msgid "Decimalized number"
+msgstr ""
+
+#: models/ir_qweb_fields.py:164
+msgid "Rounding precision"
+msgstr ""
+
+#: models/ir_qweb_fields.py:209
+msgid "Date format"
+msgstr ""
+
+#: models/ir_qweb_fields.py:227
+msgid "Pattern to format"
+msgstr ""
+
+#: models/ir_qweb_fields.py:228
+msgid "Optional timezone name"
+msgstr ""
+
+#: models/ir_qweb_fields.py:229
+msgid "Display only the time"
+msgstr ""
+
+#: models/ir_qweb_fields.py:230
+msgid "Hide seconds"
+msgstr ""
+
+#: models/ir_qweb_fields.py:231
+#, fuzzy
+msgid "Display only the date"
+msgstr "Näidatav nimi"
+
+#: models/ir_qweb_fields.py:301
+msgid "Selection"
+msgstr "Valik"
+
+#: models/ir_qweb_fields.py:301
+msgid "By default the widget uses the field information"
+msgstr ""
+
+#: models/ir_qweb_fields.py:425
+msgid "Original currency"
+msgstr ""
+
+#: models/ir_qweb_fields.py:426
+msgid "Display currency"
+msgstr ""
+
+#: models/ir_qweb_fields.py:427
+msgid "Date"
+msgstr "Kuupäev"
+
+#: models/ir_qweb_fields.py:427
+msgid ""
+"Date used for the original currency (only used for t-esc). by default use "
+"the current date."
+msgstr ""
+
+#: models/ir_qweb_fields.py:428
+msgid "Company"
+msgstr "Ettevõte"
+
+#: models/ir_qweb_fields.py:428
+msgid ""
+"Company used for the original currency (only used for t-esc). By default use "
+"the user company"
+msgstr ""
+
+#: models/ir_qweb_fields.py:437
+msgid "The value send to monetary field is not a number."
+msgstr ""
+
+#: models/ir_qweb_fields.py:535
+#, python-format
+msgid "The value (%s) passed should be positive"
+msgstr ""
+
+#: models/ir_qweb_fields.py:538
+msgid "The hour must be between 0 and 23"
+msgstr ""
+
+#: models/ir_qweb_fields.py:572
+msgid "Digital formatting"
+msgstr ""
+
+#: models/ir_qweb_fields.py:573
+msgid "Date unit"
+msgstr ""
+
+#: models/ir_qweb_fields.py:573
+msgid "Date unit used for comparison and formatting"
+msgstr ""
+
+#: models/ir_qweb_fields.py:574
+msgid "Rounding unit"
+msgstr ""
+
+#: models/ir_qweb_fields.py:574
+msgid ""
+"Date unit used for the rounding. The value must be smaller than 'hour' if "
+"you use the digital formatting."
+msgstr ""
+
+#: models/ir_qweb_fields.py:578
+msgid "Long"
+msgstr ""
+
+#: models/ir_qweb_fields.py:579
+#, fuzzy
+msgid "Short"
+msgstr "Kohord"
+
+#: models/ir_qweb_fields.py:580
+msgid "Narrow"
+msgstr ""
+
+#: models/ir_qweb_fields.py:581
+#, fuzzy
+msgid "Format"
+msgstr "Vorm"
+
+#: models/ir_qweb_fields.py:582
+msgid "Formatting: long, short, narrow (not used for digital)"
+msgstr ""
+
+#: models/ir_qweb_fields.py:587
+#, fuzzy
+msgid "Add direction"
+msgstr "Suund"
+
+#: models/ir_qweb_fields.py:588
+msgid "Add directional information (not used for digital)"
+msgstr ""
+
+#: models/ir_qweb_fields.py:650
+msgid "Reference date"
+msgstr ""
+
+#: models/ir_qweb_fields.py:650
+msgid "Date to compare with the field value, by default use the current date."
+msgstr ""
+
+#: models/ir_qweb_fields.py:686
+msgid "Barcode symbology"
+msgstr ""
+
+#: models/ir_qweb_fields.py:686
+msgid "Barcode type, eg: UPCA, EAN13, Code128"
+msgstr ""
+
+#: models/ir_qweb_fields.py:687
+msgid "Width"
+msgstr "Laius"
+
+#: models/ir_qweb_fields.py:688
+msgid "Height"
+msgstr "Kõrgus"
+
+#: models/ir_qweb_fields.py:689
+msgid "Human Readable"
+msgstr ""
+
+#: models/ir_qweb_fields.py:710
+#, fuzzy, python-format
+msgid "Barcode %s"
+msgstr "Ribakood"
+
+#: models/ir_qweb_fields.py:724
+msgid "Name"
+msgstr "Nimi"
+
+#: models/ir_qweb_fields.py:725
+msgid "Address"
+msgstr "Aadress"
+
+#: models/ir_qweb_fields.py:726
+msgid "Phone"
+msgstr "Telefon"
+
+#: models/ir_qweb_fields.py:727
+msgid "Mobile"
+msgstr "Mobiil"
+
+#: models/ir_qweb_fields.py:728
+msgid "Email"
+msgstr "E-mail"
+
+#: models/ir_qweb_fields.py:729 models/ir_qweb_fields.py:780
+msgid "VAT"
+msgstr "KMKR nr"
+
+#: models/ir_qweb_fields.py:733
+msgid "Space"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+#, fuzzy
+msgid "Comma"
+msgstr "Kommentaar"
+
+#: models/ir_qweb_fields.py:733
+#, fuzzy
+msgid "Dash"
+msgstr "Töölaud"
+
+#: models/ir_qweb_fields.py:733
+msgid "Vertical bar"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+msgid "Slash"
+msgstr ""
+
+#: models/ir_qweb_fields.py:734
+#, fuzzy
+msgid "Linebreak"
+msgstr "Rida"
+
+#: models/ir_qweb_fields.py:737
+msgid "Displayed fields"
+msgstr ""
+
+#: models/ir_qweb_fields.py:737
+msgid "List of contact fields to display in the widget"
+msgstr ""
+
+#: models/ir_qweb_fields.py:738
+msgid "Address separator"
+msgstr ""
+
+#: models/ir_qweb_fields.py:738
+msgid "Separator use to split the address from the display_name."
+msgstr ""
+
+#: models/ir_qweb_fields.py:739
+msgid "Hide badges"
+msgstr ""
+
+#: models/ir_qweb_fields.py:739
+msgid "Don't display the font awesome marker"
+msgstr ""
+
+#: models/ir_qweb_fields.py:740
+msgid "Use comma"
+msgstr ""
+
+#: models/ir_qweb_fields.py:740
+msgid "Use comma instead of the <br> tag to display the address"
+msgstr ""
+
+#: models/ir_qweb_fields.py:741
+msgid "Display phone icons"
+msgstr ""
+
+#: models/ir_qweb_fields.py:741
+msgid "Display the phone icons even if no_marker is True"
+msgstr ""
+
+#: models/ir_qweb_fields.py:742
+#, fuzzy
+msgid "Display country image"
+msgstr "Näidatav nimi"
+
+#: models/ir_qweb_fields.py:742
+msgid "Display the country image if the field is present on the record"
+msgstr ""
+
+#: models/ir_rule.py:61
+msgid "Rules can not be applied on the Record Rules model."
+msgstr ""
+
+#: models/ir_rule.py:197
+#, fuzzy, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to access "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr "Vabadust, Sul puudub õigus ligipääsuks sellele dokumendile."
+
+#: models/ir_rule.py:198
+#, fuzzy, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to modify "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr "Vabandust, Sul puudub õigus selle dokumendi muutmiseks."
+
+#: models/ir_rule.py:199
+#, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to create "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr ""
+
+#: models/ir_rule.py:200
+#, fuzzy, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to delete "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr "Vabadust, Sul puudub õigus selle dokumendi kustutamiseks."
+
+#: models/ir_rule.py:225
+#, fuzzy, python-format
+msgid "Records: %s"
+msgstr "Record"
+
+#: models/ir_rule.py:228
+#, fuzzy, python-format
+msgid "User: %s"
+msgstr "Kasutajad"
+
+#: models/ir_rule.py:231
+#, python-format
+msgid ""
+"This restriction is due to the following rules:\n"
+"%s"
+msgstr ""
+
+#: models/ir_rule.py:233
+msgid "Note: this might be a multi-company issue."
+msgstr ""
+
+#: models/ir_sequence.py:17 models/ir_sequence.py:33
+msgid "Step must not be zero."
+msgstr "Samm ei tohi olla null."
+
+#: models/ir_sequence.py:234
+#, python-format
+msgid "Invalid prefix or suffix for sequence '%s'"
+msgstr ""
+
+#: models/ir_translation.py:528
+msgid "Creating translation on non existing records"
+msgstr ""
+
+#: models/ir_translation.py:552
+#, python-format
+msgid ""
+"Translation is not valid:\n"
+"%s"
+msgstr ""
+
+#: models/ir_translation.py:726
+msgid ""
+"Translation features are unavailable until you install an extra translation."
+msgstr ""
+
+#: models/ir_translation.py:756
+msgid "Translate"
+msgstr "Tõlgi"
+
+#: models/ir_translation.py:854
+msgid "Technical Translations"
+msgstr "Tehnilised tõlked"
+
+#: models/ir_ui_menu.py:73
+msgid "Error! You cannot create recursive menus."
+msgstr ""
+
+#: models/ir_ui_view.py:397
+#, python-format
+msgid ""
+"Error while validating view:\n"
+"\n"
+"%(error)s"
+msgstr ""
+
+#: models/ir_ui_view.py:415
+#, python-format
+msgid "Invalid view %(name)s definition in %(file)s"
+msgstr ""
+
+#: models/ir_ui_view.py:427
+#, python-format
+msgid ""
+"Error while validating view near:\n"
+"\n"
+"%(fivelines)s\n"
+"%(error)s"
+msgstr ""
+
+#: models/ir_ui_view.py:441
+msgid ""
+"Inherited Qweb view cannot have 'Groups' define on the record. Use 'groups' "
+"attributes inside the view definition"
+msgstr ""
+
+#: models/ir_ui_view.py:448
+msgid "You cannot create recursive inherited views."
+msgstr ""
+
+#: models/ir_ui_view.py:484
+msgid "Missing view architecture."
+msgstr ""
+
+#: models/ir_ui_view.py:680
+#, python-format
+msgid "View '%(name)s' accessible only to groups %(groups)s "
+msgstr ""
+
+#: models/ir_ui_view.py:683
+#, python-format
+msgid "View '%(name)s' is private"
+msgstr ""
+
+#: models/ir_ui_view.py:1008 models/ir_ui_view.py:1240
+#, python-format
+msgid "Model not found: %(model)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1290
+#, python-format
+msgid "Tree child can only have one of %(tags)s tag (not %(wrong_tag)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1299
+#, python-format
+msgid "A <graph> can only contains <field> nodes, found a <%s>"
+msgstr ""
+
+#: models/ir_ui_view.py:1320
+msgid "Search tag can only contain one search panel"
+msgstr ""
+
+#: models/ir_ui_view.py:1330
+msgid "Field tag must have a \"name\" attribute defined"
+msgstr ""
+
+#: models/ir_ui_view.py:1352
+#, python-format
+msgid ""
+"Domain on non-relational field \"%(name)s\" makes no sense (domain:"
+"%(domain)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1367
+#, python-format
+msgid "Field \"%(field_name)s\" does not exist in model \"%(model_name)s\""
+msgstr ""
+
+#: models/ir_ui_view.py:1381
+#, python-format
+msgid "Attribute %(attribute)s evaluation expects a boolean, got %(value)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1407
+#, python-format
+msgid "Invalid special '%(value)s' in button"
+msgstr ""
+
+#: models/ir_ui_view.py:1412
+msgid "Button must have a name"
+msgstr ""
+
+#: models/ir_ui_view.py:1416
+#, python-format
+msgid "%(action_name)s is not a valid action on %(model_name)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1424
+#, python-format
+msgid "%(method)s on %(model)s is private and cannot be called from a button"
+msgstr ""
+
+#: models/ir_ui_view.py:1442
+#, python-format
+msgid "Invalid xmlid %(xmlid)s for button of type action."
+msgstr ""
+
+#: models/ir_ui_view.py:1445
+#, python-format
+msgid ""
+"%(xmlid)s is of type %(xmlid_model)s, expected a subclass of ir.actions."
+"actions"
+msgstr ""
+
+#: models/ir_ui_view.py:1452
+#, python-format
+msgid ""
+"Action %(action_reference)s (id: %(action_id)s) does not exist for button of "
+"type action."
+msgstr ""
+
+#: models/ir_ui_view.py:1474
+#, python-format
+msgid ""
+"Field '%(name)s' found in 'groupby' node can only be of type many2one, found "
+"%(type)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1498
+#, python-format
+msgid ""
+"Field '%(field)s' found in 'groupby' node does not exist in model %(model)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1509
+msgid "Searchpanel item with select multi cannot have a domain."
+msgstr ""
+
+#: models/ir_ui_view.py:1518
+msgid ""
+"Label tag must contain a \"for\". To match label style without corresponding "
+"field or button, use 'class=\"o_form_label\"'."
+msgstr ""
+
+#: models/ir_ui_view.py:1528
+msgid "Page direct ancestor must be notebook"
+msgstr ""
+
+#: models/ir_ui_view.py:1599
+#, python-format
+msgid "\"group_by\" value must be a string %(attribute)s=%(value)r"
+msgstr ""
+
+#: models/ir_ui_view.py:1607
+#, python-format
+msgid ""
+"Unknown field \"%(field)s\" in \"group_by\" value in %(attribute)s=%(value)r"
+msgstr ""
+
+#: models/ir_ui_view.py:1630
+#, python-format
+msgid "%(attribute)r value must be an integer (%(value)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1776
+#, python-format
+msgid "Invalid domain format %(expr)s in %(use)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1788
+#, python-format
+msgid "Non-relational field %(field)r in path %(field_path)r in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1796
+#, python-format
+msgid "Unknown field \"%(model)s.%(field)s\" in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1802
+#, python-format
+msgid "Unsearchable field %(field)r in path %(field_path)r in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:2072
+msgid "Can't compare more than two views."
+msgstr ""
+
+#: models/ir_ui_view.py:2099
+msgid "Previous Arch"
+msgstr ""
+
+#: models/ir_ui_view.py:2105
+#, fuzzy
+msgid "File Arch"
+msgstr "Fail"
+
+#: models/ir_ui_view.py:2115
+#, fuzzy
+msgid "Current Arch"
+msgstr "Valuuta"
+
+#: models/ir_ui_view.py:2171
+#, python-format
+msgid ""
+"Name or id %(name_or_id)r in %(use)s must be present in view but is missing."
+msgstr ""
+
+#: models/ir_ui_view.py:2179
+#, fuzzy, python-format
+msgid "Field `%(name)s` does not exist"
+msgstr "Objekti %s pole olemas"
+
+#: models/ir_ui_view.py:2186
+#, python-format
+msgid "Invalid composed field %(definition)s in %(use)s"
+msgstr ""
+
+#: models/ir_ui_view.py:2193
+#, python-format
+msgid "Field %(name)r used in %(use)s must be present in view but is missing."
+msgstr ""
+
+#: models/ir_ui_view.py:2199
+#, python-format
+msgid ""
+"Field %(name)r used in %(use)s is present in view but is in select multi."
+msgstr ""
+
+#: models/report_paperformat.py:194
+msgid ""
+"You can select either a format or a specific page width/height, but not both."
+msgstr ""
+
+#: models/res_bank.py:73
+msgid "Normal"
+msgstr "Tavaline"
+
+#: models/res_company.py:25
+msgid ""
+"Duplicating a company is not allowed. Please create a new company instead."
+msgstr ""
+
+#: models/res_company.py:268
+msgid "You cannot create recursive companies."
+msgstr ""
+
+#: models/res_config.py:300
+msgid ""
+"\n"
+"\n"
+"This addon is already installed on your system"
+msgstr ""
+"\n"
+"\n"
+"See lisa on juba teie süsteemi installeeritud"
+
+#: models/res_config.py:384
+msgid "Cannot duplicate configuration!"
+msgstr ""
+
+#: models/res_config.py:419
+msgid "Warning!"
+msgstr "Hoiatus!"
+
+#: models/res_config.py:420
+#, python-format
+msgid ""
+"Disabling this option will also uninstall the following modules \n"
+"%s"
+msgstr ""
+
+#: models/res_config.py:625
+msgid "Only administrators can change the settings"
+msgstr "Ainult administraatorid saavad neid seadeid muuta"
+
+#: models/res_config.py:752
+msgid "Go to the configuration panel"
+msgstr "Mine seadistuste paneelile"
+
+#: models/res_config.py:793
+msgid "Invalid template user. It seems it has been deleted."
+msgstr ""
+
+#: models/res_country.py:141
+msgid "The layout contains an invalid format key"
+msgstr ""
+
+#: models/res_country.py:152
+msgid "Base view"
+msgstr "Põhivaade"
+
+#: models/res_currency.py:173
+msgid "and"
+msgstr "ja"
+
+#: models/res_currency.py:293
+#, python-format
+msgid "Unit per %s"
+msgstr ""
+
+#: models/res_currency.py:294
+#, python-format
+msgid "%s per Unit"
+msgstr ""
+
+#: models/res_currency.py:408
+msgid ""
+"The new rate is quite far from the previous rate.\n"
+"Incorrect currency rates may cause critical problems, make sure the rate is "
+"correct !"
+msgstr ""
+
+#: models/res_currency.py:428
+#, python-format
+msgid "%(rate_currency_name)s per %(company_currency_name)s"
+msgstr ""
+
+#: models/res_currency.py:429
+#, python-format
+msgid "%(company_currency_name)s per %(rate_currency_name)s"
+msgstr ""
+
+#: models/res_lang.py:72
+msgid "At least one language must be active."
+msgstr ""
+
+#: models/res_lang.py:80
+msgid ""
+"Invalid date/time format directive specified. Please refer to the list of "
+"allowed directives, displayed when you edit a language."
+msgstr ""
+
+#: models/res_lang.py:86
+msgid ""
+"The Separator Format should be like [,n] where 0 < n :starting from Unit "
+"digit. -1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
+"1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
+"106,500. Provided as the thousand separator in each case."
+msgstr ""
+
+#: models/res_lang.py:282
+msgid "Language code cannot be modified."
+msgstr ""
+
+#: models/res_lang.py:285
+msgid "Cannot deactivate a language that is currently used by users."
+msgstr ""
+
+#: models/res_lang.py:287
+msgid "Cannot deactivate a language that is currently used by contacts."
+msgstr ""
+
+#: models/res_lang.py:300
+msgid "Base Language 'en_US' can not be deleted."
+msgstr ""
+
+#: models/res_lang.py:303
+msgid "You cannot delete the language which is the user's preferred language."
+msgstr ""
+
+#: models/res_lang.py:305
+msgid ""
+"You cannot delete the language which is Active!\n"
+"Please de-activate the language first."
+msgstr ""
+
+#: models/res_lang.py:317
+#, python-format
+msgid "format() must be given exactly one %char format specifier"
+msgstr ""
+
+#: models/res_lang.py:341
+msgid ""
+"The languages that you selected have been successfully installed. Users can "
+"choose their favorite language in their preferences."
+msgstr ""
+
+#: models/res_partner.py:89
+msgid "You can not create recursive tags."
+msgstr ""
+
+#: models/res_partner.py:359
+msgid "You cannot create recursive Partner hierarchies."
+msgstr ""
+
+#: models/res_partner.py:378
+msgid ""
+"Changing the company of a contact should only be done if it was never "
+"correctly set. If an existing contact starts working for a new company then "
+"a new contact should be created under that new company. You can use the "
+"\"Discard\" button to abandon this change."
+msgstr ""
+
+#: models/res_partner.py:454
+msgid ""
+"One2Many fields cannot be synchronized as part of `commercial_fields` or "
+"`address fields`"
+msgstr ""
+
+#: models/res_partner.py:577
+#, python-format
+msgid ""
+"You cannot archive contacts linked to an active user.\n"
+"You first need to archive their associated user.\n"
+"\n"
+"Linked active users : %(names)s"
+msgstr ""
+
+#: models/res_partner.py:579 models/res_partner.py:648
+#, fuzzy
+msgid "Go to users"
+msgstr "Google Kasutajad"
+
+#: models/res_partner.py:583
+#, python-format
+msgid ""
+"You cannot archive contacts linked to an active user.\n"
+"Ask an administrator to archive their associated user first.\n"
+"\n"
+"Linked active users :\n"
+"%(names)s"
+msgstr ""
+
+#: models/res_partner.py:646
+#, python-format
+msgid ""
+"You cannot delete contacts linked to an active user.\n"
+"You should rather archive them after archiving their associated user.\n"
+"\n"
+"Linked active users : %(names)s"
+msgstr ""
+
+#: models/res_partner.py:652
+#, python-format
+msgid ""
+"You cannot delete contacts linked to an active user.\n"
+"Ask an administrator to archive their associated user first.\n"
+"\n"
+"Linked active users :\n"
+"%(names)s"
+msgstr ""
+
+#: models/res_partner.py:811
+msgid "Couldn't create contact without email address!"
+msgstr ""
+
+#: models/res_partner.py:842
+msgid "An email is required for find_or_create to work"
+msgstr ""
+
+#: models/res_partner.py:846
+msgid "A valid email is required for find_or_create to work properly."
+msgstr ""
+
+#: models/res_partner.py:918
+#, fuzzy, python-format
+msgid "Partners: %(category)s"
+msgstr "Ülemkategooria"
+
+#: models/res_partner.py:977
+msgid "Import Template for Customers"
+msgstr ""
+
+#: models/res_users.py:96
+msgid "This method can only be accessed over HTTP"
+msgstr ""
+
+#: models/res_users.py:117
+#, fuzzy
+msgid "Security Control"
+msgstr "Turvalisus"
+
+#: models/res_users.py:212
+msgid "The name of the group can not start with \"-\""
+msgstr "Grupi nimi ei tohi alata \"-\" märgiga"
+
+#: models/res_users.py:402
+msgid ""
+"Please use the change password wizard (in User Preferences or User menu) to "
+"change your own password."
+msgstr ""
+
+#: models/res_users.py:464
+#, python-format
+msgid ""
+"Company %(company_name)s is not in the allowed companies for user "
+"%(user_name)s (%(company_allowed)s)."
+msgstr ""
+
+#: models/res_users.py:471
+msgid "The \"App Switcher\" action cannot be selected as home action."
+msgstr ""
+
+#: models/res_users.py:483
+msgid "The user cannot have more than one user types."
+msgstr ""
+
+#: models/res_users.py:533
+msgid "Invalid 'group by' parameter"
+msgstr ""
+
+#: models/res_users.py:541
+msgid "Invalid search criterion"
+msgstr ""
+
+#: models/res_users.py:557
+msgid "You cannot activate the superuser."
+msgstr ""
+
+#: models/res_users.py:559
+msgid "You cannot deactivate the user you're currently logged in as."
+msgstr ""
+
+#: models/res_users.py:611
+msgid ""
+"You can not remove the admin user as it is used internally for resources "
+"created by Odoo (updates, module installation, ...)"
+msgstr ""
+
+#: models/res_users.py:803
+msgid "Setting empty passwords is not allowed for security reasons!"
+msgstr ""
+
+#: models/res_users.py:864
+msgid "Users"
+msgstr "Kasutajad"
+
+#: models/res_users.py:880
+msgid "Groups"
+msgstr "Grupid"
+
+#: models/res_users.py:892
+msgid "Access Rights"
+msgstr "Ligipääsuõigused"
+
+#: models/res_users.py:904
+msgid "Record Rules"
+msgstr "Kirje reeglid"
+
+#: models/res_users.py:1010
+msgid "Too many login failures, please wait a bit before trying again."
+msgstr ""
+
+#: models/res_users.py:1560
+msgid "Other"
+msgstr "Meeldetuletuse lisamine"
+
+#: models/res_users.py:1600
+msgid ""
+"Incorrect Password, try again or click on Forgot Password to reset your "
+"password."
+msgstr ""
+
+#: models/res_users.py:1647
+msgid "Before clicking on 'Change Password', you have to write a new password."
+msgstr ""
+
+#: models/res_users.py:1762
+msgid ""
+"You can not remove API keys unless they're yours or you are a system user"
+msgstr ""
+
+#: models/res_users.py:1826
+msgid "Only internal users can create API keys"
+msgstr ""
+
+#: wizard/base_export_language.py:19
+msgid "New Language (Empty translation template)"
+msgstr ""
+
+#: wizard/base_import_language.py:53
+#, python-format
+msgid ""
+"File %r not imported due to a malformed file.\n"
+"\n"
+"This issue can be caused by duplicates entries who are referring to the same "
+"field. Please check the content of the file you are trying to import.\n"
+"\n"
+"Technical Details:\n"
+"%s"
+msgstr ""
+
+#: wizard/base_import_language.py:60
+#, python-format
+msgid ""
+"File %r not imported due to format mismatch or a malformed file. (Valid "
+"formats are .csv, .po, .pot)\n"
+"\n"
+"Technical Details:\n"
+"%s"
+msgstr ""
+
+#: wizard/base_language_install.py:58
+msgid ""
+"The languages that you selected have been successfully "
+"installed.                            Users can choose their favorite "
+"language in their preferences."
+msgstr ""
+
+#: wizard/base_module_upgrade.py:67
+#, python-format
+msgid "The following modules are not installed or unknown: %s"
+msgstr ""
+
+#: wizard/base_partner_merge.py:305
+msgid ""
+"For safety reasons, you cannot merge more than 3 contacts together. You can "
+"re-open the wizard several times if needed."
+msgstr ""
+"For safety reasons, you cannot merge more than 3 contacts together. You can "
+"re-open the wizard several times if needed."
+
+#: wizard/base_partner_merge.py:312
+msgid "You cannot merge a contact with one of his parent."
+msgstr "You cannot merge a contact with one of his parent."
+
+#: wizard/base_partner_merge.py:315
+msgid ""
+"All contacts must have the same email. Only the Administrator can merge "
+"contacts with different emails."
+msgstr ""
+"All contacts must have the same email. Only the Administrator can merge "
+"contacts with different emails."
+
+#: wizard/base_partner_merge.py:328
+msgid ""
+"Only the destination contact may be linked to existing Journal Items. Please "
+"ask the Administrator if you need to merge several contacts linked to "
+"existing Journal Items."
+msgstr ""
+"Only the destination contact may be linked to existing Journal Items. Please "
+"ask the Administrator if you need to merge several contacts linked to "
+"existing Journal Items."
+
+#: wizard/base_partner_merge.py:412
+msgid "You have to specify a filter for your selection."
+msgstr ""
+
+#: wizard/base_update_translations.py:26
+#, python-format
+msgid "No language with code \"%s\" exists"
+msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会"
+#~ "计凭证簿\n"
+#~ "\n"
+#~ "    添加中文省份数据\n"
+#~ "\n"
+#~ "    增加小企业会计科目表\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会"
+#~ "计凭证簿\n"
+#~ "\n"
+#~ "    添加中文省份数据\n"
+#~ "\n"
+#~ "    增加小企业会计科目表\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Allow cashier to reprint receipts\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Luba kassapidajal kviitungeid uuesti välja printida\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Base module for Hungarian localization\n"
+#~ "==========================================\n"
+#~ "\n"
+#~ "This module consists :\n"
+#~ "\n"
+#~ " - Generic Hungarian chart of accounts\n"
+#~ " - Hungarian taxes\n"
+#~ " - Hungarian Bank information\n"
+#~ " "
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Baasmoodul  Ungari lokaliseerimiseks\n"
+#~ "==========================================\n"
+#~ "\n"
+#~ "See moodul koosneb :\n"
+#~ "\n"
+#~ " - Üldisest Ungari kontoplaanist\n"
+#~ " - Ungari maksudest\n"
+#~ " - Ungari pangaandmetest\n"
+#~ " "
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Localization Module for Dominican Republic\n"
+#~ "===========================================\n"
+#~ "\n"
+#~ "Catálogo de Cuentas e Impuestos para República Dominicana, Compatible "
+#~ "para\n"
+#~ "**Internacionalización** con **NIIF** y alineado a las normas y "
+#~ "regulaciones\n"
+#~ "de la Dirección General de Impuestos Internos (**DGII**).\n"
+#~ "\n"
+#~ "**Este módulo consiste de:**\n"
+#~ "\n"
+#~ "- Catálogo de Cuentas Estándar (alineado a DGII y NIIF)\n"
+#~ "- Catálogo de Impuestos con la mayoría de Impuestos Preconfigurados\n"
+#~ "        - ITBIS para compras y ventas\n"
+#~ "        - Retenciones de ITBIS\n"
+#~ "        - Retenciones de ISR\n"
+#~ "        - Grupos de Impuestos y Retenciones:\n"
+#~ "                - Telecomunicaiones\n"
+#~ "                - Proveedores de Materiales de Construcción\n"
+#~ "                - Personas Físicas Proveedoras de Servicios\n"
+#~ "        - Otros impuestos\n"
+#~ "- Secuencias Preconfiguradas para manejo de todos los NCF\n"
+#~ "        - Facturas con Valor Fiscal (para Ventas)\n"
+#~ "        - Facturas para Consumidores Finales\n"
+#~ "        - Notas de Débito y Crédito\n"
+#~ "        - Registro de Proveedores Informales\n"
+#~ "        - Registro de Ingreso Único\n"
+#~ "        - Registro de Gastos Menores\n"
+#~ "        - Gubernamentales\n"
+#~ "- Posiciones Fiscales para automatización de impuestos y retenciones\n"
+#~ "        - Cambios de Impuestos a Exenciones (Ej. Ventas al Estado)\n"
+#~ "        - Cambios de Impuestos a Retenciones (Ej. Compra Servicios al "
+#~ "Exterior)\n"
+#~ "        - Entre otros\n"
+#~ "\n"
+#~ "**Nota:**\n"
+#~ "Esta localización, aunque posee las secuencias para NCF, las mismas no "
+#~ "pueden\n"
+#~ "ser utilizadas sin la instalación de módulos de terceros o desarrollo\n"
+#~ "adicional.\n"
+#~ "\n"
+#~ "Estructura de Codificación del Catálogo de Cuentas:\n"
+#~ "===================================================\n"
+#~ "\n"
+#~ "**Un dígito** representa la categoría/tipo de cuenta del del estado "
+#~ "financiero.\n"
+#~ "**1** - Activo        **4** - Cuentas de Ingresos y Ganancias\n"
+#~ "**2** - Pasivo        **5** - Costos, Gastos y Pérdidas\n"
+#~ "**3** - Capital       **6** - Cuentas Liquidadoras de Resultados\n"
+#~ "\n"
+#~ "**Dos dígitos** representan los rubros de agrupación:\n"
+#~ "11- Activo Corriente\n"
+#~ "21- Pasivo Corriente\n"
+#~ "31- Capital Contable\n"
+#~ "\n"
+#~ "**Cuatro dígitos** se asignan a las cuentas de mayor: cuentas de primer "
+#~ "orden\n"
+#~ "1101- Efectivo y Equivalentes de Efectivo\n"
+#~ "2101- Cuentas y Documentos por pagar\n"
+#~ "3101- Capital Social\n"
+#~ "\n"
+#~ "**Seis dígitos** se asignan a las sub-cuentas: cuentas de segundo orden\n"
+#~ "110101 - Caja\n"
+#~ "210101 - Proveedores locales\n"
+#~ "\n"
+#~ "**Ocho dígitos** son para las cuentas de tercer orden (las visualizadas\n"
+#~ "en Odoo):\n"
+#~ "1101- Efectivo y Equivalentes\n"
+#~ "110101- Caja\n"
+#~ "11010101 Caja General\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Lokaliseerimise moodul Dominikaani Vabariigile\n"
+#~ "===========================================\n"
+#~ "\n"
+#~ "Catálogo de Cuentas e Impuestos para República Dominicana, Compatible "
+#~ "para\n"
+#~ "**Internacionalización** con **NIIF** y alineado a las normas y "
+#~ "regulaciones\n"
+#~ "de la Dirección General de Impuestos Internos (**DGII**).\n"
+#~ "\n"
+#~ "**Este módulo consiste de:**\n"
+#~ "\n"
+#~ "- Catálogo de Cuentas Estándar (alineado a DGII y NIIF)\n"
+#~ "- Catálogo de Impuestos con la mayoría de Impuestos Preconfigurados\n"
+#~ "        - ITBIS para compras y ventas\n"
+#~ "        - Retenciones de ITBIS\n"
+#~ "        - Retenciones de ISR\n"
+#~ "        - Grupos de Impuestos y Retenciones:\n"
+#~ "                - Telecomunicaiones\n"
+#~ "                - Proveedores de Materiales de Construcción\n"
+#~ "                - Personas Físicas Proveedoras de Servicios\n"
+#~ "        - Otros impuestos\n"
+#~ "- Secuencias Preconfiguradas para manejo de todos los NCF\n"
+#~ "        - Facturas con Valor Fiscal (para Ventas)\n"
+#~ "        - Facturas para Consumidores Finales\n"
+#~ "        - Notas de Débito y Crédito\n"
+#~ "        - Registro de Proveedores Informales\n"
+#~ "        - Registro de Ingreso Único\n"
+#~ "        - Registro de Gastos Menores\n"
+#~ "        - Gubernamentales\n"
+#~ "- Posiciones Fiscales para automatización de impuestos y retenciones\n"
+#~ "        - Cambios de Impuestos a Exenciones (Ej. Ventas al Estado)\n"
+#~ "        - Cambios de Impuestos a Retenciones (Ej. Compra Servicios al "
+#~ "Exterior)\n"
+#~ "        - Entre otros\n"
+#~ "\n"
+#~ "**Nota:**\n"
+#~ "Esta localización, aunque posee las secuencias para NCF, las mismas no "
+#~ "pueden\n"
+#~ "ser utilizadas sin la instalación de módulos de terceros o desarrollo\n"
+#~ "adicional.\n"
+#~ "\n"
+#~ "Estructura de Codificación del Catálogo de Cuentas:\n"
+#~ "===================================================\n"
+#~ "\n"
+#~ "**Un dígito** representa la categoría/tipo de cuenta del del estado "
+#~ "financiero.\n"
+#~ "**1** - Activo        **4** - Cuentas de Ingresos y Ganancias\n"
+#~ "**2** - Pasivo        **5** - Costos, Gastos y Pérdidas\n"
+#~ "**3** - Capital       **6** - Cuentas Liquidadoras de Resultados\n"
+#~ "\n"
+#~ "**Dos dígitos** representan los rubros de agrupación:\n"
+#~ "11- Activo Corriente\n"
+#~ "21- Pasivo Corriente\n"
+#~ "31- Capital Contable\n"
+#~ "\n"
+#~ "**Cuatro dígitos** se asignan a las cuentas de mayor: cuentas de primer "
+#~ "orden\n"
+#~ "1101- Efectivo y Equivalentes de Efectivo\n"
+#~ "2101- Cuentas y Documentos por pagar\n"
+#~ "3101- Capital Social\n"
+#~ "\n"
+#~ "**Seis dígitos** se asignan a las sub-cuentas: cuentas de segundo orden\n"
+#~ "110101 - Caja\n"
+#~ "210101 - Proveedores locales\n"
+#~ "\n"
+#~ "**Ocho dígitos** son para las cuentas de tercer orden (las visualizadas\n"
+#~ "en Odoo):\n"
+#~ "1101- Efectivo y Equivalentes\n"
+#~ "110101- Caja\n"
+#~ "11010101 Caja General\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Overview:\n"
+#~ "---------\n"
+#~ "\n"
+#~ "* Chart of Accounts and Taxes template for companies in Japan.\n"
+#~ "* This probably does not cover all the necessary accounts for a company. "
+#~ "You are expected to add/delete/modify accounts based on this template.\n"
+#~ "\n"
+#~ "Note:\n"
+#~ "-----\n"
+#~ "\n"
+#~ "* Fiscal positions '内税' and '外税' have been added to handle special "
+#~ "requirements which might arise from POS implementation. [1]  You may not "
+#~ "need to use these at all under normal circumstances.\n"
+#~ "\n"
+#~ "[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Ülevaade:\n"
+#~ "---------\n"
+#~ "\n"
+#~ "* Kontoplaan ja maksude näidis Jaapani ettevõtetele. \n"
+#~ "* See arvatavasti ei hõlma kõiki teie ettevõtte vajalikke kontosid. "
+#~ "Peaksite selle näite põhjal lisama/kustutama/muutma kontosid.\n"
+#~ "\n"
+#~ "Pange tähele:\n"
+#~ "-----\n"
+#~ "\n"
+#~ "* Eelarvepositsioonid '内税' ja '外税' on lisatud, et hallata erinõudeid "
+#~ "POS seadistamisel. [1]  Tavalistes tingimustes ei pruugi teil neid üldse "
+#~ "vaja minna.\n"
+#~ "\n"
+#~ "[1] Rohkem infot leiate https://github.com/odoo/odoo/pull/6470.\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Revenue recognitions\n"
+#~ "====================\n"
+#~ "Manage revenue recognitions on product sales.\n"
+#~ "Keeps track of the revenue recognition installments, and creates "
+#~ "corresponding journal entries.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Tulude eristamine\n"
+#~ "====================\n"
+#~ "Halda tulude eristamist toodete müümisel.\n"
+#~ "Jälgib tulude eristamise osamakseid ja loob vastavad andmiku kanded.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "This module adds several restaurant features to the Point of Sale:\n"
+#~ "- Bill Printing: Allows you to print a receipt before the order is paid\n"
+#~ "- Bill Splitting: Allows you to split an order into different orders\n"
+#~ "- Kitchen Order Printing: allows you to print orders updates to kitchen "
+#~ "or bar printers\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "See moodul lisab mitmeid restorani funktsioone kassasüsteemi:\n"
+#~ "- Arve prinimine: Võimaldab printida arve enne tellimuse tasumist\n"
+#~ "- Arve jagamine: Võimaldab arvet jagada mitmeks tellimuseks\n"
+#~ "- Köögi tellimuste printimine: lubab printida tellimuste uuendusi köögi- "
+#~ "või baariprinteritel\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "This module allows the cashier to quickly give a percentage\n"
+#~ "sale discount to a customer.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "See moodul võimaldab kassapidajal kiiresti anda protsentuaalset\n"
+#~ "allahindlust kliendile\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "This module allows you to define a loyalty program in\n"
+#~ "the point of sale, where the customers earn loyalty points\n"
+#~ "and get rewards.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "See moodul võimaldab määrata kassasüsteemis\n"
+#~ "lojaalsusprogrammi, kus kliendid saavad koguda lojaalsuspunkte\n"
+#~ "ja saada vastu hüvesid.\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "[object with reference: %s - %s]"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "[objekt viitega: %s - %s]"
+
+#~ msgid ""
+#~ "\n"
+#~ "        - Allow to set project for Helpdesk team\n"
+#~ "        - Track timesheet for task from ticket\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        - Lubage määrata projekt Abikeskuse tiimile\n"
+#~ "        - Jälgige kulunud aega ajaarvestusega piletist saadud "
+#~ "tööülesandele\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        A tax defined as python code consists in two snippets of python "
+#~ "code which are executed in a local environment containing data such as "
+#~ "the unit price, product or partner.\n"
+#~ "\n"
+#~ "        \"Applicable Code\" defines if the tax is to be applied.\n"
+#~ "\n"
+#~ "        \"Python Code\" defines the amount of the tax.\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "        Maks, defineeritud kui pythoni kood, koosneb kahest pythoni koodi "
+#~ "lõigust, mis viiakse läbi kohalikus keskkonnas, mis sisaldab selliseid "
+#~ "andmeid nagu ühikhind, toode või partner. \n"
+#~ "\n"
+#~ "        \"Kohaldatav kood\" kirjeldab, kas lisatakse maks.\n"
+#~ "\n"
+#~ "        \"Pythoni kood\" kirjeldab maksu summat.\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Belgium\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Belgia raamatupidamisaruanne\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Brazilian\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Brasiilia raamatupidamisaruanne\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Chile\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Tšiili raamatupidamisaruanne\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Hungarian\n"
+#~ " "
+#~ msgstr ""
+#~ "\n"
+#~ "        Ungari raamatupidamisaruanne\n"
+#~ " "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Netherlands\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Hollandi raamatupidamisaruanne\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Romania\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Rumeenia raamatupidamisaruanne\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Slovenian\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Sloveenia raamatupidamisaruanne\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Spain\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Hispaania raamatupidamisaruanne\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Switzerland\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Šveitsi raamatupidamisaruanne\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for UK\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Suurbritannia raamatupidamisaruanne\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for US\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        USA raamatupidamisaruanne\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Uruguay\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "        Uruguai raamatupidamisaruanne\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Allow to make call from next activities or with click-to-dial.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Luba helistada järgmistest toimingutest või kliki helistamiseks "
+#~ "valikust.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Allows to use python code to define taxes"
+#~ msgstr ""
+#~ "\n"
+#~ "        Luba kasutada pythoni koodi, et kirjeldada makse"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Bill timesheets logged on helpdesk tickets.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Sisse logitud kasutajatoe piletite põhjal ajaarvestuse "
+#~ "arveldamine.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Bridge between HR and Maintenance."
+#~ msgstr ""
+#~ "\n"
+#~ "        Sild Personali ja Hoolduse vahel"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Compute sales tax automatically using TaxCloud based on customer "
+#~ "address in United States.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Arvutage müügimaks automaatselt kasutades TaxCloud-i vastavalt "
+#~ "kliendi Ameerika Ühendriikide aadressile..\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Electronic accounting reports\n"
+#~ "            - COA\n"
+#~ "            - Trial Balance\n"
+#~ "        DIOT Report\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Elektroonilise raamatupidamisaruanded\n"
+#~ "            - COA\n"
+#~ "            - proovibilanss\n"
+#~ "        DIOTi aruanne\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Enable a cache on products for a lower POS loading time."
+#~ msgstr ""
+#~ "\n"
+#~ "        Luba toodete vahemällu salvestamine, et vähendada POS laadimise "
+#~ "aega."
+
+#~ msgid ""
+#~ "\n"
+#~ "        Generate payment orders as recommended by the SEPA norm, thanks "
+#~ "to pain.001 messages. Supported pain version (countries) are "
+#~ "pain.001.001.03 (generic), pain.001.001.03.ch.02 (Switzerland) and "
+#~ "pain.001.003.03 (Germany). The generated XML file can then be uploaded to "
+#~ "your bank.\n"
+#~ "\n"
+#~ "        This module follow the implementation guidelines issued by the "
+#~ "European Payment Council.\n"
+#~ "        For more informations about the SEPA standards : http://www."
+#~ "iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Loo SEPA standardile vastav maksefail pain.001 sõnumina. Toetatud "
+#~ "maksefailiformaadid (riigid) on pain.001.001.03 (üldine), pain.001.001.03."
+#~ "ch.02 (Šveits) ja pain.001.003.03 (Saksamaa). Genereeritud XML faili "
+#~ "saate üles laadida oma panka.\n"
+#~ "\n"
+#~ "        Antud moodul on loodud järgides Euroopa Maksenõukogu reegleid.\n"
+#~ "        Rohkem informatsiooni SEPA nõuete kohta : http://www.iso20022."
+#~ "org/ ja http://www.europeanpaymentscouncil.eu/\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Print amount in words on checks issued for expenses\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Prindi kulutšekkidel summa sõnadega\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        The purpose of this module is to implement \"sparse\" fields, i."
+#~ "e., fields\n"
+#~ "        that are mostly null. This implementation circumvents the "
+#~ "PostgreSQL\n"
+#~ "        limitation on the number of columns in a table. The values of all "
+#~ "sparse\n"
+#~ "        fields are stored in a \"serialized\" field in the form of a JSON "
+#~ "mapping.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Selle mooduli eesmärk on rakendada \"hõredaid\" välju, nt "
+#~ "välju, \n"
+#~ "        mis on enamasti nullid.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module adds support for barcodes scanning to the delivery "
+#~ "packages.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        See moodul lisab tuge saadetud pakkide ribakoodide "
+#~ "skaneerimisele.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module adds support for barcodes scanning to the warehouse "
+#~ "management system.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        See moodul lisab tuge laohaldamise süsteemi ribakoodide "
+#~ "skaneerimisele.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module enables the generation of SEPA Direct Debit (SDD)-"
+#~ "compliant XML files (consistent\n"
+#~ "        with pain.008.001.02 specification) to send to your bank in order "
+#~ "to\n"
+#~ "        collect a set of payments.\n"
+#~ "\n"
+#~ "        To be elligible for this payment method, a customer must have "
+#~ "first\n"
+#~ "        returned a mandate to the company, giving his consent to use "
+#~ "direct debit.\n"
+#~ "        This consent must have been encoded as a 'customer mandate' into "
+#~ "Odoo.\n"
+#~ "\n"
+#~ "        You also need to meet the following requirements in order to "
+#~ "properly\n"
+#~ "        generate a SDD file:\n"
+#~ "        - Your company account must be set to a valid IBAN number\n"
+#~ "        - Your company account must be associated to a bank having a "
+#~ "valid BIC\n"
+#~ "        - Your company must have been given a creditor identifier (this "
+#~ "can be done in the 'settings' menu of the accounting module)\n"
+#~ "        - Your company must have defined a journal to receive SDD "
+#~ "payments (again, in 'settings' of accounting module)\n"
+#~ "        - Every customer for which you generate a payment must have a "
+#~ "valid IBAN account number in a bank associated with a correct BIC.\n"
+#~ "\n"
+#~ "        Odoo will let you know if any of these requirements are not "
+#~ "satisfied.\n"
+#~ "\n"
+#~ "        Any invoice that gets validated for a customer with a mandate "
+#~ "will be\n"
+#~ "        automatically set in 'paid' state, and a payment will be "
+#~ "generated. An\n"
+#~ "        option in the dashboard will then allow you to view all the "
+#~ "payments generated\n"
+#~ "        via SDD and to generate a XML collection file for them, grouping "
+#~ "them as\n"
+#~ "        you see fit.\n"
+#~ "\n"
+#~ "        A dedicated 'SEPA Direct Debit' payment method is also available "
+#~ "for\n"
+#~ "        open invoices, when selecting a bank account in the 'register "
+#~ "payment' wizard.\n"
+#~ "        Use it to generate a SDD payment for the invoices if you added a "
+#~ "mandate\n"
+#~ "        for its owner after its validation. You will see an error message "
+#~ "if you\n"
+#~ "        try to use this method on an invoice for whose payment no mandate "
+#~ "can be used.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        See moodul võimaldab genereerida SEPA otsekorraldusele (SDD)-"
+#~ "vastavad XML failid (järjepidev\n"
+#~ "        pain.008.001.02 spetsifikatsioon), mida saata oma pangale\n"
+#~ "        maksete kogumiseks."
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module is used for Online bank synchronization."
+#~ msgstr ""
+#~ "\n"
+#~ "        Seda moodulit kasutatakse internetipanga sünkroniseerimiseks."
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module is used for Online bank synchronization. It provides "
+#~ "basic methods to synchronize bank statement.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Seda moodulit kasutatakse internetipangaga sünkroniseerimiseks. "
+#~ "See pakub baasmeetodit pangaväljavõttega sünkroniseerimiseks.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module provides the core of the Odoo Mobile App.\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "        See moodul on Odoo Mobile App'i tuum.\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Use Plaid.com to retrieve bank statements"
+#~ msgstr ""
+#~ "\n"
+#~ "        Kasutage Plaid.com'i pangaväljavõtte haldamiseks"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Use Plaid.com to retrieve bank statements.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Kasutage Plaid.com'i pangaväljavõtte haldamiseks."
+
+#~ msgid ""
+#~ "\n"
+#~ "        Use interview forms during recruitment process.\n"
+#~ "        This module is integrated with the survey module\n"
+#~ "        to allow you to define interviews for different jobs.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Värbamisprotsessi ajal kasutage küsitlusvorme.\n"
+#~ "        See moodul on integreeritud küsitlusmooduliga,\n"
+#~ "        et saaksite määratleda intervjuusid erinevate ametikohtade "
+#~ "jaoks.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        When invoicing timesheets, allows invoicing either all "
+#~ "timesheets\n"
+#~ "        linked to an SO, or only the validated timesheets\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Arve esitamisel ajaarvestuse järgi lubatakse kõik\n"
+#~ "        ajaarvestuslehed, mis on seotud \"SO\"-ga või ainult kinnitatud "
+#~ "ajaarvestuslehed.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "    * Multi language support for Chart of Accounts, Taxes, Tax Codes, "
+#~ "Journals,\n"
+#~ "      Accounting Templates, Analytic Chart of Accounts and Analytic "
+#~ "Journals.\n"
+#~ "    * Setup wizard changes\n"
+#~ "        - Copy translations for COA, Tax, Tax Code and Fiscal Position "
+#~ "from\n"
+#~ "          templates to target objects.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    * Mitmekeelne tugi kontoplaanile, maksud, maksukoodid, andmikud,\n"
+#~ "      raamatupidamise mallid, analüütiline kontoplaan ja analüütilised "
+#~ "kontod.\n"
+#~ "    * Seadistamise abimees muutub\n"
+#~ "        - Kopeeri COA tõlked, maks, maksukood ja eelarvepositsioon alates "
+#~ "sihtobjektide näidistest.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "    Adds workcenters to Quality Control\n"
+#~ msgstr ""
+#~ "\n"
+#~ "    Lisab töökohad kvaliteedikontrolli\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "    Contains pieces of code to be used as technical documentation "
+#~ "examples\n"
+#~ "    (via the ``literalinclude`` directive) in situations where they can "
+#~ "be\n"
+#~ "    syntax-checked and tested.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Sisaldab koodijuppe, mida tuleks kasutada tehnilise dokumentatsiooni "
+#~ "näidetena\n"
+#~ "    (läbi ``literalinclude`` direktiivi) olukordades, kus need võivad "
+#~ "olla\n"
+#~ "    süntaksi poolt kontrollitud ja testitud.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "    Gantt view for Leaves Dashboard\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Gantt'i vaade puhkuste töölaual\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "    Module linking the attendance module to the timesheet app.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Moodul, mis ühendab kohalviibimise mooduli ajaarvestusrakendusega.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "    PayuMoney Payment Acquirer for India.\n"
+#~ "\n"
+#~ "    PayUmoney payment gateway supports only INR currency.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    PayuMoney makse saaja India jaoks.\n"
+#~ "\n"
+#~ "    PayUmoney makseviis toetab ainult INR valuutat.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "  Publish your products on eBay"
+#~ msgstr ""
+#~ "\n"
+#~ "  Avalda oma tooted eBay's"
+
+#~ msgid ""
+#~ "\n"
+#~ "* Timesheet submission and validation\n"
+#~ "* Activate grid view for timesheets\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "* Ajaarvestuse esitamine ja kinnitamine\n"
+#~ "* Aktiveerige ajaarvestus võrgustiku vaade\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting Access Rights\n"
+#~ "========================\n"
+#~ "It gives the Administrator user access to all accounting features such as "
+#~ "journal items and the chart of accounts.\n"
+#~ "\n"
+#~ "It assigns manager and user access rights to the Administrator for the "
+#~ "accounting application and only user rights to the Demo user.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Raamatupidamise ligipääsuõigused\n"
+#~ "========================\n"
+#~ "See annab administraatorile ligipääsu kõigile "
+#~ "raamatupidamisfunktsioonidele nagu andmike kanderead ja kontoplaan.\n"
+#~ "\n"
+#~ "See annab raamatupidamisrakenduse halduri ja kasutaja õigused "
+#~ "administraatorile ja ainult kasutajaõigused demo-kasutajale.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting Data for Belgian Payroll Rules.\n"
+#~ "==========================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Belgia palgaarvestusreeglite raamatupidamisandmed\n"
+#~ "==========================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting Reports\n"
+#~ "==================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Raamatupidamisaruanded\n"
+#~ "==================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Argentina\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Argentiina raamatupidamisaruanded\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Bolivia\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Boliivia raamatupidamisaruanded\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Colombia\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Columbia raamatupidamisaruanded\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Croatia\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Horvaatia raamatupidamisaruanded\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Ethiopia\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Etioopia raamatupidamisaruanded\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for France\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Prantsusmaa raamatupidamisaruanded\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Greece\n"
+#~ "=============================\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Kreeka raamatupidamisaruanded\n"
+#~ "=============================\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for India\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "India raamatupidamisaruanded\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Japan\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Jaapani raamatupidamisaruanded\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Luxembourg\n"
+#~ "=================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Luksemburgi raamatupidamisaruanded\n"
+#~ "=================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Maroc\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Maroc'i raamatupidamisaruanded\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Norway\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Norra raamatupidamisaruanded\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Poland\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Poola raamatupidamisaruanded\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Thailand\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Tai raamatupidamisaruanded\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Add all information on the employee form to manage contracts.\n"
+#~ "=============================================================\n"
+#~ "\n"
+#~ "    * Contract\n"
+#~ "    * Place of Birth,\n"
+#~ "    * Medical Examination Date\n"
+#~ "    * Company Vehicle\n"
+#~ "\n"
+#~ "You can assign several contracts per employee.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Lisage kogu vajalik informatsioon töötaja ankeedile lepingute "
+#~ "haldamiseks.\n"
+#~ "=============================================================\n"
+#~ "\n"
+#~ "    * leping\n"
+#~ "    * sünnikoht\n"
+#~ "    * arstliku kontrolli kuupäev\n"
+#~ "    * ettevõtte sõiduk\n"
+#~ "\n"
+#~ "Te saate määrata töötajale mitu lepingut.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Add email templates to products to be sent on invoice confirmation\n"
+#~ "==================================================================\n"
+#~ "\n"
+#~ "With this module, link your products to a template to send complete "
+#~ "information and tools to your customer.\n"
+#~ "For instance when invoicing a training, the training agenda and materials "
+#~ "will automatically be sent to your customers.'\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Lisage toodetele e-kirja näidised, mis saadetakse arve kinnitamisel.\n"
+#~ "==================================================================\n"
+#~ "\n"
+#~ "Selle mooduli abil ühendate oma tooted e-kirja näidistega, et saata "
+#~ "kliendile täielik teave ja tööriistad.\n"
+#~ "Näiteks koolituse arve esitamisel saadetakse kliendile automaatselt "
+#~ "koolituse päevakord ja materjalid.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Adds a reporting menu in products that computes sales, purchases, margins "
+#~ "and other interesting indicators based on invoices.\n"
+#~ "=============================================================================================================================\n"
+#~ "\n"
+#~ "The wizard to launch the report has several options to help you get the "
+#~ "data you need.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Lisab toodetele aruandlusmenüü, mis arvutab arvete põhjal müügi, ostu, "
+#~ "kasumimarginaali ja teised huvitavad indikaatorid.\n"
+#~ "=============================================================================================================================\n"
+#~ "\n"
+#~ "Aruande avamisel käivitub abiline, mis aitab teil saada vajalikud "
+#~ "andmed.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Adds enhanced support for (Ether)Pad attachments in the web client.\n"
+#~ "===================================================================\n"
+#~ "\n"
+#~ "Lets the company customize which Pad installation should be used to link "
+#~ "to new\n"
+#~ "pads (by default, http://etherpad.com/).\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Lisab rohkem toetust (Ether)Pad manustele veebikliendis.\n"
+#~ "===================================================================\n"
+#~ "\n"
+#~ "Võimaldab ettevõttel kohendada, millist Pad-i paigutust kasutada uute "
+#~ "linkimiseks\n"
+#~ "pad-i (vaikimisi http://etherpad.com/).\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Allow clients to Schedule Appointments through your Website\n"
+#~ "-------------------------------------------------------------\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Lubage klientidel kodulehe kaudu kohtumisi planeerida\n"
+#~ "-------------------------------------------------------------\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Allow credit card POS payments\n"
+#~ "==============================\n"
+#~ "\n"
+#~ "This module allows customers to pay for their orders with credit\n"
+#~ "cards. The transactions are processed by Mercury (developed by Wells\n"
+#~ "Fargo Bank). A Mercury merchant account is necessary. It allows the\n"
+#~ "following:\n"
+#~ "\n"
+#~ "* Fast payment by just swiping a credit card while on the payment screen\n"
+#~ "* Combining of cash payments and credit card payments\n"
+#~ "* Cashback\n"
+#~ "* Supported cards: Visa, MasterCard, American Express, Discover\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Lubage POS-maksed krediitkaardiga\n"
+#~ "==============================\n"
+#~ "\n"
+#~ "See moodul laseb klientidel tasuda oma tellimuste eest krediitkaardiga.\n"
+#~ "Tehinguid töötleb Mercury (arendatud Wells Fargo panga poolt). Vajalik on "
+#~ "Mercury kaupmehe konto, mis võimaldab järgmist:\n"
+#~ "\n"
+#~ "* Kiire makse krediitkaardiga viibates makse ekraanil\n"
+#~ "* Ühendab sulraha- ja krediitkaardimaksed\n"
+#~ "* Raha tagasi\n"
+#~ "* Toetatud kaardid: Visa, MasterCard, American Express, Discover\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Allow users to login through OAuth2 Provider.\n"
+#~ "=============================================\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Lubage kasutajatel logida sisse OAuth2 teenusepakkuja kaudu.\n"
+#~ "=============================================\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Allow users to sign up and reset their password\n"
+#~ "===============================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Lubage kasutajatel registreeruda ja lähtestada oma parool\n"
+#~ "===============================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Allows canceling accounting entries.\n"
+#~ "====================================\n"
+#~ "\n"
+#~ "This module adds a checkbox on the accounting journals to allow the "
+#~ "cancellation of journal entries.\n"
+#~ "\n"
+#~ "This checkbox is only visible on the accounting journals when the debug "
+#~ "mode is active.\n"
+#~ "\n"
+#~ "If this checkbox is set to TRUE, it allows users to cancel journal "
+#~ "entries.\n"
+#~ "\n"
+#~ "The accounting entry that is cancelled can then be modified and reposted "
+#~ "or deleted.\n"
+#~ "\n"
+#~ "It also operates on invoices, bank statements, payments ...\n"
+#~ "\n"
+#~ "Be careful with this module as it has audit implications. Cancelling "
+#~ "accounting entries is not authorized in all countries.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Võimaldab tühistada raamatupidamiskandeid.\n"
+#~ "====================================\n"
+#~ "\n"
+#~ "See moodul lisab raamatupidamisandmikku valiku andmiku kannete "
+#~ "tühistamiseks.\n"
+#~ "\n"
+#~ "See valik on nähtav ainult andmiku kannetel kui vigade kõrvaldamise "
+#~ "režiim on sees. \n"
+#~ "\n"
+#~ "Kui see valik on määratud kui tõene, siis kasutajatel on võimalik "
+#~ "tühistada andmiku kandeid.\n"
+#~ "\n"
+#~ "Tühistatud andmiku kannet on võimalik muuta ja uuesti postitada või "
+#~ "kustutada.\n"
+#~ "\n"
+#~ "Samuti toimib see arvetel, pangaväljavõtetel, maksetel ...\n"
+#~ "\n"
+#~ "Olge selle mooduliga ettevaatlik, kuna see võib mõjutada auditeid. "
+#~ "Raamatupidamiskirjete kustutamine pole kõigis riikides lubatud.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Allows to sell timesheets in your sales order\n"
+#~ "=============================================\n"
+#~ "\n"
+#~ "This module set the right product on all timesheet lines\n"
+#~ "according to the order/contract you work on. This allows to\n"
+#~ "have real delivered quantities in sales orders.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Võimaldab müüa ajaarvestuslehti müügitellimustel\n"
+#~ "=============================================\n"
+#~ "\n"
+#~ "See moodul seab õige toote kõigi ajaarvestuslehe ridadele\n"
+#~ "vastavalt tellimustele/lepingutele, mille kallal töötate. See võimaldab\n"
+#~ "müügitellimustele lisada reaalselt tarnitud kogused.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Allows you to add delivery methods in sale orders and picking.\n"
+#~ "==============================================================\n"
+#~ "\n"
+#~ "You can define your own carrier for prices. When creating\n"
+#~ "invoices from picking, the system is able to add and compute the shipping "
+#~ "line.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Võimaldab teil lisada tarneviise müügitellimustele ja korjetele.\n"
+#~ "==============================================================\n"
+#~ "\n"
+#~ "Saate hindadele seadistada oma vedaja. Korje arvet koostades\n"
+#~ "on süsteem võimeline lisama ja arvutama tarnerea.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Analytic Accounting in MRP\n"
+#~ "==========================\n"
+#~ "\n"
+#~ "* Cost structure report\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Analüütiline raamatupidamine MRP's (tootmisressursside planeerimine)\n"
+#~ "==========================\n"
+#~ "\n"
+#~ "* Struktuurne kuluaruanne\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Argentinian accounting chart and tax localization.\n"
+#~ "==================================================\n"
+#~ "\n"
+#~ "Plan contable argentino e impuestos de acuerdo a disposiciones vigentes\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Argentiina raamatupidamise kontoplaani ja maksude lokaliseerimine.\n"
+#~ "==================================================\n"
+#~ "\n"
+#~ "Plan contable argentino e impuestos de acuerdo a disposiciones vigentes\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Ask questions, get answers, no distractions\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "Küsige küsimusi, saage vastuseid, ei mingit segadust\n"
+#~ "\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "Asserts on accounting.\n"
+#~ "======================\n"
+#~ "With this module you can manually check consistencies and inconsistencies "
+#~ "of accounting module from menu Reporting/Accounting/Accounting Tests.\n"
+#~ "\n"
+#~ "You can write a query in order to create Consistency Test and you will "
+#~ "get the result of the test \n"
+#~ "in PDF format which can be accessed by Menu Reporting -> Accounting "
+#~ "Tests, then select the test \n"
+#~ "and print the report from Print button in header area.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Raamatupidamise kinnitused.\n"
+#~ "======================\n"
+#~ "Selle mooduli abil saate manuaalselt kontrollida järjepidevust ja "
+#~ "ebakõlasid raamatupidamismoodulil.\n"
+#~ "\n"
+#~ "Te saate kirjutada päringu, et teha järjepidevuse test ja te saate "
+#~ "vastuse PDF\n"
+#~ "faili kujul. Fail on leitab aruandluse menüüst -> raamatupidamise testid, "
+#~ "seejärel\n"
+#~ "vali test ja prindi aruanne kasutades printimise nuppu päises.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Assets management\n"
+#~ "=================\n"
+#~ "Manage assets owned by a company or a person.\n"
+#~ "Keeps track of depreciations, and creates corresponding journal entries.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Varade haldamine\n"
+#~ "=================\n"
+#~ "Halda ettevõtte või inimese varasid.\n"
+#~ "Haldab amortisatsioonikulusid ja loob vastavad andmiku kanded.\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Attachments list and document indexation\n"
+#~ "========================================\n"
+#~ "* Show attachment on the top of the forms\n"
+#~ "* Document Indexation: odt\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Manuste loend ja dokumentide indekseerimine\n"
+#~ "========================================\n"
+#~ "* Näita ankeedi ülaosas manuseid\n"
+#~ "* Dokumendi indekseerimine: odt\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Australian Accounting Module\n"
+#~ "============================\n"
+#~ "\n"
+#~ "Australian accounting basic charts and localizations.\n"
+#~ "\n"
+#~ "Also:\n"
+#~ "    - activates a number of regional currencies.\n"
+#~ "    - sets up Australian taxes.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Austraalia raamatupiddamismoodul\n"
+#~ "============================\n"
+#~ "\n"
+#~ "Austraalia raamatupidamise põhikontod ja lokaliseerimine.\n"
+#~ "\n"
+#~ "K.a:\n"
+#~ "    - aktiveerib hulga piirkondlikke valuutasid.\n"
+#~ "    - seadistab Austraalia maksud.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Australian Accounting Reports\n"
+#~ "=============================\n"
+#~ "\n"
+#~ "GST Reporting for Australian Accounting.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Austraalia raamatupidamisaruanded\n"
+#~ "=============================\n"
+#~ "\n"
+#~ "GST aruanded Austraalia raamatupidamises.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Automated Translations through Gengo API\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "This module will install passive scheduler job for automated "
+#~ "translations \n"
+#~ "using the Gengo API. To activate it, you must\n"
+#~ "1) Configure your Gengo authentication parameters under `Settings > "
+#~ "Companies > Gengo Parameters`\n"
+#~ "2) Launch the wizard under `Settings > Application Terms > Gengo: Manual "
+#~ "Request of Translation` and follow the wizard.\n"
+#~ "\n"
+#~ "This wizard will activate the CRON job and the Scheduler and will start "
+#~ "the automatic translation via Gengo Services for all the terms where you "
+#~ "requested it.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Automatiseeritud tõlkimine läbi Gengo API\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "See moodul installeerib passiivse planeerija töö automaatseks tõlkimiseks "
+#~ "kasutades Gengo API-t."
+
+#~ msgid ""
+#~ "\n"
+#~ "Base Module for Ethiopian Localization\n"
+#~ "======================================\n"
+#~ "\n"
+#~ "This is the latest Ethiopian Odoo localization and consists of:\n"
+#~ "    - Chart of Accounts\n"
+#~ "    - VAT tax structure\n"
+#~ "    - Withholding tax structure\n"
+#~ "    - Regional State listings\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Baasmoodul Etioopia lokaliseerimiseks\n"
+#~ "======================================\n"
+#~ "\n"
+#~ "This is the latest Ethiopian Odoo localization and consists of:\n"
+#~ "    - Chart of Accounts\n"
+#~ "    - VAT tax structure\n"
+#~ "    - Withholding tax structure\n"
+#~ "    - Regional State listings\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Base module for the Brazilian localization\n"
+#~ "==========================================\n"
+#~ "\n"
+#~ "This module consists in:\n"
+#~ "\n"
+#~ " - Generic Brazilian chart of accounts\n"
+#~ " - Brazilian taxes such as:\n"
+#~ "\n"
+#~ "        - IPI\n"
+#~ "        - ICMS\n"
+#~ "        - PIS\n"
+#~ "        - COFINS\n"
+#~ "        - ISS\n"
+#~ "        - IR\n"
+#~ "        - IRPJ\n"
+#~ "        - CSLL\n"
+#~ "\n"
+#~ "The field tax_discount has also been added in the account.tax.template "
+#~ "and \n"
+#~ "account.tax objects to allow the proper computation of some Brazilian "
+#~ "VATs \n"
+#~ "such as ICMS. The chart of account creation wizard has been extended to \n"
+#~ "propagate those new data properly.\n"
+#~ "\n"
+#~ "It's important to note however that this module lack many implementations "
+#~ "to \n"
+#~ "use Odoo properly in Brazil. Those implementations (such as the "
+#~ "electronic \n"
+#~ "fiscal Invoicing which is already operational) are brought by more than "
+#~ "15 \n"
+#~ "additional modules of the Brazilian Launchpad localization project \n"
+#~ "https://launchpad.net/openerp.pt-br-localiz and their dependencies in "
+#~ "the \n"
+#~ "extra addons branch. Those modules aim at not breaking with the "
+#~ "remarkable \n"
+#~ "Odoo modularity, this is why they are numerous but small. One of the \n"
+#~ "reasons for maintaining those modules apart is that Brazilian "
+#~ "Localization \n"
+#~ "leaders need commit rights agility to complete the localization as "
+#~ "companies \n"
+#~ "fund the remaining legal requirements (such as soon fiscal ledgers, \n"
+#~ "accounting SPED, fiscal SPED and PAF ECF that are still missing as "
+#~ "September \n"
+#~ "2011). Those modules are also strictly licensed under AGPL V3 and today "
+#~ "don't \n"
+#~ "come with any additional paid permission for online use of 'private "
+#~ "modules'.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Baasmoodul Brasiilia lokaliseerimiseks\n"
+#~ "==========================================\n"
+#~ "\n"
+#~ "This module consists in:\n"
+#~ "\n"
+#~ " - Generic Brazilian chart of accounts\n"
+#~ " - Brazilian taxes such as:\n"
+#~ "\n"
+#~ "        - IPI\n"
+#~ "        - ICMS\n"
+#~ "        - PIS\n"
+#~ "        - COFINS\n"
+#~ "        - ISS\n"
+#~ "        - IR\n"
+#~ "        - IRPJ\n"
+#~ "        - CSLL\n"
+#~ "\n"
+#~ "The field tax_discount has also been added in the account.tax.template "
+#~ "and \n"
+#~ "account.tax objects to allow the proper computation of some Brazilian "
+#~ "VATs \n"
+#~ "such as ICMS. The chart of account creation wizard has been extended to \n"
+#~ "propagate those new data properly.\n"
+#~ "\n"
+#~ "It's important to note however that this module lack many implementations "
+#~ "to \n"
+#~ "use Odoo properly in Brazil. Those implementations (such as the "
+#~ "electronic \n"
+#~ "fiscal Invoicing which is already operational) are brought by more than "
+#~ "15 \n"
+#~ "additional modules of the Brazilian Launchpad localization project \n"
+#~ "https://launchpad.net/openerp.pt-br-localiz and their dependencies in "
+#~ "the \n"
+#~ "extra addons branch. Those modules aim at not breaking with the "
+#~ "remarkable \n"
+#~ "Odoo modularity, this is why they are numerous but small. One of the \n"
+#~ "reasons for maintaining those modules apart is that Brazilian "
+#~ "Localization \n"
+#~ "leaders need commit rights agility to complete the localization as "
+#~ "companies \n"
+#~ "fund the remaining legal requirements (such as soon fiscal ledgers, \n"
+#~ "accounting SPED, fiscal SPED and PAF ECF that are still missing as "
+#~ "September \n"
+#~ "2011). Those modules are also strictly licensed under AGPL V3 and today "
+#~ "don't \n"
+#~ "come with any additional paid permission for online use of 'private "
+#~ "modules'.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Belgian Payroll Rules.\n"
+#~ "======================\n"
+#~ "\n"
+#~ "    * Employee Details\n"
+#~ "    * Employee Contracts\n"
+#~ "    * Passport based Contract\n"
+#~ "    * Allowances/Deductions\n"
+#~ "    * Allow to configure Basic/Gross/Net Salary\n"
+#~ "    * Employee Payslip\n"
+#~ "    * Monthly Payroll Register\n"
+#~ "    * Integrated with Leaves Management\n"
+#~ "    * Salary Maj, ONSS, Withholding Tax, Child Allowance, ...\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Belgia palgaarvestuse reegel\n"
+#~ "======================\n"
+#~ "\n"
+#~ "    * Employee Details\n"
+#~ "    * Employee Contracts\n"
+#~ "    * Passport based Contract\n"
+#~ "    * Allowances/Deductions\n"
+#~ "    * Allow to configure Basic/Gross/Net Salary\n"
+#~ "    * Employee Payslip\n"
+#~ "    * Monthly Payroll Register\n"
+#~ "    * Integrated with Leaves Management\n"
+#~ "    * Salary Maj, ONSS, Withholding Tax, Child Allowance, ...\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Belgian Registered Cash Register\n"
+#~ "================================\n"
+#~ "\n"
+#~ "This module turns the Point Of Sale module into a certified Belgian cash "
+#~ "register.\n"
+#~ "\n"
+#~ "More info:\n"
+#~ "  * http://www.systemedecaisseenregistreuse.be/\n"
+#~ "  * http://www.geregistreerdkassasysteem.be/\n"
+#~ "\n"
+#~ "Legal\n"
+#~ "-----\n"
+#~ "**The use of pos_blackbox_be sources is only certified on odoo.com SaaS "
+#~ "platform\n"
+#~ "for version 9.0.**\n"
+#~ "An obfuscated and certified version of the pos_blackbox_be may be "
+#~ "provided on\n"
+#~ "requests for on-premise installations.\n"
+#~ "No modified version is certified and supported by Odoo SA.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Belgia rahakassa registreerimine\n"
+#~ "================================\n"
+#~ "\n"
+#~ "This module turns the Point Of Sale module into a certified Belgian cash "
+#~ "register.\n"
+#~ "\n"
+#~ "More info:\n"
+#~ "  * http://www.systemedecaisseenregistreuse.be/\n"
+#~ "  * http://www.geregistreerdkassasysteem.be/\n"
+#~ "\n"
+#~ "Legal\n"
+#~ "-----\n"
+#~ "**The use of pos_blackbox_be sources is only certified on odoo.com SaaS "
+#~ "platform\n"
+#~ "for version 9.0.**\n"
+#~ "An obfuscated and certified version of the pos_blackbox_be may be "
+#~ "provided on\n"
+#~ "requests for on-premise installations.\n"
+#~ "No modified version is certified and supported by Odoo SA.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Bolivian accounting chart and tax localization.\n"
+#~ "\n"
+#~ "Plan contable boliviano e impuestos de acuerdo a disposiciones vigentes\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Boliivia raamatupidamise kontoplaan ja maksude lokaliseerimine.\n"
+#~ "\n"
+#~ "Plan contable boliviano e impuestos de acuerdo a disposiciones vigentes\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Bridge module for rating on website stuff.\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "Vajalik moodul veebilehe elementide hindamiseks.\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "Bridge module to integrate leaves in timesheet\n"
+#~ "================================================\n"
+#~ "\n"
+#~ "This module allows to automatically log timesheets when employees are\n"
+#~ "on leaves. Project and task can be configured company-wide.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Vajalik moodul puhkuste ühendamiseks ajaarvestuslehtedega\n"
+#~ "================================================\n"
+#~ "\n"
+#~ "See moodul võimaldab märkida töötaja puhkused automaatselt\n"
+#~ "ajaarvestuslehtedele. Projekti ja ülesannet saab seadistada kogu "
+#~ "ettevõtte\n"
+#~ "ulatuses.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Bridge to add contract calendar on automated actions\n"
+#~ "====================================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Vajalik moodul, et lisada lepingute kalendrisse automatiseeritud "
+#~ "tegevused\n"
+#~ "====================================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "CRM Phone Numbers Validation\n"
+#~ "============================\n"
+#~ "\n"
+#~ "This module allows for validate and format phone numbers for leads and "
+#~ "contacts."
+#~ msgstr ""
+#~ "\n"
+#~ "CRM telefoninumbrite kinnitamine\n"
+#~ "============================\n"
+#~ "\n"
+#~ "See moodul võimaldab kontrollida ja vormindada telefoninumbreid "
+#~ "kontaktidel."
+
+#~ msgid ""
+#~ "\n"
+#~ "Chart of Account for Venezuela.\n"
+#~ "===============================\n"
+#~ "\n"
+#~ "Venezuela doesn't have any chart of account by law, but the default\n"
+#~ "proposed in Odoo should comply with some Accepted best practices in "
+#~ "Venezuela, \n"
+#~ "this plan comply with this practices.\n"
+#~ "\n"
+#~ "This module has been tested as base for more of 1000 companies, because \n"
+#~ "it is based in a mixtures of most common software in the Venezuelan \n"
+#~ "market what will allow for sure to accountants feel them first steps "
+#~ "with \n"
+#~ "Odoo more confortable.\n"
+#~ "\n"
+#~ "This module doesn't pretend be the total localization for Venezuela, \n"
+#~ "but it will help you to start really quickly with Odoo in this country.\n"
+#~ "\n"
+#~ "This module give you.\n"
+#~ "---------------------\n"
+#~ "\n"
+#~ "- Basic taxes for Venezuela.\n"
+#~ "- Have basic data to run tests with community localization.\n"
+#~ "- Start a company from 0 if your needs are basic from an accounting PoV.\n"
+#~ "\n"
+#~ "We recomend use of account_anglo_saxon if you want valued your \n"
+#~ "stocks as Venezuela does with out invoices.\n"
+#~ "\n"
+#~ "If you install this module, and select Custom chart a basic chart will be "
+#~ "proposed, \n"
+#~ "but you will need set manually account defaults for taxes.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Venetsueela kontoplaan\n"
+#~ "\n"
+#~ "===============================\n"
+#~ "\n"
+#~ "Venezuela doesn't have any chart of account by law, but the default\n"
+#~ "proposed in Odoo should comply with some Accepted best practices in "
+#~ "Venezuela, \n"
+#~ "this plan comply with this practices.\n"
+#~ "\n"
+#~ "This module has been tested as base for more of 1000 companies, because \n"
+#~ "it is based in a mixtures of most common software in the Venezuelan \n"
+#~ "market what will allow for sure to accountants feel them first steps "
+#~ "with \n"
+#~ "Odoo more confortable.\n"
+#~ "\n"
+#~ "This module doesn't pretend be the total localization for Venezuela, \n"
+#~ "but it will help you to start really quickly with Odoo in this country.\n"
+#~ "\n"
+#~ "This module give you.\n"
+#~ "---------------------\n"
+#~ "\n"
+#~ "- Basic taxes for Venezuela.\n"
+#~ "- Have basic data to run tests with community localization.\n"
+#~ "- Start a company from 0 if your needs are basic from an accounting PoV.\n"
+#~ "\n"
+#~ "We recomend use of account_anglo_saxon if you want valued your \n"
+#~ "stocks as Venezuela does with out invoices.\n"
+#~ "\n"
+#~ "If you install this module, and select Custom chart a basic chart will be "
+#~ "proposed, \n"
+#~ "but you will need set manually account defaults for taxes.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Chart of Accounts for Thailand.\n"
+#~ "===============================\n"
+#~ "\n"
+#~ "Thai accounting chart and localization.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Tai kontoplaan.\n"
+#~ "===============================\n"
+#~ "\n"
+#~ "Tai raamatupidamise kontoplaan ja lokaliseerimine.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Chart of accounts for Costa Rica.\n"
+#~ "=================================\n"
+#~ "\n"
+#~ "Includes:\n"
+#~ "---------\n"
+#~ "    * account.account.template\n"
+#~ "    * account.tax.template\n"
+#~ "    * account.chart.template\n"
+#~ "\n"
+#~ "Everything is in English with Spanish translation. Further translations "
+#~ "are welcome,\n"
+#~ "please go to http://translations.launchpad.net/openerp-costa-rica.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Costa Rica kontoplaan.\n"
+#~ "=================================\n"
+#~ "\n"
+#~ "Includes:\n"
+#~ "---------\n"
+#~ "    * account.account.template\n"
+#~ "    * account.tax.template\n"
+#~ "    * account.chart.template\n"
+#~ "\n"
+#~ "Everything is in English with Spanish translation. Further translations "
+#~ "are welcome,\n"
+#~ "please go to http://translations.launchpad.net/openerp-costa-rica.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Chilean accounting chart and tax localization.\n"
+#~ "==============================================\n"
+#~ "Plan contable chileno e impuestos de acuerdo a disposiciones vigentes\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Tšiili raamatupidamise kontoplaan ja maksude lokaliseerimine.\n"
+#~ "==============================================\n"
+#~ "Plan contable chileno e impuestos de acuerdo a disposiciones vigentes\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "City Management in Addresses\n"
+#~ "============================\n"
+#~ "\n"
+#~ "This module allows to enforce users to choose the city of a partner "
+#~ "inside a given list instead of a free text field.\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "Linna haldamine aadressis\n"
+#~ "============================\n"
+#~ "\n"
+#~ "See moodul lubab klientidel valida linna nimekirjast mitte kirjutada "
+#~ "vabasse tekstivälja.\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "Compare timesheets and forecast for your projects.\n"
+#~ "==================================================\n"
+#~ "\n"
+#~ "In your project plan, you can compare your timesheets and your forecast "
+#~ "to better schedule your resources.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Võrrelge projektide ajaarvestust ja prognoose.\n"
+#~ "==================================================\n"
+#~ "\n"
+#~ "Saate projekti plaanis võrrelda ajaarvestust ja prognoosi, et paremini "
+#~ "ressursse planeerida.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Configure the price accuracy you need for different kinds of usage: "
+#~ "accounting, sales, purchases.\n"
+#~ "=================================================================================================\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Seadistage hindade täpsus, mida on vaja erinevatel juhtudel: "
+#~ "raamatupidamine, müük, ostud.\n"
+#~ "=================================================================================================\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Contact Number Validation on Website\n"
+#~ "====================================\n"
+#~ "\n"
+#~ "Validate contact (phone,mobile) numbers and normalize them on leads and "
+#~ "contacts:\n"
+#~ "- use the national format for your company country\n"
+#~ "- use the international format for all others\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "Veebilehel kontaktnumbri kinnitamine\n"
+#~ "====================================\n"
+#~ "\n"
+#~ "Kinnitage kontaktnumbrid (telefon, mobiil) kontaktidel:\n"
+#~ "- kasutage oma ettevõtte riigi vormingut\n"
+#~ "- kasutage rahvusvahelist vormingut kõigi teiste puhul\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "Create short and trackable URLs.\n"
+#~ "=====================================================\n"
+#~ "\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "Looge lühikesed ja jälgitavad URL'id.\n"
+#~ "=====================================================\n"
+#~ "\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "Creating registration with sales orders.\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "This module allows you to automate and connect your registration creation "
+#~ "with\n"
+#~ "your main sale flow and therefore, to enable the invoicing feature of "
+#~ "registrations.\n"
+#~ "\n"
+#~ "It defines a new kind of service products that offers you the possibility "
+#~ "to\n"
+#~ "choose an event category associated with it. When you encode a sales "
+#~ "order for\n"
+#~ "that product, you will be able to choose an existing event of that "
+#~ "category and\n"
+#~ "when you confirm your sales order it will automatically create a "
+#~ "registration for\n"
+#~ "this event.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Müügitellimuste registreerimise loomine.\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "See moodul võimaldab teil automatiseerida ja ühendada registreerimise "
+#~ "loomise teie peamise müügivooga ja seega annab arve registreerimise "
+#~ "võimaluse.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Croatian localisation.\n"
+#~ "======================\n"
+#~ "\n"
+#~ "Author: Goran Kliska, Slobodni programi d.o.o., Zagreb\n"
+#~ "        https://www.slobodni-programi.hr\n"
+#~ "\n"
+#~ "Contributions:\n"
+#~ "  Tomislav Bošnjaković, Storm Computers: tipovi konta\n"
+#~ "  Ivan Vađić, Slobodni programi: tipovi konta\n"
+#~ "\n"
+#~ "Description:\n"
+#~ "\n"
+#~ "Croatian Chart of Accounts (RRIF ver.2012)\n"
+#~ "\n"
+#~ "RRIF-ov računski plan za poduzetnike za 2012.\n"
+#~ "Vrste konta\n"
+#~ "Kontni plan prema RRIF-u, dorađen u smislu kraćenja naziva i dodavanja "
+#~ "analitika\n"
+#~ "Porezne grupe prema poreznoj prijavi\n"
+#~ "Porezi PDV obrasca\n"
+#~ "Ostali porezi\n"
+#~ "Osnovne fiskalne pozicije\n"
+#~ "\n"
+#~ "Izvori podataka:\n"
+#~ " https://www.rrif.hr/dok/preuzimanje/rrif-rp2011.rar\n"
+#~ " https://www.rrif.hr/dok/preuzimanje/rrif-rp2012.rar\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Horvaatia lokaliseerimine\n"
+#~ "======================\n"
+#~ "\n"
+#~ "Author: Goran Kliska, Slobodni programi d.o.o., Zagreb\n"
+#~ "        https://www.slobodni-programi.hr\n"
+#~ "\n"
+#~ "Contributions:\n"
+#~ "  Tomislav Bošnjaković, Storm Computers: tipovi konta\n"
+#~ "  Ivan Vađić, Slobodni programi: tipovi konta\n"
+#~ "\n"
+#~ "Description:\n"
+#~ "\n"
+#~ "Croatian Chart of Accounts (RRIF ver.2012)\n"
+#~ "\n"
+#~ "RRIF-ov računski plan za poduzetnike za 2012.\n"
+#~ "Vrste konta\n"
+#~ "Kontni plan prema RRIF-u, dorađen u smislu kraćenja naziva i dodavanja "
+#~ "analitika\n"
+#~ "Porezne grupe prema poreznoj prijavi\n"
+#~ "Porezi PDV obrasca\n"
+#~ "Ostali porezi\n"
+#~ "Osnovne fiskalne pozicije\n"
+#~ "\n"
+#~ "Izvori podataka:\n"
+#~ " https://www.rrif.hr/dok/preuzimanje/rrif-rp2011.rar\n"
+#~ " https://www.rrif.hr/dok/preuzimanje/rrif-rp2012.rar\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Design gorgeous mails\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Disaini vapustavaid e-kirju\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem "
+#~ "SKR03.\n"
+#~ "==============================================================================\n"
+#~ "\n"
+#~ "German accounting chart and localization.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem "
+#~ "SKR03.\n"
+#~ "==============================================================================\n"
+#~ "\n"
+#~ "Saksamaa raamatupidamise kontoplaan ja lokaliseerimine.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem "
+#~ "SKR04.\n"
+#~ "==============================================================================\n"
+#~ "\n"
+#~ "German accounting chart and localization.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem "
+#~ "SKR04.\n"
+#~ "==============================================================================\n"
+#~ "\n"
+#~ "Saksamaa raamatupidamise kontoplaan ja lokaliseerimine.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Display orders to invoice in website dashboard.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Kuva tellimusi, mis ootavad arveks tegemist, veebilehe töölaual.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "EDI Mexican Localization\n"
+#~ "========================\n"
+#~ "Allow the user to generate the EDI document for Mexican invoicing.\n"
+#~ "\n"
+#~ "This module allows the creation of the EDI documents and the "
+#~ "communication with the Mexican certification providers (PACs) to sign/"
+#~ "cancel them.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "EDI Mehhiko lokaliseerimine\n"
+#~ "========================\n"
+#~ "Allow the user to generate the EDI document for Mexican invoicing.\n"
+#~ "\n"
+#~ "This module allows the creation of the EDI documents and the "
+#~ "communication with the Mexican certification providers (PACs) to sign/"
+#~ "cancel them.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "ESC/POS Hardware Driver\n"
+#~ "=======================\n"
+#~ "\n"
+#~ "This module allows Odoo to print with ESC/POS compatible printers and\n"
+#~ "to open ESC/POS controlled cashdrawers in the point of sale and other "
+#~ "modules\n"
+#~ "that would need such functionality.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "ESC/POS riistvaradraiver\n"
+#~ "=======================\n"
+#~ "\n"
+#~ "See moodul võimaldab Odool printida ESC/POS ühilduvate printeritega ja\n"
+#~ "avada ESC/POS kontrollitud kassasahtleid kassasüsteemis ja teistes "
+#~ "moodulites,\n"
+#~ "mis vajavad sellist funktsionaalsust.\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "EU Mini One Stop Shop (MOSS) VAT for telecommunications, broadcasting and "
+#~ "electronic services\n"
+#~ "=============================================================================================\n"
+#~ "\n"
+#~ "As of January 1rst, 2015, telecommunications, broadcasting\n"
+#~ "and electronic services sold within the European Union\n"
+#~ "have to be always taxed in the country where the customer\n"
+#~ "belongs. In order to simplify the application of this EU\n"
+#~ "directive, the Mini One Stop Shop (MOSS) registration scheme\n"
+#~ "allows businesses to make a unique tax declaration.\n"
+#~ "\n"
+#~ "This module makes it possible by helping with the creation\n"
+#~ "of the required EU fiscal positions and taxes in order to\n"
+#~ "automatically apply and record the required taxes.\n"
+#~ "\n"
+#~ "This module installs a wizard to help setup fiscal positions\n"
+#~ "and taxes for selling electronic services inside EU.\n"
+#~ "\n"
+#~ "The wizard lets you select:\n"
+#~ " - the EU countries to which you are selling these\n"
+#~ "   services\n"
+#~ " - your national VAT tax for services, to be mapped\n"
+#~ "   to the target country's tax\n"
+#~ " - optionally: a template fiscal position, in order\n"
+#~ "   to copy the account mapping. Should be your\n"
+#~ "   existing B2C Intra-EU fiscal position. (defaults\n"
+#~ "   to no account mapping)\n"
+#~ " - optionally: an account to use for collecting the\n"
+#~ "   tax amounts (defaults to the account used by your\n"
+#~ "   national VAT tax for services)\n"
+#~ "\n"
+#~ "It creates the corresponding fiscal positions and taxes,\n"
+#~ "automatically applicable for EU sales with a customer\n"
+#~ "in the selected countries.\n"
+#~ "The wizard can be run again for adding more countries.\n"
+#~ "\n"
+#~ "The wizard creates a separate Chart of Taxes for collecting the\n"
+#~ "VAT amounts of the MOSS declaration, so extracting the MOSS\n"
+#~ "data should be easy.\n"
+#~ "Look for a Chart of Taxes named \"EU MOSS VAT Chart\" in the\n"
+#~ "Taxes Report menu (Generic Accounting Report).\n"
+#~ "\n"
+#~ "References\n"
+#~ "++++++++++\n"
+#~ "- Directive 2008/8/EC\n"
+#~ "- Council Implementing Regulation (EU) No 1042/2013\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "EU Mini One Stop Shop (MOSS) VAT for telecommunications, broadcasting and "
+#~ "electronic services\n"
+#~ "=============================================================================================\n"
+#~ "\n"
+#~ "As of January 1rst, 2015, telecommunications, broadcasting\n"
+#~ "and electronic services sold within the European Union\n"
+#~ "have to be always taxed in the country where the customer\n"
+#~ "belongs. In order to simplify the application of this EU\n"
+#~ "directive, the Mini One Stop Shop (MOSS) registration scheme\n"
+#~ "allows businesses to make a unique tax declaration.\n"
+#~ "\n"
+#~ "This module makes it possible by helping with the creation\n"
+#~ "of the required EU fiscal positions and taxes in order to\n"
+#~ "automatically apply and record the required taxes.\n"
+#~ "\n"
+#~ "This module installs a wizard to help setup fiscal positions\n"
+#~ "and taxes for selling electronic services inside EU.\n"
+#~ "\n"
+#~ "The wizard lets you select:\n"
+#~ " - the EU countries to which you are selling these\n"
+#~ "   services\n"
+#~ " - your national VAT tax for services, to be mapped\n"
+#~ "   to the target country's tax\n"
+#~ " - optionally: a template fiscal position, in order\n"
+#~ "   to copy the account mapping. Should be your\n"
+#~ "   existing B2C Intra-EU fiscal position. (defaults\n"
+#~ "   to no account mapping)\n"
+#~ " - optionally: an account to use for collecting the\n"
+#~ "   tax amounts (defaults to the account used by your\n"
+#~ "   national VAT tax for services)\n"
+#~ "\n"
+#~ "It creates the corresponding fiscal positions and taxes,\n"
+#~ "automatically applicable for EU sales with a customer\n"
+#~ "in the selected countries.\n"
+#~ "The wizard can be run again for adding more countries.\n"
+#~ "\n"
+#~ "The wizard creates a separate Chart of Taxes for collecting the\n"
+#~ "VAT amounts of the MOSS declaration, so extracting the MOSS\n"
+#~ "data should be easy.\n"
+#~ "Look for a Chart of Taxes named \"EU MOSS VAT Chart\" in the\n"
+#~ "Taxes Report menu (Generic Accounting Report).\n"
+#~ "\n"
+#~ "References\n"
+#~ "++++++++++\n"
+#~ "- Directive 2008/8/EC\n"
+#~ "- Council Implementing Regulation (EU) No 1042/2013\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Enable UTM trackers in shared links.\n"
+#~ "=====================================================\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "UTM jagamisseadmete lubamine jagatud linkidel.\n"
+#~ "=====================================================\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "Extended Addresses Management\n"
+#~ "=============================\n"
+#~ "\n"
+#~ "This module holds all extra fields one may need to manage accurately "
+#~ "addresses.\n"
+#~ "\n"
+#~ "For example, in legal reports, some countries need to split the street "
+#~ "into several fields,\n"
+#~ "with the street name, the house number, and room number.\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "Laiendatud aadresside haldamine\n"
+#~ "=============================\n"
+#~ "\n"
+#~ "See moodul sisaldab kõiki lisavälju, mida võib sul vaja minna täpseks "
+#~ "aadresside haldamiseks."
+
+#~ msgid ""
+#~ "\n"
+#~ "Fiscal Data Module Hardware Driver\n"
+#~ "==================================\n"
+#~ "\n"
+#~ "This module allows a Point Of Sale client to communicate with a\n"
+#~ "connected Belgian Fiscal Data Module.\n"
+#~ "\n"
+#~ "This module does **not** turn an Odoo Point Of Sale module into a "
+#~ "certified\n"
+#~ "Belgian cash register. It allows the communication on with a certified "
+#~ "Fiscal\n"
+#~ "Data Module but will not modify the behaviour of the Point of Sale.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Fiskaalandmete mooduli riistvaradraiver\n"
+#~ "==================================\n"
+#~ "\n"
+#~ "See moodul võimaldab kassasüsteemi kliendil suhelda ühendatud\n"
+#~ "Belgia fiskaalandmete mooduliga.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "French Payroll Rules.\n"
+#~ "=====================\n"
+#~ "\n"
+#~ "    - Configuration of hr_payroll for French localization\n"
+#~ "    - All main contributions rules for French payslip, for 'cadre' and "
+#~ "'non-cadre'\n"
+#~ "    - New payslip report\n"
+#~ "\n"
+#~ "TODO:\n"
+#~ "-----\n"
+#~ "    - Integration with holidays module for deduction and allowance\n"
+#~ "    - Integration with hr_payroll_account for the automatic "
+#~ "account_move_line\n"
+#~ "      creation from the payslip\n"
+#~ "    - Continue to integrate the contribution. Only the main contribution "
+#~ "are\n"
+#~ "      currently implemented\n"
+#~ "    - Remake the report under webkit\n"
+#~ "    - The payslip.line with appears_in_payslip = False should appears in "
+#~ "the\n"
+#~ "      payslip interface, but not in the payslip report\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Prantsuse palgareeglid\n"
+#~ "=====================\n"
+#~ "\n"
+#~ "    - Configuration of hr_payroll for French localization\n"
+#~ "    - All main contributions rules for French payslip, for 'cadre' and "
+#~ "'non-cadre'\n"
+#~ "    - New payslip report\n"
+#~ "\n"
+#~ "TODO:\n"
+#~ "-----\n"
+#~ "    - Integration with holidays module for deduction and allowance\n"
+#~ "    - Integration with hr_payroll_account for the automatic "
+#~ "account_move_line\n"
+#~ "      creation from the payslip\n"
+#~ "    - Continue to integrate the contribution. Only the main contribution "
+#~ "are\n"
+#~ "      currently implemented\n"
+#~ "    - Remake the report under webkit\n"
+#~ "    - The payslip.line with appears_in_payslip = False should appears in "
+#~ "the\n"
+#~ "      payslip interface, but not in the payslip report\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Generates Intrastat XML report for declaration\n"
+#~ "Based on invoices.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Loob Intrastat XML aruande deklaratsiooni jaoks\n"
+#~ "Põhineb arvetel.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "This module allows you to set a deferred revenue on your subscriptions.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "See moodul laseb seada viittulu tellimustele.\n"
+
+#~ msgid "%A - Full weekday name."
+#~ msgstr "%A - Täielik nädalapäeva nimetus."
+
+#~ msgid "%B - Full month name.\""
+#~ msgstr "%B - täispikku kuu nimetus.\""
+
+#~ msgid "%H - Hour (24-hour clock) [00,23].\""
+#~ msgstr "%H - tund (24-tunnine kellaaeg) [00,23].\""
+
+#~ msgid "%I - Hour (12-hour clock) [01,12].\""
+#~ msgstr "%I - tund (12-tunnine kellaaeg) [01,12].\""
+
+#~ msgid "%M - Minute [00,59].\""
+#~ msgstr "%M - minutit [00,59].\""
+
+#~ msgid "%S - Seconds [00,61].\""
+#~ msgstr "%S - sekundit [00,61].\""
+
+#~ msgid "%Y - Year with century.\""
+#~ msgstr "%Y - aastaarv koos sajandiga.\""
+
+#~ msgid "%a - Abbreviated weekday name."
+#~ msgstr "%a - Nädalapäev lühendatult."
+
+#~ msgid "%b - Abbreviated month name."
+#~ msgstr "%b - Kuu nime lühend."
+
+#~ msgid "%d - Day of the month [01,31].\""
+#~ msgstr "%d - kuu päev [01,31].\""
+
+#~ msgid "%j - Day of the year [001,366].\""
+#~ msgstr "%j - päeval aastas [001,366].\""
+
+#~ msgid "%m - Month number [01,12].\""
+#~ msgstr "%m - kuu number [01,12].\""
+
+#~ msgid "%p - Equivalent of either AM or PM.\""
+#~ msgstr "%p - samaväärne AM-ga või PM-ga.\""
+
+#~ msgid "%w - Weekday number [0(Sunday),6].\""
+#~ msgstr "%w - nädalapäeva number [0(pühapäev),6].\""
+
+#~ msgid "%y - Year without century [00,99].\""
+#~ msgstr "%y - aasta ilma sajandita [00,99].\""
+
+#~ msgid "&amp;nbsp;"
+#~ msgstr "&amp;nbsp;"
+
+#~ msgid ", or your preferred text editor"
+#~ msgstr ", või teie eelistatud tekstitöötlusprogramm"
+
+#~ msgid ", readonly"
+#~ msgstr ", ainult loetav"
+
+#~ msgid ", required"
+#~ msgstr ", nõutud"
+
+#~ msgid "- domain ="
+#~ msgstr "- domeen ="
+
+#~ msgid "- field ="
+#~ msgstr "- väli ="
+
+#~ msgid "- groups ="
+#~ msgstr "- grupid ="
+
+#~ msgid "- ondelete ="
+#~ msgstr "- kustutamisel ="
+
+#~ msgid "- relation ="
+#~ msgstr "- seos ="
+
+#~ msgid "- selection ="
+#~ msgstr "- valik ="
+
+#~ msgid "- size ="
+#~ msgstr "- suurus ="
+
+#~ msgid "-This module does not create menu."
+#~ msgstr "- See moodul ei loo menüüd."
+
+#~ msgid "-This module does not create report."
+#~ msgstr "- See moodul ei loo aruannet."
+
+#~ msgid "-This module does not create views."
+#~ msgstr "- See moodul ei loo vaateid."
+
+#~ msgid "-This module does not depends on any other module."
+#~ msgstr "- See moodul ei sõltu ühestki teisest moodulist."
+
+#~ msgid "-This module does not exclude any other module."
+#~ msgstr "- See moodul ei välista ühtegi teist moodulit."
+
+#~ msgid "3. %y, %Y         ==&gt; 08, 2008"
+#~ msgstr "3. %y, %Y         ==&gt; 08, 2008"
+
+#~ msgid "4. %d, %m         ==&gt; 05, 12"
+#~ msgstr "4. %d, %m         ==&gt; 05, 12"
+
+#~ msgid "5. %H:%M:%S      ==&gt; 18:25:20"
+#~ msgstr "5. %H:%M:%S      ==&gt; 18:25:20"
+
+#~ msgid "6. %I:%M:%S %p  ==&gt; 06:25:20 PM"
+#~ msgstr "6. %I:%M:%S %p  ==&gt; 06:25:20 PM"
+
+#~ msgid "7. %j              ==&gt; 340"
+#~ msgstr "7. %j              ==&gt; 340"
+
+#~ msgid "8. %S              ==&gt; 20"
+#~ msgstr "8. %S              ==&gt; 20"
+
+#~ msgid "9. %w              ==&gt; 5 ( Friday is the 6th day)"
+#~ msgstr "9. %w              ==&gt; 5 (reede on 6. päev)"
+
+#~ msgid "<strong>Apps</strong>"
+#~ msgstr "<strong>Rakendused</strong>"
+
+#~ msgid "<strong>Attribute</strong>"
+#~ msgstr "<strong>Atribuut</strong>"
+
+#~ msgid "<strong>Dependencies :</strong>"
+#~ msgstr "<strong>Sõltuvused :</strong>"
+
+#~ msgid "<strong>Email:</strong>"
+#~ msgstr "<strong>E-post:</strong>"
+
+#~ msgid "<strong>Group</strong>"
+#~ msgstr "<strong>Grupp</strong>"
+
+#~ msgid "<strong>Inherited</strong>"
+#~ msgstr "<strong>Päritud</strong>"
+
+#~ msgid "<strong>Label</strong>"
+#~ msgstr "<strong>Silt</strong>"
+
+#~ msgid "<strong>Menu :</strong>"
+#~ msgstr "<strong>Menüü :</strong>"
+
+#~ msgid "<strong>Name</strong>"
+#~ msgstr "<strong>Nimi</strong>"
+
+#~ msgid "<strong>Phone</strong>"
+#~ msgstr "<strong>Telefon</strong>"
+
+#~ msgid "<strong>Reports :</strong>"
+#~ msgstr "<strong>Aruanded :</strong>"
+
+#~ msgid ""
+#~ "<strong>This operation will permanently erase all data currently stored "
+#~ "by the modules!</strong>"
+#~ msgstr ""
+#~ "<strong>See operatisoon kustutab jäädavalt kõik andmed, mida hetkel "
+#~ "moodul salvestab!</strong>"
+
+#~ msgid "<strong>Type</strong>"
+#~ msgstr "<strong>Tüüp</strong>"
+
+#~ msgid "<strong>View :</strong>"
+#~ msgstr "<strong>Vaade :</strong>"
+
+#~ msgid "<strong>XML ID</strong>"
+#~ msgstr "<strong>XML ID</strong>"
+
+#~ msgid "<u><strong>Fields</strong></u>"
+#~ msgstr "<u><strong>Väljad</strong></u>"
+
+#~ msgid "<u><strong>Security</strong></u>"
+#~ msgstr "<u><strong>Turvalisus</strong></u>"
+
+#~ msgid "<u><strong>Views</strong></u>"
+#~ msgstr "<u><strong>Vaated</strong></u>"
+
+#~ msgid "A AGRICULTURE, FORESTRY AND FISHING"
+#~ msgstr "PÕLLUMAJANDUS, METSAMAJANDUS JA KALANDUS"
+
+#~ msgid "A document was modified since you last viewed it (%s:%d)"
+#~ msgstr "Dokumendi muudeti viimati, kui te vaatasite seda (%s:%d)"
+
+#~ msgid "A module to generate exceptions."
+#~ msgstr "Erandite loomise moodul."
+
+#~ msgid "A module to test Odoo with pylint."
+#~ msgstr "Moodul Odoo testimiseks pylint'iga."
+
+#~ msgid "A module to test import/export."
+#~ msgstr "Impordi/ekspordi testimise moodul."
+
+#~ msgid "A module to test the API."
+#~ msgstr "API testimise moodul"
+
+#~ msgid "A module to test the uninstall feature."
+#~ msgstr "Moodul deinstalleerimise testimiseks."
+
+#~ msgid "A module to verify the Assets Bundle mechanism."
+#~ msgstr "Assets Bundle mehhanismi tuvastamise moodul."
+
+#~ msgid "A user associated to the contact"
+#~ msgstr "A user associated to the contact"
+
+#~ msgid "A0  5   841 x 1189 mm"
+#~ msgstr "A0  5   841 x 1189 mm"
+
+#~ msgid "A1  6   594 x 841 mm"
+#~ msgstr "A1  6   594 x 841 mm"
+
+#~ msgid "A2  7   420 x 594 mm"
+#~ msgstr "A2  7   420 x 594 mm"
+
+#~ msgid "A3  8   297 x 420 mm"
+#~ msgstr "A3  8   297 x 420 mm"
+
+#~ msgid "A4  0   210 x 297 mm, 8.26 x 11.69 inches"
+#~ msgstr "A4  0   210 x 297 mm, 8.26 x 11.69 tolli"
+
+#~ msgid "A5  9   148 x 210 mm"
+#~ msgstr "A5  9   148 x 210 mm"
+
+#~ msgid "A6  10  105 x 148 mm"
+#~ msgstr "A6  10  105 x 148 mm"
+
+#~ msgid "A7  11  74 x 105 mm"
+#~ msgstr "A7  11  74 x 105 mm"
+
+#~ msgid "A8  12  52 x 74 mm"
+#~ msgstr "A8  12  52 x 74 mm"
+
+#~ msgid "A9  13  37 x 52 mm"
+#~ msgstr "A9  13  37 x 52 mm"
+
+#~ msgid "Abbreviation"
+#~ msgstr "Lühendamine"
+
+#~ msgid "Accepted Users"
+#~ msgstr "Aksepteeritud kasutajad"
+
+#~ msgid "Access"
+#~ msgstr "Ligipääs"
+
+#~ msgid "Access Controls"
+#~ msgstr "Ligipääsukontroll"
+
+#~ msgid "Access Groups"
+#~ msgstr "Ligipääsu gruppid"
+
+#~ msgid "Access Menu"
+#~ msgstr "Menüü ligipääs"
+
+#~ msgid "Access Token"
+#~ msgstr "Ligipääsu võti"
+
+#~ msgid "Account Analytic Defaults"
+#~ msgstr "Konto analüütilised vaikeväärtused"
+
+#~ msgid "Account Bank Statement Import"
+#~ msgstr "Pangaväljavõtte import"
+
+#~ msgid "Account Charts"
+#~ msgstr "Konto tabelid"
+
+#~ msgid "Account Holder"
+#~ msgstr "Konto valdaja"
+
+#~ msgid "Account No."
+#~ msgstr "Konto nr."
+
+#~ msgid "Account Number"
+#~ msgstr "Konto number"
+
+#~ msgid "Account Number must be unique"
+#~ msgstr "Kontonumber peab olema kordumatu"
+
+#~ msgid "Account TaxCloud"
+#~ msgstr "TaxCloud konto"
+
+#~ msgid "Account TaxCloud - Ecommerce"
+#~ msgstr "TaxCloud konto - e-kaubandus"
+
+#~ msgid "Account TaxCloud - Sale"
+#~ msgstr "TaxCloud konto - müük"
+
+#~ msgid "Account and Payment Link and Portal"
+#~ msgstr "Konto ja makse link ja portaal"
+
+#~ msgid "Accounting"
+#~ msgstr "Raamatupidamine"
+
+#~ msgid "Accounting & Finance"
+#~ msgstr "Raamatupidamine ja finantsid"
+
+#~ msgid "Accounting &amp; Finance"
+#~ msgstr "Raamatupidamine ja rahandus"
+
+#~ msgid "Accounting - MRP"
+#~ msgstr "Raamatupidamine - MRP"
+
+#~ msgid "Accounting Consistency Tests"
+#~ msgstr "Raamatupidamise järjepidevuse testid"
+
+#~ msgid "Accounting Reports"
+#~ msgstr "Raamatupidamisaruanded"
+
+#~ msgid "Action"
+#~ msgstr "Tegevus"
+
+#~ msgid "Action Description"
+#~ msgstr "Tegevuse kirjeldus"
+
+#~ msgid "Action Name"
+#~ msgstr "Tegevuse nimi"
+
+#~ msgid "Action Target"
+#~ msgstr "Toimingu sihtmärk"
+
+#~ msgid "Action To Do"
+#~ msgstr "Teha tegevused"
+
+#~ msgid "Action Type"
+#~ msgstr "Toimingu liik"
+
+#~ msgid "Action URL"
+#~ msgstr "Toimingu URL"
+
+#~ msgid "Action Usage"
+#~ msgstr "Toimingu kasutus"
+
+#~ msgid "Actions"
+#~ msgstr "Tegevused"
+
+#~ msgid "Active"
+#~ msgstr "Aktiivne"
+
+#~ msgid "Add a link to edit a translation in Transifex"
+#~ msgstr "Lisage link, et tõlget muuta Transifex keskkonnas"
+
+#~ msgid "Add barcode scanning facilities to Delivery."
+#~ msgstr "Lisage saatmisele ribakoodi lugemise võimalus."
+
+#~ msgid "Add barcode scanning feature to event management."
+#~ msgstr "Lisage ürituste haldamisele ribakoodi lugemise võimalus."
+
+#~ msgid "Add extra fields on addresses"
+#~ msgstr "Lisage aadressidele täiendavaid välju"
+
+#~ msgid "Add in the 'Print' menu"
+#~ msgstr "Lisa \"prindi\" menüüs"
+
+#~ msgid "Address Type"
+#~ msgstr "Aadressi tüüp"
+
+#~ msgid "Address format..."
+#~ msgstr "Aadressi formaat..."
+
+#~ msgid "Administration"
+#~ msgstr "Haldus"
+
+#~ msgid "Administrative"
+#~ msgstr "Administratiivne"
+
+#~ msgid ""
+#~ "Administrative divisions of a country. E.g. Fed. State, Departement, "
+#~ "Canton"
+#~ msgstr "Riigi haldusüksused nt Fed. State, Departement, Canton"
+
+#~ msgid "Advanced Address Formatting"
+#~ msgstr "Täiustatud aadressi vormindamine"
+
+#~ msgid "Advanced Events"
+#~ msgstr "Täpsemad sündmused"
+
+#~ msgid "Advanced Properties"
+#~ msgstr "Täpsemad seaded"
+
+#~ msgid "Adyen Payment Acquirer"
+#~ msgstr "Adyen'i pangalink"
+
+#~ msgid "Affero GPL-3"
+#~ msgstr "Affero GPL-3"
+
+#~ msgid "Afghanistan"
+#~ msgstr "Afganistan"
+
+#~ msgid "After Address"
+#~ msgstr "Pärast aadressi"
+
+#~ msgid "After Amount"
+#~ msgstr "Peale summat"
+
+#~ msgid "Agriculture"
+#~ msgstr "Põllumajandus"
+
+#~ msgid "Albania"
+#~ msgstr "Albaania"
+
+#~ msgid "Algeria"
+#~ msgstr "Alžeeria"
+
+#~ msgid "All"
+#~ msgstr "All"
+
+#~ msgid "Allow cashier to reprint receipts"
+#~ msgstr "Luba kassapidajal kviitungeid uuesti välja printida"
+
+#~ msgid "Allowed Companies"
+#~ msgstr "Lubatud ettevõtted"
+
+#~ msgid ""
+#~ "Allows you to create your invoices and track the payments. It is an "
+#~ "easier version of the accounting module for managers who are not "
+#~ "accountants."
+#~ msgstr ""
+#~ "Võimaldab luua arveid ja jälgida makseid. See on lihtsam versioon "
+#~ "raamatupidamise moodulist mitte-raamatupidajatest juhtidele ."
+
+#~ msgid "American Samoa"
+#~ msgstr "Ameerika Samoa"
+
+#~ msgid "Analytic Accounting"
+#~ msgstr "Analüütiline raamatupidamine"
+
+#~ msgid "Analytic accounting in Manufacturing"
+#~ msgstr "Tootmise analüütiline raamatupidamine."
+
+#~ msgid "Andorra"
+#~ msgstr "Andorra"
+
+#~ msgid "Angola"
+#~ msgstr "Angola"
+
+#~ msgid "Anguilla"
+#~ msgstr "Anguilla"
+
+#~ msgid "Antarctica"
+#~ msgstr "Antarktika"
+
+#~ msgid "Antigua and Barbuda"
+#~ msgstr "Antigua ja Barbuda"
+
+#~ msgid "App Store"
+#~ msgstr "Rakenduste pood"
+
+#~ msgid "Application"
+#~ msgstr "Kandideerimine"
+
+#~ msgid "Application Accesses"
+#~ msgstr "Ligipääsud rakendustele"
+
+#~ msgid "Application Terms"
+#~ msgstr "Rakenduse terminid"
+
+#~ msgid "Apply"
+#~ msgstr "Kinnita"
+
+#~ msgid "Apply Scheduled Upgrades"
+#~ msgstr "Paigalda valitud uuendused"
+
+#~ msgid "Apply for Create"
+#~ msgstr "Rakenda loomisele"
+
+#~ msgid "Apply for Delete"
+#~ msgstr "Rakenda kustutamisele"
+
+#~ msgid "Apply for Read"
+#~ msgstr "Rakenda lugemisele"
+
+#~ msgid "Apply for Write"
+#~ msgstr "Rakenda kirjutamisele"
+
+#~ msgid "Appraisal"
+#~ msgstr "Hindamine"
+
+#~ msgid "Appraisals"
+#~ msgstr "Hindamised"
+
+#~ msgid "Apps"
+#~ msgstr "Rakendused"
+
+#~ msgid "Apps To Export"
+#~ msgstr "Eksporditavad rakendused"
+
+#~ msgid "Apps to Update"
+#~ msgstr "Uuendatavad rakendused"
+
+#~ msgid "Apps:"
+#~ msgstr "Rakendused:"
+
+#~ msgid "Architecture"
+#~ msgstr "Arhitektuur"
+
+#~ msgid "Archived"
+#~ msgstr "Arhiveeritud"
+
+#~ msgid "Are you sure to execute the automatic merge of your contacts ?"
+#~ msgstr "Are you sure to execute the automatic merge of your contacts ?"
+
+#~ msgid ""
+#~ "Are you sure to execute the list of automatic merges of your contacts ?"
+#~ msgstr ""
+#~ "Are you sure to execute the list of automatic merges of your contacts ?"
+
+#~ msgid "Argentina"
+#~ msgstr "Argentiina"
+
+#~ msgid "Armenia"
+#~ msgstr "Armeenia"
+
+#~ msgid "Aruba"
+#~ msgstr "Aruba"
+
+#~ msgid "Assets Management"
+#~ msgstr "Varade haldamine"
+
+#~ msgid "Attached To"
+#~ msgstr "Lisatud millele"
+
+#~ msgid "Attachment"
+#~ msgstr "Manus"
+
+#~ msgid "Attachments"
+#~ msgstr "Manused"
+
+#~ msgid "Attendance"
+#~ msgstr "Kohalviibimine"
+
+#~ msgid "Attendances"
+#~ msgstr "Kohalviibimised"
+
+#~ msgid "Australia"
+#~ msgstr "Austraalia"
+
+#~ msgid "Austria"
+#~ msgstr "Austria"
+
+#~ msgid "Author"
+#~ msgstr "Autor"
+
+#~ msgid "Author Name"
+#~ msgstr "Autori nimi"
+
+#~ msgid "Auto Search"
+#~ msgstr "Automaatne otsing"
+
+#~ msgid "Automatic Installation"
+#~ msgstr "Automaatne paigaldamine"
+
+#~ msgid "Automatic Merge Wizard"
+#~ msgstr "Automatic Merge Wizard"
+
+#~ msgid "Automation"
+#~ msgstr "Automatiseerimine"
+
+#~ msgid "Available for User"
+#~ msgstr "Saadaval kasutajale"
+
+#~ msgid "Azerbaijan"
+#~ msgstr "Aserbaidžaan"
+
+#~ msgid "B0  14  1000 x 1414 mm"
+#~ msgstr "B0  14  1000 x 1414 mm"
+
+#~ msgid "B1  15  707 x 1000 mm"
+#~ msgstr "B1  15  707 x 1000 mm"
+
+#~ msgid "B2  17  500 x 707 mm"
+#~ msgstr "B2  17  500 x 707 mm"
+
+#~ msgid "B3  18  353 x 500 mm"
+#~ msgstr "B3  18  353 x 500 mm"
+
+#~ msgid "B4  19  250 x 353 mm"
+#~ msgstr "B4  19  250 x 353 mm"
+
+#~ msgid "B5  1   176 x 250 mm, 6.93 x 9.84 inches"
+#~ msgstr "B5  1   176 x 250 mm, 6.93 x 9.84 tolli"
+
+#~ msgid "B6  20  125 x 176 mm"
+#~ msgstr "B6  20  125 x 176 mm"
+
+#~ msgid "B7  21  88 x 125 mm"
+#~ msgstr "B7  21  88 x 125 mm"
+
+#~ msgid "B8  22  62 x 88 mm"
+#~ msgstr "B8  22  62 x 88 mm"
+
+#~ msgid "B9  23  33 x 62 mm"
+#~ msgstr "B9  23  33 x 62 mm"
+
+#~ msgid "Bahamas"
+#~ msgstr "Bahama saared"
+
+#~ msgid "Bahrain"
+#~ msgstr "Bahrein"
+
+#~ msgid "Bangladesh"
+#~ msgstr "Bangladesh"
+
+#~ msgid "Bank"
+#~ msgstr "Pank"
+
+#~ msgid "Bank Accounts"
+#~ msgstr "Pangakontod"
+
+#~ msgid "Bank Identifier Code"
+#~ msgstr "Panga identifitseerimiskood (BIC)"
+
+#~ msgid "Bank Name"
+#~ msgstr "Panga nimi"
+
+#~ msgid "Bank account"
+#~ msgstr "Pangakonto"
+
+#~ msgid "Bank accounts related to this company"
+#~ msgstr "Ettevõttega seotud pangakontod"
+
+#~ msgid "Banks"
+#~ msgstr "Pangad"
+
+#~ msgid "Barbados"
+#~ msgstr "Barbados"
+
+#~ msgid "Base"
+#~ msgstr "Alus"
+
+#~ msgid "Base Field"
+#~ msgstr "Baasväli"
+
+#~ msgid "Base Object"
+#~ msgstr "Baasobjekt"
+
+#~ msgid "Before Amount"
+#~ msgstr "Enne summat"
+
+#~ msgid "Belarus"
+#~ msgstr "Valgevene"
+
+#~ msgid "Belgium"
+#~ msgstr "Belgia"
+
+#~ msgid "Belize"
+#~ msgstr "Belize"
+
+#~ msgid "Benin"
+#~ msgstr "Benin"
+
+#~ msgid "Bermuda"
+#~ msgstr "Bermuda"
+
+#~ msgid "Bhutan"
+#~ msgstr "Bhutan"
+
+#~ msgid "Binding Model"
+#~ msgstr "Siduv mudel"
+
+#~ msgid "Binding Type"
+#~ msgstr "Siduv tüüp"
+
+#~ msgid "Blogs"
+#~ msgstr "Blogid"
+
+#~ msgid "Bolivia"
+#~ msgstr "Boliivia"
+
+#~ msgid "Boolean"
+#~ msgstr "Boolean"
+
+#~ msgid "Botswana"
+#~ msgstr "Botswana"
+
+#~ msgid "Bouvet Island"
+#~ msgstr "Bouveti saar"
+
+#~ msgid "Brazil"
+#~ msgstr "Brasiilia"
+
+#~ msgid "British Indian Ocean Territory"
+#~ msgstr "Briti India ookeani territoorium"
+
+#~ msgid "Brunei Darussalam"
+#~ msgstr "Brunei Darussalam"
+
+#~ msgid "Budget Management"
+#~ msgstr "Eelarvestamine"
+
+#~ msgid "Bulgaria"
+#~ msgstr "Bulgaaria"
+
+#~ msgid "Burkina Faso"
+#~ msgstr "Burkina Faso"
+
+#~ msgid "Burundi"
+#~ msgstr "Burundi"
+
+#~ msgid "C5E 24  163 x 229 mm"
+#~ msgstr "C5E 24  163 x 229 mm"
+
+#~ msgid "CRM"
+#~ msgstr "CRM"
+
+#~ msgid "CSV File"
+#~ msgstr "CSV fail"
+
+#~ msgid "Calendar"
+#~ msgstr "Kalender"
+
+#~ msgid "Cameroon"
+#~ msgstr "Kamerun"
+
+#~ msgid "Canada"
+#~ msgstr "Kanada"
+
+#~ msgid "Canada - Accounting"
+#~ msgstr "Kanada - Raamatupidamine"
+
+#~ msgid "Cancel"
+#~ msgstr "Tühista"
+
+#~ msgid "Cancel Install"
+#~ msgstr "Katkesta paigaldamine"
+
+#~ msgid "Cancel Uninstall"
+#~ msgstr "Tühista eemaldus"
+
+#~ msgid "Cancel Upgrade"
+#~ msgstr "Tühista uuendus"
+
+#~ msgid "Cape Verde"
+#~ msgstr "Roheneemesaared (Cabo Verde)"
+
+#~ msgid "Cascade"
+#~ msgstr "Kaskaad"
+
+#~ msgid "Category"
+#~ msgstr "Kategooria"
+
+#~ msgid "Cayman Islands"
+#~ msgstr "Kaimani saared"
+
+#~ msgid "Central African Republic"
+#~ msgstr "Kesk Aafrika Vabariik"
+
+#~ msgid "Chad"
+#~ msgstr "Tšaad"
+
+#~ msgid "Change My Preferences"
+#~ msgstr "Muuda Eelistusi"
+
+#~ msgid "Change Password"
+#~ msgstr "Muuda Salasõna"
+
+#~ msgid "Change password"
+#~ msgstr "Vaheta salasõna"
+
+#~ msgid "Char"
+#~ msgstr "Sümbol"
+
+#~ msgid "Check this box if this contact is an Employee."
+#~ msgstr "Märgi see valik, kui see kontakt on töötaja."
+
+#~ msgid "Checksum/SHA1"
+#~ msgstr "Checksum/SHA1"
+
+#~ msgid "Child Actions"
+#~ msgstr "Alamtegevused"
+
+#~ msgid "Child Applications"
+#~ msgstr "Alam-moodulid"
+
+#~ msgid "Child Companies"
+#~ msgstr "Tütarettevõtted"
+
+#~ msgid "Child Field"
+#~ msgstr "Alamväli"
+
+#~ msgid "Child IDs"
+#~ msgstr "Alam ID-d"
+
+#~ msgid ""
+#~ "Child server actions that will be executed. Note that the last return "
+#~ "returned action value will be used as global return value."
+#~ msgstr ""
+#~ "Käivitatav alamserveri tegevus. Pange tähele, et tagastatav viimase "
+#~ "toimingu väärtust kasutatakse kui globaalset tagastatud väärtust."
+
+#~ msgid "Chile"
+#~ msgstr "Tšiili"
+
+#~ msgid "China"
+#~ msgstr "Hiina"
+
+#~ msgid "Choose Your Document Layout"
+#~ msgstr "Vali oma dokumendi kujundus"
+
+#~ msgid "Christmas Island"
+#~ msgstr "Jõulusaar"
+
+#~ msgid "City"
+#~ msgstr "Linn"
+
+#~ msgid "City Addresses"
+#~ msgstr "Linnade aadressid"
+
+#~ msgid "Client"
+#~ msgstr "Klient"
+
+#~ msgid "Client Action"
+#~ msgstr "Kliendi toiming"
+
+#~ msgid "Close"
+#~ msgstr "Kinnitatud"
+
+#~ msgid "Cocos (Keeling) Islands"
+#~ msgstr "Kookossaared (Keelingi saared)"
+
+#~ msgid "Code"
+#~ msgstr "Kood"
+
+#~ msgid "Collaborative Pads"
+#~ msgstr "Koostööplatvormid"
+
+#~ msgid "Colombia"
+#~ msgstr "Kolumbia"
+
+#~ msgid "Color Index"
+#~ msgstr "Värvikood"
+
+#~ msgid "Column 1"
+#~ msgstr "Veerg 1"
+
+#~ msgid "Column 2"
+#~ msgstr "Veerg 2"
+
+#~ msgid "Comments"
+#~ msgstr "Kommentaarid"
+
+#~ msgid "Commercial Entity"
+#~ msgstr "Äriühing"
+
+#~ msgid "Communication"
+#~ msgstr "Suhtlus"
+
+#~ msgid "Comoros"
+#~ msgstr "Komoori saared"
+
+#~ msgid "Companies"
+#~ msgstr "Ettevõtted"
+
+#~ msgid "Companies count"
+#~ msgstr "Ettevõtete arv"
+
+#~ msgid "Company Data"
+#~ msgstr "Ettevõtete andmed"
+
+#~ msgid "Company Logo"
+#~ msgstr "Ettevõtte logo"
+
+#~ msgid "Company Name"
+#~ msgstr "Ettevõtte nimi"
+
+#~ msgid "Company Properties"
+#~ msgstr "Ettevõtte omadused"
+
+#~ msgid "Company Registry"
+#~ msgstr "Ettevõtte registrikood"
+
+#~ msgid "Company Type"
+#~ msgstr "Ettevõtte liik"
+
+#~ msgid "Complete Address"
+#~ msgstr "Täielik aadress"
+
+#~ msgid "Complete Name"
+#~ msgstr "Täielik nimi"
+
+#~ msgid "Compute"
+#~ msgstr "Arvuta"
+
+#~ msgid "Condition"
+#~ msgstr "Tingimus"
+
+#~ msgid "Config Wizard Steps"
+#~ msgstr "Seadistamisnõustaja sammud"
+
+#~ msgid "Configuration"
+#~ msgstr "Seadistused"
+
+#~ msgid "Configuration Wizards"
+#~ msgstr "Seadistamisnõustajad"
+
+#~ msgid "Confirm"
+#~ msgstr "Kinnita"
+
+#~ msgid "Congo"
+#~ msgstr "Kongo"
+
+#~ msgid "Connection Information"
+#~ msgstr "Ühenduse info"
+
+#~ msgid "Constraint"
+#~ msgstr "Piirang"
+
+#~ msgid "Construction"
+#~ msgstr "Ehitamine"
+
+#~ msgid "Contact"
+#~ msgstr "Kontakt"
+
+#~ msgid "Contact Creation"
+#~ msgstr "Kontaktide loomine"
+
+#~ msgid "Contact Form"
+#~ msgstr "Kontaktivorm"
+
+#~ msgid "Contact Name"
+#~ msgstr "Kontakti nimi"
+
+#~ msgid "Contact Tag"
+#~ msgstr "Kontakti silt"
+
+#~ msgid "Contact Tags"
+#~ msgstr "Kontaktide sildid"
+
+#~ msgid "Contact Titles"
+#~ msgstr "Kontaktide tiitlid"
+
+#~ msgid "Contacts"
+#~ msgstr "Kontaktid"
+
+#~ msgid "Contacts & Addresses"
+#~ msgstr "Kontaktid ja aadressid"
+
+#~ msgid "Context"
+#~ msgstr "Kontekst"
+
+#~ msgid "Context Value"
+#~ msgstr "Konteksti väärtus"
+
+#~ msgid ""
+#~ "Context dictionary as Python expression, empty by default (Default: {})"
+#~ msgstr ""
+#~ "Konteksti sõnastik Python avaldisena, vaikimisi tühi (Vaikimisi: {})"
+
+#~ msgid "Contracts"
+#~ msgstr "Lepingud"
+
+#~ msgid "Contributors"
+#~ msgstr "Kaasautorid"
+
+#~ msgid "Cook Islands"
+#~ msgstr "Cooki saared"
+
+#~ msgid "Copied"
+#~ msgstr "Kopeeritud"
+
+#~ msgid "Costa Rica"
+#~ msgstr "Costa Rica"
+
+#~ msgid "Costa Rica - Accounting"
+#~ msgstr "Costa Rica - Raamatupidamine"
+
+#~ msgid "Count (incl. archived)"
+#~ msgstr "Loendus (k.a arhiveeritud)"
+
+#~ msgid "Countries"
+#~ msgstr "Riigid"
+
+#~ msgid "Country"
+#~ msgstr "Riik"
+
+#~ msgid "Country Calling Code"
+#~ msgstr "Riigi suunakood"
+
+#~ msgid "Country Code"
+#~ msgstr "Riigikood"
+
+#~ msgid "Country Group"
+#~ msgstr "Riikide grupp"
+
+#~ msgid "Country Groups"
+#~ msgstr "Riikide rühmad"
+
+#~ msgid "Country Name"
+#~ msgstr "Riigi nimi"
+
+#~ msgid "Country state"
+#~ msgstr "Maakond"
+
+#~ msgid "Create Access"
+#~ msgstr "Loomisõigus"
+
+#~ msgid "Create Date"
+#~ msgstr "Loomise kuupäev"
+
+#~ msgid "Create Menu"
+#~ msgstr "Loo menüü"
+
+#~ msgid "Create _Menu"
+#~ msgstr "Loo_Menüü"
+
+#~ msgid "Create a Menu"
+#~ msgstr "Lisa menüü"
+
+#~ msgid "Create a new Record"
+#~ msgstr "Loo uus sissekanne"
+
+#~ msgid "Create/Write Target Model"
+#~ msgstr "Sihtmudeli loomine/kirjutamine"
+
+#~ msgid "Created Menus"
+#~ msgstr "Loodud menüüd"
+
+#~ msgid "Created Views"
+#~ msgstr "Loodud Vaated"
+
+#~ msgid "Created by"
+#~ msgstr "Loonud"
+
+#~ msgid "Created on"
+#~ msgstr "Loomise kuupäev"
+
+#~ msgid "Creation"
+#~ msgstr "Loomine"
+
+#~ msgid "Creation Date"
+#~ msgstr "Loomise kuupäev"
+
+#~ msgid "Credit Limit"
+#~ msgstr "Krediidilimiit"
+
+#~ msgid "Crm Phone Numbers Validation"
+#~ msgstr "Crm Telefoninumbri kinnitamine"
+
+#~ msgid "Croatia"
+#~ msgstr "Horvaatia"
+
+#~ msgid "Cuba"
+#~ msgstr "Kuuba"
+
+#~ msgid "Curaçao"
+#~ msgstr "Curaçao"
+
+#~ msgid "Currencies"
+#~ msgstr "Valuutad"
+
+#~ msgid "Currency Code (ISO 4217)"
+#~ msgstr "Valuutakood (ISO 4217)"
+
+#~ msgid "Currency Rate"
+#~ msgstr "Valuutakurss"
+
+#~ msgid "Currency Rates"
+#~ msgstr "Valuutavahetuskursid"
+
+#~ msgid "Currency Unit"
+#~ msgstr "Valuuta ühik"
+
+#~ msgid "Currency Unit Name"
+#~ msgstr "Valuuta ühiku nimi"
+
+#~ msgid "Current Company"
+#~ msgstr "Praegune ettevõte"
+
+#~ msgid "Current Line"
+#~ msgstr "Current Line"
+
+#~ msgid "Current Rate"
+#~ msgstr "Hetke määr"
+
+#~ msgid "Current Window"
+#~ msgstr "Käesolev aken"
+
+#~ msgid "Custom"
+#~ msgstr "Kohandatud"
+
+#~ msgid "Custom Field"
+#~ msgstr "Kohandatud väli"
+
+#~ msgid "Custom Object"
+#~ msgstr "Kohandatud objekt"
+
+#~ msgid "Custom Shortcuts"
+#~ msgstr "Kohandatud kiirklahvid"
+
+#~ msgid "Customer Portal"
+#~ msgstr "Kliendiportaal"
+
+#~ msgid "Customer References"
+#~ msgstr "Kliendi viited"
+
+#~ msgid "Customers"
+#~ msgstr "Kliendid"
+
+#~ msgid "Customized Views"
+#~ msgstr "Kohandatud vaated"
+
+#~ msgid "Cyprus"
+#~ msgstr "Küpros"
+
+#~ msgid "Czech Republic"
+#~ msgstr "Tšehhi"
+
+#~ msgid "Côte d'Ivoire"
+#~ msgstr "Elevandiluurannik"
+
+#~ msgid "Dashboards"
+#~ msgstr "Töölauad"
+
+#~ msgid "Data to Write"
+#~ msgstr "Kirjutatavad andmed"
+
+#~ msgid "Database"
+#~ msgstr "Andmebaas"
+
+#~ msgid "Database Data"
+#~ msgstr "Database Data"
+
+#~ msgid "Database Name"
+#~ msgstr "Andmebaasi nimi"
+
+#~ msgid "Database Structure"
+#~ msgstr "Andmebaasi struktuur"
+
+#~ msgid "Date Format"
+#~ msgstr "Kuupäeva vorming"
+
+#~ msgid "DateTime"
+#~ msgstr "Kuupäev ja kellaaeg"
+
+#~ msgid "Days"
+#~ msgstr "Päevad"
+
+#~ msgid "Decimal Places"
+#~ msgstr "Komakohad"
+
+#~ msgid "Decimal Separator"
+#~ msgstr "Kümnendkohtade eraldaja"
+
+#~ msgid "Deduplicate Contacts"
+#~ msgstr "Deduplicate Contacts"
+
+#~ msgid "Deduplicate the other Contacts"
+#~ msgstr "Deduplicate the other Contacts"
+
+#~ msgid "Default Filter"
+#~ msgstr "Vaikimisi filter"
+
+#~ msgid "Default Theme"
+#~ msgstr "Vaikimisi teema"
+
+#~ msgid "Default Values"
+#~ msgstr "Vaikeväärtused"
+
+#~ msgid "Default limit for the list view"
+#~ msgstr "Vaikimisi limiit nimekirjavaatele"
+
+#~ msgid "Deferred Revenues"
+#~ msgstr "Viittulud"
+
+#~ msgid "Deferred Revenues Management for Subscriptions"
+#~ msgstr "Tellimuste viittulu haldus"
+
+#~ msgid "Defined Reports"
+#~ msgstr "Määratletud aruanded"
+
+#~ msgid "Definition"
+#~ msgstr "Määratlus"
+
+#~ msgid "Delete Access Right"
+#~ msgstr "Kustuta ligipääsureegel"
+
+#~ msgid "Delivery"
+#~ msgstr "Transport"
+
+#~ msgid "Delivery Costs"
+#~ msgstr "Tarnekulud"
+
+#~ msgid "Demo"
+#~ msgstr "Esitlus"
+
+#~ msgid "Demo Data"
+#~ msgstr "Näidisandmed"
+
+#~ msgid "Denmark"
+#~ msgstr "Taani"
+
+#~ msgid "Dependencies"
+#~ msgstr "Sõltuvused"
+
+#~ msgid "Dependency"
+#~ msgstr "Sõltuvus"
+
+#~ msgid "Description"
+#~ msgstr "Kirjeldus"
+
+#~ msgid "Description HTML"
+#~ msgstr "Kirjeldus HTML-ina"
+
+#~ msgid "Destination Contact"
+#~ msgstr "Destination Contact"
+
+#~ msgid "Detailed algorithm:"
+#~ msgstr "Üksikasjalik algoritm:"
+
+#~ msgid "Diagram"
+#~ msgstr "Diagramm"
+
+#~ msgid "Discard"
+#~ msgstr "Loobu"
+
+#~ msgid "Discuss"
+#~ msgstr "Vestlus"
+
+#~ msgid "Display"
+#~ msgstr "Ekraan"
+
+#~ msgid "Djibouti"
+#~ msgstr "Djibouti"
+
+#~ msgid "Doctor"
+#~ msgstr "Doktor"
+
+#~ msgid "Document"
+#~ msgstr "Dokument"
+
+#~ msgid "Document Management"
+#~ msgstr "Dokumendihaldus"
+
+#~ msgid "Document Template"
+#~ msgstr "Dokumendi põhi"
+
+#~ msgid "Document model"
+#~ msgstr "Dokumendi mudel"
+
+#~ msgid "Documents"
+#~ msgstr "Dokumendid"
+
+#~ msgid "Domain"
+#~ msgstr "Domeen"
+
+#~ msgid "Domain Value"
+#~ msgstr "Domeeni väärtus"
+
+#~ msgid "Dominica"
+#~ msgstr "Dominica"
+
+#~ msgid "Dominican Republic"
+#~ msgstr "Dominikaani Vabariik"
+
+#~ msgid "Done"
+#~ msgstr "Tehtud"
+
+#~ msgid "Dr."
+#~ msgstr "Dr."
+
+#~ msgid "Drop Shipping"
+#~ msgstr "Otse kliendile saatmine"
+
+#~ msgid "Ecuador"
+#~ msgstr "Ecuador"
+
+#~ msgid "Edit Translations"
+#~ msgstr "Muuda tõlkeid"
+
+#~ msgid "Education"
+#~ msgstr "Haridus"
+
+#~ msgid "Egypt"
+#~ msgstr "Egiptus"
+
+#~ msgid "El Salvador"
+#~ msgstr "El Salvador"
+
+#~ msgid "Element '%s' cannot be located in parent view"
+#~ msgstr "Element \"%s\" ei saa asuda ülemvaates"
+
+#~ msgid "Email Address"
+#~ msgstr "E-posti aadress"
+
+#~ msgid "Email Marketing"
+#~ msgstr "E-posti turundus"
+
+#~ msgid "Email Preferences"
+#~ msgstr "E-posti seadistused"
+
+#~ msgid "Employee"
+#~ msgstr "Töötaja"
+
+#~ msgid "Employee Contracts"
+#~ msgstr "Töötaja lepingud"
+
+#~ msgid "Employees"
+#~ msgstr " töötajad"
+
+#~ msgid "Entertainment"
+#~ msgstr "Meelelahutus"
+
+#~ msgid "Equatorial Guinea"
+#~ msgstr "Ekvatoriaal-Guinea"
+
+#~ msgid "Equipments, Assets, Internal Hardware, Allocation Tracking"
+#~ msgstr "Seadmed, varad, sisemine riistvara, jaotuse jälgimine"
+
+#~ msgid "Eritrea"
+#~ msgstr "Eritrea"
+
+#~ msgid "Error"
+#~ msgstr "Viga"
+
+#~ msgid "Error details:"
+#~ msgstr "Vea detailid:"
+
+#~ msgid "Estonia"
+#~ msgstr "Eesti"
+
+#~ msgid "Ethiopia"
+#~ msgstr "Etioopia"
+
+#~ msgid "Ethiopia - Accounting"
+#~ msgstr "Etioopia - raamatupidamine"
+
+#~ msgid "Ethiopia - Accounting Reports"
+#~ msgstr "Etioopia - raamatupidamisaruanded"
+
+#~ msgid "Europe"
+#~ msgstr "Euroopa"
+
+#~ msgid "Evaluation Type"
+#~ msgstr "Hindamise tüüp"
+
+#~ msgid "Event Barcode Scanning"
+#~ msgstr "Üritusel ribakoodi lugemine"
+
+#~ msgid "Event Barcode in Mobile"
+#~ msgstr "Üritusel ribakoodi lugemine mobiilist"
+
+#~ msgid "Event Barcode scan in Mobile"
+#~ msgstr "Üritusel ribakoodi lugemine mobiili abil"
+
+#~ msgid "Events"
+#~ msgstr "Sündmused"
+
+#~ msgid "Events Organization"
+#~ msgstr "Ürituste korraldamine"
+
+#~ msgid "Events Sales"
+#~ msgstr "Ürituste müük"
+
+#~ msgid "Example of Python code"
+#~ msgstr "Pythoni koodi näidis"
+
+#~ msgid "Examples"
+#~ msgstr "Näited"
+
+#~ msgid "Exclude contacts having"
+#~ msgstr "Exclude contacts having"
+
+#~ msgid "Exclusion Module"
+#~ msgstr "Välistamise moodul"
+
+#~ msgid "Exclusions"
+#~ msgstr "Erandid"
+
+#~ msgid "Exclusive"
+#~ msgstr "Eksklusiivne"
+
+#~ msgid "Expenses"
+#~ msgstr "Kulud"
+
+#~ msgid "Export"
+#~ msgstr "Eksport"
+
+#~ msgid "Export ID"
+#~ msgstr "Ekspordi ID"
+
+#~ msgid "Export Name"
+#~ msgstr "Ekspordi nimi"
+
+#~ msgid "Export Settings"
+#~ msgstr "Ekspordi seaded"
+
+#~ msgid "Export Translation"
+#~ msgstr "Ekspordi tõlge"
+
+#~ msgid "Export Translations"
+#~ msgstr "Ekspordi tõlked"
+
+#~ msgid "External ID"
+#~ msgstr "Väline ID"
+
+#~ msgid "Extra"
+#~ msgstr "Lisaks"
+
+#~ msgid "Extra Rights"
+#~ msgstr "Lisaõigused"
+
+#~ msgid "Extra Tools"
+#~ msgstr "Lisa töövahendid"
+
+#~ msgid "Falkland Islands"
+#~ msgstr "Falklandi saared"
+
+#~ msgid "Faroe Islands"
+#~ msgstr "Fääri saared"
+
+#~ msgid "Fax"
+#~ msgstr "Faks"
+
+#~ msgid "Fed. State"
+#~ msgstr "Maakond"
+
+#~ msgid "Fed. States"
+#~ msgstr "Maakonnad"
+
+#~ msgid "Field"
+#~ msgstr "Väli"
+
+#~ msgid "Field Label"
+#~ msgstr "Välja nimi"
+
+#~ msgid "Field Mappings"
+#~ msgstr "Välja seostamised"
+
+#~ msgid "Field Name"
+#~ msgstr "Välja nimi"
+
+#~ msgid "Field Type"
+#~ msgstr "Välja tüüp"
+
+#~ msgid "Fields"
+#~ msgstr "Väljad"
+
+#~ msgid "Fields Description"
+#~ msgstr "Välja kirjeldus"
+
+#~ msgid "Fiji"
+#~ msgstr "Fidži"
+
+#~ msgid "File Content"
+#~ msgstr "Faili sisu"
+
+#~ msgid "File Format"
+#~ msgstr "Failivorming"
+
+#~ msgid "File Name"
+#~ msgstr "Failinimi"
+
+#~ msgid "File Size"
+#~ msgstr "Failisuurus"
+
+#~ msgid "Filename"
+#~ msgstr "Faili nimi"
+
+#~ msgid "Filter"
+#~ msgstr "Filter"
+
+#~ msgid "Filter Name"
+#~ msgstr "Filtri nimi"
+
+#~ msgid "Filter names must be unique"
+#~ msgstr "Filtreeritavad nimed peavad olema unikaalsed"
+
+#~ msgid "Filter on my documents"
+#~ msgstr "Filtreeri mu dokumente"
+
+#~ msgid "Filters"
+#~ msgstr "Filtrid"
+
+#~ msgid "Filters created by myself"
+#~ msgstr "Minu poolt loodud filtrid"
+
+#~ msgid "Filters shared with all users"
+#~ msgstr "Kõigi kasutajatega jagatud filtrid"
+
+#~ msgid "Filters visible only for one user"
+#~ msgstr "Ainult ühele kasutajale nähtavad filtrid"
+
+#~ msgid "Finance/Insurance"
+#~ msgstr "Finants/kindlustus"
+
+#~ msgid "Finished"
+#~ msgstr "Lõpetatud"
+
+#~ msgid "Finland"
+#~ msgstr "Soome"
+
+#~ msgid "Float"
+#~ msgstr "Ujukomaarv"
+
+#~ msgid "Food"
+#~ msgstr "Toit"
+
+#~ msgid "Footer"
+#~ msgstr "Jalus"
+
+#~ msgid "Footer text displayed at the bottom of all reports."
+#~ msgstr "Jaluse tekst kuvatakse kõigi aruannete allosas."
+
+#~ msgid "Forecast"
+#~ msgstr "Prognoos"
+
+#~ msgid "Formatted Email"
+#~ msgstr "Vormindatud e-posti aadress"
+
+#~ msgid "Forum"
+#~ msgstr "Foorum"
+
+#~ msgid "France"
+#~ msgstr "Prantsusmaa"
+
+#~ msgid "French Payroll"
+#~ msgstr "Prantsuse palgaarvestus"
+
+#~ msgid "French Southern Territories"
+#~ msgstr "Prantsuse Lõunaalad"
+
+#~ msgid "Friday"
+#~ msgstr "Reede"
+
+#~ msgid "From"
+#~ msgstr "Saatja"
+
+#~ msgid "Full Access"
+#~ msgstr "Täielik juurdepääs"
+
+#~ msgid "Full Name"
+#~ msgstr "Täielik nimi"
+
+#~ msgid "Full Path"
+#~ msgstr "Täielik asukoht"
+
+#~ msgid "Full Screen"
+#~ msgstr "Täisekraan"
+
+#~ msgid "Function"
+#~ msgstr "Funktsioon"
+
+#~ msgid "GPL Version 2"
+#~ msgstr "GPL Versioon 2"
+
+#~ msgid "GPL Version 3"
+#~ msgstr "GPL Versioon 3"
+
+#~ msgid "GPL-2 or later version"
+#~ msgstr "GPL-2 või hilisem versioon"
+
+#~ msgid "GPL-3 or later version"
+#~ msgstr "GPL-3 või hilisem versioon"
+
+#~ msgid "Gabon"
+#~ msgstr "Gabon"
+
+#~ msgid "Gambia"
+#~ msgstr "Gambia"
+
+#~ msgid "Gamification"
+#~ msgstr "Gamification"
+
+#~ msgid "Gantt"
+#~ msgstr "Gantt"
+
+#~ msgid "General"
+#~ msgstr "Üldine"
+
+#~ msgid "General Information"
+#~ msgstr "Üldine info"
+
+#~ msgid "General Settings"
+#~ msgstr "Üldised seaded"
+
+#~ msgid "Generate Missing Terms"
+#~ msgstr "Lisa puuduvad mõisted"
+
+#~ msgid "Generic"
+#~ msgstr "Üldine"
+
+#~ msgid "Georgia"
+#~ msgstr "Gruusia"
+
+#~ msgid "Germany"
+#~ msgstr "Saksamaa"
+
+#~ msgid "Ghana"
+#~ msgstr "Ghana"
+
+#~ msgid "Gibraltar"
+#~ msgstr "Gibraltar"
+
+#~ msgid "Global"
+#~ msgstr "Globaalne"
+
+#~ msgid "Google Calendar"
+#~ msgstr "Google'i kalender"
+
+#~ msgid "Google Drive™ integration"
+#~ msgstr "Google Drive™-ga ühendamine"
+
+#~ msgid "Google Spreadsheet"
+#~ msgstr "Google'i arvutustabel"
+
+#~ msgid "Graph"
+#~ msgstr "Graafik"
+
+#~ msgid "Greece"
+#~ msgstr "Kreeka"
+
+#~ msgid "Greece - Accounting"
+#~ msgstr "Kreeka - Raamatupidamine"
+
+#~ msgid "Greenland"
+#~ msgstr "Gröönimaa"
+
+#~ msgid "Grenada"
+#~ msgstr "Grenada"
+
+#~ msgid "Grid"
+#~ msgstr "Võrgustik"
+
+#~ msgid "Grid View"
+#~ msgstr "Võrgustiku vaade"
+
+#~ msgid "Group"
+#~ msgstr "Grupp"
+
+#~ msgid "Group By"
+#~ msgstr "Rühmitamine"
+
+#~ msgid "Group Name"
+#~ msgstr "Grupi nimi"
+
+#~ msgid "Group name"
+#~ msgstr "Rühma nimi"
+
+#~ msgid "Group of Contacts"
+#~ msgstr "Group of Contacts"
+
+#~ msgid "Groups (no group = global)"
+#~ msgstr "Rühmad (ilma rühmata = globaalne)"
+
+#~ msgid "Guatemala"
+#~ msgstr "Guatemala"
+
+#~ msgid "Guinea"
+#~ msgstr "Guinea"
+
+#~ msgid "Guyana"
+#~ msgstr "Guyana"
+
+#~ msgid "HR Gamification"
+#~ msgstr "Personali tunnustamine"
+
+#~ msgid "HR Org Chart"
+#~ msgstr "Personali organisatsiooniline struktuur"
+
+#~ msgid "HTML"
+#~ msgstr "HTML"
+
+#~ msgid "Haiti"
+#~ msgstr "Haiti"
+
+#~ msgid "Hardware Drivers"
+#~ msgstr "Riistvara draiverid"
+
+#~ msgid "Hardware Proxy"
+#~ msgstr "Riistvara vaheserver"
+
+#~ msgid "Help"
+#~ msgstr "Abi"
+
+#~ msgid "Helpdesk"
+#~ msgstr "Kasutajatugi"
+
+#~ msgid "History"
+#~ msgstr "Ajalugu"
+
+#~ msgid "Holy See (Vatican City State)"
+#~ msgstr "Püha Tool (Vatikani Linnriik)"
+
+#~ msgid "Home Action"
+#~ msgstr "Kodu toiming"
+
+#~ msgid "Honduras"
+#~ msgstr "Honduras"
+
+#~ msgid "Hong Kong"
+#~ msgstr "Hong Kong"
+
+#~ msgid "Hours"
+#~ msgstr "Tunnid"
+
+#~ msgid "Households"
+#~ msgstr "Majapidamised"
+
+#~ msgid "How to define a computed field"
+#~ msgstr "Kuidas määrata arvutatud välja"
+
+#~ msgid "Human Resource"
+#~ msgstr "Personal"
+
+#~ msgid "Human Resources Survey"
+#~ msgstr "Küsitlus personalile"
+
+#~ msgid "Hungarian - Accounting"
+#~ msgstr "Ungari - Raamatupidamine"
+
+#~ msgid "Hungarian - Accounting Reports"
+#~ msgstr "Ungari - Raamatupidamisaruanded"
+
+#~ msgid "Hungary"
+#~ msgstr "Ungari"
+
+#~ msgid "IBAN Bank Accounts"
+#~ msgstr "IBAN Pangakontod"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "ISO Code"
+#~ msgstr "ISO Kood"
+
+#~ msgid "ISO code"
+#~ msgstr "ISO kood"
+
+#~ msgid "Iceland"
+#~ msgstr "Island"
+
+#~ msgid "Icon"
+#~ msgstr "Ikoon"
+
+#~ msgid "Icon URL"
+#~ msgstr "Ikooni URL"
+
+#~ msgid "Ids"
+#~ msgstr "ID"
+
+#~ msgid ""
+#~ "If set to true, the action will not be displayed on the right toolbar of "
+#~ "a form view."
+#~ msgstr ""
+#~ "Kui määratud tõeseks siis toimingut ei kuvata vormivaate parempoolsel "
+#~ "tööriistaribal."
+
+#~ msgid ""
+#~ "If you check this, then the second time the user prints with same "
+#~ "attachment name, it returns the previous report."
+#~ msgstr ""
+#~ "Selle kasti märgistamisel pöördutakse eelmise aruande juurde, kui "
+#~ "kasutaja prindib olemasoleva manuse nimega"
+
+#~ msgid "Image"
+#~ msgstr "Pilt"
+
+#~ msgid "Impacted Apps"
+#~ msgstr "Mõjutatud rakendused"
+
+#~ msgid "Impacted data models"
+#~ msgstr "Mõjutatud andmemudelid"
+
+#~ msgid "Impacted modules"
+#~ msgstr "Mõjutatud moodulid"
+
+#~ msgid "Import / Export"
+#~ msgstr "Import / Eksport"
+
+#~ msgid "Import Translation"
+#~ msgstr "Impordi tõlge"
+
+#~ msgid "In Apps"
+#~ msgstr "Rakendustes"
+
+#~ msgid "In-App Purchases"
+#~ msgstr "Rakendustesisesed ostud"
+
+#~ msgid "Inactive"
+#~ msgstr "Mitteaktiivne"
+
+#~ msgid "Inactive Users"
+#~ msgstr "Mitteaktiivsed kasutajad"
+
+#~ msgid "Indexed"
+#~ msgstr "Indekseeritud"
+
+#~ msgid "Indexed Content"
+#~ msgstr "Indekseeritud sisu"
+
+#~ msgid "India"
+#~ msgstr "India"
+
+#~ msgid "Indian - Accounting"
+#~ msgstr "India - Raamatupidamine"
+
+#~ msgid "Indian - Accounting Reports"
+#~ msgstr "India - Raamatupidamisaruanded"
+
+#~ msgid "Indian Payroll"
+#~ msgstr "India palgaarvestus"
+
+#~ msgid "Individual"
+#~ msgstr "Eraisik"
+
+#~ msgid "Indonesia"
+#~ msgstr "Indoneesia"
+
+#~ msgid "Industry"
+#~ msgstr "Tööstus"
+
+#~ msgid "Information"
+#~ msgstr "Informatsioon"
+
+#~ msgid "Inherit"
+#~ msgstr "Pärandama"
+
+#~ msgid "Inherited"
+#~ msgstr "Pärandatud"
+
+#~ msgid "Inherited View"
+#~ msgstr "Päritud vaade"
+
+#~ msgid "Inherited Views"
+#~ msgstr "Pärandatud vaated"
+
+#~ msgid "Inherited models"
+#~ msgstr "Pärandatud mudelid"
+
+#~ msgid "Init Date"
+#~ msgstr "Init kuupäev"
+
+#~ msgid "Install Language"
+#~ msgstr "Paigalda keel"
+
+#~ msgid "Installed"
+#~ msgstr "Paigaldatud"
+
+#~ msgid "Installed Features"
+#~ msgstr "Paigaldatud funktsioonid"
+
+#~ msgid "Installed Version"
+#~ msgstr "Paigaldatud versioon"
+
+#~ msgid "Integer"
+#~ msgstr "Täisarv"
+
+#~ msgid "Internal Groups"
+#~ msgstr "Ettevõttesisesed grupid"
+
+#~ msgid "Internal Notes"
+#~ msgstr "Ettevõttesisesed märkmed"
+
+#~ msgid "Internal Reference"
+#~ msgstr "Sisemine viide"
+
+#~ msgid "Internal Source"
+#~ msgstr "Sisemine allikas"
+
+#~ msgid "Interval Number"
+#~ msgstr "Intervalli number"
+
+#~ msgid "Interval Unit"
+#~ msgstr "Intervalli üksus"
+
+#~ msgid "Introspection report on objects"
+#~ msgstr "Enesevaatlusaruanne objektidel"
+
+#~ msgid "Inventory"
+#~ msgstr "Ladu"
+
+#~ msgid "Invoice"
+#~ msgstr "Arve"
+
+#~ msgid "Invoicing"
+#~ msgstr "Raamatupidamine"
+
+#~ msgid "Invoicing & Payments"
+#~ msgstr "Arveldamine ja maksed"
+
+#~ msgid "Invoicing Management"
+#~ msgstr "Arvete esitamise haldamine"
+
+#~ msgid "Iran"
+#~ msgstr "Iraan"
+
+#~ msgid "Iraq"
+#~ msgstr "Iraak"
+
+#~ msgid "Ireland"
+#~ msgstr "Iirimaa"
+
+#~ msgid "Is Company"
+#~ msgstr "Is Company"
+
+#~ msgid "Is a Company"
+#~ msgstr "On ettevõte"
+
+#~ msgid "Is a Customer"
+#~ msgstr "Klient"
+
+#~ msgid "Is a Vendor"
+#~ msgstr "Tarnija"
+
+#~ msgid "Is public document"
+#~ msgstr "On avalik dokument"
+
+#~ msgid "Isle of Man"
+#~ msgstr "Mani saar"
+
+#~ msgid "Israel"
+#~ msgstr "Iisrael"
+
+#~ msgid "Italy"
+#~ msgstr "Itaalia"
+
+#~ msgid "Italy - Accounting"
+#~ msgstr "Itaalia - Raamatupidamine"
+
+#~ msgid "Jamaica"
+#~ msgstr "Jamaica"
+
+#~ msgid "Japan"
+#~ msgstr "Jaapan"
+
+#~ msgid "Japan - Accounting"
+#~ msgstr "Jaapan - Raamatupidamine"
+
+#~ msgid "Japan - Accounting Reports"
+#~ msgstr "Jaapan - Raamatupidamisaruanded"
+
+#~ msgid "Jersey"
+#~ msgstr "Jersey"
+
+#~ msgid "Job Position"
+#~ msgstr "Ametikoht"
+
+#~ msgid "Jordan"
+#~ msgstr "Jordaania"
+
+#~ msgid "Journal Items associated to the contact"
+#~ msgstr "Journal Items associated to the contact"
+
+#~ msgid "Just In Time Scheduling"
+#~ msgstr "Lihtsalt aja planeerimises"
+
+#~ msgid "Kanban"
+#~ msgstr "Kanban"
+
+#~ msgid "Kazakhstan"
+#~ msgstr "Kasahstan"
+
+#~ msgid "Kenya"
+#~ msgstr "Keenia"
+
+#~ msgid "Key"
+#~ msgstr "Võti"
+
+#~ msgid "Key must be unique."
+#~ msgstr "Võti peab olema unikaalne."
+
+#~ msgid "Kiribati"
+#~ msgstr "Kiribati"
+
+#~ msgid "Kuwait"
+#~ msgstr "Kuveit"
+
+#~ msgid "LGPL Version 3"
+#~ msgstr "LGPL versioon 3"
+
+#~ msgid "Landed Costs"
+#~ msgstr "Maaletoomise kulud"
+
+#~ msgid "Language"
+#~ msgstr "Keel"
+
+#~ msgid "Language Import"
+#~ msgstr "Keele import"
+
+#~ msgid "Language Name"
+#~ msgstr "Keele nimi"
+
+#~ msgid "Language Pack"
+#~ msgstr "Keelepakett"
+
+#~ msgid "Languages"
+#~ msgstr "Keeled"
+
+#~ msgid "Laos"
+#~ msgstr "Laos"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Viimati muudetud (millal)"
+
+#~ msgid "Last Updated by"
+#~ msgstr "Viimati uuendatud (kelle poolt)"
+
+#~ msgid "Last Updated on"
+#~ msgstr "Viimati uuendatud (millal)"
+
+#~ msgid "Latest Version"
+#~ msgstr "Uusim versioon"
+
+#~ msgid "Latest connection"
+#~ msgstr "Viimane ühendus"
+
+#~ msgid "Latvia"
+#~ msgstr "Läti"
+
+#~ msgid "Launch"
+#~ msgstr "Käivita"
+
+#~ msgid "Layout in Reports"
+#~ msgstr "Paigutus aruannetes"
+
+#~ msgid "Lead to Tasks"
+#~ msgstr "Müügivihje ülesandeks"
+
+#~ msgid "Leaves"
+#~ msgstr "Puudumised"
+
+#~ msgid "Lebanon"
+#~ msgstr "Liibanon"
+
+#~ msgid "Left Margin (mm)"
+#~ msgstr "Vasak veerg (mm)"
+
+#~ msgid "Left-to-Right"
+#~ msgstr "Vasakult-paremale"
+
+#~ msgid "Legal    3   8.5 x 14 inches, 215.9 x 355.6 mm"
+#~ msgstr "Legal    3   8.5 x 14 tolli, 215.9 x 355.6 mm"
+
+#~ msgid "Legend (for prefix, suffix)"
+#~ msgstr "Legend (ees- ja järelliitele)"
+
+#~ msgid "Lesotho"
+#~ msgstr "Lesotho"
+
+#~ msgid "Level"
+#~ msgstr "Tase"
+
+#~ msgid "Liberia"
+#~ msgstr "Libeeria"
+
+#~ msgid "Libya"
+#~ msgstr "Liibüa"
+
+#~ msgid "License"
+#~ msgstr "Litsents"
+
+#~ msgid "Liechtenstein"
+#~ msgstr "Liechtenstein"
+
+#~ msgid "Limit"
+#~ msgstr "Piirang"
+
+#~ msgid "Lines"
+#~ msgstr "Read"
+
+#~ msgid "Link Tracker"
+#~ msgstr "Lingi jälgija"
+
+#~ msgid "Link using field"
+#~ msgstr "Link ,kasutades välja"
+
+#~ msgid "Lithuania"
+#~ msgstr "Leedu"
+
+#~ msgid "Live Chat"
+#~ msgstr "Online vestlus"
+
+#~ msgid "Load"
+#~ msgstr "Lae"
+
+#~ msgid "Load a Translation"
+#~ msgstr "Lae tõlge"
+
+#~ msgid "Localization"
+#~ msgstr "Asukoht laos"
+
+#~ msgid "Log"
+#~ msgstr "Logi"
+
+#~ msgid "Login"
+#~ msgstr "Kasutajanimi"
+
+#~ msgid "Logo"
+#~ msgstr "Logo"
+
+#~ msgid "Logs"
+#~ msgstr "Logid"
+
+#~ msgid "Lunch"
+#~ msgstr "Lõuna"
+
+#~ msgid "Luxembourg"
+#~ msgstr "Luksemburg"
+
+#~ msgid "Macau"
+#~ msgstr "Macau"
+
+#~ msgid "Macedonia, the former Yugoslav Republic of"
+#~ msgstr "Makedoonia, endine Jugoslaavia Vabariik"
+
+#~ msgid "Madagascar"
+#~ msgstr "Madagaskar"
+
+#~ msgid "Madam"
+#~ msgstr "Proua"
+
+#~ msgid "Main Sequence"
+#~ msgstr "Peajärjestus"
+
+#~ msgid "Maintainer"
+#~ msgstr "Haldaja"
+
+#~ msgid "Maintenance"
+#~ msgstr "Hooldus"
+
+#~ msgid "Maintenance - MRP"
+#~ msgstr "Hooldus - materjali nõuete planeerimine"
+
+#~ msgid "Malawi"
+#~ msgstr "Malawi"
+
+#~ msgid "Malaysia"
+#~ msgstr "Malaisia"
+
+#~ msgid "Maldives"
+#~ msgstr "Maldiivid"
+
+#~ msgid "Mali"
+#~ msgstr "Mali"
+
+#~ msgid "Malta"
+#~ msgstr "Malta"
+
+#~ msgid ""
+#~ "Manage sectors of activity to better classify partners for tracking and "
+#~ "analysis purposes."
+#~ msgstr ""
+#~ "Halda tegevusvaldkondi, et paremini liigitada partnereid hilisema "
+#~ "jälgimise ja analüüsi eesmärgil."
+
+#~ msgid "Manufacturing"
+#~ msgstr "Tootmine"
+
+#~ msgid "Many2One"
+#~ msgstr "Many2One"
+
+#~ msgid "Marketing"
+#~ msgstr "Turundus"
+
+#~ msgid "Marketing Automation"
+#~ msgstr "Turunduse automatiseerimine"
+
+#~ msgid "Marshall Islands"
+#~ msgstr "Marshalli Saared"
+
+#~ msgid "Master Production Schedule"
+#~ msgstr "Peamine tootmisgraafik"
+
+#~ msgid "Mauritania"
+#~ msgstr "Mauritaania"
+
+#~ msgid "Mauritius"
+#~ msgstr "Mauritius"
+
+#~ msgid "Maximum of Group of Contacts"
+#~ msgstr "Maximum of Group of Contacts"
+
+#~ msgid "Mayotte"
+#~ msgstr "Mayotte"
+
+#~ msgid "Medium-sized image"
+#~ msgstr "Keskmise suurusega pilt"
+
+#~ msgid "Members"
+#~ msgstr "Liikmed"
+
+#~ msgid "Menu"
+#~ msgstr "Menüü"
+
+#~ msgid "Menu Items"
+#~ msgstr "Menüü kirjed"
+
+#~ msgid "Menu Name"
+#~ msgstr "Menüü nimi"
+
+#~ msgid "Menus"
+#~ msgstr "Menüüd"
+
+#~ msgid "Menus Customization"
+#~ msgstr "Menüüde kohandamine"
+
+#~ msgid "Merge Automatically"
+#~ msgstr "Merge Automatically"
+
+#~ msgid "Merge Automatically all process"
+#~ msgstr "Merge Automatically all process"
+
+#~ msgid "Merge Contacts"
+#~ msgstr "Liida kontaktid"
+
+#~ msgid "Merge the following contacts"
+#~ msgstr "Merge the following contacts"
+
+#~ msgid "Merge with Manual Check"
+#~ msgstr "Merge with Manual Check"
+
+#~ msgid "Message"
+#~ msgstr "Sõnum"
+
+#~ msgid "Mexico"
+#~ msgstr "Mehhiko"
+
+#~ msgid "Mexico - Accounting"
+#~ msgstr "Mehhiko - Raamatupidamine"
+
+#~ msgid "Micronesia"
+#~ msgstr "Mikroneesia"
+
+#~ msgid "Mime Type"
+#~ msgstr "Mime Type"
+
+#~ msgid "MinID"
+#~ msgstr "MinID"
+
+#~ msgid "Minutes"
+#~ msgstr "Minutid"
+
+#~ msgid "Misc"
+#~ msgstr "Muu"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "Muu"
+
+#~ msgid "Miss"
+#~ msgstr "Preili"
+
+#~ msgid "Missing document(s)"
+#~ msgstr "Puuduv(ad) dokument(id)"
+
+#~ msgid "Mister"
+#~ msgstr "Härra"
+
+#~ msgid "Mobile:"
+#~ msgstr "Mobiiltelefon:"
+
+#~ msgid "Model"
+#~ msgstr "Mudel"
+
+#~ msgid "Model Description"
+#~ msgstr "Mudeli kirjeldus"
+
+#~ msgid "Model Name"
+#~ msgstr "Mudeli nimetus"
+
+#~ msgid ""
+#~ "Model for record creation / update. Set this field only to specify a "
+#~ "different model than the base model."
+#~ msgstr ""
+#~ "Kirjete loomise/uuendamise mudel. Määrakse see väli ainult erinevate kui "
+#~ "baasmudelite täpsustamiseks."
+
+#~ msgid "Model on which the server action runs."
+#~ msgstr "Mudelid, millel jooksutatakse serveri toiminguid."
+
+#~ msgid "Models"
+#~ msgstr "Mudelid"
+
+#~ msgid "Module"
+#~ msgstr "Moodul"
+
+#~ msgid "Module Category"
+#~ msgstr "Mooduli kategooria"
+
+#~ msgid "Module Name"
+#~ msgstr "Mooduli nimi"
+
+#~ msgid "Module Update"
+#~ msgstr "Mooduli uuendamine"
+
+#~ msgid "Module Update Result"
+#~ msgstr "Mooduli uuendamise tulemused"
+
+#~ msgid "Module dependency"
+#~ msgstr "Mooduli sõltuvus"
+
+#~ msgid "Modules"
+#~ msgstr "Moodulid"
+
+#~ msgid "Moldova"
+#~ msgstr "Moldova"
+
+#~ msgid "Monaco"
+#~ msgstr "Monaco"
+
+#~ msgid "Monday"
+#~ msgstr "Esmaspäev"
+
+#~ msgid "Mongolia"
+#~ msgstr "Mongoolia"
+
+#~ msgid "Montenegro"
+#~ msgstr "Montenegro"
+
+#~ msgid "Months"
+#~ msgstr "Kuud"
+
+#~ msgid "Montserrat"
+#~ msgstr "Montserrat"
+
+#~ msgid "Morocco"
+#~ msgstr "Maroko"
+
+#~ msgid "Mozambique"
+#~ msgstr "Mosambiik"
+
+#~ msgid "Mr."
+#~ msgstr "Hr."
+
+#~ msgid "Mrs."
+#~ msgstr "Pr."
+
+#~ msgid "Multi Companies"
+#~ msgstr "Mitu ettevõtet"
+
+#~ msgid "Multi Language Chart of Accounts"
+#~ msgstr "Mitmekeelne kontoplaan"
+
+#~ msgid "My Document(s)"
+#~ msgstr "Minu dokumendid"
+
+#~ msgid "My filters"
+#~ msgstr "Minu filtrid"
+
+#~ msgid "Myanmar"
+#~ msgstr "Birma (Myanmar)"
+
+#~ msgid "Name:"
+#~ msgstr "Nimi:"
+
+#~ msgid "Namibia"
+#~ msgstr "Namiibia"
+
+#~ msgid "Nauru"
+#~ msgstr "Nauru"
+
+#~ msgid "Nepal"
+#~ msgstr "Nepaal"
+
+#~ msgid "Netherlands"
+#~ msgstr "Holland"
+
+#~ msgid "Netherlands - Accounting"
+#~ msgstr "Holland - Raamatupidamine"
+
+#~ msgid "Netherlands - Accounting Reports"
+#~ msgstr "Holland - Raamatupidamisaruanded"
+
+#~ msgid "New Password"
+#~ msgstr "Uus parool"
+
+#~ msgid "New Window"
+#~ msgstr "Uus aken"
+
+#~ msgid "New Zealand"
+#~ msgstr "Uus-Meremaa"
+
+#~ msgid "Next Execution Date"
+#~ msgstr "Next Execution Date"
+
+#~ msgid "Next Number"
+#~ msgstr "Järgmine number"
+
+#~ msgid "Next planned execution date for this job."
+#~ msgstr "Järgmine planeeritud kuupäev töö teostamiseks."
+
+#~ msgid "Nicaragua"
+#~ msgstr "Nicaragua"
+
+#~ msgid "Niger"
+#~ msgstr "Niger"
+
+#~ msgid "Nigeria"
+#~ msgstr "Nigeeria"
+
+#~ msgid "Niue"
+#~ msgstr "Niue"
+
+#~ msgid "No Record Found"
+#~ msgstr "Andmeid ei leitud"
+
+#~ msgid "Non Updatable"
+#~ msgstr "Pole uuendatav"
+
+#~ msgid "None"
+#~ msgstr "Pole"
+
+#~ msgid "Norfolk Island"
+#~ msgstr "Norfolki saar"
+
+#~ msgid "North Korea"
+#~ msgstr "Põhja-Korea"
+
+#~ msgid "Northern Mariana Islands"
+#~ msgstr "Põhja-Mariaani saared"
+
+#~ msgid "Norway"
+#~ msgstr "Norra"
+
+#~ msgid "Norway - Accounting"
+#~ msgstr "Norra - Raamatupidamine"
+
+#~ msgid "Norway - Accounting Reports"
+#~ msgstr "Norra - Raamatupidamisaruanded"
+
+#~ msgid "Not Installed"
+#~ msgstr "Pole paigaldatud"
+
+#~ msgid "Notes"
+#~ msgstr "Märkused"
+
+#~ msgid "Number of Apps"
+#~ msgstr "Rakenduste arv"
+
+#~ msgid "Number of Calls"
+#~ msgstr "Kõnede arv"
+
+#~ msgid "Number of Companies"
+#~ msgstr "Ettevõtete arv"
+
+#~ msgid "Number of modules added"
+#~ msgstr "Lisatud moodulite arv"
+
+#~ msgid "Number of modules updated"
+#~ msgstr "Uuendatud moodulite arv"
+
+#~ msgid "OAuth2 Authentication"
+#~ msgstr "OAuth2 autentimine"
+
+#~ msgid "OHADA - Accounting"
+#~ msgstr "OHADA - Raamatupidamine"
+
+#~ msgid "Object"
+#~ msgstr "Objekt"
+
+#~ msgid "Object Name"
+#~ msgstr "Objekti nimi"
+
+#~ msgid "Object Relation"
+#~ msgstr "Objekti seos"
+
+#~ msgid "Object:"
+#~ msgstr "Objekt:"
+
+#~ msgid "Office Supplies"
+#~ msgstr "Kontoritarbed"
+
+#~ msgid "Ok"
+#~ msgstr "Ok"
+
+#~ msgid "Oman"
+#~ msgstr "Omaan"
+
+#~ msgid "On Delete"
+#~ msgstr "Kustutamisel"
+
+#~ msgid "On Multiple Doc."
+#~ msgstr "Mitmel dokumendil"
+
+#~ msgid "On delete property for many2one fields"
+#~ msgstr "Omadus kustutamisel many2one väljadel"
+
+#~ msgid "Open Settings Menu"
+#~ msgstr "Ava seadete menüü"
+
+#~ msgid "Open Window"
+#~ msgstr "Ava aken"
+
+#~ msgid "Open a Window"
+#~ msgstr "Ava aken"
+
+#~ msgid "Option"
+#~ msgstr "Valik"
+
+#~ msgid ""
+#~ "Optional help text for the users with a description of the target view, "
+#~ "such as its usage and purpose."
+#~ msgstr ""
+#~ "Valikuline abitekst kasutajatele koos sihtvaate kirjeldusega nagu selle "
+#~ "kasutamine ja eesmärgid."
+
+#~ msgid "Options"
+#~ msgstr "Seaded"
+
+#~ msgid "Original View"
+#~ msgstr "Originaalvaade"
+
+#~ msgid "Other Partners"
+#~ msgstr "Teised partnerid"
+
+#~ msgid "Other Services"
+#~ msgstr "Muud teenused"
+
+#~ msgid "Other address"
+#~ msgstr "Muud aadressid"
+
+#~ msgid "Outgoing Mail Server"
+#~ msgstr "Väljuvate kirjade server"
+
+#~ msgid "Outgoing Mail Servers"
+#~ msgstr "Väljuvate kirjade serverid"
+
+#~ msgid "Overwrite Existing Terms"
+#~ msgstr "Kirjuta üle olemasolevad terminid"
+
+#~ msgid "Owner"
+#~ msgstr "Omanik"
+
+#~ msgid "P EDUCATION"
+#~ msgstr "P HARIDUS"
+
+#~ msgid "PDF"
+#~ msgstr "PDF"
+
+#~ msgid "PO File"
+#~ msgstr "PO fail"
+
+#~ msgid "POEdit"
+#~ msgstr "POEdit"
+
+#~ msgid "Page width (mm)"
+#~ msgstr "Lehekülje laius (mm)"
+
+#~ msgid "Pakistan"
+#~ msgstr "Pakistan"
+
+#~ msgid "Palau"
+#~ msgstr "Belau"
+
+#~ msgid "Panama"
+#~ msgstr "Panama"
+
+#~ msgid "Paper Format"
+#~ msgstr "Paberi formaat"
+
+#~ msgid "Paper format"
+#~ msgstr "Paberformaat"
+
+#~ msgid "Paper size"
+#~ msgstr "Paberi suurus"
+
+#~ msgid "Papua New Guinea"
+#~ msgstr "Paapua Uus-Guinea"
+
+#~ msgid "Paraguay"
+#~ msgstr "Paraguai"
+
+#~ msgid "Parameters"
+#~ msgstr "Parameetrid"
+
+#~ msgid "Parent Application"
+#~ msgstr "Peamine rakendus"
+
+#~ msgid "Parent Company"
+#~ msgstr "Ülem ettevõte"
+
+#~ msgid "Parent Menu"
+#~ msgstr "Ülemmenüü"
+
+#~ msgid "Partner"
+#~ msgstr "Partner"
+
+#~ msgid "Partner Tags"
+#~ msgstr "Partneri sildid"
+
+#~ msgid "Partner Titles"
+#~ msgstr "Partneri tiitlid"
+
+#~ msgid "Partner-related data of the user"
+#~ msgstr "Partner-related data of the user"
+
+#~ msgid "Partners"
+#~ msgstr "Partnerid"
+
+#~ msgid "Partners: "
+#~ msgstr "Partnerid: "
+
+#~ msgid "Password"
+#~ msgstr "Salasõna"
+
+#~ msgid "Path"
+#~ msgstr "Asukoht"
+
+#~ msgid "Payment - Account"
+#~ msgstr "Makse - Konto"
+
+#~ msgid "Payment Acquirer"
+#~ msgstr "Makse saaja"
+
+#~ msgid "Payroll"
+#~ msgstr "Palgaarvestus"
+
+#~ msgid "Peru"
+#~ msgstr "Peruu"
+
+#~ msgid "Peru - Accounting"
+#~ msgstr "Peruu - Raamatupidamine"
+
+#~ msgid "Philippines"
+#~ msgstr "Filipiinid"
+
+#~ msgid "Phone Numbers Validation"
+#~ msgstr "Telefoninumbri kinnitamine"
+
+#~ msgid "Phone:"
+#~ msgstr "Telefon:"
+
+#~ msgid "Pivot"
+#~ msgstr "Pivoo"
+
+#~ msgid "Point of Sale"
+#~ msgstr "Müügikoht"
+
+#~ msgid "Poland"
+#~ msgstr "Poola"
+
+#~ msgid "Portal"
+#~ msgstr "Portaal"
+
+#~ msgid "Portugal"
+#~ msgstr "Portugal"
+
+#~ msgid "Portugal - Accounting"
+#~ msgstr "Portugal - Raamatupidamine"
+
+#~ msgid "Preferences"
+#~ msgstr "Eelistused"
+
+#~ msgid "Prefix"
+#~ msgstr "Prefiks"
+
+#~ msgid "Price Accuracy"
+#~ msgstr "Hinna täpsus"
+
+#~ msgid "Priority"
+#~ msgstr "Prioriteet"
+
+#~ msgid "Private Address"
+#~ msgstr "Seotud kontakt"
+
+#~ msgid "Product Email Template"
+#~ msgstr "Toote e-maili mall"
+
+#~ msgid "Product Lifecycle Management (PLM)"
+#~ msgstr "Toote elutsükli haldamine (ing. k PLM)"
+
+#~ msgid "Productivity"
+#~ msgstr "Tulemuslikkus"
+
+#~ msgid "Products & Pricelists"
+#~ msgstr "Tooted ja hinnakirjad"
+
+#~ msgid "Products Expiration Date"
+#~ msgstr "Toodete aegumiskuupäev"
+
+#~ msgid "Prof."
+#~ msgstr "Prof."
+
+#~ msgid "Professor"
+#~ msgstr "Professor"
+
+#~ msgid "Project"
+#~ msgstr "Projektid"
+
+#~ msgid "Properties"
+#~ msgstr "Seaded"
+
+#~ msgid "Public"
+#~ msgstr "Avalik"
+
+#~ msgid "Published Version"
+#~ msgstr "Avaldatud versioon"
+
+#~ msgid "Puerto Rico"
+#~ msgstr "Puerto Rico"
+
+#~ msgid "Purchase"
+#~ msgstr "Ost"
+
+#~ msgid "Purchase Agreements"
+#~ msgstr "Ostulepingud"
+
+#~ msgid "Purchases"
+#~ msgstr "Ostud"
+
+#~ msgid "Python Code"
+#~ msgstr "Pythoni kood"
+
+#~ msgid "QWeb"
+#~ msgstr "QWeb"
+
+#~ msgid "Qatar"
+#~ msgstr "Qatar"
+
+#~ msgid "Quality"
+#~ msgstr "Kvaliteedikontroll"
+
+#~ msgid "Rate"
+#~ msgstr "Määr"
+
+#~ msgid "Rates"
+#~ msgstr "Kursid"
+
+#~ msgid "Read Access"
+#~ msgstr "Lugemisõigus"
+
+#~ msgid "Readonly"
+#~ msgstr "Ainult loetav"
+
+#~ msgid "Record ID"
+#~ msgstr "Kirje ID"
+
+#~ msgid "Record rules"
+#~ msgstr "Kirje reeglid"
+
+#~ msgid "Recruitment"
+#~ msgstr "Värbamine"
+
+#~ msgid "Reference"
+#~ msgstr "Viide"
+
+#~ msgid "Related Company"
+#~ msgstr "Seotud ettevõte"
+
+#~ msgid "Related Field"
+#~ msgstr "Seotud väljad"
+
+#~ msgid "Related Partner"
+#~ msgstr "Seotud partner"
+
+#~ msgid "Relation Field"
+#~ msgstr "Seose väli"
+
+#~ msgid "Reload from Attachment"
+#~ msgstr "Taaslae manusest"
+
+#~ msgid "Remove"
+#~ msgstr "Eemalda"
+
+#~ msgid "Repairs"
+#~ msgstr "Parandustööd"
+
+#~ msgid "Repeat Missed"
+#~ msgstr "Korda ebaõnnestunud"
+
+#~ msgid "Report"
+#~ msgstr "Aruanne"
+
+#~ msgid "Report File"
+#~ msgstr "Aruande fail"
+
+#~ msgid "Report Footer"
+#~ msgstr "Aruande jalus"
+
+#~ msgid "Report Model"
+#~ msgstr "Aruande mall"
+
+#~ msgid "Report Type"
+#~ msgstr "Aruande tüüp"
+
+#~ msgid "Report Xml"
+#~ msgstr "Raport Xml"
+
+#~ msgid "Report xml"
+#~ msgstr "Raport xml"
+
+#~ msgid "Reporting"
+#~ msgstr "Aruandlus"
+
+#~ msgid "Reports"
+#~ msgstr "Raportid"
+
+#~ msgid "Required"
+#~ msgstr "Nõutud"
+
+#~ msgid "Resellers"
+#~ msgstr "Edasimüüjad"
+
+#~ msgid "Resource"
+#~ msgstr "Ressurss"
+
+#~ msgid "Resource Field"
+#~ msgstr "Ressursi väli"
+
+#~ msgid "Resource ID"
+#~ msgstr "Ressursi ID"
+
+#~ msgid "Resource Model"
+#~ msgstr "Resource Model"
+
+#~ msgid "Resource Name"
+#~ msgstr "Ressursi nimi"
+
+#~ msgid "Restaurant"
+#~ msgstr "Restoran"
+
+#~ msgid "Restrict"
+#~ msgstr "Piira"
+
+#~ msgid "Right-to-Left"
+#~ msgstr "Paremalt vasakule"
+
+#~ msgid "Romania"
+#~ msgstr "Rumeenia"
+
+#~ msgid "Romania - Accounting"
+#~ msgstr "Rumeenia - Raamatupidamine"
+
+#~ msgid "Romania - Accounting Reports"
+#~ msgstr "Rumeenia - Raamatupidamise aruanded"
+
+#~ msgid "Rounding Factor"
+#~ msgstr "Ümardamise faktor"
+
+#~ msgid "Rules"
+#~ msgstr "Reeglid"
+
+#~ msgid "Run"
+#~ msgstr "Run"
+
+#~ msgid "Run Manually"
+#~ msgstr "Käivita käsitsi"
+
+#~ msgid "Russian Federation"
+#~ msgstr "Vene Föderatsioon"
+
+#~ msgid "Rwanda"
+#~ msgstr "Ruanda"
+
+#~ msgid "SEPA Credit Transfer"
+#~ msgstr "SEPA pangaülekanne"
+
+#~ msgid "SEPA Direct Debit"
+#~ msgstr "SEPA otsekorraldus"
+
+#~ msgid "SMTP Port"
+#~ msgstr "SMTP port"
+
+#~ msgid "SMTP Server"
+#~ msgstr "SMTP server"
+
+#~ msgid "SSL/TLS"
+#~ msgstr "SSL/TLS"
+
+#~ msgid "Saint Lucia"
+#~ msgstr "Saint Lucia"
+
+#~ msgid "Saint Pierre and Miquelon"
+#~ msgstr "Saint-Pierre ja Miquelon"
+
+#~ msgid "Salary Package Configurator"
+#~ msgstr "Palgapaketi konfiguratsioon"
+
+#~ msgid "Sales"
+#~ msgstr "Müük"
+
+#~ msgid "Sales & Purchases"
+#~ msgstr "Müük ja ost"
+
+#~ msgid "Sales and Warehouse Management"
+#~ msgstr "Müük ja laohaldus"
+
+#~ msgid "Salesperson"
+#~ msgstr "Müügiesindaja"
+
+#~ msgid "Samoa"
+#~ msgstr "Samoa"
+
+#~ msgid "San Marino"
+#~ msgstr "San Marino"
+
+#~ msgid "Saturday"
+#~ msgstr "Laupäev"
+
+#~ msgid "Saudi Arabia"
+#~ msgstr "Saudi Araabia"
+
+#~ msgid "Save"
+#~ msgstr "Salvesta"
+
+#~ msgid "Scheduled Action"
+#~ msgstr "Ajastatud toimingud"
+
+#~ msgid "Scheduled Actions"
+#~ msgstr "ˇAjastatud toimingud"
+
+#~ msgid "Scientific"
+#~ msgstr "Teaduslik"
+
+#~ msgid "Search"
+#~ msgstr "Otsi"
+
+#~ msgid "Search Actions"
+#~ msgstr "Otsingu toimingud"
+
+#~ msgid "Search Partner"
+#~ msgstr "Otsi partnerit"
+
+#~ msgid "Search View"
+#~ msgstr "Otsinguvaade"
+
+#~ msgid "Search duplicates based on duplicated data in"
+#~ msgstr "Search duplicates based on duplicated data in"
+
+#~ msgid "Search modules"
+#~ msgstr "Otsingu moodulid"
+
+#~ msgid "Search..."
+#~ msgstr "Otsing..."
+
+#~ msgid "Security and Authentication"
+#~ msgstr "Turvalisus ja Autentimine"
+
+#~ msgid "See http://openerp.com"
+#~ msgstr "Vaata http://openerp.com"
+
+#~ msgid ""
+#~ "Select the list of fields used to search for\n"
+#~ "                            duplicated records. If you select several "
+#~ "fields,\n"
+#~ "                            Odoo will propose you to merge only those "
+#~ "having\n"
+#~ "                            all these fields in common. (not one of the "
+#~ "fields)."
+#~ msgstr ""
+#~ "Select the list of fields used to search for\n"
+#~ "                            duplicated records. If you select several "
+#~ "fields,\n"
+#~ "                            Odoo will propose you to merge only those "
+#~ "having\n"
+#~ "                            all these fields in common. (not one of the "
+#~ "fields)."
+
+#~ msgid "Selectable"
+#~ msgstr "Valitav"
+
+#~ msgid ""
+#~ "Selected contacts will be merged together.\n"
+#~ "                                All documents linked to one of these "
+#~ "contacts\n"
+#~ "                                will be redirected to the destination "
+#~ "contact.\n"
+#~ "                                You can remove contacts from this list to "
+#~ "avoid merging them."
+#~ msgstr ""
+#~ "Selected contacts will be merged together.\n"
+#~ "                                All documents linked to one of these "
+#~ "contacts\n"
+#~ "                                will be redirected to the destination "
+#~ "contact.\n"
+#~ "                                You can remove contacts from this list to "
+#~ "avoid merging them."
+
+#~ msgid ""
+#~ "Selecting the \"Warning\" option will notify user with the message, "
+#~ "Selecting \"Blocking Message\" will throw an exception with the message "
+#~ "and block the flow. The Message has to be written in the next field."
+#~ msgstr ""
+#~ "Valides 'Hoiatus' teavitab see kasutaja teatega, valides 'Blokeerimise "
+#~ "teade' teavitab kasutajat ja peatab tegevuse. Teade tuleb kirjutada "
+#~ "järgmisse lahtrisse."
+
+#~ msgid "Selection Options"
+#~ msgstr "Valiku toimingud"
+
+#~ msgid "Senegal"
+#~ msgstr "Senegal"
+
+#~ msgid "Separator Format"
+#~ msgstr "Eraldaja formaat"
+
+#~ msgid "Sequence"
+#~ msgstr "Järjestus"
+
+#~ msgid "Sequences"
+#~ msgstr "Järjekorrad"
+
+#~ msgid "Serbia"
+#~ msgstr "Serbia"
+
+#~ msgid "Server"
+#~ msgstr "Server"
+
+#~ msgid "Server Action"
+#~ msgstr "Serveri toiming"
+
+#~ msgid "Server Actions"
+#~ msgstr "Serveri tegevused"
+
+#~ msgid "Server action"
+#~ msgstr "Serveri tegevus"
+
+#~ msgid "Services"
+#~ msgstr "Teenused"
+
+#~ msgid "Set NULL"
+#~ msgstr "Määra NULL"
+
+#~ msgid "Set Password"
+#~ msgstr "Määra parool"
+
+#~ msgid "Set as Todo"
+#~ msgstr "Määra tegemist vajavaks"
+
+#~ msgid ""
+#~ "Setting a value makes this action available in the sidebar for the given "
+#~ "model."
+#~ msgstr ""
+#~ "Väärtuse määramine muudab selle tegevuse mudeli küljeribal kättesaadavaks."
+
+#~ msgid "Settings"
+#~ msgstr "Seaded"
+
+#~ msgid "Seychelles"
+#~ msgstr "Seišellid"
+
+#~ msgid "Shared"
+#~ msgstr "Jagatud"
+
+#~ msgid "Show All"
+#~ msgstr "Näita kõiki"
+
+#~ msgid "Sierra Leone"
+#~ msgstr "Sierra Leone"
+
+#~ msgid "Sign"
+#~ msgstr "Allkirjastamine"
+
+#~ msgid "Signature"
+#~ msgstr "Allkiri"
+
+#~ msgid "Signup"
+#~ msgstr "Liitumine"
+
+#~ msgid "Singapore"
+#~ msgstr "Singapur"
+
+#~ msgid "Singapore - Accounting"
+#~ msgstr "Singapur - Raamatupidamine"
+
+#~ msgid "Singapore - Accounting Reports"
+#~ msgstr "Singapur - Raamatupidamise aruanded"
+
+#~ msgid "Size"
+#~ msgstr "Suurus"
+
+#~ msgid "Skip"
+#~ msgstr "Jäta vahele"
+
+#~ msgid "Skip these contacts"
+#~ msgstr "Skip these contacts"
+
+#~ msgid "Slides"
+#~ msgstr "Presentatsioon"
+
+#~ msgid "Slovakia"
+#~ msgstr "Slovakkia"
+
+#~ msgid "Slovenia"
+#~ msgstr "Sloveenia"
+
+#~ msgid "Slovenian - Accounting"
+#~ msgstr "Sloveenia - Raamatupidamine"
+
+#~ msgid "Slovenian - Accounting Reports"
+#~ msgstr "Sloveenia - Raamatupidamise aruanded"
+
+#~ msgid "Small-sized image"
+#~ msgstr "Väikse suurusega pilt"
+
+#~ msgid "Solomon Islands"
+#~ msgstr "Saalomoni saared"
+
+#~ msgid "Somalia"
+#~ msgstr "Somaalia"
+
+#~ msgid "Sort"
+#~ msgstr "Sorteeri"
+
+#~ msgid "Source Object"
+#~ msgstr "Allikaobjekt"
+
+#~ msgid "Source Term"
+#~ msgstr "Tõlgitav väärtus"
+
+#~ msgid "Source term"
+#~ msgstr "Tõlgitav väärtus"
+
+#~ msgid "South Africa"
+#~ msgstr "Lõuna Aafrika"
+
+#~ msgid "South America"
+#~ msgstr "Lõuna-Ameerika"
+
+#~ msgid "South Korea"
+#~ msgstr "Lõuna-Korea"
+
+#~ msgid "South Sudan"
+#~ msgstr "Lõuna-Sudaan"
+
+#~ msgid "Spain"
+#~ msgstr "Hispaania"
+
+#~ msgid "Sri Lanka"
+#~ msgstr "Sri Lanka"
+
+#~ msgid "Standard"
+#~ msgstr "Standard"
+
+#~ msgid "Start configuration"
+#~ msgstr "Alusta seadistamist"
+
+#~ msgid "State"
+#~ msgstr "Maakond"
+
+#~ msgid "State Code"
+#~ msgstr "Maakonna kood"
+
+#~ msgid "State Name"
+#~ msgstr "Maakonna nimi"
+
+#~ msgid "States"
+#~ msgstr "Maakonnad"
+
+#~ msgid "Status"
+#~ msgstr "Staatus"
+
+#~ msgid "Step"
+#~ msgstr "Samm"
+
+#~ msgid "Stored Filename"
+#~ msgstr "Salvestatud faili nimi"
+
+#~ msgid "Street"
+#~ msgstr "Tänav"
+
+#~ msgid "Street 2..."
+#~ msgstr "Tänav 2"
+
+#~ msgid "Street..."
+#~ msgstr "Tänav"
+
+#~ msgid "Street2"
+#~ msgstr "Tänav2"
+
+#~ msgid "Studio"
+#~ msgstr "Stuudio"
+
+#~ msgid "Submenus"
+#~ msgstr "Alammenüüd"
+
+#~ msgid "Subscriptions"
+#~ msgstr "Tellimused"
+
+#~ msgid "Sudan"
+#~ msgstr "Sudaan"
+
+#~ msgid "Suffix"
+#~ msgstr "Liide"
+
+#~ msgid "Summary"
+#~ msgstr "Kokkuvõte"
+
+#~ msgid "Sunday"
+#~ msgstr "Pühapäev"
+
+#~ msgid "Supplementary arguments"
+#~ msgstr "Täiendavad argumendid"
+
+#~ msgid "Suriname"
+#~ msgstr "Suriname"
+
+#~ msgid "Survey"
+#~ msgstr "Küsitlus"
+
+#~ msgid "Survey CRM"
+#~ msgstr "CRM küsitlus"
+
+#~ msgid "Surveys"
+#~ msgstr "Küsitlused"
+
+#~ msgid "Swaziland"
+#~ msgstr "Svaasimaa"
+
+#~ msgid "Sweden"
+#~ msgstr "Rootsi"
+
+#~ msgid "Switzerland"
+#~ msgstr "Šveits"
+
+#~ msgid "Switzerland - Accounting"
+#~ msgstr "Šveits - Raamatupidamine"
+
+#~ msgid "Switzerland - Accounting Reports"
+#~ msgstr "Šveits - Raamatupidamise aruanded"
+
+#~ msgid "Symbol"
+#~ msgstr "Sümbol"
+
+#~ msgid "Symbol Position"
+#~ msgstr "Sümboli asukoht"
+
+#~ msgid "Syria"
+#~ msgstr "Süüria"
+
+#~ msgid "System Parameters"
+#~ msgstr "Süsteemi parameetrid"
+
+#~ msgid "System Properties"
+#~ msgstr "Süsteemi seaded"
+
+#~ msgid "System Update"
+#~ msgstr "Süsteemi uuendus"
+
+#~ msgid "TGZ Archive"
+#~ msgstr "TGZ arhiiv"
+
+#~ msgid "TLS (STARTTLS)"
+#~ msgstr "TLS (STARTTLS)"
+
+#~ msgid "Tag"
+#~ msgstr "Silt"
+
+#~ msgid "Tag Name"
+#~ msgstr "Sildi nimi"
+
+#~ msgid "Tags"
+#~ msgstr "Sildid"
+
+#~ msgid "Tags..."
+#~ msgstr "Sildid..."
+
+#~ msgid "Taiwan"
+#~ msgstr "Taiwan"
+
+#~ msgid "Tajikistan"
+#~ msgstr "Tadžikistan"
+
+#~ msgid "Tanzania"
+#~ msgstr "Tansaania"
+
+#~ msgid "Target Window"
+#~ msgstr "Sihtaken"
+
+#~ msgid "Tax ID"
+#~ msgstr "KMKR nr"
+
+#~ msgid "Technical"
+#~ msgstr "Tehniline"
+
+#~ msgid "Technical Data"
+#~ msgstr "Tehnilised andmed"
+
+#~ msgid "Technical Features"
+#~ msgstr "Tehnilised omadused"
+
+#~ msgid "Technical Name"
+#~ msgstr "Tehniline nimi"
+
+#~ msgid "Technical Settings"
+#~ msgstr "Tehnilised seaded"
+
+#~ msgid "Technical guide"
+#~ msgstr "Tehniline juhend"
+
+#~ msgid "Template"
+#~ msgstr "Mall"
+
+#~ msgid "Template Name"
+#~ msgstr "Malli nimi"
+
+#~ msgid "Test API"
+#~ msgstr "Testi API"
+
+#~ msgid "Test Connection"
+#~ msgstr "Testi ühendust"
+
+#~ msgid "Test Performance"
+#~ msgstr "Testi kiirust"
+
+#~ msgid "Tests"
+#~ msgstr "Testid"
+
+#~ msgid "Text"
+#~ msgstr "Tekst"
+
+#~ msgid "Thailand"
+#~ msgstr "Tai"
+
+#~ msgid "Thailand - Accounting"
+#~ msgstr "Tai - Raamatupidamine"
+
+#~ msgid "Thailand - Accounting Reports"
+#~ msgstr "Tai - Raamatupidamise aruanded"
+
+#~ msgid ""
+#~ "The active field allows you to hide the category without removing it."
+#~ msgstr "Aktiivne väli võimaldab sul peita kategooriat seda eemaldamata."
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "Ettevõtte nimi peab olema unikaalne !"
+
+#~ msgid "The company this user is currently working for."
+#~ msgstr "Ettevõtte kus kasutaja hetkel töötab."
+
+#~ msgid "The currency code must be unique!"
+#~ msgstr "Valuuta kood peab olema unikaalne!"
+
+#~ msgid "The database object this attachment will be attached to."
+#~ msgstr "The database object this attachment will be attached to."
+
+#~ msgid "The full name of the country."
+#~ msgstr "Riigi täisnimi."
+
+#~ msgid "The list of models that extends the current model."
+#~ msgstr "Käesolevat mudelit laiendavate mudelite nimekiri"
+
+#~ msgid "The name of the language must be unique !"
+#~ msgstr "Keele nimi peab olema unikaalne"
+
+#~ msgid "The rate of the currency to the currency of rate 1"
+#~ msgstr "Kursi määra seos kursiga 1"
+
+#~ msgid "The record id this is attached to."
+#~ msgstr "The record id this is attached to."
+
+#~ msgid "Theme"
+#~ msgstr "Teema"
+
+#~ msgid "There is no more contacts to merge for this request..."
+#~ msgstr "There is no more contacts to merge for this request..."
+
+#~ msgid "This ISO code is the name of po files to use for translations"
+#~ msgstr "See ISO kood on PO-faili nimi mida kasutatakse tõlgeteks"
+
+#~ msgid "This Window"
+#~ msgstr "See aken"
+
+#~ msgid ""
+#~ "This is the filename of the attachment used to store the printing result. "
+#~ "Keep empty to not save the printed reports. You can use a python "
+#~ "expression with the object and time variables."
+#~ msgstr ""
+#~ "See on printimistulemuse salvestamiseks kasutatava manuse nimi. Jäta "
+#~ "tühjaks, kui sa ei soovi salvestada aruandeid. Sa saad kasutada pythoni "
+#~ "avaldist objekti ja aja muutujatega."
+
+#~ msgid "Thousands Separator"
+#~ msgstr "Tuhande eraldaja"
+
+#~ msgid "Thumbnail"
+#~ msgstr "Pisipilt"
+
+#~ msgid "Thursday"
+#~ msgstr "Neljapäev"
+
+#~ msgid "Time Format"
+#~ msgstr "Ajaformaat"
+
+#~ msgid "Timesheets"
+#~ msgstr "Tööaja ajaarvestusleht"
+
+#~ msgid "Timesheets/attendances reporting"
+#~ msgstr "Ajaarvestuse/kohalviibimiste aruandlus"
+
+#~ msgid "Timezone"
+#~ msgstr "Ajavöönd"
+
+#~ msgid "Title"
+#~ msgstr "Tiitel"
+
+#~ msgid "To"
+#~ msgstr "Saaja"
+
+#~ msgid "To Do"
+#~ msgstr "Tegemiseks"
+
+#~ msgid "To Translate"
+#~ msgstr "Tõlkimiseks"
+
+#~ msgid "To be installed"
+#~ msgstr "Paigaldamise ootel"
+
+#~ msgid "To be removed"
+#~ msgstr "Eemaldamisel"
+
+#~ msgid "To be upgraded"
+#~ msgstr "Uuendamist ootavad"
+
+#~ msgid "Todo"
+#~ msgstr "Ülesanded"
+
+#~ msgid "Togo"
+#~ msgstr "Togo"
+
+#~ msgid "Tokelau"
+#~ msgstr "Tokelau"
+
+#~ msgid "Tonga"
+#~ msgstr "Tonga"
+
+#~ msgid "Tools"
+#~ msgstr "Tööriistad"
+
+#~ msgid "Translatable"
+#~ msgstr "Tõlgitav"
+
+#~ msgid "Translated"
+#~ msgstr "Tõlgitud"
+
+#~ msgid "Translated Terms"
+#~ msgstr "Tõlgitud mõisted"
+
+#~ msgid "Translated field"
+#~ msgstr "Tõlgitud väärtus"
+
+#~ msgid "Translation"
+#~ msgstr "Tõlge"
+
+#~ msgid "Translation Value"
+#~ msgstr "Tõlge"
+
+#~ msgid "Translation comments"
+#~ msgstr "Tõlke kommentaarid"
+
+#~ msgid "Translations"
+#~ msgstr "Tõlked"
+
+#~ msgid "Transportation"
+#~ msgstr "Transport"
+
+#~ msgid "Tree"
+#~ msgstr "Puu"
+
+#~ msgid "Trinidad and Tobago"
+#~ msgstr "Trinidad ja Tobago"
+
+#~ msgid "Tuesday"
+#~ msgstr "Teisipäev"
+
+#~ msgid "Tunisia"
+#~ msgstr "Tuneesia"
+
+#~ msgid "Turkey"
+#~ msgstr "Türgi"
+
+#~ msgid "Turkey - Accounting"
+#~ msgstr "Türgi - Raamatupidamine"
+
+#~ msgid "Turkmenistan"
+#~ msgstr "Türkmenistan"
+
+#~ msgid "Turks and Caicos Islands"
+#~ msgstr "Turksi and Caicose saared"
+
+#~ msgid "Tuvalu"
+#~ msgstr "Tuvalu"
+
+#~ msgid "Type"
+#~ msgstr "Tüüp"
+
+#~ msgid "Type:"
+#~ msgstr "Tüüp:"
+
+#~ msgid "UK - Accounting"
+#~ msgstr "UK - Raamatupidamine"
+
+#~ msgid "UK - Accounting Reports"
+#~ msgstr "UK - Raamatupidamisaruanded"
+
+#~ msgid "URL"
+#~ msgstr "URL"
+
+#~ msgid "USA Minor Outlying Islands"
+#~ msgstr "Väiksemad USA-st eemal asetsevad saared"
+
+#~ msgid "Uganda"
+#~ msgstr "Uganda"
+
+#~ msgid "Uid"
+#~ msgstr "Uid"
+
+#~ msgid "Ukraine"
+#~ msgstr "Ukraina"
+
+#~ msgid "Uncategorized"
+#~ msgstr "Kategoriseerimata"
+
+#~ msgid "Uninstallable"
+#~ msgstr "Pole eemaldatav"
+
+#~ msgid "United Arab Emirates"
+#~ msgstr "Araabia Ühendemiraadid"
+
+#~ msgid "United Kingdom"
+#~ msgstr "Suurbritannia"
+
+#~ msgid "United States"
+#~ msgstr "Ameerika Ühendriigid"
+
+#~ msgid "United States - Accounting"
+#~ msgstr "Ameerika Ühendriigid - Raamatupidamine"
+
+#~ msgid "Unknown"
+#~ msgstr "Tundmatu"
+
+#~ msgid "Untranslated"
+#~ msgstr "Tõlkimata"
+
+#~ msgid "Updatable"
+#~ msgstr "Uuendatav"
+
+#~ msgid "Update"
+#~ msgstr "Uuenda"
+
+#~ msgid "Update Apps List"
+#~ msgstr "Uuenda rakenduste nimekirja"
+
+#~ msgid "Update Date"
+#~ msgstr "Uuendamise kuupäev"
+
+#~ msgid "Update Module"
+#~ msgstr "Uuenda moodul"
+
+#~ msgid "Update Module List"
+#~ msgstr "Uuenda moodulite nimekirja"
+
+#~ msgid "Updates"
+#~ msgstr "Uuendused"
+
+#~ msgid "Upgrade"
+#~ msgstr "Uuenda"
+
+#~ msgid "Url"
+#~ msgstr "URL"
+
+#~ msgid "Uruguay"
+#~ msgstr "Uruguai"
+
+#~ msgid "Usage"
+#~ msgstr "Kasutamine"
+
+#~ msgid "Used to log into the system"
+#~ msgstr "Used to log into the system"
+
+#~ msgid "User"
+#~ msgstr "Kasutaja"
+
+#~ msgid "User Interface"
+#~ msgstr "Kasutajaliides"
+
+#~ msgid "User Login"
+#~ msgstr "Kasutaja sisselogimine"
+
+#~ msgid "Username"
+#~ msgstr "Kasutajanimi"
+
+#~ msgid "Users & Companies"
+#~ msgstr "Kasutajad ja ettevõtted"
+
+#~ msgid "Uzbekistan"
+#~ msgstr "Usbekistan"
+
+#~ msgid "VAT Number Validation"
+#~ msgstr "KMKR nr kontroll"
+
+#~ msgid "VOIP"
+#~ msgstr "Internetitelefon VOIP"
+
+#~ msgid "VOIP OnSIP"
+#~ msgstr "VOIP OnSIP"
+
+#~ msgid "Value"
+#~ msgstr "Väärtus"
+
+#~ msgid "Value Mapping"
+#~ msgstr "Väärtuste kaardistamine"
+
+#~ msgid "Vanuatu"
+#~ msgstr "Vanuatu"
+
+#~ msgid "Vat Label"
+#~ msgstr "KM tunnuskood"
+
+#~ msgid "Vendor"
+#~ msgstr "Tarnija"
+
+#~ msgid "Vendors"
+#~ msgstr "Tarnijad"
+
+#~ msgid "Venezuela"
+#~ msgstr "Venetsueela"
+
+#~ msgid "Vietnam"
+#~ msgstr "Vietnam"
+
+#~ msgid "View"
+#~ msgstr "Vaade"
+
+#~ msgid "View Architecture"
+#~ msgstr "Vaata Ülesehitust"
+
+#~ msgid "View Name"
+#~ msgstr "Vaate nimi"
+
+#~ msgid "View Ref."
+#~ msgstr "Vaate viit"
+
+#~ msgid "View Type"
+#~ msgstr "Vaate tüüp"
+
+#~ msgid "Views"
+#~ msgstr "Vaated"
+
+#~ msgid "Virgin Islands (British)"
+#~ msgstr "Neitsisaared (Briti)"
+
+#~ msgid "Virgin Islands (USA)"
+#~ msgstr "Neitsisaared"
+
+#~ msgid "Visible"
+#~ msgstr "Nähtav"
+
+#~ msgid "WMS Accounting"
+#~ msgstr "WMS raamatupidamine"
+
+#~ msgid "Warehouse"
+#~ msgstr "Ladu"
+
+#~ msgid "Water supply"
+#~ msgstr "Veevarustus"
+
+#~ msgid "Web"
+#~ msgstr "Veeb"
+
+#~ msgid "Web Editor"
+#~ msgstr "Veebiredaktor"
+
+#~ msgid "Web Icon File"
+#~ msgstr "Veebiikooni fail"
+
+#~ msgid "Web Icon Image"
+#~ msgstr "Veebiikooni pilt"
+
+#~ msgid "Website"
+#~ msgstr "Veebileht"
+
+#~ msgid "Website Helpdesk"
+#~ msgstr "Veebisait - Kasutajatugi"
+
+#~ msgid "Website Mail"
+#~ msgstr "Veebisait - E-post"
+
+#~ msgid "Website Partner"
+#~ msgstr "Veebisait - Partner"
+
+#~ msgid "Website Rating"
+#~ msgstr "Veebisait - Hindamine"
+
+#~ msgid "Website Studio"
+#~ msgstr "Veebistuudio"
+
+#~ msgid "Website Theme Install"
+#~ msgstr "Veebisaidi teema paigaldamine"
+
+#~ msgid "Wednesday"
+#~ msgstr "Kolmapäev"
+
+#~ msgid "Weeks"
+#~ msgstr "Nädalad"
+
+#~ msgid "Western Sahara"
+#~ msgstr "Lääne-Sahaara"
+
+#~ msgid ""
+#~ "When dealing with multiple actions, the execution order is based on the "
+#~ "sequence. Low number means high priority."
+#~ msgstr ""
+#~ "Kui tegemist on mitme tegevusega, siis nende käivitamise järjekord sõltub "
+#~ "järjestusest. Madalam arv vastab kõrgemale prioriteedile."
+
+#~ msgid "Window Actions"
+#~ msgstr "Akna toimingud"
+
+#~ msgid "Wizard"
+#~ msgstr "Nõustaja"
+
+#~ msgid "Write Access"
+#~ msgstr "Kirjutusõigus"
+
+#~ msgid "Yemen"
+#~ msgstr "Jeemen"
+
+#~ msgid "Yodlee"
+#~ msgstr "Yodlee"
+
+#~ msgid ""
+#~ "You can either upload a file from your computer or copy/paste an internet "
+#~ "link to your file."
+#~ msgstr ""
+#~ "You can either upload a file from your computer or copy/paste an internet "
+#~ "link to your file."
+
+#~ msgid "You should try other search criteria."
+#~ msgstr "Peaksid proovima mõnda teist otsingusõna."
+
+#~ msgid "ZIP"
+#~ msgstr "Indeks"
+
+#~ msgid "Zambia"
+#~ msgstr "Zambia"
+
+#~ msgid "Zimbabwe"
+#~ msgstr "Zimbabwe"
+
+#~ msgid "Zip"
+#~ msgstr "Postiindeks"
+
+#~ msgid "_Import"
+#~ msgstr "_Impordi"
+
+#~ msgid "at"
+#~ msgstr "á"
+
+#~ msgid "choose"
+#~ msgstr "vali"
+
+#~ msgid "crm"
+#~ msgstr "crm"
+
+#~ msgid "date"
+#~ msgstr "kuupäev"
+
+#~ msgid "datetime"
+#~ msgstr "kuupäevkellaaeg"
+
+#~ msgid "documentation"
+#~ msgstr "dokumentatsioon"
+
+#~ msgid "done"
+#~ msgstr "valmis"
+
+#~ msgid "e.g. BE0477472701"
+#~ msgstr "nt. BE0477472701"
+
+#~ msgid "e.g. English"
+#~ msgstr "nt. Inglise"
+
+#~ msgid "e.g. Mr."
+#~ msgstr "nt. Hr"
+
+#~ msgid "e.g. Sales Director"
+#~ msgstr "nt müühijuht"
+
+#~ msgid "e.g. en_US"
+#~ msgstr "nt. et_EE"
+
+#~ msgid "e.g. www.odoo.com"
+#~ msgstr "nt. www.odoo.com"
+
+#~ msgid "eBay Connector"
+#~ msgstr "eBay-ga ühendamine"
+
+#~ msgid "eCommerce"
+#~ msgstr "E-kaubandus"
+
+#~ msgid "false"
+#~ msgstr "väär"
+
+#~ msgid "get"
+#~ msgstr "saa"
+
+#~ msgid "html"
+#~ msgstr "html"
+
+#~ msgid "init"
+#~ msgstr "initsialiseeri"
+
+#~ msgid "integer"
+#~ msgstr "täisarv"
+
+#~ msgid "internal note..."
+#~ msgstr "sisemine märkus..."
+
+#~ msgid "ir.actions.act_window"
+#~ msgstr "ir.actions.act_window"
+
+#~ msgid "ir.actions.server"
+#~ msgstr "ir.actions.server"
+
+#~ msgid "monetary"
+#~ msgstr "rahaline"
+
+#~ msgid "n/a"
+#~ msgstr "n/a"
+
+#~ msgid "no"
+#~ msgstr "ei"
+
+#~ msgid "reference"
+#~ msgstr "viide"
+
+#~ msgid "selection"
+#~ msgstr "valik"
+
+#~ msgid "text"
+#~ msgstr "tekst"
+
+#~ msgid "title"
+#~ msgstr "pealkiri"
+
+#~ msgid "true"
+#~ msgstr "tõene"
+
+#~ msgid "yes"
+#~ msgstr "jah"
+
+#~ msgid "Åland Islands"
+#~ msgstr "Ahvenamaa"

@@ -406,12 +406,8 @@ class GettextAlias(object):
                     path, module = os.path.split(path)
                     if path == os.path.dirname(path):   # not in a module
                         return source
-
-                # TODO: WIP, to improve
-                lang = 'fr'
-                t = gettext.translation(module, localedir=os.path.join(path, module, 'i18n'), languages=[lang])
-                t.install()
-                return gettext.gettext(source)
+                t = gettext.translation('code', localedir=os.path.join(path, module, 'i18n'), languages=[lang])
+                return t.gettext(source)
             else:
                 _logger.debug('no translation language detected, skipping translation for "%r" ', source)
         except Exception:

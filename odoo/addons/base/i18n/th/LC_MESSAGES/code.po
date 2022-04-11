@@ -1,0 +1,7569 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base
+#
+# Translators:
+# Seksan Poltree <seksan.poltree@gmail.com>, 2018
+# Prawit Boonthue <prawit.boonthue@gmail.com>, 2018
+# LAO <sumonchai@gmail.com>, 2018
+# Potsawat Manuthamathorn <firmpotsawat@hotmail.com>, 2018
+# Phinitnan Chanasabaeng <crackerizer@gmail.com>, 2018
+# นัจ-ณวัสน์ เอกสิรินิธิพล <nawhath.aek@hotmail.com>, 2018
+# monchai7 <montchye@gmail.com>, 2018
+# Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2018
+# Somchart Jabsung <jabsung.s@gmail.com>, 2018
+# gsong <gsong2014@foxmail.com>, 2018
+# Martin Trigaux, 2018
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2022-04-11 12:53+0200\n"
+"PO-Revision-Date: 2018-08-24 09:14+0000\n"
+"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018\n"
+"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: models/decimal_precision.py:57 models/res_currency.py:407
+#, fuzzy, python-format
+msgid "Warning for %s"
+msgstr "คำเตือน"
+
+#: models/decimal_precision.py:58
+#, python-format
+msgid ""
+"The precision has been reduced for %s.\n"
+"Note that existing data WON'T be updated by this change.\n"
+"\n"
+"As decimal precisions impact the whole system, this may cause critical "
+"issues.\n"
+"E.g. reducing the precision could disturb your financial balance.\n"
+"\n"
+"Therefore, changing decimal precisions in a running database is not "
+"recommended."
+msgstr ""
+
+#: models/ir_actions.py:179 models/ir_actions.py:181
+#, python-format
+msgid "Invalid model name %r in action definition."
+msgstr ""
+
+#: models/ir_actions.py:210
+#, python-format
+msgid "The modes in view_mode must not be duplicated: %s"
+msgstr ""
+
+#: models/ir_actions.py:212
+#, python-format
+msgid "No spaces allowed in view_mode: %r"
+msgstr ""
+
+#: models/ir_actions.py:457
+msgid "Recursion found in child server actions"
+msgstr "Recursion found in child server actions"
+
+#: models/ir_actions.py:610
+msgid "You don't have enough access rights to run this action."
+msgstr ""
+
+#: models/ir_actions.py:702
+msgid "many2many fields cannot be evaluated by reference"
+msgstr ""
+
+#: models/ir_actions_report.py:497
+#, python-format
+msgid ""
+"Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
+"number of subprocess reached. Message : %s"
+msgstr ""
+
+#: models/ir_actions_report.py:500
+#, python-format
+msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
+msgstr "Wkhtmltopdf ล้มเหลว (error code: %s). Message: %s"
+
+#: models/ir_actions_report.py:745
+#, fuzzy
+msgid "One of the documents you are trying to merge is encrypted"
+msgstr ""
+"One of the documents you are trying to access has been deleted, please try "
+"again after refreshing."
+
+#: models/ir_actions_report.py:770
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still "
+"retrieve those PDFs by selecting each of the affected records individually, "
+"which will avoid merging."
+msgstr ""
+
+#: models/ir_actions_report.py:858
+msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
+msgstr ""
+
+#: models/ir_actions_report.py:865
+#, python-format
+msgid ""
+"The report's template '%s' is wrong, please contact your administrator. \n"
+"\n"
+"Can not separate file to save as attachment because the report's template "
+"does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div "
+"with 'article' classname."
+msgstr ""
+
+#: models/ir_attachment.py:71
+msgid "Only administrators can execute this action."
+msgstr "Only administrators can execute this action."
+
+#: models/ir_attachment.py:431 models/ir_attachment.py:442
+msgid "Sorry, you are not allowed to access this document."
+msgstr "ขออภัย ท่านไม่มีสิทธิเข้าถึงเอกสารนี้"
+
+#: models/ir_attachment.py:476
+msgid "Sorry, you must provide fields to read on attachments"
+msgstr ""
+
+#: models/ir_attachment.py:479
+msgid "Sorry, the syntax 'name:agg(field)' is not available for attachments"
+msgstr ""
+
+#: models/ir_attachment.py:485
+#, fuzzy
+msgid "Sorry, you are not allowed to access these fields on attachments."
+msgstr "ขออภัย ท่านไม่มีสิทธิเข้าถึงเอกสารนี้"
+
+#: models/ir_cron.py:372
+msgid ""
+"Record cannot be modified right now: This cron task is currently being "
+"executed and may not be modified Please try again in a few minutes"
+msgstr ""
+
+#: models/ir_default.py:70
+#, python-format
+msgid "Invalid field %s.%s"
+msgstr ""
+
+#: models/ir_default.py:72
+#, python-format
+msgid "Invalid value for %s.%s: %s"
+msgstr ""
+
+#: models/ir_fields.py:213
+#, fuzzy, python-format
+msgid "Unknown value '%s' for boolean field '%%(field)s'"
+msgstr "Unknown value '%s' for boolean field '%%(field)s', assuming '%s'"
+
+#: models/ir_fields.py:215
+msgid "Use '1' for yes and '0' for no"
+msgstr "Use '1' for yes and '0' for no"
+
+#: models/ir_fields.py:225
+#, python-format
+msgid "'%s' does not seem to be an integer for field '%%(field)s'"
+msgstr "'%s' does not seem to be an integer for field '%%(field)s'"
+
+#: models/ir_fields.py:236
+#, python-format
+msgid "'%s' does not seem to be a number for field '%%(field)s'"
+msgstr "'%s' does not seem to be a number for field '%%(field)s'"
+
+#: models/ir_fields.py:256
+#, python-format
+msgid "'%s' does not seem to be a valid date for field '%%(field)s'"
+msgstr "'%s' does not seem to be a valid date for field '%%(field)s'"
+
+#: models/ir_fields.py:258 models/ir_fields.py:290
+#, python-format
+msgid "Use the format '%s'"
+msgstr "ใช้รูปแบบ '%s'"
+
+#: models/ir_fields.py:288
+#, python-format
+msgid "'%s' does not seem to be a valid datetime for field '%%(field)s'"
+msgstr "'%s' does not seem to be a valid datetime for field '%%(field)s'"
+
+#: models/ir_fields.py:332
+#, python-format
+msgid "Value '%s' not found in selection field '%%(field)s'"
+msgstr "Value '%s' not found in selection field '%%(field)s'"
+
+#: models/ir_fields.py:367
+msgid "See all possible values"
+msgstr "See all possible values"
+
+#: models/ir_fields.py:376
+msgid "database id"
+msgstr "database id"
+
+#: models/ir_fields.py:388
+#, python-format
+msgid "Invalid database id '%s' for the field '%%(field)s'"
+msgstr "Invalid database id '%s' for the field '%%(field)s'"
+
+#: models/ir_fields.py:392
+msgid "external id"
+msgstr "external id"
+
+#: models/ir_fields.py:402
+msgid "name"
+msgstr "ชื่อ"
+
+#: models/ir_fields.py:410
+#, fuzzy, python-format
+msgid ""
+"Found multiple matches for value '%s' in field '%%(field)s' (%d matches)"
+msgstr "Found multiple matches for field '%%(field)s' (%d matches)"
+
+#: models/ir_fields.py:419
+#, python-format
+msgid ""
+"Cannot create new '%s' records from their name alone. Please create those "
+"records manually and try importing again."
+msgstr ""
+
+#: models/ir_fields.py:423
+#, python-format
+msgid "Unknown sub-field '%s'"
+msgstr "Unknown sub-field '%s'"
+
+#: models/ir_fields.py:436
+#, python-format
+msgid ""
+"No matching record found for %(field_type)s '%(value)s' in field "
+"'%%(field)s' and the following error was encountered when we attempted to "
+"create one: %(error_message)s"
+msgstr ""
+
+#: models/ir_fields.py:438
+#, python-format
+msgid ""
+"No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'"
+msgstr ""
+"No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'"
+
+#: models/ir_fields.py:493
+msgid ""
+"Can not create Many-To-One records indirectly, import the field separately"
+msgstr ""
+"Can not create Many-To-One records indirectly, import the field separately"
+
+#: models/ir_fields.py:496
+#, python-format
+msgid ""
+"Ambiguous specification for field '%(field)s', only provide one of name, "
+"external id or database id"
+msgstr ""
+"Ambiguous specification for field '%(field)s', only provide one of name, "
+"external id or database id"
+
+#: models/ir_filters.py:36 models/res_partner.py:364 models/res_users.py:205
+#: models/res_users.py:632 models/res_users.py:634
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (สำเนา)"
+
+#: models/ir_filters.py:105
+#, python-format
+msgid ""
+"There is already a shared filter set as default for %(model)s, delete or "
+"change it before setting a new default"
+msgstr ""
+"There is already a shared filter set as default for %(model)s, delete or "
+"change it before setting a new default"
+
+#: models/ir_mail_server.py:126
+#, python-format
+msgid "SSL private key is missing for %s."
+msgstr ""
+
+#: models/ir_mail_server.py:128
+#, python-format
+msgid "SSL certificate is missing for %s."
+msgstr ""
+
+#: models/ir_mail_server.py:134
+msgid ""
+"Please configure an email on the current user to simulate sending an email "
+"message via this outgoing server"
+msgstr ""
+
+#: models/ir_mail_server.py:148
+#, python-format
+msgid ""
+"The server refused the sender address (%(email_from)s) with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:153
+#, python-format
+msgid ""
+"The server refused the test recipient (%(email_to)s) with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:160
+#, python-format
+msgid "The server refused the test connection with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:166
+#, python-format
+msgid ""
+"Invalid server name !\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:168
+#, python-format
+msgid ""
+"No response received. Check server address and port number.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:170
+#, python-format
+msgid ""
+"The server has closed the connection unexpectedly. Check configuration "
+"served on this port number.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:172
+#, python-format
+msgid ""
+"Server replied with following exception:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:174
+#, python-format
+msgid ""
+"An option is not supported by the server:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:176
+#, python-format
+msgid ""
+"An SMTP exception occurred. Check port number and connection security type.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:178
+#, python-format
+msgid ""
+"An SSL exception occurred. Check connection security type.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:180
+#, python-format
+msgid ""
+"Connection Test Failed! Here is what we got instead:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:189
+#, fuzzy
+msgid "Connection Test Successful!"
+msgstr "ความปลอดภัยการเชื่อมต่อ"
+
+#: models/ir_mail_server.py:259 models/ir_mail_server.py:284
+#, python-format
+msgid ""
+"The private key or the certificate is not a valid file. \n"
+"%s"
+msgstr ""
+
+#: models/ir_mail_server.py:261 models/ir_mail_server.py:286
+#, python-format
+msgid ""
+"Could not load your certificate / private key. \n"
+"%s"
+msgstr ""
+
+#: models/ir_mail_server.py:290
+msgid "Missing SMTP Server"
+msgstr "Missing SMTP Server"
+
+#: models/ir_mail_server.py:291
+msgid ""
+"Please define at least one SMTP server, or provide the SMTP parameters "
+"explicitly."
+msgstr ""
+"Please define at least one SMTP server, or provide the SMTP parameters "
+"explicitly."
+
+#: models/ir_mail_server.py:297
+msgid ""
+"Your Odoo Server does not support SMTP-over-SSL. You could use STARTTLS "
+"instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
+"should do the trick."
+msgstr ""
+
+#: models/ir_mail_server.py:615
+#, python-format
+msgid ""
+"Mail delivery failed via SMTP server '%s'.\n"
+"%s: %s"
+msgstr ""
+"ล้มเหลวในการส่งอีเมลผ่านเซิร์ฟเวอร์ '%s' \n"
+" %s: %s"
+
+#: models/ir_mail_server.py:617
+msgid "Mail Delivery Failed"
+msgstr "การส่งอีเมลล้มเหลว"
+
+#: models/ir_mail_server.py:701 models/ir_model.py:605 models/ir_model.py:684
+#: models/ir_model.py:692 models/res_partner.py:377
+msgid "Warning"
+msgstr "คำเตือน"
+
+#: models/ir_mail_server.py:702
+msgid ""
+"Your server does not seem to support SSL, you may want to try STARTTLS "
+"instead"
+msgstr ""
+"Your server does not seem to support SSL, you may want to try STARTTLS "
+"instead"
+
+#: models/ir_model.py:215
+msgid "The model name must start with 'x_'."
+msgstr ""
+
+#: models/ir_model.py:217
+msgid ""
+"The model name can only contain lowercase characters, digits, underscores "
+"and dots."
+msgstr ""
+
+#: models/ir_model.py:234
+#, python-format
+msgid ""
+"Unable to order by %s: fields used for ordering must be present on the model "
+"and stored."
+msgstr ""
+
+#: models/ir_model.py:277
+#, python-format
+msgid "Model '%s' contains module data and cannot be removed."
+msgstr ""
+
+#: models/ir_model.py:302
+msgid "Field \"Model\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:304
+msgid "Field \"Type\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:306
+msgid "Field \"Transient Model\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:563
+msgid "Custom fields must have a name that starts with 'x_' !"
+msgstr "ฟิลด์ที่สร้างเองต้องมีชื่อที่ขึ้นต้นด้วย 'x_'!"
+
+#: models/ir_model.py:567
+msgid ""
+"Field names can only contain characters, digits and underscores (up to 63)."
+msgstr ""
+
+#: models/ir_model.py:583
+#, python-format
+msgid "Unknown field name '%s' in related field '%s'"
+msgstr ""
+
+#: models/ir_model.py:586
+#, python-format
+msgid "Non-relational field name '%s' in related field '%s'"
+msgstr ""
+
+#: models/ir_model.py:595
+#, python-format
+msgid "Related field '%s' does not have type '%s'"
+msgstr ""
+
+#: models/ir_model.py:597
+#, python-format
+msgid "Related field '%s' does not have comodel '%s'"
+msgstr ""
+
+#: models/ir_model.py:618
+#, python-format
+msgid "Empty dependency in %r"
+msgstr ""
+
+#: models/ir_model.py:625
+#, python-format
+msgid "Unknown field %r in dependency %r"
+msgstr ""
+
+#: models/ir_model.py:627
+#, python-format
+msgid "Non-relational field %r in dependency %r"
+msgstr ""
+
+#: models/ir_model.py:658
+#, python-format
+msgid "Model %s does not exist"
+msgstr ""
+
+#: models/ir_model.py:659
+msgid "Please specify a valid model for the object relation"
+msgstr ""
+
+#: models/ir_model.py:685
+#, python-format
+msgid "The table %r if used for other, possibly incompatible fields."
+msgstr ""
+
+#: models/ir_model.py:692
+#, python-format
+msgid ""
+"The m2o field %s is required but declares its ondelete policy as being 'set "
+"null'. Only 'restrict' and 'cascade' make sense."
+msgstr ""
+
+#: models/ir_model.py:770
+#, python-format
+msgid "The field '%s' cannot be removed because the field '%s' depends on it."
+msgstr ""
+
+#: models/ir_model.py:797
+msgid "Cannot rename/delete fields that are still present in views:"
+msgstr ""
+
+#: models/ir_model.py:798
+#, python-format
+msgid "Fields: %s"
+msgstr ""
+
+#: models/ir_model.py:799
+#, python-format
+msgid "View: %s"
+msgstr ""
+
+#: models/ir_model.py:814
+msgid "This column contains module data and cannot be removed!"
+msgstr "คอลัมน์นี้มีข้อมูลโมดูลและไม่สามารถลบได้!"
+
+#: models/ir_model.py:882
+#, python-format
+msgid "Model %s does not exist!"
+msgstr "Model %s does not exist!"
+
+#: models/ir_model.py:889
+#, python-format
+msgid "Many2one %s on model %s does not exist!"
+msgstr ""
+
+#: models/ir_model.py:911
+msgid "Changing the model of a field is forbidden!"
+msgstr "Changing the model of a field is forbidden!"
+
+#: models/ir_model.py:914
+msgid ""
+"Changing the type of a field is not yet supported. Please drop it and create "
+"it again!"
+msgstr ""
+
+#: models/ir_model.py:928
+msgid "Can only rename one field at a time!"
+msgstr ""
+
+#: models/ir_model.py:1314 models/ir_model.py:1334 models/ir_model.py:1365
+msgid ""
+"Properties of base fields cannot be altered in this manner! Please modify "
+"them through Python code, preferably through a custom addon!"
+msgstr ""
+"Properties of base fields cannot be altered in this manner! Please modify "
+"them through Python code, preferably through a custom addon!"
+
+#: models/ir_model.py:1439
+#, python-format
+msgid "The ondelete policy %r is not valid for field %r"
+msgstr ""
+
+#: models/ir_model.py:1484 models/ir_model.py:1622 models/ir_model.py:2040
+msgid "Administrator access is required to uninstall a module"
+msgstr "Administrator access is required to uninstall a module"
+
+#: models/ir_model.py:1771
+#, fuzzy, python-format
+msgid ""
+"You are not allowed to access '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr "ขออภัย ท่านไม่มีสิทธิเข้าถึงเอกสารนี้"
+
+#: models/ir_model.py:1772
+#, fuzzy, python-format
+msgid ""
+"You are not allowed to modify '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr "Sorry, you are not allowed to modify this document."
+
+#: models/ir_model.py:1773
+#, fuzzy, python-format
+msgid ""
+"You are not allowed to create '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr "Sorry, you are not allowed to create this kind of document."
+
+#: models/ir_model.py:1774
+#, fuzzy, python-format
+msgid ""
+"You are not allowed to delete '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr "Sorry, you are not allowed to delete this document."
+
+#: models/ir_model.py:1779
+#, python-format
+msgid ""
+"This operation is allowed for the following groups:\n"
+"%(groups_list)s"
+msgstr ""
+
+#: models/ir_model.py:1781
+msgid "No group currently allows this operation."
+msgstr ""
+
+#: models/ir_model.py:1783 models/ir_rule.py:203
+msgid "Contact your administrator to request access if necessary."
+msgstr ""
+
+#: models/ir_model.py:1938
+msgid "Not enough access rights on the external ID:"
+msgstr ""
+
+#: models/ir_module.py:321
+msgid ""
+"You are trying to remove a module that is installed or will be installed."
+msgstr ""
+
+#: models/ir_module.py:368
+#, python-format
+msgid ""
+"Unable to install module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+"Unable to install module \"%s\" because an external dependency is not met: %s"
+
+#: models/ir_module.py:370
+#, python-format
+msgid ""
+"Unable to upgrade module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+"Unable to upgrade module \"%s\" because an external dependency is not met: %s"
+
+#: models/ir_module.py:372
+#, python-format
+msgid ""
+"Unable to process module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+"Unable to process module \"%s\" because an external dependency is not met: %s"
+
+#: models/ir_module.py:377
+msgid "Recursion error in modules dependencies !"
+msgstr "Recursion error in modules dependencies !"
+
+#: models/ir_module.py:391
+#, python-format
+msgid ""
+"You try to install module '%s' that depends on module '%s'.\n"
+"But the latter module is not available in your system."
+msgstr ""
+"You try to install module '%s' that depends on module '%s'.\n"
+"But the latter module is not available in your system."
+
+#: models/ir_module.py:438
+#, python-format
+msgid "Modules \"%s\" and \"%s\" are incompatible."
+msgstr ""
+
+#: models/ir_module.py:457
+#, python-format
+msgid "You are trying to install incompatible modules in category \"%s\":"
+msgstr ""
+
+#: models/ir_module.py:464
+msgid "Install"
+msgstr "ติดตั้ง"
+
+#: models/ir_module.py:594
+msgid ""
+"Odoo is currently processing a scheduled action.\n"
+"Module operations are not possible at this time, please try again later or "
+"contact your system administrator."
+msgstr ""
+
+#: models/ir_module.py:630
+msgid "The `base` module cannot be uninstalled"
+msgstr "โมดูล base ไม่สามารถถูกถอนการติดตั้งได้"
+
+#: models/ir_module.py:632
+msgid ""
+"One or more of the selected modules have already been uninstalled, if you "
+"believe this to be an error, you may try again later or contact support."
+msgstr ""
+
+#: models/ir_module.py:638
+msgid "Uninstall"
+msgstr "ถอนการติดตั้ง"
+
+#: models/ir_module.py:646
+msgid "Uninstall module"
+msgstr ""
+
+#: models/ir_module.py:687
+#, python-format
+msgid "Can not upgrade module '%s'. It is not installed."
+msgstr "ไม่สามารถอัพเกรดโมดูล '%s' เพราะยังไม่ได้ติดตั้ง"
+
+#: models/ir_module.py:706
+#, python-format
+msgid ""
+"You try to upgrade the module %s that depends on the module: %s.\n"
+"But this module is not available in your system."
+msgstr ""
+
+#: models/ir_module.py:711
+msgid "Apply Schedule Upgrade"
+msgstr "ใช้งานการอัพเกรดตามกำหนดการ"
+
+#: models/ir_module.py:805
+msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr ""
+
+#: models/ir_module.py:806
+msgid ""
+"To enable it, make sure this directory exists and is writable on the server:"
+msgstr ""
+
+#: models/ir_module.py:833
+#, python-format
+msgid ""
+"The `%s` module appears to be unavailable at the moment, please try again "
+"later."
+msgstr ""
+"The `%s` module appears to be unavailable at the moment, please try again "
+"later."
+
+#: models/ir_profile.py:101
+msgid ""
+"Profiling is not enabled on this database. Please contact an administrator."
+msgstr ""
+
+#: models/ir_property.py:88
+msgid "Invalid type"
+msgstr ""
+
+#: models/ir_qweb_fields.py:144
+msgid "Decimalized number"
+msgstr ""
+
+#: models/ir_qweb_fields.py:164
+msgid "Rounding precision"
+msgstr ""
+
+#: models/ir_qweb_fields.py:209
+msgid "Date format"
+msgstr ""
+
+#: models/ir_qweb_fields.py:227
+msgid "Pattern to format"
+msgstr ""
+
+#: models/ir_qweb_fields.py:228
+msgid "Optional timezone name"
+msgstr ""
+
+#: models/ir_qweb_fields.py:229
+msgid "Display only the time"
+msgstr ""
+
+#: models/ir_qweb_fields.py:230
+msgid "Hide seconds"
+msgstr ""
+
+#: models/ir_qweb_fields.py:231
+#, fuzzy
+msgid "Display only the date"
+msgstr "แสดงหัวรายงานแบบบรรทัด"
+
+#: models/ir_qweb_fields.py:301
+msgid "Selection"
+msgstr "เลือก"
+
+#: models/ir_qweb_fields.py:301
+msgid "By default the widget uses the field information"
+msgstr ""
+
+#: models/ir_qweb_fields.py:425
+msgid "Original currency"
+msgstr ""
+
+#: models/ir_qweb_fields.py:426
+msgid "Display currency"
+msgstr ""
+
+#: models/ir_qweb_fields.py:427
+msgid "Date"
+msgstr "วันที่"
+
+#: models/ir_qweb_fields.py:427
+msgid ""
+"Date used for the original currency (only used for t-esc). by default use "
+"the current date."
+msgstr ""
+
+#: models/ir_qweb_fields.py:428
+msgid "Company"
+msgstr "บริษัท"
+
+#: models/ir_qweb_fields.py:428
+msgid ""
+"Company used for the original currency (only used for t-esc). By default use "
+"the user company"
+msgstr ""
+
+#: models/ir_qweb_fields.py:437
+msgid "The value send to monetary field is not a number."
+msgstr ""
+
+#: models/ir_qweb_fields.py:535
+#, python-format
+msgid "The value (%s) passed should be positive"
+msgstr ""
+
+#: models/ir_qweb_fields.py:538
+msgid "The hour must be between 0 and 23"
+msgstr ""
+
+#: models/ir_qweb_fields.py:572
+msgid "Digital formatting"
+msgstr ""
+
+#: models/ir_qweb_fields.py:573
+msgid "Date unit"
+msgstr ""
+
+#: models/ir_qweb_fields.py:573
+msgid "Date unit used for comparison and formatting"
+msgstr ""
+
+#: models/ir_qweb_fields.py:574
+msgid "Rounding unit"
+msgstr ""
+
+#: models/ir_qweb_fields.py:574
+msgid ""
+"Date unit used for the rounding. The value must be smaller than 'hour' if "
+"you use the digital formatting."
+msgstr ""
+
+#: models/ir_qweb_fields.py:578
+msgid "Long"
+msgstr ""
+
+#: models/ir_qweb_fields.py:579
+msgid "Short"
+msgstr ""
+
+#: models/ir_qweb_fields.py:580
+msgid "Narrow"
+msgstr ""
+
+#: models/ir_qweb_fields.py:581
+#, fuzzy
+msgid "Format"
+msgstr "รูปแบบ"
+
+#: models/ir_qweb_fields.py:582
+msgid "Formatting: long, short, narrow (not used for digital)"
+msgstr ""
+
+#: models/ir_qweb_fields.py:587
+#, fuzzy
+msgid "Add direction"
+msgstr "ทิศทาง"
+
+#: models/ir_qweb_fields.py:588
+msgid "Add directional information (not used for digital)"
+msgstr ""
+
+#: models/ir_qweb_fields.py:650
+msgid "Reference date"
+msgstr ""
+
+#: models/ir_qweb_fields.py:650
+msgid "Date to compare with the field value, by default use the current date."
+msgstr ""
+
+#: models/ir_qweb_fields.py:686
+msgid "Barcode symbology"
+msgstr ""
+
+#: models/ir_qweb_fields.py:686
+msgid "Barcode type, eg: UPCA, EAN13, Code128"
+msgstr ""
+
+#: models/ir_qweb_fields.py:687
+msgid "Width"
+msgstr ""
+
+#: models/ir_qweb_fields.py:688
+msgid "Height"
+msgstr ""
+
+#: models/ir_qweb_fields.py:689
+msgid "Human Readable"
+msgstr ""
+
+#: models/ir_qweb_fields.py:710
+#, fuzzy, python-format
+msgid "Barcode %s"
+msgstr "บาร์โค้ด"
+
+#: models/ir_qweb_fields.py:724
+msgid "Name"
+msgstr "ชื่อ"
+
+#: models/ir_qweb_fields.py:725
+msgid "Address"
+msgstr "ที่อยู่"
+
+#: models/ir_qweb_fields.py:726
+msgid "Phone"
+msgstr "โทรศัพท์"
+
+#: models/ir_qweb_fields.py:727
+msgid "Mobile"
+msgstr "มือถือ"
+
+#: models/ir_qweb_fields.py:728
+msgid "Email"
+msgstr "อีเมล"
+
+#: models/ir_qweb_fields.py:729 models/ir_qweb_fields.py:780
+msgid "VAT"
+msgstr "ภาษีมูลค่าเพิ่ม (VAT)"
+
+#: models/ir_qweb_fields.py:733
+msgid "Space"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+#, fuzzy
+msgid "Comma"
+msgstr "ความคิดเห็น"
+
+#: models/ir_qweb_fields.py:733
+#, fuzzy
+msgid "Dash"
+msgstr "แดชบอร์ด"
+
+#: models/ir_qweb_fields.py:733
+msgid "Vertical bar"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+msgid "Slash"
+msgstr ""
+
+#: models/ir_qweb_fields.py:734
+#, fuzzy
+msgid "Linebreak"
+msgstr "Line"
+
+#: models/ir_qweb_fields.py:737
+msgid "Displayed fields"
+msgstr ""
+
+#: models/ir_qweb_fields.py:737
+msgid "List of contact fields to display in the widget"
+msgstr ""
+
+#: models/ir_qweb_fields.py:738
+msgid "Address separator"
+msgstr ""
+
+#: models/ir_qweb_fields.py:738
+msgid "Separator use to split the address from the display_name."
+msgstr ""
+
+#: models/ir_qweb_fields.py:739
+msgid "Hide badges"
+msgstr ""
+
+#: models/ir_qweb_fields.py:739
+msgid "Don't display the font awesome marker"
+msgstr ""
+
+#: models/ir_qweb_fields.py:740
+msgid "Use comma"
+msgstr ""
+
+#: models/ir_qweb_fields.py:740
+msgid "Use comma instead of the <br> tag to display the address"
+msgstr ""
+
+#: models/ir_qweb_fields.py:741
+#, fuzzy
+msgid "Display phone icons"
+msgstr "แสดงหัวรายงานแบบบรรทัด"
+
+#: models/ir_qweb_fields.py:741
+msgid "Display the phone icons even if no_marker is True"
+msgstr ""
+
+#: models/ir_qweb_fields.py:742
+#, fuzzy
+msgid "Display country image"
+msgstr "ชื่อที่ใช้แสดง"
+
+#: models/ir_qweb_fields.py:742
+msgid "Display the country image if the field is present on the record"
+msgstr ""
+
+#: models/ir_rule.py:61
+msgid "Rules can not be applied on the Record Rules model."
+msgstr "Rules can not be applied on the Record Rules model."
+
+#: models/ir_rule.py:197
+#, fuzzy, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to access "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr "ขออภัย ท่านไม่มีสิทธิเข้าถึงเอกสารนี้"
+
+#: models/ir_rule.py:198
+#, fuzzy, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to modify "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr "Sorry, you are not allowed to modify this document."
+
+#: models/ir_rule.py:199
+#, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to create "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr ""
+
+#: models/ir_rule.py:200
+#, fuzzy, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to delete "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr "Sorry, you are not allowed to delete this document."
+
+#: models/ir_rule.py:225
+#, fuzzy, python-format
+msgid "Records: %s"
+msgstr "Record"
+
+#: models/ir_rule.py:228
+#, fuzzy, python-format
+msgid "User: %s"
+msgstr "ผู้ใช้งาน"
+
+#: models/ir_rule.py:231
+#, fuzzy, python-format
+msgid ""
+"This restriction is due to the following rules:\n"
+"%s"
+msgstr ""
+"Disabling this option will also uninstall the following modules \n"
+"%s"
+
+#: models/ir_rule.py:233
+msgid "Note: this might be a multi-company issue."
+msgstr ""
+
+#: models/ir_sequence.py:17 models/ir_sequence.py:33
+msgid "Step must not be zero."
+msgstr ""
+
+#: models/ir_sequence.py:234
+#, python-format
+msgid "Invalid prefix or suffix for sequence '%s'"
+msgstr "Invalid prefix or suffix for sequence '%s'"
+
+#: models/ir_translation.py:528
+msgid "Creating translation on non existing records"
+msgstr ""
+
+#: models/ir_translation.py:552
+#, python-format
+msgid ""
+"Translation is not valid:\n"
+"%s"
+msgstr ""
+
+#: models/ir_translation.py:726
+msgid ""
+"Translation features are unavailable until you install an extra translation."
+msgstr ""
+
+#: models/ir_translation.py:756
+msgid "Translate"
+msgstr "แปล"
+
+#: models/ir_translation.py:854
+msgid "Technical Translations"
+msgstr ""
+
+#: models/ir_ui_menu.py:73
+msgid "Error! You cannot create recursive menus."
+msgstr ""
+
+#: models/ir_ui_view.py:397
+#, python-format
+msgid ""
+"Error while validating view:\n"
+"\n"
+"%(error)s"
+msgstr ""
+
+#: models/ir_ui_view.py:415
+#, python-format
+msgid "Invalid view %(name)s definition in %(file)s"
+msgstr ""
+
+#: models/ir_ui_view.py:427
+#, python-format
+msgid ""
+"Error while validating view near:\n"
+"\n"
+"%(fivelines)s\n"
+"%(error)s"
+msgstr ""
+
+#: models/ir_ui_view.py:441
+msgid ""
+"Inherited Qweb view cannot have 'Groups' define on the record. Use 'groups' "
+"attributes inside the view definition"
+msgstr ""
+
+#: models/ir_ui_view.py:448
+msgid "You cannot create recursive inherited views."
+msgstr ""
+
+#: models/ir_ui_view.py:484
+msgid "Missing view architecture."
+msgstr ""
+
+#: models/ir_ui_view.py:680
+#, python-format
+msgid "View '%(name)s' accessible only to groups %(groups)s "
+msgstr ""
+
+#: models/ir_ui_view.py:683
+#, python-format
+msgid "View '%(name)s' is private"
+msgstr ""
+
+#: models/ir_ui_view.py:1008 models/ir_ui_view.py:1240
+#, python-format
+msgid "Model not found: %(model)s"
+msgstr "Model not found: %(model)s"
+
+#: models/ir_ui_view.py:1290
+#, python-format
+msgid "Tree child can only have one of %(tags)s tag (not %(wrong_tag)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1299
+#, python-format
+msgid "A <graph> can only contains <field> nodes, found a <%s>"
+msgstr ""
+
+#: models/ir_ui_view.py:1320
+msgid "Search tag can only contain one search panel"
+msgstr ""
+
+#: models/ir_ui_view.py:1330
+msgid "Field tag must have a \"name\" attribute defined"
+msgstr ""
+
+#: models/ir_ui_view.py:1352
+#, python-format
+msgid ""
+"Domain on non-relational field \"%(name)s\" makes no sense (domain:"
+"%(domain)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1367
+#, fuzzy, python-format
+msgid "Field \"%(field_name)s\" does not exist in model \"%(model_name)s\""
+msgstr "Field `%(field_name)s` does not exist"
+
+#: models/ir_ui_view.py:1381
+#, python-format
+msgid "Attribute %(attribute)s evaluation expects a boolean, got %(value)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1407
+#, python-format
+msgid "Invalid special '%(value)s' in button"
+msgstr ""
+
+#: models/ir_ui_view.py:1412
+msgid "Button must have a name"
+msgstr ""
+
+#: models/ir_ui_view.py:1416
+#, python-format
+msgid "%(action_name)s is not a valid action on %(model_name)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1424
+#, python-format
+msgid "%(method)s on %(model)s is private and cannot be called from a button"
+msgstr ""
+
+#: models/ir_ui_view.py:1442
+#, python-format
+msgid "Invalid xmlid %(xmlid)s for button of type action."
+msgstr ""
+
+#: models/ir_ui_view.py:1445
+#, python-format
+msgid ""
+"%(xmlid)s is of type %(xmlid_model)s, expected a subclass of ir.actions."
+"actions"
+msgstr ""
+
+#: models/ir_ui_view.py:1452
+#, python-format
+msgid ""
+"Action %(action_reference)s (id: %(action_id)s) does not exist for button of "
+"type action."
+msgstr ""
+
+#: models/ir_ui_view.py:1474
+#, python-format
+msgid ""
+"Field '%(name)s' found in 'groupby' node can only be of type many2one, found "
+"%(type)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1498
+#, python-format
+msgid ""
+"Field '%(field)s' found in 'groupby' node does not exist in model %(model)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1509
+msgid "Searchpanel item with select multi cannot have a domain."
+msgstr ""
+
+#: models/ir_ui_view.py:1518
+msgid ""
+"Label tag must contain a \"for\". To match label style without corresponding "
+"field or button, use 'class=\"o_form_label\"'."
+msgstr ""
+
+#: models/ir_ui_view.py:1528
+msgid "Page direct ancestor must be notebook"
+msgstr ""
+
+#: models/ir_ui_view.py:1599
+#, python-format
+msgid "\"group_by\" value must be a string %(attribute)s=%(value)r"
+msgstr ""
+
+#: models/ir_ui_view.py:1607
+#, python-format
+msgid ""
+"Unknown field \"%(field)s\" in \"group_by\" value in %(attribute)s=%(value)r"
+msgstr ""
+
+#: models/ir_ui_view.py:1630
+#, python-format
+msgid "%(attribute)r value must be an integer (%(value)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1776
+#, python-format
+msgid "Invalid domain format %(expr)s in %(use)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1788
+#, python-format
+msgid "Non-relational field %(field)r in path %(field_path)r in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1796
+#, python-format
+msgid "Unknown field \"%(model)s.%(field)s\" in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1802
+#, python-format
+msgid "Unsearchable field %(field)r in path %(field_path)r in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:2072
+msgid "Can't compare more than two views."
+msgstr ""
+
+#: models/ir_ui_view.py:2099
+msgid "Previous Arch"
+msgstr ""
+
+#: models/ir_ui_view.py:2105
+#, fuzzy
+msgid "File Arch"
+msgstr "ไฟล์"
+
+#: models/ir_ui_view.py:2115
+#, fuzzy
+msgid "Current Arch"
+msgstr "สกุลเงิน"
+
+#: models/ir_ui_view.py:2171
+#, python-format
+msgid ""
+"Name or id %(name_or_id)r in %(use)s must be present in view but is missing."
+msgstr ""
+
+#: models/ir_ui_view.py:2179
+#, fuzzy, python-format
+msgid "Field `%(name)s` does not exist"
+msgstr "Field `%(field_name)s` does not exist"
+
+#: models/ir_ui_view.py:2186
+#, python-format
+msgid "Invalid composed field %(definition)s in %(use)s"
+msgstr ""
+
+#: models/ir_ui_view.py:2193
+#, python-format
+msgid "Field %(name)r used in %(use)s must be present in view but is missing."
+msgstr ""
+
+#: models/ir_ui_view.py:2199
+#, python-format
+msgid ""
+"Field %(name)r used in %(use)s is present in view but is in select multi."
+msgstr ""
+
+#: models/report_paperformat.py:194
+msgid ""
+"You can select either a format or a specific page width/height, but not both."
+msgstr ""
+
+#: models/res_bank.py:73
+msgid "Normal"
+msgstr "ปกติ"
+
+#: models/res_company.py:25
+msgid ""
+"Duplicating a company is not allowed. Please create a new company instead."
+msgstr ""
+
+#: models/res_company.py:268
+msgid "You cannot create recursive companies."
+msgstr ""
+
+#: models/res_config.py:300
+msgid ""
+"\n"
+"\n"
+"This addon is already installed on your system"
+msgstr ""
+"\n"
+"\n"
+"This addon is already installed on your system"
+
+#: models/res_config.py:384
+msgid "Cannot duplicate configuration!"
+msgstr "Cannot duplicate configuration!"
+
+#: models/res_config.py:419
+msgid "Warning!"
+msgstr "คำเตือน!"
+
+#: models/res_config.py:420
+#, python-format
+msgid ""
+"Disabling this option will also uninstall the following modules \n"
+"%s"
+msgstr ""
+"Disabling this option will also uninstall the following modules \n"
+"%s"
+
+#: models/res_config.py:625
+msgid "Only administrators can change the settings"
+msgstr "เฉพาะผู้ดูแลระบบเท่านั้นที่สามารถแก้ไขการตั้งค่าได้"
+
+#: models/res_config.py:752
+msgid "Go to the configuration panel"
+msgstr "ไปยังหน้าการตั้งค่า"
+
+#: models/res_config.py:793
+msgid "Invalid template user. It seems it has been deleted."
+msgstr ""
+
+#: models/res_country.py:141
+msgid "The layout contains an invalid format key"
+msgstr ""
+
+#: models/res_country.py:152
+msgid "Base view"
+msgstr "Base view"
+
+#: models/res_currency.py:173
+msgid "and"
+msgstr "และ"
+
+#: models/res_currency.py:293
+#, python-format
+msgid "Unit per %s"
+msgstr ""
+
+#: models/res_currency.py:294
+#, python-format
+msgid "%s per Unit"
+msgstr ""
+
+#: models/res_currency.py:408
+msgid ""
+"The new rate is quite far from the previous rate.\n"
+"Incorrect currency rates may cause critical problems, make sure the rate is "
+"correct !"
+msgstr ""
+
+#: models/res_currency.py:428
+#, python-format
+msgid "%(rate_currency_name)s per %(company_currency_name)s"
+msgstr ""
+
+#: models/res_currency.py:429
+#, python-format
+msgid "%(company_currency_name)s per %(rate_currency_name)s"
+msgstr ""
+
+#: models/res_lang.py:72
+msgid "At least one language must be active."
+msgstr ""
+
+#: models/res_lang.py:80
+msgid ""
+"Invalid date/time format directive specified. Please refer to the list of "
+"allowed directives, displayed when you edit a language."
+msgstr ""
+"Invalid date/time format directive specified. Please refer to the list of "
+"allowed directives, displayed when you edit a language."
+
+#: models/res_lang.py:86
+msgid ""
+"The Separator Format should be like [,n] where 0 < n :starting from Unit "
+"digit. -1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
+"1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
+"106,500. Provided as the thousand separator in each case."
+msgstr ""
+
+#: models/res_lang.py:282
+msgid "Language code cannot be modified."
+msgstr ""
+
+#: models/res_lang.py:285
+msgid "Cannot deactivate a language that is currently used by users."
+msgstr ""
+
+#: models/res_lang.py:287
+msgid "Cannot deactivate a language that is currently used by contacts."
+msgstr ""
+
+#: models/res_lang.py:300
+msgid "Base Language 'en_US' can not be deleted."
+msgstr ""
+
+#: models/res_lang.py:303
+msgid "You cannot delete the language which is the user's preferred language."
+msgstr ""
+
+#: models/res_lang.py:305
+msgid ""
+"You cannot delete the language which is Active!\n"
+"Please de-activate the language first."
+msgstr ""
+"You cannot delete the language which is Active!\n"
+"Please de-activate the language first."
+
+#: models/res_lang.py:317
+#, python-format
+msgid "format() must be given exactly one %char format specifier"
+msgstr ""
+
+#: models/res_lang.py:341
+msgid ""
+"The languages that you selected have been successfully installed. Users can "
+"choose their favorite language in their preferences."
+msgstr ""
+
+#: models/res_partner.py:89
+msgid "You can not create recursive tags."
+msgstr ""
+
+#: models/res_partner.py:359
+msgid "You cannot create recursive Partner hierarchies."
+msgstr "You cannot create recursive Partner hierarchies."
+
+#: models/res_partner.py:378
+msgid ""
+"Changing the company of a contact should only be done if it was never "
+"correctly set. If an existing contact starts working for a new company then "
+"a new contact should be created under that new company. You can use the "
+"\"Discard\" button to abandon this change."
+msgstr ""
+"Changing the company of a contact should only be done if it was never "
+"correctly set. If an existing contact starts working for a new company then "
+"a new contact should be created under that new company. You can use the "
+"\"Discard\" button to abandon this change."
+
+#: models/res_partner.py:454
+msgid ""
+"One2Many fields cannot be synchronized as part of `commercial_fields` or "
+"`address fields`"
+msgstr ""
+
+#: models/res_partner.py:577
+#, python-format
+msgid ""
+"You cannot archive contacts linked to an active user.\n"
+"You first need to archive their associated user.\n"
+"\n"
+"Linked active users : %(names)s"
+msgstr ""
+
+#: models/res_partner.py:579 models/res_partner.py:648
+#, fuzzy
+msgid "Go to users"
+msgstr "ผู้ใช้ Google"
+
+#: models/res_partner.py:583
+#, python-format
+msgid ""
+"You cannot archive contacts linked to an active user.\n"
+"Ask an administrator to archive their associated user first.\n"
+"\n"
+"Linked active users :\n"
+"%(names)s"
+msgstr ""
+
+#: models/res_partner.py:646
+#, python-format
+msgid ""
+"You cannot delete contacts linked to an active user.\n"
+"You should rather archive them after archiving their associated user.\n"
+"\n"
+"Linked active users : %(names)s"
+msgstr ""
+
+#: models/res_partner.py:652
+#, python-format
+msgid ""
+"You cannot delete contacts linked to an active user.\n"
+"Ask an administrator to archive their associated user first.\n"
+"\n"
+"Linked active users :\n"
+"%(names)s"
+msgstr ""
+
+#: models/res_partner.py:811
+msgid "Couldn't create contact without email address!"
+msgstr "Couldn't create contact without email address!"
+
+#: models/res_partner.py:842
+msgid "An email is required for find_or_create to work"
+msgstr ""
+
+#: models/res_partner.py:846
+msgid "A valid email is required for find_or_create to work properly."
+msgstr ""
+
+#: models/res_partner.py:918
+#, fuzzy, python-format
+msgid "Partners: %(category)s"
+msgstr "หมวดสินค้าแม่"
+
+#: models/res_partner.py:977
+msgid "Import Template for Customers"
+msgstr ""
+
+#: models/res_users.py:96
+msgid "This method can only be accessed over HTTP"
+msgstr ""
+
+#: models/res_users.py:117
+#, fuzzy
+msgid "Security Control"
+msgstr "ความปลอดภัย"
+
+#: models/res_users.py:212
+msgid "The name of the group can not start with \"-\""
+msgstr "The name of the group can not start with \"-\""
+
+#: models/res_users.py:402
+msgid ""
+"Please use the change password wizard (in User Preferences or User menu) to "
+"change your own password."
+msgstr ""
+"Please use the change password wizard (in User Preferences or User menu) to "
+"change your own password."
+
+#: models/res_users.py:464
+#, fuzzy, python-format
+msgid ""
+"Company %(company_name)s is not in the allowed companies for user "
+"%(user_name)s (%(company_allowed)s)."
+msgstr "บริษัทที่เลือกไม่ได้อยู่ใน บริษัทที่ได้รับอนุญาตสำหรับผู้ใช้นี้"
+
+#: models/res_users.py:471
+msgid "The \"App Switcher\" action cannot be selected as home action."
+msgstr ""
+
+#: models/res_users.py:483
+msgid "The user cannot have more than one user types."
+msgstr ""
+
+#: models/res_users.py:533
+msgid "Invalid 'group by' parameter"
+msgstr ""
+
+#: models/res_users.py:541
+msgid "Invalid search criterion"
+msgstr ""
+
+#: models/res_users.py:557
+msgid "You cannot activate the superuser."
+msgstr ""
+
+#: models/res_users.py:559
+msgid "You cannot deactivate the user you're currently logged in as."
+msgstr ""
+
+#: models/res_users.py:611
+msgid ""
+"You can not remove the admin user as it is used internally for resources "
+"created by Odoo (updates, module installation, ...)"
+msgstr ""
+"You can not remove the admin user as it is used internally for resources "
+"created by Odoo (updates, module installation, ...)"
+
+#: models/res_users.py:803
+msgid "Setting empty passwords is not allowed for security reasons!"
+msgstr "Setting empty passwords is not allowed for security reasons!"
+
+#: models/res_users.py:864
+msgid "Users"
+msgstr "ผู้ใช้งาน"
+
+#: models/res_users.py:880
+msgid "Groups"
+msgstr "กลุ่ม"
+
+#: models/res_users.py:892
+msgid "Access Rights"
+msgstr "สิทธิ์การเข้าใช้งาน"
+
+#: models/res_users.py:904
+msgid "Record Rules"
+msgstr "Record Rules"
+
+#: models/res_users.py:1010
+msgid "Too many login failures, please wait a bit before trying again."
+msgstr ""
+
+#: models/res_users.py:1560
+msgid "Other"
+msgstr "อื่นๆ"
+
+#: models/res_users.py:1600
+msgid ""
+"Incorrect Password, try again or click on Forgot Password to reset your "
+"password."
+msgstr ""
+
+#: models/res_users.py:1647
+msgid "Before clicking on 'Change Password', you have to write a new password."
+msgstr ""
+
+#: models/res_users.py:1762
+msgid ""
+"You can not remove API keys unless they're yours or you are a system user"
+msgstr ""
+
+#: models/res_users.py:1826
+msgid "Only internal users can create API keys"
+msgstr ""
+
+#: wizard/base_export_language.py:19
+msgid "New Language (Empty translation template)"
+msgstr "ภาษาใหม่ (ไฟล์แปลภาษาเปล่า)"
+
+#: wizard/base_import_language.py:53
+#, python-format
+msgid ""
+"File %r not imported due to a malformed file.\n"
+"\n"
+"This issue can be caused by duplicates entries who are referring to the same "
+"field. Please check the content of the file you are trying to import.\n"
+"\n"
+"Technical Details:\n"
+"%s"
+msgstr ""
+
+#: wizard/base_import_language.py:60
+#, python-format
+msgid ""
+"File %r not imported due to format mismatch or a malformed file. (Valid "
+"formats are .csv, .po, .pot)\n"
+"\n"
+"Technical Details:\n"
+"%s"
+msgstr ""
+
+#: wizard/base_language_install.py:58
+msgid ""
+"The languages that you selected have been successfully "
+"installed.                            Users can choose their favorite "
+"language in their preferences."
+msgstr ""
+
+#: wizard/base_module_upgrade.py:67
+#, python-format
+msgid "The following modules are not installed or unknown: %s"
+msgstr ""
+
+#: wizard/base_partner_merge.py:305
+msgid ""
+"For safety reasons, you cannot merge more than 3 contacts together. You can "
+"re-open the wizard several times if needed."
+msgstr ""
+
+#: wizard/base_partner_merge.py:312
+msgid "You cannot merge a contact with one of his parent."
+msgstr ""
+
+#: wizard/base_partner_merge.py:315
+msgid ""
+"All contacts must have the same email. Only the Administrator can merge "
+"contacts with different emails."
+msgstr ""
+
+#: wizard/base_partner_merge.py:328
+msgid ""
+"Only the destination contact may be linked to existing Journal Items. Please "
+"ask the Administrator if you need to merge several contacts linked to "
+"existing Journal Items."
+msgstr ""
+
+#: wizard/base_partner_merge.py:412
+msgid "You have to specify a filter for your selection."
+msgstr ""
+
+#: wizard/base_update_translations.py:26
+#, python-format
+msgid "No language with code \"%s\" exists"
+msgstr "No language with code \"%s\" exists"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Overview:\n"
+#~ "---------\n"
+#~ "\n"
+#~ "* Chart of Accounts and Taxes template for companies in Japan.\n"
+#~ "* This probably does not cover all the necessary accounts for a company. "
+#~ "You are expected to add/delete/modify accounts based on this template.\n"
+#~ "\n"
+#~ "Note:\n"
+#~ "-----\n"
+#~ "\n"
+#~ "* Fiscal positions '内税' and '外税' have been added to handle special "
+#~ "requirements which might arise from POS implementation. [1]  You may not "
+#~ "need to use these at all under normal circumstances.\n"
+#~ "\n"
+#~ "[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Overview:\n"
+#~ "---------\n"
+#~ "\n"
+#~ "* Chart of Accounts and Taxes template for companies in Japan.\n"
+#~ "* This probably does not cover all the necessary accounts for a company. "
+#~ "You are expected to add/delete/modify accounts based on this template.\n"
+#~ "\n"
+#~ "Note:\n"
+#~ "-----\n"
+#~ "\n"
+#~ "* Fiscal positions '内税' and '外税' have been added to handle special "
+#~ "requirements which might arise from POS implementation. [1]  You may not "
+#~ "need to use these at all under normal circumstances.\n"
+#~ "\n"
+#~ "[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "    * Multi language support for Chart of Accounts, Taxes, Tax Codes, "
+#~ "Journals,\n"
+#~ "      Accounting Templates, Analytic Chart of Accounts and Analytic "
+#~ "Journals.\n"
+#~ "    * Setup wizard changes\n"
+#~ "        - Copy translations for COA, Tax, Tax Code and Fiscal Position "
+#~ "from\n"
+#~ "          templates to target objects.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    * Multi language support for Chart of Accounts, Taxes, Tax Codes, "
+#~ "Journals,\n"
+#~ "      Accounting Templates, Analytic Chart of Accounts and Analytic "
+#~ "Journals.\n"
+#~ "    * Setup wizard changes\n"
+#~ "        - Copy translations for COA, Tax, Tax Code and Fiscal Position "
+#~ "from\n"
+#~ "          templates to target objects.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "    Contains pieces of code to be used as technical documentation "
+#~ "examples\n"
+#~ "    (via the ``literalinclude`` directive) in situations where they can "
+#~ "be\n"
+#~ "    syntax-checked and tested.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Contains pieces of code to be used as technical documentation "
+#~ "examples\n"
+#~ "    (via the ``literalinclude`` directive) in situations where they can "
+#~ "be\n"
+#~ "    syntax-checked and tested.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting Data for Belgian Payroll Rules.\n"
+#~ "==========================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Accounting Data for Belgian Payroll Rules.\n"
+#~ "==========================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Thailand\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "รายงานทางบัญชีสำหรับประเทศไทย\n"
+#~ "================================"
+
+#~ msgid ""
+#~ "\n"
+#~ "Add all information on the employee form to manage contracts.\n"
+#~ "=============================================================\n"
+#~ "\n"
+#~ "    * Contract\n"
+#~ "    * Place of Birth,\n"
+#~ "    * Medical Examination Date\n"
+#~ "    * Company Vehicle\n"
+#~ "\n"
+#~ "You can assign several contracts per employee.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Add all information on the employee form to manage contracts.\n"
+#~ "=============================================================\n"
+#~ "\n"
+#~ "    * Contract\n"
+#~ "    * Place of Birth,\n"
+#~ "    * Medical Examination Date\n"
+#~ "    * Company Vehicle\n"
+#~ "\n"
+#~ "You can assign several contracts per employee.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Adds a reporting menu in products that computes sales, purchases, margins "
+#~ "and other interesting indicators based on invoices.\n"
+#~ "=============================================================================================================================\n"
+#~ "\n"
+#~ "The wizard to launch the report has several options to help you get the "
+#~ "data you need.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Adds a reporting menu in products that computes sales, purchases, margins "
+#~ "and other interesting indicators based on invoices.\n"
+#~ "=============================================================================================================================\n"
+#~ "\n"
+#~ "The wizard to launch the report has several options to help you get the "
+#~ "data you need.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Adds enhanced support for (Ether)Pad attachments in the web client.\n"
+#~ "===================================================================\n"
+#~ "\n"
+#~ "Lets the company customize which Pad installation should be used to link "
+#~ "to new\n"
+#~ "pads (by default, http://etherpad.com/).\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Adds enhanced support for (Ether)Pad attachments in the web client.\n"
+#~ "===================================================================\n"
+#~ "\n"
+#~ "Lets the company customize which Pad installation should be used to link "
+#~ "to new\n"
+#~ "pads (by default, http://etherpad.com/).\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Allow users to login through OAuth2 Provider.\n"
+#~ "=============================================\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Allow users to login through OAuth2 Provider.\n"
+#~ "=============================================\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Allow users to sign up and reset their password\n"
+#~ "===============================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Allow users to sign up and reset their password\n"
+#~ "===============================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Argentinian accounting chart and tax localization.\n"
+#~ "==================================================\n"
+#~ "\n"
+#~ "Plan contable argentino e impuestos de acuerdo a disposiciones vigentes\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Argentinian accounting chart and tax localization.\n"
+#~ "==================================================\n"
+#~ "\n"
+#~ "Plan contable argentino e impuestos de acuerdo a disposiciones vigentes\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Ask questions, get answers, no distractions\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "Ask questions, get answers, no distractions\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "Asserts on accounting.\n"
+#~ "======================\n"
+#~ "With this module you can manually check consistencies and inconsistencies "
+#~ "of accounting module from menu Reporting/Accounting/Accounting Tests.\n"
+#~ "\n"
+#~ "You can write a query in order to create Consistency Test and you will "
+#~ "get the result of the test \n"
+#~ "in PDF format which can be accessed by Menu Reporting -> Accounting "
+#~ "Tests, then select the test \n"
+#~ "and print the report from Print button in header area.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Asserts on accounting.\n"
+#~ "======================\n"
+#~ "With this module you can manually check consistencies and inconsistencies "
+#~ "of accounting module from menu Reporting/Accounting/Accounting Tests.\n"
+#~ "\n"
+#~ "You can write a query in order to create Consistency Test and you will "
+#~ "get the result of the test \n"
+#~ "in PDF format which can be accessed by Menu Reporting -> Accounting "
+#~ "Tests, then select the test \n"
+#~ "and print the report from Print button in header area.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Automated Translations through Gengo API\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "This module will install passive scheduler job for automated "
+#~ "translations \n"
+#~ "using the Gengo API. To activate it, you must\n"
+#~ "1) Configure your Gengo authentication parameters under `Settings > "
+#~ "Companies > Gengo Parameters`\n"
+#~ "2) Launch the wizard under `Settings > Application Terms > Gengo: Manual "
+#~ "Request of Translation` and follow the wizard.\n"
+#~ "\n"
+#~ "This wizard will activate the CRON job and the Scheduler and will start "
+#~ "the automatic translation via Gengo Services for all the terms where you "
+#~ "requested it.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Automated Translations through Gengo API\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "This module will install passive scheduler job for automated "
+#~ "translations \n"
+#~ "using the Gengo API. To activate it, you must\n"
+#~ "1) Configure your Gengo authentication parameters under `Settings > "
+#~ "Companies > Gengo Parameters`\n"
+#~ "2) Launch the wizard under `Settings > Application Terms > Gengo: Manual "
+#~ "Request of Translation` and follow the wizard.\n"
+#~ "\n"
+#~ "This wizard will activate the CRON job and the Scheduler and will start "
+#~ "the automatic translation via Gengo Services for all the terms where you "
+#~ "requested it.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Bolivian accounting chart and tax localization.\n"
+#~ "\n"
+#~ "Plan contable boliviano e impuestos de acuerdo a disposiciones vigentes\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Bolivian accounting chart and tax localization.\n"
+#~ "\n"
+#~ "Plan contable boliviano e impuestos de acuerdo a disposiciones vigentes\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Chart of Accounts for Thailand.\n"
+#~ "===============================\n"
+#~ "\n"
+#~ "Thai accounting chart and localization.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Chart of Accounts for Thailand.\n"
+#~ "===============================\n"
+#~ "\n"
+#~ "Thai accounting chart and localization.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Chilean accounting chart and tax localization.\n"
+#~ "==============================================\n"
+#~ "Plan contable chileno e impuestos de acuerdo a disposiciones vigentes\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Chilean accounting chart and tax localization.\n"
+#~ "==============================================\n"
+#~ "Plan contable chileno e impuestos de acuerdo a disposiciones vigentes\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem "
+#~ "SKR03.\n"
+#~ "==============================================================================\n"
+#~ "\n"
+#~ "German accounting chart and localization.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem "
+#~ "SKR03.\n"
+#~ "==============================================================================\n"
+#~ "\n"
+#~ "German accounting chart and localization.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "EU Mini One Stop Shop (MOSS) VAT for telecommunications, broadcasting and "
+#~ "electronic services\n"
+#~ "=============================================================================================\n"
+#~ "\n"
+#~ "As of January 1rst, 2015, telecommunications, broadcasting\n"
+#~ "and electronic services sold within the European Union\n"
+#~ "have to be always taxed in the country where the customer\n"
+#~ "belongs. In order to simplify the application of this EU\n"
+#~ "directive, the Mini One Stop Shop (MOSS) registration scheme\n"
+#~ "allows businesses to make a unique tax declaration.\n"
+#~ "\n"
+#~ "This module makes it possible by helping with the creation\n"
+#~ "of the required EU fiscal positions and taxes in order to\n"
+#~ "automatically apply and record the required taxes.\n"
+#~ "\n"
+#~ "This module installs a wizard to help setup fiscal positions\n"
+#~ "and taxes for selling electronic services inside EU.\n"
+#~ "\n"
+#~ "The wizard lets you select:\n"
+#~ " - the EU countries to which you are selling these\n"
+#~ "   services\n"
+#~ " - your national VAT tax for services, to be mapped\n"
+#~ "   to the target country's tax\n"
+#~ " - optionally: a template fiscal position, in order\n"
+#~ "   to copy the account mapping. Should be your\n"
+#~ "   existing B2C Intra-EU fiscal position. (defaults\n"
+#~ "   to no account mapping)\n"
+#~ " - optionally: an account to use for collecting the\n"
+#~ "   tax amounts (defaults to the account used by your\n"
+#~ "   national VAT tax for services)\n"
+#~ "\n"
+#~ "It creates the corresponding fiscal positions and taxes,\n"
+#~ "automatically applicable for EU sales with a customer\n"
+#~ "in the selected countries.\n"
+#~ "The wizard can be run again for adding more countries.\n"
+#~ "\n"
+#~ "The wizard creates a separate Chart of Taxes for collecting the\n"
+#~ "VAT amounts of the MOSS declaration, so extracting the MOSS\n"
+#~ "data should be easy.\n"
+#~ "Look for a Chart of Taxes named \"EU MOSS VAT Chart\" in the\n"
+#~ "Taxes Report menu (Generic Accounting Report).\n"
+#~ "\n"
+#~ "References\n"
+#~ "++++++++++\n"
+#~ "- Directive 2008/8/EC\n"
+#~ "- Council Implementing Regulation (EU) No 1042/2013\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "EU Mini One Stop Shop (MOSS) VAT for telecommunications, broadcasting and "
+#~ "electronic services\n"
+#~ "=============================================================================================\n"
+#~ "\n"
+#~ "As of January 1rst, 2015, telecommunications, broadcasting\n"
+#~ "and electronic services sold within the European Union\n"
+#~ "have to be always taxed in the country where the customer\n"
+#~ "belongs. In order to simplify the application of this EU\n"
+#~ "directive, the Mini One Stop Shop (MOSS) registration scheme\n"
+#~ "allows businesses to make a unique tax declaration.\n"
+#~ "\n"
+#~ "This module makes it possible by helping with the creation\n"
+#~ "of the required EU fiscal positions and taxes in order to\n"
+#~ "automatically apply and record the required taxes.\n"
+#~ "\n"
+#~ "This module installs a wizard to help setup fiscal positions\n"
+#~ "and taxes for selling electronic services inside EU.\n"
+#~ "\n"
+#~ "The wizard lets you select:\n"
+#~ " - the EU countries to which you are selling these\n"
+#~ "   services\n"
+#~ " - your national VAT tax for services, to be mapped\n"
+#~ "   to the target country's tax\n"
+#~ " - optionally: a template fiscal position, in order\n"
+#~ "   to copy the account mapping. Should be your\n"
+#~ "   existing B2C Intra-EU fiscal position. (defaults\n"
+#~ "   to no account mapping)\n"
+#~ " - optionally: an account to use for collecting the\n"
+#~ "   tax amounts (defaults to the account used by your\n"
+#~ "   national VAT tax for services)\n"
+#~ "\n"
+#~ "It creates the corresponding fiscal positions and taxes,\n"
+#~ "automatically applicable for EU sales with a customer\n"
+#~ "in the selected countries.\n"
+#~ "The wizard can be run again for adding more countries.\n"
+#~ "\n"
+#~ "The wizard creates a separate Chart of Taxes for collecting the\n"
+#~ "VAT amounts of the MOSS declaration, so extracting the MOSS\n"
+#~ "data should be easy.\n"
+#~ "Look for a Chart of Taxes named \"EU MOSS VAT Chart\" in the\n"
+#~ "Taxes Report menu (Generic Accounting Report).\n"
+#~ "\n"
+#~ "References\n"
+#~ "++++++++++\n"
+#~ "- Directive 2008/8/EC\n"
+#~ "- Council Implementing Regulation (EU) No 1042/2013\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "French Payroll Rules.\n"
+#~ "=====================\n"
+#~ "\n"
+#~ "    - Configuration of hr_payroll for French localization\n"
+#~ "    - All main contributions rules for French payslip, for 'cadre' and "
+#~ "'non-cadre'\n"
+#~ "    - New payslip report\n"
+#~ "\n"
+#~ "TODO:\n"
+#~ "-----\n"
+#~ "    - Integration with holidays module for deduction and allowance\n"
+#~ "    - Integration with hr_payroll_account for the automatic "
+#~ "account_move_line\n"
+#~ "      creation from the payslip\n"
+#~ "    - Continue to integrate the contribution. Only the main contribution "
+#~ "are\n"
+#~ "      currently implemented\n"
+#~ "    - Remake the report under webkit\n"
+#~ "    - The payslip.line with appears_in_payslip = False should appears in "
+#~ "the\n"
+#~ "      payslip interface, but not in the payslip report\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "French Payroll Rules.\n"
+#~ "=====================\n"
+#~ "\n"
+#~ "    - Configuration of hr_payroll for French localization\n"
+#~ "    - All main contributions rules for French payslip, for 'cadre' and "
+#~ "'non-cadre'\n"
+#~ "    - New payslip report\n"
+#~ "\n"
+#~ "TODO:\n"
+#~ "-----\n"
+#~ "    - Integration with holidays module for deduction and allowance\n"
+#~ "    - Integration with hr_payroll_account for the automatic "
+#~ "account_move_line\n"
+#~ "      creation from the payslip\n"
+#~ "    - Continue to integrate the contribution. Only the main contribution "
+#~ "are\n"
+#~ "      currently implemented\n"
+#~ "    - Remake the report under webkit\n"
+#~ "    - The payslip.line with appears_in_payslip = False should appears in "
+#~ "the\n"
+#~ "      payslip interface, but not in the payslip report\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "General Chart of Accounts.\n"
+#~ "==========================\n"
+#~ "\n"
+#~ "Provide Templates for Chart of Accounts, Taxes for Uruguay.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "General Chart of Accounts.\n"
+#~ "==========================\n"
+#~ "\n"
+#~ "Provide Templates for Chart of Accounts, Taxes for Uruguay.\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Generates Intrastat XML report for declaration\n"
+#~ "Based on invoices.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Generates Intrastat XML report for declaration\n"
+#~ "Based on invoices.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Generic Payroll system Integrated with Accounting.\n"
+#~ "==================================================\n"
+#~ "\n"
+#~ "    * Expense Encoding\n"
+#~ "    * Payment Encoding\n"
+#~ "    * Company Contribution Management\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Generic Payroll system Integrated with Accounting.\n"
+#~ "==================================================\n"
+#~ "\n"
+#~ "    * Expense Encoding\n"
+#~ "    * Payment Encoding\n"
+#~ "    * Company Contribution Management\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Hardware Poxy\n"
+#~ "=============\n"
+#~ "\n"
+#~ "This module allows you to remotely use peripherals connected to this "
+#~ "server.\n"
+#~ "\n"
+#~ "This modules only contains the enabling framework. The actual devices "
+#~ "drivers\n"
+#~ "are found in other modules that must be installed separately. \n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Hardware Poxy\n"
+#~ "=============\n"
+#~ "\n"
+#~ "This module allows you to remotely use peripherals connected to this "
+#~ "server.\n"
+#~ "\n"
+#~ "This modules only contains the enabling framework. The actual devices "
+#~ "drivers\n"
+#~ "are found in other modules that must be installed separately. \n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Import a custom data module\n"
+#~ "===========================\n"
+#~ "\n"
+#~ "This module allows authorized users to import a custom data module (.xml "
+#~ "files and static assests)\n"
+#~ "for customization purpose.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Import a custom data module\n"
+#~ "===========================\n"
+#~ "\n"
+#~ "This module allows authorized users to import a custom data module (.xml "
+#~ "files and static assests)\n"
+#~ "for customization purpose.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Landed Costs Management\n"
+#~ "=======================\n"
+#~ "This module allows you to easily add extra costs on pickings and decide "
+#~ "the split of these costs among their stock moves in order to take them "
+#~ "into account in your stock valuation.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Landed Costs Management\n"
+#~ "=======================\n"
+#~ "This module allows you to easily add extra costs on pickings and decide "
+#~ "the split of these costs among their stock moves in order to take them "
+#~ "into account in your stock valuation.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Lets the user create a custom dashboard.\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "Allows users to create custom dashboard.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Lets the user create a custom dashboard.\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "Allows users to create custom dashboard.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Module for resource management.\n"
+#~ "===============================\n"
+#~ "\n"
+#~ "A resource represent something that can be scheduled (a developer on a "
+#~ "task or a\n"
+#~ "work center on manufacturing orders). This module manages a resource "
+#~ "calendar\n"
+#~ "associated to every resource. It also manages the leaves of every "
+#~ "resource.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Module for resource management.\n"
+#~ "===============================\n"
+#~ "\n"
+#~ "A resource represent something that can be scheduled (a developer on a "
+#~ "task or a\n"
+#~ "work center on manufacturing orders). This module manages a resource "
+#~ "calendar\n"
+#~ "associated to every resource. It also manages the leaves of every "
+#~ "resource.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Module to import CODA bank statements.\n"
+#~ "======================================\n"
+#~ "\n"
+#~ "Supported are CODA flat files in V2 format from Belgian bank accounts.\n"
+#~ "----------------------------------------------------------------------\n"
+#~ "    * CODA v1 support.\n"
+#~ "    * CODA v2.2 support.\n"
+#~ "    * Foreign Currency support.\n"
+#~ "    * Support for all data record types (0, 1, 2, 3, 4, 8, 9).\n"
+#~ "    * Parsing & logging of all Transaction Codes and Structured Format\n"
+#~ "      Communications.\n"
+#~ "    * Automatic Financial Journal assignment via CODA configuration "
+#~ "parameters.\n"
+#~ "    * Support for multiple Journals per Bank Account Number.\n"
+#~ "    * Support for multiple statements from different bank accounts in a "
+#~ "single\n"
+#~ "      CODA file.\n"
+#~ "    * Support for 'parsing only' CODA Bank Accounts (defined as "
+#~ "type='info' in\n"
+#~ "      the CODA Bank Account configuration records).\n"
+#~ "    * Multi-language CODA parsing, parsing configuration data provided "
+#~ "for EN,\n"
+#~ "      NL, FR.\n"
+#~ "\n"
+#~ "The machine readable CODA Files are parsed and stored in human readable "
+#~ "format in\n"
+#~ "CODA Bank Statements. Also Bank Statements are generated containing a "
+#~ "subset of\n"
+#~ "the CODA information (only those transaction lines that are required for "
+#~ "the\n"
+#~ "creation of the Financial Accounting records). The CODA Bank Statement is "
+#~ "a\n"
+#~ "'read-only' object, hence remaining a reliable representation of the "
+#~ "original\n"
+#~ "CODA file whereas the Bank Statement will get modified as required by "
+#~ "accounting\n"
+#~ "business processes.\n"
+#~ "\n"
+#~ "CODA Bank Accounts configured as type 'Info' will only generate CODA Bank "
+#~ "Statements.\n"
+#~ "\n"
+#~ "A removal of one object in the CODA processing results in the removal of "
+#~ "the\n"
+#~ "associated objects. The removal of a CODA File containing multiple Bank\n"
+#~ "Statements will also remove those associated statements.\n"
+#~ "\n"
+#~ "Instead of a manual adjustment of the generated Bank Statements, you can "
+#~ "also\n"
+#~ "re-import the CODA after updating the OpenERP database with the "
+#~ "information that\n"
+#~ "was missing to allow automatic reconciliation.\n"
+#~ "\n"
+#~ "Remark on CODA V1 support:\n"
+#~ "~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
+#~ "In some cases a transaction code, transaction category or structured\n"
+#~ "communication code has been given a new or clearer description in CODA V2."
+#~ "The\n"
+#~ "description provided by the CODA configuration tables is based upon the "
+#~ "CODA\n"
+#~ "V2.2 specifications.\n"
+#~ "If required, you can manually adjust the descriptions via the CODA "
+#~ "configuration menu.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Module to import CODA bank statements.\n"
+#~ "======================================\n"
+#~ "\n"
+#~ "Supported are CODA flat files in V2 format from Belgian bank accounts.\n"
+#~ "----------------------------------------------------------------------\n"
+#~ "    * CODA v1 support.\n"
+#~ "    * CODA v2.2 support.\n"
+#~ "    * Foreign Currency support.\n"
+#~ "    * Support for all data record types (0, 1, 2, 3, 4, 8, 9).\n"
+#~ "    * Parsing & logging of all Transaction Codes and Structured Format\n"
+#~ "      Communications.\n"
+#~ "    * Automatic Financial Journal assignment via CODA configuration "
+#~ "parameters.\n"
+#~ "    * Support for multiple Journals per Bank Account Number.\n"
+#~ "    * Support for multiple statements from different bank accounts in a "
+#~ "single\n"
+#~ "      CODA file.\n"
+#~ "    * Support for 'parsing only' CODA Bank Accounts (defined as "
+#~ "type='info' in\n"
+#~ "      the CODA Bank Account configuration records).\n"
+#~ "    * Multi-language CODA parsing, parsing configuration data provided "
+#~ "for EN,\n"
+#~ "      NL, FR.\n"
+#~ "\n"
+#~ "The machine readable CODA Files are parsed and stored in human readable "
+#~ "format in\n"
+#~ "CODA Bank Statements. Also Bank Statements are generated containing a "
+#~ "subset of\n"
+#~ "the CODA information (only those transaction lines that are required for "
+#~ "the\n"
+#~ "creation of the Financial Accounting records). The CODA Bank Statement is "
+#~ "a\n"
+#~ "'read-only' object, hence remaining a reliable representation of the "
+#~ "original\n"
+#~ "CODA file whereas the Bank Statement will get modified as required by "
+#~ "accounting\n"
+#~ "business processes.\n"
+#~ "\n"
+#~ "CODA Bank Accounts configured as type 'Info' will only generate CODA Bank "
+#~ "Statements.\n"
+#~ "\n"
+#~ "A removal of one object in the CODA processing results in the removal of "
+#~ "the\n"
+#~ "associated objects. The removal of a CODA File containing multiple Bank\n"
+#~ "Statements will also remove those associated statements.\n"
+#~ "\n"
+#~ "Instead of a manual adjustment of the generated Bank Statements, you can "
+#~ "also\n"
+#~ "re-import the CODA after updating the OpenERP database with the "
+#~ "information that\n"
+#~ "was missing to allow automatic reconciliation.\n"
+#~ "\n"
+#~ "Remark on CODA V1 support:\n"
+#~ "~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
+#~ "In some cases a transaction code, transaction category or structured\n"
+#~ "communication code has been given a new or clearer description in CODA V2."
+#~ "The\n"
+#~ "description provided by the CODA configuration tables is based upon the "
+#~ "CODA\n"
+#~ "V2.2 specifications.\n"
+#~ "If required, you can manually adjust the descriptions via the CODA "
+#~ "configuration menu.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "OpenERP Web Gantt chart view.\n"
+#~ "=============================\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "OpenERP Web Gantt chart view.\n"
+#~ "=============================\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Openerp Web Diagram view.\n"
+#~ "=========================\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Openerp Web Diagram view.\n"
+#~ "=========================\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Peruvian accounting chart and tax localization. According the PCGE 2010.\n"
+#~ "========================================================================\n"
+#~ "\n"
+#~ "Plan contable peruano e impuestos de acuerdo a disposiciones vigentes de "
+#~ "la\n"
+#~ "SUNAT 2011 (PCGE 2010).\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Peruvian accounting chart and tax localization. According the PCGE 2010.\n"
+#~ "========================================================================\n"
+#~ "\n"
+#~ "Plan contable peruano e impuestos de acuerdo a disposiciones vigentes de "
+#~ "la\n"
+#~ "SUNAT 2011 (PCGE 2010).\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Piano dei conti italiano di un'impresa generica.\n"
+#~ "================================================\n"
+#~ "\n"
+#~ "Italian accounting chart and localization.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Piano dei conti italiano di un'impresa generica.\n"
+#~ "================================================\n"
+#~ "\n"
+#~ "Italian accounting chart and localization.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Set default values for your analytic accounts.\n"
+#~ "==============================================\n"
+#~ "\n"
+#~ "Allows to automatically select analytic accounts based on criterions:\n"
+#~ "---------------------------------------------------------------------\n"
+#~ "    * Product\n"
+#~ "    * Partner\n"
+#~ "    * User\n"
+#~ "    * Company\n"
+#~ "    * Date\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Set default values for your analytic accounts.\n"
+#~ "==============================================\n"
+#~ "\n"
+#~ "Allows to automatically select analytic accounts based on criterions:\n"
+#~ "---------------------------------------------------------------------\n"
+#~ "    * Product\n"
+#~ "    * Partner\n"
+#~ "    * User\n"
+#~ "    * Company\n"
+#~ "    * Date\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Survey - CRM (bridge module)\n"
+#~ "=================================================================================\n"
+#~ "This module adds a Survey mass mailing button inside the more option of "
+#~ "lead/customers views\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Survey - CRM (bridge module)\n"
+#~ "=================================================================================\n"
+#~ "This module adds a Survey mass mailing button inside the more option of "
+#~ "lead/customers views\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "The module adds google user in res user.\n"
+#~ "========================================\n"
+#~ msgstr ""
+#~ "\n"
+#~ "The module adds google user in res user.\n"
+#~ "========================================\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "This is a full-featured calendar system.\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "It supports:\n"
+#~ "------------\n"
+#~ "    - Calendar of events\n"
+#~ "    - Recurring events\n"
+#~ "\n"
+#~ "If you need to manage your meetings, you should install the CRM module.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "This is a full-featured calendar system.\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "It supports:\n"
+#~ "------------\n"
+#~ "    - Calendar of events\n"
+#~ "    - Recurring events\n"
+#~ "\n"
+#~ "If you need to manage your meetings, you should install the CRM module.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "This is the base module to manage the accounting chart for Dominican "
+#~ "Republic.\n"
+#~ "==============================================================================\n"
+#~ "\n"
+#~ "* Chart of Accounts.\n"
+#~ "* The Tax Code Chart for Domincan Republic\n"
+#~ "* The main taxes used in Domincan Republic\n"
+#~ "* Fiscal position for local "
+#~ msgstr ""
+#~ "\n"
+#~ "This is the base module to manage the accounting chart for Dominican "
+#~ "Republic.\n"
+#~ "==============================================================================\n"
+#~ "\n"
+#~ "* Chart of Accounts.\n"
+#~ "* The Tax Code Chart for Domincan Republic\n"
+#~ "* The main taxes used in Domincan Republic\n"
+#~ "* Fiscal position for local "
+
+#~ msgid ""
+#~ "\n"
+#~ "This is the base module to manage the accounting chart for Greece.\n"
+#~ "==================================================================\n"
+#~ "\n"
+#~ "Greek accounting chart and localization.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "This is the base module to manage the accounting chart for Greece.\n"
+#~ "==================================================================\n"
+#~ "\n"
+#~ "Greek accounting chart and localization.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "This is the base module to manage the accounting chart for Guatemala.\n"
+#~ "=====================================================================\n"
+#~ "\n"
+#~ "Agrega una nomenclatura contable para Guatemala. También icluye impuestos "
+#~ "y\n"
+#~ "la moneda del Quetzal. -- Adds accounting chart for Guatemala. It also "
+#~ "includes\n"
+#~ "taxes and the Quetzal currency."
+#~ msgstr ""
+#~ "\n"
+#~ "This is the base module to manage the accounting chart for Guatemala.\n"
+#~ "=====================================================================\n"
+#~ "\n"
+#~ "Agrega una nomenclatura contable para Guatemala. También icluye impuestos "
+#~ "y\n"
+#~ "la moneda del Quetzal. -- Adds accounting chart for Guatemala. It also "
+#~ "includes\n"
+#~ "taxes and the Quetzal currency."
+
+#~ msgid ""
+#~ "\n"
+#~ "This is the base module to manage the accounting chart for Honduras.\n"
+#~ "====================================================================\n"
+#~ "    \n"
+#~ "Agrega una nomenclatura contable para Honduras. También incluye impuestos "
+#~ "y la\n"
+#~ "moneda Lempira. -- Adds accounting chart for Honduras. It also includes "
+#~ "taxes\n"
+#~ "and the Lempira currency."
+#~ msgstr ""
+#~ "\n"
+#~ "This is the base module to manage the accounting chart for Honduras.\n"
+#~ "====================================================================\n"
+#~ "    \n"
+#~ "Agrega una nomenclatura contable para Honduras. También incluye impuestos "
+#~ "y la\n"
+#~ "moneda Lempira. -- Adds accounting chart for Honduras. It also includes "
+#~ "taxes\n"
+#~ "and the Lempira currency."
+
+#~ msgid ""
+#~ "\n"
+#~ "This is the base module to manage the accounting chart for Luxembourg.\n"
+#~ "======================================================================\n"
+#~ "\n"
+#~ "    * the Luxembourg Official Chart of Accounts (law of June 2009 + 2015 "
+#~ "chart and Taxes),\n"
+#~ "    * the Tax Code Chart for Luxembourg\n"
+#~ "    * the main taxes used in Luxembourg\n"
+#~ "    * default fiscal position for local, intracom, extracom\n"
+#~ "\n"
+#~ "Notes:\n"
+#~ "    * the 2015 chart of taxes is implemented to a large extent,\n"
+#~ "      see the first sheet of tax.xls for details of coverage\n"
+#~ "    * to update the chart of tax template, update tax.xls and run tax2csv."
+#~ "py\n"
+#~ msgstr ""
+#~ "\n"
+#~ "This is the base module to manage the accounting chart for Luxembourg.\n"
+#~ "======================================================================\n"
+#~ "\n"
+#~ "    * the Luxembourg Official Chart of Accounts (law of June 2009 + 2015 "
+#~ "chart and Taxes),\n"
+#~ "    * the Tax Code Chart for Luxembourg\n"
+#~ "    * the main taxes used in Luxembourg\n"
+#~ "    * default fiscal position for local, intracom, extracom\n"
+#~ "\n"
+#~ "Notes:\n"
+#~ "    * the 2015 chart of taxes is implemented to a large extent,\n"
+#~ "      see the first sheet of tax.xls for details of coverage\n"
+#~ "    * to update the chart of tax template, update tax.xls and run tax2csv."
+#~ "py\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "This is the base module to manage the accounting chart for Maroc.\n"
+#~ "=================================================================\n"
+#~ "\n"
+#~ "Ce Module charge le modèle du plan de comptes standard Marocain et permet "
+#~ "de\n"
+#~ "générer les états comptables aux normes marocaines (Bilan, CPC (comptes "
+#~ "de\n"
+#~ "produits et charges), balance générale à 6 colonnes, Grand livre "
+#~ "cumulatif...).\n"
+#~ "L'intégration comptable a été validé avec l'aide du Cabinet d'expertise "
+#~ "comptable\n"
+#~ "Seddik au cours du troisième trimestre 2010."
+#~ msgstr ""
+#~ "\n"
+#~ "This is the base module to manage the accounting chart for Maroc.\n"
+#~ "=================================================================\n"
+#~ "\n"
+#~ "Ce Module charge le modèle du plan de comptes standard Marocain et permet "
+#~ "de\n"
+#~ "générer les états comptables aux normes marocaines (Bilan, CPC (comptes "
+#~ "de\n"
+#~ "produits et charges), balance générale à 6 colonnes, Grand livre "
+#~ "cumulatif...).\n"
+#~ "L'intégration comptable a été validé avec l'aide du Cabinet d'expertise "
+#~ "comptable\n"
+#~ "Seddik au cours du troisième trimestre 2010."
+
+#~ msgid ""
+#~ "\n"
+#~ "This module adds the 'Margin' on sales order.\n"
+#~ "=============================================\n"
+#~ "\n"
+#~ "This gives the profitability by calculating the difference between the "
+#~ "Unit\n"
+#~ "Price and Cost Price.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "This module adds the 'Margin' on sales order.\n"
+#~ "=============================================\n"
+#~ "\n"
+#~ "This gives the profitability by calculating the difference between the "
+#~ "Unit\n"
+#~ "Price and Cost Price.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "This module allows you to manage all operations for managing "
+#~ "memberships.\n"
+#~ "=========================================================================\n"
+#~ "\n"
+#~ "It supports different kind of members:\n"
+#~ "--------------------------------------\n"
+#~ "    * Free member\n"
+#~ "    * Associated member (e.g.: a group subscribes to a membership for all "
+#~ "subsidiaries)\n"
+#~ "    * Paid members\n"
+#~ "    * Special member prices\n"
+#~ "\n"
+#~ "It is integrated with sales and accounting to allow you to automatically\n"
+#~ "invoice and send propositions for membership renewal.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "This module allows you to manage all operations for managing "
+#~ "memberships.\n"
+#~ "=========================================================================\n"
+#~ "\n"
+#~ "It supports different kind of members:\n"
+#~ "--------------------------------------\n"
+#~ "    * Free member\n"
+#~ "    * Associated member (e.g.: a group subscribes to a membership for all "
+#~ "subsidiaries)\n"
+#~ "    * Paid members\n"
+#~ "    * Special member prices\n"
+#~ "\n"
+#~ "It is integrated with sales and accounting to allow you to automatically\n"
+#~ "invoice and send propositions for membership renewal.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "This module allows you to produce several products from one production "
+#~ "order.\n"
+#~ "=============================================================================\n"
+#~ "\n"
+#~ "You can configure by-products in the bill of material.\n"
+#~ "\n"
+#~ "Without this module:\n"
+#~ "--------------------\n"
+#~ "    A + B + C -> D\n"
+#~ "\n"
+#~ "With this module:\n"
+#~ "-----------------\n"
+#~ "    A + B + C -> D + E\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "This module allows you to produce several products from one production "
+#~ "order.\n"
+#~ "=============================================================================\n"
+#~ "\n"
+#~ "You can configure by-products in the bill of material.\n"
+#~ "\n"
+#~ "Without this module:\n"
+#~ "--------------------\n"
+#~ "    A + B + C -> D\n"
+#~ "\n"
+#~ "With this module:\n"
+#~ "-----------------\n"
+#~ "    A + B + C -> D + E\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "This module helps to configure the system at the installation of a new "
+#~ "database.\n"
+#~ "================================================================================\n"
+#~ "\n"
+#~ "Shows you a list of applications features to install from.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "This module helps to configure the system at the installation of a new "
+#~ "database.\n"
+#~ "================================================================================\n"
+#~ "\n"
+#~ "Shows you a list of applications features to install from.\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "This module implements the accounting chart for OHADA area.\n"
+#~ "===========================================================\n"
+#~ "    \n"
+#~ "It allows any company or association to manage its financial accounting.\n"
+#~ "\n"
+#~ "Countries that use OHADA are the following:\n"
+#~ "-------------------------------------------\n"
+#~ "    Benin, Burkina Faso, Cameroon, Central African Republic, Comoros, "
+#~ "Congo,\n"
+#~ "    \n"
+#~ "    Ivory Coast, Gabon, Guinea, Guinea Bissau, Equatorial Guinea, Mali, "
+#~ "Niger,\n"
+#~ "    \n"
+#~ "    Replica of Democratic Congo, Senegal, Chad, Togo.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "This module implements the accounting chart for OHADA area.\n"
+#~ "===========================================================\n"
+#~ "    \n"
+#~ "It allows any company or association to manage its financial accounting.\n"
+#~ "\n"
+#~ "Countries that use OHADA are the following:\n"
+#~ "-------------------------------------------\n"
+#~ "    Benin, Burkina Faso, Cameroon, Central African Republic, Comoros, "
+#~ "Congo,\n"
+#~ "    \n"
+#~ "    Ivory Coast, Gabon, Guinea, Guinea Bissau, Equatorial Guinea, Mali, "
+#~ "Niger,\n"
+#~ "    \n"
+#~ "    Replica of Democratic Congo, Senegal, Chad, Togo.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "This module is to configure modules related to an association.\n"
+#~ "==============================================================\n"
+#~ "\n"
+#~ "It installs the profile for associations to manage events, registrations, "
+#~ "memberships, \n"
+#~ "membership products (schemes).\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "This module is to configure modules related to an association.\n"
+#~ "==============================================================\n"
+#~ "\n"
+#~ "It installs the profile for associations to manage events, registrations, "
+#~ "memberships, \n"
+#~ "membership products (schemes).\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "This module provides facility to the user to install mrp and sales "
+#~ "modulesat a time.\n"
+#~ "====================================================================================\n"
+#~ "\n"
+#~ "It is basically used when we want to keep track of production orders "
+#~ "generated\n"
+#~ "from sales order. It adds sales name and sales Reference on production "
+#~ "order.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "This module provides facility to the user to install mrp and sales "
+#~ "modulesat a time.\n"
+#~ "====================================================================================\n"
+#~ "\n"
+#~ "It is basically used when we want to keep track of production orders "
+#~ "generated\n"
+#~ "from sales order. It adds sales name and sales Reference on production "
+#~ "order.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "This module provides the standard Accounting Chart for Austria which is "
+#~ "based on the Template from BMF.gv.at.\n"
+#~ "============================================================================================================= \n"
+#~ "Please keep in mind that you should review and adapt it with your "
+#~ "Accountant, before using it in a live Environment.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "This module provides the standard Accounting Chart for Austria which is "
+#~ "based on the Template from BMF.gv.at.\n"
+#~ "============================================================================================================= \n"
+#~ "Please keep in mind that you should review and adapt it with your "
+#~ "Accountant, before using it in a live Environment.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Track different dates on products and production lots.\n"
+#~ "======================================================\n"
+#~ "\n"
+#~ "Following dates can be tracked:\n"
+#~ "-------------------------------\n"
+#~ "    - end of life\n"
+#~ "    - best before date\n"
+#~ "    - removal date\n"
+#~ "    - alert date\n"
+#~ "\n"
+#~ "Also implements the removal strategy First Expiry First Out (FEFO) widely "
+#~ "used, for example, in food industries.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Track different dates on products and production lots.\n"
+#~ "======================================================\n"
+#~ "\n"
+#~ "Following dates can be tracked:\n"
+#~ "-------------------------------\n"
+#~ "    - end of life\n"
+#~ "    - best before date\n"
+#~ "    - removal date\n"
+#~ "    - alert date\n"
+#~ "\n"
+#~ "Also implements the removal strategy First Expiry First Out (FEFO) widely "
+#~ "used, for example, in food industries.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "United Arab Emirates accounting chart and localization.\n"
+#~ "=======================================================\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "United Arab Emirates accounting chart and localization.\n"
+#~ "=======================================================\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "United States - Chart of accounts.\n"
+#~ "==================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "United States - Chart of accounts.\n"
+#~ "==================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Vehicle, leasing, insurances, cost\n"
+#~ "==================================\n"
+#~ "With this module, Odoo helps you managing all your vehicles, the\n"
+#~ "contracts associated to those vehicle as well as services, fuel log\n"
+#~ "entries, costs and many other features necessary to the management \n"
+#~ "of your fleet of vehicle(s)\n"
+#~ "\n"
+#~ "Main Features\n"
+#~ "-------------\n"
+#~ "* Add vehicles to your fleet\n"
+#~ "* Manage contracts for vehicles\n"
+#~ "* Reminder when a contract reach its expiration date\n"
+#~ "* Add services, fuel log entry, odometer values for all vehicles\n"
+#~ "* Show all costs associated to a vehicle or to a type of service\n"
+#~ "* Analysis graph for costs\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Vehicle, leasing, insurances, cost\n"
+#~ "==================================\n"
+#~ "With this module, Odoo helps you managing all your vehicles, the\n"
+#~ "contracts associated to those vehicle as well as services, fuel log\n"
+#~ "entries, costs and many other features necessary to the management \n"
+#~ "of your fleet of vehicle(s)\n"
+#~ "\n"
+#~ "Main Features\n"
+#~ "-------------\n"
+#~ "* Add vehicles to your fleet\n"
+#~ "* Manage contracts for vehicles\n"
+#~ "* Reminder when a contract reach its expiration date\n"
+#~ "* Add services, fuel log entry, odometer values for all vehicles\n"
+#~ "* Show all costs associated to a vehicle or to a type of service\n"
+#~ "* Analysis graph for costs\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "WMS Accounting module\n"
+#~ "======================\n"
+#~ "This module makes the link between the 'stock' and 'account' modules and "
+#~ "allows you to create accounting entries to value your stock movements\n"
+#~ "\n"
+#~ "Key Features\n"
+#~ "------------\n"
+#~ "* Stock Valuation (periodical or automatic)\n"
+#~ "* Invoice from Picking\n"
+#~ "\n"
+#~ "Dashboard / Reports for Warehouse Management includes:\n"
+#~ "------------------------------------------------------\n"
+#~ "* Stock Inventory Value at given date (support dates in the past)\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "WMS Accounting module\n"
+#~ "======================\n"
+#~ "This module makes the link between the 'stock' and 'account' modules and "
+#~ "allows you to create accounting entries to value your stock movements\n"
+#~ "\n"
+#~ "Key Features\n"
+#~ "------------\n"
+#~ "* Stock Valuation (periodical or automatic)\n"
+#~ "* Invoice from Picking\n"
+#~ "\n"
+#~ "Dashboard / Reports for Warehouse Management includes:\n"
+#~ "------------------------------------------------------\n"
+#~ "* Stock Inventory Value at given date (support dates in the past)\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Worldline SIPS Payment Acquirer for online payments\n"
+#~ "\n"
+#~ "Works with Worldline keys version 2.0, contains implementation of\n"
+#~ "payments acquirer using Worldline SIPS."
+#~ msgstr ""
+#~ "\n"
+#~ "Worldline SIPS Payment Acquirer for online payments\n"
+#~ "\n"
+#~ "Works with Worldline keys version 2.0, contains implementation of\n"
+#~ "payments acquirer using Worldline SIPS."
+
+#~ msgid "%A - Full weekday name."
+#~ msgstr "%A - ชื่อวันแบบเต็ม"
+
+#~ msgid "%a - Abbreviated weekday name."
+#~ msgstr "%a - ชื่อวันแบบย่อ"
+
+#~ msgid "%b - Abbreviated month name."
+#~ msgstr "%b - ชื่อเดือนแบบย่อ"
+
+#~ msgid "&amp;nbsp;"
+#~ msgstr "&amp;nbsp;"
+
+#~ msgid ", or your preferred text editor"
+#~ msgstr ", or your preferred text editor"
+
+#~ msgid "- size ="
+#~ msgstr "- ขนาด ="
+
+#~ msgid "-This module does not create menu."
+#~ msgstr "-This module does not create menu."
+
+#~ msgid "-This module does not create report."
+#~ msgstr "-This module does not create report."
+
+#~ msgid "-This module does not create views."
+#~ msgstr "-This module does not create views."
+
+#~ msgid "-This module does not depends on any other module."
+#~ msgstr "-This module does not depends on any other module."
+
+#~ msgid "<code>dateutil</code> (Python module)"
+#~ msgstr "<code>dateutil</code> (Python module)"
+
+#~ msgid "<code>time</code> (Python module)"
+#~ msgstr "<code>time</code> (Python module)"
+
+#~ msgid "<strong>Apps</strong>"
+#~ msgstr "<strong>แอพ</strong>"
+
+#~ msgid "<strong>Group</strong>"
+#~ msgstr "<strong>กลุ่ม</strong>"
+
+#~ msgid "<strong>Label</strong>"
+#~ msgstr "<strong>ป้ายกำกับ</strong>"
+
+#~ msgid "<strong>Menu :</strong>"
+#~ msgstr "<strong>เมนู :</strong>"
+
+#~ msgid "<strong>Name</strong>"
+#~ msgstr "<strong>ชื่อ</strong>"
+
+#~ msgid "<strong>Reports :</strong>"
+#~ msgstr "<strong>รายงาน :</strong>"
+
+#~ msgid "<strong>Seq</strong>"
+#~ msgstr "<strong>ลำดับ</strong>"
+
+#~ msgid "<strong>Type</strong>"
+#~ msgstr "<strong>ประเภท</strong>"
+
+#~ msgid "<strong>XML ID</strong>"
+#~ msgstr "<strong>XML ID</strong>"
+
+#~ msgid "<u><strong>Security</strong></u>"
+#~ msgstr "<u><strong>ความปลอดภัย</strong></u>"
+
+#~ msgid "A document was modified since you last viewed it (%s:%d)"
+#~ msgstr "A document was modified since you last viewed it (%s:%d)"
+
+#~ msgid ""
+#~ "A group is a set of functional areas that will be assigned to the user in "
+#~ "order to give them access and rights to specific applications and tasks "
+#~ "in the system. You can create custom groups or edit the ones existing by "
+#~ "default in order to customize the view of the menu that users will be "
+#~ "able to see. Whether they can have a read, write, create and delete "
+#~ "access right can be managed from here."
+#~ msgstr ""
+#~ "A group is a set of functional areas that will be assigned to the user in "
+#~ "order to give them access and rights to specific applications and tasks "
+#~ "in the system. You can create custom groups or edit the ones existing by "
+#~ "default in order to customize the view of the menu that users will be "
+#~ "able to see. Whether they can have a read, write, create and delete "
+#~ "access right can be managed from here."
+
+#~ msgid "A module to generate exceptions."
+#~ msgstr "A module to generate exceptions."
+
+#~ msgid "A module to test import/export."
+#~ msgstr "A module to test import/export."
+
+#~ msgid "A module to test the API."
+#~ msgstr "A module to test the API."
+
+#~ msgid "A module to test the uninstall feature."
+#~ msgstr "A module to test the uninstall feature."
+
+#~ msgid "A module to verify the inheritance using _inherits."
+#~ msgstr "A module to verify the inheritance using _inherits."
+
+#~ msgid "A module to verify the inheritance."
+#~ msgstr "A module to verify the inheritance."
+
+#~ msgid "A module with dummy methods."
+#~ msgstr "A module with dummy methods."
+
+#~ msgid "A0  5   841 x 1189 mm"
+#~ msgstr "A0  5   841 x 1189 มม."
+
+#~ msgid "A1  6   594 x 841 mm"
+#~ msgstr "A1  6   594 x 841 มม."
+
+#~ msgid "A2  7   420 x 594 mm"
+#~ msgstr "A2  7   420 x 594 มม."
+
+#~ msgid "A3  8   297 x 420 mm"
+#~ msgstr "A3  8   297 x 420 มม."
+
+#~ msgid "A4  0   210 x 297 mm, 8.26 x 11.69 inches"
+#~ msgstr "A4  0   210 x 297 มม., 8.26 x 11.69 นิ้ว"
+
+#~ msgid "A5  9   148 x 210 mm"
+#~ msgstr "A5  9   148 x 210 มม."
+
+#~ msgid "A6  10  105 x 148 mm"
+#~ msgstr "A6  10  105 x 148 มม."
+
+#~ msgid "A7  11  74 x 105 mm"
+#~ msgstr "A7  11  74 x 105 มม."
+
+#~ msgid "A8  12  52 x 74 mm"
+#~ msgstr "A8  12  52 x 74 มม."
+
+#~ msgid "A9  13  37 x 52 mm"
+#~ msgstr "A9  13  37 x 52 มม."
+
+#~ msgid "Abbreviation"
+#~ msgstr "คำย่อ"
+
+#~ msgid "Accepted Users"
+#~ msgstr "Accepted Users"
+
+#~ msgid "Access"
+#~ msgstr "เข้าถึง"
+
+#~ msgid "Access Controls"
+#~ msgstr "การควบคุมการเข้าถึง"
+
+#~ msgid "Access Groups"
+#~ msgstr "กลุ่มการเข้าถึง"
+
+#~ msgid "Access Menu"
+#~ msgstr "เมนูเข้าถึง"
+
+#~ msgid "Account Analytic Defaults"
+#~ msgstr "Account Analytic Defaults"
+
+#~ msgid "Account Charts"
+#~ msgstr "ผังบัญชี"
+
+#~ msgid "Account Holder"
+#~ msgstr "ผู้ถือบัญชี"
+
+#~ msgid "Account No."
+#~ msgstr "เลขที่บัญชี"
+
+#~ msgid "Account Number"
+#~ msgstr "หมายเลขบัญชี"
+
+#~ msgid "Accounting"
+#~ msgstr "การบัญชี"
+
+#~ msgid "Accounting & Finance"
+#~ msgstr "การบัญชีและการเงิน"
+
+#~ msgid "Accounting Consistency Tests"
+#~ msgstr "Accounting Consistency Tests"
+
+#~ msgid "Accounting Reports"
+#~ msgstr "รายงานทางบัญชี"
+
+#~ msgid "Action"
+#~ msgstr "การดำเนินการ"
+
+#~ msgid "Action Name"
+#~ msgstr "ชื่อการกระทำ"
+
+#~ msgid "Action Target"
+#~ msgstr "เป้าหมายการดำเนินการ"
+
+#~ msgid "Action To Do"
+#~ msgstr "สิ่งที่จะทำ"
+
+#~ msgid "Action Type"
+#~ msgstr "ชนิดการทำงาน"
+
+#~ msgid "Action URL"
+#~ msgstr "URL ของการดำเนินการ"
+
+#~ msgid "Action Usage"
+#~ msgstr "การใช้งานการดำเนินการ"
+
+#~ msgid "Actions"
+#~ msgstr "การดำเนินการ"
+
+#~ msgid "Active"
+#~ msgstr "เปิดใช้งาน"
+
+#~ msgid "Address Type"
+#~ msgstr "ชนิดที่อยู่"
+
+#~ msgid "Address format..."
+#~ msgstr "รูปแบบที่อยู่"
+
+#~ msgid "Administration"
+#~ msgstr "ผู้ดูแลระบบ"
+
+#~ msgid ""
+#~ "Administrative divisions of a country. E.g. Fed. State, Departement, "
+#~ "Canton"
+#~ msgstr ""
+#~ "Administrative divisions of a country. E.g. Fed. State, Departement, "
+#~ "Canton"
+
+#~ msgid "Advanced Events"
+#~ msgstr "Advanced Events"
+
+#~ msgid "Advanced Properties"
+#~ msgstr "คุณสมบัติขั้นสูง"
+
+#~ msgid "Adyen Payment Acquirer"
+#~ msgstr "Adyen Payment Acquirer"
+
+#~ msgid "Affero GPL-3"
+#~ msgstr "Affero GPL-3"
+
+#~ msgid "After Amount"
+#~ msgstr "จำนวนก่อน"
+
+#~ msgid "Albania"
+#~ msgstr "อัลเเบเนีย"
+
+#~ msgid "Algeria"
+#~ msgstr "แอลจีเรีย"
+
+#~ msgid "All"
+#~ msgstr "ทั้งหมด"
+
+#~ msgid "Allow cashier to reprint receipts"
+#~ msgstr "อนุญาตให้พนักงานขายพิมพ์ใบเสร็จซ้ำได้"
+
+#~ msgid "Allowed Companies"
+#~ msgstr "อนุญาตให้ใช้ บริษัท"
+
+#~ msgid ""
+#~ "Allows you to create your invoices and track the payments. It is an "
+#~ "easier version of the accounting module for managers who are not "
+#~ "accountants."
+#~ msgstr ""
+#~ "Allows you to create your invoices and track the payments. It is an "
+#~ "easier version of the accounting module for managers who are not "
+#~ "accountants."
+
+#~ msgid "American Samoa"
+#~ msgstr "American Samoa"
+
+#~ msgid ""
+#~ "An arbitrary string, interpreted by the client according to its own needs "
+#~ "and wishes. There is no central tag repository across clients."
+#~ msgstr ""
+#~ "An arbitrary string, interpreted by the client according to its own needs "
+#~ "and wishes. There is no central tag repository across clients."
+
+#~ msgid ""
+#~ "An auto-installable module is automatically installed by the system when "
+#~ "all its dependencies are satisfied. If the module has no dependency, it "
+#~ "is always installed."
+#~ msgstr ""
+#~ "An auto-installable module is automatically installed by the system when "
+#~ "all its dependencies are satisfied. If the module has no dependency, it "
+#~ "is always installed."
+
+#~ msgid "Analytic Accounting"
+#~ msgstr "การบัญชีวิเคราะห์"
+
+#~ msgid "Angola"
+#~ msgstr "แองโกลา"
+
+#~ msgid "Anguilla"
+#~ msgstr "แองกวิลลา"
+
+#~ msgid "Antarctica"
+#~ msgstr "แอนตาร์กติกา"
+
+#~ msgid "Antigua and Barbuda"
+#~ msgstr "Antigua and Barbuda"
+
+#~ msgid ""
+#~ "Appears by default on the top right corner of your printed documents "
+#~ "(report header)."
+#~ msgstr ""
+#~ "Appears by default on the top right corner of your printed documents "
+#~ "(report header)."
+
+#~ msgid "Application"
+#~ msgstr "โปรแกรม"
+
+#~ msgid "Application Terms"
+#~ msgstr "ศัพท์แอพพลิเคชัน"
+
+#~ msgid "Apply"
+#~ msgstr "นำไปใช้"
+
+#~ msgid "Apply Scheduled Upgrades"
+#~ msgstr "ใช้งานการอัพเกรดตามกำหนดการ"
+
+#~ msgid "Apply for Create"
+#~ msgstr "ใช้กับการสร้าง"
+
+#~ msgid "Apply for Delete"
+#~ msgstr "ยืนยันการลบ"
+
+#~ msgid "Apply for Read"
+#~ msgstr "ใช้กับการอ่าน"
+
+#~ msgid "Apply for Write"
+#~ msgstr "ใช้กับการแก้ไข"
+
+#~ msgid "Apps"
+#~ msgstr "แอพ"
+
+#~ msgid "Apps To Export"
+#~ msgstr "แอพที่ส่งออก"
+
+#~ msgid "Apps:"
+#~ msgstr "แอพ:"
+
+#~ msgid "Architecture"
+#~ msgstr "สถาปัตยกรรม"
+
+#~ msgid "Archived"
+#~ msgstr "ถูกเก็บ"
+
+#~ msgid "Argentina"
+#~ msgstr "อาร์เจนตินา"
+
+#~ msgid "Argentina - Accounting"
+#~ msgstr "อาร์เจนตินา  - การบัญชี"
+
+#~ msgid "Argentina - Accounting Reports"
+#~ msgstr "อาร์เจนตินา  - รายงานทางบัญชี"
+
+#~ msgid "Armenia"
+#~ msgstr "อาร์เมเนีย"
+
+#~ msgid "Aruba"
+#~ msgstr "Aruba"
+
+#~ msgid "Assets Management"
+#~ msgstr "การจัดการสินทรัพย์"
+
+#~ msgid "Associated reports"
+#~ msgstr "รายงานที่เกี่ยวข้อง"
+
+#~ msgid "Associations Management"
+#~ msgstr "การบริหาร Associations"
+
+#~ msgid "Attached To"
+#~ msgstr "Attached To"
+
+#~ msgid "Attachment"
+#~ msgstr "แนบ"
+
+#~ msgid "Attachments"
+#~ msgstr "เอกสารแนบ"
+
+#~ msgid "Attendance"
+#~ msgstr "เวลาเข้าออกงาน"
+
+#~ msgid "Attendances"
+#~ msgstr "Attendances"
+
+#~ msgid "Australia"
+#~ msgstr "ออสเตรเลีย"
+
+#~ msgid "Austria"
+#~ msgstr "ออสเตรีย"
+
+#~ msgid "Austria - Accounting"
+#~ msgstr "Austria - Accounting"
+
+#~ msgid "Authentication via LDAP"
+#~ msgstr "Authentication via LDAP"
+
+#~ msgid "Author"
+#~ msgstr "ผู้แต่ง"
+
+#~ msgid "Author Name"
+#~ msgstr "ชื่อผู้สร้าง"
+
+#~ msgid "Authorize.Net Payment Acquirer"
+#~ msgstr "Authorize.Net Payment Acquirer"
+
+#~ msgid "Auto Search"
+#~ msgstr "ค้นหาอัตโนมัติ"
+
+#~ msgid "Automated Action Rules"
+#~ msgstr "กฎการดำเนินการโดยอัตโนมัติ"
+
+#~ msgid "Automated Translations through Gengo API"
+#~ msgstr "Automated Translations through Gengo API"
+
+#~ msgid "Automatic Installation"
+#~ msgstr "การติดตั้งอัตโนมัติ"
+
+#~ msgid ""
+#~ "Automatically set to let administators find new terms that might need to "
+#~ "be translated"
+#~ msgstr ""
+#~ "Automatically set to let administators find new terms that might need to "
+#~ "be translated"
+
+#~ msgid "Automation"
+#~ msgstr "การทำงานอัตโนมัติ"
+
+#~ msgid "Azerbaijan"
+#~ msgstr "อาร์เซอร์ไบจัน"
+
+#~ msgid "B0  14  1000 x 1414 mm"
+#~ msgstr "B0  14  1000 x 1414 มม."
+
+#~ msgid "B1  15  707 x 1000 mm"
+#~ msgstr "B1  15  707 x 1000 มม."
+
+#~ msgid "B2  17  500 x 707 mm"
+#~ msgstr "B2  17  500 x 707 มม."
+
+#~ msgid "B3  18  353 x 500 mm"
+#~ msgstr "B3  18  353 x 500 มม."
+
+#~ msgid "B4  19  250 x 353 mm"
+#~ msgstr "B4  19  250 x 353 มม."
+
+#~ msgid "B5  1   176 x 250 mm, 6.93 x 9.84 inches"
+#~ msgstr "B5  1   176 x 250 มม., 6.93 x 9.84 นิ้ว"
+
+#~ msgid "B6  20  125 x 176 mm"
+#~ msgstr "B6  20  125 x 176 มม."
+
+#~ msgid "B7  21  88 x 125 mm"
+#~ msgstr "B7  21  88 x 125 mm"
+
+#~ msgid "B8  22  62 x 88 mm"
+#~ msgstr "B8  22  62 x 88 มม."
+
+#~ msgid "B9  23  33 x 62 mm"
+#~ msgstr "B9  23  33 x 62 มม."
+
+#~ msgid "Bad file format: %s"
+#~ msgstr "รูปแบบไฟล์ไม่ถูกต้อง: %s"
+
+#~ msgid "Bahamas"
+#~ msgstr "บาฮามาส"
+
+#~ msgid "Bahrain"
+#~ msgstr "บาห์เรน"
+
+#~ msgid "Bangladesh"
+#~ msgstr "บังคลาเทศ"
+
+#~ msgid "Bank"
+#~ msgstr "ธนาคาร"
+
+#~ msgid "Bank Accounts"
+#~ msgstr "บัญชีธนาคาร"
+
+#~ msgid "Bank Identifier Code"
+#~ msgstr "Bank Identifier Code"
+
+#~ msgid "Bank Name"
+#~ msgstr "ชื่อธนาคาร"
+
+#~ msgid "Bank account"
+#~ msgstr "บัญชีธนาคาร"
+
+#~ msgid "Bank accounts related to this company"
+#~ msgstr "Bank accounts related to this company"
+
+#~ msgid "Banks"
+#~ msgstr "ธนาคาร"
+
+#~ msgid "Barbados"
+#~ msgstr "บารเบโดส"
+
+#~ msgid "Barcode Scanner Hardware Driver"
+#~ msgstr "Barcode Scanner Hardware Driver"
+
+#~ msgid "Base"
+#~ msgstr "พื้นฐาน"
+
+#~ msgid "Base Field"
+#~ msgstr "Base Field"
+
+#~ msgid "Base Object"
+#~ msgstr "Base Object"
+
+#~ msgid "Base Properties"
+#~ msgstr "คุณสมบัติพื้นฐาน"
+
+#~ msgid "Base import"
+#~ msgstr "Base import"
+
+#~ msgid "Base import module"
+#~ msgstr "Base import module"
+
+#~ msgid "Before Amount"
+#~ msgstr "จำนวนก่อน"
+
+#~ msgid "Belarus"
+#~ msgstr "เบลารุส"
+
+#~ msgid "Belgian Intrastat Declaration"
+#~ msgstr "Belgian Intrastat Declaration"
+
+#~ msgid "Belgium"
+#~ msgstr "เบลเยียม"
+
+#~ msgid "Belgium - Accounting"
+#~ msgstr "Belgium - Accounting"
+
+#~ msgid "Belgium - Import Bank CODA Statements"
+#~ msgstr "Belgium - Import Bank CODA Statements"
+
+#~ msgid "Belgium - Payroll"
+#~ msgstr "Belgium - Payroll"
+
+#~ msgid "Belgium - Payroll with Accounting"
+#~ msgstr "Belgium - Payroll with Accounting"
+
+#~ msgid "Belgium - Structured Communication"
+#~ msgstr "Belgium - Structured Communication"
+
+#~ msgid "Belize"
+#~ msgstr "เบลีซ"
+
+#~ msgid "Benin"
+#~ msgstr "เบนิน"
+
+#~ msgid "Bermuda"
+#~ msgstr "เบอร์มิวด้า"
+
+#~ msgid "Bhutan"
+#~ msgstr "ภูฏาน"
+
+#~ msgid "Binary"
+#~ msgstr "Binary"
+
+#~ msgid "Blogs"
+#~ msgstr "บล็อก"
+
+#~ msgid "Bolivia"
+#~ msgstr "โบลิเวีย"
+
+#~ msgid "Bonaire, Sint Eustatius and Saba"
+#~ msgstr "Bonaire, Sint Eustatius and Saba"
+
+#~ msgid "Boolean"
+#~ msgstr "Boolean"
+
+#~ msgid "Botswana"
+#~ msgstr "โบทสวานา"
+
+#~ msgid "Bottom Margin (mm)"
+#~ msgstr "ขอบล่าง (มม.)"
+
+#~ msgid "Bouvet Island"
+#~ msgstr "เกาะบูเวต์"
+
+#~ msgid "Brazil"
+#~ msgstr "บราซิล"
+
+#~ msgid "Brazilian - Accounting"
+#~ msgstr "Brazilian - Accounting"
+
+#~ msgid "British Indian Ocean Territory"
+#~ msgstr "เขตปกครองบริติชอินเดียนโอเชียน"
+
+#~ msgid "Brunei Darussalam"
+#~ msgstr "บรูไนดารุสซาลาม"
+
+#~ msgid "Buckaroo Payment Acquirer"
+#~ msgstr "Buckaroo Payment Acquirer"
+
+#~ msgid "Bulgaria"
+#~ msgstr "บัลแกเรีย"
+
+#~ msgid "Burkina Faso"
+#~ msgstr "เบอร์กินาฟาโซ"
+
+#~ msgid "Burundi"
+#~ msgstr "บุรุนดี"
+
+#~ msgid "By"
+#~ msgstr "โดย"
+
+#~ msgid "C5E 24  163 x 229 mm"
+#~ msgstr "C5E 24  163 x 229 มม."
+
+#~ msgid "CRM"
+#~ msgstr "CRM"
+
+#~ msgid "CRM Gamification"
+#~ msgstr "CRM Gamification"
+
+#~ msgid "CSV File"
+#~ msgstr "ไฟล์ CSV"
+
+#~ msgid ""
+#~ "CSV format: you may edit it directly with your favorite spreadsheet "
+#~ "software,\n"
+#~ "                                the rightmost column (value) contains the "
+#~ "translations"
+#~ msgstr ""
+#~ "CSV format: you may edit it directly with your favorite spreadsheet "
+#~ "software,\n"
+#~ "                                the rightmost column (value) contains the "
+#~ "translations"
+
+#~ msgid "Calendar"
+#~ msgstr "ปฏิทิน"
+
+#~ msgid "Cameroon"
+#~ msgstr "แคเมอรูน"
+
+#~ msgid "Canada"
+#~ msgstr "แคนาดา"
+
+#~ msgid "Canada - Accounting"
+#~ msgstr "แคนาดา - การบัญชี"
+
+#~ msgid "Cancel"
+#~ msgstr "ยกเลิก"
+
+#~ msgid "Cancel Install"
+#~ msgstr "ยกเลิกการติดตั้ง"
+
+#~ msgid "Cancel Journal Entries"
+#~ msgstr "Cancel Journal Entries"
+
+#~ msgid "Cancel Uninstall"
+#~ msgstr "ยกเลิกการถอนการติดตั้ง"
+
+#~ msgid "Cancel Upgrade"
+#~ msgstr "ยกเลิกการปรับรุ่น"
+
+#~ msgid "Cape Verde"
+#~ msgstr "แหลมเวอร์ดี"
+
+#~ msgid "Cascade"
+#~ msgstr "เรียงลดหลั่น"
+
+#~ msgid "Category"
+#~ msgstr "หมวด"
+
+#~ msgid "Cayman Islands"
+#~ msgstr "หมู่เกาะเคย์แมน"
+
+#~ msgid "Central African Republic"
+#~ msgstr "สาธารณรัฐแอฟริกากลาง"
+
+#~ msgid "Chad"
+#~ msgstr "Chad"
+
+#~ msgid "Change My Preferences"
+#~ msgstr "เปลี่ยนการตั้งค่าส่วนตัว"
+
+#~ msgid "Change Password"
+#~ msgstr "เปลี่ยนรหัสผ่าน"
+
+#~ msgid "Change Password Wizard"
+#~ msgstr "Change Password Wizard"
+
+#~ msgid "Change password"
+#~ msgstr "เปลี่ยนรหัสผ่าน"
+
+#~ msgid "Char"
+#~ msgstr "Char"
+
+#~ msgid "Check if the contact is a company, otherwise it is a person"
+#~ msgstr "Check if the contact is a company, otherwise it is a person"
+
+#~ msgid "Check this box if this contact is an Employee."
+#~ msgstr "เลือกช่องนี้ถ้ารายชื่อนี้เป็นบุคลากร"
+
+#~ msgid "Child Actions"
+#~ msgstr "Child Actions"
+
+#~ msgid "Child Applications"
+#~ msgstr "Child Applications"
+
+#~ msgid "Child Companies"
+#~ msgstr "บริษัทในเครือ"
+
+#~ msgid "Child Field"
+#~ msgstr "Child Field"
+
+#~ msgid "Child IDs"
+#~ msgstr "Child IDs"
+
+#~ msgid ""
+#~ "Child server actions that will be executed. Note that the last return "
+#~ "returned action value will be used as global return value."
+#~ msgstr ""
+#~ "Child server actions that will be executed. Note that the last return "
+#~ "returned action value will be used as global return value."
+
+#~ msgid "Chile"
+#~ msgstr "ชิลี"
+
+#~ msgid "China"
+#~ msgstr "จีน"
+
+#~ msgid ""
+#~ "Choose the connection encryption scheme:\n"
+#~ "- None: SMTP sessions are done in cleartext.\n"
+#~ "- TLS (STARTTLS): TLS encryption is requested at start of SMTP session "
+#~ "(Recommended)\n"
+#~ "- SSL/TLS: SMTP sessions are encrypted with SSL/TLS through a dedicated "
+#~ "port (default: 465)"
+#~ msgstr ""
+#~ "Choose the connection encryption scheme:\n"
+#~ "- None: SMTP sessions are done in cleartext.\n"
+#~ "- TLS (STARTTLS): TLS encryption is requested at start of SMTP session "
+#~ "(Recommended)\n"
+#~ "- SSL/TLS: SMTP sessions are encrypted with SSL/TLS through a dedicated "
+#~ "port (default: 465)"
+
+#~ msgid "Christmas Island"
+#~ msgstr "เกาะคริสมาสต์"
+
+#~ msgid "City"
+#~ msgstr "เขต / อำเภอ"
+
+#~ msgid "Client"
+#~ msgstr "ไคลเอนต์"
+
+#~ msgid "Client Action"
+#~ msgstr "Client Action"
+
+#~ msgid "Client action tag"
+#~ msgstr "Client action tag"
+
+#~ msgid "Close"
+#~ msgstr "ปิด"
+
+#~ msgid "Cocos (Keeling) Islands"
+#~ msgstr "หมู่เกาะ (คีลิง) โคโคส"
+
+#~ msgid "Code"
+#~ msgstr "รหัส"
+
+#~ msgid "Collaborative Pads"
+#~ msgstr "Collaborative Pads"
+
+#~ msgid "Colombia"
+#~ msgstr "โคลัมเบีย"
+
+#~ msgid "Colombian - Accounting"
+#~ msgstr "Colombian - Accounting"
+
+#~ msgid "Colombian Accounting and Tax Preconfiguration"
+#~ msgstr "Colombian Accounting and Tax Preconfiguration"
+
+#~ msgid "Color Index"
+#~ msgstr "ดัชนีสี"
+
+#~ msgid "Comm10E 25  105 x 241 mm, U.S. Common 10 Envelope"
+#~ msgstr "Comm10E 25  105 x 241 มม."
+
+#~ msgid ""
+#~ "Comma-separated list of allowed view modes, such as 'form', 'tree', "
+#~ "'calendar', etc. (Default: tree,form)"
+#~ msgstr ""
+#~ "Comma-separated list of allowed view modes, such as 'form', 'tree', "
+#~ "'calendar', etc. (Default: tree,form)"
+
+#~ msgid "Comments"
+#~ msgstr "ความคิดเห็น"
+
+#~ msgid "Commercial Entity"
+#~ msgstr "Commercial Entity"
+
+#~ msgid "Communication"
+#~ msgstr "การติดต่อสื่อสาร"
+
+#~ msgid "Comoros"
+#~ msgstr "คอโมโรส"
+
+#~ msgid "Companies"
+#~ msgstr "บริษัท"
+
+#~ msgid "Company Data"
+#~ msgstr " ข้อมูลบริษัท"
+
+#~ msgid "Company Name"
+#~ msgstr "ชื่อบริษัท"
+
+#~ msgid "Company Properties"
+#~ msgstr "Company Properties"
+
+#~ msgid "Company Registry"
+#~ msgstr "Company Registry"
+
+#~ msgid "Company Tagline"
+#~ msgstr "Company Tagline"
+
+#~ msgid "Complete Address"
+#~ msgstr "ที่อยู่แบบเต็ม"
+
+#~ msgid "Complete ID"
+#~ msgstr "Complete ID"
+
+#~ msgid "Complete Name"
+#~ msgstr "Complete Name"
+
+#~ msgid "Compute"
+#~ msgstr "คำนวน"
+
+#~ msgid "Condition"
+#~ msgstr "เงื่อนไข"
+
+#~ msgid "Config Wizard Steps"
+#~ msgstr "ตัวช่วยสร้าง ขั้นตอนการตั้งค่า"
+
+#~ msgid "Configuration"
+#~ msgstr "การกำหนดค่า"
+
+#~ msgid "Configuration Installer"
+#~ msgstr "Configuration Installer"
+
+#~ msgid "Configuration Wizards"
+#~ msgstr "Configuration Wizards"
+
+#~ msgid "Confirm"
+#~ msgstr "ยืนยัน"
+
+#~ msgid "Congo"
+#~ msgstr "คองโก"
+
+#~ msgid "Connect the Web Client to Hardware Peripherals"
+#~ msgstr "Connect the Web Client to Hardware Peripherals"
+
+#~ msgid "Connection Information"
+#~ msgstr "ข้อมูลการเชื่อมต่อ"
+
+#~ msgid "Constraint"
+#~ msgstr "Constraint"
+
+#~ msgid "Constraint Type"
+#~ msgstr "ประเภท ข้อจำกัด"
+
+#~ msgid "Constraints with the same name are unique per module."
+#~ msgstr "Constraints with the same name are unique per module."
+
+#~ msgid "Contact"
+#~ msgstr "ผู้ติดต่อ"
+
+#~ msgid "Contact Creation"
+#~ msgstr "เพิ่มรายชื่อ"
+
+#~ msgid "Contact Form"
+#~ msgstr "ติดต่อจาก"
+
+#~ msgid "Contact Name"
+#~ msgstr "ชื่อผู้ติดต่อ"
+
+#~ msgid "Contact Titles"
+#~ msgstr "คำนำหน้าชื่อผู้ติดต่อ"
+
+#~ msgid "Contacts"
+#~ msgstr "รายชื่อ"
+
+#~ msgid "Contacts & Addresses"
+#~ msgstr "รายชื่อและที่อยู่"
+
+#~ msgid "Contacts require a name."
+#~ msgstr "ผู้ติดต่อต้องมีชื่อ"
+
+#~ msgid "Context"
+#~ msgstr "คอนเท็กซ์"
+
+#~ msgid "Context Value"
+#~ msgstr "Context Value"
+
+#~ msgid ""
+#~ "Context dictionary as Python expression, empty by default (Default: {})"
+#~ msgstr ""
+#~ "Context dictionary as Python expression, empty by default (Default: {})"
+
+#~ msgid "Contracts"
+#~ msgstr "สัญญา"
+
+#~ msgid "Contributors"
+#~ msgstr "ผู้ให้ข้อมูล"
+
+#~ msgid "Cook Islands"
+#~ msgstr "หมู่เกาะคุ้ก"
+
+#~ msgid "Copied"
+#~ msgstr "ทำสำเนาแล้ว"
+
+#~ msgid "Costa Rica"
+#~ msgstr "คอสตาริกา"
+
+#~ msgid "Costa Rica - Accounting"
+#~ msgstr "Costa Rica - Accounting"
+
+#~ msgid "Countries"
+#~ msgstr "ประเทศ"
+
+#~ msgid "Country"
+#~ msgstr "ประเทศ"
+
+#~ msgid "Country Code"
+#~ msgstr "รหัสประเทศ"
+
+#~ msgid "Country Group"
+#~ msgstr "กลุ่มประเทศ"
+
+#~ msgid "Country Groups"
+#~ msgstr "กลุ่มประเทศ"
+
+#~ msgid "Country Name"
+#~ msgstr "ชื่อประเทศ"
+
+#~ msgid "Country state"
+#~ msgstr "จังหวัด"
+
+#~ msgid "Create Access"
+#~ msgstr "สิทธิ์การสร้าง"
+
+#~ msgid "Create Access Right"
+#~ msgstr "สิทธิ์การสร้าง"
+
+#~ msgid "Create Date"
+#~ msgstr "วันที่สร้าง"
+
+#~ msgid "Create Menu"
+#~ msgstr "สร้างเมนู"
+
+#~ msgid "Create _Menu"
+#~ msgstr "สร้าง _Menu"
+
+#~ msgid "Create a Menu"
+#~ msgstr "สร้างเมนู"
+
+#~ msgid ""
+#~ "Create and manage the companies that will be managed by Odoo from here. "
+#~ "Shops or subsidiaries can be created and maintained from here."
+#~ msgstr ""
+#~ "Create and manage the companies that will be managed by Odoo from here. "
+#~ "Shops or subsidiaries can be created and maintained from here."
+
+#~ msgid ""
+#~ "Create and manage users that will connect to the system. Users can be "
+#~ "deactivated should there be a period of time during which they will/"
+#~ "should not connect to the system. You can assign them groups in order to "
+#~ "give them specific access to the applications they need to use in the "
+#~ "system."
+#~ msgstr ""
+#~ "Create and manage users that will connect to the system. Users can be "
+#~ "deactivated should there be a period of time during which they will/"
+#~ "should not connect to the system. You can assign them groups in order to "
+#~ "give them specific access to the applications they need to use in the "
+#~ "system."
+
+#~ msgid "Created Menus"
+#~ msgstr "เมนูที่สร้างไว้"
+
+#~ msgid "Created Views"
+#~ msgstr "มุมมองที่สร้างไว้"
+
+#~ msgid "Created by"
+#~ msgstr "สร้างโดย"
+
+#~ msgid "Created on"
+#~ msgstr "สร้างเมื่อ"
+
+#~ msgid "Creation"
+#~ msgstr "การสร้าง"
+
+#~ msgid "Creation Date"
+#~ msgstr "วันที่สร้าง"
+
+#~ msgid "Credit Limit"
+#~ msgstr "วงเงินเครดิต"
+
+#~ msgid "Croatia"
+#~ msgstr "โครเอเชีย"
+
+#~ msgid "Cuba"
+#~ msgstr "คิวบา"
+
+#~ msgid "Curaçao"
+#~ msgstr "Curaçao"
+
+#~ msgid "Currencies"
+#~ msgstr "สกุลเงิน"
+
+#~ msgid "Currency Code (ISO 4217)"
+#~ msgstr "Currency Code (ISO 4217)"
+
+#~ msgid "Currency Rate"
+#~ msgstr "อัตราแลกเปลี่ยน"
+
+#~ msgid "Currency sign, to be used when printing amounts."
+#~ msgstr "Currency sign, to be used when printing amounts."
+
+#~ msgid "Current Rate"
+#~ msgstr "อัตราแลกเปลี่ยนปัจจุบัน"
+
+#~ msgid "Current Window"
+#~ msgstr "หน้าปัจจุบัน"
+
+#~ msgid "Custom"
+#~ msgstr "ที่กำหนดเอง"
+
+#~ msgid "Custom Field"
+#~ msgstr "Custom Field"
+
+#~ msgid "Custom Object"
+#~ msgstr "Custom Object"
+
+#~ msgid "Custom Shortcuts"
+#~ msgstr "ทางลัดกำหนดเอง"
+
+#~ msgid "Customer References"
+#~ msgstr "อ้างอิงลูกค้า"
+
+#~ msgid "Customers"
+#~ msgstr "ลูกค้า"
+
+#~ msgid "Customized Views"
+#~ msgstr "ปรับแต่ง มุมมอง"
+
+#~ msgid "Cyprus"
+#~ msgstr "ไซปรัส"
+
+#~ msgid "Czech Republic"
+#~ msgstr "สาธารณรัฐเช็ก"
+
+#~ msgid "DLE 26 110 x 220 mm"
+#~ msgstr "DLE 26 110 x 220 มม."
+
+#~ msgid "Dashboards"
+#~ msgstr "Dashboards"
+
+#~ msgid "Data for xml conversion tests"
+#~ msgstr "Data for xml conversion tests"
+
+#~ msgid "Database"
+#~ msgstr "ฐานข้อมูล"
+
+#~ msgid "Database Data"
+#~ msgstr "ข้อมูลฐานข้อมูล"
+
+#~ msgid ""
+#~ "Database ID of record to open in form view, when ``view_mode`` is set to "
+#~ "'form' only"
+#~ msgstr ""
+#~ "Database ID of record to open in form view, when ``view_mode`` is set to "
+#~ "'form' only"
+
+#~ msgid "Database Name"
+#~ msgstr "ชื่อฐานข้อมูล"
+
+#~ msgid "Database Structure"
+#~ msgstr "โครงสร้างฐานข้อมูล"
+
+#~ msgid ""
+#~ "Database fetch misses ids ({}) and has extra ids ({}), may be caused by a "
+#~ "type incoherence in a previous request"
+#~ msgstr ""
+#~ "Database fetch misses ids ({}) and has extra ids ({}), may be caused by a "
+#~ "type incoherence in a previous request"
+
+#~ msgid "Date Format"
+#~ msgstr "รูปแบบวันที่"
+
+#~ msgid "DateTime"
+#~ msgstr "วันที่เวลา"
+
+#~ msgid "Days"
+#~ msgstr "วัน"
+
+#~ msgid "Debugging"
+#~ msgstr "การดีบั๊ก"
+
+#~ msgid "Decimal Precision Configuration"
+#~ msgstr "Decimal Precision Configuration"
+
+#~ msgid "Decimal Separator"
+#~ msgstr "อักษรแบ่งคั่นเลขทศนิยม"
+
+#~ msgid "Default Values"
+#~ msgstr "ค่าเริ่มต้น"
+
+#~ msgid "Default limit for the list view"
+#~ msgstr "Default limit for the list view"
+
+#~ msgid "Default paper format ?"
+#~ msgstr "รูปแบบกระดาษเริ่มต้น"
+
+#~ msgid "Defined Reports"
+#~ msgstr "รายงาน"
+
+#~ msgid "Delete Access"
+#~ msgstr "สิทธิ์การลบ"
+
+#~ msgid "Delete Access Right"
+#~ msgstr "สิทธิ์การลบ"
+
+#~ msgid "Delivery"
+#~ msgstr "การจัดส่ง"
+
+#~ msgid "Delivery Costs"
+#~ msgstr "ค่าจัดส่ง"
+
+#~ msgid "Demo Data"
+#~ msgstr "ตัวอย่าง ข้อมูล"
+
+#~ msgid "Denmark"
+#~ msgstr "เดนมาร์ก"
+
+#~ msgid "Dependencies"
+#~ msgstr "แพกเกจที่ต้องใช้"
+
+#~ msgid "Dependency"
+#~ msgstr "จำเป็นต้องใช้ร่วมกับ"
+
+#~ msgid "Description"
+#~ msgstr "รายละเอียด"
+
+#~ msgid "Description HTML"
+#~ msgstr "Description HTML"
+
+#~ msgid "Design, send and track emails"
+#~ msgstr "Design, send and track emails"
+
+#~ msgid "Destination Model"
+#~ msgstr "โมเดลปลายทาง"
+
+#~ msgid "Detailed algorithm:"
+#~ msgstr "Detailed algorithm:"
+
+#~ msgid ""
+#~ "Determines where the currency symbol should be placed after or before the "
+#~ "amount."
+#~ msgstr ""
+#~ "Determines where the currency symbol should be placed after or before the "
+#~ "amount."
+
+#~ msgid "Diagram"
+#~ msgstr "ไดอะแกรม"
+
+#~ msgid "Discard"
+#~ msgstr "ยกเลิก"
+
+#~ msgid "Discuss"
+#~ msgstr "การสนทนา"
+
+#~ msgid "Display"
+#~ msgstr "แสดงผล"
+
+#~ msgid ""
+#~ "Display and manage the list of all countries group. You can create or "
+#~ "delete country group to make sure the ones you are working on will be "
+#~ "maintained."
+#~ msgstr ""
+#~ "Display and manage the list of all countries group. You can create or "
+#~ "delete country group to make sure the ones you are working on will be "
+#~ "maintained."
+
+#~ msgid ""
+#~ "Display and manage the list of all countries that can be assigned to your "
+#~ "partner records. You can create or delete countries to make sure the ones "
+#~ "you are working on will be maintained."
+#~ msgstr ""
+#~ "Display and manage the list of all countries that can be assigned to your "
+#~ "partner records. You can create or delete countries to make sure the ones "
+#~ "you are working on will be maintained."
+
+#~ msgid "Djibouti"
+#~ msgstr "จิบูติ"
+
+#~ msgid "Doctor"
+#~ msgstr "ดอกเตอร์"
+
+#~ msgid "Document"
+#~ msgstr "เอกสาร"
+
+#~ msgid "Document Management"
+#~ msgstr "เอกสาร"
+
+#~ msgid "Document model"
+#~ msgstr "รูปแบบเอกสาร"
+
+#~ msgid "Documentation examples test"
+#~ msgstr "Documentation examples test"
+
+#~ msgid "Documents"
+#~ msgstr "เอกสาร"
+
+#~ msgid "Domain"
+#~ msgstr "โดเมน"
+
+#~ msgid "Domain Value"
+#~ msgstr "Domain Value"
+
+#~ msgid "Dominica"
+#~ msgstr "โดมินิกา"
+
+#~ msgid "Dominican Republic"
+#~ msgstr "สาธารณรัฐโดมินิกัน"
+
+#~ msgid "Dominican Republic - Accounting"
+#~ msgstr "Dominican Republic - Accounting"
+
+#~ msgid "Done"
+#~ msgstr "เสร็จสิ้น"
+
+#~ msgid "Dr."
+#~ msgstr "ดร."
+
+#~ msgid "Drop Shipping"
+#~ msgstr "Drop Shipping"
+
+#~ msgid "ESC/POS Hardware Driver"
+#~ msgstr "ESC/POS Hardware Driver"
+
+#~ msgid "EU Mini One Stop Shop (MOSS)"
+#~ msgstr "EU Mini One Stop Shop (MOSS)"
+
+#~ msgid "Each model must be unique!"
+#~ msgstr "Each model must be unique!"
+
+#~ msgid "Ecuador"
+#~ msgstr "เอกวาดอร์"
+
+#~ msgid "Ecuador - Accounting"
+#~ msgstr "Ecuador - Accounting"
+
+#~ msgid "Edit Translations"
+#~ msgstr "แก้ไขการแปล"
+
+#~ msgid "Egypt"
+#~ msgstr "อียิปต์"
+
+#~ msgid "El Salvador"
+#~ msgstr "El Salvador"
+
+#~ msgid "Element '%s' cannot be located in parent view"
+#~ msgstr "Element '%s' cannot be located in parent view"
+
+#~ msgid "Email Address"
+#~ msgstr "ที่อยู่อีเมล"
+
+#~ msgid "Email Gateway"
+#~ msgstr "อีเมล์เกตเวย์"
+
+#~ msgid "Email Preferences"
+#~ msgstr "ตั้งค่าอีเมล"
+
+#~ msgid "Employee"
+#~ msgstr "บุคลากร"
+
+#~ msgid "Employee Contracts"
+#~ msgstr "สัญญาของบุคลากร"
+
+#~ msgid "Employees"
+#~ msgstr "บุคลากร"
+
+#~ msgid ""
+#~ "Enter Python code here. Help about Python expression is available in the "
+#~ "help tab of this document."
+#~ msgstr ""
+#~ "Enter Python code here. Help about Python expression is available in the "
+#~ "help tab of this document."
+
+#~ msgid "Equatorial Guinea"
+#~ msgstr "อิเควทอเรียลกินี"
+
+#~ msgid "Eritrea"
+#~ msgstr "เอริเทรีย"
+
+#~ msgid "Error"
+#~ msgstr "ผิดพลาด"
+
+#~ msgid ""
+#~ "Error context:\n"
+#~ "View `%(view_name)s`"
+#~ msgstr ""
+#~ "Error context:\n"
+#~ "View `%(view_name)s`"
+
+#~ msgid "Error details:"
+#~ msgstr "Error details:"
+
+#~ msgid "Estonia"
+#~ msgstr "เอสโตเนีย"
+
+#~ msgid "Ethiopia"
+#~ msgstr "เอธิโอเปีย"
+
+#~ msgid "Ethiopia - Accounting"
+#~ msgstr "Ethiopia - Accounting"
+
+#~ msgid "Evaluation Type"
+#~ msgstr "Evaluation Type"
+
+#~ msgid "Events"
+#~ msgstr "เหตการณ์"
+
+#~ msgid "Events Sales"
+#~ msgstr "Events Sales"
+
+#~ msgid ""
+#~ "Example of goal definitions and challenges that can be used related to "
+#~ "the usage of the CRM Sale module."
+#~ msgstr ""
+#~ "Example of goal definitions and challenges that can be used related to "
+#~ "the usage of the CRM Sale module."
+
+#~ msgid ""
+#~ "Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 OR "
+#~ "GROUP_A_RULE_2) OR (GROUP_B_RULE_1 OR GROUP_B_RULE_2) )"
+#~ msgstr ""
+#~ "Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 OR "
+#~ "GROUP_A_RULE_2) OR (GROUP_B_RULE_1 OR GROUP_B_RULE_2) )"
+
+#~ msgid "Examples"
+#~ msgstr "ตัวอย่าง"
+
+#~ msgid "Execute several actions"
+#~ msgstr "Execute several actions"
+
+#~ msgid "Execution"
+#~ msgstr "ประมวลผล"
+
+#~ msgid "Executive 4   7.5 x 10 inches, 190.5 x 254 mm"
+#~ msgstr "ผู้บริหาร 4   7.5 x 10 inches, 190.5 x 254 มม."
+
+#~ msgid "Expenses"
+#~ msgstr "การใช้จ่าย"
+
+#~ msgid "Explicitly associated reports"
+#~ msgstr "รายงานที่เกี่ยวข้อง"
+
+#~ msgid "Export"
+#~ msgstr "ส่งออก"
+
+#~ msgid "Export Complete"
+#~ msgstr "ส่งออกสำเร็จ"
+
+#~ msgid "Export ID"
+#~ msgstr "ID การส่งออก"
+
+#~ msgid "Export Name"
+#~ msgstr "ชื่อการส่งออก"
+
+#~ msgid "Export Settings"
+#~ msgstr "ตั้งค่าการส่งออก"
+
+#~ msgid "Export Translation"
+#~ msgstr "ส่งออกการแปล"
+
+#~ msgid "Export Translations"
+#~ msgstr "ส่งออกการแปล"
+
+#~ msgid "Extension View"
+#~ msgstr "Extension View"
+
+#~ msgid "External ID"
+#~ msgstr "รหัสจากภายนอก"
+
+#~ msgid "External Identifier"
+#~ msgstr "External Identifier"
+
+#~ msgid "External Identifiers"
+#~ msgstr "External Identifiers"
+
+#~ msgid ""
+#~ "External Key/Identifier that can be used for data integration with third-"
+#~ "party systems"
+#~ msgstr ""
+#~ "External Key/Identifier that can be used for data integration with third-"
+#~ "party systems"
+
+#~ msgid "Extra"
+#~ msgstr "พิเศษ"
+
+#~ msgid "Extra Rights"
+#~ msgstr "สิทธิ์เพิ่มเติม"
+
+#~ msgid "Extra Tools"
+#~ msgstr "เครื่องมือเพิ่มเติม"
+
+#~ msgid "Falkland Islands"
+#~ msgstr "หมู่เกาะฟอร์คแลนด์"
+
+#~ msgid "Faroe Islands"
+#~ msgstr "หมู่เกาะแฟโร"
+
+#~ msgid "Fax"
+#~ msgstr "แฟกซ์"
+
+#~ msgid "Fed. State"
+#~ msgstr "จังหวัด"
+
+#~ msgid "Fed. States"
+#~ msgstr "จังหวัด"
+
+#~ msgid "Field"
+#~ msgstr "ฟิลด์"
+
+#~ msgid "Field Label"
+#~ msgstr "Field Label"
+
+#~ msgid "Field Mappings"
+#~ msgstr "Field Mappings"
+
+#~ msgid "Field Name"
+#~ msgstr "ชื่อ ฟิลด์"
+
+#~ msgid "Field Type"
+#~ msgstr "ประเภทฟิลด์"
+
+#~ msgid "Fields"
+#~ msgstr "ช่องข้อมูล"
+
+#~ msgid "Fields Description"
+#~ msgstr "Fields Description"
+
+#~ msgid "Fiji"
+#~ msgstr "ฟิจิ"
+
+#~ msgid "File Content"
+#~ msgstr "เนื้อหาไฟล์"
+
+#~ msgid "File Format"
+#~ msgstr "รูปแบบไฟล์"
+
+#~ msgid "File Name"
+#~ msgstr "ชื่อไฟล์"
+
+#~ msgid "File Size"
+#~ msgstr "ขนาดไฟล์"
+
+#~ msgid "Filename"
+#~ msgstr "ชื่อไฟล์"
+
+#~ msgid "Filter"
+#~ msgstr "ตัวกรอง"
+
+#~ msgid "Filter Name"
+#~ msgstr "ชื่อตัวกรอง"
+
+#~ msgid "Filter names must be unique"
+#~ msgstr "Filter names must be unique"
+
+#~ msgid "Filter on my documents"
+#~ msgstr "กรองเอกสารของฉัน"
+
+#~ msgid "Filters"
+#~ msgstr "ตัวกรอง"
+
+#~ msgid "Filters created by myself"
+#~ msgstr "Filters created by myself"
+
+#~ msgid "Filters shared with all users"
+#~ msgstr "Filters shared with all users"
+
+#~ msgid "Filters visible only for one user"
+#~ msgstr "Filters visible only for one user"
+
+#~ msgid "Finished"
+#~ msgstr "สิ้นสุดแล้ว"
+
+#~ msgid "Finland"
+#~ msgstr "ฟินแลนด์"
+
+#~ msgid "Float"
+#~ msgstr "เลขทศนิยม"
+
+#~ msgid "Folio 27  210 x 330 mm"
+#~ msgstr "Folio 27  210 x 330 มม."
+
+#~ msgid "Footer"
+#~ msgstr "ทิ้งท้าย"
+
+#~ msgid "Footer text displayed at the bottom of all reports."
+#~ msgstr "ข้อความท้ายกระดาษปรากฏอยู่ด้านล่างของรายงานทั้งหมด"
+
+#~ msgid ""
+#~ "For QWeb reports, name of the template used in the rendering. The method "
+#~ "'render_html' of the model 'report.template_name' will be called (if any) "
+#~ "to give the html. For RML reports, this is the LocalService name."
+#~ msgstr ""
+#~ "For QWeb reports, name of the template used in the rendering. The method "
+#~ "'render_html' of the model 'report.template_name' will be called (if any) "
+#~ "to give the html. For RML reports, this is the LocalService name."
+
+#~ msgid ""
+#~ "For more details about translating Odoo in your language, please refer to "
+#~ "the"
+#~ msgstr "สำหรับรายละเอียดเพิ่มเติมเกี่ยวกับการแปล Odoo ในภาษาของคุณ, กรุณาอ้างอิง"
+
+#~ msgid ""
+#~ "For one2many fields, the field on the target model that implement the "
+#~ "opposite many2one relationship"
+#~ msgstr ""
+#~ "For one2many fields, the field on the target model that implement the "
+#~ "opposite many2one relationship"
+
+#~ msgid "For relationship fields, the technical name of the target model"
+#~ msgstr "For relationship fields, the technical name of the target model"
+
+#~ msgid "For selection fields, the Selection Options must be given!"
+#~ msgstr "For selection fields, the Selection Options must be given!"
+
+#~ msgid ""
+#~ "For this kind of document, you may only access records you created "
+#~ "yourself.\n"
+#~ "\n"
+#~ "(Document type: %s)"
+#~ msgstr ""
+#~ "For this kind of document, you may only access records you created "
+#~ "yourself.\n"
+#~ "\n"
+#~ "(Document type: %s)"
+
+#~ msgid "Forum"
+#~ msgstr "ฟอรัม"
+
+#~ msgid "France"
+#~ msgstr "ฝรั่งเศส"
+
+#~ msgid "France - Accounting"
+#~ msgstr "France - Accounting"
+
+#~ msgid "French Payroll"
+#~ msgstr "French Payroll"
+
+#~ msgid "French Southern Territories"
+#~ msgstr "เขตปกครองเฟรนช์เซาเทิร์น"
+
+#~ msgid "Friday"
+#~ msgstr "วันศุกร์"
+
+#~ msgid "From"
+#~ msgstr "จาก"
+
+#~ msgid "Full Access"
+#~ msgstr "เข้าถึงแบบเต็ม"
+
+#~ msgid "Full Access Right"
+#~ msgstr "สิทธิ์การเข้าถึงแบบเต็ม"
+
+#~ msgid "Full Name"
+#~ msgstr "ชื่อเต็ม"
+
+#~ msgid "Full Path"
+#~ msgstr "พาธเต็ม"
+
+#~ msgid "Function"
+#~ msgstr "ฟังก์ชั่น"
+
+#~ msgid "GPL Version 2"
+#~ msgstr "GPL Version 2"
+
+#~ msgid "GPL Version 3"
+#~ msgstr "GPL Version 3"
+
+#~ msgid "GPL-2 or later version"
+#~ msgstr "GPL-2 or later version"
+
+#~ msgid "GPL-3 or later version"
+#~ msgstr "GPL-3 or later version"
+
+#~ msgid "Gabon"
+#~ msgstr "กาบอน"
+
+#~ msgid "Gambia"
+#~ msgstr "แกมเบีย"
+
+#~ msgid "Gamification"
+#~ msgstr "Gamification"
+
+#~ msgid "Gantt"
+#~ msgstr "แกนต์"
+
+#~ msgid "Gauge Widget for Kanban"
+#~ msgstr "Gauge Widget for Kanban"
+
+#~ msgid "General"
+#~ msgstr "ทั่วไป"
+
+#~ msgid "General Information"
+#~ msgstr "ข้อมูลทั่วไป"
+
+#~ msgid "General Settings"
+#~ msgstr "การตั้งค่าทั่วไป"
+
+#~ msgid "Generic"
+#~ msgstr "ค่าทั่วไป"
+
+#~ msgid "Georgia"
+#~ msgstr "จอร์เจีย"
+
+#~ msgid "Germany"
+#~ msgstr "เยอรมันนี"
+
+#~ msgid "Ghana"
+#~ msgstr "กานา"
+
+#~ msgid "Gibraltar"
+#~ msgstr "ยิบรอลตาร์"
+
+#~ msgid "Global"
+#~ msgstr "โกลบอล"
+
+#~ msgid "Google Calendar"
+#~ msgstr "Google Calendar"
+
+#~ msgid "Google Drive™ integration"
+#~ msgstr "การทำงานร่วมกับ Google ไดรฟ์™"
+
+#~ msgid "Google Spreadsheet"
+#~ msgstr "Google Spreadsheet"
+
+#~ msgid "Graph"
+#~ msgstr "กราฟ"
+
+#~ msgid "Greece"
+#~ msgstr "Greece"
+
+#~ msgid "Greece - Accounting"
+#~ msgstr "Greece - Accounting"
+
+#~ msgid "Greenland"
+#~ msgstr "กรีนแลนด์"
+
+#~ msgid "Grenada"
+#~ msgstr "เกรนาดา"
+
+#~ msgid "Group"
+#~ msgstr "กลุ่ม"
+
+#~ msgid "Group By"
+#~ msgstr "จัดกลุ่มโดย"
+
+#~ msgid "Group Name"
+#~ msgstr "กลุ่ม"
+
+#~ msgid "Group name"
+#~ msgstr "ชื่อกลุ่ม"
+
+#~ msgid "Groups (no group = global)"
+#~ msgstr "Groups (no group = global)"
+
+#~ msgid "Guatemala"
+#~ msgstr "กัวเตมาลา"
+
+#~ msgid "Guatemala - Accounting"
+#~ msgstr "Guatemala - Accounting"
+
+#~ msgid "Guernsey"
+#~ msgstr "เกิร์นซีย์"
+
+#~ msgid "Guinea"
+#~ msgstr "กินี"
+
+#~ msgid "Guyana"
+#~ msgstr "กายอานา"
+
+#~ msgid "HR Gamification"
+#~ msgstr "HR Gamification"
+
+#~ msgid "HTML"
+#~ msgstr "HTML"
+
+#~ msgid "Haiti"
+#~ msgstr "เฮติ"
+
+#~ msgid "Hardware Driver for Barcode Scanners"
+#~ msgstr "Hardware Driver for Barcode Scanners"
+
+#~ msgid "Hardware Driver for ESC/POS Printers and Cashdrawers"
+#~ msgstr "Hardware Driver for ESC/POS Printers and Cashdrawers"
+
+#~ msgid "Hardware Drivers"
+#~ msgstr "Hardware Drivers"
+
+#~ msgid "Hardware Proxy"
+#~ msgstr "Hardware Proxy"
+
+#~ msgid "Header spacing"
+#~ msgstr "ระยะหัวรายงาน"
+
+#~ msgid "Help"
+#~ msgstr "ช่วยเหลือ"
+
+#~ msgid "Helpdesk"
+#~ msgstr "ฝ่ายช่วยเหลือ"
+
+#~ msgid ""
+#~ "Helps you handle your accounting needs, if you are not an accountant, we "
+#~ "suggest you to install only the Invoicing."
+#~ msgstr ""
+#~ "Helps you handle your accounting needs, if you are not an accountant, we "
+#~ "suggest you to install only the Invoicing."
+
+#~ msgid "Helps you handle your quotations, sale orders and invoicing."
+#~ msgstr "Helps you handle your quotations, sale orders and invoicing."
+
+#~ msgid ""
+#~ "Helps you manage your inventory and main stock operations: delivery "
+#~ "orders, receptions, etc."
+#~ msgstr ""
+#~ "Helps you manage your inventory and main stock operations: delivery "
+#~ "orders, receptions, etc."
+
+#~ msgid ""
+#~ "Helps you manage your manufacturing processes and generate reports on "
+#~ "those processes."
+#~ msgstr ""
+#~ "Helps you manage your manufacturing processes and generate reports on "
+#~ "those processes."
+
+#~ msgid ""
+#~ "Helps you manage your projects and tasks by tracking them, generating "
+#~ "plannings, etc..."
+#~ msgstr "ช่วยคุณในการจัดการโครงการและงาน โดยการติดตาม การเสนอการวางแผน และอื่นๆ"
+
+#~ msgid "Here is the exported translation file:"
+#~ msgstr "ไฟล์แปลภาษาที่นำออกมา: "
+
+#~ msgid "History"
+#~ msgstr "ประวัติ"
+
+#~ msgid "Holy See (Vatican City State)"
+#~ msgstr "นครรัฐวาติกัน"
+
+#~ msgid "Home Action"
+#~ msgstr "หน้าแรก"
+
+#~ msgid "Honduras"
+#~ msgstr "ฮอนดูรัส"
+
+#~ msgid "Honduras - Accounting"
+#~ msgstr "Honduras - Accounting"
+
+#~ msgid "Hong Kong"
+#~ msgstr "ฮ่องกง"
+
+#~ msgid "Hostname or IP of SMTP server"
+#~ msgstr "Hostname or IP of SMTP server"
+
+#~ msgid "Hours"
+#~ msgstr "ชั่วโมง"
+
+#~ msgid ""
+#~ "How many times the method is called,\n"
+#~ "a negative number indicates no limit."
+#~ msgstr ""
+#~ "How many times the method is called,\n"
+#~ "a negative number indicates no limit."
+
+#~ msgid "Hungarian - Accounting"
+#~ msgstr "Hungarian - Accounting"
+
+#~ msgid "Hungary"
+#~ msgstr "ฮังการี"
+
+#~ msgid "IBAN Bank Accounts"
+#~ msgstr "บัญชีธนาคาร IBAN"
+
+#~ msgid "ID"
+#~ msgstr "รหัส"
+
+#~ msgid "ID of the target record in the database"
+#~ msgstr "ID of the target record in the database"
+
+#~ msgid "ID of the view defined in xml file"
+#~ msgstr "ID of the view defined in xml file"
+
+#~ msgid "IM Bus"
+#~ msgstr "IM Bus"
+
+#~ msgid "ISO Code"
+#~ msgstr "รหัส ISO"
+
+#~ msgid "ISO Language and Country code, e.g. en_US"
+#~ msgstr "รหัส ISO ของภาษาและรหัสประเทศ เช่น th_TH"
+
+#~ msgid "ISO code"
+#~ msgstr "รหัส ISO"
+
+#~ msgid "Iceland"
+#~ msgstr "ไอซ์แลนด์"
+
+#~ msgid "Icon"
+#~ msgstr "ไอคอน"
+
+#~ msgid "Icon URL"
+#~ msgstr "Icon URL"
+
+#~ msgid "Ids"
+#~ msgstr "รหัส"
+
+#~ msgid ""
+#~ "If checked and the action is bound to a model, it will only appear in the "
+#~ "More menu on list views"
+#~ msgstr ""
+#~ "If checked and the action is bound to a model, it will only appear in the "
+#~ "More menu on list views"
+
+#~ msgid "If no group is specified the rule is global and applied to everyone"
+#~ msgstr "If no group is specified the rule is global and applied to everyone"
+
+#~ msgid "If not set, acts as a default value for new resources"
+#~ msgstr "If not set, acts as a default value for new resources"
+
+#~ msgid ""
+#~ "If set to true, the action will not be displayed on the right toolbar of "
+#~ "a form view."
+#~ msgstr ""
+#~ "If set to true, the action will not be displayed on the right toolbar of "
+#~ "a form view."
+
+#~ msgid "If set, action binding only applies for this company"
+#~ msgstr "If set, action binding only applies for this company"
+
+#~ msgid "If set, action binding only applies for this user."
+#~ msgstr "If set, action binding only applies for this user."
+
+#~ msgid ""
+#~ "If several child actions return an action, only the last one will be "
+#~ "executed.\n"
+#~ "                                    This may happen when having server "
+#~ "actions executing code that returns an action, or server actions "
+#~ "returning a client action."
+#~ msgstr ""
+#~ "If several child actions return an action, only the last one will be "
+#~ "executed.\n"
+#~ "                                    This may happen when having server "
+#~ "actions executing code that returns an action, or server actions "
+#~ "returning a client action."
+
+#~ msgid ""
+#~ "If specified, this action will be opened at log on for this user, in "
+#~ "addition to the standard menu."
+#~ msgstr ""
+#~ "If specified, this action will be opened at log on for this user, in "
+#~ "addition to the standard menu."
+
+#~ msgid ""
+#~ "If this field is empty, the view applies to all users. Otherwise, the "
+#~ "view applies to the users of those groups only."
+#~ msgstr ""
+#~ "If this field is empty, the view applies to all users. Otherwise, the "
+#~ "view applies to the users of those groups only."
+
+#~ msgid ""
+#~ "If you are working on the American market, you can manage the different "
+#~ "federal states you are working on from here. Each state is attached to "
+#~ "one country."
+#~ msgstr ""
+#~ "If you are working on the American market, you can manage the different "
+#~ "federal states you are working on from here. Each state is attached to "
+#~ "one country."
+
+#~ msgid ""
+#~ "If you check this box, your customized translations will be overwritten "
+#~ "and replaced by the official ones."
+#~ msgstr "หากคุณเลือกช่องนี้, การแปลของคุณเองจะถูกเขียนทับและแทนที่ด้วยการแปลของ เจ้าของ"
+
+#~ msgid ""
+#~ "If you check this, then the second time the user prints with same "
+#~ "attachment name, it returns the previous report."
+#~ msgstr ""
+#~ "If you check this, then the second time the user prints with same "
+#~ "attachment name, it returns the previous report."
+
+#~ msgid ""
+#~ "If you enable this option, existing translations (including custom ones) "
+#~ "will be overwritten and replaced by those in this file"
+#~ msgstr ""
+#~ "If you enable this option, existing translations (including custom ones) "
+#~ "will be overwritten and replaced by those in this file"
+
+#~ msgid ""
+#~ "If you have groups, the visibility of this menu will be based on these "
+#~ "groups. If this field is empty, Odoo will compute visibility based on the "
+#~ "related object's read access."
+#~ msgstr ""
+#~ "If you have groups, the visibility of this menu will be based on these "
+#~ "groups. If this field is empty, Odoo will compute visibility based on the "
+#~ "related object's read access."
+
+#~ msgid "If you wish to cancel the process, press the cancel button below"
+#~ msgstr "If you wish to cancel the process, press the cancel button below"
+
+#~ msgid "Image"
+#~ msgstr "รูปภาพ"
+
+#~ msgid "Implementation"
+#~ msgstr "การดำเนินการ"
+
+#~ msgid "Import / Export"
+#~ msgstr "นำเข้า / ส่งออก"
+
+#~ msgid "Import Translation"
+#~ msgstr "นำเข้าการแปล"
+
+#~ msgid "Inactive"
+#~ msgstr "ไม่เปิดใช้งาน"
+
+#~ msgid "Inactive Users"
+#~ msgstr "ผู้ใช้ที่ไม่เปิดใช้งาน"
+
+#~ msgid "India"
+#~ msgstr "อินเดีย"
+
+#~ msgid "Indian - Accounting"
+#~ msgstr "Indian - Accounting"
+
+#~ msgid "Indian Payroll"
+#~ msgstr "Indian Payroll"
+
+#~ msgid "Individual"
+#~ msgstr "บุคคล"
+
+#~ msgid "Indonesia"
+#~ msgstr "อินโดนีเซีย"
+
+#~ msgid "Information"
+#~ msgstr "ข้อมูลรายละเอียด"
+
+#~ msgid "Inherit"
+#~ msgstr "Inherit"
+
+#~ msgid "Inherited"
+#~ msgstr "Inherited"
+
+#~ msgid "Inherited View"
+#~ msgstr "มุมมองสืบทอด"
+
+#~ msgid "Inherited Views"
+#~ msgstr "Inherited Views"
+
+#~ msgid "Inherited models"
+#~ msgstr "Inherited models"
+
+#~ msgid "Inherits"
+#~ msgstr "Inherits"
+
+#~ msgid "Init Date"
+#~ msgstr "Init Date"
+
+#~ msgid "Initial Setup Tools"
+#~ msgstr "Initial Setup Tools"
+
+#~ msgid "Initialization Date"
+#~ msgstr "Initialization Date"
+
+#~ msgid "Inline Edit"
+#~ msgstr "Inline Edit"
+
+#~ msgid "Install Apps"
+#~ msgstr "ติดตั้งแอพ"
+
+#~ msgid "Install Language"
+#~ msgstr "ติดตั้งภาษา"
+
+#~ msgid "Installed"
+#~ msgstr "ติดตั้งแล้ว"
+
+#~ msgid "Installed Features"
+#~ msgstr "คุณสมบัติที่ถูกติดตั้ง"
+
+#~ msgid "Installed Version"
+#~ msgstr "เวอร์ชันที่ติดตั้ง"
+
+#~ msgid "Instant Messaging Bus allow you to send messages to users, in live."
+#~ msgstr "Instant Messaging Bus allow you to send messages to users, in live."
+
+#~ msgid "Insufficient fields for Calendar View!"
+#~ msgstr "Insufficient fields for Calendar View!"
+
+#~ msgid ""
+#~ "Insufficient fields to generate a Calendar View for %s, missing a "
+#~ "date_stop or a date_delay"
+#~ msgstr ""
+#~ "Insufficient fields to generate a Calendar View for %s, missing a "
+#~ "date_stop or a date_delay"
+
+#~ msgid "Integer"
+#~ msgstr "ตัวเลขจำนวนเต็ม"
+
+#~ msgid "Interaction between rules"
+#~ msgstr "Interaction between rules"
+
+#~ msgid "Internal Notes"
+#~ msgstr "โน้ตภายใน"
+
+#~ msgid "Internal Reference"
+#~ msgstr "อ้างอิงภายใน"
+
+#~ msgid "Internal Users"
+#~ msgstr "ผู้ใช้ภายใน"
+
+#~ msgid "Internal note..."
+#~ msgstr "โน้ตภายใน..."
+
+#~ msgid "Interval Number"
+#~ msgstr "Interval Number"
+
+#~ msgid "Interval Unit"
+#~ msgstr "หน่วยของช่วงเวลา"
+
+#~ msgid "Introspection report on objects"
+#~ msgstr "Introspection report on objects"
+
+#~ msgid ""
+#~ "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
+#~ "separated list of valid field names (optionally followed by asc/desc for "
+#~ "the direction)"
+#~ msgstr ""
+#~ "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
+#~ "separated list of valid field names (optionally followed by asc/desc for "
+#~ "the direction)"
+
+#~ msgid ""
+#~ "Invalid inheritance mode: if the mode is 'extension', the view must "
+#~ "extend an other view"
+#~ msgstr ""
+#~ "Invalid inheritance mode: if the mode is 'extension', the view must "
+#~ "extend an other view"
+
+#~ msgid "Invalid position attribute: '%s'"
+#~ msgstr "Invalid position attribute: '%s'"
+
+#~ msgid "Inventory"
+#~ msgstr "สินค้าคงคลัง"
+
+#~ msgid "Inventory, Logistic, Valuation, Accounting"
+#~ msgstr "Inventory, Logistic, Valuation, Accounting"
+
+#~ msgid "Invoice"
+#~ msgstr "ใบกำกับสินค้า/ใบแจ้งหนี้"
+
+#~ msgid "Invoicing"
+#~ msgstr "การแจ้งหนี้"
+
+#~ msgid "Invoicing & Payments"
+#~ msgstr "การแจ้งหนี้และการชำระเงิน"
+
+#~ msgid "Iran"
+#~ msgstr "อิหร่าน"
+
+#~ msgid "Iraq"
+#~ msgstr "อิรัก"
+
+#~ msgid "Ireland"
+#~ msgstr "ไอร์แลนด์"
+
+#~ msgid "Is a Company"
+#~ msgstr "เป็นบริษัท"
+
+#~ msgid "Is a Customer"
+#~ msgstr "เป็นลูกค้า"
+
+#~ msgid "Is a Vendor"
+#~ msgstr "เป็นผู้จำหน่าย"
+
+#~ msgid "Isle of Man"
+#~ msgstr "เกาะแมน"
+
+#~ msgid "Israel"
+#~ msgstr "อิสราเอล"
+
+#~ msgid "Italy"
+#~ msgstr "อิตาลี"
+
+#~ msgid "Italy - Accounting"
+#~ msgstr "Italy - Accounting"
+
+#~ msgid "Jamaica"
+#~ msgstr "จาไมก้า"
+
+#~ msgid "Japan"
+#~ msgstr "ญี่ปุ่น"
+
+#~ msgid "Japan - Accounting"
+#~ msgstr "Japan - Accounting"
+
+#~ msgid "Jersey"
+#~ msgstr "เจอร์ซีย์"
+
+#~ msgid "Job Position"
+#~ msgstr "ตำแหน่ง"
+
+#~ msgid "Jordan"
+#~ msgstr "จอร์แดน"
+
+#~ msgid "Just In Time Scheduling"
+#~ msgstr "Just In Time Scheduling"
+
+#~ msgid "Kanban"
+#~ msgstr "Kanban"
+
+#~ msgid "Kazakhstan"
+#~ msgstr "คาซัคสถาน"
+
+#~ msgid "Kenya"
+#~ msgstr "เคนยา"
+
+#~ msgid "Key"
+#~ msgstr "กุญแจ"
+
+#~ msgid "Key must be unique."
+#~ msgstr "Key สำคัญต้องไม่ซ้ำกัน"
+
+#~ msgid "Kiribati"
+#~ msgstr "Kiribati"
+
+#~ msgid "Kontni načrt za gospodarske družbe"
+#~ msgstr "Kontni načrt za gospodarske družbe"
+
+#~ msgid "Kuwait"
+#~ msgstr "คูเวต"
+
+#~ msgid "LGPL Version 3"
+#~ msgstr "LGPL Version 3"
+
+#~ msgid "Landed Costs"
+#~ msgstr "Landed Costs"
+
+#~ msgid "Landscape"
+#~ msgstr "แนวนอน"
+
+#~ msgid "Language"
+#~ msgstr "ภาษา"
+
+#~ msgid "Language Import"
+#~ msgstr "นำเข้าภาษา"
+
+#~ msgid "Language Name"
+#~ msgstr "ชื่อภาษา"
+
+#~ msgid "Language Pack"
+#~ msgstr "ชุดภาษา"
+
+#~ msgid "Language code of translation item must be among known languages"
+#~ msgstr "Language code of translation item must be among known languages"
+
+#~ msgid "Languages"
+#~ msgstr "ภาษา"
+
+#~ msgid "Laos"
+#~ msgstr "ลาว"
+
+#~ msgid "Last Modified on"
+#~ msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
+
+#~ msgid "Last Updated by"
+#~ msgstr "อัพเดทครั้งสุดท้ายโดย"
+
+#~ msgid "Last Updated on"
+#~ msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
+
+#~ msgid "Latest Version"
+#~ msgstr "รุ่นล่าสุด"
+
+#~ msgid "Latest connection"
+#~ msgstr "เข้าใช้งานครั้งสุดท้าย"
+
+#~ msgid "Latvia"
+#~ msgstr "ลัตเวีย"
+
+#~ msgid "Launch"
+#~ msgstr "เรียก"
+
+#~ msgid "Launch Configuration Wizard"
+#~ msgstr "เปิดตัวช่วยสร้างการกำหนดค่า"
+
+#~ msgid "Leaves"
+#~ msgstr "การลา"
+
+#~ msgid "Lebanon"
+#~ msgstr "เลบานอน"
+
+#~ msgid "Ledger  28  431.8 x 279.4 mm"
+#~ msgstr "บัญชีแยกประเภท  28  431.8 x 279.4 มม."
+
+#~ msgid "Left Margin (mm)"
+#~ msgstr "ขอบซ้าย (มม.)"
+
+#~ msgid "Left-to-Right"
+#~ msgstr "จากซ้ายไปขวา"
+
+#~ msgid "Legal    3   8.5 x 14 inches, 215.9 x 355.6 mm"
+#~ msgstr "กฎหมาย    3   8.5 x 14 inches, 215.9 x 355.6 มม."
+
+#~ msgid "Legend (for prefix, suffix)"
+#~ msgstr "Legend (for prefix, suffix)"
+
+#~ msgid "Legends for supported Date and Time Formats"
+#~ msgstr "รหัสสำหรับรูปแบบวันและเวลาที่รองรับ"
+
+#~ msgid "Lesotho"
+#~ msgstr "เลโซโท"
+
+#~ msgid "Letter 2 8.5 x 11 inches, 215.9 x 279.4 mm"
+#~ msgstr "จดหมาย 2 8.5 x 11 นิ้ว, 215.9 x 279.4 มม."
+
+#~ msgid "Level"
+#~ msgstr "ระดับ"
+
+#~ msgid "Liberia"
+#~ msgstr "ไลบีเรีย"
+
+#~ msgid "Libya"
+#~ msgstr "ลิเบีย"
+
+#~ msgid "License"
+#~ msgstr "ใบอนุญาต"
+
+#~ msgid "Liechtenstein"
+#~ msgstr "ลิกเตนสไตน์"
+
+#~ msgid "Limit"
+#~ msgstr "จำกัด"
+
+#~ msgid "Lines"
+#~ msgstr "เส้น"
+
+#~ msgid "Link using field"
+#~ msgstr "Link using field"
+
+#~ msgid "List of modules in which the field is defined"
+#~ msgstr "List of modules in which the field is defined"
+
+#~ msgid "List of modules in which the object is defined or inherited"
+#~ msgstr "List of modules in which the object is defined or inherited"
+
+#~ msgid ""
+#~ "List of options for a selection field, specified as a Python expression "
+#~ "defining a list of (key, label) pairs. For example: [('blue','Blue'),"
+#~ "('yellow','Yellow')]"
+#~ msgstr ""
+#~ "List of options for a selection field, specified as a Python expression "
+#~ "defining a list of (key, label) pairs. For example: [('blue','Blue'),"
+#~ "('yellow','Yellow')]"
+
+#~ msgid "Lithuania"
+#~ msgstr "ลิทัวเนีย"
+
+#~ msgid "Live Chat"
+#~ msgstr "Live Chat"
+
+#~ msgid "Load"
+#~ msgstr "โหลด"
+
+#~ msgid "Load a Translation"
+#~ msgstr "โหลดการแปล"
+
+#~ msgid "Locale Code"
+#~ msgstr "รหัสประเทศ"
+
+#~ msgid "Localization"
+#~ msgstr "การปรับเข้ากับท้องถิ่น"
+
+#~ msgid "Log"
+#~ msgstr "Log"
+
+#~ msgid "Logging"
+#~ msgstr "Logging"
+
+#~ msgid "Login"
+#~ msgstr "เข้าสู่ระบบ"
+
+#~ msgid "Logo"
+#~ msgstr "โลโก้"
+
+#~ msgid "Logo Web"
+#~ msgstr "โลโก้เว็บไซต์"
+
+#~ msgid "Logs"
+#~ msgstr "Logs"
+
+#~ msgid "Lunch"
+#~ msgstr "อาหารเที่ยง"
+
+#~ msgid "Luxembourg"
+#~ msgstr "ลักเซมเบิร์ก"
+
+#~ msgid "Luxembourg - Accounting"
+#~ msgstr "Luxembourg - Accounting"
+
+#~ msgid "MRP Byproducts"
+#~ msgstr "MRP Byproducts"
+
+#~ msgid "Macau"
+#~ msgstr "มาเก๊า"
+
+#~ msgid "Macedonia, the former Yugoslav Republic of"
+#~ msgstr "Macedonia, the former Yugoslav Republic of"
+
+#~ msgid "Madagascar"
+#~ msgstr "มาดากัสการ"
+
+#~ msgid "Madam"
+#~ msgstr "นาง"
+
+#~ msgid "Maintainer"
+#~ msgstr "Maintainer"
+
+#~ msgid "Maintenance"
+#~ msgstr "บำรุงรักษา"
+
+#~ msgid "Malawi"
+#~ msgstr "มาลาวี"
+
+#~ msgid "Malaysia"
+#~ msgstr "มาเลเซีย"
+
+#~ msgid "Maldives"
+#~ msgstr "มัลดิฟ"
+
+#~ msgid "Mali"
+#~ msgstr "เมาริ"
+
+#~ msgid "Malta"
+#~ msgstr "มอลตา"
+
+#~ msgid ""
+#~ "Manage and customize the items available and displayed in your Odoo "
+#~ "system menu. You can delete an item by clicking on the box at the "
+#~ "beginning of each line and then delete it through the button that "
+#~ "appeared. Items can be assigned to specific groups in order to make them "
+#~ "accessible to some users within the system."
+#~ msgstr ""
+#~ "Manage and customize the items available and displayed in your Odoo "
+#~ "system menu. You can delete an item by clicking on the box at the "
+#~ "beginning of each line and then delete it through the button that "
+#~ "appeared. Items can be assigned to specific groups in order to make them "
+#~ "accessible to some users within the system."
+
+#~ msgid "Manufacturing"
+#~ msgstr "การผลิต"
+
+#~ msgid "Many2One"
+#~ msgstr "Many2One"
+
+#~ msgid "ManyToMany Relations"
+#~ msgstr "ManyToMany Relations"
+
+#~ msgid "Margins by Products"
+#~ msgstr "Margins by Products"
+
+#~ msgid "Margins in Sales Orders"
+#~ msgstr "Margins in Sales Orders"
+
+#~ msgid "Marketing"
+#~ msgstr "การตลาด"
+
+#~ msgid "Maroc - Accounting"
+#~ msgstr "Maroc - Accounting"
+
+#~ msgid "Marshall Islands"
+#~ msgstr "หมู่เกาะมาร์แชลล์"
+
+#~ msgid "Mauritania"
+#~ msgstr "มอริทาเนีย"
+
+#~ msgid "Mauritius"
+#~ msgstr "มอริเชียส"
+
+#~ msgid "Mayotte"
+#~ msgstr "เมโยเต้"
+
+#~ msgid "Medium-sized image"
+#~ msgstr "รูปภาพขนาดกลาง"
+
+#~ msgid ""
+#~ "Medium-sized image of this contact. It is automatically resized as a "
+#~ "128x128px image, with aspect ratio preserved. Use this field in form "
+#~ "views or some kanban views."
+#~ msgstr ""
+#~ "Medium-sized image of this contact. It is automatically resized as a "
+#~ "128x128px image, with aspect ratio preserved. Use this field in form "
+#~ "views or some kanban views."
+
+#~ msgid "Members"
+#~ msgstr "สมาชิก"
+
+#~ msgid "Memos pad"
+#~ msgstr "Memos pad"
+
+#~ msgid "Menu"
+#~ msgstr "เมนู"
+
+#~ msgid "Menu Items"
+#~ msgstr "รายการเมนู"
+
+#~ msgid "Menu Name"
+#~ msgstr "ชื่อเมนู"
+
+#~ msgid "Menus"
+#~ msgstr "เมนู"
+
+#~ msgid "Menus Customization"
+#~ msgstr "การปรับแต่งเมนู"
+
+#~ msgid "Merge Contacts"
+#~ msgstr "รวมรายชื่อ"
+
+#~ msgid "Merge the following contacts"
+#~ msgstr "รวมรายชื่อต่อไปนี้"
+
+#~ msgid "Message"
+#~ msgstr "ข้อความ"
+
+#~ msgid "Messaging and Social"
+#~ msgstr "ข้อความและสังคม"
+
+#~ msgid "Mexico"
+#~ msgstr "เม็กซิโก"
+
+#~ msgid "Mexico - Accounting"
+#~ msgstr "Mexico - Accounting"
+
+#~ msgid "Micronesia"
+#~ msgstr "ไมโครนีเซีย"
+
+#~ msgid "Minutes"
+#~ msgstr "นาที"
+
+#~ msgid "Misc"
+#~ msgstr "เบ็ดเตล็ด"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "เบ็ดเตล็ด"
+
+#~ msgid "Miss"
+#~ msgstr "นางสาว"
+
+#~ msgid "Missing required value for the field '%s' (%s)"
+#~ msgstr "Missing required value for the field '%s' (%s)"
+
+#~ msgid "Mister"
+#~ msgstr "นาย"
+
+#~ msgid "Mobile:"
+#~ msgstr "มือถือ:"
+
+#~ msgid "Model"
+#~ msgstr "โมเดล"
+
+#~ msgid "Model Constraints"
+#~ msgstr "ข้อจำกัดโมเดล"
+
+#~ msgid "Model Data"
+#~ msgstr "Model Data"
+
+#~ msgid "Model Description"
+#~ msgstr "รายละเอียดโมเดล"
+
+#~ msgid "Model Name"
+#~ msgstr "ชื่อโมเดล"
+
+#~ msgid "Model Overview"
+#~ msgstr "Model Overview"
+
+#~ msgid ""
+#~ "Model for record creation / update. Set this field only to specify a "
+#~ "different model than the base model."
+#~ msgstr ""
+#~ "Model for record creation / update. Set this field only to specify a "
+#~ "different model than the base model."
+
+#~ msgid "Model name of the object to open in the view window"
+#~ msgstr "Model name of the object to open in the view window"
+
+#~ msgid "Models"
+#~ msgstr "โมเดล"
+
+#~ msgid "Module"
+#~ msgstr "โมดูล"
+
+#~ msgid "Module Category"
+#~ msgstr "หมวดโมดูล"
+
+#~ msgid "Module Name"
+#~ msgstr "ชื่อโมดูล"
+
+#~ msgid "Module Update"
+#~ msgstr "ปรับปรุงโมดูล"
+
+#~ msgid "Module Update Result"
+#~ msgstr "ผลการปรับปรุงโมดูล"
+
+#~ msgid "Module Upgrade Install"
+#~ msgstr "ติดตั้ง อัพเกรดโมดูล"
+
+#~ msgid "Module dependency"
+#~ msgstr "การพึ่งพาของโมดูล"
+
+#~ msgid "Module this term belongs to"
+#~ msgstr "Module this term belongs to"
+
+#~ msgid "Modules"
+#~ msgstr "โมดูล"
+
+#~ msgid "Monaco"
+#~ msgstr "โมนาโก"
+
+#~ msgid "Monday"
+#~ msgstr "วันจันทร์"
+
+#~ msgid "Mongolia"
+#~ msgstr "มองโกเลีย"
+
+#~ msgid "Montenegro"
+#~ msgstr "มอนเตเนโกร"
+
+#~ msgid "Months"
+#~ msgstr "เดือน"
+
+#~ msgid "Montserrat"
+#~ msgstr "มอนต์เซอร์รัต"
+
+#~ msgid "Morocco"
+#~ msgstr "โมร็อกโก"
+
+#~ msgid "Mozambique"
+#~ msgstr "โมแซมบิก"
+
+#~ msgid "Mr."
+#~ msgstr "นาย"
+
+#~ msgid "Mrs."
+#~ msgstr "นางสาว"
+
+#~ msgid "Multi Companies"
+#~ msgstr "หลายบริษัท"
+
+#~ msgid "Multi Currencies"
+#~ msgstr "หลายสกุลเงิน"
+
+#~ msgid "Multi Language Chart of Accounts"
+#~ msgstr "ผังบัญชีหลายภาษา"
+
+#~ msgid "My Document(s)"
+#~ msgstr "เอกสารของฉัน"
+
+#~ msgid "My filters"
+#~ msgstr "ตัวกรองของฉัน"
+
+#~ msgid "Myanmar"
+#~ msgstr "พม่า"
+
+#~ msgid "Name:"
+#~ msgstr "ชื่อ:"
+
+#~ msgid "Namibia"
+#~ msgstr "นามิเบีย"
+
+#~ msgid "Nauru"
+#~ msgstr "นาอูรู"
+
+#~ msgid "Nepal"
+#~ msgstr "เนปาล"
+
+#~ msgid "Netherlands"
+#~ msgstr "เนเธอร์แลนด์"
+
+#~ msgid "Netherlands - Accounting"
+#~ msgstr "Netherlands - Accounting"
+
+#~ msgid "New Password"
+#~ msgstr "รหัสผ่านใหม่"
+
+#~ msgid "New Window"
+#~ msgstr "หน้าต่างใหม่"
+
+#~ msgid "New Zealand"
+#~ msgstr "นิวซีแลนด์"
+
+#~ msgid "Next Execution Date"
+#~ msgstr "Next Execution Date"
+
+#~ msgid "Next Number"
+#~ msgstr "หมายเลขต่อไป"
+
+#~ msgid "Next number of this sequence"
+#~ msgstr "หมายเลขต่อไปของลำดับนี้"
+
+#~ msgid ""
+#~ "Next number that will be used. This number can be incremented frequently "
+#~ "so the displayed value might already be obsolete"
+#~ msgstr ""
+#~ "Next number that will be used. This number can be incremented frequently "
+#~ "so the displayed value might already be obsolete"
+
+#~ msgid "Next planned execution date for this job."
+#~ msgstr "วางแผน วันทำงานถัดไปสำหรับงานนี้"
+
+#~ msgid "Nicaragua"
+#~ msgstr "นิคารากัว"
+
+#~ msgid "Niger"
+#~ msgstr "ไนเจอร์"
+
+#~ msgid "Nigeria"
+#~ msgstr "ไนจีเรีย"
+
+#~ msgid "Niue"
+#~ msgstr "นีอูเอ"
+
+#~ msgid "No default view of type '%s' could be found !"
+#~ msgstr "No default view of type '%s' could be found !"
+
+#~ msgid "No gap"
+#~ msgstr "ไม่มีช่องว่าง"
+
+#~ msgid "Non Updatable"
+#~ msgstr "Non Updatable"
+
+#~ msgid "None"
+#~ msgstr "ไม่มี"
+
+#~ msgid "Norfolk Island"
+#~ msgstr "เกาะนอร์ฟอล์ก"
+
+#~ msgid "North Korea"
+#~ msgstr "เกาหลีเหนือ"
+
+#~ msgid "Northern Mariana Islands"
+#~ msgstr "หมู่เกาะนอร์เทิร์นมาเรียนา"
+
+#~ msgid "Norway"
+#~ msgstr "นอร์เวย์"
+
+#~ msgid "Not Installed"
+#~ msgstr "ไม่ถูกติดตั้ง"
+
+#~ msgid "Notes"
+#~ msgstr "โน้ต"
+
+#~ msgid "Number of Calls"
+#~ msgstr "Number of Calls"
+
+#~ msgid "Number of modules added"
+#~ msgstr "Number of modules added"
+
+#~ msgid "Number of modules updated"
+#~ msgstr "จำนวนโมดูลที่ปรับปรุง"
+
+#~ msgid "OAuth2 Authentication"
+#~ msgstr "OAuth2 Authentication"
+
+#~ msgid "OHADA - Accounting"
+#~ msgstr "OHADA - Accounting"
+
+#~ msgid "Object"
+#~ msgstr "อ็อบเจกต์"
+
+#~ msgid "Object Name"
+#~ msgstr "ชื่อออปเจ็กต์"
+
+#~ msgid "Object Relation"
+#~ msgstr "Object Relation"
+
+#~ msgid "Object:"
+#~ msgstr "วัตถุ:"
+
+#~ msgid ""
+#~ "Odoo will automatically adds some '0' on the left of the 'Next Number' to "
+#~ "get the required padding size."
+#~ msgstr ""
+#~ "Odoo will automatically adds some '0' on the left of the 'Next Number' to "
+#~ "get the required padding size."
+
+#~ msgid "Ogone Payment Acquirer"
+#~ msgstr "Ogone Payment Acquirer"
+
+#~ msgid "Ok"
+#~ msgstr "ตกลง"
+
+#~ msgid "Oman"
+#~ msgstr "โอมาน"
+
+#~ msgid "On Delete"
+#~ msgstr "On Delete"
+
+#~ msgid "On Multiple Doc."
+#~ msgstr "On Multiple Doc."
+
+#~ msgid "On delete property for many2one fields"
+#~ msgstr "On delete property for many2one fields"
+
+#~ msgid ""
+#~ "One of the records you are trying to modify has already been deleted "
+#~ "(Document type: %s)."
+#~ msgstr ""
+#~ "One of the records you are trying to modify has already been deleted "
+#~ "(Document type: %s)."
+
+#~ msgid ""
+#~ "Only users with the following access level are currently allowed to do "
+#~ "that"
+#~ msgstr ""
+#~ "Only users with the following access level are currently allowed to do "
+#~ "that"
+
+#~ msgid "Open Settings Menu"
+#~ msgstr "เปิด เมนูการตั้งค่า"
+
+#~ msgid "Open Window"
+#~ msgstr "Open Window"
+
+#~ msgid "Open a Window"
+#~ msgstr "เปิดหน้าต่าง"
+
+#~ msgid "Opportunity to Quotation"
+#~ msgstr "Opportunity to Quotation"
+
+#~ msgid "Option"
+#~ msgstr "ตัวเลือก"
+
+#~ msgid ""
+#~ "Optional domain filtering of the destination data, as a Python expression"
+#~ msgstr ""
+#~ "Optional domain filtering of the destination data, as a Python expression"
+
+#~ msgid ""
+#~ "Optional help text for the users with a description of the target view, "
+#~ "such as its usage and purpose."
+#~ msgstr ""
+#~ "Optional help text for the users with a description of the target view, "
+#~ "such as its usage and purpose."
+
+#~ msgid ""
+#~ "Optional model name of the objects on which this action should be visible"
+#~ msgstr ""
+#~ "Optional model name of the objects on which this action should be visible"
+
+#~ msgid "Optional model, mostly used for needactions."
+#~ msgstr "Optional model, mostly used for needactions."
+
+#~ msgid "Optional password for SMTP authentication"
+#~ msgstr "Optional password for SMTP authentication"
+
+#~ msgid "Optional username for SMTP authentication"
+#~ msgstr "Optional username for SMTP authentication"
+
+#~ msgid "Options"
+#~ msgstr "ตัวเลือก"
+
+#~ msgid "Orientation"
+#~ msgstr "แนบกระดาษ"
+
+#~ msgid "Original View"
+#~ msgstr "มุมมองดั้งเดิม"
+
+#~ msgid "Other Extra Rights"
+#~ msgstr "สิทธิ์เพิ่มเติมอื่นๆ"
+
+#~ msgid "Other OSI Approved Licence"
+#~ msgstr "Other OSI Approved Licence"
+
+#~ msgid "Other Partners"
+#~ msgstr "คู่ค้าอื่นๆ"
+
+#~ msgid "Other Proprietary"
+#~ msgstr "Other Proprietary"
+
+#~ msgid "Outgoing Mail Server"
+#~ msgstr "Outgoing Mail Server"
+
+#~ msgid "Outgoing Mail Servers"
+#~ msgstr "Outgoing Mail Servers"
+
+#~ msgid "Output DPI"
+#~ msgstr "DPI"
+
+#~ msgid "Overwrite Existing Terms"
+#~ msgstr "เขียนทับศัพท์ที่มีอยู่"
+
+#~ msgid "Owner"
+#~ msgstr "เจ้าของ"
+
+#~ msgid "PDF"
+#~ msgstr "PDF"
+
+#~ msgid "PO File"
+#~ msgstr "ไฟล์ PO"
+
+#~ msgid "PO(T) format: you should edit it with a PO editor such as"
+#~ msgstr "รูปแบบ PO(T): คุณควรแก้ไขด้วยโปรแกรมแก้ไข PO เช่น"
+
+#~ msgid "POEdit"
+#~ msgstr "POEdit"
+
+#~ msgid "Pad on tasks"
+#~ msgstr "Pad on tasks"
+
+#~ msgid "Page height (mm)"
+#~ msgstr "ความสูงกระดาษ (มม.)"
+
+#~ msgid "Page width (mm)"
+#~ msgstr "ความกว้างกระดาษ (มม.)"
+
+#~ msgid "Pakistan"
+#~ msgstr "ปากีสถาน"
+
+#~ msgid "Palau"
+#~ msgstr "ปาเลา"
+
+#~ msgid "Panama"
+#~ msgstr "ปานามา"
+
+#~ msgid "Paper Format"
+#~ msgstr "รูปแบบกระดาษ"
+
+#~ msgid "Paper Format General Configuration"
+#~ msgstr "การตั้งค่าทั่วไปของรูปแบบกระดาษ"
+
+#~ msgid "Paper format"
+#~ msgstr "รูปแบบกระดาษ"
+
+#~ msgid "Paper format configuration"
+#~ msgstr "การตั้งค่ารูปแบบกระดาษ"
+
+#~ msgid "Paper size"
+#~ msgstr "ขนาดกระดาษ"
+
+#~ msgid "Papua New Guinea"
+#~ msgstr "ปาปัวนิวกินี"
+
+#~ msgid "Paraguay"
+#~ msgstr "ปารากวัย"
+
+#~ msgid "Parameters"
+#~ msgstr "พารามิเตอร์"
+
+#~ msgid "Parameters that are used by all resources."
+#~ msgstr "Parameters that are used by all resources."
+
+#~ msgid "Params storage"
+#~ msgstr "Params storage"
+
+#~ msgid "Parent Application"
+#~ msgstr "Parent Application"
+
+#~ msgid "Parent Company"
+#~ msgstr "บริษัทแม่"
+
+#~ msgid "Parent Menu"
+#~ msgstr "Parent Menu"
+
+#~ msgid "Parent name"
+#~ msgstr "Parent name"
+
+#~ msgid "Partner"
+#~ msgstr "คู่ค้า"
+
+#~ msgid "Partner Tags"
+#~ msgstr "ป้ายกำกับคู่ค้า"
+
+#~ msgid "Partner Titles"
+#~ msgstr "คำนำหน้าชื่อคู่ค้า"
+
+#~ msgid "Partner-related data of the user"
+#~ msgstr "Partner-related data of the user"
+
+#~ msgid "Partners"
+#~ msgstr "คู่ค้า"
+
+#~ msgid "Partners: "
+#~ msgstr "คู่ค้า: "
+
+#~ msgid "Password"
+#~ msgstr "รหัสผ่าน"
+
+#~ msgid "Path"
+#~ msgstr "Path"
+
+#~ msgid "Payment Acquirer"
+#~ msgstr "ผู้รับชำระ"
+
+#~ msgid "Payment Acquirer Base Module"
+#~ msgstr "Payment Acquirer Base Module"
+
+#~ msgid "Payment Acquirer: Adyen Implementation"
+#~ msgstr "Payment Acquirer: Adyen Implementation"
+
+#~ msgid "Payment Acquirer: Authorize.net Implementation"
+#~ msgstr "Payment Acquirer: Authorize.net Implementation"
+
+#~ msgid "Payment Acquirer: Buckaroo Implementation"
+#~ msgstr "Payment Acquirer: Buckaroo Implementation"
+
+#~ msgid "Payment Acquirer: Ogone Implementation"
+#~ msgstr "Payment Acquirer: Ogone Implementation"
+
+#~ msgid "Payment Acquirer: Paypal Implementation"
+#~ msgstr "Payment Acquirer: Paypal Implementation"
+
+#~ msgid "Payment Acquirer: Transfer Implementation"
+#~ msgstr "Payment Acquirer: Transfer Implementation"
+
+#~ msgid "Payment Follow-up Management"
+#~ msgstr "Payment Follow-up Management"
+
+#~ msgid "Paypal Payment Acquirer"
+#~ msgstr "Paypal Payment Acquirer"
+
+#~ msgid "Payroll"
+#~ msgstr "เงินเดือน"
+
+#~ msgid "Payroll Accounting"
+#~ msgstr "บัญชีเงินเดือน"
+
+#~ msgid "Peru"
+#~ msgstr "เปรู"
+
+#~ msgid "Philippines"
+#~ msgstr "ฟิลิปปินส์"
+
+#~ msgid "Phone:"
+#~ msgstr "โทรศัพท์:"
+
+#~ msgid "Plano de contas SNC para Portugal"
+#~ msgstr "Plano de contas SNC para Portugal"
+
+#~ msgid ""
+#~ "Please contact your system administrator if you think this is an error."
+#~ msgstr ""
+#~ "Please contact your system administrator if you think this is an error."
+
+#~ msgid "Point of Sale"
+#~ msgstr "จุดขาย"
+
+#~ msgid "Point of Sale Discounts"
+#~ msgstr "Point of Sale Discounts"
+
+#~ msgid "Poland"
+#~ msgstr "โปแลนด์"
+
+#~ msgid "Poland - Accounting"
+#~ msgstr "Poland - Accounting"
+
+#~ msgid "Portal"
+#~ msgstr "Portal"
+
+#~ msgid ""
+#~ "Portal members have specific access rights (such as record rules and "
+#~ "restricted menus).\n"
+#~ "                They usually do not belong to the usual Odoo groups."
+#~ msgstr ""
+#~ "Portal members have specific access rights (such as record rules and "
+#~ "restricted menus).\n"
+#~ "                They usually do not belong to the usual Odoo groups."
+
+#~ msgid "Portrait"
+#~ msgstr "แนวตั้ง"
+
+#~ msgid "Portugal"
+#~ msgstr "โปรตุเกส"
+
+#~ msgid "PostgreSQL constraint or foreign key name."
+#~ msgstr "PostgreSQL constraint or foreign key name."
+
+#~ msgid "PostgreSQL table name implementing a many2many relation."
+#~ msgstr "PostgreSQL table name implementing a many2many relation."
+
+#~ msgid "Preferences"
+#~ msgstr "การตั้งค่า"
+
+#~ msgid "Prefix"
+#~ msgstr "อักษรนำ"
+
+#~ msgid "Prefix value of the record for the sequence"
+#~ msgstr "ค่า"
+
+#~ msgid "Price Accuracy"
+#~ msgstr "Price Accuracy"
+
+#~ msgid "Priority"
+#~ msgstr "ระดับความสำคัญ"
+
+#~ msgid "Product Email Template"
+#~ msgstr "Product Email Template"
+
+#~ msgid "Products & Pricelists"
+#~ msgstr "Products & Pricelists"
+
+#~ msgid "Prof."
+#~ msgstr "ศ."
+
+#~ msgid "Professor"
+#~ msgstr "ศาสตราจารย์"
+
+#~ msgid "Project"
+#~ msgstr "โปรเจค"
+
+#~ msgid "Properties"
+#~ msgstr "คุณสมบัติ"
+
+#~ msgid "Public"
+#~ msgstr "สาธารณะ"
+
+#~ msgid ""
+#~ "Public users have specific access rights (such as record rules and "
+#~ "restricted menus).\n"
+#~ "                They usually do not belong to the usual Odoo groups."
+#~ msgstr ""
+#~ "Public users have specific access rights (such as record rules and "
+#~ "restricted menus).\n"
+#~ "                They usually do not belong to the usual Odoo groups."
+
+#~ msgid "Published Version"
+#~ msgstr "เวอร์ชันเผยแพร่"
+
+#~ msgid "Puerto Rico"
+#~ msgstr "เปอร์โตริโก"
+
+#~ msgid "Purchase"
+#~ msgstr "การซื้อ"
+
+#~ msgid "Purchases"
+#~ msgstr "การซื้อ"
+
+#~ msgid "Python Code"
+#~ msgstr "Python Code"
+
+#~ msgid "Python expression"
+#~ msgstr "Python expression"
+
+#~ msgid "QWeb"
+#~ msgstr "QWeb"
+
+#~ msgid "Qatar"
+#~ msgstr "กาตาร์"
+
+#~ msgid "Quality"
+#~ msgstr "คุณภาพ"
+
+#~ msgid "Rate"
+#~ msgstr "อัตรา"
+
+#~ msgid "Rates"
+#~ msgstr "Rates"
+
+#~ msgid "Read Access"
+#~ msgstr "สิทธิ์แบบอ่าน"
+
+#~ msgid "Read Access Right"
+#~ msgstr "สิทธิ์การอ่าน"
+
+#~ msgid "Readonly"
+#~ msgstr "Readonly"
+
+#~ msgid "Record ID"
+#~ msgstr "Record ID"
+
+#~ msgid "Record Rule"
+#~ msgstr "กฎบันทึก"
+
+#~ msgid "Record does not exist or has been deleted."
+#~ msgstr "Record does not exist or has been deleted."
+
+#~ msgid "Record rules"
+#~ msgstr "Record rules"
+
+#~ msgid "Recruitment"
+#~ msgstr "รับสมัครงาน"
+
+#~ msgid "Recursivity Detected."
+#~ msgstr "Recursivity Detected."
+
+#~ msgid "Reference"
+#~ msgstr "อ้างอิง"
+
+#~ msgid "Related Company"
+#~ msgstr "บริษัท ที่เกี่ยวข้อง"
+
+#~ msgid "Related Partner"
+#~ msgstr "คู่ค้าที่เกี่ยวข้อง"
+
+#~ msgid "Related Server Action"
+#~ msgstr "Related Server Action"
+
+#~ msgid "Relation Field"
+#~ msgstr "Relation Field"
+
+#~ msgid "Relation Name"
+#~ msgstr "ชื่อความสัมพันธ์"
+
+#~ msgid "Reload from Attachment"
+#~ msgstr "โหลดใหม่จากสิ่งที่แนบมา"
+
+#~ msgid "Remove"
+#~ msgstr "ลบออก"
+
+#~ msgid "Remove from the 'Print' menu"
+#~ msgstr "นำออกจากเมนู 'พิมพ์'"
+
+#~ msgid "Repairs"
+#~ msgstr "งานซ่อมแซม"
+
+#~ msgid "Repeat Missed"
+#~ msgstr "Repeat Missed"
+
+#~ msgid "Repeat every x."
+#~ msgstr "Repeat every x."
+
+#~ msgid "Report"
+#~ msgstr "รายงาน"
+
+#~ msgid "Report File"
+#~ msgstr "ไฟล์รายงาน"
+
+#~ msgid "Report Footer"
+#~ msgstr "ส่วนท้ายของ รายงาน"
+
+#~ msgid "Report Model"
+#~ msgstr "Report Model"
+
+#~ msgid "Report Type"
+#~ msgstr "ประเภทรายงาน"
+
+#~ msgid "Report Xml"
+#~ msgstr "รายงาน Xml"
+
+#~ msgid "Report xml"
+#~ msgstr "รายงาน xml"
+
+#~ msgid "Reporting"
+#~ msgstr "การรายงาน"
+
+#~ msgid "Reports"
+#~ msgstr "รายงาน"
+
+#~ msgid "Required"
+#~ msgstr "ต้องการ"
+
+#~ msgid "Resellers"
+#~ msgstr "Resellers"
+
+#~ msgid "Resolve other errors first"
+#~ msgstr "Resolve other errors first"
+
+#~ msgid "Resource"
+#~ msgstr "ทรัพยากร"
+
+#~ msgid "Resource ID"
+#~ msgstr "ID ทรัพยากร"
+
+#~ msgid "Resource Model"
+#~ msgstr "Resource Model"
+
+#~ msgid "Resource Name"
+#~ msgstr "ทรัพยากรชื่อ"
+
+#~ msgid "Restaurant"
+#~ msgstr "ร้านอาหาร"
+
+#~ msgid "Restaurant extensions for the Point of Sale "
+#~ msgstr "Restaurant extensions for the Point of Sale "
+
+#~ msgid "Restrict"
+#~ msgstr "Restrict"
+
+#~ msgid "Restrict to lists"
+#~ msgstr "Restrict to lists"
+
+#~ msgid "Right Margin (mm)"
+#~ msgstr "ขอบขวา (มม.)"
+
+#~ msgid "Right-to-Left"
+#~ msgstr "จากขวาไปซ้าย"
+
+#~ msgid "Romania"
+#~ msgstr "โรมาเนีย"
+
+#~ msgid "Romania - Accounting"
+#~ msgstr "Romania - Accounting"
+
+#~ msgid "Rounding Factor"
+#~ msgstr "Rounding Factor"
+
+#~ msgid "Rule Definition (Domain Filter)"
+#~ msgstr "Rule Definition (Domain Filter)"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "Rule must have at least one checked access right !"
+
+#~ msgid "Rules"
+#~ msgstr "กฏ"
+
+#~ msgid "Rules can not be applied on Transient models."
+#~ msgstr "Rules can not be applied on Transient models."
+
+#~ msgid "Run"
+#~ msgstr "เริ่มทำงาน"
+
+#~ msgid "Russian Federation"
+#~ msgstr "สหพันธรัฐรัสเซีย"
+
+#~ msgid "Rwanda"
+#~ msgstr "รวันดา"
+
+#~ msgid "SMTP Port"
+#~ msgstr "SMTP Port"
+
+#~ msgid "SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases."
+#~ msgstr "SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases."
+
+#~ msgid "SMTP Server"
+#~ msgstr "เซิร์ฟเวอร์ SMTP"
+
+#~ msgid "SQL Constraint"
+#~ msgstr "SQL Constraint"
+
+#~ msgid "SSL/TLS"
+#~ msgstr "SSL/TLS"
+
+#~ msgid "Saint Barthélémy"
+#~ msgstr "Saint Barthélémy"
+
+#~ msgid "Saint Lucia"
+#~ msgstr "เซนต์ลูเซีย"
+
+#~ msgid "Saint Martin (French part)"
+#~ msgstr "แซงมาร์แตง (ส่วนของฝรั่งเศส)"
+
+#~ msgid "Saint Pierre and Miquelon"
+#~ msgstr "แซงปีแยร์และมีเกอลง"
+
+#~ msgid "Sales"
+#~ msgstr "การขาย"
+
+#~ msgid "Sales & Purchases"
+#~ msgstr "การขายและการซื้อ"
+
+#~ msgid "Sales Teams"
+#~ msgstr "ทีมขาย"
+
+#~ msgid "Sales and MRP Management"
+#~ msgstr "การขายและการบริหารจัดการ MRP"
+
+#~ msgid "Sales and Warehouse Management"
+#~ msgstr "Sales and Warehouse Management"
+
+#~ msgid "Salesperson"
+#~ msgstr "พนักงานขาย"
+
+#~ msgid "Samoa"
+#~ msgstr "ซามัว"
+
+#~ msgid "San Marino"
+#~ msgstr "ซานมารีโน"
+
+#~ msgid "Saudi Arabia"
+#~ msgstr "ซาอุดิอาระเบีย"
+
+#~ msgid "Save"
+#~ msgstr "บันทึก"
+
+#~ msgid "Save as Attachment Prefix"
+#~ msgstr "บันทึกเป็นคำนำหน้าสิ่งที่แนบมา"
+
+#~ msgid "Scheduled Action"
+#~ msgstr "Scheduled Action"
+
+#~ msgid "Scheduled Actions"
+#~ msgstr "การกระทำที่กำหนดไว้"
+
+#~ msgid "Search"
+#~ msgstr "ค้นหา"
+
+#~ msgid "Search Actions"
+#~ msgstr "ค้นหาการดำเนินการ"
+
+#~ msgid "Search Partner"
+#~ msgstr "ค้นหาคู่ค้า"
+
+#~ msgid "Search View Ref."
+#~ msgstr "Search View Ref."
+
+#~ msgid "Search modules"
+#~ msgstr "Search modules"
+
+#~ msgid "Search..."
+#~ msgstr "ค้นหา..."
+
+#~ msgid "Security and Authentication"
+#~ msgstr "ระบบรักษาความปลอดภัยและการตรวจสอบ"
+
+#~ msgid "See http://openerp.com"
+#~ msgstr "See http://openerp.com"
+
+#~ msgid "Select Proper Paper size"
+#~ msgstr "เลือกขนาดกระดาษที่เหมาะสม"
+
+#~ msgid "Selectable"
+#~ msgstr "Selectable"
+
+#~ msgid "Selection Options"
+#~ msgstr "Selection Options"
+
+#~ msgid "Senegal"
+#~ msgstr "เซเนกัล"
+
+#~ msgid "Separator Format"
+#~ msgstr "รูปแบบการคั่น"
+
+#~ msgid "Sequence"
+#~ msgstr "ลำดับ"
+
+#~ msgid "Sequences"
+#~ msgstr "ลำดับ"
+
+#~ msgid "Sequences & Identifiers"
+#~ msgstr "ลำดับและตัวบ่งชี้"
+
+#~ msgid "Serbia"
+#~ msgstr "เซอร์เบีย"
+
+#~ msgid "Server"
+#~ msgstr "Server"
+
+#~ msgid "Server Action"
+#~ msgstr "Server Action"
+
+#~ msgid "Server Action value mapping"
+#~ msgstr "Server Action value mapping"
+
+#~ msgid "Server Actions"
+#~ msgstr "การดำเนินการของเซิร์ฟเวอร์"
+
+#~ msgid "Services"
+#~ msgstr "บริการ"
+
+#~ msgid "Set NULL"
+#~ msgstr "Set NULL"
+
+#~ msgid "Set Password"
+#~ msgstr "ตั้งรหัสผ่าน"
+
+#~ msgid "Set as Todo"
+#~ msgstr "ตั้งเป็นสิ่งที่ต้องทำ"
+
+#~ msgid "Settings"
+#~ msgstr "ตั้งค่า"
+
+#~ msgid "Seychelles"
+#~ msgstr "เซเชลส์"
+
+#~ msgid "Shared"
+#~ msgstr "แบ่งปัน"
+
+#~ msgid "Sierra Leone"
+#~ msgstr "เซียร์ราลีโอน"
+
+#~ msgid "Signature"
+#~ msgstr "ลายเซ็นต์"
+
+#~ msgid "Signup"
+#~ msgstr "สมัครสมาชิก"
+
+#~ msgid "Simple Discounts in the Point of Sale "
+#~ msgstr "Simple Discounts in the Point of Sale "
+
+#~ msgid "Singapore"
+#~ msgstr "สิงคโปร์"
+
+#~ msgid "Singapore - Accounting"
+#~ msgstr "Singapore - Accounting"
+
+#~ msgid "Sint Maarten (Dutch part)"
+#~ msgstr "Sint Maarten (Dutch part)"
+
+#~ msgid "Size"
+#~ msgstr "ขนาด"
+
+#~ msgid "Skip"
+#~ msgstr "ข้าม"
+
+#~ msgid "Slides"
+#~ msgstr "สไลด์"
+
+#~ msgid "Slovakia"
+#~ msgstr "สโลวาเกีย"
+
+#~ msgid "Slovenia"
+#~ msgstr "สโลเวเนีย"
+
+#~ msgid "Slovenian - Accounting"
+#~ msgstr "Slovenian - Accounting"
+
+#~ msgid "Small-sized image"
+#~ msgstr "รูปขนาดเล็ก"
+
+#~ msgid ""
+#~ "Small-sized image of this contact. It is automatically resized as a "
+#~ "64x64px image, with aspect ratio preserved. Use this field anywhere a "
+#~ "small image is required."
+#~ msgstr ""
+#~ "Small-sized image of this contact. It is automatically resized as a "
+#~ "64x64px image, with aspect ratio preserved. Use this field anywhere a "
+#~ "small image is required."
+
+#~ msgid "Solomon Islands"
+#~ msgstr "หมู่เกาะโซโลมอน"
+
+#~ msgid "Somalia"
+#~ msgstr "โซมาเลีย"
+
+#~ msgid "Sometimes called BIC or Swift."
+#~ msgstr "Sometimes called BIC or Swift."
+
+#~ msgid "Sorting field %s not found on model %s"
+#~ msgstr "Sorting field %s not found on model %s"
+
+#~ msgid "Source Model"
+#~ msgstr "Source Model"
+
+#~ msgid "Source Object"
+#~ msgstr "Source Object"
+
+#~ msgid "Source Term"
+#~ msgstr "ศัพท์ต้นฉบับ"
+
+#~ msgid "Source term"
+#~ msgstr "ศัพท์ต้นฉบับ"
+
+#~ msgid "South Africa"
+#~ msgstr "แอฟฟริกาใต้"
+
+#~ msgid "South Georgia and the South Sandwich Islands"
+#~ msgstr "เกาะเซาท์จอร์เจียและหมู่เกาะเซาท์แซนด์วิช"
+
+#~ msgid "South Korea"
+#~ msgstr "เกาหลีใต้"
+
+#~ msgid "South Sudan"
+#~ msgstr "South Sudan"
+
+#~ msgid "Spain"
+#~ msgstr "สเปน"
+
+#~ msgid "Specific Industry Applications"
+#~ msgstr "Specific Industry Applications"
+
+#~ msgid ""
+#~ "Specify a value only when creating a user or if you're changing the "
+#~ "user's password, otherwise leave empty. After a change of password, the "
+#~ "user has to login again."
+#~ msgstr ""
+#~ "Specify a value only when creating a user or if you're changing the "
+#~ "user's password, otherwise leave empty. After a change of password, the "
+#~ "user has to login again."
+
+#~ msgid ""
+#~ "Specify if missed occurrences should be executed when the server restarts."
+#~ msgstr ""
+#~ "Specify if missed occurrences should be executed when the server restarts."
+
+#~ msgid "Sponsors, Tracks, Agenda, Event News"
+#~ msgstr "Sponsors, Tracks, Agenda, Event News"
+
+#~ msgid "Sri Lanka"
+#~ msgstr "ศรีลังกา"
+
+#~ msgid "Standard"
+#~ msgstr "มาตรฐาน"
+
+#~ msgid "Start configuration"
+#~ msgstr "เริ่มการตั้งค่า"
+
+#~ msgid "State"
+#~ msgstr "สถานะ"
+
+#~ msgid "State Code"
+#~ msgstr "รหัสจังหวัด"
+
+#~ msgid "State Name"
+#~ msgstr "ชื่อจังหวัด"
+
+#~ msgid "States"
+#~ msgstr "จังหวัด"
+
+#~ msgid "Status"
+#~ msgstr "สถานะ"
+
+#~ msgid "Step"
+#~ msgstr "ขั้นตอน"
+
+#~ msgid "Sticky memos, Collaborative"
+#~ msgstr "Sticky memos, Collaborative"
+
+#~ msgid "Stored Filename"
+#~ msgstr "ชื่อไฟล์ที่จัดเก็บ"
+
+#~ msgid "Street"
+#~ msgstr "ที่อยู่"
+
+#~ msgid "Street 2..."
+#~ msgstr "ที่อยู่บรรทัดที่ 2"
+
+#~ msgid "Street..."
+#~ msgstr "ที่อยู่..."
+
+#~ msgid "Street2"
+#~ msgstr "ที่อยู่ บรรทัดที่ 2"
+
+#~ msgid "Submenus"
+#~ msgstr "เมนูย่อย"
+
+#~ msgid "Subscriptions"
+#~ msgstr "การสมัครรับข้อมูลข่าวสาร"
+
+#~ msgid "Subsequences"
+#~ msgstr "ลำดับย่อย"
+
+#~ msgid "Sudan"
+#~ msgstr "ซูดาน"
+
+#~ msgid "Suffix"
+#~ msgstr "คำลงท้าย"
+
+#~ msgid "Suffix value of the record for the sequence"
+#~ msgstr "Suffix value of the record for the sequence"
+
+#~ msgid "Summary"
+#~ msgstr "สรุป"
+
+#~ msgid "Sunday"
+#~ msgstr "วันอาทิตย์"
+
+#~ msgid "Supplementary arguments"
+#~ msgstr "Supplementary arguments"
+
+#~ msgid "Suriname"
+#~ msgstr "ซูรินาเม"
+
+#~ msgid "Survey"
+#~ msgstr "การสำรวจ"
+
+#~ msgid "Survey CRM"
+#~ msgstr "Survey CRM"
+
+#~ msgid "Surveys"
+#~ msgstr "การสำรวจ"
+
+#~ msgid "Swaziland"
+#~ msgstr "สวาซิแลนด์"
+
+#~ msgid "Sweden"
+#~ msgstr "สวีเดน"
+
+#~ msgid "Switzerland"
+#~ msgstr "สวิตเซอร์แลนด์"
+
+#~ msgid "Switzerland - Accounting"
+#~ msgstr "Switzerland - Accounting"
+
+#~ msgid "Symbol"
+#~ msgstr "สัญลักษณ์"
+
+#~ msgid "Symbol Position"
+#~ msgstr "ตำแหน่งสัญลักษณ์"
+
+#~ msgid "Syria"
+#~ msgstr "ซีเรีย"
+
+#~ msgid "System Parameters"
+#~ msgstr "พารามิเตอร์ของระบบ"
+
+#~ msgid "System Properties"
+#~ msgstr "คุณสมบัติของระบบ"
+
+#~ msgid "System Update"
+#~ msgstr "การอัพเดทระบบ"
+
+#~ msgid "TGZ Archive"
+#~ msgstr "TGZ Archive"
+
+#~ msgid "TLS (STARTTLS)"
+#~ msgstr "TLS (STARTTLS)"
+
+#~ msgid "Tabloid 29 279.4 x 431.8 mm"
+#~ msgstr "Tabloid 29 279.4 x 431.8 มม."
+
+#~ msgid "Tag"
+#~ msgstr "ป้ายกำกับ"
+
+#~ msgid "Tag Name"
+#~ msgstr "ชื่อป้ายกำกับ"
+
+#~ msgid "Tags"
+#~ msgstr "ป้ายกำกับ"
+
+#~ msgid "Tags..."
+#~ msgstr "ป้ายกำกับ..."
+
+#~ msgid "Taiwan"
+#~ msgstr "ไต้หวัน"
+
+#~ msgid "Tajikistan"
+#~ msgstr "ทาจิกิสถาน"
+
+#~ msgid "Tanzania"
+#~ msgstr "แทนซาเนีย"
+
+#~ msgid "Target Window"
+#~ msgstr "หน้าต่างเป้าหมาย"
+
+#~ msgid "Tax ID"
+#~ msgstr "เลขประจำตัวผู้เสียภาษี"
+
+#~ msgid "Technical"
+#~ msgstr "ทางเทคนิค"
+
+#~ msgid "Technical Data"
+#~ msgstr "ข้อมูลทางเทคนิค"
+
+#~ msgid "Technical Features"
+#~ msgstr "Technical Features"
+
+#~ msgid "Technical Name"
+#~ msgstr "ชื่อทางเทคนิค"
+
+#~ msgid "Technical Settings"
+#~ msgstr "การตั้งค่าทางเทคนิค"
+
+#~ msgid "Technical guide"
+#~ msgstr "Technical guide"
+
+#~ msgid "Template"
+#~ msgstr "แม่แบบ"
+
+#~ msgid "Template Name"
+#~ msgstr "ชื่อแม่แบบ"
+
+#~ msgid "Test API"
+#~ msgstr "Test API"
+
+#~ msgid "Test Connection"
+#~ msgstr "ทดสอบการเชื่อมต่อ"
+
+#~ msgid "Testing of access restrictions"
+#~ msgstr "Testing of access restrictions"
+
+#~ msgid "Tests"
+#~ msgstr "ทดสอบ"
+
+#~ msgid "Tests of field conversions"
+#~ msgstr "Tests of field conversions"
+
+#~ msgid "Text"
+#~ msgstr "ข้อความ"
+
+#~ msgid "Thailand"
+#~ msgstr "ประเทศไทย"
+
+#~ msgid "Thailand - Accounting"
+#~ msgstr "ประเทศไทย - การบัญชี"
+
+#~ msgid "Thailand - Accounting Reports"
+#~ msgstr "ประเทศไทย - รายงานทางบัญชี"
+
+#~ msgid ""
+#~ "The active field allows you to hide the category without removing it."
+#~ msgstr ""
+#~ "The active field allows you to hide the category without removing it."
+
+#~ msgid "The code of the country must be unique !"
+#~ msgstr "The code of the country must be unique !"
+
+#~ msgid "The code of the language must be unique !"
+#~ msgstr "รหัสของภาษาที่ต้องไม่ซ้ำกัน!"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "ชื่อ บริษัท ต้องไม่ซ้ำกัน!"
+
+#~ msgid "The company this user is currently working for."
+#~ msgstr "The company this user is currently working for."
+
+#~ msgid ""
+#~ "The configuration wizards are used to help you configure a new instance "
+#~ "of Odoo. They are launched during the installation of new modules, but "
+#~ "you can choose to restart some wizards manually from this menu."
+#~ msgstr ""
+#~ "The configuration wizards are used to help you configure a new instance "
+#~ "of Odoo. They are launched during the installation of new modules, but "
+#~ "you can choose to restart some wizards manually from this menu."
+
+#~ msgid "The full name of the country."
+#~ msgstr "ชื่อเต็มของประเทศ"
+
+#~ msgid "The list of models that extends the current model."
+#~ msgstr "The list of models that extends the current model."
+
+#~ msgid ""
+#~ "The menu action this filter applies to. When left empty the filter "
+#~ "applies to all menus for this model."
+#~ msgstr ""
+#~ "The menu action this filter applies to. When left empty the filter "
+#~ "applies to all menus for this model."
+
+#~ msgid "The model this field belongs to"
+#~ msgstr "The model this field belongs to"
+
+#~ msgid "The name of the country must be unique !"
+#~ msgstr "ชื่อของประเทศจะต้องไม่ซ้ำกัน"
+
+#~ msgid "The name of the group must be unique within an application!"
+#~ msgstr "The name of the group must be unique within an application!"
+
+#~ msgid "The name of the language must be unique !"
+#~ msgstr "ชื่อของภาษาที่ต้องไม่ซ้ำกัน!"
+
+#~ msgid "The next number of the sequence will be incremented by this number"
+#~ msgstr "The next number of the sequence will be incremented by this number"
+
+#~ msgid "The next step depends on the file format:"
+#~ msgstr "ขั้นตอนต่อไปขึ้นอยู่กับประเภทของไฟล์"
+
+#~ msgid ""
+#~ "The optional domain to restrict possible values for relationship fields, "
+#~ "specified as a Python expression defining a list of triplets. For "
+#~ "example: [('color','=','red')]"
+#~ msgstr ""
+#~ "The optional domain to restrict possible values for relationship fields, "
+#~ "specified as a Python expression defining a list of triplets. For "
+#~ "example: [('color','=','red')]"
+
+#~ msgid ""
+#~ "The partner's timezone, used to output proper date and time values inside "
+#~ "printed reports. It is important to set a value for this field. You "
+#~ "should use the same timezone that is otherwise used to pick and render "
+#~ "date and time values: your computer's timezone."
+#~ msgstr ""
+#~ "The partner's timezone, used to output proper date and time values inside "
+#~ "printed reports. It is important to set a value for this field. You "
+#~ "should use the same timezone that is otherwise used to pick and render "
+#~ "date and time values: your computer's timezone."
+
+#~ msgid ""
+#~ "The priority of the job, as an integer: 0 means higher priority, 10 means "
+#~ "lower priority."
+#~ msgstr ""
+#~ "The priority of the job, as an integer: 0 means higher priority, 10 means "
+#~ "lower priority."
+
+#~ msgid "The rate of the currency to the currency of rate 1"
+#~ msgstr "The rate of the currency to the currency of rate 1"
+
+#~ msgid "The rate of the currency to the currency of rate 1."
+#~ msgstr "The rate of the currency to the currency of rate 1."
+
+#~ msgid ""
+#~ "The requested operation cannot be completed due to security restrictions. "
+#~ "Please contact your system administrator.\n"
+#~ "\n"
+#~ "(Document type: %s, Operation: %s)"
+#~ msgstr ""
+#~ " (รายการ %s) คุณทำไม่ถูกอนุญาตให้ทำการ %s เนื่องจากข้อจำกัดด้านความปลอดภัย "
+#~ "กรุณาติดต่อผู้ดูแลระบบ"
+
+#~ msgid "The state code."
+#~ msgstr "รหัสจังหวัด"
+
+#~ msgid "The technical name of the model this field belongs to"
+#~ msgstr "The technical name of the model this field belongs to"
+
+#~ msgid ""
+#~ "The user this filter is private to. When left empty the filter is public "
+#~ "and available to all users."
+#~ msgstr ""
+#~ "The user this filter is private to. When left empty the filter is public "
+#~ "and available to all users."
+
+#~ msgid "Theme"
+#~ msgstr "ธีม"
+
+#~ msgid "This ISO code is the name of po files to use for translations"
+#~ msgstr "This ISO code is the name of po files to use for translations"
+
+#~ msgid "This Window"
+#~ msgstr "หน้าต่างนี้"
+
+#~ msgid ""
+#~ "This field holds the image used as avatar for this contact, limited to "
+#~ "1024x1024px"
+#~ msgstr "สนามนี้ถือเป็นภาพที่ใช้เป็นสัญลักษณ์สำหรับการติดต่อนี้ จำกัด 1024x1024px"
+
+#~ msgid "This field is used to set/get locales for user"
+#~ msgstr "This field is used to set/get locales for user"
+
+#~ msgid ""
+#~ "This function field computes the ordered list of views that should be "
+#~ "enabled when displaying the result of an action, federating view mode, "
+#~ "views and reference view. The result is returned as an ordered list of "
+#~ "pairs (view_id,view_mode)."
+#~ msgstr ""
+#~ "This function field computes the ordered list of views that should be "
+#~ "enabled when displaying the result of an action, federating view mode, "
+#~ "views and reference view. The result is returned as an ordered list of "
+#~ "pairs (view_id,view_mode)."
+
+#~ msgid ""
+#~ "This is the filename of the attachment used to store the printing result. "
+#~ "Keep empty to not save the printed reports. You can use a python "
+#~ "expression with the object and time variables."
+#~ msgstr ""
+#~ "This is the filename of the attachment used to store the printing result. "
+#~ "Keep empty to not save the printed reports. You can use a python "
+#~ "expression with the object and time variables."
+
+#~ msgid "This module will trigger the uninstallation of below modules."
+#~ msgstr "This module will trigger the uninstallation of below modules."
+
+#~ msgid "Thousands Separator"
+#~ msgstr "อักษรคั่นหลักพัน"
+
+#~ msgid "Thursday"
+#~ msgstr "วันพฤหัสบดี"
+
+#~ msgid "Time Format"
+#~ msgstr "รูปแบบเวลา"
+
+#~ msgid "Timesheets"
+#~ msgstr "สมุดจดเวลาทำงาน"
+
+#~ msgid "Timezone"
+#~ msgstr "เขตเวลา"
+
+#~ msgid "Timezone offset"
+#~ msgstr "โซนเวลาชดเชย"
+
+#~ msgid "Title"
+#~ msgstr "คำนำหน้าชื่อ"
+
+#~ msgid "To"
+#~ msgstr "ถึง"
+
+#~ msgid "To Do"
+#~ msgstr "ที่จะทำ"
+
+#~ msgid "To Translate"
+#~ msgstr "จะแปล"
+
+#~ msgid "To be installed"
+#~ msgstr "ที่จะถูกติดตั้ง"
+
+#~ msgid "To be removed"
+#~ msgstr "ที่จะถูกถอนการติดตั้ง"
+
+#~ msgid "To be upgraded"
+#~ msgstr "ที่จะถูกอัพเกรด"
+
+#~ msgid "Todo"
+#~ msgstr "ที่จะทำ"
+
+#~ msgid "Togo"
+#~ msgstr "โตโก"
+
+#~ msgid "Tokelau"
+#~ msgstr "โตเกเลา"
+
+#~ msgid "Tonga"
+#~ msgstr "ตองก้า"
+
+#~ msgid "Tools"
+#~ msgstr "เครื่องมือ"
+
+#~ msgid "Top Margin (mm)"
+#~ msgstr "ขอบบน (มม.)"
+
+#~ msgid "Trainings, Conferences, Meetings, Exhibitions, Registrations"
+#~ msgstr "Trainings, Conferences, Meetings, Exhibitions, Registrations"
+
+#~ msgid "Transfer Payment Acquirer"
+#~ msgstr "Transfer Payment Acquirer"
+
+#~ msgid "Transient Model"
+#~ msgstr "Transient Model"
+
+#~ msgid "Transitively inherits"
+#~ msgstr "Transitively inherits"
+
+#~ msgid "Translatable"
+#~ msgstr "สามารถแปลได้"
+
+#~ msgid "Translated"
+#~ msgstr "ถูกแปลแล้ว"
+
+#~ msgid "Translated Terms"
+#~ msgstr "ศัพท์ที่ถูกแปล"
+
+#~ msgid "Translated field"
+#~ msgstr "ฟิลด์ที่ถูกแปล"
+
+#~ msgid "Translation"
+#~ msgstr "การแปล"
+
+#~ msgid "Translation Value"
+#~ msgstr "ค่าการแปล"
+
+#~ msgid "Translation comments"
+#~ msgstr "ความเห็นการแปล"
+
+#~ msgid "Translation in Progress"
+#~ msgstr "อยู่ระหว่างการดำเนินการแปล"
+
+#~ msgid "Translations"
+#~ msgstr "การแปล"
+
+#~ msgid "Tree"
+#~ msgstr "มุมมองต้นไม้"
+
+#~ msgid "Trinidad and Tobago"
+#~ msgstr "ตรินิแดดและโตเบโก"
+
+#~ msgid "Tuesday"
+#~ msgstr "วันอังคาร"
+
+#~ msgid "Tunisia"
+#~ msgstr "ตูนีเซีย"
+
+#~ msgid "Turkey"
+#~ msgstr "ตุรกี"
+
+#~ msgid "Turkey - Accounting"
+#~ msgstr "Turkey - Accounting"
+
+#~ msgid "Turkmenistan"
+#~ msgstr "เติรกเมนิสถาน"
+
+#~ msgid "Turks and Caicos Islands"
+#~ msgstr "หมู่เกาะเติกส์และหมู่เกาะเคคอส"
+
+#~ msgid "Tuvalu"
+#~ msgstr "ตูวาลู"
+
+#~ msgid "Twitter Roller"
+#~ msgstr "Twitter Roller"
+
+#~ msgid ""
+#~ "Two sequence object implementations are offered: Standard and 'No gap'. "
+#~ "The later is slower than the former but forbids any gap in the sequence "
+#~ "(while they are possible in the former)."
+#~ msgstr ""
+#~ "Two sequence object implementations are offered: Standard and 'No gap'. "
+#~ "The later is slower than the former but forbids any gap in the sequence "
+#~ "(while they are possible in the former)."
+
+#~ msgid "Type"
+#~ msgstr "ประเภท"
+
+#~ msgid ""
+#~ "Type of the constraint: `f` for a foreign key, `u` for other constraints."
+#~ msgstr ""
+#~ "Type of the constraint: `f` for a foreign key, `u` for other constraints."
+
+#~ msgid "Type:"
+#~ msgstr "ชนิด:"
+
+#~ msgid "U.A.E. - Accounting"
+#~ msgstr "U.A.E. - Accounting"
+
+#~ msgid "UK - Accounting"
+#~ msgstr "UK - Accounting"
+
+#~ msgid "URL"
+#~ msgstr "URL"
+
+#~ msgid "USA Minor Outlying Islands"
+#~ msgstr "USA Minor Outlying Islands"
+
+#~ msgid "Uganda"
+#~ msgstr "ยูกันดา"
+
+#~ msgid "Uid"
+#~ msgstr "Uid"
+
+#~ msgid "Ukraine"
+#~ msgstr "ยูเครน"
+
+#~ msgid ""
+#~ "Unable to delete this document because it is used as a default property"
+#~ msgstr ""
+#~ "Unable to delete this document because it is used as a default property"
+
+#~ msgid "Uncategorized"
+#~ msgstr "ไม่ถูกจัดหมวด"
+
+#~ msgid "Uninstallable"
+#~ msgstr "ไม่สามารถถอนการติดตั้งได้"
+
+#~ msgid "United Arab Emirates"
+#~ msgstr "สหรัฐอาหรับเอมิเรส"
+
+#~ msgid "United Kingdom"
+#~ msgstr "อังกฤษ"
+
+#~ msgid "United States"
+#~ msgstr "สหรัฐอเมริกา"
+
+#~ msgid "Unknown"
+#~ msgstr "ไม่ทราบ"
+
+#~ msgid "Unknown database identifier '%s'"
+#~ msgstr "Unknown database identifier '%s'"
+
+#~ msgid "Unknown error during import:"
+#~ msgstr "Unknown error during import:"
+
+#~ msgid "Untranslated"
+#~ msgstr "ยังไม่ได้รับการแปล"
+
+#~ msgid "Updatable"
+#~ msgstr "สามารถอัพเดทได้"
+
+#~ msgid "Update"
+#~ msgstr "อัพเดท"
+
+#~ msgid "Update Apps List"
+#~ msgstr "อัพเดทรายการแอพ"
+
+#~ msgid "Update Date"
+#~ msgstr "วันที่อัพเดท"
+
+#~ msgid "Update Module"
+#~ msgstr "อัพเดทโมดูล"
+
+#~ msgid "Update Module List"
+#~ msgstr "รายการอัพเดตโมดูล"
+
+#~ msgid "Update Terms"
+#~ msgstr "อัพเดทคำศัพท์"
+
+#~ msgid "Updates"
+#~ msgstr "การอัพเดท"
+
+#~ msgid "Upgrade"
+#~ msgstr "อัพเกรด"
+
+#~ msgid "Url"
+#~ msgstr "ที่อยู่ Url"
+
+#~ msgid "Uruguay"
+#~ msgstr "อุรุกวัย"
+
+#~ msgid "Uruguay - Chart of Accounts"
+#~ msgstr "Uruguay - Chart of Accounts"
+
+#~ msgid "Used to filter menu and home actions from the user form."
+#~ msgstr "Used to filter menu and home actions from the user form."
+
+#~ msgid "Used to log into the system"
+#~ msgstr "นำมาใช้ในการเข้าสู่ระบบ"
+
+#~ msgid "User"
+#~ msgstr "ผู้ใช้"
+
+#~ msgid "User Interface"
+#~ msgstr "ส่วนติดต่อผู้ใช้"
+
+#~ msgid "User Login"
+#~ msgstr "ชื่อผู้ใช้"
+
+#~ msgid "User-defined Defaults"
+#~ msgstr "User-defined Defaults"
+
+#~ msgid "User-defined Filters"
+#~ msgstr "ตัวกรองที่ผู้ใช้กำหนด"
+
+#~ msgid "Username"
+#~ msgstr "ชื่อผู้ใช้"
+
+#~ msgid ""
+#~ "Users added to this group are automatically added in the following groups."
+#~ msgstr ""
+#~ "Users added to this group are automatically added in the following groups."
+
+#~ msgid "Users of this group automatically inherit those groups"
+#~ msgstr "Users of this group automatically inherit those groups"
+
+#~ msgid "Uzbekistan"
+#~ msgstr "อุซเบกิสถาน"
+
+#~ msgid "VAT Number Validation"
+#~ msgstr "VAT Number Validation"
+
+#~ msgid "Value"
+#~ msgstr "ค่า"
+
+#~ msgid "Value Mapping"
+#~ msgstr "Value Mapping"
+
+#~ msgid "Vanuatu"
+#~ msgstr "วานูอาตู"
+
+#~ msgid ""
+#~ "Various fields may use Python code or Python expressions. The following "
+#~ "variables can be used:"
+#~ msgstr ""
+#~ "Various fields may use Python code or Python expressions. The following "
+#~ "variables can be used:"
+
+#~ msgid "Vendor"
+#~ msgstr "ผู้จำหน่าย"
+
+#~ msgid "Vendors"
+#~ msgstr "ผู้ขาย"
+
+#~ msgid "Venezuela"
+#~ msgstr "เวเนซูเอลา"
+
+#~ msgid "Venezuela - Accounting"
+#~ msgstr "Venezuela - Accounting"
+
+#~ msgid "Vietnam"
+#~ msgstr "เวียดนาม"
+
+#~ msgid "View"
+#~ msgstr "มุมมอง"
+
+#~ msgid "View Architecture"
+#~ msgstr "มุมมองออกแบบ"
+
+#~ msgid "View Name"
+#~ msgstr "ชื่อ มุมมอง"
+
+#~ msgid "View Ref."
+#~ msgstr "View Ref."
+
+#~ msgid "View Type"
+#~ msgstr "ประเภทมุมมอง"
+
+#~ msgid "View inheritance mode"
+#~ msgstr "View inheritance mode"
+
+#~ msgid ""
+#~ "View type: Tree type to use for the tree view, set to 'tree' for a "
+#~ "hierarchical tree view, or 'form' for a regular list view"
+#~ msgstr ""
+#~ "View type: Tree type to use for the tree view, set to 'tree' for a "
+#~ "hierarchical tree view, or 'form' for a regular list view"
+
+#~ msgid "Views"
+#~ msgstr "มุมมอง"
+
+#~ msgid ""
+#~ "Views allows you to personalize each view of Odoo. You can add new "
+#~ "fields, move fields, rename them or delete the ones that you do not need."
+#~ msgstr ""
+#~ "Views allows you to personalize each view of Odoo. You can add new "
+#~ "fields, move fields, rename them or delete the ones that you do not need."
+
+#~ msgid "Virgin Islands (British)"
+#~ msgstr "Virgin Islands (British)"
+
+#~ msgid "Virgin Islands (USA)"
+#~ msgstr "Virgin Islands (USA)"
+
+#~ msgid "Visible"
+#~ msgstr "ปรากฏ"
+
+#~ msgid "WMS Accounting"
+#~ msgstr "WMS Accounting"
+
+#~ msgid "WMS Landed Costs"
+#~ msgstr "WMS Landed Costs"
+
+#~ msgid "Warehouse"
+#~ msgstr "คลังสินค้า"
+
+#~ msgid "Web"
+#~ msgstr "เว็บ"
+
+#~ msgid "Web Icon File"
+#~ msgstr "Web Icon File"
+
+#~ msgid "Web Icon Image"
+#~ msgstr "Web Icon Image"
+
+#~ msgid "Web-only translations"
+#~ msgstr "คำแปลบนเว็บเท่านั้น"
+
+#~ msgid "Website"
+#~ msgstr "เว็บไซต์"
+
+#~ msgid "Website Mail"
+#~ msgstr "Website Mail"
+
+#~ msgid "Website Module for Mail"
+#~ msgstr "Website Module for Mail"
+
+#~ msgid "Website Partner"
+#~ msgstr "Website Partner"
+
+#~ msgid "Wednesday"
+#~ msgstr "วันพุธ"
+
+#~ msgid "Weeks"
+#~ msgstr "สัปดาห์"
+
+#~ msgid "Western Sahara"
+#~ msgstr "ซาฮาราตะวันตก"
+
+#~ msgid ""
+#~ "When dealing with multiple actions, the execution order is based on the "
+#~ "sequence. Low number means high priority."
+#~ msgstr ""
+#~ "When dealing with multiple actions, the execution order is based on the "
+#~ "sequence. Low number means high priority."
+
+#~ msgid ""
+#~ "When no specific mail server is requested for a mail, the highest "
+#~ "priority one is used. Default priority is 10 (smaller number = higher "
+#~ "priority)"
+#~ msgstr ""
+#~ "When no specific mail server is requested for a mail, the highest "
+#~ "priority one is used. Default priority is 10 (smaller number = higher "
+#~ "priority)"
+
+#~ msgid ""
+#~ "Whether values for this field can be translated (enables the translation "
+#~ "mechanism for that field)"
+#~ msgstr ""
+#~ "Whether values for this field can be translated (enables the translation "
+#~ "mechanism for that field)"
+
+#~ msgid "Window Actions"
+#~ msgstr "Window Actions"
+
+#~ msgid "Wizard"
+#~ msgstr "Wizard"
+
+#~ msgid "Wizards to be Launched"
+#~ msgstr "Wizards to be Launched"
+
+#~ msgid "Write Access"
+#~ msgstr "สิทธิ์การแก้ไข"
+
+#~ msgid "Write Access Right"
+#~ msgstr "สิทธิ์การแก้ไข"
+
+#~ msgid "Yemen"
+#~ msgstr "เยเมน"
+
+#~ msgid "Yodlee"
+#~ msgstr "Yodlee"
+
+#~ msgid "Yodlee Finance"
+#~ msgstr "Yodlee Finance"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "You can not have two users with the same login !"
+
+#~ msgid ""
+#~ "You will be able to define additional access rights by editing the newly "
+#~ "created user under the Settings / Users menu."
+#~ msgstr ""
+#~ "You will be able to define additional access rights by editing the newly "
+#~ "created user under the Settings / Users menu."
+
+#~ msgid "ZIP"
+#~ msgstr "รหัสไปรษณีย์"
+
+#~ msgid "Zambia"
+#~ msgstr "แซมเบีย"
+
+#~ msgid "Zimbabwe"
+#~ msgstr "ซิมบับเว"
+
+#~ msgid "Zip"
+#~ msgstr "รหัสไปรษณีย์"
+
+#~ msgid "_Import"
+#~ msgstr "_Import"
+
+#~ msgid "account_online_sync"
+#~ msgstr "account_online_sync"
+
+#~ msgid "account_plaid"
+#~ msgstr "account_plaid"
+
+#~ msgid "at"
+#~ msgstr "ที่"
+
+#~ msgid "choose"
+#~ msgstr "เลือก"
+
+#~ msgid "documentation"
+#~ msgstr "เอกสารกำกับ"
+
+#~ msgid "done"
+#~ msgstr "เสร็จสิ้น"
+
+#~ msgid "e.g. BE0477472701"
+#~ msgstr "เช่น BE0477472701"
+
+#~ msgid "e.g. English"
+#~ msgstr "เช่น Thai / ภาษาไทย"
+
+#~ msgid "e.g. Global Business Solutions"
+#~ msgstr "ต.ย. Global Business Solutions"
+
+#~ msgid "e.g. Mr."
+#~ msgstr "เช่น นาย"
+
+#~ msgid "e.g. Sales Director"
+#~ msgstr "เช่น ผู้จัดการการขาย"
+
+#~ msgid "e.g. en_US"
+#~ msgstr "เช่น th_TH"
+
+#~ msgid "e.g. www.odoo.com"
+#~ msgstr "เช่น www.example.com"
+
+#~ msgid "eCommerce"
+#~ msgstr "eCommerce"
+
+#~ msgid "eCommerce Delivery"
+#~ msgstr "eCommerce Delivery"
+
+#~ msgid "email@yourcompany.com"
+#~ msgstr "email@yourcompany.com"
+
+#~ msgid "false"
+#~ msgstr "เป็นเท็จ"
+
+#~ msgid ""
+#~ "for record in self:\n"
+#~ "        record['size'] = len(record.name)"
+#~ msgstr ""
+#~ "for record in self:\n"
+#~ "        record['size'] = len(record.name)"
+
+#~ msgid "get"
+#~ msgstr "ได้รับ"
+
+#~ msgid "init"
+#~ msgstr "init"
+
+#~ msgid "internal note..."
+#~ msgstr "โน้ตภายใน..."
+
+#~ msgid "ir.actions.act_url"
+#~ msgstr "ir.actions.act_url"
+
+#~ msgid "ir.actions.act_window"
+#~ msgstr "ir.actions.act_window"
+
+#~ msgid "ir.actions.client"
+#~ msgstr "ir.actions.client"
+
+#~ msgid "ir.actions.server"
+#~ msgstr "ir.actions.server"
+
+#~ msgid "n/a"
+#~ msgstr "ไม่มีข้อมูล"
+
+#~ msgid "no"
+#~ msgstr "ไม่"
+
+#~ msgid "on"
+#~ msgstr "บน"
+
+#~ msgid "pos_cache"
+#~ msgstr "pos_cache"
+
+#~ msgid "test of access rights and rules"
+#~ msgstr "test of access rights and rules"
+
+#~ msgid "test-exceptions"
+#~ msgstr "test-exceptions"
+
+#~ msgid "test-field-converter"
+#~ msgstr "test-field-converter"
+
+#~ msgid "test-import-export"
+#~ msgstr "test-import-export"
+
+#~ msgid "test-inherit"
+#~ msgstr "test-inherit"
+
+#~ msgid "test-inherits"
+#~ msgstr "test-inherits"
+
+#~ msgid "test-limits"
+#~ msgstr "test-limits"
+
+#~ msgid "test-uninstall"
+#~ msgstr "test-uninstall"
+
+#~ msgid "test_convert"
+#~ msgstr "test_convert"
+
+#~ msgid "title"
+#~ msgstr "คำนำหน้าชื่อ"
+
+#~ msgid "true"
+#~ msgstr "เป็นจริง"
+
+#~ msgid "yes"
+#~ msgstr "ใช่"
+
+#~ msgid "Åland Islands"
+#~ msgstr "หมู่เกาะโอแลนด์"

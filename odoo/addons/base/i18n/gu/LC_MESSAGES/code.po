@@ -1,0 +1,2412 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base
+#
+# Translators:
+# Jay Vora <jay.vora@serpentcs.com>, 2018
+# Divya Pandya <dia@odoo.com>, 2018
+# Gaurav Marsoniya <marsoniyagaurav@gmail.com>, 2018
+# Turkesh Patel <turkesh4friends@gmail.com>, 2018
+# Dharmraj Jhala <dja@openerp.com>, 2018
+# Ranjit Pillai <rpi@odoo.com>, 2018
+# Spellbound Soft Solutions <jeel.spellbound@gmail.com>, 2018
+# Martin Trigaux, 2018
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2022-04-11 12:53+0200\n"
+"PO-Revision-Date: 2018-08-24 09:14+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
+"Language-Team: Gujarati (https://www.transifex.com/odoo/teams/41243/gu/)\n"
+"Language: gu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: models/decimal_precision.py:57 models/res_currency.py:407
+#, fuzzy, python-format
+msgid "Warning for %s"
+msgstr "ચેતવણી"
+
+#: models/decimal_precision.py:58
+#, python-format
+msgid ""
+"The precision has been reduced for %s.\n"
+"Note that existing data WON'T be updated by this change.\n"
+"\n"
+"As decimal precisions impact the whole system, this may cause critical "
+"issues.\n"
+"E.g. reducing the precision could disturb your financial balance.\n"
+"\n"
+"Therefore, changing decimal precisions in a running database is not "
+"recommended."
+msgstr ""
+
+#: models/ir_actions.py:179 models/ir_actions.py:181
+#, python-format
+msgid "Invalid model name %r in action definition."
+msgstr ""
+
+#: models/ir_actions.py:210
+#, python-format
+msgid "The modes in view_mode must not be duplicated: %s"
+msgstr ""
+
+#: models/ir_actions.py:212
+#, python-format
+msgid "No spaces allowed in view_mode: %r"
+msgstr ""
+
+#: models/ir_actions.py:457
+msgid "Recursion found in child server actions"
+msgstr ""
+
+#: models/ir_actions.py:610
+msgid "You don't have enough access rights to run this action."
+msgstr ""
+
+#: models/ir_actions.py:702
+msgid "many2many fields cannot be evaluated by reference"
+msgstr ""
+
+#: models/ir_actions_report.py:497
+#, python-format
+msgid ""
+"Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
+"number of subprocess reached. Message : %s"
+msgstr ""
+
+#: models/ir_actions_report.py:500
+#, python-format
+msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
+msgstr ""
+
+#: models/ir_actions_report.py:745
+msgid "One of the documents you are trying to merge is encrypted"
+msgstr ""
+
+#: models/ir_actions_report.py:770
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still "
+"retrieve those PDFs by selecting each of the affected records individually, "
+"which will avoid merging."
+msgstr ""
+
+#: models/ir_actions_report.py:858
+msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
+msgstr ""
+
+#: models/ir_actions_report.py:865
+#, python-format
+msgid ""
+"The report's template '%s' is wrong, please contact your administrator. \n"
+"\n"
+"Can not separate file to save as attachment because the report's template "
+"does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div "
+"with 'article' classname."
+msgstr ""
+
+#: models/ir_attachment.py:71
+msgid "Only administrators can execute this action."
+msgstr ""
+
+#: models/ir_attachment.py:431 models/ir_attachment.py:442
+msgid "Sorry, you are not allowed to access this document."
+msgstr ""
+
+#: models/ir_attachment.py:476
+msgid "Sorry, you must provide fields to read on attachments"
+msgstr ""
+
+#: models/ir_attachment.py:479
+msgid "Sorry, the syntax 'name:agg(field)' is not available for attachments"
+msgstr ""
+
+#: models/ir_attachment.py:485
+msgid "Sorry, you are not allowed to access these fields on attachments."
+msgstr ""
+
+#: models/ir_cron.py:372
+msgid ""
+"Record cannot be modified right now: This cron task is currently being "
+"executed and may not be modified Please try again in a few minutes"
+msgstr ""
+
+#: models/ir_default.py:70
+#, python-format
+msgid "Invalid field %s.%s"
+msgstr ""
+
+#: models/ir_default.py:72
+#, python-format
+msgid "Invalid value for %s.%s: %s"
+msgstr ""
+
+#: models/ir_fields.py:213
+#, python-format
+msgid "Unknown value '%s' for boolean field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:215
+msgid "Use '1' for yes and '0' for no"
+msgstr ""
+
+#: models/ir_fields.py:225
+#, python-format
+msgid "'%s' does not seem to be an integer for field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:236
+#, python-format
+msgid "'%s' does not seem to be a number for field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:256
+#, python-format
+msgid "'%s' does not seem to be a valid date for field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:258 models/ir_fields.py:290
+#, python-format
+msgid "Use the format '%s'"
+msgstr ""
+
+#: models/ir_fields.py:288
+#, python-format
+msgid "'%s' does not seem to be a valid datetime for field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:332
+#, python-format
+msgid "Value '%s' not found in selection field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:367
+msgid "See all possible values"
+msgstr ""
+
+#: models/ir_fields.py:376
+msgid "database id"
+msgstr ""
+
+#: models/ir_fields.py:388
+#, python-format
+msgid "Invalid database id '%s' for the field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:392
+msgid "external id"
+msgstr ""
+
+#: models/ir_fields.py:402
+msgid "name"
+msgstr "નામ"
+
+#: models/ir_fields.py:410
+#, python-format
+msgid ""
+"Found multiple matches for value '%s' in field '%%(field)s' (%d matches)"
+msgstr ""
+
+#: models/ir_fields.py:419
+#, python-format
+msgid ""
+"Cannot create new '%s' records from their name alone. Please create those "
+"records manually and try importing again."
+msgstr ""
+
+#: models/ir_fields.py:423
+#, python-format
+msgid "Unknown sub-field '%s'"
+msgstr ""
+
+#: models/ir_fields.py:436
+#, python-format
+msgid ""
+"No matching record found for %(field_type)s '%(value)s' in field "
+"'%%(field)s' and the following error was encountered when we attempted to "
+"create one: %(error_message)s"
+msgstr ""
+
+#: models/ir_fields.py:438
+#, python-format
+msgid ""
+"No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:493
+msgid ""
+"Can not create Many-To-One records indirectly, import the field separately"
+msgstr ""
+
+#: models/ir_fields.py:496
+#, python-format
+msgid ""
+"Ambiguous specification for field '%(field)s', only provide one of name, "
+"external id or database id"
+msgstr ""
+
+#: models/ir_filters.py:36 models/res_partner.py:364 models/res_users.py:205
+#: models/res_users.py:632 models/res_users.py:634
+#, python-format
+msgid "%s (copy)"
+msgstr "%s  (નકલ)"
+
+#: models/ir_filters.py:105
+#, python-format
+msgid ""
+"There is already a shared filter set as default for %(model)s, delete or "
+"change it before setting a new default"
+msgstr ""
+
+#: models/ir_mail_server.py:126
+#, python-format
+msgid "SSL private key is missing for %s."
+msgstr ""
+
+#: models/ir_mail_server.py:128
+#, python-format
+msgid "SSL certificate is missing for %s."
+msgstr ""
+
+#: models/ir_mail_server.py:134
+msgid ""
+"Please configure an email on the current user to simulate sending an email "
+"message via this outgoing server"
+msgstr ""
+
+#: models/ir_mail_server.py:148
+#, python-format
+msgid ""
+"The server refused the sender address (%(email_from)s) with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:153
+#, python-format
+msgid ""
+"The server refused the test recipient (%(email_to)s) with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:160
+#, python-format
+msgid "The server refused the test connection with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:166
+#, python-format
+msgid ""
+"Invalid server name !\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:168
+#, python-format
+msgid ""
+"No response received. Check server address and port number.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:170
+#, python-format
+msgid ""
+"The server has closed the connection unexpectedly. Check configuration "
+"served on this port number.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:172
+#, python-format
+msgid ""
+"Server replied with following exception:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:174
+#, python-format
+msgid ""
+"An option is not supported by the server:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:176
+#, python-format
+msgid ""
+"An SMTP exception occurred. Check port number and connection security type.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:178
+#, python-format
+msgid ""
+"An SSL exception occurred. Check connection security type.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:180
+#, python-format
+msgid ""
+"Connection Test Failed! Here is what we got instead:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:189
+msgid "Connection Test Successful!"
+msgstr ""
+
+#: models/ir_mail_server.py:259 models/ir_mail_server.py:284
+#, python-format
+msgid ""
+"The private key or the certificate is not a valid file. \n"
+"%s"
+msgstr ""
+
+#: models/ir_mail_server.py:261 models/ir_mail_server.py:286
+#, python-format
+msgid ""
+"Could not load your certificate / private key. \n"
+"%s"
+msgstr ""
+
+#: models/ir_mail_server.py:290
+msgid "Missing SMTP Server"
+msgstr ""
+
+#: models/ir_mail_server.py:291
+msgid ""
+"Please define at least one SMTP server, or provide the SMTP parameters "
+"explicitly."
+msgstr ""
+
+#: models/ir_mail_server.py:297
+msgid ""
+"Your Odoo Server does not support SMTP-over-SSL. You could use STARTTLS "
+"instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
+"should do the trick."
+msgstr ""
+
+#: models/ir_mail_server.py:615
+#, python-format
+msgid ""
+"Mail delivery failed via SMTP server '%s'.\n"
+"%s: %s"
+msgstr ""
+
+#: models/ir_mail_server.py:617
+msgid "Mail Delivery Failed"
+msgstr ""
+
+#: models/ir_mail_server.py:701 models/ir_model.py:605 models/ir_model.py:684
+#: models/ir_model.py:692 models/res_partner.py:377
+msgid "Warning"
+msgstr "ચેતવણી"
+
+#: models/ir_mail_server.py:702
+msgid ""
+"Your server does not seem to support SSL, you may want to try STARTTLS "
+"instead"
+msgstr ""
+
+#: models/ir_model.py:215
+msgid "The model name must start with 'x_'."
+msgstr ""
+
+#: models/ir_model.py:217
+msgid ""
+"The model name can only contain lowercase characters, digits, underscores "
+"and dots."
+msgstr ""
+
+#: models/ir_model.py:234
+#, python-format
+msgid ""
+"Unable to order by %s: fields used for ordering must be present on the model "
+"and stored."
+msgstr ""
+
+#: models/ir_model.py:277
+#, python-format
+msgid "Model '%s' contains module data and cannot be removed."
+msgstr ""
+
+#: models/ir_model.py:302
+msgid "Field \"Model\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:304
+msgid "Field \"Type\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:306
+msgid "Field \"Transient Model\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:563
+msgid "Custom fields must have a name that starts with 'x_' !"
+msgstr "કસ્ટમ ફિલ્ડ નુ નામ 'x_' થી જ શરુ થવુ જોઇયે!"
+
+#: models/ir_model.py:567
+msgid ""
+"Field names can only contain characters, digits and underscores (up to 63)."
+msgstr ""
+
+#: models/ir_model.py:583
+#, python-format
+msgid "Unknown field name '%s' in related field '%s'"
+msgstr ""
+
+#: models/ir_model.py:586
+#, python-format
+msgid "Non-relational field name '%s' in related field '%s'"
+msgstr ""
+
+#: models/ir_model.py:595
+#, python-format
+msgid "Related field '%s' does not have type '%s'"
+msgstr ""
+
+#: models/ir_model.py:597
+#, python-format
+msgid "Related field '%s' does not have comodel '%s'"
+msgstr ""
+
+#: models/ir_model.py:618
+#, python-format
+msgid "Empty dependency in %r"
+msgstr ""
+
+#: models/ir_model.py:625
+#, python-format
+msgid "Unknown field %r in dependency %r"
+msgstr ""
+
+#: models/ir_model.py:627
+#, python-format
+msgid "Non-relational field %r in dependency %r"
+msgstr ""
+
+#: models/ir_model.py:658
+#, python-format
+msgid "Model %s does not exist"
+msgstr ""
+
+#: models/ir_model.py:659
+msgid "Please specify a valid model for the object relation"
+msgstr ""
+
+#: models/ir_model.py:685
+#, python-format
+msgid "The table %r if used for other, possibly incompatible fields."
+msgstr ""
+
+#: models/ir_model.py:692
+#, python-format
+msgid ""
+"The m2o field %s is required but declares its ondelete policy as being 'set "
+"null'. Only 'restrict' and 'cascade' make sense."
+msgstr ""
+
+#: models/ir_model.py:770
+#, python-format
+msgid "The field '%s' cannot be removed because the field '%s' depends on it."
+msgstr ""
+
+#: models/ir_model.py:797
+msgid "Cannot rename/delete fields that are still present in views:"
+msgstr ""
+
+#: models/ir_model.py:798
+#, python-format
+msgid "Fields: %s"
+msgstr ""
+
+#: models/ir_model.py:799
+#, python-format
+msgid "View: %s"
+msgstr ""
+
+#: models/ir_model.py:814
+msgid "This column contains module data and cannot be removed!"
+msgstr ""
+
+#: models/ir_model.py:882
+#, python-format
+msgid "Model %s does not exist!"
+msgstr ""
+
+#: models/ir_model.py:889
+#, python-format
+msgid "Many2one %s on model %s does not exist!"
+msgstr ""
+
+#: models/ir_model.py:911
+msgid "Changing the model of a field is forbidden!"
+msgstr "ફિલ્ડ નુ મોડેલ બદલવુ પ્રતિબંધિત છે!"
+
+#: models/ir_model.py:914
+msgid ""
+"Changing the type of a field is not yet supported. Please drop it and create "
+"it again!"
+msgstr ""
+
+#: models/ir_model.py:928
+msgid "Can only rename one field at a time!"
+msgstr ""
+
+#: models/ir_model.py:1314 models/ir_model.py:1334 models/ir_model.py:1365
+msgid ""
+"Properties of base fields cannot be altered in this manner! Please modify "
+"them through Python code, preferably through a custom addon!"
+msgstr ""
+
+#: models/ir_model.py:1439
+#, python-format
+msgid "The ondelete policy %r is not valid for field %r"
+msgstr ""
+
+#: models/ir_model.py:1484 models/ir_model.py:1622 models/ir_model.py:2040
+msgid "Administrator access is required to uninstall a module"
+msgstr ""
+
+#: models/ir_model.py:1771
+#, python-format
+msgid ""
+"You are not allowed to access '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr ""
+
+#: models/ir_model.py:1772
+#, python-format
+msgid ""
+"You are not allowed to modify '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr ""
+
+#: models/ir_model.py:1773
+#, python-format
+msgid ""
+"You are not allowed to create '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr ""
+
+#: models/ir_model.py:1774
+#, python-format
+msgid ""
+"You are not allowed to delete '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr ""
+
+#: models/ir_model.py:1779
+#, python-format
+msgid ""
+"This operation is allowed for the following groups:\n"
+"%(groups_list)s"
+msgstr ""
+
+#: models/ir_model.py:1781
+msgid "No group currently allows this operation."
+msgstr ""
+
+#: models/ir_model.py:1783 models/ir_rule.py:203
+msgid "Contact your administrator to request access if necessary."
+msgstr ""
+
+#: models/ir_model.py:1938
+msgid "Not enough access rights on the external ID:"
+msgstr ""
+
+#: models/ir_module.py:321
+msgid ""
+"You are trying to remove a module that is installed or will be installed."
+msgstr ""
+
+#: models/ir_module.py:368
+#, python-format
+msgid ""
+"Unable to install module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+
+#: models/ir_module.py:370
+#, python-format
+msgid ""
+"Unable to upgrade module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+
+#: models/ir_module.py:372
+#, python-format
+msgid ""
+"Unable to process module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+
+#: models/ir_module.py:377
+msgid "Recursion error in modules dependencies !"
+msgstr ""
+
+#: models/ir_module.py:391
+#, python-format
+msgid ""
+"You try to install module '%s' that depends on module '%s'.\n"
+"But the latter module is not available in your system."
+msgstr ""
+
+#: models/ir_module.py:438
+#, python-format
+msgid "Modules \"%s\" and \"%s\" are incompatible."
+msgstr ""
+
+#: models/ir_module.py:457
+#, python-format
+msgid "You are trying to install incompatible modules in category \"%s\":"
+msgstr ""
+
+#: models/ir_module.py:464
+msgid "Install"
+msgstr ""
+
+#: models/ir_module.py:594
+msgid ""
+"Odoo is currently processing a scheduled action.\n"
+"Module operations are not possible at this time, please try again later or "
+"contact your system administrator."
+msgstr ""
+
+#: models/ir_module.py:630
+msgid "The `base` module cannot be uninstalled"
+msgstr ""
+
+#: models/ir_module.py:632
+msgid ""
+"One or more of the selected modules have already been uninstalled, if you "
+"believe this to be an error, you may try again later or contact support."
+msgstr ""
+
+#: models/ir_module.py:638
+msgid "Uninstall"
+msgstr ""
+
+#: models/ir_module.py:646
+msgid "Uninstall module"
+msgstr ""
+
+#: models/ir_module.py:687
+#, python-format
+msgid "Can not upgrade module '%s'. It is not installed."
+msgstr ""
+
+#: models/ir_module.py:706
+#, python-format
+msgid ""
+"You try to upgrade the module %s that depends on the module: %s.\n"
+"But this module is not available in your system."
+msgstr ""
+
+#: models/ir_module.py:711
+msgid "Apply Schedule Upgrade"
+msgstr ""
+
+#: models/ir_module.py:805
+msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr ""
+
+#: models/ir_module.py:806
+msgid ""
+"To enable it, make sure this directory exists and is writable on the server:"
+msgstr ""
+
+#: models/ir_module.py:833
+#, python-format
+msgid ""
+"The `%s` module appears to be unavailable at the moment, please try again "
+"later."
+msgstr ""
+
+#: models/ir_profile.py:101
+msgid ""
+"Profiling is not enabled on this database. Please contact an administrator."
+msgstr ""
+
+#: models/ir_property.py:88
+msgid "Invalid type"
+msgstr ""
+
+#: models/ir_qweb_fields.py:144
+msgid "Decimalized number"
+msgstr ""
+
+#: models/ir_qweb_fields.py:164
+msgid "Rounding precision"
+msgstr ""
+
+#: models/ir_qweb_fields.py:209
+msgid "Date format"
+msgstr ""
+
+#: models/ir_qweb_fields.py:227
+msgid "Pattern to format"
+msgstr ""
+
+#: models/ir_qweb_fields.py:228
+msgid "Optional timezone name"
+msgstr ""
+
+#: models/ir_qweb_fields.py:229
+msgid "Display only the time"
+msgstr ""
+
+#: models/ir_qweb_fields.py:230
+msgid "Hide seconds"
+msgstr ""
+
+#: models/ir_qweb_fields.py:231
+#, fuzzy
+msgid "Display only the date"
+msgstr "પ્રદર્શન નામ"
+
+#: models/ir_qweb_fields.py:301
+msgid "Selection"
+msgstr ""
+
+#: models/ir_qweb_fields.py:301
+msgid "By default the widget uses the field information"
+msgstr ""
+
+#: models/ir_qweb_fields.py:425
+msgid "Original currency"
+msgstr ""
+
+#: models/ir_qweb_fields.py:426
+msgid "Display currency"
+msgstr ""
+
+#: models/ir_qweb_fields.py:427
+msgid "Date"
+msgstr "તારીખ"
+
+#: models/ir_qweb_fields.py:427
+msgid ""
+"Date used for the original currency (only used for t-esc). by default use "
+"the current date."
+msgstr ""
+
+#: models/ir_qweb_fields.py:428
+msgid "Company"
+msgstr "કંપની"
+
+#: models/ir_qweb_fields.py:428
+msgid ""
+"Company used for the original currency (only used for t-esc). By default use "
+"the user company"
+msgstr ""
+
+#: models/ir_qweb_fields.py:437
+msgid "The value send to monetary field is not a number."
+msgstr ""
+
+#: models/ir_qweb_fields.py:535
+#, python-format
+msgid "The value (%s) passed should be positive"
+msgstr ""
+
+#: models/ir_qweb_fields.py:538
+msgid "The hour must be between 0 and 23"
+msgstr ""
+
+#: models/ir_qweb_fields.py:572
+msgid "Digital formatting"
+msgstr ""
+
+#: models/ir_qweb_fields.py:573
+msgid "Date unit"
+msgstr ""
+
+#: models/ir_qweb_fields.py:573
+msgid "Date unit used for comparison and formatting"
+msgstr ""
+
+#: models/ir_qweb_fields.py:574
+msgid "Rounding unit"
+msgstr ""
+
+#: models/ir_qweb_fields.py:574
+msgid ""
+"Date unit used for the rounding. The value must be smaller than 'hour' if "
+"you use the digital formatting."
+msgstr ""
+
+#: models/ir_qweb_fields.py:578
+msgid "Long"
+msgstr ""
+
+#: models/ir_qweb_fields.py:579
+msgid "Short"
+msgstr ""
+
+#: models/ir_qweb_fields.py:580
+msgid "Narrow"
+msgstr ""
+
+#: models/ir_qweb_fields.py:581
+#, fuzzy
+msgid "Format"
+msgstr "ફોર્મ"
+
+#: models/ir_qweb_fields.py:582
+msgid "Formatting: long, short, narrow (not used for digital)"
+msgstr ""
+
+#: models/ir_qweb_fields.py:587
+#, fuzzy
+msgid "Add direction"
+msgstr "દિશા"
+
+#: models/ir_qweb_fields.py:588
+msgid "Add directional information (not used for digital)"
+msgstr ""
+
+#: models/ir_qweb_fields.py:650
+msgid "Reference date"
+msgstr ""
+
+#: models/ir_qweb_fields.py:650
+msgid "Date to compare with the field value, by default use the current date."
+msgstr ""
+
+#: models/ir_qweb_fields.py:686
+msgid "Barcode symbology"
+msgstr ""
+
+#: models/ir_qweb_fields.py:686
+msgid "Barcode type, eg: UPCA, EAN13, Code128"
+msgstr ""
+
+#: models/ir_qweb_fields.py:687
+msgid "Width"
+msgstr ""
+
+#: models/ir_qweb_fields.py:688
+msgid "Height"
+msgstr ""
+
+#: models/ir_qweb_fields.py:689
+msgid "Human Readable"
+msgstr ""
+
+#: models/ir_qweb_fields.py:710
+#, python-format
+msgid "Barcode %s"
+msgstr ""
+
+#: models/ir_qweb_fields.py:724
+msgid "Name"
+msgstr "નામ"
+
+#: models/ir_qweb_fields.py:725
+msgid "Address"
+msgstr "સરનામું"
+
+#: models/ir_qweb_fields.py:726
+msgid "Phone"
+msgstr "ફોન"
+
+#: models/ir_qweb_fields.py:727
+msgid "Mobile"
+msgstr "મોબાઇલ"
+
+#: models/ir_qweb_fields.py:728
+msgid "Email"
+msgstr "ઈ-મેઈલ"
+
+#: models/ir_qweb_fields.py:729 models/ir_qweb_fields.py:780
+msgid "VAT"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+msgid "Space"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+msgid "Comma"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+msgid "Dash"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+msgid "Vertical bar"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+msgid "Slash"
+msgstr ""
+
+#: models/ir_qweb_fields.py:734
+msgid "Linebreak"
+msgstr ""
+
+#: models/ir_qweb_fields.py:737
+msgid "Displayed fields"
+msgstr ""
+
+#: models/ir_qweb_fields.py:737
+msgid "List of contact fields to display in the widget"
+msgstr ""
+
+#: models/ir_qweb_fields.py:738
+msgid "Address separator"
+msgstr ""
+
+#: models/ir_qweb_fields.py:738
+msgid "Separator use to split the address from the display_name."
+msgstr ""
+
+#: models/ir_qweb_fields.py:739
+msgid "Hide badges"
+msgstr ""
+
+#: models/ir_qweb_fields.py:739
+msgid "Don't display the font awesome marker"
+msgstr ""
+
+#: models/ir_qweb_fields.py:740
+msgid "Use comma"
+msgstr ""
+
+#: models/ir_qweb_fields.py:740
+msgid "Use comma instead of the <br> tag to display the address"
+msgstr ""
+
+#: models/ir_qweb_fields.py:741
+msgid "Display phone icons"
+msgstr ""
+
+#: models/ir_qweb_fields.py:741
+msgid "Display the phone icons even if no_marker is True"
+msgstr ""
+
+#: models/ir_qweb_fields.py:742
+#, fuzzy
+msgid "Display country image"
+msgstr "પ્રદર્શન નામ"
+
+#: models/ir_qweb_fields.py:742
+msgid "Display the country image if the field is present on the record"
+msgstr ""
+
+#: models/ir_rule.py:61
+msgid "Rules can not be applied on the Record Rules model."
+msgstr ""
+
+#: models/ir_rule.py:197
+#, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to access "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr ""
+
+#: models/ir_rule.py:198
+#, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to modify "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr ""
+
+#: models/ir_rule.py:199
+#, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to create "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr ""
+
+#: models/ir_rule.py:200
+#, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to delete "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr ""
+
+#: models/ir_rule.py:225
+#, fuzzy, python-format
+msgid "Records: %s"
+msgstr "રેકોર્ડ"
+
+#: models/ir_rule.py:228
+#, fuzzy, python-format
+msgid "User: %s"
+msgstr "વપરાશકર્તાઓ"
+
+#: models/ir_rule.py:231
+#, python-format
+msgid ""
+"This restriction is due to the following rules:\n"
+"%s"
+msgstr ""
+
+#: models/ir_rule.py:233
+msgid "Note: this might be a multi-company issue."
+msgstr ""
+
+#: models/ir_sequence.py:17 models/ir_sequence.py:33
+msgid "Step must not be zero."
+msgstr ""
+
+#: models/ir_sequence.py:234
+#, python-format
+msgid "Invalid prefix or suffix for sequence '%s'"
+msgstr ""
+
+#: models/ir_translation.py:528
+msgid "Creating translation on non existing records"
+msgstr ""
+
+#: models/ir_translation.py:552
+#, python-format
+msgid ""
+"Translation is not valid:\n"
+"%s"
+msgstr ""
+
+#: models/ir_translation.py:726
+msgid ""
+"Translation features are unavailable until you install an extra translation."
+msgstr ""
+
+#: models/ir_translation.py:756
+msgid "Translate"
+msgstr "અનુવાદ"
+
+#: models/ir_translation.py:854
+msgid "Technical Translations"
+msgstr ""
+
+#: models/ir_ui_menu.py:73
+msgid "Error! You cannot create recursive menus."
+msgstr ""
+
+#: models/ir_ui_view.py:397
+#, python-format
+msgid ""
+"Error while validating view:\n"
+"\n"
+"%(error)s"
+msgstr ""
+
+#: models/ir_ui_view.py:415
+#, python-format
+msgid "Invalid view %(name)s definition in %(file)s"
+msgstr ""
+
+#: models/ir_ui_view.py:427
+#, python-format
+msgid ""
+"Error while validating view near:\n"
+"\n"
+"%(fivelines)s\n"
+"%(error)s"
+msgstr ""
+
+#: models/ir_ui_view.py:441
+msgid ""
+"Inherited Qweb view cannot have 'Groups' define on the record. Use 'groups' "
+"attributes inside the view definition"
+msgstr ""
+
+#: models/ir_ui_view.py:448
+msgid "You cannot create recursive inherited views."
+msgstr ""
+
+#: models/ir_ui_view.py:484
+msgid "Missing view architecture."
+msgstr ""
+
+#: models/ir_ui_view.py:680
+#, python-format
+msgid "View '%(name)s' accessible only to groups %(groups)s "
+msgstr ""
+
+#: models/ir_ui_view.py:683
+#, python-format
+msgid "View '%(name)s' is private"
+msgstr ""
+
+#: models/ir_ui_view.py:1008 models/ir_ui_view.py:1240
+#, python-format
+msgid "Model not found: %(model)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1290
+#, python-format
+msgid "Tree child can only have one of %(tags)s tag (not %(wrong_tag)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1299
+#, python-format
+msgid "A <graph> can only contains <field> nodes, found a <%s>"
+msgstr ""
+
+#: models/ir_ui_view.py:1320
+msgid "Search tag can only contain one search panel"
+msgstr ""
+
+#: models/ir_ui_view.py:1330
+msgid "Field tag must have a \"name\" attribute defined"
+msgstr ""
+
+#: models/ir_ui_view.py:1352
+#, python-format
+msgid ""
+"Domain on non-relational field \"%(name)s\" makes no sense (domain:"
+"%(domain)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1367
+#, python-format
+msgid "Field \"%(field_name)s\" does not exist in model \"%(model_name)s\""
+msgstr ""
+
+#: models/ir_ui_view.py:1381
+#, python-format
+msgid "Attribute %(attribute)s evaluation expects a boolean, got %(value)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1407
+#, python-format
+msgid "Invalid special '%(value)s' in button"
+msgstr ""
+
+#: models/ir_ui_view.py:1412
+msgid "Button must have a name"
+msgstr ""
+
+#: models/ir_ui_view.py:1416
+#, python-format
+msgid "%(action_name)s is not a valid action on %(model_name)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1424
+#, python-format
+msgid "%(method)s on %(model)s is private and cannot be called from a button"
+msgstr ""
+
+#: models/ir_ui_view.py:1442
+#, python-format
+msgid "Invalid xmlid %(xmlid)s for button of type action."
+msgstr ""
+
+#: models/ir_ui_view.py:1445
+#, python-format
+msgid ""
+"%(xmlid)s is of type %(xmlid_model)s, expected a subclass of ir.actions."
+"actions"
+msgstr ""
+
+#: models/ir_ui_view.py:1452
+#, python-format
+msgid ""
+"Action %(action_reference)s (id: %(action_id)s) does not exist for button of "
+"type action."
+msgstr ""
+
+#: models/ir_ui_view.py:1474
+#, python-format
+msgid ""
+"Field '%(name)s' found in 'groupby' node can only be of type many2one, found "
+"%(type)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1498
+#, python-format
+msgid ""
+"Field '%(field)s' found in 'groupby' node does not exist in model %(model)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1509
+msgid "Searchpanel item with select multi cannot have a domain."
+msgstr ""
+
+#: models/ir_ui_view.py:1518
+msgid ""
+"Label tag must contain a \"for\". To match label style without corresponding "
+"field or button, use 'class=\"o_form_label\"'."
+msgstr ""
+
+#: models/ir_ui_view.py:1528
+msgid "Page direct ancestor must be notebook"
+msgstr ""
+
+#: models/ir_ui_view.py:1599
+#, python-format
+msgid "\"group_by\" value must be a string %(attribute)s=%(value)r"
+msgstr ""
+
+#: models/ir_ui_view.py:1607
+#, python-format
+msgid ""
+"Unknown field \"%(field)s\" in \"group_by\" value in %(attribute)s=%(value)r"
+msgstr ""
+
+#: models/ir_ui_view.py:1630
+#, python-format
+msgid "%(attribute)r value must be an integer (%(value)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1776
+#, python-format
+msgid "Invalid domain format %(expr)s in %(use)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1788
+#, python-format
+msgid "Non-relational field %(field)r in path %(field_path)r in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1796
+#, python-format
+msgid "Unknown field \"%(model)s.%(field)s\" in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1802
+#, python-format
+msgid "Unsearchable field %(field)r in path %(field_path)r in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:2072
+msgid "Can't compare more than two views."
+msgstr ""
+
+#: models/ir_ui_view.py:2099
+msgid "Previous Arch"
+msgstr ""
+
+#: models/ir_ui_view.py:2105
+#, fuzzy
+msgid "File Arch"
+msgstr "ફાઇલ"
+
+#: models/ir_ui_view.py:2115
+#, fuzzy
+msgid "Current Arch"
+msgstr "ચલણ"
+
+#: models/ir_ui_view.py:2171
+#, python-format
+msgid ""
+"Name or id %(name_or_id)r in %(use)s must be present in view but is missing."
+msgstr ""
+
+#: models/ir_ui_view.py:2179
+#, python-format
+msgid "Field `%(name)s` does not exist"
+msgstr ""
+
+#: models/ir_ui_view.py:2186
+#, python-format
+msgid "Invalid composed field %(definition)s in %(use)s"
+msgstr ""
+
+#: models/ir_ui_view.py:2193
+#, python-format
+msgid "Field %(name)r used in %(use)s must be present in view but is missing."
+msgstr ""
+
+#: models/ir_ui_view.py:2199
+#, python-format
+msgid ""
+"Field %(name)r used in %(use)s is present in view but is in select multi."
+msgstr ""
+
+#: models/report_paperformat.py:194
+msgid ""
+"You can select either a format or a specific page width/height, but not both."
+msgstr ""
+
+#: models/res_bank.py:73
+msgid "Normal"
+msgstr "સામાન્ય"
+
+#: models/res_company.py:25
+msgid ""
+"Duplicating a company is not allowed. Please create a new company instead."
+msgstr ""
+
+#: models/res_company.py:268
+msgid "You cannot create recursive companies."
+msgstr ""
+
+#: models/res_config.py:300
+msgid ""
+"\n"
+"\n"
+"This addon is already installed on your system"
+msgstr ""
+
+#: models/res_config.py:384
+msgid "Cannot duplicate configuration!"
+msgstr ""
+
+#: models/res_config.py:419
+msgid "Warning!"
+msgstr "ચેતવણી!"
+
+#: models/res_config.py:420
+#, python-format
+msgid ""
+"Disabling this option will also uninstall the following modules \n"
+"%s"
+msgstr ""
+
+#: models/res_config.py:625
+msgid "Only administrators can change the settings"
+msgstr ""
+
+#: models/res_config.py:752
+msgid "Go to the configuration panel"
+msgstr ""
+
+#: models/res_config.py:793
+msgid "Invalid template user. It seems it has been deleted."
+msgstr ""
+
+#: models/res_country.py:141
+msgid "The layout contains an invalid format key"
+msgstr ""
+
+#: models/res_country.py:152
+msgid "Base view"
+msgstr ""
+
+#: models/res_currency.py:173
+msgid "and"
+msgstr ""
+
+#: models/res_currency.py:293
+#, python-format
+msgid "Unit per %s"
+msgstr ""
+
+#: models/res_currency.py:294
+#, python-format
+msgid "%s per Unit"
+msgstr ""
+
+#: models/res_currency.py:408
+msgid ""
+"The new rate is quite far from the previous rate.\n"
+"Incorrect currency rates may cause critical problems, make sure the rate is "
+"correct !"
+msgstr ""
+
+#: models/res_currency.py:428
+#, python-format
+msgid "%(rate_currency_name)s per %(company_currency_name)s"
+msgstr ""
+
+#: models/res_currency.py:429
+#, python-format
+msgid "%(company_currency_name)s per %(rate_currency_name)s"
+msgstr ""
+
+#: models/res_lang.py:72
+msgid "At least one language must be active."
+msgstr ""
+
+#: models/res_lang.py:80
+msgid ""
+"Invalid date/time format directive specified. Please refer to the list of "
+"allowed directives, displayed when you edit a language."
+msgstr ""
+
+#: models/res_lang.py:86
+msgid ""
+"The Separator Format should be like [,n] where 0 < n :starting from Unit "
+"digit. -1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
+"1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
+"106,500. Provided as the thousand separator in each case."
+msgstr ""
+
+#: models/res_lang.py:282
+msgid "Language code cannot be modified."
+msgstr ""
+
+#: models/res_lang.py:285
+msgid "Cannot deactivate a language that is currently used by users."
+msgstr ""
+
+#: models/res_lang.py:287
+msgid "Cannot deactivate a language that is currently used by contacts."
+msgstr ""
+
+#: models/res_lang.py:300
+msgid "Base Language 'en_US' can not be deleted."
+msgstr ""
+
+#: models/res_lang.py:303
+msgid "You cannot delete the language which is the user's preferred language."
+msgstr ""
+
+#: models/res_lang.py:305
+msgid ""
+"You cannot delete the language which is Active!\n"
+"Please de-activate the language first."
+msgstr ""
+
+#: models/res_lang.py:317
+#, python-format
+msgid "format() must be given exactly one %char format specifier"
+msgstr ""
+
+#: models/res_lang.py:341
+msgid ""
+"The languages that you selected have been successfully installed. Users can "
+"choose their favorite language in their preferences."
+msgstr ""
+
+#: models/res_partner.py:89
+msgid "You can not create recursive tags."
+msgstr ""
+
+#: models/res_partner.py:359
+msgid "You cannot create recursive Partner hierarchies."
+msgstr ""
+
+#: models/res_partner.py:378
+msgid ""
+"Changing the company of a contact should only be done if it was never "
+"correctly set. If an existing contact starts working for a new company then "
+"a new contact should be created under that new company. You can use the "
+"\"Discard\" button to abandon this change."
+msgstr ""
+
+#: models/res_partner.py:454
+msgid ""
+"One2Many fields cannot be synchronized as part of `commercial_fields` or "
+"`address fields`"
+msgstr ""
+
+#: models/res_partner.py:577
+#, python-format
+msgid ""
+"You cannot archive contacts linked to an active user.\n"
+"You first need to archive their associated user.\n"
+"\n"
+"Linked active users : %(names)s"
+msgstr ""
+
+#: models/res_partner.py:579 models/res_partner.py:648
+msgid "Go to users"
+msgstr ""
+
+#: models/res_partner.py:583
+#, python-format
+msgid ""
+"You cannot archive contacts linked to an active user.\n"
+"Ask an administrator to archive their associated user first.\n"
+"\n"
+"Linked active users :\n"
+"%(names)s"
+msgstr ""
+
+#: models/res_partner.py:646
+#, python-format
+msgid ""
+"You cannot delete contacts linked to an active user.\n"
+"You should rather archive them after archiving their associated user.\n"
+"\n"
+"Linked active users : %(names)s"
+msgstr ""
+
+#: models/res_partner.py:652
+#, python-format
+msgid ""
+"You cannot delete contacts linked to an active user.\n"
+"Ask an administrator to archive their associated user first.\n"
+"\n"
+"Linked active users :\n"
+"%(names)s"
+msgstr ""
+
+#: models/res_partner.py:811
+msgid "Couldn't create contact without email address!"
+msgstr ""
+
+#: models/res_partner.py:842
+msgid "An email is required for find_or_create to work"
+msgstr ""
+
+#: models/res_partner.py:846
+msgid "A valid email is required for find_or_create to work properly."
+msgstr ""
+
+#: models/res_partner.py:918
+#, python-format
+msgid "Partners: %(category)s"
+msgstr ""
+
+#: models/res_partner.py:977
+msgid "Import Template for Customers"
+msgstr ""
+
+#: models/res_users.py:96
+msgid "This method can only be accessed over HTTP"
+msgstr ""
+
+#: models/res_users.py:117
+#, fuzzy
+msgid "Security Control"
+msgstr "સુરક્ષા"
+
+#: models/res_users.py:212
+msgid "The name of the group can not start with \"-\""
+msgstr ""
+
+#: models/res_users.py:402
+msgid ""
+"Please use the change password wizard (in User Preferences or User menu) to "
+"change your own password."
+msgstr ""
+
+#: models/res_users.py:464
+#, python-format
+msgid ""
+"Company %(company_name)s is not in the allowed companies for user "
+"%(user_name)s (%(company_allowed)s)."
+msgstr ""
+
+#: models/res_users.py:471
+msgid "The \"App Switcher\" action cannot be selected as home action."
+msgstr ""
+
+#: models/res_users.py:483
+msgid "The user cannot have more than one user types."
+msgstr ""
+
+#: models/res_users.py:533
+msgid "Invalid 'group by' parameter"
+msgstr ""
+
+#: models/res_users.py:541
+msgid "Invalid search criterion"
+msgstr ""
+
+#: models/res_users.py:557
+msgid "You cannot activate the superuser."
+msgstr ""
+
+#: models/res_users.py:559
+msgid "You cannot deactivate the user you're currently logged in as."
+msgstr ""
+
+#: models/res_users.py:611
+msgid ""
+"You can not remove the admin user as it is used internally for resources "
+"created by Odoo (updates, module installation, ...)"
+msgstr ""
+
+#: models/res_users.py:803
+msgid "Setting empty passwords is not allowed for security reasons!"
+msgstr ""
+
+#: models/res_users.py:864
+msgid "Users"
+msgstr "વપરાશકર્તાઓ"
+
+#: models/res_users.py:880
+msgid "Groups"
+msgstr "જૂથો"
+
+#: models/res_users.py:892
+msgid "Access Rights"
+msgstr ""
+
+#: models/res_users.py:904
+msgid "Record Rules"
+msgstr ""
+
+#: models/res_users.py:1010
+msgid "Too many login failures, please wait a bit before trying again."
+msgstr ""
+
+#: models/res_users.py:1560
+msgid "Other"
+msgstr "અન્ય"
+
+#: models/res_users.py:1600
+msgid ""
+"Incorrect Password, try again or click on Forgot Password to reset your "
+"password."
+msgstr ""
+
+#: models/res_users.py:1647
+msgid "Before clicking on 'Change Password', you have to write a new password."
+msgstr ""
+
+#: models/res_users.py:1762
+msgid ""
+"You can not remove API keys unless they're yours or you are a system user"
+msgstr ""
+
+#: models/res_users.py:1826
+msgid "Only internal users can create API keys"
+msgstr ""
+
+#: wizard/base_export_language.py:19
+msgid "New Language (Empty translation template)"
+msgstr ""
+
+#: wizard/base_import_language.py:53
+#, python-format
+msgid ""
+"File %r not imported due to a malformed file.\n"
+"\n"
+"This issue can be caused by duplicates entries who are referring to the same "
+"field. Please check the content of the file you are trying to import.\n"
+"\n"
+"Technical Details:\n"
+"%s"
+msgstr ""
+
+#: wizard/base_import_language.py:60
+#, python-format
+msgid ""
+"File %r not imported due to format mismatch or a malformed file. (Valid "
+"formats are .csv, .po, .pot)\n"
+"\n"
+"Technical Details:\n"
+"%s"
+msgstr ""
+
+#: wizard/base_language_install.py:58
+msgid ""
+"The languages that you selected have been successfully "
+"installed.                            Users can choose their favorite "
+"language in their preferences."
+msgstr ""
+
+#: wizard/base_module_upgrade.py:67
+#, python-format
+msgid "The following modules are not installed or unknown: %s"
+msgstr ""
+
+#: wizard/base_partner_merge.py:305
+msgid ""
+"For safety reasons, you cannot merge more than 3 contacts together. You can "
+"re-open the wizard several times if needed."
+msgstr ""
+
+#: wizard/base_partner_merge.py:312
+msgid "You cannot merge a contact with one of his parent."
+msgstr ""
+
+#: wizard/base_partner_merge.py:315
+msgid ""
+"All contacts must have the same email. Only the Administrator can merge "
+"contacts with different emails."
+msgstr ""
+
+#: wizard/base_partner_merge.py:328
+msgid ""
+"Only the destination contact may be linked to existing Journal Items. Please "
+"ask the Administrator if you need to merge several contacts linked to "
+"existing Journal Items."
+msgstr ""
+
+#: wizard/base_partner_merge.py:412
+msgid "You have to specify a filter for your selection."
+msgstr ""
+
+#: wizard/base_update_translations.py:26
+#, python-format
+msgid "No language with code \"%s\" exists"
+msgstr ""
+
+#~ msgid "Access Controls"
+#~ msgstr "વપરાશ નિયંત્રણ"
+
+#~ msgid "Accounting"
+#~ msgstr "હિસાબ"
+
+#~ msgid "Action Target"
+#~ msgstr "કાર્યવાહી લક્ષ્યાંક"
+
+#~ msgid "Action To Do"
+#~ msgstr "કરવાનું"
+
+#~ msgid "Action URL"
+#~ msgstr "એકશન યુ.આર.એલ (URL)"
+
+#~ msgid "Actions"
+#~ msgstr "ક્રિયાઓ"
+
+#~ msgid "Active"
+#~ msgstr "સક્રિય"
+
+#~ msgid "All"
+#~ msgstr "બધા"
+
+#~ msgid "Application"
+#~ msgstr "કાર્યક્રમ"
+
+#~ msgid "Armenia"
+#~ msgstr "અર્મેનિઆ"
+
+#~ msgid "Attachment"
+#~ msgstr "જોડાણ"
+
+#~ msgid "Australia"
+#~ msgstr "ઓસ્ટ્રેલિયા"
+
+#~ msgid "Austria"
+#~ msgstr "ઓસ્ટ્રીઆ"
+
+#~ msgid "Author"
+#~ msgstr "લેખક"
+
+#~ msgid "Automated Action Rules"
+#~ msgstr "સ્વયંસંચાલિત ક્રિયા ના નિયમો"
+
+#~ msgid "Bahamas"
+#~ msgstr "બહામાસ"
+
+#~ msgid "Bangladesh"
+#~ msgstr "બાંગ્લાદેશ"
+
+#~ msgid "Bank"
+#~ msgstr "બેન્ક"
+
+#~ msgid "Bank Accounts"
+#~ msgstr "બેન્કના ખાતાઓ"
+
+#~ msgid "Bank account"
+#~ msgstr "બેન્ક ખાતું"
+
+#~ msgid "Barbados"
+#~ msgstr "બાર્બાડોસ"
+
+#~ msgid "Base"
+#~ msgstr "આધાર"
+
+#~ msgid "Base Field"
+#~ msgstr "આધાર ક્ષેત્ર:"
+
+#~ msgid "Belgium - Structured Communication"
+#~ msgstr "બેલ્જીયમ - સંરચિત સંચાર"
+
+#~ msgid "Belize"
+#~ msgstr "બેલિઝ"
+
+#~ msgid "Benin"
+#~ msgstr "બેનીન"
+
+#~ msgid "Bermuda"
+#~ msgstr "બર્મુડા"
+
+#~ msgid "Bolivia"
+#~ msgstr "બોલીવિઆ"
+
+#~ msgid "Brazil"
+#~ msgstr "બ્રાઝિલ"
+
+#~ msgid "British Indian Ocean Territory"
+#~ msgstr "બ્રિટીશ ભારતીય ઓશિયન ટેરિટરી"
+
+#~ msgid "Calendar"
+#~ msgstr "કેલેન્ડર"
+
+#~ msgid "Cancel"
+#~ msgstr "રદ કરો"
+
+#~ msgid "Category"
+#~ msgstr "વર્ગ"
+
+#~ msgid "Cayman Islands"
+#~ msgstr "કેમેન ટાપુઓ"
+
+#~ msgid "Central African Republic"
+#~ msgstr "કેંન્દ્રિય આફ્રિકન રિપલ્બીક"
+
+#~ msgid "Change Password"
+#~ msgstr "પાસવર્ડ બદલો"
+
+#~ msgid "Char"
+#~ msgstr "અક્ષરીય"
+
+#~ msgid "Chile"
+#~ msgstr "ચિલી"
+
+#~ msgid "Client Action"
+#~ msgstr "ક્લાઈન્ટ ક્રિયા"
+
+#~ msgid "Close"
+#~ msgstr "બંધ કરો"
+
+#~ msgid "Code"
+#~ msgstr "કોડ"
+
+#~ msgid "Colombia"
+#~ msgstr "કોલંબિયા"
+
+#~ msgid "Companies"
+#~ msgstr "કંપનીઓ"
+
+#~ msgid "Company Name"
+#~ msgstr "કંપનીનું નામ"
+
+#~ msgid "Complete Name"
+#~ msgstr "પૂરું નામ"
+
+#~ msgid "Config Wizard Steps"
+#~ msgstr "વિઝાર્ડ  ની રૂપરેખા(કન્ફિગ્યુરેશન) ના પગલા"
+
+#~ msgid "Configuration"
+#~ msgstr "રુપરેખાંકન"
+
+#~ msgid "Confirm"
+#~ msgstr "ખાતરી"
+
+#~ msgid "Contact"
+#~ msgstr "સંપર્ક"
+
+#~ msgid "Context"
+#~ msgstr "સંદર્ભ"
+
+#~ msgid ""
+#~ "Context dictionary as Python expression, empty by default (Default: {})"
+#~ msgstr ""
+#~ "કંટેક્સ્ટ પાયથન એક્સ્પ્રેશન મા એક ડિક્ષ્નરી છે કે જે મૂળભૂત રીતે ખાલી હોય છે (Default:{})"
+
+#~ msgid "Contracts"
+#~ msgstr "કરારો"
+
+#~ msgid "Contributors"
+#~ msgstr "યોગદાન આપનારાઓ"
+
+#~ msgid "Countries"
+#~ msgstr "દેશો"
+
+#~ msgid "Country"
+#~ msgstr "દેશ"
+
+#~ msgid "Country Name"
+#~ msgstr "દેશ નુ નામ"
+
+#~ msgid "Country state"
+#~ msgstr "દેશ નુ રાજ્ય"
+
+#~ msgid "Create Menu"
+#~ msgstr "મેનુ સર્જન"
+
+#~ msgid "Create _Menu"
+#~ msgstr "મેનુ _ બનાવો"
+
+#~ msgid "Create a Menu"
+#~ msgstr "મેનુ બનાવો"
+
+#~ msgid "Created Views"
+#~ msgstr "બનાવેલા દ્રશ્યો"
+
+#~ msgid "Created by"
+#~ msgstr "બનાવનાર"
+
+#~ msgid "Creation Date"
+#~ msgstr "સર્જન તારીખ"
+
+#~ msgid "Credit Limit"
+#~ msgstr "ઋણ સીમા"
+
+#~ msgid "Croatia"
+#~ msgstr "ક્રોએશિઆ"
+
+#~ msgid "Cuba"
+#~ msgstr "ક્યુબા"
+
+#~ msgid "Currency Code (ISO 4217)"
+#~ msgstr "ચલણ કોડ (4217 ISO)"
+
+#~ msgid "Custom Object"
+#~ msgstr "કસ્ટમ ઓબ્જેક્ટ"
+
+#~ msgid "Customers"
+#~ msgstr "ગ્રાહકો"
+
+#~ msgid "Database Structure"
+#~ msgstr "ડેટાબેઝ બંધારણ"
+
+#~ msgid "Date Format"
+#~ msgstr "તારીખ સ્વરૂપણ"
+
+#~ msgid "DateTime"
+#~ msgstr "દિવસ અને સમય"
+
+#~ msgid "Days"
+#~ msgstr "દિવસો"
+
+#~ msgid "Debugging"
+#~ msgstr "ડિબગીંગ"
+
+#~ msgid "Defined Reports"
+#~ msgstr "અહેવાલો"
+
+#~ msgid "Definition"
+#~ msgstr "વ્યાખ્યા"
+
+#~ msgid "Delete Access"
+#~ msgstr "એક્સેસ રદ"
+
+#~ msgid "Dependencies"
+#~ msgstr "નિર્ભરતા"
+
+#~ msgid "Dependency"
+#~ msgstr "નિર્ભરતા"
+
+#~ msgid "Description"
+#~ msgstr "વર્ણન"
+
+#~ msgid "Doctor"
+#~ msgstr "ડોક્ટર"
+
+#~ msgid "Document"
+#~ msgstr "દસ્તાવેજ"
+
+#~ msgid "Documents"
+#~ msgstr "દસ્તાવેજો"
+
+#~ msgid "Domain"
+#~ msgstr "શરતી અવકાશ"
+
+#~ msgid "Done"
+#~ msgstr "પુર્ણ થયુ"
+
+#~ msgid "Education"
+#~ msgstr "શિક્ષણ"
+
+#~ msgid "Egypt"
+#~ msgstr "ઇજીપ્ટ"
+
+#~ msgid "Email Address"
+#~ msgstr "ઈમેઈલ સરનામુ"
+
+#~ msgid "Employee"
+#~ msgstr "કર્મચારી"
+
+#~ msgid "Employees"
+#~ msgstr "કર્મચારીઓ"
+
+#~ msgid "Error"
+#~ msgstr "ભૂલ"
+
+#~ msgid "Events"
+#~ msgstr "ઘટનાઓ"
+
+#~ msgid "Export"
+#~ msgstr "નિકાસ"
+
+#~ msgid "Fax"
+#~ msgstr "ફેક્સ"
+
+#~ msgid "Field Name"
+#~ msgstr "ફિલ્ડ નુ નામ"
+
+#~ msgid "Filter"
+#~ msgstr "ફિલ્ટર"
+
+#~ msgid "Filters"
+#~ msgstr "ગાળકો"
+
+#~ msgid "Float"
+#~ msgstr "ફ્લોટ"
+
+#~ msgid "France"
+#~ msgstr "ફ્રાન્સ"
+
+#~ msgid "From"
+#~ msgstr "તરફથી"
+
+#~ msgid "Full Access"
+#~ msgstr "પૂર્ણ વપરાશ"
+
+#~ msgid "Function"
+#~ msgstr "કાર્ય"
+
+#~ msgid "General"
+#~ msgstr "જનરલ"
+
+#~ msgid "General Information"
+#~ msgstr "સામાન્ય માહિતી"
+
+#~ msgid "Graph"
+#~ msgstr "આલેખ"
+
+#~ msgid "Greece"
+#~ msgstr "ગ્રીસ"
+
+#~ msgid "Greenland"
+#~ msgstr "ગ્રીનલેન્ડ"
+
+#~ msgid "Group"
+#~ msgstr "સમુદાય"
+
+#~ msgid "Help"
+#~ msgstr "મદદ"
+
+#~ msgid "Hong Kong"
+#~ msgstr "હોંગ કોંગ"
+
+#~ msgid "Hours"
+#~ msgstr "કલાક"
+
+#~ msgid "ID"
+#~ msgstr "ઓળખ"
+
+#~ msgid "Iceland"
+#~ msgstr "આઇસલેન્ડ"
+
+#~ msgid "Ids"
+#~ msgstr "ઓળખ"
+
+#~ msgid "Image"
+#~ msgstr "ચિત્ર"
+
+#~ msgid "Import / Export"
+#~ msgstr "આયાત / નિકાસ"
+
+#~ msgid "Indonesia"
+#~ msgstr "ઇન્ડોનેશિયા"
+
+#~ msgid "Information"
+#~ msgstr "માહિતી"
+
+#~ msgid "Invoice"
+#~ msgstr "બિલ"
+
+#~ msgid "Iran"
+#~ msgstr "ઈરાન"
+
+#~ msgid "Iraq"
+#~ msgstr "ઇરાક"
+
+#~ msgid "Israel"
+#~ msgstr "ઇઝરાયેલ"
+
+#~ msgid "Italy"
+#~ msgstr "ઇટાલી"
+
+#~ msgid "Jamaica"
+#~ msgstr "જમૈકા"
+
+#~ msgid "Job Position"
+#~ msgstr "સ્થાન"
+
+#~ msgid "Kuwait"
+#~ msgstr "કુવૈત"
+
+#~ msgid "Languages"
+#~ msgstr "ભાષાઓ"
+
+#~ msgid "Laos"
+#~ msgstr "લાઓસ"
+
+#~ msgid "Lines"
+#~ msgstr "લીટીઓ"
+
+#~ msgid "Log"
+#~ msgstr "લોગ"
+
+#~ msgid "Login"
+#~ msgstr "લોગ ઇન"
+
+#~ msgid "Logo"
+#~ msgstr "લોગો"
+
+#~ msgid "Malaysia"
+#~ msgstr "મલેશિયા"
+
+#~ msgid "Maldives"
+#~ msgstr "માલદીવ"
+
+#~ msgid "Manufacturing"
+#~ msgstr "ઉત્પાદન"
+
+#~ msgid "Marketing"
+#~ msgstr "પ્રચાર"
+
+#~ msgid "Members"
+#~ msgstr "સભ્યો"
+
+#~ msgid "Menu"
+#~ msgstr "મેનૂ"
+
+#~ msgid "Message"
+#~ msgstr "સંદેશ"
+
+#~ msgid "Mexico"
+#~ msgstr "મેક્સિકો"
+
+#~ msgid "Minutes"
+#~ msgstr "મિનીટો"
+
+#~ msgid "Model"
+#~ msgstr "નમુનો"
+
+#~ msgid "Module"
+#~ msgstr "મોડ્યુલ"
+
+#~ msgid "Monaco"
+#~ msgstr "મોનાકો"
+
+#~ msgid "Mongolia"
+#~ msgstr "મંગોલિયા"
+
+#~ msgid "Months"
+#~ msgstr "મહિનાઓ"
+
+#~ msgid "Morocco"
+#~ msgstr "મોરોક્કો"
+
+#~ msgid "Mozambique"
+#~ msgstr "મોઝામ્બિક"
+
+#~ msgid "Nepal"
+#~ msgstr "નેપાળ"
+
+#~ msgid "Netherlands"
+#~ msgstr "નેધરલેન્ડ"
+
+#~ msgid "New Password"
+#~ msgstr "નવું પાસવર્ડ"
+
+#~ msgid "None"
+#~ msgstr "કશું નંહિ"
+
+#~ msgid "Norway"
+#~ msgstr "નોર્વે"
+
+#~ msgid "Notes"
+#~ msgstr "નોંધ"
+
+#~ msgid "Object"
+#~ msgstr "વસ્તુ"
+
+#~ msgid "Object:"
+#~ msgstr "વસ્તુ:"
+
+#~ msgid "Ok"
+#~ msgstr "બરાબર"
+
+#~ msgid "Options"
+#~ msgstr "વિકલ્પો"
+
+#~ msgid "Owner"
+#~ msgstr "માલિક"
+
+#~ msgid "Panama"
+#~ msgstr "પનામા"
+
+#~ msgid "Partner"
+#~ msgstr "ભાગીદાર"
+
+#~ msgid "Partners"
+#~ msgstr "ભાગીદાર"
+
+#~ msgid "Password"
+#~ msgstr "પાસવર્ડ"
+
+#~ msgid "Philippines"
+#~ msgstr "ફિલિપાઇન્સ"
+
+#~ msgid "Preferences"
+#~ msgstr "સામાન્ય પસંદગીઓ"
+
+#~ msgid "Priority"
+#~ msgstr "પ્રાથમિકતા"
+
+#~ msgid "Private Address"
+#~ msgstr "ખાનગી સરનામું"
+
+#~ msgid "Professor"
+#~ msgstr "પ્રોફેસર"
+
+#~ msgid "Properties"
+#~ msgstr "ગુણધર્મો"
+
+#~ msgid "Purchases"
+#~ msgstr "ખરીદીઓ"
+
+#~ msgid "Qatar"
+#~ msgstr "કતાર"
+
+#~ msgid "Reference"
+#~ msgstr "સંદર્ભ"
+
+#~ msgid "Remove"
+#~ msgstr "દૂર કરો"
+
+#~ msgid "Report"
+#~ msgstr "અહેવાલ"
+
+#~ msgid "Reporting"
+#~ msgstr "અહેવાલીકરણ"
+
+#~ msgid "Reports"
+#~ msgstr "અહેવાલો"
+
+#~ msgid "Required"
+#~ msgstr "આવશ્યક"
+
+#~ msgid "Resource"
+#~ msgstr "સ્ત્રોત"
+
+#~ msgid "Rules"
+#~ msgstr "નિયમો"
+
+#~ msgid "Sales"
+#~ msgstr "વેચાણ"
+
+#~ msgid "Saudi Arabia"
+#~ msgstr "સાઉદી અરેબિયા"
+
+#~ msgid "Save"
+#~ msgstr "સંગ્રહો"
+
+#~ msgid "Search"
+#~ msgstr "શોધ"
+
+#~ msgid "Sequence"
+#~ msgstr "ક્રમ"
+
+#~ msgid "Settings"
+#~ msgstr "સુયોજનો"
+
+#~ msgid "Signature"
+#~ msgstr "હસ્તાક્ષર"
+
+#~ msgid "Singapore"
+#~ msgstr "સિંગાપુર"
+
+#~ msgid "Slovakia"
+#~ msgstr "સ્લોવેકિયા"
+
+#~ msgid "Standard"
+#~ msgstr "પ્રમાણભૂત"
+
+#~ msgid "State"
+#~ msgstr "અવસ્થા"
+
+#~ msgid "States"
+#~ msgstr "રાજ્યો"
+
+#~ msgid "Status"
+#~ msgstr "સ્થિતિ"
+
+#~ msgid "Summary"
+#~ msgstr "સાર"
+
+#~ msgid "Sunday"
+#~ msgstr "રવિવાર"
+
+#~ msgid "Survey"
+#~ msgstr "મોજણી"
+
+#~ msgid "Switzerland"
+#~ msgstr "સ્વિટ્ઝર્લૅન્ડ"
+
+#~ msgid "Taiwan"
+#~ msgstr "તાઇવાન"
+
+#~ msgid "Tanzania"
+#~ msgstr "તાંઝાનિયા"
+
+#~ msgid "Tests"
+#~ msgstr "ચકાસણીઓ"
+
+#~ msgid "Text"
+#~ msgstr "લેખન"
+
+#~ msgid "Thailand"
+#~ msgstr "થાઇલેન્ડ"
+
+#~ msgid "Title"
+#~ msgstr "શીર્ષક"
+
+#~ msgid "To"
+#~ msgstr "પ્રતિ"
+
+#~ msgid "To Do"
+#~ msgstr "કરવાનું"
+
+#~ msgid "Todo"
+#~ msgstr "કરવાનું"
+
+#~ msgid "Tree"
+#~ msgstr "ટ્રી"
+
+#~ msgid "Tunisia"
+#~ msgstr "ટ્યુનિશિયા"
+
+#~ msgid "Turkey"
+#~ msgstr "તુર્કી"
+
+#~ msgid "Turkmenistan"
+#~ msgstr "તુર્કમેનિસ્તાન"
+
+#~ msgid "Type"
+#~ msgstr "પ્રકાર"
+
+#~ msgid "Type:"
+#~ msgstr "પ્રકાર:"
+
+#~ msgid "Ukraine"
+#~ msgstr "યુક્રેન"
+
+#~ msgid "Update Date"
+#~ msgstr "અદ્યતન(અપડેટ) તારીખ"
+
+#~ msgid "Url"
+#~ msgstr "Url"
+
+#~ msgid "Usage"
+#~ msgstr "વપરાશ"
+
+#~ msgid "User"
+#~ msgstr "વપરાશકર્તા"
+
+#~ msgid "Username"
+#~ msgstr "વપરાશકર્તા નામ"
+
+#~ msgid "Uzbekistan"
+#~ msgstr "ઉઝબેકિસ્તાન"
+
+#~ msgid "Value"
+#~ msgstr "મૂલ્ય"
+
+#~ msgid "Venezuela"
+#~ msgstr "વેનેઝુએલા"
+
+#~ msgid "Vietnam"
+#~ msgstr "વિયેતનામ"
+
+#~ msgid "View"
+#~ msgstr "દેખાવ"
+
+#~ msgid "Views"
+#~ msgstr "દેખાવો"
+
+#~ msgid "Yemen"
+#~ msgstr "યમન"
+
+#~ msgid "_Import"
+#~ msgstr "_આયાત કરો"
+
+#~ msgid "at"
+#~ msgstr "એટ"
+
+#~ msgid "on"
+#~ msgstr "ના"
+
+#~ msgid "yes"
+#~ msgstr "હા"

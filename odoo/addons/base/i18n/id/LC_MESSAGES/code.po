@@ -1,0 +1,5122 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base
+#
+# Translators:
+# Bonny Useful <bonny.useful@gmail.com>, 2017
+# Ryanto The <ry.the77@gmail.com>, 2017
+# Gusti Rini <gustirini@gmail.com>, 2017
+# Rachmat Aditiya <raditiya@me.com>, 2017
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
+# Edy Kend <edy@azmall.co.id>, 2017
+# Febrasari Almania <febrasari.almania@gmail.com>, 2017
+# Muhammad Herdiansyah <herdiansyah@openmailbox.org>, 2017
+# Lorenz Damara <lorenzrenz@gmail.com>, 2017
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# William Surya Permana <zarambie_game@yahoo.com>, 2017
+# Edy Kendengis <edaptec@gmail.com>, 2017
+# Budi Iskandar <budiiskandar11@gmail.com>, 2017
+# Rizky Fajar Ryanda <rizky.rikuverse@gmail.com>, 2017
+# Ngalim Siregar <ngalim.siregar@gmail.com>, 2017
+# Azhe 403 <azhe403@gmail.com>, 2017
+# Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2017
+# LInda <linda.mail88@gmail.com>, 2017
+# Dedi Santoso <dedisantoso@yahoo.com>, 2017
+# Deddy Ddr <deddy.ddr@gmail.com>, 2017
+# Andhitia Rama <andhitia.r@gmail.com>, 2017
+# Yani Dama Putera <yanidp@gmail.com>, 2017
+# rtfm pliz <rtfmpliz@gmail.com>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 11.0\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2022-04-11 12:53+0200\n"
+"PO-Revision-Date: 2017-11-08 13:21+0000\n"
+"Last-Translator: rtfm pliz <rtfmpliz@gmail.com>, 2017\n"
+"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: models/decimal_precision.py:57 models/res_currency.py:407
+#, fuzzy, python-format
+msgid "Warning for %s"
+msgstr "Peringatan"
+
+#: models/decimal_precision.py:58
+#, python-format
+msgid ""
+"The precision has been reduced for %s.\n"
+"Note that existing data WON'T be updated by this change.\n"
+"\n"
+"As decimal precisions impact the whole system, this may cause critical "
+"issues.\n"
+"E.g. reducing the precision could disturb your financial balance.\n"
+"\n"
+"Therefore, changing decimal precisions in a running database is not "
+"recommended."
+msgstr ""
+
+#: models/ir_actions.py:179 models/ir_actions.py:181
+#, python-format
+msgid "Invalid model name %r in action definition."
+msgstr ""
+
+#: models/ir_actions.py:210
+#, python-format
+msgid "The modes in view_mode must not be duplicated: %s"
+msgstr ""
+
+#: models/ir_actions.py:212
+#, python-format
+msgid "No spaces allowed in view_mode: %r"
+msgstr ""
+
+#: models/ir_actions.py:457
+msgid "Recursion found in child server actions"
+msgstr ""
+
+#: models/ir_actions.py:610
+msgid "You don't have enough access rights to run this action."
+msgstr ""
+
+#: models/ir_actions.py:702
+msgid "many2many fields cannot be evaluated by reference"
+msgstr ""
+
+#: models/ir_actions_report.py:497
+#, python-format
+msgid ""
+"Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
+"number of subprocess reached. Message : %s"
+msgstr ""
+"Wkhtmltopdf gagal (kode kesalahan: %s). Batas memori terlalu rendah atau "
+"jumlah berkas melebihi proses maksimum. Pesan : %s"
+
+#: models/ir_actions_report.py:500
+#, python-format
+msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
+msgstr "Wkhtmltopdf gagal (kode kesalahan:%s). Pesan:%s"
+
+#: models/ir_actions_report.py:745
+msgid "One of the documents you are trying to merge is encrypted"
+msgstr ""
+
+#: models/ir_actions_report.py:770
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still "
+"retrieve those PDFs by selecting each of the affected records individually, "
+"which will avoid merging."
+msgstr ""
+
+#: models/ir_actions_report.py:858
+msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
+msgstr "Tidak dapat menemukan Wkhtmltopdf pada sistem. PDF tidak bisa dibuat."
+
+#: models/ir_actions_report.py:865
+#, python-format
+msgid ""
+"The report's template '%s' is wrong, please contact your administrator. \n"
+"\n"
+"Can not separate file to save as attachment because the report's template "
+"does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div "
+"with 'article' classname."
+msgstr ""
+
+#: models/ir_attachment.py:71
+msgid "Only administrators can execute this action."
+msgstr "Hanya administrator yang bisa mengeksekusi aksi ini"
+
+#: models/ir_attachment.py:431 models/ir_attachment.py:442
+msgid "Sorry, you are not allowed to access this document."
+msgstr "Maaf, anda tidak diizinkan mengakses dokumen ini."
+
+#: models/ir_attachment.py:476
+msgid "Sorry, you must provide fields to read on attachments"
+msgstr ""
+
+#: models/ir_attachment.py:479
+msgid "Sorry, the syntax 'name:agg(field)' is not available for attachments"
+msgstr ""
+
+#: models/ir_attachment.py:485
+#, fuzzy
+msgid "Sorry, you are not allowed to access these fields on attachments."
+msgstr "Maaf, anda tidak diizinkan mengakses dokumen ini."
+
+#: models/ir_cron.py:372
+msgid ""
+"Record cannot be modified right now: This cron task is currently being "
+"executed and may not be modified Please try again in a few minutes"
+msgstr ""
+
+#: models/ir_default.py:70
+#, python-format
+msgid "Invalid field %s.%s"
+msgstr ""
+
+#: models/ir_default.py:72
+#, python-format
+msgid "Invalid value for %s.%s: %s"
+msgstr ""
+
+#: models/ir_fields.py:213
+#, python-format
+msgid "Unknown value '%s' for boolean field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:215
+msgid "Use '1' for yes and '0' for no"
+msgstr "Gunakan '1' untuk Ya atau '0' untuk Tidak"
+
+#: models/ir_fields.py:225
+#, python-format
+msgid "'%s' does not seem to be an integer for field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:236
+#, python-format
+msgid "'%s' does not seem to be a number for field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:256
+#, python-format
+msgid "'%s' does not seem to be a valid date for field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:258 models/ir_fields.py:290
+#, python-format
+msgid "Use the format '%s'"
+msgstr ""
+
+#: models/ir_fields.py:288
+#, python-format
+msgid "'%s' does not seem to be a valid datetime for field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:332
+#, python-format
+msgid "Value '%s' not found in selection field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:367
+msgid "See all possible values"
+msgstr ""
+
+#: models/ir_fields.py:376
+msgid "database id"
+msgstr "id database"
+
+#: models/ir_fields.py:388
+#, python-format
+msgid "Invalid database id '%s' for the field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:392
+msgid "external id"
+msgstr "id eksternal"
+
+#: models/ir_fields.py:402
+msgid "name"
+msgstr "nama"
+
+#: models/ir_fields.py:410
+#, python-format
+msgid ""
+"Found multiple matches for value '%s' in field '%%(field)s' (%d matches)"
+msgstr ""
+
+#: models/ir_fields.py:419
+#, python-format
+msgid ""
+"Cannot create new '%s' records from their name alone. Please create those "
+"records manually and try importing again."
+msgstr ""
+
+#: models/ir_fields.py:423
+#, python-format
+msgid "Unknown sub-field '%s'"
+msgstr ""
+
+#: models/ir_fields.py:436
+#, python-format
+msgid ""
+"No matching record found for %(field_type)s '%(value)s' in field "
+"'%%(field)s' and the following error was encountered when we attempted to "
+"create one: %(error_message)s"
+msgstr ""
+
+#: models/ir_fields.py:438
+#, python-format
+msgid ""
+"No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:493
+msgid ""
+"Can not create Many-To-One records indirectly, import the field separately"
+msgstr ""
+
+#: models/ir_fields.py:496
+#, python-format
+msgid ""
+"Ambiguous specification for field '%(field)s', only provide one of name, "
+"external id or database id"
+msgstr ""
+
+#: models/ir_filters.py:36 models/res_partner.py:364 models/res_users.py:205
+#: models/res_users.py:632 models/res_users.py:634
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (salinan)"
+
+#: models/ir_filters.py:105
+#, python-format
+msgid ""
+"There is already a shared filter set as default for %(model)s, delete or "
+"change it before setting a new default"
+msgstr ""
+"Sudah ada filter yang telah ditetapkan untuk  %(model)s, silakan hapus atau "
+"rubah dulu sebelum menetapkan nilai baru."
+
+#: models/ir_mail_server.py:126
+#, python-format
+msgid "SSL private key is missing for %s."
+msgstr ""
+
+#: models/ir_mail_server.py:128
+#, python-format
+msgid "SSL certificate is missing for %s."
+msgstr ""
+
+#: models/ir_mail_server.py:134
+msgid ""
+"Please configure an email on the current user to simulate sending an email "
+"message via this outgoing server"
+msgstr ""
+
+#: models/ir_mail_server.py:148
+#, python-format
+msgid ""
+"The server refused the sender address (%(email_from)s) with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:153
+#, python-format
+msgid ""
+"The server refused the test recipient (%(email_to)s) with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:160
+#, python-format
+msgid "The server refused the test connection with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:166
+#, python-format
+msgid ""
+"Invalid server name !\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:168
+#, python-format
+msgid ""
+"No response received. Check server address and port number.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:170
+#, python-format
+msgid ""
+"The server has closed the connection unexpectedly. Check configuration "
+"served on this port number.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:172
+#, python-format
+msgid ""
+"Server replied with following exception:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:174
+#, python-format
+msgid ""
+"An option is not supported by the server:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:176
+#, python-format
+msgid ""
+"An SMTP exception occurred. Check port number and connection security type.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:178
+#, python-format
+msgid ""
+"An SSL exception occurred. Check connection security type.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:180
+#, python-format
+msgid ""
+"Connection Test Failed! Here is what we got instead:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:189
+msgid "Connection Test Successful!"
+msgstr ""
+
+#: models/ir_mail_server.py:259 models/ir_mail_server.py:284
+#, python-format
+msgid ""
+"The private key or the certificate is not a valid file. \n"
+"%s"
+msgstr ""
+
+#: models/ir_mail_server.py:261 models/ir_mail_server.py:286
+#, python-format
+msgid ""
+"Could not load your certificate / private key. \n"
+"%s"
+msgstr ""
+
+#: models/ir_mail_server.py:290
+msgid "Missing SMTP Server"
+msgstr ""
+
+#: models/ir_mail_server.py:291
+msgid ""
+"Please define at least one SMTP server, or provide the SMTP parameters "
+"explicitly."
+msgstr ""
+
+#: models/ir_mail_server.py:297
+#, fuzzy
+msgid ""
+"Your Odoo Server does not support SMTP-over-SSL. You could use STARTTLS "
+"instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
+"should do the trick."
+msgstr ""
+"Server anda tidak mendukung SMTP-over-SSL. Anda dapat menggunakan STARTTLS. "
+"Jika memerlukan SSL, dapat menggunakan trik dengan meng-upgrade ke Python "
+"2.6  di server."
+
+#: models/ir_mail_server.py:615
+#, python-format
+msgid ""
+"Mail delivery failed via SMTP server '%s'.\n"
+"%s: %s"
+msgstr ""
+"Pengiriman pesan gagal melalui server SMTP '%s'.\n"
+"%s: %s"
+
+#: models/ir_mail_server.py:617
+msgid "Mail Delivery Failed"
+msgstr "Pengiriman e-mail yang gagal"
+
+#: models/ir_mail_server.py:701 models/ir_model.py:605 models/ir_model.py:684
+#: models/ir_model.py:692 models/res_partner.py:377
+msgid "Warning"
+msgstr "Peringatan"
+
+#: models/ir_mail_server.py:702
+msgid ""
+"Your server does not seem to support SSL, you may want to try STARTTLS "
+"instead"
+msgstr "Server anda tidak mendukung SSL, anda bisa mencoba dengan STARTTLS"
+
+#: models/ir_model.py:215
+msgid "The model name must start with 'x_'."
+msgstr ""
+
+#: models/ir_model.py:217
+msgid ""
+"The model name can only contain lowercase characters, digits, underscores "
+"and dots."
+msgstr ""
+
+#: models/ir_model.py:234
+#, python-format
+msgid ""
+"Unable to order by %s: fields used for ordering must be present on the model "
+"and stored."
+msgstr ""
+
+#: models/ir_model.py:277
+#, python-format
+msgid "Model '%s' contains module data and cannot be removed."
+msgstr ""
+
+#: models/ir_model.py:302
+msgid "Field \"Model\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:304
+msgid "Field \"Type\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:306
+msgid "Field \"Transient Model\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:563
+msgid "Custom fields must have a name that starts with 'x_' !"
+msgstr ""
+
+#: models/ir_model.py:567
+msgid ""
+"Field names can only contain characters, digits and underscores (up to 63)."
+msgstr ""
+
+#: models/ir_model.py:583
+#, python-format
+msgid "Unknown field name '%s' in related field '%s'"
+msgstr ""
+
+#: models/ir_model.py:586
+#, python-format
+msgid "Non-relational field name '%s' in related field '%s'"
+msgstr ""
+
+#: models/ir_model.py:595
+#, python-format
+msgid "Related field '%s' does not have type '%s'"
+msgstr "Kolom terkait '%s' tidak memiliki tipe '%s'"
+
+#: models/ir_model.py:597
+#, python-format
+msgid "Related field '%s' does not have comodel '%s'"
+msgstr "Kolom terkait '%s' tidak memiliki comodel '%s'"
+
+#: models/ir_model.py:618
+#, python-format
+msgid "Empty dependency in %r"
+msgstr ""
+
+#: models/ir_model.py:625
+#, python-format
+msgid "Unknown field %r in dependency %r"
+msgstr ""
+
+#: models/ir_model.py:627
+#, python-format
+msgid "Non-relational field %r in dependency %r"
+msgstr ""
+
+#: models/ir_model.py:658
+#, fuzzy, python-format
+msgid "Model %s does not exist"
+msgstr "%s Many2one pada model %s tidak ada!"
+
+#: models/ir_model.py:659
+msgid "Please specify a valid model for the object relation"
+msgstr ""
+
+#: models/ir_model.py:685
+#, python-format
+msgid "The table %r if used for other, possibly incompatible fields."
+msgstr ""
+
+#: models/ir_model.py:692
+#, python-format
+msgid ""
+"The m2o field %s is required but declares its ondelete policy as being 'set "
+"null'. Only 'restrict' and 'cascade' make sense."
+msgstr ""
+
+#: models/ir_model.py:770
+#, python-format
+msgid "The field '%s' cannot be removed because the field '%s' depends on it."
+msgstr ""
+
+#: models/ir_model.py:797
+msgid "Cannot rename/delete fields that are still present in views:"
+msgstr ""
+
+#: models/ir_model.py:798
+#, python-format
+msgid "Fields: %s"
+msgstr ""
+
+#: models/ir_model.py:799
+#, python-format
+msgid "View: %s"
+msgstr ""
+
+#: models/ir_model.py:814
+msgid "This column contains module data and cannot be removed!"
+msgstr ""
+
+#: models/ir_model.py:882
+#, python-format
+msgid "Model %s does not exist!"
+msgstr ""
+
+#: models/ir_model.py:889
+#, python-format
+msgid "Many2one %s on model %s does not exist!"
+msgstr "%s Many2one pada model %s tidak ada!"
+
+#: models/ir_model.py:911
+msgid "Changing the model of a field is forbidden!"
+msgstr ""
+
+#: models/ir_model.py:914
+msgid ""
+"Changing the type of a field is not yet supported. Please drop it and create "
+"it again!"
+msgstr ""
+
+#: models/ir_model.py:928
+msgid "Can only rename one field at a time!"
+msgstr "Hanya bisa mengganti satu baris nama dalam satu waktu!"
+
+#: models/ir_model.py:1314 models/ir_model.py:1334 models/ir_model.py:1365
+msgid ""
+"Properties of base fields cannot be altered in this manner! Please modify "
+"them through Python code, preferably through a custom addon!"
+msgstr ""
+"Properti dari kolom dasar tidak dapat diubah dengan cara ini! Silahkan "
+"memodifikasinya melalui kode Python, sebaiknya dengan membuat modul terpisah."
+
+#: models/ir_model.py:1439
+#, python-format
+msgid "The ondelete policy %r is not valid for field %r"
+msgstr ""
+
+#: models/ir_model.py:1484 models/ir_model.py:1622 models/ir_model.py:2040
+msgid "Administrator access is required to uninstall a module"
+msgstr "Akses administrator diperlukan untuk membongkar sebuah modul"
+
+#: models/ir_model.py:1771
+#, fuzzy, python-format
+msgid ""
+"You are not allowed to access '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr "Maaf, anda tidak diizinkan mengakses dokumen ini."
+
+#: models/ir_model.py:1772
+#, fuzzy, python-format
+msgid ""
+"You are not allowed to modify '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr "Maaf, anda tidak diizinkan melakukan perubahan dokumen"
+
+#: models/ir_model.py:1773
+#, fuzzy, python-format
+msgid ""
+"You are not allowed to create '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr "Maaf, anda tidak diizinkan membuat dokumen baru"
+
+#: models/ir_model.py:1774
+#, fuzzy, python-format
+msgid ""
+"You are not allowed to delete '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr "Maaf, anda tidak diizinkan menghapus dokumen"
+
+#: models/ir_model.py:1779
+#, python-format
+msgid ""
+"This operation is allowed for the following groups:\n"
+"%(groups_list)s"
+msgstr ""
+
+#: models/ir_model.py:1781
+msgid "No group currently allows this operation."
+msgstr ""
+
+#: models/ir_model.py:1783 models/ir_rule.py:203
+msgid "Contact your administrator to request access if necessary."
+msgstr ""
+
+#: models/ir_model.py:1938
+msgid "Not enough access rights on the external ID:"
+msgstr ""
+
+#: models/ir_module.py:321
+#, fuzzy
+msgid ""
+"You are trying to remove a module that is installed or will be installed."
+msgstr "Anda mencoba membuang modul yang sudah dipasang atau akan dipasang"
+
+#: models/ir_module.py:368
+#, python-format
+msgid ""
+"Unable to install module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+"Tidak dapat memasang modul `%s` karena ketergantungan eksternal %s tidak "
+"ditemukan"
+
+#: models/ir_module.py:370
+#, python-format
+msgid ""
+"Unable to upgrade module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+
+#: models/ir_module.py:372
+#, python-format
+msgid ""
+"Unable to process module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+
+#: models/ir_module.py:377
+msgid "Recursion error in modules dependencies !"
+msgstr ""
+
+#: models/ir_module.py:391
+#, python-format
+msgid ""
+"You try to install module '%s' that depends on module '%s'.\n"
+"But the latter module is not available in your system."
+msgstr ""
+"Anda mencoba memasang modul '%s' yang tergantung pada modul '%s'.\n"
+"Namun modul terakhir tersebut tidak tersedia di sistem Anda."
+
+#: models/ir_module.py:438
+#, python-format
+msgid "Modules \"%s\" and \"%s\" are incompatible."
+msgstr ""
+
+#: models/ir_module.py:457
+#, python-format
+msgid "You are trying to install incompatible modules in category \"%s\":"
+msgstr ""
+
+#: models/ir_module.py:464
+msgid "Install"
+msgstr "Pasang"
+
+#: models/ir_module.py:594
+msgid ""
+"Odoo is currently processing a scheduled action.\n"
+"Module operations are not possible at this time, please try again later or "
+"contact your system administrator."
+msgstr ""
+
+#: models/ir_module.py:630
+msgid "The `base` module cannot be uninstalled"
+msgstr "Modul `dasar` tidak dapat dibongkar"
+
+#: models/ir_module.py:632
+msgid ""
+"One or more of the selected modules have already been uninstalled, if you "
+"believe this to be an error, you may try again later or contact support."
+msgstr ""
+
+#: models/ir_module.py:638
+msgid "Uninstall"
+msgstr "Bongkar"
+
+#: models/ir_module.py:646
+msgid "Uninstall module"
+msgstr ""
+
+#: models/ir_module.py:687
+#, python-format
+msgid "Can not upgrade module '%s'. It is not installed."
+msgstr "Tidak dapat memperbarui modul '%s'. Modul tersebut tidak dipasang."
+
+#: models/ir_module.py:706
+#, python-format
+msgid ""
+"You try to upgrade the module %s that depends on the module: %s.\n"
+"But this module is not available in your system."
+msgstr ""
+"Anda mencoba untuk upgrade modul %s yang membutuhkan modul: %s.\n"
+"Tapi modul ini tidak tersedia di sistem anda."
+
+#: models/ir_module.py:711
+msgid "Apply Schedule Upgrade"
+msgstr "Terapkan Perbaruan Terjadwal"
+
+#: models/ir_module.py:805
+msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr ""
+
+#: models/ir_module.py:806
+msgid ""
+"To enable it, make sure this directory exists and is writable on the server:"
+msgstr ""
+
+#: models/ir_module.py:833
+#, python-format
+msgid ""
+"The `%s` module appears to be unavailable at the moment, please try again "
+"later."
+msgstr ""
+
+#: models/ir_profile.py:101
+msgid ""
+"Profiling is not enabled on this database. Please contact an administrator."
+msgstr ""
+
+#: models/ir_property.py:88
+msgid "Invalid type"
+msgstr ""
+
+#: models/ir_qweb_fields.py:144
+msgid "Decimalized number"
+msgstr ""
+
+#: models/ir_qweb_fields.py:164
+#, fuzzy
+msgid "Rounding precision"
+msgstr "Faktor Pembulatan"
+
+#: models/ir_qweb_fields.py:209
+#, fuzzy
+msgid "Date format"
+msgstr "Format Tanggal"
+
+#: models/ir_qweb_fields.py:227
+#, fuzzy
+msgid "Pattern to format"
+msgstr "Format kertas"
+
+#: models/ir_qweb_fields.py:228
+msgid "Optional timezone name"
+msgstr ""
+
+#: models/ir_qweb_fields.py:229
+#, fuzzy
+msgid "Display only the time"
+msgstr "Tampilkan baris header"
+
+#: models/ir_qweb_fields.py:230
+msgid "Hide seconds"
+msgstr ""
+
+#: models/ir_qweb_fields.py:231
+#, fuzzy
+msgid "Display only the date"
+msgstr "Tampilkan baris header"
+
+#: models/ir_qweb_fields.py:301
+msgid "Selection"
+msgstr "Pilihan"
+
+#: models/ir_qweb_fields.py:301
+msgid "By default the widget uses the field information"
+msgstr ""
+
+#: models/ir_qweb_fields.py:425
+#, fuzzy
+msgid "Original currency"
+msgstr "Tampilan Asal"
+
+#: models/ir_qweb_fields.py:426
+#, fuzzy
+msgid "Display currency"
+msgstr "Nama Tampilan"
+
+#: models/ir_qweb_fields.py:427
+msgid "Date"
+msgstr "Tanggal"
+
+#: models/ir_qweb_fields.py:427
+msgid ""
+"Date used for the original currency (only used for t-esc). by default use "
+"the current date."
+msgstr ""
+
+#: models/ir_qweb_fields.py:428
+msgid "Company"
+msgstr "Perusahaan"
+
+#: models/ir_qweb_fields.py:428
+msgid ""
+"Company used for the original currency (only used for t-esc). By default use "
+"the user company"
+msgstr ""
+
+#: models/ir_qweb_fields.py:437
+msgid "The value send to monetary field is not a number."
+msgstr ""
+
+#: models/ir_qweb_fields.py:535
+#, python-format
+msgid "The value (%s) passed should be positive"
+msgstr ""
+
+#: models/ir_qweb_fields.py:538
+msgid "The hour must be between 0 and 23"
+msgstr ""
+
+#: models/ir_qweb_fields.py:572
+msgid "Digital formatting"
+msgstr ""
+
+#: models/ir_qweb_fields.py:573
+#, fuzzy
+msgid "Date unit"
+msgstr "Tanggal"
+
+#: models/ir_qweb_fields.py:573
+msgid "Date unit used for comparison and formatting"
+msgstr ""
+
+#: models/ir_qweb_fields.py:574
+#, fuzzy
+msgid "Rounding unit"
+msgstr "Faktor Pembulatan"
+
+#: models/ir_qweb_fields.py:574
+msgid ""
+"Date unit used for the rounding. The value must be smaller than 'hour' if "
+"you use the digital formatting."
+msgstr ""
+
+#: models/ir_qweb_fields.py:578
+msgid "Long"
+msgstr ""
+
+#: models/ir_qweb_fields.py:579
+msgid "Short"
+msgstr ""
+
+#: models/ir_qweb_fields.py:580
+msgid "Narrow"
+msgstr ""
+
+#: models/ir_qweb_fields.py:581
+#, fuzzy
+msgid "Format"
+msgstr "Formulir"
+
+#: models/ir_qweb_fields.py:582
+msgid "Formatting: long, short, narrow (not used for digital)"
+msgstr ""
+
+#: models/ir_qweb_fields.py:587
+#, fuzzy
+msgid "Add direction"
+msgstr "Tindakan"
+
+#: models/ir_qweb_fields.py:588
+msgid "Add directional information (not used for digital)"
+msgstr ""
+
+#: models/ir_qweb_fields.py:650
+#, fuzzy
+msgid "Reference date"
+msgstr "Referensi"
+
+#: models/ir_qweb_fields.py:650
+msgid "Date to compare with the field value, by default use the current date."
+msgstr ""
+
+#: models/ir_qweb_fields.py:686
+#, fuzzy
+msgid "Barcode symbology"
+msgstr "Barcode"
+
+#: models/ir_qweb_fields.py:686
+msgid "Barcode type, eg: UPCA, EAN13, Code128"
+msgstr ""
+
+#: models/ir_qweb_fields.py:687
+msgid "Width"
+msgstr ""
+
+#: models/ir_qweb_fields.py:688
+msgid "Height"
+msgstr ""
+
+#: models/ir_qweb_fields.py:689
+msgid "Human Readable"
+msgstr ""
+
+#: models/ir_qweb_fields.py:710
+#, fuzzy, python-format
+msgid "Barcode %s"
+msgstr "Barcode"
+
+#: models/ir_qweb_fields.py:724
+msgid "Name"
+msgstr "Nama"
+
+#: models/ir_qweb_fields.py:725
+msgid "Address"
+msgstr "Alamat"
+
+#: models/ir_qweb_fields.py:726
+msgid "Phone"
+msgstr "Telepon"
+
+#: models/ir_qweb_fields.py:727
+msgid "Mobile"
+msgstr "Ponsel"
+
+#: models/ir_qweb_fields.py:728
+msgid "Email"
+msgstr "Email"
+
+#: models/ir_qweb_fields.py:729 models/ir_qweb_fields.py:780
+msgid "VAT"
+msgstr "PPN"
+
+#: models/ir_qweb_fields.py:733
+msgid "Space"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+#, fuzzy
+msgid "Comma"
+msgstr "Komentar"
+
+#: models/ir_qweb_fields.py:733
+msgid "Dash"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+msgid "Vertical bar"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+msgid "Slash"
+msgstr ""
+
+#: models/ir_qweb_fields.py:734
+#, fuzzy
+msgid "Linebreak"
+msgstr "Garis"
+
+#: models/ir_qweb_fields.py:737
+#, fuzzy
+msgid "Displayed fields"
+msgstr "Kolom yang Telah Diterjemahkan"
+
+#: models/ir_qweb_fields.py:737
+msgid "List of contact fields to display in the widget"
+msgstr ""
+
+#: models/ir_qweb_fields.py:738
+#, fuzzy
+msgid "Address separator"
+msgstr "Format alamat..."
+
+#: models/ir_qweb_fields.py:738
+msgid "Separator use to split the address from the display_name."
+msgstr ""
+
+#: models/ir_qweb_fields.py:739
+msgid "Hide badges"
+msgstr ""
+
+#: models/ir_qweb_fields.py:739
+msgid "Don't display the font awesome marker"
+msgstr ""
+
+#: models/ir_qweb_fields.py:740
+msgid "Use comma"
+msgstr ""
+
+#: models/ir_qweb_fields.py:740
+msgid "Use comma instead of the <br> tag to display the address"
+msgstr ""
+
+#: models/ir_qweb_fields.py:741
+#, fuzzy
+msgid "Display phone icons"
+msgstr "Tampilkan baris header"
+
+#: models/ir_qweb_fields.py:741
+msgid "Display the phone icons even if no_marker is True"
+msgstr ""
+
+#: models/ir_qweb_fields.py:742
+#, fuzzy
+msgid "Display country image"
+msgstr "Nama Tampilan"
+
+#: models/ir_qweb_fields.py:742
+msgid "Display the country image if the field is present on the record"
+msgstr ""
+
+#: models/ir_rule.py:61
+msgid "Rules can not be applied on the Record Rules model."
+msgstr ""
+
+#: models/ir_rule.py:197
+#, fuzzy, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to access "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr "Maaf, anda tidak diizinkan mengakses dokumen ini."
+
+#: models/ir_rule.py:198
+#, fuzzy, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to modify "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr "Maaf, anda tidak diizinkan melakukan perubahan dokumen"
+
+#: models/ir_rule.py:199
+#, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to create "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr ""
+
+#: models/ir_rule.py:200
+#, fuzzy, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to delete "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr "Maaf, anda tidak diizinkan menghapus dokumen"
+
+#: models/ir_rule.py:225
+#, fuzzy, python-format
+msgid "Records: %s"
+msgstr "Catatan"
+
+#: models/ir_rule.py:228
+#, fuzzy, python-format
+msgid "User: %s"
+msgstr "Pengguna"
+
+#: models/ir_rule.py:231
+#, python-format
+msgid ""
+"This restriction is due to the following rules:\n"
+"%s"
+msgstr ""
+
+#: models/ir_rule.py:233
+msgid "Note: this might be a multi-company issue."
+msgstr ""
+
+#: models/ir_sequence.py:17 models/ir_sequence.py:33
+msgid "Step must not be zero."
+msgstr ""
+
+#: models/ir_sequence.py:234
+#, python-format
+msgid "Invalid prefix or suffix for sequence '%s'"
+msgstr ""
+
+#: models/ir_translation.py:528
+msgid "Creating translation on non existing records"
+msgstr ""
+
+#: models/ir_translation.py:552
+#, python-format
+msgid ""
+"Translation is not valid:\n"
+"%s"
+msgstr ""
+
+#: models/ir_translation.py:726
+msgid ""
+"Translation features are unavailable until you install an extra translation."
+msgstr ""
+"Fitur terjemahan tidak tersedia kecuali Anda memasang terjemahan tambahan."
+
+#: models/ir_translation.py:756
+msgid "Translate"
+msgstr "Terjemahkan"
+
+#: models/ir_translation.py:854
+msgid "Technical Translations"
+msgstr "Terjemahan Teknis"
+
+#: models/ir_ui_menu.py:73
+msgid "Error! You cannot create recursive menus."
+msgstr ""
+
+#: models/ir_ui_view.py:397
+#, python-format
+msgid ""
+"Error while validating view:\n"
+"\n"
+"%(error)s"
+msgstr ""
+
+#: models/ir_ui_view.py:415
+#, python-format
+msgid "Invalid view %(name)s definition in %(file)s"
+msgstr ""
+
+#: models/ir_ui_view.py:427
+#, python-format
+msgid ""
+"Error while validating view near:\n"
+"\n"
+"%(fivelines)s\n"
+"%(error)s"
+msgstr ""
+
+#: models/ir_ui_view.py:441
+msgid ""
+"Inherited Qweb view cannot have 'Groups' define on the record. Use 'groups' "
+"attributes inside the view definition"
+msgstr ""
+
+#: models/ir_ui_view.py:448
+msgid "You cannot create recursive inherited views."
+msgstr "Anda tidak bisa membuat tampilan warisan rekursif."
+
+#: models/ir_ui_view.py:484
+msgid "Missing view architecture."
+msgstr ""
+
+#: models/ir_ui_view.py:680
+#, python-format
+msgid "View '%(name)s' accessible only to groups %(groups)s "
+msgstr ""
+
+#: models/ir_ui_view.py:683
+#, python-format
+msgid "View '%(name)s' is private"
+msgstr ""
+
+#: models/ir_ui_view.py:1008 models/ir_ui_view.py:1240
+#, python-format
+msgid "Model not found: %(model)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1290
+#, python-format
+msgid "Tree child can only have one of %(tags)s tag (not %(wrong_tag)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1299
+#, python-format
+msgid "A <graph> can only contains <field> nodes, found a <%s>"
+msgstr ""
+
+#: models/ir_ui_view.py:1320
+msgid "Search tag can only contain one search panel"
+msgstr ""
+
+#: models/ir_ui_view.py:1330
+msgid "Field tag must have a \"name\" attribute defined"
+msgstr ""
+
+#: models/ir_ui_view.py:1352
+#, python-format
+msgid ""
+"Domain on non-relational field \"%(name)s\" makes no sense (domain:"
+"%(domain)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1367
+#, python-format
+msgid "Field \"%(field_name)s\" does not exist in model \"%(model_name)s\""
+msgstr ""
+
+#: models/ir_ui_view.py:1381
+#, python-format
+msgid "Attribute %(attribute)s evaluation expects a boolean, got %(value)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1407
+#, python-format
+msgid "Invalid special '%(value)s' in button"
+msgstr ""
+
+#: models/ir_ui_view.py:1412
+msgid "Button must have a name"
+msgstr ""
+
+#: models/ir_ui_view.py:1416
+#, python-format
+msgid "%(action_name)s is not a valid action on %(model_name)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1424
+#, python-format
+msgid "%(method)s on %(model)s is private and cannot be called from a button"
+msgstr ""
+
+#: models/ir_ui_view.py:1442
+#, python-format
+msgid "Invalid xmlid %(xmlid)s for button of type action."
+msgstr ""
+
+#: models/ir_ui_view.py:1445
+#, python-format
+msgid ""
+"%(xmlid)s is of type %(xmlid_model)s, expected a subclass of ir.actions."
+"actions"
+msgstr ""
+
+#: models/ir_ui_view.py:1452
+#, python-format
+msgid ""
+"Action %(action_reference)s (id: %(action_id)s) does not exist for button of "
+"type action."
+msgstr ""
+
+#: models/ir_ui_view.py:1474
+#, python-format
+msgid ""
+"Field '%(name)s' found in 'groupby' node can only be of type many2one, found "
+"%(type)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1498
+#, python-format
+msgid ""
+"Field '%(field)s' found in 'groupby' node does not exist in model %(model)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1509
+msgid "Searchpanel item with select multi cannot have a domain."
+msgstr ""
+
+#: models/ir_ui_view.py:1518
+msgid ""
+"Label tag must contain a \"for\". To match label style without corresponding "
+"field or button, use 'class=\"o_form_label\"'."
+msgstr ""
+
+#: models/ir_ui_view.py:1528
+msgid "Page direct ancestor must be notebook"
+msgstr ""
+
+#: models/ir_ui_view.py:1599
+#, python-format
+msgid "\"group_by\" value must be a string %(attribute)s=%(value)r"
+msgstr ""
+
+#: models/ir_ui_view.py:1607
+#, python-format
+msgid ""
+"Unknown field \"%(field)s\" in \"group_by\" value in %(attribute)s=%(value)r"
+msgstr ""
+
+#: models/ir_ui_view.py:1630
+#, python-format
+msgid "%(attribute)r value must be an integer (%(value)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1776
+#, python-format
+msgid "Invalid domain format %(expr)s in %(use)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1788
+#, python-format
+msgid "Non-relational field %(field)r in path %(field_path)r in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1796
+#, python-format
+msgid "Unknown field \"%(model)s.%(field)s\" in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1802
+#, python-format
+msgid "Unsearchable field %(field)r in path %(field_path)r in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:2072
+msgid "Can't compare more than two views."
+msgstr ""
+
+#: models/ir_ui_view.py:2099
+msgid "Previous Arch"
+msgstr ""
+
+#: models/ir_ui_view.py:2105
+#, fuzzy
+msgid "File Arch"
+msgstr "Berkas"
+
+#: models/ir_ui_view.py:2115
+#, fuzzy
+msgid "Current Arch"
+msgstr "Mata Uang"
+
+#: models/ir_ui_view.py:2171
+#, python-format
+msgid ""
+"Name or id %(name_or_id)r in %(use)s must be present in view but is missing."
+msgstr ""
+
+#: models/ir_ui_view.py:2179
+#, fuzzy, python-format
+msgid "Field `%(name)s` does not exist"
+msgstr "Objek '%s' tidak ada"
+
+#: models/ir_ui_view.py:2186
+#, python-format
+msgid "Invalid composed field %(definition)s in %(use)s"
+msgstr ""
+
+#: models/ir_ui_view.py:2193
+#, python-format
+msgid "Field %(name)r used in %(use)s must be present in view but is missing."
+msgstr ""
+
+#: models/ir_ui_view.py:2199
+#, python-format
+msgid ""
+"Field %(name)r used in %(use)s is present in view but is in select multi."
+msgstr ""
+
+#: models/report_paperformat.py:194
+#, fuzzy
+msgid ""
+"You can select either a format or a specific page width/height, but not both."
+msgstr ""
+"Salah ! Anda tidak dapat memilih format DAN lebar/tinggi halaman tertentu. "
+
+#: models/res_bank.py:73
+msgid "Normal"
+msgstr ""
+
+#: models/res_company.py:25
+msgid ""
+"Duplicating a company is not allowed. Please create a new company instead."
+msgstr ""
+
+#: models/res_company.py:268
+#, fuzzy
+msgid "You cannot create recursive companies."
+msgstr "Anda tidak bisa membuat tampilan warisan rekursif."
+
+#: models/res_config.py:300
+msgid ""
+"\n"
+"\n"
+"This addon is already installed on your system"
+msgstr ""
+"\n"
+"\n"
+"Addon ini sudah terpasang di sistem anda"
+
+#: models/res_config.py:384
+msgid "Cannot duplicate configuration!"
+msgstr ""
+
+#: models/res_config.py:419
+msgid "Warning!"
+msgstr "Peringatan!"
+
+#: models/res_config.py:420
+#, python-format
+msgid ""
+"Disabling this option will also uninstall the following modules \n"
+"%s"
+msgstr ""
+
+#: models/res_config.py:625
+msgid "Only administrators can change the settings"
+msgstr "Hanya administrator yang dapat mengubah pengaturan"
+
+#: models/res_config.py:752
+msgid "Go to the configuration panel"
+msgstr "Menuju panel konfigurasi"
+
+#: models/res_config.py:793
+msgid "Invalid template user. It seems it has been deleted."
+msgstr ""
+
+#: models/res_country.py:141
+msgid "The layout contains an invalid format key"
+msgstr ""
+
+#: models/res_country.py:152
+msgid "Base view"
+msgstr ""
+
+#: models/res_currency.py:173
+msgid "and"
+msgstr "dan"
+
+#: models/res_currency.py:293
+#, python-format
+msgid "Unit per %s"
+msgstr ""
+
+#: models/res_currency.py:294
+#, python-format
+msgid "%s per Unit"
+msgstr ""
+
+#: models/res_currency.py:408
+msgid ""
+"The new rate is quite far from the previous rate.\n"
+"Incorrect currency rates may cause critical problems, make sure the rate is "
+"correct !"
+msgstr ""
+
+#: models/res_currency.py:428
+#, python-format
+msgid "%(rate_currency_name)s per %(company_currency_name)s"
+msgstr ""
+
+#: models/res_currency.py:429
+#, python-format
+msgid "%(company_currency_name)s per %(rate_currency_name)s"
+msgstr ""
+
+#: models/res_lang.py:72
+msgid "At least one language must be active."
+msgstr ""
+
+#: models/res_lang.py:80
+msgid ""
+"Invalid date/time format directive specified. Please refer to the list of "
+"allowed directives, displayed when you edit a language."
+msgstr ""
+"Penetapan format data/time salah. Silakan contoh yang ditampilkan ketika "
+"mengedit bahasa."
+
+#: models/res_lang.py:86
+msgid ""
+"The Separator Format should be like [,n] where 0 < n :starting from Unit "
+"digit. -1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
+"1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
+"106,500. Provided as the thousand separator in each case."
+msgstr ""
+
+#: models/res_lang.py:282
+msgid "Language code cannot be modified."
+msgstr "Kode bahasa tidak bisa dimodifikasi."
+
+#: models/res_lang.py:285
+#, fuzzy
+msgid "Cannot deactivate a language that is currently used by users."
+msgstr "Anda tidak dapat menonaktifkan akun pengguna yang sedang anda gunakan."
+
+#: models/res_lang.py:287
+#, fuzzy
+msgid "Cannot deactivate a language that is currently used by contacts."
+msgstr "Anda tidak dapat menonaktifkan akun pengguna yang sedang anda gunakan."
+
+#: models/res_lang.py:300
+#, fuzzy
+msgid "Base Language 'en_US' can not be deleted."
+msgstr "Kode bahasa tidak bisa dimodifikasi."
+
+#: models/res_lang.py:303
+#, fuzzy
+msgid "You cannot delete the language which is the user's preferred language."
+msgstr "Anda tidak dapat menghapus bahasa yang merupakan pilihan pemakai !"
+
+#: models/res_lang.py:305
+msgid ""
+"You cannot delete the language which is Active!\n"
+"Please de-activate the language first."
+msgstr ""
+"Anda tidak dapat menghapus bahasa yang sedang aktif !\n"
+"Silahkan Non-Aktiifkan terlebih dahulu."
+
+#: models/res_lang.py:317
+#, python-format
+msgid "format() must be given exactly one %char format specifier"
+msgstr "format() must be given exactly one %char format specifier"
+
+#: models/res_lang.py:341
+msgid ""
+"The languages that you selected have been successfully installed. Users can "
+"choose their favorite language in their preferences."
+msgstr ""
+
+#: models/res_partner.py:89
+#, fuzzy
+msgid "You can not create recursive tags."
+msgstr "Anda tidak bisa membuat tampilan warisan rekursif."
+
+#: models/res_partner.py:359
+msgid "You cannot create recursive Partner hierarchies."
+msgstr "Anda tidak boleh membuat hirarki rekanan yang rekursif."
+
+#: models/res_partner.py:378
+msgid ""
+"Changing the company of a contact should only be done if it was never "
+"correctly set. If an existing contact starts working for a new company then "
+"a new contact should be created under that new company. You can use the "
+"\"Discard\" button to abandon this change."
+msgstr ""
+
+#: models/res_partner.py:454
+msgid ""
+"One2Many fields cannot be synchronized as part of `commercial_fields` or "
+"`address fields`"
+msgstr ""
+
+#: models/res_partner.py:577
+#, python-format
+msgid ""
+"You cannot archive contacts linked to an active user.\n"
+"You first need to archive their associated user.\n"
+"\n"
+"Linked active users : %(names)s"
+msgstr ""
+
+#: models/res_partner.py:579 models/res_partner.py:648
+msgid "Go to users"
+msgstr ""
+
+#: models/res_partner.py:583
+#, python-format
+msgid ""
+"You cannot archive contacts linked to an active user.\n"
+"Ask an administrator to archive their associated user first.\n"
+"\n"
+"Linked active users :\n"
+"%(names)s"
+msgstr ""
+
+#: models/res_partner.py:646
+#, python-format
+msgid ""
+"You cannot delete contacts linked to an active user.\n"
+"You should rather archive them after archiving their associated user.\n"
+"\n"
+"Linked active users : %(names)s"
+msgstr ""
+
+#: models/res_partner.py:652
+#, python-format
+msgid ""
+"You cannot delete contacts linked to an active user.\n"
+"Ask an administrator to archive their associated user first.\n"
+"\n"
+"Linked active users :\n"
+"%(names)s"
+msgstr ""
+
+#: models/res_partner.py:811
+msgid "Couldn't create contact without email address!"
+msgstr ""
+
+#: models/res_partner.py:842
+msgid "An email is required for find_or_create to work"
+msgstr ""
+
+#: models/res_partner.py:846
+msgid "A valid email is required for find_or_create to work properly."
+msgstr ""
+
+#: models/res_partner.py:918
+#, fuzzy, python-format
+msgid "Partners: %(category)s"
+msgstr "Induk Kategori"
+
+#: models/res_partner.py:977
+msgid "Import Template for Customers"
+msgstr ""
+
+#: models/res_users.py:96
+msgid "This method can only be accessed over HTTP"
+msgstr ""
+
+#: models/res_users.py:117
+#, fuzzy
+msgid "Security Control"
+msgstr "Kontrol Kualitas"
+
+#: models/res_users.py:212
+msgid "The name of the group can not start with \"-\""
+msgstr ""
+
+#: models/res_users.py:402
+msgid ""
+"Please use the change password wizard (in User Preferences or User menu) to "
+"change your own password."
+msgstr ""
+"Harap gunakan wisaya ubah sandi (pada Preferensi Pengguna atau menu "
+"Pengguna) untuk mengubah sandi Anda sendiri."
+
+#: models/res_users.py:464
+#, fuzzy, python-format
+msgid ""
+"Company %(company_name)s is not in the allowed companies for user "
+"%(user_name)s (%(company_allowed)s)."
+msgstr "Perusahaan yang dipilih, tidak diizinkan untuk pengguna ini"
+
+#: models/res_users.py:471
+msgid "The \"App Switcher\" action cannot be selected as home action."
+msgstr ""
+
+#: models/res_users.py:483
+msgid "The user cannot have more than one user types."
+msgstr ""
+
+#: models/res_users.py:533
+msgid "Invalid 'group by' parameter"
+msgstr ""
+
+#: models/res_users.py:541
+msgid "Invalid search criterion"
+msgstr ""
+
+#: models/res_users.py:557
+#, fuzzy
+msgid "You cannot activate the superuser."
+msgstr "Anda tidak dapat menonaktifkan pengguna admin."
+
+#: models/res_users.py:559
+msgid "You cannot deactivate the user you're currently logged in as."
+msgstr "Anda tidak dapat menonaktifkan akun pengguna yang sedang anda gunakan."
+
+#: models/res_users.py:611
+msgid ""
+"You can not remove the admin user as it is used internally for resources "
+"created by Odoo (updates, module installation, ...)"
+msgstr ""
+"Anda tidak dapat menghapus pengguna admin karena ia digunakan secara "
+"internal untuk sumber daya yang dibuat oleh Odoo (pembaruan, pemasangan "
+"modul, dll)"
+
+#: models/res_users.py:803
+msgid "Setting empty passwords is not allowed for security reasons!"
+msgstr "Menetapkan sandi kosong tidak diperbolehkan atas alasan keamanan!"
+
+#: models/res_users.py:864
+msgid "Users"
+msgstr "Pengguna"
+
+#: models/res_users.py:880
+msgid "Groups"
+msgstr "Kelompok"
+
+#: models/res_users.py:892
+msgid "Access Rights"
+msgstr "Hak Akses"
+
+#: models/res_users.py:904
+msgid "Record Rules"
+msgstr ""
+
+#: models/res_users.py:1010
+msgid "Too many login failures, please wait a bit before trying again."
+msgstr ""
+
+#: models/res_users.py:1560
+msgid "Other"
+msgstr "Lainnya"
+
+#: models/res_users.py:1600
+msgid ""
+"Incorrect Password, try again or click on Forgot Password to reset your "
+"password."
+msgstr ""
+
+#: models/res_users.py:1647
+msgid "Before clicking on 'Change Password', you have to write a new password."
+msgstr ""
+
+#: models/res_users.py:1762
+msgid ""
+"You can not remove API keys unless they're yours or you are a system user"
+msgstr ""
+
+#: models/res_users.py:1826
+msgid "Only internal users can create API keys"
+msgstr ""
+
+#: wizard/base_export_language.py:19
+msgid "New Language (Empty translation template)"
+msgstr "Bahasa Baru (cetakan terjemahan kosong)"
+
+#: wizard/base_import_language.py:53
+#, python-format
+msgid ""
+"File %r not imported due to a malformed file.\n"
+"\n"
+"This issue can be caused by duplicates entries who are referring to the same "
+"field. Please check the content of the file you are trying to import.\n"
+"\n"
+"Technical Details:\n"
+"%s"
+msgstr ""
+
+#: wizard/base_import_language.py:60
+#, python-format
+msgid ""
+"File %r not imported due to format mismatch or a malformed file. (Valid "
+"formats are .csv, .po, .pot)\n"
+"\n"
+"Technical Details:\n"
+"%s"
+msgstr ""
+
+#: wizard/base_language_install.py:58
+msgid ""
+"The languages that you selected have been successfully "
+"installed.                            Users can choose their favorite "
+"language in their preferences."
+msgstr ""
+
+#: wizard/base_module_upgrade.py:67
+#, python-format
+msgid "The following modules are not installed or unknown: %s"
+msgstr "Modul berikut ini tidak terpasang atau tidak diketahui: %s"
+
+#: wizard/base_partner_merge.py:305
+msgid ""
+"For safety reasons, you cannot merge more than 3 contacts together. You can "
+"re-open the wizard several times if needed."
+msgstr ""
+
+#: wizard/base_partner_merge.py:312
+msgid "You cannot merge a contact with one of his parent."
+msgstr ""
+
+#: wizard/base_partner_merge.py:315
+msgid ""
+"All contacts must have the same email. Only the Administrator can merge "
+"contacts with different emails."
+msgstr ""
+
+#: wizard/base_partner_merge.py:328
+msgid ""
+"Only the destination contact may be linked to existing Journal Items. Please "
+"ask the Administrator if you need to merge several contacts linked to "
+"existing Journal Items."
+msgstr ""
+
+#: wizard/base_partner_merge.py:412
+msgid "You have to specify a filter for your selection."
+msgstr ""
+
+#: wizard/base_update_translations.py:26
+#, python-format
+msgid "No language with code \"%s\" exists"
+msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Allow cashier to reprint receipts\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Izinkan kasir mencetak ulang bon\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Overview:\n"
+#~ "---------\n"
+#~ "\n"
+#~ "* Chart of Accounts and Taxes template for companies in Japan.\n"
+#~ "* This probably does not cover all the necessary accounts for a company. "
+#~ "You are expected to add/delete/modify accounts based on this template.\n"
+#~ "\n"
+#~ "Note:\n"
+#~ "-----\n"
+#~ "\n"
+#~ "* Fiscal positions '内税' and '外税' have been added to handle special "
+#~ "requirements which might arise from POS implementation. [1]  You may not "
+#~ "need to use these at all under normal circumstances.\n"
+#~ "\n"
+#~ "[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Ikhtisar:\n"
+#~ "---------\n"
+#~ "\n"
+#~ "* Cetakan Bagan Akun dan Perpajakan untuk perusahaan di Jepang.\n"
+#~ "* Ini mungkin tidak mencakup semua akun yang diperlukan oleh sebuah "
+#~ "perusahaan. Anda diharapkan menambahkan/menghapus/mengubah akun-akun "
+#~ "tersebut berdasarkan cetakan ini.\n"
+#~ "\n"
+#~ "Catatan:\n"
+#~ "-----\n"
+#~ "\n"
+#~ "* Posisi fiskal '内税' dan '外税' telah ditambahkan untuk menangani "
+#~ "persyaratan khusus yang mungkin muncul akibat penerapan POS. [1]  Anda "
+#~ "mungkin tidak perlu menggunakannya sama sekali pada keadaan normal.\n"
+#~ "\n"
+#~ "[1] Lihat https://github.com/odoo/odoo/pull/6470 untuk rinciannya.\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "[object with reference: %s - %s]"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "[objek dengan referensi: %s - %s]"
+
+#~ msgid ""
+#~ "\n"
+#~ "        A tax defined as python code consists in two snippets of python "
+#~ "code which are executed in a local environment containing data such as "
+#~ "the unit price, product or partner.\n"
+#~ "\n"
+#~ "        \"Applicable Code\" defines if the tax is to be applied.\n"
+#~ "\n"
+#~ "        \"Python Code\" defines the amount of the tax.\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "Pajak yang ditetapkan melalui kode python terdiri dari dua bagian kode "
+#~ "python, di mana kode tersebut dieksekusi di lingkungan lokal yang "
+#~ "mengandung data seperti harga satuan, produk, atau pelanggan.\n"
+#~ "\n"
+#~ "\"Kode Aplikasi\" ditetapkan jika pajak digunakan.\n"
+#~ "\n"
+#~ "\"Kode Python\" digunakan untuk menetapkan pajak."
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Belgium\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Laporan akuntan untuk Belgia\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Brazilian\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Laporan akuntan untuk Brazil\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Chile\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Laporan akuntan untuk Chile\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Hungarian\n"
+#~ " "
+#~ msgstr ""
+#~ "\n"
+#~ "        Laporan akuntan untuk Hungaria\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Netherlands\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Laporan akuntan untuk Belanda\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Romania\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Laporan akuntan untuk Romania\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Slovenian\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Laporan akuntan untuk Slovenia\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Spain\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Laporan akuntan untuk Spanyol\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Switzerland\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Laporan akuntan untuk Swiss\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for UK\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Laporan akuntan untuk Britania Raya\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Uruguay\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Laporan akuntan untuk Uruguay\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Allows to use python code to define taxes"
+#~ msgstr ""
+#~ "\n"
+#~ "Gunakan kode python untuk menentukan pajak"
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module is used for Online bank synchronization."
+#~ msgstr ""
+#~ "\n"
+#~ "        Modul ini digunakan untuk sinkronisasi bank daring."
+
+#~ msgid ""
+#~ "\n"
+#~ "        Use Plaid.com to retrieve bank statements"
+#~ msgstr ""
+#~ "\n"
+#~ "        Gunakan Plaid.com untuk menerima rekening koran"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Use Plaid.com to retrieve bank statements.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "         Gunakan Plaid.com untuk menerima rekening koran\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "    Contains pieces of code to be used as technical documentation "
+#~ "examples\n"
+#~ "    (via the ``literalinclude`` directive) in situations where they can "
+#~ "be\n"
+#~ "    syntax-checked and tested.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Berisi bagian kode digunakan sebagai contoh dokumentasi teknis\n"
+#~ "    (via direktif ``literalinclude``) pada situasi dimana bisa\n"
+#~ "    mengecek sintak dan telah di tes.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "  Publish your products on eBay"
+#~ msgstr ""
+#~ "\n"
+#~ "Terbitkan produk Anda di eBay"
+
+#~ msgid ""
+#~ "\n"
+#~ "A module that adds intrastat reports.\n"
+#~ "=====================================\n"
+#~ "\n"
+#~ "This module gives the details of the goods traded between the countries "
+#~ "of\n"
+#~ "European Union."
+#~ msgstr ""
+#~ "\n"
+#~ "Modul yang menambahkan Laporan intrastat.\n"
+#~ "=====================================\n"
+#~ "\n"
+#~ "Moduul ini memberikan detail dari barang diperdagangkan antara negara\n"
+#~ "Uni Eropa."
+
+#~ msgid ""
+#~ "\n"
+#~ "Allow users to sign up and reset their password\n"
+#~ "===============================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Perbolehkan pengguna untuk mendaftar dan mengatur ulang sandi mereka\n"
+#~ "===============================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Chilean accounting chart and tax localization.\n"
+#~ "==============================================\n"
+#~ "Plan contable chileno e impuestos de acuerdo a disposiciones vigentes\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Lokalisasi skema akunting dan pajak Chili.\n"
+#~ "==============================================\n"
+#~ "Plan contable chileno e impuestos de acuerdo a disposiciones vigentes\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Delivery Costs\n"
+#~ "==============\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Biaya Pengiriman\n"
+#~ "================\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Odoo dashboard\n"
+#~ "==============\n"
+#~ "* Quick access to install apps\n"
+#~ "* Quick users add\n"
+#~ "* Access all planners at one place\n"
+#~ "* Quick access to the `App Store` and `Theme Store`\n"
+#~ "\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "Dasbor Odoo\n"
+#~ "==============\n"
+#~ "* Akses cepat untuk memasang aplikasi\n"
+#~ "* Penambahan pengguna dengan cepat\n"
+#~ "* Akses semua perencana di satu tempat\n"
+#~ "* Akses cepat ke `Toko Aplikasi` dan `Toko Tema`\n"
+#~ "\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "The module adds google user in res user.\n"
+#~ "========================================\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Modul ini menambahkan pengguna google dalam res user.\n"
+#~ "======================================================\n"
+
+#~ msgid "1. %b, %B         ==&gt; Dec, December"
+#~ msgstr "1. %b, %B ==&gt; Des, Desember"
+
+#~ msgid ":B10    16  31 x 44 mm"
+#~ msgstr ":B10    16  31 x 44 mm"
+
+#~ msgid "<b>No module found!</b>"
+#~ msgstr "<b>Tidak ada modul ditemukan!</b>"
+
+#~ msgid "<strong>Apps</strong>"
+#~ msgstr "<strong>Aplikasi</strong>"
+
+#~ msgid "<strong>Attribute</strong>"
+#~ msgstr "<strong>Atribut</strong>"
+
+#~ msgid "<strong>Email:</strong>"
+#~ msgstr "<strong>Email:</strong>"
+
+#~ msgid "<strong>Group</strong>"
+#~ msgstr "<strong>Kelompok</strong>"
+
+#~ msgid "<strong>Label</strong>"
+#~ msgstr "<strong>Label</strong>"
+
+#~ msgid "<strong>Menu :</strong>"
+#~ msgstr "<strong>Menu :</strong>"
+
+#~ msgid "<strong>Name</strong>"
+#~ msgstr "<strong>Nama</strong>"
+
+#~ msgid "<strong>Phone</strong>"
+#~ msgstr "<strong>Telepon</strong>"
+
+#~ msgid "<strong>Reports :</strong>"
+#~ msgstr "<strong>Laporan :</strong>"
+
+#~ msgid "<u><strong>Security</strong></u>"
+#~ msgstr "<u>Keamanan</strong></u>"
+
+#~ msgid "<u><strong>Views</strong></u>"
+#~ msgstr "<u>Tampilan</strong></u>"
+
+#~ msgid "A module to test import/export."
+#~ msgstr "Modul untuk menguji impor/ekspor."
+
+#~ msgid "A0  5   841 x 1189 mm"
+#~ msgstr "A0  5   841 x 1189 mm"
+
+#~ msgid "A1  6   594 x 841 mm"
+#~ msgstr "A1  6   594 x 841 mm"
+
+#~ msgid "A2  7   420 x 594 mm"
+#~ msgstr "A2  7   420 x 594 mm"
+
+#~ msgid "A3  8   297 x 420 mm"
+#~ msgstr "A3  8   297 x 420 mm"
+
+#~ msgid "A4  0   210 x 297 mm, 8.26 x 11.69 inches"
+#~ msgstr "A4  0   210 x 297 mm, 8.26 x 11.69 inchi"
+
+#~ msgid "A5  9   148 x 210 mm"
+#~ msgstr "A5  9   148 x 210 mm"
+
+#~ msgid "A6  10  105 x 148 mm"
+#~ msgstr "A6  10  105 x 148 mm"
+
+#~ msgid "A7  11  74 x 105 mm"
+#~ msgstr "A7  11  74 x 105 mm"
+
+#~ msgid "A8  12  52 x 74 mm"
+#~ msgstr "A8  12  52 x 74 mm"
+
+#~ msgid "A9  13  37 x 52 mm"
+#~ msgstr "A9  13  37 x 52 mm"
+
+#~ msgid "Abbreviation"
+#~ msgstr "Singkatan"
+
+#~ msgid "Acc Type"
+#~ msgstr "Tipe Akun"
+
+#~ msgid "Access"
+#~ msgstr "Akses"
+
+#~ msgid "Access Control"
+#~ msgstr "Kontrol Akses"
+
+#~ msgid "Access Controls"
+#~ msgstr "Kontrol Akses"
+
+#~ msgid "Access Controls List"
+#~ msgstr "Daftar Kontrol Akses"
+
+#~ msgid "Access Groups"
+#~ msgstr "Kelompok Akses"
+
+#~ msgid "Access Menu"
+#~ msgstr "Menu Akses"
+
+#~ msgid "Access Rules"
+#~ msgstr "Aturan Akses"
+
+#~ msgid "Access Token"
+#~ msgstr "Token Akses"
+
+#~ msgid "Account Analytic Defaults"
+#~ msgstr "Akun Analitik Standar"
+
+#~ msgid "Account Bank Statement Import"
+#~ msgstr "Impor Akun Rekening Koran"
+
+#~ msgid "Account Charts"
+#~ msgstr "Bagan Akun"
+
+#~ msgid "Account Extension"
+#~ msgstr "Ekstensi Akun"
+
+#~ msgid "Account Holder"
+#~ msgstr "Pemegang Akun"
+
+#~ msgid "Account No."
+#~ msgstr "No. Akun"
+
+#~ msgid "Account Number"
+#~ msgstr "Nomor Akun"
+
+#~ msgid "Account Number must be unique"
+#~ msgstr "Nomor Akun harus unik"
+
+#~ msgid "Account TaxCloud"
+#~ msgstr "Akun TaxCloud"
+
+#~ msgid "Account TaxCloud - Ecommerce"
+#~ msgstr "Akun TaxCloud - Ecommerce"
+
+#~ msgid "Account TaxCloud - Sale"
+#~ msgstr "Akun TaxCloud - Penjualan"
+
+#~ msgid "Accounting"
+#~ msgstr "Akuntansi"
+
+#~ msgid "Accounting & Finance"
+#~ msgstr "Akuntansi & Keuangan"
+
+#~ msgid "Accounting &amp; Finance"
+#~ msgstr "Akuntansi &amp; Keuangan"
+
+#~ msgid "Accounting - MRP"
+#~ msgstr "Akuntansi - MRP"
+
+#~ msgid "Accounting Consistency Tests"
+#~ msgstr "Tes Konsistensi Akuntansi"
+
+#~ msgid "Accounting Reports"
+#~ msgstr "Laporan Akuntansi"
+
+#~ msgid "Accounting and Finance"
+#~ msgstr "Akuntansi dan Keuangan"
+
+#~ msgid "Action Description"
+#~ msgstr "Deskripsi Tindakan"
+
+#~ msgid "Action Name"
+#~ msgstr "Nama Tindakan"
+
+#~ msgid "Action Target"
+#~ msgstr "Target Tindakan"
+
+#~ msgid "Action To Do"
+#~ msgstr "Tindakan Todo"
+
+#~ msgid "Action Type"
+#~ msgstr "Jenis Tindakan"
+
+#~ msgid "Action URL"
+#~ msgstr "URL Tindakan"
+
+#~ msgid "Action Usage"
+#~ msgstr "Penggunaan Tindakan"
+
+#~ msgid "Actions"
+#~ msgstr "Tindakan"
+
+#~ msgid "Active"
+#~ msgstr "Aktif"
+
+#~ msgid "Add Delivery Costs to Online Sales"
+#~ msgstr "Tambahkan Ongkos Kirim ke Penjualan Daring"
+
+#~ msgid "Add a link to edit a translation in Transifex"
+#~ msgstr "Tambahkan tautan untuk menyunting terjemahan di Transifex"
+
+#~ msgid "Add a many2one field city on addresses"
+#~ msgstr "Tambahkan kolom many2one kota pada alamat"
+
+#~ msgid "Add barcode scanning facilities to Delivery."
+#~ msgstr "Tambahkan fasilitas pindai barcode di Pengiriman."
+
+#~ msgid "Add barcode scanning facilities to Warehouse Management."
+#~ msgstr "Tambahkan fasilitas pindai barcode di Manajemen Gudang."
+
+#~ msgid "Add barcode scanning feature to event management."
+#~ msgstr "Tambahkan fasilitas pindai barcode di Manajemen Acara."
+
+#~ msgid "Add extra fields on addresses"
+#~ msgstr "Tambahkan kolom tambahan pada alamat"
+
+#~ msgid "Add in the 'Print' menu"
+#~ msgstr "Tambahkan di menu 'Cetak'"
+
+#~ msgid "Address Type"
+#~ msgstr "Jenis Alamat"
+
+#~ msgid "Administration"
+#~ msgstr "Administrasi"
+
+#~ msgid "Afghanistan"
+#~ msgstr "Afganistan"
+
+#~ msgid "After Address"
+#~ msgstr "Setelah Alamat"
+
+#~ msgid "After Amount"
+#~ msgstr "Setelah Jumlah"
+
+#~ msgid "Albania"
+#~ msgstr "Albania"
+
+#~ msgid "Algeria"
+#~ msgstr "Algeria"
+
+#~ msgid "All"
+#~ msgstr "Semua"
+
+#~ msgid "Allow cashier to reprint receipts"
+#~ msgstr "Perbolehkan kasir untuk mencetak ulang kuitansi"
+
+#~ msgid "Allows customization of a report."
+#~ msgstr "Izinkan kustomisasi laporan."
+
+#~ msgid "Analytic Accounting"
+#~ msgstr "Akuntansi Analitik"
+
+#~ msgid "Andorra"
+#~ msgstr "Andora"
+
+#~ msgid "Angola"
+#~ msgstr "Angola"
+
+#~ msgid "Antarctica"
+#~ msgstr "Antartika"
+
+#~ msgid "App Store"
+#~ msgstr "App Store"
+
+#~ msgid "Application"
+#~ msgstr "Aplikasi"
+
+#~ msgid "Apply"
+#~ msgstr "Terapkan"
+
+#~ msgid "Apply Scheduled Upgrades"
+#~ msgstr "Terapkan Perbaruan Terjadwal"
+
+#~ msgid "Appointment Scheduling"
+#~ msgstr "Penjadwalan Pertemuan"
+
+#~ msgid "Appraisals"
+#~ msgstr "Penilaian"
+
+#~ msgid "Apps"
+#~ msgstr "Aplikasi"
+
+#~ msgid "Apps To Export"
+#~ msgstr "Aplikasi yang Ingin Diekspor"
+
+#~ msgid "Apps to Update"
+#~ msgstr "Aplikasi yang Ingin Diperbarui"
+
+#~ msgid "Apps:"
+#~ msgstr "Aplikasi:"
+
+#~ msgid "Architecture"
+#~ msgstr "Arsitektur"
+
+#~ msgid "Archived"
+#~ msgstr "Diarsipkan"
+
+#~ msgid "Argentina"
+#~ msgstr "Argentina"
+
+#~ msgid "Argentina - Accounting"
+#~ msgstr "Argentina - Akuntansi"
+
+#~ msgid "Argentina - Accounting Reports"
+#~ msgstr "Argentina - Laporan Akuntansi"
+
+#~ msgid "Assets Management"
+#~ msgstr "Manajemen Aset"
+
+#~ msgid "Associated reports"
+#~ msgstr "Laporan terkait"
+
+#~ msgid "Attached To"
+#~ msgstr "Dilampirkan Pada"
+
+#~ msgid "Attachment"
+#~ msgstr "Lampiran"
+
+#~ msgid "Attachment Name"
+#~ msgstr "Nama Lampiran"
+
+#~ msgid "Attachments"
+#~ msgstr "Lampiran"
+
+#~ msgid "Attendance"
+#~ msgstr "Kehadiran"
+
+#~ msgid "Attendances"
+#~ msgstr "Kehadiran"
+
+#~ msgid "Australia"
+#~ msgstr "Australia"
+
+#~ msgid "Australian - Accounting"
+#~ msgstr "Australia - Akuntansi"
+
+#~ msgid "Australian - Accounting Reports"
+#~ msgstr "Australia - Laporan Akuntansi"
+
+#~ msgid "Austria"
+#~ msgstr "Austria"
+
+#~ msgid "Austria - Accounting"
+#~ msgstr "Austria - Akuntansi"
+
+#~ msgid "Author"
+#~ msgstr "Pembuat"
+
+#~ msgid "Author Name"
+#~ msgstr "Nama Pembuat"
+
+#~ msgid "Auto Search"
+#~ msgstr "Cari Otomatis"
+
+#~ msgid "Automated Action Rules"
+#~ msgstr "Aturan Tindakan Otomatis"
+
+#~ msgid "Automatic Installation"
+#~ msgstr "Pemasangan Otomatis"
+
+#~ msgid "Azerbaijan"
+#~ msgstr "Azerbaijan"
+
+#~ msgid "B0  14  1000 x 1414 mm"
+#~ msgstr "B0  14  1000 x 1414 mm"
+
+#~ msgid "B1  15  707 x 1000 mm"
+#~ msgstr "B1  15  707 x 1000 mm"
+
+#~ msgid "B2  17  500 x 707 mm"
+#~ msgstr "B2  17  500 x 707 mm"
+
+#~ msgid "B3  18  353 x 500 mm"
+#~ msgstr "B3  18  353 x 500 mm"
+
+#~ msgid "B4  19  250 x 353 mm"
+#~ msgstr "B4  19  250 x 353 mm"
+
+#~ msgid "B5  1   176 x 250 mm, 6.93 x 9.84 inches"
+#~ msgstr "B5  1   176 x 250 mm, 6.93 x 9.84 inchi"
+
+#~ msgid "B6  20  125 x 176 mm"
+#~ msgstr "B6  20  125 x 176 mm"
+
+#~ msgid "B7  21  88 x 125 mm"
+#~ msgstr "B7  21  88 x 125 mm"
+
+#~ msgid "B8  22  62 x 88 mm"
+#~ msgstr "B8  22  62 x 88 mm"
+
+#~ msgid "B9  23  33 x 62 mm"
+#~ msgstr "B9  23  33 x 62 mm"
+
+#~ msgid "Background"
+#~ msgstr "Latar Belakang"
+
+#~ msgid "Bad file format: %s"
+#~ msgstr "Format file salah: %s"
+
+#~ msgid "Bahamas"
+#~ msgstr "Bahamas"
+
+#~ msgid "Bahrain"
+#~ msgstr "Bahrain"
+
+#~ msgid "Bangladesh"
+#~ msgstr "Bangladesh"
+
+#~ msgid "Bank"
+#~ msgstr "Bank"
+
+#~ msgid "Bank Accounts"
+#~ msgstr "Akun Bank"
+
+#~ msgid "Bank Identifier Code"
+#~ msgstr "Kode Bank"
+
+#~ msgid "Bank Name"
+#~ msgstr "Nama Bank"
+
+#~ msgid "Bank account"
+#~ msgstr "Akun Bank"
+
+#~ msgid "Banks"
+#~ msgstr "Bank"
+
+#~ msgid "Barbados"
+#~ msgstr "Barbados"
+
+#~ msgid "Barcode"
+#~ msgstr "Barcode"
+
+#~ msgid "Base"
+#~ msgstr "Dasar"
+
+#~ msgid "Belarus"
+#~ msgstr "Belarus"
+
+#~ msgid "Belgium"
+#~ msgstr "Belgia"
+
+#~ msgid "Belgium - Structured Communication"
+#~ msgstr "Belgia - Komunikasi terstruktur"
+
+#~ msgid "Belize"
+#~ msgstr "Belize"
+
+#~ msgid "Benin"
+#~ msgstr "Benin"
+
+#~ msgid "Bermuda"
+#~ msgstr "Bermuda"
+
+#~ msgid "Bhutan"
+#~ msgstr "Bhutan"
+
+#~ msgid "Binary"
+#~ msgstr "Biner"
+
+#~ msgid "Blogs"
+#~ msgstr "Blog"
+
+#~ msgid "Bolivia"
+#~ msgstr "Bolivia"
+
+#~ msgid "Botswana"
+#~ msgstr "Botswana"
+
+#~ msgid "Bottom Margin (mm)"
+#~ msgstr "Margin Bawah (mm)"
+
+#~ msgid "Bouvet Island"
+#~ msgstr "Pulau Bouvet"
+
+#~ msgid "Brazil"
+#~ msgstr "Brazil"
+
+#~ msgid "British Indian Ocean Territory"
+#~ msgstr "Wilayah Samudra Hindia Britania"
+
+#~ msgid "Bronze"
+#~ msgstr "Perunggu"
+
+#~ msgid "Brunei Darussalam"
+#~ msgstr "Brunei Darussalam"
+
+#~ msgid "Bulgaria"
+#~ msgstr "Bulgaria"
+
+#~ msgid "Burkina Faso"
+#~ msgstr "Burkina Faso"
+
+#~ msgid "Burundi"
+#~ msgstr "Burundi"
+
+#~ msgid "By"
+#~ msgstr "Oleh"
+
+#~ msgid "C5E 24  163 x 229 mm"
+#~ msgstr "C5E 24  163 x 229 mm"
+
+#~ msgid "CRM"
+#~ msgstr "CRM"
+
+#~ msgid "CSV File"
+#~ msgstr "File CSV"
+
+#~ msgid "Calendar"
+#~ msgstr "Kalender"
+
+#~ msgid "Cambodia"
+#~ msgstr "Kamboja"
+
+#~ msgid "Cameroon"
+#~ msgstr "Kamerun"
+
+#~ msgid "Canada"
+#~ msgstr "Kanada"
+
+#~ msgid "Canada - Accounting"
+#~ msgstr "Kanada - Akuntansi"
+
+#~ msgid "Cancel"
+#~ msgstr "Batal"
+
+#~ msgid "Cancel Install"
+#~ msgstr "Batalkan Pemasangan"
+
+#~ msgid "Cancel Journal Entries"
+#~ msgstr "Batalkan Ayat-ayat Jurnal"
+
+#~ msgid "Cancel Uninstall"
+#~ msgstr "Batalkan Pembongkaran"
+
+#~ msgid "Cancel Upgrade"
+#~ msgstr "Batalkan Perbaruan"
+
+#~ msgid "Cape Verde"
+#~ msgstr "Cape Verde"
+
+#~ msgid "Category"
+#~ msgstr "Kategori"
+
+#~ msgid "Cayman Islands"
+#~ msgstr "Kepulauan Cayman"
+
+#~ msgid "Central African Republic"
+#~ msgstr "Republik Afrika Tengah"
+
+#~ msgid "Chad"
+#~ msgstr "Chad"
+
+#~ msgid "Change My Preferences"
+#~ msgstr "Ganti Preferensi Saya"
+
+#~ msgid "Change Password"
+#~ msgstr "Ubah Sandi"
+
+#~ msgid "Change Password Wizard"
+#~ msgstr "Wisaya Ubah Sandi"
+
+#~ msgid "Change Password Wizard User"
+#~ msgstr "Pengguna Wisaya Ubah Sandi"
+
+#~ msgid "Change password"
+#~ msgstr "Ubah sandi"
+
+#~ msgid "Check this box if this contact is an Employee."
+#~ msgstr "Centang kotak ini jika kontak adalah pegawai"
+
+#~ msgid "Child Applications"
+#~ msgstr "Aplikasi Turunan"
+
+#~ msgid "Chile"
+#~ msgstr "Chili"
+
+#~ msgid "Chile - Accounting"
+#~ msgstr "Chili - Akuntansi"
+
+#~ msgid "Chile - Accounting Reports"
+#~ msgstr "Chili - Laporan Akuntansi"
+
+#~ msgid "China"
+#~ msgstr "China"
+
+#~ msgid "Choose Your Document Layout"
+#~ msgstr "Pilih Tata Letak Dokumen Anda"
+
+#~ msgid "Christmas Island"
+#~ msgstr "Pulau Christmas"
+
+#~ msgid "City"
+#~ msgstr "Kota"
+
+#~ msgid "City Addresses"
+#~ msgstr "Alamat Kota"
+
+#~ msgid "Clean"
+#~ msgstr "Rapih"
+
+#~ msgid "Click here to create a customized view"
+#~ msgstr "Klik di sini untuk membuat tampilan khusus"
+
+#~ msgid "Click here to create new documents."
+#~ msgstr "Klik di sini untuk membuat dokumen baru."
+
+#~ msgid "Click on Update below to start the process..."
+#~ msgstr "Klik di Perbarui di bawah untuk memulai proses..."
+
+#~ msgid "Click to add a contact in your address book."
+#~ msgstr "Klik untuk menambah kontak di buku alamat Anda."
+
+#~ msgid "Click to create a bank account."
+#~ msgstr "Klik untuk membuat akun bank."
+
+#~ msgid "Click to create a new bank."
+#~ msgstr "Klik untuk membuat bank baru."
+
+#~ msgid "Click to create a new industry."
+#~ msgstr "Klik untuk membuat industri baru."
+
+#~ msgid "Click to create a new partner tag."
+#~ msgstr "Klik untuk membuat tag rekanan."
+
+#~ msgid "Client"
+#~ msgstr "Klien"
+
+#~ msgid "Close"
+#~ msgstr "Tutup"
+
+#~ msgid "Code"
+#~ msgstr "Kode"
+
+#~ msgid "Colombia"
+#~ msgstr "Kolombia"
+
+#~ msgid "Color Index"
+#~ msgstr "Indeks Warna"
+
+#~ msgid "Column 1"
+#~ msgstr "Kolom 1"
+
+#~ msgid "Column 2"
+#~ msgstr "Kolom 2"
+
+#~ msgid "Comm10E 25  105 x 241 mm, U.S. Common 10 Envelope"
+#~ msgstr "Comm10E 25 105 x 241 mm, Amplop US Common 10"
+
+#~ msgid "Comments"
+#~ msgstr "Komentar"
+
+#~ msgid "Commercial Entity"
+#~ msgstr "Entitas Komersial"
+
+#~ msgid "Communication"
+#~ msgstr "Komunikasi"
+
+#~ msgid "Companies"
+#~ msgstr "Perusahaan"
+
+#~ msgid "Companies count"
+#~ msgstr "Jumlah Perusahaan"
+
+#~ msgid "Company Contact"
+#~ msgstr "Kontak Perusahaan"
+
+#~ msgid "Company Logo"
+#~ msgstr "Logo Perusahaan"
+
+#~ msgid "Company Name"
+#~ msgstr "Nama Perusahaan"
+
+#~ msgid "Company Name Entity"
+#~ msgstr "Entitas Nama Perusahaan"
+
+#~ msgid "Company Properties"
+#~ msgstr "Properti Perusahaan"
+
+#~ msgid "Company Tagline"
+#~ msgstr "Motto Perusahaan"
+
+#~ msgid "Company Type"
+#~ msgstr "Tipe Perusahaan"
+
+#~ msgid "Complete Address"
+#~ msgstr "Alamat Perusahaan"
+
+#~ msgid "Complete ID"
+#~ msgstr "ID Lengkap"
+
+#~ msgid "Complete Name"
+#~ msgstr "Nama Lengkap"
+
+#~ msgid "Compute"
+#~ msgstr "Hitung"
+
+#~ msgid "Condition"
+#~ msgstr "Syarat?"
+
+#~ msgid "Config Wizard Steps"
+#~ msgstr "Langkah Konfigurasi Wizard"
+
+#~ msgid "Configuration"
+#~ msgstr "Konfigurasi"
+
+#~ msgid "Configuration Installer"
+#~ msgstr "Pemasang Konfigurasi"
+
+#~ msgid "Configuration Wizards"
+#~ msgstr "Wisaya Konfigurasi"
+
+#~ msgid "Confirm"
+#~ msgstr "Konfirmasi"
+
+#~ msgid "Congo"
+#~ msgstr "Kongo"
+
+#~ msgid "Contact"
+#~ msgstr "Kontak"
+
+#~ msgid "Contact / Address"
+#~ msgstr "Kontak / Alamat"
+
+#~ msgid "Contact Creation"
+#~ msgstr "Pembuatan Kontak"
+
+#~ msgid "Contact Form"
+#~ msgstr "Formulir Kontak"
+
+#~ msgid "Contact Name"
+#~ msgstr "Nama kontak"
+
+#~ msgid "Contact Tag"
+#~ msgstr "Tag Kontak"
+
+#~ msgid "Contact Tags"
+#~ msgstr "Tanda kontak"
+
+#~ msgid "Contact Titles"
+#~ msgstr "Gelar/panggilan"
+
+#~ msgid "Contacts"
+#~ msgstr "Daftar kontak"
+
+#~ msgid "Contacts & Addresses"
+#~ msgstr "Kontak & Alamat"
+
+#~ msgid "Cook Islands"
+#~ msgstr "Kepulauan Cook"
+
+#~ msgid "Copied"
+#~ msgstr "Tersalin"
+
+#~ msgid "Costa Rica"
+#~ msgstr "Costa Rica"
+
+#~ msgid "Countries"
+#~ msgstr "Negara"
+
+#~ msgid "Country"
+#~ msgstr "Negara"
+
+#~ msgid "Country Calling Code"
+#~ msgstr "Kode Panggilan Negara"
+
+#~ msgid "Country Code"
+#~ msgstr "Kode Negara"
+
+#~ msgid "Country Group"
+#~ msgstr "Kelompok Negara"
+
+#~ msgid "Country Groups"
+#~ msgstr "Kelompok Negara"
+
+#~ msgid "Country Name"
+#~ msgstr "Nama Negara"
+
+#~ msgid "Create Access"
+#~ msgstr "Buat Akses"
+
+#~ msgid "Create Access Right"
+#~ msgstr "Membuat Hak Akses"
+
+#~ msgid "Create Date"
+#~ msgstr "Tanggal Dibuat"
+
+#~ msgid "Create Menu"
+#~ msgstr "Buat Menu"
+
+#~ msgid "Create a Menu"
+#~ msgstr "Buat Sebuah Menu"
+
+#~ msgid ""
+#~ "Create and manage users that will connect to the system. Users can be "
+#~ "deactivated should there be a period of time during which they will/"
+#~ "should not connect to the system. You can assign them groups in order to "
+#~ "give them specific access to the applications they need to use in the "
+#~ "system."
+#~ msgstr ""
+#~ "Membuat dan mengelola pengguna yang akan terhubungkan ke sistem. Pengguna "
+#~ "dapat dinonaktifkan bila ada periode waktu di mana mereka tidak boleh "
+#~ "terhubung ke sistem. Anda dapat menetapkan kelompok mereka untuk "
+#~ "memberikan mereka akses khusus untuk aplikasi yang mereka butuhkan untuk "
+#~ "digunakan dalam sistem."
+
+#~ msgid "Create company"
+#~ msgstr "Buat Perusahaan"
+
+#~ msgid "Created Menus"
+#~ msgstr "Menu Dibuat"
+
+#~ msgid "Created Views"
+#~ msgstr "Tampilan yang Dibuat"
+
+#~ msgid "Created by"
+#~ msgstr "Dibuat oleh"
+
+#~ msgid "Created on"
+#~ msgstr "Dibuat pada"
+
+#~ msgid "Creation"
+#~ msgstr "Pembuatan"
+
+#~ msgid "Creation Month"
+#~ msgstr "Bulan Pembuatan"
+
+#~ msgid "Credit Limit"
+#~ msgstr "Batas Kredit"
+
+#~ msgid "Croatia"
+#~ msgstr "Kroasia"
+
+#~ msgid "Cuba"
+#~ msgstr "Kuba"
+
+#~ msgid "Curaçao"
+#~ msgstr "Curaçao"
+
+#~ msgid "Currencies"
+#~ msgstr "Mata Uang"
+
+#~ msgid "Currency Code (ISO 4217)"
+#~ msgstr "Kode Mata Uang (ISO 4217)"
+
+#~ msgid "Currency Rate"
+#~ msgstr "Kurs Mata Uang"
+
+#~ msgid "Currency Rates"
+#~ msgstr "Kurs Mata Uang"
+
+#~ msgid "Currency Unit"
+#~ msgstr "Satuan Mata Uang"
+
+#~ msgid "Currency Unit Name"
+#~ msgstr "Nama Satuan Mata Uang"
+
+#~ msgid "Currency sign, to be used when printing amounts."
+#~ msgstr "Simbol mata uang, digunakan ketika mencetak jumlah."
+
+#~ msgid "Custom"
+#~ msgstr "Khusus"
+
+#~ msgid "Custom Object"
+#~ msgstr "Obyek Khusus"
+
+#~ msgid "Customer Rating"
+#~ msgstr "Nilai Pelanggan"
+
+#~ msgid "Customer References"
+#~ msgstr "Referensi Pelanggan"
+
+#~ msgid "Customers"
+#~ msgstr "Pelanggan"
+
+#~ msgid "Customers, Vendors, Partners,..."
+#~ msgstr "Pelanggan, Pemasok, Rekanan,..."
+
+#~ msgid "Cyprus"
+#~ msgstr "Cyprus"
+
+#~ msgid "Czech Republic"
+#~ msgstr "Republik Ceko"
+
+#~ msgid "DHL Shipping"
+#~ msgstr "Pengiriman DHL"
+
+#~ msgid "DLE 26 110 x 220 mm"
+#~ msgstr "DLE (110 x 220 mm)"
+
+#~ msgid "Dashboards"
+#~ msgstr "Dasbor"
+
+#~ msgid "Database"
+#~ msgstr "Database"
+
+#~ msgid ""
+#~ "Database ID of record to open in form view, when ``view_mode`` is set to "
+#~ "'form' only"
+#~ msgstr ""
+#~ "Database ID dari data yang akan dibuka dalam tampilan formulir (form "
+#~ "view), dimana \"view_mode\" diberi nilai \"form\"."
+
+#~ msgid "Database Name"
+#~ msgstr "Nama Database"
+
+#~ msgid "Database Structure"
+#~ msgstr "Struktur Database"
+
+#~ msgid "Date Created"
+#~ msgstr "Tanggal Dibuat"
+
+#~ msgid "DateTime"
+#~ msgstr "DateTime"
+
+#~ msgid "Dates on Sales Order"
+#~ msgstr "Tanggal pada Order Penjualan"
+
+#~ msgid "Day"
+#~ msgstr "Hari"
+
+#~ msgid "Days"
+#~ msgstr "Hari"
+
+#~ msgid "Decimal Separator"
+#~ msgstr "Pemisah Desimal"
+
+#~ msgid "Default Filter"
+#~ msgstr "Penyaring Standar"
+
+#~ msgid "Default Theme"
+#~ msgstr "Tema Default"
+
+#~ msgid "Default limit for the list view"
+#~ msgstr "Batas standar untuk tampilan daftar"
+
+#~ msgid "Default paper format ?"
+#~ msgstr "Format kertas standar?"
+
+#~ msgid "Deferred Revenues"
+#~ msgstr "Tangguhan Pendapatan"
+
+#~ msgid "Definition"
+#~ msgstr "Definisi"
+
+#~ msgid "Delete Access"
+#~ msgstr "Hapus Akses"
+
+#~ msgid "Delivery Costs"
+#~ msgstr "Ongkos Kirim"
+
+#~ msgid "Denmark"
+#~ msgstr "Denmark"
+
+#~ msgid "Description"
+#~ msgstr "Deskripsi"
+
+#~ msgid "Diagram"
+#~ msgstr "Diagram"
+
+#~ msgid "Directory"
+#~ msgstr "Direktori"
+
+#~ msgid "Discard"
+#~ msgstr "Abaikan"
+
+#~ msgid "Discuss"
+#~ msgstr "Diskusi"
+
+#~ msgid "Discussions, Mailing Lists, News"
+#~ msgstr "Diskusi, Milis, Berita"
+
+#~ msgid "Display"
+#~ msgstr "Tampilan"
+
+#~ msgid "Distributor"
+#~ msgstr "Distributor"
+
+#~ msgid "Djibouti"
+#~ msgstr "Djibouti"
+
+#~ msgid "Doctor"
+#~ msgstr "Doktor"
+
+#~ msgid "Document"
+#~ msgstr "Dokumen"
+
+#~ msgid "Document Management"
+#~ msgstr "Manajemen dokumen"
+
+#~ msgid "Document Template"
+#~ msgstr "Contoh Dokumen"
+
+#~ msgid "Documentation"
+#~ msgstr "Dokumentasi"
+
+#~ msgid "Domain"
+#~ msgstr "Filter"
+
+#~ msgid "Done"
+#~ msgstr "Selesai"
+
+#~ msgid "Dr."
+#~ msgstr "Dr."
+
+#~ msgid "Ecuador"
+#~ msgstr "Ekuador"
+
+#~ msgid "Edit Translations"
+#~ msgstr "Sunting Terjemahan"
+
+#~ msgid "Education"
+#~ msgstr "Pendidikan"
+
+#~ msgid "Egypt"
+#~ msgstr "Mesir"
+
+#~ msgid "El Salvador"
+#~ msgstr "El Salvador"
+
+#~ msgid "Email Address"
+#~ msgstr "Alamat Email"
+
+#~ msgid "Email Marketing"
+#~ msgstr "Pemasaran Email"
+
+#~ msgid "Email Preferences"
+#~ msgstr "Preferensi Email"
+
+#~ msgid "Employee"
+#~ msgstr "Karyawan"
+
+#~ msgid "Employee Contracts"
+#~ msgstr "Kontrak Karyawan"
+
+#~ msgid "Employees"
+#~ msgstr "Karyawan"
+
+#~ msgid "Equipments"
+#~ msgstr "Peralatan"
+
+#~ msgid "Eritrea"
+#~ msgstr "Eritrea"
+
+#~ msgid "Error details:"
+#~ msgstr "Rincian Eror:"
+
+#~ msgid "Estonia"
+#~ msgstr "Estonia"
+
+#~ msgid "Ethiopia"
+#~ msgstr "Ethiopia"
+
+#~ msgid "Europe"
+#~ msgstr "Eropa"
+
+#~ msgid "Evaluation Type"
+#~ msgstr "Jenis Evaluasi"
+
+#~ msgid "Events"
+#~ msgstr "Acara"
+
+#~ msgid "Examples"
+#~ msgstr "Contoh"
+
+#~ msgid "Execution"
+#~ msgstr "Pelaksanaan"
+
+#~ msgid "Executive 4   7.5 x 10 inches, 190.5 x 254 mm"
+#~ msgstr "Executive 4 7,5 x 10 inci, 190,5 x 254 mm"
+
+#~ msgid "Expenses"
+#~ msgstr "Beban"
+
+#~ msgid "Explicitly associated reports"
+#~ msgstr "Laporan yang terkait secara eksplisit"
+
+#~ msgid "Export"
+#~ msgstr "Ekspor"
+
+#~ msgid "Export Complete"
+#~ msgstr "Ekspor Selesai"
+
+#~ msgid "Export ID"
+#~ msgstr "ID Ekspor"
+
+#~ msgid "Export Name"
+#~ msgstr "Ekspor Nama"
+
+#~ msgid "Export Settings"
+#~ msgstr "Ekspor Pengaturan"
+
+#~ msgid "Export Translation"
+#~ msgstr "Ekspor Terjemahan"
+
+#~ msgid "Export Translations"
+#~ msgstr "Ekspor Terjemahan"
+
+#~ msgid "External ID"
+#~ msgstr "ID Eksternal"
+
+#~ msgid ""
+#~ "External user with limited access, created only for the purpose of "
+#~ "sharing data."
+#~ msgstr ""
+#~ "Pengguna eksternal dengan akses terbatas, dibuat hanya untuk tujuan "
+#~ "berbagi data."
+
+#~ msgid "Extra Rights"
+#~ msgstr "Hak Tambahan"
+
+#~ msgid "Extra Tools"
+#~ msgstr "Alat Tambahan"
+
+#~ msgid "Fed. States"
+#~ msgstr "Negara Bagian/Propinsi"
+
+#~ msgid "Fedex Shipping"
+#~ msgstr "Pengiriman Fedex"
+
+#~ msgid "Field"
+#~ msgstr "Kolom"
+
+#~ msgid "Field Name"
+#~ msgstr "Nama Kolom"
+
+#~ msgid "Fields"
+#~ msgstr "Kolom"
+
+#~ msgid "File Name"
+#~ msgstr "Nama Berkas"
+
+#~ msgid "File Size"
+#~ msgstr "Ukuran Berkas"
+
+#~ msgid "Filter"
+#~ msgstr "Saring"
+
+#~ msgid "Filter Name"
+#~ msgstr "Nama Penyaring"
+
+#~ msgid "Filter names must be unique"
+#~ msgstr "Nama penyaring harus unik"
+
+#~ msgid "Filter on my documents"
+#~ msgstr "Saring pada dokumen saya"
+
+#~ msgid "Filters"
+#~ msgstr "Penyaring"
+
+#~ msgid "Filters created by myself"
+#~ msgstr "Penyaring yang saya buat"
+
+#~ msgid "Filters shared with all users"
+#~ msgstr "Penyaring yang dibagikan ke semua pengguna"
+
+#~ msgid "Filters visible only for one user"
+#~ msgstr "Penyaring yang dapat dilihat oleh seorang pengguna"
+
+#~ msgid "Financial and Analytic Accounting"
+#~ msgstr "Akuntansi Analitik dan Keuangan"
+
+#~ msgid "Float"
+#~ msgstr "Desimal"
+
+#~ msgid "Folio 27  210 x 330 mm"
+#~ msgstr "Folio (210 x 330 mm)"
+
+#~ msgid "Food"
+#~ msgstr "Makanan"
+
+#~ msgid ""
+#~ "For more details about translating Odoo in your language, please refer to "
+#~ "the"
+#~ msgstr ""
+#~ "Untuk lebih jelas mengenai cara menerjemahkan Odoo ke dalam bahasa Anda, "
+#~ "silakan merujuk ke"
+
+#~ msgid "Forum"
+#~ msgstr "Forum"
+
+#~ msgid "From"
+#~ msgstr "Dari"
+
+#~ msgid "Full Access"
+#~ msgstr "Akses Penuh"
+
+#~ msgid "Full Access Right"
+#~ msgstr "Hak Akses Penuh"
+
+#~ msgid "Full Name"
+#~ msgstr "Nama lengkap"
+
+#~ msgid "Function"
+#~ msgstr "Fungsi"
+
+#~ msgid "Gamification"
+#~ msgstr "Gamifikasi"
+
+#~ msgid "Gantt"
+#~ msgstr "Gantt"
+
+#~ msgid "General"
+#~ msgstr "Umum"
+
+#~ msgid "General Information"
+#~ msgstr "Informasi Umum"
+
+#~ msgid "General Settings"
+#~ msgstr "Pengaturan Umum"
+
+#~ msgid "Germany"
+#~ msgstr "Jerman"
+
+#~ msgid "Global"
+#~ msgstr "Global"
+
+#~ msgid "Gold"
+#~ msgstr "Emas"
+
+#~ msgid "Google Calendar"
+#~ msgstr "Google Calendar"
+
+#~ msgid "Graph"
+#~ msgstr "Diagram"
+
+#~ msgid "Greece"
+#~ msgstr "Yunani"
+
+#~ msgid "Greece - Accounting"
+#~ msgstr "Yunani - Akuntansi"
+
+#~ msgid "Greece - Accounting Reports"
+#~ msgstr "Yunani - Laporan Akuntansi"
+
+#~ msgid "Group"
+#~ msgstr "Grup"
+
+#~ msgid "Group By"
+#~ msgstr "Dikelompokkan berdasarkan"
+
+#~ msgid "Group Name"
+#~ msgstr "Nama Kelompok"
+
+#~ msgid "Group created to set access rights for sharing data with some users."
+#~ msgstr ""
+#~ "Kelompok dibuat untuk mengatur hak akses untuk berbagi data dengan "
+#~ "beberapa pengguna."
+
+#~ msgid "Group name"
+#~ msgstr "Nama kelompok"
+
+#~ msgid "HTTP routing"
+#~ msgstr "HTTP routing"
+
+#~ msgid "Hardware Proxy"
+#~ msgstr "Perantara Perangkat Keras"
+
+#~ msgid "Header spacing"
+#~ msgstr "Spasi Kop"
+
+#~ msgid "Help"
+#~ msgstr "Bantuan"
+
+#~ msgid "Helpdesk"
+#~ msgstr "Helpdesk"
+
+#~ msgid "Helps you manage your Events."
+#~ msgstr "Membantu Anda mengelola Acara Anda."
+
+#~ msgid ""
+#~ "Helps you manage your projects and tasks by tracking them, generating "
+#~ "plannings, etc..."
+#~ msgstr ""
+#~ "Membantu anda mengelola proyek dan tugas dengan cara melacak, "
+#~ "menghasilkan perencanaan, dan lain sebagainya..."
+
+#~ msgid "Here is the exported translation file:"
+#~ msgstr "Berikut ini adalah berkas terjemahan yang sudah diekspor:"
+
+#~ msgid "Hidden"
+#~ msgstr "Tersembunyi"
+
+#~ msgid "History"
+#~ msgstr "Riwayat"
+
+#~ msgid "Hours"
+#~ msgstr "Jam"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "ISO Code"
+#~ msgstr "Kode ISO"
+
+#~ msgid "ISO code"
+#~ msgstr "Kode ISO"
+
+#~ msgid "Icon"
+#~ msgstr "Ikon"
+
+#~ msgid "If checked, this group is usable as a portal."
+#~ msgstr "Jika dicentang, kelompok ini berguna sebagai portal."
+
+#~ msgid "Image"
+#~ msgstr "Gambar"
+
+#~ msgid "Impacted Apps"
+#~ msgstr "Aplikasi yang Terpengaruh"
+
+#~ msgid "Import / Export"
+#~ msgstr "Impor / Ekspor"
+
+#~ msgid "Import Translation"
+#~ msgstr "Impor Terjemahan"
+
+#~ msgid "In Apps"
+#~ msgstr "Dalam Aplikasi"
+
+#~ msgid "Inactive"
+#~ msgstr "Tidak aktif"
+
+#~ msgid "Indexed Content"
+#~ msgstr "Konten Terindeks"
+
+#~ msgid "Indian Payroll"
+#~ msgstr "Payroll untuk India"
+
+#~ msgid "Information"
+#~ msgstr "Informasi"
+
+#~ msgid "Inherited View"
+#~ msgstr "Tampilan Turunan"
+
+#~ msgid "Inherited models"
+#~ msgstr "Model Turunan"
+
+#~ msgid "Install Apps"
+#~ msgstr "Pasang Aplikasi"
+
+#~ msgid "Install Language"
+#~ msgstr "Pasang Bahasa"
+
+#~ msgid "Installed"
+#~ msgstr "Terpasang"
+
+#~ msgid "Installed Features"
+#~ msgstr "Fitur yang Dipasang"
+
+#~ msgid "Installed Version"
+#~ msgstr "Versi yang Dipasang"
+
+#~ msgid "Integer"
+#~ msgstr "Bilangan Bulat"
+
+#~ msgid "Internal Groups"
+#~ msgstr "Kelompok Internal"
+
+#~ msgid "Internal Notes"
+#~ msgstr "Catatan Internal"
+
+#~ msgid "Internal Reference"
+#~ msgstr "Referensi internal"
+
+#~ msgid "Internal Users"
+#~ msgstr "Pengguna Internal"
+
+#~ msgid "Internal note..."
+#~ msgstr "Catatan internal..."
+
+#~ msgid "Interval Unit"
+#~ msgstr "Satuan Interval"
+
+#~ msgid "Inventory"
+#~ msgstr "Persediaan"
+
+#~ msgid "Invoicing"
+#~ msgstr "Penagihan"
+
+#~ msgid "Invoicing & Payments"
+#~ msgstr "Penagihan & Pembayaran"
+
+#~ msgid "Is a Company"
+#~ msgstr "Perusahaan"
+
+#~ msgid "Is a Customer"
+#~ msgstr "Pelanggan"
+
+#~ msgid "Is a Vendor"
+#~ msgstr "Pemasok"
+
+#~ msgid "Is public document"
+#~ msgstr "Dokumen publik"
+
+#~ msgid "Job Position"
+#~ msgstr "Jabatan"
+
+#~ msgid "Jobs, Departments, Employees Details"
+#~ msgstr "Pekerjaan, Departemen, Detail Karyawan"
+
+#~ msgid "Kanban"
+#~ msgstr "Kanban"
+
+#~ msgid "Key"
+#~ msgstr "Kunci"
+
+#~ msgid "Kuwait"
+#~ msgstr "Kuwait"
+
+#~ msgid "Kyrgyzstan"
+#~ msgstr "Kyrgyzstan"
+
+#~ msgid "Landed Costs"
+#~ msgstr "Landed Costs"
+
+#~ msgid "Landscape"
+#~ msgstr "Lanskap"
+
+#~ msgid "Language"
+#~ msgstr "Bahasa"
+
+#~ msgid "Language Import"
+#~ msgstr "Impor Bahasa"
+
+#~ msgid "Language Name"
+#~ msgstr "Nama Bahasa"
+
+#~ msgid "Language Pack"
+#~ msgstr "Paket Bahasa"
+
+#~ msgid "Language code of translation item must be among known languages"
+#~ msgstr ""
+#~ "Kode bahasa dari butir terjemahan harus terdaftar dalam bahasa-bahasa "
+#~ "yang dikenali"
+
+#~ msgid "Languages"
+#~ msgstr "Bahasa"
+
+#~ msgid "Laos"
+#~ msgstr "Laos"
+
+#~ msgid "Last Modification Date"
+#~ msgstr "Tanggal Modifikasi terakhir"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Terakhir diubah pada"
+
+#~ msgid "Last Updated by"
+#~ msgstr "Terakhir diperbarui oleh"
+
+#~ msgid "Last Updated on"
+#~ msgstr "Terakhir diperbarui pada"
+
+#~ msgid "Latest Version"
+#~ msgstr "Versi Terkini"
+
+#~ msgid "Latest connection"
+#~ msgstr "Koneksi terakhir"
+
+#~ msgid "Latvia"
+#~ msgstr "Latvia"
+
+#~ msgid "Launch"
+#~ msgstr "Luncurkan"
+
+#~ msgid "Leaves"
+#~ msgstr "Cuti"
+
+#~ msgid "Ledger  28  431.8 x 279.4 mm"
+#~ msgstr "Ledger 28 431,8 x 279,4 mm"
+
+#~ msgid "Left Margin (mm)"
+#~ msgstr "Margin Kiri (mm)"
+
+#~ msgid "Left-to-Right"
+#~ msgstr "Kiri-ke-Kanan"
+
+#~ msgid "Legal    3   8.5 x 14 inches, 215.9 x 355.6 mm"
+#~ msgstr "Legal 3 8,5 x 14 inci, 215,9 x 355,6 mm"
+
+#~ msgid "Letter 2 8.5 x 11 inches, 215.9 x 279.4 mm"
+#~ msgstr "Letter 2 8.5 x 11 inci, 215.9 x 279.4 mm"
+
+#~ msgid "Level"
+#~ msgstr "Tingkatan"
+
+#~ msgid "Liberia"
+#~ msgstr "Liberia"
+
+#~ msgid "Libya"
+#~ msgstr "Libya"
+
+#~ msgid "License"
+#~ msgstr "Lisensi"
+
+#~ msgid "Liechtenstein"
+#~ msgstr "Liechtenstein"
+
+#~ msgid "Limit"
+#~ msgstr "Batas"
+
+#~ msgid "Link Tracker"
+#~ msgstr "Penjejak Tautan"
+
+#~ msgid "Link module between project_forecast and sale(_timesheet)"
+#~ msgstr "Modul penghubung antara project_forecast dan sale(_timesheet)"
+
+#~ msgid "Link using field"
+#~ msgstr "Hubungkan menggunakan field"
+
+#~ msgid "List of modules in which the field is defined"
+#~ msgstr "Daftar modul-modul yang field-nya terdefinisi"
+
+#~ msgid "List of modules in which the object is defined or inherited"
+#~ msgstr "Daftar modul-modul yang objeknya terdefinisi atau terwariskan"
+
+#~ msgid "Lithuania"
+#~ msgstr "Lithuania"
+
+#~ msgid "Load a Translation"
+#~ msgstr "Muat Terjemahan"
+
+#~ msgid "Localization"
+#~ msgstr "Lokalisasi"
+
+#~ msgid "Login"
+#~ msgstr "Log masuk"
+
+#~ msgid "Logs"
+#~ msgstr "Catatan"
+
+#~ msgid "Loyalty Program"
+#~ msgstr "Program loyalitas"
+
+#~ msgid "Lunch"
+#~ msgstr "Makan siang"
+
+#~ msgid "Luxembourg"
+#~ msgstr "Luxembourg"
+
+#~ msgid "Luxembourg - Accounting"
+#~ msgstr "Luxembourg - Akuntansi"
+
+#~ msgid "Luxembourg - Accounting Reports"
+#~ msgstr "Luxembourg - Laporan Akuntansi"
+
+#~ msgid "Madam"
+#~ msgstr "Nyonya"
+
+#~ msgid "Main Sequence"
+#~ msgstr "Penomoran Utama"
+
+#~ msgid "Malawi"
+#~ msgstr "Malawi"
+
+#~ msgid "Malaysia"
+#~ msgstr "Malaysia"
+
+#~ msgid "Maldives"
+#~ msgstr "Maladewa"
+
+#~ msgid ""
+#~ "Manage and customize the items available and displayed in your Odoo "
+#~ "system menu. You can delete an item by clicking on the box at the "
+#~ "beginning of each line and then delete it through the button that "
+#~ "appeared. Items can be assigned to specific groups in order to make them "
+#~ "accessible to some users within the system."
+#~ msgstr ""
+#~ "Mengelola dan menyesuaikan item-item yang tersedia dan ditampilkan di "
+#~ "menu sistem Odoo Anda. Anda dapat menghapus sebuah item dengan mengeklik "
+#~ "kotak yang ada di awal tiap garis kemudian menghapusnya melalui tombol "
+#~ "yang muncul. Item-item dapat diperuntukkan kepada kelompok-kelompok "
+#~ "spesifik agar mereka tampak oleh beberapa pengguna sistem saja."
+
+#~ msgid "Manage bank records you want to be used in the system."
+#~ msgstr "Mengelola catatan bank yang ingin Anda gunakan dalam sistem."
+
+#~ msgid "Manage employee attendances"
+#~ msgstr "Mengelola kehadiran karyawan"
+
+#~ msgid "Manufacturing"
+#~ msgstr "Produksi"
+
+#~ msgid "Many2One"
+#~ msgstr "Many2One"
+
+#~ msgid "ManyToMany Relations"
+#~ msgstr "Relasi ManyToMany"
+
+#~ msgid "Marketing"
+#~ msgstr "Pemasaran"
+
+#~ msgid "Mass Mailing"
+#~ msgstr "Pengiriman Massal"
+
+#~ msgid "Medium-sized image"
+#~ msgstr "Gambar ukuran sedang"
+
+#~ msgid "Menu"
+#~ msgstr "Menu"
+
+#~ msgid "Message"
+#~ msgstr "Pesan"
+
+#~ msgid "Mime Type"
+#~ msgstr "Jenis MIME"
+
+#~ msgid "Minute: %(min)s"
+#~ msgstr "Menit: %(min)s"
+
+#~ msgid "Minutes"
+#~ msgstr "Menit"
+
+#~ msgid "Misc"
+#~ msgstr "Lain-Lain"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "Lain-lain"
+
+#~ msgid "Miss"
+#~ msgstr "Ibu"
+
+#~ msgid "Mister"
+#~ msgstr "Bapak"
+
+#~ msgid "Mobile:"
+#~ msgstr "Ponsel:"
+
+#~ msgid "Model"
+#~ msgstr "Model"
+
+#~ msgid "Model Name"
+#~ msgstr "Nama Model"
+
+#~ msgid "Models"
+#~ msgstr "Model"
+
+#~ msgid "Module"
+#~ msgstr "Modul"
+
+#~ msgid "Module Name"
+#~ msgstr "Nama Modul"
+
+#~ msgid "Module Upgrade Install"
+#~ msgstr "Pasang Pembaruan Modul"
+
+#~ msgid "Month"
+#~ msgstr "Bulan"
+
+#~ msgid "Months"
+#~ msgstr "Bulan"
+
+#~ msgid "Mr."
+#~ msgstr "Tn."
+
+#~ msgid "Mrs."
+#~ msgstr "Ny."
+
+#~ msgid "Multi Currencies"
+#~ msgstr "Banyak Mata Uang"
+
+#~ msgid "My Document(s)"
+#~ msgstr "Dokumen saya"
+
+#~ msgid "My filters"
+#~ msgstr "Penyaring saya"
+
+#~ msgid "Name:"
+#~ msgstr "Nama:"
+
+#~ msgid "New Password"
+#~ msgstr "Sandi Baru"
+
+#~ msgid "New Window"
+#~ msgstr "Jendela baru"
+
+#~ msgid "Next Number"
+#~ msgstr "Jumlah Berikutnya"
+
+#~ msgid "Next number of this sequence"
+#~ msgstr "Nomor berikutnya dari penomoran ini"
+
+#~ msgid "No gap"
+#~ msgstr "Tidak ada gap"
+
+#~ msgid "Non Updatable"
+#~ msgstr "Tidak dapat diperbarui"
+
+#~ msgid "Non-Portal Groups"
+#~ msgstr "Kelompok-kelompok non-Portal"
+
+#~ msgid "None"
+#~ msgstr "Tidak Ada"
+
+#~ msgid "Norfolk Island"
+#~ msgstr "Pulau Norfolk"
+
+#~ msgid "North Korea"
+#~ msgstr "Korea Utara"
+
+#~ msgid "Northern Mariana Islands"
+#~ msgstr "Kepulauan Mariana Utara"
+
+#~ msgid "Norway"
+#~ msgstr "Norwegia"
+
+#~ msgid "Norway - Accounting"
+#~ msgstr "Norwegia - Akuntansi"
+
+#~ msgid "Norway - Accounting Reports"
+#~ msgstr "Norwegia - Laporan Akuntansi"
+
+#~ msgid "Not Installed"
+#~ msgstr "Tidak Terpasang"
+
+#~ msgid "Notes"
+#~ msgstr "Catatan"
+
+#~ msgid "Number of Apps"
+#~ msgstr "Jumlah Aplikasi"
+
+#~ msgid "Number of Calls"
+#~ msgstr "Jumlah Panggilan"
+
+#~ msgid "Number of modules added"
+#~ msgstr "Jumlah modul yang ditambahkan"
+
+#~ msgid "Number of modules updated"
+#~ msgstr "Jumlah modul yang diperbarui"
+
+#~ msgid "OAuth2 Authentication"
+#~ msgstr "Otentikasi OAuth2"
+
+#~ msgid "OHADA - Accounting"
+#~ msgstr "OHADA - Akuntansi"
+
+#~ msgid "Object"
+#~ msgstr "Obyek"
+
+#~ msgid "Object Name"
+#~ msgstr "Nama objek"
+
+#~ msgid "Object Relation"
+#~ msgstr "Relasi Objek"
+
+#~ msgid "Object:"
+#~ msgstr "Obyek:"
+
+#~ msgid "Odoo Enterprise Edition License v1.0"
+#~ msgstr "Lisensi Odoo Enterprise v1.0"
+
+#~ msgid "Odoo Settings Dashboard"
+#~ msgstr "Dasbor Pengaturan Odoo"
+
+#~ msgid ""
+#~ "Odoo will automatically adds some '0' on the left of the 'Next Number' to "
+#~ "get the required padding size."
+#~ msgstr ""
+#~ "Odoo otomatis akan menambahkan beberapa '0' di sebelah kiri dari 'Nomor "
+#~ "Berikutnya' untuk memperoleh jumlah digit yang diperlukan."
+
+#~ msgid "Online Events"
+#~ msgstr "Acara Daring"
+
+#~ msgid "Open Apps"
+#~ msgstr "Buka Aplikasi"
+
+#~ msgid "Open Settings Menu"
+#~ msgstr "Buka Menu Pengaturan"
+
+#~ msgid "Optional password for SMTP authentication"
+#~ msgstr "Sandi opsional untuk autentikasi SMTP"
+
+#~ msgid "Orientation"
+#~ msgstr "Orientasi"
+
+#~ msgid "Other Partners"
+#~ msgstr "Rekanan Lain"
+
+#~ msgid "Other address"
+#~ msgstr "Alamat Lainnya"
+
+#~ msgid "Outgoing Mail Server"
+#~ msgstr "Server - Surat Keluar"
+
+#~ msgid "Outgoing Mail Servers"
+#~ msgstr "Server - Surat Keluar"
+
+#~ msgid "Output DPI"
+#~ msgstr "Hasil DPI"
+
+#~ msgid "Owner"
+#~ msgstr "Pemilik"
+
+#~ msgid "Page height (mm)"
+#~ msgstr "Tinggi halaman (mm)"
+
+#~ msgid "Page width (mm)"
+#~ msgstr "Lebar halaman (mm)"
+
+#~ msgid "Paper Format"
+#~ msgstr "Format Kertas"
+
+#~ msgid "Paper Format General Configuration"
+#~ msgstr "Konfigurasi Umum Format Kertas"
+
+#~ msgid "Paper format configuration"
+#~ msgstr "Konfigurasi format kertas"
+
+#~ msgid "Paper size"
+#~ msgstr "Ukuran kertas"
+
+#~ msgid "Parameters"
+#~ msgstr "Parameter"
+
+#~ msgid "Parent Application"
+#~ msgstr "Aplikasi Induk"
+
+#~ msgid "Parent Company"
+#~ msgstr "Perusahaan Induk"
+
+#~ msgid "Parent Left"
+#~ msgstr "Induk Kiri"
+
+#~ msgid "Parent Menu"
+#~ msgstr "Menu Induk"
+
+#~ msgid "Parent Right"
+#~ msgstr "Induk Kanan"
+
+#~ msgid "Parent name"
+#~ msgstr "Nama Induk"
+
+#~ msgid "Partner"
+#~ msgstr "Rekanan"
+
+#~ msgid "Partner Tags"
+#~ msgstr "Tag Rekanan"
+
+#~ msgid "Partner Titles"
+#~ msgstr "Jabatan Rekanan"
+
+#~ msgid "Partner-related data of the user"
+#~ msgstr "Data terkait rekanan dari pengguna"
+
+#~ msgid "Partners"
+#~ msgstr "Rekanan"
+
+#~ msgid "Partners: "
+#~ msgstr "Rekanan:"
+
+#~ msgid "Password"
+#~ msgstr "Sandi"
+
+#~ msgid "Password Encryption"
+#~ msgstr "Enkripsi Sandi"
+
+#~ msgid "Payment Acquirer"
+#~ msgstr "Penerima Pembayaran"
+
+#~ msgid "Payroll"
+#~ msgstr "Penggajian"
+
+#~ msgid "Phone:"
+#~ msgstr "Telepon"
+
+#~ msgid "Pivot"
+#~ msgstr "Poros"
+
+#~ msgid "Planner"
+#~ msgstr "Perencanaan"
+
+#~ msgid "Point of Sale"
+#~ msgstr "POS"
+
+#~ msgid "Portal"
+#~ msgstr "Portal"
+
+#~ msgid "Portal Groups"
+#~ msgstr "Kelompok-kelompok portal"
+
+#~ msgid "Portrait"
+#~ msgstr "Tegak"
+
+#~ msgid "Preferences"
+#~ msgstr "Preferensi"
+
+#~ msgid "Prefix"
+#~ msgstr "Prefiks"
+
+#~ msgid "Prefix value of the record for the sequence"
+#~ msgstr "Prefiks penomoran dari dokumen"
+
+#~ msgid "Print Invoice"
+#~ msgstr "Cetak Faktur"
+
+#~ msgid "Print Sale"
+#~ msgstr "Cetak Penjualan"
+
+#~ msgid "Printed Report Name"
+#~ msgstr "Cetak Nama Laporan"
+
+#~ msgid "Priority"
+#~ msgstr "Prioritas"
+
+#~ msgid "Product Email Template"
+#~ msgstr "Templete Email Produk"
+
+#~ msgid "Products & Pricelists"
+#~ msgstr "Produk & Daftar Harga"
+
+#~ msgid "Products Expiration Date"
+#~ msgstr "Tanggal Kadaluarsa Produk"
+
+#~ msgid "Professor"
+#~ msgstr "Profesor"
+
+#~ msgid "Project"
+#~ msgstr "Proyek"
+
+#~ msgid "Project Forecast"
+#~ msgstr "Telaah Proyek"
+
+#~ msgid "Properties"
+#~ msgstr "Properti"
+
+#~ msgid "Public"
+#~ msgstr "Umum"
+
+#~ msgid "Publish Associations, Groups and Memberships"
+#~ msgstr "Publikasi Asosiasi, Grup dan Keanggotaan"
+
+#~ msgid "Publish Your Channel of Resellers"
+#~ msgstr "Publikasi Daftar Penjualan"
+
+#~ msgid "Publish Your Customer References"
+#~ msgstr "Publikasi Daftar Pelanggan"
+
+#~ msgid "Purchase"
+#~ msgstr "Pembelian"
+
+#~ msgid "Purchase Agreements"
+#~ msgstr "Perjanjian Pembelian"
+
+#~ msgid "Purchase Management"
+#~ msgstr "Manajemen Pembelian"
+
+#~ msgid "Purchase Orders, Receipts, Vendor Bills"
+#~ msgstr "Order Pembelian, Penerimaan, Tegihan Pemasok"
+
+#~ msgid "Purchases"
+#~ msgstr "# Pembelian"
+
+#~ msgid "Python Code"
+#~ msgstr "Kode Python"
+
+#~ msgid "QWeb"
+#~ msgstr "QWeb"
+
+#~ msgid "QWeb views"
+#~ msgstr "Tampilan QWeb"
+
+#~ msgid "Quotations, Sales Orders, Invoicing"
+#~ msgstr "Penawaran, Order Penjualan, Penagihan"
+
+#~ msgid "Recruitment"
+#~ msgstr "Perekrutan"
+
+#~ msgid "Related Partner"
+#~ msgstr "Rekanan Terkait"
+
+#~ msgid "Relation Field"
+#~ msgstr "Kolom Relasi"
+
+#~ msgid "Relation Name"
+#~ msgstr "Nama Relasi"
+
+#~ msgid "Relation Table"
+#~ msgstr "Tabel Relasi"
+
+#~ msgid "Remove from the 'Print' menu"
+#~ msgstr "Hapus dari menu 'Cetak'"
+
+#~ msgid "Repairs Management"
+#~ msgstr "Manajemen Reparasi"
+
+#~ msgid "Report"
+#~ msgstr "Laporan"
+
+#~ msgid "Report File"
+#~ msgstr "Berkas Laporan"
+
+#~ msgid "Report Footer"
+#~ msgstr "Laporan - Footer"
+
+#~ msgid "Report Model"
+#~ msgstr "Laporan - Model"
+
+#~ msgid "Report Type"
+#~ msgstr "Tipe Laporan"
+
+#~ msgid "Report Xml"
+#~ msgstr "Laporan Xml"
+
+#~ msgid "Report xml"
+#~ msgstr "Laporan xml"
+
+#~ msgid "Report/Template"
+#~ msgstr "Laporan/Template"
+
+#~ msgid "Reporting"
+#~ msgstr "Laporan"
+
+#~ msgid "Reports"
+#~ msgstr "Laporan"
+
+#~ msgid "Required"
+#~ msgstr "Wajib"
+
+#~ msgid "Resellers"
+#~ msgstr "Reseller"
+
+#~ msgid "Resource"
+#~ msgstr "Sumber Daya"
+
+#~ msgid "Resource Field"
+#~ msgstr "Kolom Sumber Daya"
+
+#~ msgid "Resource ID"
+#~ msgstr "ID Sumber Daya"
+
+#~ msgid "Resource Model"
+#~ msgstr "Model Sumber Daya"
+
+#~ msgid "Resource Name"
+#~ msgstr "Nama Sumber Daya"
+
+#~ msgid "Restaurant"
+#~ msgstr "Restoran"
+
+#~ msgid "Right Margin (mm)"
+#~ msgstr "Margin Kanan (mm)"
+
+#~ msgid "Right parent"
+#~ msgstr "Induk Kanan"
+
+#~ msgid "Right-to-Left"
+#~ msgstr "Kanan-ke-Kiri"
+
+#~ msgid "Rules"
+#~ msgstr "Peraturan"
+
+#~ msgid "SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases."
+#~ msgstr "SMTP Port. biasanya SSL = 465, dan selain SSL adalah 25 atau 587."
+
+#~ msgid "SMTP Server"
+#~ msgstr "SMTP Server"
+
+#~ msgid "SSL/TLS"
+#~ msgstr "SSL / TLS"
+
+#~ msgid "Sale"
+#~ msgstr "Penjualan"
+
+#~ msgid "Sale & Purchase Vouchers"
+#~ msgstr "Voucher Penjualan & Pembelian"
+
+#~ msgid "Sales"
+#~ msgstr "Penjualan"
+
+#~ msgid "Sales & Purchases"
+#~ msgstr "Penjualan & Pembelian"
+
+#~ msgid "Sales Channels"
+#~ msgstr "Saluran Penjualan"
+
+#~ msgid "Sales Expense"
+#~ msgstr "Biaya Penjualan"
+
+#~ msgid "Sales Management"
+#~ msgstr "Manajemen Penjualan"
+
+#~ msgid "Sales and MRP Management"
+#~ msgstr "Manajemen Penjualan dan MRP"
+
+#~ msgid "Sales and Warehouse Management"
+#~ msgstr "Manajemen Penjualan dan Gudang"
+
+#~ msgid "Salesperson"
+#~ msgstr "Penjual"
+
+#~ msgid "Save"
+#~ msgstr "Simpan"
+
+#~ msgid "Search"
+#~ msgstr "Pencarian"
+
+#~ msgid "Search Partner"
+#~ msgstr "Pencarian Rekanan"
+
+#~ msgid "Search..."
+#~ msgstr "Cari ..."
+
+#~ msgid "Security"
+#~ msgstr "Keamanan"
+
+#~ msgid "Select Proper Paper size"
+#~ msgstr "Pilih ukuran kertas yang tepat"
+
+#~ msgid ""
+#~ "Selecting the \"Warning\" option will notify user with the message, "
+#~ "Selecting \"Blocking Message\" will throw an exception with the message "
+#~ "and block the flow. The Message has to be written in the next field."
+#~ msgstr ""
+#~ "Memilih opsi \"Peringatan\" akan memberitahu pengguna dengan pesan, "
+#~ "Memilih \"Blokir Pesan\" akan memunculkan pengecualian dengan pesan dan "
+#~ "memblokir alur. Pesan harus ditulis pada kolom berikutnya."
+
+#~ msgid "Send Invoices and Track Payments"
+#~ msgstr "Kirim Faktur dan Telusuri Pembayaran"
+
+#~ msgid "Sequence"
+#~ msgstr "Penomoran"
+
+#~ msgid "Sequences"
+#~ msgstr "Penomoran"
+
+#~ msgid "Server"
+#~ msgstr "Server"
+
+#~ msgid "Server Action"
+#~ msgstr "Tindakan Server"
+
+#~ msgid "Services"
+#~ msgstr "Jasa"
+
+#~ msgid "Set Password"
+#~ msgstr "Tetapkan Sandi"
+
+#~ msgid "Settings"
+#~ msgstr "Pengaturan"
+
+#~ msgid "Share Group"
+#~ msgstr "Berbagi Kelompok"
+
+#~ msgid "Share User"
+#~ msgstr "Berbagi Pengguna"
+
+#~ msgid "Signature"
+#~ msgstr "Tanda Tangan"
+
+#~ msgid "Signup"
+#~ msgstr "Mendaftar"
+
+#~ msgid "Silver"
+#~ msgstr "Perak"
+
+#~ msgid "Size"
+#~ msgstr "Ukuran"
+
+#~ msgid "Skip"
+#~ msgstr "Lewati"
+
+#~ msgid "Slides"
+#~ msgstr "Slide"
+
+#~ msgid "Small-sized image"
+#~ msgstr "Gambar berukuran kecil"
+
+#~ msgid "Sort"
+#~ msgstr "Urutkan"
+
+#~ msgid "Source Model"
+#~ msgstr "Model Sumber"
+
+#~ msgid "Source Object"
+#~ msgstr "Objek Sumber"
+
+#~ msgid "South Africa"
+#~ msgstr "Afrika Selatan"
+
+#~ msgid "South Korea"
+#~ msgstr "Korea Selatan"
+
+#~ msgid "South Sudan"
+#~ msgstr "Sudan Selatan"
+
+#~ msgid "Spain"
+#~ msgstr "Spanyol"
+
+#~ msgid ""
+#~ "Specify a value only when creating a user or if you're changing the "
+#~ "user's password, otherwise leave empty. After a change of password, the "
+#~ "user has to login again."
+#~ msgstr ""
+#~ "Tentukan nilai yang digunakan ketika membuat pengguna baru atau ketika "
+#~ "Anda menganti kata sandi pengguna, atau biarkan kosong. Setelah ganti "
+#~ "kata sandi, pengguna harus log masuk kembali."
+
+#~ msgid "Standard"
+#~ msgstr "Standar"
+
+#~ msgid "Start configuration"
+#~ msgstr "Mulai konfigurasi"
+
+#~ msgid "State"
+#~ msgstr "Propinsi"
+
+#~ msgid "State Code"
+#~ msgstr "Kode Propinsi"
+
+#~ msgid "State Name"
+#~ msgstr "Nama Propinsi"
+
+#~ msgid "States"
+#~ msgstr "Negara"
+
+#~ msgid "Status"
+#~ msgstr "Status"
+
+#~ msgid "Stock"
+#~ msgstr "Stok"
+
+#~ msgid "Street"
+#~ msgstr "Jalan"
+
+#~ msgid "Street 2..."
+#~ msgstr "Tambahan nama jalan..."
+
+#~ msgid "Street..."
+#~ msgstr "Nama jalan..."
+
+#~ msgid "Street2"
+#~ msgstr "Jalan2"
+
+#~ msgid "Subject"
+#~ msgstr "Judul"
+
+#~ msgid "Subscription Management"
+#~ msgstr "Manajemen Subskripsi"
+
+#~ msgid "Suffix"
+#~ msgstr "Sufiks"
+
+#~ msgid "Suffix value of the record for the sequence"
+#~ msgstr "Sufiks penomoran dari dokumen"
+
+#~ msgid "Summary"
+#~ msgstr "Ringkasan"
+
+#~ msgid "Supplementary arguments"
+#~ msgstr "Argumen tambahan"
+
+#~ msgid "Survey"
+#~ msgstr "Survei"
+
+#~ msgid "Surveys"
+#~ msgstr "Survei"
+
+#~ msgid "Swaziland"
+#~ msgstr "Swaziland"
+
+#~ msgid "Symbol"
+#~ msgstr "Simbol"
+
+#~ msgid "Symbol Position"
+#~ msgstr "Posisi Simbol"
+
+#~ msgid "System Parameters"
+#~ msgstr "Parameter Sistem"
+
+#~ msgid "System Properties"
+#~ msgstr "Properti Sistem"
+
+#~ msgid "System Update"
+#~ msgstr "Perbarui Sistem"
+
+#~ msgid "TIN"
+#~ msgstr "NPWP"
+
+#~ msgid "Tabloid 29 279.4 x 431.8 mm"
+#~ msgstr "Tabloid 29 279,4 x 431,8 mm"
+
+#~ msgid "Tag"
+#~ msgstr "Tag"
+
+#~ msgid "Tag Name"
+#~ msgstr "Nama Tag"
+
+#~ msgid "Tags"
+#~ msgstr "Tag"
+
+#~ msgid "Taiwan"
+#~ msgstr "Taiwan"
+
+#~ msgid "Target Window"
+#~ msgstr "Jendela Sasaran"
+
+#~ msgid ""
+#~ "Tax Identification Number. Fill it if the company is subjected to taxes. "
+#~ "Used by the some of the legal statements."
+#~ msgstr ""
+#~ "Nomor Pokok Wajib Pajak. Diisi jika perusahaan merupakan Pengusaha Kena "
+#~ "Pajak (PKP)."
+
+#~ msgid "Technical"
+#~ msgstr "Teknis"
+
+#~ msgid "Technical Data"
+#~ msgstr "Data Teknis"
+
+#~ msgid "Technical Features"
+#~ msgstr "Fitur Teknis"
+
+#~ msgid "Technical Name"
+#~ msgstr "Nama Teknis"
+
+#~ msgid "Technical Settings"
+#~ msgstr "Pengaturan Teknis"
+
+#~ msgid "Technical guide"
+#~ msgstr "Panduan teknis"
+
+#~ msgid "Template Name"
+#~ msgstr "Nama Template"
+
+#~ msgid "Test API"
+#~ msgstr "Coba API"
+
+#~ msgid "Tests"
+#~ msgstr "Tes"
+
+#~ msgid "Text"
+#~ msgstr "Teks"
+
+#~ msgid ""
+#~ "The active field allows you to hide the category without removing it."
+#~ msgstr ""
+#~ "Kolom aktif digunakan untuk menyembunyikan kategori tanpa menghapusnya."
+
+#~ msgid "The code of the country must be unique !"
+#~ msgstr "Kode negara harus unik !"
+
+#~ msgid "The code of the language must be unique !"
+#~ msgstr "Kode bahasa harus unik !"
+
+#~ msgid "The code of the state must be unique by country !"
+#~ msgstr "Kode propinsi harus unik per negara !"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "Nama perusahaan harus unik !"
+
+#~ msgid "The company this user is currently working for."
+#~ msgstr "Perusahaan tempat kerja dari pengguna"
+
+#~ msgid "The currency code must be unique!"
+#~ msgstr "Kode mata uang harus unik!"
+
+#~ msgid "The following apps will be uninstalled"
+#~ msgstr "Aplikasi berikut ini akan dibongkar"
+
+#~ msgid "The following documents will be permanently lost"
+#~ msgstr "Dokumen berikut ini akan hilang secara permanen"
+
+#~ msgid "The full name of the country."
+#~ msgstr "Nama lengkap negara"
+
+#~ msgid ""
+#~ "The internal user that is in charge of communicating with this contact if "
+#~ "any."
+#~ msgstr ""
+#~ "Pengguna/user yang ditugaskan berhubungan dengan kontak ini, jika ada."
+
+#~ msgid "The name of the language must be unique !"
+#~ msgstr "Nama bahasa harus unik"
+
+#~ msgid "The next number of the sequence will be incremented by this number"
+#~ msgstr "Nomor berikutnya dari penomoran akan bertambah sejumlah ini"
+
+#~ msgid ""
+#~ "The optional domain to restrict possible values for relationship fields, "
+#~ "specified as a Python expression defining a list of triplets. For "
+#~ "example: [('color','=','red')]"
+#~ msgstr ""
+#~ "Sebuah domain (opsional) untuk membatasi nilai untuk field yang terelasi, "
+#~ "dimana merupakan ekspresi Python yang mendefinisikan daftar triplet. "
+#~ "Sebagai contoh: [('color', '=', 'merah')]"
+
+#~ msgid ""
+#~ "The requested operation cannot be completed due to security restrictions. "
+#~ "Please contact your system administrator.\n"
+#~ "\n"
+#~ "(Document type: %s, Operation: %s)"
+#~ msgstr ""
+#~ "Operasi yang diminta tidak dapat diselesaikan karena batasan keamanan. "
+#~ "Hubungi administrator sistem Anda.\n"
+#~ "\n"
+#~ "(Jenis dokumen: %s, Operasi: %s)"
+
+#~ msgid "The selected modules have been updated / installed !"
+#~ msgstr "Modul yang dipilih telah selesai diperbarui/dipasang!"
+
+#~ msgid "The technical name of the model this field belongs to"
+#~ msgstr "Nama teknis dari model"
+
+#~ msgid ""
+#~ "The user this filter is private to. When left empty the filter is public "
+#~ "and available to all users."
+#~ msgstr ""
+#~ "Filter untuk pribadi. Apabila dikosongkan maka filter berlaku umum dan "
+#~ "tersedia untuk semua pengguna"
+
+#~ msgid "Theme"
+#~ msgstr "Tema"
+
+#~ msgid "This ISO code is the name of po files to use for translations"
+#~ msgstr "Kode ISO sama dengan .po file, digunakan untuk penterjemahan"
+
+#~ msgid ""
+#~ "This is the filename of the report going to download. Keep empty to not "
+#~ "change the report filename. You can use a python expression with the "
+#~ "object and time variables."
+#~ msgstr ""
+#~ "Ini adalah nama file laporan yang akan diunduh. Biarkan kosong supaya "
+#~ "tidak mengubah nama file laporan. Anda bisa menggunakan ekspresi python "
+#~ "dengan variabel objek dan waktu."
+
+#~ msgid "This module will trigger the uninstallation of below modules."
+#~ msgstr ""
+#~ "Modul ini akan mengakibatkan pembongkaran dari modul-modul di bawah ini."
+
+#~ msgid "Thousands Separator"
+#~ msgstr "Pemisah Ribuan"
+
+#~ msgid "Time Format"
+#~ msgstr "Format Waktu"
+
+#~ msgid "Timesheets"
+#~ msgstr "Tabel Waktu"
+
+#~ msgid "Timezone"
+#~ msgstr "Zona waktu"
+
+#~ msgid "Title"
+#~ msgstr "Gelar"
+
+#~ msgid "To"
+#~ msgstr "Kepada"
+
+#~ msgid "To Do"
+#~ msgstr "Todo"
+
+#~ msgid "To Translate"
+#~ msgstr "Yang Perlu Diterjemahkan"
+
+#~ msgid "To be installed"
+#~ msgstr "Akan dipasang"
+
+#~ msgid "Todo"
+#~ msgstr "Todo"
+
+#~ msgid "Tools"
+#~ msgstr "Alat"
+
+#~ msgid "Top Margin (mm)"
+#~ msgstr "Margin Atas (mm)"
+
+#~ msgid "Touchscreen Interface for Shops"
+#~ msgstr "Antarmuka Layar Sentuh untuk Toko"
+
+#~ msgid "Translatable"
+#~ msgstr "Dapat Diterjemahkan"
+
+#~ msgid "Translated"
+#~ msgstr "Telah Diterjemahkan"
+
+#~ msgid "Translated Terms"
+#~ msgstr "Istilah yang Telah Diterjemahkan"
+
+#~ msgid "Translation"
+#~ msgstr "Terjemahan"
+
+#~ msgid "Translation Value"
+#~ msgstr "Nilai Terjemahan"
+
+#~ msgid "Translation comments"
+#~ msgstr "Komentar terjemahan"
+
+#~ msgid "Translation in Progress"
+#~ msgstr "Terjemahan yang Sedang Dikerjakan"
+
+#~ msgid "Translations"
+#~ msgstr "Terjemahan"
+
+#~ msgid "Tree"
+#~ msgstr "Daftar"
+
+#~ msgid "Turkey - Accounting"
+#~ msgstr "Turki - Akuntansi"
+
+#~ msgid "Tuvalu"
+#~ msgstr "Tuvalu"
+
+#~ msgid "Type"
+#~ msgstr "Tipe"
+
+#~ msgid "Type:"
+#~ msgstr "Tipe:"
+
+#~ msgid "URL"
+#~ msgstr "URL"
+
+#~ msgid "Uganda"
+#~ msgstr "Uganda"
+
+#~ msgid "Ukraine"
+#~ msgstr "Ukraina"
+
+#~ msgid "Uncategorized"
+#~ msgstr "Tidak Berkategori"
+
+#~ msgid "Uninstallable"
+#~ msgstr "Dapat Dibongkar"
+
+#~ msgid "Unknown"
+#~ msgstr "Tidak diketahui"
+
+#~ msgid "Untranslated"
+#~ msgstr "Belum Diterjemahkan"
+
+#~ msgid "Update"
+#~ msgstr "Diperbarui"
+
+#~ msgid "Update Apps List"
+#~ msgstr "Perbarui Daftar Aplikasi"
+
+#~ msgid "Update Date"
+#~ msgstr "Tanggal Pembaharuan"
+
+#~ msgid "Update Module"
+#~ msgstr "Perbarui Modul"
+
+#~ msgid "Update Module List"
+#~ msgstr "Perbarui Daftar Modul"
+
+#~ msgid "Update Terms"
+#~ msgstr "Perbarui Istilah"
+
+#~ msgid "Updates"
+#~ msgstr "Perbarui"
+
+#~ msgid "Url"
+#~ msgstr "Url"
+
+#~ msgid "Usage"
+#~ msgstr "Penggunaan"
+
+#~ msgid "Used to log into the system"
+#~ msgstr "Digunakan untuk masuk ke sistem"
+
+#~ msgid "User"
+#~ msgstr "Pengguna"
+
+#~ msgid "User Interface"
+#~ msgstr "Antar-muka Pengguna"
+
+#~ msgid "User Login"
+#~ msgstr "Log Masuk Pengguna"
+
+#~ msgid "User-defined Filters"
+#~ msgstr "Penyaring yang ditentukan pengguna"
+
+#~ msgid "Username"
+#~ msgstr "Nama pengguna"
+
+#~ msgid "Value"
+#~ msgstr "Nilai"
+
+#~ msgid "Vendor"
+#~ msgstr "Pemasok"
+
+#~ msgid "Vendors"
+#~ msgstr "Pemasok"
+
+#~ msgid "Venezuela"
+#~ msgstr "Venezuela"
+
+#~ msgid "Version"
+#~ msgstr "Versi"
+
+#~ msgid "Vietnam"
+#~ msgstr "Vietnam"
+
+#~ msgid "View"
+#~ msgstr "Tampilan"
+
+#~ msgid "View Architecture"
+#~ msgstr "Lihat Arsitektur"
+
+#~ msgid "Views"
+#~ msgstr "Tampilan"
+
+#~ msgid "Warehouse"
+#~ msgstr "Gudang"
+
+#~ msgid "Web"
+#~ msgstr "Web"
+
+#~ msgid "Website"
+#~ msgstr "Situs Web"
+
+#~ msgid "Website Versioning"
+#~ msgstr "Versi Website"
+
+#~ msgid "Website of Partner or Company"
+#~ msgstr "Situs Web Rekanan atau Perusahaan"
+
+#~ msgid "Week of the Year: %(woy)s"
+#~ msgstr "Minggu dalam Setahun: %(woy)s"
+
+#~ msgid "Weeks"
+#~ msgstr "Minggu"
+
+#~ msgid "Wholesale/Retail"
+#~ msgstr "Grosir/Eceran"
+
+#~ msgid "Window Actions"
+#~ msgstr "Aksi Jendela"
+
+#~ msgid "Wizard"
+#~ msgstr "Wisaya"
+
+#~ msgid "Write Access"
+#~ msgstr "Akses Menulis"
+
+#~ msgid "Write Access Right"
+#~ msgstr "Hak Akses Menulis"
+
+#~ msgid "Yemen"
+#~ msgstr "Yaman"
+
+#~ msgid "Yodlee"
+#~ msgstr "Yodlee"
+
+#~ msgid ""
+#~ "You are creating a new user. After saving, the user will receive an "
+#~ "invite email containing a link to set its password."
+#~ msgstr ""
+#~ "Anda sedang membuat pengguna baru. Setelah disimpan, pengguna akan "
+#~ "menerima email yang memiliki sebuah tautan untuk menganti kata sandi."
+
+#~ msgid ""
+#~ "You can either upload a file from your computer or copy/paste an internet "
+#~ "link to your file."
+#~ msgstr ""
+#~ "Anda juga dapat mengunggah berkas dari komputer atau salin/tempel dari "
+#~ "tautan internet ke berkas anda."
+
+#~ msgid ""
+#~ "You can not change the company as the partner/user has multiple user "
+#~ "linked with different companies."
+#~ msgstr ""
+#~ "Anda tidak bisa mengubah perusahaan menjadi rekanan/pengguna yang "
+#~ "memiliki banyak pengguna yang terhubung dengan perusahan yang berbeda."
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "Anda tidak dapat membuat dua pengguna dengan login yang sama !"
+
+#~ msgid "You should try other search criteria."
+#~ msgstr "Anda harus coba mencari kriteria lainnya."
+
+#~ msgid ""
+#~ "You will be able to define additional access rights by editing the newly "
+#~ "created user under the Settings / Users menu."
+#~ msgstr ""
+#~ "Anda akan dapat memberikan akses tambahan dengan mengubah akun pengguna "
+#~ "baru tersebut di menu Pengaturan / Pengguna."
+
+#~ msgid "ZIP"
+#~ msgstr "Kode Pos"
+
+#~ msgid "Zambia"
+#~ msgstr "Zambia"
+
+#~ msgid "Zimbabwe"
+#~ msgstr "Zimbabwe"
+
+#~ msgid "Zip"
+#~ msgstr "Kode Pos"
+
+#~ msgid "[('blue', 'Blue'),('yellow', 'Yellow')]"
+#~ msgstr "[('blue', 'Biru'),('yellow', 'Kuning')]"
+
+#~ msgid "_Import"
+#~ msgstr "_Impor"
+
+#~ msgid "_unknown"
+#~ msgstr "_unknown"
+
+#~ msgid "account_online_sync"
+#~ msgstr "account_online_sync"
+
+#~ msgid "account_plaid"
+#~ msgstr "account_plaid"
+
+#~ msgid "at"
+#~ msgstr "pada"
+
+#~ msgid "base"
+#~ msgstr "base"
+
+#~ msgid "base.language.export"
+#~ msgstr "base.language.export"
+
+#~ msgid "base.update.translations"
+#~ msgstr "base.update.translations"
+
+#~ msgid "binary"
+#~ msgstr "biner"
+
+#~ msgid "choose"
+#~ msgstr "pilih"
+
+#~ msgid "documentation"
+#~ msgstr "dokumentasi"
+
+#~ msgid "done"
+#~ msgstr "selesai"
+
+#~ msgid "e.g. BE0477472701"
+#~ msgstr "mis. BE0477472701"
+
+#~ msgid "e.g. English"
+#~ msgstr "misalnya: Bahasa Inggris"
+
+#~ msgid "e.g. Global Business Solutions"
+#~ msgstr "misalnya: Global Business Solutions"
+
+#~ msgid "e.g. Mr."
+#~ msgstr "misalnya: Bapak"
+
+#~ msgid "e.g. Sales Director"
+#~ msgstr "misalnya: Direktur Penjualan"
+
+#~ msgid "e.g. Update order quantity"
+#~ msgstr "misalnya: Perbarui kuantitas pesanan"
+
+#~ msgid "e.g. en_US"
+#~ msgstr "misalnya: en_US"
+
+#~ msgid "e.g. www.odoo.com"
+#~ msgstr "misalnya: www.odoo.com"
+
+#~ msgid "eCommerce"
+#~ msgstr "eCommerce"
+
+#~ msgid "eCommerce Delivery"
+#~ msgstr "Pengiriman eCommerce"
+
+#~ msgid "eCommerce Optional Products"
+#~ msgstr "Produk Pilihan eCommerce"
+
+#~ msgid "email@yourcompany.com"
+#~ msgstr "surel@perusahaananda.com"
+
+#~ msgid "false"
+#~ msgstr "salah"
+
+#~ msgid ""
+#~ "for record in self:\n"
+#~ "        record['size'] = len(record.name)"
+#~ msgstr ""
+#~ "for record in self:\n"
+#~ "        record['size'] = len(record.name)"
+
+#~ msgid "get"
+#~ msgstr "get"
+
+#~ msgid "html"
+#~ msgstr "html"
+
+#~ msgid "init"
+#~ msgstr "init"
+
+#~ msgid "internal note..."
+#~ msgstr "catatan internal..."
+
+#~ msgid "ir.actions.act_url"
+#~ msgstr "ir.actions.act_url"
+
+#~ msgid "ir.actions.act_window"
+#~ msgstr "ir.action.act_window"
+
+#~ msgid "ir.actions.act_window.view"
+#~ msgstr "ir.actions.act_window.view"
+
+#~ msgid "ir.actions.act_window_close"
+#~ msgstr "ir.actions.act_window_close"
+
+#~ msgid "ir.actions.actions"
+#~ msgstr "ir.actions.actions"
+
+#~ msgid "ir.actions.client"
+#~ msgstr "ir.actions.client"
+
+#~ msgid "ir.actions.server"
+#~ msgstr "ir.actions.server"
+
+#~ msgid "ir.attachment"
+#~ msgstr "ir.attachment"
+
+#~ msgid "ir.autovacuum"
+#~ msgstr "ir.autovacuum"
+
+#~ msgid "ir.config_parameter"
+#~ msgstr "ir.config_parameter"
+
+#~ msgid "ir.exports"
+#~ msgstr "ir.exports"
+
+#~ msgid "ir.exports.line"
+#~ msgstr "ir.exports.line"
+
+#~ msgid "ir.fields.converter"
+#~ msgstr "ir.fields.converter"
+
+#~ msgid "ir.logging"
+#~ msgstr "ir.logging"
+
+#~ msgid "ir.mail_server"
+#~ msgstr "ir.mail_server"
+
+#~ msgid "ir.model.access"
+#~ msgstr "ir.model.access"
+
+#~ msgid "ir.model.constraint"
+#~ msgstr "ir.model.constraint"
+
+#~ msgid "ir.model.data"
+#~ msgstr "ir.model.data"
+
+#~ msgid "ir.model.relation"
+#~ msgstr "ir.model.relation"
+
+#~ msgid "ir.property"
+#~ msgstr "ir.property"
+
+#~ msgid "ir.qweb"
+#~ msgstr "ir.qweb"
+
+#~ msgid "ir.qweb.field"
+#~ msgstr "ir.qweb.field"
+
+#~ msgid "ir.qweb.field.barcode"
+#~ msgstr "ir.qweb.field.barcode"
+
+#~ msgid "ir.qweb.field.contact"
+#~ msgstr "ir.qweb.field.contact"
+
+#~ msgid "ir.qweb.field.date"
+#~ msgstr "ir.qweb.field.date"
+
+#~ msgid "ir.qweb.field.datetime"
+#~ msgstr "ir.qweb.field.datetime"
+
+#~ msgid "ir.qweb.field.duration"
+#~ msgstr "ir.qweb.field.duration"
+
+#~ msgid "ir.qweb.field.float"
+#~ msgstr "ir.qweb.field.float"
+
+#~ msgid "ir.qweb.field.html"
+#~ msgstr "ir.qweb.field.html"
+
+#~ msgid "ir.qweb.field.image"
+#~ msgstr "ir.qweb.field.image"
+
+#~ msgid "ir.qweb.field.integer"
+#~ msgstr "ir.qweb.field.integer"
+
+#~ msgid "ir.qweb.field.many2one"
+#~ msgstr "ir.qweb.field.many2one"
+
+#~ msgid "ir.qweb.field.monetary"
+#~ msgstr "ir.qweb.field.monetary"
+
+#~ msgid "ir.qweb.field.qweb"
+#~ msgstr "ir.qweb.field.qweb"
+
+#~ msgid "ir.qweb.field.relative"
+#~ msgstr "ir.qweb.field.relative"
+
+#~ msgid "ir.qweb.field.selection"
+#~ msgstr "ir.qweb.field.selection"
+
+#~ msgid "ir.qweb.field.text"
+#~ msgstr "ir.qweb.field.text"
+
+#~ msgid "ir.rule"
+#~ msgstr "ir.rule"
+
+#~ msgid "ir.sequence"
+#~ msgstr "ir.sequence"
+
+#~ msgid "ir.sequence.date_range"
+#~ msgstr "ir.sequence.date_range"
+
+#~ msgid "ir.translation"
+#~ msgstr "ir.translation"
+
+#~ msgid "ir.ui.menu"
+#~ msgstr "ir.ui.menu"
+
+#~ msgid "ir.ui.view"
+#~ msgstr "ir.ui.view"
+
+#~ msgid "ir.ui.view.custom"
+#~ msgstr "ir.ui.view.custom"
+
+#~ msgid "many2many"
+#~ msgstr "many2many"
+
+#~ msgid "many2one"
+#~ msgstr "many2one"
+
+#~ msgid "n/a"
+#~ msgstr "kosong"
+
+#~ msgid "no"
+#~ msgstr "no"
+
+#~ msgid "on"
+#~ msgstr "on"
+
+#~ msgid "one2many"
+#~ msgstr "one2many"
+
+#~ msgid "pos_cache"
+#~ msgstr "pos_cache"
+
+#~ msgid "pos_sale"
+#~ msgstr "pos_sale"
+
+#~ msgid "report.base.report_irmodulereference"
+#~ msgstr "report.base.report_irmodulereference"
+
+#~ msgid "res.config"
+#~ msgstr "res.config"
+
+#~ msgid "res.config.installer"
+#~ msgstr "res.config.installer"
+
+#~ msgid "res.config.settings"
+#~ msgstr "res.config.settings"
+
+#~ msgid "res.partner.title"
+#~ msgstr "res.partner.title"
+
+#~ msgid "res.request.link"
+#~ msgstr "res.request.link"
+
+#~ msgid "res.users.log"
+#~ msgstr "res.users.log"
+
+#~ msgid "test mimetypes-guessing"
+#~ msgstr "test mimetypes-guessing"
+
+#~ msgid "test of access rights and rules"
+#~ msgstr "test hak ases dan aturan"
+
+#~ msgid "test read_group"
+#~ msgstr "test read_group"
+
+#~ msgid "test-assetsbundle"
+#~ msgstr "test-assetsbundle"
+
+#~ msgid "test-eval"
+#~ msgstr "test-eval"
+
+#~ msgid "test-exceptions"
+#~ msgstr "test-exceptions"
+
+#~ msgid "test-field-converter"
+#~ msgstr "test-field-converter"
+
+#~ msgid "test-import-export"
+#~ msgstr "test-import-export"
+
+#~ msgid "test-inherit"
+#~ msgstr "test-inherit"
+
+#~ msgid "test-inherits"
+#~ msgstr "test-inherits"
+
+#~ msgid "test-limits"
+#~ msgstr "test-limits"
+
+#~ msgid "test-uninstall"
+#~ msgstr "test-uninstall"
+
+#~ msgid "test_convert"
+#~ msgstr "test_convert"
+
+#~ msgid "text"
+#~ msgstr "teks"
+
+#~ msgid "title"
+#~ msgstr "judul"
+
+#~ msgid "true"
+#~ msgstr "benar"
+
+#~ msgid "wizard.ir.model.menu.create"
+#~ msgstr "wizard.ir.model.menu.create"
+
+#~ msgid "yes"
+#~ msgstr "ya"
+
+#~ msgid "Åland Islands"
+#~ msgstr "Kepulauan Aland"

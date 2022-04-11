@@ -1,0 +1,6997 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base
+#
+# Translators:
+# mehdi samadi <mehsamadi@gmail.com>, 2018
+# arya sadeghy <aryasadeghy@gmail.com>, 2018
+# Maziar Niaki <maziarmn@gmail.com>, 2018
+# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2018
+# Arash Sardari <arashss77@gmail.com>, 2018
+# elaheh pourrezaie <elaheh.pourrezaie@hotmail.com>, 2018
+# Sepehr Khoshnood <sepehr.kho@gmail.com>, 2018
+# Zahed Alfak <tamass4116@gmail.com>, 2018
+# سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2018
+# Hamid Darabi, 2018
+# Martin Trigaux, 2018
+# Hamed Mohammadi <hamed@dehongi.com>, 2018
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2022-04-11 12:53+0200\n"
+"PO-Revision-Date: 2018-08-24 09:14+0000\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
+"Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: models/decimal_precision.py:57 models/res_currency.py:407
+#, fuzzy, python-format
+msgid "Warning for %s"
+msgstr "هشدارها"
+
+#: models/decimal_precision.py:58
+#, python-format
+msgid ""
+"The precision has been reduced for %s.\n"
+"Note that existing data WON'T be updated by this change.\n"
+"\n"
+"As decimal precisions impact the whole system, this may cause critical "
+"issues.\n"
+"E.g. reducing the precision could disturb your financial balance.\n"
+"\n"
+"Therefore, changing decimal precisions in a running database is not "
+"recommended."
+msgstr ""
+
+#: models/ir_actions.py:179 models/ir_actions.py:181
+#, python-format
+msgid "Invalid model name %r in action definition."
+msgstr ""
+
+#: models/ir_actions.py:210
+#, python-format
+msgid "The modes in view_mode must not be duplicated: %s"
+msgstr ""
+
+#: models/ir_actions.py:212
+#, python-format
+msgid "No spaces allowed in view_mode: %r"
+msgstr ""
+
+#: models/ir_actions.py:457
+msgid "Recursion found in child server actions"
+msgstr ""
+
+#: models/ir_actions.py:610
+msgid "You don't have enough access rights to run this action."
+msgstr ""
+
+#: models/ir_actions.py:702
+msgid "many2many fields cannot be evaluated by reference"
+msgstr ""
+
+#: models/ir_actions_report.py:497
+#, python-format
+msgid ""
+"Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
+"number of subprocess reached. Message : %s"
+msgstr ""
+
+#: models/ir_actions_report.py:500
+#, python-format
+msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
+msgstr ""
+
+#: models/ir_actions_report.py:745
+msgid "One of the documents you are trying to merge is encrypted"
+msgstr ""
+
+#: models/ir_actions_report.py:770
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still "
+"retrieve those PDFs by selecting each of the affected records individually, "
+"which will avoid merging."
+msgstr ""
+
+#: models/ir_actions_report.py:858
+msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
+msgstr ""
+
+#: models/ir_actions_report.py:865
+#, python-format
+msgid ""
+"The report's template '%s' is wrong, please contact your administrator. \n"
+"\n"
+"Can not separate file to save as attachment because the report's template "
+"does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div "
+"with 'article' classname."
+msgstr ""
+
+#: models/ir_attachment.py:71
+msgid "Only administrators can execute this action."
+msgstr "فقط مدیران می توانند این عمل را اجرا کنند."
+
+#: models/ir_attachment.py:431 models/ir_attachment.py:442
+msgid "Sorry, you are not allowed to access this document."
+msgstr "با عرض پوزش، شما اجازه دسترسی به این سند را ندارید."
+
+#: models/ir_attachment.py:476
+msgid "Sorry, you must provide fields to read on attachments"
+msgstr ""
+
+#: models/ir_attachment.py:479
+msgid "Sorry, the syntax 'name:agg(field)' is not available for attachments"
+msgstr ""
+
+#: models/ir_attachment.py:485
+#, fuzzy
+msgid "Sorry, you are not allowed to access these fields on attachments."
+msgstr "با عرض پوزش، شما اجازه دسترسی به این سند را ندارید."
+
+#: models/ir_cron.py:372
+msgid ""
+"Record cannot be modified right now: This cron task is currently being "
+"executed and may not be modified Please try again in a few minutes"
+msgstr ""
+
+#: models/ir_default.py:70
+#, python-format
+msgid "Invalid field %s.%s"
+msgstr "فیلد نامعتبر %s.%s"
+
+#: models/ir_default.py:72
+#, python-format
+msgid "Invalid value for %s.%s: %s"
+msgstr ""
+
+#: models/ir_fields.py:213
+#, python-format
+msgid "Unknown value '%s' for boolean field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:215
+msgid "Use '1' for yes and '0' for no"
+msgstr "استفاده از '1' برای بله و '0' برای خیر"
+
+#: models/ir_fields.py:225
+#, python-format
+msgid "'%s' does not seem to be an integer for field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:236
+#, python-format
+msgid "'%s' does not seem to be a number for field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:256
+#, python-format
+msgid "'%s' does not seem to be a valid date for field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:258 models/ir_fields.py:290
+#, python-format
+msgid "Use the format '%s'"
+msgstr "استفاده از قالب '%s'"
+
+#: models/ir_fields.py:288
+#, python-format
+msgid "'%s' does not seem to be a valid datetime for field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:332
+#, python-format
+msgid "Value '%s' not found in selection field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:367
+msgid "See all possible values"
+msgstr "دیدن همه مقادیر ممکن"
+
+#: models/ir_fields.py:376
+msgid "database id"
+msgstr "شناسه پایگاه داده"
+
+#: models/ir_fields.py:388
+#, python-format
+msgid "Invalid database id '%s' for the field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:392
+msgid "external id"
+msgstr "آیدی خارجی"
+
+#: models/ir_fields.py:402
+msgid "name"
+msgstr "نام"
+
+#: models/ir_fields.py:410
+#, python-format
+msgid ""
+"Found multiple matches for value '%s' in field '%%(field)s' (%d matches)"
+msgstr ""
+
+#: models/ir_fields.py:419
+#, python-format
+msgid ""
+"Cannot create new '%s' records from their name alone. Please create those "
+"records manually and try importing again."
+msgstr ""
+
+#: models/ir_fields.py:423
+#, python-format
+msgid "Unknown sub-field '%s'"
+msgstr ""
+
+#: models/ir_fields.py:436
+#, python-format
+msgid ""
+"No matching record found for %(field_type)s '%(value)s' in field "
+"'%%(field)s' and the following error was encountered when we attempted to "
+"create one: %(error_message)s"
+msgstr ""
+
+#: models/ir_fields.py:438
+#, python-format
+msgid ""
+"No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:493
+msgid ""
+"Can not create Many-To-One records indirectly, import the field separately"
+msgstr ""
+
+#: models/ir_fields.py:496
+#, python-format
+msgid ""
+"Ambiguous specification for field '%(field)s', only provide one of name, "
+"external id or database id"
+msgstr ""
+"مشخصات نامفهوم برای %(field)s، فقط یک نام، شناسه‌ی خارجی یا شناسه دیتابیس را "
+"ارائه دهید"
+
+#: models/ir_filters.py:36 models/res_partner.py:364 models/res_users.py:205
+#: models/res_users.py:632 models/res_users.py:634
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (کپی)"
+
+#: models/ir_filters.py:105
+#, python-format
+msgid ""
+"There is already a shared filter set as default for %(model)s, delete or "
+"change it before setting a new default"
+msgstr ""
+
+#: models/ir_mail_server.py:126
+#, python-format
+msgid "SSL private key is missing for %s."
+msgstr ""
+
+#: models/ir_mail_server.py:128
+#, python-format
+msgid "SSL certificate is missing for %s."
+msgstr ""
+
+#: models/ir_mail_server.py:134
+msgid ""
+"Please configure an email on the current user to simulate sending an email "
+"message via this outgoing server"
+msgstr ""
+
+#: models/ir_mail_server.py:148
+#, python-format
+msgid ""
+"The server refused the sender address (%(email_from)s) with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:153
+#, python-format
+msgid ""
+"The server refused the test recipient (%(email_to)s) with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:160
+#, python-format
+msgid "The server refused the test connection with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:166
+#, python-format
+msgid ""
+"Invalid server name !\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:168
+#, python-format
+msgid ""
+"No response received. Check server address and port number.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:170
+#, python-format
+msgid ""
+"The server has closed the connection unexpectedly. Check configuration "
+"served on this port number.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:172
+#, python-format
+msgid ""
+"Server replied with following exception:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:174
+#, python-format
+msgid ""
+"An option is not supported by the server:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:176
+#, python-format
+msgid ""
+"An SMTP exception occurred. Check port number and connection security type.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:178
+#, python-format
+msgid ""
+"An SSL exception occurred. Check connection security type.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:180
+#, python-format
+msgid ""
+"Connection Test Failed! Here is what we got instead:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:189
+#, fuzzy
+msgid "Connection Test Successful!"
+msgstr "امنیت اتصال"
+
+#: models/ir_mail_server.py:259 models/ir_mail_server.py:284
+#, python-format
+msgid ""
+"The private key or the certificate is not a valid file. \n"
+"%s"
+msgstr ""
+
+#: models/ir_mail_server.py:261 models/ir_mail_server.py:286
+#, python-format
+msgid ""
+"Could not load your certificate / private key. \n"
+"%s"
+msgstr ""
+
+#: models/ir_mail_server.py:290
+msgid "Missing SMTP Server"
+msgstr "سرور SMTP وجود ندارد"
+
+#: models/ir_mail_server.py:291
+msgid ""
+"Please define at least one SMTP server, or provide the SMTP parameters "
+"explicitly."
+msgstr ""
+
+#: models/ir_mail_server.py:297
+msgid ""
+"Your Odoo Server does not support SMTP-over-SSL. You could use STARTTLS "
+"instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
+"should do the trick."
+msgstr ""
+
+#: models/ir_mail_server.py:615
+#, python-format
+msgid ""
+"Mail delivery failed via SMTP server '%s'.\n"
+"%s: %s"
+msgstr ""
+
+#: models/ir_mail_server.py:617
+msgid "Mail Delivery Failed"
+msgstr "ارسال پست الکترونیک موفق نبود"
+
+#: models/ir_mail_server.py:701 models/ir_model.py:605 models/ir_model.py:684
+#: models/ir_model.py:692 models/res_partner.py:377
+msgid "Warning"
+msgstr "هشدار"
+
+#: models/ir_mail_server.py:702
+msgid ""
+"Your server does not seem to support SSL, you may want to try STARTTLS "
+"instead"
+msgstr ""
+
+#: models/ir_model.py:215
+msgid "The model name must start with 'x_'."
+msgstr "نام مدل باید با 'x_' شروع شود."
+
+#: models/ir_model.py:217
+msgid ""
+"The model name can only contain lowercase characters, digits, underscores "
+"and dots."
+msgstr ""
+"نام مدل فقط می‌تواند شامل کاراکترهای حروف کوچک، عدد، زیرین خط underscore یا "
+"نقطه باشد."
+
+#: models/ir_model.py:234
+#, python-format
+msgid ""
+"Unable to order by %s: fields used for ordering must be present on the model "
+"and stored."
+msgstr ""
+
+#: models/ir_model.py:277
+#, python-format
+msgid "Model '%s' contains module data and cannot be removed."
+msgstr ""
+
+#: models/ir_model.py:302
+msgid "Field \"Model\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:304
+msgid "Field \"Type\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:306
+msgid "Field \"Transient Model\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:563
+msgid "Custom fields must have a name that starts with 'x_' !"
+msgstr "نام فیلدهای دلخواه باید با 'x_' آغاز شوند!"
+
+#: models/ir_model.py:567
+msgid ""
+"Field names can only contain characters, digits and underscores (up to 63)."
+msgstr ""
+
+#: models/ir_model.py:583
+#, python-format
+msgid "Unknown field name '%s' in related field '%s'"
+msgstr ""
+
+#: models/ir_model.py:586
+#, python-format
+msgid "Non-relational field name '%s' in related field '%s'"
+msgstr ""
+
+#: models/ir_model.py:595
+#, python-format
+msgid "Related field '%s' does not have type '%s'"
+msgstr "فیلد مربوطه '%s' نوع ندارد '%s'"
+
+#: models/ir_model.py:597
+#, python-format
+msgid "Related field '%s' does not have comodel '%s'"
+msgstr ""
+
+#: models/ir_model.py:618
+#, python-format
+msgid "Empty dependency in %r"
+msgstr ""
+
+#: models/ir_model.py:625
+#, python-format
+msgid "Unknown field %r in dependency %r"
+msgstr ""
+
+#: models/ir_model.py:627
+#, python-format
+msgid "Non-relational field %r in dependency %r"
+msgstr ""
+
+#: models/ir_model.py:658
+#, python-format
+msgid "Model %s does not exist"
+msgstr ""
+
+#: models/ir_model.py:659
+msgid "Please specify a valid model for the object relation"
+msgstr ""
+
+#: models/ir_model.py:685
+#, python-format
+msgid "The table %r if used for other, possibly incompatible fields."
+msgstr ""
+
+#: models/ir_model.py:692
+#, python-format
+msgid ""
+"The m2o field %s is required but declares its ondelete policy as being 'set "
+"null'. Only 'restrict' and 'cascade' make sense."
+msgstr ""
+
+#: models/ir_model.py:770
+#, python-format
+msgid "The field '%s' cannot be removed because the field '%s' depends on it."
+msgstr "فیلد '%s' را نمی‌توان حذف کرد زیرا فیلد '%s' به آن بستگی دارد."
+
+#: models/ir_model.py:797
+msgid "Cannot rename/delete fields that are still present in views:"
+msgstr ""
+
+#: models/ir_model.py:798
+#, python-format
+msgid "Fields: %s"
+msgstr "فیلدها: %s"
+
+#: models/ir_model.py:799
+#, python-format
+msgid "View: %s"
+msgstr "نمایش: %s"
+
+#: models/ir_model.py:814
+msgid "This column contains module data and cannot be removed!"
+msgstr "این ستون حاوی داده های ماژول است و نمی تواند حذف شود!"
+
+#: models/ir_model.py:882
+#, python-format
+msgid "Model %s does not exist!"
+msgstr "مدل %s وجود ندارد!"
+
+#: models/ir_model.py:889
+#, python-format
+msgid "Many2one %s on model %s does not exist!"
+msgstr ""
+
+#: models/ir_model.py:911
+msgid "Changing the model of a field is forbidden!"
+msgstr "تغییر مدل این فیلد ممنوع است"
+
+#: models/ir_model.py:914
+msgid ""
+"Changing the type of a field is not yet supported. Please drop it and create "
+"it again!"
+msgstr ""
+
+#: models/ir_model.py:928
+msgid "Can only rename one field at a time!"
+msgstr ""
+
+#: models/ir_model.py:1314 models/ir_model.py:1334 models/ir_model.py:1365
+msgid ""
+"Properties of base fields cannot be altered in this manner! Please modify "
+"them through Python code, preferably through a custom addon!"
+msgstr ""
+
+#: models/ir_model.py:1439
+#, python-format
+msgid "The ondelete policy %r is not valid for field %r"
+msgstr ""
+
+#: models/ir_model.py:1484 models/ir_model.py:1622 models/ir_model.py:2040
+msgid "Administrator access is required to uninstall a module"
+msgstr "دسترسی مدیر برای لغو نصب یک ماجول لازم است"
+
+#: models/ir_model.py:1771
+#, fuzzy, python-format
+msgid ""
+"You are not allowed to access '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr "با عرض پوزش، شما اجازه دسترسی به این سند را ندارید."
+
+#: models/ir_model.py:1772
+#, fuzzy, python-format
+msgid ""
+"You are not allowed to modify '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr "با عرض پوزش، شما نمیتوانید این سند را تغییر دهید."
+
+#: models/ir_model.py:1773
+#, fuzzy, python-format
+msgid ""
+"You are not allowed to create '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr "متاسفیم، شما نمی‌توانید این نوع از سند را ایجاد کنید."
+
+#: models/ir_model.py:1774
+#, fuzzy, python-format
+msgid ""
+"You are not allowed to delete '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr "با عرض پوزش، شما نمیتوانید این سند را حذف کنید."
+
+#: models/ir_model.py:1779
+#, python-format
+msgid ""
+"This operation is allowed for the following groups:\n"
+"%(groups_list)s"
+msgstr ""
+
+#: models/ir_model.py:1781
+msgid "No group currently allows this operation."
+msgstr ""
+
+#: models/ir_model.py:1783 models/ir_rule.py:203
+msgid "Contact your administrator to request access if necessary."
+msgstr ""
+
+#: models/ir_model.py:1938
+msgid "Not enough access rights on the external ID:"
+msgstr ""
+
+#: models/ir_module.py:321
+msgid ""
+"You are trying to remove a module that is installed or will be installed."
+msgstr ""
+
+#: models/ir_module.py:368
+#, python-format
+msgid ""
+"Unable to install module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+
+#: models/ir_module.py:370
+#, python-format
+msgid ""
+"Unable to upgrade module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+
+#: models/ir_module.py:372
+#, python-format
+msgid ""
+"Unable to process module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+
+#: models/ir_module.py:377
+msgid "Recursion error in modules dependencies !"
+msgstr "خطای تودرتویی در وابستگی‌های پیمانه‌ها!"
+
+#: models/ir_module.py:391
+#, python-format
+msgid ""
+"You try to install module '%s' that depends on module '%s'.\n"
+"But the latter module is not available in your system."
+msgstr ""
+
+#: models/ir_module.py:438
+#, python-format
+msgid "Modules \"%s\" and \"%s\" are incompatible."
+msgstr ""
+
+#: models/ir_module.py:457
+#, python-format
+msgid "You are trying to install incompatible modules in category \"%s\":"
+msgstr ""
+
+#: models/ir_module.py:464
+msgid "Install"
+msgstr "نصب"
+
+#: models/ir_module.py:594
+msgid ""
+"Odoo is currently processing a scheduled action.\n"
+"Module operations are not possible at this time, please try again later or "
+"contact your system administrator."
+msgstr ""
+
+#: models/ir_module.py:630
+msgid "The `base` module cannot be uninstalled"
+msgstr "`ماژول base` قابل حذف شدن نیست"
+
+#: models/ir_module.py:632
+msgid ""
+"One or more of the selected modules have already been uninstalled, if you "
+"believe this to be an error, you may try again later or contact support."
+msgstr ""
+
+#: models/ir_module.py:638
+msgid "Uninstall"
+msgstr "حذف نصب"
+
+#: models/ir_module.py:646
+msgid "Uninstall module"
+msgstr "لغو نصب ماجول"
+
+#: models/ir_module.py:687
+#, python-format
+msgid "Can not upgrade module '%s'. It is not installed."
+msgstr "نمی‌توانید پیمانه '%s' را ارتقا دهید زیرا برپاسازی نشده است."
+
+#: models/ir_module.py:706
+#, python-format
+msgid ""
+"You try to upgrade the module %s that depends on the module: %s.\n"
+"But this module is not available in your system."
+msgstr ""
+
+#: models/ir_module.py:711
+msgid "Apply Schedule Upgrade"
+msgstr ""
+
+#: models/ir_module.py:805
+msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr ""
+
+#: models/ir_module.py:806
+msgid ""
+"To enable it, make sure this directory exists and is writable on the server:"
+msgstr ""
+
+#: models/ir_module.py:833
+#, python-format
+msgid ""
+"The `%s` module appears to be unavailable at the moment, please try again "
+"later."
+msgstr ""
+
+#: models/ir_profile.py:101
+msgid ""
+"Profiling is not enabled on this database. Please contact an administrator."
+msgstr ""
+
+#: models/ir_property.py:88
+msgid "Invalid type"
+msgstr "نوع نامعتبر"
+
+#: models/ir_qweb_fields.py:144
+msgid "Decimalized number"
+msgstr ""
+
+#: models/ir_qweb_fields.py:164
+msgid "Rounding precision"
+msgstr ""
+
+#: models/ir_qweb_fields.py:209
+msgid "Date format"
+msgstr ""
+
+#: models/ir_qweb_fields.py:227
+msgid "Pattern to format"
+msgstr ""
+
+#: models/ir_qweb_fields.py:228
+msgid "Optional timezone name"
+msgstr ""
+
+#: models/ir_qweb_fields.py:229
+msgid "Display only the time"
+msgstr ""
+
+#: models/ir_qweb_fields.py:230
+msgid "Hide seconds"
+msgstr ""
+
+#: models/ir_qweb_fields.py:231
+#, fuzzy
+msgid "Display only the date"
+msgstr "نمایش سطر هدر"
+
+#: models/ir_qweb_fields.py:301
+msgid "Selection"
+msgstr "انتخاب"
+
+#: models/ir_qweb_fields.py:301
+msgid "By default the widget uses the field information"
+msgstr ""
+
+#: models/ir_qweb_fields.py:425
+msgid "Original currency"
+msgstr ""
+
+#: models/ir_qweb_fields.py:426
+msgid "Display currency"
+msgstr ""
+
+#: models/ir_qweb_fields.py:427
+msgid "Date"
+msgstr "تاریخ"
+
+#: models/ir_qweb_fields.py:427
+msgid ""
+"Date used for the original currency (only used for t-esc). by default use "
+"the current date."
+msgstr ""
+
+#: models/ir_qweb_fields.py:428
+msgid "Company"
+msgstr "شرکت"
+
+#: models/ir_qweb_fields.py:428
+msgid ""
+"Company used for the original currency (only used for t-esc). By default use "
+"the user company"
+msgstr ""
+
+#: models/ir_qweb_fields.py:437
+msgid "The value send to monetary field is not a number."
+msgstr ""
+
+#: models/ir_qweb_fields.py:535
+#, python-format
+msgid "The value (%s) passed should be positive"
+msgstr ""
+
+#: models/ir_qweb_fields.py:538
+#, fuzzy
+msgid "The hour must be between 0 and 23"
+msgstr "ضریب گرد کردن باید بزرگتر از 0 باشد!"
+
+#: models/ir_qweb_fields.py:572
+msgid "Digital formatting"
+msgstr ""
+
+#: models/ir_qweb_fields.py:573
+msgid "Date unit"
+msgstr ""
+
+#: models/ir_qweb_fields.py:573
+msgid "Date unit used for comparison and formatting"
+msgstr ""
+
+#: models/ir_qweb_fields.py:574
+msgid "Rounding unit"
+msgstr ""
+
+#: models/ir_qweb_fields.py:574
+msgid ""
+"Date unit used for the rounding. The value must be smaller than 'hour' if "
+"you use the digital formatting."
+msgstr ""
+
+#: models/ir_qweb_fields.py:578
+msgid "Long"
+msgstr ""
+
+#: models/ir_qweb_fields.py:579
+msgid "Short"
+msgstr ""
+
+#: models/ir_qweb_fields.py:580
+msgid "Narrow"
+msgstr ""
+
+#: models/ir_qweb_fields.py:581
+#, fuzzy
+msgid "Format"
+msgstr "فرم"
+
+#: models/ir_qweb_fields.py:582
+msgid "Formatting: long, short, narrow (not used for digital)"
+msgstr ""
+
+#: models/ir_qweb_fields.py:587
+#, fuzzy
+msgid "Add direction"
+msgstr "جهت"
+
+#: models/ir_qweb_fields.py:588
+msgid "Add directional information (not used for digital)"
+msgstr ""
+
+#: models/ir_qweb_fields.py:650
+msgid "Reference date"
+msgstr ""
+
+#: models/ir_qweb_fields.py:650
+msgid "Date to compare with the field value, by default use the current date."
+msgstr ""
+
+#: models/ir_qweb_fields.py:686
+msgid "Barcode symbology"
+msgstr ""
+
+#: models/ir_qweb_fields.py:686
+msgid "Barcode type, eg: UPCA, EAN13, Code128"
+msgstr ""
+
+#: models/ir_qweb_fields.py:687
+msgid "Width"
+msgstr "عرض"
+
+#: models/ir_qweb_fields.py:688
+msgid "Height"
+msgstr "ارتفاع"
+
+#: models/ir_qweb_fields.py:689
+msgid "Human Readable"
+msgstr ""
+
+#: models/ir_qweb_fields.py:710
+#, fuzzy, python-format
+msgid "Barcode %s"
+msgstr "بارکد"
+
+#: models/ir_qweb_fields.py:724
+msgid "Name"
+msgstr "نام"
+
+#: models/ir_qweb_fields.py:725
+msgid "Address"
+msgstr "نشانی"
+
+#: models/ir_qweb_fields.py:726
+msgid "Phone"
+msgstr "تلفن"
+
+#: models/ir_qweb_fields.py:727
+msgid "Mobile"
+msgstr "تلفن همراه"
+
+#: models/ir_qweb_fields.py:728
+msgid "Email"
+msgstr "پست الکترونیک"
+
+#: models/ir_qweb_fields.py:729 models/ir_qweb_fields.py:780
+msgid "VAT"
+msgstr "ارزش افزوده"
+
+#: models/ir_qweb_fields.py:733
+msgid "Space"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+#, fuzzy
+msgid "Comma"
+msgstr "توضیح"
+
+#: models/ir_qweb_fields.py:733
+#, fuzzy
+msgid "Dash"
+msgstr "داشبورد"
+
+#: models/ir_qweb_fields.py:733
+msgid "Vertical bar"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+msgid "Slash"
+msgstr ""
+
+#: models/ir_qweb_fields.py:734
+#, fuzzy
+msgid "Linebreak"
+msgstr "سطر"
+
+#: models/ir_qweb_fields.py:737
+msgid "Displayed fields"
+msgstr ""
+
+#: models/ir_qweb_fields.py:737
+msgid "List of contact fields to display in the widget"
+msgstr ""
+
+#: models/ir_qweb_fields.py:738
+msgid "Address separator"
+msgstr ""
+
+#: models/ir_qweb_fields.py:738
+msgid "Separator use to split the address from the display_name."
+msgstr ""
+
+#: models/ir_qweb_fields.py:739
+msgid "Hide badges"
+msgstr ""
+
+#: models/ir_qweb_fields.py:739
+msgid "Don't display the font awesome marker"
+msgstr ""
+
+#: models/ir_qweb_fields.py:740
+msgid "Use comma"
+msgstr ""
+
+#: models/ir_qweb_fields.py:740
+msgid "Use comma instead of the <br> tag to display the address"
+msgstr ""
+
+#: models/ir_qweb_fields.py:741
+#, fuzzy
+msgid "Display phone icons"
+msgstr "نمایش سطر هدر"
+
+#: models/ir_qweb_fields.py:741
+msgid "Display the phone icons even if no_marker is True"
+msgstr ""
+
+#: models/ir_qweb_fields.py:742
+#, fuzzy
+msgid "Display country image"
+msgstr "نام نمایشی"
+
+#: models/ir_qweb_fields.py:742
+msgid "Display the country image if the field is present on the record"
+msgstr ""
+
+#: models/ir_rule.py:61
+msgid "Rules can not be applied on the Record Rules model."
+msgstr ""
+
+#: models/ir_rule.py:197
+#, fuzzy, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to access "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr "با عرض پوزش، شما اجازه دسترسی به این سند را ندارید."
+
+#: models/ir_rule.py:198
+#, fuzzy, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to modify "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr "با عرض پوزش، شما نمیتوانید این سند را تغییر دهید."
+
+#: models/ir_rule.py:199
+#, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to create "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr ""
+
+#: models/ir_rule.py:200
+#, fuzzy, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to delete "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr "با عرض پوزش، شما نمیتوانید این سند را حذف کنید."
+
+#: models/ir_rule.py:225
+#, fuzzy, python-format
+msgid "Records: %s"
+msgstr "رکورد"
+
+#: models/ir_rule.py:228
+#, fuzzy, python-format
+msgid "User: %s"
+msgstr "کاربران"
+
+#: models/ir_rule.py:231
+#, python-format
+msgid ""
+"This restriction is due to the following rules:\n"
+"%s"
+msgstr ""
+
+#: models/ir_rule.py:233
+msgid "Note: this might be a multi-company issue."
+msgstr ""
+
+#: models/ir_sequence.py:17 models/ir_sequence.py:33
+msgid "Step must not be zero."
+msgstr "گام نباید صفر باشد."
+
+#: models/ir_sequence.py:234
+#, python-format
+msgid "Invalid prefix or suffix for sequence '%s'"
+msgstr ""
+
+#: models/ir_translation.py:528
+msgid "Creating translation on non existing records"
+msgstr ""
+
+#: models/ir_translation.py:552
+#, python-format
+msgid ""
+"Translation is not valid:\n"
+"%s"
+msgstr ""
+
+#: models/ir_translation.py:726
+msgid ""
+"Translation features are unavailable until you install an extra translation."
+msgstr ""
+
+#: models/ir_translation.py:756
+msgid "Translate"
+msgstr "ترجمه"
+
+#: models/ir_translation.py:854
+msgid "Technical Translations"
+msgstr "ترجمه‌های تکنیکی"
+
+#: models/ir_ui_menu.py:73
+msgid "Error! You cannot create recursive menus."
+msgstr "خطا! شما نمی‌توانید منوهای بازگشتی ایجاد کنید."
+
+#: models/ir_ui_view.py:397
+#, fuzzy, python-format
+msgid ""
+"Error while validating view:\n"
+"\n"
+"%(error)s"
+msgstr "خطا هنگام ارزیابی قیدها"
+
+#: models/ir_ui_view.py:415
+#, python-format
+msgid "Invalid view %(name)s definition in %(file)s"
+msgstr ""
+
+#: models/ir_ui_view.py:427
+#, python-format
+msgid ""
+"Error while validating view near:\n"
+"\n"
+"%(fivelines)s\n"
+"%(error)s"
+msgstr ""
+
+#: models/ir_ui_view.py:441
+msgid ""
+"Inherited Qweb view cannot have 'Groups' define on the record. Use 'groups' "
+"attributes inside the view definition"
+msgstr ""
+
+#: models/ir_ui_view.py:448
+msgid "You cannot create recursive inherited views."
+msgstr "شما نمی‌توانید نماهای ارث برده بازگشتی ایجاد کنید."
+
+#: models/ir_ui_view.py:484
+msgid "Missing view architecture."
+msgstr "ساختار نما نا موجود است."
+
+#: models/ir_ui_view.py:680
+#, python-format
+msgid "View '%(name)s' accessible only to groups %(groups)s "
+msgstr ""
+
+#: models/ir_ui_view.py:683
+#, python-format
+msgid "View '%(name)s' is private"
+msgstr ""
+
+#: models/ir_ui_view.py:1008 models/ir_ui_view.py:1240
+#, python-format
+msgid "Model not found: %(model)s"
+msgstr "مدل یافت نشد: %(model)s"
+
+#: models/ir_ui_view.py:1290
+#, python-format
+msgid "Tree child can only have one of %(tags)s tag (not %(wrong_tag)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1299
+#, python-format
+msgid "A <graph> can only contains <field> nodes, found a <%s>"
+msgstr ""
+
+#: models/ir_ui_view.py:1320
+msgid "Search tag can only contain one search panel"
+msgstr ""
+
+#: models/ir_ui_view.py:1330
+msgid "Field tag must have a \"name\" attribute defined"
+msgstr ""
+
+#: models/ir_ui_view.py:1352
+#, python-format
+msgid ""
+"Domain on non-relational field \"%(name)s\" makes no sense (domain:"
+"%(domain)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1367
+#, python-format
+msgid "Field \"%(field_name)s\" does not exist in model \"%(model_name)s\""
+msgstr ""
+
+#: models/ir_ui_view.py:1381
+#, python-format
+msgid "Attribute %(attribute)s evaluation expects a boolean, got %(value)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1407
+#, python-format
+msgid "Invalid special '%(value)s' in button"
+msgstr ""
+
+#: models/ir_ui_view.py:1412
+msgid "Button must have a name"
+msgstr ""
+
+#: models/ir_ui_view.py:1416
+#, python-format
+msgid "%(action_name)s is not a valid action on %(model_name)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1424
+#, python-format
+msgid "%(method)s on %(model)s is private and cannot be called from a button"
+msgstr ""
+
+#: models/ir_ui_view.py:1442
+#, python-format
+msgid "Invalid xmlid %(xmlid)s for button of type action."
+msgstr ""
+
+#: models/ir_ui_view.py:1445
+#, python-format
+msgid ""
+"%(xmlid)s is of type %(xmlid_model)s, expected a subclass of ir.actions."
+"actions"
+msgstr ""
+
+#: models/ir_ui_view.py:1452
+#, python-format
+msgid ""
+"Action %(action_reference)s (id: %(action_id)s) does not exist for button of "
+"type action."
+msgstr ""
+
+#: models/ir_ui_view.py:1474
+#, python-format
+msgid ""
+"Field '%(name)s' found in 'groupby' node can only be of type many2one, found "
+"%(type)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1498
+#, python-format
+msgid ""
+"Field '%(field)s' found in 'groupby' node does not exist in model %(model)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1509
+msgid "Searchpanel item with select multi cannot have a domain."
+msgstr ""
+
+#: models/ir_ui_view.py:1518
+msgid ""
+"Label tag must contain a \"for\". To match label style without corresponding "
+"field or button, use 'class=\"o_form_label\"'."
+msgstr ""
+
+#: models/ir_ui_view.py:1528
+msgid "Page direct ancestor must be notebook"
+msgstr ""
+
+#: models/ir_ui_view.py:1599
+#, python-format
+msgid "\"group_by\" value must be a string %(attribute)s=%(value)r"
+msgstr ""
+
+#: models/ir_ui_view.py:1607
+#, python-format
+msgid ""
+"Unknown field \"%(field)s\" in \"group_by\" value in %(attribute)s=%(value)r"
+msgstr ""
+
+#: models/ir_ui_view.py:1630
+#, python-format
+msgid "%(attribute)r value must be an integer (%(value)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1776
+#, python-format
+msgid "Invalid domain format %(expr)s in %(use)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1788
+#, python-format
+msgid "Non-relational field %(field)r in path %(field_path)r in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1796
+#, python-format
+msgid "Unknown field \"%(model)s.%(field)s\" in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1802
+#, python-format
+msgid "Unsearchable field %(field)r in path %(field_path)r in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:2072
+msgid "Can't compare more than two views."
+msgstr ""
+
+#: models/ir_ui_view.py:2099
+msgid "Previous Arch"
+msgstr ""
+
+#: models/ir_ui_view.py:2105
+#, fuzzy
+msgid "File Arch"
+msgstr "پرونده"
+
+#: models/ir_ui_view.py:2115
+#, fuzzy
+msgid "Current Arch"
+msgstr "ارز"
+
+#: models/ir_ui_view.py:2171
+#, python-format
+msgid ""
+"Name or id %(name_or_id)r in %(use)s must be present in view but is missing."
+msgstr ""
+
+#: models/ir_ui_view.py:2179
+#, fuzzy, python-format
+msgid "Field `%(name)s` does not exist"
+msgstr "مدل %s وجود ندارد!"
+
+#: models/ir_ui_view.py:2186
+#, python-format
+msgid "Invalid composed field %(definition)s in %(use)s"
+msgstr ""
+
+#: models/ir_ui_view.py:2193
+#, python-format
+msgid "Field %(name)r used in %(use)s must be present in view but is missing."
+msgstr ""
+
+#: models/ir_ui_view.py:2199
+#, python-format
+msgid ""
+"Field %(name)r used in %(use)s is present in view but is in select multi."
+msgstr ""
+
+#: models/report_paperformat.py:194
+msgid ""
+"You can select either a format or a specific page width/height, but not both."
+msgstr ""
+
+#: models/res_bank.py:73
+msgid "Normal"
+msgstr "عادی"
+
+#: models/res_company.py:25
+msgid ""
+"Duplicating a company is not allowed. Please create a new company instead."
+msgstr ""
+
+#: models/res_company.py:268
+msgid "You cannot create recursive companies."
+msgstr ""
+
+#: models/res_config.py:300
+msgid ""
+"\n"
+"\n"
+"This addon is already installed on your system"
+msgstr ""
+"\n"
+"\n"
+"این افزونه در حال حاضر بر روی سیستم شما نصب شده است"
+
+#: models/res_config.py:384
+msgid "Cannot duplicate configuration!"
+msgstr "نمی‌توان پیکربندی را دوبل کرد!"
+
+#: models/res_config.py:419
+msgid "Warning!"
+msgstr "هشدار!"
+
+#: models/res_config.py:420
+#, python-format
+msgid ""
+"Disabling this option will also uninstall the following modules \n"
+"%s"
+msgstr ""
+
+#: models/res_config.py:625
+msgid "Only administrators can change the settings"
+msgstr "فقط مدیران می توانند تنظیمات را تغییر دهند"
+
+#: models/res_config.py:752
+msgid "Go to the configuration panel"
+msgstr "برو به صفحه پیکربندی"
+
+#: models/res_config.py:793
+msgid "Invalid template user. It seems it has been deleted."
+msgstr ""
+
+#: models/res_country.py:141
+msgid "The layout contains an invalid format key"
+msgstr ""
+
+#: models/res_country.py:152
+msgid "Base view"
+msgstr "نمای پایه"
+
+#: models/res_currency.py:173
+msgid "and"
+msgstr "و"
+
+#: models/res_currency.py:293
+#, python-format
+msgid "Unit per %s"
+msgstr ""
+
+#: models/res_currency.py:294
+#, python-format
+msgid "%s per Unit"
+msgstr ""
+
+#: models/res_currency.py:408
+msgid ""
+"The new rate is quite far from the previous rate.\n"
+"Incorrect currency rates may cause critical problems, make sure the rate is "
+"correct !"
+msgstr ""
+
+#: models/res_currency.py:428
+#, python-format
+msgid "%(rate_currency_name)s per %(company_currency_name)s"
+msgstr ""
+
+#: models/res_currency.py:429
+#, python-format
+msgid "%(company_currency_name)s per %(rate_currency_name)s"
+msgstr ""
+
+#: models/res_lang.py:72
+msgid "At least one language must be active."
+msgstr ""
+
+#: models/res_lang.py:80
+msgid ""
+"Invalid date/time format directive specified. Please refer to the list of "
+"allowed directives, displayed when you edit a language."
+msgstr ""
+
+#: models/res_lang.py:86
+msgid ""
+"The Separator Format should be like [,n] where 0 < n :starting from Unit "
+"digit. -1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
+"1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
+"106,500. Provided as the thousand separator in each case."
+msgstr ""
+
+#: models/res_lang.py:282
+msgid "Language code cannot be modified."
+msgstr "کد زبان نمی‌توان تغییر داد"
+
+#: models/res_lang.py:285
+msgid "Cannot deactivate a language that is currently used by users."
+msgstr ""
+
+#: models/res_lang.py:287
+#, fuzzy
+msgid "Cannot deactivate a language that is currently used by contacts."
+msgstr "شما نمی‌توانید کاربری که اکنون به نامش وارد شده‌اید غیر فعال کنید."
+
+#: models/res_lang.py:300
+msgid "Base Language 'en_US' can not be deleted."
+msgstr ""
+
+#: models/res_lang.py:303
+msgid "You cannot delete the language which is the user's preferred language."
+msgstr ""
+
+#: models/res_lang.py:305
+msgid ""
+"You cannot delete the language which is Active!\n"
+"Please de-activate the language first."
+msgstr ""
+"شما نمی‌توانید زبانی که فعال است را حذف کنید!\n"
+"لطفا ابتدا آن را غیر فعال کنید."
+
+#: models/res_lang.py:317
+#, python-format
+msgid "format() must be given exactly one %char format specifier"
+msgstr ""
+
+#: models/res_lang.py:341
+msgid ""
+"The languages that you selected have been successfully installed. Users can "
+"choose their favorite language in their preferences."
+msgstr ""
+
+#: models/res_partner.py:89
+msgid "You can not create recursive tags."
+msgstr ""
+
+#: models/res_partner.py:359
+msgid "You cannot create recursive Partner hierarchies."
+msgstr "شما نمی‌توانید سلسله مراتب بازگشتی همکار ایجاد کنید."
+
+#: models/res_partner.py:378
+msgid ""
+"Changing the company of a contact should only be done if it was never "
+"correctly set. If an existing contact starts working for a new company then "
+"a new contact should be created under that new company. You can use the "
+"\"Discard\" button to abandon this change."
+msgstr ""
+
+#: models/res_partner.py:454
+msgid ""
+"One2Many fields cannot be synchronized as part of `commercial_fields` or "
+"`address fields`"
+msgstr ""
+
+#: models/res_partner.py:577
+#, python-format
+msgid ""
+"You cannot archive contacts linked to an active user.\n"
+"You first need to archive their associated user.\n"
+"\n"
+"Linked active users : %(names)s"
+msgstr ""
+
+#: models/res_partner.py:579 models/res_partner.py:648
+#, fuzzy
+msgid "Go to users"
+msgstr "کاربران گوگل"
+
+#: models/res_partner.py:583
+#, python-format
+msgid ""
+"You cannot archive contacts linked to an active user.\n"
+"Ask an administrator to archive their associated user first.\n"
+"\n"
+"Linked active users :\n"
+"%(names)s"
+msgstr ""
+
+#: models/res_partner.py:646
+#, python-format
+msgid ""
+"You cannot delete contacts linked to an active user.\n"
+"You should rather archive them after archiving their associated user.\n"
+"\n"
+"Linked active users : %(names)s"
+msgstr ""
+
+#: models/res_partner.py:652
+#, python-format
+msgid ""
+"You cannot delete contacts linked to an active user.\n"
+"Ask an administrator to archive their associated user first.\n"
+"\n"
+"Linked active users :\n"
+"%(names)s"
+msgstr ""
+
+#: models/res_partner.py:811
+msgid "Couldn't create contact without email address!"
+msgstr ""
+
+#: models/res_partner.py:842
+msgid "An email is required for find_or_create to work"
+msgstr ""
+
+#: models/res_partner.py:846
+msgid "A valid email is required for find_or_create to work properly."
+msgstr ""
+
+#: models/res_partner.py:918
+#, fuzzy, python-format
+msgid "Partners: %(category)s"
+msgstr "دسته‌بندی مادر"
+
+#: models/res_partner.py:977
+msgid "Import Template for Customers"
+msgstr ""
+
+#: models/res_users.py:96
+msgid "This method can only be accessed over HTTP"
+msgstr ""
+
+#: models/res_users.py:117
+#, fuzzy
+msgid "Security Control"
+msgstr "امنیت"
+
+#: models/res_users.py:212
+msgid "The name of the group can not start with \"-\""
+msgstr "نام گروه نمی‌تواند با \"-\" آغاز شود"
+
+#: models/res_users.py:402
+msgid ""
+"Please use the change password wizard (in User Preferences or User menu) to "
+"change your own password."
+msgstr ""
+
+#: models/res_users.py:464
+#, python-format
+msgid ""
+"Company %(company_name)s is not in the allowed companies for user "
+"%(user_name)s (%(company_allowed)s)."
+msgstr ""
+
+#: models/res_users.py:471
+msgid "The \"App Switcher\" action cannot be selected as home action."
+msgstr ""
+
+#: models/res_users.py:483
+msgid "The user cannot have more than one user types."
+msgstr ""
+
+#: models/res_users.py:533
+msgid "Invalid 'group by' parameter"
+msgstr ""
+
+#: models/res_users.py:541
+msgid "Invalid search criterion"
+msgstr "شرط جستجوی نامعتبر"
+
+#: models/res_users.py:557
+msgid "You cannot activate the superuser."
+msgstr ""
+
+#: models/res_users.py:559
+msgid "You cannot deactivate the user you're currently logged in as."
+msgstr "شما نمی‌توانید کاربری که اکنون به نامش وارد شده‌اید غیر فعال کنید."
+
+#: models/res_users.py:611
+msgid ""
+"You can not remove the admin user as it is used internally for resources "
+"created by Odoo (updates, module installation, ...)"
+msgstr ""
+
+#: models/res_users.py:803
+msgid "Setting empty passwords is not allowed for security reasons!"
+msgstr "به دلایل امنیتی کلمه عبور نمیتواند خالی باشد!"
+
+#: models/res_users.py:864
+msgid "Users"
+msgstr "کاربران"
+
+#: models/res_users.py:880
+msgid "Groups"
+msgstr "گروه‌ها"
+
+#: models/res_users.py:892
+msgid "Access Rights"
+msgstr "سطوح دسترسی"
+
+#: models/res_users.py:904
+msgid "Record Rules"
+msgstr "قواعد رکورد"
+
+#: models/res_users.py:1010
+msgid "Too many login failures, please wait a bit before trying again."
+msgstr ""
+
+#: models/res_users.py:1560
+msgid "Other"
+msgstr "سایر"
+
+#: models/res_users.py:1600
+msgid ""
+"Incorrect Password, try again or click on Forgot Password to reset your "
+"password."
+msgstr ""
+
+#: models/res_users.py:1647
+msgid "Before clicking on 'Change Password', you have to write a new password."
+msgstr ""
+
+#: models/res_users.py:1762
+msgid ""
+"You can not remove API keys unless they're yours or you are a system user"
+msgstr ""
+
+#: models/res_users.py:1826
+msgid "Only internal users can create API keys"
+msgstr ""
+
+#: wizard/base_export_language.py:19
+msgid "New Language (Empty translation template)"
+msgstr "زبان جدید (قالب ترجمه خالی)"
+
+#: wizard/base_import_language.py:53
+#, python-format
+msgid ""
+"File %r not imported due to a malformed file.\n"
+"\n"
+"This issue can be caused by duplicates entries who are referring to the same "
+"field. Please check the content of the file you are trying to import.\n"
+"\n"
+"Technical Details:\n"
+"%s"
+msgstr ""
+
+#: wizard/base_import_language.py:60
+#, python-format
+msgid ""
+"File %r not imported due to format mismatch or a malformed file. (Valid "
+"formats are .csv, .po, .pot)\n"
+"\n"
+"Technical Details:\n"
+"%s"
+msgstr ""
+
+#: wizard/base_language_install.py:58
+msgid ""
+"The languages that you selected have been successfully "
+"installed.                            Users can choose their favorite "
+"language in their preferences."
+msgstr ""
+
+#: wizard/base_module_upgrade.py:67
+#, python-format
+msgid "The following modules are not installed or unknown: %s"
+msgstr "ماجولهای زیر نصب نشده‌اند یا ناشناخته‌اند: %s"
+
+#: wizard/base_partner_merge.py:305
+msgid ""
+"For safety reasons, you cannot merge more than 3 contacts together. You can "
+"re-open the wizard several times if needed."
+msgstr ""
+
+#: wizard/base_partner_merge.py:312
+msgid "You cannot merge a contact with one of his parent."
+msgstr ""
+
+#: wizard/base_partner_merge.py:315
+msgid ""
+"All contacts must have the same email. Only the Administrator can merge "
+"contacts with different emails."
+msgstr ""
+
+#: wizard/base_partner_merge.py:328
+msgid ""
+"Only the destination contact may be linked to existing Journal Items. Please "
+"ask the Administrator if you need to merge several contacts linked to "
+"existing Journal Items."
+msgstr ""
+
+#: wizard/base_partner_merge.py:412
+msgid "You have to specify a filter for your selection."
+msgstr ""
+
+#: wizard/base_update_translations.py:26
+#, python-format
+msgid "No language with code \"%s\" exists"
+msgstr "هیچ زبانی با کد %s وجود ندارد"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Allow cashier to reprint receipts\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "اجازه به صندوقدار جهت چاپ مجدد رسید\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Base module for Hungarian localization\n"
+#~ "==========================================\n"
+#~ "\n"
+#~ "This module consists :\n"
+#~ "\n"
+#~ " - Generic Hungarian chart of accounts\n"
+#~ " - Hungarian taxes\n"
+#~ " - Hungarian Bank information\n"
+#~ " "
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "ماجول پایه برای مجارستان\n"
+#~ "==========================================\n"
+#~ "\n"
+#~ "این ماجول تشکیل شده از :\n"
+#~ "\n"
+#~ " - نمودارهای عمومی حساب مجارستان\n"
+#~ " - مالیاتهای مجارستان\n"
+#~ " - اطلاعات بانک مجارستان\n"
+#~ " "
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "This module allows the cashier to quickly give a percentage\n"
+#~ "sale discount to a customer.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "این ماجول صندوقدار را قادر می‌سازد سریع یک درصد\n"
+#~ "تخفیف در فروش به مشتری بدهد.\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "[object with reference: %s - %s]"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "[شئ با مرجع: %s - %s]"
+
+#~ msgid ""
+#~ "\n"
+#~ "        - Allow to set project for Helpdesk team\n"
+#~ "        - Track timesheet for task from ticket\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        - اجازه به تعیین پروژه برای تیم پشتیبانی\n"
+#~ "        - رهگیری برگه زمانبندی برای کار از تیکت\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Belgium\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        گزارشهای حسابداری برای بلژیک\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Brazilian\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        گزارش‌های حسابداری برای برزیل\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Chile\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        گزارشهای حسابداری برای شیلی\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Hungarian\n"
+#~ " "
+#~ msgstr ""
+#~ "\n"
+#~ "        گزارش‌های حسابداری برای مجارستان\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Netherlands\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        گزارش‌های حسابداری برای هلند\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Romania\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        گزارش‌های حسابداری برای رومانی\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Slovenian\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        گزارش‌های حسابداری برای اسلوونی\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Spain\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        گزارش‌های حسابداری برای اسپانیا\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Switzerland\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        گزارش‌های حسابداری برای سوئیس\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for UK\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        گزارشهای حسابداری برای بریتانیا\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for US\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        گزارش‌های حسابداری برای ایالات متحده\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Uruguay\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "        گزارشهای حسابداری برای اوروگوئه\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Allows to use python code to define taxes"
+#~ msgstr ""
+#~ "\n"
+#~ "        اجازه استفاده از کد پایتون برای تعریف مالیاتها را می‌دهد"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Bridge between HR and Maintenance."
+#~ msgstr ""
+#~ "\n"
+#~ "        پل بین منابع انسانی و نگهداری."
+
+#~ msgid ""
+#~ "\n"
+#~ "        Print amount in words on checks issued for expenses\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        چاپ مقدار به حروف روی چکهای صادر شده برای هزینه‌ها\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module adds support for barcodes scanning to the delivery "
+#~ "packages.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "       این ماجول از اسکن بارکد برای تحویل بسته‌ها پشتیبانی می‌کند.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module adds support for barcodes scanning to the warehouse "
+#~ "management system.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        این ماجول پشتیبانی از اسکنر بارکد به سیستم مدیریت انبار اضافه "
+#~ "می‌کند.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module is used for Online bank synchronization."
+#~ msgstr ""
+#~ "\n"
+#~ "        این ماجول برای همگام سازی آنلاین بانک استفاده می‌شود."
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module provides the core of the Odoo Mobile App.\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "        این ماجول هسته برنامه موبایل اودو را فراهم می‌کند.\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Use Plaid.com to retrieve bank statements"
+#~ msgstr ""
+#~ "\n"
+#~ "        از Plaid.com برای گرفتن صورتحساب بانک استفاده کنید"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Use Plaid.com to retrieve bank statements.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "         از Plaid.com برای گرفتن صورتحساب بانک استفاده کنید.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "    Adds workcenters to Quality Control\n"
+#~ msgstr ""
+#~ "\n"
+#~ "    مراکز کار به کنترل کیفیت اضافه می‌کند\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "    Module linking the attendance module to the timesheet app.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    ماجولی که بین ماجول حضور و غیاب و برنامه برگه زمانی لینک ایجاد "
+#~ "می‌کند.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "  Publish your products on eBay"
+#~ msgstr ""
+#~ "\n"
+#~ "  محصول خود را روی ایfd lkjav ;kdn"
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting Data for Belgian Payroll Rules.\n"
+#~ "==========================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "داده‌های حسابداری برای قوانین حقوق و دستمزد بلژیک.\n"
+#~ "==========================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting Reports\n"
+#~ "==================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "گزارشهای حسابداری\n"
+#~ "==================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Argentina\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "گزارشهای حسابداری برای آرژانتین\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Bolivia\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "گزارشهای حسابداری برای بولیوی\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Colombia\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "گزارشهای حسابداری برای کلمبیا\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Croatia\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "گزارشهای حسابداری برای کرواسی\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Ethiopia\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "گزارشهای حسابداری برای اتیوپی\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for France\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "گزارشهای حسابداری برای فرانسه\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Greece\n"
+#~ "=============================\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "گزارشهای حسابداری برای یونان\n"
+#~ "=============================\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for India\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "گزارشهای حسابداری برای هند\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Japan\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "گزارشهای حسابداری برای ژاپن================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Luxembourg\n"
+#~ "=================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "گزارشهای حسابداری برای لوکزامبورگ\n"
+#~ "=================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Maroc\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "گزارشهای حسابداری برای مراکش\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Norway\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "گزارشهای حسابداری برای نروژ\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Poland\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "گزارشهای حسابداری برای لهستان\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Thailand\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "گزارشهای حسابداری برای تایلند\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Allow clients to Schedule Appointments through your Website\n"
+#~ "-------------------------------------------------------------\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "به ارباب رجوع اجازه می‌دهد قرار ملاقات به وسیله وبسایت برنامه ریزی کنند\n"
+#~ "-------------------------------------------------------------\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Allow users to login through OAuth2 Provider.\n"
+#~ "=============================================\n"
+#~ msgstr ""
+#~ "\n"
+#~ "به کاربران اجازه ورود با استفاده از فراهم کننده OAuth2 را بدهید.\n"
+#~ "=============================================\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Allow users to sign up and reset their password\n"
+#~ "===============================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "به کاربران اجازه ثبت نام و بازنشانی گذرواژه را می‌دهد\n"
+#~ "===============================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Analytic Accounting in MRP\n"
+#~ "==========================\n"
+#~ "\n"
+#~ "* Cost structure report\n"
+#~ msgstr ""
+#~ "\n"
+#~ "حسابداری تحلیلی در  MRP\n"
+#~ "==========================\n"
+#~ "\n"
+#~ "* گزارش ساختار هزینه\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Ask questions, get answers, no distractions\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "سوال بپرسید، جواب بگیرید، بدون ابهام\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "Assets management\n"
+#~ "=================\n"
+#~ "Manage assets owned by a company or a person.\n"
+#~ "Keeps track of depreciations, and creates corresponding journal entries.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "مدیریت دارایی‌ها\n"
+#~ "=================\n"
+#~ "دارایی‌های یک شرکت یا شخص را مدیریت کنید.\n"
+#~ "حساب استهلاک را دارد و ورودی‌های مربوطه روزنامه را ایجاد می‌کند.\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Bridge module for rating on website stuff.\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "ماجول پلی برای رتبه‌دهی برای چیزهای وبسایت.\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "Chart of Accounts for Thailand.\n"
+#~ "===============================\n"
+#~ "\n"
+#~ "Thai accounting chart and localization.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "نمودار حسابها برای تایلند.\n"
+#~ "===============================\n"
+#~ "\n"
+#~ "نمودار حسابداری و محلی‌سازی تایلند.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Create short and trackable URLs.\n"
+#~ "=====================================================\n"
+#~ "\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "آدرسهای اینترنتی کوتاه و قابل پیگیری ایجاد کنید.\n"
+#~ "=====================================================\n"
+#~ "\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "Design gorgeous mails\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "نامه‌های زیبا طراحی کنید\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Display orders to invoice in website dashboard.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "سفارشات برای فاکتور کردن را در داشبورد وبسایت نشان می‌دهد.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "General Chart of Accounts.\n"
+#~ "==========================\n"
+#~ "\n"
+#~ "Provide Templates for Chart of Accounts, Taxes for Uruguay.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "نمودارهای حساب عمومی.\n"
+#~ "==========================\n"
+#~ "\n"
+#~ "نمودار حسابها و مالیاتها برای اروگوئه را فراهم می‌کند.\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Lets the user create a custom dashboard.\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "Allows users to create custom dashboard.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "امکان ایجاد داشبورد سفارشی به کاربر می‌دهد.\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "به کاربرها اجازه می‌دهد داشبورد سفارشی ایجاد کنند.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Odoo Enterprise Web Client.\n"
+#~ "===========================\n"
+#~ "\n"
+#~ "This module modifies the web addon to provide Enterprise design and "
+#~ "responsiveness.\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "کلاینت وب سازمانی اودو.\n"
+#~ "===========================\n"
+#~ "\n"
+#~ "این ماجول افزونه وب را تغییر می‌دهد تا طراحی سازمانی و قابلیت پاسخگویی را "
+#~ "اضافه کند.\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "Odoo Web Editor widget.\n"
+#~ "==========================\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "ویجت ویرایشگر وب اودو.\n"
+#~ "==========================\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Odoo Web core module.\n"
+#~ "========================\n"
+#~ "\n"
+#~ "This module provides the core of the Odoo Web Client.\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "ماجول هسته وب اودو.\n"
+#~ "========================\n"
+#~ "\n"
+#~ "این ماجول هسته کلاینت وب اودو را فراهم می‌کند.\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "Odoo Web tours.\n"
+#~ "========================\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "تورهای وب اودو.\n"
+#~ "========================\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Partners Geolocation\n"
+#~ "========================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "موقعیت مکانی همکاران\n"
+#~ "========================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "The kernel of Odoo, needed for all installation.\n"
+#~ "===================================================\n"
+#~ msgstr ""
+#~ "\n"
+#~ "هسته اودو، مورد نیاز برای همه نصب‌ها.\n"
+#~ "===================================================\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module allows a customer to give rating.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "این ماجول به یک مشتری امکان نمره دادن می‌دهد.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "United Arab Emirates accounting chart and localization.\n"
+#~ "=======================================================\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "نمودار حسابها و محلی‌سازی امارات متحده عربی.\n"
+#~ "=======================================================\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "United States - Chart of accounts.\n"
+#~ "==================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "ایالات متحده - نمودار حسابها.\n"
+#~ "==================================\n"
+#~ "    "
+
+#~ msgid "%A - Full weekday name."
+#~ msgstr "%A - نام کامل روزهای هفته."
+
+#~ msgid "%B - Full month name.\""
+#~ msgstr "%B - نام کامل ماه.\""
+
+#~ msgid "%H - Hour (24-hour clock) [00,23].\""
+#~ msgstr "%H - ساعت (ساعت 24 ساعته) [00,23].\""
+
+#~ msgid "%I - Hour (12-hour clock) [01,12].\""
+#~ msgstr "%H - ساعت (ساعت 12 ساعته) [01,12].\""
+
+#~ msgid "%M - Minute [00,59].\""
+#~ msgstr "%M - دقیقه [00,59].\""
+
+#~ msgid "%S - Seconds [00,61].\""
+#~ msgstr "%S - ثانیه [00,61].\""
+
+#~ msgid "%Y - Year with century.\""
+#~ msgstr "%Y - سال با صده.\""
+
+#~ msgid "%a - Abbreviated weekday name."
+#~ msgstr "%a - نام روزهای اختصاری هفته."
+
+#~ msgid "%b - Abbreviated month name."
+#~ msgstr "%b - نام اختصاری ماه"
+
+#~ msgid "%d - Day of the month [01,31].\""
+#~ msgstr "%d - روز در ماه [01,31].\""
+
+#~ msgid "%j - Day of the year [001,366].\""
+#~ msgstr "%j - روز در سال [001,366].\""
+
+#~ msgid "%m - Month number [01,12].\""
+#~ msgstr "%m - شماره ماه [01,12].\""
+
+#~ msgid "%y - Year without century [00,99].\""
+#~ msgstr "%y - سال بدون صده [00,99].\""
+
+#~ msgid "&amp;nbsp;"
+#~ msgstr "&amp;nbsp;"
+
+#~ msgid ", or your preferred text editor"
+#~ msgstr ", یا شما ویرایشگر متنی ترجیح دادید"
+
+#~ msgid ", readonly"
+#~ msgstr ", فقط خواندنی"
+
+#~ msgid ", required"
+#~ msgstr ", لازم"
+
+#~ msgid "- domain ="
+#~ msgstr "- دامنه ="
+
+#~ msgid "- field ="
+#~ msgstr "- فیلد ="
+
+#~ msgid "- groups ="
+#~ msgstr "- گروهها ="
+
+#~ msgid "- ondelete ="
+#~ msgstr "- هنگام پاک کردن ="
+
+#~ msgid "- relation ="
+#~ msgstr "- رابطه ="
+
+#~ msgid "- selection ="
+#~ msgstr "- انتخاب ="
+
+#~ msgid "- size ="
+#~ msgstr "- اندازه ="
+
+#~ msgid "-This module does not create menu."
+#~ msgstr "-این ماجول منو ایجاد نمی‌کند."
+
+#~ msgid "-This module does not create report."
+#~ msgstr "-این ماجول گزارش ایجاد نمی‌کند."
+
+#~ msgid "-This module does not create views."
+#~ msgstr "-این ماجول نما ایجاد نمی‌کند."
+
+#~ msgid "-This module does not depends on any other module."
+#~ msgstr "-این ماجول به هیچ ماجول دیگری وابسته نیست."
+
+#~ msgid "-This module does not exclude any other module."
+#~ msgstr "- این ماجول ماجولی دیگر را حذف نمی‌کند."
+
+#~ msgid "<strong>Apps</strong>"
+#~ msgstr "<strong>برنامه‌ها</strong>"
+
+#~ msgid "<strong>Attribute</strong>"
+#~ msgstr "<strong>صفت</strong>"
+
+#~ msgid "<strong>Dependencies :</strong>"
+#~ msgstr "<strong>وابستگی‌ها :</strong>"
+
+#~ msgid "<strong>Email:</strong>"
+#~ msgstr "<strong>ایمیل:</strong>"
+
+#~ msgid "<strong>Group</strong>"
+#~ msgstr "<strong>گروه</strong>"
+
+#~ msgid "<strong>Label</strong>"
+#~ msgstr "<strong>برچسب</strong>"
+
+#~ msgid "<strong>Menu :</strong>"
+#~ msgstr "<strong>منو :</strong>"
+
+#~ msgid "<strong>Name</strong>"
+#~ msgstr "<strong>نام</strong>"
+
+#~ msgid "<strong>Phone</strong>"
+#~ msgstr "<strong>تلفن</strong>"
+
+#~ msgid "<strong>Reports :</strong>"
+#~ msgstr "<strong>گزارش‌ها :</strong>"
+
+#~ msgid "<strong>Type</strong>"
+#~ msgstr "<strong>نوع</strong>"
+
+#~ msgid "<strong>View :</strong>"
+#~ msgstr "<strong>نما :</strong>"
+
+#~ msgid "<u><strong>Fields</strong></u>"
+#~ msgstr "<u><strong>فیلدها</strong></u>"
+
+#~ msgid "<u><strong>Security</strong></u>"
+#~ msgstr "<u><strong>امنیت</strong></u>"
+
+#~ msgid "<u><strong>Views</strong></u>"
+#~ msgstr "<u><strong>نماها</strong></u>"
+
+#~ msgid "A AGRICULTURE, FORESTRY AND FISHING"
+#~ msgstr "کشاورزی، جنکلکاری و شیلات"
+
+#~ msgid "A user associated to the contact"
+#~ msgstr "یک کاربر به مخاطب مربوط شده است"
+
+#~ msgid "A0  5   841 x 1189 mm"
+#~ msgstr "A0  5   841 x 1189 mm"
+
+#~ msgid "A1  6   594 x 841 mm"
+#~ msgstr "A1  6   594 x 841 mm"
+
+#~ msgid "A2  7   420 x 594 mm"
+#~ msgstr "A2  7   420 x 594 mm"
+
+#~ msgid "A3  8   297 x 420 mm"
+#~ msgstr "A3  8   297 x 420 mm"
+
+#~ msgid "A4  0   210 x 297 mm, 8.26 x 11.69 inches"
+#~ msgstr "A4  0   210 x 297 mm, 8.26 x 11.69 inches"
+
+#~ msgid "A5  9   148 x 210 mm"
+#~ msgstr "A5  9   148 x 210 mm"
+
+#~ msgid "A6  10  105 x 148 mm"
+#~ msgstr "A6  10  105 x 148 mm"
+
+#~ msgid "A7  11  74 x 105 mm"
+#~ msgstr "A7  11  74 x 105 mm"
+
+#~ msgid "A8  12  52 x 74 mm"
+#~ msgstr "A8  12  52 x 74 mm"
+
+#~ msgid "A9  13  37 x 52 mm"
+#~ msgstr "A9  13  37 x 52 mm"
+
+#~ msgid "Abbreviation"
+#~ msgstr "مخفف"
+
+#~ msgid "Accepted Users"
+#~ msgstr "کاربران پذیرفته"
+
+#~ msgid "Access"
+#~ msgstr "دسترسی"
+
+#~ msgid "Access Controls"
+#~ msgstr "کنترل‌های دسترسی"
+
+#~ msgid "Access Groups"
+#~ msgstr "گروه‌های حق دسترسی"
+
+#~ msgid "Access Menu"
+#~ msgstr "منوی دسترسی"
+
+#~ msgid "Access Token"
+#~ msgstr "توکن دسترسی"
+
+#~ msgid "Account Analytic Defaults"
+#~ msgstr "پیشفرضهای حساب تحلیلی"
+
+#~ msgid "Account Charts"
+#~ msgstr "نمودار حساب ها"
+
+#~ msgid "Account Holder"
+#~ msgstr "دارنده حساب"
+
+#~ msgid "Account No."
+#~ msgstr "شماره حساب"
+
+#~ msgid "Account Number"
+#~ msgstr "شماره حساب"
+
+#~ msgid "Account and Payment Link and Portal"
+#~ msgstr "لینک و پرتال حساب و پرداخت"
+
+#~ msgid "Accounting"
+#~ msgstr "حسابداری"
+
+#~ msgid "Accounting & Finance"
+#~ msgstr "حسابداری و مالی"
+
+#~ msgid "Accounting Reports"
+#~ msgstr "گزارشات حسابداری"
+
+#~ msgid "Action"
+#~ msgstr "عمل"
+
+#~ msgid "Action Description"
+#~ msgstr "توضیحات عمل"
+
+#~ msgid "Action Name"
+#~ msgstr "نام کنش"
+
+#~ msgid "Action Target"
+#~ msgstr "هدف کنش"
+
+#~ msgid "Action To Do"
+#~ msgstr "عمل برای انجام"
+
+#~ msgid "Action Type"
+#~ msgstr "نوع واکنش"
+
+#~ msgid "Action URL"
+#~ msgstr "URL کنش"
+
+#~ msgid "Action Usage"
+#~ msgstr "کاربرد کنش"
+
+#~ msgid "Actions"
+#~ msgstr "کنش‌ها"
+
+#~ msgid "Active"
+#~ msgstr "فعال"
+
+#~ msgid "Add extra fields on addresses"
+#~ msgstr "اضافه کردن فیلد اضافه برای نشانی‌ها"
+
+#~ msgid "Add in the 'Print' menu"
+#~ msgstr "اضافه کردن در منوی پرینت"
+
+#~ msgid "Address Type"
+#~ msgstr "نوع نشانی"
+
+#~ msgid "Address format..."
+#~ msgstr "قالب نشانی..."
+
+#~ msgid "Administration"
+#~ msgstr "مدیریت"
+
+#~ msgid "Administrative"
+#~ msgstr "مدیریتی"
+
+#~ msgid "Advanced Address Formatting"
+#~ msgstr "قالب بندی نشانی پیشرفته"
+
+#~ msgid "Advanced Events"
+#~ msgstr "رویدادهای پیشرفته"
+
+#~ msgid "Advanced Properties"
+#~ msgstr "ویژگی‌های پیشرفته"
+
+#~ msgid "Affero GPL-3"
+#~ msgstr "Affero GPL-3"
+
+#~ msgid "Afghanistan"
+#~ msgstr "افغانستان"
+
+#~ msgid "After Address"
+#~ msgstr "آدرس بعد"
+
+#~ msgid "After Amount"
+#~ msgstr "مقدار بعد"
+
+#~ msgid "Agriculture"
+#~ msgstr "کشاورزی"
+
+#~ msgid "Albania"
+#~ msgstr "آلبانی"
+
+#~ msgid "Algeria"
+#~ msgstr "الجزایر"
+
+#~ msgid "All"
+#~ msgstr "همه"
+
+#~ msgid "Allow cashier to reprint receipts"
+#~ msgstr "اجازه به صندوقدار برای چاپ مجدد رسید"
+
+#~ msgid "Allowed Companies"
+#~ msgstr "شرکت‌های مجاز"
+
+#~ msgid "Allows to use discount coupons in sales orders"
+#~ msgstr "اجازه جهت استفاده از کوپن تخفیف در سفارشات فروش"
+
+#~ msgid ""
+#~ "Allows you to create your invoices and track the payments. It is an "
+#~ "easier version of the accounting module for managers who are not "
+#~ "accountants."
+#~ msgstr ""
+#~ "اجازه می دهد تا شما فاکتورهای خود را ایجاد و پرداخت ها را  پیگیری کنید . "
+#~ "این یک نسخه ساده تر از ماژول حسابداری است برای مدیرانی که حسابدار نیستند."
+
+#~ msgid ""
+#~ "Also you will find here all the related documents and download it by "
+#~ "clicking on any individual document."
+#~ msgstr ""
+#~ "شما می‌توانید در این قسمت تمام فایل‌های مرتبط را یافته هر سند فردی را با "
+#~ "کلیک روی آن دانلود کنید"
+
+#~ msgid "American Samoa"
+#~ msgstr "سومای امریکا"
+
+#~ msgid "Analytic Accounting"
+#~ msgstr "حسابداری تحلیلی"
+
+#~ msgid "Andorra"
+#~ msgstr "آندورا"
+
+#~ msgid "Angola"
+#~ msgstr "آنگولا"
+
+#~ msgid "Anguilla"
+#~ msgstr "آنگولا"
+
+#~ msgid "Antarctica"
+#~ msgstr "جنوبگان"
+
+#~ msgid "Antigua and Barbuda"
+#~ msgstr "اَنتیگا و باربودا"
+
+#~ msgid "App Store"
+#~ msgstr "فروشگاه‌ برنامه"
+
+#~ msgid "Application"
+#~ msgstr "برنامه"
+
+#~ msgid "Application Accesses"
+#~ msgstr "دسترسی به برنامه"
+
+#~ msgid "Application Terms"
+#~ msgstr "واژگان برنامه"
+
+#~ msgid "Apply"
+#~ msgstr "اعمال"
+
+#~ msgid "Apply Scheduled Upgrades"
+#~ msgstr "اعمال ارتقای زمان‌بندی‌شده"
+
+#~ msgid "Apply for Create"
+#~ msgstr "اعمال برای ایجاد"
+
+#~ msgid "Apply for Delete"
+#~ msgstr "اعمال برای حذف"
+
+#~ msgid "Apply for Read"
+#~ msgstr "اعمال برای خواندن"
+
+#~ msgid "Apply for Write"
+#~ msgstr "اعمال برای نوشتن"
+
+#~ msgid "Appraisal"
+#~ msgstr "ارزیابی"
+
+#~ msgid "Appraisals"
+#~ msgstr "ارزیابی‌ها"
+
+#~ msgid "Apps"
+#~ msgstr "برنامه ها"
+
+#~ msgid "Apps To Export"
+#~ msgstr "برنامه‌ها جهت برون‌بری"
+
+#~ msgid "Apps to Update"
+#~ msgstr "برنامه‌ها برای بروزرسانی"
+
+#~ msgid "Apps:"
+#~ msgstr "برنامه‌ها:"
+
+#~ msgid "Architecture"
+#~ msgstr "معماری"
+
+#~ msgid "Archived"
+#~ msgstr "بایگانی شده"
+
+#~ msgid "Are you sure to execute the automatic merge of your contacts ?"
+#~ msgstr "آیا شما مطمئن به اجرای ادغام خودکار تماس‌هایتان هستید؟"
+
+#~ msgid "Argentina"
+#~ msgstr "آرژانتین"
+
+#~ msgid "Argentina - Accounting"
+#~ msgstr "حسابداری - آرژانتین"
+
+#~ msgid "Argentina - Accounting Reports"
+#~ msgstr "گزارشات حسابداری - آرژانتین"
+
+#~ msgid "Armenia"
+#~ msgstr "ارمنستان"
+
+#~ msgid "Aruba"
+#~ msgstr "آروبا"
+
+#~ msgid "Assets Management"
+#~ msgstr "مدیریت دارایی"
+
+#~ msgid "Associated reports"
+#~ msgstr "گزارشات وابسته"
+
+#~ msgid "Attached Document Name"
+#~ msgstr "نام فایل ضمیمه شده"
+
+#~ msgid "Attached To"
+#~ msgstr "پیوست به"
+
+#~ msgid "Attachment"
+#~ msgstr "پیوست"
+
+#~ msgid "Attachments"
+#~ msgstr "پیوست‌ها"
+
+#~ msgid "Attendance"
+#~ msgstr "حضور و غیاب"
+
+#~ msgid "Attendances"
+#~ msgstr "حضورغیاب ها"
+
+#~ msgid "Australia"
+#~ msgstr "استرالیا"
+
+#~ msgid "Australian - Accounting"
+#~ msgstr "استرالیا - حسابداری"
+
+#~ msgid "Australian - Accounting Reports"
+#~ msgstr "استرالیا - گزارش‌های حسابداری"
+
+#~ msgid "Austria"
+#~ msgstr "اتریش"
+
+#~ msgid "Austria - Accounting"
+#~ msgstr "اتریش - حسابداری"
+
+#~ msgid "Author"
+#~ msgstr "مولف"
+
+#~ msgid "Author Name"
+#~ msgstr "نویسنده"
+
+#~ msgid "Auto Search"
+#~ msgstr "جستجوی خودکار"
+
+#~ msgid "Automated Action Rules"
+#~ msgstr "قوانین عملیات خودکار"
+
+#~ msgid "Automatic Installation"
+#~ msgstr "نصب خودکار"
+
+#~ msgid "Automatic Merge Wizard"
+#~ msgstr "ویزارد ادغام خودکار"
+
+#~ msgid "Automation"
+#~ msgstr "اتوماسیون"
+
+#~ msgid "Available for User"
+#~ msgstr "موجود برای کاربر"
+
+#~ msgid "Avatar"
+#~ msgstr "آواتار"
+
+#~ msgid "Azerbaijan"
+#~ msgstr "آذربایجان"
+
+#~ msgid "B0  14  1000 x 1414 mm"
+#~ msgstr "B0  14  1000 x 1414 mm"
+
+#~ msgid "B1  15  707 x 1000 mm"
+#~ msgstr "B1  15  707 x 1000 mm"
+
+#~ msgid "B2  17  500 x 707 mm"
+#~ msgstr "B2  17  500 x 707 mm"
+
+#~ msgid "B3  18  353 x 500 mm"
+#~ msgstr "B3  18  353 x 500 mm"
+
+#~ msgid "B4  19  250 x 353 mm"
+#~ msgstr "B4  19  250 x 353 mm"
+
+#~ msgid "B5  1   176 x 250 mm, 6.93 x 9.84 inches"
+#~ msgstr "B5  1   176 x 250 mm, 6.93 x 9.84 inches"
+
+#~ msgid "B6  20  125 x 176 mm"
+#~ msgstr "B6  20  125 x 176 mm"
+
+#~ msgid "B7  21  88 x 125 mm"
+#~ msgstr "B7  21  88 x 125 mm"
+
+#~ msgid "B8  22  62 x 88 mm"
+#~ msgstr "B8  22  62 x 88 mm"
+
+#~ msgid "B9  23  33 x 62 mm"
+#~ msgstr "B9  23  33 x 62 mm"
+
+#~ msgid "Bad file format: %s"
+#~ msgstr "فرمت فایل نامعتبر است: %s"
+
+#~ msgid "Bahamas"
+#~ msgstr "باهاماس"
+
+#~ msgid "Bahrain"
+#~ msgstr "بحرین"
+
+#~ msgid "Bangladesh"
+#~ msgstr "بنگلادش"
+
+#~ msgid "Bank"
+#~ msgstr "بانک"
+
+#~ msgid "Bank Accounts"
+#~ msgstr "حساب‌های بانکی"
+
+#~ msgid "Bank Identifier Code"
+#~ msgstr "کد شناسه بانک"
+
+#~ msgid "Bank Name"
+#~ msgstr "نام بانک"
+
+#~ msgid "Bank account"
+#~ msgstr "حساب بانکی"
+
+#~ msgid "Bank accounts related to this company"
+#~ msgstr "حساب های بانکی مرتبط با این شرکت"
+
+#~ msgid "Banks"
+#~ msgstr "بانک‌ها"
+
+#~ msgid "Barbados"
+#~ msgstr "بارابادوس"
+
+#~ msgid "Barcode Scanner Hardware Driver"
+#~ msgstr "درایو سخت‌افزاری اسکنر بارکد"
+
+#~ msgid "Base"
+#~ msgstr "پایه"
+
+#~ msgid "Base Field"
+#~ msgstr "فیلد پایه"
+
+#~ msgid "Base Object"
+#~ msgstr "شی پایه"
+
+#~ msgid "Base Properties"
+#~ msgstr "ویژگی‌های پایه‌ای"
+
+#~ msgid "Basic 2D Grid view for odoo"
+#~ msgstr "نمای پایه چهارخانه برای اودو"
+
+#~ msgid "Before Address"
+#~ msgstr "نشانی قبلی"
+
+#~ msgid "Before Amount"
+#~ msgstr "مقدار قبلی"
+
+#~ msgid "Belarus"
+#~ msgstr "بلاروس"
+
+#~ msgid "Belgium"
+#~ msgstr "بلژیک"
+
+#~ msgid "Belgium - Accounting"
+#~ msgstr "بلژیک - حسابداری"
+
+#~ msgid "Belgium - Accounting Reports"
+#~ msgstr "بلژیک - گزارش‌های حسابداری"
+
+#~ msgid "Belgium - Payroll"
+#~ msgstr "بلژیک - حقوق و دستمزد"
+
+#~ msgid "Belgium - Payroll - Fleet"
+#~ msgstr "بلژیک - دستمزد - ناوگان حمل"
+
+#~ msgid "Belgium - Payroll with Accounting"
+#~ msgstr "بلژیک - حقوق و دستمزد با حسابداری"
+
+#~ msgid "Belgium - Structured Communication"
+#~ msgstr "بلژیک ساختار ارتباطات"
+
+#~ msgid "Belize"
+#~ msgstr "بلیز"
+
+#~ msgid "Benin"
+#~ msgstr "بنین"
+
+#~ msgid "Bermuda"
+#~ msgstr "برمودا"
+
+#~ msgid "Bhutan"
+#~ msgstr "بوتان"
+
+#~ msgid "Binary"
+#~ msgstr "باینری"
+
+#~ msgid "Binding Model"
+#~ msgstr "مدل الزام‌آور"
+
+#~ msgid "Binding Type"
+#~ msgstr "نوع الزام‌آور"
+
+#~ msgid "Blogs"
+#~ msgstr "بلاگها"
+
+#~ msgid "Bolivia"
+#~ msgstr "بولیوی"
+
+#~ msgid "Bolivia - Accounting"
+#~ msgstr "بولیوی - حسابداری"
+
+#~ msgid "Bolivia - Accounting Reports"
+#~ msgstr "بولیوی - گزارشّای حسابداری"
+
+#~ msgid "Boolean"
+#~ msgstr "بله/خیر"
+
+#~ msgid "Bootswatch Theme"
+#~ msgstr "تم بوتسواچ"
+
+#~ msgid "Bosnia and Herzegovina"
+#~ msgstr "بوسنی و هرزگوین"
+
+#~ msgid "Botswana"
+#~ msgstr "بوتسوانا"
+
+#~ msgid "Bottom Margin (mm)"
+#~ msgstr "حاشیه پایین (میلی متر)"
+
+#~ msgid "Bouvet Island"
+#~ msgstr "جزیره‌ی بووت"
+
+#~ msgid "Brazil"
+#~ msgstr "برزیل"
+
+#~ msgid "Brazilian - Accounting"
+#~ msgstr "برزیل - حسابداری"
+
+#~ msgid "Brazilian - Accounting Reports"
+#~ msgstr "برزیل - گزارشهای حسابداری"
+
+#~ msgid "British Indian Ocean Territory"
+#~ msgstr "مستعمره‌های انگلستان در اقیانوس هند"
+
+#~ msgid "Brunei Darussalam"
+#~ msgstr "برونئی دارالسلام"
+
+#~ msgid "Budget Management"
+#~ msgstr "مدیریت بودجه"
+
+#~ msgid "Bulgaria"
+#~ msgstr "بلغارستان"
+
+#~ msgid "Burkina Faso"
+#~ msgstr "بورکینافاسو"
+
+#~ msgid "Burundi"
+#~ msgstr "بوروندی"
+
+#~ msgid "By"
+#~ msgstr "توسط"
+
+#~ msgid "C5E 24  163 x 229 mm"
+#~ msgstr "C5E 24  163 x 229 mm"
+
+#~ msgid "CRM"
+#~ msgstr "CRM"
+
+#~ msgid "CRM Livechat"
+#~ msgstr "گفتگوی زنده ارتباط با مشتری"
+
+#~ msgid "CSV File"
+#~ msgstr "فایل CSV"
+
+#~ msgid "Calendar"
+#~ msgstr "گاهشمار"
+
+#~ msgid "Cambodia"
+#~ msgstr "کامبوج"
+
+#~ msgid "Cameroon"
+#~ msgstr "کامرون"
+
+#~ msgid "Canada"
+#~ msgstr "کانادا"
+
+#~ msgid "Canada - Accounting"
+#~ msgstr "کانادا - حسابداری"
+
+#~ msgid "Cancel"
+#~ msgstr "لغو"
+
+#~ msgid "Cancel Install"
+#~ msgstr "لغو برپاسازی"
+
+#~ msgid "Cancel Journal Entries"
+#~ msgstr "لغو ورودی‌های روزنامه"
+
+#~ msgid "Cancel Uninstall"
+#~ msgstr "لغو برکناری"
+
+#~ msgid "Cancel Upgrade"
+#~ msgstr "لغو ارتقا"
+
+#~ msgid "Cape Verde"
+#~ msgstr "کیپ ورد"
+
+#~ msgid "Cascade"
+#~ msgstr "آبشاری"
+
+#~ msgid "Category"
+#~ msgstr "دسته‌بندی"
+
+#~ msgid "Cayman Islands"
+#~ msgstr "جزایر کِیمَن"
+
+#~ msgid "Central African Republic"
+#~ msgstr "جمهوری افریقای مرکزی"
+
+#~ msgid "Chad"
+#~ msgstr "چاد"
+
+#~ msgid "Change My Preferences"
+#~ msgstr "تغییر ترجیحات من"
+
+#~ msgid "Change Password"
+#~ msgstr "تغییر کلمه عبور"
+
+#~ msgid "Change Password Wizard"
+#~ msgstr "ویزارد تغییر گذرواژه"
+
+#~ msgid "Change password"
+#~ msgstr "تغییر رمز عبور"
+
+#~ msgid "Char"
+#~ msgstr "کاراکتر"
+
+#~ msgid "Check Printing Base"
+#~ msgstr "اساس پرینت چک"
+
+#~ msgid "Check Printing in Expenses"
+#~ msgstr "پرینت چک در هزینه‌ها"
+
+#~ msgid "Check if the contact is a company, otherwise it is a person"
+#~ msgstr "تیک بزنید اگر تماس یک شرکت است، در غیر این صورت شخص میباشد"
+
+#~ msgid "Check printing commons"
+#~ msgstr "عمومی پرینت چک"
+
+#~ msgid "Check this box if this contact is an Employee."
+#~ msgstr "این گزینه را انتخاب کنید اگر این تماس یک کارمند است"
+
+#~ msgid "Child Actions"
+#~ msgstr "عمل‌های زیر دست"
+
+#~ msgid "Child Applications"
+#~ msgstr "برنامه‌های فرزند"
+
+#~ msgid "Child Companies"
+#~ msgstr "شرکت‌های فرزند"
+
+#~ msgid "Child Field"
+#~ msgstr "فیلد فرزند"
+
+#~ msgid "Child IDs"
+#~ msgstr "شناسه‌های فرزند"
+
+#~ msgid "Child Tags"
+#~ msgstr "برچسبهای فرزند"
+
+#~ msgid "Chile"
+#~ msgstr "شیلی"
+
+#~ msgid "Chile - Accounting"
+#~ msgstr "شیلی - حسابداری"
+
+#~ msgid "Chile - Accounting Reports"
+#~ msgstr "شیلی - گزارشهای حسابداری"
+
+#~ msgid "China"
+#~ msgstr "چین"
+
+#~ msgid "Choose Your Document Layout"
+#~ msgstr "طرح بندی سند خود انتخاب کنید"
+
+#~ msgid "Christmas Island"
+#~ msgstr "جزیره‌ی کریسمس"
+
+#~ msgid "City"
+#~ msgstr "شهر"
+
+#~ msgid "City Addresses"
+#~ msgstr "آدرسهای شهرها"
+
+#~ msgid "Client"
+#~ msgstr "کلاینت"
+
+#~ msgid "Client Action"
+#~ msgstr "کنش کارخواه"
+
+#~ msgid "Close"
+#~ msgstr "بستن"
+
+#~ msgid "Cocos (Keeling) Islands"
+#~ msgstr "جزایر کوکوس"
+
+#~ msgid "Code"
+#~ msgstr "کد"
+
+#~ msgid "Collaborative Pads"
+#~ msgstr "پدهای تعاملی"
+
+#~ msgid "Colombia"
+#~ msgstr "کلمبیا"
+
+#~ msgid "Colombian - Accounting"
+#~ msgstr "کلمبیا - حسابداری"
+
+#~ msgid "Colombian - Accounting Reports"
+#~ msgstr "کلمبیا - گزارش‌های حسابداری"
+
+#~ msgid "Color Index"
+#~ msgstr "رنگ پس زمینه"
+
+#~ msgid "Column 1"
+#~ msgstr "ستون 1"
+
+#~ msgid "Column 2"
+#~ msgstr "ستون 2"
+
+#~ msgid "Comments"
+#~ msgstr "نظرها"
+
+#~ msgid "Commercial Entity"
+#~ msgstr "نهاد تجاری"
+
+#~ msgid "Communication"
+#~ msgstr "رسانگرش"
+
+#~ msgid "Comoros"
+#~ msgstr "کومورو"
+
+#~ msgid "Companies"
+#~ msgstr "شرکت‌ها"
+
+#~ msgid "Companies count"
+#~ msgstr "تعداد شرکتها"
+
+#~ msgid "Company Data"
+#~ msgstr "داده شرکت"
+
+#~ msgid "Company Logo"
+#~ msgstr "لوگو شرکت"
+
+#~ msgid "Company Name"
+#~ msgstr "نام شرکت"
+
+#~ msgid "Company Name Entity"
+#~ msgstr "نام موسسه شرکت"
+
+#~ msgid "Company Properties"
+#~ msgstr "خصوصیات شرکت"
+
+#~ msgid "Company Registry"
+#~ msgstr "ثبت شرکت"
+
+#~ msgid "Company Tagline"
+#~ msgstr "شعار شرکت"
+
+#~ msgid "Company Type"
+#~ msgstr "نوع شرکت"
+
+#~ msgid "Complete Address"
+#~ msgstr "نشانی کامل"
+
+#~ msgid "Complete ID"
+#~ msgstr "آیدی کامل"
+
+#~ msgid "Complete Name"
+#~ msgstr "نام کامل"
+
+#~ msgid "Compute"
+#~ msgstr "محاسبه"
+
+#~ msgid "Condition"
+#~ msgstr "شرط"
+
+#~ msgid "Config Wizard Steps"
+#~ msgstr "پیکربندی گام‌های تردست"
+
+#~ msgid "Configuration"
+#~ msgstr "پیکربندی"
+
+#~ msgid "Configuration Installer"
+#~ msgstr "نصب کننده پیکربندی"
+
+#~ msgid "Configuration Wizards"
+#~ msgstr "ویزارد پیکربندی"
+
+#~ msgid "Confirm"
+#~ msgstr "تایید"
+
+#~ msgid "Congo"
+#~ msgstr "کونگو"
+
+#~ msgid "Connection Information"
+#~ msgstr "اطلاعات تماس"
+
+#~ msgid "Constraint"
+#~ msgstr "قید"
+
+#~ msgid "Constraint Type"
+#~ msgstr "نوع قید"
+
+#~ msgid "Constraints with the same name are unique per module."
+#~ msgstr "قیدها با نام یکسان در هر ماجول یکتا هستند."
+
+#~ msgid "Construction"
+#~ msgstr "ساخت و ساز"
+
+#~ msgid "Contact"
+#~ msgstr "مخاطب"
+
+#~ msgid "Contact / Address"
+#~ msgstr "تماس / نشانی"
+
+#~ msgid "Contact Creation"
+#~ msgstr "ایجاد تماس"
+
+#~ msgid "Contact Form"
+#~ msgstr "فرم تماس"
+
+#~ msgid "Contact Form Number Validation"
+#~ msgstr "اعتبارسنجی عدد در فرم تماس"
+
+#~ msgid "Contact Name"
+#~ msgstr "نام تماس"
+
+#~ msgid "Contact Tag"
+#~ msgstr "برچسب تماس"
+
+#~ msgid "Contact Tags"
+#~ msgstr "برچسب‌های مخاطبان"
+
+#~ msgid "Contact Titles"
+#~ msgstr "عناوین مخاطبان"
+
+#~ msgid "Contacts"
+#~ msgstr "مخاطبان"
+
+#~ msgid "Contacts & Addresses"
+#~ msgstr "تماس‌ها و نشانی‌ها"
+
+#~ msgid "Contacts require a name."
+#~ msgstr "مخاطبها به نام نیاز دارند."
+
+#~ msgid "Context"
+#~ msgstr "زمینه"
+
+#~ msgid "Context Value"
+#~ msgstr "مقدار زمینه"
+
+#~ msgid "Contracts"
+#~ msgstr "قراردادها"
+
+#~ msgid "Contributors"
+#~ msgstr "شرکت کنندگان"
+
+#~ msgid "Cook Islands"
+#~ msgstr "جزایر کوک"
+
+#~ msgid "Copied"
+#~ msgstr "کپی شده"
+
+#~ msgid "Costa Rica"
+#~ msgstr "کاستاریکا"
+
+#~ msgid "Costa Rica - Accounting"
+#~ msgstr "حسابداری - کاستاریکا"
+
+#~ msgid "Countries"
+#~ msgstr "کشورها"
+
+#~ msgid "Country"
+#~ msgstr "کشور"
+
+#~ msgid "Country Calling Code"
+#~ msgstr "کد تلفن کشور"
+
+#~ msgid "Country Code"
+#~ msgstr "کد کشور"
+
+#~ msgid "Country Group"
+#~ msgstr "گروه کشور"
+
+#~ msgid "Country Groups"
+#~ msgstr "گروه‌های کشور"
+
+#~ msgid "Country Name"
+#~ msgstr "نام کشور"
+
+#~ msgid "Country state"
+#~ msgstr "استان کشور"
+
+#~ msgid "Create Access"
+#~ msgstr "پدیدن دسترسی"
+
+#~ msgid "Create Access Right"
+#~ msgstr "ایجاد حق دسترسی"
+
+#~ msgid "Create Date"
+#~ msgstr "ایجاد تاریخ"
+
+#~ msgid "Create Menu"
+#~ msgstr "ایجاد منو"
+
+#~ msgid "Create _Menu"
+#~ msgstr "ایجاد منو"
+
+#~ msgid "Create a Menu"
+#~ msgstr "ساخت منو"
+
+#~ msgid "Create a new Record"
+#~ msgstr "ایجاد یک رکورد جدید"
+
+#~ msgid "Create/Write Target Model"
+#~ msgstr "ایجاد/نوشتن مدل هدف"
+
+#~ msgid "Created Menus"
+#~ msgstr "منوهای پدیدآمده"
+
+#~ msgid "Created Views"
+#~ msgstr "نماهای پدیدآمده"
+
+#~ msgid "Created by"
+#~ msgstr "ایجاد شده توسط"
+
+#~ msgid "Created on"
+#~ msgstr "ایجاد شده در"
+
+#~ msgid "Creation"
+#~ msgstr "ایجاد"
+
+#~ msgid "Creation Date"
+#~ msgstr "تاریخ ایجاد"
+
+#~ msgid "Credit Limit"
+#~ msgstr "حد اعتبار"
+
+#~ msgid "Credit card support for Point Of Sale"
+#~ msgstr "پشتیبانی از کارت اعتباری در پایانه فروش."
+
+#~ msgid "Croatia"
+#~ msgstr "کرواسی"
+
+#~ msgid "Cuba"
+#~ msgstr "کوبا"
+
+#~ msgid "Currencies"
+#~ msgstr "ارزها"
+
+#~ msgid "Currency Code (ISO 4217)"
+#~ msgstr "کد ارز (ISO 4217)"
+
+#~ msgid "Currency Rate"
+#~ msgstr "نرخ ارز"
+
+#~ msgid "Currency Rates"
+#~ msgstr "نرخهای ارز"
+
+#~ msgid "Currency Subunit"
+#~ msgstr "ارسال ارز"
+
+#~ msgid "Currency Subunit Name"
+#~ msgstr "نام ارسالی ارز"
+
+#~ msgid "Currency Unit"
+#~ msgstr "واحد ارز"
+
+#~ msgid "Currency Unit Name"
+#~ msgstr "نام واحد ارز"
+
+#~ msgid "Currency sign, to be used when printing amounts."
+#~ msgstr "علامت ارز، برای استفاده هنگام پرینت مقدار."
+
+#~ msgid "Current Company"
+#~ msgstr "شرکت فعلی"
+
+#~ msgid "Current Line"
+#~ msgstr "سطر جاری"
+
+#~ msgid "Current Rate"
+#~ msgstr "نرخ کنونی"
+
+#~ msgid "Current Window"
+#~ msgstr "پنجره‌ کنونی"
+
+#~ msgid "Custom"
+#~ msgstr "دلخواه"
+
+#~ msgid "Custom Field"
+#~ msgstr "فیلد دلخواه"
+
+#~ msgid "Custom Object"
+#~ msgstr "شی دلخواه"
+
+#~ msgid "Custom Shortcuts"
+#~ msgstr "میان‌برهای دلخواه"
+
+#~ msgid "Customer Name Position"
+#~ msgstr "نام جایگاه مشتری"
+
+#~ msgid "Customer Portal"
+#~ msgstr "پرتال مشتری"
+
+#~ msgid "Customer Rating"
+#~ msgstr "نمره مشتری"
+
+#~ msgid "Customer References"
+#~ msgstr "مراجع مشتری"
+
+#~ msgid "Customers"
+#~ msgstr "همکارانِ مشتریان"
+
+#~ msgid "Customized Views"
+#~ msgstr "نماهای سفارشی"
+
+#~ msgid "Cyprus"
+#~ msgstr "قبرس"
+
+#~ msgid "Czech Republic"
+#~ msgstr "جمهوری چک"
+
+#~ msgid "DHL Shipping"
+#~ msgstr "پست دی اچ ال"
+
+#~ msgid "DLE 26 110 x 220 mm"
+#~ msgstr "DLE 26 110 x 220 mm"
+
+#~ msgid "Dashboards"
+#~ msgstr "داشبوردها"
+
+#~ msgid "Data to Write"
+#~ msgstr "داده برای نوشتن"
+
+#~ msgid "Database"
+#~ msgstr "پایگاه داده"
+
+#~ msgid "Database Data"
+#~ msgstr "داده پایگاه داده"
+
+#~ msgid "Database Name"
+#~ msgstr "نام پایگاه داده"
+
+#~ msgid "Database Structure"
+#~ msgstr "ساختار دادگان"
+
+#~ msgid "Date Format"
+#~ msgstr "قالب تاریخ"
+
+#~ msgid "DateTime"
+#~ msgstr "تاریخ و ساعت"
+
+#~ msgid "Days"
+#~ msgstr "روزها"
+
+#~ msgid "Debugging"
+#~ msgstr "اشکال‌زدایی"
+
+#~ msgid "Decimal Places"
+#~ msgstr "تعداد اعشار"
+
+#~ msgid "Decimal Precision Configuration"
+#~ msgstr "پیکربندی دقت عددی"
+
+#~ msgid "Decimal Separator"
+#~ msgstr "جداساز شمارگانی"
+
+#~ msgid "Deduplicate Contacts"
+#~ msgstr "تکرار تماسها"
+
+#~ msgid "Default Filter"
+#~ msgstr "فیلتر پیشفرض"
+
+#~ msgid "Default Theme"
+#~ msgstr "تم پیشفرض"
+
+#~ msgid "Default Value (JSON format)"
+#~ msgstr "ارزش پیشفرض (JSON فرمت)"
+
+#~ msgid "Default Values"
+#~ msgstr "مقادیر پیش فرض"
+
+#~ msgid "Default limit for the list view"
+#~ msgstr "محدودیت پیش‌فرض برای نمای فهرستی"
+
+#~ msgid "Default paper format ?"
+#~ msgstr "فرمت پیشفرض کاغذ ؟"
+
+#~ msgid "Deferred Revenues"
+#~ msgstr "درآمدهای معوق"
+
+#~ msgid "Define Taxes as Python Code"
+#~ msgstr "مالیاتها را به صورت کد پایتون تعریف کنید"
+
+#~ msgid "Defined Reports"
+#~ msgstr "گزارش‌های تعریف‌شده"
+
+#~ msgid "Definition"
+#~ msgstr "تعریف"
+
+#~ msgid "Delete Access"
+#~ msgstr "حذف دسترسی"
+
+#~ msgid "Delete Access Right"
+#~ msgstr "حذف حق دسترسی"
+
+#~ msgid "Delivery"
+#~ msgstr "تحویل"
+
+#~ msgid "Delivery Barcode Scanning"
+#~ msgstr "اسکن بارکد بخش تحویل"
+
+#~ msgid "Delivery Costs"
+#~ msgstr "هزینه های تحویل"
+
+#~ msgid "Demo Data"
+#~ msgstr "اطلاعات نمایشی"
+
+#~ msgid "Democratic Republic of the Congo"
+#~ msgstr "جمهوری دموکراتیک کنگو"
+
+#~ msgid "Denmark"
+#~ msgstr "دانمارک"
+
+#~ msgid "Dependencies"
+#~ msgstr "وابستگی‌ها"
+
+#~ msgid "Dependency"
+#~ msgstr "وابستگی"
+
+#~ msgid "Description"
+#~ msgstr "توصیف"
+
+#~ msgid "Description HTML"
+#~ msgstr "توضیحات HTML"
+
+#~ msgid "Design gorgeous mails"
+#~ msgstr "طراحی ایمیلهای زیبا"
+
+#~ msgid "Design, send and track emails"
+#~ msgstr "طراحی، ارسال و پیگیری ایمیلها انجام بده"
+
+#~ msgid "Destination Contact"
+#~ msgstr "مخاطب مقصد"
+
+#~ msgid "Destination Model"
+#~ msgstr "مدل مقصد"
+
+#~ msgid "Detailed algorithm:"
+#~ msgstr "الگوریتم با جزئیات:"
+
+#~ msgid "Diagram"
+#~ msgstr "دیاگرام"
+
+#~ msgid "Digital Products"
+#~ msgstr "محصولات دیجیتال"
+
+#~ msgid "Discard"
+#~ msgstr "رها کردن"
+
+#~ msgid "Discuss"
+#~ msgstr "بحث"
+
+#~ msgid "Display"
+#~ msgstr "نمایش"
+
+#~ msgid "Display Website Elements in Studio"
+#~ msgstr "نمایش اجزاء وبسایت در استودیو"
+
+#~ msgid "Djibouti"
+#~ msgstr "جیبوتی"
+
+#~ msgid "Doctor"
+#~ msgstr "دکتر"
+
+#~ msgid "Document"
+#~ msgstr "سند"
+
+#~ msgid "Document Management"
+#~ msgstr "اسناد"
+
+#~ msgid "Document Template"
+#~ msgstr "قالب سند"
+
+#~ msgid "Document model"
+#~ msgstr "مدل سند"
+
+#~ msgid "Documentation examples test"
+#~ msgstr "تست مثالهای مستندات"
+
+#~ msgid "Documents"
+#~ msgstr "اسناد"
+
+#~ msgid "Domain"
+#~ msgstr "دامنه"
+
+#~ msgid "Domain Value"
+#~ msgstr "مقدار دامنه"
+
+#~ msgid "Dominica"
+#~ msgstr "دومینیکا"
+
+#~ msgid "Dominican Republic"
+#~ msgstr "جمهوری دومنیکن"
+
+#~ msgid "Dominican Republic - Accounting"
+#~ msgstr "جمهوری دومینیکن - حسابداری"
+
+#~ msgid "Done"
+#~ msgstr "انجام شد"
+
+#~ msgid "Dr."
+#~ msgstr "دکتر"
+
+#~ msgid "Drop Shipping"
+#~ msgstr "حذف ارسال"
+
+#~ msgid "Each model must be unique!"
+#~ msgstr "هر مدل باید یکتا باشد!"
+
+#~ msgid "Ecuador"
+#~ msgstr "اکوادور"
+
+#~ msgid "Ecuador - Accounting"
+#~ msgstr "اکوادور - حسابداری"
+
+#~ msgid "Edit Translations"
+#~ msgstr "ویرایش ترجمه‌ها"
+
+#~ msgid "Education"
+#~ msgstr "آموزش"
+
+#~ msgid "Egypt"
+#~ msgstr "مصر"
+
+#~ msgid "El Salvador"
+#~ msgstr "ال‌سالوادور"
+
+#~ msgid "Email Address"
+#~ msgstr "نشانی ایمیل"
+
+#~ msgid "Email Gateway"
+#~ msgstr "گیت وی ایمیل"
+
+#~ msgid "Email Marketing"
+#~ msgstr "بازاریابی ایمیل"
+
+#~ msgid "Email Preferences"
+#~ msgstr "تنظیمات ایمیل"
+
+#~ msgid "Employee"
+#~ msgstr "کارمند"
+
+#~ msgid "Employee Contracts"
+#~ msgstr "قرارداد کارمند"
+
+#~ msgid "Employees"
+#~ msgstr "کارمندان"
+
+#~ msgid "Energy supply"
+#~ msgstr "منبع انرژی"
+
+#~ msgid "Entertainment"
+#~ msgstr "سرگرمی"
+
+#~ msgid "Equatorial Guinea"
+#~ msgstr "گینه‌ی استوایی"
+
+#~ msgid "Equipments, Assets, Internal Hardware, Allocation Tracking"
+#~ msgstr "تجهیزات، دارای‌ها، سخت افزارهای داخلی، پیگیری تخصیص"
+
+#~ msgid "Eritrea"
+#~ msgstr "اریتره"
+
+#~ msgid "Error"
+#~ msgstr "خطا"
+
+#~ msgid ""
+#~ "Error context:\n"
+#~ "View `%(view_name)s`"
+#~ msgstr ""
+#~ "زمینه خطا:\n"
+#~ "ببینید `%(view_name)s`"
+
+#~ msgid "Error details:"
+#~ msgstr "جزئیات خطا:"
+
+#~ msgid "Estonia"
+#~ msgstr "استونی"
+
+#~ msgid "Ethiopia"
+#~ msgstr "اتیوپی"
+
+#~ msgid "Ethiopia - Accounting"
+#~ msgstr "اتیوپی - حسابداری"
+
+#~ msgid "Ethiopia - Accounting Reports"
+#~ msgstr "اتیوپی - گزارش‌های حسابداری"
+
+#~ msgid "Europe"
+#~ msgstr "اروپا"
+
+#~ msgid "Evaluation Type"
+#~ msgstr "نوع ارزیابی"
+
+#~ msgid "Event Barcode Scanning"
+#~ msgstr "اسکن بارکد رویدادها"
+
+#~ msgid "Event Barcode in Mobile"
+#~ msgstr "بارکد رویداد در موبایل"
+
+#~ msgid "Event Barcode scan in Mobile"
+#~ msgstr "اسکن بارکد رویداد در موبایل"
+
+#~ msgid "Events"
+#~ msgstr "رویدادها"
+
+#~ msgid "Events Organization"
+#~ msgstr "سازمان دهی رویدادها"
+
+#~ msgid "Events Sales"
+#~ msgstr "رویدادهای فروش"
+
+#~ msgid "Example of Python code"
+#~ msgstr "نمونه کد پایتون"
+
+#~ msgid "Examples"
+#~ msgstr "نمونه‌ها"
+
+#~ msgid "Execute Every"
+#~ msgstr "هر کدام را اجرا کن"
+
+#~ msgid "Execute Python Code"
+#~ msgstr "اجرای کد پایتون"
+
+#~ msgid "Execute several actions"
+#~ msgstr "جندین عمل اجرا کن"
+
+#~ msgid "Execution"
+#~ msgstr "اجرا"
+
+#~ msgid "Executive 4   7.5 x 10 inches, 190.5 x 254 mm"
+#~ msgstr "Executive 4   7.5 x 10 inches, 190.5 x 254 mm"
+
+#~ msgid "Expenses"
+#~ msgstr "هزینه ها"
+
+#~ msgid "Export"
+#~ msgstr "برونش"
+
+#~ msgid "Export Complete"
+#~ msgstr "صدور فابل کامل شد"
+
+#~ msgid "Export ID"
+#~ msgstr "شناسه برونش"
+
+#~ msgid "Export Name"
+#~ msgstr "نام برونش"
+
+#~ msgid "Export Settings"
+#~ msgstr "تنظیمات صدور فایل"
+
+#~ msgid "Export Translation"
+#~ msgstr "خروج ترجمه"
+
+#~ msgid "Export Translations"
+#~ msgstr "صدور ترجمه‌ها به فایل"
+
+#~ msgid "Extended Addresses"
+#~ msgstr "نشانی‌ها گسترش یافته"
+
+#~ msgid "Extension View"
+#~ msgstr "نمای گسترشی"
+
+#~ msgid "External ID"
+#~ msgstr "آیدی خارجی"
+
+#~ msgid "Extra"
+#~ msgstr "اضافی"
+
+#~ msgid "Extra Rights"
+#~ msgstr "حق دسترسی‌های بیشتر"
+
+#~ msgid "Extra Tools"
+#~ msgstr "ابزارهای اضافه"
+
+#~ msgid "Falkland Islands"
+#~ msgstr "جزایر فالکلند"
+
+#~ msgid "Faroe Islands"
+#~ msgstr "جزایر فارو"
+
+#~ msgid "Fax"
+#~ msgstr "فکس"
+
+#~ msgid "Fed. State"
+#~ msgstr "ایالت فدرال"
+
+#~ msgid "Fed. States"
+#~ msgstr "ایالت‌های فدرال"
+
+#~ msgid "Field"
+#~ msgstr "فیلد"
+
+#~ msgid "Field Help"
+#~ msgstr "توضیحات کمکی فیلد"
+
+#~ msgid "Field Label"
+#~ msgstr "برچسب فیلد"
+
+#~ msgid "Field Mappings"
+#~ msgstr "نگاشت‌های فیلد"
+
+#~ msgid "Field Name"
+#~ msgstr "نام فیلد"
+
+#~ msgid "Field Type"
+#~ msgstr "نوع فیلد"
+
+#~ msgid "Fields"
+#~ msgstr "فیلدها"
+
+#~ msgid "Fields Description"
+#~ msgstr "شرح فیلدها"
+
+#~ msgid "Fiji"
+#~ msgstr "فیجی"
+
+#~ msgid "File Content"
+#~ msgstr "محتوای فایل"
+
+#~ msgid "File Format"
+#~ msgstr "قالب پرونده"
+
+#~ msgid "File Name"
+#~ msgstr "نام فایل"
+
+#~ msgid "File Size"
+#~ msgstr "حجم فایل"
+
+#~ msgid "Filename"
+#~ msgstr "نام فایل"
+
+#~ msgid "Filter"
+#~ msgstr "فیلتر"
+
+#~ msgid "Filter Name"
+#~ msgstr "نام فیلتر"
+
+#~ msgid "Filter names must be unique"
+#~ msgstr "نام فیلتر باید منحصر به فرد باشد"
+
+#~ msgid "Filter on my documents"
+#~ msgstr "فلیتر بر اسناد من"
+
+#~ msgid "Filters"
+#~ msgstr "فیلترها"
+
+#~ msgid "Filters created by myself"
+#~ msgstr "فیلترها توسط من ایجاد شده"
+
+#~ msgid "Filters shared with all users"
+#~ msgstr "فیلترهایی که با همه کاربران اشتراک گذاری شده"
+
+#~ msgid "Finance/Insurance"
+#~ msgstr "مالی/بیمه"
+
+#~ msgid "Finished"
+#~ msgstr "تمام شد"
+
+#~ msgid "Finland"
+#~ msgstr "فنلاند"
+
+#~ msgid "Fleet"
+#~ msgstr "ناوگان"
+
+#~ msgid "Float"
+#~ msgstr "شناور"
+
+#~ msgid "Folio 27  210 x 330 mm"
+#~ msgstr "Folio 27  210 x 330 mm"
+
+#~ msgid "Food"
+#~ msgstr "غذا"
+
+#~ msgid "Footer"
+#~ msgstr "پاورقی"
+
+#~ msgid "Footer text displayed at the bottom of all reports."
+#~ msgstr "متن پاورقی نمایش داده شده در همه گزارشها."
+
+#~ msgid ""
+#~ "For more details about translating Odoo in your language, please refer to "
+#~ "the"
+#~ msgstr ""
+#~ "برای جزئیات بیشتر درباره ترجمه اودو به زبان خودتان، لطفا مراجعه کنید به"
+
+#~ msgid "Forecast"
+#~ msgstr "پیش‌بینی"
+
+#~ msgid "Form Builder"
+#~ msgstr "سازنده فرم"
+
+#~ msgid "Formatted Email"
+#~ msgstr "ایمیل قالب بندی شده"
+
+#~ msgid "Forum"
+#~ msgstr "انجمن"
+
+#~ msgid "France"
+#~ msgstr "فرانسه"
+
+#~ msgid "France - Accounting"
+#~ msgstr "فرانسه - حسابداری"
+
+#~ msgid "France - Accounting Reports"
+#~ msgstr "فرانسه - گزارشهای حسابداری"
+
+#~ msgid "France - FEC"
+#~ msgstr "فرانسه - FEC"
+
+#~ msgid "French Guiana"
+#~ msgstr "گینه فرانسوی"
+
+#~ msgid "French Payroll"
+#~ msgstr "حقوق و دستمزد فرانسه"
+
+#~ msgid "French Polynesia"
+#~ msgstr "پلی نزی فرانسه"
+
+#~ msgid "French Southern Territories"
+#~ msgstr "مستعمره‌های جنوبی فرانسه"
+
+#~ msgid "Friday"
+#~ msgstr "جمعه"
+
+#~ msgid "From"
+#~ msgstr "از"
+
+#~ msgid "Full Access"
+#~ msgstr "دسترسی کامل"
+
+#~ msgid "Full Access Right"
+#~ msgstr "حق دسترسی کامل"
+
+#~ msgid "Full Name"
+#~ msgstr "نام کامل"
+
+#~ msgid "Full Path"
+#~ msgstr "آدرس کامل"
+
+#~ msgid "Full Screen"
+#~ msgstr "تمام صفحه"
+
+#~ msgid "Function"
+#~ msgstr "کارکرد"
+
+#~ msgid "GPL Version 2"
+#~ msgstr "GPL Version 2"
+
+#~ msgid "GPL Version 3"
+#~ msgstr "GPL Version 3"
+
+#~ msgid "GPL-2 or later version"
+#~ msgstr "مجوز GPL-2 یا نگارش بالاتر"
+
+#~ msgid "GPL-3 or later version"
+#~ msgstr "GPL-3 یا نگارش پس"
+
+#~ msgid "Gabon"
+#~ msgstr "گابون"
+
+#~ msgid "Gambia"
+#~ msgstr "گامبیا"
+
+#~ msgid "Gamification"
+#~ msgstr "تولید"
+
+#~ msgid "Gantt"
+#~ msgstr "گانت"
+
+#~ msgid "General"
+#~ msgstr "عمومی"
+
+#~ msgid "General Information"
+#~ msgstr "اطلاعات عمومی"
+
+#~ msgid "General Settings"
+#~ msgstr "تنظیمات عمومی"
+
+#~ msgid "Generate Missing Terms"
+#~ msgstr "تولید ترم‌های نا موجود"
+
+#~ msgid "Generic"
+#~ msgstr "عمومی"
+
+#~ msgid "Generic - Accounting"
+#~ msgstr "عمومی - حسابداری"
+
+#~ msgid "Generic Form Controller"
+#~ msgstr "کنترل کننده عمومی فرم"
+
+#~ msgid "Georgia"
+#~ msgstr "گرجستان"
+
+#~ msgid "Germany"
+#~ msgstr "آلمان"
+
+#~ msgid "Ghana"
+#~ msgstr "غنا"
+
+#~ msgid "Gibraltar"
+#~ msgstr "گیبرالتار"
+
+#~ msgid "Global"
+#~ msgstr "فراگیر"
+
+#~ msgid "Google Calendar"
+#~ msgstr "تقویم گوگل"
+
+#~ msgid "Google Drive™ integration"
+#~ msgstr "ادغام درایو گوگل"
+
+#~ msgid "Google Maps"
+#~ msgstr "نقشه گوگل"
+
+#~ msgid "Google Spreadsheet"
+#~ msgstr "صفحه گسترده گوگل"
+
+#~ msgid "Graph"
+#~ msgstr "نمودار"
+
+#~ msgid "Greece"
+#~ msgstr "یونان"
+
+#~ msgid "Greece - Accounting"
+#~ msgstr "یونان - حسابداری"
+
+#~ msgid "Greece - Accounting Reports"
+#~ msgstr "یونان - گزارش‌های حسابداری"
+
+#~ msgid "Greenland"
+#~ msgstr "گرینلند"
+
+#~ msgid "Grenada"
+#~ msgstr "گرانادا"
+
+#~ msgid "Grid"
+#~ msgstr "شبکه"
+
+#~ msgid "Grid View"
+#~ msgstr "نمای چهار خانه‌ای"
+
+#~ msgid "Group"
+#~ msgstr "گروه"
+
+#~ msgid "Group By"
+#~ msgstr "گروه‌بندی برمبنای"
+
+#~ msgid "Group Name"
+#~ msgstr "نام گروه"
+
+#~ msgid "Group name"
+#~ msgstr "نام گروه"
+
+#~ msgid "Group of Contacts"
+#~ msgstr "گروه تماس‌ها"
+
+#~ msgid "Groups (no group = global)"
+#~ msgstr "گروه ها (بدون گروه = عمومی)"
+
+#~ msgid "Guam"
+#~ msgstr "گوام"
+
+#~ msgid "Guatemala"
+#~ msgstr "گواتمالا"
+
+#~ msgid "Guatemala - Accounting"
+#~ msgstr "گواتمالا - حسابداری"
+
+#~ msgid "Guinea"
+#~ msgstr "گینه"
+
+#~ msgid "Guinea-Bissau"
+#~ msgstr "گینه بیسائو"
+
+#~ msgid "Guyana"
+#~ msgstr "گویان"
+
+#~ msgid "HTML"
+#~ msgstr "HTML"
+
+#~ msgid "Haiti"
+#~ msgstr "هائیتی"
+
+#~ msgid "Hardware Driver for Barcode Scanners"
+#~ msgstr "درایور سخت افزاری برای اسکنرهای بارکد"
+
+#~ msgid "Hardware Drivers"
+#~ msgstr "درایورهای سخت افزار"
+
+#~ msgid "Hardware Proxy"
+#~ msgstr "پروکسی سخت افزار"
+
+#~ msgid "Header spacing"
+#~ msgstr "فاصله سر صفحه"
+
+#~ msgid "Health/Social"
+#~ msgstr "سلامتی/اجتماعی"
+
+#~ msgid "Help"
+#~ msgstr "راهنما"
+
+#~ msgid "Help with Python expressions"
+#~ msgstr "کمک برای عبارات پایتون"
+
+#~ msgid "Helpdesk"
+#~ msgstr "میز کمک"
+
+#~ msgid "Helpdesk Timesheet"
+#~ msgstr "برگه زمانی پشتیبانی"
+
+#~ msgid "Helpdesk: Knowledge Base"
+#~ msgstr "پشتیبانی: بر اساس دانش"
+
+#~ msgid "Helps you manage the attendances."
+#~ msgstr "به شما کمک می‌کند حضور و غیاب را مدیریت کنید."
+
+#~ msgid "Helps you manage the timesheets."
+#~ msgstr "به شما کمک می‌کند برگه‌های زمانی را مدیریت کنید."
+
+#~ msgid "Helps you manage your Events."
+#~ msgstr "به شما کمک می‌کند رویدادهایتان را مدیریت کنید."
+
+#~ msgid "Helps you manage your appraisals."
+#~ msgstr "به شما کمک می‌کند ارزیابی‌ها را مدیریت کنید."
+
+#~ msgid "Helps you manage your employees."
+#~ msgstr "به شما کمک می‌کند کارمندان خود را مدیریت کنید."
+
+#~ msgid "Helps you manage your expenses."
+#~ msgstr "به شما کمک می‌کند هزینه‌های خود را مدیریت کنید."
+
+#~ msgid "Helps you manage your leaves."
+#~ msgstr "به شما کمک می‌کند مرخصی‌ها را مدیریت کنید."
+
+#~ msgid "Helps you manage your payrolls."
+#~ msgstr "به شما کمک می‌کند حقوق و دستمزد را مدیریت کنید."
+
+#~ msgid "Helps you manage your recruitments."
+#~ msgstr "به شما کمک می‌کند بازنشستگی را مدیریت کنید."
+
+#~ msgid "History"
+#~ msgstr "تاریخچه"
+
+#~ msgid "Holy See (Vatican City State)"
+#~ msgstr "هالی سی (استان واتیکان)"
+
+#~ msgid "Home Action"
+#~ msgstr "کنش خانه"
+
+#~ msgid "Honduras"
+#~ msgstr "هندوراس"
+
+#~ msgid "Honduras - Accounting"
+#~ msgstr "حسابداری هندوراس"
+
+#~ msgid "Hong Kong"
+#~ msgstr "هنگ‌کنگ"
+
+#~ msgid "Hours"
+#~ msgstr "ساعت‌ها"
+
+#~ msgid "Households"
+#~ msgstr "خانه‌دارها"
+
+#~ msgid "How to define a computed field"
+#~ msgstr "چگونه یک فیلد محاسبه شده را تعریف کنیم"
+
+#~ msgid "Hr Recruitment Interview Forms"
+#~ msgstr "فرمهای مصاحبه استخدام منابع انسانی"
+
+#~ msgid "Human Resource"
+#~ msgstr "منابع انسانی"
+
+#~ msgid "Human Resources Survey"
+#~ msgstr "نظرسنجی منایع انسانی"
+
+#~ msgid "Hungarian - Accounting"
+#~ msgstr "حسابداری مجارستان"
+
+#~ msgid "Hungarian - Accounting Reports"
+#~ msgstr "مجارستان - گزارشهای حسابداری"
+
+#~ msgid "Hungary"
+#~ msgstr "مجارستان"
+
+#~ msgid "ID"
+#~ msgstr "شناسه"
+
+#~ msgid "ID of the view defined in xml file"
+#~ msgstr "آیدی نما تعریف شده در فایل xml"
+
+#~ msgid "ISO Code"
+#~ msgstr "ISO Code"
+
+#~ msgid "ISO code"
+#~ msgstr "کد ISO"
+
+#~ msgid "IT/Communication"
+#~ msgstr "آی‌تی/ارتباطات"
+
+#~ msgid "Iceland"
+#~ msgstr "ایسلند"
+
+#~ msgid "Icon"
+#~ msgstr "شمایل"
+
+#~ msgid "Icon URL"
+#~ msgstr "آیکون URL"
+
+#~ msgid "Ids"
+#~ msgstr "شناسه ها"
+
+#~ msgid ""
+#~ "If set to true, the action will not be displayed on the right toolbar of "
+#~ "a form view."
+#~ msgstr ""
+#~ "اگر مقدار به درست تنظیم شود، کُنش در سمت راست نوار ابزار یک نمای فرم نشان "
+#~ "داده نخواهد شد."
+
+#~ msgid ""
+#~ "If you check this box, your customized translations will be overwritten "
+#~ "and replaced by the official ones."
+#~ msgstr "اگر این گزینه فعال باشد، ترجمه شما جایگزین ترجمه های قبلی میشود."
+
+#~ msgid ""
+#~ "If you check this, then the second time the user prints with same "
+#~ "attachment name, it returns the previous report."
+#~ msgstr ""
+#~ "اگر شما این را تیک بزنید، دومین باری که کاربر پیوستی با همان نام را چاپ "
+#~ "می‌کند، گزارش پیشین بازگردانده می‌شود."
+
+#~ msgid "If you wish to cancel the process, press the cancel button below"
+#~ msgstr "اگر شما مایل به لغو این روند هستید،دکمه لغو زیر را فشار دهید"
+
+#~ msgid "Image"
+#~ msgstr "تصویر"
+
+#~ msgid "Impacted Apps"
+#~ msgstr "برنامه‌ها تحت تاثیر"
+
+#~ msgid "Impacted modules"
+#~ msgstr "ماجولهای تحت تاثیر"
+
+#~ msgid "Implementation"
+#~ msgstr "پیاده‌سازی"
+
+#~ msgid "Import / Export"
+#~ msgstr "Import / Export"
+
+#~ msgid "Import Translation"
+#~ msgstr "ورود فایل ترجمه"
+
+#~ msgid "In Apps"
+#~ msgstr "در برنامه‌ها"
+
+#~ msgid "In-App Purchases"
+#~ msgstr "خرید درون برنامه‌ای"
+
+#~ msgid "Inactive"
+#~ msgstr "غیرفعال"
+
+#~ msgid "Inactive Users"
+#~ msgstr "کاربران غیرفعال"
+
+#~ msgid "Indexed"
+#~ msgstr "شاخص شده"
+
+#~ msgid "Indexed Content"
+#~ msgstr "محتوای ایندکس شده"
+
+#~ msgid "India"
+#~ msgstr "هند"
+
+#~ msgid "Indian - Accounting"
+#~ msgstr "هند - حسابداری"
+
+#~ msgid "Indian - Accounting Reports"
+#~ msgstr "هند - گزارشات حسابداری"
+
+#~ msgid "Indian Payroll"
+#~ msgstr "حقوق‌و‌دستمزد هند"
+
+#~ msgid "Individual"
+#~ msgstr "فردی"
+
+#~ msgid "Indonesia"
+#~ msgstr "اندونزی"
+
+#~ msgid "Industry"
+#~ msgstr "صنعت"
+
+#~ msgid "Information"
+#~ msgstr "اطلاعات"
+
+#~ msgid "Inherit"
+#~ msgstr "ارث بردن"
+
+#~ msgid "Inherited"
+#~ msgstr "موروثی"
+
+#~ msgid "Inherited View"
+#~ msgstr "نمای موروثی"
+
+#~ msgid "Inherited Views"
+#~ msgstr "نماهای موروثی"
+
+#~ msgid "Inherited models"
+#~ msgstr "مدل‌های موروثی"
+
+#~ msgid "Inherits"
+#~ msgstr "به ارث می‌برد"
+
+#~ msgid "Init Date"
+#~ msgstr "تاریخ آغازی"
+
+#~ msgid "Initial Setup Tools"
+#~ msgstr "ابزار تنظیمات اولیه"
+
+#~ msgid "Initialization Date"
+#~ msgstr "تاریخ شروع"
+
+#~ msgid "Inline Edit"
+#~ msgstr "ویرایش درجا"
+
+#~ msgid "Input View"
+#~ msgstr "نمای ورود"
+
+#~ msgid "Install Apps"
+#~ msgstr "نصب برنامه‌ها"
+
+#~ msgid "Install Language"
+#~ msgstr "نصب زبان"
+
+#~ msgid "Installed"
+#~ msgstr "برپاسازی شد"
+
+#~ msgid "Installed Features"
+#~ msgstr "امکانات نصب‌شده"
+
+#~ msgid "Installed Version"
+#~ msgstr "نگارش نصب شده"
+
+#~ msgid "Integer"
+#~ msgstr "عدد صحیح"
+
+#~ msgid "Interaction between rules"
+#~ msgstr "تعامل قوانین"
+
+#~ msgid "Internal Groups"
+#~ msgstr "دسته داخلی"
+
+#~ msgid "Internal Notes"
+#~ msgstr "یادداشت‌های داخلی"
+
+#~ msgid "Internal Reference"
+#~ msgstr "مرجع داخلی"
+
+#~ msgid "Internal Source"
+#~ msgstr "مرجع داخلی"
+
+#~ msgid "Internal Users"
+#~ msgstr "کاربران داخلی"
+
+#~ msgid "Internal note..."
+#~ msgstr "یادداشت داخلی..."
+
+#~ msgid "Interval Number"
+#~ msgstr "شماره بازه"
+
+#~ msgid "Interval Unit"
+#~ msgstr "یکای بازه"
+
+#~ msgid "Introspection report on objects"
+#~ msgstr "گزارش درون‌نگری روی اشیا"
+
+#~ msgid "Inventory"
+#~ msgstr "انبار"
+
+#~ msgid "Inventory, Logistic, Valuation, Accounting"
+#~ msgstr "انبارداری، لجستیک، ارزیابی، حسابداری"
+
+#~ msgid "Invoice"
+#~ msgstr "فاکتور"
+
+#~ msgid "Invoice address"
+#~ msgstr "نشانی فاکتور"
+
+#~ msgid "Invoicing"
+#~ msgstr "صدور فاکتور"
+
+#~ msgid "Invoicing & Payments"
+#~ msgstr "صدور فاکتور و پرداخت ها"
+
+#~ msgid "Invoicing Management"
+#~ msgstr "مدیریت صدور فاکتور"
+
+#~ msgid "Iran"
+#~ msgstr "ایران"
+
+#~ msgid "Iraq"
+#~ msgstr "عراق"
+
+#~ msgid "Ireland"
+#~ msgstr "ایرلند"
+
+#~ msgid "Is Company"
+#~ msgstr "شرکت است"
+
+#~ msgid "Is a Company"
+#~ msgstr "شرکت است"
+
+#~ msgid "Is a Customer"
+#~ msgstr "مشتری است"
+
+#~ msgid "Is a Vendor"
+#~ msgstr "فروشنده است"
+
+#~ msgid "Is public document"
+#~ msgstr "یک سند عمومی است"
+
+#~ msgid "Isle of Man"
+#~ msgstr "جزیره مان"
+
+#~ msgid "Israel"
+#~ msgstr "اسرائیل"
+
+#~ msgid "Italy"
+#~ msgstr "ایتالیا"
+
+#~ msgid "Italy - Accounting"
+#~ msgstr "ایتالیا - حسابداری"
+
+#~ msgid "Jamaica"
+#~ msgstr "جامائیکا"
+
+#~ msgid "Japan"
+#~ msgstr "ژاپن"
+
+#~ msgid "Japan - Accounting"
+#~ msgstr "ژاپن - حسابداری"
+
+#~ msgid "Japan - Accounting Reports"
+#~ msgstr "ژاپن - گزارشات حسابداری"
+
+#~ msgid "Jersey"
+#~ msgstr "جرسی"
+
+#~ msgid "Job Position"
+#~ msgstr "موقعیت شغلی"
+
+#~ msgid "Jordan"
+#~ msgstr "اردن"
+
+#~ msgid "Journal Items associated to the contact"
+#~ msgstr "سرفصل حساب انتساب داده شده به این تماس"
+
+#~ msgid "Kanban"
+#~ msgstr "کانبان"
+
+#~ msgid "Kazakhstan"
+#~ msgstr "قزاقستان"
+
+#~ msgid "Kenya"
+#~ msgstr "کنیا"
+
+#~ msgid "Key"
+#~ msgstr "کلید"
+
+#~ msgid "Key must be unique."
+#~ msgstr "کلید باید منحصربه‌فرد باشد"
+
+#~ msgid "Kiribati"
+#~ msgstr "کیریباتی"
+
+#~ msgid "Kuwait"
+#~ msgstr "کویت"
+
+#~ msgid "Kyrgyzstan"
+#~ msgstr "قرقیزستان"
+
+#~ msgid "LGPL Version 3"
+#~ msgstr "LGPL Version 3"
+
+#~ msgid "Landscape"
+#~ msgstr "حالت لندسکیپ"
+
+#~ msgid "Language"
+#~ msgstr "زبان"
+
+#~ msgid "Language Import"
+#~ msgstr "ورود زبان"
+
+#~ msgid "Language Name"
+#~ msgstr "نام زبان"
+
+#~ msgid "Language Pack"
+#~ msgstr "بسته زبان"
+
+#~ msgid "Languages"
+#~ msgstr "زبان‌ها"
+
+#~ msgid "Laos"
+#~ msgstr "لائوس"
+
+#~ msgid "Last Modified on"
+#~ msgstr "آخرین تغییر در"
+
+#~ msgid "Last Updated by"
+#~ msgstr "آخرین تغییر توسط"
+
+#~ msgid "Last Updated on"
+#~ msgstr "آخرین به روز رسانی در"
+
+#~ msgid "Latest Version"
+#~ msgstr "آخرین نگارش"
+
+#~ msgid "Latest connection"
+#~ msgstr "آخرین اتصال"
+
+#~ msgid "Latvia"
+#~ msgstr "لاتویا"
+
+#~ msgid "Launch"
+#~ msgstr "بارگذاری"
+
+#~ msgid "Layout in Reports"
+#~ msgstr "طرح‌بندی در گزارشها"
+
+#~ msgid "Leaves"
+#~ msgstr "مرخصی ها"
+
+#~ msgid "Lebanon"
+#~ msgstr "لبنان"
+
+#~ msgid "Ledger  28  431.8 x 279.4 mm"
+#~ msgstr "Ledger  28  431.8 x 279.4 mm"
+
+#~ msgid "Left Margin (mm)"
+#~ msgstr "حاشیه چپ (mm)"
+
+#~ msgid "Left-to-Right"
+#~ msgstr "چپ به راست"
+
+#~ msgid "Legal    3   8.5 x 14 inches, 215.9 x 355.6 mm"
+#~ msgstr "Legal    3   8.5 x 14 inches, 215.9 x 355.6 mm"
+
+#~ msgid "Legend (for prefix, suffix)"
+#~ msgstr "فهرست اختصارات (برای پسوند و پیشوند)"
+
+#~ msgid "Lesotho"
+#~ msgstr "لسوتو"
+
+#~ msgid "Letter 2 8.5 x 11 inches, 215.9 x 279.4 mm"
+#~ msgstr "Letter 2 8.5 x 11 inches, 215.9 x 279.4 mm"
+
+#~ msgid "Level"
+#~ msgstr "سطح"
+
+#~ msgid "Liberia"
+#~ msgstr "لیبریا"
+
+#~ msgid "Libya"
+#~ msgstr "لیبی"
+
+#~ msgid "License"
+#~ msgstr "مجوز"
+
+#~ msgid "Liechtenstein"
+#~ msgstr "لیختن‌اشتاین"
+
+#~ msgid "Limit"
+#~ msgstr "محدودیت"
+
+#~ msgid "Lines"
+#~ msgstr "سطرها"
+
+#~ msgid "Link Tracker"
+#~ msgstr "پیگیری لینک"
+
+#~ msgid "Link using field"
+#~ msgstr "لینک کردن با استفاده از فیلد"
+
+#~ msgid "Lithuania"
+#~ msgstr "لیتوانی"
+
+#~ msgid "Live Chat"
+#~ msgstr "چت آنلاین"
+
+#~ msgid "Live Currency Exchange Rate"
+#~ msgstr "نرخ ارز لحظه‌ای"
+
+#~ msgid "Livechat Support"
+#~ msgstr "پشتیبانی گفتگوی زنده"
+
+#~ msgid "Load"
+#~ msgstr "بارگذاری"
+
+#~ msgid "Load a Translation"
+#~ msgstr "بارگذاری زبان"
+
+#~ msgid "Locale Code"
+#~ msgstr "کد کشور"
+
+#~ msgid "Localization"
+#~ msgstr "بومی‌سازی"
+
+#~ msgid "Log"
+#~ msgstr "ورود به سیستم"
+
+#~ msgid "Logging"
+#~ msgstr "در حال ورود"
+
+#~ msgid "Login"
+#~ msgstr "ورود"
+
+#~ msgid "Logo"
+#~ msgstr "نشان"
+
+#~ msgid "Logo Web"
+#~ msgstr "نشان"
+
+#~ msgid "Logs"
+#~ msgstr "گزارشات"
+
+#~ msgid "Loyalty Program"
+#~ msgstr "برنامه مشتریان وفادار"
+
+#~ msgid "Loyalty Program for the Point of Sale "
+#~ msgstr "برنامه مشتریان وفادار برای صندوق فروشگاهی"
+
+#~ msgid "Lunch"
+#~ msgstr "ناهار"
+
+#~ msgid "Luxembourg"
+#~ msgstr "لوکزامبورگ"
+
+#~ msgid "Luxembourg - Accounting"
+#~ msgstr "لوکزامبرگ - حسابداری"
+
+#~ msgid "Luxembourg - Accounting Reports"
+#~ msgstr "لوکزامبرگ - گزارشات حسابداری"
+
+#~ msgid "Macau"
+#~ msgstr "آسیا/ماکائو"
+
+#~ msgid "Madagascar"
+#~ msgstr "ماداگاسکار"
+
+#~ msgid "Madam"
+#~ msgstr "خانم"
+
+#~ msgid "Main Sequence"
+#~ msgstr "دنباله اصلی"
+
+#~ msgid "Maintainer"
+#~ msgstr "نگهدارنده"
+
+#~ msgid "Maintenance"
+#~ msgstr "نگهداری"
+
+#~ msgid "Maintenance - MRP"
+#~ msgstr "نگهداری - MRP"
+
+#~ msgid "Malawi"
+#~ msgstr "مالاوی"
+
+#~ msgid "Malaysia"
+#~ msgstr "مالزی"
+
+#~ msgid "Maldives"
+#~ msgstr "مالدیو"
+
+#~ msgid "Mali"
+#~ msgstr "مالی"
+
+#~ msgid "Malta"
+#~ msgstr "مالت"
+
+#~ msgid ""
+#~ "Manage your debts and credits thanks to simple sale/purchase receipts"
+#~ msgstr ""
+#~ "بدهکاری و بستانکاری خود را با استفاده از رسیدهای ساده خرید/فروش مدیریت "
+#~ "کنید."
+
+#~ msgid "Manage your employee payroll records"
+#~ msgstr "رکوردهای حقوق و دستمزد کارکنان خود را مدیریت کنید"
+
+#~ msgid "Manufacturing"
+#~ msgstr "تولید"
+
+#~ msgid "Many2One"
+#~ msgstr "چند به یک"
+
+#~ msgid "ManyToMany Relations"
+#~ msgstr "رابطه چندبه‌چند"
+
+#~ msgid "Margins by Products"
+#~ msgstr "حاشیه سود هر محصول"
+
+#~ msgid "Margins in Sales Orders"
+#~ msgstr "حاشیه‌سود سفارشات فروش"
+
+#~ msgid "Marketing"
+#~ msgstr "بازاریابی"
+
+#~ msgid "Marketing Automation"
+#~ msgstr "اتوماسیون بازاریابی"
+
+#~ msgid "Maroc - Accounting"
+#~ msgstr "مراکش - حسابداری"
+
+#~ msgid "Maroc - Accounting Reports"
+#~ msgstr "مراکش - گزارشات حسابداری"
+
+#~ msgid "Marshall Islands"
+#~ msgstr "جزایر مارشال"
+
+#~ msgid "Mass Mailing Themes"
+#~ msgstr "تم نامه‌های انبوه"
+
+#~ msgid "Master Production Schedule"
+#~ msgstr "برنامه اصلی تولید"
+
+#~ msgid "Mauritania"
+#~ msgstr "موریتانی"
+
+#~ msgid "Mauritius"
+#~ msgstr "موریتیوس"
+
+#~ msgid "Mayotte"
+#~ msgstr "مایوت"
+
+#~ msgid "Medium-sized image"
+#~ msgstr "تصویر با اندازه متوسط"
+
+#~ msgid "Members"
+#~ msgstr "اعضا"
+
+#~ msgid "Memos pad"
+#~ msgstr "پد یادداشتها"
+
+#~ msgid "Menu"
+#~ msgstr "منو"
+
+#~ msgid "Menu Items"
+#~ msgstr "آیتم‌های منو"
+
+#~ msgid "Menu Name"
+#~ msgstr "نام منو"
+
+#~ msgid "Menus"
+#~ msgstr "منوها"
+
+#~ msgid "Menus Customization"
+#~ msgstr "ویرایش منوها"
+
+#~ msgid "Mercury Payment Services"
+#~ msgstr "سرویس های پرداخت مرکوری"
+
+#~ msgid "Merge Automatically"
+#~ msgstr "ادغام خودکار"
+
+#~ msgid "Merge Contacts"
+#~ msgstr "ادغام تماسها"
+
+#~ msgid "Merge with Manual Check"
+#~ msgstr "ادغام با بررسی دستی"
+
+#~ msgid "Message"
+#~ msgstr "پیام"
+
+#~ msgid "Messaging and Social"
+#~ msgstr "پیام رسانی و شبکه اجتماعی"
+
+#~ msgid "Mexico"
+#~ msgstr "مکزیک"
+
+#~ msgid "Mexico - Accounting"
+#~ msgstr "مکزیک - حسابداری"
+
+#~ msgid "Micronesia"
+#~ msgstr "میکرونزی"
+
+#~ msgid "Mime Type"
+#~ msgstr "نوع MIME"
+
+#~ msgid "Minutes"
+#~ msgstr "دقیقه‌ها"
+
+#~ msgid "Misc"
+#~ msgstr "متفرقه"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "متفرقه"
+
+#~ msgid "Miss"
+#~ msgstr "دوشیزه"
+
+#~ msgid "Missing document(s)"
+#~ msgstr "پرونده (ها) موجود نیست"
+
+#~ msgid "Mister"
+#~ msgstr "آقا"
+
+#~ msgid "Mobile:"
+#~ msgstr "تلفن همراه:"
+
+#~ msgid "Model"
+#~ msgstr "مدل"
+
+#~ msgid "Model Constraints"
+#~ msgstr "محدودیت های مدل"
+
+#~ msgid "Model Data"
+#~ msgstr "داده های مدل"
+
+#~ msgid "Model Description"
+#~ msgstr "شرح مدل"
+
+#~ msgid "Model Name"
+#~ msgstr "نام مدل"
+
+#~ msgid "Model Overview"
+#~ msgstr "بازنگری مدل"
+
+#~ msgid ""
+#~ "Model for record creation / update. Set this field only to specify a "
+#~ "different model than the base model."
+#~ msgstr ""
+#~ "مدل برای ایجاد ثبت / به روز رسانی. این فیلد را فقط برای تعیین یک مدل "
+#~ "متفاوت از مدل پایه تنظیم کنید."
+
+#~ msgid "Models"
+#~ msgstr "مدل ها"
+
+#~ msgid "Module"
+#~ msgstr "ماژول"
+
+#~ msgid "Module Category"
+#~ msgstr "دسته‌بندی ماژول"
+
+#~ msgid "Module Name"
+#~ msgstr "نام ماژول"
+
+#~ msgid "Module Update"
+#~ msgstr "به‌روزرسانی ماژول"
+
+#~ msgid "Module Update Result"
+#~ msgstr "نتیجه به‌روزرسانی ماژول"
+
+#~ msgid "Module Upgrade Install"
+#~ msgstr "نصب به روزرسانی ماجول"
+
+#~ msgid "Module dependency"
+#~ msgstr "وابستگی ماژول"
+
+#~ msgid "Module this term belongs to"
+#~ msgstr "ماجولی که این واژه به آن تعلق دارد"
+
+#~ msgid "Modules"
+#~ msgstr "ماژول‌ها"
+
+#~ msgid "Monaco"
+#~ msgstr "موناکو"
+
+#~ msgid "Monday"
+#~ msgstr "دوشنبه"
+
+#~ msgid "Mongolia"
+#~ msgstr "مغولستان"
+
+#~ msgid "Montenegro"
+#~ msgstr "مونته‌نگرو"
+
+#~ msgid "Months"
+#~ msgstr "ماه‌ها"
+
+#~ msgid "Montserrat"
+#~ msgstr "مونت‌سرات"
+
+#~ msgid "Morocco"
+#~ msgstr "مراکش"
+
+#~ msgid "Mozambique"
+#~ msgstr "موزامبیک"
+
+#~ msgid "Mr."
+#~ msgstr "آقای"
+
+#~ msgid "Mrs."
+#~ msgstr "خانم"
+
+#~ msgid "Multi Companies"
+#~ msgstr "چند شرکتی"
+
+#~ msgid "Multi Currencies"
+#~ msgstr "چند ارزی"
+
+#~ msgid "Multi Language Chart of Accounts"
+#~ msgstr "جدول حساب‌های چندزبانه"
+
+#~ msgid "My Document(s)"
+#~ msgstr "سند(های) من"
+
+#~ msgid "My filters"
+#~ msgstr "فیلترهای من"
+
+#~ msgid "Myanmar"
+#~ msgstr "میانمار"
+
+#~ msgid "Name:"
+#~ msgstr "نام:"
+
+#~ msgid "Namibia"
+#~ msgstr "نامیبیا"
+
+#~ msgid "Nauru"
+#~ msgstr "نائورو"
+
+#~ msgid "Nepal"
+#~ msgstr "نپال"
+
+#~ msgid "Netherlands"
+#~ msgstr "هلند"
+
+#~ msgid "Netherlands - Accounting"
+#~ msgstr "هلند - حسابداری"
+
+#~ msgid "Netherlands - Accounting Reports"
+#~ msgstr "هلند - گزارشات حسابداری"
+
+#~ msgid "New Password"
+#~ msgstr "کلمه‌ی عبور جدید"
+
+#~ msgid "New Window"
+#~ msgstr "پنجره‌ جدید"
+
+#~ msgid "New Zealand"
+#~ msgstr "زلاند نو"
+
+#~ msgid "New Zealand - Accounting"
+#~ msgstr "حسابداری - زلاند نو"
+
+#~ msgid "Next Execution Date"
+#~ msgstr "تاریخ اجرای بعدی"
+
+#~ msgid "Next Number"
+#~ msgstr "شماره بعدی"
+
+#~ msgid "Next number of this sequence"
+#~ msgstr "شماره بعدی از این ردیف"
+
+#~ msgid "Next planned execution date for this job."
+#~ msgstr "تاریخ برنامه ریزی شده بعدی برای انجام این کار"
+
+#~ msgid "Nicaragua"
+#~ msgstr "نیکاراگوئه"
+
+#~ msgid "Niger"
+#~ msgstr "نیجر"
+
+#~ msgid "Nigeria"
+#~ msgstr "نیجریه"
+
+#~ msgid "Niue"
+#~ msgstr "نیوئه"
+
+#~ msgid "No Record Found"
+#~ msgstr "رکورد جدید یافت شد"
+
+#~ msgid "No gap"
+#~ msgstr "بدون فاصله"
+
+#~ msgid "Non Updatable"
+#~ msgstr "غیرقابل به روزرسانی"
+
+#~ msgid "None"
+#~ msgstr "هیچکدام"
+
+#~ msgid "Norfolk Island"
+#~ msgstr "جزیره‌ی نورفولک"
+
+#~ msgid "North Korea"
+#~ msgstr "کره شمالی"
+
+#~ msgid "Northern Mariana Islands"
+#~ msgstr "جزایر ماریانای شمالی"
+
+#~ msgid "Norway"
+#~ msgstr "نروژ"
+
+#~ msgid "Norway - Accounting"
+#~ msgstr "نروزژ - حسابداری"
+
+#~ msgid "Norway - Accounting Reports"
+#~ msgstr "نروزژ - گزارشات حسابداری"
+
+#~ msgid "Not Installed"
+#~ msgstr "نصب نشده"
+
+#~ msgid "Notes"
+#~ msgstr "یادداشت‌ها"
+
+#~ msgid "Number of Apps"
+#~ msgstr "تعداد برنامه ها"
+
+#~ msgid "Number of Calls"
+#~ msgstr "تعداد تماس‌ها"
+
+#~ msgid "Number of Companies"
+#~ msgstr "تعداد شرکتها"
+
+#~ msgid "Number of modules added"
+#~ msgstr "تعداد ماژول‌های افزوده‌شده"
+
+#~ msgid "Number of modules updated"
+#~ msgstr "تعداد ماژول‌های به‌روزرسانی‌شده"
+
+#~ msgid "OHADA - Accounting"
+#~ msgstr "OHADA - حسابداری"
+
+#~ msgid "Object"
+#~ msgstr "شی"
+
+#~ msgid "Object %s doesn't exist"
+#~ msgstr "شئ %s وجود ندارد"
+
+#~ msgid "Object Name"
+#~ msgstr "نام شی"
+
+#~ msgid "Object Relation"
+#~ msgstr "رابطه شی"
+
+#~ msgid "Object:"
+#~ msgstr "شی:"
+
+#~ msgid "Odoo Enterprise Edition License v1.0"
+#~ msgstr "گواهی نسخه سازمانی اودو نسخه v1.0"
+
+#~ msgid "Odoo Mexican Localization Reports"
+#~ msgstr "گزارشهای محلی سازی مکزیک اودو"
+
+#~ msgid "Odoo Mobile Core module"
+#~ msgstr "هسته ماجول موبایل اودو"
+
+#~ msgid "Odoo Proprietary License v1.0"
+#~ msgstr "مجوز اختصاصی اودو نسخه ۱"
+
+#~ msgid "Odoo Settings Dashboard"
+#~ msgstr "داشبورد تنظیمات اودو"
+
+#~ msgid "Odoo Web Diagram"
+#~ msgstr "دیاگرام وب اودو"
+
+#~ msgid "Office Supplies"
+#~ msgstr "لوازم اداری"
+
+#~ msgid "Ok"
+#~ msgstr "تأیید"
+
+#~ msgid "Oman"
+#~ msgstr "عمان"
+
+#~ msgid "On Delete"
+#~ msgstr "در هنگام حذف"
+
+#~ msgid "On Multiple Doc."
+#~ msgstr "روی چند سند"
+
+#~ msgid "On delete property for many2one fields"
+#~ msgstr "ویژگی هنگام ستردن برای فیلدهای many2one"
+
+#~ msgid "Online Jobs"
+#~ msgstr "مشاغل آنلاین"
+
+#~ msgid "Only one currency rate per day allowed!"
+#~ msgstr "فقط یک نرخ ارز در روز مجاز است!"
+
+#~ msgid ""
+#~ "Only users with the following access level are currently allowed to do "
+#~ "that"
+#~ msgstr ""
+#~ "در حال حاضر تنها کاربران با سطح دسترسی زیر  مجاز به انجام این کار هستند"
+
+#~ msgid "Open Apps"
+#~ msgstr "باز کردن برنامه ها"
+
+#~ msgid "Open Settings Menu"
+#~ msgstr "باز کردن منوی تنظیمات"
+
+#~ msgid "Open Window"
+#~ msgstr "باز کردن پنجره‌"
+
+#~ msgid "Open a Window"
+#~ msgstr "بازکردن یک پنجره"
+
+#~ msgid "Opportunity to Quotation"
+#~ msgstr "فرصت به پیش‌فاکتور"
+
+#~ msgid "Option"
+#~ msgstr "گزینه"
+
+#~ msgid "Options"
+#~ msgstr "گزینه ها"
+
+#~ msgid "Orientation"
+#~ msgstr "طرز قرار گیری"
+
+#~ msgid "Original View"
+#~ msgstr "نمای بُنیانی"
+
+#~ msgid "Other Extra Rights"
+#~ msgstr "سایر دسترسی‌های اضافی"
+
+#~ msgid "Other Partners"
+#~ msgstr "همکاران دیگر"
+
+#~ msgid "Other Proprietary"
+#~ msgstr "دیگر اختصاصی‌ها"
+
+#~ msgid "Other Services"
+#~ msgstr "سرویس‌های دیگر"
+
+#~ msgid "Other address"
+#~ msgstr "نشانی دیگر"
+
+#~ msgid "Outgoing Mail Server"
+#~ msgstr "سرور ایمیل Outgoing"
+
+#~ msgid "Outgoing Mail Servers"
+#~ msgstr "سرورهای ایمیل Outgoing"
+
+#~ msgid "Output DPI"
+#~ msgstr "DPI خروجی"
+
+#~ msgid "Overwrite Existing Terms"
+#~ msgstr "بازنویسی قوانین موجود"
+
+#~ msgid "Owner"
+#~ msgstr "مالک‌"
+
+#~ msgid "PDF"
+#~ msgstr "PDF"
+
+#~ msgid "PO File"
+#~ msgstr "پرونده PO"
+
+#~ msgid "POEdit"
+#~ msgstr "POEdit"
+
+#~ msgid "Page height (mm)"
+#~ msgstr "ارتفاع صفحه (mm)"
+
+#~ msgid "Page width (mm)"
+#~ msgstr "عرض صفحه (mm)"
+
+#~ msgid "Pakistan"
+#~ msgstr "پاکستان"
+
+#~ msgid "Palau"
+#~ msgstr "پالائو"
+
+#~ msgid "Panama"
+#~ msgstr "پاناما"
+
+#~ msgid "Panama - Accounting"
+#~ msgstr "پاناما - حسابداری"
+
+#~ msgid "Paper Format"
+#~ msgstr "قالب کاغذ"
+
+#~ msgid "Paper Format General Configuration"
+#~ msgstr "پیکربندی عمومی قالب کاغذ"
+
+#~ msgid "Paper format"
+#~ msgstr "قالب کاغذ"
+
+#~ msgid "Paper format configuration"
+#~ msgstr "پیکربندی قالب کاغذ"
+
+#~ msgid "Paper size"
+#~ msgstr "اندازه کاغذ"
+
+#~ msgid "Papua New Guinea"
+#~ msgstr "پاپوا گینه‌ی نو"
+
+#~ msgid "Paraguay"
+#~ msgstr "پاراگوئه"
+
+#~ msgid "Parameters"
+#~ msgstr "پارامترها"
+
+#~ msgid "Parameters that are used by all resources."
+#~ msgstr "پارامترهایی که توسط همه منابع استفاده می‌شوند."
+
+#~ msgid "Params storage"
+#~ msgstr "پارامترهای ذخیره سازی"
+
+#~ msgid "Parent Application"
+#~ msgstr "برنامه اصلی"
+
+#~ msgid "Parent Company"
+#~ msgstr "شرکت مادر"
+
+#~ msgid "Parent Menu"
+#~ msgstr "منوی مادر"
+
+#~ msgid "Parent name"
+#~ msgstr "نام والد"
+
+#~ msgid "Partner"
+#~ msgstr "همکار"
+
+#~ msgid "Partner Tags"
+#~ msgstr "برچسب های شریک تجاری"
+
+#~ msgid "Partner Titles"
+#~ msgstr "عناوین همکار"
+
+#~ msgid "Partner-related data of the user"
+#~ msgstr "داده مربوط به همکار کاربر"
+
+#~ msgid "Partners"
+#~ msgstr "همکاران"
+
+#~ msgid "Partners Geolocation"
+#~ msgstr "موقعیت مکانی همکاران"
+
+#~ msgid "Partners: "
+#~ msgstr "همکاران:"
+
+#~ msgid "Password"
+#~ msgstr "گذرواژه"
+
+#~ msgid "Path"
+#~ msgstr "مسیر"
+
+#~ msgid "Payment - Account"
+#~ msgstr "پرداخت - حساب"
+
+#~ msgid "Payment Acquirer"
+#~ msgstr "دریافت کننده پرداخت"
+
+#~ msgid "Payment Follow-up Management"
+#~ msgstr "مدیریت پیگیری پرداخت"
+
+#~ msgid "Paypal Payment Acquirer"
+#~ msgstr "دریافت کننده پرداخت پی پل"
+
+#~ msgid "Payroll"
+#~ msgstr "حقوق و دستمزد"
+
+#~ msgid "Payroll Accounting"
+#~ msgstr "حسابداری حقوق و دستمزد"
+
+#~ msgid "Peru"
+#~ msgstr "پرو"
+
+#~ msgid "Peru - Accounting"
+#~ msgstr "پرو - حسابداری"
+
+#~ msgid "Philippines"
+#~ msgstr "فیلیپین"
+
+#~ msgid "Phone Numbers Validation"
+#~ msgstr "اعتبار سنجی شماره‌های موبایل"
+
+#~ msgid "Phone:"
+#~ msgstr "تلفن:"
+
+#~ msgid "Pitcairn Islands"
+#~ msgstr "ارزیابی شماره تلفن"
+
+#~ msgid "Pivot"
+#~ msgstr "پیوت"
+
+#~ msgid "Point of Sale"
+#~ msgstr "پایانه فروش"
+
+#~ msgid "Point of Sale Discounts"
+#~ msgstr "تخفیف های پایانه فروش"
+
+#~ msgid "Point of Sale Receipt Reprinting"
+#~ msgstr "چاپ مجدد در پایانه فروش"
+
+#~ msgid "Poland"
+#~ msgstr "لهستان"
+
+#~ msgid "Poland - Accounting"
+#~ msgstr "لهستان - حسابداری"
+
+#~ msgid "Poland - Accounting Reports"
+#~ msgstr "لهستان - گزارشات حسابداری"
+
+#~ msgid "Portal"
+#~ msgstr "پورتال"
+
+#~ msgid "Portrait"
+#~ msgstr "پرتره"
+
+#~ msgid "Portugal"
+#~ msgstr "پرتغال"
+
+#~ msgid "Portugal - Accounting"
+#~ msgstr "پرتغال - حسابداری"
+
+#~ msgid "PostgreSQL constraint definition"
+#~ msgstr "تعریف قید PostgreSQL"
+
+#~ msgid "Preferences"
+#~ msgstr "ترجیحات"
+
+#~ msgid "Prefix"
+#~ msgstr "پیشوند"
+
+#~ msgid "Price Accuracy"
+#~ msgstr "دقت قیمت"
+
+#~ msgid "Print US Checks"
+#~ msgstr "چاپ چک آمریکایی"
+
+#~ msgid "Printed Report Name"
+#~ msgstr "نام گزارش چاپ شده"
+
+#~ msgid "Priority"
+#~ msgstr "اولویت"
+
+#~ msgid "Private Address"
+#~ msgstr "آدرس خصوصی"
+
+#~ msgid "Product Email Template"
+#~ msgstr "قالب ایمیل محصول"
+
+#~ msgid "Product Lifecycle Management (PLM)"
+#~ msgstr "مدیریت چرخه محصول (PLM)"
+
+#~ msgid "Productivity"
+#~ msgstr "کارآیی"
+
+#~ msgid "Products & Pricelists"
+#~ msgstr "محصولات و لیست‌های قیمت"
+
+#~ msgid "Products Expiration Date"
+#~ msgstr "تاریخ انقضای محصول"
+
+#~ msgid "Prof."
+#~ msgstr "پروفسور"
+
+#~ msgid "Professor"
+#~ msgstr "پروفسور"
+
+#~ msgid "Project"
+#~ msgstr "پروژه"
+
+#~ msgid "Project, Helpdesk, Timesheet and Sale Orders"
+#~ msgstr "پروژه، میز کمک، برگ زمان بندی و سفارشات فروش"
+
+#~ msgid "Project, Tasks, Timesheet"
+#~ msgstr "پروژه‌ها، کارها ، برگه زمان بندی"
+
+#~ msgid "Properties"
+#~ msgstr "مشخصات"
+
+#~ msgid "Public"
+#~ msgstr "همگانی"
+
+#~ msgid "Public Administration"
+#~ msgstr "مدیریت عام"
+
+#~ msgid "Published Version"
+#~ msgstr "نگارش منتشر شده"
+
+#~ msgid "Puerto Rico"
+#~ msgstr "پورتو ریکو"
+
+#~ msgid "Purchase"
+#~ msgstr "خرید"
+
+#~ msgid "Purchase Agreements"
+#~ msgstr "توافقات خرید"
+
+#~ msgid "Purchase and MRP Management"
+#~ msgstr "مدیریت خرید و MRP"
+
+#~ msgid "Purchases"
+#~ msgstr "خریدها"
+
+#~ msgid "Python Code"
+#~ msgstr "کد پایتون"
+
+#~ msgid "Python expression"
+#~ msgstr "عبارت پایتون"
+
+#~ msgid "QWeb"
+#~ msgstr "QWeb"
+
+#~ msgid "Qatar"
+#~ msgstr "قطر"
+
+#~ msgid "Quality"
+#~ msgstr "کیفیت"
+
+#~ msgid "Quality Management with MRP"
+#~ msgstr "مدیریت کیفیت با MRP"
+
+#~ msgid "Questions on Events"
+#~ msgstr "سوالات و رویدادها"
+
+#~ msgid "Rate"
+#~ msgstr "نرخ"
+
+#~ msgid "Rates"
+#~ msgstr "نرخ‌ها"
+
+#~ msgid "Read Access"
+#~ msgstr "دسترسی خواندن"
+
+#~ msgid "Read Access Right"
+#~ msgstr "حق دسترسی خواندن"
+
+#~ msgid "Readonly"
+#~ msgstr "فقط خواندنی"
+
+#~ msgid "Real Estate"
+#~ msgstr "مشاور املاک"
+
+#~ msgid "Record ID"
+#~ msgstr "شناسه رکورد"
+
+#~ msgid "Record Rule"
+#~ msgstr "قاعده رکورد"
+
+#~ msgid "Record does not exist or has been deleted."
+#~ msgstr "رکورد وجود ندارد یا حذف شده است."
+
+#~ msgid "Record rules"
+#~ msgstr "قواعد رکورد"
+
+#~ msgid "Recruitment"
+#~ msgstr "استخدام"
+
+#~ msgid "Recursivity Detected."
+#~ msgstr "بازگشتی تشخیص داده شد."
+
+#~ msgid "Reference"
+#~ msgstr "مرجع‌"
+
+#~ msgid "Related Company"
+#~ msgstr "شرکت های مرتبط"
+
+#~ msgid "Related Field"
+#~ msgstr "فیلدهای مربوطه"
+
+#~ msgid "Related Partner"
+#~ msgstr "شریک تجاری مرتبط"
+
+#~ msgid "Related Server Action"
+#~ msgstr "عمل سرور مربوطه"
+
+#~ msgid "Relation Field"
+#~ msgstr "فیلد رابطه"
+
+#~ msgid "Relation Name"
+#~ msgstr "نام رابطه"
+
+#~ msgid "Relation Table"
+#~ msgstr "جدول رابطه"
+
+#~ msgid "Reload from Attachment"
+#~ msgstr "بازخوانی از پیوست"
+
+#~ msgid "Remove"
+#~ msgstr "حذف"
+
+#~ msgid "Remove from the 'Print' menu"
+#~ msgstr "حذف از منوی «چاپ»"
+
+#~ msgid "Repairs"
+#~ msgstr "تعمیرات"
+
+#~ msgid "Repeat Missed"
+#~ msgstr "تکرار بی‌پاسخ"
+
+#~ msgid "Repeat every x."
+#~ msgstr "تکرار هر X."
+
+#~ msgid "Report"
+#~ msgstr "گزارش"
+
+#~ msgid "Report File"
+#~ msgstr "فایل گزارش"
+
+#~ msgid "Report Footer"
+#~ msgstr "زیرنویس گزارش"
+
+#~ msgid "Report Model"
+#~ msgstr "مدل گزارش"
+
+#~ msgid "Report Type"
+#~ msgstr "نوع گزارش"
+
+#~ msgid "Report xml"
+#~ msgstr "گزارش xml"
+
+#~ msgid "Reporting"
+#~ msgstr "گزارش"
+
+#~ msgid "Reports"
+#~ msgstr "گزارش‌ها"
+
+#~ msgid "Required"
+#~ msgstr "لازم"
+
+#~ msgid "Resellers"
+#~ msgstr "نمایندگان فروش"
+
+#~ msgid "Resource"
+#~ msgstr "منبع"
+
+#~ msgid "Resource Field"
+#~ msgstr "فیلد منبع"
+
+#~ msgid "Resource ID"
+#~ msgstr "شناسه منبع"
+
+#~ msgid "Resource Model"
+#~ msgstr "مدل منبع"
+
+#~ msgid "Resource Name"
+#~ msgstr "نام منبع"
+
+#~ msgid "Restaurant"
+#~ msgstr "رستوران"
+
+#~ msgid "Restaurant extensions for the Point of Sale "
+#~ msgstr "قابلیت های اضافه برای رستوران در پایانه فروش."
+
+#~ msgid "Restrict"
+#~ msgstr "محدود کردن"
+
+#~ msgid "Restrict to lists"
+#~ msgstr "محدود کردن به لیستها"
+
+#~ msgid "Right Margin (mm)"
+#~ msgstr "حاشیه راست (mm)"
+
+#~ msgid "Right-to-Left"
+#~ msgstr "راست به چپ"
+
+#~ msgid "Romania"
+#~ msgstr "رومانی"
+
+#~ msgid "Romania - Accounting"
+#~ msgstr "حسابداری - رومانی"
+
+#~ msgid "Romania - Accounting Reports"
+#~ msgstr "رومانی - گزارشهای حسابداری"
+
+#~ msgid "Rounding Factor"
+#~ msgstr "فاکتور گردکردن"
+
+#~ msgid "Rules"
+#~ msgstr "قواعد"
+
+#~ msgid "Run Manually"
+#~ msgstr "اجرای دستی"
+
+#~ msgid "Russian Federation"
+#~ msgstr "فدراسیون روسیه"
+
+#~ msgid "Rwanda"
+#~ msgstr "رواندا"
+
+#~ msgid "SMS gateway"
+#~ msgstr "درگاه پیام کوتاه"
+
+#~ msgid "SMTP Port"
+#~ msgstr "پورت SMTP"
+
+#~ msgid "SMTP Server"
+#~ msgstr "سرور SMTP"
+
+#~ msgid "SQL Constraint"
+#~ msgstr "قید SQL ای"
+
+#~ msgid "SSL/TLS"
+#~ msgstr "SSL/TLS"
+
+#~ msgid "Saint Lucia"
+#~ msgstr "سنت لوشا"
+
+#~ msgid "Saint Martin (French part)"
+#~ msgstr "سنت مارتین (بخش فرانسوی)"
+
+#~ msgid "Saint Pierre and Miquelon"
+#~ msgstr "سنت پیر و میکلون"
+
+#~ msgid "Salary Package Configurator"
+#~ msgstr "پیکربند بسته حقوق"
+
+#~ msgid "Sale & Purchase Vouchers"
+#~ msgstr "ووچرهای خرید و فروش"
+
+#~ msgid "Sale Coupon"
+#~ msgstr "کوپن فروش"
+
+#~ msgid "Sale Coupon Delivery"
+#~ msgstr "تحویل کوپن فروش"
+
+#~ msgid "Sales"
+#~ msgstr "فروش"
+
+#~ msgid "Sales & Purchases"
+#~ msgstr "فروش‌ها و خریدها"
+
+#~ msgid "Sales Expense"
+#~ msgstr "هزینه فروش"
+
+#~ msgid "Sales Teams"
+#~ msgstr "تیم های فروش"
+
+#~ msgid "Sales Timesheet"
+#~ msgstr "برگه زمان بندی فروش"
+
+#~ msgid "Sales Timesheet: Grid Support"
+#~ msgstr "برگه زمتنی فروش: پشتیبانی گرید"
+
+#~ msgid "Sales and MRP Management"
+#~ msgstr "مدیریت فروش و تولید"
+
+#~ msgid "Sales and Warehouse Management"
+#~ msgstr "مدیریت فروش و انبار"
+
+#~ msgid "Salesperson"
+#~ msgstr "فروشنده"
+
+#~ msgid "Samoa"
+#~ msgstr "ساموا"
+
+#~ msgid "San Marino"
+#~ msgstr "سان مارینو"
+
+#~ msgid "Saturday"
+#~ msgstr "شنبه"
+
+#~ msgid "Saudi Arabia"
+#~ msgstr "عربستان سعودی"
+
+#~ msgid "Saudi Arabia - Accounting"
+#~ msgstr "عربستان سعودی - حسابداری"
+
+#~ msgid "Save"
+#~ msgstr "ذخیره"
+
+#~ msgid "Save and Print"
+#~ msgstr "ذخیره و چاپ"
+
+#~ msgid "Scheduled Action"
+#~ msgstr "اقدام برنامه ریزی شده"
+
+#~ msgid "Scheduled Actions"
+#~ msgstr "کنش‌های زمان‌بندی‌شده"
+
+#~ msgid "Scheduler User"
+#~ msgstr "کاربر برنامه ریز"
+
+#~ msgid "Scientific"
+#~ msgstr "علمی"
+
+#~ msgid "Screen Driver"
+#~ msgstr "درایور صفحه نمایش"
+
+#~ msgid "Search"
+#~ msgstr "جستجو"
+
+#~ msgid "Search Actions"
+#~ msgstr "عملهای جستجو"
+
+#~ msgid "Search Partner"
+#~ msgstr "جستجوی همکار"
+
+#~ msgid "Search View"
+#~ msgstr "نمای جستجو"
+
+#~ msgid "Search View Ref."
+#~ msgstr "مرجع نمای جستجو"
+
+#~ msgid "Search modules"
+#~ msgstr "جستجوی ماژول ها"
+
+#~ msgid "Search..."
+#~ msgstr "جستجو..."
+
+#~ msgid "Security and Authentication"
+#~ msgstr "امنیت و احراز هویت"
+
+#~ msgid "See http://openerp.com"
+#~ msgstr "بروید به http://openerp.com"
+
+#~ msgid "Select Proper Paper size"
+#~ msgstr "انتخاب اندازه کاغذ مناسب"
+
+#~ msgid "Selectable"
+#~ msgstr "گزینش پذیر"
+
+#~ msgid "Selection Options"
+#~ msgstr "گزینه‌های انتخاب"
+
+#~ msgid "Self"
+#~ msgstr "خود"
+
+#~ msgid "Senegal"
+#~ msgstr "سنگال"
+
+#~ msgid "Separator Format"
+#~ msgstr "قالب جداساز"
+
+#~ msgid "Sequence"
+#~ msgstr "دنباله"
+
+#~ msgid "Sequence Code"
+#~ msgstr "کد دنباله"
+
+#~ msgid "Sequence Size"
+#~ msgstr "اندازه دنباله"
+
+#~ msgid "Sequences"
+#~ msgstr "دنباله‌ها"
+
+#~ msgid "Sequences & Identifiers"
+#~ msgstr "شناسه ها و دنباله ها"
+
+#~ msgid "Serbia"
+#~ msgstr "صربستان"
+
+#~ msgid "Server"
+#~ msgstr "سرور"
+
+#~ msgid "Server Action"
+#~ msgstr "کنش کارپذیر"
+
+#~ msgid "Server Actions"
+#~ msgstr "کُنش‌های سمت سرور"
+
+#~ msgid "Server action"
+#~ msgstr "عمل سرور"
+
+#~ msgid "Services"
+#~ msgstr "خدمات"
+
+#~ msgid "Set NULL"
+#~ msgstr "تنظیم به NULL"
+
+#~ msgid "Set Password"
+#~ msgstr "ایجاد کلمه عبور"
+
+#~ msgid "Set as Todo"
+#~ msgstr "تعیین به عنوان در دست اقدام"
+
+#~ msgid "Settings"
+#~ msgstr "تنظیمات"
+
+#~ msgid "Seychelles"
+#~ msgstr "سیشل"
+
+#~ msgid "Share Group"
+#~ msgstr "اشتراک گروه"
+
+#~ msgid "Share Partner"
+#~ msgstr "اشتراک همکار"
+
+#~ msgid "Share User"
+#~ msgstr "اشتراک کاربر"
+
+#~ msgid "Shared"
+#~ msgstr "به اشتراک گذاشته شده"
+
+#~ msgid "Shipping address"
+#~ msgstr "نشانی ارسال"
+
+#~ msgid "Show All"
+#~ msgstr "نمایش همه"
+
+#~ msgid "Show active currencies"
+#~ msgstr "نمایش ارزهای فعال"
+
+#~ msgid "Show inactive currencies"
+#~ msgstr "نمایش ارزهای غیر فعال"
+
+#~ msgid "Show technical modules"
+#~ msgstr "نمایش ماجول‌های تکنیکال"
+
+#~ msgid "Sierra Leone"
+#~ msgstr "سیرالئون"
+
+#~ msgid "Sign"
+#~ msgstr "امضا"
+
+#~ msgid "Signature"
+#~ msgstr "امضا"
+
+#~ msgid "Signup"
+#~ msgstr "ثبت نام"
+
+#~ msgid "Simple Discounts in the Point of Sale "
+#~ msgstr "تخفیف ساده در پایانه فروش"
+
+#~ msgid "Singapore"
+#~ msgstr "سنگاپور"
+
+#~ msgid "Singapore - Accounting"
+#~ msgstr "سنگاپور - حسابداری"
+
+#~ msgid "Singapore - Accounting Reports"
+#~ msgstr "سنگاپور - گزارش‌های حسابداری"
+
+#~ msgid "Sint Maarten (Dutch part)"
+#~ msgstr "سن مارتین (بخش هلندی)"
+
+#~ msgid "Size"
+#~ msgstr "اندازه"
+
+#~ msgid "Size of the field cannot be negative."
+#~ msgstr "اندازه فیلد نمی‌تواند منفی باشد."
+
+#~ msgid "Skip"
+#~ msgstr "پرش"
+
+#~ msgid "Skip these contacts"
+#~ msgstr "پرش از این تماسها"
+
+#~ msgid "Slides"
+#~ msgstr "اسلایدها"
+
+#~ msgid "Slovakia"
+#~ msgstr "اسلواکی"
+
+#~ msgid "Slovenia"
+#~ msgstr "اسلوونی"
+
+#~ msgid "Slovenian - Accounting"
+#~ msgstr "اسلونی - حسابداری"
+
+#~ msgid "Slovenian - Accounting Reports"
+#~ msgstr "اسلوونی - گزارشهای حسابداری"
+
+#~ msgid "Small-sized image"
+#~ msgstr "تصویر کوچک"
+
+#~ msgid "Solomon Islands"
+#~ msgstr "جزایر سلیمان"
+
+#~ msgid "Somalia"
+#~ msgstr "سومالی"
+
+#~ msgid "Sort"
+#~ msgstr "مرتب سازی"
+
+#~ msgid "Source Model"
+#~ msgstr "مدل منبع"
+
+#~ msgid "Source Object"
+#~ msgstr "شی مبدا"
+
+#~ msgid "Source Term"
+#~ msgstr "تیم منبع"
+
+#~ msgid "Source term"
+#~ msgstr "شرایط منبع"
+
+#~ msgid "South Africa"
+#~ msgstr "افریقای جنوبی"
+
+#~ msgid "South America"
+#~ msgstr "آمریکای جنوبی"
+
+#~ msgid "South Korea"
+#~ msgstr "کره جنوبی"
+
+#~ msgid "South Sudan"
+#~ msgstr "سودان جنوبی"
+
+#~ msgid "Spain"
+#~ msgstr "اسپانیا"
+
+#~ msgid "Specific Industry Applications"
+#~ msgstr "برنامه‌های صنایع خاص"
+
+#~ msgid "Sri Lanka"
+#~ msgstr "سری‌لانکا"
+
+#~ msgid "Standard"
+#~ msgstr "استاندارد"
+
+#~ msgid "Start configuration"
+#~ msgstr "آغاز پیکربندی"
+
+#~ msgid "State"
+#~ msgstr "استان"
+
+#~ msgid "State Code"
+#~ msgstr "کد استان"
+
+#~ msgid "State Name"
+#~ msgstr "نام استان"
+
+#~ msgid "State of Palestine"
+#~ msgstr "فلسطین"
+
+#~ msgid "States"
+#~ msgstr "وضعیت ها"
+
+#~ msgid "Status"
+#~ msgstr "وضعیت"
+
+#~ msgid "Step"
+#~ msgstr "گام"
+
+#~ msgid "Sticky memos, Collaborative"
+#~ msgstr "یادداشت چسبان، همکاری"
+
+#~ msgid "Stored Filename"
+#~ msgstr "نام فایل ذخیره شده"
+
+#~ msgid "Street"
+#~ msgstr "خیابان"
+
+#~ msgid "Street 2..."
+#~ msgstr "خیابان 2 ..."
+
+#~ msgid "Street..."
+#~ msgstr "خیابان ..."
+
+#~ msgid "Street2"
+#~ msgstr "خیابان۲"
+
+#~ msgid "Studio"
+#~ msgstr "استودیو"
+
+#~ msgid "Submenus"
+#~ msgstr "زیرمنو ها"
+
+#~ msgid "Subscriptions"
+#~ msgstr "اشتراک ها"
+
+#~ msgid "Sudan"
+#~ msgstr "سودان"
+
+#~ msgid "Suffix"
+#~ msgstr "پسوند"
+
+#~ msgid "Summary"
+#~ msgstr "چکیده"
+
+#~ msgid "Sunday"
+#~ msgstr "یکشنبه"
+
+#~ msgid "Suriname"
+#~ msgstr "سورینام"
+
+#~ msgid "Survey"
+#~ msgstr "نظرسنجی"
+
+#~ msgid "Survey CRM"
+#~ msgstr "نظرسنجی ارتباط با مشتری"
+
+#~ msgid "Surveys"
+#~ msgstr "نظر سنجی‌ها"
+
+#~ msgid "Swaziland"
+#~ msgstr "سوازیلند"
+
+#~ msgid "Sweden"
+#~ msgstr "سوئد"
+
+#~ msgid "Switzerland"
+#~ msgstr "سوئیس"
+
+#~ msgid "Switzerland - Accounting"
+#~ msgstr "سوئیس - حسابداری"
+
+#~ msgid "Switzerland - Accounting Reports"
+#~ msgstr "سوئیس - گزارش‌های حسابداری"
+
+#~ msgid "Symbol"
+#~ msgstr "نماد"
+
+#~ msgid "Symbol Position"
+#~ msgstr "محل سمبل"
+
+#~ msgid "Syria"
+#~ msgstr "سوریه"
+
+#~ msgid "System Parameters"
+#~ msgstr "پارامترهای سیستم"
+
+#~ msgid "System Properties"
+#~ msgstr "خواص سیستم"
+
+#~ msgid "System Update"
+#~ msgstr "به روز رسانی سیستم"
+
+#~ msgid "TGZ Archive"
+#~ msgstr "بایگانی TGZ"
+
+#~ msgid "Tabloid 29 279.4 x 431.8 mm"
+#~ msgstr "Tabloid 29 279.4 x 431.8 mm"
+
+#~ msgid "Tag"
+#~ msgstr "برچسب"
+
+#~ msgid "Tag Name"
+#~ msgstr "نام تگ"
+
+#~ msgid "Tags"
+#~ msgstr "برچسب‌ها"
+
+#~ msgid "Tags..."
+#~ msgstr "برچسب ها..."
+
+#~ msgid "Taiwan"
+#~ msgstr "تایوان"
+
+#~ msgid "Tajikistan"
+#~ msgstr "تاجیکستان"
+
+#~ msgid "Tanzania"
+#~ msgstr "تانزانیا"
+
+#~ msgid "Target Window"
+#~ msgstr "پنجره هدف"
+
+#~ msgid "Tax ID"
+#~ msgstr "شناسه مالیات"
+
+#~ msgid "Technical"
+#~ msgstr "فنی"
+
+#~ msgid "Technical Data"
+#~ msgstr "داده‌ فنی"
+
+#~ msgid "Technical Features"
+#~ msgstr "ویژگی های فنی"
+
+#~ msgid "Technical Name"
+#~ msgstr "نام فنی"
+
+#~ msgid "Technical Settings"
+#~ msgstr "تنظیمات فنی"
+
+#~ msgid "Technical guide"
+#~ msgstr "راهنمای فنی"
+
+#~ msgid "Template"
+#~ msgstr "پوسته"
+
+#~ msgid "Template Name"
+#~ msgstr "نام قالب"
+
+#~ msgid "Test Connection"
+#~ msgstr "آزمودن اتصال"
+
+#~ msgid "Test Main Flow"
+#~ msgstr "آزمایش جریان اصلی"
+
+#~ msgid "Test Performance"
+#~ msgstr "آزمایش عملکرد"
+
+#~ msgid "Testing of access restrictions"
+#~ msgstr "آزمایش محدودیتهای دسترسی"
+
+#~ msgid "Tests"
+#~ msgstr "آزمونها"
+
+#~ msgid "Text"
+#~ msgstr "متن"
+
+#~ msgid "Thailand"
+#~ msgstr "تایلند"
+
+#~ msgid "Thailand - Accounting"
+#~ msgstr "تایلند - حسابداری"
+
+#~ msgid "Thailand - Accounting Reports"
+#~ msgstr "تایلند - گزارشهای حسابداری"
+
+#~ msgid ""
+#~ "The active field allows you to hide the category without removing it."
+#~ msgstr "فیلد فعال می‌گذارد تا شما دسته‌بندی را بدون برداشتن آن پنهان نمایید."
+
+#~ msgid "The code of the country must be unique !"
+#~ msgstr "کد کشور باید منحصر به فرد باشد!"
+
+#~ msgid "The code of the language must be unique !"
+#~ msgstr "کد زبان باید منحصر به فرد باشد!"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "نام شرکت باید منحصر به فرد باشد !"
+
+#~ msgid "The company this user is currently working for."
+#~ msgstr "شرکتی که این کاربر هم اکنون برایش کار می‌کند."
+
+#~ msgid "The currency code must be unique!"
+#~ msgstr "کد ارز باید یکتا باشد!"
+
+#~ msgid "The database object this attachment will be attached to."
+#~ msgstr "شئ پایگاه داده که این پیوست به آن پیوست خواهد شد."
+
+#~ msgid "The following apps will be uninstalled"
+#~ msgstr "برنامه‌های زیر لغو نصب می‌شوند"
+
+#~ msgid "The following documents will be permanently lost"
+#~ msgstr "اسناد زیر به صورت دائم از بین خواهند رفت"
+
+#~ msgid "The full name of the country."
+#~ msgstr "نام کامل کشور."
+
+#~ msgid "The list of models that extends the current model."
+#~ msgstr "لیست ماجولهایی که این مدل را گسترش می‌دهد."
+
+#~ msgid "The model this field belongs to"
+#~ msgstr "ماجول این فیلد متعلق است به"
+
+#~ msgid "The name of the country must be unique !"
+#~ msgstr "نام کشور باید منحصر به فرد باشد!"
+
+#~ msgid "The name of the group must be unique within an application!"
+#~ msgstr "نام گروه در محدوده یک برنامه باید یکتا باشد!"
+
+#~ msgid "The name of the language must be unique !"
+#~ msgstr "نام زبان باید منحصر به فرد باشد !"
+
+#~ msgid "The name of the module must be unique!"
+#~ msgstr "نام ماجول باید یکتا باشد!"
+
+#~ msgid "The next number of the sequence will be incremented by this number"
+#~ msgstr "شماره بعدی دنباله با این عدد افزایش می‌یابد"
+
+#~ msgid "The next step depends on the file format:"
+#~ msgstr "گام بعدی بسته به فرمت فایل:"
+
+#~ msgid "The only predefined variables are"
+#~ msgstr "تنها متغیرهای از پیش تعریف شده عبارتند از"
+
+#~ msgid "The rate of the currency to the currency of rate 1"
+#~ msgstr "The rate of the currency to the currency of rate 1"
+
+#~ msgid "The rate of the currency to the currency of rate 1."
+#~ msgstr "نرخ ارز به ارز با نرخ 1."
+
+#~ msgid "The record id this is attached to."
+#~ msgstr "آیدی رکوردی که این به آن وابسته است."
+
+#~ msgid "The state code."
+#~ msgstr "کد استان."
+
+#~ msgid "The technical name of the model this field belongs to"
+#~ msgstr "نام فنی مدل که این فیلد به آن تعلق دارد"
+
+#~ msgid "Theme"
+#~ msgstr "تم"
+
+#~ msgid "This ISO code is the name of po files to use for translations"
+#~ msgstr "این کد iso نام پرونده‌های po بکارگرفته برای برگردان‌هاست"
+
+#~ msgid "This Window"
+#~ msgstr "این پنجره"
+
+#~ msgid "This field is used to set/get locales for user"
+#~ msgstr "این فیلد برای تنظیم/دریافت زبان‌های کاربر بکارگرفته شده"
+
+#~ msgid ""
+#~ "This is the filename of the attachment used to store the printing result. "
+#~ "Keep empty to not save the printed reports. You can use a python "
+#~ "expression with the object and time variables."
+#~ msgstr ""
+#~ "نام پرونده‌ پیوستی است که برآمدِ چاپی را در خود نگه می‌دارد. برای نگه نداشتن "
+#~ "گزارش‌های چاپ شده اینجا را خالی بگذارید. شما می‌توانید یک عبارت پایتونی "
+#~ "همراه با متغیرهای ساعت و شی را بکارگیرید."
+
+#~ msgid "Thousands Separator"
+#~ msgstr "جداساز هزارگان"
+
+#~ msgid "Thursday"
+#~ msgstr "پنجشنبه"
+
+#~ msgid "Ticketing, Support, Livechat"
+#~ msgstr "پشتیبانی، تیکت و چت زنده"
+
+#~ msgid "Ticketing, Support, Slides"
+#~ msgstr "تیکت، پشتیبانی و اسلایدها"
+
+#~ msgid "Time Format"
+#~ msgstr "قالب ساعت"
+
+#~ msgid "Timesheet when on Leaves"
+#~ msgstr "برگه زمانی موقع مرخصی"
+
+#~ msgid "Timesheets"
+#~ msgstr "برگه ساعات کارکرد"
+
+#~ msgid "Timezone"
+#~ msgstr "منطقه‌ زمانی"
+
+#~ msgid "Title"
+#~ msgstr "عنوان"
+
+#~ msgid "To"
+#~ msgstr "به"
+
+#~ msgid "To Do"
+#~ msgstr "در دست اقدام"
+
+#~ msgid "To Translate"
+#~ msgstr "برای ترجمه"
+
+#~ msgid "To be installed"
+#~ msgstr "برای نصب"
+
+#~ msgid "To be removed"
+#~ msgstr "برای برداشته‌شدن"
+
+#~ msgid "To be upgraded"
+#~ msgstr "برای ارتقا"
+
+#~ msgid "Todo"
+#~ msgstr "در دست اقدام"
+
+#~ msgid "Togo"
+#~ msgstr "توگو"
+
+#~ msgid "Tokelau"
+#~ msgstr "توکلائو"
+
+#~ msgid "Tonga"
+#~ msgstr "تونگا"
+
+#~ msgid "Tools"
+#~ msgstr "ابزار‌ها"
+
+#~ msgid "Top Margin (mm)"
+#~ msgstr "حاشیه بالا (mm)"
+
+#~ msgid "Total number of records in this model"
+#~ msgstr "تعداد کل رکوردها در این مدل"
+
+#~ msgid "Tours"
+#~ msgstr "تورها"
+
+#~ msgid "Trainings, Conferences, Meetings, Exhibitions, Registrations"
+#~ msgstr "آموزشها، کنفرانس ها، جلسات، نمایشگاه ها، ثبت نام"
+
+#~ msgid "Transient"
+#~ msgstr "موقت"
+
+#~ msgid "Transient Model"
+#~ msgstr "مدل موقتی"
+
+#~ msgid "Transient: False"
+#~ msgstr "موقتی: نادرست"
+
+#~ msgid "Transient: True"
+#~ msgstr "موقتی: درست"
+
+#~ msgid "Transifex integration"
+#~ msgstr "ادغام ترنسیفکس"
+
+#~ msgid "Translatable"
+#~ msgstr "برگردان پذیر"
+
+#~ msgid "Translated"
+#~ msgstr "ترجمه‌شده"
+
+#~ msgid "Translated Terms"
+#~ msgstr "کلمات ترجمه شده"
+
+#~ msgid "Translated field"
+#~ msgstr "فیلد ترجمه شده"
+
+#~ msgid "Translation"
+#~ msgstr "ترجمه"
+
+#~ msgid "Translation Value"
+#~ msgstr "مقدار ترجمه"
+
+#~ msgid "Translation comments"
+#~ msgstr "اجزای برگردان"
+
+#~ msgid "Translation in Progress"
+#~ msgstr "برگردان در حال انجام است"
+
+#~ msgid "Translations"
+#~ msgstr "زبان ها"
+
+#~ msgid "Transportation"
+#~ msgstr "حمل و نقل"
+
+#~ msgid "Tree"
+#~ msgstr "درخت"
+
+#~ msgid "Trinidad and Tobago"
+#~ msgstr "ترینیداد و توباگو"
+
+#~ msgid "Tuesday"
+#~ msgstr "سه‌شنبه"
+
+#~ msgid "Tunisia"
+#~ msgstr "تونس"
+
+#~ msgid "Turkey"
+#~ msgstr "ترکیه"
+
+#~ msgid "Turkey - Accounting"
+#~ msgstr "ترکیه - حسابداری"
+
+#~ msgid "Turkmenistan"
+#~ msgstr "ترکمنستان"
+
+#~ msgid "Turks and Caicos Islands"
+#~ msgstr "جزایر ترک و کایکوس"
+
+#~ msgid "Tuvalu"
+#~ msgstr "تووالو"
+
+#~ msgid "Twitter Roller"
+#~ msgstr "رولر تویتر"
+
+#~ msgid "Type"
+#~ msgstr "نوع"
+
+#~ msgid "Type:"
+#~ msgstr "نوع:"
+
+#~ msgid "U.A.E. - Accounting"
+#~ msgstr "امارات متحده عربی - حسابداری"
+
+#~ msgid "UK - Accounting"
+#~ msgstr "بریتانیا - حسابداری"
+
+#~ msgid "UK - Accounting Reports"
+#~ msgstr "بریتانیا - گزارشهای حسابداری"
+
+#~ msgid "URL"
+#~ msgstr "URL"
+
+#~ msgid "US - Accounting Reports"
+#~ msgstr "ایالات متحده آمریکاه - گزارشهای حسابداری"
+
+#~ msgid "USA Minor Outlying Islands"
+#~ msgstr "جزایر کوچک دورافتاده‌ی ایالات متحده"
+
+#~ msgid "Uganda"
+#~ msgstr "اوگاندا"
+
+#~ msgid "Ukraine"
+#~ msgstr "اوکراین"
+
+#~ msgid "Uncategorized"
+#~ msgstr "دسته‌بندی نشده"
+
+#~ msgid "Uninstallable"
+#~ msgstr "غیر قابل حذف"
+
+#~ msgid "United Arab Emirates"
+#~ msgstr "امارات متحده عربی"
+
+#~ msgid "United Kingdom"
+#~ msgstr "انگلستان"
+
+#~ msgid "United States"
+#~ msgstr "ایالات متحده"
+
+#~ msgid "United States - Accounting"
+#~ msgstr "ایالات متحده - حسابداری"
+
+#~ msgid "Unknown"
+#~ msgstr "ناشناخته"
+
+#~ msgid "Unknown error during import:"
+#~ msgstr "خطای ناشناخته در حین ورود فایل:"
+
+#~ msgid "Untranslated"
+#~ msgstr "ترجمه‌نشده"
+
+#~ msgid "Updatable"
+#~ msgstr "قابل به روز رسانی"
+
+#~ msgid "Update"
+#~ msgstr "بروزرسانی"
+
+#~ msgid "Update Apps List"
+#~ msgstr "به روز رسانی لیست برنامه‌ها"
+
+#~ msgid "Update Date"
+#~ msgstr "تاریخ بروزرسانی"
+
+#~ msgid "Update Language Terms"
+#~ msgstr "به روز رسانی واژه‌های زبان"
+
+#~ msgid "Update Module"
+#~ msgstr "به روز رسانی ماجول"
+
+#~ msgid "Update Module List"
+#~ msgstr "به روز رسانی لیست ماجول"
+
+#~ msgid "Update Terms"
+#~ msgstr "به روز رسانی کلمات"
+
+#~ msgid "Update the Record"
+#~ msgstr "به روز کردن رکورد"
+
+#~ msgid "Updates"
+#~ msgstr "به‌روز رسانی‌ها"
+
+#~ msgid "Upgrade"
+#~ msgstr "ارتقا"
+
+#~ msgid "Url"
+#~ msgstr "آدرس وب"
+
+#~ msgid "Uruguay"
+#~ msgstr "اروگوئه"
+
+#~ msgid "Uruguay - Accounts Reports"
+#~ msgstr "اروگوئه - گزارش‌های حساب"
+
+#~ msgid "Uruguay - Chart of Accounts"
+#~ msgstr "اروکوئه - نمودار حسابها"
+
+#~ msgid "Usage"
+#~ msgstr "کاربرد"
+
+#~ msgid "Used to log into the system"
+#~ msgstr "مورد استفاده برای ورود به سامانه"
+
+#~ msgid "User"
+#~ msgstr "کاربر"
+
+#~ msgid "User Interface"
+#~ msgstr "واسط کاربر"
+
+#~ msgid "User Login"
+#~ msgstr "ورود کاربر"
+
+#~ msgid "User log entries"
+#~ msgstr "ورودی‌های ورود کاربر"
+
+#~ msgid "User-defined Defaults"
+#~ msgstr "پیشفرض‌های کاربر تعریف"
+
+#~ msgid "User-defined Filters"
+#~ msgstr "فیلترهای کاربر تعریف"
+
+#~ msgid "Username"
+#~ msgstr "نام کاربری"
+
+#~ msgid "Users & Companies"
+#~ msgstr "کاربران و شرکتها"
+
+#~ msgid ""
+#~ "Users added to this group are automatically added in the following groups."
+#~ msgstr ""
+#~ "کاربرانی که به این گروه اضافه میشوند به صورت خودکار به گروه های زیر "
+#~ "افزوده میشوند."
+
+#~ msgid "Uzbekistan"
+#~ msgstr "ازبکستان"
+
+#~ msgid "VOIP"
+#~ msgstr "VOIP"
+
+#~ msgid "VOIP OnSIP"
+#~ msgstr "VOIP OnSIP"
+
+#~ msgid "Value"
+#~ msgstr "مقدار"
+
+#~ msgid "Value Binary"
+#~ msgstr "مقدار دودویی"
+
+#~ msgid "Value Datetime"
+#~ msgstr "مقدار تاریخ زمان"
+
+#~ msgid "Value Float"
+#~ msgstr "مقدار عدد اعشاری"
+
+#~ msgid "Value Integer"
+#~ msgstr "قدار عدد صحیح"
+
+#~ msgid "Value Reference"
+#~ msgstr "مقدار مرجع"
+
+#~ msgid "Value Text"
+#~ msgstr "مقدار متنی"
+
+#~ msgid "Vanuatu"
+#~ msgstr "وانواتو"
+
+#~ msgid "Vendor"
+#~ msgstr "تامین کننده"
+
+#~ msgid "Vendors"
+#~ msgstr "فروشندگان"
+
+#~ msgid "Venezuela"
+#~ msgstr "ونزوئلا"
+
+#~ msgid "Venezuela - Accounting"
+#~ msgstr "ونزوپلا - حسابداری"
+
+#~ msgid "Vietnam"
+#~ msgstr "ویتنام"
+
+#~ msgid "Vietnam - Accounting"
+#~ msgstr "ویتنام - حسابداری"
+
+#~ msgid "Vietnam - Accounting Reports"
+#~ msgstr "ویتنام - گزارشهای حسابداری"
+
+#~ msgid "View"
+#~ msgstr "نما"
+
+#~ msgid "View Architecture"
+#~ msgstr "ساختمان نما"
+
+#~ msgid "View ID"
+#~ msgstr "آیدی نما"
+
+#~ msgid "View Mode"
+#~ msgstr "حالت نما"
+
+#~ msgid "View Name"
+#~ msgstr "نام نما"
+
+#~ msgid "View Ref."
+#~ msgstr "مرجع نما"
+
+#~ msgid "View Type"
+#~ msgstr "نوع نما"
+
+#~ msgid "View and create reports"
+#~ msgstr "نمایش و ایجاد گزارش‌ها"
+
+#~ msgid "Views"
+#~ msgstr "نماها"
+
+#~ msgid "Virgin Islands (British)"
+#~ msgstr "جزایر ویرجین انگلستان"
+
+#~ msgid "Virgin Islands (USA)"
+#~ msgstr "جزایر ویرجین انگلستان"
+
+#~ msgid "Visible"
+#~ msgstr "نمايان"
+
+#~ msgid "Warehouse"
+#~ msgstr "انبار"
+
+#~ msgid "Water supply"
+#~ msgstr "منبع آب"
+
+#~ msgid "Web"
+#~ msgstr "وب"
+
+#~ msgid "Web Editor"
+#~ msgstr "ویرایشگر وب"
+
+#~ msgid "Web Enterprise"
+#~ msgstr "وب سازمانی"
+
+#~ msgid "Web Icon File"
+#~ msgstr "فایل آیکون وب"
+
+#~ msgid "Web Icon Image"
+#~ msgstr "تصویر آیکون وب"
+
+#~ msgid "Web-only translations"
+#~ msgstr "ترجمه‌های فقط وب"
+
+#~ msgid "Website"
+#~ msgstr "تارنما"
+
+#~ msgid "Website Enterprise"
+#~ msgstr "وبسایت سازمانی"
+
+#~ msgid "Website Helpdesk"
+#~ msgstr "پشتیبانی وبسایت"
+
+#~ msgid "Website Mail"
+#~ msgstr "نامه رسانی وبسایت"
+
+#~ msgid "Website Partner"
+#~ msgstr "وبسایت همکار"
+
+#~ msgid "Website Rating"
+#~ msgstr "نمره دهی وبسایت"
+
+#~ msgid "Website Studio"
+#~ msgstr "استودیو وبسایت"
+
+#~ msgid "Website Theme Install"
+#~ msgstr "نصب تم وبسایت"
+
+#~ msgid "Wednesday"
+#~ msgstr "چهارشنبه"
+
+#~ msgid "Weeks"
+#~ msgstr "هفته‌ها"
+
+#~ msgid "Western Sahara"
+#~ msgstr "صحرای غربی"
+
+#~ msgid "Wholesale/Retail"
+#~ msgstr "عمده فروش/توزیع کننده"
+
+#~ msgid "Window Actions"
+#~ msgstr "کنش‌های پنجره"
+
+#~ msgid "Wizard"
+#~ msgstr "تَردست"
+
+#~ msgid "Wizards to be Launched"
+#~ msgstr "ویزاردهایی که قرار است اجرا شوند"
+
+#~ msgid "Work Orders, Planing, Stock Reports."
+#~ msgstr "سفارشات کار، برنامه ریزی، گزارشهای سهام."
+
+#~ msgid "Write Access"
+#~ msgstr "دسترسی نوشتن"
+
+#~ msgid "Write Access Right"
+#~ msgstr "حق دسترسی نوشتن"
+
+#~ msgid "Yemen"
+#~ msgstr "یمن"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "نمی‌توانید دو کاربر با یک لاگین داشته باشید!"
+
+#~ msgid "You should try other search criteria."
+#~ msgstr "شما باید دیگر شرایط جستجو را آزمایش کنید."
+
+#~ msgid ""
+#~ "You will be able to define additional access rights by editing the newly "
+#~ "created user under the Settings / Users menu."
+#~ msgstr ""
+#~ "شما قادر خواهید بود حق دسترسی‌های اضافی با ویرایش کاربران جدیدا ایجاد شده "
+#~ "در منوی تنظیمات/کاربران تعریف کنید."
+
+#~ msgid "ZIP"
+#~ msgstr "کد پستی"
+
+#~ msgid "Zambia"
+#~ msgstr "زامبیا"
+
+#~ msgid "Zimbabwe"
+#~ msgstr "زیمبابوه"
+
+#~ msgid "Zip"
+#~ msgstr "کدپستی"
+
+#~ msgid "_Import"
+#~ msgstr "ـ‌وارد کردن"
+
+#~ msgid "at"
+#~ msgstr "در"
+
+#~ msgid "binary"
+#~ msgstr "دودویی"
+
+#~ msgid "boolean"
+#~ msgstr "بولین"
+
+#~ msgid "char"
+#~ msgstr "کاراکتر"
+
+#~ msgid "choose"
+#~ msgstr "انتخاب"
+
+#~ msgid "date"
+#~ msgstr "تاریخ"
+
+#~ msgid "datetime"
+#~ msgstr "تاریخ زمان"
+
+#~ msgid "documentation"
+#~ msgstr "مستندات"
+
+#~ msgid "done"
+#~ msgstr "انجام شد"
+
+#~ msgid "e.g. BE0477472701"
+#~ msgstr "مثلا  BE0477472701"
+
+#~ msgid "e.g. English"
+#~ msgstr "مثلا انگلیسی"
+
+#~ msgid "e.g. Global Business Solutions"
+#~ msgstr "برای مثال کسب و کار گستر جهانی"
+
+#~ msgid "e.g. Mr."
+#~ msgstr "برای مثال آقا"
+
+#~ msgid "e.g. Sales Director"
+#~ msgstr "برای مثال مدیر فروش"
+
+#~ msgid "e.g. Update order quantity"
+#~ msgstr "مثلا تعداد سفارش خود را بروز کنید"
+
+#~ msgid "e.g. en_US"
+#~ msgstr "برای مثال en_US"
+
+#~ msgid "e.g. www.odoo.com"
+#~ msgstr "برای مثال www.odoo.com"
+
+#~ msgid "eCommerce"
+#~ msgstr "تجارت الکترونیکی"
+
+#~ msgid "eCommerce Delivery"
+#~ msgstr "تحویل تجارت الکترونیکی"
+
+#~ msgid "email@yourcompany.com"
+#~ msgstr "email@yourcompany.com"
+
+#~ msgid "false"
+#~ msgstr "نادرست‌"
+
+#~ msgid "float"
+#~ msgstr "عدد اعشاری"
+
+#~ msgid "get"
+#~ msgstr "دریافت"
+
+#~ msgid "integer"
+#~ msgstr "عدد صحییح"
+
+#~ msgid "internal note..."
+#~ msgstr "یادداشت داخلی..."
+
+#~ msgid "ir.actions.act_url"
+#~ msgstr "ir.actions.act_url"
+
+#~ msgid "ir.actions.act_window"
+#~ msgstr "ir.actions.act_window"
+
+#~ msgid "ir.actions.client"
+#~ msgstr "ir.actions.client"
+
+#~ msgid "ir.actions.report"
+#~ msgstr "ir.actions.report"
+
+#~ msgid "ir.actions.server"
+#~ msgstr "ir.actions.server"
+
+#~ msgid "many2many"
+#~ msgstr "many2many"
+
+#~ msgid "many2one"
+#~ msgstr "many2one"
+
+#~ msgid "monetary"
+#~ msgstr "پولی"
+
+#~ msgid "no"
+#~ msgstr "نه"
+
+#~ msgid "on"
+#~ msgstr "در"
+
+#~ msgid "one2many"
+#~ msgstr "one2many"
+
+#~ msgid "selection"
+#~ msgstr "گزینه"
+
+#~ msgid "text"
+#~ msgstr "متن"
+
+#~ msgid "title"
+#~ msgstr "عنوان"
+
+#~ msgid "true"
+#~ msgstr "درست‌"
+
+#~ msgid "yes"
+#~ msgstr "بله"
+
+#~ msgid "Åland Islands"
+#~ msgstr "جزایر آلاند"

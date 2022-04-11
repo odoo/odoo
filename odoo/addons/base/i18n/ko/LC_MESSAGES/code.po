@@ -1,0 +1,4946 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base
+#
+# Translators:
+# Linda Stockelova <stockeloval@btlnet.com>, 2018
+# Jongkwan, Yeom <jongkwanyeom@gmail.com>, 2018
+# heejun lee <tkm01b@gmail.com>, 2018
+# Mark Lee <odoos@soti.33mail.com>, 2018
+# Goh Gangtai <gangtai.goh@gmail.com>, 2018
+# Martin Trigaux, 2018
+# 경민기 <moonend@gmail.com>, 2018
+# 종현 엄 <whd5367@naver.com>, 2018
+# Seongseok Shin <shinss61@hotmail.com>, 2018
+# 최재호 <hwangtog@gmail.com>, 2018
+# Link Up링크업 <linkup.way@gmail.com>, 2018
+# Linkup <link-up@naver.com>, 2018
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2022-04-11 12:53+0200\n"
+"PO-Revision-Date: 2018-08-24 09:14+0000\n"
+"Last-Translator: Linkup <link-up@naver.com>, 2018\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: models/decimal_precision.py:57 models/res_currency.py:407
+#, fuzzy, python-format
+msgid "Warning for %s"
+msgstr "경고"
+
+#: models/decimal_precision.py:58
+#, python-format
+msgid ""
+"The precision has been reduced for %s.\n"
+"Note that existing data WON'T be updated by this change.\n"
+"\n"
+"As decimal precisions impact the whole system, this may cause critical "
+"issues.\n"
+"E.g. reducing the precision could disturb your financial balance.\n"
+"\n"
+"Therefore, changing decimal precisions in a running database is not "
+"recommended."
+msgstr ""
+
+#: models/ir_actions.py:179 models/ir_actions.py:181
+#, python-format
+msgid "Invalid model name %r in action definition."
+msgstr ""
+
+#: models/ir_actions.py:210
+#, python-format
+msgid "The modes in view_mode must not be duplicated: %s"
+msgstr ""
+
+#: models/ir_actions.py:212
+#, python-format
+msgid "No spaces allowed in view_mode: %r"
+msgstr ""
+
+#: models/ir_actions.py:457
+msgid "Recursion found in child server actions"
+msgstr ""
+
+#: models/ir_actions.py:610
+msgid "You don't have enough access rights to run this action."
+msgstr ""
+
+#: models/ir_actions.py:702
+msgid "many2many fields cannot be evaluated by reference"
+msgstr ""
+
+#: models/ir_actions_report.py:497
+#, python-format
+msgid ""
+"Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
+"number of subprocess reached. Message : %s"
+msgstr ""
+
+#: models/ir_actions_report.py:500
+#, python-format
+msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
+msgstr "Wkhtmltopdf가 실패했습니다 (에러코드: %s). 메시지 : %s"
+
+#: models/ir_actions_report.py:745
+msgid "One of the documents you are trying to merge is encrypted"
+msgstr ""
+
+#: models/ir_actions_report.py:770
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still "
+"retrieve those PDFs by selecting each of the affected records individually, "
+"which will avoid merging."
+msgstr ""
+
+#: models/ir_actions_report.py:858
+msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
+msgstr ""
+
+#: models/ir_actions_report.py:865
+#, python-format
+msgid ""
+"The report's template '%s' is wrong, please contact your administrator. \n"
+"\n"
+"Can not separate file to save as attachment because the report's template "
+"does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div "
+"with 'article' classname."
+msgstr ""
+
+#: models/ir_attachment.py:71
+msgid "Only administrators can execute this action."
+msgstr ""
+
+#: models/ir_attachment.py:431 models/ir_attachment.py:442
+msgid "Sorry, you are not allowed to access this document."
+msgstr ""
+
+#: models/ir_attachment.py:476
+msgid "Sorry, you must provide fields to read on attachments"
+msgstr ""
+
+#: models/ir_attachment.py:479
+msgid "Sorry, the syntax 'name:agg(field)' is not available for attachments"
+msgstr ""
+
+#: models/ir_attachment.py:485
+msgid "Sorry, you are not allowed to access these fields on attachments."
+msgstr ""
+
+#: models/ir_cron.py:372
+msgid ""
+"Record cannot be modified right now: This cron task is currently being "
+"executed and may not be modified Please try again in a few minutes"
+msgstr ""
+
+#: models/ir_default.py:70
+#, python-format
+msgid "Invalid field %s.%s"
+msgstr ""
+
+#: models/ir_default.py:72
+#, python-format
+msgid "Invalid value for %s.%s: %s"
+msgstr ""
+
+#: models/ir_fields.py:213
+#, python-format
+msgid "Unknown value '%s' for boolean field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:215
+msgid "Use '1' for yes and '0' for no"
+msgstr ""
+
+#: models/ir_fields.py:225
+#, python-format
+msgid "'%s' does not seem to be an integer for field '%%(field)s'"
+msgstr "'%s'은(는) '%%(field)s' 필드의 정수값이 아닙니다."
+
+#: models/ir_fields.py:236
+#, python-format
+msgid "'%s' does not seem to be a number for field '%%(field)s'"
+msgstr "'%s'은(는) '%%(field)s' 필드에 대한 숫자로 보이지 않습니다."
+
+#: models/ir_fields.py:256
+#, python-format
+msgid "'%s' does not seem to be a valid date for field '%%(field)s'"
+msgstr "'%s'은(는)  '%%(field)s' 필드에 대해 유효하지 않은 날짜입니다."
+
+#: models/ir_fields.py:258 models/ir_fields.py:290
+#, python-format
+msgid "Use the format '%s'"
+msgstr ""
+
+#: models/ir_fields.py:288
+#, python-format
+msgid "'%s' does not seem to be a valid datetime for field '%%(field)s'"
+msgstr "'%s'은(는)  '%%(field)s' 필드에 대해 유효하지 않은 날짜시간입니다."
+
+#: models/ir_fields.py:332
+#, python-format
+msgid "Value '%s' not found in selection field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:367
+msgid "See all possible values"
+msgstr ""
+
+#: models/ir_fields.py:376
+msgid "database id"
+msgstr ""
+
+#: models/ir_fields.py:388
+#, python-format
+msgid "Invalid database id '%s' for the field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:392
+msgid "external id"
+msgstr ""
+
+#: models/ir_fields.py:402
+msgid "name"
+msgstr "이름"
+
+#: models/ir_fields.py:410
+#, python-format
+msgid ""
+"Found multiple matches for value '%s' in field '%%(field)s' (%d matches)"
+msgstr ""
+
+#: models/ir_fields.py:419
+#, python-format
+msgid ""
+"Cannot create new '%s' records from their name alone. Please create those "
+"records manually and try importing again."
+msgstr ""
+
+#: models/ir_fields.py:423
+#, python-format
+msgid "Unknown sub-field '%s'"
+msgstr ""
+
+#: models/ir_fields.py:436
+#, python-format
+msgid ""
+"No matching record found for %(field_type)s '%(value)s' in field "
+"'%%(field)s' and the following error was encountered when we attempted to "
+"create one: %(error_message)s"
+msgstr ""
+
+#: models/ir_fields.py:438
+#, python-format
+msgid ""
+"No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:493
+msgid ""
+"Can not create Many-To-One records indirectly, import the field separately"
+msgstr ""
+"다 대 일 레코드를 간접적으로 생성할 수 없으므로 필드를 개별적으로 가져오십시"
+"오"
+
+#: models/ir_fields.py:496
+#, python-format
+msgid ""
+"Ambiguous specification for field '%(field)s', only provide one of name, "
+"external id or database id"
+msgstr ""
+"외부 id 또는 데이터베이스 id 이름 중 하나를 제공하는 '%(field)s' 필드의 애매"
+"한 명세서"
+
+#: models/ir_filters.py:36 models/res_partner.py:364 models/res_users.py:205
+#: models/res_users.py:632 models/res_users.py:634
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (사본)"
+
+#: models/ir_filters.py:105
+#, python-format
+msgid ""
+"There is already a shared filter set as default for %(model)s, delete or "
+"change it before setting a new default"
+msgstr ""
+
+#: models/ir_mail_server.py:126
+#, python-format
+msgid "SSL private key is missing for %s."
+msgstr ""
+
+#: models/ir_mail_server.py:128
+#, python-format
+msgid "SSL certificate is missing for %s."
+msgstr ""
+
+#: models/ir_mail_server.py:134
+msgid ""
+"Please configure an email on the current user to simulate sending an email "
+"message via this outgoing server"
+msgstr ""
+
+#: models/ir_mail_server.py:148
+#, python-format
+msgid ""
+"The server refused the sender address (%(email_from)s) with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:153
+#, python-format
+msgid ""
+"The server refused the test recipient (%(email_to)s) with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:160
+#, python-format
+msgid "The server refused the test connection with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:166
+#, python-format
+msgid ""
+"Invalid server name !\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:168
+#, python-format
+msgid ""
+"No response received. Check server address and port number.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:170
+#, python-format
+msgid ""
+"The server has closed the connection unexpectedly. Check configuration "
+"served on this port number.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:172
+#, python-format
+msgid ""
+"Server replied with following exception:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:174
+#, python-format
+msgid ""
+"An option is not supported by the server:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:176
+#, python-format
+msgid ""
+"An SMTP exception occurred. Check port number and connection security type.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:178
+#, python-format
+msgid ""
+"An SSL exception occurred. Check connection security type.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:180
+#, python-format
+msgid ""
+"Connection Test Failed! Here is what we got instead:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:189
+#, fuzzy
+msgid "Connection Test Successful!"
+msgstr "연결 보안"
+
+#: models/ir_mail_server.py:259 models/ir_mail_server.py:284
+#, python-format
+msgid ""
+"The private key or the certificate is not a valid file. \n"
+"%s"
+msgstr ""
+
+#: models/ir_mail_server.py:261 models/ir_mail_server.py:286
+#, python-format
+msgid ""
+"Could not load your certificate / private key. \n"
+"%s"
+msgstr ""
+
+#: models/ir_mail_server.py:290
+msgid "Missing SMTP Server"
+msgstr ""
+
+#: models/ir_mail_server.py:291
+msgid ""
+"Please define at least one SMTP server, or provide the SMTP parameters "
+"explicitly."
+msgstr ""
+
+#: models/ir_mail_server.py:297
+msgid ""
+"Your Odoo Server does not support SMTP-over-SSL. You could use STARTTLS "
+"instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
+"should do the trick."
+msgstr ""
+
+#: models/ir_mail_server.py:615
+#, python-format
+msgid ""
+"Mail delivery failed via SMTP server '%s'.\n"
+"%s: %s"
+msgstr ""
+
+#: models/ir_mail_server.py:617
+msgid "Mail Delivery Failed"
+msgstr "메일 전송 실패"
+
+#: models/ir_mail_server.py:701 models/ir_model.py:605 models/ir_model.py:684
+#: models/ir_model.py:692 models/res_partner.py:377
+msgid "Warning"
+msgstr "경고"
+
+#: models/ir_mail_server.py:702
+msgid ""
+"Your server does not seem to support SSL, you may want to try STARTTLS "
+"instead"
+msgstr ""
+
+#: models/ir_model.py:215
+msgid "The model name must start with 'x_'."
+msgstr ""
+
+#: models/ir_model.py:217
+msgid ""
+"The model name can only contain lowercase characters, digits, underscores "
+"and dots."
+msgstr ""
+
+#: models/ir_model.py:234
+#, python-format
+msgid ""
+"Unable to order by %s: fields used for ordering must be present on the model "
+"and stored."
+msgstr ""
+
+#: models/ir_model.py:277
+#, python-format
+msgid "Model '%s' contains module data and cannot be removed."
+msgstr ""
+
+#: models/ir_model.py:302
+msgid "Field \"Model\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:304
+msgid "Field \"Type\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:306
+msgid "Field \"Transient Model\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:563
+msgid "Custom fields must have a name that starts with 'x_' !"
+msgstr "사용자 지정 필드명은 'x_'로 시작해야 합니다!"
+
+#: models/ir_model.py:567
+msgid ""
+"Field names can only contain characters, digits and underscores (up to 63)."
+msgstr ""
+
+#: models/ir_model.py:583
+#, python-format
+msgid "Unknown field name '%s' in related field '%s'"
+msgstr ""
+
+#: models/ir_model.py:586
+#, python-format
+msgid "Non-relational field name '%s' in related field '%s'"
+msgstr ""
+
+#: models/ir_model.py:595
+#, python-format
+msgid "Related field '%s' does not have type '%s'"
+msgstr ""
+
+#: models/ir_model.py:597
+#, python-format
+msgid "Related field '%s' does not have comodel '%s'"
+msgstr ""
+
+#: models/ir_model.py:618
+#, python-format
+msgid "Empty dependency in %r"
+msgstr ""
+
+#: models/ir_model.py:625
+#, python-format
+msgid "Unknown field %r in dependency %r"
+msgstr ""
+
+#: models/ir_model.py:627
+#, python-format
+msgid "Non-relational field %r in dependency %r"
+msgstr ""
+
+#: models/ir_model.py:658
+#, python-format
+msgid "Model %s does not exist"
+msgstr ""
+
+#: models/ir_model.py:659
+msgid "Please specify a valid model for the object relation"
+msgstr ""
+
+#: models/ir_model.py:685
+#, python-format
+msgid "The table %r if used for other, possibly incompatible fields."
+msgstr ""
+
+#: models/ir_model.py:692
+#, python-format
+msgid ""
+"The m2o field %s is required but declares its ondelete policy as being 'set "
+"null'. Only 'restrict' and 'cascade' make sense."
+msgstr ""
+
+#: models/ir_model.py:770
+#, python-format
+msgid "The field '%s' cannot be removed because the field '%s' depends on it."
+msgstr ""
+
+#: models/ir_model.py:797
+msgid "Cannot rename/delete fields that are still present in views:"
+msgstr ""
+
+#: models/ir_model.py:798
+#, python-format
+msgid "Fields: %s"
+msgstr ""
+
+#: models/ir_model.py:799
+#, python-format
+msgid "View: %s"
+msgstr ""
+
+#: models/ir_model.py:814
+msgid "This column contains module data and cannot be removed!"
+msgstr ""
+
+#: models/ir_model.py:882
+#, python-format
+msgid "Model %s does not exist!"
+msgstr ""
+
+#: models/ir_model.py:889
+#, python-format
+msgid "Many2one %s on model %s does not exist!"
+msgstr ""
+
+#: models/ir_model.py:911
+msgid "Changing the model of a field is forbidden!"
+msgstr "필드 모델은 변경할 수 없습니다!"
+
+#: models/ir_model.py:914
+msgid ""
+"Changing the type of a field is not yet supported. Please drop it and create "
+"it again!"
+msgstr ""
+
+#: models/ir_model.py:928
+msgid "Can only rename one field at a time!"
+msgstr ""
+
+#: models/ir_model.py:1314 models/ir_model.py:1334 models/ir_model.py:1365
+msgid ""
+"Properties of base fields cannot be altered in this manner! Please modify "
+"them through Python code, preferably through a custom addon!"
+msgstr ""
+
+#: models/ir_model.py:1439
+#, python-format
+msgid "The ondelete policy %r is not valid for field %r"
+msgstr ""
+
+#: models/ir_model.py:1484 models/ir_model.py:1622 models/ir_model.py:2040
+msgid "Administrator access is required to uninstall a module"
+msgstr "모듈을 제거하려면 관리자로 접근해야 합니다."
+
+#: models/ir_model.py:1771
+#, python-format
+msgid ""
+"You are not allowed to access '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr ""
+
+#: models/ir_model.py:1772
+#, python-format
+msgid ""
+"You are not allowed to modify '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr ""
+
+#: models/ir_model.py:1773
+#, python-format
+msgid ""
+"You are not allowed to create '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr ""
+
+#: models/ir_model.py:1774
+#, python-format
+msgid ""
+"You are not allowed to delete '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr ""
+
+#: models/ir_model.py:1779
+#, python-format
+msgid ""
+"This operation is allowed for the following groups:\n"
+"%(groups_list)s"
+msgstr ""
+
+#: models/ir_model.py:1781
+msgid "No group currently allows this operation."
+msgstr ""
+
+#: models/ir_model.py:1783 models/ir_rule.py:203
+msgid "Contact your administrator to request access if necessary."
+msgstr ""
+
+#: models/ir_model.py:1938
+msgid "Not enough access rights on the external ID:"
+msgstr ""
+
+#: models/ir_module.py:321
+msgid ""
+"You are trying to remove a module that is installed or will be installed."
+msgstr ""
+
+#: models/ir_module.py:368
+#, python-format
+msgid ""
+"Unable to install module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+
+#: models/ir_module.py:370
+#, python-format
+msgid ""
+"Unable to upgrade module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+
+#: models/ir_module.py:372
+#, python-format
+msgid ""
+"Unable to process module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+
+#: models/ir_module.py:377
+msgid "Recursion error in modules dependencies !"
+msgstr ""
+
+#: models/ir_module.py:391
+#, python-format
+msgid ""
+"You try to install module '%s' that depends on module '%s'.\n"
+"But the latter module is not available in your system."
+msgstr ""
+
+#: models/ir_module.py:438
+#, python-format
+msgid "Modules \"%s\" and \"%s\" are incompatible."
+msgstr ""
+
+#: models/ir_module.py:457
+#, python-format
+msgid "You are trying to install incompatible modules in category \"%s\":"
+msgstr ""
+
+#: models/ir_module.py:464
+msgid "Install"
+msgstr ""
+
+#: models/ir_module.py:594
+msgid ""
+"Odoo is currently processing a scheduled action.\n"
+"Module operations are not possible at this time, please try again later or "
+"contact your system administrator."
+msgstr ""
+
+#: models/ir_module.py:630
+msgid "The `base` module cannot be uninstalled"
+msgstr ""
+
+#: models/ir_module.py:632
+msgid ""
+"One or more of the selected modules have already been uninstalled, if you "
+"believe this to be an error, you may try again later or contact support."
+msgstr ""
+
+#: models/ir_module.py:638
+msgid "Uninstall"
+msgstr ""
+
+#: models/ir_module.py:646
+msgid "Uninstall module"
+msgstr ""
+
+#: models/ir_module.py:687
+#, python-format
+msgid "Can not upgrade module '%s'. It is not installed."
+msgstr "'%s' 모듈을 업그레이드할 수 없습니다. 설치되지 않습니다."
+
+#: models/ir_module.py:706
+#, python-format
+msgid ""
+"You try to upgrade the module %s that depends on the module: %s.\n"
+"But this module is not available in your system."
+msgstr ""
+
+#: models/ir_module.py:711
+msgid "Apply Schedule Upgrade"
+msgstr "예약 업그레이드 적용"
+
+#: models/ir_module.py:805
+msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr ""
+
+#: models/ir_module.py:806
+msgid ""
+"To enable it, make sure this directory exists and is writable on the server:"
+msgstr ""
+
+#: models/ir_module.py:833
+#, python-format
+msgid ""
+"The `%s` module appears to be unavailable at the moment, please try again "
+"later."
+msgstr ""
+
+#: models/ir_profile.py:101
+msgid ""
+"Profiling is not enabled on this database. Please contact an administrator."
+msgstr ""
+
+#: models/ir_property.py:88
+msgid "Invalid type"
+msgstr ""
+
+#: models/ir_qweb_fields.py:144
+msgid "Decimalized number"
+msgstr ""
+
+#: models/ir_qweb_fields.py:164
+msgid "Rounding precision"
+msgstr ""
+
+#: models/ir_qweb_fields.py:209
+msgid "Date format"
+msgstr ""
+
+#: models/ir_qweb_fields.py:227
+msgid "Pattern to format"
+msgstr ""
+
+#: models/ir_qweb_fields.py:228
+msgid "Optional timezone name"
+msgstr ""
+
+#: models/ir_qweb_fields.py:229
+msgid "Display only the time"
+msgstr ""
+
+#: models/ir_qweb_fields.py:230
+msgid "Hide seconds"
+msgstr ""
+
+#: models/ir_qweb_fields.py:231
+#, fuzzy
+msgid "Display only the date"
+msgstr "머리말에 줄 표시"
+
+#: models/ir_qweb_fields.py:301
+msgid "Selection"
+msgstr "선택"
+
+#: models/ir_qweb_fields.py:301
+msgid "By default the widget uses the field information"
+msgstr ""
+
+#: models/ir_qweb_fields.py:425
+msgid "Original currency"
+msgstr ""
+
+#: models/ir_qweb_fields.py:426
+msgid "Display currency"
+msgstr ""
+
+#: models/ir_qweb_fields.py:427
+msgid "Date"
+msgstr "날짜"
+
+#: models/ir_qweb_fields.py:427
+msgid ""
+"Date used for the original currency (only used for t-esc). by default use "
+"the current date."
+msgstr ""
+
+#: models/ir_qweb_fields.py:428
+msgid "Company"
+msgstr "회사"
+
+#: models/ir_qweb_fields.py:428
+msgid ""
+"Company used for the original currency (only used for t-esc). By default use "
+"the user company"
+msgstr ""
+
+#: models/ir_qweb_fields.py:437
+msgid "The value send to monetary field is not a number."
+msgstr ""
+
+#: models/ir_qweb_fields.py:535
+#, python-format
+msgid "The value (%s) passed should be positive"
+msgstr ""
+
+#: models/ir_qweb_fields.py:538
+msgid "The hour must be between 0 and 23"
+msgstr ""
+
+#: models/ir_qweb_fields.py:572
+msgid "Digital formatting"
+msgstr ""
+
+#: models/ir_qweb_fields.py:573
+msgid "Date unit"
+msgstr ""
+
+#: models/ir_qweb_fields.py:573
+msgid "Date unit used for comparison and formatting"
+msgstr ""
+
+#: models/ir_qweb_fields.py:574
+msgid "Rounding unit"
+msgstr ""
+
+#: models/ir_qweb_fields.py:574
+msgid ""
+"Date unit used for the rounding. The value must be smaller than 'hour' if "
+"you use the digital formatting."
+msgstr ""
+
+#: models/ir_qweb_fields.py:578
+msgid "Long"
+msgstr ""
+
+#: models/ir_qweb_fields.py:579
+msgid "Short"
+msgstr ""
+
+#: models/ir_qweb_fields.py:580
+msgid "Narrow"
+msgstr ""
+
+#: models/ir_qweb_fields.py:581
+#, fuzzy
+msgid "Format"
+msgstr "양식"
+
+#: models/ir_qweb_fields.py:582
+msgid "Formatting: long, short, narrow (not used for digital)"
+msgstr ""
+
+#: models/ir_qweb_fields.py:587
+#, fuzzy
+msgid "Add direction"
+msgstr "방향"
+
+#: models/ir_qweb_fields.py:588
+msgid "Add directional information (not used for digital)"
+msgstr ""
+
+#: models/ir_qweb_fields.py:650
+msgid "Reference date"
+msgstr ""
+
+#: models/ir_qweb_fields.py:650
+msgid "Date to compare with the field value, by default use the current date."
+msgstr ""
+
+#: models/ir_qweb_fields.py:686
+msgid "Barcode symbology"
+msgstr ""
+
+#: models/ir_qweb_fields.py:686
+msgid "Barcode type, eg: UPCA, EAN13, Code128"
+msgstr ""
+
+#: models/ir_qweb_fields.py:687
+msgid "Width"
+msgstr "폭"
+
+#: models/ir_qweb_fields.py:688
+msgid "Height"
+msgstr "높이"
+
+#: models/ir_qweb_fields.py:689
+msgid "Human Readable"
+msgstr ""
+
+#: models/ir_qweb_fields.py:710
+#, fuzzy, python-format
+msgid "Barcode %s"
+msgstr "바코드"
+
+#: models/ir_qweb_fields.py:724
+msgid "Name"
+msgstr "이름"
+
+#: models/ir_qweb_fields.py:725
+msgid "Address"
+msgstr "주소"
+
+#: models/ir_qweb_fields.py:726
+msgid "Phone"
+msgstr "전화"
+
+#: models/ir_qweb_fields.py:727
+msgid "Mobile"
+msgstr "휴대전화"
+
+#: models/ir_qweb_fields.py:728
+msgid "Email"
+msgstr "이메일"
+
+#: models/ir_qweb_fields.py:729 models/ir_qweb_fields.py:780
+msgid "VAT"
+msgstr "VAT(부가세)"
+
+#: models/ir_qweb_fields.py:733
+msgid "Space"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+#, fuzzy
+msgid "Comma"
+msgstr "코멘트"
+
+#: models/ir_qweb_fields.py:733
+#, fuzzy
+msgid "Dash"
+msgstr "알림판"
+
+#: models/ir_qweb_fields.py:733
+msgid "Vertical bar"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+msgid "Slash"
+msgstr ""
+
+#: models/ir_qweb_fields.py:734
+#, fuzzy
+msgid "Linebreak"
+msgstr "라인"
+
+#: models/ir_qweb_fields.py:737
+msgid "Displayed fields"
+msgstr ""
+
+#: models/ir_qweb_fields.py:737
+msgid "List of contact fields to display in the widget"
+msgstr ""
+
+#: models/ir_qweb_fields.py:738
+msgid "Address separator"
+msgstr ""
+
+#: models/ir_qweb_fields.py:738
+msgid "Separator use to split the address from the display_name."
+msgstr ""
+
+#: models/ir_qweb_fields.py:739
+msgid "Hide badges"
+msgstr ""
+
+#: models/ir_qweb_fields.py:739
+msgid "Don't display the font awesome marker"
+msgstr ""
+
+#: models/ir_qweb_fields.py:740
+msgid "Use comma"
+msgstr ""
+
+#: models/ir_qweb_fields.py:740
+msgid "Use comma instead of the <br> tag to display the address"
+msgstr ""
+
+#: models/ir_qweb_fields.py:741
+#, fuzzy
+msgid "Display phone icons"
+msgstr "머리말에 줄 표시"
+
+#: models/ir_qweb_fields.py:741
+msgid "Display the phone icons even if no_marker is True"
+msgstr ""
+
+#: models/ir_qweb_fields.py:742
+#, fuzzy
+msgid "Display country image"
+msgstr "이름 표시"
+
+#: models/ir_qweb_fields.py:742
+msgid "Display the country image if the field is present on the record"
+msgstr ""
+
+#: models/ir_rule.py:61
+msgid "Rules can not be applied on the Record Rules model."
+msgstr ""
+
+#: models/ir_rule.py:197
+#, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to access "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr ""
+
+#: models/ir_rule.py:198
+#, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to modify "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr ""
+
+#: models/ir_rule.py:199
+#, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to create "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr ""
+
+#: models/ir_rule.py:200
+#, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to delete "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr ""
+
+#: models/ir_rule.py:225
+#, fuzzy, python-format
+msgid "Records: %s"
+msgstr "기록"
+
+#: models/ir_rule.py:228
+#, fuzzy, python-format
+msgid "User: %s"
+msgstr "사용자"
+
+#: models/ir_rule.py:231
+#, python-format
+msgid ""
+"This restriction is due to the following rules:\n"
+"%s"
+msgstr ""
+
+#: models/ir_rule.py:233
+msgid "Note: this might be a multi-company issue."
+msgstr ""
+
+#: models/ir_sequence.py:17 models/ir_sequence.py:33
+msgid "Step must not be zero."
+msgstr ""
+
+#: models/ir_sequence.py:234
+#, python-format
+msgid "Invalid prefix or suffix for sequence '%s'"
+msgstr ""
+
+#: models/ir_translation.py:528
+msgid "Creating translation on non existing records"
+msgstr ""
+
+#: models/ir_translation.py:552
+#, python-format
+msgid ""
+"Translation is not valid:\n"
+"%s"
+msgstr ""
+
+#: models/ir_translation.py:726
+msgid ""
+"Translation features are unavailable until you install an extra translation."
+msgstr ""
+
+#: models/ir_translation.py:756
+msgid "Translate"
+msgstr "번역"
+
+#: models/ir_translation.py:854
+msgid "Technical Translations"
+msgstr ""
+
+#: models/ir_ui_menu.py:73
+msgid "Error! You cannot create recursive menus."
+msgstr ""
+
+#: models/ir_ui_view.py:397
+#, python-format
+msgid ""
+"Error while validating view:\n"
+"\n"
+"%(error)s"
+msgstr ""
+
+#: models/ir_ui_view.py:415
+#, python-format
+msgid "Invalid view %(name)s definition in %(file)s"
+msgstr ""
+
+#: models/ir_ui_view.py:427
+#, python-format
+msgid ""
+"Error while validating view near:\n"
+"\n"
+"%(fivelines)s\n"
+"%(error)s"
+msgstr ""
+
+#: models/ir_ui_view.py:441
+msgid ""
+"Inherited Qweb view cannot have 'Groups' define on the record. Use 'groups' "
+"attributes inside the view definition"
+msgstr ""
+
+#: models/ir_ui_view.py:448
+msgid "You cannot create recursive inherited views."
+msgstr ""
+
+#: models/ir_ui_view.py:484
+msgid "Missing view architecture."
+msgstr ""
+
+#: models/ir_ui_view.py:680
+#, python-format
+msgid "View '%(name)s' accessible only to groups %(groups)s "
+msgstr ""
+
+#: models/ir_ui_view.py:683
+#, python-format
+msgid "View '%(name)s' is private"
+msgstr ""
+
+#: models/ir_ui_view.py:1008 models/ir_ui_view.py:1240
+#, python-format
+msgid "Model not found: %(model)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1290
+#, python-format
+msgid "Tree child can only have one of %(tags)s tag (not %(wrong_tag)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1299
+#, python-format
+msgid "A <graph> can only contains <field> nodes, found a <%s>"
+msgstr ""
+
+#: models/ir_ui_view.py:1320
+msgid "Search tag can only contain one search panel"
+msgstr ""
+
+#: models/ir_ui_view.py:1330
+msgid "Field tag must have a \"name\" attribute defined"
+msgstr ""
+
+#: models/ir_ui_view.py:1352
+#, python-format
+msgid ""
+"Domain on non-relational field \"%(name)s\" makes no sense (domain:"
+"%(domain)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1367
+#, python-format
+msgid "Field \"%(field_name)s\" does not exist in model \"%(model_name)s\""
+msgstr ""
+
+#: models/ir_ui_view.py:1381
+#, python-format
+msgid "Attribute %(attribute)s evaluation expects a boolean, got %(value)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1407
+#, python-format
+msgid "Invalid special '%(value)s' in button"
+msgstr ""
+
+#: models/ir_ui_view.py:1412
+msgid "Button must have a name"
+msgstr ""
+
+#: models/ir_ui_view.py:1416
+#, python-format
+msgid "%(action_name)s is not a valid action on %(model_name)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1424
+#, python-format
+msgid "%(method)s on %(model)s is private and cannot be called from a button"
+msgstr ""
+
+#: models/ir_ui_view.py:1442
+#, python-format
+msgid "Invalid xmlid %(xmlid)s for button of type action."
+msgstr ""
+
+#: models/ir_ui_view.py:1445
+#, python-format
+msgid ""
+"%(xmlid)s is of type %(xmlid_model)s, expected a subclass of ir.actions."
+"actions"
+msgstr ""
+
+#: models/ir_ui_view.py:1452
+#, python-format
+msgid ""
+"Action %(action_reference)s (id: %(action_id)s) does not exist for button of "
+"type action."
+msgstr ""
+
+#: models/ir_ui_view.py:1474
+#, python-format
+msgid ""
+"Field '%(name)s' found in 'groupby' node can only be of type many2one, found "
+"%(type)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1498
+#, python-format
+msgid ""
+"Field '%(field)s' found in 'groupby' node does not exist in model %(model)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1509
+msgid "Searchpanel item with select multi cannot have a domain."
+msgstr ""
+
+#: models/ir_ui_view.py:1518
+msgid ""
+"Label tag must contain a \"for\". To match label style without corresponding "
+"field or button, use 'class=\"o_form_label\"'."
+msgstr ""
+
+#: models/ir_ui_view.py:1528
+msgid "Page direct ancestor must be notebook"
+msgstr ""
+
+#: models/ir_ui_view.py:1599
+#, python-format
+msgid "\"group_by\" value must be a string %(attribute)s=%(value)r"
+msgstr ""
+
+#: models/ir_ui_view.py:1607
+#, python-format
+msgid ""
+"Unknown field \"%(field)s\" in \"group_by\" value in %(attribute)s=%(value)r"
+msgstr ""
+
+#: models/ir_ui_view.py:1630
+#, python-format
+msgid "%(attribute)r value must be an integer (%(value)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1776
+#, python-format
+msgid "Invalid domain format %(expr)s in %(use)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1788
+#, python-format
+msgid "Non-relational field %(field)r in path %(field_path)r in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1796
+#, python-format
+msgid "Unknown field \"%(model)s.%(field)s\" in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1802
+#, python-format
+msgid "Unsearchable field %(field)r in path %(field_path)r in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:2072
+msgid "Can't compare more than two views."
+msgstr ""
+
+#: models/ir_ui_view.py:2099
+msgid "Previous Arch"
+msgstr ""
+
+#: models/ir_ui_view.py:2105
+#, fuzzy
+msgid "File Arch"
+msgstr "파일"
+
+#: models/ir_ui_view.py:2115
+#, fuzzy
+msgid "Current Arch"
+msgstr "환율"
+
+#: models/ir_ui_view.py:2171
+#, python-format
+msgid ""
+"Name or id %(name_or_id)r in %(use)s must be present in view but is missing."
+msgstr ""
+
+#: models/ir_ui_view.py:2179
+#, python-format
+msgid "Field `%(name)s` does not exist"
+msgstr ""
+
+#: models/ir_ui_view.py:2186
+#, python-format
+msgid "Invalid composed field %(definition)s in %(use)s"
+msgstr ""
+
+#: models/ir_ui_view.py:2193
+#, python-format
+msgid "Field %(name)r used in %(use)s must be present in view but is missing."
+msgstr ""
+
+#: models/ir_ui_view.py:2199
+#, python-format
+msgid ""
+"Field %(name)r used in %(use)s is present in view but is in select multi."
+msgstr ""
+
+#: models/report_paperformat.py:194
+msgid ""
+"You can select either a format or a specific page width/height, but not both."
+msgstr ""
+
+#: models/res_bank.py:73
+msgid "Normal"
+msgstr "표준"
+
+#: models/res_company.py:25
+msgid ""
+"Duplicating a company is not allowed. Please create a new company instead."
+msgstr ""
+
+#: models/res_company.py:268
+msgid "You cannot create recursive companies."
+msgstr ""
+
+#: models/res_config.py:300
+msgid ""
+"\n"
+"\n"
+"This addon is already installed on your system"
+msgstr ""
+"\n"
+"\n"
+"이 addon은 이미 시스템에 설치되어 있습니다."
+
+#: models/res_config.py:384
+msgid "Cannot duplicate configuration!"
+msgstr "환경 설정을 복제할 수 없습니다!"
+
+#: models/res_config.py:419
+msgid "Warning!"
+msgstr "경고!"
+
+#: models/res_config.py:420
+#, python-format
+msgid ""
+"Disabling this option will also uninstall the following modules \n"
+"%s"
+msgstr ""
+
+#: models/res_config.py:625
+msgid "Only administrators can change the settings"
+msgstr "관리자만 설정을 변경할 수 있습니다."
+
+#: models/res_config.py:752
+msgid "Go to the configuration panel"
+msgstr "구성 패널로 이동하기"
+
+#: models/res_config.py:793
+msgid "Invalid template user. It seems it has been deleted."
+msgstr ""
+
+#: models/res_country.py:141
+msgid "The layout contains an invalid format key"
+msgstr ""
+
+#: models/res_country.py:152
+msgid "Base view"
+msgstr "기본 화면"
+
+#: models/res_currency.py:173
+msgid "and"
+msgstr "그리고"
+
+#: models/res_currency.py:293
+#, python-format
+msgid "Unit per %s"
+msgstr ""
+
+#: models/res_currency.py:294
+#, python-format
+msgid "%s per Unit"
+msgstr ""
+
+#: models/res_currency.py:408
+msgid ""
+"The new rate is quite far from the previous rate.\n"
+"Incorrect currency rates may cause critical problems, make sure the rate is "
+"correct !"
+msgstr ""
+
+#: models/res_currency.py:428
+#, python-format
+msgid "%(rate_currency_name)s per %(company_currency_name)s"
+msgstr ""
+
+#: models/res_currency.py:429
+#, python-format
+msgid "%(company_currency_name)s per %(rate_currency_name)s"
+msgstr ""
+
+#: models/res_lang.py:72
+msgid "At least one language must be active."
+msgstr ""
+
+#: models/res_lang.py:80
+msgid ""
+"Invalid date/time format directive specified. Please refer to the list of "
+"allowed directives, displayed when you edit a language."
+msgstr ""
+
+#: models/res_lang.py:86
+msgid ""
+"The Separator Format should be like [,n] where 0 < n :starting from Unit "
+"digit. -1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
+"1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
+"106,500. Provided as the thousand separator in each case."
+msgstr ""
+
+#: models/res_lang.py:282
+msgid "Language code cannot be modified."
+msgstr ""
+
+#: models/res_lang.py:285
+msgid "Cannot deactivate a language that is currently used by users."
+msgstr ""
+
+#: models/res_lang.py:287
+msgid "Cannot deactivate a language that is currently used by contacts."
+msgstr ""
+
+#: models/res_lang.py:300
+msgid "Base Language 'en_US' can not be deleted."
+msgstr ""
+
+#: models/res_lang.py:303
+msgid "You cannot delete the language which is the user's preferred language."
+msgstr ""
+
+#: models/res_lang.py:305
+msgid ""
+"You cannot delete the language which is Active!\n"
+"Please de-activate the language first."
+msgstr ""
+
+#: models/res_lang.py:317
+#, python-format
+msgid "format() must be given exactly one %char format specifier"
+msgstr ""
+
+#: models/res_lang.py:341
+msgid ""
+"The languages that you selected have been successfully installed. Users can "
+"choose their favorite language in their preferences."
+msgstr ""
+
+#: models/res_partner.py:89
+msgid "You can not create recursive tags."
+msgstr ""
+
+#: models/res_partner.py:359
+msgid "You cannot create recursive Partner hierarchies."
+msgstr ""
+
+#: models/res_partner.py:378
+msgid ""
+"Changing the company of a contact should only be done if it was never "
+"correctly set. If an existing contact starts working for a new company then "
+"a new contact should be created under that new company. You can use the "
+"\"Discard\" button to abandon this change."
+msgstr ""
+"연락처에 회사는 올바르게 설정되지 않은 경우에만 변경해야 합니다. 기존 연락처"
+"로 새로운 회사에서 업무를 시작하면 그 다음에 새 연락처는 그 회사에서 만들어"
+"야 합니다. 이 변경을 취소하기 위해 \"취소\" 단추를 사용할 수 있습니다."
+
+#: models/res_partner.py:454
+msgid ""
+"One2Many fields cannot be synchronized as part of `commercial_fields` or "
+"`address fields`"
+msgstr ""
+
+#: models/res_partner.py:577
+#, python-format
+msgid ""
+"You cannot archive contacts linked to an active user.\n"
+"You first need to archive their associated user.\n"
+"\n"
+"Linked active users : %(names)s"
+msgstr ""
+
+#: models/res_partner.py:579 models/res_partner.py:648
+msgid "Go to users"
+msgstr ""
+
+#: models/res_partner.py:583
+#, python-format
+msgid ""
+"You cannot archive contacts linked to an active user.\n"
+"Ask an administrator to archive their associated user first.\n"
+"\n"
+"Linked active users :\n"
+"%(names)s"
+msgstr ""
+
+#: models/res_partner.py:646
+#, python-format
+msgid ""
+"You cannot delete contacts linked to an active user.\n"
+"You should rather archive them after archiving their associated user.\n"
+"\n"
+"Linked active users : %(names)s"
+msgstr ""
+
+#: models/res_partner.py:652
+#, python-format
+msgid ""
+"You cannot delete contacts linked to an active user.\n"
+"Ask an administrator to archive their associated user first.\n"
+"\n"
+"Linked active users :\n"
+"%(names)s"
+msgstr ""
+
+#: models/res_partner.py:811
+msgid "Couldn't create contact without email address!"
+msgstr "이메일 주소 없이 문의 사항을 작성할 수 없습니다!"
+
+#: models/res_partner.py:842
+msgid "An email is required for find_or_create to work"
+msgstr ""
+
+#: models/res_partner.py:846
+msgid "A valid email is required for find_or_create to work properly."
+msgstr ""
+
+#: models/res_partner.py:918
+#, fuzzy, python-format
+msgid "Partners: %(category)s"
+msgstr "상위 카테고리"
+
+#: models/res_partner.py:977
+msgid "Import Template for Customers"
+msgstr ""
+
+#: models/res_users.py:96
+msgid "This method can only be accessed over HTTP"
+msgstr ""
+
+#: models/res_users.py:117
+#, fuzzy
+msgid "Security Control"
+msgstr "보안"
+
+#: models/res_users.py:212
+msgid "The name of the group can not start with \"-\""
+msgstr ""
+
+#: models/res_users.py:402
+msgid ""
+"Please use the change password wizard (in User Preferences or User menu) to "
+"change your own password."
+msgstr ""
+
+#: models/res_users.py:464
+#, python-format
+msgid ""
+"Company %(company_name)s is not in the allowed companies for user "
+"%(user_name)s (%(company_allowed)s)."
+msgstr ""
+
+#: models/res_users.py:471
+msgid "The \"App Switcher\" action cannot be selected as home action."
+msgstr ""
+
+#: models/res_users.py:483
+msgid "The user cannot have more than one user types."
+msgstr ""
+
+#: models/res_users.py:533
+msgid "Invalid 'group by' parameter"
+msgstr ""
+
+#: models/res_users.py:541
+msgid "Invalid search criterion"
+msgstr ""
+
+#: models/res_users.py:557
+msgid "You cannot activate the superuser."
+msgstr ""
+
+#: models/res_users.py:559
+msgid "You cannot deactivate the user you're currently logged in as."
+msgstr ""
+
+#: models/res_users.py:611
+msgid ""
+"You can not remove the admin user as it is used internally for resources "
+"created by Odoo (updates, module installation, ...)"
+msgstr ""
+
+#: models/res_users.py:803
+msgid "Setting empty passwords is not allowed for security reasons!"
+msgstr ""
+
+#: models/res_users.py:864
+msgid "Users"
+msgstr "사용자"
+
+#: models/res_users.py:880
+msgid "Groups"
+msgstr "그룹"
+
+#: models/res_users.py:892
+msgid "Access Rights"
+msgstr "접근 권한"
+
+#: models/res_users.py:904
+msgid "Record Rules"
+msgstr ""
+
+#: models/res_users.py:1010
+msgid "Too many login failures, please wait a bit before trying again."
+msgstr ""
+
+#: models/res_users.py:1560
+msgid "Other"
+msgstr "기타"
+
+#: models/res_users.py:1600
+msgid ""
+"Incorrect Password, try again or click on Forgot Password to reset your "
+"password."
+msgstr ""
+
+#: models/res_users.py:1647
+msgid "Before clicking on 'Change Password', you have to write a new password."
+msgstr ""
+
+#: models/res_users.py:1762
+msgid ""
+"You can not remove API keys unless they're yours or you are a system user"
+msgstr ""
+
+#: models/res_users.py:1826
+msgid "Only internal users can create API keys"
+msgstr ""
+
+#: wizard/base_export_language.py:19
+msgid "New Language (Empty translation template)"
+msgstr ""
+
+#: wizard/base_import_language.py:53
+#, python-format
+msgid ""
+"File %r not imported due to a malformed file.\n"
+"\n"
+"This issue can be caused by duplicates entries who are referring to the same "
+"field. Please check the content of the file you are trying to import.\n"
+"\n"
+"Technical Details:\n"
+"%s"
+msgstr ""
+
+#: wizard/base_import_language.py:60
+#, python-format
+msgid ""
+"File %r not imported due to format mismatch or a malformed file. (Valid "
+"formats are .csv, .po, .pot)\n"
+"\n"
+"Technical Details:\n"
+"%s"
+msgstr ""
+
+#: wizard/base_language_install.py:58
+msgid ""
+"The languages that you selected have been successfully "
+"installed.                            Users can choose their favorite "
+"language in their preferences."
+msgstr ""
+
+#: wizard/base_module_upgrade.py:67
+#, python-format
+msgid "The following modules are not installed or unknown: %s"
+msgstr ""
+
+#: wizard/base_partner_merge.py:305
+msgid ""
+"For safety reasons, you cannot merge more than 3 contacts together. You can "
+"re-open the wizard several times if needed."
+msgstr ""
+"안전상의 이유로 3 개 이상의 연락처를 병합 할 수 없습니다. 필요한 경우 마법사"
+"를 여러 번 열 수 있습니다."
+
+#: wizard/base_partner_merge.py:312
+msgid "You cannot merge a contact with one of his parent."
+msgstr ""
+
+#: wizard/base_partner_merge.py:315
+msgid ""
+"All contacts must have the same email. Only the Administrator can merge "
+"contacts with different emails."
+msgstr ""
+"모든 연락처에는 동일한 이메일이 있어야합니다. 관리자 만 다른 전자 메일과 연락"
+"처를 병합 할 수 있습니다."
+
+#: wizard/base_partner_merge.py:328
+msgid ""
+"Only the destination contact may be linked to existing Journal Items. Please "
+"ask the Administrator if you need to merge several contacts linked to "
+"existing Journal Items."
+msgstr ""
+"대상 연락처만 분개 항목에 연결할 수 있습니다. 기존 분개 항목에 연결된 여러 연"
+"락처를 병합하려면 관리자에게 문의하시기 바랍니다."
+
+#: wizard/base_partner_merge.py:412
+msgid "You have to specify a filter for your selection."
+msgstr ""
+
+#: wizard/base_update_translations.py:26
+#, python-format
+msgid "No language with code \"%s\" exists"
+msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Allow cashier to reprint receipts\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "계산원이 영수증을 재 인쇄하도록 허용 하십시오\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Base module for Hungarian localization\n"
+#~ "==========================================\n"
+#~ "\n"
+#~ "This module consists :\n"
+#~ "\n"
+#~ " - Generic Hungarian chart of accounts\n"
+#~ " - Hungarian taxes\n"
+#~ " - Hungarian Bank information\n"
+#~ " "
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "헝가리 지역화를 위한 모듈\n"
+#~ "==========================================\n"
+#~ "\n"
+#~ "모듈 포함사항:\n"
+#~ "\n"
+#~ " - 헝가리 회계 적용\n"
+#~ " - 헝가리 세법 적용\n"
+#~ " - 헝가리 은행 정보\n"
+#~ " "
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "This module adds several restaurant features to the Point of Sale:\n"
+#~ "- Bill Printing: Allows you to print a receipt before the order is paid\n"
+#~ "- Bill Splitting: Allows you to split an order into different orders\n"
+#~ "- Kitchen Order Printing: allows you to print orders updates to kitchen "
+#~ "or bar printers\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "이 모듈은 POS에 몇 가지 레스토랑 기능을 추가합니다:\n"
+#~ "- 영수증 인쇄: 주문 건에 지불하기 전에 주문 영수증을 인쇄 할 수 있습니"
+#~ "다.\n"
+#~ "- 영수증 나누기: 주문을 여러 주문으로 나눌 수 있습니다.\n"
+#~ "- 주방 주문 인쇄: 주방이나 바 프린터로 주문 업데이트를 인쇄 할 수 있습니"
+#~ "다.\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "This module allows the cashier to quickly give a percentage\n"
+#~ "sale discount to a customer.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "이 모듈을 사용하면 계산원이 고객에게 백분율 할인을\n"
+#~ "신속하게 제공 할 수 있습니다.\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "This module allows you to define a loyalty program in\n"
+#~ "the point of sale, where the customers earn loyalty points\n"
+#~ "and get rewards.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "이 모듈을 사용하면 판매 시점에 로열티 프로그램을\n"
+#~ "정의 할 수 있습니다. 고객은 로열티 포인트를 얻고 \n"
+#~ "보상을 받습니다.\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "[object with reference: %s - %s]"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "[참조 대상: %s - %s]"
+
+#~ msgid ""
+#~ "\n"
+#~ "        - Allow to set project for Helpdesk team\n"
+#~ "        - Track timesheet for task from ticket\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        - Helpdesk팀을 위한 프로젝트 설정 가능\n"
+#~ "        - 티켓에서 작업에 대한 작업 표 추적\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        A tax defined as python code consists in two snippets of python "
+#~ "code which are executed in a local environment containing data such as "
+#~ "the unit price, product or partner.\n"
+#~ "\n"
+#~ "        \"Applicable Code\" defines if the tax is to be applied.\n"
+#~ "\n"
+#~ "        \"Python Code\" defines the amount of the tax.\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "        파이썬 코드로 정의 된 세금은 단위 가격, 제품 또는 파트너와 같은 데"
+#~ "이터를 포함하는 로컬 환경에서 실행되는 두 개의 파이썬 코드의 스니펫으로 구"
+#~ "성됩니다.\n"
+#~ "\n"
+#~ "        \"해당 코드\"는 세금 적용 여부를 정의합니다.\n"
+#~ "\n"
+#~ "        \"파이썬 코드\"는 세금의 액수를 정의합니다.\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Belgium\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Accounting reports for Belgium\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Brazilian\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "브라질인을 위한 재무제표"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Chile\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "칠레인을 위한 재무제표"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Hungarian\n"
+#~ " "
+#~ msgstr ""
+#~ "\n"
+#~ "헝가리인을 위한 재무제표"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Netherlands\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "네덜란드인을 위한 재무제표"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Romania\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "로마니아인을 위한 재무제표"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Slovenian\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "슬로베니아인을 위한 재무제표"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Spain\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "스페인인을 위한 재무제표"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Switzerland\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "스위스인을 위한 재무제표"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for UK\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "영국인을 위한 재무제표"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Uruguay\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "우루과이인을 위한 재무제표\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Allow to make call from next activities or with click-to-dial.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        다음 활동 또는 click-to-dial로 전화를 걸 수 있습니다.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Allows to use python code to define taxes"
+#~ msgstr ""
+#~ "\n"
+#~ "        파이썬 코드를 사용하여 세금을 정의 할 수 있습니다"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Bridge between HR and Maintenance."
+#~ msgstr ""
+#~ "\n"
+#~ "        인사 관리와 유지 관리 사이의 다리."
+
+#~ msgid ""
+#~ "\n"
+#~ "        Compute sales tax automatically using TaxCloud based on customer "
+#~ "address in United States.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        미국의 고객 주소를 기반으로 TaxCloud를 사용하여 자동으로 판매세 계"
+#~ "산.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Electronic accounting reports\n"
+#~ "            - COA\n"
+#~ "            - Trial Balance\n"
+#~ "        DIOT Report\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        전자 회계 보고서\n"
+#~ "            - COA\n"
+#~ "            - 시산표(試算表)\n"
+#~ "        DIOT 보고서\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Enable a cache on products for a lower POS loading time."
+#~ msgstr ""
+#~ "\n"
+#~ "        POS로드 시간을 줄이기 위해 제품에서 캐시(고속기억장치)를 사용 가능"
+#~ "하게 하십시오."
+
+#~ msgid ""
+#~ "\n"
+#~ "        Print amount in words on checks issued for expenses\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        경비로 발행 된 check(수표)에 인쇄 된 금액\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        The purpose of this module is to implement \"sparse\" fields, i."
+#~ "e., fields\n"
+#~ "        that are mostly null. This implementation circumvents the "
+#~ "PostgreSQL\n"
+#~ "        limitation on the number of columns in a table. The values of all "
+#~ "sparse\n"
+#~ "        fields are stored in a \"serialized\" field in the form of a JSON "
+#~ "mapping.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        이 모듈의 목적은\"희소\"필드, 즉 대부분 null인 필드를 구현하는 것"
+#~ "입니다.\n"
+#~ "        이 구현의 케이블의 열 수에 대한 PostgreSQL 제한을 위회 합니다.\n"
+#~ "        모든 희소 가치 필드는 JSON 매핑 형태로\n"
+#~ "        \"serialized\"필드에 저장됩니다.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module adds support for barcodes scanning to the delivery "
+#~ "packages.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        이 모듈은 배달 패키지에 대한 바코드 스캐닝에 대한 지원을 추가합니"
+#~ "다..\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module adds support for barcodes scanning to the warehouse "
+#~ "management system.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        이 모듈은 바코드 스캐닝에 대한 지원을 창고 관리 시스템에 추가합니"
+#~ "다..\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module is used for Online bank synchronization."
+#~ msgstr ""
+#~ "\n"
+#~ "        이 모듈은 온라인 뱅크 동기화에 사용됩니다.."
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module is used for Online bank synchronization. It provides "
+#~ "basic methods to synchronize bank statement.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        이 모듈은 온라인 뱅크 동기화에 사용됩니다. 은행 계좌 명세서를 동기"
+#~ "화하는 기본 방법을 제공합니다.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module provides the core of the Odoo Mobile App.\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "        이 모듈은 Odoo Mobile App의 핵심을 제공합니다..\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Use Plaid.com to retrieve bank statements"
+#~ msgstr ""
+#~ "\n"
+#~ "        Plaid.com을 사용하여 은행 거래 내역 확인"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Use Plaid.com to retrieve bank statements.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Plaid.com을 사용하여 은행 내역서를 검색하십시오.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Use interview forms during recruitment process.\n"
+#~ "        This module is integrated with the survey module\n"
+#~ "        to allow you to define interviews for different jobs.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        모집 프로세스 중에 인터뷰 양식을 사용하십시오.\n"
+#~ "        이 모듈은 설문조사 모듈과 통합되어\n"
+#~ "        여러 작업에 대한 인터뷰를 정의 할 수 있습니다.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        When invoicing timesheets, allows invoicing either all "
+#~ "timesheets\n"
+#~ "        linked to an SO, or only the validated timesheets\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        청구서 발행 시간표를 사용하면, SO에 연결된 모든 작업 표 또는\n"
+#~ "        유효성이 확인 된 작업표 만 송장 처리 할 수 있습니다\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "    * Multi language support for Chart of Accounts, Taxes, Tax Codes, "
+#~ "Journals,\n"
+#~ "      Accounting Templates, Analytic Chart of Accounts and Analytic "
+#~ "Journals.\n"
+#~ "    * Setup wizard changes\n"
+#~ "        - Copy translations for COA, Tax, Tax Code and Fiscal Position "
+#~ "from\n"
+#~ "          templates to target objects.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    * 회계 계통도(會計系統圖),세금, 세법, Journals,\n"
+#~ "      회계 양식, 분석 차트 및 분석 저널에 대한 다국어 지원.\n"
+#~ "    * 설치 마법사 변경\n"
+#~ "        - COA, 세금, 세법 및 Fiscal Position(회계연도회계감사)에 대한\n"
+#~ "          대한 번역을 양식에서 대상 객체로 복사합니다.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "    Adds workcenters to Quality Control\n"
+#~ msgstr ""
+#~ "\n"
+#~ "    품질 관리에 workcenter을 추가합니다\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "    Module linking the attendance module to the timesheet app.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    출석 모듈을 작업 표 응용 프로그램에 연결하는 모듈입니다..\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "  Publish your products on eBay"
+#~ msgstr ""
+#~ "\n"
+#~ "  eBay에 제품 게시"
+
+#~ msgid ""
+#~ "\n"
+#~ "* Timesheet submission and validation\n"
+#~ "* Activate grid view for timesheets\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "* 작업표 제출 및 유효성 검사\n"
+#~ "* 작업표의 그리드보기 활성화\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting Reports\n"
+#~ "==================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "회계 보고서\n"
+#~ "==================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Argentina\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "아르헨티나 회계 보고서\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Bolivia\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "볼리비아 회계 보고서\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Colombia\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "콜롬비아 회계 보고서\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Croatia\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "크로아티아 회계 보고서\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Ethiopia\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "에티오피아인을 위한 재무제표"
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for France\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "프랑스 회계 보고서\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Greece\n"
+#~ "=============================\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "그리스 회계 보고서\n"
+#~ "=============================\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for India\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "인도 회계 보고서\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Japan\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "일본인을 위한 재무재표\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Luxembourg\n"
+#~ "=================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "룩셈부르그 회계 보고서\n"
+#~ "=================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Maroc\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "모로코인을 위한 재무재표\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Norway\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "노르웨이 회계 보고서\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Poland\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "폴란드 회계 보고서\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Thailand\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "태국 회계 보고서\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Add all information on the employee form to manage contracts.\n"
+#~ "=============================================================\n"
+#~ "\n"
+#~ "    * Contract\n"
+#~ "    * Place of Birth,\n"
+#~ "    * Medical Examination Date\n"
+#~ "    * Company Vehicle\n"
+#~ "\n"
+#~ "You can assign several contracts per employee.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "계약서를 관리하기 위해 직원 양식에 대한 모든 정보를 추가하십시오.\n"
+#~ "=============================================================\n"
+#~ "\n"
+#~ "    * 계약\n"
+#~ "    * 출생지,\n"
+#~ "    * 건강 진단 날짜\n"
+#~ "    * 회사 차량\n"
+#~ "\n"
+#~ "직원 당 여러 계약을 지정할 수 있습니다.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Add email templates to products to be sent on invoice confirmation\n"
+#~ "==================================================================\n"
+#~ "\n"
+#~ "With this module, link your products to a template to send complete "
+#~ "information and tools to your customer.\n"
+#~ "For instance when invoicing a training, the training agenda and materials "
+#~ "will automatically be sent to your customers.'\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "청구서 확인 메일로 보낼 제품에 이메일 양식 추가\n"
+#~ "==================================================================\n"
+#~ "\n"
+#~ "이 모듈을 사용하면 제품에 템플릿(양식)을 연결하여 모든 정보와 도구를 고객"
+#~ "에게 보낼 수 있습니다.\n"
+#~ "예를 들어 교육 청구서 발행시, 교육 일정 및 자료가 자동으로 고객에게 전송됩"
+#~ "니다.'\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Adds a reporting menu in products that computes sales, purchases, margins "
+#~ "and other interesting indicators based on invoices.\n"
+#~ "=============================================================================================================================\n"
+#~ "\n"
+#~ "The wizard to launch the report has several options to help you get the "
+#~ "data you need.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "판매, 구매, 매출 총이익, 기타 청구서 기반의 흥미로운 지표를 계한하는 제품"
+#~ "에 보고 메뉴를 추가합니다.\n"
+#~ "=============================================================================================================================\n"
+#~ "\n"
+#~ "보고서를 실행하는 마법사에는 필요한 데이터를 얻을 수있는 몇 가지 옵션이 있"
+#~ "습니다.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Adds enhanced support for (Ether)Pad attachments in the web client.\n"
+#~ "===================================================================\n"
+#~ "\n"
+#~ "Lets the company customize which Pad installation should be used to link "
+#~ "to new\n"
+#~ "pads (by default, http://etherpad.com/).\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "웹 클라이언트에서 (Ether) 패드 부착에 대한 향상 된 지원을 추가합니다.\n"
+#~ "===================================================================\n"
+#~ "\n"
+#~ "회사에서 새 패드에 연결할 패드 설치를 커스터마이즈 할 수 있습니다.\n"
+#~ "(기본적으로 http://etherpad.com/).\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Allow clients to Schedule Appointments through your Website\n"
+#~ "-------------------------------------------------------------\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "고객이 귀하의 웹 사이트를 통해 약속을 잡도록 허용하십시오\n"
+#~ "-------------------------------------------------------------\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Allow credit card POS payments\n"
+#~ "==============================\n"
+#~ "\n"
+#~ "This module allows customers to pay for their orders with credit\n"
+#~ "cards. The transactions are processed by Mercury (developed by Wells\n"
+#~ "Fargo Bank). A Mercury merchant account is necessary. It allows the\n"
+#~ "following:\n"
+#~ "\n"
+#~ "* Fast payment by just swiping a credit card while on the payment screen\n"
+#~ "* Combining of cash payments and credit card payments\n"
+#~ "* Cashback\n"
+#~ "* Supported cards: Visa, MasterCard, American Express, Discover\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "신용 카드 POS 지불 허용\n"
+#~ "==============================\n"
+#~ "\n"
+#~ "이 모듈을 통해 고객은 신용카드로 주문을 지불 할 수 있습니다. 거래는 "
+#~ "Mercury (Wells Fargo Bank가\n"
+#~ "개발했습니다). A Mercury merchant account가 필요합니다. 그것은\n"
+#~ "다음과 같은 내용을 수행 할 수 있습니다:\n"
+#~ "\n"
+#~ "* 결제 화면에서 신용카드를 스와이프하여 빠른 지불\n"
+#~ "* 현금 지불과 신용 카드 지불의 결합\n"
+#~ "* Cashback\n"
+#~ "* 지원카드: Visa, MasterCard, American Express, Discover\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Allow users to login through OAuth2 Provider.\n"
+#~ "=============================================\n"
+#~ msgstr ""
+#~ "\n"
+#~ "사용자가 OAuth2 제공 업체를 통해 로그인하도록 허용합니다.\n"
+#~ "=============================================\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Allow users to sign up and reset their password\n"
+#~ "===============================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "사용자가 가입하고 비밀번호를 재설정하도록 허용\n"
+#~ "===============================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Allows canceling accounting entries.\n"
+#~ "====================================\n"
+#~ "\n"
+#~ "This module adds a checkbox on the accounting journals to allow the "
+#~ "cancellation of journal entries.\n"
+#~ "\n"
+#~ "This checkbox is only visible on the accounting journals when the debug "
+#~ "mode is active.\n"
+#~ "\n"
+#~ "If this checkbox is set to TRUE, it allows users to cancel journal "
+#~ "entries.\n"
+#~ "\n"
+#~ "The accounting entry that is cancelled can then be modified and reposted "
+#~ "or deleted.\n"
+#~ "\n"
+#~ "It also operates on invoices, bank statements, payments ...\n"
+#~ "\n"
+#~ "Be careful with this module as it has audit implications. Cancelling "
+#~ "accounting entries is not authorized in all countries.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "회계 항목 최소를 허용합니다.\n"
+#~ "====================================\n"
+#~ "\n"
+#~ "이 모듈은 accounting journals에 체크 박스를 추가하여 journal entries를 취"
+#~ "소 할 수있게 합니다.\n"
+#~ "\n"
+#~ "이 확인란은 디버그 모드가 활성화되어있을 때 accounting journals에서만 볼 "
+#~ "수 있습니다.\n"
+#~ "\n"
+#~ "이 확인란을 TRUE로 설정하면 사용자가 journal entries을 취소 할 수 있습니"
+#~ "다..\n"
+#~ "\n"
+#~ "취소 된 accounting entry는 수정 및 reposted or 삭제할 수 있습니다.\n"
+#~ "\n"
+#~ "또한 청구서, 은행 명세서, 지불에 대한 운영...\n"
+#~ "\n"
+#~ "이 모듈에는 audit implications(감사의 의미)가 있으므로 주의하십시오. "
+#~ "Accounting entries 취소는 모든 국가에서 승인되지 않습니다.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Allows to sell timesheets in your sales order\n"
+#~ "=============================================\n"
+#~ "\n"
+#~ "This module set the right product on all timesheet lines\n"
+#~ "according to the order/contract you work on. This allows to\n"
+#~ "have real delivered quantities in sales orders.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "판매 주문서에 timesheet(작업표)를 판매 할 수 있습니다.\n"
+#~ "=============================================\n"
+#~ "\n"
+#~ "이 모듈은 귀하가 작업하는 주문/계약서에 따라 모든 timesheet(작업표) 줄"
+#~ "에.\n"
+#~ "올바른 제품을 설정합니다. 이를 통해\n"
+#~ "판매 주문에서 실제 인도 된 수량을 보유 할 수 있습니다.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Allows you to add delivery methods in sale orders and picking.\n"
+#~ "==============================================================\n"
+#~ "\n"
+#~ "You can define your own carrier for prices. When creating\n"
+#~ "invoices from picking, the system is able to add and compute the shipping "
+#~ "line.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "판매 주문 및 picking(선별작업)에 납품 방법을 추가 할 수 있습니다.\n"
+#~ "==============================================================\n"
+#~ "\n"
+#~ "가격에 대한 자체 운송 업체를 정의 할 수 있습니다.\n"
+#~ "생성시 picking(선별작업)에서 청구서를 받으면 시스템이 배송 라인을 추가하"
+#~ "고 계산할수 있습니다.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Analytic Accounting in MRP\n"
+#~ "==========================\n"
+#~ "\n"
+#~ "* Cost structure report\n"
+#~ msgstr ""
+#~ "\n"
+#~ "MRP의 분석 회계\n"
+#~ "==========================\n"
+#~ "\n"
+#~ "* 비용 구조 보고서\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Ask questions, get answers, no distractions\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "질문하고, 대답을 얻고, 산만하게 하지 마십시오\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "Asserts on accounting.\n"
+#~ "======================\n"
+#~ "With this module you can manually check consistencies and inconsistencies "
+#~ "of accounting module from menu Reporting/Accounting/Accounting Tests.\n"
+#~ "\n"
+#~ "You can write a query in order to create Consistency Test and you will "
+#~ "get the result of the test \n"
+#~ "in PDF format which can be accessed by Menu Reporting -> Accounting "
+#~ "Tests, then select the test \n"
+#~ "and print the report from Print button in header area.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "회계에 대한 주장.\n"
+#~ "======================\n"
+#~ "이 모듈을 사용하면 보고/회계/회계 테스트 메뉴에서 회계 모듈의 일관성과 불"
+#~ "일치를 수동으로 확인할 수 있습니다.\n"
+#~ "\n"
+#~ "Consistency Test를 만들기 위해 쿼리를 작성할 수 있으며 테스트 결과를 얻을 "
+#~ "수 있습니다.\n"
+#~ "Menu Reporting -> Accounting Tests에서 access(접속)할 수 있는 PDF형식으로 "
+#~ "테스트를 선택한 다음\n"
+#~ "머리글 영역의 인쇄 버튼에서 보고서를 인쇄하십시오.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Assets management\n"
+#~ "=================\n"
+#~ "Manage assets owned by a company or a person.\n"
+#~ "Keeps track of depreciations, and creates corresponding journal entries.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "자산 관리\n"
+#~ "=================\n"
+#~ "회사 또는 사람이 소유 한 자산을 관리합니다..\n"
+#~ "감가 상각을 추적하고 journal entries(해당분개)를 생성합니다..\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Attachments list and document indexation\n"
+#~ "========================================\n"
+#~ "* Show attachment on the top of the forms\n"
+#~ "* Document Indexation: odt\n"
+#~ msgstr ""
+#~ "\n"
+#~ "첨부 파일 목록 및 문서 indexation(분류)\n"
+#~ "========================================\n"
+#~ "* 양식 상단에 첨부 파일 표시\n"
+#~ "* 문서 Indexation(분류): odt\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Australian Accounting Module\n"
+#~ "============================\n"
+#~ "\n"
+#~ "Australian accounting basic charts and localizations.\n"
+#~ "\n"
+#~ "Also:\n"
+#~ "    - activates a number of regional currencies.\n"
+#~ "    - sets up Australian taxes.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Australian Accounting Module\n"
+#~ "============================\n"
+#~ "\n"
+#~ "Australian accounting basic charts and localizations.\n"
+#~ "\n"
+#~ "Also:\n"
+#~ "    - activates a number of regional currencies.\n"
+#~ "    - sets up Australian taxes.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Bridge module for rating on website stuff.\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "웹 사이트에 대한 평가를위한 Bridge 모듈.\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "CRM Phone Numbers Validation\n"
+#~ "============================\n"
+#~ "\n"
+#~ "This module allows for validate and format phone numbers for leads and "
+#~ "contacts."
+#~ msgstr ""
+#~ "\n"
+#~ "CRM 전화 번호 검증\n"
+#~ "============================\n"
+#~ "\n"
+#~ "이 모듈을 사용하면 리드(영업제안) 및 연락처의 전화 번호를 확인하고 형식을 "
+#~ "지정할 수 있습니다."
+
+#~ msgid ""
+#~ "\n"
+#~ "City Management in Addresses\n"
+#~ "============================\n"
+#~ "\n"
+#~ "This module allows to enforce users to choose the city of a partner "
+#~ "inside a given list instead of a free text field.\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "주소의 도시 관리\n"
+#~ "============================\n"
+#~ "\n"
+#~ "이 모듈을 사용하면 사용자가 a free text field 대신 주어진 목록에서 파트너 "
+#~ "도시를 선택할 수 있습니다.\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "Compare timesheets and forecast for your projects.\n"
+#~ "==================================================\n"
+#~ "\n"
+#~ "In your project plan, you can compare your timesheets and your forecast "
+#~ "to better schedule your resources.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "프로젝트에 대한 timesheet(작업표)와 예측을 비교하십시오.\n"
+#~ "==================================================\n"
+#~ "\n"
+#~ "프로젝트 계획에서 timesheet(작업표)와 예측을 비교하여 resources(자원)를 보"
+#~ "다 효율적으로 계획 할 수 있습니다.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Configure the price accuracy you need for different kinds of usage: "
+#~ "accounting, sales, purchases.\n"
+#~ "=================================================================================================\n"
+#~ msgstr ""
+#~ "\n"
+#~ "다양한 종류의 사용 (회계, 판매, 구매)에 필요한 가격 정확도를 구성하십시"
+#~ "오.\n"
+#~ "=================================================================================================\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Contact Number Validation on Website\n"
+#~ "====================================\n"
+#~ "\n"
+#~ "Validate contact (phone,mobile) numbers and normalize them on leads and "
+#~ "contacts:\n"
+#~ "- use the national format for your company country\n"
+#~ "- use the international format for all others\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "웹 사이트의 담당자 번호 확인\n"
+#~ "====================================\n"
+#~ "\n"
+#~ "연락처 (전화, 휴대폰)번호를 확인하고 리드(영업제안) 및 연락처에서 정규화 "
+#~ "합니다:\n"
+#~ "- 회사 국가의 국가 형식 사용\n"
+#~ "- 다른 모든 국가의 경우 국제 형식 사용\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "General Chart of Accounts.\n"
+#~ "==========================\n"
+#~ "\n"
+#~ "Provide Templates for Chart of Accounts, Taxes for Uruguay.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "일반 회계과목표.\n"
+#~ "==========================\n"
+#~ "\n"
+#~ "우루과이의 회계 과목표, 세금 양식을 제공함.\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "OpenERP Web Gantt chart view.\n"
+#~ "=============================\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "OpenERP Web 간트 도표 화면.\n"
+#~ "=============================\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Openerp Web Diagram view.\n"
+#~ "=========================\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Openerp Web 도표 화면.\n"
+#~ "=========================\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Piano dei conti italiano di un'impresa generica.\n"
+#~ "================================================\n"
+#~ "\n"
+#~ "Italian accounting chart and localization.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Piano dei conti italiano di un'impresa generica.\n"
+#~ "================================================\n"
+#~ "\n"
+#~ "이탈리아 회계 도표 및 현지화.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "This module helps to configure the system at the installation of a new "
+#~ "database.\n"
+#~ "================================================================================\n"
+#~ "\n"
+#~ "Shows you a list of applications features to install from.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "해당 모듈은 신규 데이터베이스 설치 시 시스템을 구성할 수 있도록 도와줍니"
+#~ "다.\n"
+#~ "================================================================================\n"
+#~ "\n"
+#~ "설치할 수 있는 응용 프로그램 기능에 대한 목록을 보여줍니다.\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "United States - Chart of accounts.\n"
+#~ "==================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "미국 - 회계 과목표.\n"
+#~ "==================================\n"
+#~ "    "
+
+#~ msgid "%A - Full weekday name."
+#~ msgstr "%A - 긴 요일 이름(월요일,화요일)."
+
+#~ msgid "%a - Abbreviated weekday name."
+#~ msgstr "%a - 짧은 요일 이름(월,화,수)."
+
+#~ msgid "%b - Abbreviated month name."
+#~ msgstr "%b - 짧은 월 이름(한글은 관계 없임)."
+
+#~ msgid "&amp;nbsp;"
+#~ msgstr "&amp;nbsp;"
+
+#~ msgid ", or your preferred text editor"
+#~ msgstr ", 또는 귀하가 선호하는 텍스트 편집기"
+
+#~ msgid "-This module does not create menu."
+#~ msgstr "-이 모듈은 메뉴를 만들지 않습니다."
+
+#~ msgid "-This module does not create report."
+#~ msgstr "-이 모듈은 보고서를 만들지 않습니다."
+
+#~ msgid "-This module does not create views."
+#~ msgstr "-이 모듈은 화면을 만들지 않습니다."
+
+#~ msgid "-This module does not depends on any other module."
+#~ msgstr "-이 모듈은 다른 모듈에 의존하지 않습니다."
+
+#~ msgid ""
+#~ "A group is a set of functional areas that will be assigned to the user in "
+#~ "order to give them access and rights to specific applications and tasks "
+#~ "in the system. You can create custom groups or edit the ones existing by "
+#~ "default in order to customize the view of the menu that users will be "
+#~ "able to see. Whether they can have a read, write, create and delete "
+#~ "access right can be managed from here."
+#~ msgstr ""
+#~ "그룹은 시스템 내에서 특정 응용 프로그램과 과제의 접근과 권한을 사용자에게 "
+#~ "부여하기 위하여 사용자들에게 할당된 기능적 영역의 집합입니다. 사용자가 볼 "
+#~ "수 있도록 메뉴의 화면을 꾸미기 위해 사용자 지정 그룹을 생성하거나 이미 기"
+#~ "본으로 존재하는 그룹을 편집할 수 있습니다. 그룹이 보유한 읽기, 쓰기, 생성 "
+#~ "및 삭제 접근 권한이 여기에서 관리될 수 있습니다."
+
+#~ msgid "A module to generate exceptions."
+#~ msgstr "예외를 생성하는 모듈입니다."
+
+#~ msgid "A module to test import/export."
+#~ msgstr "가져오기/내보내기 테스트 모듈입니다."
+
+#~ msgid "A module to test the uninstall feature."
+#~ msgstr "제거 기능을 테스트하는 모듈입니다."
+
+#~ msgid "A module to verify the inheritance."
+#~ msgstr "상속을 확인하는 모듈입니다."
+
+#~ msgid "A module with dummy methods."
+#~ msgstr "예제 방법 모듈입니다."
+
+#~ msgid "A user associated to the contact"
+#~ msgstr "대화 상대와 연결된 사용자"
+
+#~ msgid "A0  5   841 x 1189 mm"
+#~ msgstr "A0  5   841 x 1189 mm"
+
+#~ msgid "A1  6   594 x 841 mm"
+#~ msgstr "A1  6   594 x 841 mm"
+
+#~ msgid "A2  7   420 x 594 mm"
+#~ msgstr "A2  7   420 x 594 mm"
+
+#~ msgid "A3  8   297 x 420 mm"
+#~ msgstr "A3  8   297 x 420 mm"
+
+#~ msgid "A4  0   210 x 297 mm, 8.26 x 11.69 inches"
+#~ msgstr "A4  0   210 x 297 mm"
+
+#~ msgid "A5  9   148 x 210 mm"
+#~ msgstr "A5  9   148 x 210 mm"
+
+#~ msgid "A6  10  105 x 148 mm"
+#~ msgstr "A6  10  105 x 148 mm"
+
+#~ msgid "A7  11  74 x 105 mm"
+#~ msgstr "A7  11  74 x 105 mm"
+
+#~ msgid "A8  12  52 x 74 mm"
+#~ msgstr "A8  12  52 x 74 mm"
+
+#~ msgid "A9  13  37 x 52 mm"
+#~ msgstr "A9  13  37 x 52 mm"
+
+#~ msgid "Abbreviation"
+#~ msgstr "약어"
+
+#~ msgid "Accepted Users"
+#~ msgstr "허용된 사용자"
+
+#~ msgid "Access"
+#~ msgstr "접근"
+
+#~ msgid "Access Controls"
+#~ msgstr "접근 제어"
+
+#~ msgid "Access Groups"
+#~ msgstr "접근 그룹"
+
+#~ msgid "Access Menu"
+#~ msgstr "접근 메뉴"
+
+#~ msgid "Access Token"
+#~ msgstr "액세스 토큰"
+
+#~ msgid "Account Analytic Defaults"
+#~ msgstr "분석적 기본값 계정"
+
+#~ msgid "Account Charts"
+#~ msgstr "회계과목표"
+
+#~ msgid "Account No."
+#~ msgstr "계정 번호"
+
+#~ msgid "Account Number"
+#~ msgstr "계정 번호"
+
+#~ msgid "Account TaxCloud"
+#~ msgstr "계정 택스클라우드"
+
+#~ msgid "Accounting"
+#~ msgstr "회계"
+
+#~ msgid "Accounting & Finance"
+#~ msgstr "회계와 재무"
+
+#~ msgid "Accounting Consistency Tests"
+#~ msgstr "회계 일관성 검사"
+
+#~ msgid "Accounting Reports"
+#~ msgstr "회계 보고서"
+
+#~ msgid "Action"
+#~ msgstr "조치"
+
+#~ msgid "Action Name"
+#~ msgstr "동작명"
+
+#~ msgid "Action Target"
+#~ msgstr "동작 대상"
+
+#~ msgid "Action To Do"
+#~ msgstr "필요한 작업"
+
+#~ msgid "Action Type"
+#~ msgstr "동작 유형"
+
+#~ msgid "Action URL"
+#~ msgstr "동작 URL"
+
+#~ msgid "Action Usage"
+#~ msgstr "동작 용도"
+
+#~ msgid "Actions"
+#~ msgstr "추가작업"
+
+#~ msgid "Active"
+#~ msgstr "활성"
+
+#~ msgid "Address Type"
+#~ msgstr "주소 유형"
+
+#~ msgid "Address format..."
+#~ msgstr "주소 형식..."
+
+#~ msgid "Administration"
+#~ msgstr "관리"
+
+#~ msgid ""
+#~ "Administrative divisions of a country. E.g. Fed. State, Departement, "
+#~ "Canton"
+#~ msgstr "국가의 행정 구역. 예를 들어 도, 시, 군"
+
+#~ msgid "Advanced Events"
+#~ msgstr "고급 이벤트"
+
+#~ msgid "Adyen Payment Acquirer"
+#~ msgstr "Adyen 결제 매입사"
+
+#~ msgid "Affero GPL-3"
+#~ msgstr "Affero GPL-3"
+
+#~ msgid "After Amount"
+#~ msgstr "이후 금액"
+
+#~ msgid "Albania"
+#~ msgstr "알바니아"
+
+#~ msgid "Algeria"
+#~ msgstr "알제리아"
+
+#~ msgid "All"
+#~ msgstr "모두"
+
+#~ msgid "Allow shoppers to compare products based on their attributes"
+#~ msgstr "구매자의 취향에 따라 제품을 비교할 수 있도록 허용"
+
+#~ msgid "Allowed Companies"
+#~ msgstr "허용된 업체"
+
+#~ msgid ""
+#~ "Allows you to create your invoices and track the payments. It is an "
+#~ "easier version of the accounting module for managers who are not "
+#~ "accountants."
+#~ msgstr ""
+#~ "귀하의 청구서를 작성하고 지불을 추적할 수 있습니다. 이것은 회계사가 없는 "
+#~ "관리자를 위한 회계 모듈의 쉬운 버전입니다."
+
+#~ msgid "American Samoa"
+#~ msgstr "미국령 사모아"
+
+#~ msgid ""
+#~ "An arbitrary string, interpreted by the client according to its own needs "
+#~ "and wishes. There is no central tag repository across clients."
+#~ msgstr ""
+#~ "클라이언트에 의해 자체적인 필요 및 요구에 따라 해석되는 임의의 문자열. 클"
+#~ "라이언트를 통하는 중앙 태그 저장소는 없습니다."
+
+#~ msgid ""
+#~ "An auto-installable module is automatically installed by the system when "
+#~ "all its dependencies are satisfied. If the module has no dependency, it "
+#~ "is always installed."
+#~ msgstr ""
+#~ "자동 설치 모듈은 모든 의존성이 만족되면 시스템에 의해 자동으로 설치됩니"
+#~ "다. 모듈에 의존성이 존재하지 않을 경우 항상 설치됩니다."
+
+#~ msgid "Analytic Accounting"
+#~ msgstr "분석 회계"
+
+#~ msgid "Angola"
+#~ msgstr "앙골라"
+
+#~ msgid "Anguilla"
+#~ msgstr "앙골라"
+
+#~ msgid "Antarctica"
+#~ msgstr "남극 대륙"
+
+#~ msgid "Antigua and Barbuda"
+#~ msgstr "앤티가 바부다"
+
+#~ msgid ""
+#~ "Appears by default on the top right corner of your printed documents "
+#~ "(report header)."
+#~ msgstr "출력 문서의 우측 상단에 기본으로 출력됩니다. (보고서 머릿글)"
+
+#~ msgid "Application"
+#~ msgstr "응용 프로그램"
+
+#~ msgid "Application Terms"
+#~ msgstr "응용 프로그램 용어"
+
+#~ msgid "Apply"
+#~ msgstr "적용"
+
+#~ msgid "Apply Scheduled Upgrades"
+#~ msgstr "예약된 업그레이드 적용"
+
+#~ msgid "Apply for Create"
+#~ msgstr "작성에 적용"
+
+#~ msgid "Apply for Delete"
+#~ msgstr "삭제에 적용"
+
+#~ msgid "Apply for Read"
+#~ msgstr "읽기에 적용"
+
+#~ msgid "Apply for Write"
+#~ msgstr "쓰기에 적용"
+
+#~ msgid "Appraisal"
+#~ msgstr "직무평가"
+
+#~ msgid "Appraisals"
+#~ msgstr "직무평가"
+
+#~ msgid "Apps"
+#~ msgstr "앱"
+
+#~ msgid "Architecture"
+#~ msgstr "구조"
+
+#~ msgid "Archived"
+#~ msgstr "아카이브됨"
+
+#~ msgid "Are you sure to execute the automatic merge of your contacts ?"
+#~ msgstr "연락처의 자동 병합을 실행 하시겠습니까?"
+
+#~ msgid ""
+#~ "Are you sure to execute the list of automatic merges of your contacts ?"
+#~ msgstr "연락처의 자동 병합 목록을 실행 하시겠습니까?"
+
+#~ msgid "Argentina"
+#~ msgstr "아르헨티나"
+
+#~ msgid "Armenia"
+#~ msgstr "아르메니아"
+
+#~ msgid "Aruba"
+#~ msgstr "아루바"
+
+#~ msgid "Assets Management"
+#~ msgstr "자산 관리"
+
+#~ msgid "Associated reports"
+#~ msgstr "관련된 보고서"
+
+#~ msgid "Associations Management"
+#~ msgstr "연계 관리"
+
+#~ msgid "Attached To"
+#~ msgstr "첨부 대상"
+
+#~ msgid "Attachment"
+#~ msgstr "첨부 파일"
+
+#~ msgid "Attachments"
+#~ msgstr "첨부 파일"
+
+#~ msgid "Attendance"
+#~ msgstr "참석"
+
+#~ msgid "Attendances"
+#~ msgstr "근태"
+
+#~ msgid "Australia"
+#~ msgstr "호주"
+
+#~ msgid "Austria"
+#~ msgstr "오스트리아"
+
+#~ msgid "Austria - Accounting"
+#~ msgstr "오스트리아 - 회계"
+
+#~ msgid "Authentication via LDAP"
+#~ msgstr "LDAP를 통한 인증"
+
+#~ msgid "Author"
+#~ msgstr "작성자"
+
+#~ msgid "Auto Search"
+#~ msgstr "자동 검색"
+
+#~ msgid "Automated Action Rules"
+#~ msgstr "자동화된 동작 규칙"
+
+#~ msgid "Automated Translations through Gengo API"
+#~ msgstr "Gengo API를 통한 자동 번역"
+
+#~ msgid "Automatic Installation"
+#~ msgstr "자동 설치"
+
+#~ msgid "Automatic Merge Wizard"
+#~ msgstr "자동 병합 마법사"
+
+#~ msgid ""
+#~ "Automatically set to let administators find new terms that might need to "
+#~ "be translated"
+#~ msgstr "관리자가 새로운 용어를 찾아 번역할 수 있도록 자동으로 설정합니다"
+
+#~ msgid "Automation"
+#~ msgstr "자동화"
+
+#~ msgid "Azerbaijan"
+#~ msgstr "아제르바이잔"
+
+#~ msgid "B0  14  1000 x 1414 mm"
+#~ msgstr "B0  14  1000 x 1414 mm"
+
+#~ msgid "B1  15  707 x 1000 mm"
+#~ msgstr "B1  15  707 x 1000 mm"
+
+#~ msgid "B2  17  500 x 707 mm"
+#~ msgstr "B2  17  500 x 707 mm"
+
+#~ msgid "B3  18  353 x 500 mm"
+#~ msgstr "B3  18  353 x 500 mm"
+
+#~ msgid "B4  19  250 x 353 mm"
+#~ msgstr "B4  19  250 x 353 mm"
+
+#~ msgid "B5  1   176 x 250 mm, 6.93 x 9.84 inches"
+#~ msgstr "B5  1   176 x 250 mm, 6.93 x 9.84 인치"
+
+#~ msgid "B6  20  125 x 176 mm"
+#~ msgstr "B6  20  125 x 176 mm"
+
+#~ msgid "B7  21  88 x 125 mm"
+#~ msgstr "B7  21  88 x 125 mm"
+
+#~ msgid "B8  22  62 x 88 mm"
+#~ msgstr "B8  22  62 x 88 mm"
+
+#~ msgid "B9  23  33 x 62 mm"
+#~ msgstr "B9  23  33 x 62 mm"
+
+#~ msgid "Bahamas"
+#~ msgstr "바하마"
+
+#~ msgid "Bahrain"
+#~ msgstr "바레인"
+
+#~ msgid "Bangladesh"
+#~ msgstr "방글라데시"
+
+#~ msgid "Bank"
+#~ msgstr "은행"
+
+#~ msgid "Bank Accounts"
+#~ msgstr "은행 계좌"
+
+#~ msgid "Bank Identifier Code"
+#~ msgstr "은행 식별자 코드"
+
+#~ msgid "Bank Name"
+#~ msgstr "은행명"
+
+#~ msgid "Bank account"
+#~ msgstr "예금 계정"
+
+#~ msgid "Banks"
+#~ msgstr "은행"
+
+#~ msgid "Barbados"
+#~ msgstr "바베이도스"
+
+#~ msgid "Barcode Scanner Hardware Driver"
+#~ msgstr "바코드 스캐너 하드웨어 드라이버"
+
+#~ msgid "Base"
+#~ msgstr "기준"
+
+#~ msgid "Base Field"
+#~ msgstr "기본 필드"
+
+#~ msgid "Base Object"
+#~ msgstr "기본 객체"
+
+#~ msgid "Base import"
+#~ msgstr "기본 가져오기"
+
+#~ msgid "Base import module"
+#~ msgstr "기본 가져오기 모듈"
+
+#~ msgid "Before Amount"
+#~ msgstr "이전 금액"
+
+#~ msgid "Belarus"
+#~ msgstr "벨라루스"
+
+#~ msgid "Belgium"
+#~ msgstr "벨기에"
+
+#~ msgid "Belgium - Accounting"
+#~ msgstr "벨기에 - 회계"
+
+#~ msgid "Belgium - Import Bank CODA Statements"
+#~ msgstr "벨기에 - 수출입 은행 CODA 명세서"
+
+#~ msgid "Belgium - Payroll"
+#~ msgstr "벨기에 - 급여"
+
+#~ msgid "Belgium - Payroll with Accounting"
+#~ msgstr "벨기에 - 회계와 급여"
+
+#~ msgid "Belgium - Structured Communication"
+#~ msgstr "벨기에 - 구조화된 의사 소통"
+
+#~ msgid "Belize"
+#~ msgstr "벨리즈"
+
+#~ msgid "Benin"
+#~ msgstr "베닌"
+
+#~ msgid "Bermuda"
+#~ msgstr "버뮤다 제도"
+
+#~ msgid "Bhutan"
+#~ msgstr "부탄"
+
+#~ msgid "Binary"
+#~ msgstr "이진수"
+
+#~ msgid "Blogs"
+#~ msgstr "블로그"
+
+#~ msgid "Bolivia"
+#~ msgstr "볼리비아"
+
+#~ msgid "Bonaire, Sint Eustatius and Saba"
+#~ msgstr "보네르"
+
+#~ msgid "Boolean"
+#~ msgstr "논리 값"
+
+#~ msgid "Botswana"
+#~ msgstr "보츠와나"
+
+#~ msgid "Bottom Margin (mm)"
+#~ msgstr "하단 여백 (mm)"
+
+#~ msgid "Bouvet Island"
+#~ msgstr "부베 섬"
+
+#~ msgid "Brazil"
+#~ msgstr "브라질"
+
+#~ msgid "Brazilian - Accounting"
+#~ msgstr "브라질 - 회계"
+
+#~ msgid "British Indian Ocean Territory"
+#~ msgstr "영국령 인도양 식민지"
+
+#~ msgid "Brunei Darussalam"
+#~ msgstr "브루나이"
+
+#~ msgid "Buckaroo Payment Acquirer"
+#~ msgstr "Buckaroo 결제 매입사"
+
+#~ msgid "Budget Management"
+#~ msgstr "예산 관리"
+
+#~ msgid "Bulgaria"
+#~ msgstr "불가리아"
+
+#~ msgid "Burkina Faso"
+#~ msgstr "부르키나 파소"
+
+#~ msgid "Burundi"
+#~ msgstr "부룬디"
+
+#~ msgid "C5E 24  163 x 229 mm"
+#~ msgstr "C5E 24  163 x 229 mm"
+
+#~ msgid "CRM"
+#~ msgstr "CRM"
+
+#~ msgid "CRM Gamification"
+#~ msgstr "CRM 게임화"
+
+#~ msgid "CSV File"
+#~ msgstr "CSV 파일"
+
+#~ msgid ""
+#~ "CSV format: you may edit it directly with your favorite spreadsheet "
+#~ "software,\n"
+#~ "                                the rightmost column (value) contains the "
+#~ "translations"
+#~ msgstr ""
+#~ "CSV 형식 : 귀하가 좋아하는 스프레드쉬트 프로그램으로 직접 편집할 수 있습니"
+#~ "다.\n"
+#~ "                                맨 오른쪽 열(값)에 번역을 포함합니다."
+
+#~ msgid "Calendar"
+#~ msgstr "달력"
+
+#~ msgid "Cameroon"
+#~ msgstr "카메룬"
+
+#~ msgid "Canada"
+#~ msgstr "캐나다"
+
+#~ msgid "Canada - Accounting"
+#~ msgstr "캐나다 - 회계"
+
+#~ msgid "Cancel"
+#~ msgstr "취소"
+
+#~ msgid "Cancel Install"
+#~ msgstr "설치 취소"
+
+#~ msgid "Cancel Journal Entries"
+#~ msgstr "분개 기입 항목 취소"
+
+#~ msgid "Cancel Uninstall"
+#~ msgstr "제거 취소"
+
+#~ msgid "Cancel Upgrade"
+#~ msgstr "업그레이드 취소"
+
+#~ msgid "Cape Verde"
+#~ msgstr "카보베르데"
+
+#~ msgid "Cascade"
+#~ msgstr "계단식"
+
+#~ msgid "Category"
+#~ msgstr "분류"
+
+#~ msgid "Cayman Islands"
+#~ msgstr "케이맨 제도"
+
+#~ msgid "Central African Republic"
+#~ msgstr "중앙 아프리카 공화국"
+
+#~ msgid "Chad"
+#~ msgstr "차드"
+
+#~ msgid "Change My Preferences"
+#~ msgstr "내 기본 설정 변경"
+
+#~ msgid "Change Password"
+#~ msgstr "비밀번호 변경"
+
+#~ msgid "Change Password Wizard"
+#~ msgstr "비밀번호 변경 마법사"
+
+#~ msgid "Change password"
+#~ msgstr "비밀번호 변경"
+
+#~ msgid "Char"
+#~ msgstr "채팅"
+
+#~ msgid "Check if the contact is a company, otherwise it is a person"
+#~ msgstr ""
+#~ "연락처가 업체인 경우 확인란을 선택합니다. 선택하지 않으면 사람입니다."
+
+#~ msgid "Check this box if this contact is an Employee."
+#~ msgstr "직원 연락처인 경우 확인란을 선택하십시오."
+
+#~ msgid "Child Actions"
+#~ msgstr "하위 조치"
+
+#~ msgid "Child Applications"
+#~ msgstr "하위 응용 프로그램"
+
+#~ msgid "Child Companies"
+#~ msgstr "자회사"
+
+#~ msgid "Child Field"
+#~ msgstr "하위 필드"
+
+#~ msgid "Child IDs"
+#~ msgstr "하위 ID"
+
+#~ msgid ""
+#~ "Child server actions that will be executed. Note that the last return "
+#~ "returned action value will be used as global return value."
+#~ msgstr ""
+#~ "보조 서버 작업이 실행됩니다. 주의 : 전역 반환 값으로 사용할 반환된 작업 값"
+#~ "을 마지막에 반환합니다."
+
+#~ msgid "Chile"
+#~ msgstr "칠레"
+
+#~ msgid "China"
+#~ msgstr "중국"
+
+#~ msgid ""
+#~ "Choose the connection encryption scheme:\n"
+#~ "- None: SMTP sessions are done in cleartext.\n"
+#~ "- TLS (STARTTLS): TLS encryption is requested at start of SMTP session "
+#~ "(Recommended)\n"
+#~ "- SSL/TLS: SMTP sessions are encrypted with SSL/TLS through a dedicated "
+#~ "port (default: 465)"
+#~ msgstr ""
+#~ "연결 암호화 방식을 선택하십시오 :\n"
+#~ "- 없음 : SMTP 세션을 일반 텍스트로 진행합니다.\n"
+#~ "- TLS (STARTTLS) : SMTP 세션이 시작될 때 TLS로 암호화합니다(권장).\n"
+#~ "- SSL/TLS : SMTP 세션이 전용 포트(기본 : 465)를 통해 SSL/TLS로 암호화됩니"
+#~ "다."
+
+#~ msgid "Christmas Island"
+#~ msgstr "크리스마스 섬"
+
+#~ msgid "City"
+#~ msgstr "도시"
+
+#~ msgid "Client"
+#~ msgstr "클라이언트"
+
+#~ msgid "Client Action"
+#~ msgstr "클라이언트 동작"
+
+#~ msgid "Client action tag"
+#~ msgstr "클라이언트 동작 태그"
+
+#~ msgid "Close"
+#~ msgstr "마감"
+
+#~ msgid "Cocos (Keeling) Islands"
+#~ msgstr "코코스 (킬링) 제도"
+
+#~ msgid "Code"
+#~ msgstr "코드"
+
+#~ msgid "Collaborative Pads"
+#~ msgstr "협업 패드"
+
+#~ msgid "Colombia"
+#~ msgstr "콜롬비아"
+
+#~ msgid "Colombian - Accounting"
+#~ msgstr "콜롬비아-회계"
+
+#~ msgid "Colombian Accounting and Tax Preconfiguration"
+#~ msgstr "콜롬비아 회계 및 세무 사전설정"
+
+#~ msgid "Color Index"
+#~ msgstr "색상표"
+
+#~ msgid "Comm10E 25  105 x 241 mm, U.S. Common 10 Envelope"
+#~ msgstr "Comm10E 25  105 x 241 mm, 미국 일반 10 봉투"
+
+#~ msgid ""
+#~ "Comma-separated list of allowed view modes, such as 'form', 'tree', "
+#~ "'calendar', etc. (Default: tree,form)"
+#~ msgstr ""
+#~ "'양식', '트리', '달력' 등과 같은 허용된 보기 방법의 쉼표로 구분된 목록 (기"
+#~ "본: 트리,양식)"
+
+#~ msgid "Comments"
+#~ msgstr "의견"
+
+#~ msgid "Commercial Entity"
+#~ msgstr "상업 항목"
+
+#~ msgid "Communication"
+#~ msgstr "커뮤니케이션"
+
+#~ msgid "Comoros"
+#~ msgstr "코모로"
+
+#~ msgid "Companies"
+#~ msgstr "회사들"
+
+#~ msgid "Company Data"
+#~ msgstr "회사 데이터"
+
+#~ msgid "Company Name"
+#~ msgstr "회사 이름"
+
+#~ msgid "Company Properties"
+#~ msgstr "회사 속성"
+
+#~ msgid "Company Registry"
+#~ msgstr "사업자번호"
+
+#~ msgid "Company Tagline"
+#~ msgstr "회사 슬로건"
+
+#~ msgid "Complete Address"
+#~ msgstr "전체 주소"
+
+#~ msgid "Complete ID"
+#~ msgstr "전체 ID"
+
+#~ msgid "Complete Name"
+#~ msgstr "전체 명칭"
+
+#~ msgid "Compute"
+#~ msgstr "계산"
+
+#~ msgid "Condition"
+#~ msgstr "조건"
+
+#~ msgid "Config Wizard Steps"
+#~ msgstr "구성 마법사 단계"
+
+#~ msgid "Configuration"
+#~ msgstr "구성"
+
+#~ msgid "Configuration Installer"
+#~ msgstr "설치 환경 설정"
+
+#~ msgid "Configuration Wizards"
+#~ msgstr "마법사 환경 설정"
+
+#~ msgid "Confirm"
+#~ msgstr "확인"
+
+#~ msgid "Congo"
+#~ msgstr "콩고"
+
+#~ msgid "Connect the Web Client to Hardware Peripherals"
+#~ msgstr "하드웨어 주변 기기에 웹 클라이언트 연결"
+
+#~ msgid "Connection Information"
+#~ msgstr "연결 정보"
+
+#~ msgid "Constraint"
+#~ msgstr "제약 조건"
+
+#~ msgid "Constraint Type"
+#~ msgstr "제약 조건 유형"
+
+#~ msgid "Constraints with the same name are unique per module."
+#~ msgstr "모듈별로 제약 조건의 이름은 유일해야 합니다."
+
+#~ msgid "Contact"
+#~ msgstr "연락처"
+
+#~ msgid "Contact Creation"
+#~ msgstr "문의 생성"
+
+#~ msgid "Contact Form"
+#~ msgstr "문의 양식"
+
+#~ msgid "Contact Name"
+#~ msgstr "담당자 이름"
+
+#~ msgid "Contact Titles"
+#~ msgstr "문의 제목"
+
+#~ msgid "Contacts"
+#~ msgstr "연락처"
+
+#~ msgid "Context"
+#~ msgstr "문맥"
+
+#~ msgid "Context Value"
+#~ msgstr "문맥 값"
+
+#~ msgid ""
+#~ "Context dictionary as Python expression, empty by default (Default: {})"
+#~ msgstr "파이썬 문법의 문맥 사전, 기본적으로 비어 있음 (Default:{})"
+
+#~ msgid "Contracts"
+#~ msgstr "계약"
+
+#~ msgid "Contributors"
+#~ msgstr "도움을 주신 분들"
+
+#~ msgid "Cook Islands"
+#~ msgstr "쿡 제도"
+
+#~ msgid "Costa Rica"
+#~ msgstr "코스타리카"
+
+#~ msgid "Costa Rica - Accounting"
+#~ msgstr "코스타리카 - 회계"
+
+#~ msgid "Countries"
+#~ msgstr "국가"
+
+#~ msgid "Country"
+#~ msgstr "국가"
+
+#~ msgid "Country Code"
+#~ msgstr "국가 코드"
+
+#~ msgid "Country Group"
+#~ msgstr "국가 그룹"
+
+#~ msgid "Country Groups"
+#~ msgstr "국가 그룹"
+
+#~ msgid "Country Name"
+#~ msgstr "국가명"
+
+#~ msgid "Country state"
+#~ msgstr "국가 상태"
+
+#~ msgid "Create Access"
+#~ msgstr "접근 생성"
+
+#~ msgid "Create Access Right"
+#~ msgstr "접근 권한 생성"
+
+#~ msgid "Create Date"
+#~ msgstr "작성일"
+
+#~ msgid "Create Menu"
+#~ msgstr "메뉴 작성"
+
+#~ msgid "Create _Menu"
+#~ msgstr "_Menu 작성"
+
+#~ msgid "Create a Menu"
+#~ msgstr "메뉴 작성"
+
+#~ msgid ""
+#~ "Create and manage the companies that will be managed by Odoo from here. "
+#~ "Shops or subsidiaries can be created and maintained from here."
+#~ msgstr ""
+#~ "회사를 만들고 관리하는 것은 여기에서 Odoo에 의해 관리됩니다. 상점 또는 자"
+#~ "회사를 생성하고 여기에서 유지 관리할 수 있습니다."
+
+#~ msgid ""
+#~ "Create and manage users that will connect to the system. Users can be "
+#~ "deactivated should there be a period of time during which they will/"
+#~ "should not connect to the system. You can assign them groups in order to "
+#~ "give them specific access to the applications they need to use in the "
+#~ "system."
+#~ msgstr ""
+#~ "시스템에 연결될 사용자를 생성하고 관리합니다. 사용자는 시스템에 연결되었거"
+#~ "나 연결되지 않은 기간 동안 비활성화될 수 있습니다. 사용자가 시스템을 사용 "
+#~ "시 필요한 응용 프로그램에 대해 특정 접근 권한을 부여하도록 그룹을 지정할 "
+#~ "수 있습니다."
+
+#~ msgid "Created Menus"
+#~ msgstr "생성된 메뉴"
+
+#~ msgid "Created Views"
+#~ msgstr "생성된 화면"
+
+#~ msgid "Created by"
+#~ msgstr "작성자"
+
+#~ msgid "Created on"
+#~ msgstr "작성일"
+
+#~ msgid "Creation"
+#~ msgstr "생성"
+
+#~ msgid "Creation Date"
+#~ msgstr "작성 날짜"
+
+#~ msgid "Credit Limit"
+#~ msgstr "신용 한도"
+
+#~ msgid "Croatia"
+#~ msgstr "크로아티아"
+
+#~ msgid "Cuba"
+#~ msgstr "쿠바"
+
+#~ msgid "Curaçao"
+#~ msgstr "큐라"
+
+#~ msgid "Currencies"
+#~ msgstr "통화"
+
+#~ msgid "Currency Code (ISO 4217)"
+#~ msgstr "통화 코드 (ISO 4217)"
+
+#~ msgid "Currency Rate"
+#~ msgstr "환율"
+
+#~ msgid "Currency sign, to be used when printing amounts."
+#~ msgstr "통화 표기, 금액 인쇄 시 사용됨."
+
+#~ msgid "Current Line"
+#~ msgstr "통화 명세"
+
+#~ msgid "Current Rate"
+#~ msgstr "현재 비율"
+
+#~ msgid "Current Window"
+#~ msgstr "현재 창"
+
+#~ msgid "Custom"
+#~ msgstr "맞춤"
+
+#~ msgid "Custom Field"
+#~ msgstr "사용자 지정 필드"
+
+#~ msgid "Custom Object"
+#~ msgstr "사용자 정의 객체"
+
+#~ msgid "Custom Shortcuts"
+#~ msgstr "사용자 정의 단축키"
+
+#~ msgid "Customer References"
+#~ msgstr "고객 참조"
+
+#~ msgid "Customers"
+#~ msgstr "고객"
+
+#~ msgid "Customized Views"
+#~ msgstr "사용자 지정 화면"
+
+#~ msgid ""
+#~ "Customized views are used when users reorganize the content of their "
+#~ "dashboard views (via web client)"
+#~ msgstr ""
+#~ "사용자 지정 화면은 사용자가 (웹 클라이언트를 통해) 대시보드 화면의 내용을 "
+#~ "재정리할 때 사용됩니다."
+
+#~ msgid "Cyprus"
+#~ msgstr "키프로스"
+
+#~ msgid "Czech Republic"
+#~ msgstr "체코 공화국"
+
+#~ msgid "DLE 26 110 x 220 mm"
+#~ msgstr "DLE 26 110 x 220 mm"
+
+#~ msgid "Dashboards"
+#~ msgstr "대시보드"
+
+#~ msgid "Data for xml conversion tests"
+#~ msgstr "Xml 변환 시험에 대한 데이터"
+
+#~ msgid "Database"
+#~ msgstr "데이터베이스"
+
+#~ msgid "Database Data"
+#~ msgstr "데이터베이스 데이터"
+
+#~ msgid ""
+#~ "Database ID of record to open in form view, when ``view_mode`` is set to "
+#~ "'form' only"
+#~ msgstr ""
+#~ "``view_mode``를 'form'으로 설정했을 때만 레코드의 데이타베이스 ID를 양식 "
+#~ "화면으로 엽니다."
+
+#~ msgid "Database Name"
+#~ msgstr "데이터베이스 이름"
+
+#~ msgid "Database Structure"
+#~ msgstr "데이터베이스 구조"
+
+#~ msgid "Date Format"
+#~ msgstr "날짜 형식"
+
+#~ msgid "DateTime"
+#~ msgstr "날짜와 시간"
+
+#~ msgid "Days"
+#~ msgstr "일"
+
+#~ msgid "Debugging"
+#~ msgstr "디버깅"
+
+#~ msgid "Decimal Precision Configuration"
+#~ msgstr "소수점 정밀도 구성"
+
+#~ msgid "Decimal Separator"
+#~ msgstr "소수 구분 기호"
+
+#~ msgid "Deduplicate Contacts"
+#~ msgstr "연락처 사본생성"
+
+#~ msgid "Deduplicate the other Contacts"
+#~ msgstr "다른 연락처 사본생성"
+
+#~ msgid "Default Theme"
+#~ msgstr "기본 테마"
+
+#~ msgid "Default Values"
+#~ msgstr "기본 값"
+
+#~ msgid "Default limit for the list view"
+#~ msgstr "목록 화면의 기본 제한"
+
+#~ msgid "Default paper format ?"
+#~ msgstr "기본 용지 형식?"
+
+#~ msgid "Deferred Revenues"
+#~ msgstr "이연 수익"
+
+#~ msgid "Defined Reports"
+#~ msgstr "정의된 보고서"
+
+#~ msgid "Definition"
+#~ msgstr "정의"
+
+#~ msgid "Delete Access"
+#~ msgstr "접근 삭제"
+
+#~ msgid "Delete Access Right"
+#~ msgstr "접근 권한 삭제"
+
+#~ msgid "Delivery"
+#~ msgstr "배송"
+
+#~ msgid "Delivery Costs"
+#~ msgstr "배송 비용"
+
+#~ msgid "Demo Data"
+#~ msgstr "시연 데이터"
+
+#~ msgid "Denmark"
+#~ msgstr "덴마크"
+
+#~ msgid "Dependencies"
+#~ msgstr "의존성"
+
+#~ msgid "Dependency"
+#~ msgstr "의존성"
+
+#~ msgid "Description"
+#~ msgstr "내용"
+
+#~ msgid "Destination Contact"
+#~ msgstr "대상 연락처"
+
+#~ msgid "Diagram"
+#~ msgstr "도표"
+
+#~ msgid "Digital Products"
+#~ msgstr "디지털 제품"
+
+#~ msgid "Discard"
+#~ msgstr "작성취소"
+
+#~ msgid "Discuss"
+#~ msgstr "의논/토의"
+
+#~ msgid "Display"
+#~ msgstr "표시"
+
+#~ msgid "Document"
+#~ msgstr "문서"
+
+#~ msgid "Document model"
+#~ msgstr "문서 모델"
+
+#~ msgid "Documents"
+#~ msgstr "문서"
+
+#~ msgid "Domain"
+#~ msgstr "도메인"
+
+#~ msgid "Done"
+#~ msgstr "완료"
+
+#~ msgid "Drop Shipping"
+#~ msgstr "배송"
+
+#~ msgid "Email Address"
+#~ msgstr "이메일 주소"
+
+#~ msgid "Email Marketing"
+#~ msgstr "이메일 마케팅"
+
+#~ msgid "Employee"
+#~ msgstr "임직원"
+
+#~ msgid "Employees"
+#~ msgstr "임직원"
+
+#~ msgid "Error"
+#~ msgstr "오류"
+
+#~ msgid "Events"
+#~ msgstr "일정"
+
+#~ msgid "Examples"
+#~ msgstr "예시"
+
+#~ msgid "Exclude contacts having"
+#~ msgstr "다음과 같은 연락처 제외"
+
+#~ msgid "Executive 4   7.5 x 10 inches, 190.5 x 254 mm"
+#~ msgstr "익스큐티브 4   7.5 x 10 inches, 190.5 x 254 mm"
+
+#~ msgid "Expenses"
+#~ msgstr "경비"
+
+#~ msgid "Explicitly associated reports"
+#~ msgstr "명시적으로 관련된 보고서"
+
+#~ msgid "Export"
+#~ msgstr "내보내기"
+
+#~ msgid "External ID"
+#~ msgstr "외부 ID"
+
+#~ msgid "Fax"
+#~ msgstr "팩스"
+
+#~ msgid "Field"
+#~ msgstr "필드"
+
+#~ msgid "Field Name"
+#~ msgstr "필드명"
+
+#~ msgid "Field Type"
+#~ msgstr "필드 유형"
+
+#~ msgid "Fields"
+#~ msgstr "필드"
+
+#~ msgid "File Name"
+#~ msgstr "파일명"
+
+#~ msgid "Filename"
+#~ msgstr "파일명"
+
+#~ msgid "Filter"
+#~ msgstr "필터"
+
+#~ msgid "Filters"
+#~ msgstr "필터"
+
+#~ msgid "Finished"
+#~ msgstr "완료됨"
+
+#~ msgid "Fleet"
+#~ msgstr "차량"
+
+#~ msgid "Float"
+#~ msgstr "부동 소수점"
+
+#~ msgid "Folio 27  210 x 330 mm"
+#~ msgstr "2절판 27  210 x 330 mm"
+
+#~ msgid "Footer text displayed at the bottom of all reports."
+#~ msgstr "모든 보고서 하단에 표시되는 꼬리말 문구."
+
+#~ msgid "Forecast"
+#~ msgstr "Forcast"
+
+#~ msgid "Form Builder"
+#~ msgstr "폼 빌더"
+
+#~ msgid "Forum"
+#~ msgstr "게시판"
+
+#~ msgid "Friday"
+#~ msgstr "금요일"
+
+#~ msgid "From"
+#~ msgstr "보낸 사람"
+
+#~ msgid "Full Access"
+#~ msgstr "전체 접근"
+
+#~ msgid "Full Name"
+#~ msgstr "전체 이름"
+
+#~ msgid "Full Screen"
+#~ msgstr "전체 화면"
+
+#~ msgid "Function"
+#~ msgstr "직능"
+
+#~ msgid "Gamification"
+#~ msgstr "게임화"
+
+#~ msgid "Gantt"
+#~ msgstr "간트"
+
+#~ msgid "General"
+#~ msgstr "일반"
+
+#~ msgid "General Information"
+#~ msgstr "일반 정보"
+
+#~ msgid "General Settings"
+#~ msgstr "일반 설정"
+
+#~ msgid "Global"
+#~ msgstr "글로벌"
+
+#~ msgid "Google Calendar"
+#~ msgstr "구글 캘린더"
+
+#~ msgid "Graph"
+#~ msgstr "그래프"
+
+#~ msgid "Grid"
+#~ msgstr "그리드"
+
+#~ msgid "Group"
+#~ msgstr "그룹"
+
+#~ msgid "Group By"
+#~ msgstr "그룹별"
+
+#~ msgid "Group of Contacts"
+#~ msgstr "연락처 그룹"
+
+#~ msgid "Header spacing"
+#~ msgstr "머리말 여백"
+
+#~ msgid "Help"
+#~ msgstr "도움말"
+
+#~ msgid "History"
+#~ msgstr "기록"
+
+#~ msgid "Hours"
+#~ msgstr "시간"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "Icon"
+#~ msgstr "아이콘"
+
+#~ msgid "Ids"
+#~ msgstr "Ids"
+
+#~ msgid "Image"
+#~ msgstr "이미지"
+
+#~ msgid "Import / Export"
+#~ msgstr "가져오기 / 내보내기"
+
+#~ msgid "In-App Purchases"
+#~ msgstr "인앱구입"
+
+#~ msgid "Inactive"
+#~ msgstr "비활성"
+
+#~ msgid "Information"
+#~ msgstr "정보"
+
+#~ msgid "Inherited View"
+#~ msgstr "상속된 화면"
+
+#~ msgid "Inherited models"
+#~ msgstr "상속된 모델"
+
+#~ msgid "Install Apps"
+#~ msgstr "앱 설치"
+
+#~ msgid "Install Language"
+#~ msgstr "언어 설치"
+
+#~ msgid "Internal Notes"
+#~ msgstr "내부 메모"
+
+#~ msgid "Internal Reference"
+#~ msgstr "내부 참조"
+
+#~ msgid "Interval Unit"
+#~ msgstr "간격 단위"
+
+#~ msgid "Inventory"
+#~ msgstr "재고"
+
+#~ msgid "Invoice"
+#~ msgstr "청구서"
+
+#~ msgid "Invoicing"
+#~ msgstr "청구서 발행"
+
+#~ msgid "Is Company"
+#~ msgstr "회사입니까?"
+
+#~ msgid "Job Position"
+#~ msgstr "직책"
+
+#~ msgid "Journal Items associated to the contact"
+#~ msgstr "연락처와 관련된 분개 항목"
+
+#~ msgid "Kanban"
+#~ msgstr "칸반"
+
+#~ msgid "Key"
+#~ msgstr "키"
+
+#~ msgid "Landed Costs"
+#~ msgstr "하차 비용"
+
+#~ msgid "Landscape"
+#~ msgstr "경치"
+
+#~ msgid "Language"
+#~ msgstr "언어"
+
+#~ msgid "Languages"
+#~ msgstr "언어"
+
+#~ msgid "Last Modified on"
+#~ msgstr "최근 수정"
+
+#~ msgid "Last Updated by"
+#~ msgstr "최근 갱신한 사람"
+
+#~ msgid "Last Updated on"
+#~ msgstr "최근 갱신 날짜"
+
+#~ msgid "Launch"
+#~ msgstr "시작"
+
+#~ msgid "Leaves"
+#~ msgstr "휴가"
+
+#~ msgid "Ledger  28  431.8 x 279.4 mm"
+#~ msgstr "레저  28  431.8 x 279.4 mm"
+
+#~ msgid "Left Margin (mm)"
+#~ msgstr "왼쪽 여백 (mm)"
+
+#~ msgid "Legal    3   8.5 x 14 inches, 215.9 x 355.6 mm"
+#~ msgstr "리걸    3   8.5 x 14 inches, 215.9 x 355.6 mm"
+
+#~ msgid "Letter 2 8.5 x 11 inches, 215.9 x 279.4 mm"
+#~ msgstr "레터 2 8.5 x 11 inches, 215.9 x 279.4 mm"
+
+#~ msgid "Level"
+#~ msgstr "수준"
+
+#~ msgid "Lines"
+#~ msgstr "라인"
+
+#~ msgid "Link Tracker"
+#~ msgstr "링크 트랙커"
+
+#~ msgid "Live Chat"
+#~ msgstr "실시간 채팅"
+
+#~ msgid "Livechat Support"
+#~ msgstr "실시간 채팅 지원"
+
+#~ msgid "Load"
+#~ msgstr "불러오기"
+
+#~ msgid "Load a Translation"
+#~ msgstr "번역 불러오기"
+
+#~ msgid "Localization"
+#~ msgstr "현지화"
+
+#~ msgid "Log"
+#~ msgstr "기록"
+
+#~ msgid "Login"
+#~ msgstr "로그인"
+
+#~ msgid "Logo"
+#~ msgstr "로고"
+
+#~ msgid "Lunch"
+#~ msgstr "점심"
+
+#~ msgid "Maintenance"
+#~ msgstr "유지보수"
+
+#~ msgid "Manufacturing"
+#~ msgstr "제조"
+
+#~ msgid "Marketing"
+#~ msgstr "마케팅"
+
+#~ msgid "Marketing Automation"
+#~ msgstr "마케팅 자동화"
+
+#~ msgid "Maximum of Group of Contacts"
+#~ msgstr "연락처 그룹의 최대 수"
+
+#~ msgid "Medium-sized image"
+#~ msgstr "중간 크기 이미지"
+
+#~ msgid ""
+#~ "Medium-sized image of this contact. It is automatically resized as a "
+#~ "128x128px image, with aspect ratio preserved. Use this field in form "
+#~ "views or some kanban views."
+#~ msgstr ""
+#~ "연락처를 나타내는 중간 크기 사진입니다. 이미지의 가로 세로 비율을 유지한 "
+#~ "채 자동으로 128x128픽셀 이미지로 크기가 조정됩니다. 양식 보기 또는 다른 칸"
+#~ "반 보기에 이 필드를 이용합니다."
+
+#~ msgid "Members"
+#~ msgstr "참여자"
+
+#~ msgid "Menu"
+#~ msgstr "메뉴"
+
+#~ msgid "Merge Automatically"
+#~ msgstr "자동 병합"
+
+#~ msgid "Merge Automatically all process"
+#~ msgstr "자동으로 모든 과정 병합"
+
+#~ msgid "Merge Contacts"
+#~ msgstr "연락처 병합"
+
+#~ msgid "Merge the following contacts"
+#~ msgstr "다음 연락처를 병합합니다"
+
+#~ msgid "Merge with Manual Check"
+#~ msgstr "수동 검사로 병합"
+
+#~ msgid "Message"
+#~ msgstr "메세지"
+
+#~ msgid "MinID"
+#~ msgstr "MinID"
+
+#~ msgid "Minutes"
+#~ msgstr "분"
+
+#~ msgid "Misc"
+#~ msgstr "기타"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "기타"
+
+#~ msgid "Mobile:"
+#~ msgstr "휴대전화 :"
+
+#~ msgid "Model"
+#~ msgstr "모델"
+
+#~ msgid "Model Name"
+#~ msgstr "모델명"
+
+#~ msgid "Models"
+#~ msgstr "모델"
+
+#~ msgid "Module"
+#~ msgstr "모듈"
+
+#~ msgid "Modules"
+#~ msgstr "모듈"
+
+#~ msgid "Monday"
+#~ msgstr "월요일"
+
+#~ msgid "Months"
+#~ msgstr "월"
+
+#~ msgid "Multi Currencies"
+#~ msgstr "다중 통화"
+
+#~ msgid "Name:"
+#~ msgstr "이름:"
+
+#~ msgid "New Password"
+#~ msgstr "새 비밀번호"
+
+#~ msgid "New Window"
+#~ msgstr "새 창"
+
+#~ msgid "Next Execution Date"
+#~ msgstr "다음 실행일"
+
+#~ msgid "Next Number"
+#~ msgstr "다음 번호"
+
+#~ msgid "None"
+#~ msgstr "없음"
+
+#~ msgid "Notes"
+#~ msgstr "메모"
+
+#~ msgid "Object"
+#~ msgstr "제목"
+
+#~ msgid "Object Name"
+#~ msgstr "객체명"
+
+#~ msgid "Object:"
+#~ msgstr "오브젝트 :"
+
+#~ msgid "Ok"
+#~ msgstr "OK"
+
+#~ msgid "Option"
+#~ msgstr "옵션"
+
+#~ msgid "Options"
+#~ msgstr "옵션"
+
+#~ msgid "Orientation"
+#~ msgstr "방향"
+
+#~ msgid "Outgoing Mail Server"
+#~ msgstr "보내는 메일 서버"
+
+#~ msgid "Output DPI"
+#~ msgstr "출력 DPI"
+
+#~ msgid "Owner"
+#~ msgstr "담당자(파트너)"
+
+#~ msgid "PDF"
+#~ msgstr "PDF"
+
+#~ msgid "Page height (mm)"
+#~ msgstr "페이지 높이 (mm)"
+
+#~ msgid "Page width (mm)"
+#~ msgstr "페이지 폭 (mm)"
+
+#~ msgid "Paper Format"
+#~ msgstr "용지 형식"
+
+#~ msgid "Paper Format General Configuration"
+#~ msgstr "용지 형식 일반 설정"
+
+#~ msgid "Paper format"
+#~ msgstr "용지 형식"
+
+#~ msgid "Paper format configuration"
+#~ msgstr "용지 형식 구성"
+
+#~ msgid "Paper size"
+#~ msgstr "용지 크기"
+
+#~ msgid "Parameters"
+#~ msgstr "매개 변수"
+
+#~ msgid "Parent Company"
+#~ msgstr "모(母)회사"
+
+#~ msgid "Parent Menu"
+#~ msgstr "상위 메뉴"
+
+#~ msgid "Partner"
+#~ msgstr "협력사"
+
+#~ msgid "Partner Tags"
+#~ msgstr "파트너 태그"
+
+#~ msgid "Partners"
+#~ msgstr "협력사"
+
+#~ msgid "Password"
+#~ msgstr "비밀번호"
+
+#~ msgid "Path"
+#~ msgstr "경로"
+
+#~ msgid "Payment Acquirer"
+#~ msgstr "지불 취득자"
+
+#~ msgid "Payment Follow-up Management"
+#~ msgstr "지불 후속 조치 관리"
+
+#~ msgid "Payroll"
+#~ msgstr "급여"
+
+#~ msgid "Phone:"
+#~ msgstr "전화 :"
+
+#~ msgid "Pivot"
+#~ msgstr "피벗"
+
+#~ msgid "Point of Sale"
+#~ msgstr "점포판매시스템"
+
+#~ msgid "Portal"
+#~ msgstr "포털"
+
+#~ msgid "Portrait"
+#~ msgstr "세로"
+
+#~ msgid "Preferences"
+#~ msgstr "환경 설정"
+
+#~ msgid "Priority"
+#~ msgstr "우선순위"
+
+#~ msgid "Product Email Template"
+#~ msgstr "제품 이메일 템플릿"
+
+#~ msgid "Project"
+#~ msgstr "프로젝트"
+
+#~ msgid "Properties"
+#~ msgstr "부동산"
+
+#~ msgid "Public"
+#~ msgstr "공개"
+
+#~ msgid "Purchase"
+#~ msgstr "매입"
+
+#~ msgid "Purchase Agreements"
+#~ msgstr "구매 동의"
+
+#~ msgid "Purchases"
+#~ msgstr "매입"
+
+#~ msgid "Python Code"
+#~ msgstr "파이썬 코드"
+
+#~ msgid "QWeb"
+#~ msgstr "QWeb"
+
+#~ msgid "Record ID"
+#~ msgstr "기록 ID"
+
+#~ msgid "Recruitment"
+#~ msgstr "채용"
+
+#~ msgid "Reference"
+#~ msgstr "참조"
+
+#~ msgid "Related Partner"
+#~ msgstr "관련된 파트너"
+
+#~ msgid "Relation field"
+#~ msgstr "관련 필드"
+
+#~ msgid "Remove"
+#~ msgstr "제거"
+
+#~ msgid "Report"
+#~ msgstr "보고서"
+
+#~ msgid "Report Type"
+#~ msgstr "보고서 유형"
+
+#~ msgid "Reporting"
+#~ msgstr "보고"
+
+#~ msgid "Reports"
+#~ msgstr "보고서"
+
+#~ msgid "Required"
+#~ msgstr "요구됨"
+
+#~ msgid "Resellers"
+#~ msgstr "대리점"
+
+#~ msgid "Resource"
+#~ msgstr "자원"
+
+#~ msgid "Resource ID"
+#~ msgstr "리소스 ID"
+
+#~ msgid "Resource Name"
+#~ msgstr "리소스명"
+
+#~ msgid "Restaurant"
+#~ msgstr "레스토랑"
+
+#~ msgid "Right Margin (mm)"
+#~ msgstr "오른쪽 여백 (mm)"
+
+#~ msgid "Rules"
+#~ msgstr "규칙"
+
+#~ msgid "Run"
+#~ msgstr "동작"
+
+#~ msgid "SMTP Server"
+#~ msgstr "SMTP 서버"
+
+#~ msgid "SSL/TLS"
+#~ msgstr "SSL/TLS"
+
+#~ msgid "Sales"
+#~ msgstr "매출"
+
+#~ msgid "Sales Teams"
+#~ msgstr "영업팀"
+
+#~ msgid "Salesperson"
+#~ msgstr "영업사원"
+
+#~ msgid "Saturday"
+#~ msgstr "토요일"
+
+#~ msgid "Save"
+#~ msgstr "저장"
+
+#~ msgid "Search"
+#~ msgstr "검색"
+
+#~ msgid "Search duplicates based on duplicated data in"
+#~ msgstr "중복 된 데이터를 기반으로 중복 검색"
+
+#~ msgid "Search..."
+#~ msgstr "검색..."
+
+#~ msgid "Select Proper Paper size"
+#~ msgstr "적절한 용지 크기를 선택하십시오"
+
+#~ msgid ""
+#~ "Select the list of fields used to search for\n"
+#~ "                            duplicated records. If you select several "
+#~ "fields,\n"
+#~ "                            Odoo will propose you to merge only those "
+#~ "having\n"
+#~ "                            all these fields in common. (not one of the "
+#~ "fields)."
+#~ msgstr ""
+#~ "중복 된 레코드를 검색하는데 사용되는 필드 목록을\n"
+#~ "                            선택하십시오. 여러 필드를 선택하면,\n"
+#~ "                            Odoo는 이 모든 필드가 공통인 필드만\n"
+#~ "                            병합하도록 제안합니다(필드 중 하나가 아님)."
+
+#~ msgid "Selectable"
+#~ msgstr "선택가능한 "
+
+#~ msgid ""
+#~ "Selected contacts will be merged together.\n"
+#~ "                                All documents linked to one of these "
+#~ "contacts\n"
+#~ "                                will be redirected to the destination "
+#~ "contact.\n"
+#~ "                                You can remove contacts from this list to "
+#~ "avoid merging them."
+#~ msgstr ""
+#~ "선택한 연락처가 함께 병합됩니다.\n"
+#~ "                                이 연락처 중 하나에 연결된 모든 문서는\n"
+#~ "                                대상 연락처로 리디렉션됩니다.\n"
+#~ "                                이 목록에서 연락처를 제거하면 병합되지 않"
+#~ "습니다."
+
+#~ msgid ""
+#~ "Selecting the \"Warning\" option will notify user with the message, "
+#~ "Selecting \"Blocking Message\" will throw an exception with the message "
+#~ "and block the flow. The Message has to be written in the next field."
+#~ msgstr ""
+#~ "\"경고\" 옵션을 선택하면 사용자들이 메시지를 받을 수 있습니다. \"메시지 차"
+#~ "단\"을 선택하면, 예외가 발생하고 메시지 흐름이 차단됩니다. 메시지는 다음 "
+#~ "필드에 작성되어야 합니다."
+
+#~ msgid "Sequence"
+#~ msgstr "순차적"
+
+#~ msgid "Server"
+#~ msgstr "서버"
+
+#~ msgid "Server Action"
+#~ msgstr "서버작업"
+
+#~ msgid "Server Actions"
+#~ msgstr "서버 동작"
+
+#~ msgid "Services"
+#~ msgstr "서비스"
+
+#~ msgid "Settings"
+#~ msgstr "설정"
+
+#~ msgid "Signature"
+#~ msgstr "사인"
+
+#~ msgid "Size"
+#~ msgstr "사이즈"
+
+#~ msgid "Skip"
+#~ msgstr "건너뛰기"
+
+#~ msgid "Skip these contacts"
+#~ msgstr "이 연락처 생략"
+
+#~ msgid "Slides"
+#~ msgstr "슬라이드"
+
+#~ msgid "Small-sized image"
+#~ msgstr "작은 이미지"
+
+#~ msgid ""
+#~ "Small-sized image of this contact. It is automatically resized as a "
+#~ "64x64px image, with aspect ratio preserved. Use this field anywhere a "
+#~ "small image is required."
+#~ msgstr ""
+#~ "연락처를 나타내는 작은 이미지입니다. 이미지의 가로 세로 비율을 유지한 채 "
+#~ "자동으로 64x64픽셀 이미지로 크기가 조정됩니다. 어디서나 작은 이미지가 필요"
+#~ "할 때는 이 필드를 이용합니다."
+
+#~ msgid "Standard"
+#~ msgstr "표준"
+
+#~ msgid "State"
+#~ msgstr "상태"
+
+#~ msgid "States"
+#~ msgstr "상태"
+
+#~ msgid "Status"
+#~ msgstr "상태"
+
+#~ msgid "Street"
+#~ msgstr "도로"
+
+#~ msgid "Street 2..."
+#~ msgstr "거리 2..."
+
+#~ msgid "Street..."
+#~ msgstr "도로..."
+
+#~ msgid "Street2"
+#~ msgstr "거리2"
+
+#~ msgid "Subscriptions"
+#~ msgstr "구독"
+
+#~ msgid "Suffix"
+#~ msgstr "접미사"
+
+#~ msgid "Summary"
+#~ msgstr "요약"
+
+#~ msgid "Sunday"
+#~ msgstr "일요일"
+
+#~ msgid "Survey"
+#~ msgstr "설문 조사"
+
+#~ msgid "Surveys"
+#~ msgstr "설문 조사"
+
+#~ msgid "Tabloid 29 279.4 x 431.8 mm"
+#~ msgstr "타블로이드 29 279.4 x 431.8 mm"
+
+#~ msgid "Tag"
+#~ msgstr "태그"
+
+#~ msgid "Tag Name"
+#~ msgstr "태그 이름"
+
+#~ msgid "Tags"
+#~ msgstr "태그"
+
+#~ msgid "Tags..."
+#~ msgstr "태그..."
+
+#~ msgid "Tax ID"
+#~ msgstr "세금등록번호"
+
+#~ msgid "Technical"
+#~ msgstr "기술"
+
+#~ msgid "Template"
+#~ msgstr "템플릿"
+
+#~ msgid "Template Name"
+#~ msgstr "양식명"
+
+#~ msgid "Tests"
+#~ msgstr "테스트"
+
+#~ msgid "Text"
+#~ msgstr "텍스트"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "회사명은 유일해야 합니다 !"
+
+#~ msgid "The company this user is currently working for."
+#~ msgstr "해당 사용자가 현재 근무하는 회사"
+
+#~ msgid ""
+#~ "The requested operation cannot be completed due to security restrictions. "
+#~ "Please contact your system administrator.\n"
+#~ "\n"
+#~ "(Document type: %s, Operation: %s)"
+#~ msgstr ""
+#~ "보안 제한으로 인해 요청한 작업을 완료 할 수 없습니다. 시스템 관리자에게 문"
+#~ "의하십시오.\n"
+#~ "\n"
+#~ "\n"
+#~ "(Document type: %s, Operation: %s)"
+
+#~ msgid "There is no more contacts to merge for this request..."
+#~ msgstr "이 요청에 대해 더 이상 병합 할 연락처가 없습니다 ..."
+
+#~ msgid "Thursday"
+#~ msgstr "목요일"
+
+#~ msgid "Timesheets"
+#~ msgstr "일정표"
+
+#~ msgid "Timezone"
+#~ msgstr "시간대"
+
+#~ msgid "Title"
+#~ msgstr "제목"
+
+#~ msgid "To"
+#~ msgstr "받는 이"
+
+#~ msgid "To Do"
+#~ msgstr "할 일"
+
+#~ msgid "Todo"
+#~ msgstr "할 일 목록"
+
+#~ msgid "Top Margin (mm)"
+#~ msgstr "위쪽 여백 (mm)"
+
+#~ msgid "Translation in Progress"
+#~ msgstr "번역 진행 중"
+
+#~ msgid "Translations"
+#~ msgstr "번역"
+
+#~ msgid "Tree"
+#~ msgstr "트리"
+
+#~ msgid "Tuesday"
+#~ msgstr "화요일"
+
+#~ msgid "Type"
+#~ msgstr "유형"
+
+#~ msgid "Type:"
+#~ msgstr "유형 :"
+
+#~ msgid "URL"
+#~ msgstr "URL"
+
+#~ msgid "Uncategorized"
+#~ msgstr "분류되지 않음"
+
+#~ msgid "Unknown"
+#~ msgstr "알 수 없음"
+
+#~ msgid "Update"
+#~ msgstr "갱신"
+
+#~ msgid "Update Date"
+#~ msgstr "업데이트 날짜"
+
+#~ msgid "Upgrade"
+#~ msgstr "업그레이드"
+
+#~ msgid "Url"
+#~ msgstr "Url"
+
+#~ msgid "Usage"
+#~ msgstr "사용량"
+
+#~ msgid "Used to log into the system"
+#~ msgstr "시스템에 로그인하는 데 사용됩니다"
+
+#~ msgid "User"
+#~ msgstr "사용자"
+
+#~ msgid "User Login"
+#~ msgstr "사용자 로그인"
+
+#~ msgid "Username"
+#~ msgstr "사용자명"
+
+#~ msgid "Value"
+#~ msgstr "가치"
+
+#~ msgid "Vendor"
+#~ msgstr "공급업체"
+
+#~ msgid "Vendors"
+#~ msgstr "공급업체"
+
+#~ msgid "View"
+#~ msgstr "보기"
+
+#~ msgid "Views"
+#~ msgstr "회"
+
+#~ msgid "Warehouse"
+#~ msgstr "창고"
+
+#~ msgid "Website"
+#~ msgstr "웹사이트"
+
+#~ msgid "Wednesday"
+#~ msgstr "수요일"
+
+#~ msgid "Weeks"
+#~ msgstr "주"
+
+#~ msgid "Wizard"
+#~ msgstr "마법사"
+
+#~ msgid "Yodlee"
+#~ msgstr "요들리"
+
+#~ msgid "ZIP"
+#~ msgstr "우편번호"
+
+#~ msgid "Zip"
+#~ msgstr "우편번호"
+
+#~ msgid "_Import"
+#~ msgstr "_가져오기"
+
+#~ msgid "at"
+#~ msgstr "성공확률"
+
+#~ msgid "done"
+#~ msgstr "완료"
+
+#~ msgid "e.g. BE0477472701"
+#~ msgstr "예. BE0477472701"
+
+#~ msgid "e.g. www.odoo.com"
+#~ msgstr "예: www.odoo.com"
+
+#~ msgid "eCommerce"
+#~ msgstr "전자 상거래"
+
+#~ msgid "init"
+#~ msgstr "초기화"
+
+#~ msgid "ir.actions.server"
+#~ msgstr "ir.actions.server"
+
+#~ msgid "n/a"
+#~ msgstr "n/a"
+
+#~ msgid "no"
+#~ msgstr "아니오"
+
+#~ msgid "on"
+#~ msgstr "작성일"
+
+#~ msgid "yes"
+#~ msgstr "예"

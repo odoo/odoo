@@ -1,0 +1,6367 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base
+#
+# Translators:
+# Malik K, 2018
+# Bole <bole@dajmi5.com>, 2018
+# Nemanja Dragovic <nemanjadragovic94@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Boško Stojaković <bluesoft83@gmail.com>, 2018
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2022-04-11 12:53+0200\n"
+"PO-Revision-Date: 2018-08-24 09:14+0000\n"
+"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>, 2018\n"
+"Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
+"Language: bs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: models/decimal_precision.py:57 models/res_currency.py:407
+#, fuzzy, python-format
+msgid "Warning for %s"
+msgstr "Upozorenja"
+
+#: models/decimal_precision.py:58
+#, python-format
+msgid ""
+"The precision has been reduced for %s.\n"
+"Note that existing data WON'T be updated by this change.\n"
+"\n"
+"As decimal precisions impact the whole system, this may cause critical "
+"issues.\n"
+"E.g. reducing the precision could disturb your financial balance.\n"
+"\n"
+"Therefore, changing decimal precisions in a running database is not "
+"recommended."
+msgstr ""
+
+#: models/ir_actions.py:179 models/ir_actions.py:181
+#, python-format
+msgid "Invalid model name %r in action definition."
+msgstr "Nepravilan naziv modela %r u definiciji akcije."
+
+#: models/ir_actions.py:210
+#, python-format
+msgid "The modes in view_mode must not be duplicated: %s"
+msgstr ""
+
+#: models/ir_actions.py:212
+#, python-format
+msgid "No spaces allowed in view_mode: %r"
+msgstr ""
+
+#: models/ir_actions.py:457
+msgid "Recursion found in child server actions"
+msgstr ""
+
+#: models/ir_actions.py:610
+msgid "You don't have enough access rights to run this action."
+msgstr ""
+
+#: models/ir_actions.py:702
+msgid "many2many fields cannot be evaluated by reference"
+msgstr ""
+
+#: models/ir_actions_report.py:497
+#, python-format
+msgid ""
+"Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
+"number of subprocess reached. Message : %s"
+msgstr ""
+
+#: models/ir_actions_report.py:500
+#, python-format
+msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
+msgstr ""
+
+#: models/ir_actions_report.py:745
+msgid "One of the documents you are trying to merge is encrypted"
+msgstr ""
+
+#: models/ir_actions_report.py:770
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still "
+"retrieve those PDFs by selecting each of the affected records individually, "
+"which will avoid merging."
+msgstr ""
+
+#: models/ir_actions_report.py:858
+msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
+msgstr ""
+
+#: models/ir_actions_report.py:865
+#, python-format
+msgid ""
+"The report's template '%s' is wrong, please contact your administrator. \n"
+"\n"
+"Can not separate file to save as attachment because the report's template "
+"does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div "
+"with 'article' classname."
+msgstr ""
+
+#: models/ir_attachment.py:71
+msgid "Only administrators can execute this action."
+msgstr ""
+
+#: models/ir_attachment.py:431 models/ir_attachment.py:442
+msgid "Sorry, you are not allowed to access this document."
+msgstr "Oprostite, nije vam dozvoljen pristup ovom dokumentu."
+
+#: models/ir_attachment.py:476
+msgid "Sorry, you must provide fields to read on attachments"
+msgstr ""
+
+#: models/ir_attachment.py:479
+msgid "Sorry, the syntax 'name:agg(field)' is not available for attachments"
+msgstr ""
+
+#: models/ir_attachment.py:485
+#, fuzzy
+msgid "Sorry, you are not allowed to access these fields on attachments."
+msgstr "Oprostite, nije vam dozvoljen pristup ovom dokumentu."
+
+#: models/ir_cron.py:372
+msgid ""
+"Record cannot be modified right now: This cron task is currently being "
+"executed and may not be modified Please try again in a few minutes"
+msgstr ""
+
+#: models/ir_default.py:70
+#, python-format
+msgid "Invalid field %s.%s"
+msgstr "Nepravilno polje %s.%s"
+
+#: models/ir_default.py:72
+#, python-format
+msgid "Invalid value for %s.%s: %s"
+msgstr "Nepravilna vrijednost za %s.%s: %s"
+
+#: models/ir_fields.py:213
+#, fuzzy, python-format
+msgid "Unknown value '%s' for boolean field '%%(field)s'"
+msgstr ""
+"Nepoznata vrijednost '%s' za polje boolean '%%(field)s', predpostavljajući "
+"'%s'"
+
+#: models/ir_fields.py:215
+msgid "Use '1' for yes and '0' for no"
+msgstr "Koristite '1' za DA i '0' za NE"
+
+#: models/ir_fields.py:225
+#, python-format
+msgid "'%s' does not seem to be an integer for field '%%(field)s'"
+msgstr "%s' čini se nije cijeli broj za polje '%%(field)s'"
+
+#: models/ir_fields.py:236
+#, python-format
+msgid "'%s' does not seem to be a number for field '%%(field)s'"
+msgstr "'%s' izgleda nije broj za polje '%%(field)s'"
+
+#: models/ir_fields.py:256
+#, python-format
+msgid "'%s' does not seem to be a valid date for field '%%(field)s'"
+msgstr "'%s' nije ispravna vrijednost za datumsko polje '%%(field)s'"
+
+#: models/ir_fields.py:258 models/ir_fields.py:290
+#, python-format
+msgid "Use the format '%s'"
+msgstr "Koristi format '%s'"
+
+#: models/ir_fields.py:288
+#, python-format
+msgid "'%s' does not seem to be a valid datetime for field '%%(field)s'"
+msgstr "'%s' nije pravilno datum-vrijeme za polje '%%(field)s'"
+
+#: models/ir_fields.py:332
+#, python-format
+msgid "Value '%s' not found in selection field '%%(field)s'"
+msgstr "Vrijednost '%s' nije pronađena u polju odabira '%%(field)s'"
+
+#: models/ir_fields.py:367
+msgid "See all possible values"
+msgstr "Vidi sve moguće vrijednosti"
+
+#: models/ir_fields.py:376
+msgid "database id"
+msgstr "ID baze podataka"
+
+#: models/ir_fields.py:388
+#, python-format
+msgid "Invalid database id '%s' for the field '%%(field)s'"
+msgstr "Ne pravilan ID baze podataka '%s' za polje '%%(field)s'"
+
+#: models/ir_fields.py:392
+msgid "external id"
+msgstr "vanjski id"
+
+#: models/ir_fields.py:402
+msgid "name"
+msgstr "naziv"
+
+#: models/ir_fields.py:410
+#, fuzzy, python-format
+msgid ""
+"Found multiple matches for value '%s' in field '%%(field)s' (%d matches)"
+msgstr ""
+"Pronađeno je nekoliko odgovarajućih za polje '%%(field)s' (%d odgovarajućih)"
+
+#: models/ir_fields.py:419
+#, python-format
+msgid ""
+"Cannot create new '%s' records from their name alone. Please create those "
+"records manually and try importing again."
+msgstr ""
+
+#: models/ir_fields.py:423
+#, python-format
+msgid "Unknown sub-field '%s'"
+msgstr "Nepoznato pod-polje '%s'"
+
+#: models/ir_fields.py:436
+#, python-format
+msgid ""
+"No matching record found for %(field_type)s '%(value)s' in field "
+"'%%(field)s' and the following error was encountered when we attempted to "
+"create one: %(error_message)s"
+msgstr ""
+
+#: models/ir_fields.py:438
+#, python-format
+msgid ""
+"No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'"
+msgstr ""
+"Nije pronađen odgovarajući zapis za %(field_type)s '%(value)s' u polju "
+"'%%(field)s'"
+
+#: models/ir_fields.py:493
+msgid ""
+"Can not create Many-To-One records indirectly, import the field separately"
+msgstr ""
+"Ne mogu se kreirati Many-To-One zapisi indirektno, uvezite polje odvojeno"
+
+#: models/ir_fields.py:496
+#, python-format
+msgid ""
+"Ambiguous specification for field '%(field)s', only provide one of name, "
+"external id or database id"
+msgstr ""
+"Dvosmislena specifikacija za polje '%(field)s', unesite samo jedno ime, "
+"eksterni id ili id baze podataka"
+
+#: models/ir_filters.py:36 models/res_partner.py:364 models/res_users.py:205
+#: models/res_users.py:632 models/res_users.py:634
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopija)"
+
+#: models/ir_filters.py:105
+#, python-format
+msgid ""
+"There is already a shared filter set as default for %(model)s, delete or "
+"change it before setting a new default"
+msgstr ""
+"Već postoji djeljeni filter postavljen kao zadati za %(model)s, obrišite ili "
+"izmjenite ga prije postavljnja novog zadanog"
+
+#: models/ir_mail_server.py:126
+#, python-format
+msgid "SSL private key is missing for %s."
+msgstr ""
+
+#: models/ir_mail_server.py:128
+#, python-format
+msgid "SSL certificate is missing for %s."
+msgstr ""
+
+#: models/ir_mail_server.py:134
+msgid ""
+"Please configure an email on the current user to simulate sending an email "
+"message via this outgoing server"
+msgstr ""
+
+#: models/ir_mail_server.py:148
+#, python-format
+msgid ""
+"The server refused the sender address (%(email_from)s) with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:153
+#, python-format
+msgid ""
+"The server refused the test recipient (%(email_to)s) with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:160
+#, python-format
+msgid "The server refused the test connection with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:166
+#, python-format
+msgid ""
+"Invalid server name !\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:168
+#, python-format
+msgid ""
+"No response received. Check server address and port number.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:170
+#, python-format
+msgid ""
+"The server has closed the connection unexpectedly. Check configuration "
+"served on this port number.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:172
+#, python-format
+msgid ""
+"Server replied with following exception:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:174
+#, python-format
+msgid ""
+"An option is not supported by the server:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:176
+#, python-format
+msgid ""
+"An SMTP exception occurred. Check port number and connection security type.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:178
+#, python-format
+msgid ""
+"An SSL exception occurred. Check connection security type.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:180
+#, python-format
+msgid ""
+"Connection Test Failed! Here is what we got instead:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:189
+#, fuzzy
+msgid "Connection Test Successful!"
+msgstr "Sigurnost povezivanja"
+
+#: models/ir_mail_server.py:259 models/ir_mail_server.py:284
+#, python-format
+msgid ""
+"The private key or the certificate is not a valid file. \n"
+"%s"
+msgstr ""
+
+#: models/ir_mail_server.py:261 models/ir_mail_server.py:286
+#, python-format
+msgid ""
+"Could not load your certificate / private key. \n"
+"%s"
+msgstr ""
+
+#: models/ir_mail_server.py:290
+msgid "Missing SMTP Server"
+msgstr "Nedostaje SMTP Server"
+
+#: models/ir_mail_server.py:291
+msgid ""
+"Please define at least one SMTP server, or provide the SMTP parameters "
+"explicitly."
+msgstr ""
+"Molimo Vas da definišete makar jedan SMTP server, ili obezbjedite parametre "
+"SMTP-a eksplicitno."
+
+#: models/ir_mail_server.py:297
+msgid ""
+"Your Odoo Server does not support SMTP-over-SSL. You could use STARTTLS "
+"instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
+"should do the trick."
+msgstr ""
+
+#: models/ir_mail_server.py:615
+#, python-format
+msgid ""
+"Mail delivery failed via SMTP server '%s'.\n"
+"%s: %s"
+msgstr ""
+"Isporuka email-a ne uspješna putem SMTP servera '%s'.\n"
+"%s: %s"
+
+#: models/ir_mail_server.py:617
+msgid "Mail Delivery Failed"
+msgstr "Isporuka mail-a neuspješna"
+
+#: models/ir_mail_server.py:701 models/ir_model.py:605 models/ir_model.py:684
+#: models/ir_model.py:692 models/res_partner.py:377
+msgid "Warning"
+msgstr "Upozorenje"
+
+#: models/ir_mail_server.py:702
+msgid ""
+"Your server does not seem to support SSL, you may want to try STARTTLS "
+"instead"
+msgstr ""
+"Vaš server izgleda da ne podržava SSL, možete pokušati sa STARTTLS umjesto "
+"toga"
+
+#: models/ir_model.py:215
+msgid "The model name must start with 'x_'."
+msgstr "Naziv modela mora počinjati sa 'x_'."
+
+#: models/ir_model.py:217
+msgid ""
+"The model name can only contain lowercase characters, digits, underscores "
+"and dots."
+msgstr ""
+"Naziv modela može da sadrži samo mala slova, brojeve, donje crtice i tačke."
+
+#: models/ir_model.py:234
+#, python-format
+msgid ""
+"Unable to order by %s: fields used for ordering must be present on the model "
+"and stored."
+msgstr ""
+
+#: models/ir_model.py:277
+#, python-format
+msgid "Model '%s' contains module data and cannot be removed."
+msgstr ""
+
+#: models/ir_model.py:302
+msgid "Field \"Model\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:304
+msgid "Field \"Type\" cannot be modified on models."
+msgstr "Polje \"Type\" ne može biti modifikovano na modelima."
+
+#: models/ir_model.py:306
+msgid "Field \"Transient Model\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:563
+msgid "Custom fields must have a name that starts with 'x_' !"
+msgstr "Prilagođena polja moraju imati ime koje počinje sa 'x_' !"
+
+#: models/ir_model.py:567
+msgid ""
+"Field names can only contain characters, digits and underscores (up to 63)."
+msgstr ""
+"Nazivi polja mogu sadržati samo karaktere, brojeve i donje crtice (do 63)."
+
+#: models/ir_model.py:583
+#, python-format
+msgid "Unknown field name '%s' in related field '%s'"
+msgstr "Nepoznat naziv polja '%s' u relacionom polju '%s'"
+
+#: models/ir_model.py:586
+#, python-format
+msgid "Non-relational field name '%s' in related field '%s'"
+msgstr "Ne ralacioni naziv pojla '%s' u relacionom polju '%s'"
+
+#: models/ir_model.py:595
+#, python-format
+msgid "Related field '%s' does not have type '%s'"
+msgstr "Povezano polje '%s' nema tip '%s'"
+
+#: models/ir_model.py:597
+#, python-format
+msgid "Related field '%s' does not have comodel '%s'"
+msgstr "Relaciono polje '%s' nema referentni model '%s'"
+
+#: models/ir_model.py:618
+#, python-format
+msgid "Empty dependency in %r"
+msgstr "Prazna ovisnost u %r"
+
+#: models/ir_model.py:625
+#, python-format
+msgid "Unknown field %r in dependency %r"
+msgstr "Nepoznato polje %r u ovisnosti %r"
+
+#: models/ir_model.py:627
+#, python-format
+msgid "Non-relational field %r in dependency %r"
+msgstr "Ne ralacijsko polje %r u ovisnosti %r"
+
+#: models/ir_model.py:658
+#, python-format
+msgid "Model %s does not exist"
+msgstr ""
+
+#: models/ir_model.py:659
+msgid "Please specify a valid model for the object relation"
+msgstr ""
+
+#: models/ir_model.py:685
+#, python-format
+msgid "The table %r if used for other, possibly incompatible fields."
+msgstr "Tabela %r ako je korištena za druga, moguće nekomapatibilna polja."
+
+#: models/ir_model.py:692
+#, python-format
+msgid ""
+"The m2o field %s is required but declares its ondelete policy as being 'set "
+"null'. Only 'restrict' and 'cascade' make sense."
+msgstr ""
+
+#: models/ir_model.py:770
+#, python-format
+msgid "The field '%s' cannot be removed because the field '%s' depends on it."
+msgstr "Polje '%s' ne može biti uklonjeno jer polje '%s' ovisi o njemu."
+
+#: models/ir_model.py:797
+msgid "Cannot rename/delete fields that are still present in views:"
+msgstr ""
+"Nemogu se preimenovati/obrisati polja koja su još prisutna u pogledima:"
+
+#: models/ir_model.py:798
+#, python-format
+msgid "Fields: %s"
+msgstr "Polja: %s"
+
+#: models/ir_model.py:799
+#, python-format
+msgid "View: %s"
+msgstr "Pogled: %s"
+
+#: models/ir_model.py:814
+msgid "This column contains module data and cannot be removed!"
+msgstr "Ova kolona sadrži podatke modula i ne može biti uklonjena!"
+
+#: models/ir_model.py:882
+#, python-format
+msgid "Model %s does not exist!"
+msgstr "Ne postoji Model %s!"
+
+#: models/ir_model.py:889
+#, python-format
+msgid "Many2one %s on model %s does not exist!"
+msgstr "Many2one %s na modelu %s ne postoji!"
+
+#: models/ir_model.py:911
+msgid "Changing the model of a field is forbidden!"
+msgstr "Nije dopušteno mjenjanje modela polja."
+
+#: models/ir_model.py:914
+msgid ""
+"Changing the type of a field is not yet supported. Please drop it and create "
+"it again!"
+msgstr ""
+"Izmjena tipa polja još uvijek nije podržana. Molimo da ga obrišete i "
+"kreirate ponovno!"
+
+#: models/ir_model.py:928
+msgid "Can only rename one field at a time!"
+msgstr "Možete preimenovati jedno polje u isto vrijeme!"
+
+#: models/ir_model.py:1314 models/ir_model.py:1334 models/ir_model.py:1365
+msgid ""
+"Properties of base fields cannot be altered in this manner! Please modify "
+"them through Python code, preferably through a custom addon!"
+msgstr ""
+"Svojstva baznih polja se ne mogu mjenjati na ovaj način! Molimo Vas da ih "
+"mjenjate kroz Python kod, najbolje preko prilagođenog dodatka!"
+
+#: models/ir_model.py:1439
+#, python-format
+msgid "The ondelete policy %r is not valid for field %r"
+msgstr ""
+
+#: models/ir_model.py:1484 models/ir_model.py:1622 models/ir_model.py:2040
+msgid "Administrator access is required to uninstall a module"
+msgstr "Potreban je administrativni pristup da se deinstalira modul"
+
+#: models/ir_model.py:1771
+#, fuzzy, python-format
+msgid ""
+"You are not allowed to access '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr "Oprostite, nije vam dozvoljen pristup ovom dokumentu."
+
+#: models/ir_model.py:1772
+#, fuzzy, python-format
+msgid ""
+"You are not allowed to modify '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr "Oprostite, nije Vam dozvoljeno mijenjanje ovog dokumenta."
+
+#: models/ir_model.py:1773
+#, fuzzy, python-format
+msgid ""
+"You are not allowed to create '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr ""
+"Izvinjavamo se, ali nije Vam dozvoljeno da kreirate ovu vrstu dokumenta."
+
+#: models/ir_model.py:1774
+#, fuzzy, python-format
+msgid ""
+"You are not allowed to delete '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr "Žao nam je, nije Vam dozvoljeno brisanje ovog dokumenta."
+
+#: models/ir_model.py:1779
+#, python-format
+msgid ""
+"This operation is allowed for the following groups:\n"
+"%(groups_list)s"
+msgstr ""
+
+#: models/ir_model.py:1781
+msgid "No group currently allows this operation."
+msgstr ""
+
+#: models/ir_model.py:1783 models/ir_rule.py:203
+msgid "Contact your administrator to request access if necessary."
+msgstr ""
+
+#: models/ir_model.py:1938
+msgid "Not enough access rights on the external ID:"
+msgstr ""
+
+#: models/ir_module.py:321
+msgid ""
+"You are trying to remove a module that is installed or will be installed."
+msgstr ""
+
+#: models/ir_module.py:368
+#, python-format
+msgid ""
+"Unable to install module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+"Nije moguće instalirati modul \"%s\", jer vanjska ovisnost nije zadovoljena:"
+"%s"
+
+#: models/ir_module.py:370
+#, python-format
+msgid ""
+"Unable to upgrade module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+"Nije se mogao nadograditi modul \"%s\" jer vanjska ovisnost nije ispunjena: "
+"%s"
+
+#: models/ir_module.py:372
+#, python-format
+msgid ""
+"Unable to process module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+"Nije moguće obraditi modul \"%s\" jer postoji eksterna ovisnost koja nije "
+"ispunjena: %s"
+
+#: models/ir_module.py:377
+msgid "Recursion error in modules dependencies !"
+msgstr "Rekurzivna greška u ovisnostima modula !"
+
+#: models/ir_module.py:391
+#, python-format
+msgid ""
+"You try to install module '%s' that depends on module '%s'.\n"
+"But the latter module is not available in your system."
+msgstr ""
+"Pokušali ste instalirati modul '%s' koji ovisi o modulu '%s' \n"
+"koji nije dostupan na vašem sistemu."
+
+#: models/ir_module.py:438
+#, python-format
+msgid "Modules \"%s\" and \"%s\" are incompatible."
+msgstr "Moduli \"%s\" i \"%s\" nisu kompatibilni."
+
+#: models/ir_module.py:457
+#, python-format
+msgid "You are trying to install incompatible modules in category \"%s\":"
+msgstr ""
+
+#: models/ir_module.py:464
+msgid "Install"
+msgstr "Instalacija"
+
+#: models/ir_module.py:594
+msgid ""
+"Odoo is currently processing a scheduled action.\n"
+"Module operations are not possible at this time, please try again later or "
+"contact your system administrator."
+msgstr ""
+
+#: models/ir_module.py:630
+msgid "The `base` module cannot be uninstalled"
+msgstr "Modul 'base' nije moguće deinstalirati"
+
+#: models/ir_module.py:632
+msgid ""
+"One or more of the selected modules have already been uninstalled, if you "
+"believe this to be an error, you may try again later or contact support."
+msgstr ""
+
+#: models/ir_module.py:638
+msgid "Uninstall"
+msgstr "Deinstaliraj"
+
+#: models/ir_module.py:646
+msgid "Uninstall module"
+msgstr "Deinstaliraj modul"
+
+#: models/ir_module.py:687
+#, python-format
+msgid "Can not upgrade module '%s'. It is not installed."
+msgstr "Nije moguće nadograditi modul '%s'. Nije instaliran."
+
+#: models/ir_module.py:706
+#, python-format
+msgid ""
+"You try to upgrade the module %s that depends on the module: %s.\n"
+"But this module is not available in your system."
+msgstr ""
+
+#: models/ir_module.py:711
+msgid "Apply Schedule Upgrade"
+msgstr "Izvrši zakazane nadogradnje"
+
+#: models/ir_module.py:805
+msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr ""
+
+#: models/ir_module.py:806
+msgid ""
+"To enable it, make sure this directory exists and is writable on the server:"
+msgstr ""
+
+#: models/ir_module.py:833
+#, python-format
+msgid ""
+"The `%s` module appears to be unavailable at the moment, please try again "
+"later."
+msgstr ""
+"Čini se da modul`%s` trenutno nije dostupan, molimo Vas da pokušate kasnije."
+
+#: models/ir_profile.py:101
+msgid ""
+"Profiling is not enabled on this database. Please contact an administrator."
+msgstr ""
+
+#: models/ir_property.py:88
+msgid "Invalid type"
+msgstr "Nepravilan tip"
+
+#: models/ir_qweb_fields.py:144
+msgid "Decimalized number"
+msgstr ""
+
+#: models/ir_qweb_fields.py:164
+msgid "Rounding precision"
+msgstr ""
+
+#: models/ir_qweb_fields.py:209
+msgid "Date format"
+msgstr ""
+
+#: models/ir_qweb_fields.py:227
+msgid "Pattern to format"
+msgstr ""
+
+#: models/ir_qweb_fields.py:228
+msgid "Optional timezone name"
+msgstr ""
+
+#: models/ir_qweb_fields.py:229
+msgid "Display only the time"
+msgstr ""
+
+#: models/ir_qweb_fields.py:230
+msgid "Hide seconds"
+msgstr ""
+
+#: models/ir_qweb_fields.py:231
+#, fuzzy
+msgid "Display only the date"
+msgstr "Prikaži liniju zaglavlja"
+
+#: models/ir_qweb_fields.py:301
+msgid "Selection"
+msgstr "Odabir"
+
+#: models/ir_qweb_fields.py:301
+msgid "By default the widget uses the field information"
+msgstr ""
+
+#: models/ir_qweb_fields.py:425
+msgid "Original currency"
+msgstr ""
+
+#: models/ir_qweb_fields.py:426
+msgid "Display currency"
+msgstr ""
+
+#: models/ir_qweb_fields.py:427
+msgid "Date"
+msgstr "Datum"
+
+#: models/ir_qweb_fields.py:427
+msgid ""
+"Date used for the original currency (only used for t-esc). by default use "
+"the current date."
+msgstr ""
+
+#: models/ir_qweb_fields.py:428
+msgid "Company"
+msgstr "Kompanija"
+
+#: models/ir_qweb_fields.py:428
+msgid ""
+"Company used for the original currency (only used for t-esc). By default use "
+"the user company"
+msgstr ""
+
+#: models/ir_qweb_fields.py:437
+msgid "The value send to monetary field is not a number."
+msgstr ""
+
+#: models/ir_qweb_fields.py:535
+#, python-format
+msgid "The value (%s) passed should be positive"
+msgstr ""
+
+#: models/ir_qweb_fields.py:538
+#, fuzzy
+msgid "The hour must be between 0 and 23"
+msgstr "Faktor zaokruživanja mora biti veći od 0!"
+
+#: models/ir_qweb_fields.py:572
+msgid "Digital formatting"
+msgstr ""
+
+#: models/ir_qweb_fields.py:573
+msgid "Date unit"
+msgstr ""
+
+#: models/ir_qweb_fields.py:573
+msgid "Date unit used for comparison and formatting"
+msgstr ""
+
+#: models/ir_qweb_fields.py:574
+msgid "Rounding unit"
+msgstr ""
+
+#: models/ir_qweb_fields.py:574
+msgid ""
+"Date unit used for the rounding. The value must be smaller than 'hour' if "
+"you use the digital formatting."
+msgstr ""
+
+#: models/ir_qweb_fields.py:578
+msgid "Long"
+msgstr ""
+
+#: models/ir_qweb_fields.py:579
+msgid "Short"
+msgstr ""
+
+#: models/ir_qweb_fields.py:580
+msgid "Narrow"
+msgstr ""
+
+#: models/ir_qweb_fields.py:581
+#, fuzzy
+msgid "Format"
+msgstr "Obrazac"
+
+#: models/ir_qweb_fields.py:582
+msgid "Formatting: long, short, narrow (not used for digital)"
+msgstr ""
+
+#: models/ir_qweb_fields.py:587
+#, fuzzy
+msgid "Add direction"
+msgstr "Smjer"
+
+#: models/ir_qweb_fields.py:588
+msgid "Add directional information (not used for digital)"
+msgstr ""
+
+#: models/ir_qweb_fields.py:650
+msgid "Reference date"
+msgstr ""
+
+#: models/ir_qweb_fields.py:650
+msgid "Date to compare with the field value, by default use the current date."
+msgstr ""
+
+#: models/ir_qweb_fields.py:686
+msgid "Barcode symbology"
+msgstr ""
+
+#: models/ir_qweb_fields.py:686
+msgid "Barcode type, eg: UPCA, EAN13, Code128"
+msgstr ""
+
+#: models/ir_qweb_fields.py:687
+msgid "Width"
+msgstr "Širina"
+
+#: models/ir_qweb_fields.py:688
+msgid "Height"
+msgstr "Visina"
+
+#: models/ir_qweb_fields.py:689
+msgid "Human Readable"
+msgstr ""
+
+#: models/ir_qweb_fields.py:710
+#, fuzzy, python-format
+msgid "Barcode %s"
+msgstr "Barkod"
+
+#: models/ir_qweb_fields.py:724
+msgid "Name"
+msgstr "Naziv:"
+
+#: models/ir_qweb_fields.py:725
+msgid "Address"
+msgstr "Adresa"
+
+#: models/ir_qweb_fields.py:726
+msgid "Phone"
+msgstr "Telefon"
+
+#: models/ir_qweb_fields.py:727
+msgid "Mobile"
+msgstr "Mobitel"
+
+#: models/ir_qweb_fields.py:728
+msgid "Email"
+msgstr "E-Mail"
+
+#: models/ir_qweb_fields.py:729 models/ir_qweb_fields.py:780
+msgid "VAT"
+msgstr "PDV"
+
+#: models/ir_qweb_fields.py:733
+msgid "Space"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+#, fuzzy
+msgid "Comma"
+msgstr "Komentar"
+
+#: models/ir_qweb_fields.py:733
+#, fuzzy
+msgid "Dash"
+msgstr "Kontrolna ploča"
+
+#: models/ir_qweb_fields.py:733
+msgid "Vertical bar"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+msgid "Slash"
+msgstr ""
+
+#: models/ir_qweb_fields.py:734
+#, fuzzy
+msgid "Linebreak"
+msgstr "Stavka"
+
+#: models/ir_qweb_fields.py:737
+msgid "Displayed fields"
+msgstr ""
+
+#: models/ir_qweb_fields.py:737
+msgid "List of contact fields to display in the widget"
+msgstr ""
+
+#: models/ir_qweb_fields.py:738
+msgid "Address separator"
+msgstr ""
+
+#: models/ir_qweb_fields.py:738
+msgid "Separator use to split the address from the display_name."
+msgstr ""
+
+#: models/ir_qweb_fields.py:739
+msgid "Hide badges"
+msgstr ""
+
+#: models/ir_qweb_fields.py:739
+msgid "Don't display the font awesome marker"
+msgstr ""
+
+#: models/ir_qweb_fields.py:740
+msgid "Use comma"
+msgstr ""
+
+#: models/ir_qweb_fields.py:740
+msgid "Use comma instead of the <br> tag to display the address"
+msgstr ""
+
+#: models/ir_qweb_fields.py:741
+#, fuzzy
+msgid "Display phone icons"
+msgstr "Prikaži liniju zaglavlja"
+
+#: models/ir_qweb_fields.py:741
+msgid "Display the phone icons even if no_marker is True"
+msgstr ""
+
+#: models/ir_qweb_fields.py:742
+#, fuzzy
+msgid "Display country image"
+msgstr "Prikazani naziv"
+
+#: models/ir_qweb_fields.py:742
+msgid "Display the country image if the field is present on the record"
+msgstr ""
+
+#: models/ir_rule.py:61
+msgid "Rules can not be applied on the Record Rules model."
+msgstr "Pravila ne mogu biti primjenjena na modelu Pravila Zapisa."
+
+#: models/ir_rule.py:197
+#, fuzzy, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to access "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr "Oprostite, nije vam dozvoljen pristup ovom dokumentu."
+
+#: models/ir_rule.py:198
+#, fuzzy, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to modify "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr "Oprostite, nije Vam dozvoljeno mijenjanje ovog dokumenta."
+
+#: models/ir_rule.py:199
+#, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to create "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr ""
+
+#: models/ir_rule.py:200
+#, fuzzy, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to delete "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr "Žao nam je, nije Vam dozvoljeno brisanje ovog dokumenta."
+
+#: models/ir_rule.py:225
+#, fuzzy, python-format
+msgid "Records: %s"
+msgstr "Zapis"
+
+#: models/ir_rule.py:228
+#, fuzzy, python-format
+msgid "User: %s"
+msgstr "Korisnici"
+
+#: models/ir_rule.py:231
+#, fuzzy, python-format
+msgid ""
+"This restriction is due to the following rules:\n"
+"%s"
+msgstr ""
+"Onemogućavanje ove opcije će deinstalirati sljedeće module \n"
+"%s"
+
+#: models/ir_rule.py:233
+msgid "Note: this might be a multi-company issue."
+msgstr ""
+
+#: models/ir_sequence.py:17 models/ir_sequence.py:33
+msgid "Step must not be zero."
+msgstr "Korak ne može biti 0."
+
+#: models/ir_sequence.py:234
+#, python-format
+msgid "Invalid prefix or suffix for sequence '%s'"
+msgstr "Ne pravilan prefix ili sufix za sekvencu '%s'"
+
+#: models/ir_translation.py:528
+msgid "Creating translation on non existing records"
+msgstr ""
+
+#: models/ir_translation.py:552
+#, python-format
+msgid ""
+"Translation is not valid:\n"
+"%s"
+msgstr ""
+"Prevod nije validan:\n"
+"%s"
+
+#: models/ir_translation.py:726
+msgid ""
+"Translation features are unavailable until you install an extra translation."
+msgstr ""
+
+#: models/ir_translation.py:756
+msgid "Translate"
+msgstr "Prevedi"
+
+#: models/ir_translation.py:854
+msgid "Technical Translations"
+msgstr "Tehnički prevodi"
+
+#: models/ir_ui_menu.py:73
+msgid "Error! You cannot create recursive menus."
+msgstr "Greška! Ne možete kreirati rekurzivne menije."
+
+#: models/ir_ui_view.py:397
+#, fuzzy, python-format
+msgid ""
+"Error while validating view:\n"
+"\n"
+"%(error)s"
+msgstr "Greška prilikom validacije ograničenja"
+
+#: models/ir_ui_view.py:415
+#, python-format
+msgid "Invalid view %(name)s definition in %(file)s"
+msgstr ""
+
+#: models/ir_ui_view.py:427
+#, python-format
+msgid ""
+"Error while validating view near:\n"
+"\n"
+"%(fivelines)s\n"
+"%(error)s"
+msgstr ""
+
+#: models/ir_ui_view.py:441
+msgid ""
+"Inherited Qweb view cannot have 'Groups' define on the record. Use 'groups' "
+"attributes inside the view definition"
+msgstr ""
+
+#: models/ir_ui_view.py:448
+msgid "You cannot create recursive inherited views."
+msgstr ""
+
+#: models/ir_ui_view.py:484
+msgid "Missing view architecture."
+msgstr "Nedostaje arhitektura pogleda."
+
+#: models/ir_ui_view.py:680
+#, python-format
+msgid "View '%(name)s' accessible only to groups %(groups)s "
+msgstr ""
+
+#: models/ir_ui_view.py:683
+#, python-format
+msgid "View '%(name)s' is private"
+msgstr ""
+
+#: models/ir_ui_view.py:1008 models/ir_ui_view.py:1240
+#, python-format
+msgid "Model not found: %(model)s"
+msgstr "Model nije pronađen: %(model)s"
+
+#: models/ir_ui_view.py:1290
+#, python-format
+msgid "Tree child can only have one of %(tags)s tag (not %(wrong_tag)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1299
+#, python-format
+msgid "A <graph> can only contains <field> nodes, found a <%s>"
+msgstr ""
+
+#: models/ir_ui_view.py:1320
+msgid "Search tag can only contain one search panel"
+msgstr ""
+
+#: models/ir_ui_view.py:1330
+msgid "Field tag must have a \"name\" attribute defined"
+msgstr ""
+
+#: models/ir_ui_view.py:1352
+#, python-format
+msgid ""
+"Domain on non-relational field \"%(name)s\" makes no sense (domain:"
+"%(domain)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1367
+#, fuzzy, python-format
+msgid "Field \"%(field_name)s\" does not exist in model \"%(model_name)s\""
+msgstr "Polje `%(field_name)s` ne postoji"
+
+#: models/ir_ui_view.py:1381
+#, python-format
+msgid "Attribute %(attribute)s evaluation expects a boolean, got %(value)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1407
+#, python-format
+msgid "Invalid special '%(value)s' in button"
+msgstr ""
+
+#: models/ir_ui_view.py:1412
+msgid "Button must have a name"
+msgstr ""
+
+#: models/ir_ui_view.py:1416
+#, python-format
+msgid "%(action_name)s is not a valid action on %(model_name)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1424
+#, python-format
+msgid "%(method)s on %(model)s is private and cannot be called from a button"
+msgstr ""
+
+#: models/ir_ui_view.py:1442
+#, python-format
+msgid "Invalid xmlid %(xmlid)s for button of type action."
+msgstr ""
+
+#: models/ir_ui_view.py:1445
+#, python-format
+msgid ""
+"%(xmlid)s is of type %(xmlid_model)s, expected a subclass of ir.actions."
+"actions"
+msgstr ""
+
+#: models/ir_ui_view.py:1452
+#, python-format
+msgid ""
+"Action %(action_reference)s (id: %(action_id)s) does not exist for button of "
+"type action."
+msgstr ""
+
+#: models/ir_ui_view.py:1474
+#, python-format
+msgid ""
+"Field '%(name)s' found in 'groupby' node can only be of type many2one, found "
+"%(type)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1498
+#, python-format
+msgid ""
+"Field '%(field)s' found in 'groupby' node does not exist in model %(model)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1509
+msgid "Searchpanel item with select multi cannot have a domain."
+msgstr ""
+
+#: models/ir_ui_view.py:1518
+msgid ""
+"Label tag must contain a \"for\". To match label style without corresponding "
+"field or button, use 'class=\"o_form_label\"'."
+msgstr ""
+
+#: models/ir_ui_view.py:1528
+msgid "Page direct ancestor must be notebook"
+msgstr ""
+
+#: models/ir_ui_view.py:1599
+#, python-format
+msgid "\"group_by\" value must be a string %(attribute)s=%(value)r"
+msgstr ""
+
+#: models/ir_ui_view.py:1607
+#, python-format
+msgid ""
+"Unknown field \"%(field)s\" in \"group_by\" value in %(attribute)s=%(value)r"
+msgstr ""
+
+#: models/ir_ui_view.py:1630
+#, python-format
+msgid "%(attribute)r value must be an integer (%(value)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1776
+#, python-format
+msgid "Invalid domain format %(expr)s in %(use)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1788
+#, fuzzy, python-format
+msgid "Non-relational field %(field)r in path %(field_path)r in %(use)s)"
+msgstr "Ne ralacioni naziv pojla '%s' u relacionom polju '%s'"
+
+#: models/ir_ui_view.py:1796
+#, python-format
+msgid "Unknown field \"%(model)s.%(field)s\" in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1802
+#, python-format
+msgid "Unsearchable field %(field)r in path %(field_path)r in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:2072
+msgid "Can't compare more than two views."
+msgstr ""
+
+#: models/ir_ui_view.py:2099
+msgid "Previous Arch"
+msgstr ""
+
+#: models/ir_ui_view.py:2105
+#, fuzzy
+msgid "File Arch"
+msgstr "Datoteka"
+
+#: models/ir_ui_view.py:2115
+#, fuzzy
+msgid "Current Arch"
+msgstr "Valuta"
+
+#: models/ir_ui_view.py:2171
+#, python-format
+msgid ""
+"Name or id %(name_or_id)r in %(use)s must be present in view but is missing."
+msgstr ""
+
+#: models/ir_ui_view.py:2179
+#, fuzzy, python-format
+msgid "Field `%(name)s` does not exist"
+msgstr "Polje `%(field_name)s` ne postoji"
+
+#: models/ir_ui_view.py:2186
+#, python-format
+msgid "Invalid composed field %(definition)s in %(use)s"
+msgstr ""
+
+#: models/ir_ui_view.py:2193
+#, python-format
+msgid "Field %(name)r used in %(use)s must be present in view but is missing."
+msgstr ""
+
+#: models/ir_ui_view.py:2199
+#, python-format
+msgid ""
+"Field %(name)r used in %(use)s is present in view but is in select multi."
+msgstr ""
+
+#: models/report_paperformat.py:194
+msgid ""
+"You can select either a format or a specific page width/height, but not both."
+msgstr ""
+
+#: models/res_bank.py:73
+msgid "Normal"
+msgstr "Normalan"
+
+#: models/res_company.py:25
+msgid ""
+"Duplicating a company is not allowed. Please create a new company instead."
+msgstr ""
+
+#: models/res_company.py:268
+msgid "You cannot create recursive companies."
+msgstr ""
+
+#: models/res_config.py:300
+msgid ""
+"\n"
+"\n"
+"This addon is already installed on your system"
+msgstr ""
+"\n"
+"\n"
+"Ovaj dodatak je već instaliran na vašem sistemu"
+
+#: models/res_config.py:384
+msgid "Cannot duplicate configuration!"
+msgstr "Nije moguće duplicirati konfiguraciju!"
+
+#: models/res_config.py:419
+msgid "Warning!"
+msgstr "Upozorenje!"
+
+#: models/res_config.py:420
+#, python-format
+msgid ""
+"Disabling this option will also uninstall the following modules \n"
+"%s"
+msgstr ""
+"Onemogućavanje ove opcije će deinstalirati sljedeće module \n"
+"%s"
+
+#: models/res_config.py:625
+msgid "Only administrators can change the settings"
+msgstr ""
+
+#: models/res_config.py:752
+msgid "Go to the configuration panel"
+msgstr "Idite na panel konfiguracije"
+
+#: models/res_config.py:793
+msgid "Invalid template user. It seems it has been deleted."
+msgstr ""
+
+#: models/res_country.py:141
+msgid "The layout contains an invalid format key"
+msgstr ""
+
+#: models/res_country.py:152
+msgid "Base view"
+msgstr "Osnovni pogled"
+
+#: models/res_currency.py:173
+msgid "and"
+msgstr "i"
+
+#: models/res_currency.py:293
+#, python-format
+msgid "Unit per %s"
+msgstr ""
+
+#: models/res_currency.py:294
+#, python-format
+msgid "%s per Unit"
+msgstr ""
+
+#: models/res_currency.py:408
+msgid ""
+"The new rate is quite far from the previous rate.\n"
+"Incorrect currency rates may cause critical problems, make sure the rate is "
+"correct !"
+msgstr ""
+
+#: models/res_currency.py:428
+#, python-format
+msgid "%(rate_currency_name)s per %(company_currency_name)s"
+msgstr ""
+
+#: models/res_currency.py:429
+#, python-format
+msgid "%(company_currency_name)s per %(rate_currency_name)s"
+msgstr ""
+
+#: models/res_lang.py:72
+msgid "At least one language must be active."
+msgstr "Najmanje jedan jezik mora biti aktivan."
+
+#: models/res_lang.py:80
+msgid ""
+"Invalid date/time format directive specified. Please refer to the list of "
+"allowed directives, displayed when you edit a language."
+msgstr ""
+"Ne pravilan format direktive specifiran za datum/vrijeme. Molimo obratite se "
+"listi dozvoljenih direktiva, prikazanih kada uređujete jezik."
+
+#: models/res_lang.py:86
+msgid ""
+"The Separator Format should be like [,n] where 0 < n :starting from Unit "
+"digit. -1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
+"1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
+"106,500. Provided as the thousand separator in each case."
+msgstr ""
+
+#: models/res_lang.py:282
+msgid "Language code cannot be modified."
+msgstr "Jezička šifra se ne može promjeniti."
+
+#: models/res_lang.py:285
+msgid "Cannot deactivate a language that is currently used by users."
+msgstr ""
+
+#: models/res_lang.py:287
+#, fuzzy
+msgid "Cannot deactivate a language that is currently used by contacts."
+msgstr "Ne možete deaktivirati korisnika sa kojim ste trenutno prijavljeni."
+
+#: models/res_lang.py:300
+msgid "Base Language 'en_US' can not be deleted."
+msgstr ""
+
+#: models/res_lang.py:303
+msgid "You cannot delete the language which is the user's preferred language."
+msgstr ""
+
+#: models/res_lang.py:305
+msgid ""
+"You cannot delete the language which is Active!\n"
+"Please de-activate the language first."
+msgstr ""
+"Ne možete da brišete jezik koji je aktivan!\n"
+"Prvo deaktivirajte jezik."
+
+#: models/res_lang.py:317
+#, python-format
+msgid "format() must be given exactly one %char format specifier"
+msgstr ""
+
+#: models/res_lang.py:341
+msgid ""
+"The languages that you selected have been successfully installed. Users can "
+"choose their favorite language in their preferences."
+msgstr ""
+
+#: models/res_partner.py:89
+msgid "You can not create recursive tags."
+msgstr ""
+
+#: models/res_partner.py:359
+msgid "You cannot create recursive Partner hierarchies."
+msgstr "Ne možete kreirati rekurzivne hijerarhije partnera"
+
+#: models/res_partner.py:378
+msgid ""
+"Changing the company of a contact should only be done if it was never "
+"correctly set. If an existing contact starts working for a new company then "
+"a new contact should be created under that new company. You can use the "
+"\"Discard\" button to abandon this change."
+msgstr ""
+"Promjenu kompanije kontakta trebate izvršiti samo u slučaju da nikada i nije "
+"bila pravilno postavljena. Ako postojeći kontakt počne raditi za novu "
+"kompaniju onda bi trebao biti otvoren novi kontakt na nivou te nove "
+"kompanije. Možete da koristite dugme \"Odbaci\" da bi ste napustili ovu "
+"promjenu."
+
+#: models/res_partner.py:454
+msgid ""
+"One2Many fields cannot be synchronized as part of `commercial_fields` or "
+"`address fields`"
+msgstr ""
+
+#: models/res_partner.py:577
+#, python-format
+msgid ""
+"You cannot archive contacts linked to an active user.\n"
+"You first need to archive their associated user.\n"
+"\n"
+"Linked active users : %(names)s"
+msgstr ""
+
+#: models/res_partner.py:579 models/res_partner.py:648
+#, fuzzy
+msgid "Go to users"
+msgstr "Google korisnici"
+
+#: models/res_partner.py:583
+#, python-format
+msgid ""
+"You cannot archive contacts linked to an active user.\n"
+"Ask an administrator to archive their associated user first.\n"
+"\n"
+"Linked active users :\n"
+"%(names)s"
+msgstr ""
+
+#: models/res_partner.py:646
+#, python-format
+msgid ""
+"You cannot delete contacts linked to an active user.\n"
+"You should rather archive them after archiving their associated user.\n"
+"\n"
+"Linked active users : %(names)s"
+msgstr ""
+
+#: models/res_partner.py:652
+#, python-format
+msgid ""
+"You cannot delete contacts linked to an active user.\n"
+"Ask an administrator to archive their associated user first.\n"
+"\n"
+"Linked active users :\n"
+"%(names)s"
+msgstr ""
+
+#: models/res_partner.py:811
+msgid "Couldn't create contact without email address!"
+msgstr "Nije se mogao kreirati kontakt bez email adrese!"
+
+#: models/res_partner.py:842
+msgid "An email is required for find_or_create to work"
+msgstr ""
+
+#: models/res_partner.py:846
+msgid "A valid email is required for find_or_create to work properly."
+msgstr ""
+
+#: models/res_partner.py:918
+#, fuzzy, python-format
+msgid "Partners: %(category)s"
+msgstr "Izvorna kategorija"
+
+#: models/res_partner.py:977
+msgid "Import Template for Customers"
+msgstr ""
+
+#: models/res_users.py:96
+msgid "This method can only be accessed over HTTP"
+msgstr ""
+
+#: models/res_users.py:117
+#, fuzzy
+msgid "Security Control"
+msgstr "Sigurnost"
+
+#: models/res_users.py:212
+msgid "The name of the group can not start with \"-\""
+msgstr "Naziv grupe ne može počinjati sa \"-\""
+
+#: models/res_users.py:402
+msgid ""
+"Please use the change password wizard (in User Preferences or User menu) to "
+"change your own password."
+msgstr ""
+"Koristite čarobnjaka za promjenu lozinke (u korisničim postavkama ili "
+"korisničkom meniju)."
+
+#: models/res_users.py:464
+#, fuzzy, python-format
+msgid ""
+"Company %(company_name)s is not in the allowed companies for user "
+"%(user_name)s (%(company_allowed)s)."
+msgstr "Odabrana kompanija nije u listi dozvoljenih za ovog korisnika"
+
+#: models/res_users.py:471
+msgid "The \"App Switcher\" action cannot be selected as home action."
+msgstr ""
+
+#: models/res_users.py:483
+msgid "The user cannot have more than one user types."
+msgstr ""
+
+#: models/res_users.py:533
+msgid "Invalid 'group by' parameter"
+msgstr ""
+
+#: models/res_users.py:541
+msgid "Invalid search criterion"
+msgstr "Nepravilan kriterijum pretrage"
+
+#: models/res_users.py:557
+msgid "You cannot activate the superuser."
+msgstr ""
+
+#: models/res_users.py:559
+msgid "You cannot deactivate the user you're currently logged in as."
+msgstr "Ne možete deaktivirati korisnika sa kojim ste trenutno prijavljeni."
+
+#: models/res_users.py:611
+msgid ""
+"You can not remove the admin user as it is used internally for resources "
+"created by Odoo (updates, module installation, ...)"
+msgstr ""
+
+#: models/res_users.py:803
+msgid "Setting empty passwords is not allowed for security reasons!"
+msgstr "Šifra ne može ostati prazna iz sigurnosnih razloga."
+
+#: models/res_users.py:864
+msgid "Users"
+msgstr "Korisnici"
+
+#: models/res_users.py:880
+msgid "Groups"
+msgstr "Grupe"
+
+#: models/res_users.py:892
+msgid "Access Rights"
+msgstr "Prava pristupa"
+
+#: models/res_users.py:904
+msgid "Record Rules"
+msgstr "Pravila zapisa"
+
+#: models/res_users.py:1010
+msgid "Too many login failures, please wait a bit before trying again."
+msgstr ""
+
+#: models/res_users.py:1560
+msgid "Other"
+msgstr "Drugo"
+
+#: models/res_users.py:1600
+msgid ""
+"Incorrect Password, try again or click on Forgot Password to reset your "
+"password."
+msgstr ""
+
+#: models/res_users.py:1647
+msgid "Before clicking on 'Change Password', you have to write a new password."
+msgstr "Prije klika na 'Izmjeni šifru', morate da zapišete novu šifru."
+
+#: models/res_users.py:1762
+msgid ""
+"You can not remove API keys unless they're yours or you are a system user"
+msgstr ""
+
+#: models/res_users.py:1826
+msgid "Only internal users can create API keys"
+msgstr ""
+
+#: wizard/base_export_language.py:19
+msgid "New Language (Empty translation template)"
+msgstr "Novi jezik (Prazan šablon prevoda)"
+
+#: wizard/base_import_language.py:53
+#, python-format
+msgid ""
+"File %r not imported due to a malformed file.\n"
+"\n"
+"This issue can be caused by duplicates entries who are referring to the same "
+"field. Please check the content of the file you are trying to import.\n"
+"\n"
+"Technical Details:\n"
+"%s"
+msgstr ""
+
+#: wizard/base_import_language.py:60
+#, python-format
+msgid ""
+"File %r not imported due to format mismatch or a malformed file. (Valid "
+"formats are .csv, .po, .pot)\n"
+"\n"
+"Technical Details:\n"
+"%s"
+msgstr ""
+
+#: wizard/base_language_install.py:58
+msgid ""
+"The languages that you selected have been successfully "
+"installed.                            Users can choose their favorite "
+"language in their preferences."
+msgstr ""
+
+#: wizard/base_module_upgrade.py:67
+#, python-format
+msgid "The following modules are not installed or unknown: %s"
+msgstr "Sljedeći modul nije instaliran ili je nepoznat: %s"
+
+#: wizard/base_partner_merge.py:305
+msgid ""
+"For safety reasons, you cannot merge more than 3 contacts together. You can "
+"re-open the wizard several times if needed."
+msgstr ""
+
+#: wizard/base_partner_merge.py:312
+msgid "You cannot merge a contact with one of his parent."
+msgstr "Ne možete spojiti kontakt sa jedim od njegovih roditelja."
+
+#: wizard/base_partner_merge.py:315
+msgid ""
+"All contacts must have the same email. Only the Administrator can merge "
+"contacts with different emails."
+msgstr ""
+
+#: wizard/base_partner_merge.py:328
+msgid ""
+"Only the destination contact may be linked to existing Journal Items. Please "
+"ask the Administrator if you need to merge several contacts linked to "
+"existing Journal Items."
+msgstr ""
+
+#: wizard/base_partner_merge.py:412
+msgid "You have to specify a filter for your selection."
+msgstr ""
+
+#: wizard/base_update_translations.py:26
+#, python-format
+msgid "No language with code \"%s\" exists"
+msgstr "Jezik sa šifrom \"%s\" ne postoji/ nije definiran"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Allow cashier to reprint receipts\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Dozvoli kaserima da ponovno odštampaju račun\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "[object with reference: %s - %s]"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "[objekt sa referencom: %s - %s]"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Belgium\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Računovodstveni izvještaji za Belgiju"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Brazilian\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Računovodstveni izvještaji za Brazil"
+
+#~ msgid ""
+#~ "\n"
+#~ "The module adds google user in res user.\n"
+#~ "========================================\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Ovaj modul dodaje google korisnika u res user.\n"
+#~ "========================================\n"
+
+#~ msgid "%A - Full weekday name."
+#~ msgstr "%A - Puno ime dana u sedmici."
+
+#~ msgid "%B - Full month name.\""
+#~ msgstr "%B - Puno ime mjeseca.\""
+
+#~ msgid "%H - Hour (24-hour clock) [00,23].\""
+#~ msgstr "%H - Sat (24 satni) [00,23].\""
+
+#~ msgid "%I - Hour (12-hour clock) [01,12].\""
+#~ msgstr "%I - Sat (12 satni) [01,12].\""
+
+#~ msgid "%M - Minute [00,59].\""
+#~ msgstr "%M - Minuta [00,59].\""
+
+#~ msgid "%S - Seconds [00,61].\""
+#~ msgstr "%S - Sekunda [00,61].\""
+
+#~ msgid "%Y - Year with century.\""
+#~ msgstr "%Y - Godina sa vijekom.\""
+
+#~ msgid "%a - Abbreviated weekday name."
+#~ msgstr "%a - Skraćeni naziv dana u sedmici."
+
+#~ msgid "%b - Abbreviated month name."
+#~ msgstr "%b - Skraćen naziv mjeseca."
+
+#~ msgid "%d - Day of the month [01,31].\""
+#~ msgstr "%d - Dan u mjesecu [01,31].\""
+
+#~ msgid "%j - Day of the year [001,366].\""
+#~ msgstr "%j - Dan u godini [001,366].\""
+
+#~ msgid "%m - Month number [01,12].\""
+#~ msgstr "%m - Broj mjeseca [01,12].\""
+
+#~ msgid "%p - Equivalent of either AM or PM.\""
+#~ msgstr "%p - Ekvivalent AM ili PM.\""
+
+#~ msgid "%w - Weekday number [0(Sunday),6].\""
+#~ msgstr "%w - Broj sedmice [0(Nedelja),6].\""
+
+#~ msgid "%y - Year without century [00,99].\""
+#~ msgstr "%y - Godina bez vijeka [00,99].\""
+
+#~ msgid "&amp;nbsp;"
+#~ msgstr "&amp;nbsp;"
+
+#~ msgid ", or your preferred text editor"
+#~ msgstr ", ili vaš omiljeni text editor"
+
+#~ msgid ", readonly"
+#~ msgstr ", samo za čitanje"
+
+#~ msgid ", required"
+#~ msgstr ", zahtjevano"
+
+#~ msgid "- domain ="
+#~ msgstr "- domen ="
+
+#~ msgid "- field ="
+#~ msgstr "- polje ="
+
+#~ msgid "- groups ="
+#~ msgstr "- grupe ="
+
+#~ msgid "- ondelete ="
+#~ msgstr "- prilikom brisanja ="
+
+#~ msgid "- relation ="
+#~ msgstr "- relacija ="
+
+#~ msgid "- selection ="
+#~ msgstr "- odabir ="
+
+#~ msgid "- size ="
+#~ msgstr "- valičina ="
+
+#~ msgid "-This module does not create menu."
+#~ msgstr "- Ovaj modul ne kreira meni."
+
+#~ msgid "-This module does not create report."
+#~ msgstr "-Ovaj modul ne kreira izvještaj."
+
+#~ msgid "-This module does not create views."
+#~ msgstr "-Ovaj modul ne kreira poglede."
+
+#~ msgid "-This module does not depends on any other module."
+#~ msgstr "-Ovaj modul ne ovisi o drugim modulima."
+
+#~ msgid "-This module does not exclude any other module."
+#~ msgstr "-Ovaj modul ne isključuje nijedan drugi module."
+
+#~ msgid "1. %b, %B         ==&gt; Dec, December"
+#~ msgstr "1. %b, %B         ==&gt; Dec, Decembar"
+
+#~ msgid "2. %a ,%A         ==&gt; Fri, Friday"
+#~ msgstr "2. %a ,%A         ==&gt; Pet, Petak"
+
+#~ msgid "3. %y, %Y         ==&gt; 08, 2008"
+#~ msgstr "3. %y, %Y         ==&gt; 08, 2008"
+
+#~ msgid "4. %d, %m         ==&gt; 05, 12"
+#~ msgstr "4. %d, %m         ==&gt; 05, 12"
+
+#~ msgid "5. %H:%M:%S      ==&gt; 18:25:20"
+#~ msgstr "5. %H:%M:%S      ==&gt; 18:25:20"
+
+#~ msgid "6. %I:%M:%S %p  ==&gt; 06:25:20 PM"
+#~ msgstr "6. %I:%M:%S %p  ==&gt; 06:25:20 PM"
+
+#~ msgid "7. %j              ==&gt; 340"
+#~ msgstr "7. %j              ==&gt; 340"
+
+#~ msgid "8. %S              ==&gt; 20"
+#~ msgstr "8. %S              ==&gt; 20"
+
+#~ msgid "9. %w              ==&gt; 5 ( Friday is the 6th day)"
+#~ msgstr "9. %w              ==&gt; 5 ( Petak je 6ti dan )"
+
+#~ msgid ""
+#~ "<code style=\"white-space: pre-wrap\">\n"
+#~ "partner_name = record.name + '_code'\n"
+#~ "env['res.partner'].create({'name': partner_name})\n"
+#~ "</code>"
+#~ msgstr ""
+#~ "<code style=\"white-space: pre-wrap\">\n"
+#~ "partner_name = record.name + '_code'\n"
+#~ "env['res.partner'].create({'name': partner_name})\n"
+#~ "</code>"
+
+#~ msgid "<code>datetime</code> (Python module)"
+#~ msgstr "<code>datetime</code> (Python modul)"
+
+#~ msgid "<code>dateutil</code> (Python module)"
+#~ msgstr "<code>dateutil</code> (Python modul)"
+
+#~ msgid "<code>env</code>: Odoo Environment on which the action is triggered"
+#~ msgstr "<code>env</code>: Odoo okruženje u kojem je akcija okinuta"
+
+#~ msgid ""
+#~ "<code>log(message, level='info')</code>:logging function to record debug "
+#~ "information in <code>ir.logging</code> table"
+#~ msgstr ""
+#~ "<code>log(message, level='info')</code>:funkcija logiranja za zabilješku "
+#~ "razvojnih informacija u <code>ir.logging</code> tabeli"
+
+#~ msgid ""
+#~ "<code>model</code>: Odoo Model of the record on which the action is "
+#~ "triggered; is a void recordset"
+#~ msgstr ""
+#~ "<code>model</code>: Odoo Model zapisa na kojem je akcija okinuta; validan "
+#~ "je rekordset"
+
+#~ msgid ""
+#~ "<code>record</code>: record on which the action is triggered; may be be "
+#~ "void"
+#~ msgstr ""
+#~ "<code>record</code>: zapis na kojem je akcija okinuta; može biti void"
+
+#~ msgid ""
+#~ "<code>records</code>: recordset of all records on which the action is "
+#~ "triggered in multi mode; may be void"
+#~ msgstr ""
+#~ "<code>records</code>: rekordset svih zapisa na kojima će akcija biti "
+#~ "okinuta u multi modu; može biti void"
+
+#~ msgid "<code>self</code> (the set of records to compute)"
+#~ msgstr "<code>self</code> (set zapisa za izračunavanje)"
+
+#~ msgid "<code>time</code> (Python module)"
+#~ msgstr "<code>time</code> (Python modul)"
+
+#~ msgid ""
+#~ "<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
+#~ "<code>timezone</code>: useful Python libraries"
+#~ msgstr ""
+#~ "<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
+#~ "<code>timezone</code>: korisne Python bibilioteke"
+
+#~ msgid "<strong><span>Current Rate: </span></strong>"
+#~ msgstr "<strong><span>Trenutna stopa: </span></strong>"
+
+#~ msgid "<strong>Apps</strong>"
+#~ msgstr "<strong>Apps</strong>"
+
+#~ msgid "<strong>Attribute</strong>"
+#~ msgstr "<strong>Atribut</strong>"
+
+#~ msgid "<strong>Dependencies :</strong>"
+#~ msgstr "<strong>Ovisnosti :</strong>"
+
+#~ msgid "<strong>Email:</strong>"
+#~ msgstr "<strong>Email:</strong>"
+
+#~ msgid "<strong>Group</strong>"
+#~ msgstr "<strong>Grupa</strong>"
+
+#~ msgid "<strong>Idx</strong>"
+#~ msgstr "<strong>Idx</strong>"
+
+#~ msgid "<strong>Inherited</strong>"
+#~ msgstr "<strong>Nasljeđeno</strong>"
+
+#~ msgid "<strong>Label</strong>"
+#~ msgstr "<strong>Naljepnica</strong>"
+
+#~ msgid "<strong>Menu :</strong>"
+#~ msgstr "<strong>Meni :</strong>"
+
+#~ msgid "<strong>Name</strong>"
+#~ msgstr "<strong>Naziv</strong>"
+
+#~ msgid "<strong>Phone</strong>"
+#~ msgstr "<strong>Telefon</strong>"
+
+#~ msgid "<strong>Reports :</strong>"
+#~ msgstr "<strong>Izvještaji :</strong>"
+
+#~ msgid "<strong>Ro</strong>"
+#~ msgstr "<strong>Ro</strong>"
+
+#~ msgid "<strong>Rq</strong>"
+#~ msgstr "<strong>Rq</strong>"
+
+#~ msgid "<strong>Seq</strong>"
+#~ msgstr "<strong>Seq</strong>"
+
+#~ msgid ""
+#~ "<strong>This operation will permanently erase all data currently stored "
+#~ "by the modules!</strong>"
+#~ msgstr ""
+#~ "<strong>Ova operacija će trajno obrisati sve podatke trenutno skladištene "
+#~ "u ovom modulu!</strong>"
+
+#~ msgid "<strong>Type</strong>"
+#~ msgstr "<strong>Tip</strong>"
+
+#~ msgid "<strong>View :</strong>"
+#~ msgstr "<strong>Pogled :</strong>"
+
+#~ msgid "<strong>XML ID</strong>"
+#~ msgstr "<strong>XML ID</strong>"
+
+#~ msgid "<u><strong>Fields</strong></u>"
+#~ msgstr "<u><strong>Polja</strong></u>"
+
+#~ msgid "<u><strong>Security</strong></u>"
+#~ msgstr "<u><strong>Sigurnost</strong></u>"
+
+#~ msgid "<u><strong>Views</strong></u>"
+#~ msgstr "<u><strong>Pogledi</strong></u>"
+
+#~ msgid "A document was modified since you last viewed it (%s:%d)"
+#~ msgstr ""
+#~ "Dokument je izmjenjen od vremena kada ste ga zadnji put pogledali (%s:%d)"
+
+#~ msgid ""
+#~ "A group is a set of functional areas that will be assigned to the user in "
+#~ "order to give them access and rights to specific applications and tasks "
+#~ "in the system. You can create custom groups or edit the ones existing by "
+#~ "default in order to customize the view of the menu that users will be "
+#~ "able to see. Whether they can have a read, write, create and delete "
+#~ "access right can be managed from here."
+#~ msgstr ""
+#~ "Grupa je skup funkcionalnih područja koja će biti dodijeljena korisniku "
+#~ "kako bi imli prava pristupa na posebne programe i zadatke u sistemu. "
+#~ "Možete stvoriti prilagođene grupe ili izmijeniti one postojeće kako bi "
+#~ "prilagodili menije i polja na formama koje će korisnici moći vidjeti. "
+#~ "Ovdje možete upravljati pravima čitanja, pisanja, kreiranja i brisanja "
+#~ "zapisa po grupama."
+
+#~ msgid "A0  5   841 x 1189 mm"
+#~ msgstr "A0  5   841 x 1189 mm"
+
+#~ msgid "A1  6   594 x 841 mm"
+#~ msgstr "A1  6   594 x 841 mm"
+
+#~ msgid "A2  7   420 x 594 mm"
+#~ msgstr "A2  7   420 x 594 mm"
+
+#~ msgid "A3  8   297 x 420 mm"
+#~ msgstr "A3  8   297 x 420 mm"
+
+#~ msgid "A4  0   210 x 297 mm, 8.26 x 11.69 inches"
+#~ msgstr "A4  0   210 x 297 mm, 8.26 x 11.69 inches"
+
+#~ msgid "A5  9   148 x 210 mm"
+#~ msgstr "A5  9   148 x 210 mm"
+
+#~ msgid "A6  10  105 x 148 mm"
+#~ msgstr "A6  10  105 x 148 mm"
+
+#~ msgid "A7  11  74 x 105 mm"
+#~ msgstr "A7  11  74 x 105 mm"
+
+#~ msgid "A8  12  52 x 74 mm"
+#~ msgstr "A8  12  52 x 74 mm"
+
+#~ msgid "A9  13  37 x 52 mm"
+#~ msgstr "A9  13  37 x 52 mm"
+
+#~ msgid "Abbreviation"
+#~ msgstr "Skraćenica"
+
+#~ msgid "Accepted Users"
+#~ msgstr "Prihvaćeni korisnici"
+
+#~ msgid "Access"
+#~ msgstr "Pristup"
+
+#~ msgid "Access Controls"
+#~ msgstr "Kontrole pristupa"
+
+#~ msgid "Access Groups"
+#~ msgstr "Pristupne grupe"
+
+#~ msgid "Access Menu"
+#~ msgstr "Pristup meniju"
+
+#~ msgid "Access Token"
+#~ msgstr "Pristupni token"
+
+#~ msgid "Account Analytic Defaults"
+#~ msgstr "Zadane vrijednosti analitičkih konta"
+
+#~ msgid "Account Bank Statement Import"
+#~ msgstr "Uvoz izvoda iz banke"
+
+#~ msgid "Account Charts"
+#~ msgstr "Kontni planovi"
+
+#~ msgid "Account Holder"
+#~ msgstr "Nosioc računa"
+
+#~ msgid "Account No."
+#~ msgstr "Broj računa"
+
+#~ msgid "Account Number"
+#~ msgstr "Broj računa"
+
+#~ msgid "Account Number must be unique"
+#~ msgstr "Broj računa mora biti jedinstven"
+
+#~ msgid "Accounting"
+#~ msgstr "Računovodstvo"
+
+#~ msgid "Accounting & Finance"
+#~ msgstr "Računovodstvo i financije"
+
+#~ msgid "Accounting &amp; Finance"
+#~ msgstr "Računovodstvo i Finansije"
+
+#~ msgid "Accounting Reports"
+#~ msgstr "Računovodstveni izvještaji"
+
+#~ msgid "Action"
+#~ msgstr "Akcija"
+
+#~ msgid "Action Description"
+#~ msgstr "Opis akcije"
+
+#~ msgid "Action Name"
+#~ msgstr "Naziv akcije"
+
+#~ msgid "Action Target"
+#~ msgstr "Cilj akcije"
+
+#~ msgid "Action To Do"
+#~ msgstr "Akcija za uraditi"
+
+#~ msgid "Action Type"
+#~ msgstr "Tip akcije"
+
+#~ msgid "Action URL"
+#~ msgstr "URL akcije"
+
+#~ msgid "Action Usage"
+#~ msgstr "Svrha akcije"
+
+#~ msgid "Actions"
+#~ msgstr "Akcije"
+
+#~ msgid "Active"
+#~ msgstr "Aktivan"
+
+#~ msgid "Add a link to edit a translation in Transifex"
+#~ msgstr "Dodaje link za uređivanje prevoda na Transifex"
+
+#~ msgid "Add in the 'Print' menu"
+#~ msgstr "Dodaj u meni 'Ispis'"
+
+#~ msgid "Address Type"
+#~ msgstr "Tip adrese"
+
+#~ msgid "Address format..."
+#~ msgstr "Format adrese ..."
+
+#~ msgid "Administration"
+#~ msgstr "Administracija"
+
+#~ msgid ""
+#~ "Administrative divisions of a country. E.g. Fed. State, Departement, "
+#~ "Canton"
+#~ msgstr "Administrativna podjela države. (federacije, republike, kantoni...)"
+
+#~ msgid "Affero GPL-3"
+#~ msgstr "Affero GPL-3"
+
+#~ msgid "After Amount"
+#~ msgstr "Nakon iznosa"
+
+#~ msgid "Albania"
+#~ msgstr "Albanija"
+
+#~ msgid "Algeria"
+#~ msgstr "Alžir"
+
+#~ msgid "All"
+#~ msgstr "Sve"
+
+#~ msgid "Allow cashier to reprint receipts"
+#~ msgstr "Dozvoli kaseru da ponovno odštampa račun"
+
+#~ msgid "Allowed Companies"
+#~ msgstr "Dopuštene kompanije"
+
+#~ msgid ""
+#~ "Allows you to create your invoices and track the payments. It is an "
+#~ "easier version of the accounting module for managers who are not "
+#~ "accountants."
+#~ msgstr ""
+#~ "Dozvoljava Vam da kreirate vaše fakture i pratite plaćanja. To je lakša "
+#~ "verzija modula računovodstva za menadžere koji nisu računovođe."
+
+#~ msgid "American Samoa"
+#~ msgstr "Američka Samoa"
+
+#~ msgid ""
+#~ "An arbitrary string, interpreted by the client according to its own needs "
+#~ "and wishes. There is no central tag repository across clients."
+#~ msgstr ""
+#~ "Slobodan niz znakova, interpretiran od strane klijenta na osnovu "
+#~ "sopstvenih potreba i želja. Ne postoji centralna oznaka repozitorija "
+#~ "preko klijenata."
+
+#~ msgid ""
+#~ "An auto-installable module is automatically installed by the system when "
+#~ "all its dependencies are satisfied. If the module has no dependency, it "
+#~ "is always installed."
+#~ msgstr ""
+#~ "Auto instalacijski modul se automatski instalira od strane sistema kada "
+#~ "se sve ovisnosti ispune. Ako modul nema ovisnosti, uvijek je instaliran."
+
+#~ msgid "Analytic Accounting"
+#~ msgstr "Analitičko računovodstvo"
+
+#~ msgid "Angola"
+#~ msgstr "Angolski"
+
+#~ msgid "Anguilla"
+#~ msgstr "Angvila"
+
+#~ msgid "Antarctica"
+#~ msgstr "Antarktik"
+
+#~ msgid "Antigua and Barbuda"
+#~ msgstr "Antigva i Barbuda"
+
+#~ msgid ""
+#~ "Appears by default on the top right corner of your printed documents "
+#~ "(report header)."
+#~ msgstr ""
+#~ "Pojavljuje se u gornjem desnom uglu ispisanih dokumenata ( zaglavlje "
+#~ "izvještaja)"
+
+#~ msgid "Application"
+#~ msgstr "Aplikacija"
+
+#~ msgid "Application Terms"
+#~ msgstr "Termini aplikacije"
+
+#~ msgid "Apply"
+#~ msgstr "Primjeni"
+
+#~ msgid "Apply Scheduled Upgrades"
+#~ msgstr "Primjeni planirane nadogradnje"
+
+#~ msgid "Apply for Create"
+#~ msgstr "Kreiranje"
+
+#~ msgid "Apply for Delete"
+#~ msgstr "Brisanje"
+
+#~ msgid "Apply for Read"
+#~ msgstr "Čitanje"
+
+#~ msgid "Apply for Write"
+#~ msgstr "Pisanje"
+
+#~ msgid "Apps"
+#~ msgstr "Aplikacije"
+
+#~ msgid "Apps To Export"
+#~ msgstr "Aplikacije za izvoz"
+
+#~ msgid "Apps to Update"
+#~ msgstr "Aplikacije za nadogradnju"
+
+#~ msgid "Apps:"
+#~ msgstr "Aplikacije:"
+
+#~ msgid "Architecture"
+#~ msgstr "Arhitektura"
+
+#~ msgid "Archived"
+#~ msgstr "Arhivirano"
+
+#~ msgid "Are you sure to execute the automatic merge of your contacts ?"
+#~ msgstr "Dali ste sigurni da izvršite automatsko spajanje vaših kontakata?"
+
+#~ msgid ""
+#~ "Are you sure to execute the list of automatic merges of your contacts ?"
+#~ msgstr ""
+#~ "Dali ste sigurni da izvršite listu automatskih spajanja vaših kontakata?"
+
+#~ msgid "Argentina"
+#~ msgstr "Argentina"
+
+#~ msgid "Armenia"
+#~ msgstr "Armenija"
+
+#~ msgid "Aruba"
+#~ msgstr "Aruba"
+
+#~ msgid "Assets Management"
+#~ msgstr "Upravljanje Sredstvima"
+
+#~ msgid "Associated reports"
+#~ msgstr "Povezani izvještaji"
+
+#~ msgid "Associations Management"
+#~ msgstr "Upravljanje udruženjima"
+
+#~ msgid "Attached Document Name"
+#~ msgstr "Naziv zakačenog dokumenta"
+
+#~ msgid "Attached To"
+#~ msgstr "Prikačeno na"
+
+#~ msgid "Attachment"
+#~ msgstr "Zakačka"
+
+#~ msgid "Attachments"
+#~ msgstr "Prilozi"
+
+#~ msgid "Attendance"
+#~ msgstr "Prisutnost"
+
+#~ msgid "Attendances"
+#~ msgstr "Prisutnosti"
+
+#~ msgid "Australia"
+#~ msgstr "Australija"
+
+#~ msgid "Austria"
+#~ msgstr "Austrija"
+
+#~ msgid "Austria - Accounting"
+#~ msgstr "Austrija - računovodstvo"
+
+#~ msgid "Authentication via LDAP"
+#~ msgstr "LDAP Autentikacija"
+
+#~ msgid "Author"
+#~ msgstr "Autor"
+
+#~ msgid "Author Name"
+#~ msgstr "Ime autora"
+
+#~ msgid "Auto Search"
+#~ msgstr "Automatska pretraga"
+
+#~ msgid "Automated Action Rules"
+#~ msgstr "Automatizovana pravila akcije"
+
+#~ msgid "Automated Translations through Gengo API"
+#~ msgstr "Automatizirani prevodi preko Gengo API"
+
+#~ msgid "Automatic Installation"
+#~ msgstr "Automatska instalacija"
+
+#~ msgid "Automatic Merge Wizard"
+#~ msgstr "Čarobnjak automatskog spajanja"
+
+#~ msgid ""
+#~ "Automatically set to let administators find new terms that might need to "
+#~ "be translated"
+#~ msgstr ""
+#~ "Automatski postavljeno da dozvoli administratorima da pronađu termine "
+#~ "koji možda treba da budu prevedeni"
+
+#~ msgid "Automation"
+#~ msgstr "Automatizacija"
+
+#~ msgid "Available for User"
+#~ msgstr "Dostupno korisniku"
+
+#~ msgid "Azerbaijan"
+#~ msgstr "Azerbejdžan"
+
+#~ msgid "B0  14  1000 x 1414 mm"
+#~ msgstr "B0  14  1000 x 1414 mm"
+
+#~ msgid "B1  15  707 x 1000 mm"
+#~ msgstr "B1  15  707 x 1000 mm"
+
+#~ msgid "B2  17  500 x 707 mm"
+#~ msgstr "B2  17  500 x 707 mm"
+
+#~ msgid "B3  18  353 x 500 mm"
+#~ msgstr "B3  18  353 x 500 mm"
+
+#~ msgid "B4  19  250 x 353 mm"
+#~ msgstr "B4  19  250 x 353 mm"
+
+#~ msgid "B5  1   176 x 250 mm, 6.93 x 9.84 inches"
+#~ msgstr "B5  1   176 x 250 mm, 6.93 x 9.84 inča"
+
+#~ msgid "B6  20  125 x 176 mm"
+#~ msgstr "B6  20  125 x 176 mm"
+
+#~ msgid "B7  21  88 x 125 mm"
+#~ msgstr "B7  21  88 x 125 mm"
+
+#~ msgid "B8  22  62 x 88 mm"
+#~ msgstr "B8  22  62 x 88 mm"
+
+#~ msgid "B9  23  33 x 62 mm"
+#~ msgstr "B9  23  33 x 62 mm"
+
+#~ msgid "Bad file format: %s"
+#~ msgstr "Loš format datoteke: %s"
+
+#~ msgid "Bahamas"
+#~ msgstr "Bahami"
+
+#~ msgid "Bangladesh"
+#~ msgstr "Bangladeš"
+
+#~ msgid "Bank"
+#~ msgstr "Banka"
+
+#~ msgid "Bank Accounts"
+#~ msgstr "Računi banke"
+
+#~ msgid "Bank Identifier Code"
+#~ msgstr "Identifikacijska šifra banke"
+
+#~ msgid "Bank Name"
+#~ msgstr "Naziv banke"
+
+#~ msgid "Bank account"
+#~ msgstr "Žiro račun"
+
+#~ msgid "Bank accounts related to this company"
+#~ msgstr "Bankovni računi povezani sa ovom kompanijom"
+
+#~ msgid "Banks"
+#~ msgstr "Banke"
+
+#~ msgid "Barbados"
+#~ msgstr "Barbados"
+
+#~ msgid "Barcode Scanner Hardware Driver"
+#~ msgstr "Barkod skener hardverski drajver"
+
+#~ msgid "Barcodes Scanning and Parsing"
+#~ msgstr "Barkod skeniranje i parsiranje"
+
+#~ msgid "Base"
+#~ msgstr "Osnova"
+
+#~ msgid "Base Field"
+#~ msgstr "Osnovno polje"
+
+#~ msgid "Base Object"
+#~ msgstr "Osnovni objekt"
+
+#~ msgid "Base Properties"
+#~ msgstr "Osnovna svojstva"
+
+#~ msgid "Base import"
+#~ msgstr "Osnovni uvoz"
+
+#~ msgid "Base import module"
+#~ msgstr "Osnovni uvozni modul"
+
+#~ msgid "Base: Auto-vacuum internal data"
+#~ msgstr "Osnova: Automatsko vakumiranje internih podataka"
+
+#~ msgid "Basic 2D Grid view for odoo"
+#~ msgstr "Osnovno 2D grid pogled za odoo"
+
+#~ msgid "Before Address"
+#~ msgstr "Prije adrese"
+
+#~ msgid "Before Amount"
+#~ msgstr "Prije iznosa"
+
+#~ msgid "Belgium"
+#~ msgstr "Belgija"
+
+#~ msgid "Belgium - Structured Communication"
+#~ msgstr "Belgija - struktuirana komunkacija"
+
+#~ msgid "Belize"
+#~ msgstr "Belize"
+
+#~ msgid "Benin"
+#~ msgstr "Beninski"
+
+#~ msgid "Bermuda"
+#~ msgstr "Bermudi"
+
+#~ msgid "Bhutan"
+#~ msgstr "Butan"
+
+#~ msgid "Binary"
+#~ msgstr "Binarni"
+
+#~ msgid "Binding Model"
+#~ msgstr "Vezni model"
+
+#~ msgid "Binding Type"
+#~ msgstr "Tip vezivanja"
+
+#~ msgid "Bolivia"
+#~ msgstr "Bolivija"
+
+#~ msgid "Boolean"
+#~ msgstr "Logički"
+
+#~ msgid "Bootswatch Theme"
+#~ msgstr "Bootswatch Tema"
+
+#~ msgid "Bosnia and Herzegovina"
+#~ msgstr "Bosna i Hercegovina"
+
+#~ msgid "Botswana"
+#~ msgstr "Bocvana"
+
+#~ msgid "Bottom Margin (mm)"
+#~ msgstr "Donja margina (mm)"
+
+#~ msgid "Bouvet Island"
+#~ msgstr "Ostrvo Bouvet"
+
+#~ msgid "Brazil"
+#~ msgstr "Brazil"
+
+#~ msgid "British Indian Ocean Territory"
+#~ msgstr "Britanske teritorije u Indijskom okeanu"
+
+#~ msgid "Budget Management"
+#~ msgstr "Upravljanje budžetom"
+
+#~ msgid "Burkina Faso"
+#~ msgstr "Burkina Faso"
+
+#~ msgid "Burundi"
+#~ msgstr "Burundi"
+
+#~ msgid "By"
+#~ msgstr "Od strane"
+
+#~ msgid "C5E 24  163 x 229 mm"
+#~ msgstr "C5E 24  163 x 229 mm"
+
+#~ msgid "CRM"
+#~ msgstr "CRM"
+
+#~ msgid "CSV File"
+#~ msgstr "CSV datoteka"
+
+#~ msgid ""
+#~ "CSV format: you may edit it directly with your favorite spreadsheet "
+#~ "software,\n"
+#~ "                                the rightmost column (value) contains the "
+#~ "translations"
+#~ msgstr ""
+#~ "CSV format: možete ga editovati direktno sa vašim omiljenim spreadsheet "
+#~ "software-om,\n"
+#~ "                                zadnja desna kolona (vrijednost) sadrži "
+#~ "prevod"
+
+#~ msgid "Calendar"
+#~ msgstr "Kalendar"
+
+#~ msgid "Cameroon"
+#~ msgstr "Kamerun"
+
+#~ msgid "Canada"
+#~ msgstr "Kanada"
+
+#~ msgid "Cancel"
+#~ msgstr "Otkaži"
+
+#~ msgid "Cancel Install"
+#~ msgstr "Otkaži instalaciju"
+
+#~ msgid "Cancel Journal Entries"
+#~ msgstr "Otkaži zapise knjiženja"
+
+#~ msgid "Cancel Uninstall"
+#~ msgstr "Poništi deinstalaciju"
+
+#~ msgid "Cancel Upgrade"
+#~ msgstr "Otkaži nadogradnju"
+
+#~ msgid "Cape Verde"
+#~ msgstr "Zelenortska Ostrva"
+
+#~ msgid "Cascade"
+#~ msgstr "Kaskadno"
+
+#~ msgid "Category"
+#~ msgstr "Kategorija"
+
+#~ msgid "Cayman Islands"
+#~ msgstr "Kajmanska ostrva"
+
+#~ msgid "Central African Republic"
+#~ msgstr "Centralno Afrička Republika"
+
+#~ msgid "Chad"
+#~ msgstr "Čad"
+
+#~ msgid "Change My Preferences"
+#~ msgstr "Promjeni Moje postavke"
+
+#~ msgid "Change Password"
+#~ msgstr "Promjeni šifru"
+
+#~ msgid "Change Password Wizard"
+#~ msgstr "Čarobnjak za promjenu lozinke"
+
+#~ msgid "Change password"
+#~ msgstr "Promijeni šifru"
+
+#~ msgid "Change the way addresses are displayed in reports"
+#~ msgstr "Promjeni način na koji je adresa prikazana u izvještajima"
+
+#~ msgid "Char"
+#~ msgstr "Znak"
+
+#~ msgid "Check if the contact is a company, otherwise it is a person"
+#~ msgstr "Označite ako je kontakt Kompanija, u suprotnom smatra se osobom"
+
+#~ msgid "Check this box if this contact is an Employee."
+#~ msgstr "Označite ovo polje ako je ovaj kontakt zaposleni"
+
+#~ msgid "Child Actions"
+#~ msgstr "Podređena akcija"
+
+#~ msgid "Child Applications"
+#~ msgstr "Podređene aplikacije"
+
+#~ msgid "Child Companies"
+#~ msgstr "Podređene kompanije"
+
+#~ msgid "Child Field"
+#~ msgstr "POdređeno polje"
+
+#~ msgid "Child IDs"
+#~ msgstr "ID-ovi podređenih"
+
+#~ msgid "Child Tags"
+#~ msgstr "Podređena oznaka"
+
+#~ msgid ""
+#~ "Child server actions that will be executed. Note that the last return "
+#~ "returned action value will be used as global return value."
+#~ msgstr ""
+#~ "Podređena serverska akcija koja će biti izvršena. Zapamtite da će zadnja "
+#~ "vraćena vrijednost akcije biti korišćena kao globalna vraćena vrijednost."
+
+#~ msgid "Choose Your Document Layout"
+#~ msgstr "Odaberite vaš raspored dokumenta"
+
+#~ msgid ""
+#~ "Choose a subview of partners that includes only address fields, to change "
+#~ "the way users can input addresses."
+#~ msgstr ""
+#~ "Odaberite pod pogled partnera koji uključuju samo polje adresa, da "
+#~ "promjenite način na koji korisnici mogu unositi adrese."
+
+#~ msgid ""
+#~ "Choose the connection encryption scheme:\n"
+#~ "- None: SMTP sessions are done in cleartext.\n"
+#~ "- TLS (STARTTLS): TLS encryption is requested at start of SMTP session "
+#~ "(Recommended)\n"
+#~ "- SSL/TLS: SMTP sessions are encrypted with SSL/TLS through a dedicated "
+#~ "port (default: 465)"
+#~ msgstr ""
+#~ "Odaberite šemu enkripcije konekcije:\n"
+#~ "- Nema: SMTP sesije su urađene u čistom tekstu.\n"
+#~ "- TLS (STARTTLS): TLS enkripcija je zahtjevana pri začetku SMTP sesije "
+#~ "(Preporučeno)\n"
+#~ "- SSL/TLS: SMTP sesije su enkriptovane sa SSL/TLS kroz posvećeni port "
+#~ "(zadano: 465)"
+
+#~ msgid "City"
+#~ msgstr "Grad"
+
+#~ msgid "City Addresses"
+#~ msgstr "Adresa grada"
+
+#~ msgid "Client"
+#~ msgstr "Klijent"
+
+#~ msgid "Client Action"
+#~ msgstr "Klijentska akcija"
+
+#~ msgid "Client action tag"
+#~ msgstr "Oznaka klijentske akcije"
+
+#~ msgid "Close"
+#~ msgstr "Zatvori"
+
+#~ msgid "Cocos (Keeling) Islands"
+#~ msgstr "Kokosova (Kilingova) ostrva"
+
+#~ msgid "Code"
+#~ msgstr "Šifra"
+
+#~ msgid "Collaborative Pads"
+#~ msgstr "Kolaborativne bilježnice"
+
+#~ msgid "Colombia"
+#~ msgstr "Kolumbija"
+
+#~ msgid "Color Index"
+#~ msgstr "Indeks boje"
+
+#~ msgid "Column 1"
+#~ msgstr "Kolona 1"
+
+#~ msgid "Column 2"
+#~ msgstr "Kolona 2"
+
+#~ msgid "Column referring to the record in the comodel table"
+#~ msgstr "Kolona koja referiše na zapis referentne tabele modela"
+
+#~ msgid "Column referring to the record in the model table"
+#~ msgstr "Kolona koja referiše na zapis u tabeli modela"
+
+#~ msgid ""
+#~ "Comma-separated list of allowed view modes, such as 'form', 'tree', "
+#~ "'calendar', etc. (Default: tree,form)"
+#~ msgstr ""
+#~ "Zarezima odvojena lista dozvoljenih vrsta pogleda , kao  'forma', "
+#~ "'stablo', 'kalendar', itd. (Zadano: stablo,forma)"
+
+#~ msgid "Comments"
+#~ msgstr "Komentari"
+
+#~ msgid "Commercial Entity"
+#~ msgstr "Komercijalni entitet"
+
+#~ msgid "Communication"
+#~ msgstr "Komunikacija"
+
+#~ msgid "Companies"
+#~ msgstr "Kompanije"
+
+#~ msgid "Companies count"
+#~ msgstr "Broj kompanija"
+
+#~ msgid "Company Data"
+#~ msgstr "Podatci kompanije"
+
+#~ msgid "Company Logo"
+#~ msgstr "Logo kompanije"
+
+#~ msgid "Company Name"
+#~ msgstr "Naziv firme"
+
+#~ msgid "Company Properties"
+#~ msgstr "Kompanijska svojstva"
+
+#~ msgid "Company Registry"
+#~ msgstr "Matični broj"
+
+#~ msgid "Company Tagline"
+#~ msgstr "Slogan kompanije"
+
+#~ msgid "Company Type"
+#~ msgstr "Tip kompanije"
+
+#~ msgid "Complete Address"
+#~ msgstr "Puna adresa"
+
+#~ msgid "Complete ID"
+#~ msgstr "Puni ID"
+
+#~ msgid "Complete Name"
+#~ msgstr "Puni naziv"
+
+#~ msgid "Compute"
+#~ msgstr "Izračunaj"
+
+#~ msgid "Condition"
+#~ msgstr "Uslov"
+
+#~ msgid "Config Wizard Steps"
+#~ msgstr "Koraci konfiguracijskog čarobnjaka"
+
+#~ msgid "Configuration"
+#~ msgstr "Konfiguracija"
+
+#~ msgid "Configuration Installer"
+#~ msgstr "Konfiguracijski instaler"
+
+#~ msgid "Configuration Wizards"
+#~ msgstr "Konfiguracijski čarobnjaci"
+
+#~ msgid "Confirm"
+#~ msgstr "Portvrdi"
+
+#~ msgid "Connection Information"
+#~ msgstr "Informacija o konekciji"
+
+#~ msgid "Constraint"
+#~ msgstr "Ograničenje"
+
+#~ msgid "Constraint Type"
+#~ msgstr "Tip ograničenja"
+
+#~ msgid "Constraints with the same name are unique per module."
+#~ msgstr "Ograničenja sa istim imenom su jedinstvena na nivou jednog modula."
+
+#~ msgid "Contact"
+#~ msgstr "Kontakt"
+
+#~ msgid "Contact / Address"
+#~ msgstr "Kontakt / Adresa"
+
+#~ msgid "Contact Creation"
+#~ msgstr "Kreiranje kontakta"
+
+#~ msgid "Contact Form"
+#~ msgstr "Kontakt forma"
+
+#~ msgid "Contact Form Number Validation"
+#~ msgstr "Validacija broja kontakt forme"
+
+#~ msgid "Contact Name"
+#~ msgstr "Ime kontakta"
+
+#~ msgid "Contact Tag"
+#~ msgstr "Oznaka kontakta"
+
+#~ msgid "Contact Tags"
+#~ msgstr "Oznake kontakata"
+
+#~ msgid "Contact Titles"
+#~ msgstr "Titule kontakta"
+
+#~ msgid "Contacts"
+#~ msgstr "Kontakti"
+
+#~ msgid "Contacts & Addresses"
+#~ msgstr "Kontakti i Adrese"
+
+#~ msgid "Contacts require a name."
+#~ msgstr "Kontakti zahtjevaju ime."
+
+#~ msgid "Context"
+#~ msgstr "Kontekst"
+
+#~ msgid "Context Value"
+#~ msgstr "Vrijednost konteksta"
+
+#~ msgid ""
+#~ "Context dictionary as Python expression, empty by default (Default: {})"
+#~ msgstr ""
+#~ "Riječnik (dictionary) konteksta kao Python izraz, početna vrijednost je "
+#~ "prazno (Zadano: {})"
+
+#~ msgid "Contracts"
+#~ msgstr "Ugovori"
+
+#~ msgid "Contributors"
+#~ msgstr "Saradnici"
+
+#~ msgid "Copied"
+#~ msgstr "Kopirano"
+
+#~ msgid "Costa Rica - Accounting"
+#~ msgstr "Kostarika - Računovodstvo"
+
+#~ msgid "Count (incl. archived)"
+#~ msgstr "Broj (uključujući arhivirano)"
+
+#~ msgid "Countries"
+#~ msgstr "Zemlje"
+
+#~ msgid "Country"
+#~ msgstr "Država"
+
+#~ msgid "Country Calling Code"
+#~ msgstr "Pozivni broj države"
+
+#~ msgid "Country Code"
+#~ msgstr "Šifra države"
+
+#~ msgid "Country Group"
+#~ msgstr "Grupa zemalja"
+
+#~ msgid "Country Groups"
+#~ msgstr "Grupe zemalja"
+
+#~ msgid "Country Name"
+#~ msgstr "Naziv države"
+
+#~ msgid "Country state"
+#~ msgstr "Fed. država/Kanton"
+
+#~ msgid "Create Access"
+#~ msgstr "Kreiranje"
+
+#~ msgid "Create Access Right"
+#~ msgstr "Kreiranje"
+
+#~ msgid "Create Contextual Action"
+#~ msgstr "Kreiraj kontekstualnu akciju"
+
+#~ msgid "Create Date"
+#~ msgstr "Kreiraj datum"
+
+#~ msgid "Create Menu"
+#~ msgstr "Kreiraj izbornik"
+
+#~ msgid "Create Tasks from Leads"
+#~ msgstr "Kreiraj zadatke sa potencijala"
+
+#~ msgid "Create _Menu"
+#~ msgstr "Kreiraj _Meni"
+
+#~ msgid "Create a Menu"
+#~ msgstr "Kreiraj meni"
+
+#~ msgid "Create a new Record"
+#~ msgstr "Kreiraj novi zapis"
+
+#~ msgid ""
+#~ "Create and manage users that will connect to the system. Users can be "
+#~ "deactivated should there be a period of time during which they will/"
+#~ "should not connect to the system. You can assign them groups in order to "
+#~ "give them specific access to the applications they need to use in the "
+#~ "system."
+#~ msgstr ""
+#~ "Kreirajte i upravljajte korisnicima koji će se spajati na sistem. "
+#~ "Korisnici mogu biti deaktivirani ako postoji potreba da u određenom "
+#~ "vremenu trebaju ili ne trebaju biti prijavljeni na sistem. Možete im "
+#~ "dodjeliti grupe da bi ste im dali specifična prava pristupa aplikacijama "
+#~ "koje trebaju da koriste u sistemu."
+
+#~ msgid "Create lead from livechat conversation"
+#~ msgstr "Kreiraj potencijal iz razgovora na čatu u živo"
+
+#~ msgid "Create new lead with using /lead command in the channel"
+#~ msgstr "Kreiraj novi potencijal koristeći komandu /lead na kanalu"
+
+#~ msgid "Create/Write Target Model"
+#~ msgstr "Kreiraj/Piši ciljani model"
+
+#~ msgid "Created Menus"
+#~ msgstr "Kreirani meniji"
+
+#~ msgid "Created Views"
+#~ msgstr "Kreirani prikazi"
+
+#~ msgid "Created by"
+#~ msgstr "Kreirao"
+
+#~ msgid "Created on"
+#~ msgstr "Kreirano"
+
+#~ msgid "Creation"
+#~ msgstr "Kreiranje"
+
+#~ msgid "Creation Date"
+#~ msgstr "Datum kreiranja"
+
+#~ msgid "Credit Limit"
+#~ msgstr "Limit zaduženja"
+
+#~ msgid "Credit card support for Point Of Sale"
+#~ msgstr "Podrška za kreditne kartice u POSu"
+
+#~ msgid "Crm Phone Numbers Validation"
+#~ msgstr "Validacija brojeva telefona u CRM-u"
+
+#~ msgid "Croatia"
+#~ msgstr "Hrvatska"
+
+#~ msgid "Cuba"
+#~ msgstr "Kuba"
+
+#~ msgid "Curaçao"
+#~ msgstr "Curaçao"
+
+#~ msgid "Currencies"
+#~ msgstr "Valute"
+
+#~ msgid "Currency Code (ISO 4217)"
+#~ msgstr "Šifra valute (ISO 4217)"
+
+#~ msgid "Currency Rate"
+#~ msgstr "Kursna lista"
+
+#~ msgid "Currency Rates"
+#~ msgstr "Valutne stope"
+
+#~ msgid "Currency Subunit"
+#~ msgstr "Podjedinica valute"
+
+#~ msgid "Currency Subunit Name"
+#~ msgstr "Naziv podjedinice valute"
+
+#~ msgid "Currency Unit"
+#~ msgstr "Jedinica valute"
+
+#~ msgid "Currency Unit Name"
+#~ msgstr "Naziv jedinice valute"
+
+#~ msgid "Currency sign, to be used when printing amounts."
+#~ msgstr "Kursne oznake, koje će se koristiti prilikom štampanja iznosa."
+
+#~ msgid "Current Company"
+#~ msgstr "Trenutna kompanija"
+
+#~ msgid "Current Line"
+#~ msgstr "Trenutna linija"
+
+#~ msgid "Current Rate"
+#~ msgstr "Kurs"
+
+#~ msgid "Current Window"
+#~ msgstr "Trenutni prozor"
+
+#~ msgid "Custom"
+#~ msgstr "Prilagođeno"
+
+#~ msgid "Custom Field"
+#~ msgstr "Prilagođeno polje"
+
+#~ msgid "Custom Object"
+#~ msgstr "Prilagođeni objekt"
+
+#~ msgid "Custom Shortcuts"
+#~ msgstr "Prilagođene prečice"
+
+#~ msgid "Customer Name Position"
+#~ msgstr "Pozicija naziva kupca"
+
+#~ msgid "Customer Portal"
+#~ msgstr "Javni portal"
+
+#~ msgid "Customer Rating"
+#~ msgstr "Ocijena kupca"
+
+#~ msgid "Customer References"
+#~ msgstr "Referenca kupca"
+
+#~ msgid "Customers"
+#~ msgstr "Kupci"
+
+#~ msgid "Customized Views"
+#~ msgstr "Prilagođeni Pogledi"
+
+#~ msgid ""
+#~ "Customized views are used when users reorganize the content of their "
+#~ "dashboard views (via web client)"
+#~ msgstr ""
+#~ "Prilagođeni pogledi se koriste kada korisnik reorganizira sadržaj "
+#~ "kontrolnih ploča (putem web klijent)"
+
+#~ msgid "DLE 26 110 x 220 mm"
+#~ msgstr "DLE 26 110 x 220 mm"
+
+#~ msgid "Dashboards"
+#~ msgstr "Kontrolne ploče"
+
+#~ msgid "Data to Write"
+#~ msgstr "Podatci za upis"
+
+#~ msgid "Database"
+#~ msgstr "Baza podataka"
+
+#~ msgid "Database Data"
+#~ msgstr "Podatci baze"
+
+#~ msgid ""
+#~ "Database ID of record to open in form view, when ``view_mode`` is set to "
+#~ "'form' only"
+#~ msgstr ""
+#~ "ID baze podataka zapisa za otvaranje u pogledu forme, kada je "
+#~ "``view_mode`` postavljen samo na  'form'"
+
+#~ msgid "Database Name"
+#~ msgstr "Naziv baze podataka"
+
+#~ msgid "Database Structure"
+#~ msgstr "Struktura baze podataka"
+
+#~ msgid "Date Format"
+#~ msgstr "Format datuma"
+
+#~ msgid "DateTime"
+#~ msgstr "DatumVrijeme"
+
+#~ msgid "Days"
+#~ msgstr "Dani"
+
+#~ msgid "Debugging"
+#~ msgstr "Otklanjanje grešaka"
+
+#~ msgid "Decimal Places"
+#~ msgstr "Decimalna mjesta"
+
+#~ msgid "Decimal Precision Configuration"
+#~ msgstr "Konfiguracija preciznosti decimala"
+
+#~ msgid "Decimal Separator"
+#~ msgstr "Decimalni separator"
+
+#~ msgid "Deduplicate Contacts"
+#~ msgstr "Dedupliciraj kontakte"
+
+#~ msgid "Deduplicate the other Contacts"
+#~ msgstr "Deduplicirajte ostale kontakte"
+
+#~ msgid "Default Filter"
+#~ msgstr "Zadani filter"
+
+#~ msgid "Default Theme"
+#~ msgstr "Zadana tema"
+
+#~ msgid "Default Value (JSON format)"
+#~ msgstr "Zadana vrijednost (JSON format)"
+
+#~ msgid "Default Values"
+#~ msgstr "Zadane vrijednosti"
+
+#~ msgid "Default limit for the list view"
+#~ msgstr "Podrazumjevana granica za prikaz liste"
+
+#~ msgid "Default paper format ?"
+#~ msgstr "Zadani format papira?"
+
+#~ msgid "Deferred Revenues"
+#~ msgstr "Odloženi prihodi"
+
+#~ msgid "Deferred Revenues Management for Subscriptions"
+#~ msgstr "Upravljanje odloženim prihodima za pretplate"
+
+#~ msgid "Define Taxes as Python Code"
+#~ msgstr "Definiši poreze kao Python kod"
+
+#~ msgid "Defined Reports"
+#~ msgstr "Definirani izvještaji"
+
+#~ msgid "Definition"
+#~ msgstr "Definicija"
+
+#~ msgid "Delete Access"
+#~ msgstr "Brisanje"
+
+#~ msgid "Delete Access Right"
+#~ msgstr "Brisanje"
+
+#~ msgid "Delivery"
+#~ msgstr "Isporuka"
+
+#~ msgid "Delivery Barcode Scanning"
+#~ msgstr "Barkod skeniranje isporuka"
+
+#~ msgid "Delivery Costs"
+#~ msgstr "Troškovi Dostave"
+
+#~ msgid "Demo Data"
+#~ msgstr "Demo Podaci"
+
+#~ msgid "Dependencies"
+#~ msgstr "Ovisnosti"
+
+#~ msgid ""
+#~ "Dependencies of compute method; a list of comma-separated field names, "
+#~ "like\n"
+#~ "\n"
+#~ "    name, partner_id.name"
+#~ msgstr ""
+#~ "Ovisnosti kalkulisanih metoda; lista zarezom odvojenih naziva polja, kao\n"
+#~ "\n"
+#~ "    name, partner_id.name"
+
+#~ msgid "Dependency"
+#~ msgstr "Ovisnost"
+
+#~ msgid "Description"
+#~ msgstr "Opis"
+
+#~ msgid "Description HTML"
+#~ msgstr "Opis HTML"
+
+#~ msgid "Destination Contact"
+#~ msgstr "Odredišni kontakt"
+
+#~ msgid "Destination Model"
+#~ msgstr "Odredišni model"
+
+#~ msgid "Detailed algorithm:"
+#~ msgstr "Detaljni algoritam:"
+
+#~ msgid ""
+#~ "Determines where the currency symbol should be placed after or before the "
+#~ "amount."
+#~ msgstr ""
+#~ "Određuje gdje bi se trebao nalaziti simbol valute, prije ili nakon iznosa."
+
+#~ msgid "Diagram"
+#~ msgstr "Dijagram"
+
+#~ msgid "Digital Products"
+#~ msgstr "Digitalni proizvod"
+
+#~ msgid "Discard"
+#~ msgstr "Odbaci"
+
+#~ msgid "Discuss"
+#~ msgstr "Rasprava"
+
+#~ msgid "Display"
+#~ msgstr "Prikaz"
+
+#~ msgid "Display Website Elements in Studio"
+#~ msgstr "Prikaži elemente web stranice u studiju"
+
+#~ msgid ""
+#~ "Display an option in the 'More' top-menu in order to run this action."
+#~ msgstr ""
+#~ "Prikaži opciju u 'Više' gornjem meniju da bi ste mogli koristiti ovu "
+#~ "akciju."
+
+#~ msgid "Display an option on related documents to print this report"
+#~ msgstr "Prikaži opciju na povezanim dokumentima da ispišete ovaj izvještaj"
+
+#~ msgid ""
+#~ "Display and manage the list of all countries group. You can create or "
+#~ "delete country group to make sure the ones you are working on will be "
+#~ "maintained."
+#~ msgstr ""
+#~ "Prikaži i upravljaj sa listom grupa zemalja. Možete kreirati ili obrisati "
+#~ "grupu zemalja da obezbjedite da oni sa kojima radite budu pravilno "
+#~ "održavani."
+
+#~ msgid ""
+#~ "Display and manage the list of all countries that can be assigned to your "
+#~ "partner records. You can create or delete countries to make sure the ones "
+#~ "you are working on will be maintained."
+#~ msgstr ""
+#~ "Prikaži i upravljaj listom svih država koje mogu biti dodjeljene vašim "
+#~ "partnerima. Možete kreirati ili brisati države da budete sigurni da "
+#~ "radite sa onim koji će biti održavani."
+
+#~ msgid ""
+#~ "Display format to use for addresses belonging to this country.\n"
+#~ "\n"
+#~ "You can use python-style string pattern with all the fields of the "
+#~ "address (for example, use '%(street)s' to display the field 'street') "
+#~ "plus\n"
+#~ "%(state_name)s: the name of the state\n"
+#~ "%(state_code)s: the code of the state\n"
+#~ "%(country_name)s: the name of the country\n"
+#~ "%(country_code)s: the code of the country"
+#~ msgstr ""
+#~ "Prikazni format koji se koristi na adresama koje pripadaju ovoj državi.\n"
+#~ "\n"
+#~ "Možete koristiti python-stil string patern sa svim poljima adrese ( na "
+#~ "primjer, koristite '%(street)s' da prikažete polje 'street') plus\n"
+#~ "%(state_name)s: naziv republike\n"
+#~ "%(state_code)s: šifra republike\n"
+#~ "%(country_name)s: ime države\n"
+#~ "%(country_code)s: šifra države"
+
+#~ msgid "Djibouti"
+#~ msgstr "Djibouti"
+
+#~ msgid "Doctor"
+#~ msgstr "Doktor"
+
+#~ msgid "Document"
+#~ msgstr "Dokument"
+
+#~ msgid "Document Management"
+#~ msgstr "Upravljanje dokumentima"
+
+#~ msgid "Document Template"
+#~ msgstr "Predložak dokumenta"
+
+#~ msgid "Document model"
+#~ msgstr "Model dokumenta"
+
+#~ msgid "Documents"
+#~ msgstr "Dokumenti"
+
+#~ msgid "Domain"
+#~ msgstr "Domen"
+
+#~ msgid "Domain Value"
+#~ msgstr "Vrijednost domene"
+
+#~ msgid "Done"
+#~ msgstr "Gotovo"
+
+#~ msgid "Dr."
+#~ msgstr "Dr."
+
+#~ msgid "Each model must be unique!"
+#~ msgstr "Svaki model mora biti jedinstven"
+
+#~ msgid "Edit Translations"
+#~ msgstr "Uredi prevode"
+
+#~ msgid "Education"
+#~ msgstr "Edukacija"
+
+#~ msgid "Element '%s' cannot be located in parent view"
+#~ msgstr "Element '%s' ne može biti pronađen u nadređenom pogledu"
+
+#~ msgid "Email Address"
+#~ msgstr "E-mail adresa"
+
+#~ msgid "Email Gateway"
+#~ msgstr "Email mrežni prolaz"
+
+#~ msgid "Email Marketing"
+#~ msgstr "Email Marketing"
+
+#~ msgid "Email Preferences"
+#~ msgstr "Podešavanja za E-mail"
+
+#~ msgid "Employee"
+#~ msgstr "Zaposleni"
+
+#~ msgid "Employee Contracts"
+#~ msgstr "Ugovori zaposlinih"
+
+#~ msgid "Employees"
+#~ msgstr "Zaposleni"
+
+#~ msgid ""
+#~ "Enter Python code here. Help about Python expression is available in the "
+#~ "help tab of this document."
+#~ msgstr ""
+#~ "Unesite Python kod ovdje. Pomoć oko Python ekspresija je dostupan u tabu "
+#~ "pomoći ovog dokumenta."
+
+#~ msgid "Equatorial Guinea"
+#~ msgstr "Ekvatorijska Gvineja"
+
+#~ msgid "Eritrea"
+#~ msgstr "Eritreja"
+
+#~ msgid "Error"
+#~ msgstr "Greška"
+
+#~ msgid ""
+#~ "Error context:\n"
+#~ "View `%(view_name)s`"
+#~ msgstr ""
+#~ "Greška konteksta:\n"
+#~ "Pogled `%(view_name)s`"
+
+#~ msgid "Error details:"
+#~ msgstr "Detalji greške:"
+
+#~ msgid "Ethiopia"
+#~ msgstr "Etiopija"
+
+#~ msgid "Europe"
+#~ msgstr "Europa"
+
+#~ msgid "Evaluation Type"
+#~ msgstr "Tip evaluacije"
+
+#~ msgid "Events"
+#~ msgstr "Događaji"
+
+#~ msgid "Events Organization"
+#~ msgstr "Organizacija događaja"
+
+#~ msgid "Events Sales"
+#~ msgstr "Prodaja na događajima"
+
+#~ msgid "Example of Python code"
+#~ msgstr "Primjer Python koda"
+
+#~ msgid "Examples"
+#~ msgstr "Primjeri"
+
+#~ msgid "Exclude contacts having"
+#~ msgstr "Izuzmi kontakte koji imaju"
+
+#~ msgid "Execute Every"
+#~ msgstr "Izvrši svaki"
+
+#~ msgid "Execute Python Code"
+#~ msgstr "Izvrši Python kod"
+
+#~ msgid "Execute several actions"
+#~ msgstr "Izvrši nekoliko akcija"
+
+#~ msgid "Execution"
+#~ msgstr "Izvršavanje"
+
+#~ msgid "Executive 4   7.5 x 10 inches, 190.5 x 254 mm"
+#~ msgstr "Executive 4   7.5 x 10 inča, 190.5 x 254 mm"
+
+#~ msgid "Expenses"
+#~ msgstr "Troškovi"
+
+#~ msgid "Explicitly associated reports"
+#~ msgstr "Eksplicitno dodjeljeni izvještaji"
+
+#~ msgid "Export"
+#~ msgstr "Izvoz"
+
+#~ msgid "Export Complete"
+#~ msgstr "Izvoz je završen"
+
+#~ msgid "Export ID"
+#~ msgstr "ID izvoza"
+
+#~ msgid "Export Name"
+#~ msgstr "Naziv izvoza"
+
+#~ msgid "Export Settings"
+#~ msgstr "Postavke izvoza"
+
+#~ msgid "Export Translation"
+#~ msgstr "Izvoz prevoda"
+
+#~ msgid "Export Translations"
+#~ msgstr "Izvoz prevoda"
+
+#~ msgid "Extended Addresses"
+#~ msgstr "Proširene adrese"
+
+#~ msgid "Extension View"
+#~ msgstr "Prošireni pogled"
+
+#~ msgid "External ID"
+#~ msgstr "Externi ID"
+
+#~ msgid "External Identifier"
+#~ msgstr "Vanjski identifikator"
+
+#~ msgid "External Identifiers"
+#~ msgstr "Vanjski identifikatori"
+
+#~ msgid ""
+#~ "External Key/Identifier that can be used for data integration with third-"
+#~ "party systems"
+#~ msgstr ""
+#~ "Vanjski ključ/identifikator koji se može koristiti za podatkovnu "
+#~ "integraciju sa trećim sistemima"
+
+#~ msgid ""
+#~ "External user with limited access, created only for the purpose of "
+#~ "sharing data."
+#~ msgstr ""
+#~ "Vanjski korisnika sa limitiranim pravima pristupa, kreiran samo za svrhu "
+#~ "djeljenja podataka."
+
+#~ msgid "Extra"
+#~ msgstr "Ekstra"
+
+#~ msgid "Extra Rights"
+#~ msgstr "Ekstra prava"
+
+#~ msgid "Extra Tools"
+#~ msgstr "Dodatni alati"
+
+#~ msgid "Faroe Islands"
+#~ msgstr "Farska Ostrva"
+
+#~ msgid "Fax"
+#~ msgstr "Fax"
+
+#~ msgid "Fed. State"
+#~ msgstr "Federacija"
+
+#~ msgid "Fed. States"
+#~ msgstr "Fed. države"
+
+#~ msgid "Field"
+#~ msgstr "Polje"
+
+#~ msgid "Field Help"
+#~ msgstr "Polje pomoći"
+
+#~ msgid "Field Label"
+#~ msgstr "Prikazani naziv polja"
+
+#~ msgid "Field Mappings"
+#~ msgstr "Mapiranje polja"
+
+#~ msgid "Field Name"
+#~ msgstr "Naziv polja"
+
+#~ msgid "Field Type"
+#~ msgstr "Tip polja"
+
+#~ msgid "Field names must be unique per model."
+#~ msgstr "Nazivi polja moraju biti unikatna po modelu."
+
+#~ msgid "Fields"
+#~ msgstr "Polja"
+
+#~ msgid "Fields Description"
+#~ msgstr "Opis polja"
+
+#~ msgid "Fiji"
+#~ msgstr "Fidži"
+
+#~ msgid "File Content"
+#~ msgstr "Sadržaj datoteke"
+
+#~ msgid "File Format"
+#~ msgstr "Format datoteke"
+
+#~ msgid "File Name"
+#~ msgstr "Ime fajla"
+
+#~ msgid "File Size"
+#~ msgstr "Veličine datoteke"
+
+#~ msgid "Filter"
+#~ msgstr "Filter"
+
+#~ msgid "Filter Name"
+#~ msgstr "Naziv filtera"
+
+#~ msgid "Filter names must be unique"
+#~ msgstr "Nazivi filtera moraju biti jedinstveni"
+
+#~ msgid "Filter on my documents"
+#~ msgstr "Filtriraj moje dokumente"
+
+#~ msgid "Filters"
+#~ msgstr "Filteri"
+
+#~ msgid "Filters created by myself"
+#~ msgstr "Filter koji sam ja kreirao"
+
+#~ msgid "Filters shared with all users"
+#~ msgstr "Filteri djeljeni sa svim korisnicima"
+
+#~ msgid "Filters visible only for one user"
+#~ msgstr "Filteri vidljivi samo jednom korisniku"
+
+#~ msgid "Finished"
+#~ msgstr "Završeno"
+
+#~ msgid "Finland"
+#~ msgstr "Finska"
+
+#~ msgid "Fleet"
+#~ msgstr "Vozni park"
+
+#~ msgid "Float"
+#~ msgstr "Decimalni broj"
+
+#~ msgid "Folio 27  210 x 330 mm"
+#~ msgstr "Folio 27  210 x 330 mm"
+
+#~ msgid "Food"
+#~ msgstr "Hrana"
+
+#~ msgid "Footer"
+#~ msgstr "Podnožje"
+
+#~ msgid "Footer text displayed at the bottom of all reports."
+#~ msgstr "Tekst podnožja prikazan na dnu svih izvještaja"
+
+#~ msgid ""
+#~ "For more details about translating Odoo in your language, please refer to "
+#~ "the"
+#~ msgstr ""
+#~ "Za više informacija o prevođenju Odoo na vaš jezik, molimo pogledajte "
+
+#~ msgid ""
+#~ "For one2many fields, the field on the target model that implement the "
+#~ "opposite many2one relationship"
+#~ msgstr ""
+#~ "Za one2many polja, polje u odredišnom modelu koje implementira suprotnu "
+#~ "many2one vezu"
+
+#~ msgid "For relationship fields, the technical name of the target model"
+#~ msgstr "Za relacijska polja, tehničko ime odredišnog modela"
+
+#~ msgid "For selection fields, the Selection Options must be given!"
+#~ msgstr "Za polja iz odabira, opcije odabira moraju biti zadane!"
+
+#~ msgid "Forum"
+#~ msgstr "Forum"
+
+#~ msgid "French Payroll"
+#~ msgstr "Francuska plata"
+
+#~ msgid "Friday"
+#~ msgstr "Petak"
+
+#~ msgid "From"
+#~ msgstr "Od"
+
+#~ msgid "Full Access"
+#~ msgstr "Puni pristup"
+
+#~ msgid "Full Access Right"
+#~ msgstr "Sva prava"
+
+#~ msgid "Full Name"
+#~ msgstr "Puno Ime"
+
+#~ msgid "Full Path"
+#~ msgstr "Puna putanja"
+
+#~ msgid "Full Screen"
+#~ msgstr "Cijeli ekran"
+
+#~ msgid "Function"
+#~ msgstr "Funkcija"
+
+#~ msgid "GPL Version 2"
+#~ msgstr "GPL Verzija 2"
+
+#~ msgid "GPL Version 3"
+#~ msgstr "GPL Verzija 3"
+
+#~ msgid "GPL-2 or later version"
+#~ msgstr "GPL-2 ili novija verzija"
+
+#~ msgid "GPL-3 or later version"
+#~ msgstr "GPL-3 ili novija verzija"
+
+#~ msgid "Gamification"
+#~ msgstr "Gejmifikacija"
+
+#~ msgid "Gantt"
+#~ msgstr "Gantogram"
+
+#~ msgid "General"
+#~ msgstr "Opšte"
+
+#~ msgid "General Information"
+#~ msgstr "Opšte informacije"
+
+#~ msgid "General Settings"
+#~ msgstr "Opšte postavke"
+
+#~ msgid "Generate Missing Terms"
+#~ msgstr "Generiši nedostajuće termine"
+
+#~ msgid "Generic"
+#~ msgstr "Opšti"
+
+#~ msgid "Georgia"
+#~ msgstr "Gruzija"
+
+#~ msgid "Germany"
+#~ msgstr "Njemačka"
+
+#~ msgid "Ghana"
+#~ msgstr "Gana"
+
+#~ msgid "Global"
+#~ msgstr "Opšte"
+
+#~ msgid "Google Calendar"
+#~ msgstr "Google kalendar"
+
+#~ msgid "Google Drive™ integration"
+#~ msgstr "Google Drive™ integracija"
+
+#~ msgid "Google Spreadsheet"
+#~ msgstr "Google Spreadsheet"
+
+#~ msgid "Graph"
+#~ msgstr "Dijagram"
+
+#~ msgid "Greece"
+#~ msgstr "Grčka"
+
+#~ msgid "Grenada"
+#~ msgstr "Grenada"
+
+#~ msgid "Grid"
+#~ msgstr "Meža"
+
+#~ msgid "Group"
+#~ msgstr "Grupa"
+
+#~ msgid "Group By"
+#~ msgstr "Grupiši po"
+
+#~ msgid "Group Name"
+#~ msgstr "Naziv grupe"
+
+#~ msgid "Group created to set access rights for sharing data with some users."
+#~ msgstr ""
+#~ "Grupa kreirana da postavi prava pristupa za djeljene podatke sa nekim "
+#~ "korisnicima."
+
+#~ msgid "Group name"
+#~ msgstr "Naziv grupe"
+
+#~ msgid "Group of Contacts"
+#~ msgstr "Grupa kontakata"
+
+#~ msgid "Groups (no group = global)"
+#~ msgstr "Grupe (prazno = globalno)"
+
+#~ msgid "Guatemala"
+#~ msgstr "Gvatemala"
+
+#~ msgid "Haiti"
+#~ msgstr "Haiti"
+
+#~ msgid "Help"
+#~ msgstr "Pomoć"
+
+#~ msgid "Help with Python expressions"
+#~ msgstr "Pomoć sa Python izrazima"
+
+#~ msgid "Helpdesk"
+#~ msgstr "Helpdesk"
+
+#~ msgid ""
+#~ "Helps you handle your accounting needs, if you are not an accountant, we "
+#~ "suggest you to install only the Invoicing."
+#~ msgstr ""
+#~ "Pomaže Vam da upravljate potrebama računovodstva. Ako niste računovođa, "
+#~ "predlažemo Vam da instalirate samo fakturisanje."
+
+#~ msgid "Helps you handle your quotations, sale orders and invoicing."
+#~ msgstr ""
+#~ "Pomaže Vam sa manipulacijom predračuna, prodajnih narudžbi i "
+#~ "fakturisanjem."
+
+#~ msgid ""
+#~ "Helps you manage your inventory and main stock operations: delivery "
+#~ "orders, receptions, etc."
+#~ msgstr ""
+#~ "Pomaže Vam u upravljanju popisa zalihe (inventure) i glavnim operacijama "
+#~ "zalihe: nalozi isporuke, prijemi, itd..."
+
+#~ msgid ""
+#~ "Helps you manage your manufacturing processes and generate reports on "
+#~ "those processes."
+#~ msgstr ""
+#~ "Pomaže Vam pri upravljanju procesima proizvodnje i generisanjem "
+#~ "izvještaja nad ovim procesima."
+
+#~ msgid ""
+#~ "Helps you manage your projects and tasks by tracking them, generating "
+#~ "plannings, etc..."
+#~ msgstr ""
+#~ "Pomaže Vam prilikom upravljanja projektima i zadatcima na način da ih "
+#~ "pratite, generišete planiranja, itd...."
+
+#~ msgid "Here is the exported translation file:"
+#~ msgstr "Ovde je izvezena datoteka prevoda:"
+
+#~ msgid "History"
+#~ msgstr "Istorija"
+
+#~ msgid "Holy See (Vatican City State)"
+#~ msgstr "Vatikan"
+
+#~ msgid "Home Action"
+#~ msgstr "Početna akcija"
+
+#~ msgid "Hong Kong"
+#~ msgstr "Hong Kong"
+
+#~ msgid "Hostname or IP of SMTP server"
+#~ msgstr "Naziv servera ili IP za SMTP server"
+
+#~ msgid "Hours"
+#~ msgstr "Sati"
+
+#~ msgid ""
+#~ "How many times the method is called,\n"
+#~ "a negative number indicates no limit."
+#~ msgstr ""
+#~ "Koliko pute je pozvana metoda,\n"
+#~ "negativan broj(-1) znači bez limita."
+
+#~ msgid "Hungary"
+#~ msgstr "Mađarska"
+
+#~ msgid "IBAN Bank Accounts"
+#~ msgstr "IBAN žiro račun"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "ID of the target record in the database"
+#~ msgstr "ID ciljanog zapisa u bazi"
+
+#~ msgid "ID of the view defined in xml file"
+#~ msgstr "ID pogleda definisan u xml fajlu"
+
+#~ msgid "ISO Code"
+#~ msgstr "ISO šifra"
+
+#~ msgid "ISO Language and Country code, e.g. en_US"
+#~ msgstr "ISO šifra jezika i zemlje (en_US, bs_BS)"
+
+#~ msgid "ISO code"
+#~ msgstr "ISO šifra"
+
+#~ msgid "Icon"
+#~ msgstr "Znak"
+
+#~ msgid "Icon URL"
+#~ msgstr "URL ikone"
+
+#~ msgid "Ids"
+#~ msgstr "ID"
+
+#~ msgid "If no group is specified the rule is global and applied to everyone"
+#~ msgstr "Ako se ne navedu grupe, prvilo je globalno i vrijedi za svakoga"
+
+#~ msgid "If not set, acts as a default value for new resources"
+#~ msgstr "Ako nije postavljeno, služi kao zadana vrijednost za nove resurse"
+
+#~ msgid ""
+#~ "If set to true, the action will not be displayed on the right toolbar of "
+#~ "a form view."
+#~ msgstr ""
+#~ "Ako je postavljeno potvrdno, akcija neće biti prikazana na desnoj alatnoj "
+#~ "traci pogleda forme."
+
+#~ msgid "If set, action binding only applies for this company"
+#~ msgstr ""
+#~ "Ukoliko je postavljeno, povezivanje akcija se primjenjuje samo za ovu "
+#~ "kompaniju"
+
+#~ msgid "If set, action binding only applies for this user."
+#~ msgstr ""
+#~ "Ako je postavljeno, povezivanje sa akcijom se odnosi samo za ovog "
+#~ "korisnika."
+
+#~ msgid ""
+#~ "If this field is empty, the view applies to all users. Otherwise, the "
+#~ "view applies to the users of those groups only."
+#~ msgstr ""
+#~ "Ako je ovo polje prazno, pogled se odnosi na sve korisnike. U suprotnom, "
+#~ "pogled se odnosi samo na korisnike ovih grupa."
+
+#~ msgid ""
+#~ "If you are working on the American market, you can manage the different "
+#~ "federal states you are working on from here. Each state is attached to "
+#~ "one country."
+#~ msgstr ""
+#~ "Ako radite na američkom tržištu, možete da upravljate različitim "
+#~ "federalnim republikama na kojima radite odavde. Svaka je republika "
+#~ "pridružena državi."
+
+#~ msgid ""
+#~ "If you check this box, your customized translations will be overwritten "
+#~ "and replaced by the official ones."
+#~ msgstr ""
+#~ "Ako označite ovo polje, Vaš prilagođeni prevod će biti prepisan i "
+#~ "zamjenjen sa oficijalnim."
+
+#~ msgid ""
+#~ "If you check this, then the second time the user prints with same "
+#~ "attachment name, it returns the previous report."
+#~ msgstr ""
+#~ "Ukoliko je označeno, prilikom sljedećeg štampanja s istim imenom zakačke, "
+#~ "vraća prethodni izvještaj."
+
+#~ msgid ""
+#~ "If you enable this option, existing translations (including custom ones) "
+#~ "will be overwritten and replaced by those in this file"
+#~ msgstr ""
+#~ "Ako omogućite ovu opciju, postojeći prevodi (uključujući korisničke) će "
+#~ "biti prepisani i zamjenjeni ovim iz ovih fajlova"
+
+#~ msgid "Image"
+#~ msgstr "Slika"
+
+#~ msgid "Implementation"
+#~ msgstr "Implementacija"
+
+#~ msgid "Import / Export"
+#~ msgstr "Uvoz / Izvoz"
+
+#~ msgid "Import Translation"
+#~ msgstr "Uvezi prevod"
+
+#~ msgid "In Apps"
+#~ msgstr "U aplikacijama"
+
+#~ msgid "Inactive"
+#~ msgstr "Neaktivan"
+
+#~ msgid "Inactive Users"
+#~ msgstr "Neaktivni korisnici"
+
+#~ msgid "Indexed"
+#~ msgstr "Indeksirano"
+
+#~ msgid "Indexed Content"
+#~ msgstr "Indeksiani sadržaj"
+
+#~ msgid "India"
+#~ msgstr "Indija"
+
+#~ msgid "Individual"
+#~ msgstr "Pojedinac"
+
+#~ msgid "Information"
+#~ msgstr "Informacije"
+
+#~ msgid "Inherit"
+#~ msgstr "Nasljedi"
+
+#~ msgid "Inherited"
+#~ msgstr "Nasljeđeno"
+
+#~ msgid "Inherited View"
+#~ msgstr "Nasljeđeni pogled"
+
+#~ msgid "Inherited Views"
+#~ msgstr "Nasljeđeni pogledi"
+
+#~ msgid "Inherited models"
+#~ msgstr "Integrisani modeli"
+
+#~ msgid "Inherits"
+#~ msgstr "Nasljeđuje"
+
+#~ msgid "Init Date"
+#~ msgstr "Datum inicijalizacije"
+
+#~ msgid "Initial Setup Tools"
+#~ msgstr "Alat za inicijalne postavke"
+
+#~ msgid "Initialization Date"
+#~ msgstr "Datum inicijalizacije"
+
+#~ msgid "Inline Edit"
+#~ msgstr "Uredi unutar"
+
+#~ msgid "Input View"
+#~ msgstr "Ulazni pogled"
+
+#~ msgid "Install Apps"
+#~ msgstr "Instaliraj Aplikacije"
+
+#~ msgid "Install Language"
+#~ msgstr "Instalacija jezika"
+
+#~ msgid "Installed"
+#~ msgstr "Instalirano"
+
+#~ msgid "Installed Features"
+#~ msgstr "Instalirane mogućnosti"
+
+#~ msgid "Installed Version"
+#~ msgstr "Instalirana verzija"
+
+#~ msgid "Insufficient fields for Calendar View!"
+#~ msgstr "Nedovoljno polja za kalenda pogled!"
+
+#~ msgid "Integer"
+#~ msgstr "Cijeli broj"
+
+#~ msgid "Interaction between rules"
+#~ msgstr "Interakcija između pravila"
+
+#~ msgid "Internal Groups"
+#~ msgstr "Interne grupe"
+
+#~ msgid "Internal Notes"
+#~ msgstr "Interne zabilješke"
+
+#~ msgid "Internal Reference"
+#~ msgstr "Interna referenca"
+
+#~ msgid "Internal Source"
+#~ msgstr "Interni izvor"
+
+#~ msgid "Internal Users"
+#~ msgstr "Interni korisnici"
+
+#~ msgid "Internal note..."
+#~ msgstr "Interna zabilješka..."
+
+#~ msgid "Interval Number"
+#~ msgstr "Broj intervala"
+
+#~ msgid "Interval Unit"
+#~ msgstr "Jedinica intervala"
+
+#~ msgid "Introspection report on objects"
+#~ msgstr "Izvještaj introspekcije na objektima"
+
+#~ msgid ""
+#~ "Invalid inheritance mode: if the mode is 'extension', the view must "
+#~ "extend an other view"
+#~ msgstr ""
+#~ "Nepravilan model nasljeđivanja: ako je model 'proširenje', pogled mora "
+#~ "poširiti drugi pogled"
+
+#~ msgid "Invalid position attribute: '%s'"
+#~ msgstr "Nepraviln atribut pozicije: '%s'"
+
+#~ msgid "Inventory"
+#~ msgstr "Skladište"
+
+#~ msgid "Invoice"
+#~ msgstr "Faktura"
+
+#~ msgid "Invoice address"
+#~ msgstr "Adresa fakture"
+
+#~ msgid "Invoicing"
+#~ msgstr "Fakturisanje"
+
+#~ msgid "Invoicing & Payments"
+#~ msgstr "Fakturisanje i Plaćanje"
+
+#~ msgid "Invoicing Management"
+#~ msgstr "Upravljanje fakturisanjem"
+
+#~ msgid "Iran"
+#~ msgstr "Iran"
+
+#~ msgid "Ireland"
+#~ msgstr "Irska"
+
+#~ msgid "Is Company"
+#~ msgstr "Je kompanija"
+
+#~ msgid "Is a Company"
+#~ msgstr "Je kompanija"
+
+#~ msgid "Is a Customer"
+#~ msgstr "Kupac"
+
+#~ msgid "Is a Vendor"
+#~ msgstr "Dobavljač"
+
+#~ msgid "Is public document"
+#~ msgstr "Je javni dokument"
+
+#~ msgid "Isle of Man"
+#~ msgstr "Čovjekovo Ostrvo"
+
+#~ msgid "Israel"
+#~ msgstr "Izrael"
+
+#~ msgid "Italy"
+#~ msgstr "Italija"
+
+#~ msgid "Japan"
+#~ msgstr "Japan"
+
+#~ msgid "Jersey"
+#~ msgstr "Džersi (Jersey)"
+
+#~ msgid "Job Position"
+#~ msgstr "Radno mjesto"
+
+#~ msgid "Jordan"
+#~ msgstr "Jordan"
+
+#~ msgid "Journal Items associated to the contact"
+#~ msgstr "Stavke dnevnika povezane sa kontaktom"
+
+#~ msgid "Just In Time Scheduling"
+#~ msgstr "Baš na vrijeme Planiranje"
+
+#~ msgid "Kanban"
+#~ msgstr "Kanban"
+
+#~ msgid "Kazakhstan"
+#~ msgstr "Kazahstan"
+
+#~ msgid "Kenya"
+#~ msgstr "Kenija"
+
+#~ msgid "Key"
+#~ msgstr "Ključ"
+
+#~ msgid "Key must be unique."
+#~ msgstr "Ključ mora biti jedinstven"
+
+#~ msgid "Kuwait"
+#~ msgstr "Kuvajt"
+
+#~ msgid "LGPL Version 3"
+#~ msgstr "LGPL Verzija 3"
+
+#~ msgid "Landed Costs"
+#~ msgstr "Troškovi nabavke"
+
+#~ msgid "Landscape"
+#~ msgstr "Položeno"
+
+#~ msgid "Language"
+#~ msgstr "Jezik"
+
+#~ msgid "Language Import"
+#~ msgstr "Uvoz jezika"
+
+#~ msgid "Language Name"
+#~ msgstr "Naziv jezika"
+
+#~ msgid "Language Pack"
+#~ msgstr "Jezični paket"
+
+#~ msgid "Language code of translation item must be among known languages"
+#~ msgstr ""
+#~ "Šifra jezika stavke koja se prevodi mora biti među poznatim jezicima"
+
+#~ msgid "Languages"
+#~ msgstr "Jezici"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Zadnje mijenjano"
+
+#~ msgid "Last Updated by"
+#~ msgstr "Zadnji ažurirao"
+
+#~ msgid "Last Updated on"
+#~ msgstr "Zadnje ažurirano"
+
+#~ msgid "Latest Version"
+#~ msgstr "Zadnja verzija"
+
+#~ msgid "Latest connection"
+#~ msgstr "Zadnja prijava"
+
+#~ msgid "Latvia"
+#~ msgstr "Latvija"
+
+#~ msgid "Launch"
+#~ msgstr "Lansiraj"
+
+#~ msgid "Launch Configuration Wizard"
+#~ msgstr "Pokreni čarobnjaka za konfiguraciju"
+
+#~ msgid "Layout in Reports"
+#~ msgstr "Raspored u izvještajima"
+
+#~ msgid "Lead Automation"
+#~ msgstr "Automatizacija prilika"
+
+#~ msgid "Lead to Tasks"
+#~ msgstr "Prilike u zadatke"
+
+#~ msgid "Leaves"
+#~ msgstr "Odsutnosti"
+
+#~ msgid "Ledger  28  431.8 x 279.4 mm"
+#~ msgstr "Ledger  28  431.8 x 279.4 mm"
+
+#~ msgid "Left Margin (mm)"
+#~ msgstr "Lijeva margina (mm)"
+
+#~ msgid "Left-to-Right"
+#~ msgstr "S lijeva nadesno"
+
+#~ msgid "Legal    3   8.5 x 14 inches, 215.9 x 355.6 mm"
+#~ msgstr "Legal    3   8.5 x 14 inča, 215.9 x 355.6 mm"
+
+#~ msgid "Legend (for prefix, suffix)"
+#~ msgstr "Legenda (za prefiks, sufiks)"
+
+#~ msgid "Lesotho"
+#~ msgstr "Lesoto"
+
+#~ msgid "Level"
+#~ msgstr "Nivo"
+
+#~ msgid "Libya"
+#~ msgstr "Libija"
+
+#~ msgid "License"
+#~ msgstr "Licenca"
+
+#~ msgid "Liechtenstein"
+#~ msgstr "Linhenštajn"
+
+#~ msgid "Limit"
+#~ msgstr "Limit"
+
+#~ msgid "Lines"
+#~ msgstr "Retci"
+
+#~ msgid "Link Tracker"
+#~ msgstr "Pratioc veza"
+
+#~ msgid "Link using field"
+#~ msgstr "Polje koje koristi vezu"
+
+#~ msgid "List of modules in which the field is defined"
+#~ msgstr "Popis modula u kojima je polje definirano"
+
+#~ msgid "List of modules in which the object is defined or inherited"
+#~ msgstr "Lista modula na kojima je objekat definisan ili nasljeđen"
+
+#~ msgid ""
+#~ "List of options for a selection field, specified as a Python expression "
+#~ "defining a list of (key, label) pairs. For example: [('blue','Blue'),"
+#~ "('yellow','Yellow')]"
+#~ msgstr ""
+#~ "Lista opcija za polje odabira, specifirano kao Python izraz koji definira "
+#~ "listu (key, label) parova. Na primjer:[('blue','Blue'),"
+#~ "('yellow','Yellow')]"
+
+#~ msgid "Lithuania"
+#~ msgstr "Litva"
+
+#~ msgid "Live Chat"
+#~ msgstr "Razgovor u živo"
+
+#~ msgid "Livechat Support"
+#~ msgstr "Podrška razgovora u živo"
+
+#~ msgid "Load"
+#~ msgstr "Učitaj"
+
+#~ msgid "Load a Translation"
+#~ msgstr "Učitaj prevod"
+
+#~ msgid "Locale Code"
+#~ msgstr "Šifra lokalizacije"
+
+#~ msgid "Localization"
+#~ msgstr "Lokalizacija"
+
+#~ msgid "Log"
+#~ msgstr "Zabilješka"
+
+#~ msgid "Login"
+#~ msgstr "Prijava"
+
+#~ msgid "Logo"
+#~ msgstr "Logo"
+
+#~ msgid "Loyalty Program"
+#~ msgstr "Program lojalnosti"
+
+#~ msgid "Luxembourg - Accounting"
+#~ msgstr "Luksemburg - Računovodstvo"
+
+#~ msgid "MRP Byproducts"
+#~ msgstr "Nusproizvodi proizvodnje"
+
+#~ msgid "Macau"
+#~ msgstr "Makao"
+
+#~ msgid "Madagascar"
+#~ msgstr "Madagaskar"
+
+#~ msgid "Madam"
+#~ msgstr "Gospođa"
+
+#~ msgid "Main Sequence"
+#~ msgstr "Glavna Sekvenca"
+
+#~ msgid "Maintainer"
+#~ msgstr "Održavalac"
+
+#~ msgid "Maintenance"
+#~ msgstr "Održavanje"
+
+#~ msgid "Malawi"
+#~ msgstr "Malavi"
+
+#~ msgid "Malaysia"
+#~ msgstr "Malezija"
+
+#~ msgid "Mali"
+#~ msgstr "Mali"
+
+#~ msgid "Malta"
+#~ msgstr "Malta"
+
+#~ msgid ""
+#~ "Manage sectors of activity to better classify partners for tracking and "
+#~ "analysis purposes."
+#~ msgstr ""
+#~ "Upravljajte sa šiframa dijelatnosti da bolje klasifikujete partnere za "
+#~ "potrebe praćenja i analize."
+
+#~ msgid "Manufacturing"
+#~ msgstr "Proizvodnja"
+
+#~ msgid "Many2One"
+#~ msgstr "Many2One"
+
+#~ msgid "ManyToMany Relations"
+#~ msgstr "ManyToMany Relacije"
+
+#~ msgid "Margins by Products"
+#~ msgstr "Marže po proizvodima"
+
+#~ msgid "Margins in Sales Orders"
+#~ msgstr "Marža u prodajnim narudžbama"
+
+#~ msgid "Marketing"
+#~ msgstr "Marketing"
+
+#~ msgid "Marshall Islands"
+#~ msgstr "Maršalska ostrva"
+
+#~ msgid "Master Production Schedule"
+#~ msgstr "Glavni plan proizvodnje"
+
+#~ msgid "Mauritius"
+#~ msgstr "Mauricijus"
+
+#~ msgid "Maximum of Group of Contacts"
+#~ msgstr "Maksimum grupa kontakata"
+
+#~ msgid "Mayotte"
+#~ msgstr "Majot"
+
+#~ msgid "Medium-sized image"
+#~ msgstr "Slika srednje veličine"
+
+#~ msgid ""
+#~ "Medium-sized image of this contact. It is automatically resized as a "
+#~ "128x128px image, with aspect ratio preserved. Use this field in form "
+#~ "views or some kanban views."
+#~ msgstr ""
+#~ "Slika srednje veličine ovog kontakta. Automatski je promjenjena veličina "
+#~ "na 128x128px, sa očuvanom razmjerom. Koristite ovo polje u forma "
+#~ "pogledima ili nekim kanban pogledima."
+
+#~ msgid "Members"
+#~ msgstr "Članovi"
+
+#~ msgid "Memos pad"
+#~ msgstr "Bilježnica"
+
+#~ msgid "Menu"
+#~ msgstr "Meni"
+
+#~ msgid "Menu Items"
+#~ msgstr "Stavke menija"
+
+#~ msgid "Menu Name"
+#~ msgstr "Naziv menija"
+
+#~ msgid "Menus"
+#~ msgstr "Meniji"
+
+#~ msgid "Merge Automatically"
+#~ msgstr "Automatski spoji"
+
+#~ msgid "Merge Automatically all process"
+#~ msgstr "Automtaski spoji sve procese"
+
+#~ msgid "Merge Contacts"
+#~ msgstr "Spoji kontakte"
+
+#~ msgid "Merge the following contacts"
+#~ msgstr "Spoji sljedeće kontakte"
+
+#~ msgid "Merge with Manual Check"
+#~ msgstr "Spoji sa ručnom provjerom"
+
+#~ msgid "Message"
+#~ msgstr "Poruka"
+
+#~ msgid "Mexico - Accounting"
+#~ msgstr "Meksiko - Računovodstvo"
+
+#~ msgid "Micronesia"
+#~ msgstr "Mikronezijia"
+
+#~ msgid "Mime Type"
+#~ msgstr "Mime Tip"
+
+#~ msgid "Minutes"
+#~ msgstr "Minute"
+
+#~ msgid "Misc"
+#~ msgstr "Razno"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "Ostalo"
+
+#~ msgid "Miss"
+#~ msgstr "Gospođica"
+
+#~ msgid "Missing document(s)"
+#~ msgstr "Nedostajući dokument(i)"
+
+#~ msgid "Missing required value for the field '%s' (%s)"
+#~ msgstr "Nedostaje zahtjevana vrijednost za polje  '%s' (%s)"
+
+#~ msgid "Mister"
+#~ msgstr "Gospodin"
+
+#~ msgid "Mobile:"
+#~ msgstr "Mobilni:"
+
+#~ msgid "Model"
+#~ msgstr "Model"
+
+#~ msgid "Model Constraints"
+#~ msgstr "Ograničenja modela"
+
+#~ msgid "Model Data"
+#~ msgstr "Podatci modela"
+
+#~ msgid "Model Description"
+#~ msgstr "Opis modela"
+
+#~ msgid "Model Name"
+#~ msgstr "Naziv modela"
+
+#~ msgid "Model Overview"
+#~ msgstr "Pregled modela"
+
+#~ msgid "Model name of the object to open in the view window"
+#~ msgstr "Ime Modela objekta za otvaranje u prozoru pogleda"
+
+#~ msgid "Model on which the server action runs."
+#~ msgstr "Model na kojem se izvršava serverska akcija."
+
+#~ msgid "Models"
+#~ msgstr "Modeli"
+
+#~ msgid "Module"
+#~ msgstr "Modul"
+
+#~ msgid "Module Category"
+#~ msgstr "Kategorija modula"
+
+#~ msgid "Module Name"
+#~ msgstr "Ime Modula"
+
+#~ msgid "Module Update"
+#~ msgstr "Nadogradnja modula"
+
+#~ msgid "Module Update Result"
+#~ msgstr "Rezultati nadogradnje modula"
+
+#~ msgid "Module Upgrade Install"
+#~ msgstr "Instalacija Nadogradnje Modula"
+
+#~ msgid "Module dependency"
+#~ msgstr "Ovisnost modula"
+
+#~ msgid ""
+#~ "Module loading %s failed: file %s could not be processed:\n"
+#~ " %s"
+#~ msgstr ""
+#~ "Učitavanje modula %s je neuspješno: datoteka %s nije mogla biti "
+#~ "obrađena:\n"
+#~ " %s"
+
+#~ msgid "Module this term belongs to"
+#~ msgstr "Modul kojem ovaj termin pripada"
+
+#~ msgid "Modules"
+#~ msgstr "Moduli"
+
+#~ msgid "Monday"
+#~ msgstr "Ponedjeljak"
+
+#~ msgid "Mongolia"
+#~ msgstr "Mongolija"
+
+#~ msgid "Montenegro"
+#~ msgstr "Crna Gora"
+
+#~ msgid "Months"
+#~ msgstr "Mjeseci"
+
+#~ msgid "Montserrat"
+#~ msgstr "Montserat"
+
+#~ msgid "Morocco"
+#~ msgstr "Maroko"
+
+#~ msgid "Mozambique"
+#~ msgstr "Mozambik"
+
+#~ msgid "Mr."
+#~ msgstr "Gdin."
+
+#~ msgid "Mrs."
+#~ msgstr "Gđa."
+
+#~ msgid "Multi Companies"
+#~ msgstr "Višekompnijske kompanije"
+
+#~ msgid "Multi Currencies"
+#~ msgstr "Više valuta"
+
+#~ msgid "Multi Language Chart of Accounts"
+#~ msgstr "Višejezični kontni planovi"
+
+#~ msgid "My Document(s)"
+#~ msgstr "Moj(i) Dokument(i)"
+
+#~ msgid "My filters"
+#~ msgstr "Moji filteri"
+
+#~ msgid "Myanmar"
+#~ msgstr "Mijanmar"
+
+#~ msgid "Name:"
+#~ msgstr "Naziv:"
+
+#~ msgid "Namibia"
+#~ msgstr "Namibija"
+
+#~ msgid "Nauru"
+#~ msgstr "Nauru"
+
+#~ msgid "Netherlands"
+#~ msgstr "Nizozemska"
+
+#~ msgid "New Password"
+#~ msgstr "Nova šifra"
+
+#~ msgid "New Window"
+#~ msgstr "Novi prozor"
+
+#~ msgid "New Zealand"
+#~ msgstr "Novi zeland"
+
+#~ msgid "Next Execution Date"
+#~ msgstr "Datum slijedećeg izvršavanja"
+
+#~ msgid "Next Number"
+#~ msgstr "Sljedeći broj"
+
+#~ msgid "Next number of this sequence"
+#~ msgstr "Sljedeći broj ove sekvence"
+
+#~ msgid ""
+#~ "Next number that will be used. This number can be incremented frequently "
+#~ "so the displayed value might already be obsolete"
+#~ msgstr ""
+#~ "Sljedeći broj koji će se koristiti. Ovaj broj može biti često povećan "
+#~ "tako da prikazana vrijednos je možda već zastarjela"
+
+#~ msgid "Next planned execution date for this job."
+#~ msgstr "Sljedeće planirano vrijeme izvršenja za ovaj posao."
+
+#~ msgid "Nicaragua"
+#~ msgstr "Nikaragva"
+
+#~ msgid "Niger"
+#~ msgstr "Nigerija"
+
+#~ msgid "Nigeria"
+#~ msgstr "Nigerija"
+
+#~ msgid "Niue"
+#~ msgstr "Niu"
+
+#~ msgid "No Record Found"
+#~ msgstr "Nisu pronađeni zapisi"
+
+#~ msgid "No default view of type '%s' could be found !"
+#~ msgstr "Zadani pogled tipa '%s' nije bilo moguće pronaći !"
+
+#~ msgid "No gap"
+#~ msgstr "Bez razmaka"
+
+#~ msgid "No inverse field %r found for %r"
+#~ msgstr "Inverzno polje %r pronađeno za %r"
+
+#~ msgid "Non Updatable"
+#~ msgstr "Nije nadogradivo"
+
+#~ msgid "None"
+#~ msgstr "Ništa"
+
+#~ msgid "Norfolk Island"
+#~ msgstr "Norfolško ostrvo"
+
+#~ msgid "North Korea"
+#~ msgstr "Sjeverna Koreja"
+
+#~ msgid "Northern Mariana Islands"
+#~ msgstr "Sjeverno Marijanska Ostrva"
+
+#~ msgid "Norway"
+#~ msgstr "Norveška"
+
+#~ msgid "Not Installed"
+#~ msgstr "Nije instaliran"
+
+#~ msgid "Notes"
+#~ msgstr "Zabilješke"
+
+#~ msgid "Number of Apps"
+#~ msgstr "Broj aplikacija"
+
+#~ msgid "Number of Calls"
+#~ msgstr "Broj pokretanja"
+
+#~ msgid "Number of Companies"
+#~ msgstr "Broj kompanija"
+
+#~ msgid "Number of modules added"
+#~ msgstr "Broj dodanih modula"
+
+#~ msgid "Number of modules updated"
+#~ msgstr "Borj nadograđenih modula"
+
+#~ msgid "OAuth2 Authentication"
+#~ msgstr "OAuth2 Autentifikacija"
+
+#~ msgid "Object"
+#~ msgstr "Objekat"
+
+#~ msgid "Object %s doesn't exist"
+#~ msgstr "Objekat %s ne postoji"
+
+#~ msgid "Object Name"
+#~ msgstr "Naziv objekta"
+
+#~ msgid "Object Relation"
+#~ msgstr "Relacija objekta"
+
+#~ msgid "Object:"
+#~ msgstr "Objekat:"
+
+#~ msgid "Odoo Enterprise Edition License v1.0"
+#~ msgstr "Odoo Enterprise Verzija Licence v1.0"
+
+#~ msgid "Office Supplies"
+#~ msgstr "Kancelarijski materijal"
+
+#~ msgid "Ok"
+#~ msgstr "U redu"
+
+#~ msgid "Oman"
+#~ msgstr "Oman"
+
+#~ msgid "On Delete"
+#~ msgstr "Pri brisanju"
+
+#~ msgid "On Multiple Doc."
+#~ msgstr "Na više dokumenata"
+
+#~ msgid "On delete property for many2one fields"
+#~ msgstr "Pri brisanju svojstva za many2one polja"
+
+#~ msgid "Only one currency rate per day allowed!"
+#~ msgstr "Samo jedna kursna lista po danu je dozvoljena!"
+
+#~ msgid ""
+#~ "Only users with the following access level are currently allowed to do "
+#~ "that"
+#~ msgstr ""
+#~ "Samo korisnicima sa sljedećim nivoima pristupa je trenutno omogućeno da "
+#~ "to učine"
+
+#~ msgid "Open Settings Menu"
+#~ msgstr "Otvori meni podešavanja"
+
+#~ msgid "Open Window"
+#~ msgstr "Otvori prozor"
+
+#~ msgid "Open a Window"
+#~ msgstr "Otvori prozor"
+
+#~ msgid "Opportunity to Quotation"
+#~ msgstr "Prilika na predračun"
+
+#~ msgid "Option"
+#~ msgstr "Opcija"
+
+#~ msgid ""
+#~ "Optional domain filtering of the destination data, as a Python expression"
+#~ msgstr "Opcionalno domensko filtriranje ciljnih podataka, kao Python izraz"
+
+#~ msgid ""
+#~ "Optional help text for the users with a description of the target view, "
+#~ "such as its usage and purpose."
+#~ msgstr ""
+#~ "Opcionalni tekst pomoći za korisnike sa opisom ciljnog pogleda, kao što "
+#~ "je njegova upotreba i svrha."
+
+#~ msgid ""
+#~ "Optional model name of the objects on which this action should be visible"
+#~ msgstr ""
+#~ "Opcionalni naziv modela objekata na kojem bi ova akcija trebala biti "
+#~ "vidljiva"
+
+#~ msgid "Optional model, mostly used for needactions."
+#~ msgstr ""
+#~ "Opcionalni model, najčešće korišćen za potrebne akcije (needactions)."
+
+#~ msgid "Optional password for SMTP authentication"
+#~ msgstr "Opcionalna šifra za SMTP prijavu"
+
+#~ msgid "Optional username for SMTP authentication"
+#~ msgstr "Opcionalno korisničko ime za SMTP prijavu"
+
+#~ msgid "Options"
+#~ msgstr "Opcije"
+
+#~ msgid "Orientation"
+#~ msgstr "Orijentacija"
+
+#~ msgid "Original View"
+#~ msgstr "Izvorni prikaz"
+
+#~ msgid "Other Extra Rights"
+#~ msgstr "Druga ekstra prava"
+
+#~ msgid "Other OSI Approved Licence"
+#~ msgstr "Druga OSI odobrena licenca"
+
+#~ msgid "Other Partners"
+#~ msgstr "Ostali partneri"
+
+#~ msgid "Other Proprietary"
+#~ msgstr "Ostale Vlasničke"
+
+#~ msgid "Other Services"
+#~ msgstr "Ostali servisi"
+
+#~ msgid "Other address"
+#~ msgstr "Druga adresa"
+
+#~ msgid "Outgoing Mail Server"
+#~ msgstr "Odlazni E-mail server"
+
+#~ msgid "Outgoing Mail Servers"
+#~ msgstr "Odlazni mail serveri"
+
+#~ msgid "Output DPI"
+#~ msgstr "Izlazni DPI"
+
+#~ msgid "Overwrite Existing Terms"
+#~ msgstr "Prepiši postojeće termine"
+
+#~ msgid "Owner"
+#~ msgstr "Vlasnik"
+
+#~ msgid "PDF"
+#~ msgstr "PDF"
+
+#~ msgid "PO File"
+#~ msgstr "PO datoteka"
+
+#~ msgid "PO(T) format: you should edit it with a PO editor such as"
+#~ msgstr "PO(T) format: trebali ste ih uređivati sa PO editorom kao što je"
+
+#~ msgid "POEdit"
+#~ msgstr "POEdit"
+
+#~ msgid "Pad on tasks"
+#~ msgstr "Blok (pad)  na zadatcima"
+
+#~ msgid "Page height (mm)"
+#~ msgstr "Visina stranice (mm)"
+
+#~ msgid "Page width (mm)"
+#~ msgstr "Širina stranice (mm)"
+
+#~ msgid "Pakistan"
+#~ msgstr "Pakistan"
+
+#~ msgid "Palau"
+#~ msgstr "Palau"
+
+#~ msgid "Panama"
+#~ msgstr "Panama"
+
+#~ msgid "Paper Format"
+#~ msgstr "Format papira"
+
+#~ msgid "Paper format"
+#~ msgstr "Format papira"
+
+#~ msgid "Paper format configuration"
+#~ msgstr "Konfiguracija formata papira"
+
+#~ msgid "Paper size"
+#~ msgstr "Veličina papira"
+
+#~ msgid "Papua New Guinea"
+#~ msgstr "Papua Nova Gvineja"
+
+#~ msgid "Paraguay"
+#~ msgstr "Paragvaj"
+
+#~ msgid "Parameters"
+#~ msgstr "Parametri"
+
+#~ msgid "Parameters that are used by all resources."
+#~ msgstr "Parametri koji se koriste u svim resursima"
+
+#~ msgid "Params storage"
+#~ msgstr "Spremanje parametara"
+
+#~ msgid "Parent Application"
+#~ msgstr "Nadređena aplikacija"
+
+#~ msgid "Parent Company"
+#~ msgstr "Nadređena kompanija"
+
+#~ msgid "Parent Menu"
+#~ msgstr "Nadređeni meni"
+
+#~ msgid "Parent name"
+#~ msgstr "Naziv roditelja"
+
+#~ msgid "Partner"
+#~ msgstr "Partner"
+
+#~ msgid "Partner Tags"
+#~ msgstr "Oznake partnera"
+
+#~ msgid "Partner Titles"
+#~ msgstr "Titule partnera"
+
+#~ msgid "Partner-related data of the user"
+#~ msgstr "Podatci vezani za partnera na korisniku"
+
+#~ msgid "Partners"
+#~ msgstr "Partneri"
+
+#~ msgid "Partners Geolocation"
+#~ msgstr "Geolokacija partnera"
+
+#~ msgid "Partners: "
+#~ msgstr "Partneri: "
+
+#~ msgid "Password"
+#~ msgstr "Šifra"
+
+#~ msgid "Path"
+#~ msgstr "Putanja"
+
+#~ msgid "Payment Acquirer"
+#~ msgstr "Sticaoc plaćanja"
+
+#~ msgid "Payment Follow-up Management"
+#~ msgstr "Upravljanje praćenja naplate"
+
+#~ msgid "Payroll"
+#~ msgstr "Obračun plata"
+
+#~ msgid "Payroll Accounting"
+#~ msgstr "Računovodstvo plata"
+
+#~ msgid "Peru"
+#~ msgstr "Peru"
+
+#~ msgid "Philippines"
+#~ msgstr "Filipini"
+
+#~ msgid "Phone:"
+#~ msgstr "Telefon:"
+
+#~ msgid "Pivot"
+#~ msgstr "Pivot"
+
+#~ msgid ""
+#~ "Please contact your system administrator if you think this is an error."
+#~ msgstr ""
+#~ "Molimo da kontaktirate svog administratora sistema ako smatrate da je ovo "
+#~ "greška."
+
+#~ msgid "Point of Sale"
+#~ msgstr "POS Kasa"
+
+#~ msgid "Poland"
+#~ msgstr "Poljska"
+
+#~ msgid "Portal"
+#~ msgstr "Portal"
+
+#~ msgid "Portrait"
+#~ msgstr "Uspravno"
+
+#~ msgid "Portugal"
+#~ msgstr "Portugalija"
+
+#~ msgid "PostgreSQL constraint definition"
+#~ msgstr "PostgreSQL definicija ograničenja"
+
+#~ msgid "PostgreSQL constraint or foreign key name."
+#~ msgstr "PostgreSQL ograničenje ili naziv stranog ključa"
+
+#~ msgid "PostgreSQL table name implementing a many2many relation."
+#~ msgstr "PostgreSQL ime tabele koji implementira many2many relaciju."
+
+#~ msgid "Preferences"
+#~ msgstr "Postavke"
+
+#~ msgid "Prefix"
+#~ msgstr "Prefiks"
+
+#~ msgid "Prefix value of the record for the sequence"
+#~ msgstr "Prefiks vrijednost zapisa za sekvencu"
+
+#~ msgid "Price Accuracy"
+#~ msgstr "Preciznost cijene"
+
+#~ msgid "Printed Report Name"
+#~ msgstr "Ispisani naziv izvještaja"
+
+#~ msgid "Priority"
+#~ msgstr "Prioritet"
+
+#~ msgid "Private Address"
+#~ msgstr "Privatna adresa"
+
+#~ msgid "Private methods (such as %s) cannot be called remotely."
+#~ msgstr "Privatna metoda (kao što je %s) nemože biti pozvana na daljinu."
+
+#~ msgid "Product Email Template"
+#~ msgstr "Email template za proizvod"
+
+#~ msgid "Product Lifecycle Management (PLM)"
+#~ msgstr "Upravljanje životnim vijekom proizvoda (PLM)"
+
+#~ msgid "Productivity"
+#~ msgstr "Produktivnost"
+
+#~ msgid "Products & Pricelists"
+#~ msgstr "Proizvodi & Cjenovnici"
+
+#~ msgid "Prof."
+#~ msgstr "Prof."
+
+#~ msgid "Professor"
+#~ msgstr "Profesor"
+
+#~ msgid "Project"
+#~ msgstr "Projekat"
+
+#~ msgid "Properties"
+#~ msgstr "Svojstva"
+
+#~ msgid "Public"
+#~ msgstr "Javni"
+
+#~ msgid "Published Version"
+#~ msgstr "Objavljena verzija"
+
+#~ msgid "Purchase"
+#~ msgstr "Nabava"
+
+#~ msgid "Purchases"
+#~ msgstr "Nabavke"
+
+#~ msgid "Python Code"
+#~ msgstr "Python Kod"
+
+#~ msgid "Python expression"
+#~ msgstr "Python ekspresija"
+
+#~ msgid "QWeb"
+#~ msgstr "QWeb"
+
+#~ msgid "QWeb views"
+#~ msgstr "QWeb pogledi"
+
+#~ msgid "Quality"
+#~ msgstr "Kvalitet"
+
+#~ msgid "Rate"
+#~ msgstr "Stopa"
+
+#~ msgid "Rates"
+#~ msgstr "Stope"
+
+#~ msgid "Read Access"
+#~ msgstr "Ćitanje"
+
+#~ msgid "Read Access Right"
+#~ msgstr "Čitanje"
+
+#~ msgid "Readonly"
+#~ msgstr "Samo za čitanje"
+
+#~ msgid "Record ID"
+#~ msgstr "ID zapisa"
+
+#~ msgid "Record Rule"
+#~ msgstr "Pravilo zapisa"
+
+#~ msgid "Record rules"
+#~ msgstr "Pravila zapisa"
+
+#~ msgid "Recruitment"
+#~ msgstr "Regrutovanje"
+
+#~ msgid "Recursivity Detected."
+#~ msgstr "Detektovana rekurzivnost."
+
+#~ msgid "Reference"
+#~ msgstr "Referenca"
+
+#~ msgid "Related Company"
+#~ msgstr "Povezana kompanija"
+
+#~ msgid "Related Field"
+#~ msgstr "Povezano polje"
+
+#~ msgid "Related Partner"
+#~ msgstr "Povezani partner"
+
+#~ msgid "Related Server Action"
+#~ msgstr "Povezana serverska akcija"
+
+#~ msgid "Relation Field"
+#~ msgstr "Relaciono Polje"
+
+#~ msgid "Relation Name"
+#~ msgstr "Ime relacije"
+
+#~ msgid "Relation Table"
+#~ msgstr "Relaciona tabela"
+
+#~ msgid "Relation field"
+#~ msgstr "Relacijsko polje"
+
+#~ msgid "Reload from Attachment"
+#~ msgstr "Ponovno učitaj iz Zakačke"
+
+#~ msgid "Remove"
+#~ msgstr "Ukloni"
+
+#~ msgid "Remove 'More' top-menu contextual action related to this action"
+#~ msgstr "Ukloni 'Više' kontekstualnu akciju povezanu sa ovom akcijom"
+
+#~ msgid "Remove Contextual Action"
+#~ msgstr "Ukloni kontekstualnu akciju"
+
+#~ msgid "Remove from the 'Print' menu"
+#~ msgstr "Ukloni iz menija 'Štampaj'"
+
+#~ msgid "Remove the contextual action related this report"
+#~ msgstr "Ukloni kontekstualnu akciju povezanu sa ovim izvještajem"
+
+#~ msgid "Repairs"
+#~ msgstr "Popravke"
+
+#~ msgid "Repeat Missed"
+#~ msgstr "Ponovi propušteno"
+
+#~ msgid "Repeat every x."
+#~ msgstr "Ponovi svaki x."
+
+#~ msgid "Report"
+#~ msgstr "Izvještaj"
+
+#~ msgid "Report File"
+#~ msgstr "Fajl izvještaja"
+
+#~ msgid "Report Footer"
+#~ msgstr "Podnožje izvještaja"
+
+#~ msgid "Report Model"
+#~ msgstr "Model izvještaja"
+
+#~ msgid "Report Type"
+#~ msgstr "Tip izvještaja"
+
+#~ msgid "Report Xml"
+#~ msgstr "XML izvještaj"
+
+#~ msgid "Report xml"
+#~ msgstr "Xml izvještaja"
+
+#~ msgid "Reporting"
+#~ msgstr "Izvještavanje"
+
+#~ msgid "Reports"
+#~ msgstr "Izvještaji"
+
+#~ msgid "Required"
+#~ msgstr "Zahtijevano"
+
+#~ msgid "Resellers"
+#~ msgstr "Preprodavači"
+
+#~ msgid "Resolve other errors first"
+#~ msgstr "Rješi prvo ostale greške"
+
+#~ msgid "Resource"
+#~ msgstr "Resurs"
+
+#~ msgid "Resource Field"
+#~ msgstr "Polje resursa"
+
+#~ msgid "Resource ID"
+#~ msgstr "ID Resursa"
+
+#~ msgid "Resource Model"
+#~ msgstr "Model resursa"
+
+#~ msgid "Resource Name"
+#~ msgstr "Naziv resursa"
+
+#~ msgid "Restaurant"
+#~ msgstr "Restoran"
+
+#~ msgid "Restrict"
+#~ msgstr "Ograniči"
+
+#~ msgid "Restrict to lists"
+#~ msgstr "Ograniči na liste"
+
+#~ msgid "Right Margin (mm)"
+#~ msgstr "Desna margina (mm)"
+
+#~ msgid "Right-to-Left"
+#~ msgstr "S desna na lijevo"
+
+#~ msgid "Romania"
+#~ msgstr "Rumunija"
+
+#~ msgid "Romania - Accounting"
+#~ msgstr "Rumunija - Računovodstvo"
+
+#~ msgid "Rounding Factor"
+#~ msgstr "Preciznost zaokruživanja"
+
+#~ msgid "Rule Definition (Domain Filter)"
+#~ msgstr "Definicija pravila ( filter Domena)"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "Pravilo mora imati barem jedno pravo pristupa!"
+
+#~ msgid "Rules"
+#~ msgstr "Pravila"
+
+#~ msgid "Rules can not be applied on Transient models."
+#~ msgstr "Pravila se ne mogu primjenjivati na prolaznim (transient) modelima."
+
+#~ msgid "Run"
+#~ msgstr "Pokrenut"
+
+#~ msgid "Run Manually"
+#~ msgstr "Ručno pokreni"
+
+#~ msgid "Russian Federation"
+#~ msgstr "Ruska federacija"
+
+#~ msgid "SMTP Port"
+#~ msgstr "SMTP port"
+
+#~ msgid "SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases."
+#~ msgstr "SMTP Port. Obično 465 za SSL, i 25 ili 587 u ostalim slučajevima."
+
+#~ msgid "SMTP Server"
+#~ msgstr "SMTP server"
+
+#~ msgid "SQL Constraint"
+#~ msgstr "SQL ograničenje"
+
+#~ msgid "SSL/TLS"
+#~ msgstr "SSL/TLS"
+
+#~ msgid "Saint Lucia"
+#~ msgstr "Sveta Lucija"
+
+#~ msgid "Saint Martin (French part)"
+#~ msgstr "Sveti Martin (Francuski dio)"
+
+#~ msgid "Saint Pierre and Miquelon"
+#~ msgstr "Sveti Pijer i Mikelon"
+
+#~ msgid "Sales"
+#~ msgstr "Prodaja"
+
+#~ msgid "Sales & Purchases"
+#~ msgstr "Prodaja i Nabavka"
+
+#~ msgid "Sales Teams"
+#~ msgstr "Prodajni timovi"
+
+#~ msgid "Sales and MRP Management"
+#~ msgstr "Upravljanje Prodajom i Proizvodnjom"
+
+#~ msgid "Sales and Warehouse Management"
+#~ msgstr "Upravljanje Prodajom i Skladištima"
+
+#~ msgid "Salesperson"
+#~ msgstr "Prodavač(ica)"
+
+#~ msgid "San Marino"
+#~ msgstr "San Marino"
+
+#~ msgid "Saturday"
+#~ msgstr "Subota"
+
+#~ msgid "Save"
+#~ msgstr "Sačuvaj"
+
+#~ msgid "Save as Attachment Prefix"
+#~ msgstr "Sačuvaj kao prefiks zakačke"
+
+#~ msgid "Scheduled Action"
+#~ msgstr "Zakazane akcije"
+
+#~ msgid "Scheduled Actions"
+#~ msgstr "Vremenski plan akcija"
+
+#~ msgid "Search"
+#~ msgstr "Pretraži"
+
+#~ msgid "Search Actions"
+#~ msgstr "Akcije pretrage"
+
+#~ msgid "Search Partner"
+#~ msgstr "Pretraži partnere"
+
+#~ msgid "Search View Ref."
+#~ msgstr "Ref. pogleda pretraživanja"
+
+#~ msgid "Search duplicates based on duplicated data in"
+#~ msgstr "Pretraži duplikate bazirano na duplim zapisima u"
+
+#~ msgid "Search modules"
+#~ msgstr "Pretraži module"
+
+#~ msgid "Search..."
+#~ msgstr "Pretraži..."
+
+#~ msgid "Security and Authentication"
+#~ msgstr "Sigurnost i prijavljivanje"
+
+#~ msgid "Selectable"
+#~ msgstr "Može se izabrati"
+
+#~ msgid ""
+#~ "Selecting the \"Warning\" option will notify user with the message, "
+#~ "Selecting \"Blocking Message\" will throw an exception with the message "
+#~ "and block the flow. The Message has to be written in the next field."
+#~ msgstr ""
+#~ "Odabirom opcije \"Upozorenje\" obavijestit ćete korisnika porukom, "
+#~ "odabirom opcije \"Blokiranje poruke\" učinit ćete izuzetak s porukom i "
+#~ "blokirati tok. Poruku treba napisati u slijedećem polju."
+
+#~ msgid "Selection Options"
+#~ msgstr "Opcije izbora"
+
+#~ msgid "Senegal"
+#~ msgstr "Senegal"
+
+#~ msgid "Separator Format"
+#~ msgstr "Format separatora"
+
+#~ msgid "Sequence"
+#~ msgstr "Sekvenca"
+
+#~ msgid "Sequence Code"
+#~ msgstr "Šifra sekvence"
+
+#~ msgid "Sequence Size"
+#~ msgstr "Veličina sekvence"
+
+#~ msgid "Sequences"
+#~ msgstr "Redoslijedi"
+
+#~ msgid "Sequences & Identifiers"
+#~ msgstr "Sekvence i Identifikatori"
+
+#~ msgid "Serbia"
+#~ msgstr "Srbija"
+
+#~ msgid "Server"
+#~ msgstr "Server"
+
+#~ msgid "Server Action"
+#~ msgstr "Serverska akcija"
+
+#~ msgid "Server Action value mapping"
+#~ msgstr "Mapiranje vrijednosti serverske akcije"
+
+#~ msgid "Server Actions"
+#~ msgstr "Serverske akcije"
+
+#~ msgid "Server action"
+#~ msgstr "Serverska akcija"
+
+#~ msgid "Services"
+#~ msgstr "Usluge"
+
+#~ msgid "Set NULL"
+#~ msgstr "Postavi NULL"
+
+#~ msgid "Set Password"
+#~ msgstr "Postavi šifru"
+
+#~ msgid "Set as Todo"
+#~ msgstr "Postavi kao Za uraditi"
+
+#~ msgid ""
+#~ "Setting a value makes this action available in the sidebar for the given "
+#~ "model."
+#~ msgstr ""
+#~ "Postavljanjem vrijednosti omogućava ovoj akciji da bude dostupna u meniju "
+#~ "ovog modela."
+
+#~ msgid "Settings"
+#~ msgstr "Postavke"
+
+#~ msgid "Share Group"
+#~ msgstr "Grupa dijeljenja"
+
+#~ msgid "Share Partner"
+#~ msgstr "Podjeli partnera"
+
+#~ msgid "Share User"
+#~ msgstr "Korisnik djeljenja"
+
+#~ msgid "Shared"
+#~ msgstr "Dijeljeno"
+
+#~ msgid "Shipping address"
+#~ msgstr "Adresa isporuke"
+
+#~ msgid "Show All"
+#~ msgstr "Prikaži sve"
+
+#~ msgid "Show active currencies"
+#~ msgstr "Prikaži aktivne valute"
+
+#~ msgid "Show inactive currencies"
+#~ msgstr "Prikaži neaktivne valute"
+
+#~ msgid "Show technical modules"
+#~ msgstr "Prikaži tehničke module"
+
+#~ msgid "Sign"
+#~ msgstr "Potpis"
+
+#~ msgid "Signature"
+#~ msgstr "Potpis"
+
+#~ msgid "Signup"
+#~ msgstr "Učlanjivanje"
+
+#~ msgid "Sint Maarten (Dutch part)"
+#~ msgstr "Sint Maarten (Holandski dio)"
+
+#~ msgid "Size"
+#~ msgstr "Veličina"
+
+#~ msgid "Skip"
+#~ msgstr "Preskoči"
+
+#~ msgid "Skip these contacts"
+#~ msgstr "Preskoči ove kontakte"
+
+#~ msgid "Slides"
+#~ msgstr "Slajdovi"
+
+#~ msgid "Slovakia"
+#~ msgstr "Slovačka"
+
+#~ msgid "Slovenia"
+#~ msgstr "Slovenija"
+
+#~ msgid "Small-sized image"
+#~ msgstr "Male slike"
+
+#~ msgid ""
+#~ "Small-sized image of this contact. It is automatically resized as a "
+#~ "64x64px image, with aspect ratio preserved. Use this field anywhere a "
+#~ "small image is required."
+#~ msgstr ""
+#~ "Mala slika ovog kontakta. Veličina je automatski promijenjena na 64x64 px "
+#~ "sliku. sa očuvanim proporcijama. Koristite ovo polje gdje god je potrebna "
+#~ "mala slika."
+
+#~ msgid "Somalia"
+#~ msgstr "Somalija"
+
+#~ msgid "Sometimes called BIC or Swift."
+#~ msgstr "Ponekad se naziva BIC ili SWIFT"
+
+#~ msgid "Sort"
+#~ msgstr "Sortiraj"
+
+#~ msgid "Sorting field %s not found on model %s"
+#~ msgstr "Polje sortiranja %s nije pronađeno na modelu %s"
+
+#~ msgid "Source Model"
+#~ msgstr "Izvorni model"
+
+#~ msgid "Source Object"
+#~ msgstr "Izvorni objekat"
+
+#~ msgid "Source Term"
+#~ msgstr "Izvorni izraz"
+
+#~ msgid "Source term"
+#~ msgstr "Izvorni termin"
+
+#~ msgid "South Africa"
+#~ msgstr "Južna Afrika"
+
+#~ msgid "South Korea"
+#~ msgstr "Južna Koreja"
+
+#~ msgid "Spain"
+#~ msgstr "Španjolska"
+
+#~ msgid "Specific Industry Applications"
+#~ msgstr "Primjena u specifičnim industrijama"
+
+#~ msgid ""
+#~ "Specify a value only when creating a user or if you're changing the "
+#~ "user's password, otherwise leave empty. After a change of password, the "
+#~ "user has to login again."
+#~ msgstr ""
+#~ "Definišite vrijednost samo kada kreirate korisnika ili mjenjate šifru "
+#~ "korisnika, u suprotnom ostavite prazno. Nakon mjenjanja šifre, korisnik "
+#~ "će se morati ponovno prijaviti."
+
+#~ msgid ""
+#~ "Specify if missed occurrences should be executed when the server restarts."
+#~ msgstr ""
+#~ "Specifirajte ako se propušteni događaji trebaju izvršiti nakon ponovnog "
+#~ "pokretanja servera."
+
+#~ msgid "Standard"
+#~ msgstr "Standardno"
+
+#~ msgid "Start configuration"
+#~ msgstr "Započni konfiguraciju"
+
+#~ msgid "State"
+#~ msgstr "Rep./Fed."
+
+#~ msgid "State Code"
+#~ msgstr "Šifra republike"
+
+#~ msgid "State Name"
+#~ msgstr "Naziv Fed. države/Kantona"
+
+#~ msgid "States"
+#~ msgstr "Status"
+
+#~ msgid "Status"
+#~ msgstr "Status"
+
+#~ msgid "Step"
+#~ msgstr "Korak"
+
+#~ msgid "Sticky memos, Collaborative"
+#~ msgstr "Ljepljivi podsjetnici, Kolaborativni"
+
+#~ msgid "Stored"
+#~ msgstr "Pohranjeno"
+
+#~ msgid "Stored Filename"
+#~ msgstr "Pohranjeni naziv datoteke"
+
+#~ msgid "Street"
+#~ msgstr "Ulica"
+
+#~ msgid "Street 2..."
+#~ msgstr "Ulica 2 ..."
+
+#~ msgid "Street..."
+#~ msgstr "Ulica..."
+
+#~ msgid "Street2"
+#~ msgstr "Ulica2"
+
+#~ msgid "Submenus"
+#~ msgstr "Podmeniji"
+
+#~ msgid "Subscriptions"
+#~ msgstr "Pretplate"
+
+#~ msgid "Sudan"
+#~ msgstr "Sudan"
+
+#~ msgid "Suffix"
+#~ msgstr "Sufiks"
+
+#~ msgid "Suffix value of the record for the sequence"
+#~ msgstr "Sufiks (poslije brojača) za ovu sekvencu"
+
+#~ msgid "Summary"
+#~ msgstr "Sažetak"
+
+#~ msgid "Sunday"
+#~ msgstr "Nedjelja"
+
+#~ msgid "Supplementary arguments"
+#~ msgstr "Nadopunjavajući argumenti"
+
+#~ msgid "Survey"
+#~ msgstr "Upitnik"
+
+#~ msgid "Swaziland"
+#~ msgstr "Swaziland"
+
+#~ msgid "Sweden"
+#~ msgstr "Švedska"
+
+#~ msgid "Switzerland"
+#~ msgstr "Švicarska"
+
+#~ msgid "Symbol"
+#~ msgstr "Znak"
+
+#~ msgid "Symbol Position"
+#~ msgstr "Pozicija Simbola"
+
+#~ msgid "Syria"
+#~ msgstr "Sirija"
+
+#~ msgid "System Parameters"
+#~ msgstr "Sistemski parametri"
+
+#~ msgid "System Properties"
+#~ msgstr "Sistemske postavke"
+
+#~ msgid "System Update"
+#~ msgstr "Ažuriranje sistema"
+
+#~ msgid "TGZ Archive"
+#~ msgstr "TGZ arhiva"
+
+#~ msgid "TLS (STARTTLS)"
+#~ msgstr "TLS (STARTTLS)"
+
+#~ msgid "Tabloid 29 279.4 x 431.8 mm"
+#~ msgstr "Tabloid 29 279.4 x 431.8 mm"
+
+#~ msgid "Tag"
+#~ msgstr "Oznaka"
+
+#~ msgid "Tag Name"
+#~ msgstr "Ime oznake"
+
+#~ msgid "Tags"
+#~ msgstr "Oznake"
+
+#~ msgid "Tags..."
+#~ msgstr "Oznake..."
+
+#~ msgid "Tajikistan"
+#~ msgstr "Tajikistan"
+
+#~ msgid "Target Window"
+#~ msgstr "Ciljni prozor"
+
+#~ msgid "Tax ID"
+#~ msgstr "Porez"
+
+#~ msgid "Technical"
+#~ msgstr "Tehnički detalji"
+
+#~ msgid "Technical Data"
+#~ msgstr "Tehnički podaci"
+
+#~ msgid "Technical Features"
+#~ msgstr "Tehničke mogućnosti"
+
+#~ msgid "Technical Name"
+#~ msgstr "Tehnički naziv"
+
+#~ msgid "Technical Settings"
+#~ msgstr "Tehničke postavke"
+
+#~ msgid "Technical guide"
+#~ msgstr "Tehničko uputstvo"
+
+#~ msgid "Template"
+#~ msgstr "Prijedlog"
+
+#~ msgid "Template Name"
+#~ msgstr "Naziv predloška"
+
+#~ msgid "Test API"
+#~ msgstr "Test API"
+
+#~ msgid "Test Connection"
+#~ msgstr "Testiraj vezu"
+
+#~ msgid "Test Main Flow"
+#~ msgstr "Testiraj glavni tok"
+
+#~ msgid "Test Performance"
+#~ msgstr "Testiraj performanse"
+
+#~ msgid "Testing of access restrictions"
+#~ msgstr "Testiranje pristupnih ograničenja"
+
+#~ msgid "Tests"
+#~ msgstr "Testovi"
+
+#~ msgid "Tests of field conversions"
+#~ msgstr "Testovi konverzije polja"
+
+#~ msgid "Text"
+#~ msgstr "Tekst"
+
+#~ msgid ""
+#~ "The active field allows you to hide the category without removing it."
+#~ msgstr ""
+#~ "Ovo poljeVam dozvoljava da sakrijete kategoriju bez njenog uklanjanja."
+
+#~ msgid "The code of the country must be unique !"
+#~ msgstr "Šifra države mora biti jedinstvena!"
+
+#~ msgid "The code of the language must be unique !"
+#~ msgstr "Šifra jezika mora biti jedinstvena!"
+
+#~ msgid "The code of the state must be unique by country !"
+#~ msgstr "Šifra republike mora biti jedinstvena na nivou države!"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "Naziv kompanije mora biti jedinstven!"
+
+#~ msgid "The company this user is currently working for."
+#~ msgstr "Kompanija gdje trenutno radi ovaj korisnik."
+
+#~ msgid "The currency code must be unique!"
+#~ msgstr "Šifra valute mora biti jedinstvena!"
+
+#~ msgid "The database object this attachment will be attached to."
+#~ msgstr "Objekt baze podataka na koji će ova zakačka biti zakačena."
+
+#~ msgid "The following apps will be uninstalled"
+#~ msgstr "Sljedeća aplikacija će biti deinstalirana"
+
+#~ msgid "The following documents will be permanently lost"
+#~ msgstr "Sljedeći dokument će biti trajno izgubljen"
+
+#~ msgid "The full name of the country."
+#~ msgstr "Puno ime države"
+
+#~ msgid "The list of models that extends the current model."
+#~ msgstr "Lista modela koji proširuju trenutni model."
+
+#~ msgid ""
+#~ "The menu action this filter applies to. When left empty the filter "
+#~ "applies to all menus for this model."
+#~ msgstr ""
+#~ "Akcija menija na koji je ovaj filter primjenjen. Kada je ostavljeno "
+#~ "prazno filter je primjenjen na sve menije ovog modela."
+
+#~ msgid "The model this field belongs to"
+#~ msgstr "Model kojem ovo polje pripada"
+
+#~ msgid "The name of the country must be unique !"
+#~ msgstr "Naziv države mora biti jedinstven!"
+
+#~ msgid "The name of the group must be unique within an application!"
+#~ msgstr "Naziv grupe mora biti unikatno u sklopu aplikacije!"
+
+#~ msgid "The name of the language must be unique !"
+#~ msgstr "Ime jezika mora biti jedinstveno !"
+
+#~ msgid "The name of the module must be unique!"
+#~ msgstr "Naziv modela mora biti jedinstveno!"
+
+#~ msgid "The next number of the sequence will be incremented by this number"
+#~ msgstr "Sljedeći broj sekvence će biti uvećan za ovaj broj"
+
+#~ msgid "The next step depends on the file format:"
+#~ msgstr "Sljedeći korak ovisi o formatu fajla:"
+
+#~ msgid ""
+#~ "The optional domain to restrict possible values for relationship fields, "
+#~ "specified as a Python expression defining a list of triplets. For "
+#~ "example: [('color','=','red')]"
+#~ msgstr ""
+#~ "Opcionalni domen da se ograniče moguće vrijednosti za relaciona polja, "
+#~ "specifirano kao Python ekspresija koja definira trojnu listu. Na primjer: "
+#~ "[('color','=','red')]"
+
+#~ msgid ""
+#~ "The partner's timezone, used to output proper date and time values inside "
+#~ "printed reports. It is important to set a value for this field. You "
+#~ "should use the same timezone that is otherwise used to pick and render "
+#~ "date and time values: your computer's timezone."
+#~ msgstr ""
+#~ "Vremenska zona partnera, koristi se za izlaz pravilnog datuma i vremena "
+#~ "unutar partnerovih izvještaja. Bito je da se postavi vrijednost ovog "
+#~ "polja. Trebali bi ste koristiti istu vremensku zonu koja je postavljena "
+#~ "da kupi i prikazuje vrijednosti datuma i vremena: vremenska zona vašeg "
+#~ "računara."
+
+#~ msgid ""
+#~ "The priority of the job, as an integer: 0 means higher priority, 10 means "
+#~ "lower priority."
+#~ msgstr ""
+#~ "Prioritet posla, kao cijeli broj: 0 znači najveći prioritet, 10 znači "
+#~ "niži prioritet."
+
+#~ msgid "The rate of the currency to the currency of rate 1"
+#~ msgstr "Kurs valute u odnosu na kurs valute 1"
+
+#~ msgid "The rate of the currency to the currency of rate 1."
+#~ msgstr "Kurs valute u odnosu na kurs sa valutom 1."
+
+#~ msgid ""
+#~ "The requested operation cannot be completed due to record rules: Document "
+#~ "type: %s, Operation: %s, Records: %s, User: %s"
+#~ msgstr ""
+#~ "Zahtjevana operacija ne može biti završena zbog pravila zapisa: Tip "
+#~ "dokumenta: %s, Operacija: %s, Zapis: %s, Korisnik: %s"
+
+#~ msgid ""
+#~ "The requested operation cannot be completed due to security restrictions. "
+#~ "Please contact your system administrator.\n"
+#~ "\n"
+#~ "(Document type: %s, Operation: %s)"
+#~ msgstr ""
+#~ "Zahtjevana operacija nije mogla biti izvršena zbog sigurnosnih "
+#~ "ograničenja. Molimo Vas da kontaktirate vašeg sistemskog administratora.\n"
+#~ "\n"
+#~ "(Tip dokumenta: %s, Operacija: %s)"
+
+#~ msgid "The state code."
+#~ msgstr "Šifra Rep./Fed."
+
+#~ msgid "The technical name of the model this field belongs to"
+#~ msgstr "Tehnički naziv modela kojemu pripada ovo polje"
+
+#~ msgid ""
+#~ "The user this filter is private to. When left empty the filter is public "
+#~ "and available to all users."
+#~ msgstr ""
+#~ "Korisnik kojem ovaj filter pripada. Ako se ostavi prazno filter je javan "
+#~ "i dostupan svim korisnicima."
+
+#~ msgid ""
+#~ "The value for the field '%s' already exists (this is probably '%s' in the "
+#~ "current model)."
+#~ msgstr ""
+#~ "Vrijednost polja '%s' već postoji (ovo je najvjerovatnije '%s' trenutnom "
+#~ "modelu)."
+
+#~ msgid ""
+#~ "The values for the fields '%s' already exist (they are probably '%s' in "
+#~ "the current model)."
+#~ msgstr ""
+#~ "Vrijednost u poljima '%s' već postoji (ovo je najvjerovatnije '%s' "
+#~ "trenutnom modelu)."
+
+#~ msgid "Theme"
+#~ msgstr "Tema"
+
+#~ msgid "There is no more contacts to merge for this request..."
+#~ msgstr "Nema više kontakata za spajanje za ovaj zahtjev..."
+
+#~ msgid "This ISO code is the name of po files to use for translations"
+#~ msgstr "ISO oznaka je naziv PO datoteke za potrebe prijevoda"
+
+#~ msgid "This Window"
+#~ msgstr "Ovaj prozor"
+
+#~ msgid ""
+#~ "This field holds the image used as avatar for this contact, limited to "
+#~ "1024x1024px"
+#~ msgstr ""
+#~ "Ovo polje sadrži sliku korištenu kao avatar za ovaj kontakt, limitirano "
+#~ "na  1024x1024px"
+
+#~ msgid "This field is used to set/get locales for user"
+#~ msgstr ""
+#~ "Ovo polje se koristi za postavljanje/dobavljanje lokalizacije korisnika"
+
+#~ msgid ""
+#~ "This function field computes the ordered list of views that should be "
+#~ "enabled when displaying the result of an action, federating view mode, "
+#~ "views and reference view. The result is returned as an ordered list of "
+#~ "pairs (view_id,view_mode)."
+#~ msgstr ""
+#~ "Ovo funkcionalno polje izračunava naručene liste pogleda koje bi trebale "
+#~ "biti omogućene kada se prikazuje rezultat neke akcije, ujedinjenja moda "
+#~ "pogleda, pogleda i referentnih pogleda. Rezultat je vraćen kao uređena "
+#~ "lista parova (view_id,view_mode)."
+
+#~ msgid ""
+#~ "This is the filename of the attachment used to store the printing result. "
+#~ "Keep empty to not save the printed reports. You can use a python "
+#~ "expression with the object and time variables."
+#~ msgstr ""
+#~ "Ovo je naziv datoteka zakačke korištenog za spremanje rezultata "
+#~ "štampanja. Ostavite prazno ako ne želite spremiti odštampane izvještaje. "
+#~ "Možete upotrijebiti python kod sa objektima i vremenskim varijablama."
+
+#~ msgid "Thousands Separator"
+#~ msgstr "Separator hiljade"
+
+#~ msgid "Thumbnail"
+#~ msgstr "Thumbnail"
+
+#~ msgid "Thursday"
+#~ msgstr "Četvrtak"
+
+#~ msgid "Time Format"
+#~ msgstr "Format vremena"
+
+#~ msgid "Timesheets"
+#~ msgstr "Vremenski listovi"
+
+#~ msgid "Timezone"
+#~ msgstr "Vremenska zona"
+
+#~ msgid "Timezone offset"
+#~ msgstr "Vremenski odmak"
+
+#~ msgid "Title"
+#~ msgstr "Naslov"
+
+#~ msgid "To"
+#~ msgstr "Za"
+
+#~ msgid "To Do"
+#~ msgstr "Za uraditi"
+
+#~ msgid "To Translate"
+#~ msgstr "Za prevesti"
+
+#~ msgid "To be installed"
+#~ msgstr "Označen za instalaciju"
+
+#~ msgid "To be removed"
+#~ msgstr "Za ukloniti"
+
+#~ msgid "To be upgraded"
+#~ msgstr "Treba biti nadograđeno"
+
+#~ msgid "Todo"
+#~ msgstr "Za Uraditi"
+
+#~ msgid "Tokelau"
+#~ msgstr "Tokelo"
+
+#~ msgid "Tonga"
+#~ msgstr "Kraljevina Tonga"
+
+#~ msgid "Tools"
+#~ msgstr "Alati"
+
+#~ msgid "Top Margin (mm)"
+#~ msgstr "Gornja margina (mm)"
+
+#~ msgid "Total number of records in this model"
+#~ msgstr "Ukupna broj zapisa u ovom modelu"
+
+#~ msgid "Tours"
+#~ msgstr "Vodiči"
+
+#~ msgid "Trainings, Conferences, Meetings, Exhibitions, Registrations"
+#~ msgstr "Edukacije, konferencije, sastanci, izložbe, registracije"
+
+#~ msgid "Transient"
+#~ msgstr "Prelazan"
+
+#~ msgid "Transient Model"
+#~ msgstr "Prolazni model (osv_memory)"
+
+#~ msgid "Transient: False"
+#~ msgstr "Prelazan: Netačno"
+
+#~ msgid "Transient: True"
+#~ msgstr "Prelazan: Tačno"
+
+#~ msgid "Transifex integration"
+#~ msgstr "Transifex integracija"
+
+#~ msgid "Transitively inherits"
+#~ msgstr "Prelazno nasljeđuje"
+
+#~ msgid "Translatable"
+#~ msgstr "Prevodivo"
+
+#~ msgid "Translated"
+#~ msgstr "Prevedeno"
+
+#~ msgid "Translated Terms"
+#~ msgstr "Prevedeni termini"
+
+#~ msgid "Translated field"
+#~ msgstr "Prevedeno polje"
+
+#~ msgid "Translation"
+#~ msgstr "Prevod"
+
+#~ msgid "Translation Value"
+#~ msgstr "Prevedena vrijednost"
+
+#~ msgid "Translation comments"
+#~ msgstr "Komentari prevoda"
+
+#~ msgid "Translation in Progress"
+#~ msgstr "Prevod u toku"
+
+#~ msgid "Translations"
+#~ msgstr "Prevodi"
+
+#~ msgid "Tree"
+#~ msgstr "Stablo"
+
+#~ msgid "Trinidad and Tobago"
+#~ msgstr "Trinidad i Tobago"
+
+#~ msgid "Tuesday"
+#~ msgstr "Utorak"
+
+#~ msgid "Turkey"
+#~ msgstr "Turska"
+
+#~ msgid "Turkey - Accounting"
+#~ msgstr "Turska - Računovodstvo"
+
+#~ msgid "Turkmenistan"
+#~ msgstr "Turkmenistan"
+
+#~ msgid "Tuvalu"
+#~ msgstr "Tuvalu"
+
+#~ msgid "Type"
+#~ msgstr "Tip"
+
+#~ msgid ""
+#~ "Type of the constraint: `f` for a foreign key, `u` for other constraints."
+#~ msgstr "Tip ograničenja: `f` za strani ključ, `u` za ostala ograničenja."
+
+#~ msgid "Type:"
+#~ msgstr "Tip:"
+
+#~ msgid "URL"
+#~ msgstr "URL"
+
+#~ msgid "USA Minor Outlying Islands"
+#~ msgstr "USA Minor Outlying Islands"
+
+#~ msgid "Uganda"
+#~ msgstr "Uganda"
+
+#~ msgid "Uid"
+#~ msgstr "Uid"
+
+#~ msgid "Ukraine"
+#~ msgstr "Ukrajna"
+
+#~ msgid "Uncategorized"
+#~ msgstr "Nekategorisano"
+
+#~ msgid "Uninstallable"
+#~ msgstr "Nemoguće deinstalirati"
+
+#~ msgid "United Kingdom"
+#~ msgstr "Velika Britanija"
+
+#~ msgid "United States"
+#~ msgstr "Sjedinjene Države"
+
+#~ msgid "Unknown"
+#~ msgstr "Nepoznat"
+
+#~ msgid "Unknown database identifier '%s'"
+#~ msgstr "Nepoznat identifikator baze podataka '%s'"
+
+#~ msgid "Unknown error during import:"
+#~ msgstr "Nepoznata greška tokom uvoza:"
+
+#~ msgid ""
+#~ "Unrecognized extension: must be one of .csv, .po, or .tgz (received .%s)."
+#~ msgstr ""
+#~ "Nepoznato proširenje: mora biti .csv, .po, ili .tgz (primljeno .%s)."
+
+#~ msgid "Untranslated"
+#~ msgstr "Neprevedeno"
+
+#~ msgid "Updatable"
+#~ msgstr "Nadogradivi"
+
+#~ msgid "Update"
+#~ msgstr "Ažuriraj"
+
+#~ msgid "Update Apps List"
+#~ msgstr "Ažuriraj listu aplikacija"
+
+#~ msgid "Update Date"
+#~ msgstr "Datum izmjene"
+
+#~ msgid "Update Language Terms"
+#~ msgstr "Ažuriraj jezičke termine"
+
+#~ msgid "Update Module"
+#~ msgstr "Ažuriraj modul"
+
+#~ msgid "Update Module List"
+#~ msgstr "Ažuriraj listu modula"
+
+#~ msgid "Update Terms"
+#~ msgstr "Ažuriraj izraze"
+
+#~ msgid "Update the Record"
+#~ msgstr "Ažuriraj zapis"
+
+#~ msgid "Updates"
+#~ msgstr "Ažuriranja"
+
+#~ msgid "Upgrade"
+#~ msgstr "Nadogradi"
+
+#~ msgid "Url"
+#~ msgstr "URL"
+
+#~ msgid "Uruguay"
+#~ msgstr "Urugvaj"
+
+#~ msgid "Usage"
+#~ msgstr "Upotreba"
+
+#~ msgid "Use this field if you want to change vat label."
+#~ msgstr "Koristite ovo polje ako želite promjeniti oznaku PDV-a"
+
+#~ msgid "Used to filter menu and home actions from the user form."
+#~ msgstr ""
+#~ "Koristi se za filtriranje menija i početne akcije iz korisničke forme."
+
+#~ msgid "Used to log into the system"
+#~ msgstr "Korišteno za prijavu u sistem"
+
+#~ msgid "User"
+#~ msgstr "Korisnik"
+
+#~ msgid "User Interface"
+#~ msgstr "Korisnički interfejs"
+
+#~ msgid "User Login"
+#~ msgstr "Prijava korisnika"
+
+#~ msgid "User log entries"
+#~ msgstr "Zapisi korisničkog loga"
+
+#~ msgid "User-defined Defaults"
+#~ msgstr "Korisnički definisane zadane"
+
+#~ msgid "User-defined Filters"
+#~ msgstr "Korisnički filteri"
+
+#~ msgid "Username"
+#~ msgstr "Korisničko ime"
+
+#~ msgid "Users & Companies"
+#~ msgstr "Korisnici i Kompanije"
+
+#~ msgid ""
+#~ "Users added to this group are automatically added in the following groups."
+#~ msgstr ""
+#~ "Korisnici dodani ovoj grupi automatski se dodaju i slijedećim grupama."
+
+#~ msgid "Users of this group automatically inherit those groups"
+#~ msgstr "Korisnici ovih grupa automatski nasljeđuju one grupe"
+
+#~ msgid "VAT Number Validation"
+#~ msgstr "Validacija PDV broja"
+
+#~ msgid "VOIP"
+#~ msgstr "VOIP"
+
+#~ msgid "Validate and format contact form numbers"
+#~ msgstr "Verifikujte i formatirajte kontakte iz brojeva"
+
+#~ msgid "Validate and format phone numbers"
+#~ msgstr "Verifikujte i formatirajte telefonske brojeve"
+
+#~ msgid "Validate and format phone numbers for leads and contacts"
+#~ msgstr ""
+#~ "Verifikujte i formatirajte telefonske brojeve za potencijale i kontakte"
+
+#~ msgid "Value"
+#~ msgstr "Vrijednost"
+
+#~ msgid "Value Binary"
+#~ msgstr "Binarna vrijednost"
+
+#~ msgid "Value Datetime"
+#~ msgstr "Datumsko vremenska vrijednost"
+
+#~ msgid "Value Float"
+#~ msgstr "Vrijednost decimalnog broja"
+
+#~ msgid "Value Integer"
+#~ msgstr "Vrijednost cijelog broja"
+
+#~ msgid "Value Mapping"
+#~ msgstr "Mapirana vrijednost"
+
+#~ msgid "Value Reference"
+#~ msgstr "Vrijednost reference"
+
+#~ msgid "Value Text"
+#~ msgstr "Tekstualna vrijednost"
+
+#~ msgid "Vat Label"
+#~ msgstr "PDV oznaka"
+
+#~ msgid "Vendor"
+#~ msgstr "Dobavljač"
+
+#~ msgid "Vendors"
+#~ msgstr "Dobavljači"
+
+#~ msgid "Venezuela"
+#~ msgstr "Venecuela"
+
+#~ msgid "Vietnam"
+#~ msgstr "Vijetnam"
+
+#~ msgid "View"
+#~ msgstr "Pregled"
+
+#~ msgid "View Architecture"
+#~ msgstr "Arhitektura prikaza"
+
+#~ msgid "View ID"
+#~ msgstr "ID Pogleda"
+
+#~ msgid "View Mode"
+#~ msgstr "Mod pogleda"
+
+#~ msgid "View Name"
+#~ msgstr "Naziv pogleda"
+
+#~ msgid "View Ref."
+#~ msgstr "Prikaz ref."
+
+#~ msgid "View Type"
+#~ msgstr "Vrsta pregleda"
+
+#~ msgid "View and create reports"
+#~ msgstr "Pogledaj i kreiraj izvještaje"
+
+#~ msgid "View inheritance mode"
+#~ msgstr "Mod nasljeđivanja pogleda"
+
+#~ msgid ""
+#~ "View type: Tree type to use for the tree view, set to 'tree' for a "
+#~ "hierarchical tree view, or 'form' for a regular list view"
+#~ msgstr ""
+#~ "Tip pogleda: tip stablo se koristi za pogled stabla, postavite na "
+#~ "'stablo' za hijerarhijski pogled stabla, ili 'forma' za standardni pogled "
+#~ "liste"
+
+#~ msgid "Views"
+#~ msgstr "Pogledi"
+
+#~ msgid "Visible"
+#~ msgstr "Vidljiv"
+
+#~ msgid "Warehouse"
+#~ msgstr "Skladište"
+
+#~ msgid "Web"
+#~ msgstr "Web"
+
+#~ msgid "Web Icon File"
+#~ msgstr "Datoteka web ikone"
+
+#~ msgid "Web Icon Image"
+#~ msgstr "Slika web ikone"
+
+#~ msgid "Web-only translations"
+#~ msgstr "Samo Web prevodi"
+
+#~ msgid "Website"
+#~ msgstr "Web stranica"
+
+#~ msgid "Wednesday"
+#~ msgstr "Srijeda"
+
+#~ msgid "Weeks"
+#~ msgstr "Sedmice"
+
+#~ msgid ""
+#~ "When no specific mail server is requested for a mail, the highest "
+#~ "priority one is used. Default priority is 10 (smaller number = higher "
+#~ "priority)"
+#~ msgstr ""
+#~ "Kada nije određen mail server zahtjevan za mail, onaj sa najvećim "
+#~ "prioritetom će se koristiti. Zadani prioritet je 10 (manji broj = veći "
+#~ "prioritet)"
+
+#~ msgid ""
+#~ "Whether values for this field can be translated (enables the translation "
+#~ "mechanism for that field)"
+#~ msgstr "Da li vrijednosti ovog polja mogu biti prevedene na više jezika."
+
+#~ msgid "Window Actions"
+#~ msgstr "Akcije prozora"
+
+#~ msgid "Wizard"
+#~ msgstr "Čarobnjak"
+
+#~ msgid "Wizards to be Launched"
+#~ msgstr "Čarobnjaci koji će biti pokrenuti"
+
+#~ msgid "Write Access"
+#~ msgstr "Pisanje"
+
+#~ msgid "Write Access Right"
+#~ msgstr "Pisanje"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "Ne možete imati dva korisnika sa istim korisničkim imenom !"
+
+#~ msgid "ZIP"
+#~ msgstr "Broj pošte"
+
+#~ msgid "Zambia"
+#~ msgstr "Zambija"
+
+#~ msgid "Zip"
+#~ msgstr "Broj pošte"
+
+#~ msgid "_Import"
+#~ msgstr "_Uvezi"
+
+#~ msgid "at"
+#~ msgstr "kod"
+
+#~ msgid "choose"
+#~ msgstr "odaberi"
+
+#~ msgid "documentation"
+#~ msgstr "dokumentacija"
+
+#~ msgid "done"
+#~ msgstr "gotovo"
+
+#~ msgid "e.g. BE0477472701"
+#~ msgstr "npr. BE0477472701"
+
+#~ msgid "e.g. English"
+#~ msgstr "npr. Engleski"
+
+#~ msgid "e.g. Global Business Solutions"
+#~ msgstr "npr. ComTECH s.t.r."
+
+#~ msgid "e.g. Mr."
+#~ msgstr "npr. Mr."
+
+#~ msgid "e.g. Sales Director"
+#~ msgstr "npr. Direktor Prodaje"
+
+#~ msgid "e.g. Update order quantity"
+#~ msgstr "npr. Ažuriraj količinu narudžbe"
+
+#~ msgid "e.g. en_US"
+#~ msgstr "npr.: bs_BA"
+
+#~ msgid "e.g. www.odoo.com"
+#~ msgstr "npr. www.odoo.com"
+
+#~ msgid "eCommerce"
+#~ msgstr "eProdaja"
+
+#~ msgid "false"
+#~ msgstr "netačno"
+
+#~ msgid "get"
+#~ msgstr "dohvati"
+
+#~ msgid "init"
+#~ msgstr "init"
+
+#~ msgid "internal note..."
+#~ msgstr "interna zabilješka..."
+
+#~ msgid "ir.actions.act_url"
+#~ msgstr "ir.actions.act_url"
+
+#~ msgid "ir.actions.client"
+#~ msgstr "ir.actions.client"
+
+#~ msgid "ir.actions.server"
+#~ msgstr "ir.actions.server"
+
+#~ msgid "no"
+#~ msgstr "ne"
+
+#~ msgid "on"
+#~ msgstr "na"
+
+#~ msgid "title"
+#~ msgstr "Naziv"
+
+#~ msgid "true"
+#~ msgstr "tačno"
+
+#~ msgid "yes"
+#~ msgstr "da"
+
+#~ msgid "Åland Islands"
+#~ msgstr "Alandska ostrva"

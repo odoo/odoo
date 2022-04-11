@@ -1,0 +1,7039 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base
+#
+# Translators:
+# Torvald Baade Bringsvor <bringsvor@bringsvor.com>, 2019
+# Jan Pedro Tumusok <jpt@eyenetworks.no>, 2019
+# Aleksander, 2019
+# nle_odoo, 2019
+# Andy Schønhaug <odoo@cypodgroup.com>, 2019
+# Marius Stedjan <marius@stedjan.com>, 2019
+# Martin Trigaux, 2019
+# Jorunn D. Newth, 2019
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~12.5\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2022-04-11 12:53+0200\n"
+"PO-Revision-Date: 2019-08-26 09:06+0000\n"
+"Last-Translator: Jorunn D. Newth, 2019\n"
+"Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/"
+"nb/)\n"
+"Language: nb\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: models/decimal_precision.py:57 models/res_currency.py:407
+#, fuzzy, python-format
+msgid "Warning for %s"
+msgstr "Advarsler"
+
+#: models/decimal_precision.py:58
+#, python-format
+msgid ""
+"The precision has been reduced for %s.\n"
+"Note that existing data WON'T be updated by this change.\n"
+"\n"
+"As decimal precisions impact the whole system, this may cause critical "
+"issues.\n"
+"E.g. reducing the precision could disturb your financial balance.\n"
+"\n"
+"Therefore, changing decimal precisions in a running database is not "
+"recommended."
+msgstr ""
+
+#: models/ir_actions.py:179 models/ir_actions.py:181
+#, python-format
+msgid "Invalid model name %r in action definition."
+msgstr ""
+
+#: models/ir_actions.py:210
+#, python-format
+msgid "The modes in view_mode must not be duplicated: %s"
+msgstr ""
+
+#: models/ir_actions.py:212
+#, python-format
+msgid "No spaces allowed in view_mode: %r"
+msgstr ""
+
+#: models/ir_actions.py:457
+msgid "Recursion found in child server actions"
+msgstr ""
+
+#: models/ir_actions.py:610
+msgid "You don't have enough access rights to run this action."
+msgstr ""
+
+#: models/ir_actions.py:702
+msgid "many2many fields cannot be evaluated by reference"
+msgstr ""
+
+#: models/ir_actions_report.py:497
+#, python-format
+msgid ""
+"Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
+"number of subprocess reached. Message : %s"
+msgstr ""
+
+#: models/ir_actions_report.py:500
+#, python-format
+msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
+msgstr ""
+
+#: models/ir_actions_report.py:745
+msgid "One of the documents you are trying to merge is encrypted"
+msgstr ""
+
+#: models/ir_actions_report.py:770
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still "
+"retrieve those PDFs by selecting each of the affected records individually, "
+"which will avoid merging."
+msgstr ""
+
+#: models/ir_actions_report.py:858
+msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
+msgstr "Finner ikke Whhtmltopdf på systemet. Kunne ikke lage PDF."
+
+#: models/ir_actions_report.py:865
+#, python-format
+msgid ""
+"The report's template '%s' is wrong, please contact your administrator. \n"
+"\n"
+"Can not separate file to save as attachment because the report's template "
+"does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div "
+"with 'article' classname."
+msgstr ""
+
+#: models/ir_attachment.py:71
+msgid "Only administrators can execute this action."
+msgstr "Bare administratorer kan utføre denne handlingen."
+
+#: models/ir_attachment.py:431 models/ir_attachment.py:442
+msgid "Sorry, you are not allowed to access this document."
+msgstr "Beklager, du har ikke tilgang til å se dette dokumentet."
+
+#: models/ir_attachment.py:476
+msgid "Sorry, you must provide fields to read on attachments"
+msgstr ""
+
+#: models/ir_attachment.py:479
+msgid "Sorry, the syntax 'name:agg(field)' is not available for attachments"
+msgstr ""
+
+#: models/ir_attachment.py:485
+msgid "Sorry, you are not allowed to access these fields on attachments."
+msgstr ""
+
+#: models/ir_cron.py:372
+msgid ""
+"Record cannot be modified right now: This cron task is currently being "
+"executed and may not be modified Please try again in a few minutes"
+msgstr ""
+
+#: models/ir_default.py:70
+#, python-format
+msgid "Invalid field %s.%s"
+msgstr "Ugyldig felt %s.%s"
+
+#: models/ir_default.py:72
+#, python-format
+msgid "Invalid value for %s.%s: %s"
+msgstr ""
+
+#: models/ir_fields.py:213
+#, fuzzy, python-format
+msgid "Unknown value '%s' for boolean field '%%(field)s'"
+msgstr "Ukjent verdi '%s' for booleansk felt '%%(field)s', antar '%s'"
+
+#: models/ir_fields.py:215
+msgid "Use '1' for yes and '0' for no"
+msgstr "Bruk '1' for ja og '0' for nei"
+
+#: models/ir_fields.py:225
+#, python-format
+msgid "'%s' does not seem to be an integer for field '%%(field)s'"
+msgstr "'%s' er ikke et heltall for feltet '%%(field)s'"
+
+#: models/ir_fields.py:236
+#, python-format
+msgid "'%s' does not seem to be a number for field '%%(field)s'"
+msgstr "'%s' ser ikke ut til å være et tall for felt '%%(field)s'"
+
+#: models/ir_fields.py:256
+#, python-format
+msgid "'%s' does not seem to be a valid date for field '%%(field)s'"
+msgstr "'%s' ser ikke ut til å være en gyldig dato for felt '%%(field)s'"
+
+#: models/ir_fields.py:258 models/ir_fields.py:290
+#, python-format
+msgid "Use the format '%s'"
+msgstr "Bruk formatet '%s'"
+
+#: models/ir_fields.py:288
+#, python-format
+msgid "'%s' does not seem to be a valid datetime for field '%%(field)s'"
+msgstr ""
+
+#: models/ir_fields.py:332
+#, python-format
+msgid "Value '%s' not found in selection field '%%(field)s'"
+msgstr "Verdi '%s' ble ikke funnet i utvalgsfeltet '%%(field)s'"
+
+#: models/ir_fields.py:367
+msgid "See all possible values"
+msgstr "Se alle mulige verdier"
+
+#: models/ir_fields.py:376
+msgid "database id"
+msgstr "database-ID"
+
+#: models/ir_fields.py:388
+#, python-format
+msgid "Invalid database id '%s' for the field '%%(field)s'"
+msgstr "Ugyldig database-ID '%s' for feltet '%%(field)s'"
+
+#: models/ir_fields.py:392
+msgid "external id"
+msgstr "ekstern ID"
+
+#: models/ir_fields.py:402
+msgid "name"
+msgstr "navn"
+
+#: models/ir_fields.py:410
+#, fuzzy, python-format
+msgid ""
+"Found multiple matches for value '%s' in field '%%(field)s' (%d matches)"
+msgstr "Fant flere treff for feltet '%%(field)s' (%d treff)"
+
+#: models/ir_fields.py:419
+#, python-format
+msgid ""
+"Cannot create new '%s' records from their name alone. Please create those "
+"records manually and try importing again."
+msgstr ""
+
+#: models/ir_fields.py:423
+#, python-format
+msgid "Unknown sub-field '%s'"
+msgstr "Ukjent underfelt '%s'"
+
+#: models/ir_fields.py:436
+#, python-format
+msgid ""
+"No matching record found for %(field_type)s '%(value)s' in field "
+"'%%(field)s' and the following error was encountered when we attempted to "
+"create one: %(error_message)s"
+msgstr ""
+
+#: models/ir_fields.py:438
+#, python-format
+msgid ""
+"No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'"
+msgstr ""
+"Ingen matchende post for %(field_type)s '%(value)s' i felt '%%(field)s'"
+
+#: models/ir_fields.py:493
+msgid ""
+"Can not create Many-To-One records indirectly, import the field separately"
+msgstr ""
+
+#: models/ir_fields.py:496
+#, python-format
+msgid ""
+"Ambiguous specification for field '%(field)s', only provide one of name, "
+"external id or database id"
+msgstr ""
+
+#: models/ir_filters.py:36 models/res_partner.py:364 models/res_users.py:205
+#: models/res_users.py:632 models/res_users.py:634
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopi)"
+
+#: models/ir_filters.py:105
+#, python-format
+msgid ""
+"There is already a shared filter set as default for %(model)s, delete or "
+"change it before setting a new default"
+msgstr ""
+"Det er allerede satt et delt filter som standard for %(model)s, slett eller "
+"endre det før du setter et nytt standardfilter"
+
+#: models/ir_mail_server.py:126
+#, python-format
+msgid "SSL private key is missing for %s."
+msgstr ""
+
+#: models/ir_mail_server.py:128
+#, python-format
+msgid "SSL certificate is missing for %s."
+msgstr ""
+
+#: models/ir_mail_server.py:134
+msgid ""
+"Please configure an email on the current user to simulate sending an email "
+"message via this outgoing server"
+msgstr ""
+"Sett opp en epostadresse for nåværende bruker for å simulere sending av "
+"epost via denne utgående epostserveren."
+
+#: models/ir_mail_server.py:148
+#, python-format
+msgid ""
+"The server refused the sender address (%(email_from)s) with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:153
+#, python-format
+msgid ""
+"The server refused the test recipient (%(email_to)s) with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:160
+#, python-format
+msgid "The server refused the test connection with error %(repl)s"
+msgstr ""
+
+#: models/ir_mail_server.py:166
+#, python-format
+msgid ""
+"Invalid server name !\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:168
+#, python-format
+msgid ""
+"No response received. Check server address and port number.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:170
+#, python-format
+msgid ""
+"The server has closed the connection unexpectedly. Check configuration "
+"served on this port number.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:172
+#, python-format
+msgid ""
+"Server replied with following exception:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:174
+#, python-format
+msgid ""
+"An option is not supported by the server:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:176
+#, python-format
+msgid ""
+"An SMTP exception occurred. Check port number and connection security type.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:178
+#, python-format
+msgid ""
+"An SSL exception occurred. Check connection security type.\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:180
+#, python-format
+msgid ""
+"Connection Test Failed! Here is what we got instead:\n"
+" %s"
+msgstr ""
+
+#: models/ir_mail_server.py:189
+#, fuzzy
+msgid "Connection Test Successful!"
+msgstr "Tilkoblingssikkerhet"
+
+#: models/ir_mail_server.py:259 models/ir_mail_server.py:284
+#, python-format
+msgid ""
+"The private key or the certificate is not a valid file. \n"
+"%s"
+msgstr ""
+
+#: models/ir_mail_server.py:261 models/ir_mail_server.py:286
+#, python-format
+msgid ""
+"Could not load your certificate / private key. \n"
+"%s"
+msgstr ""
+
+#: models/ir_mail_server.py:290
+msgid "Missing SMTP Server"
+msgstr "SMTP-server mangler"
+
+#: models/ir_mail_server.py:291
+msgid ""
+"Please define at least one SMTP server, or provide the SMTP parameters "
+"explicitly."
+msgstr ""
+"Vennligst bruk minst en SMTP server, eller bruk SMTP parameterene eksplisitt."
+
+#: models/ir_mail_server.py:297
+msgid ""
+"Your Odoo Server does not support SMTP-over-SSL. You could use STARTTLS "
+"instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
+"should do the trick."
+msgstr ""
+
+#: models/ir_mail_server.py:615
+#, python-format
+msgid ""
+"Mail delivery failed via SMTP server '%s'.\n"
+"%s: %s"
+msgstr ""
+"Levering feilet via SMTP server '%s'.\n"
+"%s: %s"
+
+#: models/ir_mail_server.py:617
+msgid "Mail Delivery Failed"
+msgstr "Epostlevering mislyktes"
+
+#: models/ir_mail_server.py:701 models/ir_model.py:605 models/ir_model.py:684
+#: models/ir_model.py:692 models/res_partner.py:377
+msgid "Warning"
+msgstr "Advarsel"
+
+#: models/ir_mail_server.py:702
+msgid ""
+"Your server does not seem to support SSL, you may want to try STARTTLS "
+"instead"
+msgstr ""
+
+#: models/ir_model.py:215
+msgid "The model name must start with 'x_'."
+msgstr "Modellnavnet må begynne med 'x_'."
+
+#: models/ir_model.py:217
+msgid ""
+"The model name can only contain lowercase characters, digits, underscores "
+"and dots."
+msgstr ""
+
+#: models/ir_model.py:234
+#, python-format
+msgid ""
+"Unable to order by %s: fields used for ordering must be present on the model "
+"and stored."
+msgstr ""
+
+#: models/ir_model.py:277
+#, python-format
+msgid "Model '%s' contains module data and cannot be removed."
+msgstr ""
+
+#: models/ir_model.py:302
+msgid "Field \"Model\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:304
+msgid "Field \"Type\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:306
+msgid "Field \"Transient Model\" cannot be modified on models."
+msgstr ""
+
+#: models/ir_model.py:563
+msgid "Custom fields must have a name that starts with 'x_' !"
+msgstr "Tilpassede felt må ha navn som begynner med 'x_'!"
+
+#: models/ir_model.py:567
+msgid ""
+"Field names can only contain characters, digits and underscores (up to 63)."
+msgstr "Feltnavn kan bare inneholde bokstaver, tall og understrek (opptil 63)."
+
+#: models/ir_model.py:583
+#, python-format
+msgid "Unknown field name '%s' in related field '%s'"
+msgstr ""
+
+#: models/ir_model.py:586
+#, python-format
+msgid "Non-relational field name '%s' in related field '%s'"
+msgstr ""
+
+#: models/ir_model.py:595
+#, python-format
+msgid "Related field '%s' does not have type '%s'"
+msgstr ""
+
+#: models/ir_model.py:597
+#, python-format
+msgid "Related field '%s' does not have comodel '%s'"
+msgstr ""
+
+#: models/ir_model.py:618
+#, python-format
+msgid "Empty dependency in %r"
+msgstr "Tom avhengighet i %r"
+
+#: models/ir_model.py:625
+#, python-format
+msgid "Unknown field %r in dependency %r"
+msgstr ""
+
+#: models/ir_model.py:627
+#, python-format
+msgid "Non-relational field %r in dependency %r"
+msgstr ""
+
+#: models/ir_model.py:658
+#, python-format
+msgid "Model %s does not exist"
+msgstr ""
+
+#: models/ir_model.py:659
+msgid "Please specify a valid model for the object relation"
+msgstr ""
+
+#: models/ir_model.py:685
+#, python-format
+msgid "The table %r if used for other, possibly incompatible fields."
+msgstr ""
+
+#: models/ir_model.py:692
+#, python-format
+msgid ""
+"The m2o field %s is required but declares its ondelete policy as being 'set "
+"null'. Only 'restrict' and 'cascade' make sense."
+msgstr ""
+
+#: models/ir_model.py:770
+#, python-format
+msgid "The field '%s' cannot be removed because the field '%s' depends on it."
+msgstr "Feltet '%s' kan ikke fjernes fordi feltet '%s' er avhengig av det."
+
+#: models/ir_model.py:797
+msgid "Cannot rename/delete fields that are still present in views:"
+msgstr ""
+"Kan ikke gi nytt navn til eller slette felt som fortsatt er brukt i "
+"visninger:"
+
+#: models/ir_model.py:798
+#, python-format
+msgid "Fields: %s"
+msgstr "Felter: %s"
+
+#: models/ir_model.py:799
+#, python-format
+msgid "View: %s"
+msgstr "Visning: %s"
+
+#: models/ir_model.py:814
+msgid "This column contains module data and cannot be removed!"
+msgstr "Denne kolonnen inneholder moduldata og kan ikke fjernes!"
+
+#: models/ir_model.py:882
+#, python-format
+msgid "Model %s does not exist!"
+msgstr "Modellen %s eksisterer ikke!"
+
+#: models/ir_model.py:889
+#, python-format
+msgid "Many2one %s on model %s does not exist!"
+msgstr ""
+
+#: models/ir_model.py:911
+msgid "Changing the model of a field is forbidden!"
+msgstr "Å endre modellen til et felt er ikke tillatt!"
+
+#: models/ir_model.py:914
+msgid ""
+"Changing the type of a field is not yet supported. Please drop it and create "
+"it again!"
+msgstr ""
+
+#: models/ir_model.py:928
+msgid "Can only rename one field at a time!"
+msgstr "Du kan bare endre navn på ett felt av gangen!"
+
+#: models/ir_model.py:1314 models/ir_model.py:1334 models/ir_model.py:1365
+msgid ""
+"Properties of base fields cannot be altered in this manner! Please modify "
+"them through Python code, preferably through a custom addon!"
+msgstr ""
+"Egenskaper til grunnleggende felt kan ikke endres på denne måten! Vennligst "
+"modifiser dem via Python kode, helst gjennom en egen modul!"
+
+#: models/ir_model.py:1439
+#, python-format
+msgid "The ondelete policy %r is not valid for field %r"
+msgstr ""
+
+#: models/ir_model.py:1484 models/ir_model.py:1622 models/ir_model.py:2040
+msgid "Administrator access is required to uninstall a module"
+msgstr "Administratortilgang kreves for å avinstallere en modul"
+
+#: models/ir_model.py:1771
+#, fuzzy, python-format
+msgid ""
+"You are not allowed to access '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr "Beklager, du har ikke tilgang til å se dette dokumentet."
+
+#: models/ir_model.py:1772
+#, python-format
+msgid ""
+"You are not allowed to modify '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr ""
+
+#: models/ir_model.py:1773
+#, python-format
+msgid ""
+"You are not allowed to create '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr ""
+
+#: models/ir_model.py:1774
+#, python-format
+msgid ""
+"You are not allowed to delete '%(document_kind)s' (%(document_model)s) "
+"records."
+msgstr ""
+
+#: models/ir_model.py:1779
+#, python-format
+msgid ""
+"This operation is allowed for the following groups:\n"
+"%(groups_list)s"
+msgstr ""
+
+#: models/ir_model.py:1781
+msgid "No group currently allows this operation."
+msgstr ""
+
+#: models/ir_model.py:1783 models/ir_rule.py:203
+msgid "Contact your administrator to request access if necessary."
+msgstr ""
+
+#: models/ir_model.py:1938
+msgid "Not enough access rights on the external ID:"
+msgstr ""
+
+#: models/ir_module.py:321
+msgid ""
+"You are trying to remove a module that is installed or will be installed."
+msgstr ""
+
+#: models/ir_module.py:368
+#, python-format
+msgid ""
+"Unable to install module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+
+#: models/ir_module.py:370
+#, python-format
+msgid ""
+"Unable to upgrade module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+"Kunne ikke oppdatere modulen \"%s\" fordi en ekstern avhengighet ikke er "
+"møtt: %s"
+
+#: models/ir_module.py:372
+#, python-format
+msgid ""
+"Unable to process module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+"Kunne ikke prosessere modulen \"%s\" fordi en ekstern avhengighet ikke er "
+"møtt: %s"
+
+#: models/ir_module.py:377
+msgid "Recursion error in modules dependencies !"
+msgstr "Feil grunnet rekursjon i modulavhengigheter !"
+
+#: models/ir_module.py:391
+#, python-format
+msgid ""
+"You try to install module '%s' that depends on module '%s'.\n"
+"But the latter module is not available in your system."
+msgstr ""
+
+#: models/ir_module.py:438
+#, python-format
+msgid "Modules \"%s\" and \"%s\" are incompatible."
+msgstr "Modulene \"%s\" og \"%s\" er inkompatible."
+
+#: models/ir_module.py:457
+#, python-format
+msgid "You are trying to install incompatible modules in category \"%s\":"
+msgstr "Du prøver å installere inkompatible moduler i kategorien \"%s\":"
+
+#: models/ir_module.py:464
+msgid "Install"
+msgstr "Installasjon"
+
+#: models/ir_module.py:594
+msgid ""
+"Odoo is currently processing a scheduled action.\n"
+"Module operations are not possible at this time, please try again later or "
+"contact your system administrator."
+msgstr ""
+
+#: models/ir_module.py:630
+msgid "The `base` module cannot be uninstalled"
+msgstr "Modulen 'base' kan ikke avinstalleres"
+
+#: models/ir_module.py:632
+msgid ""
+"One or more of the selected modules have already been uninstalled, if you "
+"believe this to be an error, you may try again later or contact support."
+msgstr ""
+
+#: models/ir_module.py:638
+msgid "Uninstall"
+msgstr "Avinstaller"
+
+#: models/ir_module.py:646
+msgid "Uninstall module"
+msgstr "Avinstaller modul"
+
+#: models/ir_module.py:687
+#, python-format
+msgid "Can not upgrade module '%s'. It is not installed."
+msgstr "Kan ikke oppgradere modulen '%s'. Den er ikke installert."
+
+#: models/ir_module.py:706
+#, python-format
+msgid ""
+"You try to upgrade the module %s that depends on the module: %s.\n"
+"But this module is not available in your system."
+msgstr ""
+
+#: models/ir_module.py:711
+msgid "Apply Schedule Upgrade"
+msgstr ""
+
+#: models/ir_module.py:805
+msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr "Automatisk installasjon av nedlastede apper er slått av."
+
+#: models/ir_module.py:806
+msgid ""
+"To enable it, make sure this directory exists and is writable on the server:"
+msgstr ""
+
+#: models/ir_module.py:833
+#, python-format
+msgid ""
+"The `%s` module appears to be unavailable at the moment, please try again "
+"later."
+msgstr ""
+"Modulen '%s' ser ut til å være utilgjengelig for øyeblikket, vennligst prøv "
+"igjen senere."
+
+#: models/ir_profile.py:101
+msgid ""
+"Profiling is not enabled on this database. Please contact an administrator."
+msgstr ""
+
+#: models/ir_property.py:88
+msgid "Invalid type"
+msgstr "Ugyldig type"
+
+#: models/ir_qweb_fields.py:144
+msgid "Decimalized number"
+msgstr ""
+
+#: models/ir_qweb_fields.py:164
+msgid "Rounding precision"
+msgstr ""
+
+#: models/ir_qweb_fields.py:209
+msgid "Date format"
+msgstr ""
+
+#: models/ir_qweb_fields.py:227
+msgid "Pattern to format"
+msgstr ""
+
+#: models/ir_qweb_fields.py:228
+msgid "Optional timezone name"
+msgstr ""
+
+#: models/ir_qweb_fields.py:229
+msgid "Display only the time"
+msgstr ""
+
+#: models/ir_qweb_fields.py:230
+msgid "Hide seconds"
+msgstr ""
+
+#: models/ir_qweb_fields.py:231
+msgid "Display only the date"
+msgstr ""
+
+#: models/ir_qweb_fields.py:301
+msgid "Selection"
+msgstr "Valg"
+
+#: models/ir_qweb_fields.py:301
+msgid "By default the widget uses the field information"
+msgstr ""
+
+#: models/ir_qweb_fields.py:425
+msgid "Original currency"
+msgstr ""
+
+#: models/ir_qweb_fields.py:426
+msgid "Display currency"
+msgstr ""
+
+#: models/ir_qweb_fields.py:427
+msgid "Date"
+msgstr "Dato"
+
+#: models/ir_qweb_fields.py:427
+msgid ""
+"Date used for the original currency (only used for t-esc). by default use "
+"the current date."
+msgstr ""
+
+#: models/ir_qweb_fields.py:428
+msgid "Company"
+msgstr "Firma"
+
+#: models/ir_qweb_fields.py:428
+msgid ""
+"Company used for the original currency (only used for t-esc). By default use "
+"the user company"
+msgstr ""
+
+#: models/ir_qweb_fields.py:437
+msgid "The value send to monetary field is not a number."
+msgstr ""
+
+#: models/ir_qweb_fields.py:535
+#, python-format
+msgid "The value (%s) passed should be positive"
+msgstr ""
+
+#: models/ir_qweb_fields.py:538
+#, fuzzy
+msgid "The hour must be between 0 and 23"
+msgstr "Avrundingsfaktoren må være høyere enn 0!"
+
+#: models/ir_qweb_fields.py:572
+msgid "Digital formatting"
+msgstr ""
+
+#: models/ir_qweb_fields.py:573
+msgid "Date unit"
+msgstr ""
+
+#: models/ir_qweb_fields.py:573
+msgid "Date unit used for comparison and formatting"
+msgstr ""
+
+#: models/ir_qweb_fields.py:574
+msgid "Rounding unit"
+msgstr ""
+
+#: models/ir_qweb_fields.py:574
+msgid ""
+"Date unit used for the rounding. The value must be smaller than 'hour' if "
+"you use the digital formatting."
+msgstr ""
+
+#: models/ir_qweb_fields.py:578
+msgid "Long"
+msgstr ""
+
+#: models/ir_qweb_fields.py:579
+msgid "Short"
+msgstr ""
+
+#: models/ir_qweb_fields.py:580
+msgid "Narrow"
+msgstr ""
+
+#: models/ir_qweb_fields.py:581
+#, fuzzy
+msgid "Format"
+msgstr "Skjema"
+
+#: models/ir_qweb_fields.py:582
+msgid "Formatting: long, short, narrow (not used for digital)"
+msgstr ""
+
+#: models/ir_qweb_fields.py:587
+#, fuzzy
+msgid "Add direction"
+msgstr "Retning"
+
+#: models/ir_qweb_fields.py:588
+msgid "Add directional information (not used for digital)"
+msgstr ""
+
+#: models/ir_qweb_fields.py:650
+msgid "Reference date"
+msgstr ""
+
+#: models/ir_qweb_fields.py:650
+msgid "Date to compare with the field value, by default use the current date."
+msgstr ""
+
+#: models/ir_qweb_fields.py:686
+msgid "Barcode symbology"
+msgstr ""
+
+#: models/ir_qweb_fields.py:686
+msgid "Barcode type, eg: UPCA, EAN13, Code128"
+msgstr ""
+
+#: models/ir_qweb_fields.py:687
+msgid "Width"
+msgstr "Bredde"
+
+#: models/ir_qweb_fields.py:688
+msgid "Height"
+msgstr "Høyde"
+
+#: models/ir_qweb_fields.py:689
+msgid "Human Readable"
+msgstr ""
+
+#: models/ir_qweb_fields.py:710
+#, fuzzy, python-format
+msgid "Barcode %s"
+msgstr "Strekkode"
+
+#: models/ir_qweb_fields.py:724
+msgid "Name"
+msgstr "Navn"
+
+#: models/ir_qweb_fields.py:725
+msgid "Address"
+msgstr "Adresse"
+
+#: models/ir_qweb_fields.py:726
+msgid "Phone"
+msgstr "Telefon"
+
+#: models/ir_qweb_fields.py:727
+msgid "Mobile"
+msgstr "Mobil"
+
+#: models/ir_qweb_fields.py:728
+msgid "Email"
+msgstr "Epost"
+
+#: models/ir_qweb_fields.py:729 models/ir_qweb_fields.py:780
+msgid "VAT"
+msgstr "MVA"
+
+#: models/ir_qweb_fields.py:733
+msgid "Space"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+#, fuzzy
+msgid "Comma"
+msgstr "Kommentar"
+
+#: models/ir_qweb_fields.py:733
+msgid "Dash"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+msgid "Vertical bar"
+msgstr ""
+
+#: models/ir_qweb_fields.py:733
+msgid "Slash"
+msgstr ""
+
+#: models/ir_qweb_fields.py:734
+#, fuzzy
+msgid "Linebreak"
+msgstr "Linje"
+
+#: models/ir_qweb_fields.py:737
+msgid "Displayed fields"
+msgstr ""
+
+#: models/ir_qweb_fields.py:737
+msgid "List of contact fields to display in the widget"
+msgstr ""
+
+#: models/ir_qweb_fields.py:738
+msgid "Address separator"
+msgstr ""
+
+#: models/ir_qweb_fields.py:738
+msgid "Separator use to split the address from the display_name."
+msgstr ""
+
+#: models/ir_qweb_fields.py:739
+msgid "Hide badges"
+msgstr ""
+
+#: models/ir_qweb_fields.py:739
+msgid "Don't display the font awesome marker"
+msgstr ""
+
+#: models/ir_qweb_fields.py:740
+msgid "Use comma"
+msgstr ""
+
+#: models/ir_qweb_fields.py:740
+msgid "Use comma instead of the <br> tag to display the address"
+msgstr ""
+
+#: models/ir_qweb_fields.py:741
+msgid "Display phone icons"
+msgstr ""
+
+#: models/ir_qweb_fields.py:741
+msgid "Display the phone icons even if no_marker is True"
+msgstr ""
+
+#: models/ir_qweb_fields.py:742
+msgid "Display country image"
+msgstr ""
+
+#: models/ir_qweb_fields.py:742
+msgid "Display the country image if the field is present on the record"
+msgstr ""
+
+#: models/ir_rule.py:61
+msgid "Rules can not be applied on the Record Rules model."
+msgstr "Regler kan ikke brukes på regelmodellen for poster"
+
+#: models/ir_rule.py:197
+#, fuzzy, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to access "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr "Beklager, du har ikke tilgang til å se dette dokumentet."
+
+#: models/ir_rule.py:198
+#, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to modify "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr ""
+
+#: models/ir_rule.py:199
+#, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to create "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr ""
+
+#: models/ir_rule.py:200
+#, python-format
+msgid ""
+"Due to security restrictions, you are not allowed to delete "
+"'%(document_kind)s' (%(document_model)s) records."
+msgstr ""
+
+#: models/ir_rule.py:225
+#, fuzzy, python-format
+msgid "Records: %s"
+msgstr "Oppføring"
+
+#: models/ir_rule.py:228
+#, fuzzy, python-format
+msgid "User: %s"
+msgstr "Bruker:"
+
+#: models/ir_rule.py:231
+#, python-format
+msgid ""
+"This restriction is due to the following rules:\n"
+"%s"
+msgstr ""
+
+#: models/ir_rule.py:233
+msgid "Note: this might be a multi-company issue."
+msgstr ""
+
+#: models/ir_sequence.py:17 models/ir_sequence.py:33
+msgid "Step must not be zero."
+msgstr "Steget kan ikke være null."
+
+#: models/ir_sequence.py:234
+#, python-format
+msgid "Invalid prefix or suffix for sequence '%s'"
+msgstr "Ugyldig prefiks eller suffiks for sekvens '%s'"
+
+#: models/ir_translation.py:528
+msgid "Creating translation on non existing records"
+msgstr ""
+
+#: models/ir_translation.py:552
+#, python-format
+msgid ""
+"Translation is not valid:\n"
+"%s"
+msgstr ""
+"Oversettelsen er ikke gyldig:\n"
+"%s"
+
+#: models/ir_translation.py:726
+msgid ""
+"Translation features are unavailable until you install an extra translation."
+msgstr ""
+"Oversettelsesfunksjonalitet er ikke tilgjengelig før du installerer et "
+"ekstra språk."
+
+#: models/ir_translation.py:756
+msgid "Translate"
+msgstr "Oversett"
+
+#: models/ir_translation.py:854
+msgid "Technical Translations"
+msgstr "Tekniske oversettelser"
+
+#: models/ir_ui_menu.py:73
+msgid "Error! You cannot create recursive menus."
+msgstr "Feil! Du kan ikke opprette rekursive menyer"
+
+#: models/ir_ui_view.py:397
+#, python-format
+msgid ""
+"Error while validating view:\n"
+"\n"
+"%(error)s"
+msgstr ""
+
+#: models/ir_ui_view.py:415
+#, python-format
+msgid "Invalid view %(name)s definition in %(file)s"
+msgstr ""
+
+#: models/ir_ui_view.py:427
+#, python-format
+msgid ""
+"Error while validating view near:\n"
+"\n"
+"%(fivelines)s\n"
+"%(error)s"
+msgstr ""
+
+#: models/ir_ui_view.py:441
+msgid ""
+"Inherited Qweb view cannot have 'Groups' define on the record. Use 'groups' "
+"attributes inside the view definition"
+msgstr ""
+
+#: models/ir_ui_view.py:448
+msgid "You cannot create recursive inherited views."
+msgstr ""
+
+#: models/ir_ui_view.py:484
+msgid "Missing view architecture."
+msgstr "Mangler arkitektur for visning"
+
+#: models/ir_ui_view.py:680
+#, python-format
+msgid "View '%(name)s' accessible only to groups %(groups)s "
+msgstr ""
+
+#: models/ir_ui_view.py:683
+#, python-format
+msgid "View '%(name)s' is private"
+msgstr ""
+
+#: models/ir_ui_view.py:1008 models/ir_ui_view.py:1240
+#, python-format
+msgid "Model not found: %(model)s"
+msgstr "Modell ikke funnet: %(model)s"
+
+#: models/ir_ui_view.py:1290
+#, python-format
+msgid "Tree child can only have one of %(tags)s tag (not %(wrong_tag)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1299
+#, python-format
+msgid "A <graph> can only contains <field> nodes, found a <%s>"
+msgstr ""
+
+#: models/ir_ui_view.py:1320
+msgid "Search tag can only contain one search panel"
+msgstr ""
+
+#: models/ir_ui_view.py:1330
+msgid "Field tag must have a \"name\" attribute defined"
+msgstr ""
+
+#: models/ir_ui_view.py:1352
+#, python-format
+msgid ""
+"Domain on non-relational field \"%(name)s\" makes no sense (domain:"
+"%(domain)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1367
+#, fuzzy, python-format
+msgid "Field \"%(field_name)s\" does not exist in model \"%(model_name)s\""
+msgstr "Feltet '%(field_name)s' eksisterer ikke"
+
+#: models/ir_ui_view.py:1381
+#, python-format
+msgid "Attribute %(attribute)s evaluation expects a boolean, got %(value)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1407
+#, python-format
+msgid "Invalid special '%(value)s' in button"
+msgstr ""
+
+#: models/ir_ui_view.py:1412
+msgid "Button must have a name"
+msgstr ""
+
+#: models/ir_ui_view.py:1416
+#, python-format
+msgid "%(action_name)s is not a valid action on %(model_name)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1424
+#, python-format
+msgid "%(method)s on %(model)s is private and cannot be called from a button"
+msgstr ""
+
+#: models/ir_ui_view.py:1442
+#, python-format
+msgid "Invalid xmlid %(xmlid)s for button of type action."
+msgstr ""
+
+#: models/ir_ui_view.py:1445
+#, python-format
+msgid ""
+"%(xmlid)s is of type %(xmlid_model)s, expected a subclass of ir.actions."
+"actions"
+msgstr ""
+
+#: models/ir_ui_view.py:1452
+#, python-format
+msgid ""
+"Action %(action_reference)s (id: %(action_id)s) does not exist for button of "
+"type action."
+msgstr ""
+
+#: models/ir_ui_view.py:1474
+#, python-format
+msgid ""
+"Field '%(name)s' found in 'groupby' node can only be of type many2one, found "
+"%(type)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1498
+#, python-format
+msgid ""
+"Field '%(field)s' found in 'groupby' node does not exist in model %(model)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1509
+msgid "Searchpanel item with select multi cannot have a domain."
+msgstr ""
+
+#: models/ir_ui_view.py:1518
+msgid ""
+"Label tag must contain a \"for\". To match label style without corresponding "
+"field or button, use 'class=\"o_form_label\"'."
+msgstr ""
+
+#: models/ir_ui_view.py:1528
+msgid "Page direct ancestor must be notebook"
+msgstr ""
+
+#: models/ir_ui_view.py:1599
+#, python-format
+msgid "\"group_by\" value must be a string %(attribute)s=%(value)r"
+msgstr ""
+
+#: models/ir_ui_view.py:1607
+#, python-format
+msgid ""
+"Unknown field \"%(field)s\" in \"group_by\" value in %(attribute)s=%(value)r"
+msgstr ""
+
+#: models/ir_ui_view.py:1630
+#, python-format
+msgid "%(attribute)r value must be an integer (%(value)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1776
+#, python-format
+msgid "Invalid domain format %(expr)s in %(use)s"
+msgstr ""
+
+#: models/ir_ui_view.py:1788
+#, python-format
+msgid "Non-relational field %(field)r in path %(field_path)r in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1796
+#, python-format
+msgid "Unknown field \"%(model)s.%(field)s\" in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:1802
+#, python-format
+msgid "Unsearchable field %(field)r in path %(field_path)r in %(use)s)"
+msgstr ""
+
+#: models/ir_ui_view.py:2072
+msgid "Can't compare more than two views."
+msgstr ""
+
+#: models/ir_ui_view.py:2099
+msgid "Previous Arch"
+msgstr ""
+
+#: models/ir_ui_view.py:2105
+msgid "File Arch"
+msgstr ""
+
+#: models/ir_ui_view.py:2115
+msgid "Current Arch"
+msgstr ""
+
+#: models/ir_ui_view.py:2171
+#, python-format
+msgid ""
+"Name or id %(name_or_id)r in %(use)s must be present in view but is missing."
+msgstr ""
+
+#: models/ir_ui_view.py:2179
+#, fuzzy, python-format
+msgid "Field `%(name)s` does not exist"
+msgstr "Feltet '%(field_name)s' eksisterer ikke"
+
+#: models/ir_ui_view.py:2186
+#, python-format
+msgid "Invalid composed field %(definition)s in %(use)s"
+msgstr ""
+
+#: models/ir_ui_view.py:2193
+#, python-format
+msgid "Field %(name)r used in %(use)s must be present in view but is missing."
+msgstr ""
+
+#: models/ir_ui_view.py:2199
+#, python-format
+msgid ""
+"Field %(name)r used in %(use)s is present in view but is in select multi."
+msgstr ""
+
+#: models/report_paperformat.py:194
+msgid ""
+"You can select either a format or a specific page width/height, but not both."
+msgstr ""
+
+#: models/res_bank.py:73
+msgid "Normal"
+msgstr "Normal"
+
+#: models/res_company.py:25
+msgid ""
+"Duplicating a company is not allowed. Please create a new company instead."
+msgstr ""
+
+#: models/res_company.py:268
+msgid "You cannot create recursive companies."
+msgstr ""
+
+#: models/res_config.py:300
+msgid ""
+"\n"
+"\n"
+"This addon is already installed on your system"
+msgstr ""
+"\n"
+"\n"
+"Dette tillegget er allerede installert i systemet ditt"
+
+#: models/res_config.py:384
+msgid "Cannot duplicate configuration!"
+msgstr "Kan ikke duplikere konfigurasjon!"
+
+#: models/res_config.py:419
+msgid "Warning!"
+msgstr "Advarsel!"
+
+#: models/res_config.py:420
+#, python-format
+msgid ""
+"Disabling this option will also uninstall the following modules \n"
+"%s"
+msgstr ""
+
+#: models/res_config.py:625
+msgid "Only administrators can change the settings"
+msgstr "Bare administratorer kan endre innstillingene"
+
+#: models/res_config.py:752
+msgid "Go to the configuration panel"
+msgstr "Gå til konfigurasjonspanelet"
+
+#: models/res_config.py:793
+msgid "Invalid template user. It seems it has been deleted."
+msgstr ""
+
+#: models/res_country.py:141
+msgid "The layout contains an invalid format key"
+msgstr ""
+
+#: models/res_country.py:152
+msgid "Base view"
+msgstr ""
+
+#: models/res_currency.py:173
+msgid "and"
+msgstr "og"
+
+#: models/res_currency.py:293
+#, python-format
+msgid "Unit per %s"
+msgstr ""
+
+#: models/res_currency.py:294
+#, python-format
+msgid "%s per Unit"
+msgstr ""
+
+#: models/res_currency.py:408
+msgid ""
+"The new rate is quite far from the previous rate.\n"
+"Incorrect currency rates may cause critical problems, make sure the rate is "
+"correct !"
+msgstr ""
+
+#: models/res_currency.py:428
+#, python-format
+msgid "%(rate_currency_name)s per %(company_currency_name)s"
+msgstr ""
+
+#: models/res_currency.py:429
+#, python-format
+msgid "%(company_currency_name)s per %(rate_currency_name)s"
+msgstr ""
+
+#: models/res_lang.py:72
+msgid "At least one language must be active."
+msgstr "Minst ett språk må være aktivt."
+
+#: models/res_lang.py:80
+msgid ""
+"Invalid date/time format directive specified. Please refer to the list of "
+"allowed directives, displayed when you edit a language."
+msgstr ""
+"Ugyldig dato/tidsformat direktiv spesifisert. Vennligst referer til listen "
+"over tillatte direktiver, som vises når du redigerer et språk."
+
+#: models/res_lang.py:86
+msgid ""
+"The Separator Format should be like [,n] where 0 < n :starting from Unit "
+"digit. -1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
+"1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
+"106,500. Provided as the thousand separator in each case."
+msgstr ""
+
+#: models/res_lang.py:282
+msgid "Language code cannot be modified."
+msgstr "Språkkoden kan ikke endres."
+
+#: models/res_lang.py:285
+msgid "Cannot deactivate a language that is currently used by users."
+msgstr ""
+
+#: models/res_lang.py:287
+#, fuzzy
+msgid "Cannot deactivate a language that is currently used by contacts."
+msgstr "Du kan ikke deaktivere brukeren du er logget inn med."
+
+#: models/res_lang.py:300
+msgid "Base Language 'en_US' can not be deleted."
+msgstr "Base-språk 'en_US' kan ikke slettes."
+
+#: models/res_lang.py:303
+msgid "You cannot delete the language which is the user's preferred language."
+msgstr ""
+
+#: models/res_lang.py:305
+msgid ""
+"You cannot delete the language which is Active!\n"
+"Please de-activate the language first."
+msgstr ""
+"Du kan ikke slette språket som er i bruk!\n"
+"Vennligst deaktiver språket først."
+
+#: models/res_lang.py:317
+#, python-format
+msgid "format() must be given exactly one %char format specifier"
+msgstr ""
+
+#: models/res_lang.py:341
+msgid ""
+"The languages that you selected have been successfully installed. Users can "
+"choose their favorite language in their preferences."
+msgstr ""
+
+#: models/res_partner.py:89
+msgid "You can not create recursive tags."
+msgstr ""
+
+#: models/res_partner.py:359
+msgid "You cannot create recursive Partner hierarchies."
+msgstr "Du kan ikke opprette rekursive partnerhierarkier"
+
+#: models/res_partner.py:378
+msgid ""
+"Changing the company of a contact should only be done if it was never "
+"correctly set. If an existing contact starts working for a new company then "
+"a new contact should be created under that new company. You can use the "
+"\"Discard\" button to abandon this change."
+msgstr ""
+
+#: models/res_partner.py:454
+msgid ""
+"One2Many fields cannot be synchronized as part of `commercial_fields` or "
+"`address fields`"
+msgstr ""
+
+#: models/res_partner.py:577
+#, python-format
+msgid ""
+"You cannot archive contacts linked to an active user.\n"
+"You first need to archive their associated user.\n"
+"\n"
+"Linked active users : %(names)s"
+msgstr ""
+
+#: models/res_partner.py:579 models/res_partner.py:648
+#, fuzzy
+msgid "Go to users"
+msgstr "Google-brukere"
+
+#: models/res_partner.py:583
+#, python-format
+msgid ""
+"You cannot archive contacts linked to an active user.\n"
+"Ask an administrator to archive their associated user first.\n"
+"\n"
+"Linked active users :\n"
+"%(names)s"
+msgstr ""
+
+#: models/res_partner.py:646
+#, python-format
+msgid ""
+"You cannot delete contacts linked to an active user.\n"
+"You should rather archive them after archiving their associated user.\n"
+"\n"
+"Linked active users : %(names)s"
+msgstr ""
+
+#: models/res_partner.py:652
+#, python-format
+msgid ""
+"You cannot delete contacts linked to an active user.\n"
+"Ask an administrator to archive their associated user first.\n"
+"\n"
+"Linked active users :\n"
+"%(names)s"
+msgstr ""
+
+#: models/res_partner.py:811
+msgid "Couldn't create contact without email address!"
+msgstr "Kan ikke opprette kontakt uten epostadresse!"
+
+#: models/res_partner.py:842
+msgid "An email is required for find_or_create to work"
+msgstr ""
+
+#: models/res_partner.py:846
+msgid "A valid email is required for find_or_create to work properly."
+msgstr ""
+
+#: models/res_partner.py:918
+#, fuzzy, python-format
+msgid "Partners: %(category)s"
+msgstr "Overordnet kategori"
+
+#: models/res_partner.py:977
+msgid "Import Template for Customers"
+msgstr ""
+
+#: models/res_users.py:96
+msgid "This method can only be accessed over HTTP"
+msgstr ""
+
+#: models/res_users.py:117
+#, fuzzy
+msgid "Security Control"
+msgstr "Sikkerhet"
+
+#: models/res_users.py:212
+msgid "The name of the group can not start with \"-\""
+msgstr "Navnet på gruppen kan ikke starte med \"-\""
+
+#: models/res_users.py:402
+msgid ""
+"Please use the change password wizard (in User Preferences or User menu) to "
+"change your own password."
+msgstr ""
+"Vennligst bruk endre passord veiviseren (i brukerinnstillinger eller i "
+"brukermenyen) for å endre ditt eget passord."
+
+#: models/res_users.py:464
+#, fuzzy, python-format
+msgid ""
+"Company %(company_name)s is not in the allowed companies for user "
+"%(user_name)s (%(company_allowed)s)."
+msgstr "Det valgte firmaet er ikke et tillatt firma for denne brukeren."
+
+#: models/res_users.py:471
+msgid "The \"App Switcher\" action cannot be selected as home action."
+msgstr ""
+
+#: models/res_users.py:483
+msgid "The user cannot have more than one user types."
+msgstr ""
+
+#: models/res_users.py:533
+msgid "Invalid 'group by' parameter"
+msgstr ""
+
+#: models/res_users.py:541
+msgid "Invalid search criterion"
+msgstr "Ugyldig søkekriterium"
+
+#: models/res_users.py:557
+msgid "You cannot activate the superuser."
+msgstr "Du kan ikke aktivere superbrukeren."
+
+#: models/res_users.py:559
+msgid "You cannot deactivate the user you're currently logged in as."
+msgstr "Du kan ikke deaktivere brukeren du er logget inn med."
+
+#: models/res_users.py:611
+msgid ""
+"You can not remove the admin user as it is used internally for resources "
+"created by Odoo (updates, module installation, ...)"
+msgstr ""
+
+#: models/res_users.py:803
+msgid "Setting empty passwords is not allowed for security reasons!"
+msgstr "Tomt passord tillates ikke av sikkerhetsgrunner!"
+
+#: models/res_users.py:864
+msgid "Users"
+msgstr "Brukere"
+
+#: models/res_users.py:880
+msgid "Groups"
+msgstr "Grupper"
+
+#: models/res_users.py:892
+msgid "Access Rights"
+msgstr "Tilgangsrettigheter"
+
+#: models/res_users.py:904
+msgid "Record Rules"
+msgstr "Post Regler"
+
+#: models/res_users.py:1010
+msgid "Too many login failures, please wait a bit before trying again."
+msgstr ""
+
+#: models/res_users.py:1560
+msgid "Other"
+msgstr "Annet"
+
+#: models/res_users.py:1600
+msgid ""
+"Incorrect Password, try again or click on Forgot Password to reset your "
+"password."
+msgstr ""
+
+#: models/res_users.py:1647
+msgid "Before clicking on 'Change Password', you have to write a new password."
+msgstr "Du må skrive et nytt passord før du klikker på 'Endre passord'."
+
+#: models/res_users.py:1762
+msgid ""
+"You can not remove API keys unless they're yours or you are a system user"
+msgstr ""
+
+#: models/res_users.py:1826
+msgid "Only internal users can create API keys"
+msgstr ""
+
+#: wizard/base_export_language.py:19
+msgid "New Language (Empty translation template)"
+msgstr "Nytt språk (tom oversettelsesmal)"
+
+#: wizard/base_import_language.py:53
+#, python-format
+msgid ""
+"File %r not imported due to a malformed file.\n"
+"\n"
+"This issue can be caused by duplicates entries who are referring to the same "
+"field. Please check the content of the file you are trying to import.\n"
+"\n"
+"Technical Details:\n"
+"%s"
+msgstr ""
+
+#: wizard/base_import_language.py:60
+#, python-format
+msgid ""
+"File %r not imported due to format mismatch or a malformed file. (Valid "
+"formats are .csv, .po, .pot)\n"
+"\n"
+"Technical Details:\n"
+"%s"
+msgstr ""
+
+#: wizard/base_language_install.py:58
+msgid ""
+"The languages that you selected have been successfully "
+"installed.                            Users can choose their favorite "
+"language in their preferences."
+msgstr ""
+
+#: wizard/base_module_upgrade.py:67
+#, python-format
+msgid "The following modules are not installed or unknown: %s"
+msgstr "Følgende moduler er ikke installert eller ukjente: %s"
+
+#: wizard/base_partner_merge.py:305
+msgid ""
+"For safety reasons, you cannot merge more than 3 contacts together. You can "
+"re-open the wizard several times if needed."
+msgstr ""
+"Av sikkerhetsgrunner kan du ikke slå sammen mer enn 3 kontakter. Du kan "
+"gjenåpne veiviseren flere ganger om det trengs."
+
+#: wizard/base_partner_merge.py:312
+msgid "You cannot merge a contact with one of his parent."
+msgstr ""
+
+#: wizard/base_partner_merge.py:315
+msgid ""
+"All contacts must have the same email. Only the Administrator can merge "
+"contacts with different emails."
+msgstr ""
+"Alle kontakter må ha samme epostadresse. Bare administrator kan slå sammen "
+"kontakter med forskjellige adresser."
+
+#: wizard/base_partner_merge.py:328
+msgid ""
+"Only the destination contact may be linked to existing Journal Items. Please "
+"ask the Administrator if you need to merge several contacts linked to "
+"existing Journal Items."
+msgstr ""
+
+#: wizard/base_partner_merge.py:412
+msgid "You have to specify a filter for your selection."
+msgstr ""
+
+#: wizard/base_update_translations.py:26
+#, python-format
+msgid "No language with code \"%s\" exists"
+msgstr "Ingen språk med koden \"%s\" eksisterer"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会"
+#~ "计凭证簿\n"
+#~ "\n"
+#~ "    添加中文省份数据\n"
+#~ "\n"
+#~ "    增加小企业会计科目表\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会"
+#~ "计凭证簿\n"
+#~ "\n"
+#~ "    添加中文省份数据\n"
+#~ "\n"
+#~ "    增加小企业会计科目表\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Allow cashier to reprint receipts\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "La ekspeditør skrive ut kvitteringer på nytt\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Belgium\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Regnskapsrapporter for Belgia\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Chile\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Regnskapsrapporter for Chile\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Netherlands\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Regnskapsrapporter for Nederland\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Spain\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Regnskapsrapporter for Spania\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for Switzerland\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Regnskapsrapporter for Sveits\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Accounting reports for US\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Regnskapsrapporter for USA\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        Bridge between HR and Maintenance."
+#~ msgstr ""
+#~ "\n"
+#~ "        Bru mellom HR og Vedlikehold."
+
+#~ msgid ""
+#~ "\n"
+#~ "        Print amount in words on checks issued for expenses\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Trykk beløpet med bokstaver på sjekker utstedt for utlegg\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module is used for Online bank synchronization."
+#~ msgstr ""
+#~ "\n"
+#~ "        Denne modulen brukes til synkronisering med nettbank."
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module provides the core of the Odoo Mobile App.\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "        Denne modulen er kjernen i Odoos mobilapp.\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "    * Multi language support for Chart of Accounts, Taxes, Tax Codes, "
+#~ "Journals,\n"
+#~ "      Accounting Templates, Analytic Chart of Accounts and Analytic "
+#~ "Journals.\n"
+#~ "    * Setup wizard changes\n"
+#~ "        - Copy translations for COA, Tax, Tax Code and Fiscal Position "
+#~ "from\n"
+#~ "          templates to target objects.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    * Flerspråklig støtte for kontooversikt, skatt, skattekoder, "
+#~ "journaler\n"
+#~ "       regnskapsmaler, analytiske kontooversikter og analytiske "
+#~ "journaler.\n"
+#~ "    * Endringer i installasjonsveiviser.\n"
+#~ "        - Kopier oversettelser for COA, skatt, skattekoder og finans fra\n"
+#~ "          maler til målobjekter.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "  Publish your products on eBay"
+#~ msgstr ""
+#~ "\n"
+#~ "  Publiser produktene dine på eBay"
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting Reports\n"
+#~ "==================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Regnskapsrapporter\n"
+#~ "==================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for Colombia\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Regnskapsrapporter for Colombia\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for France\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Regnskapsrapporter for Frankrike\n"
+#~ "================================\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Accounting reports for India\n"
+#~ "================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Regnskapsrapporter for India\n"
+#~ "================================\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Allow users to login through OAuth2 Provider.\n"
+#~ "=============================================\n"
+#~ msgstr ""
+#~ "\n"
+#~ "La brukere logge inn via en OAuth2-tilbyder.\n"
+#~ "=============================================\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Allow users to sign up and reset their password\n"
+#~ "===============================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "La brukere registrere seg og nullstille eget passord\n"
+#~ "==============================================="
+
+#~ msgid ""
+#~ "\n"
+#~ "Ask questions, get answers, no distractions\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "Still spørsmål, få svar, ingen distraksjoner"
+
+#~ msgid ""
+#~ "\n"
+#~ "Design gorgeous mails\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Design flotte epostmeldinger\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Display orders to invoice in website dashboard.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Vis ordrer til fakturering i nettsted-dashbord.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Lets the user create a custom dashboard.\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "Allows users to create custom dashboard.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Lar brukeren lage et tilpasset instrumentpanel.\n"
+#~ "=======================================\n"
+#~ "\n"
+#~ "Lar brukere lage tilpassede instrumentpanel.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Openerp Web Diagram view.\n"
+#~ "=========================\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "OpenERP Webdiagramvisning.\n"
+#~ "=========================\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "The module adds google user in res user.\n"
+#~ "========================================\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Denne modulen legger til google-bruker i res.user.\n"
+#~ "=========================================\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "This is a full-featured calendar system.\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "It supports:\n"
+#~ "------------\n"
+#~ "    - Calendar of events\n"
+#~ "    - Recurring events\n"
+#~ "\n"
+#~ "If you need to manage your meetings, you should install the CRM module.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Dette er et fullt kalendersystem.\n"
+#~ "===========================\n"
+#~ "\n"
+#~ "Det støtter:\n"
+#~ "------------------\n"
+#~ "* Arrangementskalender\n"
+#~ "* Gjentagende hendelser\n"
+#~ "\n"
+#~ "Hvis du trenger å administrere møtevirksomheten din, bør du installere "
+#~ "CRM modulen.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "This module allows a customer to give rating.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Denne modulen lar kunder avgi vurderinger.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module helps to configure the system at the installation of a new "
+#~ "database.\n"
+#~ "================================================================================\n"
+#~ "\n"
+#~ "Shows you a list of applications features to install from.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Denne modulen lar deg konfigurere systemet etter installasjon av en ny "
+#~ "database.\n"
+#~ "==================================================================\n"
+#~ "\n"
+#~ "Viser deg en liste over applikasjoner du kan installere.\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "United States - Chart of accounts.\n"
+#~ "==================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "De Forente Stater - Kontoplan\n"
+#~ "    "
+
+#~ msgid "%A - Full weekday name."
+#~ msgstr "%A - fullt navn på ukedag."
+
+#~ msgid "%B - Full month name.\""
+#~ msgstr "%B - Fullt navn på måned.\""
+
+#~ msgid "%H - Hour (24-hour clock) [00,23].\""
+#~ msgstr "%H - Time (24-timersklokke) [00,23].\""
+
+#~ msgid "%I - Hour (12-hour clock) [01,12].\""
+#~ msgstr "%I - Hour (12-timersklokke) [01,12].\""
+
+#~ msgid "%M - Minute [00,59].\""
+#~ msgstr "%M - Minutt [00,59].\""
+
+#~ msgid "%S - Seconds [00,61].\""
+#~ msgstr "%S - Sekunder [00,61].\""
+
+#~ msgid "%Y - Year with century.\""
+#~ msgstr "%Y - År med århundre.\""
+
+#~ msgid "%a - Abbreviated weekday name."
+#~ msgstr "%a - Forkortet navn på ukedag."
+
+#~ msgid "%b - Abbreviated month name."
+#~ msgstr "%b - Forkortet navn på måned."
+
+#~ msgid "%d - Day of the month [01,31].\""
+#~ msgstr "%d - Dag i måneden [01,31].\""
+
+#~ msgid "%j - Day of the year [001,366].\""
+#~ msgstr "%j - Dag i året [001,366].\""
+
+#~ msgid "%m - Month number [01,12].\""
+#~ msgstr "%m - Månedsnummer [01,12].\""
+
+#~ msgid "%p - Equivalent of either AM or PM.\""
+#~ msgstr "%p - Ekvivalent til enten AM eller PM"
+
+#~ msgid "%w - Weekday number [0(Sunday),6].\""
+#~ msgstr "%w - Ukedagsnummer [0(søndag),6].\""
+
+#~ msgid "%y - Year without century [00,99].\""
+#~ msgstr "%y - År uten århundre [00,99].\""
+
+#~ msgid "&amp;nbsp;"
+#~ msgstr "&amp;nbsp;"
+
+#~ msgid "+1 (650) 691-3277"
+#~ msgstr "+1 (650) 691-3277"
+
+#~ msgid ", or your preferred text editor"
+#~ msgstr ", eller ditt foretrukne program for tekstredigering"
+
+#~ msgid ", readonly"
+#~ msgstr ", skrivebeskyttet"
+
+#~ msgid ", required"
+#~ msgstr ", påkrevd"
+
+#~ msgid "- domain ="
+#~ msgstr "- domene ="
+
+#~ msgid "- field ="
+#~ msgstr "- felt ="
+
+#~ msgid "- groups ="
+#~ msgstr "- grupper ="
+
+#~ msgid "- ondelete ="
+#~ msgstr "- ondelete ="
+
+#~ msgid "-This module does not create report."
+#~ msgstr "- Denne modulen lager ikke rapport."
+
+#~ msgid "-This module does not create views."
+#~ msgstr "- Denne modulen lager ikke visninger."
+
+#~ msgid "-This module does not depends on any other module."
+#~ msgstr "- Denne modulen er ikke avhengig av noen annen modul."
+
+#~ msgid "-This module does not exclude any other module."
+#~ msgstr "- Denne modulen ekskluderer ingen andre moduler."
+
+#~ msgid "1. %b, %B         ==&gt; Dec, December"
+#~ msgstr "1. %b, %B         ==&gt; des, desember"
+
+#~ msgid "2. %a ,%A         ==&gt; Fri, Friday"
+#~ msgstr "2. %a ,%A         ==&gt; fre, fredag"
+
+#~ msgid "3. %y, %Y         ==&gt; 08, 2008"
+#~ msgstr "3. %y, %Y         ==&gt; 08, 2008"
+
+#~ msgid "4. %d, %m         ==&gt; 05, 12"
+#~ msgstr "4. %d, %m         ==&gt; 05, 12"
+
+#~ msgid "5. %H:%M:%S      ==&gt; 18:25:20"
+#~ msgstr "5. %H:%M:%S      ==&gt; 18:25:20"
+
+#~ msgid "6. %I:%M:%S %p  ==&gt; 06:25:20 PM"
+#~ msgstr "6. %I:%M:%S %p  ==&gt; 06:25:20 PM"
+
+#~ msgid "7. %j              ==&gt; 340"
+#~ msgstr "7. %j              ==&gt; 340"
+
+#~ msgid "8. %S              ==&gt; 20"
+#~ msgstr "8. %S              ==&gt; 20"
+
+#~ msgid "9. %w              ==&gt; 5 ( Friday is the 6th day)"
+#~ msgstr "9. %w              ==&gt; 5 (fredag er den sjette dagen)"
+
+#~ msgid "<strong>Apps</strong>"
+#~ msgstr "<strong>Apper</strong>"
+
+#~ msgid "<strong>Attribute</strong>"
+#~ msgstr "<strong>Attributt</strong>"
+
+#~ msgid "<strong>Dependencies :</strong>"
+#~ msgstr "<strong>Avhengigheter:</strong>"
+
+#~ msgid "<strong>Email:</strong>"
+#~ msgstr "<strong>Epost:</strong>"
+
+#~ msgid "<strong>Group</strong>"
+#~ msgstr "<strong>Gruppe</strong>"
+
+#~ msgid "<strong>Idx</strong>"
+#~ msgstr "<strong>Idx</strong>"
+
+#~ msgid "<strong>Menu :</strong>"
+#~ msgstr "<strong>Meny:</strong>"
+
+#~ msgid "<strong>Name</strong>"
+#~ msgstr "<strong>Navn</strong>"
+
+#~ msgid "<strong>Phone</strong>"
+#~ msgstr "<strong>Telefon</strong>"
+
+#~ msgid "<strong>Reports :</strong>"
+#~ msgstr "<strong>Rapporter:</strong>"
+
+#~ msgid "<strong>Total</strong>"
+#~ msgstr "<strong>Total</strong>"
+
+#~ msgid "<strong>Type</strong>"
+#~ msgstr "<strong>Type</strong>"
+
+#~ msgid "<strong>View :</strong>"
+#~ msgstr "<strong>Visning:</strong>"
+
+#~ msgid "<strong>XML ID</strong>"
+#~ msgstr "<strong>XML-ID</strong>"
+
+#~ msgid "<u><strong>Fields</strong></u>"
+#~ msgstr "<u><strong>Felter</strong></u>"
+
+#~ msgid "<u><strong>Security</strong></u>"
+#~ msgstr "<u><strong>Sikkerhet</strong></u>"
+
+#~ msgid "<u><strong>Views</strong></u>"
+#~ msgstr "<u><strong>Visninger</strong></u>"
+
+#~ msgid "A AGRICULTURE, FORESTRY AND FISHING"
+#~ msgstr "A JORDBRUK, SKOGBRUK OG FISKE"
+
+#~ msgid "A document was modified since you last viewed it (%s:%d)"
+#~ msgstr "Et dokument har blitt oppdatert siden du så på det sist (%s:%d)"
+
+#~ msgid ""
+#~ "A group is a set of functional areas that will be assigned to the user in "
+#~ "order to give them access and rights to specific applications and tasks "
+#~ "in the system. You can create custom groups or edit the ones existing by "
+#~ "default in order to customize the view of the menu that users will be "
+#~ "able to see. Whether they can have a read, write, create and delete "
+#~ "access right can be managed from here."
+#~ msgstr ""
+#~ "En gruppe er et sett med funksjonelle områder som blir tilegnet brukeren "
+#~ "for å gi dem tilgang og rettigheter til spesifikke applikasjoner og "
+#~ "oppgaver i systemet. Du kan lage egne grupper, eller redigere allerede "
+#~ "eksisterende grupper for å tilpasse menyen brukerene vil se. Les, skriv, "
+#~ "opprett og slett-tilganger kan også bli håndtert herifra."
+
+#~ msgid "A module to test import/export."
+#~ msgstr "En modul for å teste import/eksport."
+
+#~ msgid "A module to test the API."
+#~ msgstr "En modul for å teste APIet."
+
+#~ msgid "A module to test the uninstall feature."
+#~ msgstr "En modul for å teste avinstallering."
+
+#~ msgid "A user associated to the contact"
+#~ msgstr "En bruker tilknyttet kontakten"
+
+#~ msgid "A0  5   841 x 1189 mm"
+#~ msgstr "A0 5 841 x 1189 mm"
+
+#~ msgid "A1  6   594 x 841 mm"
+#~ msgstr "A1 6 594 x 841 mm"
+
+#~ msgid "A2  7   420 x 594 mm"
+#~ msgstr "A2 7 420 x 594 mm"
+
+#~ msgid "A3  8   297 x 420 mm"
+#~ msgstr "A3 8 297 x 420 mm"
+
+#~ msgid "A4  0   210 x 297 mm, 8.26 x 11.69 inches"
+#~ msgstr "A4 0 210 x 297 mm, 8.26 x 11.69 tommer"
+
+#~ msgid "A5  9   148 x 210 mm"
+#~ msgstr "A5 9 148 x 210 mm"
+
+#~ msgid "A6  10  105 x 148 mm"
+#~ msgstr "A6 10 105 x 148 mm"
+
+#~ msgid "A7  11  74 x 105 mm"
+#~ msgstr "A7 11 74 x 105 mm"
+
+#~ msgid "A8  12  52 x 74 mm"
+#~ msgstr "A8 12 52 x 74 mm"
+
+#~ msgid "A9  13  37 x 52 mm"
+#~ msgstr "A9 13 37 x 52 mm"
+
+#~ msgid "Abbreviation"
+#~ msgstr "Forkortelse"
+
+#~ msgid "Accepted Users"
+#~ msgstr "Godtatte brukere"
+
+#~ msgid "Access"
+#~ msgstr "Tilgang"
+
+#~ msgid "Access Controls"
+#~ msgstr "Tilgangskontroller"
+
+#~ msgid "Access Groups"
+#~ msgstr "Tilgangsgrupper"
+
+#~ msgid "Access Menu"
+#~ msgstr "Tilgangsmeny"
+
+#~ msgid "Access Token"
+#~ msgstr "Tilgangstoken"
+
+#~ msgid "Account Analytic Defaults"
+#~ msgstr "Standardverdier for kontoanalyser"
+
+#~ msgid "Account Charts"
+#~ msgstr "Kontoplaner"
+
+#~ msgid "Account Holder"
+#~ msgstr "Kontoeier"
+
+#~ msgid "Account No."
+#~ msgstr "Kontonr."
+
+#~ msgid "Account Number"
+#~ msgstr "Kontonummer"
+
+#~ msgid "Account Number must be unique"
+#~ msgstr "Kontonummeret må være unikt!"
+
+#~ msgid "Account TaxCloud"
+#~ msgstr "Konto TaxCloud"
+
+#~ msgid "Accounting"
+#~ msgstr "Regnskap"
+
+#~ msgid "Accounting - MRP"
+#~ msgstr "Regnskap - MRP"
+
+#~ msgid "Accounting Consistency Tests"
+#~ msgstr "Regnskapskonsistens-tester"
+
+#~ msgid "Accounting Reports"
+#~ msgstr "Regnskapsrapporter"
+
+#~ msgid "Action"
+#~ msgstr "Handling"
+
+#~ msgid "Action Description"
+#~ msgstr "Tiltaksbeskrivelse"
+
+#~ msgid "Action Name"
+#~ msgstr "Handlingsnavn"
+
+#~ msgid "Action Target"
+#~ msgstr "Mål for handling"
+
+#~ msgid "Action To Do"
+#~ msgstr "Tiltak å utføre"
+
+#~ msgid "Action Type"
+#~ msgstr "Handlingstype"
+
+#~ msgid "Action URL"
+#~ msgstr "Handlings-URL"
+
+#~ msgid "Action Usage"
+#~ msgstr "Handlingsbruk"
+
+#~ msgid "Actions"
+#~ msgstr "Handlinger"
+
+#~ msgid "Active"
+#~ msgstr "Aktiv"
+
+#~ msgid "Add a link to edit a translation in Transifex"
+#~ msgstr "Legg til en link for å redigere oversettelser i Transifex"
+
+#~ msgid "Add extra fields on addresses"
+#~ msgstr "Legg til ekstra felt på adresser"
+
+#~ msgid "Add in the 'Print' menu"
+#~ msgstr "Legg til i 'Utskrift'-menyen"
+
+#~ msgid "Address Type"
+#~ msgstr "Adressetype"
+
+#~ msgid "Address format..."
+#~ msgstr "Adresseformat..."
+
+#~ msgid "Administration"
+#~ msgstr "Administrasjon"
+
+#~ msgid "Administrative"
+#~ msgstr "Administrativ"
+
+#~ msgid ""
+#~ "Administrative divisions of a country. E.g. Fed. State, Departement, "
+#~ "Canton"
+#~ msgstr ""
+#~ "Administrative inndelinger for landet. For eksempel stat, departement, "
+#~ "fylke"
+
+#~ msgid "Advanced Address Formatting"
+#~ msgstr "Avansert adresseformatering"
+
+#~ msgid "Advanced Properties"
+#~ msgstr "Avanserte egenskaper"
+
+#~ msgid "Adyen Payment Acquirer"
+#~ msgstr "Adyen betalingstilbyder"
+
+#~ msgid "Affero GPL-3"
+#~ msgstr "Affero GPL-3"
+
+#~ msgid "Afghanistan"
+#~ msgstr "Afghanistan"
+
+#~ msgid "After Amount"
+#~ msgstr "Etter beløp"
+
+#~ msgid "Agriculture"
+#~ msgstr "Agrikultur"
+
+#~ msgid "Albania"
+#~ msgstr "Albania"
+
+#~ msgid "Algeria"
+#~ msgstr "Algerie"
+
+#~ msgid "All"
+#~ msgstr "Alle"
+
+#~ msgid "Allow cashier to reprint receipts"
+#~ msgstr "La ekspeditør skrive ut kvitteringer på nytt"
+
+#~ msgid "Allow shoppers to compare products based on their attributes"
+#~ msgstr "La kunder sammenlikne produkter basert på attributter"
+
+#~ msgid "Allowed Companies"
+#~ msgstr "Tillatte firmaer"
+
+#~ msgid "Allows to offer free shippings in coupon reward"
+#~ msgstr "Lar deg tilby gratis frakt som kupong-belønning"
+
+#~ msgid "American Samoa"
+#~ msgstr "Amerikansk Samoa"
+
+#~ msgid "Amount"
+#~ msgstr "Beløp"
+
+#~ msgid ""
+#~ "An arbitrary string, interpreted by the client according to its own needs "
+#~ "and wishes. There is no central tag repository across clients."
+#~ msgstr ""
+#~ "En hvilken som helst tekststreng, tolket av klienten etter egne behov "
+#~ "eller ønsker. Det er ingen sentral mappe for tagger på tvers av klienter."
+
+#~ msgid ""
+#~ "An auto-installable module is automatically installed by the system when "
+#~ "all its dependencies are satisfied. If the module has no dependency, it "
+#~ "is always installed."
+#~ msgstr ""
+#~ "En autoinstallerbar modul blir automatisk installert av systemet når alle "
+#~ "dens avhengigheter er oppfylt. Hvis modulen ikke har avhengigheter, blir "
+#~ "den alltid installert."
+
+#~ msgid "Analytic Accounting"
+#~ msgstr "Analytisk regnskap"
+
+#~ msgid "Andorra"
+#~ msgstr "Andorra"
+
+#~ msgid "Angola"
+#~ msgstr "Angola"
+
+#~ msgid "Anguilla"
+#~ msgstr "Anguilla"
+
+#~ msgid "Antarctica"
+#~ msgstr "Antarktis"
+
+#~ msgid "Antigua and Barbuda"
+#~ msgstr "Antigua og Barbuda"
+
+#~ msgid "App Store"
+#~ msgstr "App Store"
+
+#~ msgid ""
+#~ "Appears by default on the top right corner of your printed documents "
+#~ "(report header)."
+#~ msgstr ""
+#~ "Legges til som standard i øverste høyre hjørne av dine utskrevne "
+#~ "dokumenter (topptekst på rapporter)."
+
+#~ msgid "Application"
+#~ msgstr "Applikasjon"
+
+#~ msgid "Application Terms"
+#~ msgstr "Alle språkstrenger"
+
+#~ msgid "Apply"
+#~ msgstr "Bruk"
+
+#~ msgid "Apply Scheduled Upgrades"
+#~ msgstr "Utfør planlagte oppgraderinger"
+
+#~ msgid "Apply for Create"
+#~ msgstr "Be om opprett"
+
+#~ msgid "Apply for Read"
+#~ msgstr "Be om les"
+
+#~ msgid "Appointments"
+#~ msgstr "Avtaler"
+
+#~ msgid "Appraisals"
+#~ msgstr "Ansattvurderinger"
+
+#~ msgid "Approvals"
+#~ msgstr "Godkjenninger"
+
+#~ msgid "Apps"
+#~ msgstr "Apper"
+
+#~ msgid "Apps To Export"
+#~ msgstr "Apper å eksportere"
+
+#~ msgid "Apps to Update"
+#~ msgstr "Apper å oppdatere"
+
+#~ msgid "Apps:"
+#~ msgstr "Apper:"
+
+#~ msgid "Arch Blob"
+#~ msgstr "Arch Blob"
+
+#~ msgid "Arch Filename"
+#~ msgstr "Arch Filnavn"
+
+#~ msgid "Architecture"
+#~ msgstr "Arkitektur"
+
+#~ msgid "Archived"
+#~ msgstr "Arkivert"
+
+#~ msgid "Are you sure to execute the automatic merge of your contacts ?"
+#~ msgstr "Er du sikker på at du vil slå sammen kontakter automatisk?"
+
+#~ msgid ""
+#~ "Are you sure to execute the list of automatic merges of your contacts ?"
+#~ msgstr ""
+#~ "Er du sikker på at du vil slå sammen kontakter automatisk etter denne "
+#~ "listen?"
+
+#~ msgid "Argentina"
+#~ msgstr "Argentina"
+
+#~ msgid "Armenia"
+#~ msgstr "Armenia"
+
+#~ msgid "Aruba"
+#~ msgstr "Aruba"
+
+#~ msgid "Assets Management"
+#~ msgstr "Ressursadministrasjon"
+
+#~ msgid "Associated reports"
+#~ msgstr "Tilknyttede rapporter"
+
+#~ msgid "Associations Management"
+#~ msgstr "Relasjonsstyring"
+
+#~ msgid "Attached Document Name"
+#~ msgstr "Navn på vedlagt dokument"
+
+#~ msgid "Attached To"
+#~ msgstr "Lagt ved"
+
+#~ msgid "Attachment"
+#~ msgstr "Vedlegg"
+
+#~ msgid "Attachments"
+#~ msgstr "Vedlegg"
+
+#~ msgid "Attachments List and Document Indexation"
+#~ msgstr "Vedleggsliste og dokumentindeksering"
+
+#~ msgid "Attendances"
+#~ msgstr "Oppmøte"
+
+#~ msgid "Australia"
+#~ msgstr "Australia"
+
+#~ msgid "Australian - Accounting"
+#~ msgstr "Australia - Regnskap"
+
+#~ msgid "Austria"
+#~ msgstr "Østerrike"
+
+#~ msgid "Austria - Accounting"
+#~ msgstr "Østerrike - Regnskap"
+
+#~ msgid "Authentication via LDAP"
+#~ msgstr "Autentisering via LDAP"
+
+#~ msgid "Author"
+#~ msgstr "Forfatter"
+
+#~ msgid "Author Name"
+#~ msgstr "Forfatternavn"
+
+#~ msgid "Authorize.Net Payment Acquirer"
+#~ msgstr "Authorize.Net betalingstilbyder"
+
+#~ msgid "Automated Action Rules"
+#~ msgstr "Regler for automatiserte tiltak"
+
+#~ msgid "Automated Action based on Employee Contracts"
+#~ msgstr "Automatiserte tiltak basert på ansattkontrakter"
+
+#~ msgid "Automated Translations through Gengo API"
+#~ msgstr "Automatiserte oversettelser via Gengo API"
+
+#~ msgid "Automatic Installation"
+#~ msgstr "Automatisk installasjon"
+
+#~ msgid "Automatic Merge Wizard"
+#~ msgstr "Veiviser for automatisk sammenslåing"
+
+#~ msgid ""
+#~ "Automatically set to let administators find new terms that might need to "
+#~ "be translated"
+#~ msgstr ""
+#~ "Satt automatisk til å la administratorer finne nye termer som kan trenge "
+#~ "å oversettes"
+
+#~ msgid "Automation"
+#~ msgstr "Automatisering"
+
+#~ msgid "Available for User"
+#~ msgstr "Tilgjengelig for bruker"
+
+#~ msgid "Avatar"
+#~ msgstr "Avatar"
+
+#~ msgid "Azerbaijan"
+#~ msgstr "Aserbajdsjan"
+
+#~ msgid "B MINING AND QUARRYING"
+#~ msgstr "B GRUVEDRIFT"
+
+#~ msgid "B0  14  1000 x 1414 mm"
+#~ msgstr "B0 14 1000 x 1414 mm"
+
+#~ msgid "B1  15  707 x 1000 mm"
+#~ msgstr "B1 15 707 x 1000 mm"
+
+#~ msgid "B2  17  500 x 707 mm"
+#~ msgstr "B2 17 500 x 707 mm"
+
+#~ msgid "B3  18  353 x 500 mm"
+#~ msgstr "B3 18 353 x 500 mm"
+
+#~ msgid "B4  19  250 x 353 mm"
+#~ msgstr "B4 19 250 x 353 mm"
+
+#~ msgid "B5  1   176 x 250 mm, 6.93 x 9.84 inches"
+#~ msgstr "B5 1 176 x 250 mm, 6.93 x 9.84 tommer"
+
+#~ msgid "B6  20  125 x 176 mm"
+#~ msgstr "B6 20 125 x 176 mm"
+
+#~ msgid "B7  21  88 x 125 mm"
+#~ msgstr "B7 21 88 x 125 mm"
+
+#~ msgid "B8  22  62 x 88 mm"
+#~ msgstr "B8 22 62 x 88 mm"
+
+#~ msgid "B9  23  33 x 62 mm"
+#~ msgstr "B9 23 33 x 62 mm"
+
+#~ msgid "Bad file format: %s"
+#~ msgstr "Dårlig filformat: %s"
+
+#~ msgid "Bahamas"
+#~ msgstr "Bahamas"
+
+#~ msgid "Bahrain"
+#~ msgstr "Bahrain"
+
+#~ msgid "Bangladesh"
+#~ msgstr "Bangladesh"
+
+#~ msgid "Bank"
+#~ msgstr "Bank"
+
+#~ msgid "Bank Accounts"
+#~ msgstr "Bankkonti"
+
+#~ msgid "Bank Identifier Code"
+#~ msgstr "Bankens ID-kode"
+
+#~ msgid "Bank Name"
+#~ msgstr "Banknavn"
+
+#~ msgid "Bank account"
+#~ msgstr "Bankkonto"
+
+#~ msgid "Bank accounts related to this company"
+#~ msgstr "Bankkonti knyttet til dette firmaet"
+
+#~ msgid "Banks"
+#~ msgstr "Banker"
+
+#~ msgid "Barbados"
+#~ msgstr "Barbados"
+
+#~ msgid "Base"
+#~ msgstr "Base"
+
+#~ msgid "Base Field"
+#~ msgstr "Base-felt"
+
+#~ msgid "Base Object"
+#~ msgstr "Baseobjekt"
+
+#~ msgid "Base import"
+#~ msgstr "Base-import"
+
+#~ msgid "Base import module"
+#~ msgstr "Base-importmodul"
+
+#~ msgid "Belarus"
+#~ msgstr "Hviterussland"
+
+#~ msgid "Belgium"
+#~ msgstr "Belgia"
+
+#~ msgid "Belgium - Accounting"
+#~ msgstr "Belgia - Regnskap"
+
+#~ msgid "Belgium - Accounting Reports"
+#~ msgstr "Belgia - Regnskapsrapporter"
+
+#~ msgid "Belgium - Payroll"
+#~ msgstr "Belgia - Lønnsavregning"
+
+#~ msgid "Belgium - Structured Communication"
+#~ msgstr "Belgia - Strukturert kommunikasjon"
+
+#~ msgid "Belize"
+#~ msgstr "Belize"
+
+#~ msgid "Benin"
+#~ msgstr "Benin"
+
+#~ msgid "Bermuda"
+#~ msgstr "Bermuda"
+
+#~ msgid "Bhutan"
+#~ msgstr "Bhutan"
+
+#~ msgid "Binary"
+#~ msgstr "Binær"
+
+#~ msgid "Blogs"
+#~ msgstr "Blogger"
+
+#~ msgid "Bolivia"
+#~ msgstr "Bolivia"
+
+#~ msgid "Bolivia - Accounting"
+#~ msgstr "Bolivia - Regnskap"
+
+#~ msgid "Bonaire, Sint Eustatius and Saba"
+#~ msgstr "Bonaire, Sint Eustatius og Saba"
+
+#~ msgid "Boolean"
+#~ msgstr "Boolsk"
+
+#~ msgid "Bootswatch Theme"
+#~ msgstr "Bootswatch-tema"
+
+#~ msgid "Bosnia and Herzegovina"
+#~ msgstr "Bosnia og Herzegovina"
+
+#~ msgid "Botswana"
+#~ msgstr "Botswana"
+
+#~ msgid "Bottom Margin (mm)"
+#~ msgstr "Bunnmargin (mm)"
+
+#~ msgid "Bouvet Island"
+#~ msgstr "Bouvet-øya"
+
+#~ msgid "Brazil"
+#~ msgstr "Brasil"
+
+#~ msgid "Brazilian - Accounting"
+#~ msgstr "Brasil - Regnskap"
+
+#~ msgid "British Indian Ocean Territory"
+#~ msgstr "Det britiske territoriet i Indiahavet"
+
+#~ msgid "Brunei Darussalam"
+#~ msgstr "Brunei Darussalam"
+
+#~ msgid "Buckaroo Payment Acquirer"
+#~ msgstr "Buckaroo betalingstilbyder"
+
+#~ msgid "Budget Management"
+#~ msgstr "Budsjettadministrasjon"
+
+#~ msgid "Bulgaria"
+#~ msgstr "Bulgaria"
+
+#~ msgid "Burkina Faso"
+#~ msgstr "Burkina Faso"
+
+#~ msgid "Burundi"
+#~ msgstr "Burundi"
+
+#~ msgid "By"
+#~ msgstr "Av"
+
+#~ msgid "C5E 24  163 x 229 mm"
+#~ msgstr "C5E 24  163 x 229 mm"
+
+#~ msgid "CRM"
+#~ msgstr "CRM"
+
+#~ msgid "CRM Gamification"
+#~ msgstr "CRM-gamifisering"
+
+#~ msgid "CRM Livechat"
+#~ msgstr "CRM-chat"
+
+#~ msgid "CSV File"
+#~ msgstr "CSV-fil"
+
+#~ msgid "Calendar"
+#~ msgstr "Kalender"
+
+#~ msgid "Cambodia"
+#~ msgstr "Kambodsja"
+
+#~ msgid "Cameroon"
+#~ msgstr "Kamerun"
+
+#~ msgid "Canada"
+#~ msgstr "Canada"
+
+#~ msgid "Canada - Accounting"
+#~ msgstr "Canada - Regnskap"
+
+#~ msgid "Cancel"
+#~ msgstr "Avbryt"
+
+#~ msgid "Cancel Install"
+#~ msgstr "Avbryt installasjon"
+
+#~ msgid "Cancel Uninstall"
+#~ msgstr "Avbryt avinstallasjon"
+
+#~ msgid "Cancel Upgrade"
+#~ msgstr "Avbryt oppgradering"
+
+#~ msgid "Cape Verde"
+#~ msgstr "Kapp Verde"
+
+#~ msgid "Cascade"
+#~ msgstr "Kaskade"
+
+#~ msgid "Category"
+#~ msgstr "Kategori"
+
+#~ msgid "Cayman Islands"
+#~ msgstr "Cayman-øyene"
+
+#~ msgid "Central African Republic"
+#~ msgstr "Den sentralafrikanske republikk"
+
+#~ msgid "Chad"
+#~ msgstr "Tsjad"
+
+#~ msgid "Change My Preferences"
+#~ msgstr "Endre innstillingene mine"
+
+#~ msgid "Change Password"
+#~ msgstr "Endre passord"
+
+#~ msgid "Change Password Wizard"
+#~ msgstr "Veileder for endring av passord"
+
+#~ msgid "Change password"
+#~ msgstr "Endre passord"
+
+#~ msgid "Change the way addresses are displayed in reports"
+#~ msgstr "Endre hvordan adresser vises i rapporter"
+
+#~ msgid "Char"
+#~ msgstr "Tegn"
+
+#~ msgid "Check Printing in Expenses"
+#~ msgstr "Utskrift av sjekker for utlegg"
+
+#~ msgid "Check if the contact is a company, otherwise it is a person"
+#~ msgstr "Kontroller om kontakten er et firma, ellers er det en person"
+
+#~ msgid "Check this box if this contact is an Employee."
+#~ msgstr "Merk av om kontakten er en ansatt."
+
+#~ msgid "Checksum/SHA1"
+#~ msgstr "Sjekksum/SHA1"
+
+#~ msgid "Child Applications"
+#~ msgstr "Underliggende applikasjoner"
+
+#~ msgid "Child Companies"
+#~ msgstr "Datterselskaper"
+
+#~ msgid "Child Field"
+#~ msgstr "Underordnet felt"
+
+#~ msgid "Child IDs"
+#~ msgstr "Underliggende IDer"
+
+#~ msgid "Chile"
+#~ msgstr "Chile"
+
+#~ msgid "Chile - Accounting"
+#~ msgstr "Chile - Regnskap"
+
+#~ msgid "Chile - Accounting Reports"
+#~ msgstr "Chile - Regnskapsrapporter"
+
+#~ msgid "China"
+#~ msgstr "Kina"
+
+#~ msgid ""
+#~ "Choose the connection encryption scheme:\n"
+#~ "- None: SMTP sessions are done in cleartext.\n"
+#~ "- TLS (STARTTLS): TLS encryption is requested at start of SMTP session "
+#~ "(Recommended)\n"
+#~ "- SSL/TLS: SMTP sessions are encrypted with SSL/TLS through a dedicated "
+#~ "port (default: 465)"
+#~ msgstr ""
+#~ "Velg tilkoblingskryptering:\n"
+#~ "-Ingen: SMTP sesjoner utføres i klartekst.\n"
+#~ "-TLS (STARTTLS): TLS kryptering blir forespurt når SMTP sesjonen startes "
+#~ "(Anbefalt)\n"
+#~ "-SSL/TLS: SMTP sesjoner er kryptert med SSL/TLS via en dedikert port "
+#~ "(standard: 465)"
+
+#~ msgid "Christmas Island"
+#~ msgstr "Christmasøya"
+
+#~ msgid "City"
+#~ msgstr "Sted"
+
+#~ msgid "City Addresses"
+#~ msgstr "Byadresser"
+
+#~ msgid "Client"
+#~ msgstr "Klient"
+
+#~ msgid "Client Action"
+#~ msgstr "Klienthandling"
+
+#~ msgid "Close"
+#~ msgstr "Lukk"
+
+#~ msgid "Cocos (Keeling) Islands"
+#~ msgstr "Kokosøyene (Keelingøyene)"
+
+#~ msgid "Code"
+#~ msgstr "Kode"
+
+#~ msgid "Colombia"
+#~ msgstr "Colombia"
+
+#~ msgid "Colombian - Accounting"
+#~ msgstr "Colombia - Regnskap"
+
+#~ msgid "Colombian - Accounting Reports"
+#~ msgstr "Colombia - Regnskapsrapporter"
+
+#~ msgid "Color Index"
+#~ msgstr "Fargeindeks"
+
+#~ msgid "Colors"
+#~ msgstr "Farger"
+
+#~ msgid "Column 1"
+#~ msgstr "Kolonne 1"
+
+#~ msgid "Column 2"
+#~ msgstr "Kolonne 2"
+
+#~ msgid ""
+#~ "Comma-separated list of allowed view modes, such as 'form', 'tree', "
+#~ "'calendar', etc. (Default: tree,form)"
+#~ msgstr ""
+#~ "Kommaseparert liste over tillate visningsmoduser, slik som 'skjema', "
+#~ "'tre', 'kalender', o.l (Standard: tre,skjema)"
+
+#~ msgid "Comments"
+#~ msgstr "Kommentarer"
+
+#~ msgid "Commercial Entity"
+#~ msgstr "Kommersiell enhet"
+
+#~ msgid "Comoros"
+#~ msgstr "Komorene"
+
+#~ msgid "Companies"
+#~ msgstr "Firmaer"
+
+#~ msgid "Companies count"
+#~ msgstr "Antall firmaer"
+
+#~ msgid "Company Data"
+#~ msgstr "Firmadata"
+
+#~ msgid "Company Logo"
+#~ msgstr "Firmalogo"
+
+#~ msgid "Company Name"
+#~ msgstr "Firmanavn"
+
+#~ msgid "Company Properties"
+#~ msgstr "Firmaegenskaper"
+
+#~ msgid "Company Registry"
+#~ msgstr "Firmaregister"
+
+#~ msgid "Company Tagline"
+#~ msgstr "Firma-slagord"
+
+#~ msgid "Company Type"
+#~ msgstr "Firmatype"
+
+#~ msgid "Compare timesheets and forecast for your projects"
+#~ msgstr "Sammenlikne timelister og prognoser for prosjektene dine"
+
+#~ msgid "Complete Address"
+#~ msgstr "Fullstendig adresse"
+
+#~ msgid "Complete ID"
+#~ msgstr "Fullstendig ID"
+
+#~ msgid "Complete Name"
+#~ msgstr "Fullstendig navn"
+
+#~ msgid "Compute"
+#~ msgstr "Beregn"
+
+#~ msgid "Condition"
+#~ msgstr "Betingelse"
+
+#~ msgid "Config"
+#~ msgstr "Konfigurasjon"
+
+#~ msgid "Config Settings"
+#~ msgstr "Konfigurasjonsinnstillinger"
+
+#~ msgid "Config Wizard Steps"
+#~ msgstr "Konfigurer trinn i veiviseren"
+
+#~ msgid "Configuration"
+#~ msgstr "Konfigurasjon"
+
+#~ msgid "Configuration Wizards"
+#~ msgstr "Konfigurasjonsveivisere"
+
+#~ msgid "Configure timesheet invoicing"
+#~ msgstr "Sett opp timelistefakturering"
+
+#~ msgid "Confirm"
+#~ msgstr "Bekreft"
+
+#~ msgid "Congo"
+#~ msgstr "Kongo"
+
+#~ msgid "Connection Information"
+#~ msgstr "Tilkoblingsinformasjon"
+
+#~ msgid "Constraint"
+#~ msgstr "Begrensning"
+
+#~ msgid "Constraint Type"
+#~ msgstr "Begrensningstype"
+
+#~ msgid "Contact"
+#~ msgstr "Kontakt"
+
+#~ msgid "Contact / Address"
+#~ msgstr "Kontakt/adresse"
+
+#~ msgid "Contact Creation"
+#~ msgstr "Opprettelse av kontakter"
+
+#~ msgid "Contact Form"
+#~ msgstr "Kontaktskjema"
+
+#~ msgid "Contact Name"
+#~ msgstr "Kontaktnavn"
+
+#~ msgid "Contact Tag"
+#~ msgstr "Kontakt-tag"
+
+#~ msgid "Contact Tags"
+#~ msgstr "Kontakt-tagger"
+
+#~ msgid "Contact Titles"
+#~ msgstr "Kontakt-titler"
+
+#~ msgid "Contacts"
+#~ msgstr "Kontakter"
+
+#~ msgid "Contacts & Addresses"
+#~ msgstr "Kontakter og adresser"
+
+#~ msgid "Context"
+#~ msgstr "Kontekst"
+
+#~ msgid "Context Value"
+#~ msgstr "Kontekstverdi"
+
+#~ msgid ""
+#~ "Context dictionary as Python expression, empty by default (Default: {})"
+#~ msgstr ""
+#~ "Kontekst dictionary som Python-setning, tom som standard (Standard: {})"
+
+#~ msgid "Contracts"
+#~ msgstr "Kontrakter"
+
+#~ msgid "Contributors"
+#~ msgstr "Bidragsytere"
+
+#~ msgid "Cook Islands"
+#~ msgstr "Cookøyene"
+
+#~ msgid "Copied"
+#~ msgstr "Kopiert"
+
+#~ msgid "Costa Rica"
+#~ msgstr "Costa Rica"
+
+#~ msgid "Costa Rica - Accounting"
+#~ msgstr "Costa Rica - Regnskap"
+
+#~ msgid "Countries"
+#~ msgstr "Land"
+
+#~ msgid "Country"
+#~ msgstr "Land"
+
+#~ msgid "Country Calling Code"
+#~ msgstr "Landkode"
+
+#~ msgid "Country Code"
+#~ msgstr "Landkode"
+
+#~ msgid "Country Group"
+#~ msgstr "Landegruppe"
+
+#~ msgid "Country Groups"
+#~ msgstr "Landgrupper"
+
+#~ msgid "Country Name"
+#~ msgstr "Navn på land"
+
+#~ msgid "Country state"
+#~ msgstr "Navn på stat"
+
+#~ msgid "Create Access"
+#~ msgstr "Opprett tilgang"
+
+#~ msgid "Create Access Right"
+#~ msgstr "Opprett tilgangsrettighet"
+
+#~ msgid "Create Date"
+#~ msgstr "Opprettet dato"
+
+#~ msgid "Create Menu"
+#~ msgstr "Opprett meny"
+
+#~ msgid "Create _Menu"
+#~ msgstr "Opprett _meny"
+
+#~ msgid "Create a Menu"
+#~ msgstr "Opprett en meny"
+
+#~ msgid "Create lead from livechat conversation"
+#~ msgstr "Opprett lead fra chatsamtale"
+
+#~ msgid "Create new lead with using /lead command in the channel"
+#~ msgstr "Opprett ny lead ved å bruke kommandoen /lead i kanalen"
+
+#~ msgid "Created Menus"
+#~ msgstr "Opprettede menyer"
+
+#~ msgid "Created Views"
+#~ msgstr "Opprettede visninger"
+
+#~ msgid "Created by"
+#~ msgstr "Opprettet av"
+
+#~ msgid "Created on"
+#~ msgstr "Opprettet"
+
+#~ msgid "Creation"
+#~ msgstr "Opprettelse"
+
+#~ msgid "Creation Date"
+#~ msgstr "Opprettelsesdato"
+
+#~ msgid "Credit Limit"
+#~ msgstr "Kredittgrense"
+
+#~ msgid "Credit card support for Point Of Sale"
+#~ msgstr "Kredittkortstøtte for Point of Sale"
+
+#~ msgid "Croatia"
+#~ msgstr "Kroatia"
+
+#~ msgid "Croatia - Accounting (RRIF 2012)"
+#~ msgstr "Kroatia - Regnskap (RRIF 2012)"
+
+#~ msgid "Cuba"
+#~ msgstr "Cuba"
+
+#~ msgid "Curaçao"
+#~ msgstr "Curaçao"
+
+#~ msgid "Currencies"
+#~ msgstr "Valutaer"
+
+#~ msgid "Currency"
+#~ msgstr "Valuta"
+
+#~ msgid "Currency Code (ISO 4217)"
+#~ msgstr "Valutakode (ISO 4217)"
+
+#~ msgid "Currency Rate"
+#~ msgstr "Valutakurs"
+
+#~ msgid "Currency Rates"
+#~ msgstr "Valutakurser"
+
+#~ msgid "Currency Unit"
+#~ msgstr "Valutaenhet"
+
+#~ msgid "Currency Unit Name"
+#~ msgstr "Valutaenhetsnavn"
+
+#~ msgid "Currency sign, to be used when printing amounts."
+#~ msgstr "Valutategn som skal brukes ved utskrift av beløp."
+
+#~ msgid "Current Rate"
+#~ msgstr "Gjeldende rate"
+
+#~ msgid "Current Window"
+#~ msgstr "Aktivt vindu"
+
+#~ msgid "Custom"
+#~ msgstr "Tilpasset"
+
+#~ msgid "Custom Field"
+#~ msgstr "Tilpasset felt"
+
+#~ msgid "Custom Object"
+#~ msgstr "Tilpasset objekt"
+
+#~ msgid "Custom Shortcuts"
+#~ msgstr "Tilpassede snarveier"
+
+#~ msgid "Customer Portal"
+#~ msgstr "Kundeportal"
+
+#~ msgid "Customer Rating"
+#~ msgstr "Kundevurdering"
+
+#~ msgid "Customer References"
+#~ msgstr "Kundereferanser"
+
+#~ msgid "Customers"
+#~ msgstr "Kunder"
+
+#~ msgid "Customized Views"
+#~ msgstr "Tilpassede visninger"
+
+#~ msgid "Cyprus"
+#~ msgstr "Kypros"
+
+#~ msgid "Czech Republic"
+#~ msgstr "Den tsjekkiske republikk"
+
+#~ msgid "Côte d'Ivoire"
+#~ msgstr "Elfenbenskysten"
+
+#~ msgid "DLE 26 110 x 220 mm"
+#~ msgstr "DLE 26 110 x 220 mm"
+
+#~ msgid "Dashboards"
+#~ msgstr "Dashbord"
+
+#~ msgid "Data for xml conversion tests"
+#~ msgstr "Data for XML-konverteringstester"
+
+#~ msgid "Data to Write"
+#~ msgstr "Data å skrive"
+
+#~ msgid "Database"
+#~ msgstr "Database"
+
+#~ msgid "Database Data"
+#~ msgstr "Database Data"
+
+#~ msgid ""
+#~ "Database ID of record to open in form view, when ``view_mode`` is set to "
+#~ "'form' only"
+#~ msgstr ""
+#~ "Database ID til raden  som skal åpnes i skjemavisning, når ''view_mode'' "
+#~ "er satt til 'skjema'"
+
+#~ msgid "Database Name"
+#~ msgstr "Databasenavn"
+
+#~ msgid "Database Structure"
+#~ msgstr "Databasestruktur"
+
+#~ msgid "Date Format"
+#~ msgstr "Datoformat"
+
+#~ msgid "DateTime"
+#~ msgstr "Dato og klokkeslett"
+
+#~ msgid "Days"
+#~ msgstr "Dager"
+
+#~ msgid "Debugging"
+#~ msgstr "Debugging"
+
+#~ msgid "Decimal Accuracy"
+#~ msgstr "Desimalnøyaktighet"
+
+#~ msgid "Decimal Places"
+#~ msgstr "Desimalplasser"
+
+#~ msgid "Decimal Precision"
+#~ msgstr "Desimalpresisjon"
+
+#~ msgid "Decimal Separator"
+#~ msgstr "Desimalskilletegn"
+
+#~ msgid "Default Filter"
+#~ msgstr "Standardfilter"
+
+#~ msgid "Default Theme"
+#~ msgstr "Standardtema"
+
+#~ msgid "Default Value (JSON format)"
+#~ msgstr "Standardverdi (JSON-format)"
+
+#~ msgid "Default Values"
+#~ msgstr "Standardverdier"
+
+#~ msgid "Default limit for the list view"
+#~ msgstr "Standardgrense for listevisning"
+
+#~ msgid "Default paper format ?"
+#~ msgstr "Standard papirformat"
+
+#~ msgid "Defined Reports"
+#~ msgstr "Definerte rapporter"
+
+#~ msgid "Definition"
+#~ msgstr "Definisjon"
+
+#~ msgid "Delete Access"
+#~ msgstr "Slett tilgang"
+
+#~ msgid "Delete Access Right"
+#~ msgstr "Slett tilgangsrettighet"
+
+#~ msgid "Delivery"
+#~ msgstr "Leveranse"
+
+#~ msgid "Delivery Address"
+#~ msgstr "Leveringsadresse"
+
+#~ msgid "Delivery Barcode Scanning"
+#~ msgstr "Strekkodeskanning ved leveranse"
+
+#~ msgid "Delivery Costs"
+#~ msgstr "Leveransekostnader"
+
+#~ msgid "Demo"
+#~ msgstr "Demo"
+
+#~ msgid "Demo Data"
+#~ msgstr "Demo-data"
+
+#~ msgid "Democratic Republic of the Congo"
+#~ msgstr "Den demokratiske republikken Kongo"
+
+#~ msgid "Denmark"
+#~ msgstr "Danmark"
+
+#~ msgid "Dependencies"
+#~ msgstr "Avhengigheter"
+
+#~ msgid "Dependency"
+#~ msgstr "Avhengighet"
+
+#~ msgid "Description"
+#~ msgstr "Beskrivelse"
+
+#~ msgid "Description HTML"
+#~ msgstr "Beskrivelse HTML"
+
+#~ msgid "Design gorgeous mails"
+#~ msgstr "Design flotte epostmeldinger"
+
+#~ msgid "Design, send and track emails"
+#~ msgstr "Design, send og spor epostmeldinger"
+
+#~ msgid "Destination Model"
+#~ msgstr "Destinasjonsmodell"
+
+#~ msgid "Detailed algorithm:"
+#~ msgstr "Detaljert algoritme:"
+
+#~ msgid ""
+#~ "Determines where the currency symbol should be placed after or before the "
+#~ "amount."
+#~ msgstr "Skal valutasymbolet vises før eller etter beløpet?"
+
+#~ msgid "Diagram"
+#~ msgstr "Diagram"
+
+#~ msgid "Digits"
+#~ msgstr "Sifre"
+
+#~ msgid "Discard"
+#~ msgstr "Forkast"
+
+#~ msgid "Discuss"
+#~ msgstr "Diskuter"
+
+#~ msgid "Display"
+#~ msgstr "Visning"
+
+#~ msgid "Display Name"
+#~ msgstr "Visningsnavn"
+
+#~ msgid "Display Website Elements in Studio"
+#~ msgstr "Vis nettstedelementer i Studio"
+
+#~ msgid "Display a header line"
+#~ msgstr "Vis en overskrift"
+
+#~ msgid ""
+#~ "Display and manage the list of all countries that can be assigned to your "
+#~ "partner records. You can create or delete countries to make sure the ones "
+#~ "you are working on will be maintained."
+#~ msgstr ""
+#~ "Vis og administrer liste over alle land som kan bli tildelt dine partner-"
+#~ "poster.  Du kan slette eller opprette land for å være sikker på at de du "
+#~ "jobber med vil bli vedlikeholdt."
+
+#~ msgid "Djibouti"
+#~ msgstr "Djibouti"
+
+#~ msgid "Doctor"
+#~ msgstr "Doktor"
+
+#~ msgid "Document"
+#~ msgstr "Dokument"
+
+#~ msgid "Document Template"
+#~ msgstr "Dokumentmal"
+
+#~ msgid "Documents"
+#~ msgstr "Dokumenter"
+
+#~ msgid "Domain"
+#~ msgstr "Domene"
+
+#~ msgid "Domain Value"
+#~ msgstr "Domeneverdi"
+
+#~ msgid "Dominica"
+#~ msgstr "Samveldet Dominica"
+
+#~ msgid "Dominican Republic"
+#~ msgstr "Den dominikanske republikk"
+
+#~ msgid "Dominican Republic - Accounting"
+#~ msgstr "Den dominikanske republikk - Regnskap"
+
+#~ msgid "Done"
+#~ msgstr "Fullført"
+
+#~ msgid "Dr."
+#~ msgstr "Dr."
+
+#~ msgid "Drop Shipping"
+#~ msgstr "Dropshipping"
+
+#~ msgid "Dropdown menu"
+#~ msgstr "Nedtrekksmeny"
+
+#~ msgid "EDI for Mexico"
+#~ msgstr "EDI for Mexico"
+
+#~ msgid "ESC/POS Hardware Driver"
+#~ msgstr "ESC/POS maskinvaredriver"
+
+#~ msgid "EU Mini One Stop Shop (MOSS)"
+#~ msgstr "EU Mini One Stop Shop (MOSS)"
+
+#~ msgid "Each model must be unique!"
+#~ msgstr "Hver modell må være unik!"
+
+#~ msgid "Ecuador"
+#~ msgstr "Ecuador"
+
+#~ msgid "Ecuador - Accounting"
+#~ msgstr "Ecuador - Regnskap"
+
+#~ msgid "Edit Translations"
+#~ msgstr "Rediger oversettelser"
+
+#~ msgid "Education"
+#~ msgstr "Utdanning"
+
+#~ msgid "Egypt"
+#~ msgstr "Egypt"
+
+#~ msgid "El Salvador"
+#~ msgstr "El Salvador"
+
+#~ msgid "Email Address"
+#~ msgstr "Epostadresse"
+
+#~ msgid "Email Gateway"
+#~ msgstr "Epost-gateway"
+
+#~ msgid "Email Marketing"
+#~ msgstr "Epostmarkedsføring"
+
+#~ msgid "Employee"
+#~ msgstr "Ansatt"
+
+#~ msgid "Employee Contracts"
+#~ msgstr "Ansattkontrakter"
+
+#~ msgid "Employees"
+#~ msgstr "Ansatte"
+
+#~ msgid "Energy supply"
+#~ msgstr "Energitilførsel"
+
+#~ msgid "Entertainment"
+#~ msgstr "Underholdning"
+
+#~ msgid "Equatorial Guinea"
+#~ msgstr "Ekvatorial-Guinea"
+
+#~ msgid "Eritrea"
+#~ msgstr "Eritrea"
+
+#~ msgid "Error"
+#~ msgstr "Feil"
+
+#~ msgid ""
+#~ "Error context:\n"
+#~ "View `%(view_name)s`"
+#~ msgstr ""
+#~ "Feilkontekst:\n"
+#~ "Visning '%(view_name)s'"
+
+#~ msgid "Estonia"
+#~ msgstr "Estland"
+
+#~ msgid "Ethiopia"
+#~ msgstr "Etiopia"
+
+#~ msgid "Ethiopia - Accounting"
+#~ msgstr "Etiopia - Regnskap"
+
+#~ msgid "Europe"
+#~ msgstr "Europa"
+
+#~ msgid "Evaluation Type"
+#~ msgstr "Evalueringstype"
+
+#~ msgid "Event Barcode Scanning"
+#~ msgstr "Strekkodeavlesing for arrangementer"
+
+#~ msgid "Event Barcode in Mobile"
+#~ msgstr "Arrangementsstrekkode på mobil"
+
+#~ msgid "Event Barcode scan in Mobile"
+#~ msgstr "Arrangementsstrekkodeavlesing på mobil"
+
+#~ msgid "Events"
+#~ msgstr "Arrangementer"
+
+#~ msgid "Events Organization"
+#~ msgstr "Organisering av arrangementer"
+
+#~ msgid "Events Sales"
+#~ msgstr "Messesalg"
+
+#~ msgid "Example of Python code"
+#~ msgstr "Eksempel på Python-kode"
+
+#~ msgid "Examples"
+#~ msgstr "Eksempler"
+
+#~ msgid "Exclude contacts having"
+#~ msgstr "Utelukk kontakter med"
+
+#~ msgid "Exclusive"
+#~ msgstr "Eksklusiv"
+
+#~ msgid "Execute Every"
+#~ msgstr "Utfør hver"
+
+#~ msgid "Execute several actions"
+#~ msgstr "Utfør flere tiltak"
+
+#~ msgid "Execution"
+#~ msgstr "Utføring"
+
+#~ msgid "Executive 4   7.5 x 10 inches, 190.5 x 254 mm"
+#~ msgstr "Executive 4   7.5 x 10 tommer, 190.5 x 254 mm"
+
+#~ msgid "Expenses"
+#~ msgstr "Utlegg"
+
+#~ msgid "Export"
+#~ msgstr "Eksport"
+
+#~ msgid "Export Complete"
+#~ msgstr "Eksport fullført"
+
+#~ msgid "Export ID"
+#~ msgstr "Eksporter ID"
+
+#~ msgid "Export Name"
+#~ msgstr "Eksporter navn"
+
+#~ msgid "Export Settings"
+#~ msgstr "Eksporter innstillinger"
+
+#~ msgid "Export Translation"
+#~ msgstr "Eksporter oversettelse"
+
+#~ msgid "Export Translations"
+#~ msgstr "Eksporter oversettelser"
+
+#~ msgid "Extended Addresses"
+#~ msgstr "Utvidede adresser"
+
+#~ msgid "External ID"
+#~ msgstr "Ekstern ID"
+
+#~ msgid "External Identifier"
+#~ msgstr "Ekstern identifikator"
+
+#~ msgid "External Identifiers"
+#~ msgstr "Eksterne identifikatorer"
+
+#~ msgid "Extra"
+#~ msgstr "Tillegg"
+
+#~ msgid "Extra Rights"
+#~ msgstr "Tilleggsrettigheter"
+
+#~ msgid "Falkland Islands"
+#~ msgstr "Falklandsøyene"
+
+#~ msgid "Faroe Islands"
+#~ msgstr "Færøyene"
+
+#~ msgid "Fax"
+#~ msgstr "Fax"
+
+#~ msgid "Fed. State"
+#~ msgstr "Føderal stat"
+
+#~ msgid "Fedex Shipping"
+#~ msgstr "FedEx-frakt"
+
+#~ msgid "Field"
+#~ msgstr "Felt"
+
+#~ msgid "Field Help"
+#~ msgstr "Felthjelp"
+
+#~ msgid "Field Label"
+#~ msgstr "Feltnavn"
+
+#~ msgid "Field Mappings"
+#~ msgstr "Feltoversikt"
+
+#~ msgid "Field Name"
+#~ msgstr "Feltnavn"
+
+#~ msgid "Field Type"
+#~ msgstr "Felttype"
+
+#~ msgid "Field names must be unique per model."
+#~ msgstr "Feltnavn må være unike per modell."
+
+#~ msgid "Field:"
+#~ msgstr "Felt:"
+
+#~ msgid "Fields"
+#~ msgstr "Felter"
+
+#~ msgid "Fields Description"
+#~ msgstr "Feltbeskrivelse"
+
+#~ msgid "Fiji"
+#~ msgstr "Fiji"
+
+#~ msgid "File"
+#~ msgstr "Fil"
+
+#~ msgid "File Content"
+#~ msgstr "Filinnhold"
+
+#~ msgid "File Format"
+#~ msgstr "Filformat"
+
+#~ msgid "File Name"
+#~ msgstr "Filnavn"
+
+#~ msgid "File Size"
+#~ msgstr "Filstørrelse"
+
+#~ msgid "Filter"
+#~ msgstr "Filter"
+
+#~ msgid "Filter Name"
+#~ msgstr "Filternavn"
+
+#~ msgid "Filter names must be unique"
+#~ msgstr "Filternavn må være unike"
+
+#~ msgid "Filter on my documents"
+#~ msgstr "Filtrer på mine dokumenter"
+
+#~ msgid "Filters"
+#~ msgstr "Filtre"
+
+#~ msgid "Filters created by myself"
+#~ msgstr "Filtre opprettet av meg"
+
+#~ msgid "Filters shared with all users"
+#~ msgstr "Filtre delt med alle brukere"
+
+#~ msgid "Filters visible only for one user"
+#~ msgstr "Filtre som er synlige bare for én bruker"
+
+#~ msgid "Finance/Insurance"
+#~ msgstr "Finans/forsikring"
+
+#~ msgid "Finished"
+#~ msgstr "Fullført"
+
+#~ msgid "Finland"
+#~ msgstr "Finland"
+
+#~ msgid "Fleet"
+#~ msgstr "Flåte"
+
+#~ msgid "Float"
+#~ msgstr "Flyttall"
+
+#~ msgid "Folio 27  210 x 330 mm"
+#~ msgstr "Folio 27 210 x 330 mm"
+
+#~ msgid "Food"
+#~ msgstr "Mat"
+
+#~ msgid "Footer"
+#~ msgstr "Bunntekst"
+
+#~ msgid "Footer text displayed at the bottom of all reports."
+#~ msgstr "Bunntekst som vises nederst på alle rapporter."
+
+#~ msgid ""
+#~ "For more details about translating Odoo in your language, please refer to "
+#~ "the"
+#~ msgstr "For flere detaljer om å oversette Odoo til ditt språk, vennligst se"
+
+#~ msgid ""
+#~ "For one2many fields, the field on the target model that implement the "
+#~ "opposite many2one relationship"
+#~ msgstr ""
+#~ "For en-til-mange felt, feltet på målmodellen som implementerer den "
+#~ "motsatte mange-til-en relasjonen"
+
+#~ msgid "For relationship fields, the technical name of the target model"
+#~ msgstr "For relasjonsfelt, det tekniske navnet til målmodellen"
+
+#~ msgid "Format email address \"Name <email@domain>\""
+#~ msgstr "Epostadresseformat \"Navn <epost@domene>\""
+
+#~ msgid "Formatted Email"
+#~ msgstr "Formatert epost"
+
+#~ msgid "Forum"
+#~ msgstr "Forum"
+
+#~ msgid "France"
+#~ msgstr "Frankrike"
+
+#~ msgid "France - Accounting"
+#~ msgstr "Frankrike - Regnskap"
+
+#~ msgid "France - Accounting Reports"
+#~ msgstr "Frankrike - Regnskapsrapporter"
+
+#~ msgid "France - FEC"
+#~ msgstr "Frankrike - FEC"
+
+#~ msgid "French Guiana"
+#~ msgstr "Fransk Guyana"
+
+#~ msgid "French Payroll"
+#~ msgstr "Fransk lønningsavregning"
+
+#~ msgid "French Polynesia"
+#~ msgstr "Fransk Polynesia"
+
+#~ msgid "French Southern Territories"
+#~ msgstr "De franske sørterritorier"
+
+#~ msgid "Friday"
+#~ msgstr "Fredag"
+
+#~ msgid "From"
+#~ msgstr "Fra"
+
+#~ msgid "Full Access"
+#~ msgstr "Full tilgang"
+
+#~ msgid "Full Access Right"
+#~ msgstr "Fulle tilgangsrettigheter"
+
+#~ msgid "Full Name"
+#~ msgstr "Fullt navn"
+
+#~ msgid "Full Path"
+#~ msgstr "Full sti"
+
+#~ msgid "Full Screen"
+#~ msgstr "Fullskjerm"
+
+#~ msgid "Function"
+#~ msgstr "Funksjon"
+
+#~ msgid "GPL Version 2"
+#~ msgstr "GPL versjon 2"
+
+#~ msgid "GPL Version 3"
+#~ msgstr "GPL versjon 3"
+
+#~ msgid "GPL-2 or later version"
+#~ msgstr "GPL-2 eller senere versjon"
+
+#~ msgid "GPL-3 or later version"
+#~ msgstr "GPL-3 eller senere versjon"
+
+#~ msgid "GSTIN"
+#~ msgstr "MVA-nummer"
+
+#~ msgid "Gabon"
+#~ msgstr "Gabon"
+
+#~ msgid "Gambia"
+#~ msgstr "Gambia"
+
+#~ msgid "Gamification"
+#~ msgstr "Gamifisering"
+
+#~ msgid "Gantt"
+#~ msgstr "Gantt"
+
+#~ msgid "General"
+#~ msgstr "Generell"
+
+#~ msgid "General Information"
+#~ msgstr "Generell informasjon"
+
+#~ msgid "General Settings"
+#~ msgstr "Generelle innstillinger"
+
+#~ msgid "Generate Missing Terms"
+#~ msgstr "Generer manglende termer"
+
+#~ msgid "Generic"
+#~ msgstr "Generisk"
+
+#~ msgid "Geo Latitude"
+#~ msgstr "Breddegrad"
+
+#~ msgid "Geo Longitude"
+#~ msgstr "Lengdegrad"
+
+#~ msgid "Georgia"
+#~ msgstr "Georgia"
+
+#~ msgid "Germany"
+#~ msgstr "Tyskland"
+
+#~ msgid "Ghana"
+#~ msgstr "Ghana"
+
+#~ msgid "Gibraltar"
+#~ msgstr "Gibraltar"
+
+#~ msgid "Github Integration with Discuss"
+#~ msgstr "GitHub-integrasjon med Diskuter"
+
+#~ msgid "Global"
+#~ msgstr "Global"
+
+#~ msgid "Google Calendar"
+#~ msgstr "Google Calendar"
+
+#~ msgid "Google Drive™ integration"
+#~ msgstr "Google Drive™-integrasjon"
+
+#~ msgid "Google Maps"
+#~ msgstr "Google Maps"
+
+#~ msgid "Google Spreadsheet"
+#~ msgstr "Google regneark"
+
+#~ msgid "Graph"
+#~ msgstr "Graf"
+
+#~ msgid "Greece"
+#~ msgstr "Hellas"
+
+#~ msgid "Greece - Accounting"
+#~ msgstr "Hellas - regnskap"
+
+#~ msgid "Greenland"
+#~ msgstr "Grønland"
+
+#~ msgid "Grenada"
+#~ msgstr "Grenada"
+
+#~ msgid "Group"
+#~ msgstr "Gruppe"
+
+#~ msgid "Group By"
+#~ msgstr "Grupper etter"
+
+#~ msgid "Group Name"
+#~ msgstr "Gruppenavn"
+
+#~ msgid "Group name"
+#~ msgstr "Gruppenavn"
+
+#~ msgid "Group of Contacts"
+#~ msgstr "Gruppe med kontakter"
+
+#~ msgid "Groups (no group = global)"
+#~ msgstr "Grupper (ingen gruppe = global)"
+
+#~ msgid "Guadeloupe"
+#~ msgstr "Guadeloupe"
+
+#~ msgid "Guam"
+#~ msgstr "Guam"
+
+#~ msgid "Guatemala"
+#~ msgstr "Guatemala"
+
+#~ msgid "Guatemala - Accounting"
+#~ msgstr "Guatemala - Regnskap"
+
+#~ msgid "Guernsey"
+#~ msgstr "Guernsey"
+
+#~ msgid "Guinea"
+#~ msgstr "Guinea"
+
+#~ msgid "Guinea-Bissau"
+#~ msgstr "Guinea-Bissau"
+
+#~ msgid "Guyana"
+#~ msgstr "Guyana"
+
+#~ msgid "HR Gamification"
+#~ msgstr "HR-gamifisering"
+
+#~ msgid "HR Org Chart"
+#~ msgstr "HR-organisasjonskart"
+
+#~ msgid "HTML"
+#~ msgstr "HTML"
+
+#~ msgid "HTTP Routing"
+#~ msgstr "HTTP-ruting"
+
+#~ msgid "Haiti"
+#~ msgstr "Haiti"
+
+#~ msgid "Health/Social"
+#~ msgstr "Helse/sosial"
+
+#~ msgid "Heard Island and McDonald Islands"
+#~ msgstr "Heard- og McDonaldøyene"
+
+#~ msgid "Help"
+#~ msgstr "Hjelp"
+
+#~ msgid "Helpdesk"
+#~ msgstr "Kundestøtte"
+
+#~ msgid "Helpdesk Timesheet"
+#~ msgstr "Timeliste for kundestøtte"
+
+#~ msgid "Helpdesk: Knowledge Base"
+#~ msgstr "Kundestøtte: Kunnskapsbase"
+
+#~ msgid "Helps you handle your quotations, sale orders and invoicing."
+#~ msgstr "Hjelper deg å håndtere pristilbud, salgsordrer og fakturering."
+
+#~ msgid "Helps you manage the timesheets."
+#~ msgstr "Hjelper deg å administrere timelister."
+
+#~ msgid "Helps you manage your Events."
+#~ msgstr "Hjelper deg å administrere arrangementene dine."
+
+#~ msgid "Helps you manage your appraisals."
+#~ msgstr "Hjelper deg å administrere ansattvurderinger."
+
+#~ msgid "Helps you manage your employees."
+#~ msgstr "Hjelper deg å administrere ansatte."
+
+#~ msgid "Helps you manage your expenses."
+#~ msgstr "Hjelper deg å administrere utlegg."
+
+#~ msgid ""
+#~ "Helps you manage your manufacturing processes and generate reports on "
+#~ "those processes."
+#~ msgstr "Lar deg styre din produksjonsprosess og generere rapporter."
+
+#~ msgid ""
+#~ "Helps you manage your projects and tasks by tracking them, generating "
+#~ "plannings, etc..."
+#~ msgstr ""
+#~ "Hjelper deg med å håndtere dine prosjekter og oppgaver ved å spore dem, "
+#~ "generere planer, osv..."
+
+#~ msgid "Helps you manage your quality alerts and quality checks."
+#~ msgstr "Hjelper deg å administrere kvalitetsvarsler og kvalitetskontroller."
+
+#~ msgid "Helps you manage your recruitments."
+#~ msgstr "Hjelper deg å administrere rekruttering."
+
+#~ msgid "Here is the exported translation file:"
+#~ msgstr "Her er den eksporterte oversettelsesfilen"
+
+#~ msgid "History"
+#~ msgstr "Historikk"
+
+#~ msgid "Holy See (Vatican City State)"
+#~ msgstr "Vatikanstaten"
+
+#~ msgid "Home Action"
+#~ msgstr "Hjemmehandling"
+
+#~ msgid "Honduras"
+#~ msgstr "Honduras"
+
+#~ msgid "Honduras - Accounting"
+#~ msgstr "Honduras - Regnskap"
+
+#~ msgid "Hong Kong"
+#~ msgstr "Hong Kong"
+
+#~ msgid "Hostname or IP of SMTP server"
+#~ msgstr "Hostname eller IP for SMTP-server"
+
+#~ msgid "Hours"
+#~ msgstr "Timer"
+
+#~ msgid "Households"
+#~ msgstr "Husholdninger"
+
+#~ msgid ""
+#~ "How many times the method is called,\n"
+#~ "a negative number indicates no limit."
+#~ msgstr ""
+#~ "Hvor mange ganger metoden kalles,\n"
+#~ "et negativt nummer betyr ingen begrensning."
+
+#~ msgid "Hr Recruitment Interview Forms"
+#~ msgstr "HR-rekruttering intervjuskjemaer"
+
+#~ msgid "Human Resources"
+#~ msgstr "Human Resources"
+
+#~ msgid "Hungarian - Accounting"
+#~ msgstr "Ungarn - Regnskap"
+
+#~ msgid "Hungary"
+#~ msgstr "Ungarn"
+
+#~ msgid "IBAN Bank Accounts"
+#~ msgstr "IBAN bankkonti"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "ID of the action if defined in a XML file"
+#~ msgstr "Handlings-ID er definert i en XML-fil"
+
+#~ msgid "ID of the view defined in xml file"
+#~ msgstr "ID for visningen definert i XML-filen"
+
+#~ msgid "ISO Code"
+#~ msgstr "ISO-kode"
+
+#~ msgid "ISO Language and Country code, e.g. en_US"
+#~ msgstr "ISO språk- og landskode, f.eks en_US"
+
+#~ msgid "ISO code"
+#~ msgstr "ISO-kode"
+
+#~ msgid "IT/Communication"
+#~ msgstr "IT/kommunikasjon"
+
+#~ msgid "Iceland"
+#~ msgstr "Island"
+
+#~ msgid "Icon"
+#~ msgstr "Ikon"
+
+#~ msgid "Icon URL"
+#~ msgstr "Ikon-URL"
+
+#~ msgid "Ids"
+#~ msgstr "IDer"
+
+#~ msgid "If no group is specified the rule is global and applied to everyone"
+#~ msgstr ""
+#~ "Hvis ingen grupper er spesifisert, er regelen global og gjelder for alle"
+
+#~ msgid "If not set, acts as a default value for new resources"
+#~ msgstr "Hvis ikke satt, fungerer som standard verdi for nye ressurser"
+
+#~ msgid ""
+#~ "If set to true, the action will not be displayed on the right toolbar of "
+#~ "a form view."
+#~ msgstr ""
+#~ "Hvis satt til sann, så vil ikke handlingen vises på den høyre "
+#~ "verktøylinjen i skjemavisning."
+
+#~ msgid "If set, action binding only applies for this company"
+#~ msgstr "Hvis satt, gjelder handlingsbindingen kun for dette firmaet"
+
+#~ msgid ""
+#~ "If this field is empty, the view applies to all users. Otherwise, the "
+#~ "view applies to the users of those groups only."
+#~ msgstr ""
+#~ "Hvis dette feltet er tomt, gjelder visningen alle brukere. Ellers gjelder "
+#~ "visningen bare for brukerne av gruppene nevnt her."
+
+#~ msgid ""
+#~ "If this view is inherited,\n"
+#~ "* if True, the view always extends its parent\n"
+#~ "* if False, the view currently does not extend its parent but can be "
+#~ "enabled\n"
+#~ "         "
+#~ msgstr ""
+#~ "Hvis denne visningen er arvet,\n"
+#~ "* hvis Sann, vil visningen alltid utvide sin overordnede visning\n"
+#~ "* hvis Sann, vil visningen ikke utvide sin overordnede visning, men kan "
+#~ "skrus på"
+
+#~ msgid ""
+#~ "If you check this box, your customized translations will be overwritten "
+#~ "and replaced by the official ones."
+#~ msgstr ""
+#~ "Hvis du merker av denne boksen, vil dine tilpassede oversettelser "
+#~ "overskrives med offisielle oversettelser."
+
+#~ msgid ""
+#~ "If you check this, then the second time the user prints with same "
+#~ "attachment name, it returns the previous report."
+#~ msgstr ""
+#~ "Hvis du krysser av denne, vil den forrige rapporten returneres den andre "
+#~ "gangen brukeren skriver ut med samme vedleggsnavnet."
+
+#~ msgid ""
+#~ "If you enable this option, existing translations (including custom ones) "
+#~ "will be overwritten and replaced by those in this file"
+#~ msgstr ""
+#~ "Hvis du skrur på dette valget, vil nåværende oversettelser (inkludert "
+#~ "tilpassede oversettelser) bli overskrevet av oversettelser fra denne filen"
+
+#~ msgid "If you wish to cancel the process, press the cancel button below"
+#~ msgstr "For å avbryte prosessen, klikk Avbryt-knappen nedenfor"
+
+#~ msgid "Image"
+#~ msgstr "Bilde"
+
+#~ msgid "Impacted Apps"
+#~ msgstr "Berørte apper"
+
+#~ msgid "Impacted data models"
+#~ msgstr "Berørte datamodeller"
+
+#~ msgid "Impacted modules"
+#~ msgstr "Berørte moduler"
+
+#~ msgid "Implementation"
+#~ msgstr "Implementasjon"
+
+#~ msgid "Import / Export"
+#~ msgstr "Import/eksport"
+
+#~ msgid "Import Translation"
+#~ msgstr "Importer oversettelse"
+
+#~ msgid "Import exchange rates from the Internet.\n"
+#~ msgstr "Importer valutakurser fra internett.\n"
+
+#~ msgid "In Apps"
+#~ msgstr "I apper"
+
+#~ msgid "In-App Purchases"
+#~ msgstr "Kjøp i appen"
+
+#~ msgid "Inactive"
+#~ msgstr "Inaktiv"
+
+#~ msgid "Inactive Users"
+#~ msgstr "Inaktive brukere"
+
+#~ msgid "Indexed"
+#~ msgstr "Indeksert"
+
+#~ msgid "Indexed Content"
+#~ msgstr "Indeksert innhold"
+
+#~ msgid "India"
+#~ msgstr "India"
+
+#~ msgid "Indian - Accounting"
+#~ msgstr "India - Regnskap"
+
+#~ msgid "Indian - Accounting Reports"
+#~ msgstr "India - Regnskapsrapporter"
+
+#~ msgid "Indian Payroll"
+#~ msgstr "Indisk lønningssystem"
+
+#~ msgid "Individual"
+#~ msgstr "Individuell"
+
+#~ msgid "Indonesia"
+#~ msgstr "Indonesia"
+
+#~ msgid "Industry"
+#~ msgstr "Bransje"
+
+#~ msgid "Information"
+#~ msgstr "Informasjon"
+
+#~ msgid "Inherited"
+#~ msgstr "Arvet"
+
+#~ msgid "Inherited View"
+#~ msgstr "Nedarvet visning"
+
+#~ msgid "Init Date"
+#~ msgstr "Initiell dato"
+
+#~ msgid "Initial Setup Tools"
+#~ msgstr "Verktøy for grunnleggende oppsett"
+
+#~ msgid "Inline Edit"
+#~ msgstr "På-stedet redigering"
+
+#~ msgid "Install Apps"
+#~ msgstr "Installer apper"
+
+#~ msgid "Install Language"
+#~ msgstr "Installer språk"
+
+#~ msgid "Installed"
+#~ msgstr "Installert"
+
+#~ msgid "Installed Features"
+#~ msgstr "Installerte funksjoner"
+
+#~ msgid "Installed Version"
+#~ msgstr "Installert versjon"
+
+#~ msgid "Integer"
+#~ msgstr "Heltall"
+
+#~ msgid "Integrate coupon mechanism in sales orders."
+#~ msgstr "Integrer kupongmekanisme i salgsordrer"
+
+#~ msgid "Interaction between rules"
+#~ msgstr "Interaksjon mellom regler"
+
+#~ msgid "Internal Groups"
+#~ msgstr "Interne grupper"
+
+#~ msgid "Internal Notes"
+#~ msgstr "Interne notater"
+
+#~ msgid "Internal Source"
+#~ msgstr "Intern kilde"
+
+#~ msgid "Internal Users"
+#~ msgstr "Interne bruker"
+
+#~ msgid "Internal note..."
+#~ msgstr "Internt notat.."
+
+#~ msgid "Internal notes..."
+#~ msgstr "Interne notater..."
+
+#~ msgid "Interval Unit"
+#~ msgstr "Intervallenhet"
+
+#~ msgid "Introspection report on objects"
+#~ msgstr "Introspektiv objektrapport"
+
+#~ msgid "Inventory"
+#~ msgstr "Lager"
+
+#~ msgid "Invoice"
+#~ msgstr "Faktura"
+
+#~ msgid "Invoice Address"
+#~ msgstr "Fakturaadresse"
+
+#~ msgid "Invoicing"
+#~ msgstr "Fakturering"
+
+#~ msgid "Iran"
+#~ msgstr "Iran"
+
+#~ msgid "Iraq"
+#~ msgstr "Irak"
+
+#~ msgid "Ireland"
+#~ msgstr "Irland"
+
+#~ msgid "Is Company"
+#~ msgstr "Er et firma"
+
+#~ msgid "Is a Company"
+#~ msgstr "Er et firma"
+
+#~ msgid "Is public document"
+#~ msgstr "Er et offentlig dokument"
+
+#~ msgid "Isle of Man"
+#~ msgstr "Man"
+
+#~ msgid "Israel"
+#~ msgstr "Israel"
+
+#~ msgid "Italy"
+#~ msgstr "Italia"
+
+#~ msgid "Italy - Accounting"
+#~ msgstr "Italia - Regnskap"
+
+#~ msgid "J INFORMATION AND COMMUNICATION"
+#~ msgstr "J INFORMASJON OG KOMMUNIKASJON"
+
+#~ msgid "Jamaica"
+#~ msgstr "Jamaica"
+
+#~ msgid "Japan"
+#~ msgstr "Japan"
+
+#~ msgid "Japan - Accounting"
+#~ msgstr "Japan - Regnskap"
+
+#~ msgid "Jersey"
+#~ msgstr "Jersey"
+
+#~ msgid "Job Position"
+#~ msgstr "Stilling"
+
+#~ msgid "Jordan"
+#~ msgstr "Jordan"
+
+#~ msgid "Just In Time Scheduling"
+#~ msgstr "Akkurat-i-tide planlegging"
+
+#~ msgid "K FINANCIAL AND INSURANCE ACTIVITIES"
+#~ msgstr "K FINANS OG FORSIKRINGSVIRKSOMHET"
+
+#~ msgid "Kanban"
+#~ msgstr "Kanban"
+
+#~ msgid "Kazakhstan"
+#~ msgstr "Kasakhstan"
+
+#~ msgid "Kenya"
+#~ msgstr "Kenya"
+
+#~ msgid "Key"
+#~ msgstr "Nøkkel"
+
+#~ msgid "Key must be unique."
+#~ msgstr "Nøkkelen må være unik."
+
+#~ msgid "Kiribati"
+#~ msgstr "Kiribati"
+
+#~ msgid "Knowledge base for helpdesk based on Odoo Forum"
+#~ msgstr "Kunnskapsbase for kundestøtte basert på Odoo Forum"
+
+#~ msgid "Kontni načrt za gospodarske družbe"
+#~ msgstr "Kontoplan for bedrifter"
+
+#~ msgid "Kuwait"
+#~ msgstr "Kuwait"
+
+#~ msgid "Kyrgyzstan"
+#~ msgstr "Kirgisistan"
+
+#~ msgid "L REAL ESTATE ACTIVITIES"
+#~ msgstr "L EIENDOMSMEGLING"
+
+#~ msgid "LGPL Version 3"
+#~ msgstr "LGPL versjon 3"
+
+#~ msgid "Landed Costs"
+#~ msgstr "Mottakskostnader"
+
+#~ msgid "Landscape"
+#~ msgstr "Landskap"
+
+#~ msgid "Language"
+#~ msgstr "Språk"
+
+#~ msgid "Language Import"
+#~ msgstr "Språkimport"
+
+#~ msgid "Language Name"
+#~ msgstr "Språknavn"
+
+#~ msgid "Language Pack"
+#~ msgstr "Språkpakke"
+
+#~ msgid "Language code of translation item must be among known languages"
+#~ msgstr "Språkkoden må være et kjent språk"
+
+#~ msgid "Languages"
+#~ msgstr "Språk"
+
+#~ msgid "Laos"
+#~ msgstr "Laos"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Sist endret"
+
+#~ msgid "Last Updated by"
+#~ msgstr "Sist oppdatert av"
+
+#~ msgid "Last Updated on"
+#~ msgstr "Sist oppdatert"
+
+#~ msgid "Latest Version"
+#~ msgstr "Siste versjon"
+
+#~ msgid "Latvia"
+#~ msgstr "Latvia"
+
+#~ msgid "Launch"
+#~ msgstr "Start"
+
+#~ msgid "Launch Configuration Wizard"
+#~ msgstr "Start konfigurasjonsveiviser"
+
+#~ msgid "Layout"
+#~ msgstr "Layout"
+
+#~ msgid "Layout in Reports"
+#~ msgstr "Rapportlayout"
+
+#~ msgid "Lead Scoring"
+#~ msgstr "Lead-scoring"
+
+#~ msgid "Lebanon"
+#~ msgstr "Libanon"
+
+#~ msgid "Ledger  28  431.8 x 279.4 mm"
+#~ msgstr "Ledger  28  431.8 x 279.4 mm"
+
+#~ msgid "Left Margin (mm)"
+#~ msgstr "Venstre marg (mm)"
+
+#~ msgid "Left-to-Right"
+#~ msgstr "Venstre-mot-høyre"
+
+#~ msgid "Legal    3   8.5 x 14 inches, 215.9 x 355.6 mm"
+#~ msgstr "Legal 3 8.5 x 14 inches, 215.9 x 355.6 mm"
+
+#~ msgid "Legend (for prefix, suffix)"
+#~ msgstr "Kartnøkkel (for prefix, suffix)"
+
+#~ msgid "Lesotho"
+#~ msgstr "Lesotho"
+
+#~ msgid "Letter 2 8.5 x 11 inches, 215.9 x 279.4 mm"
+#~ msgstr "Letter 2 8.5 x 11 inches, 215.9 x 279.4 mm"
+
+#~ msgid "Level"
+#~ msgstr "Nivå"
+
+#~ msgid "Liberia"
+#~ msgstr "Liberia"
+
+#~ msgid "Libya"
+#~ msgstr "Libya"
+
+#~ msgid "License"
+#~ msgstr "Lisens"
+
+#~ msgid "Liechtenstein"
+#~ msgstr "Liechtenstein"
+
+#~ msgid "Limit"
+#~ msgstr "Grense"
+
+#~ msgid "Lines"
+#~ msgstr "Linjer"
+
+#~ msgid "Link Tracker"
+#~ msgstr "Link-sporer"
+
+#~ msgid "List of modules in which the field is defined"
+#~ msgstr "Liste over moduler hvor feltet er definert"
+
+#~ msgid "List of modules in which the object is defined or inherited"
+#~ msgstr "Liste over moduler hvor objektet er definert eller arvet"
+
+#~ msgid "Lithuania"
+#~ msgstr "Litauen"
+
+#~ msgid "Live Chat"
+#~ msgstr "Chat"
+
+#~ msgid "Livechat Support"
+#~ msgstr "Kundestøtte-chat"
+
+#~ msgid "Load"
+#~ msgstr "Last inn"
+
+#~ msgid "Load a Translation"
+#~ msgstr "Last inn en oversettelse"
+
+#~ msgid "Locale Code"
+#~ msgstr "Lokaliseringskode"
+
+#~ msgid "Localization"
+#~ msgstr "Lokalisering"
+
+#~ msgid "Log"
+#~ msgstr "Logg"
+
+#~ msgid "Logging"
+#~ msgstr "Logging"
+
+#~ msgid "Login"
+#~ msgstr "Innlogging"
+
+#~ msgid "Logo"
+#~ msgstr "Logo"
+
+#~ msgid "Logo Web"
+#~ msgstr "Logo for nettsted"
+
+#~ msgid "Logs"
+#~ msgstr "Logger"
+
+#~ msgid "Loyalty Program"
+#~ msgstr "Lojalitetsprogram"
+
+#~ msgid "Loyalty Program for the Point of Sale "
+#~ msgstr "Lojalitetsprogram for denne Point of Sale"
+
+#~ msgid "Lunch"
+#~ msgstr "Lunsj"
+
+#~ msgid "Luxembourg"
+#~ msgstr "Luxembourg"
+
+#~ msgid "Luxembourg - Accounting"
+#~ msgstr "Luxembourg - Regnskap"
+
+#~ msgid "Macau"
+#~ msgstr "Macao"
+
+#~ msgid "Macedonia, the former Yugoslav Republic of"
+#~ msgstr "Republikken Makedonia"
+
+#~ msgid "Madagascar"
+#~ msgstr "Madagaskar"
+
+#~ msgid "Madam"
+#~ msgstr "Fru"
+
+#~ msgid "Main Sequence"
+#~ msgstr "Hovedsekvens"
+
+#~ msgid "Maintainer"
+#~ msgstr "Vedlikeholder"
+
+#~ msgid "Maintenance"
+#~ msgstr "Vedlikehold"
+
+#~ msgid "Malawi"
+#~ msgstr "Malawi"
+
+#~ msgid "Malaysia"
+#~ msgstr "Malaysia"
+
+#~ msgid "Maldives"
+#~ msgstr "Maldivene"
+
+#~ msgid "Mali"
+#~ msgstr "Mali"
+
+#~ msgid "Malta"
+#~ msgstr "Malta"
+
+#~ msgid "Manufacturing"
+#~ msgstr "Produksjon"
+
+#~ msgid "Many2One"
+#~ msgstr "Many2One"
+
+#~ msgid "ManyToMany Relations"
+#~ msgstr "MangeTilMange Relasjoner"
+
+#~ msgid "Margins by Products"
+#~ msgstr "Marginer etter produkter"
+
+#~ msgid "Margins in Sales Orders"
+#~ msgstr "Marginer i salgsordrer"
+
+#~ msgid "Marketing"
+#~ msgstr "Markedsføring"
+
+#~ msgid "Marketing Automation"
+#~ msgstr "Markedsføring"
+
+#~ msgid "Maroc - Accounting"
+#~ msgstr "Marokko - Regnskap"
+
+#~ msgid "Marshall Islands"
+#~ msgstr "Marshalløyene"
+
+#~ msgid "Martinique"
+#~ msgstr "Martinique"
+
+#~ msgid "Mass Mailing Themes"
+#~ msgstr "Temaer for masseutsendelser"
+
+#~ msgid "Mauritania"
+#~ msgstr "Mauritania"
+
+#~ msgid "Mauritius"
+#~ msgstr "Mauritius"
+
+#~ msgid "Mayotte"
+#~ msgstr "Mayotte"
+
+#~ msgid "Members"
+#~ msgstr "Medlemmer"
+
+#~ msgid "Memos pad"
+#~ msgstr "Notatblokk"
+
+#~ msgid "Menu"
+#~ msgstr "Meny"
+
+#~ msgid "Menu Items"
+#~ msgstr "Menyvalg"
+
+#~ msgid "Menu Name"
+#~ msgstr "Menynavn"
+
+#~ msgid "Menus"
+#~ msgstr "Menyer"
+
+#~ msgid "Menus Customization"
+#~ msgstr "Tilpassing av menyer"
+
+#~ msgid "Merge"
+#~ msgstr "Slå sammen"
+
+#~ msgid "Merge Automatically"
+#~ msgstr "Slå sammen automatisk"
+
+#~ msgid "Merge Contacts"
+#~ msgstr "Slå sammen kontakter"
+
+#~ msgid "Merge the following contacts"
+#~ msgstr "Slå sammen følgende kontakter"
+
+#~ msgid "Merge with Manual Check"
+#~ msgstr "Sammenslåing med manuell kontroll"
+
+#~ msgid "Message"
+#~ msgstr "Melding"
+
+#~ msgid "Mexican Localization for EDI documents"
+#~ msgstr "Meksikansk lokalisering for EDI-dokumenter"
+
+#~ msgid "Mexico"
+#~ msgstr "Mexico"
+
+#~ msgid "Mexico - Accounting"
+#~ msgstr "Mexico - Regnskap"
+
+#~ msgid "Micronesia"
+#~ msgstr "Mikronesia"
+
+#~ msgid "Mime Type"
+#~ msgstr "MIME-type"
+
+#~ msgid "MinID"
+#~ msgstr "MinID"
+
+#~ msgid "Minutes"
+#~ msgstr "Minutter"
+
+#~ msgid "Misc"
+#~ msgstr "Diverse"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "Diverse"
+
+#~ msgid "Miss"
+#~ msgstr "Frøken"
+
+#~ msgid "Missing document(s)"
+#~ msgstr "Dokument(er) mangler"
+
+#~ msgid "Missing required value for the field '%s' (%s)"
+#~ msgstr "Mangler påkrevd verdi for feltet '%s' (%s)"
+
+#~ msgid "Mister"
+#~ msgstr "Herr"
+
+#~ msgid "Mobile:"
+#~ msgstr "Mobil:"
+
+#~ msgid "Model"
+#~ msgstr "Modell"
+
+#~ msgid "Model Constraints"
+#~ msgstr "Modellbegrensninger"
+
+#~ msgid "Model Data"
+#~ msgstr "Modelldata"
+
+#~ msgid "Model Description"
+#~ msgstr "Modellbeskrivelse"
+
+#~ msgid "Model Name"
+#~ msgstr "Modellnavn"
+
+#~ msgid "Model Overview"
+#~ msgstr "Modelloversikt"
+
+#~ msgid "Model name of the object to open in the view window"
+#~ msgstr "Modellnavn til objektet for åpning i visningsvinduet"
+
+#~ msgid "Model on which the server action runs."
+#~ msgstr "Modell handlinger fra server kjører på."
+
+#~ msgid "Models"
+#~ msgstr "Modeller"
+
+#~ msgid "Module"
+#~ msgstr "Modul"
+
+#~ msgid "Module Category"
+#~ msgstr "Modulkategori"
+
+#~ msgid "Module Name"
+#~ msgstr "Modulnavn"
+
+#~ msgid "Module Update"
+#~ msgstr "Moduloppdatering"
+
+#~ msgid "Module Update Result"
+#~ msgstr "Resultat av moduloppdatering"
+
+#~ msgid "Module Upgrade Install"
+#~ msgstr "Installasjon av moduloppgradering"
+
+#~ msgid "Module dependency"
+#~ msgstr "Modulavhengighet"
+
+#~ msgid "Module exclusion"
+#~ msgstr "Ekskludering av modul"
+
+#~ msgid "Module this term belongs to"
+#~ msgstr "Modul denne termen tilhører"
+
+#~ msgid "Modules"
+#~ msgstr "Moduler"
+
+#~ msgid "Moldova"
+#~ msgstr "Moldova"
+
+#~ msgid "Monaco"
+#~ msgstr "Monaco"
+
+#~ msgid "Monday"
+#~ msgstr "Mandag"
+
+#~ msgid "Mongolia"
+#~ msgstr "Mongolia"
+
+#~ msgid "Montenegro"
+#~ msgstr "Montenegro"
+
+#~ msgid "Months"
+#~ msgstr "Måneder"
+
+#~ msgid "Montserrat"
+#~ msgstr "Montserrat"
+
+#~ msgid "Morocco"
+#~ msgstr "Marokko"
+
+#~ msgid "Mozambique"
+#~ msgstr "Mosambik"
+
+#~ msgid "Mr."
+#~ msgstr "Hr."
+
+#~ msgid "Mrs."
+#~ msgstr "Fru"
+
+#~ msgid "Multi Companies"
+#~ msgstr "Multi-selskap"
+
+#~ msgid "Multi Currencies"
+#~ msgstr "Flere valutaer"
+
+#~ msgid "Multi Language Chart of Accounts"
+#~ msgstr "Flerspråklig kontoplan"
+
+#~ msgid "My Document(s)"
+#~ msgstr "Mine dokumenter"
+
+#~ msgid "My filters"
+#~ msgstr "Mine filtre"
+
+#~ msgid "Myanmar"
+#~ msgstr "Myanmar"
+
+#~ msgid "Name:"
+#~ msgstr "Navn:"
+
+#~ msgid "Namibia"
+#~ msgstr "Namibia"
+
+#~ msgid "Nauru"
+#~ msgstr "Nauru"
+
+#~ msgid "Nepal"
+#~ msgstr "Nepal"
+
+#~ msgid "Netherlands"
+#~ msgstr "Nederland"
+
+#~ msgid "Netherlands - Accounting"
+#~ msgstr "Nederland - Regnskap"
+
+#~ msgid "Netherlands - Accounting Reports"
+#~ msgstr "Nederland - Regnskapsrapporter"
+
+#~ msgid "New Caledonia"
+#~ msgstr "Ny-Caledonia"
+
+#~ msgid "New Password"
+#~ msgstr "Nytt passord"
+
+#~ msgid "New Window"
+#~ msgstr "Nytt vindu"
+
+#~ msgid "New Zealand"
+#~ msgstr "New Zealand"
+
+#~ msgid "New Zealand - Accounting"
+#~ msgstr "New Zealand - Regnskap"
+
+#~ msgid "Next Execution Date"
+#~ msgstr "Neste utførelsesdato"
+
+#~ msgid "Next Number"
+#~ msgstr "Neste nummer"
+
+#~ msgid "Next number of this sequence"
+#~ msgstr "Neste nummer i denne sekvensen"
+
+#~ msgid ""
+#~ "Next number that will be used. This number can be incremented frequently "
+#~ "so the displayed value might already be obsolete"
+#~ msgstr ""
+#~ "Neste nummer som vil bli brukt. Dette nummeret kan økes ofte, så verdien "
+#~ "som vises, kan allerede være utdatert."
+
+#~ msgid "Next planned execution date for this job."
+#~ msgstr "Neste planlagte utførelsesdato for denne jobben."
+
+#~ msgid "Nicaragua"
+#~ msgstr "Nicaragua"
+
+#~ msgid "Niger"
+#~ msgstr "Niger"
+
+#~ msgid "Nigeria"
+#~ msgstr "Nigeria"
+
+#~ msgid "Niue"
+#~ msgstr "Niue"
+
+#~ msgid "No Record Found"
+#~ msgstr "Ingen oppføringer funnet"
+
+#~ msgid "No default view of type '%s' could be found !"
+#~ msgstr "Fant ingen standardvisning av type '%s'!"
+
+#~ msgid "No gap"
+#~ msgstr "Ingen gap"
+
+#~ msgid "No of Views"
+#~ msgstr "Antall visninger"
+
+#~ msgid "Non Updatable"
+#~ msgstr "Kan ikke oppdateres"
+
+#~ msgid "None"
+#~ msgstr "Ingen"
+
+#~ msgid "Norfolk Island"
+#~ msgstr "Norfolkøya"
+
+#~ msgid "North Korea"
+#~ msgstr "Nord-Korea"
+
+#~ msgid "Northern Mariana Islands"
+#~ msgstr "Nord-Marianene"
+
+#~ msgid "Norway"
+#~ msgstr "Norge"
+
+#~ msgid "Norway - Accounting"
+#~ msgstr "Norge - Regnskap"
+
+#~ msgid "Not Installed"
+#~ msgstr "Ikke installert"
+
+#~ msgid "Notes"
+#~ msgstr "Notater"
+
+#~ msgid "Number of Apps"
+#~ msgstr "Antall apper"
+
+#~ msgid "Number of Calls"
+#~ msgstr "Antall kall"
+
+#~ msgid "Number of Companies"
+#~ msgstr "Antall firma"
+
+#~ msgid "Number of modules added"
+#~ msgstr "Antall moduler lagt til"
+
+#~ msgid "Number of modules updated"
+#~ msgstr "Antall moduler oppdatert"
+
+#~ msgid "OAuth2 Authentication"
+#~ msgstr "OAuth2-autentisering"
+
+#~ msgid "OHADA - Accounting"
+#~ msgstr "OHADA - Regnskapsføring"
+
+#~ msgid "Object"
+#~ msgstr "Objekt"
+
+#~ msgid "Object %s doesn't exist"
+#~ msgstr "Objektet %s eksisterer ikke"
+
+#~ msgid "Object Name"
+#~ msgstr "Objektnavn"
+
+#~ msgid "Object Relation"
+#~ msgstr "Objektrelasjon"
+
+#~ msgid "Object:"
+#~ msgstr "Objekt:"
+
+#~ msgid "Odoo Proprietary License v1.0"
+#~ msgstr "Odoo Proprietary License v1.0"
+
+#~ msgid "Ok"
+#~ msgstr "Ok"
+
+#~ msgid "Oman"
+#~ msgstr "Oman"
+
+#~ msgid "On Delete"
+#~ msgstr "Ved sletting"
+
+#~ msgid "On Multiple Doc."
+#~ msgstr "På flere dok."
+
+#~ msgid "On delete property for many2one fields"
+#~ msgstr "On delete attributt for mange-til-en felt"
+
+#~ msgid "Online Appointment"
+#~ msgstr "Nettavtale"
+
+#~ msgid "Only one currency rate per day allowed!"
+#~ msgstr "Bare én valutakurs om dagen er tillatt!"
+
+#~ msgid "Only one value can be defined for each given usage!"
+#~ msgstr "Bare en verdi kan defineres for hvert gitt bruksområde!"
+
+#~ msgid "Open Apps"
+#~ msgstr "Åpne apper"
+
+#~ msgid "Open Settings Menu"
+#~ msgstr "Åpne innstillingsmenyen"
+
+#~ msgid "Open Window"
+#~ msgstr "Åpne vindu"
+
+#~ msgid "Open a Window"
+#~ msgstr "Åpne et vindu"
+
+#~ msgid "Operations"
+#~ msgstr "Operasjoner"
+
+#~ msgid "Opportunity to Quotation"
+#~ msgstr "Salgsmulighet til pristilbud"
+
+#~ msgid "Option"
+#~ msgstr "Valg"
+
+#~ msgid ""
+#~ "Optional domain filtering of the destination data, as a Python expression"
+#~ msgstr "Opsjonell domenefiltrering av måldata, som en Python-setning"
+
+#~ msgid ""
+#~ "Optional help text for the users with a description of the target view, "
+#~ "such as its usage and purpose."
+#~ msgstr ""
+#~ "Opsjonell hjelpetekst for brukerene med beskrivelse av målvisningen, slik "
+#~ "som bruken av visningen."
+
+#~ msgid "Optional model, mostly used for needactions."
+#~ msgstr "Opsjonell modell, for det meste brukt for needactions."
+
+#~ msgid "Optional password for SMTP authentication"
+#~ msgstr "Valgfritt passord for SMTP-autentisering"
+
+#~ msgid "Optional username for SMTP authentication"
+#~ msgstr "Valgfritt brukernavn for SMTP-autentisering"
+
+#~ msgid "Options"
+#~ msgstr "Valg"
+
+#~ msgid "Orientation"
+#~ msgstr "Orientering"
+
+#~ msgid "Original View"
+#~ msgstr "Originalvisning"
+
+#~ msgid "Other Extra Rights"
+#~ msgstr "Andre tilleggsrettigheter"
+
+#~ msgid "Other Partners"
+#~ msgstr "Andre partnere"
+
+#~ msgid "Other Proprietary"
+#~ msgstr "Annen proprietær"
+
+#~ msgid "Other Services"
+#~ msgstr "Andre tjenester"
+
+#~ msgid "Outgoing Mail Server"
+#~ msgstr "Utgående epostserver"
+
+#~ msgid "Outgoing Mail Servers"
+#~ msgstr "Utgående epostservere"
+
+#~ msgid "Overwrite Existing Terms"
+#~ msgstr "Overskriv nåværende termer/språkstrenger"
+
+#~ msgid "Owner"
+#~ msgstr "Eier"
+
+#~ msgid "P EDUCATION"
+#~ msgstr "P UNDERVISNING"
+
+#~ msgid "PDF"
+#~ msgstr "PDF"
+
+#~ msgid "PO File"
+#~ msgstr "PO-fil"
+
+#~ msgid "PO(T) format: you should edit it with a PO editor such as"
+#~ msgstr "PO(T)-format, redigeres med et PO-redigeringsprogram som"
+
+#~ msgid "POEdit"
+#~ msgstr "POEdit"
+
+#~ msgid "Page height (mm)"
+#~ msgstr "Sidehøyde (mm)"
+
+#~ msgid "Page width (mm)"
+#~ msgstr "Sidebredde (mm)"
+
+#~ msgid "Pakistan"
+#~ msgstr "Pakistan"
+
+#~ msgid "Palau"
+#~ msgstr "Palau"
+
+#~ msgid "Panama"
+#~ msgstr "Panama"
+
+#~ msgid "Panama - Accounting"
+#~ msgstr "Panama - Regnskap"
+
+#~ msgid "Paper Format"
+#~ msgstr "Papirformat"
+
+#~ msgid "Paper Format General Configuration"
+#~ msgstr "Generelt oppsett for papirformat"
+
+#~ msgid "Paper format"
+#~ msgstr "Papirformat"
+
+#~ msgid "Paper format configuration"
+#~ msgstr "Oppsett av papirformat"
+
+#~ msgid "Paper size"
+#~ msgstr "Papirstørrelse"
+
+#~ msgid "Papua New Guinea"
+#~ msgstr "Papua Ny Guinea"
+
+#~ msgid "Paraguay"
+#~ msgstr "Paraguay"
+
+#~ msgid "Parameters"
+#~ msgstr "Parametre"
+
+#~ msgid "Parameters that are used by all resources."
+#~ msgstr "Parametre som brukes av alle ressurser."
+
+#~ msgid "Params storage"
+#~ msgstr "Parameterlagring"
+
+#~ msgid "Parent Application"
+#~ msgstr "Tilhører applikasjon"
+
+#~ msgid "Parent Company"
+#~ msgstr "Morselskap"
+
+#~ msgid "Parent Menu"
+#~ msgstr "Overordnet meny"
+
+#~ msgid "Parent Path"
+#~ msgstr "Overordnet sti"
+
+#~ msgid "Partner"
+#~ msgstr "Partner"
+
+#~ msgid "Partner Tags"
+#~ msgstr "Partner-tagger"
+
+#~ msgid "Partner Titles"
+#~ msgstr "Partnertitler"
+
+#~ msgid "Partner-related data of the user"
+#~ msgstr "Partnerrelatert brukerdata"
+
+#~ msgid "Partners"
+#~ msgstr "Partnere"
+
+#~ msgid "Partners Geolocation"
+#~ msgstr "Geolokasjon for partnere"
+
+#~ msgid "Partners: "
+#~ msgstr "Partnere:"
+
+#~ msgid "Password"
+#~ msgstr "Passord"
+
+#~ msgid "Path"
+#~ msgstr "Filbane"
+
+#~ msgid "Payment"
+#~ msgstr "Betaling"
+
+#~ msgid "Payment - Account"
+#~ msgstr "Betaling - Konto"
+
+#~ msgid "Payment Acquirer"
+#~ msgstr "Betalingsløsning"
+
+#~ msgid "Payment Acquirer Base Module"
+#~ msgstr "Betalingsinnløser Base-modul"
+
+#~ msgid "Payment Acquirer: Adyen Implementation"
+#~ msgstr "Betalingsinnløser: Adyen implementasjon"
+
+#~ msgid "Payment Acquirer: Authorize.net Implementation"
+#~ msgstr "Betalingsinnløser: Authorize.net implementasjon"
+
+#~ msgid "Payment Acquirer: Buckaroo Implementation"
+#~ msgstr "Betalingsinnløser: Buckaroo implementasjon"
+
+#~ msgid "Payment Acquirer: Paypal Implementation"
+#~ msgstr "Betalingsinnløser: Paypal implementasjon"
+
+#~ msgid "Payment Acquirer: PayuMoney Implementation"
+#~ msgstr "Betalingsinnløser: PayuMoney Implementasjon"
+
+#~ msgid "Payment Acquirer: Stripe Implementation"
+#~ msgstr "Betalingsinnløser: Stripe Implementasjon"
+
+#~ msgid "Payment Acquirer: Transfer Implementation"
+#~ msgstr "Betalingsinnløser: Overføring Implementasjon"
+
+#~ msgid "Payment Follow-up Management"
+#~ msgstr "Betalingsoppfølging"
+
+#~ msgid "Payment Terms:"
+#~ msgstr "Betalingsvilkår:"
+
+#~ msgid "Paypal Payment Acquirer"
+#~ msgstr "Paypal betalingsinnløser"
+
+#~ msgid "Payroll"
+#~ msgstr "Lønnsavregning"
+
+#~ msgid "Payroll Accounting"
+#~ msgstr "Lønnsavregning"
+
+#~ msgid "PayuMoney Payment Acquirer"
+#~ msgstr "PayuMoney Betalingsinnløser"
+
+#~ msgid "Peru"
+#~ msgstr "Peru"
+
+#~ msgid "Peru - Accounting"
+#~ msgstr "Peru - Regnskap"
+
+#~ msgid "Philippines"
+#~ msgstr "Filippinene"
+
+#~ msgid "Phone Numbers Validation"
+#~ msgstr "Validering av telefonnumre"
+
+#~ msgid "Phone:"
+#~ msgstr "Telefon:"
+
+#~ msgid "Pitcairn Islands"
+#~ msgstr "Pitcairn-øyene"
+
+#~ msgid "Pivot"
+#~ msgstr "Pivot"
+
+#~ msgid "Planning"
+#~ msgstr "Planlegging"
+
+#~ msgid "Plano de contas SNC para Portugal"
+#~ msgstr "Kontoplan for Portugal"
+
+#~ msgid "Point Of Sale"
+#~ msgstr "Kasseløsning"
+
+#~ msgid "Point of Sale"
+#~ msgstr "Kasse"
+
+#~ msgid "Point of Sale Discounts"
+#~ msgstr "Point of Sale Rabatter"
+
+#~ msgid "Point of Sale Receipt Reprinting"
+#~ msgstr "Utskrift av ny kvittering på Point of Sale"
+
+#~ msgid "Poland"
+#~ msgstr "Polen"
+
+#~ msgid "Poland - Accounting"
+#~ msgstr "Polen - Regnskap"
+
+#~ msgid "Portal"
+#~ msgstr "Portal"
+
+#~ msgid "Portrait"
+#~ msgstr "Portrett"
+
+#~ msgid "Portugal"
+#~ msgstr "Portugal"
+
+#~ msgid "Portugal - Accounting"
+#~ msgstr "Portugal - Regnskap"
+
+#~ msgid "PostgreSQL constraint definition"
+#~ msgstr "PostgreSQL skranke definisjon"
+
+#~ msgid "PostgreSQL constraint or foreign key name."
+#~ msgstr "PostgreSQL skranke eller fremmednøkkel navn."
+
+#~ msgid "PostgreSQL table name implementing a many2many relation."
+#~ msgstr "PostgreSQL tabellnavn som implementerer en mange-til-mange relasjon"
+
+#~ msgid "Preferences"
+#~ msgstr "Innstillinger"
+
+#~ msgid "Prefix"
+#~ msgstr "Prefiks"
+
+#~ msgid "Prefix value of the record for the sequence"
+#~ msgstr "Prefiks verdi av posten for sekvensen"
+
+#~ msgid "Preview"
+#~ msgstr "Forhåndsvisning"
+
+#~ msgid "Preview image src"
+#~ msgstr "Forhåndsvis bildelink"
+
+#~ msgid "Preview pdf src"
+#~ msgstr "Forhåndsvis pdf-link"
+
+#~ msgid "Price Accuracy"
+#~ msgstr "Prisnøyaktighet"
+
+#~ msgid "Print US Checks"
+#~ msgstr "Skriv ut sjekker for USA"
+
+#~ msgid "Print amount in words on checks issued for expenses"
+#~ msgstr "Trykk beløpet med bokstaver på sjekker utstedt for utlegg"
+
+#~ msgid "Printed Report Name"
+#~ msgstr "Navn på utskrevet rapport"
+
+#~ msgid "Priority"
+#~ msgstr "Prioritet"
+
+#~ msgid "Private Address"
+#~ msgstr "Privatadresse"
+
+#~ msgid "Private methods (such as %s) cannot be called remotely."
+#~ msgstr "Private metoder (sånn som %s) kan ikke bli påkalt eksternt."
+
+#~ msgid "Product Email Template"
+#~ msgstr "Mal for produkt-epost"
+
+#~ msgid "Product Lifecycle Management (PLM)"
+#~ msgstr "Product Lifecycle Management (PLM)"
+
+#~ msgid "Productivity"
+#~ msgstr "Produktivitet"
+
+#~ msgid "Products & Pricelists"
+#~ msgstr "Produkter og prislister"
+
+#~ msgid "Products Expiration Date"
+#~ msgstr "Utløpsdato produkter"
+
+#~ msgid "Prof."
+#~ msgstr "Prof."
+
+#~ msgid "Professor"
+#~ msgstr "Professor"
+
+#~ msgid "Project"
+#~ msgstr "Prosjekt"
+
+#~ msgid "Project, Helpdesk, Timesheet and Sale Orders"
+#~ msgstr "Prosjekt, kundestøtte, timelister og salgsordrer"
+
+#~ msgid "Project, Tasks, Timesheet"
+#~ msgstr "Prosjekt, oppgaver, timeregistrering"
+
+#~ msgid "Properties"
+#~ msgstr "Egenskaper"
+
+#~ msgid "Public"
+#~ msgstr "Offentlig"
+
+#~ msgid "Public Administration"
+#~ msgstr "Offentlig administrasjon"
+
+#~ msgid "Published Version"
+#~ msgstr "Publisert versjon"
+
+#~ msgid "Puerto Rico"
+#~ msgstr "Puerto Rico"
+
+#~ msgid "Purchase"
+#~ msgstr "Innkjøp"
+
+#~ msgid "Purchase Agreements"
+#~ msgstr "Innkjøpsavtaler"
+
+#~ msgid "Purchase and MRP Management"
+#~ msgstr "Innkjøp og MRP Administrasjon"
+
+#~ msgid "Python Code"
+#~ msgstr "Python-kode"
+
+#~ msgid "Python expression"
+#~ msgstr "Python uttrykk"
+
+#~ msgid "Q HUMAN HEALTH AND SOCIAL WORK ACTIVITIES"
+#~ msgstr "Q HELSE OG SOSIALOMSORG"
+
+#~ msgid "QWeb"
+#~ msgstr "QWeb"
+
+#~ msgid "QWeb views"
+#~ msgstr "QWeb views"
+
+#~ msgid "Qatar"
+#~ msgstr "Qatar"
+
+#~ msgid "Quality"
+#~ msgstr "Kvalitet"
+
+#~ msgid "Quantity"
+#~ msgstr "Antall"
+
+#~ msgid "Questions on Events"
+#~ msgstr "Spørsmål om arrangementer"
+
+#~ msgid "Qweb"
+#~ msgstr "Qweb"
+
+#~ msgid "Qweb Field"
+#~ msgstr "Qweb-felt"
+
+#~ msgid "Qweb Field Contact"
+#~ msgstr "Qweb-felt Kontakt"
+
+#~ msgid "Qweb Field Date"
+#~ msgstr "Qweb-felt Dato"
+
+#~ msgid "Qweb Field Datetime"
+#~ msgstr "Qweb-felt Datotid"
+
+#~ msgid "Qweb Field Duration"
+#~ msgstr "Qweb-felt Varighet"
+
+#~ msgid "Qweb Field Float"
+#~ msgstr "Qweb-felt Desimaltall"
+
+#~ msgid "Qweb Field HTML"
+#~ msgstr "Qweb-felt HTML"
+
+#~ msgid "Qweb Field Image"
+#~ msgstr "Qweb Felt-bilde"
+
+#~ msgid "Qweb Field Integer"
+#~ msgstr "Qweb-felt Heltall"
+
+#~ msgid "Qweb Field Many to One"
+#~ msgstr "Qweb-felt Mange til én"
+
+#~ msgid "Qweb Field Relative"
+#~ msgstr "Qweb-felt Relativ"
+
+#~ msgid "Qweb Field Selection"
+#~ msgstr "Qweb-felt Utvalg"
+
+#~ msgid "Qweb Field Text"
+#~ msgstr "Qweb-felt Tekst"
+
+#~ msgid "Qweb Field qweb"
+#~ msgstr "Qweb-felt qweb"
+
+#~ msgid "R ARTS, ENTERTAINMENT AND RECREATION"
+#~ msgstr "R KUNST, UNDERHOLDNING OG REKREASJON"
+
+#~ msgid "Rate"
+#~ msgstr "Kurs"
+
+#~ msgid "Rates"
+#~ msgstr "Rater"
+
+#~ msgid "Read Access"
+#~ msgstr "Lesetilgang"
+
+#~ msgid "Read Access Right"
+#~ msgstr "Lesetilgangsrettighet"
+
+#~ msgid "Readonly"
+#~ msgstr "Skrivebeskyttet"
+
+#~ msgid "Real Estate"
+#~ msgstr "Eiendom"
+
+#~ msgid "Record ID"
+#~ msgstr "Oppførings-ID"
+
+#~ msgid "Record Rule"
+#~ msgstr "Post Regel"
+
+#~ msgid "Record does not exist or has been deleted."
+#~ msgstr "Post eksisterer ikke eller har blitt slettet."
+
+#~ msgid "Record rules"
+#~ msgstr "Post-regler"
+
+#~ msgid "Recruitment"
+#~ msgstr "Rekruttering"
+
+#~ msgid "Reference"
+#~ msgstr "Referanse"
+
+#~ msgid "Related Company"
+#~ msgstr "Relatert firma"
+
+#~ msgid "Related Field"
+#~ msgstr "Relatert felt"
+
+#~ msgid "Related Partner"
+#~ msgstr "Tilknyttet partner"
+
+#~ msgid "Related Server Action"
+#~ msgstr "Relatert handling på server"
+
+#~ msgid "Relation Field"
+#~ msgstr "Relasjonsfelt"
+
+#~ msgid "Relation Name"
+#~ msgstr "Relasjonsnavn"
+
+#~ msgid "Relation Table"
+#~ msgstr "Relasjonstabell"
+
+#~ msgid "Reload from Attachment"
+#~ msgstr "Last inn på nytt fra vedlegg"
+
+#~ msgid "Remove"
+#~ msgstr "Fjern"
+
+#~ msgid "Remove from the 'Print' menu"
+#~ msgstr "Fjern fra 'Utskrift'-menyen"
+
+#~ msgid "Repairs"
+#~ msgstr "Reparasjoner"
+
+#~ msgid "Repeat Missed"
+#~ msgstr "Repeter manglende"
+
+#~ msgid "Repeat every x."
+#~ msgstr "Gjenta hver x."
+
+#~ msgid "Report"
+#~ msgstr "Rapport"
+
+#~ msgid "Report File"
+#~ msgstr "Rapportfil"
+
+#~ msgid "Report Footer"
+#~ msgstr "Bunntekst for rapporter"
+
+#~ msgid "Report Layout"
+#~ msgstr "Rapportlayout"
+
+#~ msgid "Report Model"
+#~ msgstr "Rapportmodell"
+
+#~ msgid "Report Type"
+#~ msgstr "Rapport-type"
+
+#~ msgid "Report Xml"
+#~ msgstr "Rapport-XML"
+
+#~ msgid "Report xml"
+#~ msgstr "Rapport-XML"
+
+#~ msgid "Reporting"
+#~ msgstr "Rapportering"
+
+#~ msgid "Reports"
+#~ msgstr "Rapporter"
+
+#~ msgid "Required"
+#~ msgstr "Påkrevd"
+
+#~ msgid "Resellers"
+#~ msgstr "Videreforhandlere"
+
+#~ msgid "Resolve other errors first"
+#~ msgstr "Løs andre feil først"
+
+#~ msgid "Resource"
+#~ msgstr "Ressurs"
+
+#~ msgid "Resource Field"
+#~ msgstr "Ressursfelt"
+
+#~ msgid "Resource ID"
+#~ msgstr "Ressurs-ID"
+
+#~ msgid "Resource Model"
+#~ msgstr "Ressursmodell"
+
+#~ msgid "Resource Name"
+#~ msgstr "Ressursnavn"
+
+#~ msgid "Restaurant"
+#~ msgstr "Restaurant"
+
+#~ msgid "Restrict"
+#~ msgstr "Avgrens"
+
+#~ msgid "Right Margin (mm)"
+#~ msgstr "Høyre marg (mm)"
+
+#~ msgid "Right-to-Left"
+#~ msgstr "Høyre-mot-venstre"
+
+#~ msgid "Romania"
+#~ msgstr "Romania"
+
+#~ msgid "Romania - Accounting"
+#~ msgstr "Romania - Regnskap"
+
+#~ msgid "Rounding Factor"
+#~ msgstr "Avrundingsfaktor"
+
+#~ msgid "Rule"
+#~ msgstr "Regel"
+
+#~ msgid "Rule Definition (Domain Filter)"
+#~ msgstr "Regeldefinisjon (domenefilter)"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "Regelen må ha minst én valgt tilgangsrettighet!"
+
+#~ msgid "Rules"
+#~ msgstr "Regler"
+
+#~ msgid "Rules can not be applied on Transient models."
+#~ msgstr "Regler kan ikke bli lagt til på transiente modeller."
+
+#~ msgid "Run"
+#~ msgstr "Kjør"
+
+#~ msgid "Run Manually"
+#~ msgstr "Kjør manuel"
+
+#~ msgid "Russian Federation"
+#~ msgstr "Russland"
+
+#~ msgid "Rwanda"
+#~ msgstr "Rwanda"
+
+#~ msgid "Réunion"
+#~ msgstr "Réunion"
+
+#~ msgid "S OTHER SERVICE ACTIVITIES"
+#~ msgstr "S ANDRE TJENESTER"
+
+#~ msgid "SEPA Credit Transfer"
+#~ msgstr "SEPA kredittoverføring"
+
+#~ msgid "SEPA Direct Debit"
+#~ msgstr "SEPA Direct Debit"
+
+#~ msgid "SMS Text Messaging"
+#~ msgstr "SMS-tekstmeldinger"
+
+#~ msgid "SMS gateway"
+#~ msgstr "SMS-gateway"
+
+#~ msgid "SMTP Port"
+#~ msgstr "SMTP-port"
+
+#~ msgid "SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases."
+#~ msgstr ""
+#~ "SMTP-port. Vanligvis 465 for SSL og 25 eller 587 for andre tilfeller."
+
+#~ msgid "SMTP Server"
+#~ msgstr "SMTP-server"
+
+#~ msgid "SSL/TLS"
+#~ msgstr "SSL/TLS"
+
+#~ msgid "Saint Barthélémy"
+#~ msgstr "Saint-Barthélemy"
+
+#~ msgid "Saint Helena, Ascension and Tristan da Cunha"
+#~ msgstr "St. Helena, Ascension og Tristan da Cunha"
+
+#~ msgid "Saint Kitts and Nevis"
+#~ msgstr "Saint Kitts og Nevis"
+
+#~ msgid "Saint Lucia"
+#~ msgstr "Saint Lucia"
+
+#~ msgid "Saint Martin (French part)"
+#~ msgstr "Saint Martin (fransk del)"
+
+#~ msgid "Saint Pierre and Miquelon"
+#~ msgstr "Saint-Pierre og Miquelon"
+
+#~ msgid "Saint Vincent and the Grenadines"
+#~ msgstr "Saint Vincent og Grenadinene"
+
+#~ msgid "Salary Package Configurator"
+#~ msgstr "Lønnspakkekonfigurator"
+
+#~ msgid "Sale Subscription Dashboard"
+#~ msgstr "Abonnementssalg-dashbord"
+
+#~ msgid "Sale based on service outsourcing."
+#~ msgstr "Salg basert på outsourcing av tjeneste."
+
+#~ msgid "Sales"
+#~ msgstr "Salg"
+
+#~ msgid "Sales Expense"
+#~ msgstr "Salgsutlegg"
+
+#~ msgid "Sales Teams"
+#~ msgstr "Salgsteam"
+
+#~ msgid "Sales Timesheet"
+#~ msgstr "Timeliste for salg"
+
+#~ msgid "Sales and MRP Management"
+#~ msgstr "Salg og MRP administrasjon"
+
+#~ msgid "Salesperson"
+#~ msgstr "Selger"
+
+#~ msgid "Samoa"
+#~ msgstr "Samoa"
+
+#~ msgid "San Marino"
+#~ msgstr "San Marino"
+
+#~ msgid "Saturday"
+#~ msgstr "Lørdag"
+
+#~ msgid "Saudi Arabia"
+#~ msgstr "Saudi-Arabia"
+
+#~ msgid "Saudi Arabia - Accounting"
+#~ msgstr "Saudi-Arabia - regnskap"
+
+#~ msgid "Save"
+#~ msgstr "Lagre"
+
+#~ msgid "Save as Attachment Prefix"
+#~ msgstr "Lagre som vedleggsprefiks"
+
+#~ msgid "Scheduled Action"
+#~ msgstr "Planlagt tiltak"
+
+#~ msgid "Scheduled Actions"
+#~ msgstr "Planlagte tiltak"
+
+#~ msgid "Scientific"
+#~ msgstr "Vitenskapelig"
+
+#~ msgid "Search"
+#~ msgstr "Søk"
+
+#~ msgid "Search Actions"
+#~ msgstr "Søk handlinger"
+
+#~ msgid "Search Partner"
+#~ msgstr "Søk partner"
+
+#~ msgid "Search View"
+#~ msgstr "Søk visning"
+
+#~ msgid "Search View Ref."
+#~ msgstr "Søk Vis Ref."
+
+#~ msgid "Search duplicates based on duplicated data in"
+#~ msgstr "Søk i duplikater basert på dupliserte data i"
+
+#~ msgid "Search modules"
+#~ msgstr "Søk moduler"
+
+#~ msgid "Search..."
+#~ msgstr "Søk..."
+
+#~ msgid "Security and Authentication"
+#~ msgstr "Sikkerhet og autentisering"
+
+#~ msgid "See http://openerp.com"
+#~ msgstr "Se http://openerp.com"
+
+#~ msgid "Select Proper Paper size"
+#~ msgstr "Velg riktig papirstørrelse"
+
+#~ msgid "Selectable"
+#~ msgstr "Kan velges"
+
+#~ msgid "Self"
+#~ msgstr "Selv"
+
+#~ msgid "Sell Helpdesk Timesheet"
+#~ msgstr "Selg timeliste for kundestøtte"
+
+#~ msgid "Sell based on timesheets"
+#~ msgstr "Selg basert på timelister"
+
+#~ msgid "Send text messages as event reminders"
+#~ msgstr "Send tekstmeldinger som kalenderpåminnelser"
+
+#~ msgid "Senegal"
+#~ msgstr "Senegal"
+
+#~ msgid "Separator Format"
+#~ msgstr "Separator-format"
+
+#~ msgid "Sequence"
+#~ msgstr "Sekvens"
+
+#~ msgid "Sequence Code"
+#~ msgstr "Sekvenskode"
+
+#~ msgid "Sequence Size"
+#~ msgstr "Sekvensstørrelse"
+
+#~ msgid "Sequences"
+#~ msgstr "Sekvenser"
+
+#~ msgid "Sequences & Identifiers"
+#~ msgstr "Sekvenser og identifikatorer"
+
+#~ msgid "Serbia"
+#~ msgstr "Serbia"
+
+#~ msgid "Server"
+#~ msgstr "Server"
+
+#~ msgid "Server Action"
+#~ msgstr "Handling på server"
+
+#~ msgid "Server Action value mapping"
+#~ msgstr "Verdikobling for handling på server"
+
+#~ msgid "Server Actions"
+#~ msgstr "Handlinger på server"
+
+#~ msgid "Server action"
+#~ msgstr "Handling på server"
+
+#~ msgid "Set NULL"
+#~ msgstr "Sett NULL"
+
+#~ msgid "Set Password"
+#~ msgstr "Sett passord"
+
+#~ msgid "Set as Todo"
+#~ msgstr "Sett som Todo"
+
+#~ msgid "Settings"
+#~ msgstr "Innstillinger"
+
+#~ msgid "Seychelles"
+#~ msgstr "Seychellene"
+
+#~ msgid "Share Group"
+#~ msgstr "Del gruppe"
+
+#~ msgid "Share Partner"
+#~ msgstr "Del partner"
+
+#~ msgid "Share User"
+#~ msgstr "Del bruker"
+
+#~ msgid "Shared"
+#~ msgstr "Delt"
+
+#~ msgid "Show All"
+#~ msgstr "Vis alle"
+
+#~ msgid "Show active currencies"
+#~ msgstr "Vis aktive valutaer"
+
+#~ msgid "Show inactive currencies"
+#~ msgstr "Vis inaktive valutaer"
+
+#~ msgid "Show technical modules"
+#~ msgstr "Vis tekniske moduler"
+
+#~ msgid "Sierra Leone"
+#~ msgstr "Sierra Leone"
+
+#~ msgid "Sign"
+#~ msgstr "Signer"
+
+#~ msgid "Signup"
+#~ msgstr "Registrering"
+
+#~ msgid "Singapore"
+#~ msgstr "Singapore"
+
+#~ msgid "Singapore - Accounting"
+#~ msgstr "Singapore - Regnskap"
+
+#~ msgid "Singapore - Accounting Reports"
+#~ msgstr "Singapore - Regnskapsrapporter"
+
+#~ msgid "Sint Maarten (Dutch part)"
+#~ msgstr "Sint Maarten (nederlandsk del)"
+
+#~ msgid "Size"
+#~ msgstr "Størrelse"
+
+#~ msgid "Size of the field cannot be negative."
+#~ msgstr "Størrelsen på feltet kan ikke være negativ."
+
+#~ msgid "Skip"
+#~ msgstr "Hopp over"
+
+#~ msgid "Skip these contacts"
+#~ msgstr "Hopp over disse kontaktene"
+
+#~ msgid "Slovakia"
+#~ msgstr "Slovakia"
+
+#~ msgid "Slovenia"
+#~ msgstr "Slovenia"
+
+#~ msgid "Slovenian - Accounting"
+#~ msgstr "Slovenia - Regnskap"
+
+#~ msgid "Social Media"
+#~ msgstr "Sosiale medier"
+
+#~ msgid "Solomon Islands"
+#~ msgstr "Salomonøyene"
+
+#~ msgid "Somalia"
+#~ msgstr "Somalia"
+
+#~ msgid "Sometimes called BIC or Swift."
+#~ msgstr "Noen ganger kalt BIC eller Swift."
+
+#~ msgid "Sort"
+#~ msgstr "Sorter"
+
+#~ msgid "Source Term"
+#~ msgstr "Kildeuttrykk"
+
+#~ msgid "South Africa"
+#~ msgstr "Sør-Afrika"
+
+#~ msgid "South America"
+#~ msgstr "Sør-Amerika"
+
+#~ msgid "South Georgia and the South Sandwich Islands"
+#~ msgstr "Sør-Georgia og Sør-Sandwichøyene"
+
+#~ msgid "South Korea"
+#~ msgstr "Sør-Korea"
+
+#~ msgid "South Sudan"
+#~ msgstr "Sør-Sudan"
+
+#~ msgid "Spain"
+#~ msgstr "Spania"
+
+#~ msgid "Spain - Accounting (PGCE 2008)"
+#~ msgstr "Spania - Regnskap (PGCE 2008)"
+
+#~ msgid "Spain - Accounting (PGCE 2008) Reports"
+#~ msgstr "Spania - Regnskapsrapporter (PGCE 2008)"
+
+#~ msgid ""
+#~ "Specify a value only when creating a user or if you're changing the "
+#~ "user's password, otherwise leave empty. After a change of password, the "
+#~ "user has to login again."
+#~ msgstr ""
+#~ "Spesifiser en verdi bare når du lager en bruker, eller hvis du ønsker å "
+#~ "endre brukerens passord. La stå tomt ellers. Etter at passord har blitt "
+#~ "endret, må brukeren logge inn på nytt."
+
+#~ msgid "Sponsors, Tracks, Agenda, Event News"
+#~ msgstr "Sponsorer, spor, program, nyheter om arrangementet"
+
+#~ msgid "Sri Lanka"
+#~ msgstr "Sri Lanka"
+
+#~ msgid "Standard"
+#~ msgstr "Standard"
+
+#~ msgid "Start configuration"
+#~ msgstr "Startoppsett"
+
+#~ msgid "State"
+#~ msgstr "Stat"
+
+#~ msgid "State Code"
+#~ msgstr "Statskode"
+
+#~ msgid "State Name"
+#~ msgstr "Navn på stat"
+
+#~ msgid "State of Palestine"
+#~ msgstr "Staten Palestina"
+
+#~ msgid "States"
+#~ msgstr "Stater"
+
+#~ msgid "Status"
+#~ msgstr "Status"
+
+#~ msgid "Step"
+#~ msgstr "Steg"
+
+#~ msgid "Stored"
+#~ msgstr "Lagret"
+
+#~ msgid "Stored Filename"
+#~ msgstr "Lagret filnavn"
+
+#~ msgid "Street"
+#~ msgstr "Gate"
+
+#~ msgid "Street 2..."
+#~ msgstr "Gate 2..."
+
+#~ msgid "Street..."
+#~ msgstr "Gate..."
+
+#~ msgid "Street2"
+#~ msgstr "Gate 2"
+
+#~ msgid "Stripe Payment Acquirer"
+#~ msgstr "Stripe betalingstilbyder"
+
+#~ msgid "Studio"
+#~ msgstr "Studio"
+
+#~ msgid "Submenus"
+#~ msgstr "Undermenyer"
+
+#~ msgid "Subscription"
+#~ msgstr "Abonnement"
+
+#~ msgid "Subscriptions"
+#~ msgstr "Abonnementer"
+
+#~ msgid "Subsequences"
+#~ msgstr "Undersekvenser"
+
+#~ msgid "Subtotal"
+#~ msgstr "Subtotal"
+
+#~ msgid "Sudan"
+#~ msgstr "Sudan"
+
+#~ msgid "Suffix"
+#~ msgstr "Suffiks"
+
+#~ msgid "Suffix value of the record for the sequence"
+#~ msgstr "Suffiks verdi av posten for sekvensen"
+
+#~ msgid "Summary"
+#~ msgstr "Oppsummering"
+
+#~ msgid "Sunday"
+#~ msgstr "Søndag"
+
+#~ msgid "Supplementary arguments"
+#~ msgstr "Tilleggsargumenter"
+
+#~ msgid "Suriname"
+#~ msgstr "Surinam"
+
+#~ msgid "Survey"
+#~ msgstr "Undersøkelse"
+
+#~ msgid "Surveys"
+#~ msgstr "Undersøkelser"
+
+#~ msgid "Svalbard and Jan Mayen"
+#~ msgstr "Svalbard og Jan Mayen"
+
+#~ msgid "Swaziland"
+#~ msgstr "Swaziland"
+
+#~ msgid "Sweden"
+#~ msgstr "Sverige"
+
+#~ msgid "Switzerland"
+#~ msgstr "Sveits"
+
+#~ msgid "Switzerland - Accounting"
+#~ msgstr "Sveits - Regnskap"
+
+#~ msgid "Switzerland - Accounting Reports"
+#~ msgstr "Sveits - Regnskapsrapporter"
+
+#~ msgid "Symbol"
+#~ msgstr "Symbol"
+
+#~ msgid "Symbol Position"
+#~ msgstr "Symbolposisjon"
+
+#~ msgid "Synchronization with the external timesheet application"
+#~ msgstr "Synkronisering med ekstern applikasjon for timelister"
+
+#~ msgid "Syria"
+#~ msgstr "Syria"
+
+#~ msgid "System Parameters"
+#~ msgstr "Systemparametre"
+
+#~ msgid "System Properties"
+#~ msgstr "Systemegenskaper"
+
+#~ msgid "System Update"
+#~ msgstr "Systemoppdatering"
+
+#~ msgid "São Tomé and Príncipe"
+#~ msgstr "São Tomé og Príncipe"
+
+#~ msgid "TGZ Archive"
+#~ msgstr "TGZ-arkiv"
+
+#~ msgid "TLS (STARTTLS)"
+#~ msgstr "TLS (STARTTLS)"
+
+#~ msgid "Tabloid 29 279.4 x 431.8 mm"
+#~ msgstr "Tabloid 29 279.4 x 431.8 mm"
+
+#~ msgid "Tag"
+#~ msgstr "Tag"
+
+#~ msgid "Tag Name"
+#~ msgstr "Tagnavn"
+
+#~ msgid "Tags"
+#~ msgstr "Tagger"
+
+#~ msgid "Tags..."
+#~ msgstr "Tagger..."
+
+#~ msgid "Taiwan"
+#~ msgstr "Taiwan"
+
+#~ msgid "Tajikistan"
+#~ msgstr "Tadsjikistan"
+
+#~ msgid "Tanzania"
+#~ msgstr "Tanzania"
+
+#~ msgid "Target Window"
+#~ msgstr "Målvindu"
+
+#~ msgid "Tax ID"
+#~ msgstr "MVA-nummer"
+
+#~ msgid "Technical"
+#~ msgstr "Teknisk"
+
+#~ msgid "Technical Data"
+#~ msgstr "Tekniske data"
+
+#~ msgid "Technical Features"
+#~ msgstr "Tekniske funksjoner"
+
+#~ msgid "Technical Name"
+#~ msgstr "Teknisk navn"
+
+#~ msgid "Technical Settings"
+#~ msgstr "Tekniske innstillinger"
+
+#~ msgid "Technical guide"
+#~ msgstr "Teknisk veiledning"
+
+#~ msgid "Template Name"
+#~ msgstr "Malnavn"
+
+#~ msgid "Test API"
+#~ msgstr "Test API"
+
+#~ msgid "Test Connection"
+#~ msgstr "Test tilkobling"
+
+#~ msgid "Test Main Flow"
+#~ msgstr "Test hovedflyt"
+
+#~ msgid "Test Performance"
+#~ msgstr "Test ytelse"
+
+#~ msgid "Testing of access restrictions"
+#~ msgstr "Test av tilgangsrestriksjoner"
+
+#~ msgid "Tests"
+#~ msgstr "Tester"
+
+#~ msgid "Tests for read_group"
+#~ msgstr "Tester for read_group"
+
+#~ msgid "Text"
+#~ msgstr "Tekst"
+
+#~ msgid "Thailand"
+#~ msgstr "Thailand"
+
+#~ msgid "Thailand - Accounting"
+#~ msgstr "Thailand - Regnskap"
+
+#~ msgid ""
+#~ "The ISO country code in two chars. \n"
+#~ "You can use this field for quick search."
+#~ msgstr ""
+#~ "ISO-landkoden med to tegn.\n"
+#~ "Du kan bruke dette feltet til et raskt søk."
+
+#~ msgid ""
+#~ "The active field allows you to hide the category without removing it."
+#~ msgstr "Det aktive feltet lar deg skjule kategorien uten å fjerne den."
+
+#~ msgid "The code of the country must be unique !"
+#~ msgstr "Landkoden må være unik!"
+
+#~ msgid "The code of the language must be unique !"
+#~ msgstr "Språkkoden må være unik!"
+
+#~ msgid "The code of the state must be unique by country !"
+#~ msgstr "Delstatskoden må være unik per land!"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "Firmanavnet må være unikt!"
+
+#~ msgid "The currency code must be unique!"
+#~ msgstr "Valutakoden må være unik!"
+
+#~ msgid "The database object this attachment will be attached to."
+#~ msgstr "Databaseobjektet dette vedlegget vil bli tilknyttet."
+
+#~ msgid "The following apps will be uninstalled"
+#~ msgstr "Følgende apper vil bli avinstallert"
+
+#~ msgid "The following documents will be permanently lost"
+#~ msgstr "Følgende dokumenter vil slettes helt"
+
+#~ msgid "The full name of the country."
+#~ msgstr "Det fulle navnet på landet."
+
+#~ msgid "The list of models that extends the current model."
+#~ msgstr "Listen over modeller som utvider gjeldende modell."
+
+#~ msgid "The model this field belongs to"
+#~ msgstr "Modellen dette feltet tilhører"
+
+#~ msgid "The name of the country must be unique !"
+#~ msgstr "Navnet på landet må være unikt!"
+
+#~ msgid "The name of the group must be unique within an application!"
+#~ msgstr "Navnet på gruppen må være unikt innenfor en applikasjon!"
+
+#~ msgid "The name of the language must be unique !"
+#~ msgstr "Språknavnet må være unikt!"
+
+#~ msgid "The name of the module must be unique!"
+#~ msgstr "Modulnavnet må være unikt!"
+
+#~ msgid "The next number of the sequence will be incremented by this number"
+#~ msgstr "Neste nummer av sekvensen vil bli inkrementert med dette nummeret"
+
+#~ msgid "The next step depends on the file format:"
+#~ msgstr "Neste steg kommer an på filformatet:"
+
+#~ msgid "The only predefined variables are"
+#~ msgstr "De eneste forhåndsdefinerte variablene er"
+
+#~ msgid ""
+#~ "The optional domain to restrict possible values for relationship fields, "
+#~ "specified as a Python expression defining a list of triplets. For "
+#~ "example: [('color','=','red')]"
+#~ msgstr ""
+#~ "Domenet (valgfritt) for å begrense mulige verdier for relasjonsfelt, "
+#~ "spesifisert som en Python-setning som definerer en liste med trillinger. "
+#~ "For eksempel [(color','=','red')]"
+
+#~ msgid ""
+#~ "The priority of the job, as an integer: 0 means higher priority, 10 means "
+#~ "lower priority."
+#~ msgstr ""
+#~ "Jobbens prioritet, som et heltall: 0 betyr høyest prioritet, 10 er lavere "
+#~ "prioritet."
+
+#~ msgid "The rate of the currency to the currency of rate 1"
+#~ msgstr "Vekslingsraten til valutaen mot valutaen med vekslingsrate lik 1"
+
+#~ msgid "The rate of the currency to the currency of rate 1."
+#~ msgstr "Valutaens rate i forhold til valutaen med rate på 1."
+
+#~ msgid "The record id this is attached to."
+#~ msgstr "Oppførings-ID denne er tilknyttet."
+
+#~ msgid "The state code."
+#~ msgstr "Delstatskoden."
+
+#~ msgid "The technical name of the model this field belongs to"
+#~ msgstr "Det tekniske navnet på modellen dette feltet tilhører"
+
+#~ msgid "Theme"
+#~ msgstr "Tema"
+
+#~ msgid "This ISO code is the name of po files to use for translations"
+#~ msgstr "Denne ISO-koden er navnet på PO-filne som brukes til oversettelser"
+
+#~ msgid "This Window"
+#~ msgstr "Dette vinduet"
+
+#~ msgid "This field is used to set/get locales for user"
+#~ msgstr ""
+#~ "Dette feltet brukes til å sette/hente språkinnstillinger for brukeren."
+
+#~ msgid ""
+#~ "This function field computes the ordered list of views that should be "
+#~ "enabled when displaying the result of an action, federating view mode, "
+#~ "views and reference view. The result is returned as an ordered list of "
+#~ "pairs (view_id,view_mode)."
+#~ msgstr ""
+#~ "Dette funksjonsfeltet beregner den ordnede listen over visninger som skal "
+#~ "være tilgjengelig når resultatet fra en handling vises, i sammenfatnet "
+#~ "visning, eller referansevisning. Resultatet blir returnert som en ordnet "
+#~ "liste av par (view_id,view_mode)."
+
+#~ msgid ""
+#~ "This is the filename of the attachment used to store the printing result. "
+#~ "Keep empty to not save the printed reports. You can use a python "
+#~ "expression with the object and time variables."
+#~ msgstr ""
+#~ "Dette er filnavnet til vedlegget som benyttes til å lagre resultatet av "
+#~ "utskriften. La det være blankt for å ikke lagre utskrevne rapporter. Du "
+#~ "kan benytte et python-uttrykk på objektet, og variabler for tid/dato."
+
+#~ msgid "This module will trigger the uninstallation of below modules."
+#~ msgstr "Denne modulen vil føre til at modulene nedenfor avinstalleres."
+
+#~ msgid "Thousands Separator"
+#~ msgstr "Skilletegn for tusener"
+
+#~ msgid "Thursday"
+#~ msgstr "Torsdag"
+
+#~ msgid "Time Format"
+#~ msgstr "Tidsformat"
+
+#~ msgid "Timesheets"
+#~ msgstr "Timelister"
+
+#~ msgid "Timesheets/attendances reporting"
+#~ msgstr "Rapportering om timelister og oppmøte"
+
+#~ msgid "Timezone"
+#~ msgstr "Tidssone"
+
+#~ msgid "Timezone offset"
+#~ msgstr ""
+#~ "For å tillate dette, pass på at denne mappen eksisterer og kan skrives "
+#~ "til på server:"
+
+#~ msgid "Timor-Leste"
+#~ msgstr "Øst-Timor"
+
+#~ msgid "Title"
+#~ msgstr "Tittel"
+
+#~ msgid "To"
+#~ msgstr "Til"
+
+#~ msgid "To Do"
+#~ msgstr "Å gjøre"
+
+#~ msgid "To Translate"
+#~ msgstr "Å oversette"
+
+#~ msgid "To be installed"
+#~ msgstr "Skal installeres"
+
+#~ msgid "To be removed"
+#~ msgstr "Skal fjernes"
+
+#~ msgid "To be upgraded"
+#~ msgstr "Skal oppgraderes"
+
+#~ msgid "Todo"
+#~ msgstr "Å gjøre"
+
+#~ msgid "Togo"
+#~ msgstr "Togo"
+
+#~ msgid "Tokelau"
+#~ msgstr "Tokelau"
+
+#~ msgid "Tonga"
+#~ msgstr "Tonga"
+
+#~ msgid "Tools"
+#~ msgstr "Verktøy"
+
+#~ msgid "Top Margin (mm)"
+#~ msgstr "Toppmark (mm)"
+
+#~ msgid "Total"
+#~ msgstr "Total"
+
+#~ msgid "Total number of records in this model"
+#~ msgstr "Totalt antall oppføringer i denne modellen"
+
+#~ msgid "Tours"
+#~ msgstr "Omvisninger"
+
+#~ msgid "Trainings, Conferences, Meetings, Exhibitions, Registrations"
+#~ msgstr "Kurs, konferanser, møter, messer og registrering"
+
+#~ msgid "Transifex integration"
+#~ msgstr "Transifex-integrasjon"
+
+#~ msgid "Translatable"
+#~ msgstr "Kan oversettes"
+
+#~ msgid "Translated"
+#~ msgstr "Oversatt"
+
+#~ msgid "Translated Terms"
+#~ msgstr "Oversatte begreper"
+
+#~ msgid "Translated field"
+#~ msgstr "Oversatt felt"
+
+#~ msgid "Translation"
+#~ msgstr "Oversettelse"
+
+#~ msgid "Translation Value"
+#~ msgstr "Oversatt verdi"
+
+#~ msgid "Translation comments"
+#~ msgstr "Oversettelseskommentarer"
+
+#~ msgid "Translation in Progress"
+#~ msgstr "Oversettelse pågår"
+
+#~ msgid "Translations"
+#~ msgstr "Oversettelser"
+
+#~ msgid "Transportation"
+#~ msgstr "Transport"
+
+#~ msgid "Tree"
+#~ msgstr "Tre"
+
+#~ msgid "Trinidad and Tobago"
+#~ msgstr "Trinidad og Tobago"
+
+#~ msgid "Tuesday"
+#~ msgstr "Tirsdag"
+
+#~ msgid "Tunisia"
+#~ msgstr "Tunisia"
+
+#~ msgid "Turkey"
+#~ msgstr "Tyrkia"
+
+#~ msgid "Turkey - Accounting"
+#~ msgstr "Tyrkia - Regnskap"
+
+#~ msgid "Turkmenistan"
+#~ msgstr "Turkmenistan"
+
+#~ msgid "Turks and Caicos Islands"
+#~ msgstr "Turks- og Caicosøyene"
+
+#~ msgid "Tuvalu"
+#~ msgstr "Tuvalu"
+
+#~ msgid "Type"
+#~ msgstr "Type"
+
+#~ msgid ""
+#~ "Type of the constraint: `f` for a foreign key, `u` for other constraints."
+#~ msgstr ""
+#~ "Type begrensning: 'f' for ekstern nøkkel, 'u' for andre begrensninger."
+
+#~ msgid "Type:"
+#~ msgstr "Type:"
+
+#~ msgid "U.A.E. - Accounting"
+#~ msgstr "De forente arabiske emirater - Regnskap"
+
+#~ msgid "UK - Accounting"
+#~ msgstr "Storbritannia - Regnskap"
+
+#~ msgid "UK - Accounting Reports"
+#~ msgstr "Storbritannia - Regnskapsrapporter"
+
+#~ msgid "UPS Shipping"
+#~ msgstr "UPS-frakt"
+
+#~ msgid "URL"
+#~ msgstr "URL"
+
+#~ msgid "US - Accounting Reports"
+#~ msgstr "USA - Regnskapsrapporter"
+
+#~ msgid "USA Minor Outlying Islands"
+#~ msgstr "USAs ytre småøyer"
+
+#~ msgid "UTM Trackers"
+#~ msgstr "UTM-sporing"
+
+#~ msgid "Uganda"
+#~ msgstr "Uganda"
+
+#~ msgid "Ukraine"
+#~ msgstr "Ukraina"
+
+#~ msgid "Uncategorized"
+#~ msgstr "Ukategorisert"
+
+#~ msgid "Uninstallable"
+#~ msgstr "Ikke installerbar"
+
+#~ msgid "Unit Price"
+#~ msgstr "Enhetspris"
+
+#~ msgid "United Arab Emirates"
+#~ msgstr "De forente arabiske emirater"
+
+#~ msgid "United Kingdom"
+#~ msgstr "Storbritannia"
+
+#~ msgid "United States"
+#~ msgstr "USA"
+
+#~ msgid "United States - Accounting"
+#~ msgstr "USA - Regnskap"
+
+#~ msgid "United States Postal Service (USPS) Shipping"
+#~ msgstr "United States Postal Service (USPS)-frakt"
+
+#~ msgid "Unknown"
+#~ msgstr "Ukjent"
+
+#~ msgid "Unknown database identifier '%s'"
+#~ msgstr "Ukjent database-ID '%s'"
+
+#~ msgid "Unknown error during import:"
+#~ msgstr "Ukjent feil under import:"
+
+#~ msgid "Untranslated"
+#~ msgstr "Uoversatt"
+
+#~ msgid "Updatable"
+#~ msgstr "Kan oppdateres"
+
+#~ msgid "Update"
+#~ msgstr "Oppdater"
+
+#~ msgid "Update Apps List"
+#~ msgstr "Oppdater app-listen"
+
+#~ msgid "Update Date"
+#~ msgstr "Oppdateringsdato"
+
+#~ msgid "Update Module"
+#~ msgstr "Oppdater modul"
+
+#~ msgid "Update Module List"
+#~ msgstr "Oppdater modulliste"
+
+#~ msgid "Update the Record"
+#~ msgstr "Oppdater oppføringen"
+
+#~ msgid "Updates"
+#~ msgstr "Oppdateringer"
+
+#~ msgid "Upgrade"
+#~ msgstr "Oppgrader"
+
+#~ msgid "Url"
+#~ msgstr "URL"
+
+#~ msgid "Uruguay"
+#~ msgstr "Uruguay"
+
+#~ msgid "Uruguay - Chart of Accounts"
+#~ msgstr "Uruguay - Kontoplan"
+
+#~ msgid "Usage"
+#~ msgstr "Bruk"
+
+#~ msgid "Used to log into the system"
+#~ msgstr "Brukes for å logge seg på systemet"
+
+#~ msgid "Used to order Companies in the company switcher"
+#~ msgstr "Brukt til å organisere firmaer i firmavelgeren"
+
+#~ msgid "User"
+#~ msgstr "Bruker"
+
+#~ msgid "User Interface"
+#~ msgstr "Brukergrensesnitt"
+
+#~ msgid "User Login"
+#~ msgstr "Brukerinnlogging"
+
+#~ msgid "User-defined Defaults"
+#~ msgstr "Brukerdefinerte standarder"
+
+#~ msgid "User-defined Filters"
+#~ msgstr "Brukerdefinerte filtre"
+
+#~ msgid "Username"
+#~ msgstr "Brukernavn"
+
+#~ msgid "Users & Companies"
+#~ msgstr "Brukere og firmaer"
+
+#~ msgid ""
+#~ "Users added to this group are automatically added in the following groups."
+#~ msgstr ""
+#~ "Brukere som legges til i denne gruppen, legges automatisk til i følgende "
+#~ "grupper."
+
+#~ msgid "Users of this group automatically inherit those groups"
+#~ msgstr "Brukere i denne gruppen arver automatisk disse gruppene"
+
+#~ msgid "Uzbekistan"
+#~ msgstr "Usbekistan"
+
+#~ msgid "VAT Number Validation"
+#~ msgstr "MVA-nummer validering"
+
+#~ msgid "VOIP"
+#~ msgstr "VOIP"
+
+#~ msgid "VOIP OnSIP"
+#~ msgstr "VOIP OnSIP"
+
+#~ msgid "Validate and format phone numbers"
+#~ msgstr "Valider og formater telefonnumre"
+
+#~ msgid "Value"
+#~ msgstr "Verdi"
+
+#~ msgid "Value Mapping"
+#~ msgstr "Verdikobling"
+
+#~ msgid "Vanuatu"
+#~ msgstr "Vanuatu"
+
+#~ msgid "Vendors"
+#~ msgstr "Leverandører"
+
+#~ msgid "Venezuela"
+#~ msgstr "Venezuela"
+
+#~ msgid "Venezuela - Accounting"
+#~ msgstr "Venezuela - Regnskap"
+
+#~ msgid "Vietnam"
+#~ msgstr "Vietnam"
+
+#~ msgid "Vietnam - Accounting"
+#~ msgstr "Vietnam - Regnskap"
+
+#~ msgid "View"
+#~ msgstr "Visning"
+
+#~ msgid "View Architecture"
+#~ msgstr "Se arkitektur"
+
+#~ msgid "View ID"
+#~ msgstr "Visnings-ID"
+
+#~ msgid "View Name"
+#~ msgstr "Se navn"
+
+#~ msgid "View Ref."
+#~ msgstr "Visnings ref:"
+
+#~ msgid "View Type"
+#~ msgstr "Se type"
+
+#~ msgid "View and create reports"
+#~ msgstr "Vis og opprett rapporter"
+
+#~ msgid "View inheritance mode"
+#~ msgstr "Arve-modus for visning"
+
+#~ msgid "Views"
+#~ msgstr "Visninger"
+
+#~ msgid "Views which inherit from this one"
+#~ msgstr "Visninger som arver fra denne"
+
+#~ msgid "Virgin Islands (British)"
+#~ msgstr "Jomfruøyene (britiske)"
+
+#~ msgid "Virgin Islands (USA)"
+#~ msgstr "Jomfruøyene (amerikanske)"
+
+#~ msgid "Visible"
+#~ msgstr "Synlig"
+
+#~ msgid "Wallis and Futuna"
+#~ msgstr "Wallis- og Futunaøyene"
+
+#~ msgid "Water supply"
+#~ msgstr "Vanntilførsel"
+
+#~ msgid "Web"
+#~ msgstr "Web"
+
+#~ msgid "Web Icon File"
+#~ msgstr "Web-ikonfil"
+
+#~ msgid "Web Icon Image"
+#~ msgstr "Web-ikonbilde"
+
+#~ msgid "Web-only translations"
+#~ msgstr "Oversettelser bare for web"
+
+#~ msgid "Website"
+#~ msgstr "Nettsted"
+
+#~ msgid "Website Form"
+#~ msgstr "Nettstedskjema"
+
+#~ msgid "Website Helpdesk"
+#~ msgstr "Kundestøtte på nettsted"
+
+#~ msgid "Website IM Livechat Helpdesk"
+#~ msgstr "Kundestøtte-chat på nettsted"
+
+#~ msgid "Website Link"
+#~ msgstr "Link til nettsted"
+
+#~ msgid "Website Partner"
+#~ msgstr "Nettstedpartner"
+
+#~ msgid "Website Studio"
+#~ msgstr "Website Studio"
+
+#~ msgid "Website Theme Install"
+#~ msgstr "Installasjon av nettstedtema"
+
+#~ msgid "Wednesday"
+#~ msgstr "Onsdag"
+
+#~ msgid "Weeks"
+#~ msgstr "Uker"
+
+#~ msgid "Western Sahara"
+#~ msgstr "Vest-Sahara"
+
+#~ msgid ""
+#~ "When no specific mail server is requested for a mail, the highest "
+#~ "priority one is used. Default priority is 10 (smaller number = higher "
+#~ "priority)"
+#~ msgstr ""
+#~ "Hvis ingen spesifikk mailtjener er forespurt for en epost, vil tjeneren "
+#~ "med høyest prioritet bli benyttet. Standard prioritet er 10 (Mindre "
+#~ "nummer = høyere prioritet)"
+
+#~ msgid "Whether the value is copied when duplicating a record."
+#~ msgstr "Om verdien kopieres når en oppføring dupliseres."
+
+#~ msgid "Whether the value is stored in the database."
+#~ msgstr "Om verdien lagres i databasen."
+
+#~ msgid ""
+#~ "Whether values for this field can be translated (enables the translation "
+#~ "mechanism for that field)"
+#~ msgstr ""
+#~ "Kan verdier for dette feltet oversettes? (Skrur på "
+#~ "oversettelsesmekanismen for det feltet)"
+
+#~ msgid "Window Actions"
+#~ msgstr "Vinduhandlinger"
+
+#~ msgid "Wizard"
+#~ msgstr "Veiviser"
+
+#~ msgid "Wizards to be Launched"
+#~ msgstr "Veiledere som skal startes"
+
+#~ msgid "Write Access"
+#~ msgstr "Skrivetilgang"
+
+#~ msgid "Write Access Right"
+#~ msgstr "Skrivetilgangsrettighet"
+
+#~ msgid "Yemen"
+#~ msgstr "Yemen"
+
+#~ msgid "Yodlee"
+#~ msgstr "Yodlee"
+
+#~ msgid "Yodlee Finance"
+#~ msgstr "Yodlee Finance"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "Du kan ikke ha to brukere med samme brukernavn!"
+
+#~ msgid "You should try other search criteria."
+#~ msgstr "Du bør prøve andre søkekriterier."
+
+#~ msgid "ZIP"
+#~ msgstr "Postnummer"
+
+#~ msgid "Zambia"
+#~ msgstr "Zambia"
+
+#~ msgid "Zimbabwe"
+#~ msgstr "Zimbabwe"
+
+#~ msgid "Zip"
+#~ msgstr "Postnummer"
+
+#~ msgid "_Import"
+#~ msgstr "_Import"
+
+#~ msgid "account_online_sync"
+#~ msgstr "account_online_sync"
+
+#~ msgid "account_plaid"
+#~ msgstr "account_plaid"
+
+#~ msgid "at"
+#~ msgstr "á"
+
+#~ msgid "binary"
+#~ msgstr "binær"
+
+#~ msgid "boolean"
+#~ msgstr "boolsk"
+
+#~ msgid "bpost Shipping"
+#~ msgstr "bpost-frakt"
+
+#~ msgid "choose"
+#~ msgstr "velg"
+
+#~ msgid "date"
+#~ msgstr "dato"
+
+#~ msgid "datetime"
+#~ msgstr "Dato og klokkeslett"
+
+#~ msgid "documentation"
+#~ msgstr "dokumentasjon"
+
+#~ msgid "done"
+#~ msgstr "fullført"
+
+#~ msgid "e.g. BE0477472701"
+#~ msgstr "for eksempel BE0477472701"
+
+#~ msgid "e.g. English"
+#~ msgstr "for eksempel engelsk"
+
+#~ msgid "e.g. Global Business Solutions"
+#~ msgstr "for eksempel Global Business Solutions"
+
+#~ msgid "e.g. Mr."
+#~ msgstr "for eksempel Hr."
+
+#~ msgid "e.g. Sales Director"
+#~ msgstr "for eksempel Salgsdirektør"
+
+#~ msgid "e.g. en_US"
+#~ msgstr "for eksempel en_US"
+
+#~ msgid "e.g. https://www.odoo.com"
+#~ msgstr "for eksempel https://www.odoo.com"
+
+#~ msgid "eCommerce"
+#~ msgstr "Nettbutikk"
+
+#~ msgid "eLearning"
+#~ msgstr "elæring"
+
+#~ msgid "email@yourcompany.com"
+#~ msgstr "dittnavn@example.com"
+
+#~ msgid "false"
+#~ msgstr "usann"
+
+#~ msgid "float"
+#~ msgstr "float"
+
+#~ msgid "get"
+#~ msgstr "hent"
+
+#~ msgid "html"
+#~ msgstr "html"
+
+#~ msgid "init"
+#~ msgstr "start"
+
+#~ msgid "ir.actions.act_url"
+#~ msgstr "ir.actions.act_url"
+
+#~ msgid "ir.actions.act_window"
+#~ msgstr "ir.actions.act_window"
+
+#~ msgid "ir.actions.client"
+#~ msgstr "ir.actions.client"
+
+#~ msgid "ir.actions.report"
+#~ msgstr "ir.actions.report"
+
+#~ msgid "ir.actions.server"
+#~ msgstr "ir.actions.server"
+
+#~ msgid "many2many"
+#~ msgstr "many2many"
+
+#~ msgid "many2one"
+#~ msgstr "many2one"
+
+#~ msgid "n/a"
+#~ msgstr "n/a"
+
+#~ msgid "no"
+#~ msgstr "nei"
+
+#~ msgid "on"
+#~ msgstr "på"
+
+#~ msgid "one2many"
+#~ msgstr "one2many"
+
+#~ msgid "pos_cache"
+#~ msgstr "pos_cache"
+
+#~ msgid "pos_sale"
+#~ msgstr "pos_sale"
+
+#~ msgid "reference"
+#~ msgstr "referanse"
+
+#~ msgid "test of access rights and rules"
+#~ msgstr "test av tilgangsrettigheter og regler"
+
+#~ msgid "test_convert"
+#~ msgstr "test_convert"
+
+#~ msgid "text"
+#~ msgstr "tekst"
+
+#~ msgid "title"
+#~ msgstr "tittel"
+
+#~ msgid "true"
+#~ msgstr "sann"
+
+#~ msgid "yes"
+#~ msgstr "ja"
+
+#~ msgid "Åland Islands"
+#~ msgstr "Åland"
