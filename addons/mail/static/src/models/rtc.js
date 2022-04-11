@@ -170,7 +170,6 @@ registerModel({
                 rtcSession.update({
                     connectionRecoveryTimeout: clear(),
                     isCurrentUserInitiatorOfConnectionOffer: clear(),
-                    rtcDataChannel: clear(),
                 });
             }
             this.update({
@@ -474,7 +473,7 @@ registerModel({
             rtcSession.update({ rtcPeerConnection: insertAndReplace({ peerConnection }) });
             this.messaging.models['RtcDataChannel'].insert({
                 dataChannel,
-                rtcSession: replace(rtcSession),
+                rtcPeerConnectionAsNotificationDataChannel: replace(rtcSession.rtcPeerConnection),
             });
             return rtcSession;
         },
@@ -644,7 +643,7 @@ registerModel({
                     if (!rtcSession) {
                         continue;
                     }
-                    const rtcDataChannel = rtcSession.rtcDataChannel;
+                    const rtcDataChannel = rtcSession.rtcPeerConnection.notificationDataChannel;
                     if (!rtcDataChannel || rtcDataChannel.dataChannel.readyState !== 'open') {
                         continue;
                     }

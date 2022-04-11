@@ -17,6 +17,13 @@ registerModel({
          * If unset, this RTC Session is not considered as connected
          */
         peerConnection: attr(),
+        /**
+         * The RTCDataChannel used to send notifications to the peer
+         */
+        notificationDataChannel: one('RtcDataChannel', {
+            inverse: 'rtcPeerConnectionAsNotificationDataChannel',
+            isCausal: true,
+        }),
         rtcSession: one('RtcSession', {
             inverse: 'rtcPeerConnection',
             readonly: true,

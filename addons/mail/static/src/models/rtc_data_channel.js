@@ -5,7 +5,7 @@ import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'RtcDataChannel',
-    identifyingFields: ['rtcSession'],
+    identifyingFields: ['rtcPeerConnectionAsNotificationDataChannel'],
     lifecycleHooks: {
         _willDelete() {
             this.dataChannel.close();
@@ -16,8 +16,8 @@ registerModel({
             required: true,
             readonly: true,
         }),
-        rtcSession: one('RtcSession', {
-            inverse: 'rtcDataChannel',
+        rtcPeerConnectionAsNotificationDataChannel: one('RtcPeerConnection', {
+            inverse: 'notificationDataChannel',
             readonly: true,
             required: true,
         }),

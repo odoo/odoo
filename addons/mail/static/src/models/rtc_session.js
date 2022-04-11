@@ -433,13 +433,6 @@ registerModel({
             isCausal: true,
         }),
         /**
-         * Contains the RTCDataChannel of the rtc session.
-         */
-        rtcDataChannel: one('RtcDataChannel', {
-            inverse: 'rtcSession',
-            isCausal: true,
-        }),
-        /**
          * MediaStream of the user's video.
          *
          * Should be divided into userVideoStream and displayStream,
