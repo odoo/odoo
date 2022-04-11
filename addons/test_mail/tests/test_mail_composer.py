@@ -1442,8 +1442,8 @@ class TestComposerResultsComment(TestMailComposer):
             author=self.partner_employee,
             email_values={
                 'body_content': f'TemplateBody {self.test_record.name}',
-                # currently holding multi-email 'from'
-                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com,email.from.2@test.example.com')),
+                # single email event if email field is multi-email
+                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com')),
                 'subject': f'TemplateSubject {self.test_record.name}',
             },
             fields_values={
@@ -1461,7 +1461,8 @@ class TestComposerResultsComment(TestMailComposer):
             ] + [[email] for email in mailed_new_partners.mapped('email_formatted')],
             email_values={
                 'body_content': f'TemplateBody {self.test_record.name}',
-                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com,email.from.2@test.example.com')),
+                # single email event if email field is multi-email
+                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com')),
                 'subject': f'TemplateSubject {self.test_record.name}',
             },
             fields_values={
@@ -2021,8 +2022,8 @@ class TestComposerResultsMass(TestMailComposer):
                 ] + [[email] for email in mailed_new_partners.mapped('email_formatted')],
                 email_values={
                     'body_content': f'TemplateBody {record.name}',
-                    # currently holding multi-email 'email_from'
-                    'email_from': self.partner_employee.email_formatted,
+                    # single email event if email field is multi-email
+                    'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com')),
                     'reply_to': formataddr((
                         f'{self.env.user.company_id.name} {record.name}',
                         f'{self.alias_catchall}@{self.alias_domain}'

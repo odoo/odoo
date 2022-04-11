@@ -504,13 +504,17 @@ class MailMail(models.Model):
                     # see rev. 56596e5240ef920df14d99087451ce6f06ac6d36
                     notifs.flush_recordset(['notification_status', 'failure_type', 'failure_reason'])
 
+                # protect against ill-formatted email_from when formataddr was used on an already formatted email
+                emails_from = tools.email_split_and_format(mail.email_from)
+                email_from = emails_from[0] if emails_from else mail.email_from
+
                 # build an RFC2822 email.message.Message object and send it without queuing
                 res = None
                 # TDE note: could be great to pre-detect missing to/cc and skip sending it
                 # to go directly to failed state update
                 for email in email_list:
                     msg = IrMailServer.build_email(
-                        email_from=mail.email_from,
+                        email_from=email_from,
                         email_to=email.get('email_to'),
                         subject=mail.subject,
                         body=email.get('body'),
