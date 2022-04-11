@@ -19,8 +19,9 @@ export class DateField extends Component {
               })
             : "";
     }
-    get locale() {
-        return window.moment.locale();
+
+    onDateTimeChanged(date) {
+        date.ts !== this.date.ts && this.props.update(date);
     }
 }
 

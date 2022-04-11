@@ -618,7 +618,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "do not trigger a field_changed for datetime field with date widget",
         async function (assert) {
             assert.expect(3);
@@ -700,6 +700,16 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("DateField support internationalization", async function (assert) {
         assert.expect(2);
 
+        // The DatePicker component needs the locale to be available since it
+        // is still using Moment.js for the bootstrap datepicker
+        const originalLocale = moment.locale();
+        moment.defineLocale("no", {
+            monthsShort: "jan._feb._mars_april_mai_juni_juli_aug._sep._okt._nov._des.".split("_"),
+            monthsParseExact: true,
+            dayOfMonthOrdinalParse: /\d{1,2}\./,
+            ordinal: "%d.",
+        });
+
         registry.category("services").remove("localization");
         registry
             .category("services")
@@ -707,7 +717,6 @@ QUnit.module("Fields", (hooks) => {
                 "localization",
                 makeFakeLocalizationService({ dateFormat: strftimeToLuxonFormat("%d.%m/%Y") })
             );
-
         patchWithCleanup(luxon.Settings, {
             defaultLocale: "no",
         });
@@ -737,6 +746,9 @@ QUnit.module("Fields", (hooks) => {
             dateEditForm,
             "date field should be the same as the one selected in the view form"
         );
+
+        moment.locale(originalLocale);
+        moment.updateLocale("no", null);
     });
 
     QUnit.test("DateField: hit enter should update value", async function (assert) {

@@ -9,8 +9,7 @@
             <DatePicker
                 t-props="props.pickerOptions"
                 date="date or null"
-                onDateTimeChanged="(date) => props.update(date)"
-                locale="locale"
+                onDateTimeChanged="(date) => this.onDateTimeChanged(date)"
             />
         </t>
     </t>
