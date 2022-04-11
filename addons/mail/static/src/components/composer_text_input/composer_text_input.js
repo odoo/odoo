@@ -40,18 +40,6 @@ export class ComposerTextInput extends Component {
         return this.messaging && this.messaging.models['ComposerView'].get(this.props.localId);
     }
 
-    /**
-     * Saves the composer text input state in store
-     */
-    saveStateInStore() {
-        this.composerView.composer.update({
-            textInputContent: this.composerView.textareaRef.el.value,
-            textInputCursorEnd: this.composerView.textareaRef.el.selectionEnd,
-            textInputCursorStart: this.composerView.textareaRef.el.selectionStart,
-            textInputSelectionDirection: this.composerView.textareaRef.el.selectionDirection,
-        });
-    }
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -121,7 +109,7 @@ export class ComposerTextInput extends Component {
             return;
         }
         // clicking might change the cursor position
-        this.saveStateInStore();
+        this.composerView.saveStateInStore();
     }
 
     /**
@@ -131,7 +119,7 @@ export class ComposerTextInput extends Component {
         if (!this.composerView) {
             return;
         }
-        this.saveStateInStore();
+        this.composerView.saveStateInStore();
         this.composerView.update({ isFocused: false });
     }
 
@@ -142,7 +130,7 @@ export class ComposerTextInput extends Component {
         if (!this.composerView) {
             return;
         }
-        this.saveStateInStore();
+        this.composerView.saveStateInStore();
         if (this._textareaLastInputValue !== this.composerView.textareaRef.el.value) {
             this.composerView.handleCurrentPartnerIsTyping();
         }
@@ -235,7 +223,7 @@ export class ComposerTextInput extends Component {
                 break;
             // Otherwise, check if a mention is typed
             default:
-                this.saveStateInStore();
+                this.composerView.saveStateInStore();
         }
     }
 
