@@ -393,10 +393,6 @@ Object.assign(ComposerTextInput, {
             type: Function,
             optional: true,
         },
-        onPaste: {
-            type: Function,
-            optional: true,
-        },
     },
     template: 'mail.ComposerTextInput',
 });

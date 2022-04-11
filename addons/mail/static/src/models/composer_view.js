@@ -300,6 +300,15 @@ registerModel({
             }
         },
         /**
+         * @param {ClipboardEvent} ev
+         */
+        async onPasteTextInput(ev) {
+            if (!ev.clipboardData || !ev.clipboardData.files) {
+                return;
+            }
+            await this.fileUploader.uploadFiles(ev.clipboardData.files);
+        },
+        /**
          * Open the full composer modal.
          */
         async openFullComposer() {

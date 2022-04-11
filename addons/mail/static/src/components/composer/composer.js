@@ -19,7 +19,6 @@ export class Composer extends Component {
         useRefToModel({ fieldName: 'buttonEmojisRef', modelName: 'ComposerView', refName: 'buttonEmojis' });
         this._onDropZoneFilesDropped = this._onDropZoneFilesDropped.bind(this);
         this._onComposerTextInputSendShortcut = this._onComposerTextInputSendShortcut.bind(this);
-        this._onPasteTextInput = this._onPasteTextInput.bind(this);
     }
 
     //--------------------------------------------------------------------------
@@ -74,17 +73,6 @@ export class Composer extends Component {
     async _onDropZoneFilesDropped(detail) {
         await this.composerView.fileUploader.uploadFiles(detail.files);
         this.isDropZoneVisible.value = false;
-    }
-
-    /**
-     * @private
-     * @param {CustomEvent} ev
-     */
-    async _onPasteTextInput(ev) {
-        if (!ev.clipboardData || !ev.clipboardData.files) {
-            return;
-        }
-        await this.composerView.fileUploader.uploadFiles(ev.clipboardData.files);
     }
 
 }
