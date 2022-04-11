@@ -166,16 +166,6 @@ export class ComposerTextInput extends Component {
     /**
      * @private
      */
-    _onFocusinTextarea() {
-        if (!this.composerView) {
-            return;
-        }
-        this.composerView.update({ isFocused: true });
-    }
-
-    /**
-     * @private
-     */
     _onFocusoutTextarea() {
         if (!this.composerView) {
             return;

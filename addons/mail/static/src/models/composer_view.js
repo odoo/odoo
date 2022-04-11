@@ -256,6 +256,12 @@ registerModel({
             this.closeSuggestions();
             this.update({ doFocus: true });
         },
+        onFocusinTextarea() {
+            if (!this.exists()) {
+                return;
+            }
+            this.update({ isFocused: true });
+        },
         /**
          * @private
          * @param {KeyboardEvent} ev
