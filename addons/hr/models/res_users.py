@@ -3,6 +3,7 @@
 
 from odoo import api, models, fields, _, SUPERUSER_ID
 from odoo.exceptions import AccessError
+from odoo.tools.misc import clean_context
 
 
 HR_READABLE_FIELDS = [
@@ -208,7 +209,7 @@ class User(models.Model):
                     **self.env['hr.employee']._sync_user(user)
                 ))
         if employee_create_vals:
-            self.env['hr.employee'].create(employee_create_vals)
+            self.env['hr.employee'].with_context(clean_context(self.env.context)).create(employee_create_vals)
         return res
 
     def write(self, vals):
