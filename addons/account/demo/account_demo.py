@@ -3,6 +3,7 @@ import logging
 import time
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
+from faker.factory import Factory
 
 from odoo import api, fields, models, Command
 from odoo.exceptions import UserError, ValidationError
@@ -19,12 +20,38 @@ class AccountChartTemplate(models.Model):
         """Generate the demo data related to accounting."""
         # This is a generator because data created here might be referenced by xml_id to data
         # created later but defined in this same function.
+        yield self._get_demo_partner()
         yield self._get_demo_data_move()
         yield self._get_demo_data_statement()
         yield self._get_demo_data_reconcile_model()
         yield self._get_demo_data_attachment()
         yield self._get_demo_data_mail_message()
         yield self._get_demo_data_mail_activity()
+
+    def _get_demo_partner(self):
+        cid = self.env.company.id
+        country = self.env.company.country_id
+        lang = self.env['res.lang'].with_context(active_test=False).search([
+            ('code', '=like', f'%{country.code}'),
+        ], limit=1)
+        fake = Factory.create(lang.code)
+        fake.seed(8069)
+        return ('res.partner', {
+            f'{cid}_demo_partner_1': {
+                'name': fake.name(),
+                **dict(zip(['street', 'street2'], fake.address().split('\n'))),
+                'country_id': country.id,
+                'phone': fake.phone_number(),
+                'email': fake.email(),
+            },
+            f'{cid}_demo_partner_2': {
+                'name': fake.name(),
+                **dict(zip(['street', 'street2'], fake.address().split('\n'))),
+                'country_id': country.id,
+                'phone': fake.phone_number(),
+                'email': fake.email(),
+            },
+        })
 
     @api.model
     def _get_demo_data_move(self):
@@ -33,7 +60,7 @@ class AccountChartTemplate(models.Model):
         return ('account.move', {
             f'{cid}_demo_invoice_1': {
                 'move_type': 'out_invoice',
-                'partner_id': ref('base.res_partner_12').id,
+                'partner_id': ref(f'account.{cid}_demo_partner_1').id,
                 'invoice_user_id': ref('base.user_demo').id,
                 'invoice_payment_term_id': ref('account.account_payment_term_end_following_month').id,
                 'invoice_date': time.strftime('%Y-%m-01'),
@@ -44,7 +71,7 @@ class AccountChartTemplate(models.Model):
             },
             f'{cid}_demo_invoice_2': {
                 'move_type': 'out_invoice',
-                'partner_id': ref('base.res_partner_2').id,
+                'partner_id': ref(f'account.{cid}_demo_partner_2').id,
                 'invoice_user_id': False,
                 'invoice_date': time.strftime('%Y-%m-08'),
                 'invoice_line_ids': [
@@ -54,7 +81,7 @@ class AccountChartTemplate(models.Model):
             },
             f'{cid}_demo_invoice_3': {
                 'move_type': 'out_invoice',
-                'partner_id': ref('base.res_partner_2').id,
+                'partner_id': ref(f'account.{cid}_demo_partner_2').id,
                 'invoice_user_id': False,
                 'invoice_date': time.strftime('%Y-%m-08'),
                 'invoice_line_ids': [
@@ -64,7 +91,7 @@ class AccountChartTemplate(models.Model):
             },
             f'{cid}_demo_invoice_followup': {
                 'move_type': 'out_invoice',
-                'partner_id': ref('base.res_partner_2').id,
+                'partner_id': ref(f'account.{cid}_demo_partner_2').id,
                 'invoice_user_id': ref('base.user_demo').id,
                 'invoice_payment_term_id': ref('account.account_payment_term_immediate').id,
                 'invoice_date': (fields.Date.today() + timedelta(days=-15)).strftime('%Y-%m-%d'),
@@ -75,7 +102,7 @@ class AccountChartTemplate(models.Model):
             },
             f'{cid}_demo_invoice_5': {
                 'move_type': 'in_invoice',
-                'partner_id': ref('base.res_partner_12').id,
+                'partner_id': ref(f'account.{cid}_demo_partner_1').id,
                 'invoice_user_id': ref('base.user_demo').id,
                 'invoice_payment_term_id': ref('account.account_payment_term_end_following_month').id,
                 'invoice_date': time.strftime('%Y-%m-01'),
@@ -91,7 +118,7 @@ class AccountChartTemplate(models.Model):
             f'{cid}_demo_invoice_equipment_purchase': {
                 'move_type': 'in_invoice',
                 'ref': 'INV/2018/0057',
-                'partner_id': ref('base.res_partner_12').id,
+                'partner_id': ref(f'account.{cid}_demo_partner_1').id,
                 'invoice_user_id': False,
                 'invoice_date': '2018-09-17',
                 'invoice_line_ids': [
@@ -118,7 +145,7 @@ class AccountChartTemplate(models.Model):
                         'payment_ref': time.strftime('INV/%Y/00002 and INV/%Y/00003'),
                         'amount': 1275.0,
                         'date': time.strftime('%Y-01-01'),
-                        'partner_id': ref('base.res_partner_12').id
+                        'partner_id': ref(f'account.{cid}_demo_partner_1').id
                     }),
                     Command.create({
                         'payment_ref': 'Bank Fees',
@@ -129,13 +156,13 @@ class AccountChartTemplate(models.Model):
                         'payment_ref': 'Prepayment',
                         'amount': 650,
                         'date': time.strftime('%Y-01-01'),
-                        'partner_id': ref('base.res_partner_12').id
+                        'partner_id': ref(f'account.{cid}_demo_partner_1').id
                     }),
                     Command.create({
                         'payment_ref': time.strftime('First 2000 $ of invoice %Y/00001'),
                         'amount': 2000,
                         'date': time.strftime('%Y-01-01'),
-                        'partner_id': ref('base.res_partner_12').id
+                        'partner_id': ref(f'account.{cid}_demo_partner_1').id
                     }),
                     Command.create({
                         'payment_ref': 'Last Year Interests',
@@ -146,13 +173,13 @@ class AccountChartTemplate(models.Model):
                         'payment_ref': time.strftime('INV/%Y/00002'),
                         'amount': 750,
                         'date': time.strftime('%Y-01-01'),
-                        'partner_id': ref('base.res_partner_2').id
+                        'partner_id': ref(f'account.{cid}_demo_partner_2').id
                     }),
                     Command.create({
                         'payment_ref': 'R:9772938  10/07 AX 9415116318 T:5 BRT: 100,00€ C/ croip',
                         'amount': 96.67,
                         'date': time.strftime('%Y-01-01'),
-                        'partner_id': ref('base.res_partner_2').id
+                        'partner_id': ref(f'account.{cid}_demo_partner_2').id
                     }),
                 ]
             },
