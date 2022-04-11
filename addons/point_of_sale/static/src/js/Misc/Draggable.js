@@ -49,6 +49,7 @@ odoo.define('point_of_sale.Draggable', function(require) {
                 this.limitArea = this.props.limitArea
                     ? document.querySelector(this.props.limitArea)
                     : this.el.offsetParent;
+                if (!this.limitArea) return;
                 this.limitAreaBoundingRect = this.limitArea.getBoundingClientRect();
                 if (this.limitArea === this.el.offsetParent) {
                     this.limitLeft = 0;
