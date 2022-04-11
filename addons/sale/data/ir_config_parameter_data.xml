@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- set default confirmation template -->
+    <record id="default_confirmation_template" model="ir.config_parameter">
+        <field name="key">sale.default_confirmation_template</field>
+        <field name="value" ref="sale.mail_template_sale_confirmation"/>
+    </record>
+
+    <!-- set default order template -->
+    <record id="default_order_template" model="ir.config_parameter">
+        <field name="key">sale.default_order_template</field>
+        <field name="value" ref="sale.email_template_edi_sale"/>
+    </record>
+
+    <record id="default_invoice_email_template" model="ir.config_parameter">
+        <field name="key">sale.default_invoice_email_template</field>
+        <field name="value" ref="account.email_template_edi_invoice"/>
+    </record>
+</odoo>

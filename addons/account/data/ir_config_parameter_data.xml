@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <!-- set default invoice template -->
+        <record id="default_invoice_template" model="ir.config_parameter">
+            <field name="key">account.default_invoice_template</field>
+            <field name="value" ref="account.email_template_edi_invoice"/>
+        </record>
+
+        <!-- set default credit note template -->
+        <record id="default_credit_note_template" model="ir.config_parameter">
+            <field name="key">account.default_credit_note_template</field>
+            <field name="value" ref="account.email_template_edi_credit_note"/>
+        </record>
+    </data>
+</odoo>

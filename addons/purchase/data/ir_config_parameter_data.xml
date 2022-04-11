@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- set default rfq template -->
+        <record id="default_rfq_template" model="ir.config_parameter">
+            <field name="key">purchase.default_rfq_template</field>
+            <field name="value" ref="purchase.email_template_edi_purchase"/>
+        </record>
+
+        <!-- set default order template -->
+        <record id="default_order_template" model="ir.config_parameter">
+            <field name="key">purchase.default_order_template</field>
+            <field name="value" ref="purchase.email_template_edi_purchase_done"/>
+        </record>
+    </data>
+</odoo>

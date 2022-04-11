@@ -2897,8 +2897,10 @@ class AccountMove(models.Model):
 
     def _get_settings_template(self, setting_template_id, default_template_id):
         template_id = int(self.env['ir.config_parameter'].sudo().get_param(setting_template_id))
-        template_id = self.env['mail.template'].browse(template_id).id
         if not template_id:
+            return False
+        existing_template = self.env['mail.template'].browse(template_id).exists()
+        if not existing_template:
             template_id = self.env['ir.model.data']._xmlid_to_res_id(default_template_id, raise_if_not_found=False)
         return template_id
 
@@ -2906,14 +2908,9 @@ class AccountMove(models.Model):
         """
         :return: the correct mail template id based on the current move type
         """
-        template_id = False
-
         if all(move.move_type == 'out_refund' for move in self):
-            template_id = self._get_settings_template('account.default_credit_note_template', 'account.email_template_edi_credit_note')
-        if not template_id:
-            template_id = self._get_settings_template('account.default_invoice_template', 'account.email_template_edi_invoice')
-
-        return template_id
+            return self._get_settings_template('account.default_credit_note_template', 'account.email_template_edi_credit_note')
+        return self._get_settings_template('account.default_invoice_template', 'account.email_template_edi_invoice')
 
     def action_send_and_print(self):
         return {

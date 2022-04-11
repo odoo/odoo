@@ -727,20 +727,17 @@ class SaleOrder(models.Model):
 
     def _get_settings_template(self, setting_template_id, default_template_id):
         template_id = int(self.env['ir.config_parameter'].sudo().get_param(setting_template_id))
-        template_id = self.env['mail.template'].browse(template_id).id
         if not template_id:
+            return False
+        existing_template = self.env['mail.template'].browse(template_id).exists()
+        if not existing_template:
             template_id = self.env['ir.model.data']._xmlid_to_res_id(default_template_id, raise_if_not_found=False)
         return template_id
 
     def _find_mail_template(self, force_confirmation_template=False):
-        template_id = False
-
         if force_confirmation_template or (self.state == 'sale' and not self.env.context.get('proforma', False)):
-            template_id = self._get_settings_template('sale.default_confirmation_template', 'sale.mail_template_sale_confirmation')
-        if not template_id:
-            template_id = self._get_settings_template('sale.default_order_template', 'sale.email_template_edi_sale')
-
-        return template_id
+            return self._get_settings_template('sale.default_confirmation_template', 'sale.mail_template_sale_confirmation')
+        return self._get_settings_template('sale.default_order_template', 'sale.email_template_edi_sale')
 
     def action_quotation_sent(self):
         if self.filtered(lambda so: so.state != 'draft'):

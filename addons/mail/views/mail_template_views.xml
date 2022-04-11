@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <record model="ir.ui.view" id="email_template_form">
-            <field name="name">email.template.form</field>
+            <field name="name">mail.template.view.form</field>
             <field name="model">mail.template</field>
             <field name="arch" type="xml">
                 <form string="Templates">
@@ -46,7 +46,7 @@
                                 <div class="oe_title"><label for="subject"/></div>
                                 <div class="oe_title">
                                     <field name="subject"
-                                            placeholder='e.g. "Welcome to MyCompany" or "Nice to meet you, ${object.name}"'/>
+                                            placeholder='e.g. "Welcome to MyCompany" or "Nice to meet you, {{ object.name }}"'/>
                                 </div>
                                 <div class="oe_title"><label for="body_html"/></div>
                                 <div>
@@ -83,6 +83,18 @@
                                     </group>
                                 </group>
                             </page>
+                            <page string="Dynamic Placeholder Generator" name="dynamic_placeholder_generator">
+                                <group>
+                                    <field name="model_object_field"
+                                            domain="[('model_id','=',model_id),('ttype','!=','one2many'),('ttype','!=','many2many')]"/>
+                                    <field name="sub_object" readonly="1"/>
+                                    <field name="sub_model_object_field"
+                                            domain="[('model_id','=',sub_object),('ttype','!=','one2many'),('ttype','!=','many2many')]"
+                                            attrs="{'readonly':[('sub_object','=',False)],'required':[('sub_object','!=',False)]}"/>
+                                    <field name="null_value"/>
+                                    <field name="copyvalue"/>
+                                </group>
+                            </page>
                         </notebook>
                     </sheet>
                 </form>
@@ -90,7 +102,7 @@
         </record>
 
         <record model="ir.ui.view" id="email_template_tree">
-            <field name="name">email.template.tree</field>
+            <field name="name">mail.template.view.tree</field>
             <field name="model">mail.template</field>
             <field name="arch" type="xml">
                 <tree string="Templates" expand="1">
@@ -103,7 +115,7 @@
         </record>
 
         <record id="view_email_template_search" model="ir.ui.view">
-            <field name="name">email.template.search</field>
+            <field name="name">mail.template.view.search</field>
             <field name="model">mail.template</field>
             <field name="arch" type="xml">
                 <search string="Templates">
@@ -111,13 +123,11 @@
                     <field name="lang"/>
                     <field name="model_id"/>
                     <group expand="0" string="Group by...">
-                        <filter string="Related Model" name="model" domain="[]" context="{'group_by':'model_id'}"/>
-                        <filter string="Created by" name="createdby" domain="[]" context="{'group_by':'create_uid'}"/>
-                        <filter string="SMTP Server" name="smtpserver" domain="[]" context="{'group_by':'mail_server_id'}"/>
+                        <filter string="Related Model" name="filter_model_id" context="{'group_by': 'model_id'}"/>
+                        <filter string="Created by" name="filter_create_uid" context="{'group_by': 'create_uid'}"/>
+                        <filter string="SMTP Server" name="filter_smtpserver_id" context="{'group_by': 'mail_server_id'}"/>
                     </group>
-                    <filter string="My Templates"
-                        name="my_email_templates"
-                        domain="[('create_uid', '=', uid)]"/>
+                    <filter string="My Templates" name="my_email_templates" domain="[('create_uid', '=', uid)]"/>
                 </search>
             </field>
         </record>
