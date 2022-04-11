@@ -10,29 +10,13 @@ var time = require('web.time');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
 
-var { LIVECHAT_COOKIE_HISTORY, HISTORY_LIMIT, RATING_TO_EMOJI } = require('im_livechat.legacy.im_livechat.Constants');
+var { LIVECHAT_COOKIE_HISTORY, RATING_TO_EMOJI } = require('im_livechat.legacy.im_livechat.Constants');
 var WebsiteLivechat = require('im_livechat.legacy.im_livechat.model.WebsiteLivechat');
 var WebsiteLivechatMessage = require('im_livechat.legacy.im_livechat.model.WebsiteLivechatMessage');
 var WebsiteLivechatWindow = require('im_livechat.legacy.im_livechat.WebsiteLivechatWindow');
 
 var _t = core._t;
 var QWeb = core.qweb;
-
-
-// History tracking
-var page = window.location.href.replace(/^.*\/\/[^/]+/, '');
-var pageHistory = utils.get_cookie(LIVECHAT_COOKIE_HISTORY);
-var urlHistory = [];
-if (pageHistory) {
-    urlHistory = JSON.parse(pageHistory) || [];
-}
-if (!_.contains(urlHistory, page)) {
-    urlHistory.push(page);
-    while (urlHistory.length > HISTORY_LIMIT) {
-        urlHistory.shift();
-    }
-    utils.set_cookie(LIVECHAT_COOKIE_HISTORY, JSON.stringify(urlHistory), 60 * 60 * 24); // 1 day cookie
-}
 
 var LivechatButton = Widget.extend({
     className: 'openerp o_livechat_button d-print-none',

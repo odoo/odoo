@@ -34,6 +34,7 @@ Allow website visitors to chat with the collaborators. This module also brings a
             'mail/static/src/js/utils.js',
             'im_livechat/static/src/legacy/public_livechat.js',
             'im_livechat/static/src/legacy/public_livechat_constants.js',
+            'im_livechat/static/src/legacy/public_livechat_history_tracking.js',
             'im_livechat/static/src/legacy/models/*',
             'im_livechat/static/src/legacy/widgets/*',
             'im_livechat/static/src/legacy/public_livechat_chatbot.js',
