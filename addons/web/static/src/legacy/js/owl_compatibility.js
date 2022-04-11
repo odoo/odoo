@@ -407,7 +407,7 @@ odoo.define('web.OwlCompatibility', function (require) {
         fiber.complete = function() {
             // if target is not in dom
             // just trigger mounted hooks on the Proxy, not on any other node
-            if (!document.contains(this.target)) {
+            if (!this.target.ownerDocument.contains(this.target)) {
                 this.mounted = [this];
                 // We skipped a bunch of mounted calls.
                 // Following calls to patched may crash because of this.
@@ -609,7 +609,7 @@ odoo.define('web.OwlCompatibility', function (require) {
             }
             prepareForFinish(this.node);
             await prom;
-            if (document.contains(this.target)) {
+            if (this.target.ownerDocument.contains(this.target)) {
                 this.status = "mounted";
             }
             this.node.willStart = [];
@@ -665,7 +665,7 @@ odoo.define('web.OwlCompatibility', function (require) {
         }
 
         on_attach_callback() {
-            if (!document.contains(this.el)) {
+            if (!this.el || !this.el.ownerDocument.contains(this.el)) {
                 return;
             }
             if (this.status === "mounted") {
