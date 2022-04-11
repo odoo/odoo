@@ -580,7 +580,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             raise NotImplementedError('Unsupported %s' % ', '.join(unknown))
 
         if isinstance(author, self.env['res.partner'].__class__):
-            expected['email_from'] = formataddr((author.name, author.email))
+            expected['email_from'] = formataddr((author.name, email_normalize(author.email, strict=False) or author.email))
         else:
             expected['email_from'] = author
 
