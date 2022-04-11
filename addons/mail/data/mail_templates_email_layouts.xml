@@ -168,8 +168,7 @@
 </html>
         </template>
 
-        <!-- Used mainly in conjunction of portal models (SO, PO, Invoices) although not mandatory -->
-        <template id="mail_notification_paynow" name="Mail: Pay Now mail notification template">
+        <template id="mail_notification_layout" name="Mail: mail notification layout template">
 <html t-att-lang="lang">
 <header>
     <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
@@ -201,17 +200,27 @@
                             </td></tr>
                         </table></td><td width="7"></td><!--only inner cellspacing-->
                     </t>
-                    <t t-if="not has_button_access and is_html_empty(subtitle)">
+                    <t t-if="not has_button_access and not subtitles">
                         <td>
                             <span style="font-size: 10px;">Your <t t-out="model_description or 'document'"/></span>
                             <br />
-                            <span style="font-size: 20px; font-weight: bold;">
+                            <span style="font-size: 12px; font-weight: bold;">
                                 <t t-out="message.record_name and message.record_name.replace('/','-') or ''"/>
                             </span>
                         </td><td width="7"></td>
                     </t>
+                    <t t-if="subtitles">
+                        <td style="font-size: 12px;">
+                            <t t-foreach="subtitles" t-as="subtitle">
+                                <span t-attf-style="{{ 'font-weight:bold;' if subtitle_first else '' }}"
+                                      t-out="subtitle"/>
+                                <br t-if="not subtitle_last"/>
+                            </t>
+                        </td>
+                    </t>
                     <t t-if="actions">
-                        <td>
+                        <td>&amp;nbsp;</td>
+                        <td style="font-size: 12px;">
                             <t t-foreach="actions" t-as="action">
                                 |
                                 <a t-att-href="action['url']" style="color: #875A7B; text-decoration:none !important; text-decoration: none;">
@@ -219,12 +228,6 @@
                                 </a>
                             </t>
                         </td><td width="7"></td>
-                    </t>
-                    <t t-if="not is_html_empty(subtitle)">
-                        <td style="font-size: 12px;">
-                            <span style="font-weight:bold;" t-out="record.name"/><br/>
-                            <span t-out="subtitle"/>
-                        </td>
                     </t>
                 </tr></table></td></tr>
                 <tr><td>
@@ -237,13 +240,10 @@
     <tr>
         <td style="padding-left: 5px;">
             <t t-out="message.body"/>
-            <t t-if="email_add_signature and 'user_id' in record and record.user_id and not record.env.user._is_superuser() and not is_html_empty(record.user_id.sudo().signature)">
-                <div style="margin: 0px; padding: 0px; font-size:13px;">
-                    Best regards,
-                </div>
-                <div>&amp;nbsp;</div>
+            <t t-if="email_add_signature and not is_html_empty(signature)" class="o_signature">
+                <br/>
                 <div style="font-size: 13px;">
-                    <div t-out="record.user_id.sudo().signature"/>
+                    <div t-out="signature"/>
                 </div>
             </t>
         </td>
@@ -285,6 +285,18 @@
     <!--Trailing whitespace to push back email content so that it doesn't appear in preview. Specific characters to use may change over time -->
     <t t-out="'&#847; &#8203; ' * 140"/>
 </div>
+        </template>
+
+        <template id="mail_notification_paynow" name="Mail: Pay Now mail notification template"
+                  inherit_id="mail.mail_notification_layout" primary="True">
+            <xpath expr="//t[hasclass('o_signature')]" position="replace">
+                <t t-if="email_add_signature and 'user_id' in record and record.user_id and not record.env.user._is_superuser() and not is_html_empty(record.user_id.sudo().signature)">
+                    <br/>
+                    <div style="font-size: 13px;">
+                        <div t-out="record.user_id.sudo().signature"/>
+                    </div>
+                </t>
+            </xpath>
         </template>
     </data>
 </odoo>

@@ -16,6 +16,7 @@ from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 from odoo.tools.translate import _
 from odoo.tools import date_utils, email_re, email_split, is_html_empty, groupby
+from odoo.tools.misc import get_lang
 
 from . import crm_stage
 
@@ -1791,6 +1792,17 @@ class Lead(models.Model):
         elif 'active' in init_values and not self.active:
             return self.env.ref('crm.mt_lead_lost')
         return super(Lead, self)._track_subtype(init_values)
+
+    def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
+                                                   force_email_company=False, force_email_lang=False):
+        render_context = super()._notify_by_email_prepare_rendering_context(
+            message, msg_vals, model_description=model_description,
+            force_email_company=force_email_company, force_email_lang=force_email_lang
+        )
+        if self.date_deadline:
+            render_context['subtitles'].append(
+                _('Deadline: %s', self.date_deadline.strftime(get_lang(self.env).date_format)))
+        return render_context
 
     def _notify_get_recipients_groups(self, msg_vals=None):
         """ Handle salesman recipients that can convert leads into opportunities

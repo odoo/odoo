@@ -176,7 +176,7 @@ class TestActivityFlow(TestActivityCommon):
         rec = self.test_record.with_user(self.user_employee)
         with self.assertSinglePostNotifications(
                 [{'partner': self.partner_admin, 'type': 'email'}],
-                message_info={'content': 'assigned you an activity', 'subtype': 'mail.mt_note', 'message_type': 'user_notification'}):
+                message_info={'content': 'assigned you the following activity', 'subtype': 'mail.mt_note', 'message_type': 'user_notification'}):
             activity = rec.activity_schedule(
                 'test_mail.mail_act_test_todo',
                 user_id=self.user_admin.id)

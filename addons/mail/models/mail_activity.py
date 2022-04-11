@@ -9,7 +9,8 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, exceptions, fields, models, _, Command
 from odoo.osv import expression
-from odoo.tools.misc import clean_context
+from odoo.tools import is_html_empty
+from odoo.tools.misc import clean_context, get_lang
 
 
 class MailActivity(models.Model):
@@ -480,11 +481,11 @@ class MailActivity(models.Model):
             model_description = activity.env['ir.model']._get(activity.res_model).display_name
             body = activity.env['ir.qweb']._render(
                 'mail.message_activity_assigned',
-                dict(
-                    activity=activity,
-                    model_description=model_description,
-                    access_link=activity.env['mail.thread']._notify_get_action_link('view', model=activity.res_model, res_id=activity.res_id),
-                ),
+                {
+                    'activity': activity,
+                    'model_description': model_description,
+                    'is_html_empty': is_html_empty,
+                },
                 minimal_qcontext=True
             )
             record = activity.env[activity.res_model].browse(activity.res_id)
@@ -492,12 +493,14 @@ class MailActivity(models.Model):
                 record.message_notify(
                     partner_ids=activity.user_id.partner_id.ids,
                     body=body,
-                    subject=_('%(activity_name)s: %(summary)s assigned to you',
-                        activity_name=activity.res_name,
-                        summary=activity.summary or activity.activity_type_id.name),
                     record_name=activity.res_name,
                     model_description=model_description,
-                    email_layout_xmlid='mail.mail_notification_light',
+                    email_layout_xmlid='mail.mail_notification_layout',
+                    subject=_('"%(activity_name)s: %(summary)s" assigned to you',
+                              activity_name=activity.res_name,
+                              summary=activity.summary or activity.activity_type_id.name),
+                    subtitles=[_('Activity: %s', activity.activity_type_id.name),
+                               _('Deadline: %s', activity.date_deadline.strftime(get_lang(activity.env).date_format))]
                 )
 
     def action_done(self):

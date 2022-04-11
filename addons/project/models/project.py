@@ -2045,8 +2045,6 @@ class Task(models.Model):
 
         result = super(Task, tasks).write(vals)
 
-        self._task_message_auto_subscribe_notify({task: task.user_ids - old_user_ids[task] - self.env.user for task in self})
-
         if 'user_ids' in vals:
             tasks._populate_missing_personal_stages()
 
@@ -2065,6 +2063,8 @@ class Task(models.Model):
             if task.display_project_id != task.project_id and not task.parent_id:
                 # We must make the display_project_id follow the project_id if no parent_id set
                 task.display_project_id = task.project_id
+
+        self._task_message_auto_subscribe_notify({task: task.user_ids - old_user_ids[task] - self.env.user for task in self})
         return result
 
     def update_date_end(self, stage_id):
@@ -2141,6 +2141,20 @@ class Task(models.Model):
     # Mail gateway
     # ---------------------------------------------------
 
+    def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
+                                                   force_email_company=False, force_email_lang=False):
+        render_context = super()._notify_by_email_prepare_rendering_context(
+            message, msg_vals, model_description=model_description,
+            force_email_company=force_email_company, force_email_lang=force_email_lang
+        )
+        if self.date_deadline:
+            render_context['subtitles'].append(
+                _('Deadline: %s', self.date_deadline.strftime(get_lang(self.env).date_format)))
+        elif self.date_assign:
+            render_context['subtitles'].append(
+                _('Assigned On: %s', self.date_assign.strftime(get_lang(self.env).date_format)))
+        return render_context
+
     @api.model
     def _task_message_auto_subscribe_notify(self, users_per_task):
         # Utility method to send assignation notification upon writing/creation.
@@ -2165,7 +2179,7 @@ class Task(models.Model):
                     body=assignation_msg,
                     partner_ids=user.partner_id.ids,
                     record_name=task.display_name,
-                    email_layout_xmlid='mail.mail_notification_light',
+                    email_layout_xmlid='mail.mail_notification_layout',
                     model_description=task_model_description,
                 )
 

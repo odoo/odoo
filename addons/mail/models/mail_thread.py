@@ -2411,7 +2411,7 @@ class MailThread(models.AbstractModel):
                                 mail_auto_delete=True,  # mail.mail
                                 model_description=False, force_email_company=False, force_email_lang=False,  # rendering
                                 resend_existing=False, force_send=True, send_after_commit=True,  # email send
-                                **kwargs):
+                                subtitles=None, **kwargs):
         """ Method to send email linked to notified messages.
 
         :param message: ``mail.message`` record to notify;
@@ -2442,6 +2442,7 @@ class MailThread(models.AbstractModel):
         :param force_send: send emails directly instead of using queue;
         :param send_after_commit: if force_send, tells whether to send emails after
           the transaction has been committed using a post-commit hook;
+        :param subtitles: optional list that will be set as template value "subtitles"
         """
         partners_data = [r for r in recipients_data if r['notif'] == 'email']
         if not partners_data:
@@ -2460,6 +2461,8 @@ class MailThread(models.AbstractModel):
             force_email_company=force_email_company,
             force_email_lang=force_email_lang,
         ) # 10 queries
+        if subtitles:
+            template_values['subtitles'] = subtitles
 
         email_layout_xmlid = msg_vals.get('email_layout_xmlid') if msg_vals else message.email_layout_xmlid
         template_xmlid = email_layout_xmlid if email_layout_xmlid else 'mail.message_notification_email'
@@ -2649,7 +2652,7 @@ class MailThread(models.AbstractModel):
             'model_description': model_description,
             'record': self,
             'record_name': record_name,
-            'subtitle': False,
+            'subtitles': [record_name],
             # user / environment
             'company': company,
             'email_add_signature': email_add_signature,
@@ -3070,7 +3073,7 @@ class MailThread(models.AbstractModel):
                 body=assignation_msg,
                 partner_ids=partner_ids,
                 record_name=record.display_name,
-                email_layout_xmlid='mail.mail_notification_light',
+                email_layout_xmlid='mail.mail_notification_layout',
                 model_description=model_description,
             )
 

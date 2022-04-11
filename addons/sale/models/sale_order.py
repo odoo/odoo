@@ -1231,15 +1231,15 @@ class SaleOrder(models.Model):
             message, msg_vals, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang
         )
+        subtitles = [render_context['record'].name]
         if self.validity_date:
-            render_context['subtitle'] = _(
-                u'%(amount)s due\N{NO-BREAK SPACE}%(date)s',
-                amount=format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')),
-                date=format_date(self.env, self.validity_date, date_format='short', lang_code=render_context.get('lang'))
-            )
+            subtitles.append(_(u'%(amount)s due\N{NO-BREAK SPACE}%(date)s',
+                           amount=format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')),
+                           date=format_date(self.env, self.validity_date, date_format='short', lang_code=render_context.get('lang'))
+                          ))
         else:
-            render_context['subtitle'] = format_amount(
-                self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang'))
+            subtitles.append(format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')))
+        render_context['subtitles'] = subtitles
         return render_context
 
     def _sms_get_number_fields(self):
