@@ -4,7 +4,7 @@
     <t t-name="mail.MessagingMenu" owl="1">
         <t t-if="messagingMenu">
             <div class="o_MessagingMenu dropdown" t-att-class="{ 'show': messagingMenu.isOpen, 'o-mobile': messaging.device.isMobile }" t-attf-class="{{ className }}" t-ref="root">
-                <a class="o_MessagingMenu_toggler dropdown-toggle o-no-caret o-dropdown--narrow" t-att-class="{ 'o-no-notification': !messagingMenu.counter }" href="#" title="Conversations" role="button" t-att-aria-expanded="messagingMenu.isOpen ? 'true' : 'false'" aria-haspopup="true" t-on-click="_onClickToggler">
+                <a class="o_MessagingMenu_toggler dropdown-toggle o-no-caret o-dropdown--narrow" t-att-class="{ 'o-no-notification': !messagingMenu.counter }" href="#" title="Conversations" role="button" t-att-aria-expanded="messagingMenu.isOpen ? 'true' : 'false'" aria-haspopup="true" t-on-click="messagingMenu.onClickToggler">
                     <i class="o_MessagingMenu_icon fa fa-lg fa-comments" role="img" aria-label="Messages"/>
                     <t t-if="!messaging.isInitialized">
                         <i class="o_MessagingMenu_loading fa fa-circle-o-notch fa-spin"/>
@@ -24,7 +24,7 @@
                             <div class="o_MessagingMenu_dropdownMenuHeader border-bottom" t-att-class="{ 'o-mobile': messaging.device.isMobile }">
                                 <t t-if="!messaging.device.isMobile">
                                     <t t-foreach="['all', 'chat', 'channel']" t-as="tabId" t-key="tabId">
-                                        <button class="o_MessagingMenu_tabButton o-desktop btn btn-link" t-att-class="{ 'o-active': messagingMenu.activeTabId === tabId, }" t-on-click="_onClickDesktopTabButton" type="button" role="tab" t-att-data-tab-id="tabId">
+                                        <button class="o_MessagingMenu_tabButton o-desktop btn btn-link" t-att-class="{ 'o-active': messagingMenu.activeTabId === tabId, }" t-on-click="messagingMenu.onClickDesktopTabButton" type="button" role="tab" t-att-data-tab-id="tabId">
                                             <t t-if="tabId === 'all'">All</t>
                                             <t t-elif="tabId === 'chat'">Chat</t>
                                             <t t-elif="tabId === 'channel'">Channels</t>
@@ -72,7 +72,7 @@
                 'btn-link': !messaging.device.isMobile,
                 'btn-secondary': messaging.device.isMobile,
                 'o-mobile': messaging.device.isMobile,
-            }" t-on-click="_onClickNewMessage" type="button"
+            }" t-on-click="messagingMenu.onClickNewMessage" type="button"
         >
             New message
         </button>

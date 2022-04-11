@@ -15,6 +15,34 @@ registerModel({
             this.update({ isOpen: false });
         },
         /**
+         * @param {MouseEvent} ev
+         */
+        onClickDesktopTabButton(ev) {
+            this.update({ activeTabId: ev.currentTarget.dataset.tabId });
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickNewMessage(ev) {
+            if (!this.messaging.device.isMobile) {
+                this.messaging.chatWindowManager.openNewMessage();
+                this.close();
+            } else {
+                this.toggleMobileNewMessage();
+            }
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickToggler(ev) {
+            // avoid following dummy href
+            ev.preventDefault();
+            if (!this.exists()) {
+                return;
+            }
+            this.toggleOpen();
+        },
+        /**
          * Toggle the visibility of the messaging menu "new message" input in
          * mobile.
          */

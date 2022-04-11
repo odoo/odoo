@@ -10,7 +10,7 @@
                 <button
                     class="o_MailTemplate_button o_MailTemplate_preview btn btn-link py-0"
                     t-att-data-mail-template-id="mailTemplateView.mailTemplate.id"
-                    t-on-click="_onClickPreview"
+                    t-on-click="mailTemplateView.onClickPreview"
                 >
                     Preview
                 </button>
@@ -18,7 +18,7 @@
                 <button
                     class="o_MailTemplate_button o_MailTemplate_send btn btn-link py-0"
                     t-att-data-mail-template-id="mailTemplateView.mailTemplate.id"
-                    t-on-click="_onClickSend"
+                    t-on-click="mailTemplateView.onClickSend"
                 >
                     Send Now
                 </button>

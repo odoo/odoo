@@ -4,7 +4,6 @@ import { useComponentToModel } from '@mail/component_hooks/use_component_to_mode
 import { useUpdate } from '@mail/component_hooks/use_update';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 import { _lt } from 'web.core';
 import Popover from "web.Popover";
@@ -275,80 +274,6 @@ export class Message extends Component {
         }, 60 * 1000);
     }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClick(ev) {
-        if (ev.target.closest('.o_channel_redirect')) {
-            this.messaging.openProfile({
-                id: Number(ev.target.dataset.oeId),
-                model: 'mail.channel',
-            });
-            // avoid following dummy href
-            ev.preventDefault();
-            return;
-        }
-        if (ev.target.tagName === 'A') {
-            if (ev.target.dataset.oeId && ev.target.dataset.oeModel) {
-                this.messaging.openProfile({
-                    id: Number(ev.target.dataset.oeId),
-                    model: ev.target.dataset.oeModel,
-                });
-                // avoid following dummy href
-                ev.preventDefault();
-            }
-            return;
-        }
-        if (
-            !isEventHandled(ev, 'Message.ClickAuthorAvatar') &&
-            !isEventHandled(ev, 'Message.ClickAuthorName') &&
-            !isEventHandled(ev, 'Message.ClickFailure') &&
-            !isEventHandled(ev, 'MessageActionList.Click') &&
-            !isEventHandled(ev, 'MessageReactionGroup.Click') &&
-            !isEventHandled(ev, 'MessageInReplyToView.ClickMessageInReplyTo')
-        ) {
-            this.messageView.update({ isClicked: !this.messageView.isClicked });
-        }
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickAuthorAvatar(ev) {
-        markEventHandled(ev, 'Message.ClickAuthorAvatar');
-        if (!this.messageView.hasAuthorOpenChat) {
-            return;
-        }
-        this.messageView.message.author.openChat();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickAuthorName(ev) {
-        markEventHandled(ev, 'Message.ClickAuthorName');
-        if (!this.messageView.message.author) {
-            return;
-        }
-        this.messageView.message.author.openProfile();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickOriginThread(ev) {
-        // avoid following dummy href
-        ev.preventDefault();
-        this.messageView.message.originThread.open();
-    }
 }
 
 Object.assign(Message, {

@@ -2,7 +2,6 @@
 
 import { insert, link } from '@mail/model/model_field_command';
 import {
-    createRootMessagingComponent,
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
@@ -11,27 +10,17 @@ import Bus from 'web.Bus';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('follower_list_menu_tests.js', {
-    beforeEach() {
-        this.createFollowerListMenuComponent = async (thread, target, otherProps = {}) => {
-            const props = Object.assign({ threadLocalId: thread.localId }, otherProps);
-            await createRootMessagingComponent(thread.env, "FollowerListMenu", {
-                props,
-                target,
-            });
-        };
-    },
-});
+QUnit.module('follower_list_menu_tests.js');
 
 QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(5);
 
-    const { messaging, widget } = await start();
+    const { createFollowerListMenuComponent, messaging } = await start();
     const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    await this.createFollowerListMenuComponent(thread, widget.el, { isDisabled: true });
+    await createFollowerListMenuComponent(thread, { isDisabled: true });
     assert.containsOnce(
         document.body,
         '.o_FollowerListMenu',
@@ -63,13 +52,13 @@ QUnit.test('base rendering not editable', async function (assert) {
 QUnit.test('base rendering editable', async function (assert) {
     assert.expect(5);
 
-    const { click, messaging, widget } = await start();
+    const { click, createFollowerListMenuComponent, messaging, widget } = await start();
     const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
         hasWriteAccess: true,
     });
-    await this.createFollowerListMenuComponent(thread, widget.el);
+    await createFollowerListMenuComponent(thread, widget.el);
 
     assert.containsOnce(
         document.body,
@@ -141,13 +130,13 @@ QUnit.test('click on "add followers" button', async function (assert) {
         pyEnv['res.partner'].write([payload.action.context.default_res_id], { message_follower_ids: [mailFollowerId1] });
         payload.options.on_close();
     });
-    const { click, messaging, widget } = await start({ env: { bus } });
+    const { click, createFollowerListMenuComponent, messaging, widget } = await start({ env: { bus } });
     const thread = messaging.models['Thread'].create({
         hasWriteAccess: true,
         id: resPartnerId1,
         model: 'res.partner',
     });
-    await this.createFollowerListMenuComponent(thread, widget.el);
+    await createFollowerListMenuComponent(thread, widget.el);
 
     assert.containsOnce(
         document.body,
@@ -210,7 +199,7 @@ QUnit.test('click on remove follower', async function (assert) {
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    const { click, messaging, widget } = await start({
+    const { click, createFollowerListMenuComponent, messaging, widget } = await start({
         async mockRPC(route, args) {
             if (route.includes('message_unsubscribe')) {
                 assert.step('message_unsubscribe');
@@ -237,7 +226,7 @@ QUnit.test('click on remove follower', async function (assert) {
             name: "François Perusse",
         }),
     });
-    await this.createFollowerListMenuComponent(thread, widget.el);
+    await createFollowerListMenuComponent(thread, widget.el);
 
     await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
@@ -398,14 +387,14 @@ QUnit.test('Show "Add follower" and subtypes edition/removal buttons on all foll
 QUnit.test('Show "No Followers" dropdown-item if there are no followers and user dose not have write access', async function (assert) {
     assert.expect(1);
 
-    const { click, messaging, widget } = await start();
+    const { click, createFollowerListMenuComponent, messaging, widget } = await start();
     const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
         hasWriteAccess: false,
     });
 
-    await this.createFollowerListMenuComponent(thread, widget.el);
+    await createFollowerListMenuComponent(thread, widget.el);
     await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
         document.body,
