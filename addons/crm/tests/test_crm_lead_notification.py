@@ -65,9 +65,9 @@ class NewLeadNotification(TestCrmCommon):
                'name': 'Format Name', 'user_id': self.user_sales_leads.id,
                'team_id': self.sales_team_1.id,
               }),
-             (False, 'new.customer.multi.1@test.example.com, new.customer.2@test.example.com', None, 'Customer Email',
+             (False, '"Multi Name" <new.customer.multi.1@test.example.com,new.customer.2@test.example.com>', None, 'Customer Email',
               {}),  # no email_normalized -> no information
-             (False, 'new.customer.simple@test.example.com', None, 'Customer Email',
+             (False, '"Std Name" <new.customer.simple@test.example.com>', None, 'Customer Email',
               {'company_name': 'Std Name', 'email': 'new.customer.simple@test.example.com',
                'name': 'Std Name', 'user_id': self.user_sales_leads.id,
                'team_id': self.sales_team_1.id,
@@ -147,7 +147,7 @@ class NewLeadNotification(TestCrmCommon):
             ('Delivery Boy company', 'Test With Company', 'default_create_with_partner@example.com'),
             ('Delivery Boy company', '', 'default_create_with_partner_no_name@example.com'),
         ]:
-            formatted_email = formataddr((name, email))
+            formatted_email = formataddr((name, email)) if name else formataddr((partner_name, email))
             with self.subTest(partner_name=partner_name):
                 lang = self.env['res.lang'].sudo().search([], limit=1)[0]
                 description = '<p>Top</p>'
