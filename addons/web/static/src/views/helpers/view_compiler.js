@@ -366,6 +366,7 @@ export class ViewCompiler {
             "args",
             "context",
             "close",
+            "confirm",
             "special",
             "effect",
             // WOWL SAD: is adding the support for debounce attribute here justified or should we

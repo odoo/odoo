@@ -2,6 +2,7 @@
 
 import { useService } from "@web/core/utils/hooks";
 import { evaluateExpr } from "@web/core/py_js/py";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 const { useRef, useSubEnv } = owl;
 
@@ -16,6 +17,7 @@ function disableButtons(el) {
 
 export function useViewButtons(model, beforeExecuteAction = () => {}, refName = "root") {
     const action = useService("action");
+    const dialog = useService("dialog");
     const comp = owl.useComponent();
     const ref = useRef(refName);
     useSubEnv({
@@ -55,7 +57,16 @@ export function useViewButtons(model, beforeExecuteAction = () => {}, refName = 
             });
 
             try {
-                await action.doActionButton(doActionParams);
+                if (clickParams.confirm) {
+                    const dialogProps = {
+                        body: clickParams.confirm,
+                        confirm: async () => await action.doActionButton(doActionParams),
+                        cancel: () => {},
+                    };
+                    dialog.add(ConfirmationDialog, dialogProps);
+                } else {
+                    await action.doActionButton(doActionParams);
+                }
             } finally {
                 if (ref.el) {
                     for (const btn of manuallyDisabledButtons) {

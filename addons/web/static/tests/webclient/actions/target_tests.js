@@ -244,7 +244,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         'button with confirm attribute in act_window action in target="new"',
         async function (assert) {
             serverData.actions[999] = {
@@ -286,7 +286,10 @@ QUnit.module("ActionManager", (hooks) => {
 
             await testUtils.dom.click($(".modal:last .modal-footer .btn-primary"));
             assert.containsOnce(document.body, ".modal");
-            assert.strictEqual($(".modal:last .modal-body").text().trim(), "Another action");
+            assert.strictEqual(
+                target.querySelector(".modal main .o_content").innerText.trim(),
+                "Another action"
+            );
         }
     );
 
