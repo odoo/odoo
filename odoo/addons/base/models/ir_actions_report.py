@@ -397,7 +397,8 @@ class IrActionsReport(models.Model):
             body = IrQweb._render(layout.id, {
                     'subst': False,
                     'body': Markup(lxml.html.tostring(node, encoding='unicode')),
-                    'base_url': base_url
+                    'base_url': base_url,
+                    'report_xml_id' : self.xml_id
                 }, raise_if_not_found=False)
             bodies.append(body)
             if node.get('data-oe-model') == report_model:
