@@ -270,6 +270,7 @@ function hasColor(element, mode) {
  * array with the style property name and the value to apply to it
  * @param {boolean} [shouldApply=true] set to false to undo a style rather than
  * apply it.
+ * @returns {Element[]} the elements on which the style was changed.
  */
 export function applyInlineStyle(editor, applyStyle, style, shouldApply=true) {
     getDeepRange(editor.editable, { splitText: true, select: true });
@@ -309,6 +310,7 @@ export function applyInlineStyle(editor, applyStyle, style, shouldApply=true) {
         }
         return shouldApply ? !isApplied : isApplied;
     });
+    const changedElements = [];
     for (const textNode of textNodesToFormat) {
         // If text node ends after the end of the selection, split it and
         // keep the part that is inside.
@@ -341,6 +343,7 @@ export function applyInlineStyle(editor, applyStyle, style, shouldApply=true) {
             newParent.appendChild(textNode);
         }
         applyStyle(textNode.parentElement);
+        changedElements.push(textNode.parentElement)
     }
     if (selectedTextNodes[0] && selectedTextNodes[0].textContent === '\u200B') {
         setSelection(selectedTextNodes[0], 0);
@@ -353,6 +356,7 @@ export function applyInlineStyle(editor, applyStyle, style, shouldApply=true) {
             setSelection(lastNode, lastNode.length, firstNode, 0);
         }
     }
+    return changedElements;
 }
 const styles = {
     bold: {
@@ -374,7 +378,10 @@ const styles = {
         is: editable => isSelectionFormat(editable, 'strikeThrough'),
         name: 'textDecorationLine',
         value: 'line-through',
-    }
+    },
+    switchDirection: {
+        is: editable => isSelectionFormat(editable, 'switchDirection'),
+    },
 }
 export function toggleFormat(editor, format) {
     const selection = editor.document.getSelection();
@@ -395,6 +402,7 @@ export function toggleFormat(editor, format) {
     const selectedTextNodes = getSelectedNodes(editor.editable)
         .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length);
     const isAlreadyFormatted = style.is(editor.editable);
+    let changedElements = [];
     if (isAlreadyFormatted && style.name === 'textDecorationLine') {
         const decoratedPairs = new Set(selectedTextNodes.map(n => [closestElement(n, `[style*="text-decoration-line: ${style.value}"]`), n]));
         for (const [closestDecorated, textNode] of decoratedPairs) {
@@ -404,6 +412,7 @@ export function toggleFormat(editor, format) {
             if (!decorationToRemove.style.cssText) {
                 for (const child of decorationToRemove.childNodes) {
                     decorationToRemove.before(child);
+                    changedElements.push(child);
                 }
                 decorationToRemove.remove();
             }
@@ -426,8 +435,18 @@ export function toggleFormat(editor, format) {
         } else {
             setSelection(anchorNode, anchorOffset, focusNode, focusOffset);
         }
+    } else if (format === 'switchDirection') {
+        const defaultDirection = editor.options.direction;
+        for (const block of new Set(selectedTextNodes.map(textNode => closestBlock(textNode)))) {
+            if (isAlreadyFormatted) {
+                block.removeAttribute('dir');
+            } else {
+                block.setAttribute('dir', defaultDirection === 'ltr' ? 'rtl' : 'ltr');
+            }
+            changedElements.push(block);
+        }
     } else {
-        applyInlineStyle(editor, el => {
+        changedElements = applyInlineStyle(editor, el => {
             if (isAlreadyFormatted) {
                 const block = closestBlock(el);
                 el.style[style.name] = style.is(block) ? 'normal' : getComputedStyle(block)[style.name];
@@ -461,6 +480,7 @@ export function toggleFormat(editor, format) {
             }
         }, format, !isAlreadyFormatted);
     }
+    return changedElements;
 }
 function addColumn(editor, beforeOrAfter) {
     getDeepRange(editor.editable, { select: true }); // Ensure deep range for finding td.
@@ -549,6 +569,17 @@ export const editorCommands = {
     italic: editor => toggleFormat(editor, 'italic'),
     underline: editor => toggleFormat(editor, 'underline'),
     strikeThrough: editor => toggleFormat(editor, 'strikeThrough'),
+    switchDirection: editor => {
+        const changedElements = toggleFormat(editor, 'switchDirection');
+        for (const element of changedElements) {
+            const style = getComputedStyle(element);
+            if (style.direction === 'ltr' && style.textAlign === 'right') {
+                element.style.setProperty('text-align', 'left');
+            } else if (style.direction === 'rtl' && style.textAlign === 'left') {
+                element.style.setProperty('text-align', 'right');
+            }
+        }
+    },
     removeFormat: editor => {
         editor.document.execCommand('removeFormat');
         for (const node of getTraversedNodes(editor.editable)) {
