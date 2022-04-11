@@ -134,18 +134,24 @@ class SaleOrderLine(models.Model):
     def name_get(self):
         res = super(SaleOrderLine, self).name_get()
         with_remaining_hours = self.env.context.get('with_remaining_hours')
-        if with_remaining_hours:
+        if with_remaining_hours and any(line.remaining_hours_available for line in self):
             names = dict(res)
             result = []
-            uom_hour = self.env.ref('uom.product_uom_hour')
-            uom_day = self.env.ref('uom.product_uom_day')
+            company = self.env.company
+            encoding_uom = company.timesheet_encode_uom_id
+            is_hour = is_day = False
+            unit_label = ''
+            if encoding_uom == self.env.ref('uom.product_uom_hour'):
+                is_hour = True
+                unit_label = _('remaining')
+            elif encoding_uom == self.env.ref('uom.product_uom_day'):
+                is_day = True
+                unit_label = _('days remaining')
             for line in self:
                 name = names.get(line.id)
                 if line.remaining_hours_available:
-                    company = self.env.company
-                    encoding_uom = company.timesheet_encode_uom_id
                     remaining_time = ''
-                    if encoding_uom == uom_hour:
+                    if is_hour:
                         hours, minutes = divmod(abs(line.remaining_hours) * 60, 60)
                         round_minutes = minutes / 30
                         minutes = math.ceil(round_minutes) if line.remaining_hours >= 0 else math.floor(round_minutes)
@@ -154,15 +160,16 @@ class SaleOrderLine(models.Model):
                             hours += 1
                         else:
                             minutes = minutes * 30
-                        remaining_time = ' ({sign}{hours:02.0f}:{minutes:02.0f})'.format(
+                        remaining_time = ' ({sign}{hours:02.0f}:{minutes:02.0f} {remaining})'.format(
                             sign='-' if line.remaining_hours < 0 else '',
                             hours=hours,
-                            minutes=minutes)
-                    elif encoding_uom == uom_day:
+                            minutes=minutes,
+                            remaining=unit_label)
+                    elif is_day:
                         remaining_days = company.project_time_mode_id._compute_quantity(line.remaining_hours, encoding_uom, round=False)
                         remaining_time = ' ({qty:.02f} {unit})'.format(
                             qty=remaining_days,
-                            unit=_('days') if abs(remaining_days) > 1 else _('day')
+                            unit=unit_label
                         )
                     name = '{name}{remaining_time}'.format(
                         name=name,
