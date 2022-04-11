@@ -14,6 +14,7 @@ from odoo.exceptions import UserError
 from odoo.modules import load_information_from_description_file
 from odoo.tools import convert_file, exception_to_unicode
 from odoo.tools.osutil import tempdir
+from odoo.tools.misc import topological_sort
 
 _logger = logging.getLogger(__name__)
 
@@ -129,7 +130,17 @@ class IrModule(models.Model):
                     odoo.addons.__path__.append(module_dir)
                     z.extractall(module_dir)
                     dirs = [d for d in os.listdir(module_dir) if os.path.isdir(opj(module_dir, d))]
+
+                    dependencies_by_module = {}
                     for mod_name in dirs:
+                        path = opj(module_dir, mod_name)
+                        terp = load_information_from_description_file(mod_name, mod_path=path)
+                        dependencies_by_module[mod_name] = terp['depends']
+                    # Sort the modules so that if module A depends on module B,
+                    # B is installed before A.
+                    sorted_modules = topological_sort(dependencies_by_module)
+
+                    for mod_name in sorted_modules:
                         module_names.append(mod_name)
                         try:
                             # assert mod_name.startswith('theme_')
