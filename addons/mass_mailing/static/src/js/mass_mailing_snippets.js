@@ -265,7 +265,7 @@ options.registry.DesignTab = options.Class.extend({
                     for (const style of rule.style) {
                         const ownPriority = rule.style.getPropertyPriority(style) ? ' !important' : '';
                         if (style !== params.cssProperty) {
-                            cssTexts.push(`${style}: ${rule.style[style]}${priority || ownPriority};`);
+                            cssTexts.push(`${style}: ${rule.style[style]}${ownPriority};`);
                         }
                     }
                     cssTexts.push(`${params.cssProperty}: ${value}${priority};`);
