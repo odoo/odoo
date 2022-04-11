@@ -13,6 +13,8 @@ import re
 import tarfile
 import tempfile
 import threading
+import gettext
+
 from collections import defaultdict, namedtuple
 from datetime import datetime
 from os.path import join
@@ -358,46 +360,6 @@ def translate_sql_constraint(cr, key, lang):
     return cr.fetchone()[0]
 
 class GettextAlias(object):
-
-    def _get_db(self):
-        # find current DB based on thread/worker db name (see netsvc)
-        db_name = getattr(threading.currentThread(), 'dbname', None)
-        if db_name:
-            return odoo.sql_db.db_connect(db_name)
-
-    def _get_cr(self, frame, allow_create=True):
-        # try, in order: cr, cursor, self.env.cr, self.cr,
-        # request.env.cr
-        if 'cr' in frame.f_locals:
-            return frame.f_locals['cr'], False
-        if 'cursor' in frame.f_locals:
-            return frame.f_locals['cursor'], False
-        s = frame.f_locals.get('self')
-        if hasattr(s, 'env'):
-            return s.env.cr, False
-        if hasattr(s, 'cr'):
-            return s.cr, False
-        try:
-            from odoo.http import request
-            return request.env.cr, False
-        except RuntimeError:
-            pass
-        if allow_create:
-            # create a new cursor
-            db = self._get_db()
-            if db is not None:
-                return db.cursor(), True
-        return None, False
-
-    def _get_uid(self, frame):
-        # try, in order: uid, user, self.env.uid
-        if 'uid' in frame.f_locals:
-            return frame.f_locals['uid']
-        if 'user' in frame.f_locals:
-            return int(frame.f_locals['user'])      # user may be a record
-        s = frame.f_locals.get('self')
-        return s.env.uid
-
     def _get_lang(self, frame):
         # try, in order: context.get('lang'), kwargs['context'].get('lang'),
         # self.env.lang, self.localcontext.get('lang'), request.env.lang
@@ -421,16 +383,6 @@ class GettextAlias(object):
                     lang = request.env.lang
                 except RuntimeError:
                     pass
-            if not lang:
-                # Last resort: attempt to guess the language of the user
-                # Pitfall: some operations are performed in sudo mode, and we
-                #          don't know the original uid, so the language may
-                #          be wrong when the admin language differs.
-                (cr, dummy) = self._get_cr(frame, allow_create=False)
-                uid = self._get_uid(frame)
-                if cr and uid:
-                    env = odoo.api.Environment(cr, uid, {})
-                    lang = env['res.users'].context_get()['lang']
         return lang
 
     def __call__(self, source, *args, **kwargs):
@@ -440,44 +392,32 @@ class GettextAlias(object):
             try:
                 return translation % (args or kwargs)
             except (TypeError, ValueError, KeyError):
-                bad = translation
-                # fallback: apply to source before logging exception (in case source fails)
-                translation = source % (args or kwargs)
-                _logger.exception('Bad translation %r for string %r', bad, source)
+                _logger.exception('Bad translation %r for string %r', translation, source)
+                return source % (args or kwargs)
         return translation
 
     def _get_translation(self, source):
-        res = source
-        cr = None
-        is_new_cr = False
         try:
-            frame = inspect.currentframe()
-            if frame is None:
-                return source
-            frame = frame.f_back
-            if not frame:
-                return source
-            frame = frame.f_back
-            if not frame:
-                return source
+            frame = inspect.currentframe().f_back.f_back
             lang = self._get_lang(frame)
             if lang:
-                cr, is_new_cr = self._get_cr(frame)
-                if cr:
-                    # Try to use ir.translation to benefit from global cache if possible
-                    env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
-                    res = env['ir.translation']._get_source(None, ('code',), lang, source)
-                else:
-                    _logger.debug('no context cursor detected, skipping translation for "%r"', source)
+                path = inspect.getfile(frame)
+                while path not in odoo.addons.__path__:
+                    path, module = os.path.split(path)
+                    if path == os.path.dirname(path):   # not in a module
+                        return source
+
+                # TODO: WIP, to improve
+                lang = 'fr'
+                t = gettext.translation(module, localedir=os.path.join(path, module, 'i18n'), languages=[lang])
+                t.install()
+                return gettext.gettext(source)
             else:
                 _logger.debug('no translation language detected, skipping translation for "%r" ', source)
         except Exception:
             _logger.debug('translation went wrong for "%r", skipped', source)
                 # if so, double-check the root/base translations filenames
-        finally:
-            if cr and is_new_cr:
-                cr.close()
-        return res or ''
+        return source
 
 
 @functools.total_ordering
