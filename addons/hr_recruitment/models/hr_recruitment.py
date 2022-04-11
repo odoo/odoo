@@ -591,7 +591,7 @@ class Applicant(models.Model):
             if applicant.partner_id:
                 applicant._message_add_suggested_recipient(recipients, partner=applicant.partner_id.sudo(), reason=_('Contact'))
             elif applicant.email_from:
-                email_from = applicant.email_from
+                email_from = tools.email_normalize(applicant.email_from)
                 if applicant.partner_name:
                     email_from = tools.formataddr((applicant.partner_name, email_from))
                 applicant._message_add_suggested_recipient(recipients, email=email_from, reason=_('Contact Email'))

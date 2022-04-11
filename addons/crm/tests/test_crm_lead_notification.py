@@ -37,8 +37,8 @@ class NewLeadNotification(TestCrmCommon):
         for lead, expected_suggested in zip(
             lead_format + lead_multi + lead_from + lead_partner,
             [(False, '"New Customer" <new.customer.format@test.example.com>', None, 'Customer Email'),
-             (False, 'new.customer.multi.1@test.example.com, new.customer.2@test.example.com', None, 'Customer Email'),
-             (False, 'new.customer.simple@test.example.com', None, 'Customer Email'),
+             (False, '"Multi Name" <new.customer.multi.1@test.example.com,new.customer.2@test.example.com>', None, 'Customer Email'),
+             (False, '"Std Name" <new.customer.simple@test.example.com>', None, 'Customer Email'),
              (self.contact_1.id, '"Philip J Fry" <philip.j.fry@test.example.com>', self.contact_1.lang, 'Customer'),
             ]
         ):
