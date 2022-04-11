@@ -1205,6 +1205,10 @@ registerModel({
             compute: '_computeSuggestionSearchTerm',
         }),
         /**
+         * Reference of the textarea. Useful to set height, selection and content.
+         */
+        textareaRef: attr(),
+        /**
          * States the OWL text input component of this composer view.
          */
         textInputComponent: attr(),
