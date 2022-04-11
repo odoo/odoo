@@ -88,6 +88,30 @@
         </field>
     </record>
 
+    <record id="view_hr_timesheet_line_graph_invoice_employee" model="ir.ui.view">
+        <field name="name">account.analytic.line.graph.invoice.employee</field>
+        <field name="model">account.analytic.line</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="view_hr_timesheet_line_graph_employee_per_date"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date']" position="replace">
+                <field name="timesheet_invoice_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hr_timesheet_line_pivot_inherited" model="ir.ui.view">
+        <field name="name">account.analytic.line.pivot</field>
+        <field name="model">account.analytic.line</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="hr_timesheet.view_hr_timesheet_line_pivot"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount']" position="attributes">
+                <attribute name="type">measure</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <!--
         Timesheet from Sales Order
     -->
@@ -122,6 +146,7 @@
         <field name="search_view_id" ref="hr_timesheet.hr_timesheet_line_search"/>
         <field name="domain">[('project_id', '!=', False), ('so_line', '=', active_id)]</field>
         <field name="context">{
+            'grid_range': 'week',
             'search_default_billable_timesheet': True,
             'search_default_week': 1,
             'default_so_line': active_id,
@@ -155,7 +180,7 @@
     <record id="timesheet_action_from_sales_order_item_pivot" model="ir.actions.act_window.view">
         <field name="sequence" eval="30"/>
         <field name="view_mode">pivot</field>
-        <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_pivot"/>
+        <field name="view_id" ref="view_hr_timesheet_line_pivot_inherited"/>
         <field name="act_window_id" ref="timesheet_action_from_sales_order_item"/>
     </record>
 

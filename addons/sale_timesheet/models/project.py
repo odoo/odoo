@@ -276,7 +276,7 @@ class Project(models.Model):
             action['context'].update(search_default_groupby_timesheet_invoice_type=False, **self.env.context)
             graph_view = False
             if section_name == 'billable_time':
-                graph_view = self.env.ref('hr_timesheet.view_hr_timesheet_line_graph_all').id
+                graph_view = self.env.ref('sale_timesheet.view_hr_timesheet_line_graph_invoice_employee').id
             action['views'] = [
                 (view_id, view_type) if view_type != 'graph' else (graph_view or view_id, view_type)
                 for view_id, view_type in action['views']
@@ -440,7 +440,6 @@ class Project(models.Model):
                 if record_ids:
                     if invoice_type not in ['other_costs', 'other_revenues'] and can_see_timesheets:  # action to see the timesheets
                         action = get_timesheets_action(invoice_type, record_ids)
-                        action['context'] = json.dumps({'search_default_groupby_invoice': 1 if not cost and invoice_type == 'billable_time' else 0})
                         data['action'] = action
                 profitability_data.append(data)
             return profitability_data
@@ -459,7 +458,6 @@ class Project(models.Model):
             record_ids = aal_revenue.get('record_ids', [])
             if can_see_timesheets and record_ids:
                 action = get_timesheets_action(revenue_id, record_ids)
-                action['context'] = json.dumps({'search_default_groupby_invoice': 1 if revenue_id == 'billable_time' else 0})
                 revenue['action'] = action
 
         for cost in profitability_items['costs']['data']:
