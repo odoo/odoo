@@ -234,13 +234,15 @@ class IrActionsReport(models.Model):
             paperformat_id,
             landscape,
             specific_paperformat_args=None,
-            set_viewport_size=False):
+            set_viewport_size=False,
+            run_script=None):
         '''Build arguments understandable by wkhtmltopdf bin.
 
         :param paperformat_id: A report.paperformat record.
         :param landscape: Force the report orientation to be landscape.
         :param specific_paperformat_args: A dictionary containing prioritized wkhtmltopdf arguments.
         :param set_viewport_size: Enable a viewport sized '1024x1280' or '1280x1024' depending of landscape arg.
+        :param run_script: Run this additional javascript after the page is done loading
         :return: A list of string representing the wkhtmltopdf process command args.
         '''
         if landscape is None and specific_paperformat_args and specific_paperformat_args.get('data-report-landscape'):
@@ -250,12 +252,17 @@ class IrActionsReport(models.Model):
         if set_viewport_size:
             command_args.extend(['--viewport-size', landscape and '1024x1280' or '1280x1024'])
 
+        if run_script:
+            command_args.extend(['--run-script', run_script])
+            command_args.extend(['--debug-javascript'])
+            #command_args.extend(['--javascript-delay', '1000'])
+
         # Passing the cookie to wkhtmltopdf in order to resolve internal links.
         if request and request.db:
             command_args.extend(['--cookie', 'session_id', request.session.sid])
 
         # Less verbose error messages
-        command_args.extend(['--quiet'])
+        # command_args.extend(['--quiet'])
 
         # Build paperformat args
         if paperformat_id:
@@ -398,7 +405,8 @@ class IrActionsReport(models.Model):
             footer=None,
             landscape=False,
             specific_paperformat_args=None,
-            set_viewport_size=False):
+            set_viewport_size=False,
+            run_script=None):
         '''Execute wkhtmltopdf as a subprocess in order to convert html given in input into a pdf
         document.
 
@@ -408,6 +416,7 @@ class IrActionsReport(models.Model):
         :param landscape: Force the pdf to be rendered under a landscape format.
         :param specific_paperformat_args: dict of prioritized paperformat arguments.
         :param set_viewport_size: Enable a viewport sized '1024x1280' or '1280x1024' depending of landscape arg.
+        :param run_script: Run this additional javascript after the page is done loading
         :return: Content of the pdf as bytes
         :rtype: bytes
         '''
@@ -418,7 +427,8 @@ class IrActionsReport(models.Model):
             paperformat_id,
             landscape,
             specific_paperformat_args=specific_paperformat_args,
-            set_viewport_size=set_viewport_size)
+            set_viewport_size=set_viewport_size,
+            run_script=run_script)
 
         files_command_args = []
         temporary_files = []
@@ -760,7 +770,7 @@ class IrActionsReport(models.Model):
 
         return collected_streams
 
-    def _render_qweb_pdf(self, res_ids=None, data=None):
+    def _render_qweb_pdf(self, res_ids=None, data=None, run_script=None):
         self.ensure_one()
         if not data:
             data = {}

@@ -32,11 +32,11 @@ class IrActionsReport(models.Model):
                 }
         return collected_streams
 
-    def _render_qweb_pdf(self, res_ids=None, data=None):
+    def _render_qweb_pdf(self, res_ids=None, data=None, run_script=None):
         # Check for reports only available for invoices.
         if self.report_name in ('account.report_invoice_with_payments', 'account.report_invoice'):
             invoices = self.env['account.move'].browse(res_ids)
             if any(x.move_type == 'entry' for x in invoices):
                 raise UserError(_("Only invoices could be printed."))
 
-        return super()._render_qweb_pdf(res_ids=res_ids, data=data)
+        return super()._render_qweb_pdf(res_ids=res_ids, data=data, run_script=run_script)
