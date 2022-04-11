@@ -3584,13 +3584,15 @@ class AccountMove(models.Model):
             message, msg_vals, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang
         )
+        subtitles = [render_context['record'].name]
         if self.invoice_date_due:
-            render_context['subtitle'] = _('%(amount)s due\N{NO-BREAK SPACE}%(date)s',
+            subtitles.append(_('%(amount)s due\N{NO-BREAK SPACE}%(date)s',
                            amount=format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')),
                            date=format_date(self.env, self.invoice_date_due, date_format='short', lang_code=render_context.get('lang'))
-                          )
+                          ))
         else:
-            render_context['subtitle'] = format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang'))
+            subtitles.append(format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')))
+        render_context['subtitles'] = subtitles
         return render_context
 
     # -------------------------------------------------------------------------
