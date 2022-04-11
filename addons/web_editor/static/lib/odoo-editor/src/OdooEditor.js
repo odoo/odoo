@@ -529,10 +529,16 @@ export class OdooEditor extends EventTarget {
         for (const record of records) {
             if (record.type === 'childList') {
                 for (const node of record.addedNodes) {
+                    if (node.oIgnoreInEditor) {
+                        continue;
+                    }
                     this.idSet(node, this._checkStepUnbreakable);
                     mutatedNodes.add(node.oid);
                 }
                 for (const node of record.removedNodes) {
+                    if (node.oIgnoreInEditor) {
+                        continue;
+                    }
                     this.idSet(node, this._checkStepUnbreakable);
                     mutatedNodes.delete(node.oid);
                 }
@@ -561,6 +567,9 @@ export class OdooEditor extends EventTarget {
                 }
                 case 'childList': {
                     record.addedNodes.forEach(added => {
+                        if (added.oIgnoreInEditor) {
+                            return;
+                        }
                         this._toRollback =
                             this._toRollback ||
                             (containsUnremovable(added) && UNREMOVABLE_ROLLBACK_CODE);
@@ -583,6 +592,9 @@ export class OdooEditor extends EventTarget {
                         this._currentStep.mutations.push(mutation);
                     });
                     record.removedNodes.forEach(removed => {
+                        if (removed.oIgnoreInEditor) {
+                            return;
+                        }
                         if (!this._toRollback && containsUnremovable(removed)) {
                             this._toRollback = UNREMOVABLE_ROLLBACK_CODE;
                         }
@@ -612,23 +624,49 @@ export class OdooEditor extends EventTarget {
         const filteredRecords = [];
 
         for (const record of records) {
-            if (record.type === 'attributes') {
-                // Skip the attributes change on the dom.
-                if (record.target === this.editable) continue;
-                if (record.attributeName === 'contenteditable') {
-                    continue;
+            switch (record.type) {
+                case 'characterData': {
+                    if (record.target.oIgnoreInEditor) continue;
+                    break;
                 }
+                case 'attributes': {
+                    // Skip the attributes change on the dom.
+                    if (record.target === this.editable || record.target.oIgnoreInEditor) continue;
+                    if (record.attributeName === 'contenteditable') {
+                        continue;
+                    }
 
-                attributeCache.set(record.target, attributeCache.get(record.target) || {});
-                if (
-                    typeof attributeCache.get(record.target)[record.attributeName] === 'undefined'
-                ) {
-                    const oldValue = record.oldValue === undefined ? null : record.oldValue;
-                    attributeCache.get(record.target)[record.attributeName] =
-                        oldValue !== record.target.getAttribute(record.attributeName);
+                    attributeCache.set(record.target, attributeCache.get(record.target) || {});
+                    if (
+                        typeof attributeCache.get(record.target)[record.attributeName] === 'undefined'
+                    ) {
+                        const oldValue = record.oldValue === undefined ? null : record.oldValue;
+                        attributeCache.get(record.target)[record.attributeName] =
+                            oldValue !== record.target.getAttribute(record.attributeName);
+                    }
+                    if (!attributeCache.get(record.target)[record.attributeName]) {
+                        continue;
+                    }
+                    break;
                 }
-                if (!attributeCache.get(record.target)[record.attributeName]) {
-                    continue;
+                case 'childList': {
+                    let ignoreInEditor = true;
+                    for (const node of record.addedNodes) {
+                        if (!node.oIgnoreInEditor) {
+                            ignoreInEditor = false;
+                            break;
+                        }
+                    }
+                    for (const node of record.removedNodes) {
+                        if (!node.oIgnoreInEditor) {
+                            ignoreInEditor = false;
+                            break;
+                        }
+                    }
+                    if (ignoreInEditor) {
+                        continue;
+                    }
+                    break;
                 }
             }
             filteredRecords.push(record);
@@ -687,6 +725,7 @@ export class OdooEditor extends EventTarget {
         this._handleCommandHint();
         this.multiselectionRefresh();
         this.observerActive();
+        this.dispatchEvent(new CustomEvent('collaborativeHistorySteps'));
     }
     historyGetMissingSteps({fromStepId, toStepId}) {
         const fromIndex = this._historySteps.findIndex(x => x.id === fromStepId);
@@ -1010,7 +1049,9 @@ export class OdooEditor extends EventTarget {
                 focusNode: undefined,
                 focusOffset: undefined,
             },
-            mutations: Array.from(this.editable.childNodes).map(node => ({
+            mutations: Array.from(this.editable.childNodes)
+                            .filter(node => !node.oIgnoreInEditor)
+                            .map(node => ({
                 type: 'add',
                 append: 1,
                 id: node.oid,
@@ -1128,6 +1169,7 @@ export class OdooEditor extends EventTarget {
         this.historyResetLatestComputedSelection();
         this._handleCommandHint();
         this.multiselectionRefresh();
+        this.dispatchEvent(new CustomEvent('collaborativeHistorySteps'));
     }
 
     // Multi selection

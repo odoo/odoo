@@ -19,7 +19,7 @@ export function serializeNode(node, nodesToStripFromChildren = new Set()) {
         }
         let child = node.firstChild;
         while (child) {
-            if (!nodesToStripFromChildren.has(child.oid)) {
+            if (!nodesToStripFromChildren.has(child.oid) && !child.oIgnoreInEditor) {
                 result.children.push(serializeNode(child, nodesToStripFromChildren));
             }
             child = child.nextSibling;

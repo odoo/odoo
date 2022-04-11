@@ -52,6 +52,7 @@ FieldHtml.include({
          * after the refreshInjector without setTimeout.
          */
         const refreshInjector = () => setTimeout(this.refreshInjector.bind(this));
+        this.wysiwyg.odooEditor.addEventListener('collaborativeHistorySteps', refreshInjector);
         this.wysiwyg.odooEditor.addEventListener('historyUndo', refreshInjector);
         this.wysiwyg.odooEditor.addEventListener('historyRedo', refreshInjector);
         this.$content[0].addEventListener('paste', refreshInjector);

@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { ignoreInEditor } from '@web_editor/../lib/odoo-editor/src/OdooEditor';
 import { KnowledgeToolbar } from './knowledge_toolbars';
 
 /**
@@ -32,5 +33,15 @@ KnowledgeToolbar.include({
         if (this.mode === 'edit') {
             this.editor.observerActive();
         }
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        if (this.mode === 'edit') {
+            this.editor.idSet(this.el);
+            ignoreInEditor(this.el);
+        }
+        return this._super.apply(this, arguments);
     },
 });

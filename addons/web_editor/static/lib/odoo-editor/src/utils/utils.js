@@ -1396,6 +1396,20 @@ export function isColorGradient(value) {
 //------------------------------------------------------------------------------
 
 /**
+ * Ignore the node and all of its children for mutations and serialization.
+ *
+ * @param {Node} node
+ */
+export function ignoreInEditor(node) {
+    node.oIgnoreInEditor = true;
+    let childNode = node.firstChild;
+    while (childNode) {
+        ignoreInEditor(childNode);
+        childNode = childNode.nextSibling;
+    }
+}
+
+/**
  * Splits a text node in two parts.
  * If the split occurs at the beginning or the end, the text node stays
  * untouched and unsplit. If a split actually occurs, the original text node
