@@ -888,6 +888,59 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
             assert.verifySteps(["willUnmount", "willDestroy"]);
         });
 
+        QUnit.test("sub component hooks are correctly called when appended in iframe", async function (assert) {
+            assert.expect(13);
+
+            class MyComponent extends LegacyComponent {
+                setup() {
+                    assert.step("setup");
+                    onWillStart(() => {
+                        assert.step("willStart");
+                    });
+                    onMounted(() => {
+                        assert.step("mounted");
+                    });
+                    onWillUnmount(() => {
+                        assert.step("willUnmount");
+                    });
+                    onWillDestroy(() => {
+                        assert.step("willDestroy");
+                    });
+                }
+            }
+            MyComponent.template = xml`<div>Component</div>`;
+            const MyWidget = WidgetAdapter.extend({
+                start() {
+                    const component = new ComponentWrapper(this, MyComponent, {});
+                    return component.mount(this.el);
+                },
+            });
+
+            const widget = new MyWidget();
+            const target = testUtils.prepareTarget();
+            const iframe = document.createElement("iframe");
+            target.appendChild(iframe);
+            await widget.appendTo(iframe.contentWindow.document.body);
+
+            assert.verifySteps(["setup", "willStart", "mounted"]);
+            assert.strictEqual(widget.el.innerHTML, "<div>Component</div>");
+
+            widget.$el.detach();
+            widget.on_detach_callback();
+
+            assert.verifySteps(["willUnmount"]);
+
+            widget.$el.appendTo(iframe.contentWindow.document.body);
+            widget.on_attach_callback();
+
+            assert.verifySteps(["mounted"]);
+            assert.strictEqual(widget.el.innerHTML, "<div>Component</div>");
+
+            widget.destroy();
+
+            assert.verifySteps(["willUnmount", "willDestroy"]);
+        });
+
         QUnit.test("lifecycle with several sub components", async function (assert) {
             assert.expect(21);
 
