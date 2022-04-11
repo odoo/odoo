@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
+from collections import OrderedDict
 from random import randint, sample
 from werkzeug.exceptions import NotFound, Forbidden
 
@@ -72,12 +73,14 @@ class ExhibitorController(WebsiteEventController):
 
         # fetch data to display; use sudo to allow reading partner info, be sure domain is correct
         event = event.with_context(tz=event.date_tz or 'UTC')
-        sponsors = request.env['event.sponsor'].sudo().search(search_domain)
+        sponsors = request.env['event.sponsor'].sudo().search(
+            search_domain
+        ).sorted(lambda sponsor: (sponsor.sponsor_type_id.sequence, sponsor.sequence))
         sponsors_all = request.env['event.sponsor'].sudo().search(search_domain_base)
         sponsor_types = sponsors_all.mapped('sponsor_type_id')
         sponsor_countries = sponsors_all.mapped('partner_id.country_id').sorted('name')
         # organize sponsors into categories to help display
-        sponsor_categories_dict = dict()
+        sponsor_categories_dict = OrderedDict()
         sponsor_categories = []
         is_event_user = request.env.user.has_group('event.group_event_registration_desk')
         for sponsor in sponsors:
