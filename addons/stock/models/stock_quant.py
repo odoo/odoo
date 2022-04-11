@@ -284,10 +284,12 @@ class StockQuant(models.Model):
             'domain': [('location_id.usage', 'in', ['internal', 'transit'])],
             'help': """
                 <p class="o_view_nocontent_smiling_face">
-                    Your stock is currently empty
+                    {}
                 </p><p>
-                    Press the CREATE button to define quantity for each product in your stock or import them from a spreadsheet throughout Favorites <span class="fa fa-long-arrow-right"/> Import</p>
-                """
+                    {} <span class="fa fa-long-arrow-right"/> {}</p>
+                """.format(_('Your stock is currently empty'),
+                           _('Press the CREATE button to define quantity for each product in your stock or import them from a spreadsheet throughout Favorites'),
+                           _('Import')),
         }
         return action
 
@@ -854,10 +856,10 @@ class StockQuant(models.Model):
             'context': ctx,
             'domain': domain or [],
             'help': """
-                <p class="o_view_nocontent_empty_folder">No Stock On Hand</p>
-                <p>This analysis gives you an overview of the current stock
-                level of your products.</p>
-                """
+                <p class="o_view_nocontent_empty_folder">{}</p>
+                <p>{}</p>
+                """.format(_('No Stock On Hand'),
+                           _('This analysis gives you an overview of the current stock level of your products.')),
         }
 
         target_action = self.env.ref('stock.dashboard_open_quants', False)
