@@ -227,9 +227,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickEmoji(ev) {
-            if (this.textInputComponent) {
-                this.textInputComponent.saveStateInStore();
-            }
+            this.saveStateInStore();
             this.insertIntoTextInput(ev.currentTarget.dataset.unicode);
             if (!this.messaging.device.isMobileDevice) {
                 this.update({ doFocus: true });
@@ -552,6 +550,17 @@ registerModel({
                     composer.update({ isPostingMessage: false });
                 }
             }
+        },
+        /**
+         * Saves the composer text input state in store
+         */
+        saveStateInStore() {
+            this.composer.update({
+                textInputContent: this.textareaRef.el.value,
+                textInputCursorEnd: this.textareaRef.el.selectionEnd,
+                textInputCursorStart: this.textareaRef.el.selectionStart,
+                textInputSelectionDirection: this.textareaRef.el.selectionDirection,
+            });
         },
         /**
          * Send a message in the composer on related thread.
@@ -1389,10 +1398,6 @@ registerModel({
          * Reference of the textarea. Useful to set height, selection and content.
          */
         textareaRef: attr(),
-        /**
-         * States the OWL text input component of this composer view.
-         */
-        textInputComponent: attr(),
         /**
          * States the thread view on which this composer allows editing (if any).
          */

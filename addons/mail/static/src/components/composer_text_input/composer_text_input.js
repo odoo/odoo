@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdate } from '@mail/component_hooks/use_update';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
@@ -14,7 +13,6 @@ export class ComposerTextInput extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'textInputComponent', modelName: 'ComposerView' });
         useRefToModel({ fieldName: 'mirroredTextareaRef', modelName: 'ComposerView', refName: 'mirroredTextarea' });
         useRefToModel({ fieldName: 'textareaRef', modelName: 'ComposerView', refName: 'textarea' });
         /**
@@ -38,18 +36,6 @@ export class ComposerTextInput extends Component {
      */
     get composerView() {
         return this.messaging && this.messaging.models['ComposerView'].get(this.props.localId);
-    }
-
-    /**
-     * Saves the composer text input state in store
-     */
-    saveStateInStore() {
-        this.composerView.composer.update({
-            textInputContent: this.composerView.textareaRef.el.value,
-            textInputCursorEnd: this.composerView.textareaRef.el.selectionEnd,
-            textInputCursorStart: this.composerView.textareaRef.el.selectionStart,
-            textInputSelectionDirection: this.composerView.textareaRef.el.selectionDirection,
-        });
     }
 
     //--------------------------------------------------------------------------
@@ -121,7 +107,7 @@ export class ComposerTextInput extends Component {
             return;
         }
         // clicking might change the cursor position
-        this.saveStateInStore();
+        this.composerView.saveStateInStore();
     }
 
     /**
@@ -131,7 +117,7 @@ export class ComposerTextInput extends Component {
         if (!this.composerView) {
             return;
         }
-        this.saveStateInStore();
+        this.composerView.saveStateInStore();
         this.composerView.update({ isFocused: false });
     }
 
@@ -142,7 +128,7 @@ export class ComposerTextInput extends Component {
         if (!this.composerView) {
             return;
         }
-        this.saveStateInStore();
+        this.composerView.saveStateInStore();
         if (this._textareaLastInputValue !== this.composerView.textareaRef.el.value) {
             this.composerView.handleCurrentPartnerIsTyping();
         }
@@ -235,7 +221,7 @@ export class ComposerTextInput extends Component {
                 break;
             // Otherwise, check if a mention is typed
             default:
-                this.saveStateInStore();
+                this.composerView.saveStateInStore();
         }
     }
 
