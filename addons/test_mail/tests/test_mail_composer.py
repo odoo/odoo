@@ -18,7 +18,7 @@ from odoo.fields import Datetime as FieldDatetime
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tests.common import users, Form
-from odoo.tools import mute_logger, formataddr
+from odoo.tools import email_normalize, mute_logger, formataddr
 
 
 @tagged('mail_composer')
@@ -1814,6 +1814,10 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
         self.assertMailMail(
             self.partner_1 + self.partner_2 + mailed_new_partners, 'sent',
             author=self.partner_employee,
+            email_to_recipients=[
+                [self.partner_1.email_formatted],
+                [f'"{self.partner_2.name}" <valid.other.1@agrolait.com>', f'"{self.partner_2.name}" <valid.other.cc@agrolait.com>'],
+            ] + [[email] for email in mailed_new_partners.mapped('email_formatted')],
             email_values={
                 'body_content': f'TemplateBody {self.test_record.name}',
                 'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com,email.from.2@test.example.com')),
@@ -2185,7 +2189,7 @@ class TestComposerResultsMass(TestMailComposer):
                     # to ease translations checks.
                     sent_mail = self._find_sent_email(
                         self.partner_employee_2.email_formatted,
-                        [formataddr((record.customer_id.name, record.customer_id.email))]
+                        [formataddr((record.customer_id.name, email_normalize(record.customer_id.email, strict=False)))]
                     )
                     debug_info = ''
                     if not sent_mail:
@@ -2473,6 +2477,10 @@ class TestComposerResultsMass(TestMailComposer):
                 self.partner_1 + self.partner_2 + mailed_new_partners,
                 'sent',
                 author=self.partner_employee,
+                email_to_recipients=[
+                    [self.partner_1.email_formatted],
+                    [f'"{self.partner_2.name}" <valid.other.1@agrolait.com>', f'"{self.partner_2.name}" <valid.other.cc@agrolait.com>'],
+                ] + [[email] for email in mailed_new_partners.mapped('email_formatted')],
                 email_values={
                     'body_content': f'TemplateBody {record.name}',
                     # currently holding multi-email 'email_from'
