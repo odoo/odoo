@@ -12,6 +12,18 @@
                          data-reload="/"/>
         </div>
     </xpath>
+    <xpath expr="//we-button[hasclass('o_we_add_to_cart_btn')]" position="after">
+        <we-button title="Wishlist" class="fa fa-fw fa-heart"
+                   data-customize-website-views="website_sale_wishlist.add_to_wishlist"
+                   data-no-preview="true"
+                   data-reload="/"/>
+    </xpath>
+    <xpath expr="//we-button[hasclass('o_we_buy_now_btn')]" position="after">
+        <we-button title="Wishlist" class="fa fa-fw fa-heart"
+                   data-customize-website-views="website_sale_wishlist.product_add_to_wishlist"
+                   data-no-preview="true"
+                   data-reload="/"/>
+    </xpath>
 </template>
 
 </odoo>

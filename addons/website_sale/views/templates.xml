@@ -203,7 +203,7 @@
         </form>
     </template>
 
-    <template id="products_description" inherit_id="website_sale.products_item" active="False" customize_show="True" name="Product Description">
+    <template id="products_description" inherit_id="website_sale.products_item" active="False" name="Product Description">
         <xpath expr="//*[hasclass('o_wsale_products_item_title')]" position="after">
             <div class="oe_subdescription mb-2 text-muted small" contenteditable="false">
                 <div itemprop="description" t-field="product.description_sale"/>
@@ -211,7 +211,7 @@
         </xpath>
     </template>
 
-    <template id="products_add_to_cart" inherit_id="website_sale.products_item" active="False" customize_show="True" name="Add to Cart">
+    <template id="products_add_to_cart" inherit_id="website_sale.products_item" active="False" name="Add to Cart">
         <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="inside">
             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
             <input name="product_id" t-att-value="product_variant_id" type="hidden"/>
@@ -263,7 +263,7 @@
             <t t-set="additional_title">Shop</t>
             <t t-set="grid_block_name">Grid</t>
             <t t-set="product_block_name">Product</t>
-            <div id="wrap" class="js_sale">
+            <div id="wrap" class="js_sale o_wsale_products_page">
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_products_1"/>
                 <div class="container oe_website_sale pt-2">
                     <div class="row o_wsale_products_main_row">
@@ -383,7 +383,7 @@
         </xpath>
     </template>
 
-    <template id="sort" inherit_id="website_sale.products" customize_show="True" name="Show Sort by">
+    <template id="sort" inherit_id="website_sale.products" name="Show Sort by">
         <xpath expr="//div[hasclass('products_header')]/t[@t-call='website_sale.pricelist_list']" position="after">
             <t t-set="website_sale_sortable" t-value="website._get_product_sort_mapping()"/>
             <t t-set="website_sale_sortable_current" t-value="[sort for sort in website_sale_sortable if sort[0]==request.params.get('order', '')]"/>
@@ -411,7 +411,7 @@
         </xpath>
     </template>
 
-    <template id="add_grid_or_list_option" inherit_id="website_sale.products" active="True" customize_show="True" name="Grid or List button">
+    <template id="add_grid_or_list_option" inherit_id="website_sale.products" active="True" name="Grid or List button">
         <xpath expr="//div[hasclass('products_header')]" position="inside">
             <div class="btn-group btn-group-toggle ml-3 mb-2 d-inline-flex o_wsale_apply_layout" data-toggle="buttons">
                 <label t-attf-class="btn btn-light border-0 #{'active' if layout_mode != 'list' else None} fa fa-th-large o_wsale_apply_grid" title="Grid">
@@ -445,7 +445,7 @@
         </div>
     </template>
 
-    <template id="products_categories" inherit_id="website_sale.products" active="False" customize_show="True" name="eCommerce Categories">
+    <template id="products_categories" inherit_id="website_sale.products" active="False" name="eCommerce Categories">
         <xpath expr="//div[@id='products_grid_before']" position="before">
             <t t-set="enable_left_column" t-value="True"/>
         </xpath>
@@ -493,7 +493,7 @@
         </li>
     </template>
 
-    <template id="option_collapse_products_categories" name="Collapsible Category List" inherit_id="website_sale.products_categories" active="False" customize_show="True">
+    <template id="option_collapse_products_categories" name="Collapsible Category List" inherit_id="website_sale.products_categories" active="False">
         <xpath expr="//div[@id='wsale_products_categories_collapse']/ul" position="attributes">
             <attribute name="id">o_shop_collapse_category</attribute>
         </xpath>
@@ -502,7 +502,7 @@
         </xpath>
     </template>
 
-    <template id="products_attributes" inherit_id="website_sale.products" active="False" customize_show="True" name="Attributes &amp; Variants filters">
+    <template id="products_attributes" inherit_id="website_sale.products" active="False" name="Attributes &amp; Variants filters">
         <xpath expr="//div[@id='products_grid_before']" position="before">
             <t t-set="enable_left_column" t-value="True"/>
         </xpath>
@@ -557,10 +557,7 @@
         </xpath>
     </template>
 
-    <template id="filter_products_price" inherit_id="website_sale.products" active="False" customize_show="True" name="Filter by Prices">
-        <xpath expr="//div[@id='products_grid_before']" position="before">
-            <t t-set="enable_left_column" t-value="True"/>
-        </xpath>
+    <template id="filter_products_price" inherit_id="website_sale.products" active="False" name="Filter by Prices">
         <xpath expr="//div[@id='products_grid_before']" position="inside">
             <div t-if="available_min_price != available_max_price" id="o_wsale_price_range_option">
                 <label class="m-0 h6 o_products_attributes_title">
@@ -575,7 +572,7 @@
         </xpath>
     </template>
 
-    <template id="products_list_view" inherit_id="website_sale.products" active="False" customize_show="True" name="List View (by default)">
+    <template id="products_list_view" inherit_id="website_sale.products" active="False" name="List View (by default)">
         <xpath expr="//div[@id='products_grid']" position="after">
             <!-- Nothing to do, this view is only meant to allow the server -->
             <!-- to know if the list view layout should be used -->
@@ -598,7 +595,7 @@
 
         <t t-call="website.layout">
             <t t-set="additional_title" t-value="product.name" />
-            <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale">
+            <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale o_wsale_product_page">
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_product_1" data-editor-message="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"/>
                 <section t-attf-class="container py-4 oe_website_sale #{'discount' if combination_info['has_discounted_price'] else ''}" id="product_detail"
                     t-att-data-view-track="view_track and '1' or '0'"
@@ -715,7 +712,7 @@
     </t>
     </template>
 
-    <template id="product_custom_text" inherit_id="website_sale.product" active="True" customize_show="True" name="Terms and Conditions" priority="21">
+    <template id="product_custom_text" inherit_id="website_sale.product" active="True" name="Terms and Conditions" priority="21">
         <xpath expr="//div[@id='o_product_terms_and_share']" position="inside">
             <p class="text-muted mb-0">
                 <a href="/terms" class="text-muted"><u>Terms and Conditions</u></a><br/>
@@ -725,7 +722,7 @@
         </xpath>
     </template>
 
-    <template id="product_share_buttons" inherit_id="website_sale.product" active="True" customize_show="True" name="Share Buttons" priority="22">
+    <template id="product_share_buttons" inherit_id="website_sale.product" active="True" name="Share Buttons" priority="22">
         <xpath expr="//div[@id='o_product_terms_and_share']" position="inside">
             <div class="h4 mt-3 mb-0 d-flex justify-content-md-end flex-shrink-0" contenteditable="false">
                 <t t-snippet-call="website.s_share">
@@ -738,13 +735,13 @@
         </xpath>
     </template>
 
-    <template inherit_id='website_sale.product' id="product_picture_magnify" customize_show="True" name="Image Zoom">
+    <template inherit_id='website_sale.product' id="product_picture_magnify" name="Image Zoom">
         <xpath expr='//div[hasclass("js_sale")]' position='attributes'>
             <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-next" />
         </xpath>
     </template>
 
-    <template inherit_id='website_sale.product' id="product_picture_magnify_auto" active="False" customize_show="True" name="Automatic Image Zoom">
+    <template inherit_id='website_sale.product' id="product_picture_magnify_auto" active="False" name="Automatic Image Zoom">
         <xpath expr='//div[hasclass("js_sale")]' position='attributes'>
             <attribute name="data-ecom-zoom-auto">1</attribute>
             <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-next" />
@@ -752,7 +749,7 @@
         </xpath>
     </template>
 
-    <template id="recommended_products" inherit_id="website_sale.product" customize_show="True" name="Alternative Products">
+    <template id="recommended_products" inherit_id="website_sale.product" name="Alternative Products">
         <xpath expr="//div[@id='product_full_description']" position="after">
             <t t-set="alternative_products" t-value="product._get_website_alternative_product()"/>
             <div t-if="alternative_products" class="container mt32">
@@ -783,7 +780,7 @@
     </template>
 
     <!-- Product options: OpenChatter -->
-    <template id="product_comment" inherit_id="website_sale.product" active="False" customize_show="True" name="Discussion and Rating" priority="15">
+    <template id="product_comment" inherit_id="website_sale.product" active="False" name="Discussion and Rating" priority="15">
         <xpath expr="//div[@t-field='product.website_description']" position="after">
             <div class="o_shop_discussion_rating" data-anchor='true'>
                 <section id="o_product_page_reviews" class="container pt32 pb32" data-anchor='true'>
@@ -804,7 +801,7 @@
         </xpath>
     </template>
 
-    <template id="product_quantity" inherit_id="website_sale.product" customize_show="True" name="Select Quantity">
+    <template id="product_quantity" inherit_id="website_sale.product" name="Select Quantity">
         <xpath expr="//t[@t-set='hasQuantities']" position="attributes">
             <attribute name="t-value" remove="false" add="true" separator=" "/>
         </xpath>
@@ -825,7 +822,7 @@
       </xpath>
     </template>
 
-    <template id="product_buy_now" inherit_id="website_sale.product" active="False" customize_show="True" name="Buy Now Button">
+    <template id="product_buy_now" inherit_id="website_sale.product" active="False" name="Buy Now Button">
         <xpath expr="//t[@t-set='hasBuyNow']" position="attributes">
             <attribute name="t-value" remove="false" add="true" separator=" "/>
         </xpath>
@@ -874,7 +871,7 @@
         </div>
     </template>
 
-    <template id="product_variants" inherit_id="website_sale.product" active="False" customize_show="True" name="List View of Variants">
+    <template id="product_variants" inherit_id="website_sale.product" active="False" name="List View of Variants">
         <xpath expr="//t[@t-placeholder='select']" position="replace">
             <!--
                 Using this setting with dynamic variants is not supported.
@@ -1018,7 +1015,7 @@
         </t>
     </template>
 
-    <template id="extra_info_option" name="Extra Step Option" inherit_id="wizard_checkout" active="False" customize_show="True">
+    <template id="extra_info_option" name="Extra Step Option" inherit_id="wizard_checkout" active="False">
         <!-- Add a "flag element" to trigger style variation -->
         <xpath expr="//div[hasclass('wizard')]/div" position="before">
             <span class="o_wizard_has_extra_step d-none"/>
@@ -1268,7 +1265,7 @@
         </t>
     </template>
 
-    <template id="suggested_products_list" inherit_id="website_sale.cart_lines" customize_show="True" name="Alternative Products in my cart">
+    <template id="suggested_products_list" inherit_id="website_sale.cart_lines" name="Alternative Products in my cart">
         <xpath expr="//table[@id='cart_products']" position="after">
             <h5 class='text-muted js_cart_lines' t-if="suggested_products">Suggested Accessories:</h5>
             <table t-if="suggested_products" id="suggested_products" class="js_cart_lines table table-striped table-sm">
@@ -1582,7 +1579,7 @@
         </t>
     </template>
 
-    <template id="address_b2b" inherit_id="address" name="Show b2b fields" customize_show="True">
+    <template id="address_b2b" inherit_id="address" name="Show b2b fields">
         <xpath expr="//div[@id='div_phone']" position="after">
             <div class="w-100"/>
             <t t-set='vat_warning' t-value="'vat' in checkout and checkout['vat'] and not can_edit_vat" />
@@ -1710,7 +1707,7 @@
         </div>
     </template>
 
-    <template id="payment_sale_note" inherit_id="payment_footer" name="Accept Terms &amp; Conditions" customize_show="True" active="False">
+    <template id="payment_sale_note" inherit_id="payment_footer" name="Accept Terms &amp; Conditions" active="False">
         <xpath expr="//div[@name='o_checkbox_container']" position="inside">
             <input type="checkbox" id="checkbox_tc" class="custom-control-input"/>
             <label for="checkbox_tc" class="custom-control-label">
@@ -1905,7 +1902,7 @@
         </div>
     </template>
 
-    <template id="reduction_code" inherit_id="website_sale.total" customize_show="True" name="Promo Code">
+    <template id="reduction_code" inherit_id="website_sale.total" name="Promo Code">
         <xpath expr="//div[@id='cart_total']//table/tr[last()]" position="after">
             <tr t-if="not hide_promotions">
                 <td colspan="3" class="text-center text-xl-right border-0">
@@ -1992,7 +1989,7 @@
 
     <template id="website_sale.shop_product_carousel" name="Shop Product Carousel">
         <t t-set="product_images" t-value="product_variant._get_images() if product_variant else product._get_images()"/>
-        <t t-set="product_carousel_block_name">Product Carousel</t>
+        <t t-set="product_carousel_block_name">Product Image</t>
         <div id="o-carousel-product" class="carousel slide position-sticky mb-3 overflow-hidden" data-ride="carousel" data-interval="0" t-att-data-name="product_carousel_block_name">
             <div class="o_carousel_product_outer carousel-outer position-relative flex-grow-1">
                 <div class="carousel-inner h-100">

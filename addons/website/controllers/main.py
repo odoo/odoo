@@ -606,13 +606,6 @@ class Website(Home):
         views = views.sorted(key=lambda v: (v.inherit_id.id, v.name))
         return views.with_context(display_website=False).read(['name', 'id', 'key', 'xml_id', 'active', 'inherit_id'])
 
-    @http.route('/website/toggle_switchable_view', type='json', auth='user', website=True)
-    def toggle_switchable_view(self, view_key):
-        if request.website.user_has_groups('website.group_website_designer'):
-            request.website.viewref(view_key).toggle_active()
-        else:
-            return werkzeug.exceptions.Forbidden()
-
     @http.route('/website/reset_template', type='http', auth='user', methods=['POST'], website=True, csrf=False)
     def reset_template(self, view_id, mode='soft', redirect='/', **kwargs):
         """ This method will try to reset a broken view.

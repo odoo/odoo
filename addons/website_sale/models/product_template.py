@@ -36,8 +36,8 @@ class ProductTemplate(models.Model):
     public_categ_ids = fields.Many2many(
         'product.public.category', relation='product_public_category_product_template_rel',
         string='Website Product Category',
-        help="The product will be available in each mentioned eCommerce category. Go to Shop > "
-             "Customize and enable 'eCommerce categories' to view all eCommerce categories.")
+        help="The product will be available in each mentioned eCommerce category. Go to Shop > Edit "
+             "Click on the page and enable 'Categories' to view all eCommerce categories.")
 
     product_template_image_ids = fields.One2many('product.image', 'product_tmpl_id', string="Extra Product Media", copy=True)
 

@@ -297,6 +297,19 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async updateUIVisibility() {
+        await this._super(...arguments);
+        const pprSelector = this.el.querySelector('.o_wsale_ppr_submenu.d-none');
+        this.el.querySelector('.o_wsale_ppr_by').classList.toggle('d-none', pprSelector);
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
