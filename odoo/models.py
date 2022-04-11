@@ -2747,13 +2747,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for name, field in cls._fields.items():
             try:
                 field.setup_full(self)
-            except Exception:
+            except Exception as e:
                 if field.base_field.manual:
                     # Something goes wrong when setup a manual field.
                     # This can happen with related fields using another manual many2one field
                     # that hasn't been loaded because the comodel does not exist yet.
                     # This can also be a manual function field depending on not loaded fields yet.
                     bad_fields.append(name)
+                    _logger.warning(e)
                     continue
                 raise
 
