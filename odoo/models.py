@@ -1831,7 +1831,7 @@ class BaseModel(metaclass=MetaModel):
         """
         names = dict(self.name_get())
         for record in self:
-            record.display_name = names.get(record.id) or False
+            record.display_name = names.get(record.id)
 
     def name_get(self):
         """Returns a textual representation for the records in ``self``, with
