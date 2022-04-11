@@ -22,181 +22,12 @@ QUnit.module("Fields", (hooks) => {
                     fields: {
                         date: { string: "A date", type: "date", searchable: true },
                         datetime: { string: "A datetime", type: "datetime", searchable: true },
-                        display_name: { string: "Displayed name", type: "char", searchable: true },
-                        foo: {
-                            string: "Foo",
-                            type: "char",
-                            default: "My little Foo Value",
-                            searchable: true,
-                            trim: true,
-                        },
-                        bar: { string: "Bar", type: "boolean", default: true, searchable: true },
-                        empty_string: {
-                            string: "Empty string",
-                            type: "char",
-                            default: false,
-                            searchable: true,
-                            trim: true,
-                        },
-                        txt: {
-                            string: "txt",
-                            type: "text",
-                            default: "My little txt Value\nHo-ho-hoooo Merry Christmas",
-                        },
-                        int_field: {
-                            string: "int_field",
-                            type: "integer",
-                            sortable: true,
-                            searchable: true,
-                        },
-                        qux: { string: "Qux", type: "float", digits: [16, 1], searchable: true },
-                        p: {
-                            string: "one2many field",
-                            type: "one2many",
-                            relation: "partner",
-                            searchable: true,
-                        },
-                        trululu: {
-                            string: "Trululu",
-                            type: "many2one",
-                            relation: "partner",
-                            searchable: true,
-                        },
-                        timmy: {
-                            string: "pokemon",
-                            type: "many2many",
-                            relation: "partner_type",
-                            searchable: true,
-                        },
-                        product_id: {
-                            string: "Product",
-                            type: "many2one",
-                            relation: "product",
-                            searchable: true,
-                        },
-                        sequence: { type: "integer", string: "Sequence", searchable: true },
-                        currency_id: {
-                            string: "Currency",
-                            type: "many2one",
-                            relation: "currency",
-                            searchable: true,
-                        },
-                        selection: {
-                            string: "Selection",
-                            type: "selection",
-                            searchable: true,
-                            selection: [
-                                ["normal", "Normal"],
-                                ["blocked", "Blocked"],
-                                ["done", "Done"],
-                            ],
-                        },
-                        document: { string: "Binary", type: "binary" },
-                        hex_color: { string: "hexadecimal color", type: "char" },
                     },
                     records: [
                         {
                             id: 1,
                             date: "2017-02-03",
                             datetime: "2017-02-08 10:00:00",
-                            display_name: "first record",
-                            bar: true,
-                            foo: "yop",
-                            int_field: 10,
-                            qux: 0.44444,
-                            p: [],
-                            timmy: [],
-                            trululu: 4,
-                            selection: "blocked",
-                            document: "coucou==\n",
-                            hex_color: "#ff0000",
-                        },
-                        {
-                            id: 2,
-                            display_name: "second record",
-                            bar: true,
-                            foo: "blip",
-                            int_field: 0,
-                            qux: 0,
-                            p: [],
-                            timmy: [],
-                            trululu: 1,
-                            sequence: 4,
-                            currency_id: 2,
-                            selection: "normal",
-                        },
-                        {
-                            id: 4,
-                            display_name: "aaa",
-                            foo: "abc",
-                            sequence: 9,
-                            int_field: false,
-                            qux: false,
-                            selection: "done",
-                        },
-                        { id: 3, bar: true, foo: "gnap", int_field: 80, qux: -3.89859 },
-                        { id: 5, bar: false, foo: "blop", int_field: -4, qux: 9.1, currency_id: 1 },
-                    ],
-                    onchanges: {},
-                },
-                product: {
-                    fields: {
-                        name: { string: "Product Name", type: "char", searchable: true },
-                    },
-                    records: [
-                        {
-                            id: 37,
-                            display_name: "xphone",
-                        },
-                        {
-                            id: 41,
-                            display_name: "xpad",
-                        },
-                    ],
-                },
-                partner_type: {
-                    fields: {
-                        name: { string: "Partner Type", type: "char", searchable: true },
-                        color: { string: "Color index", type: "integer", searchable: true },
-                    },
-                    records: [
-                        { id: 12, display_name: "gold", color: 2 },
-                        { id: 14, display_name: "silver", color: 5 },
-                    ],
-                },
-                currency: {
-                    fields: {
-                        digits: { string: "Digits" },
-                        symbol: { string: "Currency Sumbol", type: "char", searchable: true },
-                        position: { string: "Currency Position", type: "char", searchable: true },
-                    },
-                    records: [
-                        {
-                            id: 1,
-                            display_name: "$",
-                            symbol: "$",
-                            position: "before",
-                        },
-                        {
-                            id: 2,
-                            display_name: "€",
-                            symbol: "€",
-                            position: "after",
-                        },
-                    ],
-                },
-                "ir.translation": {
-                    fields: {
-                        lang: { type: "char" },
-                        value: { type: "char" },
-                        resId: { type: "integer" },
-                    },
-                    records: [
-                        {
-                            id: 99,
-                            resId: 37,
-                            value: "",
-                            lang: "en_US",
                         },
                     ],
                 },
@@ -216,304 +47,320 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("DateRangeField");
 
-    QUnit.test("Datetime field without quickedit [REQUIRE FOCUS]", async function (assert) {
-        assert.expect(21);
+    QUnit.test(
+        "Datetime field - interaction with the datepicker [REQUIRE FOCUS]",
+        async function (assert) {
+            assert.expect(21);
 
-        serverData.models.partner.fields.datetime_end = {
-            string: "Datetime End",
-            type: "datetime",
-        };
-        serverData.models.partner.records[0].datetime_end = "2017-03-13 00:00:00";
+            serverData.models.partner.fields.datetime_end = {
+                string: "Datetime End",
+                type: "datetime",
+            };
+            serverData.models.partner.records[0].datetime_end = "2017-03-13 00:00:00";
 
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            resId: 1,
-            serverData,
-            arch: `
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
                 <form>
                     <field name="datetime" widget="daterange" options="{'related_end_date': 'datetime_end'}"/>
                     <field name="datetime_end" widget="daterange" options="{'related_start_date': 'datetime'}"/>
                 </form>
             `,
-        });
+            });
 
-        let fields = target.querySelectorAll(".o_field_daterange");
-        // Check date display correctly in readonly
-        assert.strictEqual(
-            fields[0].textContent,
-            "02/08/2017 15:30:00",
-            "the start date should be correctly displayed in readonly"
-        );
-        assert.strictEqual(
-            fields[fields.length - 1].textContent,
-            "03/13/2017 05:30:00",
-            "the end date should be correctly displayed in readonly"
-        );
+            let fields = target.querySelectorAll(".o_field_daterange");
+            // Check date display correctly in readonly
+            assert.strictEqual(
+                fields[0].textContent,
+                "02/08/2017 15:30:00",
+                "the start date should be correctly displayed in readonly"
+            );
+            assert.strictEqual(
+                fields[fields.length - 1].textContent,
+                "03/13/2017 05:30:00",
+                "the end date should be correctly displayed in readonly"
+            );
 
-        // Edit
-        await click(target, ".o_form_button_edit");
+            // Edit
+            await click(target, ".o_form_button_edit");
 
-        // Check date range picker initialization
-        assert.containsN(
-            document.body,
-            ".daterangepicker",
-            2,
-            "should initialize 2 date range picker"
-        );
-        const datepickers = document.querySelectorAll(`.daterangepicker`);
-        assert.isNotVisible(datepickers[0], "first date range picker should be closed initially");
-        assert.isNotVisible(
-            datepickers[datepickers.length - 1],
-            "second date range picker should be closed initially"
-        );
+            // Check date range picker initialization
+            assert.containsN(
+                document.body,
+                ".daterangepicker",
+                2,
+                "should initialize 2 date range picker"
+            );
+            const datepickers = document.querySelectorAll(`.daterangepicker`);
+            assert.isNotVisible(
+                datepickers[0],
+                "first date range picker should be closed initially"
+            );
+            assert.isNotVisible(
+                datepickers[datepickers.length - 1],
+                "second date range picker should be closed initially"
+            );
 
-        // open the first one
-        fields = target.querySelectorAll(".o_field_daterange");
-        await click(fields[0], "input");
+            // open the first one
+            fields = target.querySelectorAll(".o_field_daterange");
+            await click(fields[0].querySelector("input"));
 
-        let datepicker = document.querySelector(
-            `.daterangepicker[data-name="${fields[0].getAttribute("name")}"]`
-        );
-        assert.isVisible(datepicker, "first date range picker should be opened");
-        assert.strictEqual(
-            datepicker.querySelector(".drp-calendar.left .active.start-date").textContent,
-            "8",
-            "active start date should be '8' in date range picker"
-        );
-        assert.strictEqual(
-            datepicker.querySelector(".drp-calendar.left .hourselect").value,
-            "15",
-            "active start date hour should be '15' in date range picker"
-        );
-        assert.strictEqual(
-            datepicker.querySelector(".drp-calendar.left .minuteselect").value,
-            "30",
-            "active start date minute should be '30' in date range picker"
-        );
-        assert.strictEqual(
-            datepicker.querySelector(".drp-calendar.right .active.end-date").textContent,
-            "13",
-            "active end date should be '13' in date range picker"
-        );
-        assert.strictEqual(
-            datepicker.querySelector(".drp-calendar.right .hourselect").value,
-            "5",
-            "active end date hour should be '5' in date range picker"
-        );
-        assert.strictEqual(
-            datepicker.querySelector(".drp-calendar.right .minuteselect").value,
-            "30",
-            "active end date minute should be '30' in date range picker"
-        );
-        assert.containsN(
-            datepicker.querySelector(".drp-calendar.left .minuteselect"),
-            "option",
-            12,
-            "minute selection should contain 12 options (1 for each 5 minutes)"
-        );
-        // Close picker
-        await click(datepicker.querySelector(".cancelBtn"));
-        assert.strictEqual(datepicker.style.display, "none", "date range picker should be closed");
+            let datepicker = document.querySelector(
+                `.daterangepicker[data-name="${fields[0].getAttribute("name")}"]`
+            );
+            assert.isVisible(datepicker, "first date range picker should be opened");
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.left .active.start-date").textContent,
+                "8",
+                "active start date should be '8' in date range picker"
+            );
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.left .hourselect").value,
+                "15",
+                "active start date hour should be '15' in date range picker"
+            );
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.left .minuteselect").value,
+                "30",
+                "active start date minute should be '30' in date range picker"
+            );
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.right .active.end-date").textContent,
+                "13",
+                "active end date should be '13' in date range picker"
+            );
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.right .hourselect").value,
+                "5",
+                "active end date hour should be '5' in date range picker"
+            );
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.right .minuteselect").value,
+                "30",
+                "active end date minute should be '30' in date range picker"
+            );
+            assert.containsN(
+                datepicker.querySelector(".drp-calendar.left .minuteselect"),
+                "option",
+                12,
+                "minute selection should contain 12 options (1 for each 5 minutes)"
+            );
+            // Close picker
+            await click(datepicker.querySelector(".cancelBtn"));
+            assert.strictEqual(
+                datepicker.style.display,
+                "none",
+                "date range picker should be closed"
+            );
 
-        // Try to check with end date
-        await click(fields[fields.length - 1], "input");
-        datepicker = document.querySelector(
-            `.daterangepicker[data-name="${fields[fields.length - 1].getAttribute("name")}"]`
-        );
+            // Try to check with end date
+            await click(fields[fields.length - 1], "input");
+            datepicker = document.querySelector(
+                `.daterangepicker[data-name="${fields[fields.length - 1].getAttribute("name")}"]`
+            );
 
-        assert.isVisible(datepicker, "date range picker should be opened");
-        assert.strictEqual(
-            datepicker.querySelector(".drp-calendar.left .active.start-date").textContent,
-            "8",
-            "active start date should be '8' in date range picker"
-        );
-        assert.strictEqual(
-            datepicker.querySelector(".drp-calendar.left .hourselect").value,
-            "15",
-            "active start date hour should be '15' in date range picker"
-        );
-        assert.strictEqual(
-            datepicker.querySelector(".drp-calendar.left .minuteselect").value,
-            "30",
-            "active start date minute should be '30' in date range picker"
-        );
-        assert.strictEqual(
-            datepicker.querySelector(".drp-calendar.right .active.end-date").textContent,
-            "13",
-            "active end date should be '13' in date range picker"
-        );
-        assert.strictEqual(
-            datepicker.querySelector(".drp-calendar.right .hourselect").value,
-            "5",
-            "active end date hour should be '5' in date range picker"
-        );
-        assert.strictEqual(
-            datepicker.querySelector(".drp-calendar.right .minuteselect").value,
-            "30",
-            "active end date minute should be '30' in date range picker"
-        );
-    });
+            assert.isVisible(datepicker, "date range picker should be opened");
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.left .active.start-date").textContent,
+                "8",
+                "active start date should be '8' in date range picker"
+            );
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.left .hourselect").value,
+                "15",
+                "active start date hour should be '15' in date range picker"
+            );
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.left .minuteselect").value,
+                "30",
+                "active start date minute should be '30' in date range picker"
+            );
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.right .active.end-date").textContent,
+                "13",
+                "active end date should be '13' in date range picker"
+            );
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.right .hourselect").value,
+                "5",
+                "active end date hour should be '5' in date range picker"
+            );
+            assert.strictEqual(
+                datepicker.querySelector(".drp-calendar.right .minuteselect").value,
+                "30",
+                "active end date minute should be '30' in date range picker"
+            );
+        }
+    );
 
-    QUnit.skipWOWL("Date field without quickedit [REQUIRE FOCUS]", async function (assert) {
-        assert.expect(19);
+    QUnit.test(
+        "Date field - interaction with the datepicker [REQUIRE FOCUS]",
+        async function (assert) {
+            assert.expect(19);
 
-        serverData.models.partner.fields.date_end = { string: "Date End", type: "date" };
-        serverData.models.partner.records[0].date_end = "2017-02-08";
+            serverData.models.partner.fields.date_end = { string: "Date End", type: "date" };
+            serverData.models.partner.records[0].date_end = "2017-02-08";
 
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            resId: 1,
-            serverData,
-            arch: `
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
                 <form>
                     <field name="date" widget="daterange" options="{'related_end_date': 'date_end'}"/>
                     <field name="date_end" widget="daterange" options="{'related_start_date': 'date'}"/>
                 </form>
             `,
-        });
+            });
 
-        let fields = target.querySelectorAll(".o_field_daterange");
+            let fields = target.querySelectorAll(".o_field_daterange");
 
-        // Check date display correctly in readonly
-        assert.strictEqual(
-            fields[0].textContent,
-            "02/03/2017",
-            "the start date should be correctly displayed in readonly"
-        );
-        assert.strictEqual(
-            fields[fields.length - 1].textContent,
-            "02/08/2017",
-            "the end date should be correctly displayed in readonly"
-        );
+            // Check date display correctly in readonly
+            assert.strictEqual(
+                fields[0].textContent,
+                "02/03/2017",
+                "the start date should be correctly displayed in readonly"
+            );
+            assert.strictEqual(
+                fields[fields.length - 1].textContent,
+                "02/08/2017",
+                "the end date should be correctly displayed in readonly"
+            );
 
-        // Edit
-        await click(target, ".o_form_button_edit");
+            // Edit
+            await click(target, ".o_form_button_edit");
 
-        fields = target.querySelectorAll(".o_field_daterange");
-        const datepickers = document.querySelectorAll(`.daterangepicker`);
+            fields = target.querySelectorAll(".o_field_daterange");
+            const datepickers = document.querySelectorAll(`.daterangepicker`);
 
-        // Check date range picker initialization
-        assert.containsN(
-            document.body,
-            ".daterangepicker",
-            2,
-            "should initialize 2 date range picker"
-        );
-        assert.isNotVisible(datepickers[0], "first date range picker should be closed initially");
-        assert.isNotVisible(
-            datepickers[datepickers.length - 1],
-            "second date range picker should be closed initially"
-        );
+            // Check date range picker initialization
+            assert.containsN(
+                document.body,
+                ".daterangepicker",
+                2,
+                "should initialize 2 date range picker"
+            );
+            assert.isNotVisible(
+                datepickers[0],
+                "first date range picker should be closed initially"
+            );
+            assert.isNotVisible(
+                datepickers[datepickers.length - 1],
+                "second date range picker should be closed initially"
+            );
 
-        // open the first one
-        await click(fields[0], "input");
-        let datepicker = document.querySelector(
-            `.daterangepicker[data-name="${fields[0].getAttribute("name")}"]`
-        );
+            // open the first one
+            await click(fields[0].querySelector("input"));
+            let datepicker = document.querySelector(
+                `.daterangepicker[data-name="${fields[0].getAttribute("name")}"]`
+            );
 
-        assert.isVisible(datepicker, "first date range picker should be opened");
-        assert.strictEqual(
-            datepicker.querySelector(".active.start-date").textContent,
-            "3",
-            "active start date should be '3' in date range picker"
-        );
-        assert.strictEqual(
-            datepicker.querySelector(".active.end-date").textContent,
-            "8",
-            "active end date should be '8' in date range picker"
-        );
+            assert.isVisible(datepicker, "first date range picker should be opened");
+            assert.strictEqual(
+                datepicker.querySelector(".active.start-date").textContent,
+                "3",
+                "active start date should be '3' in date range picker"
+            );
+            assert.strictEqual(
+                datepicker.querySelector(".active.end-date").textContent,
+                "8",
+                "active end date should be '8' in date range picker"
+            );
 
-        // Change date
-        await triggerEvent(
-            datepicker,
-            ".drp-calendar.left .available[data-title='r2c4']",
-            "mousedown"
-        );
-        await triggerEvent(
-            datepicker,
-            ".drp-calendar.right .available[data-title='r2c0']",
-            "mousedown"
-        );
-        await click(datepicker.querySelector(".applyBtn"));
+            // Change date
+            await triggerEvent(
+                datepicker,
+                ".drp-calendar.left .available[data-title='r2c4']",
+                "mousedown"
+            );
+            await triggerEvent(
+                datepicker,
+                ".drp-calendar.right .available[data-title='r2c0']",
+                "mousedown"
+            );
+            await click(datepicker.querySelector(".applyBtn"));
 
-        // Check date after change
-        assert.isNotVisible(datepicker, "date range picker should be closed");
-        assert.strictEqual(
-            fields[0].querySelector("input").value,
-            "02/16/2017",
-            "the date should be '02/16/2017'"
-        );
-        assert.strictEqual(
-            fields[fields.length - 1].querySelector("input").value,
-            "03/12/2017",
-            "'the date should be '03/12/2017'"
-        );
+            // Check date after change
+            assert.isNotVisible(datepicker, "date range picker should be closed");
+            assert.strictEqual(
+                fields[0].querySelector("input").value,
+                "02/16/2017",
+                "the date should be '02/16/2017'"
+            );
+            assert.strictEqual(
+                fields[1].querySelector("input").value,
+                "03/12/2017",
+                "'the date should be '03/12/2017'"
+            );
 
-        // Try to change range with end date
-        await click(fields[fields.length - 1], "input");
-        datepicker = document.querySelector(
-            `.daterangepicker[data-name="${fields[fields.length - 1].getAttribute("name")}"]`
-        );
+            // Try to change range with end date
+            await click(fields[1].querySelector("input"));
+            datepicker = document.querySelector(
+                `.daterangepicker[data-name="${fields[1].getAttribute("name")}"]`
+            );
 
-        assert.isVisible(datepicker, "date range picker should be opened");
-        assert.strictEqual(
-            datepicker.querySelector(".active.start-date").textContent,
-            "16",
-            "start date should be a 16 in date range picker"
-        );
-        assert.strictEqual(
-            datepicker.querySelector(".active.end-date").textContent,
-            "12",
-            "end date should be a 12 in date range picker"
-        );
+            assert.isVisible(datepicker, "date range picker should be opened");
+            assert.strictEqual(
+                datepicker.querySelector(".active.start-date").textContent,
+                "16",
+                "start date should be a 16 in date range picker"
+            );
+            assert.strictEqual(
+                datepicker.querySelector(".active.end-date").textContent,
+                "12",
+                "end date should be a 12 in date range picker"
+            );
 
-        // Change date
-        await triggerEvent(
-            datepicker,
-            ".drp-calendar.left .available[data-title='r2c1']",
-            "mousedown"
-        );
-        await triggerEvent(
-            datepicker,
-            ".drp-calendar.right .available[data-title='r2c6']",
-            "mousedown"
-        );
-        await click(datepicker, ".applyBtn");
+            // Change date
+            await triggerEvent(
+                datepicker,
+                ".drp-calendar.left .available[data-title='r2c1']",
+                "mousedown"
+            );
+            await triggerEvent(
+                datepicker,
+                ".drp-calendar.right .available[data-title='r2c6']",
+                "mousedown"
+            );
+            await click(datepicker, ".applyBtn");
 
-        // Check date after change
-        assert.isNotVisible(
-            datepickers[datepickers.length - 1],
-            "date range picker should be closed"
-        );
-        assert.strictEqual(
-            fields[0].querySelector("input").value,
-            "02/13/2017",
-            "the start date should be '02/13/2017'"
-        );
-        assert.strictEqual(
-            fields[fields.length - 1].querySelector("input").value,
-            "03/18/2017",
-            "the end date should be '03/18/2017'"
-        );
+            // Check date after change
+            assert.isNotVisible(
+                datepickers[datepickers.length - 1],
+                "date range picker should be closed"
+            );
+            assert.strictEqual(
+                fields[0].querySelector("input").value,
+                "02/13/2017",
+                "the start date should be '02/13/2017'"
+            );
+            assert.strictEqual(
+                fields[1].querySelector("input").value,
+                "03/18/2017",
+                "the end date should be '03/18/2017'"
+            );
 
-        // Save
-        await click(target, ".o_form_button_save");
-        fields = target.querySelectorAll(".o_field_daterange");
+            // Save
+            await click(target, ".o_form_button_save");
+            fields = target.querySelectorAll(".o_field_daterange");
 
-        // Check date after save
-        assert.strictEqual(
-            fields[0].textContent,
-            "02/13/2017",
-            "the start date should be '02/13/2017' after save"
-        );
-        assert.strictEqual(
-            fields[fields.length - 1].textContent,
-            "03/18/2017",
-            "the end date should be '03/18/2017' after save"
-        );
-    });
+            // Check date after save
+            assert.strictEqual(
+                fields[0].textContent,
+                "02/13/2017",
+                "the start date should be '02/13/2017' after save"
+            );
+            assert.strictEqual(
+                fields[fields.length - 1].textContent,
+                "03/18/2017",
+                "the end date should be '03/18/2017' after save"
+            );
+        }
+    );
 
     QUnit.test(
         "daterangepicker should disappear on scrolling outside of it",

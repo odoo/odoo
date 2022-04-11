@@ -6,9 +6,6 @@ import { loadJS } from "@web/core/assets";
 import { useService } from "@web/core/utils/hooks";
 
 const { Component, onWillStart, useExternalListener, useRef, useEffect } = owl;
-const { DateTime } = luxon;
-
-const formatters = registry.category("formatters");
 
 export class DateRangeField extends Component {
     setup() {
@@ -74,7 +71,8 @@ export class DateRangeField extends Component {
     formatValue(format, value) {
         let formattedValue;
         try {
-            formattedValue = formatters.get(format)(value, {
+            formattedValue = this.props.format(value, {
+                formatter: format,
                 timezone: this.isDateTime,
             });
         } catch {
@@ -97,27 +95,33 @@ export class DateRangeField extends Component {
     }
 
     onWindowScroll(ev) {
-        if (this.isPickerShown && !this.env.isSmall && !this.pickerContainer.contains(ev.target)) {
+        const target = ev.target;
+        if (
+            this.isPickerShown &&
+            !this.env.isSmall &&
+            (target === window || !this.pickerContainer.contains(target))
+        ) {
             window.$(this.root.el).data("daterangepicker").hide();
         }
     }
 
     async onPickerApply(ev, picker) {
-        let start, end;
-        if (this.isDateTime) {
-            start = DateTime.fromJSDate(picker.startDate.utc().toDate());
-            end = DateTime.fromJSDate(picker.endDate.utc().toDate());
-        } else {
-            start = DateTime.fromJSDate(picker.startDate.startOf("day").toDate());
-            end = DateTime.fromJSDate(picker.endDate.startOf("day").toDate());
-        }
-        console.log({
-            "picker start": picker.startDate,
-            "picker end": picker.endDate,
-            "luxon start": start,
-            "luxon end": end,
-        });
-        await this.props.updateRange(start, end);
+        let start = this.isDateTime ? picker.startDate : picker.startDate.startOf("day");
+        let end = this.isDateTime ? picker.endDate : picker.endDate.startOf("day");
+        const format = this.isDateTime ? localization.dateTimeFormat : localization.dateFormat;
+        const dates = [start, end].map((date) =>
+            this.props.parse(date.format(format.toUpperCase()), {
+                parser: this.props.formatType,
+                timezone: this.isDateTime,
+            })
+        );
+        await this.props.updateRange(dates[0], dates[1]);
+        const input = document.querySelector(
+            `.o_field_daterange[name='${this.props.relatedDateRange}'] input`
+        );
+        const target = window.$(input).data("daterangepicker");
+        target.setStartDate(picker.startDate);
+        target.setEndDate(picker.endDate);
     }
     onPickerShow() {
         this.isPickerShown = true;
@@ -134,7 +138,7 @@ DateRangeField.extractProps = (fieldName, record, attrs) => {
     const relatedStartDate = attrs.options.related_start_date;
 
     return {
-        displayArrow: Boolean(relatedEndDate),
+        relatedDateRange: relatedEndDate ? relatedEndDate : relatedStartDate,
         endDate: record.data[relatedEndDate || fieldName],
         formatType: attrs.options.format_type || record.fields[fieldName].type,
         setAsInvalid: record.setInvalidField.bind(record),
