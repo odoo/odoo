@@ -53,7 +53,7 @@ export class ComposerTextInput extends Component {
         this.composerView.composer.update({
             textInputContent: this._getContent(),
             textInputCursorEnd: this._getSelectionEnd(),
-            textInputCursorStart: this._getSelectionStart(),
+            textInputCursorStart: this.composerView.textareaRef.el.selectionStart,
             textInputSelectionDirection: this.composerView.textareaRef.el.selectionDirection,
         });
     }
@@ -80,17 +80,6 @@ export class ComposerTextInput extends Component {
      */
     _getSelectionEnd() {
         return this.composerView.textareaRef.el.selectionEnd;
-    }
-
-    /**
-     * Returns selection start position.
-     *
-     * @private
-     * @returns {integer}
-     *
-     */
-    _getSelectionStart() {
-        return this.composerView.textareaRef.el.selectionStart;
     }
 
     /**
