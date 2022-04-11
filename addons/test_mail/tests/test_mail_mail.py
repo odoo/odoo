@@ -746,9 +746,9 @@ class TestMailMail(TestMailCommon):
             sorted(sorted(_mail['email_to']) for _mail in self._mails),
             sorted([sorted(['"Raoul, le Grand" <test.email.1@test.example.com>', '"Micheline, l\'immense" <test.email.2@test.example.com>']),
                     [formataddr((self.user_employee.name, self.user_employee.email_normalized))],
-                    [formataddr(("Tony Customer", '"Formatted Emails" <tony.customer@test.example.com>'))]
+                    [formataddr(("Tony Customer", 'tony.customer@test.example.com'))]
                    ]),
-            'Mail (FIXME): double encapsulation of emails ("Tony" <"Formatted" <tony@e.com>>)'
+            'Mail: formatting issues should have been removed as much as possible'
         )
         # CC are added to first email
         self.assertEqual(
@@ -777,10 +777,12 @@ class TestMailMail(TestMailCommon):
         self.assertEqual(
             sorted(sorted(_mail['email_to']) for _mail in self._mails),
             sorted([sorted(['test.email.1@test.example.com', 'test.email.2@test.example.com']),
-                    [formataddr((self.user_employee.name, self.user_employee.email_normalized))],
-                    [formataddr(("Tony Customer", 'tony.customer@test.example.com, norbert.customer@test.example.com'))]
+                   [formataddr((self.user_employee.name, self.user_employee.email_normalized))],
+                    sorted([formataddr(("Tony Customer", 'tony.customer@test.example.com')),
+                            formataddr(("Tony Customer", 'norbert.customer@test.example.com'))]),
                    ]),
-            'Mail: currenty broken (multi email in a single address) but supported by some providers ("Tony" <tony@e.com, tony2@e.com>)'
+            'Mail: formatting issues should have been removed as much as possible (multi emails in a single address are managed '
+            'like separate emails when sending with recipient_ids'
         )
         # CC are added to first email
         self.assertEqual(
@@ -805,10 +807,12 @@ class TestMailMail(TestMailCommon):
         self.assertEqual(
             sorted(sorted(_mail['email_to']) for _mail in self._mails),
             sorted([sorted(['test.email.1@test.example.com', 'test.email.2@test.example.com']),
-                    [formataddr((self.user_employee.name, self.user_employee.email_normalized))],
-                    [formataddr(("Tony Customer", 'tony.customer@test.example.com, "Norbert Customer" <norbert.customer@test.example.com>'))]
+                   [formataddr((self.user_employee.name, self.user_employee.email_normalized))],
+                    sorted([formataddr(("Tony Customer", 'tony.customer@test.example.com')),
+                            formataddr(("Tony Customer", 'norbert.customer@test.example.com'))]),
                    ]),
-            'Mail: currently broken, double encapsulation with formatting ("Tony" <tony@e.com, "Tony2" <tony2@e.com>>)'
+            'Mail: formatting issues should have been removed as much as possible (multi emails in a single address are managed '
+            'like separate emails when sending with recipient_ids (and partner name is always used as name part)'
         )
         # CC are added to first email
         self.assertEqual(

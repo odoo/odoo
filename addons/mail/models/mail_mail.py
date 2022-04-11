@@ -386,7 +386,14 @@ class MailMail(models.Model):
         # specific behavior to customize the send email for notified partners
         for partner in self.recipient_ids:
             # check partner email content
-            email_to = [tools.formataddr((partner.name or '', partner.email or 'False'))]
+            emails_normalized = tools.email_normalize_all(partner.email)
+            if emails_normalized:
+                email_to = [
+                    tools.formataddr((partner.name or "", email or "False"))
+                    for email in emails_normalized
+                ]
+            else:
+                email_to = [tools.formataddr((partner.name or "", partner.email or "False"))]
             email_list.append({
                 'email_cc': [],
                 'email_to': email_to,
