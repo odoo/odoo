@@ -6,9 +6,10 @@ const {ColorpickerWidget} = require('web.Colorpicker');
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
 const weUtils = require('web_editor.utils');
 const {
-    CSS_PREFIX, BTN_SIZE_STYLES, RE_SELECTOR_ENDS_WITH_GT_STAR,
+    CSS_PREFIX, BTN_SIZE_STYLES,
     DEFAULT_BUTTON_SIZE, PRIORITY_STYLES, FONT_FAMILIES,
-    getFontName, normalizeFontFamily, initializeDesignTabCss
+    getFontName, normalizeFontFamily, initializeDesignTabCss,
+    transformFontFamilySelector,
 } = require('mass_mailing.design_constants');
 
 
@@ -237,18 +238,16 @@ options.registry.DesignTab = options.Class.extend({
         if (params.cssProperty.includes('color')) {
             value = weUtils.normalizeColor(value);
         }
-        const selectors = this._getSelectors(params.selectorText);
+        let selectors = this._getSelectors(params.selectorText);
         const firstSelector = selectors[0].replace(CSS_PREFIX, '').trim();
         if (params.cssProperty === 'font-family') {
-            // Ensure font-family gets passed to all descendants.
-            selectors.push(...selectors.map(selector => selector + ' *'));
+            // Ensure font-family gets passed to all descendants and never
+            // overwrite font awesome.
+            const newSelectors = [];
             for (const selector of selectors) {
-                if (!selector.endsWith('*')) {
-                    selectors.push(`${selector} *`);
-                } else if (RE_SELECTOR_ENDS_WITH_GT_STAR.test(selector)) {
-                    selectors.push(selector.replace(RE_SELECTOR_ENDS_WITH_GT_STAR, ' *'));
-                }
+                newSelectors.push(...transformFontFamilySelector(selector));
             }
+            selectors = [...new Set(newSelectors)];
         }
         for (const selector of selectors) {
             const priority = PRIORITY_STYLES[firstSelector].includes(params.cssProperty) ? ' !important' : '';
