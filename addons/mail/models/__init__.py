@@ -13,6 +13,7 @@ from . import mail_composer_mixin
 from . import mail_thread
 from . import mail_thread_blacklist
 from . import mail_thread_cc
+from . import template_reset_mixin
 
 # mail models
 from . import fetchmail
