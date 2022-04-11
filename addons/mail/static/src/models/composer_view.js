@@ -288,6 +288,13 @@ registerModel({
             this.closeSuggestions();
             this.update({ doFocus: true });
         },
+        onClickTextarea() {
+            if (!this.exists()) {
+                return;
+            }
+            // clicking might change the cursor position
+            this.saveStateInStore();
+        },
         onFocusinTextarea() {
             if (!this.exists()) {
                 return;

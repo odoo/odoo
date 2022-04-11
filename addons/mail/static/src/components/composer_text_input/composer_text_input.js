@@ -104,17 +104,6 @@ export class ComposerTextInput extends Component {
     /**
      * @private
      */
-    _onClickTextarea() {
-        if (!this.composerView) {
-            return;
-        }
-        // clicking might change the cursor position
-        this.composerView.saveStateInStore();
-    }
-
-    /**
-     * @private
-     */
     _onFocusoutTextarea() {
         if (!this.composerView) {
             return;
