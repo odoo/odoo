@@ -68,14 +68,13 @@ registry.category("fields").add("radio", RadioField);
 
 export async function preloadRadio(orm, record, fieldName) {
     const field = record.fields[fieldName];
-    if (field.type !== "many2one") {
-        return null;
-    }
-
     const context = record.evalContext;
     const domain = record.getFieldDomain(fieldName).toList(context);
     const records = await orm.searchRead(field.relation, domain, ["id"]);
     return await orm.call(field.relation, "name_get", [records.map((record) => record.id)]);
 }
 
-registry.category("preloadedData").add("radio", preloadRadio);
+registry.category("preloadedData").add("radio", {
+    loadOnTypes: ["many2one"],
+    preload: preloadRadio,
+});

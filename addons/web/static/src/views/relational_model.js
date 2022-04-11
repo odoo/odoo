@@ -421,7 +421,7 @@ export class Record extends DataPoint {
 
     get dataContext() {
         // should not be called befor this.data is ready!
-        const evalContext = {};
+        const evalContext = { ...this.model.user.context };
         for (const fieldName in this.activeFields) {
             const value = this.data[fieldName];
             if ([null].includes(value)) {
@@ -624,6 +624,7 @@ export class Record extends DataPoint {
     getFieldDomain(fieldName) {
         return Domain.and([
             this._domains[fieldName] || [],
+            this.fields[fieldName].domain || [],
             this.activeFields[fieldName].domain || [],
         ]);
     }
@@ -693,11 +694,16 @@ export class Record extends DataPoint {
     }
 
     async loadPreloadedData() {
-        const fetchPreloadedData = async (fetchFn, fieldName) => {
+        const fetchPreloadedData = async (info, fieldName) => {
+            if (!info.loadOnTypes.includes(this.fields[fieldName].type)) {
+                return;
+            }
             const domain = this.getFieldDomain(fieldName).toList(this.evalContext).toString();
-            if (this.preloadedDataCaches[fieldName] !== domain) {
-                this.preloadedDataCaches[fieldName] = domain;
-                this.preloadedData[fieldName] = await fetchFn(this.model.orm, this, fieldName);
+            const getExtraKey = info.extraMemoizationKey || (() => null);
+            const key = JSON.stringify([domain, getExtraKey(this, fieldName)]);
+            if (this.preloadedDataCaches[fieldName] !== key) {
+                this.preloadedDataCaches[fieldName] = key;
+                this.preloadedData[fieldName] = await info.preload(this.model.orm, this, fieldName);
             }
         };
 
@@ -2649,6 +2655,7 @@ export class RelationalModel extends Model {
         this.dialogService = dialog;
         this.notificationService = notification;
         this.rpc = rpc;
+        this.user = user;
         this.viewService = view;
         this.orm = new RequestBatcherORM(rpc, user);
         this.keepLast = new KeepLast();

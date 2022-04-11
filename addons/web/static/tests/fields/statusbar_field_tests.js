@@ -2,18 +2,23 @@
 
 import { browser } from "@web/core/browser/browser";
 import { commandService } from "@web/core/commands/command_service";
-import { click, getFixture, nextTick, patchWithCleanup, triggerHotkey } from "../helpers/utils";
+import {
+    click,
+    editInput,
+    getFixture,
+    nextTick,
+    patchWithCleanup,
+    triggerHotkey,
+} from "../helpers/utils";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { makeView, setupViewRegistries } from "../views/helpers";
 import { registry } from "@web/core/registry";
+import { session } from "@web/session";
 
 let serverData;
 let target;
 
 const serviceRegistry = registry.category("services");
-
-// WOWL remove after adapting tests
-let testUtils;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -135,34 +140,32 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("StatusBarField");
 
-    QUnit.skipWOWL("static statusbar widget on many2one field", async function (assert) {
+    QUnit.test("static statusbar widget on many2one field", async function (assert) {
         assert.expect(5);
 
         serverData.models.partner.fields.trululu.domain = "[('bar', '=', True)]";
         serverData.models.partner.records[1].bar = false;
 
-        var count = 0;
-        var nb_fields_fetched;
-        const form = await makeView({
+        let count = 0;
+        let fetchFieldCount = 0;
+        await makeView({
             type: "form",
             resModel: "partner",
-            serverData,
-            arch:
-                '<form string="Partners">' +
-                '<header><field name="trululu" widget="statusbar"/></header>' +
-                // the following field seem useless, but its presence was the
-                // cause of a crash when evaluating the field domain.
-                '<field name="timmy" invisible="1"/>' +
-                "</form>",
-            mockRPC: function (route, args) {
-                if (args.method === "search_read") {
-                    count++;
-                    nb_fields_fetched = args.kwargs.fields.length;
-                }
-                return this._super.apply(this, arguments);
-            },
             resId: 1,
-            config: { device: { isMobile: false } },
+            serverData,
+            arch: `
+                <form>
+                    <header>
+                        <field name="trululu" widget="statusbar" />
+                    </header>
+                </form>
+            `,
+            mockRPC(route, { method, kwargs }) {
+                if (method === "search_read") {
+                    count++;
+                    fetchFieldCount = kwargs.fields.length;
+                }
+            },
         });
 
         assert.strictEqual(
@@ -170,43 +173,43 @@ QUnit.module("Fields", (hooks) => {
             1,
             "once search_read should have been done to fetch the relational values"
         );
-        assert.strictEqual(nb_fields_fetched, 1, "search_read should only fetch field id");
-        assert.containsN(form, ".o_statusbar_status button:not(.dropdown-toggle)", 2);
-        assert.containsN(form, ".o_statusbar_status button:disabled", 2);
-        assert.hasClass(form.$('.o_statusbar_status button[data-value="4"]'), "btn-primary");
-        form.destroy();
+        assert.strictEqual(fetchFieldCount, 1, "search_read should only fetch field id");
+        assert.containsN(target, ".o_statusbar_status button:not(.dropdown-toggle)", 2);
+        assert.containsN(target, ".o_statusbar_status button:disabled", 2);
+        assert.hasClass(
+            target.querySelector('.o_statusbar_status button[data-value="4"]'),
+            "btn-primary"
+        );
     });
 
-    QUnit.skipWOWL(
-        "static statusbar widget on many2one field with domain",
-        async function (assert) {
-            assert.expect(1);
+    QUnit.test("static statusbar widget on many2one field with domain", async function (assert) {
+        assert.expect(1);
 
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch:
-                    '<form string="Partners">' +
-                    '<header><field name="trululu" domain="[(\'user_id\',\'=\',uid)]" widget="statusbar"/></header>' +
-                    "</form>",
-                mockRPC: function (route, args) {
-                    if (args.method === "search_read") {
-                        assert.deepEqual(
-                            args.kwargs.domain,
-                            ["|", ["id", "=", 4], ["user_id", "=", 17]],
-                            "search_read should sent the correct domain"
-                        );
-                    }
-                    return this._super.apply(this, arguments);
-                },
-                resId: 1,
-                session: { user_context: { uid: 17 } },
-            });
+        patchWithCleanup(session, { uid: 17 });
 
-            form.destroy();
-        }
-    );
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <header>
+                        <field name="trululu" widget="statusbar" domain="[('user_id', '=', uid)]" />
+                    </header>
+                </form>
+            `,
+            mockRPC(route, { method, kwargs }) {
+                if (method === "search_read") {
+                    assert.deepEqual(
+                        kwargs.domain,
+                        ["|", ["id", "=", 4], ["user_id", "=", 17]],
+                        "search_read should sent the correct domain"
+                    );
+                }
+            },
+        });
+    });
 
     QUnit.test("clickable statusbar widget on many2one field", async function (assert) {
         assert.expect(5);
@@ -268,7 +271,6 @@ QUnit.module("Fields", (hooks) => {
                     </header>
                 </form>
             `,
-            // config: { device: { isMobile: false } },
         });
 
         assert.doesNotHaveClass(target.querySelector(".o_statusbar_status"), "o_field_empty");
@@ -330,53 +332,55 @@ QUnit.module("Fields", (hooks) => {
         assert.containsN(target, ".o_statusbar_status button:visible", 2);
     });
 
-    QUnit.skipWOWL("statusbar with domain but no value (create mode)", async function (assert) {
+    QUnit.test("statusbar with domain but no value (create mode)", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.fields.trululu.domain = "[('bar', '=', True)]";
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                '<header><field name="trululu" widget="statusbar"/></header>' +
-                "</form>",
-            config: { device: { isMobile: false } },
+            arch: `
+                <form>
+                    <header>
+                        <field name="trululu" widget="statusbar" />
+                    </header>
+                </form>
+            `,
         });
 
-        assert.containsN(form, ".o_statusbar_status button:disabled", 2);
-        form.destroy();
+        assert.containsN(target, ".o_statusbar_status button:disabled", 2);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "clickable statusbar should change m2o fetching domain in edit mode",
         async function (assert) {
             assert.expect(2);
 
             serverData.models.partner.fields.trululu.domain = "[('bar', '=', True)]";
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
-                serverData,
-                arch:
-                    '<form string="Partners">' +
-                    '<header><field name="trululu" widget="statusbar" options=\'{"clickable": "1"}\'/></header>' +
-                    "</form>",
                 resId: 1,
-                config: { device: { isMobile: false } },
+                serverData,
+                arch: `
+                    <form>
+                        <header>
+                            <field name="trululu" widget="statusbar" options="{'clickable': 1}" />
+                        </header>
+                    </form>
+                `,
             });
 
-            await testUtils.form.clickEdit(form);
-            assert.containsN(form, ".o_statusbar_status button:not(.dropdown-toggle)", 3);
-            await testUtils.dom.click(
-                form.$(".o_statusbar_status button:not(.dropdown-toggle)").last()
+            await click(target, ".o_form_button_edit");
+            assert.containsN(target, ".o_statusbar_status button:not(.dropdown-toggle)", 3);
+            const buttons = target.querySelectorAll(
+                ".o_statusbar_status button:not(.dropdown-toggle)"
             );
-            assert.containsN(form, ".o_statusbar_status button:not(.dropdown-toggle)", 2);
-
-            form.destroy();
+            await click(buttons[buttons.length - 1]);
+            assert.containsN(target, ".o_statusbar_status button:not(.dropdown-toggle)", 2);
         }
     );
 
@@ -416,44 +420,43 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("statusbar with dynamic domain", async function (assert) {
+    QUnit.test("statusbar with dynamic domain", async function (assert) {
         assert.expect(5);
 
         serverData.models.partner.fields.trululu.domain = "[('int_field', '>', qux)]";
         serverData.models.partner.records[2].int_field = 0;
 
-        var rpcCount = 0;
-        const form = await makeView({
+        let rpcCount = 0;
+        await makeView({
             type: "form",
             resModel: "partner",
+            resId: 1,
             serverData,
-            arch:
-                '<form string="Partners">' +
-                '<header><field name="trululu" widget="statusbar"/></header>' +
-                '<field name="qux"/>' +
-                '<field name="foo"/>' +
-                "</form>",
-            mockRPC: function (route, args) {
-                if (args.method === "search_read") {
+            arch: `
+                <form>
+                    <header>
+                        <field name="trululu" widget="statusbar" />
+                    </header>
+                    <field name="qux" />
+                    <field name="foo" />
+                </form>
+            `,
+            mockRPC(route, { method }) {
+                if (method === "search_read") {
                     rpcCount++;
                 }
-                return this._super.apply(this, arguments);
             },
-            resId: 1,
-            config: { device: { isMobile: false } },
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(target, ".o_form_button_edit");
 
-        assert.containsN(form, ".o_statusbar_status button.disabled", 3);
+        assert.containsN(target, ".o_statusbar_status button.disabled", 3);
         assert.strictEqual(rpcCount, 1, "should have done 1 search_read rpc");
-        await testUtils.fields.editInput(form.$("input[name=qux]"), 9.5);
-        assert.containsN(form, ".o_statusbar_status button.disabled", 2);
+        await editInput(target, ".o_field_widget[name='qux'] input", 9.5);
+        assert.containsN(target, ".o_statusbar_status button.disabled", 2);
         assert.strictEqual(rpcCount, 2, "should have done 1 more search_read rpc");
-        await testUtils.fields.editInput(form.$("input[name=qux]"), "hey");
+        await editInput(target, ".o_field_widget[name='qux'] input", "hey");
         assert.strictEqual(rpcCount, 2, "should not have done 1 more search_read rpc");
-
-        form.destroy();
     });
 
     QUnit.test('statusbar edited by the smart action "Move to stage..."', async function (assert) {
@@ -465,8 +468,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            serverData,
-            arch: `<form><header><field name="trululu" widget="statusbar" options=\'{"clickable": "1"}\'/></header></form>`,
+            arch: `<form><header><field name="trululu" widget="statusbar" options="{'clickable': '1'}"/></header></form>`,
             resId: 1,
         });
 

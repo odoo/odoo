@@ -77,14 +77,12 @@ registry.category("fields").add("selection", SelectionField);
 
 export function preloadSelection(orm, record, fieldName) {
     const field = record.fields[fieldName];
-    if (field.type !== "many2one") {
-        return Promise.resolve();
-    }
-
     const context = record.evalContext;
     const domain = record.getFieldDomain(fieldName).toList(context);
-
     return orm.call(field.relation, "name_search", ["", domain]);
 }
 
-registry.category("preloadedData").add("selection", preloadSelection);
+registry.category("preloadedData").add("selection", {
+    loadOnTypes: ["many2one"],
+    preload: preloadSelection,
+});

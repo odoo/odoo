@@ -50,4 +50,7 @@ export function preloadMany2ManyCheckboxes(orm, record, fieldName) {
     return orm.call(field.relation, "name_search", ["", domain]);
 }
 
-registry.category("preloadedData").add("many2many_checkboxes", preloadMany2ManyCheckboxes);
+registry.category("preloadedData").add("many2many_checkboxes", {
+    loadOnTypes: ["many2many"],
+    preload: preloadMany2ManyCheckboxes,
+});

@@ -7,6 +7,7 @@ import { useService } from "@web/core/utils/hooks";
 import { groupBy } from "@web/core/utils/arrays";
 import { standardFieldProps } from "./standard_field_props";
 import { escape, sprintf } from "@web/core/utils/strings";
+import { Domain } from "../core/domain";
 
 const { Component } = owl;
 
@@ -137,24 +138,26 @@ StatusBarField.extractProps = (fieldName, record, attrs) => {
 registry.category("fields").add("statusbar", StatusBarField);
 
 export async function preloadStatusBar(orm, record, fieldName) {
-    const field = record.fields[fieldName];
-    if (field.type !== "many2one") {
-        return null;
-    }
-
     const fieldNames = ["id"];
     const foldField = record.activeFields[fieldName].options.fold_field;
     if (foldField) {
         fieldNames.push(foldField);
     }
 
-    const records = await orm.searchRead(field.relation, [], fieldNames);
+    const context = record.evalContext;
+    let domain = record.getFieldDomain(fieldName).toList(context);
+    if (domain.length && record.data[fieldName]) {
+        domain = Domain.or([[["id", "=", record.data[fieldName][0]]], domain]).toList(context);
+    }
+
+    const relation = record.fields[fieldName].relation;
+    const records = await orm.searchRead(relation, domain, fieldNames);
     const foldMap = {};
     for (const rec of records) {
         foldMap[rec.id] = rec[foldField];
     }
 
-    const nameGets = await orm.call(field.relation, "name_get", [records.map((rec) => rec.id)]);
+    const nameGets = await orm.call(relation, "name_get", [records.map((rec) => rec.id)]);
     return nameGets.map((nameGet) => ({
         id: nameGet[0],
         name: nameGet[1],
@@ -162,4 +165,10 @@ export async function preloadStatusBar(orm, record, fieldName) {
     }));
 }
 
-registry.category("preloadedData").add("statusbar", preloadStatusBar);
+registry.category("preloadedData").add("statusbar", {
+    loadOnTypes: ["many2one"],
+    extraMemoizationKey: (record, fieldName) => {
+        return record.data[fieldName];
+    },
+    preload: preloadStatusBar,
+});
