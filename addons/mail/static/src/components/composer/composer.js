@@ -18,7 +18,6 @@ export class Composer extends Component {
         useComponentToModel({ fieldName: 'component', modelName: 'ComposerView' });
         useRefToModel({ fieldName: 'buttonEmojisRef', modelName: 'ComposerView', refName: 'buttonEmojis' });
         this._onDropZoneFilesDropped = this._onDropZoneFilesDropped.bind(this);
-        this._onComposerTextInputSendShortcut = this._onComposerTextInputSendShortcut.bind(this);
         this._onPasteTextInput = this._onPasteTextInput.bind(this);
     }
 
@@ -55,13 +54,6 @@ export class Composer extends Component {
     _onClickSend() {
         this.composerView.sendMessage();
         this.composerView.update({ doFocus: true });
-    }
-
-    /**
-     * @private
-     */
-    _onComposerTextInputSendShortcut() {
-        this.composerView.sendMessage();
     }
 
     /**

@@ -254,9 +254,7 @@ export class ComposerTextInput extends Component {
             !ev.metaKey &&
             !ev.shiftKey
         ) {
-            if (this.props.onComposerTextInputSendShortcut) {
-                this.props.onComposerTextInputSendShortcut();
-            }
+            this.composerView.sendMessage();
             ev.preventDefault();
             return;
         }
@@ -267,9 +265,7 @@ export class ComposerTextInput extends Component {
             !ev.metaKey &&
             !ev.shiftKey
         ) {
-            if (this.props.onComposerTextInputSendShortcut) {
-                this.props.onComposerTextInputSendShortcut();
-            }
+            this.composerView.sendMessage();
             ev.preventDefault();
             return;
         }
@@ -280,9 +276,7 @@ export class ComposerTextInput extends Component {
             ev.metaKey &&
             !ev.shiftKey
         ) {
-            if (this.props.onComposerTextInputSendShortcut) {
-                this.props.onComposerTextInputSendShortcut();
-            }
+            this.composerView.sendMessage();
             ev.preventDefault();
             return;
         }
@@ -387,10 +381,6 @@ Object.assign(ComposerTextInput, {
         localId: String,
         hasMentionSuggestionsBelowPosition: {
             type: Boolean,
-            optional: true,
-        },
-        onComposerTextInputSendShortcut: {
-            type: Function,
             optional: true,
         },
         onPaste: {
