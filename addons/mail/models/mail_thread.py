@@ -1513,6 +1513,7 @@ class MailThread(models.AbstractModel):
             recipient in the result dictionary. The form is :
                 partner_id, partner_name<partner_email> or partner_name, reason """
         self.ensure_one()
+        partner_info = {}
         if email and not partner:
             # get partner info from email
             partner_info = self._message_partner_info_from_emails([email])[0]
@@ -1527,9 +1528,9 @@ class MailThread(models.AbstractModel):
         if partner and partner.email:  # complete profile: id, name <email>
             result[self.ids[0]].append((partner.id, partner.email_formatted, reason))
         elif partner:  # incomplete profile: id, name
-            result[self.ids[0]].append((partner.id, '%s' % (partner.name), reason))
+            result[self.ids[0]].append((partner.id, partner.name, reason))
         else:  # unknown partner, we are probably managing an email address
-            result[self.ids[0]].append((False, email, reason))
+            result[self.ids[0]].append((False, partner_info.get('full_name') or email, reason))
         return result
 
     def _message_get_suggested_recipients(self):
