@@ -332,7 +332,14 @@ class MailMail(models.Model):
         body = self._send_prepare_body()
         body_alternative = tools.html2plaintext(body)
         if partner:
-            email_to = [tools.formataddr((partner.name or 'False', partner.email or 'False'))]
+            emails_normalized = tools.email_normalize_all(partner.email)
+            if emails_normalized:
+                email_to = [
+                    tools.formataddr((partner.name or "False", email or "False"))
+                    for email in emails_normalized
+                ]
+            else:
+                email_to = [tools.formataddr((partner.name or "False", partner.email or "False"))]
         else:
             email_to = tools.email_split_and_format(self.email_to)
         res = {
