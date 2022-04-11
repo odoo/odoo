@@ -4,6 +4,7 @@
 from odoo.addons.sale_coupon.tests.common import TestSaleCouponCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged
+from odoo.tools.float_utils import float_compare
 
 
 @tagged('post_install', '-at_install')
@@ -492,6 +493,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
             'name': 'Drawer Black',
             'product_uom_qty': 1.0,
             'order_id': order.id,
+            'tax_id': [(4, self.tax_0pc_excl.id)]
         })
         order.recompute_coupon_lines()
         self.assertEqual(order.amount_total, 0, "Total should be null. The fixed amount discount is higher than the SO total, it should be reduced to the SO total")
@@ -681,15 +683,9 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
             'coupon_code': coupon.code
         }).process_coupon()
         order.recompute_coupon_lines()
-        #TODO fix numbers
-        # Need an in-depth inspection on the behavior with
-        # - multiple product with different VAT +
-        # - a fixed amount (greater than remaining amount to pay) +
-        # - discount amount
-        # And user should be able to swap the promotion order with a meaningful result.
-        self.assertEqual(order.amount_tax, 13.5)
+        self.assertEqual(order.amount_tax, 0)
         self.assertEqual(order.amount_untaxed, 0.0, "The untaxed amount should not go below 0")
-        self.assertEqual(order.amount_total, 13.5, "The promotion program should not make the order total go below 0")
+        self.assertEqual(order.amount_total, 0, "The promotion program should not make the order total go below 0")
 
         order.order_line[3:].unlink() #remove all coupon
 
@@ -704,10 +700,9 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
                 'coupon_code': 'test_10pc'
             }).process_coupon()
         order.recompute_coupon_lines()
-        #TODO fix numbers
-        self.assertEqual(order.amount_tax, 13.5)
+        self.assertEqual(order.amount_tax, 0)
         self.assertEqual(order.amount_untaxed, 0.0)
-        self.assertEqual(order.amount_total, 13.5, "The promotion program should not make the order total go below 0be altered after recomputation")
+        self.assertEqual(order.amount_total, 0, "The promotion program should not make the order total go below 0be altered after recomputation")
 
     def test_coupon_and_coupon_discount_fixed_amount_tax_incl(self):
         """ Ensure multiple coupon can cohexists without making
@@ -1229,3 +1224,227 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         self.assertEqual(len(order.order_line.ids), 2, "discount should be applied")
         # applying the code again should return that it has been expired.
         self.assertDictEqual(self.env['sale.coupon.apply.code'].sudo().apply_coupon(order, 'promo1'), {'error': 'Promo code promo1 has been expired.'})
+
+    def test_fixed_amount_taxes_attribution(self):
+
+        self.env['sale.coupon.program'].create({
+            'name': '$5 coupon',
+            'program_type': 'promotion_program',
+            'promo_code_usage': 'no_code_needed',
+            'reward_type': 'discount',
+            'discount_type': 'fixed_amount',
+            'discount_fixed_amount': 5,
+            'active': True,
+            'discount_apply_on': 'on_order',
+        })
+
+        order = self.empty_order
+        sol = self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'price_unit': 10,
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+
+        order.recompute_coupon_lines()
+
+        self.assertEqual(order.amount_total, 5, 'Price should be 10$ - 5$(discount) = 5$')
+        self.assertEqual(order.amount_tax, 0, 'No taxes are applied yet')
+
+        sol.tax_id = self.tax_10pc_base_incl
+        order.recompute_coupon_lines()
+
+        self.assertEqual(order.amount_total, 5, 'Price should be 10$ - 5$(discount) = 5$')
+        self.assertEqual(float_compare(order.amount_tax, 5 / 11, precision_rounding=3), 0, '10% Tax included in 5$')
+
+        sol.tax_id = self.tax_10pc_excl
+        order.recompute_coupon_lines()
+
+        # Value is 5.99 instead of 6 because you cannot have 6 with 10% tax excluded and a precision rounding of 2
+        self.assertAlmostEqual(order.amount_total, 6, 1, msg='Price should be 11$ - 5$(discount) = 6$')
+        self.assertEqual(float_compare(order.amount_tax, 6 / 11, precision_rounding=3), 0, '10% Tax included in 6$')
+
+        sol.tax_id = self.tax_20pc_excl
+        order.recompute_coupon_lines()
+
+        self.assertEqual(order.amount_total, 7, 'Price should be 12$ - 5$(discount) = 7$')
+        self.assertEqual(float_compare(order.amount_tax, 7 / 12, precision_rounding=3), 0, '20% Tax included on 7$')
+
+        sol.tax_id = self.tax_10pc_base_incl + self.tax_10pc_excl
+        order.recompute_coupon_lines()
+
+        self.assertAlmostEqual(order.amount_total, 6, 1, msg='Price should be 11$ - 5$(discount) = 6$')
+        self.assertEqual(float_compare(order.amount_tax, 6 / 12, precision_rounding=3), 0, '20% Tax included on 6$')
+
+    def test_fixed_amount_taxes_attribution_multiline(self):
+
+        self.env['sale.coupon.program'].create({
+            'name': '$5 coupon',
+            'program_type': 'promotion_program',
+            'promo_code_usage': 'no_code_needed',
+            'reward_type': 'discount',
+            'discount_type': 'fixed_amount',
+            'discount_fixed_amount': 5,
+            'active': True,
+            'discount_apply_on': 'on_order',
+        })
+
+        order = self.empty_order
+        sol1 = self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'price_unit': 10,
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+        sol2 = self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'price_unit': 10,
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+
+        order.recompute_coupon_lines()
+
+        self.assertAlmostEqual(order.amount_total, 15, 1, msg='Price should be 20$ - 5$(discount) = 15$')
+        self.assertEqual(order.amount_tax, 0, 'No taxes are applied yet')
+
+        sol1.tax_id = self.tax_10pc_base_incl
+        order.recompute_coupon_lines()
+
+        self.assertAlmostEqual(order.amount_total, 15, 1, msg='Price should be 20$ - 5$(discount) = 15$')
+        self.assertEqual(float_compare(order.amount_tax, 5 / 11 + 0, precision_rounding=3), 0,
+                         '10% Tax included in 5$ in sol1 (highest cost) and 0 in sol2')
+
+        sol2.tax_id = self.tax_10pc_excl
+        order.recompute_coupon_lines()
+
+        self.assertAlmostEqual(order.amount_total, 16, 1, msg='Price should be 21$ - 5$(discount) = 16$')
+        # Tax amount = 10% in 10$ + 10% in 11$ - 10% in 5$ (apply on excluded)
+        self.assertEqual(float_compare(order.amount_tax, 5 / 11, precision_rounding=3), 0)
+
+        sol2.tax_id = self.tax_10pc_base_incl + self.tax_10pc_excl
+        order.recompute_coupon_lines()
+
+        self.assertAlmostEqual(order.amount_total, 16, 1, msg='Price should be 21$ - 5$(discount) = 16$')
+        # Promo apply on line 2 (10% inc + 10% exc)
+        # Tax amount = 10% in 10$ + 10% in 10$ + 10% in 11 - 10% in 5$ - 10% in 4.55$ (100/110*5)
+        #            = 10/11 + 10/11 + 11/11 - 5/11 - 4.55/11
+        #            = 21.45/11
+        self.assertEqual(float_compare(order.amount_tax, 21.45 / 11, precision_rounding=3), 0)
+
+        sol3 = self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'price_unit': 10,
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+        sol3.tax_id = self.tax_10pc_excl
+        order.recompute_coupon_lines()
+
+        self.assertAlmostEqual(order.amount_total, 27, 1, msg='Price should be 32$ - 5$(discount) = 27$')
+        # Promo apply on line 2 (10% inc + 10% exc)
+        # Tax amount = 10% in 10$ + 10% in 10$ + 10% in 11$ + 10% in 11$ - 10% in 5$ - 10% in 4.55$ (100/110*5)
+        #            = 10/11 + 10/11 + 11/11 + 11/11 - 5/11 - 4.55/11
+        #            = 32.45/11
+        self.assertEqual(float_compare(order.amount_tax, 32.45 / 11, precision_rounding=3), 0)
+
+    def test_order_promo(self):
+
+        promo_5off = self.env['sale.coupon.program'].create({
+            'name': '$5 coupon',
+            'program_type': 'promotion_program',
+            'promo_code_usage': 'code_needed',
+            'promo_code': '5off',
+            'reward_type': 'discount',
+            'discount_type': 'fixed_amount',
+            'discount_fixed_amount': 5,
+            'discount_apply_on': 'on_order',
+        })
+
+        promo_20pc = self.env['sale.coupon.program'].create({
+            'name': '20% reduction on order',
+            'promo_code_usage': 'no_code_needed',
+            'promo_code': '20pc',
+            'reward_type': 'discount',
+            'program_type': 'promotion_program',
+            'discount_type': 'percentage',
+            'discount_percentage': 20.0,
+            'discount_apply_on': 'on_order',
+        })
+
+        order = self.empty_order
+
+        self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'price_unit': 10,
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+
+        # Test percentage then flat
+        order.recompute_coupon_lines()
+        self.env['sale.coupon.apply.code'].sudo().apply_coupon(order, '5off')
+        order.recompute_coupon_lines()
+
+        self.assertEqual(order.amount_total, 3, 'Price should be 10$ - 2$(20% of 10$) - 5$(flat discount) = 3$')
+        self.assertEqual(len(order.order_line), 3, 'There should be 3 lines')
+
+        order.order_line[1:].unlink()
+
+        # Test flat then percentage
+        promo_20pc.promo_code_usage = 'code_needed'
+        promo_5off.promo_code_usage = 'no_code_needed'
+        order.recompute_coupon_lines()
+        self.env['sale.coupon.apply.code'].sudo().apply_coupon(order, '20pc')
+        order.recompute_coupon_lines()
+
+        self.assertEqual(order.amount_total, 3, 'Price should be 10$ - 2$(20% of 10$) - 5$(flat discount) = 3$')
+        self.assertEqual(len(order.order_line), 3, 'There should be 3 lines')
+
+        # Test reapplying already present promo
+        self.env['sale.coupon.apply.code'].sudo().apply_coupon(order, '20pc')
+        order.recompute_coupon_lines()
+
+        self.assertEqual(order.amount_total, 3, 'Price should be 10$ - 2$(20% of 10$) - 5$(flat discount) = 3$')
+        self.assertEqual(len(order.order_line), 3, 'There should be 3 lines')
+
+    def test_fixed_amount_with_negative_cost(self):
+
+        self.env['sale.coupon.program'].create({
+            'name': '$10 coupon',
+            'program_type': 'promotion_program',
+            'promo_code_usage': 'no_code_needed',
+            'reward_type': 'discount',
+            'discount_type': 'fixed_amount',
+            'discount_fixed_amount': 10,
+            'active': True,
+            'discount_apply_on': 'on_order',
+        })
+
+        order = self.empty_order
+
+        sol1 = self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'price_unit': 10,
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+
+        self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'name': 'hand discount',
+            'price_unit': -5,
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+
+        order.recompute_coupon_lines()
+
+        self.assertEqual(len(order.order_line), 3)
+        self.assertEqual(order.amount_total, 0, '10$ discount should cover the whole price')
+
+        sol1.price_unit = 20
+        order.recompute_coupon_lines()
+
+        self.assertEqual(len(order.order_line), 3)
+        self.assertEqual(order.amount_total, 5, '10$ discount should be applied on top of the 15$ original price')
