@@ -231,8 +231,8 @@ class TestMassMailing(TestMassMailCommon):
                          'partner': customer_mult,
                          'trace_status': 'cancel'},
                         {'email': '"Formatted Customer" <test.customer.format@example.com>',
-                         # double encapsulation, not good
-                         'email_to_recipients': [[f'"{customer_fmt.name}" <"Formatted Customer" <test.customer.format@example.com>>']],
+                         # mail to avoids double encapsulation
+                         'email_to_recipients': [[f'"{customer_fmt.name}" <test.customer.format@example.com>']],
                          'failure_type': False,
                          'partner': customer_fmt,
                          'trace_status': 'sent'},
@@ -243,17 +243,17 @@ class TestMassMailing(TestMassMailCommon):
                          'partner': customer_unic,
                          'trace_status': 'cancel'},  # email_re usage forbids mailing to unicode
                         {'email': 'TEST.CUSTOMER.CASE@EXAMPLE.COM',
-                         'email_to_recipients': [[f'"{customer_case.name}" <TEST.CUSTOMER.CASE@EXAMPLE.COM>']],
+                         'email_to_recipients': [[f'"{customer_case.name}" <test.customer.case@example.com>']],
                          'failure_type': False,
                          'partner': customer_case,
                          'trace_status': 'sent'},  # lower cased
                         {'email': 'test.customer.weird@example.com Weird Format',
-                         'email_to_recipients': [[f'"{customer_weird.name}" <test.customer.weird@example.com Weird Format>']],
+                         'email_to_recipients': [[f'"{customer_weird.name}" <test.customer.weird@example.comweirdformat>']],
                          'failure_type': False,
                          'partner': customer_weird,
                          'trace_status': 'sent'},  # concatenates everything after domain
                         {'email': 'Weird Format2 test.customer.weird.2@example.com',
-                         'email_to_recipients': [[f'"{customer_weird_2.name}" <Weird Format2 test.customer.weird.2@example.com>']],
+                         'email_to_recipients': [[f'"{customer_weird_2.name}" <weird format2 test.customer.weird.2@example.com>']],
                          'failure_type': False,
                          'partner': customer_weird_2,
                          'trace_status': 'sent'},
