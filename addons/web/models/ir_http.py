@@ -56,7 +56,7 @@ class Http(models.AbstractModel):
             'profile_collectors': request.session.profile_collectors,
             'profile_params': request.session.profile_params,
             "max_file_upload_size": max_file_upload_size,
-            "home_action_id": user.action_id.id,
+            "home_action_id": user.action_id.exists().id,
             "cache_hashes": {
                 "translations": translation_hash,
             },
