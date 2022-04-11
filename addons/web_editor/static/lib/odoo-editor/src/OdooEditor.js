@@ -207,6 +207,7 @@ export class OdooEditor extends EventTarget {
                 onChange: () => {},
                 isHintBlacklisted: () => false,
                 filterMutationRecords: (records) => records,
+                direction: 'ltr',
                 _t: string => string,
                 allowCommandVideo: true,
             },
@@ -270,6 +271,7 @@ export class OdooEditor extends EventTarget {
         this._idToNodeMap.set(1, editable);
         this.editable = this.options.toSanitize ? sanitize(editable) : editable;
         this.editable.classList.add("odoo-editor-editable");
+        this.editable.setAttribute('dir', this.options.direction);
 
         // Set contenteditable before clone as FF updates the content at this point.
         this._activateContenteditable();
@@ -1838,6 +1840,15 @@ export class OdooEditor extends EventTarget {
                     this.commandbarTablePicker.show();
                 },
             },
+            {
+                groupName: 'Basic blocks',
+                title: this.options._t('Switch direction'),
+                description: this.options._t('Switch the text\'s direction.'),
+                fontawesome: 'fa-exchange',
+                callback: () => {
+                    this.execCommand('switchDirection');
+                },
+            },
         ];
         this.commandBar = new Powerbox({
             editable: this.editable,
@@ -1938,7 +1949,7 @@ export class OdooEditor extends EventTarget {
             const selectionStartStyle = getComputedStyle(closestStartContainer);
 
             // queryCommandState does not take stylesheets into account
-            for (const format of ['bold', 'italic', 'underline', 'strikeThrough']) {
+            for (const format of ['bold', 'italic', 'underline', 'strikeThrough', 'switchDirection']) {
                 const formatButton = this.toolbar.querySelector(`#${format.toLowerCase()}`);
                 if (formatButton) {
                     formatButton.classList.toggle('active', isSelectionFormat(this.editable, format));
