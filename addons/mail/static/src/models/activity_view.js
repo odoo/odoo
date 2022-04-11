@@ -191,6 +191,10 @@ registerModel({
             isCausal: true,
         }),
         /**
+         * States the OWL component of this activity view.
+         */
+        component: attr(),
+        /**
          * Compute the label for "when" the activity is due.
          */
         delayLabel: attr({

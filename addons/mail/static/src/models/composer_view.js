@@ -227,9 +227,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickEmoji(ev) {
-            if (this.textInputComponent) {
-                this.textInputComponent.saveStateInStore();
-            }
+            this.saveStateInStore();
             this.insertIntoTextInput(ev.currentTarget.dataset.unicode);
             if (!this.messaging.device.isMobileDevice) {
                 this.update({ doFocus: true });
@@ -290,11 +288,25 @@ registerModel({
             this.closeSuggestions();
             this.update({ doFocus: true });
         },
+        onClickTextarea() {
+            if (!this.exists()) {
+                return;
+            }
+            // clicking might change the cursor position
+            this.saveStateInStore();
+        },
         onFocusinTextarea() {
             if (!this.exists()) {
                 return;
             }
             this.update({ isFocused: true });
+        },
+        onFocusoutTextarea() {
+            if (!this.exists()) {
+                return;
+            }
+            this.saveStateInStore();
+            this.update({ isFocused: false });
         },
         /**
          * @param {KeyboardEvent} ev
@@ -401,6 +413,93 @@ registerModel({
                 this.sendMessage();
                 ev.preventDefault();
                 return;
+            }
+        },
+        /**
+          * Key events management is performed in a Keyup to avoid intempestive RPC calls
+          *
+          * @param {KeyboardEvent} ev
+          */
+        onKeyupTextarea(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            switch (ev.key) {
+                case 'Escape':
+                    // already handled in _onKeydownTextarea, break to avoid default
+                    break;
+                // ENTER, HOME, END, UP, DOWN, PAGE UP, PAGE DOWN, TAB: check if navigation in mention suggestions
+                case 'Enter':
+                    if (this.hasSuggestions) {
+                        this.insertSuggestion();
+                        this.closeSuggestions();
+                        this.update({ doFocus: true });
+                    }
+                    break;
+                case 'ArrowUp':
+                case 'PageUp':
+                    if (ev.key === 'ArrowUp' && !this.hasSuggestions && !this.composer.textInputContent && this.threadView) {
+                        this.threadView.startEditingLastMessageFromCurrentUser();
+                        break;
+                    }
+                    if (this.hasSuggestions) {
+                        this.setPreviousSuggestionActive();
+                        this.update({ hasToScrollToActiveSuggestion: true });
+                    }
+                    break;
+                case 'ArrowDown':
+                case 'PageDown':
+                    if (ev.key === 'ArrowDown' && !this.hasSuggestions && !this.composer.textInputContent && this.threadView) {
+                        this.threadView.startEditingLastMessageFromCurrentUser();
+                        break;
+                    }
+                    if (this.hasSuggestions) {
+                        this.setNextSuggestionActive();
+                        this.update({ hasToScrollToActiveSuggestion: true });
+                    }
+                    break;
+                case 'Home':
+                    if (this.hasSuggestions) {
+                        this.setFirstSuggestionActive();
+                        this.update({ hasToScrollToActiveSuggestion: true });
+                    }
+                    break;
+                case 'End':
+                    if (this.hasSuggestions) {
+                        this.setLastSuggestionActive();
+                        this.update({ hasToScrollToActiveSuggestion: true });
+                    }
+                    break;
+                case 'Tab':
+                    if (this.hasSuggestions) {
+                        if (ev.shiftKey) {
+                            this.setPreviousSuggestionActive();
+                            this.update({ hasToScrollToActiveSuggestion: true });
+                        } else {
+                            this.setNextSuggestionActive();
+                            this.update({ hasToScrollToActiveSuggestion: true });
+                        }
+                    }
+                    break;
+                case 'Alt':
+                case 'AltGraph':
+                case 'CapsLock':
+                case 'Control':
+                case 'Fn':
+                case 'FnLock':
+                case 'Hyper':
+                case 'Meta':
+                case 'NumLock':
+                case 'ScrollLock':
+                case 'Shift':
+                case 'ShiftSuper':
+                case 'Symbol':
+                case 'SymbolLock':
+                    // prevent modifier keys from resetting the suggestion state
+                    break;
+                // Otherwise, check if a mention is typed
+                default:
+                    this.saveStateInStore();
             }
         },
         /**
@@ -552,6 +651,17 @@ registerModel({
                     composer.update({ isPostingMessage: false });
                 }
             }
+        },
+        /**
+         * Saves the composer text input state in store
+         */
+        saveStateInStore() {
+            this.composer.update({
+                textInputContent: this.textareaRef.el.value,
+                textInputCursorEnd: this.textareaRef.el.selectionEnd,
+                textInputCursorStart: this.textareaRef.el.selectionStart,
+                textInputSelectionDirection: this.textareaRef.el.selectionDirection,
+            });
         },
         /**
          * Send a message in the composer on related thread.
@@ -1389,10 +1499,6 @@ registerModel({
          * Reference of the textarea. Useful to set height, selection and content.
          */
         textareaRef: attr(),
-        /**
-         * States the OWL text input component of this composer view.
-         */
-        textInputComponent: attr(),
         /**
          * States the thread view on which this composer allows editing (if any).
          */

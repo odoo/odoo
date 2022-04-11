@@ -146,6 +146,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeFollowerListMenuView() {
+            if (this.hasFollowers && this.thread) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeHasThreadView() {
@@ -281,6 +291,11 @@ registerModel({
         }),
         context: attr({
             default: {},
+        }),
+        followerListMenuView: one('FollowerListMenuView', {
+            compute: '_computeFollowerListMenuView',
+            inverse: 'chatterOwner',
+            isCausal: true,
         }),
         /**
          * Determines whether `this` should display an activity box.

@@ -3,7 +3,7 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
-import { markEventHandled } from '@mail/utils/utils';
+import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'MessageView',
@@ -27,9 +27,71 @@ registerModel({
         /**
          * @param {MouseEvent} ev
          */
+        onClick(ev) {
+            if (ev.target.closest('.o_channel_redirect')) {
+                this.messaging.openProfile({
+                    id: Number(ev.target.dataset.oeId),
+                    model: 'mail.channel',
+                });
+                // avoid following dummy href
+                ev.preventDefault();
+                return;
+            }
+            if (ev.target.tagName === 'A') {
+                if (ev.target.dataset.oeId && ev.target.dataset.oeModel) {
+                    this.messaging.openProfile({
+                        id: Number(ev.target.dataset.oeId),
+                        model: ev.target.dataset.oeModel,
+                    });
+                    // avoid following dummy href
+                    ev.preventDefault();
+                }
+                return;
+            }
+            if (
+                !isEventHandled(ev, 'Message.ClickAuthorAvatar') &&
+                !isEventHandled(ev, 'Message.ClickAuthorName') &&
+                !isEventHandled(ev, 'Message.ClickFailure') &&
+                !isEventHandled(ev, 'MessageActionList.Click') &&
+                !isEventHandled(ev, 'MessageReactionGroup.Click') &&
+                !isEventHandled(ev, 'MessageInReplyToView.ClickMessageInReplyTo')
+            ) {
+                this.update({ isClicked: !this.isClicked });
+            }
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickAuthorAvatar(ev) {
+            markEventHandled(ev, 'Message.ClickAuthorAvatar');
+            if (!this.hasAuthorOpenChat) {
+                return;
+            }
+            this.message.author.openChat();
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickAuthorName(ev) {
+            markEventHandled(ev, 'Message.ClickAuthorName');
+            if (!this.message.author) {
+                return;
+            }
+            this.message.author.openProfile();
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
         onClickFailure(ev) {
             markEventHandled(ev, 'Message.ClickFailure');
             this.message.openResendAction();
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickOriginThread(ev) {
+            ev.preventDefault();
+            this.message.originThread.open();
         },
         onComponentUpdate() {
             if (!this.exists()) {

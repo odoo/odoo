@@ -18,6 +18,10 @@ registerModel({
             inverse: 'qunitTest',
             isCausal: true,
         }),
+        followerListMenuView: one('FollowerListMenuView', {
+            inverse: 'qunitTest',
+            isCausal: true,
+        }),
         messageView: one('MessageView', {
             inverse: 'qunitTest',
             isCausal: true,
