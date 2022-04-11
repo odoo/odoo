@@ -2052,7 +2052,7 @@ QUnit.module("Fields", (hooks) => {
             );
 
             // add a one2many subrecord and check if the default value is correctly applied
-            await click(document.querySelector(".modal .o_field_x2many_list_row_add a"));
+            await addRow(target, ".modal");
 
             assert.containsN(document.body, ".modal .o_data_row", 2);
             assert.strictEqual(
@@ -3209,7 +3209,7 @@ QUnit.module("Fields", (hooks) => {
 
         // add a record, add value to turtle_foo then click in form view to confirm it
         await clickEdit(target);
-        await click(target, ".o_field_x2many_list_row_add a");
+        await addRow(target);
 
         await editInput(target, 'div[name="turtle_foo"] input', "nora");
 
@@ -3963,7 +3963,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await addRow(target);
-        await click($(".modal .o_field_x2many_list_row_add a"));
+        await addRow(target, ".modal");
 
         assert.strictEqual(
             $(".modal .o_data_row.o_selected_row").length,
@@ -4483,7 +4483,7 @@ QUnit.module("Fields", (hooks) => {
             assert.containsOnce(target, ".o_form_view .o_field_x2many_list_row_add ");
             assert.containsNone(target, ".o_form_view input");
 
-            await click(target, "tbody td.o_field_x2many_list_row_add a");
+            await addRow(target);
             assert.containsOnce(target, ".o_form_view .o_field_x2many_list_row_add ");
             assert.containsN(target, ".o_form_view input", 2);
         }
@@ -4578,7 +4578,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".o_x2m_control_panel .o_pager", "o2m pager should be hidden");
 
         // click to create a subrecord
-        await click(target, "tbody td.o_field_x2many_list_row_add a");
+        await addRow(target);
         assert.containsOnce(target, "tr.o_data_row");
         assert.containsNone(target, ".o_x2m_control_panel .o_pager", "o2m pager should be hidden");
     });
@@ -4630,7 +4630,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".o_data_cell[title='xpad']");
 
         await clickEdit(target);
-        await click(target, "tbody td.o_field_x2many_list_row_add a");
+        await addRow(target);
 
         checkOnchange = true;
         await testUtils.fields.many2one.clickOpenDropdown("product_id");
@@ -4683,7 +4683,7 @@ QUnit.module("Fields", (hooks) => {
             },
         });
         await clickEdit(target);
-        await click(target, "tbody td.o_field_x2many_list_row_add a");
+        await addRow(target);
 
         // write in the many2one field, value = 37 (xphone)
         await testUtils.fields.many2one.clickOpenDropdown("product_id");
@@ -4958,9 +4958,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
         await clickEdit(target);
-
-        await click(target, "tbody td.o_field_x2many_list_row_add a");
-
+        await addRow(target);
         assert.containsOnce(
             target,
             "td .o_field_widget input",
@@ -4968,7 +4966,6 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await editInput(target, "td .o_field_widget input", "a");
-
         assert.containsOnce(
             target,
             "td .o_field_widget input",
@@ -4977,7 +4974,6 @@ QUnit.module("Fields", (hooks) => {
 
         await editInput(target, "td .o_field_widget input", "abc");
         await clickSave(target);
-
         assert.strictEqual(
             [...target.querySelectorAll("td")].filter((el) => el.innerText === "abc").length,
             1,
@@ -5014,7 +5010,7 @@ QUnit.module("Fields", (hooks) => {
             });
 
             await clickEdit(target);
-            await click(target, "tbody td.o_field_x2many_list_row_add a");
+            await addRow(target);
         }
     );
 
@@ -5249,7 +5245,7 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await click(target, "tbody td.o_field_x2many_list_row_add a");
+        await addRow(target);
     });
 
     QUnit.test("parent data is properly sent on an onchange rpc", async function (assert) {
@@ -5282,7 +5278,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await clickEdit(target);
-        await click(target, "tbody td.o_field_x2many_list_row_add a");
+        await addRow(target);
     });
 
     QUnit.test(
@@ -5366,7 +5362,7 @@ QUnit.module("Fields", (hooks) => {
                     }
                 },
             });
-            await click(target, "tbody td.o_field_x2many_list_row_add a");
+            await addRow(target);
             assert.verifySteps(["onchange", "onchange"]);
         }
     );
@@ -5426,7 +5422,7 @@ QUnit.module("Fields", (hooks) => {
                 }
             },
         });
-        await click(target, "td.o_field_x2many_list_row_add a");
+        await addRow(target);
         await editInput(target, 'td [name="turtle_foo"] input', "cat");
         await clickSave(target);
     });
@@ -8902,7 +8898,7 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
             });
             await click(target, ".o_form_button_edit");
-            await click(target, ".o_field_x2many_list_row_add a");
+            await addRow(target);
             assert.containsN(target, ".o_data_row", 4);
 
             await editInput(target, 'div[name="turtle_foo"] .o_input', "a");
@@ -11140,7 +11136,7 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+        await addRow(target);
     });
 
     // The following tests come from relational_fields_tests.js (so there might be issues with serverData)
