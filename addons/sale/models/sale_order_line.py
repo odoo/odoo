@@ -291,7 +291,17 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_id:
                 continue
-            line.name = line.with_context(lang=line.order_partner_id.lang)._get_sale_order_line_multiline_description_sale()
+
+            name = line.with_context(lang=line.order_partner_id.lang)._get_sale_order_line_multiline_description_sale()
+            if line.is_downpayment and not line.display_type:
+                context = {'lang': line.order_partner_id.lang}
+                dp_state = line._get_downpayment_state()
+                if dp_state == 'draft':
+                    name = _("%(line_description)s (Draft)", line_description=name)
+                elif dp_state == 'cancel':
+                    name = _("%(line_description)s (Canceled)", line_description=name)
+                del context
+            line.name = name
 
     def _get_sale_order_line_multiline_description_sale(self):
         """ Compute a default multiline description for this sales order line.
@@ -653,6 +663,20 @@ class SaleOrderLine(models.Model):
         mapping = lines_by_analytic._get_delivered_quantity_by_analytic([('amount', '<=', 0.0)])
         for so_line in lines_by_analytic:
             so_line.qty_delivered = mapping.get(so_line.id or so_line._origin.id, 0.0)
+
+    def _get_downpayment_state(self):
+        self.ensure_one()
+
+        if self.display_type:
+            return ''
+
+        invoice_lines = self._get_invoice_lines()
+        if all(line.parent_state == 'draft' for line in invoice_lines):
+            return 'draft'
+        if all(line.parent_state == 'cancel' for line in invoice_lines):
+            return 'cancel'
+
+        return ''
 
     def _get_delivered_quantity_by_analytic(self, additional_domain):
         """ Compute and write the delivered quantity of current SO lines, based on their related
