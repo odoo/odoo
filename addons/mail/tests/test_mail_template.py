@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from markupsafe import Markup
 
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
+from odoo.modules.module import get_module_resource
 from odoo.tests import Form, users
+from odoo.tools import convert_file
 
 
 class TestMailTemplate(MailCommon):
@@ -160,3 +163,42 @@ class TestMailTemplate(MailCommon):
         # Employee without mail_template_editor group cannot create dynamic translation for mail.render.mixin
         with self.assertRaises(AccessError):
             Translation.with_user(self.user_employee).create(subject_translation_vals)
+
+
+class TestMailTemplateReset(MailCommon):
+
+    def _load(self, module, *args):
+        convert_file(self.cr, module='mail',
+                     filename=get_module_resource(module, *args),
+                     idref={}, mode='init', noupdate=False, kind='test')
+
+    def test_mail_template_reset(self):
+        self._load('mail', 'tests', 'test_mail_template.xml')
+
+        mail_template = self.env.ref('mail.mail_template_test').with_context(lang=self.env.user.lang)
+
+        mail_template.write({
+            'body_html': '<div>Hello</div>',
+            'name': 'Mail: Mail Template',
+            'subject': 'Test',
+            'email_from': 'admin@example.com',
+            'email_to': 'user@example.com',
+            'attachment_ids': False,
+        })
+
+        context = {'default_template_ids': mail_template.ids}
+        mail_template_reset = self.env['mail.template.reset'].with_context(context).create({})
+        reset_action = mail_template_reset.reset_template()
+        self.assertTrue(reset_action)
+
+        self.assertEqual(mail_template.body_html.strip(), Markup('<div>Hello Odoo</div>'))
+        self.assertEqual(mail_template.name, 'Mail: Test Mail Template')
+        self.assertEqual(
+            mail_template.email_from,
+            '"{{ object.company_id.name }}" <{{ (object.company_id.email or user.email) }}>'
+        )
+        self.assertEqual(mail_template.email_to, '{{ object.email_formatted }}')
+        self.assertEqual(mail_template.attachment_ids, self.env.ref('mail.mail_template_test_attachment'))
+
+        # subject is not there in the data file template, so it should be set to False
+        self.assertFalse(mail_template.subject, "Subject should be set to False")
