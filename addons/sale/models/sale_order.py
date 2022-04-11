@@ -1245,6 +1245,25 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return self.transaction_ids._get_last()
 
+    def _get_order_lines_to_report(self):
+        down_payment_lines = self.order_line.filtered(lambda line:
+            line.is_downpayment
+            and not line.display_type
+            and not line._get_downpayment_state()
+        )
+
+        def show_line(line):
+            if not line.is_downpayment:
+                return True
+            elif line.display_type and down_payment_lines:
+                return True  # Only show the down payment section if down payments were posted
+            elif line in down_payment_lines:
+                return True  # Only show posted down payments
+            else:
+                return False
+
+        return self.order_line.filtered(show_line)
+
     # PORTAL #
 
     def has_to_be_signed(self, include_draft=False):

@@ -344,7 +344,8 @@ class TestSaleRefund(TestSaleCommon):
         })
         downpayment.create_invoices()
         sale_order_refund.invoice_ids[0].action_post()
-        sol_downpayment = sale_order_refund.order_line[1]
+        # order_line[1] is the down payment section
+        sol_downpayment = sale_order_refund.order_line[2]
 
         payment = self.env['sale.advance.payment.inv'].with_context(so_context).create({
             'deposit_account_id': self.company_data['default_account_revenue'].id
@@ -352,7 +353,8 @@ class TestSaleRefund(TestSaleCommon):
         payment.create_invoices()
 
         so_invoice = max(sale_order_refund.invoice_ids)
-        self.assertEqual(len(so_invoice.invoice_line_ids.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))), len(sale_order_refund.order_line), 'All lines should be invoiced')
+        self.assertEqual(len(so_invoice.invoice_line_ids.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))),
+                         len(sale_order_refund.order_line.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))), 'All lines should be invoiced')
         self.assertEqual(len(so_invoice.invoice_line_ids.filtered(lambda l: l.display_type == 'line_section' and l.name == "Down Payments")), 1, 'A single section for downpayments should be present')
         self.assertEqual(so_invoice.amount_total, sale_order_refund.amount_total - sol_downpayment.price_unit, 'Downpayment should be applied')
         so_invoice.action_post()
