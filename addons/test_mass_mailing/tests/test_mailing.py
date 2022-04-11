@@ -211,6 +211,8 @@ class TestMassMailing(TestMassMailCommon):
                          'partner': customer_mult,
                          'state': 'ignored'},
                         {'email': 'test.customer.format@example.com',
+                         # mail to avoids double encapsulation
+                         'email_to_recipients': [[f'"{customer_fmt.name}" <test.customer.format@example.com>']],
                          'failure_type': False,
                          'partner': customer_fmt,
                          'state': 'sent'},

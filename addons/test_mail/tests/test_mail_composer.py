@@ -734,6 +734,10 @@ class TestComposerResultsComment(TestMailComposer):
         self.assertMailMail(
             self.partner_1 + self.partner_2 + mailed_new_partners, 'sent',
             author=self.partner_employee,
+            email_to_recipients=[
+                [self.partner_1.email_formatted],
+                [f'"{self.partner_2.name}" <valid.other.1@agrolait.com>', f'"{self.partner_2.name}" <valid.other.cc@agrolait.com>'],
+            ] + [[email] for email in mailed_new_partners.mapped('email_formatted')],
             email_values={
                 'body_content': f'TemplateBody {self.test_record.name}',
                 'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com,email.from.2@test.example.com')),
@@ -1165,6 +1169,10 @@ class TestComposerResultsMass(TestMailComposer):
                 self.partner_1 + self.partner_2 + mailed_new_partners,
                 'sent',
                 author=self.partner_employee,
+                email_to_recipients=[
+                    [self.partner_1.email_formatted],
+                    [f'"{self.partner_2.name}" <valid.other.1@agrolait.com>', f'"{self.partner_2.name}" <valid.other.cc@agrolait.com>'],
+                ] + [[email] for email in mailed_new_partners.mapped('email_formatted')],
                 email_values={
                     'body_content': f'TemplateBody {record.name}',
                     # currently holding multi-email 'email_from'
