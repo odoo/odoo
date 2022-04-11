@@ -294,6 +294,13 @@ registerModel({
             }
             this.update({ isFocused: true });
         },
+        onFocusoutTextarea() {
+            if (!this.exists()) {
+                return;
+            }
+            this.saveStateInStore();
+            this.update({ isFocused: false });
+        },
         /**
          * @param {KeyboardEvent} ev
          */
