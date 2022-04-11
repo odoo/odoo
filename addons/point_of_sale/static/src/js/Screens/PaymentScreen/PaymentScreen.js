@@ -376,12 +376,17 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             const payment_terminal = line.payment_method.payment_terminal;
             line.set_payment_status('waiting');
 
-            const isPaymentSuccessful = await payment_terminal.send_payment_request(line.cid);
-            if (isPaymentSuccessful) {
-                line.set_payment_status('done');
-                line.can_be_reversed = payment_terminal.supports_reversals;
-            } else {
-                line.set_payment_status('retry');
+            try {
+                const isPaymentSuccessful = await payment_terminal.send_payment_request(line.cid);
+                line.setStatusAfterPaymentStatusValidation(isPaymentSuccessful);
+            } catch (error) {
+                // We catch the error of the payment_terminal but we just log it.
+                // At the moment, there is no common convention on how to handle
+                // error.
+                // IMPROVEMENT: Make the handling of payment request more robust, such that
+                // result and error should be handled in this function, not in the payment
+                // interface. Same improvements should be done with cancel and reverse.
+                console.error(error);
             }
         }
         async _sendPaymentCancel({ detail: line }) {

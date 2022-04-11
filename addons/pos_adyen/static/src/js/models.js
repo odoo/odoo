@@ -13,16 +13,13 @@ const PosAdyenPayment = (Payment) => class PosAdyenPayment extends Payment {
     //@override
     export_as_JSON() {
         const json = super.export_as_JSON(...arguments);
-        json.terminal_service_id = this.terminalServiceId;
+        json.terminalServiceId = this.terminalServiceId;
         return json;
     }
     //@override
     init_from_JSON(json) {
         super.init_from_JSON(...arguments);
-        this.terminalServiceId = json.terminal_service_id;
-    }
-    setTerminalServiceId(id) {
-        this.terminalServiceId = id;
+        this.terminalServiceId = json.terminalServiceId;
     }
 }
 Registries.Model.extend(Payment, PosAdyenPayment);

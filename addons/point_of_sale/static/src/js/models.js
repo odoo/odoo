@@ -2146,6 +2146,20 @@ class Payment extends PosModel {
     is_electronic() {
         return Boolean(this.get_payment_status());
     }
+    /**
+     * Properly set the status of an electronic payment when the payment request is done.
+     * @param {boolean} isSuccessfulRequest
+     */
+    setStatusAfterPaymentStatusValidation(isSuccessfulRequest) {
+        if (isSuccessfulRequest) {
+            this.set_payment_status('done');
+            if (this.payment_method.payment_terminal) {
+                this.can_be_reversed = this.payment_method.payment_terminal.supports_reversals;
+            }
+        } else {
+            this.set_payment_status('retry');
+        }
+    }
 }
 Registries.Model.add(Payment);
 
