@@ -23,12 +23,14 @@
                     <record id="tax_report_box7" model="account.tax.report.line">
                         <field name="name">[BOX 7] The amount in Box 6 is subracted from Box 5</field>
                         <field name="sequence" eval="3"/>
+                        <field name="code">NZBOX7</field>
                         <field name="formula">NZBOX5 - NZBOX6</field>
                     </record>
                     <record id="tax_report_box8" model="account.tax.report.line">
                         <field name="name">[BOX 8] Multiply the amount in Box 7 by 3 and then divide by 23</field>
                         <field name="sequence" eval="4"/>
-                        <field name="formula">((NZBOX5 - NZBOX6) * 3)/23</field>
+                        <field name="code">NZBOX8</field>
+                        <field name="formula">(NZBOX7 * 3)/23</field>
                     </record>
                     <record id="tax_report_box9" model="account.tax.report.line">
                         <field name="name">[BOX 9] Enter any adjustments from your calculation sheet</field>
@@ -40,7 +42,8 @@
                     <record id="tax_report_box10" model="account.tax.report.line">
                         <field name="name">[BOX 10] Total GST collected on sales and income</field>
                         <field name="sequence" eval="6"/>
-                        <field name="formula">(((NZBOX5 - NZBOX6) * 3)/23) + NZBOX9</field>
+                        <field name="code">NZBOX10</field>
+                        <field name="formula">NZBOX8 + NZBOX9</field>
                     </record>
                 </field>
             </record>
@@ -57,23 +60,26 @@
                     <record id="tax_report_box12" model="account.tax.report.line">
                         <field name="name">[BOX 12] Multiply BOX11 by 3 and then divide by 23</field>
                         <field name="sequence" eval="2"/>
+                        <field name="code">NZBOX12</field>
                         <field name="formula">(NZBOX11 * 3)/23</field>
                     </record>
                     <record id="tax_report_box13" model="account.tax.report.line">
                         <field name="name">[BOX 13] Credit adjustments from your calculation sheet</field>
                         <field name="sequence" eval="3"/>
+                        <field name="code">NZBOX13</field>
                     </record>
                     <record id="tax_report_box14" model="account.tax.report.line">
                         <field name="name">[BOX 14] Total GST credit for purchases and expenses</field>
                         <field name="sequence" eval="4"/>
-                        <field name="formula">((NZBOX11 * 3)/23)</field>
+                        <field name="code">NZBOX14</field>
+                        <field name="formula">NZBOX12 + NZBOX13</field>
                     </record>
                 </field>
             </record>
             <record id="tax_report_box15" model="account.tax.report.line">
                 <field name="name">[BOX 15]  Difference between BOX10 and BOX14</field>
                 <field name="sequence" eval="3"/>
-                <field name="formula">((((NZBOX5 - NZBOX6) * 3)/23) + NZBOX9) - ((NZBOX11 * 3)/23)</field>
+                <field name="formula">NZBOX10 - NZBOX14</field>
             </record>
         </field>
     </record>
