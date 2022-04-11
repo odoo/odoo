@@ -599,10 +599,11 @@ class TestOnChange(SavepointCaseWithUserDemo):
 
         form = common.Form(self.env['test_new_api.multi.tag'])
         self.assertEqual(form.name, False)
-        self.assertEqual(form.display_name, False)
+        self.assertEqual(form.display_name, "")
 
         record = form.save()
-        self.assertEqual(record.display_name, False)
+        self.assertEqual(record.name, False)
+        self.assertEqual(record.display_name, "")
         self.assertEqual(record.name_get(), [(record.id, "")])
 
 
