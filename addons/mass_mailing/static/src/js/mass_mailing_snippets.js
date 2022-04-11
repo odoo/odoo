@@ -6,7 +6,7 @@ const {ColorpickerWidget} = require('web.Colorpicker');
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
 const weUtils = require('web_editor.utils');
 const {
-    CSS_PREFIX, BTN_SIZE_STYLES,
+    CSS_PREFIX, BTN_SIZE_STYLES, RE_SELECTOR_ENDS_WITH_GT_STAR,
     DEFAULT_BUTTON_SIZE, PRIORITY_STYLES, FONT_FAMILIES,
     getFontName, normalizeFontFamily, initializeDesignTabCss
 } = require('mass_mailing.design_constants');
@@ -238,11 +238,18 @@ options.registry.DesignTab = options.Class.extend({
             value = weUtils.normalizeColor(value);
         }
         const selectors = this._getSelectors(params.selectorText);
+        const firstSelector = selectors[0].replace(CSS_PREFIX, '').trim();
         if (params.cssProperty === 'font-family') {
             // Ensure font-family gets passed to all descendants.
             selectors.push(...selectors.map(selector => selector + ' *'));
+            for (const selector of selectors) {
+                if (!selector.endsWith('*')) {
+                    selectors.push(`${selector} *`);
+                } else if (RE_SELECTOR_ENDS_WITH_GT_STAR.test(selector)) {
+                    selectors.push(selector.replace(RE_SELECTOR_ENDS_WITH_GT_STAR, ' *'));
+                }
+            }
         }
-        const firstSelector = selectors[0].replace(CSS_PREFIX, '').trim();
         for (const selector of selectors) {
             const priority = PRIORITY_STYLES[firstSelector].includes(params.cssProperty) ? ' !important' : '';
             const rule = this._getRule(selector);
