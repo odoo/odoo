@@ -4,7 +4,6 @@ import { useComponentToModel } from '@mail/component_hooks/use_component_to_mode
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdate } from '@mail/component_hooks/use_update';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { markEventHandled } from '@mail/utils/utils';
 
 const { Component } = owl;
 
@@ -46,8 +45,8 @@ export class ComposerTextInput extends Component {
      */
     saveStateInStore() {
         this.composerView.composer.update({
-            textInputContent: this._getContent(),
-            textInputCursorEnd: this._getSelectionEnd(),
+            textInputContent: this.composerView.textareaRef.el.value,
+            textInputCursorEnd: this.composerView.textareaRef.el.selectionEnd,
             textInputCursorStart: this.composerView.textareaRef.el.selectionStart,
             textInputSelectionDirection: this.composerView.textareaRef.el.selectionDirection,
         });
@@ -58,33 +57,13 @@ export class ComposerTextInput extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Returns textarea current content.
-     *
-     * @private
-     * @returns {string}
-     */
-    _getContent() {
-        return this.composerView.textareaRef.el.value;
-    }
-
-    /**
-     * Returns selection end position.
-     *
-     * @private
-     * @returns {integer}
-     */
-    _getSelectionEnd() {
-        return this.composerView.textareaRef.el.selectionEnd;
-    }
-
-    /**
      * Determines whether the textarea is empty or not.
      *
      * @private
      * @returns {boolean}
      */
     _isEmpty() {
-        return this._getContent() === "";
+        return this.composerView.textareaRef.el.value === "";
     }
 
     /**
@@ -169,89 +148,6 @@ export class ComposerTextInput extends Component {
         }
         this._textareaLastInputValue = this.composerView.textareaRef.el.value;
         this._updateHeight();
-    }
-
-    /**
-     * @private
-     * @param {KeyboardEvent} ev
-     */
-    _onKeydownTextarea(ev) {
-        if (!this.composerView) {
-            return;
-        }
-        switch (ev.key) {
-            case 'Escape':
-                if (this.composerView.hasSuggestions) {
-                    ev.preventDefault();
-                    this.composerView.closeSuggestions();
-                    markEventHandled(ev, 'ComposerTextInput.closeSuggestions');
-                }
-                break;
-            // UP, DOWN, TAB: prevent moving cursor if navigation in mention suggestions
-            case 'ArrowUp':
-            case 'PageUp':
-            case 'ArrowDown':
-            case 'PageDown':
-            case 'Home':
-            case 'End':
-            case 'Tab':
-                if (this.composerView.hasSuggestions) {
-                    // We use preventDefault here to avoid keys native actions but actions are handled in keyUp
-                    ev.preventDefault();
-                }
-                break;
-            // ENTER: submit the message only if the dropdown mention proposition is not displayed
-            case 'Enter':
-                this._onKeydownTextareaEnter(ev);
-                break;
-        }
-    }
-
-    /**
-     * @private
-     * @param {KeyboardEvent} ev
-     */
-    _onKeydownTextareaEnter(ev) {
-        if (!this.composerView) {
-            return;
-        }
-        if (this.composerView.hasSuggestions) {
-            ev.preventDefault();
-            return;
-        }
-        if (
-            this.composerView.sendShortcuts.includes('ctrl-enter') &&
-            !ev.altKey &&
-            ev.ctrlKey &&
-            !ev.metaKey &&
-            !ev.shiftKey
-        ) {
-            this.composerView.sendMessage();
-            ev.preventDefault();
-            return;
-        }
-        if (
-            this.composerView.sendShortcuts.includes('enter') &&
-            !ev.altKey &&
-            !ev.ctrlKey &&
-            !ev.metaKey &&
-            !ev.shiftKey
-        ) {
-            this.composerView.sendMessage();
-            ev.preventDefault();
-            return;
-        }
-        if (
-            this.composerView.sendShortcuts.includes('meta-enter') &&
-            !ev.altKey &&
-            !ev.ctrlKey &&
-            ev.metaKey &&
-            !ev.shiftKey
-        ) {
-            this.composerView.sendMessage();
-            ev.preventDefault();
-            return;
-        }
     }
 
     /**
