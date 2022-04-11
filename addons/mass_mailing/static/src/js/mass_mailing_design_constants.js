@@ -94,10 +94,10 @@ export const initializeDesignTabCss = $editable => {
             // If a style element can't be found, create one and initialize it.
             styleElement = document.createElement('style');
             styleElement.setAttribute('id', 'design-element');
-            // The style element needs to be within the layout of the email in
-            // order to be saved along with it.
-            $editable.find('.o_layout').prepend(styleElement);
         }
+        // The style element needs to be within the layout of the email in
+        // order to be saved along with it.
+        $editable.find('.o_layout').prepend(styleElement);
 };
 
 export const FONT_FAMILIES = [
