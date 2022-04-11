@@ -5,7 +5,7 @@
         <field name="name">Timesheets</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">account.analytic.line</field>
-        <field name="view_mode">tree,form,graph,pivot,kanban,grid</field>
+        <field name="view_mode">tree,form,graph,pivot,kanban</field>
         <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
         <field name="domain">[('timesheet_invoice_id', '=', active_id)]</field>
         <field name="help" type="html">
