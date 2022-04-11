@@ -14,6 +14,13 @@ registerModel({
     name: 'ComposerSuggestion',
     identifyingFields: [['composerViewOwnerAsExtraSuggestion', 'composerViewOwnerAsMainSuggestion'], ['cannedResponse', 'channelCommand', 'partner', 'thread']],
     recordMethods: {
+        /**
+         * @param {Event} ev
+         */
+        onClick(ev) {
+            ev.preventDefault();
+            this.composerViewOwner.onClickSuggestion(this);
+        },
          /**
          * @private
          * @returns {FieldCommand}
