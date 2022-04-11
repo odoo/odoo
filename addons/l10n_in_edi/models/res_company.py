@@ -27,4 +27,4 @@ class ResCompany(models.Model):
         super()._neutralize()
         self.flush()
         self.invalidate_cache()
-        self.env.cr.execute("UPDATE res_company SET l10n_in_edi_production_env = true")
+        self.env.cr.execute("UPDATE res_company SET l10n_in_edi_production_env = false")
