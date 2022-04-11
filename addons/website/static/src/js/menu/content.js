@@ -735,7 +735,8 @@ var EditMenuDialog = weWidgets.Dialog.extend({
         if (menuID) {
             this.toDelete.push(menuID);
         }
-        $menu.remove();
+        var $child = $menu.find('ul li');
+        isNaN(menuID) && $child.length ? $menu.replaceWith($child) : $menu.remove();
     },
     /**
      * Called when the "edit menu" button is clicked -> Opens the appropriate
