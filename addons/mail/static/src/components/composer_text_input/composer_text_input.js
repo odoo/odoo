@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdate } from '@mail/component_hooks/use_update';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
@@ -14,7 +13,6 @@ export class ComposerTextInput extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'textInputComponent', modelName: 'ComposerView' });
         useRefToModel({ fieldName: 'mirroredTextareaRef', modelName: 'ComposerView', refName: 'mirroredTextarea' });
         useRefToModel({ fieldName: 'textareaRef', modelName: 'ComposerView', refName: 'textarea' });
         /**
@@ -38,18 +36,6 @@ export class ComposerTextInput extends Component {
      */
     get composerView() {
         return this.messaging && this.messaging.models['ComposerView'].get(this.props.localId);
-    }
-
-    /**
-     * Saves the composer text input state in store
-     */
-    saveStateInStore() {
-        this.composerView.composer.update({
-            textInputContent: this.composerView.textareaRef.el.value,
-            textInputCursorEnd: this.composerView.textareaRef.el.selectionEnd,
-            textInputCursorStart: this.composerView.textareaRef.el.selectionStart,
-            textInputSelectionDirection: this.composerView.textareaRef.el.selectionDirection,
-        });
     }
 
     //--------------------------------------------------------------------------
@@ -116,127 +102,16 @@ export class ComposerTextInput extends Component {
     /**
      * @private
      */
-    _onClickTextarea() {
-        if (!this.composerView) {
-            return;
-        }
-        // clicking might change the cursor position
-        this.saveStateInStore();
-    }
-
-    /**
-     * @private
-     */
-    _onFocusoutTextarea() {
-        if (!this.composerView) {
-            return;
-        }
-        this.saveStateInStore();
-        this.composerView.update({ isFocused: false });
-    }
-
-    /**
-     * @private
-     */
     _onInputTextarea() {
         if (!this.composerView) {
             return;
         }
-        this.saveStateInStore();
+        this.composerView.saveStateInStore();
         if (this._textareaLastInputValue !== this.composerView.textareaRef.el.value) {
             this.composerView.handleCurrentPartnerIsTyping();
         }
         this._textareaLastInputValue = this.composerView.textareaRef.el.value;
         this._updateHeight();
-    }
-
-    /**
-     * Key events management is performed in a Keyup to avoid intempestive RPC calls
-     *
-     * @private
-     * @param {KeyboardEvent} ev
-     */
-    _onKeyupTextarea(ev) {
-        if (!this.composerView) {
-            return;
-        }
-        switch (ev.key) {
-            case 'Escape':
-                // already handled in _onKeydownTextarea, break to avoid default
-                break;
-            // ENTER, HOME, END, UP, DOWN, PAGE UP, PAGE DOWN, TAB: check if navigation in mention suggestions
-            case 'Enter':
-                if (this.composerView.hasSuggestions) {
-                    this.composerView.insertSuggestion();
-                    this.composerView.closeSuggestions();
-                    this.composerView.update({ doFocus: true });
-                }
-                break;
-            case 'ArrowUp':
-            case 'PageUp':
-                if (ev.key === 'ArrowUp' && !this.composerView.hasSuggestions && !this.composerView.composer.textInputContent && this.composerView.threadView) {
-                    this.composerView.threadView.startEditingLastMessageFromCurrentUser();
-                    break;
-                }
-                if (this.composerView.hasSuggestions) {
-                    this.composerView.setPreviousSuggestionActive();
-                    this.composerView.update({ hasToScrollToActiveSuggestion: true });
-                }
-                break;
-            case 'ArrowDown':
-            case 'PageDown':
-                if (ev.key === 'ArrowDown' && !this.composerView.hasSuggestions && !this.composerView.composer.textInputContent && this.composerView.threadView) {
-                    this.composerView.threadView.startEditingLastMessageFromCurrentUser();
-                    break;
-                }
-                if (this.composerView.hasSuggestions) {
-                    this.composerView.setNextSuggestionActive();
-                    this.composerView.update({ hasToScrollToActiveSuggestion: true });
-                }
-                break;
-            case 'Home':
-                if (this.composerView.hasSuggestions) {
-                    this.composerView.setFirstSuggestionActive();
-                    this.composerView.update({ hasToScrollToActiveSuggestion: true });
-                }
-                break;
-            case 'End':
-                if (this.composerView.hasSuggestions) {
-                    this.composerView.setLastSuggestionActive();
-                    this.composerView.update({ hasToScrollToActiveSuggestion: true });
-                }
-                break;
-            case 'Tab':
-                if (this.composerView.hasSuggestions) {
-                    if (ev.shiftKey) {
-                        this.composerView.setPreviousSuggestionActive();
-                        this.composerView.update({ hasToScrollToActiveSuggestion: true });
-                    } else {
-                        this.composerView.setNextSuggestionActive();
-                        this.composerView.update({ hasToScrollToActiveSuggestion: true });
-                    }
-                }
-                break;
-            case 'Alt':
-            case 'AltGraph':
-            case 'CapsLock':
-            case 'Control':
-            case 'Fn':
-            case 'FnLock':
-            case 'Hyper':
-            case 'Meta':
-            case 'NumLock':
-            case 'ScrollLock':
-            case 'Shift':
-            case 'ShiftSuper':
-            case 'Symbol':
-            case 'SymbolLock':
-                // prevent modifier keys from resetting the suggestion state
-                break;
-            // Otherwise, check if a mention is typed
-            default:
-                this.saveStateInStore();
-        }
     }
 
 }

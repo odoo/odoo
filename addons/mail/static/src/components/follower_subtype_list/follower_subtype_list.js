@@ -26,30 +26,6 @@ export class FollowerSubtypeList extends Component {
         return this.messaging && this.messaging.models['FollowerSubtypeList'].get(this.props.localId);
     }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Called when clicking on cancel button.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickCancel(ev) {
-        this.followerSubtypeList.follower.closeSubtypes();
-    }
-
-    /**
-     * Called when clicking on apply button.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickApply(ev) {
-        this.followerSubtypeList.follower.updateSubtypes();
-    }
-
 }
 
 Object.assign(FollowerSubtypeList, {
