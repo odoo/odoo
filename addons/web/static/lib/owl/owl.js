@@ -2371,7 +2371,7 @@
         const node = getCurrent();
         let render = batchedRenderFunctions.get(node);
         if (!render) {
-            render = batched(node.render.bind(node));
+            render = batched(node.render.bind(node, false));
             batchedRenderFunctions.set(node, render);
             // manual implementation of onWillDestroy to break cyclic dependency
             node.willDestroy.push(clearReactivesForCallback.bind(null, render));
@@ -2479,7 +2479,7 @@
                 fiber.render();
             }
         }
-        async render(deep = false) {
+        async render(deep) {
             let current = this.fiber;
             if (current && (current.root.locked || current.bdom === true)) {
                 await Promise.resolve();
@@ -5012,7 +5012,7 @@
         }
         setup() { }
         render(deep = false) {
-            this.__owl__.render(deep);
+            this.__owl__.render(deep === true);
         }
     }
     Component.template = "";
@@ -5602,9 +5602,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.0-beta-5';
-    __info__.date = '2022-04-07T13:41:59.537Z';
-    __info__.hash = '1179e84';
+    __info__.version = '2.0.0-beta-6';
+    __info__.date = '2022-04-11T09:02:17.726Z';
+    __info__.hash = '41344ef';
     __info__.url = 'https://github.com/odoo/owl';
 
 

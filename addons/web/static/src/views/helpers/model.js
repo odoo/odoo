@@ -98,11 +98,14 @@ export function useModel(ModelClass, params, options = {}) {
     const orm = model.orm;
     let sampleORM = globalState.sampleORM;
     const user = useService("user");
+    let started = false;
     async function load(props) {
         model.orm = orm;
         const searchParams = getSearchParams(props);
         await model.load(searchParams);
-        model.notify();
+        if (started) {
+            model.notify();
+        }
         if (useSampleModel && !model.hasData()) {
             sampleORM =
                 sampleORM || buildSampleORM(component.props.resModel, component.props.fields, user);
@@ -113,8 +116,9 @@ export function useModel(ModelClass, params, options = {}) {
         }
         model.useSampleModel = useSampleModel;
     }
-    onWillStart(() => {
-        return load(component.props);
+    onWillStart(async () => {
+        await load(component.props);
+        started = true;
     });
     onWillUpdateProps((nextProps) => {
         useSampleModel = false;
