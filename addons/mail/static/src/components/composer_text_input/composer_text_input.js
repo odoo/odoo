@@ -46,7 +46,7 @@ export class ComposerTextInput extends Component {
      */
     saveStateInStore() {
         this.composerView.composer.update({
-            textInputContent: this._getContent(),
+            textInputContent: this.composerView.textareaRef.el.value,
             textInputCursorEnd: this._getSelectionEnd(),
             textInputCursorStart: this.composerView.textareaRef.el.selectionStart,
             textInputSelectionDirection: this.composerView.textareaRef.el.selectionDirection,
@@ -56,16 +56,6 @@ export class ComposerTextInput extends Component {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
-    /**
-     * Returns textarea current content.
-     *
-     * @private
-     * @returns {string}
-     */
-    _getContent() {
-        return this.composerView.textareaRef.el.value;
-    }
 
     /**
      * Returns selection end position.
@@ -84,7 +74,7 @@ export class ComposerTextInput extends Component {
      * @returns {boolean}
      */
     _isEmpty() {
-        return this._getContent() === "";
+        return this.composerView.textareaRef.el.value === "";
     }
 
     /**
