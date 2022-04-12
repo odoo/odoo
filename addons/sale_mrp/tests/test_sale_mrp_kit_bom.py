@@ -410,3 +410,56 @@ class TestSaleMrpKitBom(TransactionCase):
 
         # Checks the delivery amount (must be 1).
         self.assertEqual(so.order_line.qty_delivered, 1)
+
+    def test_sale_kit_show_kit_in_delivery(self):
+        """Create a kit with 2 product and activate 2 steps
+            delivery and check that every stock move contains
+            a bom_line_id
+        """
+
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        wh.write({'delivery_steps': 'pick_ship'})
+
+        kitA = self._create_product('Kit Product', 'product', 0.00)
+        compA = self._create_product('ComponentA', 'product', 0.00)
+        compB = self._create_product('ComponentB', 'product', 0.00)
+
+        # Create BoM for KitB
+        bom_product_formA = Form(self.env['mrp.bom'])
+        bom_product_formA.product_id = kitA
+        bom_product_formA.product_tmpl_id = kitA.product_tmpl_id
+        bom_product_formA.product_qty = 1.0
+        bom_product_formA.type = 'phantom'
+        with bom_product_formA.bom_line_ids.new() as bom_line:
+            bom_line.product_id = compA
+            bom_line.product_qty = 1
+        with bom_product_formA.bom_line_ids.new() as bom_line:
+            bom_line.product_id = compB
+            bom_line.product_qty = 1
+        bom_product_formA.save()
+
+        customer = self.env['res.partner'].create({
+            'name': 'customer',
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': customer.id,
+            'order_line': [
+                (0, 0, {
+                    'name': kitA.name,
+                    'product_id': kitA.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': kitA.uom_id.id,
+                    'price_unit': 1,
+                    'tax_id': False,
+                })]
+        })
+        so.action_confirm()
+
+        pick = so.picking_ids[0]
+        ship = so.picking_ids[1]
+
+        self.assertTrue(pick.move_ids_without_package[0].bom_line_id, "All component from kits should have a bom line")
+        self.assertTrue(pick.move_ids_without_package[1].bom_line_id, "All component from kits should have a bom line")
+        self.assertTrue(ship.move_ids_without_package[0].bom_line_id, "All component from kits should have a bom line")
+        self.assertTrue(ship.move_ids_without_package[1].bom_line_id, "All component from kits should have a bom line")
