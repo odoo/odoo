@@ -611,8 +611,8 @@ export class KanbanRenderer extends Component {
     /**
      * Returns the proper translated name of a record color.
      */
-    kanban_getcolorname(value) {
-        return this.colors[this.kanban_getcolor(value)];
+    getColorName(value) {
+        return this.colors[this.getColorIndex(value)];
     }
 
     /**

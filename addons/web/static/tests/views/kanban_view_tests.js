@@ -8798,7 +8798,7 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(document.activeElement, "btn btn-primary o_kanban_add");
     });
 
-    QUnit.skipWOWL("kanban with isHtmlEmpty method", async (assert) => {
+    QUnit.test("kanban with isHtmlEmpty method", async (assert) => {
         assert.expect(3);
 
         serverData.models.product.fields.description = { string: "Description", type: "html" };
@@ -8840,8 +8840,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(
             target
                 .querySelector(".o_kanban_record:first-child div.test span.text-info")
-                .html()
-                .trim(),
+                .innerText.trim(),
             "hello",
             "the inner html content is rendered properly"
         );

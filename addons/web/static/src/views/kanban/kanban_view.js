@@ -44,8 +44,10 @@ const TRANSPILED_EXPRESSIONS = [
     },
     // `kanban_color(value)` => `getColorClass(record)`
     { regex: /\bkanban_color\(([^)]*)\)/g, value: `getColorClass($1)` },
-    // `kanban_getcolor(value)` => `getColor(record)`
+    // `kanban_getcolor(value)` => `getColorIndex(record)`
     { regex: /\bkanban_getcolor\(([^)]*)\)/g, value: `getColorIndex($1)` },
+    // `bkanban_getcolorname(value)` => `getColorName(record)`
+    { regex: /\bkanban_getcolorname\(([^)]*)\)/g, value: `getColorName($1)` },
     // `record.prop.value` => `getValue(record,'prop')`
     { regex: /\brecord\.(\w+)\.value\b/g, value: `getValue(record, '$1')` },
     // `record.prop.raw_value` => `getRawValue(record,'prop')`

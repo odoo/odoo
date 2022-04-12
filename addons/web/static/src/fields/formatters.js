@@ -6,6 +6,9 @@ import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { escape, intersperse, nbsp } from "@web/core/utils/strings";
 import { session } from "@web/session";
+
+const { markup } = owl;
+
 // -----------------------------------------------------------------------------
 // Helpers
 // -----------------------------------------------------------------------------
@@ -207,6 +210,8 @@ export const formatFloatTime = (value, options = {}) => {
     return `${isNegative ? "-" : ""}${hour}:${min}`;
 };
 
+export const formatHtml = (value) => markup(value);
+
 /**
  * Returns a string representing an integer.  If the value is false, then we
  * return an empty string.
@@ -385,6 +390,7 @@ registry
     .add("float", formatFloat)
     .add("float_factor", formatFloatFactor)
     .add("float_time", formatFloatTime)
+    .add("html", formatHtml)
     .add("integer", formatInteger)
     .add("many2one", formatMany2one)
     .add("one2many", formatX2many)
