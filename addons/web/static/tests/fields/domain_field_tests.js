@@ -491,7 +491,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("basic domain field: show the selection", async function (assert) {
+    QUnit.test("basic domain field: show the selection", async function (assert) {
         assert.expect(2);
 
         serverData.models.partner.records[0].foo = "[]";
@@ -533,10 +533,10 @@ QUnit.module("Fields", (hooks) => {
         // click on a record -> should not open the record
         // we don't actually check that it doesn't open the record because even
         // if it tries to, it will crash as we don't define an arch in this test
-        await click(target, ".modal .o_list_view .o_data_row:first .o_data_cell");
+        await click(target, ".modal .o_list_view .o_data_row .o_data_cell[title='gold']");
     });
 
-    QUnit.skipWOWL("field context is propagated when opening selection", async function (assert) {
+    QUnit.test("field context is propagated when opening selection", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.records[0].foo = "[]";
@@ -559,9 +559,9 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await click(target, ".o_domain_show_selection_button");
-        assert.strictEqual(
-            target.querySelector(".modal .o_data_row").innerText,
-            "1214",
+        assert.deepEqual(
+            [...target.querySelectorAll(".modal .o_data_row")].map((x) => x.innerText),
+            ["12", "14"],
             "should have picked the correct list view"
         );
     });

@@ -16,7 +16,7 @@
                     <t t-if="state.recordCount !== null">
                         <i class="fa fa-arrow-right" role="img" aria-label="Domain" title="Domain" />
                         <t t-if="state.isValid and isValidDomain">
-                            <button class="btn btn-sm btn-secondary o_domain_show_selection_button" type="button">
+                            <button class="btn btn-sm btn-secondary o_domain_show_selection_button" type="button" t-on-click="onButtonClick">
                                 <t t-esc="state.recordCount" /> record(s)
                             </button>
                         </t>

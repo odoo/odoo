@@ -16,7 +16,13 @@ export class SelectCreateDialog extends Dialog {
 
         this.title = this.props.title;
 
+        let viewId = "false";
+        if (this.props.context) {
+            viewId = this.props.context.tree_view_ref || "false";
+        }
+
         this.propsView = {
+            viewId,
             resModel: this.props.resModel,
             domain: this.props.domain,
             context: this.props.context,

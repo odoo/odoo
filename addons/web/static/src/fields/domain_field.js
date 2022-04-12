@@ -6,6 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 import { Domain } from "@web/core/domain";
 import { CharField } from "./char_field";
 import { standardFieldProps } from "./standard_field_props";
+import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
 const { Component, onWillStart, onWillUpdateProps, useState } = owl;
 
@@ -16,6 +17,7 @@ export class DomainField extends Component {
             recordCount: null,
             isValid: true,
         });
+        this.dialog = useService("dialog");
 
         onWillStart(() => {
             this.loadCount(this.props);
@@ -25,6 +27,17 @@ export class DomainField extends Component {
         });
     }
 
+    onButtonClick() {
+        const context = this.props.record.getFieldContext(this.props.name);
+        this.dialog.add(SelectCreateDialog, {
+            title: this.env._t("Selected records"),
+            noCreate: true,
+            multiSelect: false,
+            resModel: this.getResModel(this.props),
+            domain: this.getDomain(this.props.value).toList(context) || [],
+            context: context || {},
+        });
+    }
     get isValidDomain() {
         try {
             this.getDomain(this.props.value).toList();
