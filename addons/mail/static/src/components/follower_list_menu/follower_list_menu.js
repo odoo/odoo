@@ -15,7 +15,6 @@ export class FollowerListMenu extends Component {
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
         onMounted(() => this._mounted());
         onWillUnmount(() => this._willUnmount());
-        this._onClickFollower = this._onClickFollower.bind(this);
     }
 
     _mounted() {
@@ -95,14 +94,6 @@ export class FollowerListMenu extends Component {
      */
     _onClickFollowersButton(ev) {
         this.followerListMenuView.update({ isDropdownOpen: !this.followerListMenuView.isDropdownOpen });
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickFollower(ev) {
-        this.followerListMenuView.hide();
     }
 }
 

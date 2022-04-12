@@ -25,7 +25,7 @@
                                     t-foreach="thread.followers" t-as="follower" t-key="follower.localId"
                                     className="'o_FollowerMenu_follower dropdown-item'"
                                     followerLocalId="follower.localId"
-                                    onClick="_onClickFollower"
+                                    onClick="followerListMenuView.onClickFollower"
                                 />
                             </t>
                             <t t-elif="!thread.hasWriteAccess">

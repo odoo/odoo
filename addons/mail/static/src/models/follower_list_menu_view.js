@@ -9,7 +9,13 @@ registerModel({
     recordMethods: {
         hide() {
             this.update({ isDropdownOpen: false });
-        }
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickFollower(ev) {
+            this.hide();
+        },
     },
     fields: {
         chatterOwner: one('Chatter', {
