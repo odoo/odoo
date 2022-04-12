@@ -3458,6 +3458,14 @@ var FieldRadio = FieldSelection.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     * @returns {boolean} always true
+     */
+    isSet: function () {
+        return true;
+    },
+
+    /**
      * Returns the currently-checked radio button, or the first one if no radio
      * button is checked.
      *
