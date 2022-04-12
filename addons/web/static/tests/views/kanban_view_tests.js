@@ -29,19 +29,13 @@ import { session } from "@web/session";
 import { KanbanAnimatedNumber } from "@web/views/kanban/kanban_animated_number";
 import { KanbanView } from "@web/views/kanban/kanban_view";
 
-const serviceRegistry = registry.category("services");
+const { Component, markup } = owl;
 
-const { markup } = owl;
+const serviceRegistry = registry.category("services");
+const viewWidgetRegistry = registry.category("view_widgets");
 
 // WOWL remove after adapting tests
-let testUtils,
-    Widget,
-    widgetRegistry,
-    widgetRegistryOwl,
-    FormRenderer,
-    AbstractField,
-    FieldChar,
-    fieldRegistry;
+let testUtils, Widget, widgetRegistry, FormRenderer, AbstractField, FieldChar, fieldRegistry;
 
 // ----------------------------------------------------------------------------
 // Helpers
@@ -4856,7 +4850,7 @@ QUnit.module("Views", (hooks) => {
                 {
                     name: "A first example",
                     columns: ["Column 1", "Column 2", "Column 3"],
-                    description: "A weak description.",
+                    description: markup("A weak description."),
                 },
                 {
                     name: "A second example",
@@ -7009,16 +7003,16 @@ QUnit.module("Views", (hooks) => {
         delete widgetRegistry.map.test;
     });
 
-    QUnit.skipWOWL("basic support for widgets (being Owl Components)", async (assert) => {
+    QUnit.test("basic support for widgets (being Owl Components)", async (assert) => {
         assert.expect(1);
 
-        class MyComponent extends owl.Component {
+        class MyComponent extends Component {
             get value() {
                 return JSON.stringify(this.props.record.data);
             }
         }
-        MyComponent.template = owl.xml`<div t-esc="value"/>`;
-        widgetRegistryOwl.add("test", MyComponent);
+        MyComponent.template = owl.xml`<div t-att-class="props.class" t-esc="value"/>`;
+        viewWidgetRegistry.add("test", MyComponent);
 
         await makeView({
             type: "kanban",
@@ -7038,11 +7032,7 @@ QUnit.module("Views", (hooks) => {
             </kanban>`,
         });
 
-        assert.strictEqual(
-            target.querySelector(".o_widget:nth-child(2)").innerText,
-            '{"foo":"gnap","id":3}'
-        );
-        delete widgetRegistryOwl.map.test;
+        assert.strictEqual(getCard(2).querySelector(".o_widget").innerText, '{"foo":"gnap"}');
     });
 
     QUnit.skipWOWL(

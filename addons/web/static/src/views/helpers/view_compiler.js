@@ -2,6 +2,7 @@
 
 import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
+import { registry } from "@web/core/registry";
 import {
     combineAttributes,
     createElement,
@@ -16,9 +17,10 @@ import { Field } from "@web/fields/field";
  * @property {(el: Element, params: Record<string, any>) => Element} fn
  */
 
-const { Component, useComponent, xml } = owl;
+const { useComponent, xml } = owl;
 
 const templateIds = Object.create(null);
+const viewWidgetRegistry = registry.category("view_widgets");
 
 /**
  * @param {Element} parent
@@ -858,9 +860,10 @@ export const useViewCompiler = (ViewCompiler, templateKey, activeFields, xmlDoc,
             return new Domain(expr).contains(record.evalContext);
         },
         getWidget(widgetName) {
-            class ToImplement extends Component {}
-            ToImplement.template = xml`<div>${widgetName}</div>`;
-            return ToImplement;
+            if (!viewWidgetRegistry.contains(widgetName)) {
+                throw new Error(`No widget named "${widgetName}"`);
+            }
+            return viewWidgetRegistry.get(widgetName);
         },
         isFieldEmpty(record, fieldName) {
             return Field.isEmpty(record, fieldName);
