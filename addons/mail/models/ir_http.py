@@ -17,7 +17,7 @@ class IrHttp(models.AbstractModel):
             result['notification_type'] = user.notification_type
         assets_discuss_public_hash = HomeStaticTemplateHelpers.get_qweb_templates_checksum(debug=request.session.debug, bundle='mail.assets_discuss_public')
         result['cache_hashes']['assets_discuss_public'] = assets_discuss_public_hash
-        guest = self.env.context.get('guest')
+        guest = self.env['mail.guest']._get_guest_from_context()
         if not request.session.uid and guest:
             user_context = {'lang': guest.lang}
             mods = odoo.conf.server_wide_modules or []

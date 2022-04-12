@@ -120,7 +120,7 @@ class Partner(models.Model):
                 "user_id": main_user.id,
                 "is_internal_user": not partner.partner_share,
             }
-            if 'guest' in self.env.context:
+            if self.env.user._is_public():
                 partners_format[partner].pop('email')
         return partners_format
 
