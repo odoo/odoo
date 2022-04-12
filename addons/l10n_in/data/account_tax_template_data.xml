@@ -633,6 +633,18 @@ if tax &gt; result:result=tax</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',             'minus_report_line_ids': [ref('tax_report_line_cess_base')],             }),              (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',                 'account_id': ref('p10055'),                 'minus_report_line_ids': [ref('tax_report_line_cess')],             }),         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',             'plus_report_line_ids': [ref('tax_report_line_cess_base')],             }),              (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',                 'account_id': ref('p11235'),                 'plus_report_line_ids': [ref('tax_report_line_cess')],             }),         ]"/>
     </record>
+    <record id="non_gst_supplies_purchase" model="account.tax.template">
+        <field name="name">Non GST Supplies</field>
+        <field name="description">Non GST Supplies</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tax_group_id" ref="non_gst_supplies_group"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',                 'minus_report_line_ids': [ref('tax_report_line_non_gst_supplies')],              }),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',              }),         ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',                 'plus_report_line_ids': [ref('tax_report_line_non_gst_supplies')],             }),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',              }),         ]"/>
+    </record>
+
     <record id="cess_5_plus_1591_purchase" model="account.tax.template">
         <field name="name">CESS 5% + RS.1591/THOUSAND</field>
         <field name="description">CESS 5% + RS.1591/THOUSAND</field>
@@ -767,6 +779,28 @@ if tax &gt; result:result=tax</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',             'minus_report_line_ids': [ref('tax_report_line_non_itc_sgst_base')],             }),              (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',                 'account_id': ref('p10051'),                 'minus_report_line_ids': [ref('tax_report_line_non_itc_sgst')],             })         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',             'plus_report_line_ids': [ref('tax_report_line_non_itc_sgst_base')],             }),              (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',                 'account_id': ref('p11232'),                 'plus_report_line_ids': [ref('tax_report_line_non_itc_sgst')],             })         ]"/>
     </record>
+    <record id="igst_purchase_non_itc" model="account.tax.template">
+        <field name="name">IGST Purchase Non ITC</field>
+        <field name="description">IGST Non ITC</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tax_group_id" ref="igst_group"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',             'minus_report_line_ids': [ref('tax_report_line_igst_base')],             }),              (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',                 'account_id': ref('p10053'),                 'minus_report_line_ids': [ref('tax_report_line_non_itc_igst')],             })         ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',             'plus_report_line_ids': [ref('tax_report_line_igst_base')],             }),              (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',                 'account_id': ref('p11234'),                 'plus_report_line_ids': [ref('tax_report_line_non_itc_igst')],             })         ]"/>
+    </record>
+    <record id="cess_purchase_non_itc" model="account.tax.template">
+        <field name="name">CESS Purchase Non ITC</field>
+        <field name="description">CESS Non ITC</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tax_group_id" ref="cess_group"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',             'minus_report_line_ids': [ref('tax_report_line_cess_base')],             }),              (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',                 'account_id': ref('p11235'),                 'minus_report_line_ids': [ref('tax_report_line_non_itc_cess')],             })         ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',             'plus_report_line_ids': [ref('tax_report_line_cess_base')],             }),              (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',                 'account_id': ref('p10055'),                 'plus_report_line_ids': [ref('tax_report_line_non_itc_cess')],             })         ]"/>
+    </record>
     <record id="cgst_purchase_non_itc_2_5" model="account.tax.template">
         <field name="name">CGST Purchase Non ITC 2.5%</field>
         <field name="description">CGST Non ITC 2.5%</field>
@@ -787,6 +821,28 @@ if tax &gt; result:result=tax</field>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tax_group_id" ref="gst_group"/>
         <field name="children_tax_ids" eval="[(6, 0, [ref('sgst_purchase_non_itc_2_5'), ref('cgst_purchase_non_itc_2_5'),])]"/>
+    </record>
+    <record id="igst_purchase_other_non_itc" model="account.tax.template">
+        <field name="name">IGST Purchase Other Non ITC</field>
+        <field name="description">IGST Other Non ITC</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tax_group_id" ref="igst_group"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',             'minus_report_line_ids': [ref('tax_report_line_igst_other_non_itc_base')],             }),              (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',                 'account_id': ref('p10053'),                 'minus_report_line_ids': [ref('tax_report_line_other_non_itc_igst')],             })         ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',             'plus_report_line_ids': [ref('tax_report_line_igst_other_non_itc_base')],             }),              (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',                 'account_id': ref('p11234'),                 'plus_report_line_ids': [ref('tax_report_line_other_non_itc_igst')],             })         ]"/>
+    </record>
+    <record id="cess_purchase_other_non_itc" model="account.tax.template">
+        <field name="name">CESS Purchase Other Non ITC</field>
+        <field name="description">CESS Other Non ITC</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tax_group_id" ref="cess_group"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',             'minus_report_line_ids': [ref('tax_report_line_other_non_itc_cess_base')],             }),              (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',                 'account_id': ref('p11235'),                 'minus_report_line_ids': [ref('tax_report_line_other_non_itc_cess')],             })         ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',             'plus_report_line_ids': [ref('tax_report_line_other_non_itc_cess_base')],             }),              (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',                 'account_id': ref('p10055'),                 'plus_report_line_ids': [ref('tax_report_line_other_non_itc_cess')],             })         ]"/>
     </record>
     <record id="sgst_purchase_other_non_itc_2_5" model="account.tax.template">
         <field name="name">SGST Purchase Other Non ITC 2.5%</field>
