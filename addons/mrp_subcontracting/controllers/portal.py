@@ -9,7 +9,7 @@ from odoo.http import request
 from odoo.exceptions import AccessError, MissingError
 from odoo.addons.portal.controllers import portal
 from odoo.addons.portal.controllers.portal import pager as portal_pager
-from odoo.addons.web.controllers.main import HomeStaticTemplateHelpers
+from odoo.addons.web.controllers.utils import HomeStaticTemplateHelpers
 
 
 class CustomerPortal(portal.CustomerPortal):
