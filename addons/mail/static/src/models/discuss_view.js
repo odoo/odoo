@@ -9,6 +9,23 @@ registerModel({
     identifyingFields: ['discuss'],
     recordMethods: {
         /**
+         * Handles click on the "Start a meeting" button.
+         *
+         * @param {MouseEvent} ev
+         */
+        async onClickStartAMeetingButton(ev) {
+            const meetingChannel = await this.messaging.models['Thread'].createGroupChat({
+                default_display_mode: 'video_full_screen',
+                partners_to: [this.messaging.currentPartner.id],
+            });
+            meetingChannel.toggleCall({ startWithVideo: true });
+            await meetingChannel.open({ focus: false });
+            if (!meetingChannel.exists() || !this.discuss.threadView) {
+                return;
+            }
+            this.discuss.threadView.topbar.openInvitePopoverView();
+        },
+        /**
          * @private
          * @returns {FieldCommand}
          */
