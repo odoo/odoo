@@ -44,13 +44,17 @@ class StockWarehouseOrderpoint(models.Model):
             orderpoint.show_bom = orderpoint.route_id.id in manufacture_route
 
     def _quantity_in_progress(self):
-        bom_kit_orderpoints = {
-            orderpoint: bom
-            for orderpoint in self
-            for bom in self.env['mrp.bom']._bom_find(product=orderpoint.product_id, bom_type='phantom')
-            if bom
-        }
-        res = super(StockWarehouseOrderpoint, self.filtered(lambda p: p not in bom_kit_orderpoints))._quantity_in_progress()
+        bom_manufacture = self.env['mrp.bom']
+        bom_kit_orderpoints = {}
+        for orderpoint in self:
+            bom = self.env['mrp.bom']._bom_find(product=orderpoint.product_id)
+            if bom.type == 'phantom':
+                bom_kit_orderpoints[orderpoint] = bom
+            elif bom.type == 'normal':
+                bom_manufacture |= bom
+
+        orderpoints_without_kit = self - self.env['stock.warehouse.orderpoint'].concat(*bom_kit_orderpoints.keys())
+        res = super(StockWarehouseOrderpoint, orderpoints_without_kit)._quantity_in_progress()
         for orderpoint in bom_kit_orderpoints:
             boms, bom_sub_lines = bom_kit_orderpoints[orderpoint].explode(orderpoint.product_id, 1)
             ratios_qty_available = []
@@ -73,6 +77,16 @@ class StockWarehouseOrderpoint(models.Model):
             #  (the quantity if we have received all in-progress components) - (the quantity using only available components)
             product_qty = min(ratios_total or [0]) - min(ratios_qty_available or [0])
             res[orderpoint.id] = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.product_uom, round=False)
+
+        productions_group = self.env['mrp.production'].read_group(
+            [('bom_id', 'in', bom_manufacture.ids), ('state', '=', 'draft'), ('orderpoint_id', 'in', orderpoints_without_kit.ids)],
+            ['orderpoint_id', 'product_qty', 'product_uom_id'],
+            ['orderpoint_id', 'product_uom_id'], lazy=False)
+        for p in productions_group:
+            uom = self.env['uom.uom'].browse(p['product_uom_id'][0])
+            orderpoint = self.env['stock.warehouse.orderpoint'].browse(p['orderpoint_id'][0])
+            res[orderpoint.id] += uom._compute_quantity(
+                p['product_qty'], orderpoint.product_uom, round=False)
         return res
 
     def _set_default_route_id(self):
