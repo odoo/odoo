@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
 from markupsafe import Markup
@@ -768,8 +769,11 @@ class SaleOrder(models.Model):
                 'It is not allowed to confirm an order in the following states: %s'
             ) % (', '.join(self._get_forbidden_state_confirm())))
 
+        mapped_subscriptions = defaultdict(lambda: self.env['sale.order'])
         for order in self.filtered(lambda order: order.partner_id not in order.message_partner_ids):
-            order.message_subscribe([order.partner_id.id])
+            mapped_subscriptions[order.partner_id.id] += order
+        for partner_id, orders in mapped_subscriptions.items():
+            orders.message_subscribe([partner_id])
         self.write(self._prepare_confirmation_values())
 
         # Context key 'default_name' is sometimes propagated up to here.
@@ -1079,10 +1083,10 @@ class SaleOrder(models.Model):
         if final:
             moves.sudo().filtered(lambda m: m.amount_total < 0).action_switch_invoice_into_refund_credit_note()
         for move in moves:
-            move.message_post_with_view('mail.message_origin_link',
-                values={'self': move, 'origin': move.line_ids.mapped('sale_line_ids.order_id')},
-                subtype_id=self.env.ref('mail.mt_note').id
-            )
+            move.message_post_with_view(
+                'mail.message_origin_link',
+                values={'self': move, 'origin': move.line_ids.sale_line_ids.order_id},
+                subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'))
         return moves
 
     # MAIL #
