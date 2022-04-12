@@ -212,7 +212,8 @@
     }
     function makePropSetter(name) {
         return function setProp(value) {
-            this[name] = value || "";
+            // support 0, fallback to empty string for other falsy values
+            this[name] = value === 0 ? 0 : value || "";
         };
     }
     function isProp(tag, key) {
@@ -518,7 +519,7 @@
     const characterDataSetData = getDescriptor$1(characterDataProto, "data").set;
     const nodeGetFirstChild = getDescriptor$1(nodeProto$2, "firstChild").get;
     const nodeGetNextSibling = getDescriptor$1(nodeProto$2, "nextSibling").get;
-    const NO_OP$1 = () => { };
+    const NO_OP = () => { };
     const cache$1 = {};
     /**
      * Compiling blocks is a multi-step process:
@@ -822,7 +823,7 @@
                         idx: info.idx,
                         refIdx: info.refIdx,
                         setData: makeRefSetter(index, ctx.refList),
-                        updateData: NO_OP$1,
+                        updateData: NO_OP,
                     });
             }
         }
@@ -1623,6 +1624,11 @@
                 if (key === TARGET) {
                     return target;
                 }
+                // non-writable non-configurable properties cannot be made reactive
+                const desc = Object.getOwnPropertyDescriptor(target, key);
+                if (desc && !desc.writable && !desc.configurable) {
+                    return Reflect.get(target, key, proxy);
+                }
                 observeTargetKey(target, key, callback);
                 return possiblyReactive(Reflect.get(target, key, proxy), callback);
             },
@@ -1696,6 +1702,23 @@
         };
     }
     /**
+     * Creates a forEach function that will delegate to forEach on the underlying
+     * collection while observing key changes, and keys as they're iterated over,
+     * and making the passed keys/values reactive.
+     *
+     * @param target @see reactive
+     * @param callback @see reactive
+     */
+    function makeForEachObserver(target, callback) {
+        return function forEach(forEachCb, thisArg) {
+            observeTargetKey(target, KEYCHANGES, callback);
+            target.forEach(function (val, key, targetObj) {
+                observeTargetKey(target, key, callback);
+                forEachCb.call(thisArg, possiblyReactive(val, callback), possiblyReactive(key, callback), possiblyReactive(targetObj, callback));
+            }, thisArg);
+        };
+    }
+    /**
      * Creates a function that will delegate to an underlying method, and check if
      * that method has modified the presence or value of a key, and notify the
      * reactives appropriately.
@@ -1753,6 +1776,7 @@
             values: makeIteratorObserver("values", target, callback),
             entries: makeIteratorObserver("entries", target, callback),
             [Symbol.iterator]: makeIteratorObserver(Symbol.iterator, target, callback),
+            forEach: makeForEachObserver(target, callback),
             clear: makeClearNotifier(target),
             get size() {
                 observeTargetKey(target, KEYCHANGES, callback);
@@ -1768,6 +1792,7 @@
             values: makeIteratorObserver("values", target, callback),
             entries: makeIteratorObserver("entries", target, callback),
             [Symbol.iterator]: makeIteratorObserver(Symbol.iterator, target, callback),
+            forEach: makeForEachObserver(target, callback),
             clear: makeClearNotifier(target),
             get size() {
                 observeTargetKey(target, KEYCHANGES, callback);
@@ -1821,11 +1846,13 @@
             await Promise.resolve();
             if (!called) {
                 called = true;
-                callback();
                 // wait for all calls in this microtick to fall through before resetting "called"
-                // so that only the first call to the batched function calls the original callback
-                await Promise.resolve();
-                called = false;
+                // so that only the first call to the batched function calls the original callback.
+                // Schedule this before calling the callback so that calls to the batched function
+                // within the callback will proceed only after resetting called to false, and have
+                // a chance to execute the callback again
+                Promise.resolve().then(() => (called = false));
+                callback();
             }
         };
     }
@@ -1888,7 +1915,7 @@
     // Maps fibers to thrown errors
     const fibersInError = new WeakMap();
     const nodeErrorHandlers = new WeakMap();
-    function _handleError(node, error, isFirstRound = false) {
+    function _handleError(node, error) {
         if (!node) {
             return false;
         }
@@ -1898,22 +1925,19 @@
         }
         const errorHandlers = nodeErrorHandlers.get(node);
         if (errorHandlers) {
-            let stopped = false;
+            let handled = false;
             // execute in the opposite order
             for (let i = errorHandlers.length - 1; i >= 0; i--) {
                 try {
                     errorHandlers[i](error);
-                    stopped = true;
+                    handled = true;
                     break;
                 }
                 catch (e) {
                     error = e;
                 }
             }
-            if (stopped) {
-                if (isFirstRound && fiber && fiber.node.fiber) {
-                    fiber.root.counter--;
-                }
+            if (handled) {
                 return true;
             }
         }
@@ -1931,7 +1955,7 @@
             current = current.parent;
         } while (current);
         fibersInError.set(fiber.root, error);
-        const handled = _handleError(node, error, true);
+        const handled = _handleError(node, error);
         if (!handled) {
             console.warn(`[Owl] Unhandled error. Destroying the root component`);
             try {
@@ -1955,8 +1979,14 @@
         let current = node.fiber;
         if (current) {
             let root = current.root;
-            root.counter = root.counter + 1 - cancelFibers(current.children);
+            // lock root fiber because canceling children fibers may destroy components,
+            // which means any arbitrary code can be run in onWillDestroy, which may
+            // trigger new renderings
+            root.locked = true;
+            root.setCounter(root.counter + 1 - cancelFibers(current.children));
+            root.locked = false;
             current.children = [];
+            current.childrenMap = {};
             current.bdom = null;
             if (fibersInError.has(current)) {
                 fibersInError.delete(current);
@@ -1980,7 +2010,11 @@
     function cancelFibers(fibers) {
         let result = 0;
         for (let fiber of fibers) {
-            fiber.node.fiber = null;
+            let node = fiber.node;
+            if (node.status === 0 /* NEW */) {
+                node.destroy();
+            }
+            node.fiber = null;
             if (fiber.bdom) {
                 // if fiber has been rendered, this means that the component props have
                 // been updated. however, this fiber will not be patched to the dom, so
@@ -1988,7 +2022,7 @@
                 // the same props, and skip the render completely. With the next line,
                 // we kindly request the component code to force a render, so it works as
                 // expected.
-                fiber.node.forceNextRender = true;
+                node.forceNextRender = true;
             }
             else {
                 result++;
@@ -2003,17 +2037,54 @@
             this.children = [];
             this.appliedToDom = false;
             this.deep = false;
+            this.childrenMap = {};
             this.node = node;
             this.parent = parent;
             if (parent) {
                 this.deep = parent.deep;
                 const root = parent.root;
-                root.counter++;
+                root.setCounter(root.counter + 1);
                 this.root = root;
                 parent.children.push(this);
             }
             else {
                 this.root = this;
+            }
+        }
+        render() {
+            // if some parent has a fiber => register in followup
+            let prev = this.root.node;
+            let scheduler = prev.app.scheduler;
+            let current = prev.parent;
+            while (current) {
+                if (current.fiber) {
+                    let root = current.fiber.root;
+                    if (root.counter === 0 && prev.parentKey in current.fiber.childrenMap) {
+                        current = root.node;
+                    }
+                    else {
+                        scheduler.delayedRenders.push(this);
+                        return;
+                    }
+                }
+                prev = current;
+                current = current.parent;
+            }
+            // there are no current rendering from above => we can render
+            this._render();
+        }
+        _render() {
+            const node = this.node;
+            const root = this.root;
+            if (root) {
+                try {
+                    this.bdom = true;
+                    this.bdom = node.renderFn();
+                }
+                catch (e) {
+                    handleError({ node, error: e });
+                }
+                root.setCounter(root.counter - 1);
             }
         }
     }
@@ -2077,6 +2148,12 @@
                 handleError({ fiber: current || this, error: e });
             }
         }
+        setCounter(newValue) {
+            this.counter = newValue;
+            if (newValue === 0) {
+                this.node.app.scheduler.flush();
+            }
+        }
     }
     class MountFiber extends RootFiber {
         constructor(node, target, options = {}) {
@@ -2088,6 +2165,7 @@
             let current = this;
             try {
                 const node = this.node;
+                node.children = this.childrenMap;
                 node.app.constructor.validateTarget(this.target);
                 if (node.bdom) {
                     // this is a complicated situation: if we mount a fiber with an existing
@@ -2293,17 +2371,10 @@
         const node = getCurrent();
         let render = batchedRenderFunctions.get(node);
         if (!render) {
-            render = batched(node.render.bind(node));
+            render = batched(node.render.bind(node, false));
             batchedRenderFunctions.set(node, render);
             // manual implementation of onWillDestroy to break cyclic dependency
             node.willDestroy.push(clearReactivesForCallback.bind(null, render));
-            if (node.app.dev) {
-                Object.defineProperty(node, "subscriptions", {
-                    get() {
-                        return getSubscriptions(render);
-                    },
-                });
-            }
         }
         return reactive(state, render);
     }
@@ -2318,14 +2389,8 @@
     function component(name, props, key, ctx, parent) {
         let node = ctx.children[key];
         let isDynamic = typeof name !== "string";
-        if (node) {
-            if (node.status < 1 /* MOUNTED */) {
-                node.destroy();
-                node = undefined;
-            }
-            else if (node.status === 2 /* DESTROYED */) {
-                node = undefined;
-            }
+        if (node && node.status === 2 /* DESTROYED */) {
+            node = undefined;
         }
         if (isDynamic && node && node.component.constructor !== name) {
             node = undefined;
@@ -2356,14 +2421,15 @@
                     throw new Error(`Cannot find the definition of component "${name}"`);
                 }
             }
-            node = new ComponentNode(C, props, ctx.app, ctx);
+            node = new ComponentNode(C, props, ctx.app, ctx, key);
             ctx.children[key] = node;
             node.initiateRender(new Fiber(node, parentFiber));
         }
+        parentFiber.childrenMap[key] = node;
         return node;
     }
     class ComponentNode {
-        constructor(C, props, app, parent) {
+        constructor(C, props, app, parent, parentKey) {
             this.fiber = null;
             this.bdom = null;
             this.status = 0 /* NEW */;
@@ -2379,7 +2445,8 @@
             this.willDestroy = [];
             currentNode = this;
             this.app = app;
-            this.parent = parent || null;
+            this.parent = parent;
+            this.parentKey = parentKey;
             this.level = parent ? parent.level + 1 : 0;
             applyDefaultProps(props, C);
             const env = (parent && parent.childEnv) || app.env;
@@ -2409,12 +2476,12 @@
                 return;
             }
             if (this.status === 0 /* NEW */ && this.fiber === fiber) {
-                this._render(fiber);
+                fiber.render();
             }
         }
-        async render(deep = false) {
+        async render(deep) {
             let current = this.fiber;
-            if (current && current.root.locked) {
+            if (current && (current.root.locked || current.bdom === true)) {
                 await Promise.resolve();
                 // situation may have changed after the microtask tick
                 current = this.fiber;
@@ -2453,16 +2520,7 @@
             //   embedded in a rendering coming from above, so the fiber will be rendered
             //   in the next microtick anyway, so we should not render it again.
             if (this.fiber === fiber && (current || !fiber.parent)) {
-                this._render(fiber);
-            }
-        }
-        _render(fiber) {
-            try {
-                fiber.bdom = this.renderFn();
-                fiber.root.counter--;
-            }
-            catch (e) {
-                handleError({ node: this, error: e });
+                fiber.render();
             }
         }
         destroy() {
@@ -2482,8 +2540,15 @@
             for (let child of Object.values(this.children)) {
                 child._destroy();
             }
-            for (let cb of this.willDestroy) {
-                cb.call(component);
+            if (this.willDestroy.length) {
+                try {
+                    for (let cb of this.willDestroy) {
+                        cb.call(component);
+                    }
+                }
+                catch (e) {
+                    handleError({ error: e, node: this });
+                }
             }
             this.status = 2 /* DESTROYED */;
         }
@@ -2502,7 +2567,7 @@
                 return;
             }
             component.props = props;
-            this._render(fiber);
+            fiber.render();
             const parentRoot = parentFiber.root;
             if (this.willPatch.length) {
                 parentRoot.willPatch.push(fiber);
@@ -2549,6 +2614,7 @@
             bdom.mount(parent, anchor);
             this.status = 1 /* MOUNTED */;
             this.fiber.appliedToDom = true;
+            this.children = this.fiber.childrenMap;
             this.fiber = null;
         }
         moveBefore(other, afterNode) {
@@ -2564,10 +2630,8 @@
         }
         _patch() {
             const hasChildren = Object.keys(this.children).length > 0;
+            this.children = this.fiber.childrenMap;
             this.bdom.patch(this.fiber.bdom, hasChildren);
-            if (hasChildren) {
-                this.cleanOutdatedChildren();
-            }
             this.fiber.appliedToDom = true;
             this.fiber = null;
         }
@@ -2577,18 +2641,15 @@
         remove() {
             this.bdom.remove();
         }
-        cleanOutdatedChildren() {
-            const children = this.children;
-            for (const key in children) {
-                const node = children[key];
-                const status = node.status;
-                if (status !== 1 /* MOUNTED */) {
-                    delete children[key];
-                    if (status !== 2 /* DESTROYED */) {
-                        node.destroy();
-                    }
-                }
-            }
+        // ---------------------------------------------------------------------------
+        // Some debug helpers
+        // ---------------------------------------------------------------------------
+        get name() {
+            return this.component.constructor.name;
+        }
+        get subscriptions() {
+            const render = batchedRenderFunctions.get(this);
+            return render ? getSubscriptions(render) : [];
         }
     }
 
@@ -2598,59 +2659,59 @@
     class Scheduler {
         constructor() {
             this.tasks = new Set();
-            this.isRunning = false;
+            this.frame = 0;
+            this.delayedRenders = [];
             this.requestAnimationFrame = Scheduler.requestAnimationFrame;
-        }
-        start() {
-            this.isRunning = true;
-            this.scheduleTasks();
-        }
-        stop() {
-            this.isRunning = false;
         }
         addFiber(fiber) {
             this.tasks.add(fiber.root);
-            if (!this.isRunning) {
-                this.start();
-            }
         }
         /**
          * Process all current tasks. This only applies to the fibers that are ready.
          * Other tasks are left unchanged.
          */
         flush() {
-            this.tasks.forEach((fiber) => {
-                if (fiber.root !== fiber) {
-                    this.tasks.delete(fiber);
-                    return;
-                }
-                const hasError = fibersInError.has(fiber);
-                if (hasError && fiber.counter !== 0) {
-                    this.tasks.delete(fiber);
-                    return;
-                }
-                if (fiber.node.status === 2 /* DESTROYED */) {
-                    this.tasks.delete(fiber);
-                    return;
-                }
-                if (fiber.counter === 0) {
-                    if (!hasError) {
-                        fiber.complete();
+            if (this.delayedRenders.length) {
+                let renders = this.delayedRenders;
+                this.delayedRenders = [];
+                for (let f of renders) {
+                    if (f.root && f.node.status !== 2 /* DESTROYED */) {
+                        f.render();
                     }
-                    this.tasks.delete(fiber);
                 }
-            });
-            if (this.tasks.size === 0) {
-                this.stop();
+            }
+            if (this.frame === 0) {
+                this.frame = this.requestAnimationFrame(() => {
+                    this.frame = 0;
+                    this.tasks.forEach((fiber) => this.processFiber(fiber));
+                    for (let task of this.tasks) {
+                        if (task.node.status === 2 /* DESTROYED */) {
+                            this.tasks.delete(task);
+                        }
+                    }
+                });
             }
         }
-        scheduleTasks() {
-            this.requestAnimationFrame(() => {
-                this.flush();
-                if (this.isRunning) {
-                    this.scheduleTasks();
+        processFiber(fiber) {
+            if (fiber.root !== fiber) {
+                this.tasks.delete(fiber);
+                return;
+            }
+            const hasError = fibersInError.has(fiber);
+            if (hasError && fiber.counter !== 0) {
+                this.tasks.delete(fiber);
+                return;
+            }
+            if (fiber.node.status === 2 /* DESTROYED */) {
+                this.tasks.delete(fiber);
+                return;
+            }
+            if (fiber.counter === 0) {
+                if (!hasError) {
+                    fiber.complete();
                 }
-            });
+                this.tasks.delete(fiber);
+            }
         }
     }
     // capture the value of requestAnimationFrame as soon as possible, to avoid
@@ -3939,8 +4000,11 @@
                 let slotStr = [];
                 for (let slotName in ast.slots) {
                     const slotAst = ast.slots[slotName];
-                    const name = this.compileInNewTarget("slot", slotAst.content, ctx, slotAst.on);
-                    const params = [`__render: ${name}, __ctx: ${ctxStr}`];
+                    const params = [];
+                    if (slotAst.content) {
+                        const name = this.compileInNewTarget("slot", slotAst.content, ctx, slotAst.on);
+                        params.push(`__render: ${name}, __ctx: ${ctxStr}`);
+                    }
                     const scope = ast.slots[slotName].scope;
                     if (scope) {
                         params.push(`__scope: "${scope}"`);
@@ -4042,7 +4106,7 @@
                 if (dynamic) {
                     let name = this.generateId("slot");
                     this.define(name, slotName);
-                    blockString = `toggler(${name}, callSlot(ctx, node, key, ${name}), ${dynamic}, ${scope})`;
+                    blockString = `toggler(${name}, callSlot(ctx, node, key, ${name}, ${dynamic}, ${scope}))`;
                 }
                 else {
                     blockString = `callSlot(ctx, node, key, ${slotName}, ${dynamic}, ${scope})`;
@@ -4583,28 +4647,26 @@
                 slotNode.removeAttribute("t-set-slot");
                 slotNode.remove();
                 const slotAst = parseNode(slotNode, ctx);
-                if (slotAst) {
-                    let on = null;
-                    let attrs = null;
-                    let scope = null;
-                    for (let attributeName of slotNode.getAttributeNames()) {
-                        const value = slotNode.getAttribute(attributeName);
-                        if (attributeName === "t-slot-scope") {
-                            scope = value;
-                            continue;
-                        }
-                        else if (attributeName.startsWith("t-on-")) {
-                            on = on || {};
-                            on[attributeName.slice(5)] = value;
-                        }
-                        else {
-                            attrs = attrs || {};
-                            attrs[attributeName] = value;
-                        }
+                let on = null;
+                let attrs = null;
+                let scope = null;
+                for (let attributeName of slotNode.getAttributeNames()) {
+                    const value = slotNode.getAttribute(attributeName);
+                    if (attributeName === "t-slot-scope") {
+                        scope = value;
+                        continue;
                     }
-                    slots = slots || {};
-                    slots[name] = { content: slotAst, on, attrs, scope };
+                    else if (attributeName.startsWith("t-on-")) {
+                        on = on || {};
+                        on[attributeName.slice(5)] = value;
+                    }
+                    else {
+                        attrs = attrs || {};
+                        attrs[attributeName] = value;
+                    }
                 }
+                slots = slots || {};
+                slots[name] = { content: slotAst, on, attrs, scope };
             }
             // default slot
             const defaultContent = parseChildNodes(clone, ctx);
@@ -4835,12 +4897,26 @@
         return new Function("bdom, helpers", code);
     }
 
+    const TIMEOUT = Symbol("timeout");
     function wrapError(fn, hookName) {
         const error = new Error(`The following error occurred in ${hookName}: `);
+        const timeoutError = new Error(`${hookName}'s promise hasn't resolved after 3 seconds`);
+        const node = getCurrent();
         return (...args) => {
             try {
                 const result = fn(...args);
                 if (result instanceof Promise) {
+                    if (hookName === "onWillStart" || hookName === "onWillUpdateProps") {
+                        const fiber = node.fiber;
+                        Promise.race([
+                            result,
+                            new Promise((resolve) => setTimeout(() => resolve(TIMEOUT), 3000)),
+                        ]).then((res) => {
+                            if (res === TIMEOUT && node.fiber === fiber) {
+                                console.warn(timeoutError);
+                            }
+                        });
+                    }
                     return result.catch((cause) => {
                         error.cause = cause;
                         if (cause instanceof Error) {
@@ -4936,7 +5012,7 @@
         }
         setup() { }
         render(deep = false) {
-            this.__owl__.render(deep);
+            this.__owl__.render(deep === true);
         }
     }
     Component.template = "";
@@ -5318,7 +5394,7 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
             return prom;
         }
         makeNode(Component, props) {
-            return new ComponentNode(Component, props, this);
+            return new ComponentNode(Component, props, this, null, null);
         }
         mountNode(node, target, options) {
             const promise = new Promise((resolve, reject) => {
@@ -5350,6 +5426,7 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
         }
         destroy() {
             if (this.root) {
+                this.scheduler.flush();
                 this.root.destroy();
             }
         }
@@ -5415,10 +5492,6 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
         const node = getCurrent();
         node.childEnv = extendEnv(node.childEnv, envExtension);
     }
-    // -----------------------------------------------------------------------------
-    // useEffect
-    // -----------------------------------------------------------------------------
-    const NO_OP = () => { };
     /**
      * This hook will run a callback when a component is mounted and patched, and
      * will run a cleanup function before patching and before unmounting the
@@ -5436,18 +5509,20 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
         let dependencies;
         onMounted(() => {
             dependencies = computeDependencies();
-            cleanup = effect(...dependencies) || NO_OP;
+            cleanup = effect(...dependencies);
         });
         onPatched(() => {
             const newDeps = computeDependencies();
             const shouldReapply = newDeps.some((val, i) => val !== dependencies[i]);
             if (shouldReapply) {
                 dependencies = newDeps;
-                cleanup();
-                cleanup = effect(...dependencies) || NO_OP;
+                if (cleanup) {
+                    cleanup();
+                }
+                cleanup = effect(...dependencies);
             }
         });
-        onWillUnmount(() => cleanup());
+        onWillUnmount(() => cleanup && cleanup());
     }
     // -----------------------------------------------------------------------------
     // useExternalListener
@@ -5527,9 +5602,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.0-beta.3';
-    __info__.date = '2022-03-08T11:47:57.414Z';
-    __info__.hash = 'c356351';
+    __info__.version = '2.0.0-beta-6';
+    __info__.date = '2022-04-11T09:02:17.726Z';
+    __info__.hash = '41344ef';
     __info__.url = 'https://github.com/odoo/owl';
 
 
