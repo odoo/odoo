@@ -11,10 +11,10 @@ export class DiscussMobileMailboxSelection extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {Discuss}
+     * @returns {DiscussView}
      */
-    get discuss() {
-        return this.messaging && this.messaging.discuss;
+    get discussView() {
+        return this.messaging && this.messaging.models['DiscussView'].get(this.props.localId);
     }
 
     //--------------------------------------------------------------------------
@@ -39,7 +39,7 @@ export class DiscussMobileMailboxSelection extends Component {
 }
 
 Object.assign(DiscussMobileMailboxSelection, {
-    props: {},
+    props: { localId: String },
     template: 'mail.DiscussMobileMailboxSelection',
 });
 

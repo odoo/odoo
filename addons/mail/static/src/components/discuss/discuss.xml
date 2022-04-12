@@ -25,7 +25,7 @@
 
     <t t-name="mail.Discuss.content" owl="1">
         <t t-if="messaging.device.isMobile and discussView.discuss.activeMobileNavbarTabId === 'mailbox'">
-            <DiscussMobileMailboxSelection className="'o_Discuss_mobileMailboxSelection border-bottom'"/>
+            <DiscussMobileMailboxSelection className="'o_Discuss_mobileMailboxSelection border-bottom'" localId="discussView.localId"/>
         </t>
         <t t-if="discussView.mobileAddItemHeaderAutocompleteInputView">
             <div class="o_Discuss_mobileAddItemHeader border-bottom">
