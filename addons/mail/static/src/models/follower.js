@@ -47,6 +47,14 @@ registerModel({
             this.update({ followerSubtypeListDialog: clear() });
         },
         /**
+         * @param {MouseEvent} ev
+         */
+        onClickDetails(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            this.openProfile();
+        },
+        /**
          * Opens the most appropriate view that is a profile for this follower.
          */
         async openProfile() {

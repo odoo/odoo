@@ -25,16 +25,6 @@ export class Follower extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickDetails(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        this.follower.openProfile();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     _onClickEdit(ev) {
         ev.preventDefault();
         this.follower.showSubtypes();
