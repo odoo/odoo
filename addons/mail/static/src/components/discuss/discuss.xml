@@ -57,7 +57,7 @@
         </t>
         <t t-if="messaging.device.isMobile and discussView.discuss.activeMobileNavbarTabId !== 'mailbox'">
             <t t-if="discussView.discuss.activeMobileNavbarTabId === 'chat'">
-                <button class="o_Discuss_mobileNewChatButton btn btn-secondary" t-on-click="discussView.discuss.onClickMobileNewChatButton">
+                <button class="o_Discuss_mobileNewChatButton btn btn-secondary" t-on-click="discussView.onClickMobileNewChatButton">
                     Start a conversation
                 </button>
             </t>

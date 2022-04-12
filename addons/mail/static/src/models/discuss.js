@@ -128,14 +128,6 @@ registerModel({
             });
         },
         /**
-         * Handles click on the mobile "new chat" button.
-         *
-         * @param {MouseEvent} ev
-         */
-        onClickMobileNewChatButton(ev) {
-            this.update({ isAddingChat: true });
-        },
-        /**
          * Handles click on the mobile "new channel" button.
          *
          * @param {MouseEvent} ev

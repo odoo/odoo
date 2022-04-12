@@ -9,6 +9,14 @@ registerModel({
     identifyingFields: ['discuss'],
     recordMethods: {
         /**
+         * Handles click on the mobile "new chat" button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickMobileNewChatButton(ev) {
+            this.discuss.update({ isAddingChat: true });
+        },
+        /**
          * @private
          * @returns {FieldCommand}
          */
