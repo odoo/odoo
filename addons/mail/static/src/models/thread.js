@@ -915,6 +915,12 @@ registerModel({
             member.openProfile();
         },
         /**
+         * @param {MouseEvent} ev
+         */
+        onClickUnfollow(ev) {
+            this.unfollow();
+        },
+        /**
          * Opens this thread either as form view, in discuss app, or as a chat
          * window. The thread will be opened in an "active" matter, which will
          * interrupt current user flow.
