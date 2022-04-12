@@ -368,8 +368,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         // await testUtils.dom.click($modal.find(".btn.btn-primary"));
     });
 
-    QUnit.skipWOWL("SelectCreateDialog: save current search", async function (assert) {
-        // FIXME WOWL: grep #02938023289424083
+    QUnit.test("SelectCreateDialog: save current search", async function (assert) {
         assert.expect(4);
 
         serverData.views = {
@@ -438,10 +437,10 @@ QUnit.module("ViewDialogs", (hooks) => {
         await saveFavorite(target);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "SelectCreateDialog calls on_selected with every record matching the domain",
         async function (assert) {
-            assert.expect(3);
+            assert.expect(1);
             serverData.views = {
                 "partner,false,list": `
                         <tree limit="2" string="Partner">
@@ -460,13 +459,7 @@ QUnit.module("ViewDialogs", (hooks) => {
             webClient.env.services.dialog.add(SelectCreateDialog, {
                 resModel: "partner",
                 onSelected: function (records) {
-                    assert.equal(records.length, 3);
-                    // FIXME WOWL: comes from https://github.com/odoo/odoo/commit/dd239a604aa03ef44a9759e50b6c0dee7d4e2ece
-                    assert.strictEqual(
-                        records.map((r) => r.display_name).toString(),
-                        "blipblip,macgyver,Jack O'Neill"
-                    );
-                    assert.strictEqual(records.map((r) => r.id).toString(), "1,2,3");
+                    assert.equal(records.join(","), "1,2,3");
                 },
             });
             await nextTick();
@@ -477,38 +470,37 @@ QUnit.module("ViewDialogs", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "SelectCreateDialog calls on_selected with every record matching without selecting a domain",
         async function (assert) {
-            // assert.expect(3);
-            // const parent = await createParent({
-            //     data: this.data,
-            //     archs: {
-            //         'partner,false,list':
-            //             '<tree limit="2" string="Partner">' +
-            //                 '<field name="display_name"/>' +
-            //                 '<field name="foo"/>' +
-            //             '</tree>',
-            //         'partner,false,search':
-            //             '<search>' +
-            //                 '<field name="foo"/>' +
-            //             '</search>',
-            //     },
-            //     session: {},
-            // });
-            // new dialogs.SelectCreateDialog(parent, {
-            //     res_model: 'partner',
-            //     on_selected: function(records) {
-            //         assert.equal(records.length, 2);
-            //         assert.strictEqual(records.map((r) => r.display_name).toString(), "blipblip,macgyver");
-            //         assert.strictEqual(records.map((r) => r.id).toString(), "1,2");
-            //     }
-            // }).open();
-            // await testUtils.nextTick();
-            // await testUtils.dom.click($('thead .o_list_record_selector input'));
-            // await testUtils.dom.click($('.o_list_selection_box '));
-            // await testUtils.dom.click($('.modal .o_select_button'));
-            // parent.destroy();
+            assert.expect(1);
+            serverData.views = {
+                "partner,false,list": `
+                        <tree limit="2" string="Partner">
+                            <field name="display_name"/>
+                            <field name="foo"/>
+                        </tree>
+                    `,
+                "partner,false,search": `
+                        <search>
+                            <field name="foo"/>
+                        </search>
+                    `,
+            };
+
+            const webClient = await createWebClient({ serverData });
+            webClient.env.services.dialog.add(SelectCreateDialog, {
+                resModel: "partner",
+                onSelected: function (records) {
+                    assert.equal(records.join(","), "1,2");
+                },
+            });
+
+            await nextTick();
+
+            await click(target, "thead .o_list_record_selector input");
+            await click(target, ".o_list_selection_box");
+            await click(target, ".modal .o_select_button");
         }
     );
 });

@@ -11,7 +11,7 @@ export class SelectCreateDialog extends Dialog {
         super.setup();
         this.viewService = useService("view");
         this.state = useState({
-            selectedRecords: [],
+            resIds: [],
         });
 
         this.title = this.props.title;
@@ -37,8 +37,8 @@ export class SelectCreateDialog extends Dialog {
                 }
             },
             createRecord: () => {},
-            onSelectionChanged: (selectedRecords) => {
-                this.state.selectedRecords = selectedRecords;
+            onSelectionChanged: (resIds) => {
+                this.state.resIds = resIds;
             },
             noBreadcrumbs: true,
             searchViewId: this.props.searchViewId,
@@ -52,18 +52,14 @@ export class SelectCreateDialog extends Dialog {
                     context: this.props.context || {},
                     views: [[false, "search"]],
                 });
-                // FIXME AAB: what is this?? #02938023289424083
-                this.propsView.searchViewId =
-                    views.search.name !== this.props.resModel + " search"
-                        ? views.search.name
-                        : undefined;
+                this.propsView.searchViewId = views.search.id;
             }
         });
     }
 
     select() {
         if (this.props.onSelected) {
-            this.props.onSelected(this.state.selectedRecords);
+            this.props.onSelected(this.state.resIds);
             this.close();
         }
     }
