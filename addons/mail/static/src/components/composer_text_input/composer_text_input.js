@@ -124,7 +124,7 @@ export class ComposerTextInput extends Component {
             }
             this._textareaRef.el.focus();
         }
-        if (this.composerView.composer.isLastStateChangeProgrammatic) {
+        if (this.composerView.hasToRestoreContent) {
             this._textareaRef.el.value = this.composerView.composer.textInputContent;
             if (this.composerView.isFocused) {
                 this._textareaRef.el.setSelectionRange(
@@ -133,7 +133,7 @@ export class ComposerTextInput extends Component {
                     this.composerView.composer.textInputSelectionDirection,
                 );
             }
-            this.composerView.composer.update({ isLastStateChangeProgrammatic: false });
+            this.composerView.update({ hasToRestoreContent: false });
         }
         this._updateHeight();
     }

@@ -80,7 +80,6 @@ registerModel({
             const textInputContent = htmlDoc.body.textContent;
             this.update({
                 composerForEditing: insertAndReplace({
-                    isLastStateChangeProgrammatic: true,
                     mentionedPartners: replace(this.message.recipients),
                     textInputContent,
                     textInputCursorEnd: textInputContent.length,
@@ -89,6 +88,7 @@ registerModel({
                 }),
                 composerViewInEditing: insertAndReplace({
                     doFocus: true,
+                    hasToRestoreContent: true,
                 }),
             });
         },

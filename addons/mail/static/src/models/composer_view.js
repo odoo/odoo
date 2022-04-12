@@ -117,11 +117,13 @@ registerModel({
                 suggestionDelimiterPosition = suggestionDelimiterPosition + content.length;
             }
             this.composer.update({
-                isLastStateChangeProgrammatic: true,
                 textInputContent: partA + content + partB,
                 textInputCursorEnd: this.composer.textInputCursorStart + content.length,
                 textInputCursorStart: this.composer.textInputCursorStart + content.length,
             });
+            for (const composerView of this.composer.composerViews) {
+                composerView.update({ hasToRestoreContent: true });
+            }
             this.update({ suggestionDelimiterPosition });
         },
         /**
@@ -149,7 +151,6 @@ registerModel({
             }
             const recordReplacement = this.activeSuggestion.mentionText;
             const updateData = {
-                isLastStateChangeProgrammatic: true,
                 textInputContent: textLeft + recordReplacement + ' ' + textRight,
                 textInputCursorEnd: textLeft.length + recordReplacement.length + 1,
                 textInputCursorStart: textLeft.length + recordReplacement.length + 1,
@@ -164,6 +165,9 @@ registerModel({
                 Object.assign(updateData, { mentionedPartners: link(this.activeSuggestion.partner) });
             }
             this.composer.update(updateData);
+            for (const composerView of this.composer.composerViews) {
+                composerView.update({ hasToRestoreContent: true });
+            }
         },
         /**
          * Called when clicking on attachment button.
@@ -923,7 +927,7 @@ registerModel({
          * composer text input.
          */
         _onChangeComposer() {
-            this.composer.update({ isLastStateChangeProgrammatic: true });
+            this.update({ hasToRestoreContent: true });
         },
         /**
          * @private
@@ -1180,6 +1184,16 @@ registerModel({
         }),
         hasThreadTyping: attr({
             compute: '_computeHasThreadTyping',
+            default: false,
+        }),
+        /**
+         * Determines whether the content of this composer should be restored in
+         * this view. Useful to avoid restoring the state when its change was
+         * from a user action, in particular to prevent the cursor from jumping
+         * to its previous position after the user clicked on the textarea while
+         * it didn't have the focus anymore.
+         */
+        hasToRestoreContent: attr({
             default: false,
         }),
         /**
