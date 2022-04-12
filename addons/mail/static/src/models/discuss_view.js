@@ -9,6 +9,13 @@ registerModel({
     identifyingFields: ['discuss'],
     recordMethods: {
         /**
+         * @param {KeyboardEvent} ev
+         */
+        onInputQuickSearch(ev) {
+            ev.stopPropagation();
+            this.discuss.onInputQuickSearch(this.quickSearchInputRef.el.value);
+        },
+        /**
          * @private
          * @returns {FieldCommand}
          */

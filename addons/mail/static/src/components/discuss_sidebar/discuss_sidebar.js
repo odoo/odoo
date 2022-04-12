@@ -44,19 +44,6 @@ export class DiscussSidebar extends Component {
         }
     }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {KeyboardEvent} ev
-     */
-    _onInputQuickSearch(ev) {
-        ev.stopPropagation();
-        this.discussView.discuss.onInputQuickSearch(this.discussView.quickSearchInputRef.el.value);
-    }
-
 }
 
 Object.assign(DiscussSidebar, {
