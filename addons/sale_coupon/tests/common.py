@@ -44,6 +44,28 @@ class TestSaleCouponCommon(TestSaleProductAttributeValueSetup):
             'price_include': True,
         })
 
+        self.tax_10pc_base_incl = self.env['account.tax'].create({
+            'name': "10% Tax incl base amount",
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include': True,
+            'include_base_amount': True,
+        })
+
+        self.tax_10pc_excl = self.env['account.tax'].create({
+            'name': "10% Tax excl",
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include': False,
+        })
+
+        self.tax_20pc_excl = self.env['account.tax'].create({
+            'name': "20% Tax excl",
+            'amount_type': 'percent',
+            'amount': 20,
+            'price_include': False,
+        })
+
         #products
         self.product_A = self.env['product.product'].create({
             'name': 'Product A',

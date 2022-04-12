@@ -144,6 +144,10 @@ class SaleOrder(models.Model):
         discount_amount = line.product_uom_qty * line.price_reduce * (program.discount_percentage / 100)
         return discount_amount
 
+    def _get_max_reward_values_per_tax(self, program, taxes):
+        lines = self.order_line.filtered(lambda l: l.tax_id == taxes and l.product_id != program.discount_line_product_id)
+        return sum(lines.mapped(lambda l: l.price_reduce * l.product_uom_qty))
+
     def _get_reward_values_fixed_amount(self, program):
         discount_amount = self._get_reward_values_discount_fixed_amount(program)
 
@@ -424,6 +428,7 @@ class SaleOrder(models.Model):
             if program.reward_type == 'discount':
                 lines_to_remove = lines
                 lines_to_add = []
+                lines_to_keep = []
                 # Values is what discount lines should really be, lines is what we got in the SO at the moment
                 # 1. If values & lines match, we should update the line (or delete it if no qty or price?)
                 #    As removing a lines remove all the other lines linked to the same program, we need to save them
@@ -446,9 +451,12 @@ class SaleOrder(models.Model):
                     if not value_found:
                         lines_to_add += [(0, False, value)]
                 # Case 3.
-                lines_to_remove.unlink()
-                # Case 2.
-                order.write({'order_line': lines_to_add})
+                line_update = []
+                if lines_to_remove:
+                    line_update += [(3, line_id, 0) for line_id in lines_to_remove.ids]
+                    line_update += lines_to_keep
+                line_update += lines_to_add
+                order.write({'order_line': line_update})
             else:
                 update_line(order, lines, values[0]).unlink()
 

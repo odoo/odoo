@@ -447,11 +447,17 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         # Free Pedal Bin       |  5  |   -100.00  | /        | -500.00 | -500.00 |       /
         # Free Large Cabinet   |  3  |   -100.00  | 15% excl | -300.00 | -345.00 |  -45.00
         # 20% on Large Cabinet |  1  |    -80.00  | 15% excl | -80.00  | -92.00  |  -12.00
+        # 10% on no tax        |  1  |    -50.00  | /        | -50.00  | -50.00  |       /
+        # 10% on tax 15% excl  |  1  |    -60.00  | 15% excl | -60.00  | -69.00  |   -9.00
+        # 10% on tax 35%+50%   |  1  |    -30.00  | 35% incl | -22.22  | -41.11  |  -18.89
+        #                                           50% excl
         # --------------------------------------------------------------------------------
-        # TOTAL                                              | 1242.22 | 1509.11 |  266.89
-        self.assertAlmostEqual(order.amount_total, 1509.11, 2, "The order total with programs should be 1509.11")
-        self.assertEqual(order.amount_untaxed, 1242.22, "The order untaxed total with programs should be 1242.22")
-        self.assertEqual(len(order.order_line.ids), 7, "Order should contains 7 lines: 4 products lines, 2 free products lines and a 20% discount line")
+        # TOTAL                                              | 1110.0  | 1349.11 |   239.0
+        self.assertAlmostEqual(order.amount_total, 1349.0, 2, "The order total with programs should be 1509.11")
+        self.assertEqual(order.amount_untaxed, 1110.0, "The order untaxed total with programs should be 1242.22")
+        self.assertEqual(len(order.order_line.ids), 10, "Order should contains 7 lines: 4 products lines,"
+                                                        " 2 free products lines, a 20% discount line"
+                                                        "and 3 10% discount ")
 
     def test_program_numbers_extras(self):
         # Check that you can't apply a global discount promo code if there is already an auto applied global discount
@@ -1440,11 +1446,50 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
 
         order.recompute_coupon_lines()
 
-        self.assertEqual(len(order.order_line), 3)
+        self.assertEqual(len(order.order_line), 3, 'Promotion should add 1 line')
         self.assertEqual(order.amount_total, 0, '10$ discount should cover the whole price')
 
         sol1.price_unit = 20
         order.recompute_coupon_lines()
 
-        self.assertEqual(len(order.order_line), 3)
+        self.assertEqual(len(order.order_line), 3, 'Promotion should add 1 line')
         self.assertEqual(order.amount_total, 5, '10$ discount should be applied on top of the 15$ original price')
+
+    def test_fixed_amount_change_promo_amount(self):
+
+        promo = self.env['sale.coupon.program'].create({
+            'name': '$10 coupon',
+            'program_type': 'promotion_program',
+            'promo_code_usage': 'no_code_needed',
+            'reward_type': 'discount',
+            'discount_type': 'fixed_amount',
+            'discount_fixed_amount': 10,
+            'active': True,
+            'discount_apply_on': 'on_order',
+        })
+
+        order = self.empty_order
+
+        self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'price_unit': 10,
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+
+        order.recompute_coupon_lines()
+
+        self.assertEqual(len(order.order_line), 2, 'Promotion should add 1 line')
+        self.assertEqual(order.amount_total, 0, '10$ - 10$(discount) = 0$(total) ')
+
+        promo.discount_fixed_amount = 5
+        order.recompute_coupon_lines()
+
+        self.assertEqual(len(order.order_line), 2, 'Promotion should add 1 line')
+        self.assertEqual(order.amount_total, 5, '10$ - 5$(discount) = 5$(total) ')
+
+        promo.discount_fixed_amount = 0
+        order.recompute_coupon_lines()
+
+        self.assertEqual(len(order.order_line), 1, 'Promotion line should not be present')
+        self.assertEqual(order.amount_total, 10, '10$ - 0$(discount) = 10$(total) ')
