@@ -3978,6 +3978,9 @@ class AccountMoveLine(models.Model):
         """
         cr = self._cr
         cr.execute('DROP INDEX IF EXISTS account_move_line_partner_id_index')
+        cr.execute("""CREATE INDEX IF NOT EXISTS account_move_line_date_move_name_id
+            ON account_move_line
+            (date desc, move_name desc, id);""")
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('account_move_line_partner_id_ref_idx',))
         if not cr.fetchone():
             cr.execute('CREATE INDEX account_move_line_partner_id_ref_idx ON account_move_line (partner_id, ref)')
