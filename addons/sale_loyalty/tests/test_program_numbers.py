@@ -4,6 +4,7 @@
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
+from odoo.tools.float_utils import float_compare
 
 
 @tagged('post_install', '-at_install')
@@ -568,9 +569,9 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         # --------------------------------------------------------------------------------
         # TOTAL                                              | 1118.00 | 1349.00 |  240.20
 
-        self.assertAlmostEqual(order.amount_total, 1358.2, 2, "The order total with programs should be 1349.00")
-        self.assertEqual(order.amount_untaxed, 1118, "The order untaxed total with programs should be 1110.00")
-        self.assertEqual(len(order.order_line.ids), 10, "Order should contains 7 lines: 4 products lines, 2 free products lines and a 20% discount line")
+        self.assertAlmostEqual(order.amount_total, 1358.2, 2, "The order total with programs should be 1358.20")
+        self.assertEqual(order.amount_untaxed, 1118, "The order untaxed total with programs should be 1118.00")
+        self.assertEqual(len(order.order_line.ids), 10, "Order should contains 10 lines: 4 products lines, 2 free products lines and 4 discount lines")
 
     def test_program_numbers_extras(self):
         # Check that you can't apply a global discount promo code if there is already an auto applied global discount
@@ -623,6 +624,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
             'name': 'Drawer Black',
             'product_uom_qty': 1.0,
             'order_id': order.id,
+            'tax_id': [(4, self.tax_0pc_excl.id)]
         })
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(order.amount_total, 0, "Total should be null. The fixed amount discount is higher than the SO total, it should be reduced to the SO total")
@@ -1471,32 +1473,18 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         # Applying both programs in a different order should result in a different
         #  outcome since discountable amounts are computed per tax
         # Applying program A before B should yield a better final price
-        tax_10pc_excl, tax_20pc_excl = self.env['account.tax'].create([
-            {
-                'name': "10% Tax excl",
-                'amount_type': 'percent',
-                'amount': 10,
-                'type_tax_use': 'sale',
-            },
-            {
-                'name': "20% Tax excl",
-                'amount_type': 'percent',
-                'amount': 20,
-                'type_tax_use': 'sale',
-            },
-        ])
         product_a, product_b = self.env['product.product'].create([
             {
                 'name': 'Product A',
                 'list_price': 10,
                 'sale_ok': True,
-                'taxes_id': [(6, 0, [tax_10pc_excl.id])],
+                'taxes_id': [(6, 0, [self.tax_10pc_excl.id])],
             },
             {
                 'name': 'Product B',
                 'list_price': 10,
                 'sale_ok': True,
-                'taxes_id': [(6, 0, [tax_20pc_excl.id])],
+                'taxes_id': [(6, 0, [self.tax_20pc_excl.id])],
             },
         ])
         program_a, program_b = self.env['loyalty.program'].create([
@@ -1561,3 +1549,217 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         # We essentially create a discount of -100% off of an already discounted product
         # (11 - 2.4) = 8.6$ discount ~
         self.assertAlmostEqual(order.amount_total, 9.4, 1, 'Total should be 9.4$')
+
+    def test_fixed_amount_taxes_attribution(self):
+        program = self.env['loyalty.program'].create({
+            'name': '-5 USD',
+            'trigger': 'auto',
+            'program_type': 'promotion',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 5,
+                'discount_mode': 'per_point',
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+        })
+
+        order = self.empty_order
+        sol = self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'price_unit': 10,
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+
+        self._auto_rewards(order, program)
+
+        self.assertEqual(order.amount_total, 5, 'Price should be 10$ - 5$(discount) = 5$')
+        self.assertEqual(order.amount_tax, 0, 'No taxes are applied yet')
+
+        sol.tax_id = self.tax_10pc_base_incl
+        self._auto_rewards(order, program)
+
+        self.assertEqual(order.amount_total, 5, 'Price should be 10$ - 5$(discount) = 5$')
+        self.assertEqual(float_compare(order.amount_tax, 5 / 11, precision_rounding=3), 0, '10% Tax included in 5$')
+
+        sol.tax_id = self.tax_10pc_excl
+        self._auto_rewards(order, program)
+
+        # Value is 5.99 instead of 6 because you cannot have 6 with 10% tax excluded and a precision rounding of 2
+        self.assertAlmostEqual(order.amount_total, 6, 1, msg='Price should be 11$ - 5$(discount) = 6$')
+        self.assertEqual(float_compare(order.amount_tax, 6 / 11, precision_rounding=3), 0, '10% Tax included in 6$')
+
+        sol.tax_id = self.tax_20pc_excl
+        self._auto_rewards(order, program)
+
+        self.assertEqual(order.amount_total, 7, 'Price should be 12$ - 5$(discount) = 7$')
+        self.assertEqual(float_compare(order.amount_tax, 7 / 12, precision_rounding=3), 0, '20% Tax included on 7$')
+
+        sol.tax_id = self.tax_10pc_base_incl + self.tax_10pc_excl
+        self._auto_rewards(order, program)
+
+        self.assertAlmostEqual(order.amount_total, 6, 1, msg='Price should be 11$ - 5$(discount) = 6$')
+        self.assertEqual(float_compare(order.amount_tax, 6 / 12, precision_rounding=3), 0, '20% Tax included on 6$')
+
+    def test_fixed_amount_taxes_attribution_multiline(self):
+
+        program = self.env['loyalty.program'].create({
+            'name': '-5 USD',
+            'trigger': 'auto',
+            'program_type': 'promotion',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 5,
+                'discount_mode': 'per_point',
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+        })
+
+        order = self.empty_order
+        sol1 = self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'price_unit': 10,
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+        sol2 = self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'price_unit': 10,
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+
+        self._auto_rewards(order, program)
+
+        self.assertAlmostEqual(order.amount_total, 15, 1, msg='Price should be 20$ - 5$(discount) = 15$')
+        self.assertEqual(order.amount_tax, 0, 'No taxes are applied yet')
+
+        sol1.tax_id = self.tax_10pc_base_incl
+        self._auto_rewards(order, program)
+
+        self.assertAlmostEqual(order.amount_total, 15, 1, msg='Price should be 20$ - 5$(discount) = 15$')
+        self.assertEqual(float_compare(order.amount_tax, 5 / 11 + 0, precision_rounding=3), 0,
+                         '10% Tax included in 5$ in sol1 (highest cost) and 0 in sol2')
+
+        sol2.tax_id = self.tax_10pc_excl
+        self._auto_rewards(order, program)
+
+        self.assertAlmostEqual(order.amount_total, 16, 1, msg='Price should be 21$ - 5$(discount) = 16$')
+        # Tax amount = 10% in 10$ + 10% in 11$ - 10% in 5$ (apply on excluded)
+        self.assertEqual(float_compare(order.amount_tax, 5 / 11, precision_rounding=3), 0)
+
+        sol2.tax_id = self.tax_10pc_base_incl + self.tax_10pc_excl
+        self._auto_rewards(order, program)
+
+        self.assertAlmostEqual(order.amount_total, 16, 1, msg='Price should be 21$ - 5$(discount) = 16$')
+        # Promo apply on line 2 (10% inc + 10% exc)
+        # Tax amount = 10% in 10$ + 10% in 10$ + 10% in 11 - 10% in 5$ - 10% in 4.55$ (100/110*5)
+        #            = 10/11 + 10/11 + 11/11 - 5/11 - 4.55/11
+        #            = 21.45/11
+        self.assertEqual(float_compare(order.amount_tax, 21.45 / 11, precision_rounding=3), 0)
+
+        sol3 = self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'price_unit': 10,
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+        sol3.tax_id = self.tax_10pc_excl
+        self._auto_rewards(order, program)
+
+        self.assertAlmostEqual(order.amount_total, 27, 1, msg='Price should be 32$ - 5$(discount) = 27$')
+        # Promo apply on line 2 (10% inc + 10% exc)
+        # Tax amount = 10% in 10$ + 10% in 10$ + 10% in 11$ + 10% in 11$ - 10% in 5$ - 10% in 4.55$ (100/110*5)
+        #            = 10/11 + 10/11 + 11/11 + 11/11 - 5/11 - 4.55/11
+        #            = 32.45/11
+        self.assertEqual(float_compare(order.amount_tax, 32.45 / 11, precision_rounding=3), 0)
+
+    def test_fixed_amount_with_negative_cost(self):
+        program = self.env['loyalty.program'].create({
+            'name': '-10 USD',
+            'trigger': 'auto',
+            'program_type': 'promotion',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'per_point',
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+        })
+
+        order = self.empty_order
+
+        sol1 = self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'price_unit': 10,
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+
+        self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'name': 'hand discount',
+            'price_unit': -5,
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+
+        self._auto_rewards(order, program)
+
+        self.assertEqual(len(order.order_line), 3, 'Promotion should add 1 line')
+        self.assertEqual(order.amount_total, 0, '10$ discount should cover the whole price')
+
+        sol1.price_unit = 20
+        self._auto_rewards(order, program)
+
+        self.assertEqual(len(order.order_line), 3, 'Promotion should add 1 line')
+        self.assertEqual(order.amount_total, 5, '10$ discount should be applied on top of the 15$ original price')
+
+    def test_fixed_amount_change_promo_amount(self):
+        program = self.env['loyalty.program'].create({
+            'name': '-10 USD',
+            'trigger': 'auto',
+            'program_type': 'promotion',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'per_point',
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+        })
+
+        order = self.empty_order
+
+        self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'price_unit': 10,
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+
+        self._auto_rewards(order, program)
+
+        self.assertEqual(len(order.order_line), 2, 'Promotion should add 1 line')
+        self.assertEqual(order.amount_total, 0, '10$ - 10$(discount) = 0$(total) ')
+
+        program.reward_ids.discount = 5
+        self._auto_rewards(order, program)
+
+        self.assertEqual(len(order.order_line), 2, 'Promotion should add 1 line')
+        self.assertEqual(order.amount_total, 5, '10$ - 5$(discount) = 5$(total) ')
