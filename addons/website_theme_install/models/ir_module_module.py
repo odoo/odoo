@@ -360,10 +360,14 @@ class IrModuleModule(models.Model):
 
         # load the theme and his ancestors (in case the theme has been imported)
         for mod in self._theme_get_stream_themes():
+            print("Loading theme %s" % mod.name)
+            print("For website %s" % website.id)
             mod._theme_load(website)
 
         # this will install 'self' if it is not installed yet
-        self._theme_upgrade_upstream()
+        if self.imported != True:
+            print("upgrade upstream theme", self.imported)
+            self._theme_upgrade_upstream()
 
         return website.button_go_website()
 
