@@ -66,6 +66,9 @@ class AuthSignupHome(Home):
             raise werkzeug.exceptions.NotFound()
 
         if 'error' not in qcontext and request.httprequest.method == 'POST':
+            qcontext['message'] = _(
+                "If this email address exists, an email will be send with credentials to reset your password"
+            )
             try:
                 if qcontext.get('token'):
                     self.do_signup(qcontext)
@@ -77,14 +80,12 @@ class AuthSignupHome(Home):
                         "Password reset attempt for <%s> by user <%s> from %s",
                         login, request.env.user.login, request.httprequest.remote_addr)
                     request.env['res.users'].sudo().reset_password(login)
-                    qcontext['message'] = _("An email has been sent with credentials to reset your password")
             except UserError as e:
-                qcontext['error'] = e.args[0]
+                _logger.exception(e.args[0])
             except SignupError:
-                qcontext['error'] = _("Could not reset your password")
                 _logger.exception('error when resetting password')
             except Exception as e:
-                qcontext['error'] = str(e)
+                _logger.exception(str(e))
 
         response = request.render('auth_signup.reset_password', qcontext)
         response.headers['X-Frame-Options'] = 'DENY'
