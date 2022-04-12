@@ -7,6 +7,12 @@ import { clear, replace } from '@mail/model/model_field_command';
 registerModel({
     name: 'AttachmentDeleteConfirmView',
     identifyingFields: ['dialogOwner'],
+    component: {
+        name: 'AttachmentDeleteConfirm',
+        getter: 'attachmentDeleteConfirmView',
+        template: 'mail.AttachmentDeleteConfirm',
+        fieldName: 'component',
+    },
     recordMethods: {
         /**
          * Returns whether the given html element is inside this attachment delete confirm view.

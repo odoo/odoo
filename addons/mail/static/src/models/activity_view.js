@@ -4,11 +4,19 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
+import Popover from "web.Popover";
 import { auto_str_to_date, getLangDateFormat, getLangDatetimeFormat } from 'web.time';
 
 registerModel({
     name: 'ActivityView',
     identifyingFields: ['activityBoxView', 'activity'],
+    component: {
+        name: 'Activity',
+        getter: 'activityView',
+        components: { Popover },
+        template: 'mail.Activity',
+        legacy: true,
+    },
     recordMethods: {
         /**
          * Handles the click on a link inside the activity.

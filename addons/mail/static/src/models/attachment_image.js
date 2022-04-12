@@ -7,6 +7,11 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 registerModel({
     name: 'AttachmentImage',
     identifyingFields: ['attachmentList', 'attachment'],
+    component: {
+        name: 'AttachmentImage',
+        getter: 'attachmentImage',
+        template: 'mail.AttachmentImage',
+    },
     recordMethods: {
         /**
          * Opens the attachment viewer when clicking on viewable attachment.

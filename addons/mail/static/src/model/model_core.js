@@ -1,5 +1,10 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
+
+import { LegacyComponent } from "@web/legacy/legacy_component";
+
 /**
  * Module that contains registry for adding new models or patching models.
  * Useful for model manager in order to generate models.
@@ -11,6 +16,32 @@
 
 export const registry = new Map();
 
+
+/**
+ * Adds a messaging component based on `componentDefinition` and related to the
+ * given `modelName`.
+ *
+ * @param {string} modelName
+ * @param {Object} componentDefinition
+ */
+function addComponent(modelName, componentDefinition) {
+    const ComponentClass = componentDefinition.isLegacy ? LegacyComponent : owl.Component;
+    const MessagingComponentClass = { [componentDefinition.name]: class extends ComponentClass {} }[componentDefinition.name];
+    Object.assign(MessagingComponentClass, {
+        props: { localId: String },
+        template: componentDefinition.template,
+        components: componentDefinition.components,
+        setup() {
+            if (componentDefinition.fieldName) {
+                useComponentToModel({ fieldName: componentDefinition.fieldName, modelName });
+            }
+        },
+    });
+    Object.defineProperty(MessagingComponentClass.prototype, componentDefinition.getter, { get() {
+        return this.messaging && this.messaging.models[modelName].get(this.props.localId);
+    } });
+    registerMessagingComponent(MessagingComponentClass);
+}
 
 /**
  * Concats `contextMessage` at the beginning of any error raising when calling
@@ -342,6 +373,7 @@ export function patchRecordMethods(modelName, recordMethods) {
 
 /**
  * @param {Object} definition The JSON definition of the model to register.
+ * @param {Object} [definition.component]
  * @param {Object} [definition.fields]
  * @param {string[]} definition.identifyingFields
  * @param {Object} [definition.lifecycleHooks]
@@ -352,7 +384,7 @@ export function patchRecordMethods(modelName, recordMethods) {
  * @param {Object} [definition.recordGetters] Deprecated; use fields instead.
  * @param {Object} [definition.recordMethods]
  */
-export function registerModel({ fields, identifyingFields, lifecycleHooks, modelGetters, modelMethods, name, onChanges, recordGetters, recordMethods }) {
+export function registerModel({ component, fields, identifyingFields, lifecycleHooks, modelGetters, modelMethods, name, onChanges, recordGetters, recordMethods }) {
     if (!name) {
         throw new Error("Model is lacking a name.");
     }
@@ -393,5 +425,8 @@ export function registerModel({ fields, identifyingFields, lifecycleHooks, model
     }
     if (onChanges) {
         addOnChanges(name, onChanges);
+    }
+    if (component) {
+        addComponent(name, component);
     }
 }
