@@ -1821,8 +1821,6 @@ class MailThread(models.AbstractModel):
         if self._context.get('mail_post_autofollow') and partner_ids:
             self.message_subscribe(partner_ids=list(partner_ids))
 
-        parent_id = self._message_compute_parent_id(parent_id)
-
         values = dict(msg_kwargs)
         values.update({
             'author_id': author_id,
@@ -1833,7 +1831,7 @@ class MailThread(models.AbstractModel):
             'body': body,
             'subject': subject or False,
             'message_type': message_type,
-            'parent_id': parent_id,
+            'parent_id': self._message_compute_parent_id(parent_id),
             'subtype_id': subtype_id,
             'partner_ids': partner_ids,
             'add_sign': add_sign,
@@ -2061,6 +2059,13 @@ class MailThread(models.AbstractModel):
         return author_id, email_from
 
     def _message_compute_parent_id(self, parent_id):
+        # parent management, depending on ``_mail_flat_thread``
+        # ``_mail_flat_thread`` True: no free message. If no parent, find the first
+        # posted message and attach new message to it. If parent, get back to the first
+        # ancestor and attach it. We don't keep hierarchy (one level of threading).
+        # ``_mail_flat_thread`` False: free message = new thread (think of mailing lists).
+        # If parent get up one level to try to flatten threads without completely
+        # removing hierarchy.
         MailMessage_sudo = self.env['mail.message'].sudo()
         if self._mail_flat_thread and not parent_id:
             parent_message = MailMessage_sudo.search([('res_id', '=', self.id), ('model', '=', self._name), ('message_type', '!=', 'user_notification')], order="id ASC", limit=1)
@@ -2068,15 +2073,17 @@ class MailThread(models.AbstractModel):
             # Note that with sudo we will match message with internal subtypes.
             parent_id = parent_message.id if parent_message else False
         elif parent_id:
-            parent_message = MailMessage_sudo.search([('id', '=', parent_id), ('parent_id', '!=', False)], limit=1)
-            # avoid loops when finding ancestors
-            processed_list = []
-            if parent_message:
-                new_parent_id = parent_message.parent_id and parent_message.parent_id.id
-                while (new_parent_id and new_parent_id not in processed_list):
-                    processed_list.append(new_parent_id)
-                    parent_message = parent_message.parent_id
-                parent_id = parent_message.id
+            current_ancestor = MailMessage_sudo.search([('id', '=', parent_id), ('parent_id', '!=', False)])
+            if self._mail_flat_thread:
+                if current_ancestor:
+                    # avoid loops when finding ancestors
+                    processed_list = []
+                    while (current_ancestor.parent_id and current_ancestor.parent_id not in processed_list):
+                        processed_list.append(current_ancestor)
+                        current_ancestor = current_ancestor.parent_id
+                    parent_id = current_ancestor.id
+            else:
+                parent_id = current_ancestor.parent_id.id if current_ancestor.parent_id else parent_id
         return parent_id
 
     def _message_create(self, values_list):
