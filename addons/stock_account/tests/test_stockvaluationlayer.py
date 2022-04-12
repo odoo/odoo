@@ -518,10 +518,10 @@ class TestStockValuationAVCO(TestStockValuationCommon):
     def test_return_delivery_2(self):
         self.product1.write({"standard_price": 1})
         move1 = self._make_out_move(self.product1, 10, create_picking=True, force_assign=True)
-        move2 = self._make_in_move(self.product1, 10, unit_cost=2)
-        move3 = self._make_return(move1, 10)
+        self._make_in_move(self.product1, 10, unit_cost=2)
+        self._make_return(move1, 10)
 
-        self.assertEqual(self.product1.value_svl, 20)
+        self.assertEqual(self.product1.value_svl, 10)
         self.assertEqual(self.product1.quantity_svl, 10)
         self.assertEqual(self.product1.standard_price, 2)
 
@@ -698,10 +698,10 @@ class TestStockValuationFIFO(TestStockValuationCommon):
     def test_return_delivery_3(self):
         self.product1.write({"standard_price": 1})
         move1 = self._make_out_move(self.product1, 10, create_picking=True, force_assign=True)
-        move2 = self._make_in_move(self.product1, 10, unit_cost=2)
-        move3 = self._make_return(move1, 10)
+        self._make_in_move(self.product1, 10, unit_cost=2)
+        self._make_return(move1, 10)
 
-        self.assertEqual(self.product1.value_svl, 20)
+        self.assertEqual(self.product1.value_svl, 10)
         self.assertEqual(self.product1.quantity_svl, 10)
 
 
