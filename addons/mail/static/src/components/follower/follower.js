@@ -35,15 +35,6 @@ export class Follower extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickEdit(ev) {
-        ev.preventDefault();
-        this.follower.showSubtypes();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     _onClickRemove(ev) {
         this.follower.remove();
     }
