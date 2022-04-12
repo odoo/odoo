@@ -8,6 +8,7 @@ import {
     getFixture,
     getNodesTextContent,
     nextTick,
+    patchWithCleanup,
     selectDropdownItem,
 } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
@@ -292,7 +293,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.debug("fieldmany2many tags with color: rendering and edition", async function (assert) {
+    QUnit.test("fieldmany2many tags with color: rendering and edition", async function (assert) {
         assert.expect(26);
 
         serverData.models.partner.records[0].timmy = [12, 14];
@@ -461,26 +462,34 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("fieldmany2many tags in tree view", async function (assert) {
-        assert.expect(3);
+    QUnit.test("fieldmany2many tags in tree view", async function (assert) {
+        assert.expect(2); // TODO !! We need to bump this to 3 when list view can open form views in tests
 
-        await makeView({
+        serverData.models.partner.records[0].timmy = [12, 14];
+
+        const list = await makeView({
             type: "list",
             resModel: "partner",
             serverData,
-            arch:
-                "<tree>" +
-                '<field name="timmy" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
-                "</tree>",
+            arch: `<tree>
+                    <field name="timmy" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="foo"/>
+                </tree>`,
+            selectRecord: () => {
+                console.log("HOLA");
+            },
         });
+
         assert.containsN(target, ".o_field_many2many_tags .badge", 2, "there should be 2 tags");
         assert.containsNone(target, ".badge.dropdown-toggle", "the tags should not be dropdowns");
 
-        /*testUtils.mock.intercept(list, "switch_view", function (event) {
-            assert.strictEqual(event.data.view_type, "form", "should switch to form view");
-        });*/
+        patchWithCleanup(list.env.services.action, {
+            switchView(viewType) {
+                assert.strictEqual("list", viewType, "The switch view is a list view");
+            },
+        });
         // click on the tag: should do nothing and open the form view
-        click(target.el.querySelector(".o_field_many2many_tags .badge:first"));
+        click(target.querySelector(".o_field_many2many_tags .badge :nth-child(1)"));
     });
 
     QUnit.skipWOWL("fieldmany2many tags view a domain", async function (assert) {

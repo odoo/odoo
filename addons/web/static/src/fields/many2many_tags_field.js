@@ -31,6 +31,12 @@ export class Many2ManyTagsField extends Component {
             colorIndex: record.data[this.props.colorField],
         }));
     }
+    get canOpenColorDropdown() {
+        return this.props.canEditColor;
+    }
+    get showM2OSelectionField() {
+        return !this.props.readonly;
+    }
     tagColorClass(tag) {
         return `o_tag_color_${tag.colorIndex}`;
     }

@@ -3,7 +3,7 @@
 
     <t t-name="web.Many2ManyTagsField" owl="1">
         <t t-foreach="tags" t-as="tag" t-key="tag.id or tag_index">
-            <t t-if="props.canEditColor">
+            <t t-if="canOpenColorDropdown">
                 <Dropdown togglerClass="'unset-button-style'">
                     <t t-set-slot="toggler">
                         <t t-call="badge_text" />
@@ -18,7 +18,7 @@
                 <t t-call="badge_text"/>
             </t>
         </t>
-        <div class="o_field_many2many_selection" style="height: 800px;">
+        <div t-if="showM2OSelectionField" class="o_field_many2many_selection">
             <div class="o_input_dropdown">
                 <AutoComplete
                     t-if="!props.readonly"
