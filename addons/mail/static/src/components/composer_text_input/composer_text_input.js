@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdate } from '@mail/component_hooks/use_update';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { markEventHandled } from '@mail/utils/utils';
@@ -15,6 +16,7 @@ export class ComposerTextInput extends Component {
     setup() {
         super.setup();
         useComponentToModel({ fieldName: 'textInputComponent', modelName: 'ComposerView' });
+        useRefToModel({ fieldName: 'mirroredTextareaRef', modelName: 'ComposerView', refName: 'mirroredTextarea' });
         /**
          * Updates the composer text input content when composer is mounted
          * as textarea content can't be changed from the DOM.
@@ -29,12 +31,6 @@ export class ComposerTextInput extends Component {
          * Reference of the textarea. Useful to set height, selection and content.
          */
         this._textareaRef = useRef('textarea');
-        /**
-         * This is the invisible textarea used to compute the composer height
-         * based on the text content. We need it to downsize the textarea
-         * properly without flicker.
-         */
-        this._mirroredTextareaRef = useRef('mirroredTextarea');
     }
 
     //--------------------------------------------------------------------------
@@ -144,8 +140,8 @@ export class ComposerTextInput extends Component {
      * @private
      */
     _updateHeight() {
-        this._mirroredTextareaRef.el.value = this.composerView.composer.textInputContent;
-        this._textareaRef.el.style.height = (this._mirroredTextareaRef.el.scrollHeight) + "px";
+        this.composerView.mirroredTextareaRef.el.value = this.composerView.composer.textInputContent;
+        this._textareaRef.el.style.height = this.composerView.mirroredTextareaRef.el.scrollHeight + 'px';
     }
 
     //--------------------------------------------------------------------------

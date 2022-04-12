@@ -1212,6 +1212,12 @@ registerModel({
             readonly: true,
         }),
         /**
+         * This is the invisible textarea used to compute the composer height
+         * based on the text content. We need it to downsize the textarea
+         * properly without flicker.
+         */
+        mirroredTextareaRef: attr(),
+        /**
          * Determines the label on the send button of this composer view.
          */
         sendButtonText: attr({
