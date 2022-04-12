@@ -12481,6 +12481,59 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.skipWOWL(
+        "Quick Edition: Readonly one2many list (non editable form)",
+        async function (assert) {
+            assert.expect(7);
+
+            this.data.partner.records[0].p.push(2);
+
+            const form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch: `
+                <form edit="0">
+                    <field name="p">
+                        <tree>
+                            <field name="foo"/>
+                        </tree>
+                        <form>
+                            <field name="foo"/>
+                        </form>
+                    </field>
+                </form>`,
+                res_id: 1,
+            });
+
+            assert.containsOnce(form, ".o_form_view.o_form_readonly");
+            assert.containsNone(document.body, ".modal");
+
+            assert.containsNone(
+                form,
+                ".o_field_x2many_list_row_add a",
+                "no add button should be displayed"
+            );
+            assert.containsNone(
+                form,
+                ".o_list_record_remove",
+                "no remove button should be displayed"
+            );
+
+            await testUtils.dom.click(form.$(".o_field_cell:first"));
+
+            assert.containsOnce(
+                form,
+                ".o_form_view.o_form_readonly",
+                "should not switch into edit mode"
+            );
+            assert.containsOnce(document.body, ".modal");
+            assert.containsOnce(document.body, '.modal span.o_field_widget[name="foo"]');
+
+            form.destroy();
+        }
+    );
+
+    QUnit.skipWOWL(
         "Quick Edition: Editable one2many list (click cell: editable)",
         async function (assert) {
             assert.expect(3);

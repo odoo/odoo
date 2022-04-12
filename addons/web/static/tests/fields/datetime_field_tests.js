@@ -537,7 +537,8 @@ QUnit.module("Fields", (hooks) => {
         "multi edition of DatetimeField in list view: edit date in input",
         async function (assert) {
             assert.expect(4);
-            const createView = null, ListView = null;
+            const createView = null,
+                ListView = null;
             var list = await createView({
                 View: ListView,
                 model: "partner",
@@ -747,5 +748,58 @@ QUnit.module("Fields", (hooks) => {
         )) {
             assert.doesNotHaveClass(el, "disabled", "other days must stay clickable");
         }
+    });
+
+    QUnit.skipWOWL("datetime field: hit enter should update value", async function (assert) {
+        /*
+        This test verifies that the field datetime is correctly computed when:
+            - we press enter to validate our entry
+            - we click outside the field to validate our entry
+            - we save
+        */
+        assert.expect(3);
+
+        // const form = await createView({
+        //     View: FormView,
+        //     model: "partner",
+        //     data: this.data,
+        //     arch: '<form string="Partners"><field name="datetime"/></form>',
+        //     res_id: 1,
+        //     translateParameters: {
+        //         // Avoid issues due to localization formats
+        //         date_format: "%m/%d/%Y",
+        //         time_format: "%H:%M:%S",
+        //     },
+        //     viewOptions: {
+        //         mode: "edit",
+        //     },
+        //     session: {
+        //         getTZOffset: function () {
+        //             return 120;
+        //         },
+        //     },
+        // });
+
+        // const datetime = form.el.querySelector('input[name="datetime"]');
+
+        // // Enter a beginning of date and press enter to validate
+        // await testUtils.fields.editInput(datetime, "01/08/22 14:30:40");
+        // await testUtils.fields.triggerKeydown(datetime, "enter");
+
+        // const datetimeValue = `01/08/2022 14:30:40`;
+
+        // assert.strictEqual(datetime.value, datetimeValue);
+
+        // // Click outside the field to check that the field is not changed
+        // await testUtils.dom.click(form.$el);
+        // assert.strictEqual(datetime.value, datetimeValue);
+
+        // // Save and check that it's still ok
+        // await testUtils.form.clickSave(form);
+
+        // const { textContent } = form.el.querySelector('span[name="datetime"]');
+        // assert.strictEqual(textContent, datetimeValue);
+
+        // form.destroy();
     });
 });
