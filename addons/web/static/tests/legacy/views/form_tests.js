@@ -11085,7 +11085,7 @@ QUnit.module('Views', {
             res_id: 1,
         });
 
-        assert.containsOnce(form, '.o_form_view.o_form_readonly');
+        assert.containsOnce(form, '.o_legacy_form_view.o_form_readonly');
         assert.containsNone(document.body, '.modal');
 
         assert.containsNone(form, '.o_field_x2many_list_row_add a', 'no add button should be displayed');
@@ -11093,7 +11093,7 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(form.$('.o_field_cell:first'));
 
-        assert.containsOnce(form, '.o_form_view.o_form_readonly', 'should not switch into edit mode');
+        assert.containsOnce(form, '.o_legacy_form_view.o_form_readonly', 'should not switch into edit mode');
         assert.containsOnce(document.body, '.modal');
         assert.containsOnce(document.body, '.modal span.o_field_widget[name="foo"]');
 

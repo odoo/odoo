@@ -42,7 +42,8 @@ QUnit.module("ActionManager", (hooks) => {
         assert.strictEqual(target.querySelector(".modal-title").textContent, "Dialog Test");
     });
 
-    QUnit.test(
+    // JPP
+    QUnit.skipWOWL(
         "can display client actions in Dialog and close the dialog",
         async function (assert) {
             assert.expect(3);
