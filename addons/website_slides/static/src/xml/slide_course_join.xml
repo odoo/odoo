@@ -6,12 +6,7 @@
                 class="btn btn-primary o_wslides_js_course_join_link text-uppercase font-weight-bold"
                 title="Join the Course" aria-label="Join the Course"
                 href="#">
-                <t t-if="widget.channel.channelEnroll == 'public'">
-                    <t t-if="widget.publicUser">
-                        Sign in
-                    </t>
-                    <t t-else="" t-esc="widget.joinMessage" />
-                </t>
+                <t t-if="widget.channel.channelEnroll == 'public'" t-esc="widget.joinMessage"/>
             </a>
         </div>
     </t>
