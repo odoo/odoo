@@ -136,14 +136,6 @@ registerModel({
             this.update({ isAddingChat: true });
         },
         /**
-         * Handles click on the mobile "new channel" button.
-         *
-         * @param {MouseEvent} ev
-         */
-        onClickMobileNewChannelButton(ev) {
-            this.update({ isAddingChannel: true });
-        },
-        /**
          * Handles click on the "Start a meeting" button.
          *
          * @param {MouseEvent} ev

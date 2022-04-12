@@ -9,6 +9,14 @@ registerModel({
     identifyingFields: ['discuss'],
     recordMethods: {
         /**
+         * Handles click on the mobile "new channel" button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickMobileNewChannelButton(ev) {
+            this.discuss.update({ isAddingChannel: true });
+        },
+        /**
          * @private
          * @returns {FieldCommand}
          */
