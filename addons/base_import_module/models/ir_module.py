@@ -140,8 +140,7 @@ class IrModule(models.Model):
                     for mod_name in dirs:
                         path = opj(module_dir, mod_name)
                         terp = load_information_from_description_file(mod_name, mod_path=path)
-                        if mod_name not in known_mods_names:
-                            dependencies_by_module[mod_name] = terp['depends']
+                        dependencies_by_module[mod_name] = terp['depends']
                     # Sort the modules so that if module A depends on module B,
                     # B is installed before A.
                     sorted_modules = topological_sort(dependencies_by_module)
