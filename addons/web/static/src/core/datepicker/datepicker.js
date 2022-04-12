@@ -186,6 +186,25 @@ export class DatePicker extends Component {
         }
     }
 
+    /**
+     * Allow the value to be converted to a date value even if the
+     * year part is not complete.
+     */
+    formatValue(value, retry = false) {
+        let date;
+        try {
+            date = this.parse(value, this.options);
+            return date;
+        } catch (_err) {
+            if (retry) return date;
+            const retryValue = luxon.DateTime.fromString(
+                value,
+                localization.dateTimeFormat.replace("yyyy", "yy")
+            ).toString();
+            return this.formatValue(retryValue, true);
+        }
+    }
+
     //---------------------------------------------------------------------
     // Bootstrap datepicker
     //---------------------------------------------------------------------

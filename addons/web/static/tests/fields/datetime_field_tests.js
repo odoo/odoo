@@ -2,7 +2,14 @@
 
 import { registry } from "@web/core/registry";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
-import { click, getFixture, patchTimeZone, triggerEvent, triggerEvents } from "../helpers/utils";
+import {
+    click,
+    editInput,
+    getFixture,
+    patchTimeZone,
+    triggerEvent,
+    triggerEvents,
+} from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -750,7 +757,7 @@ QUnit.module("Fields", (hooks) => {
         }
     });
 
-    QUnit.skipWOWL("datetime field: hit enter should update value", async function (assert) {
+    QUnit.test("datetime field: hit enter should update value", async function (assert) {
         /*
         This test verifies that the field datetime is correctly computed when:
             - we press enter to validate our entry
@@ -759,47 +766,45 @@ QUnit.module("Fields", (hooks) => {
         */
         assert.expect(3);
 
-        // const form = await createView({
-        //     View: FormView,
-        //     model: "partner",
-        //     data: this.data,
-        //     arch: '<form string="Partners"><field name="datetime"/></form>',
-        //     res_id: 1,
-        //     translateParameters: {
-        //         // Avoid issues due to localization formats
-        //         date_format: "%m/%d/%Y",
-        //         time_format: "%H:%M:%S",
-        //     },
-        //     viewOptions: {
-        //         mode: "edit",
-        //     },
-        //     session: {
-        //         getTZOffset: function () {
-        //             return 120;
-        //         },
-        //     },
-        // });
+        patchTimeZone(120);
 
-        // const datetime = form.el.querySelector('input[name="datetime"]');
+        registry.category("services").add(
+            "localization",
+            makeFakeLocalizationService({
+                dateFormat: "%m/%d/%Y",
+                timeFormat: "%H:%M:%S",
+            }),
+            { force: true }
+        );
 
-        // // Enter a beginning of date and press enter to validate
-        // await testUtils.fields.editInput(datetime, "01/08/22 14:30:40");
-        // await testUtils.fields.triggerKeydown(datetime, "enter");
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: '<form string="Partners"><field name="datetime"/></form>',
+            resId: 1,
+        });
 
-        // const datetimeValue = `01/08/2022 14:30:40`;
+        await click(target, ".o_form_button_edit");
 
-        // assert.strictEqual(datetime.value, datetimeValue);
+        const datetime = target.querySelector(".o_field_datetime input");
 
-        // // Click outside the field to check that the field is not changed
-        // await testUtils.dom.click(form.$el);
-        // assert.strictEqual(datetime.value, datetimeValue);
+        // Enter a beginning of date and press enter to validate
+        await editInput(datetime, null, "01/08/22 14:30:40");
+        await triggerEvent(datetime, null, "keydown", { key: "Enter" });
 
-        // // Save and check that it's still ok
-        // await testUtils.form.clickSave(form);
+        const datetimeValue = `01/08/2022 14:30:40`;
 
-        // const { textContent } = form.el.querySelector('span[name="datetime"]');
-        // assert.strictEqual(textContent, datetimeValue);
+        assert.strictEqual(datetime.value, datetimeValue);
 
-        // form.destroy();
+        // Click outside the field to check that the field is not changed
+        await click(target);
+        assert.strictEqual(datetime.value, datetimeValue);
+
+        // Save and check that it's still ok
+        await click(target, ".o_form_button_save");
+
+        const { textContent } = target.querySelector(".o_field_datetime span");
+        assert.strictEqual(textContent, datetimeValue);
     });
 });

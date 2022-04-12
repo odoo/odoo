@@ -12,6 +12,10 @@ export class DateTimeField extends Component {
     get formattedValue() {
         return this.props.value ? formatDateTime(this.props.value, { timezone: true }) : "";
     }
+
+    onDateTimeChanged(date) {
+        date.ts !== this.props.value.ts && this.props.update(date);
+    }
 }
 
 DateTimeField.template = "web.DateTimeField";
