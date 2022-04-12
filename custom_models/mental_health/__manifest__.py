@@ -2,6 +2,7 @@
     'name': 'Mental Health Notes',
     'depends': [
         'base',
+        'contacts',
     ],
     'data': [
         'security/mental_health_security.xml',
