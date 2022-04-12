@@ -20,3 +20,6 @@ class TestMedia(odoo.tests.HttpCase):
             'datas': SVG,
         })
         self.start_tour("/", 'test_replace_media', login="admin")
+
+    def test_02_image_link(self):
+        self.start_tour("/", 'test_image_link', login="admin")
