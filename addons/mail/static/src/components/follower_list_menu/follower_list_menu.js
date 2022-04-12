@@ -50,13 +50,6 @@ export class FollowerListMenu extends Component {
 
     /**
      * @private
-     */
-    _hide() {
-        this.followerListMenuView.update({ isDropdownOpen: false });
-    }
-
-    /**
-     * @private
      * @param {KeyboardEvent} ev
      */
     _onKeydown(ev) {
@@ -64,7 +57,7 @@ export class FollowerListMenu extends Component {
         switch (ev.key) {
             case 'Escape':
                 ev.preventDefault();
-                this._hide();
+                this.followerListMenuView.hide();
                 break;
         }
     }
@@ -79,7 +72,7 @@ export class FollowerListMenu extends Component {
      */
     _onClickAddFollowers(ev) {
         ev.preventDefault();
-        this._hide();
+        this.followerListMenuView.hide();
         this.thread.promptAddPartnerFollower();
     }
 
@@ -92,7 +85,7 @@ export class FollowerListMenu extends Component {
     _onClickCaptureGlobal(ev) {
         // since dropdown is conditionally shown based on state, dropdownRef can be null
         if (this._dropdownRef.el && !this._dropdownRef.el.contains(ev.target)) {
-            this._hide();
+            this.followerListMenuView.hide();
         }
     }
 
@@ -109,7 +102,7 @@ export class FollowerListMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickFollower(ev) {
-        this._hide();
+        this.followerListMenuView.hide();
     }
 }
 
