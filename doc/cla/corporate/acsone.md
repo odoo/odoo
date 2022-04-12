@@ -31,3 +31,4 @@ Benoit Aimont benoit.aimont@acsone.eu https://github.com/baimont
 Bejaoui Souheil souheil.bejaoui@acsone.eu https://github.com/sbejaoui
 Nans Lefebvre nans.lefebvre@acsone.eu https://github.com/len-foss
 Régis Pirard regis.pirard@acsone.eu https://github.com/regispirard
+Xavier Bouquiaux xavier.bouquiaux@acsone.eu https://github.com/xavier-bouquiaux
