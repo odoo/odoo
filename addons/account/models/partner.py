@@ -452,6 +452,7 @@ class ResPartner(models.Model):
         string='Partner Limit', groups='account.group_account_invoice,account.group_account_readonly',
         compute='_compute_use_partner_credit_limit', inverse='_inverse_use_partner_credit_limit')
     show_credit_limit = fields.Boolean(
+        default=lambda self: self.env.company.account_use_credit_limit,
         compute='_compute_show_credit_limit', groups='account.group_account_invoice,account.group_account_readonly')
     debit = fields.Monetary(
         compute='_credit_debit_get', search=_debit_search, string='Total Payable',
