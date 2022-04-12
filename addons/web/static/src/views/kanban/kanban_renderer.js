@@ -2,11 +2,12 @@
 
 import { ColorList } from "@web/core/colorlist/colorlist";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { SimpleDialog } from "@web/core/dialog/dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
+import { sprintf, uniqueId } from "@web/core/utils/strings";
 import { useSortable } from "@web/core/utils/ui";
 import { url } from "@web/core/utils/urls";
 import { Field } from "@web/fields/field";
@@ -22,7 +23,6 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
-import { SimpleDialog } from "@web/core/dialog/dialog";
 
 const { Component, markup, useState, useRef, onWillDestroy, onWillStart, onMounted } = owl;
 const { COLORS } = ColorList;
@@ -38,7 +38,7 @@ const formatterRegistry = registry.category("formatters");
 
 class KanbanCoverImageDialog extends Component {
     setup() {
-        this.id = _.uniqueId("o_cover_image_upload");
+        this.id = uniqueId("o_cover_image_upload");
         this.orm = useService("orm");
         const { record, fieldName } = this.props;
         this.coverId = record && record.data[fieldName];
@@ -204,8 +204,8 @@ export class KanbanRenderer extends Component {
     getValue(record, fieldName) {
         const field = record.fields[fieldName];
         const value = record.data[fieldName];
-        const formatter = formatterRegistry.get(field.type);
-        return formatter(value, { field });
+        const formatter = formatterRegistry.get(field.type, (value) => value);
+        return formatter(value, { field, data: record.data });
     }
 
     get canMoveRecords() {

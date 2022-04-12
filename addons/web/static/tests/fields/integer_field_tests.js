@@ -1,7 +1,9 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture } from "../helpers/utils";
-import { makeView, setupViewRegistries } from "../views/helpers";
+import { defaultLocalization } from "@web/../tests/helpers/mock_services";
+import { click, editInput, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { localization } from "@web/core/l10n/localization";
 
 let serverData;
 let target;
@@ -117,6 +119,8 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("with input type 'number' option", async function (assert) {
         assert.expect(4);
 
+        patchWithCleanup(localization, { ...defaultLocalization, grouping: [3, 0] });
+
         await makeView({
             type: "form",
             serverData,
@@ -185,6 +189,8 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("without input type option", async function (assert) {
         assert.expect(2);
 
+        patchWithCleanup(localization, { ...defaultLocalization, grouping: [3, 0] });
+
         await makeView({
             type: "form",
             serverData,
@@ -241,6 +247,8 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.test("IntegerField is formatted by default", async function (assert) {
         assert.expect(2);
+
+        patchWithCleanup(localization, { ...defaultLocalization, grouping: [3, 0] });
 
         await makeView({
             type: "form",

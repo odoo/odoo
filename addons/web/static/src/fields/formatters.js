@@ -4,7 +4,7 @@ import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { localization as l10n } from "@web/core/l10n/localization";
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { escape, intersperse } from "@web/core/utils/strings";
+import { escape, intersperse, nbsp } from "@web/core/utils/strings";
 import { session } from "@web/session";
 // -----------------------------------------------------------------------------
 // Helpers
@@ -16,12 +16,12 @@ import { session } from "@web/session";
  * @private
  * @param {string} string representing integer number
  * @param {string} [thousandsSep=","] the separator to insert
- * @param {number[]} [grouping=[3,0]]
+ * @param {number[]} [grouping=[]]
  *   array of relative offsets at which to insert `thousandsSep`.
  *   See `strings.intersperse` method.
  * @returns {string}
  */
-function insertThousandsSep(number, thousandsSep = ",", grouping = [3, 0]) {
+function insertThousandsSep(number, thousandsSep = ",", grouping = []) {
     const negative = number[0] === "-";
     number = negative ? number.slice(1) : number;
     return (negative ? "-" : "") + intersperse(number, grouping, thousandsSep);
@@ -87,6 +87,12 @@ const humanNumber = (number, options = { decimals: 0, minDigits: 1 }) => {
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
+
+/**
+ * @param {boolean} value
+ * @returns {string}
+ */
+export const formatBoolean = (value) => (value ? _lt("True") : _lt("False"));
 
 /**
  * Returns a string representing a char.  If the value is false, then we return
@@ -280,9 +286,6 @@ export const formatX2many = (value) => {
  * the user settings (to display the correct decimal separator, currency, ...).
  *
  * @param {number | false} value the value that should be formatted
- * @param {Object} [field]
- *   a description of the field (returned by fields_get for example). It may
- *   contain a description of the number of digits that should be used.
  * @param {Object} [options]
  *   additional options to override the values in the python description of the
  *   field.
@@ -309,24 +312,29 @@ export const formatMonetary = (value, options = {}) => {
     }
 
     let currencyId = options.currencyId;
+    if (!currencyId && options.data) {
+        const currencyField = options.currencyField || "currency_id";
+        const dataValue = options.data[currencyField];
+        currencyId = Array.isArray(dataValue) ? dataValue[0] : dataValue;
+    }
     const currency = session.currencies[currencyId];
     const digits = (currency && currency.digits) || options.digits;
 
-    let formatted;
+    let formattedValue;
     if (options.humanReadable) {
-        formatted = humanNumber(value, { decimals: digits ? digits[1] : 2 });
+        formattedValue = humanNumber(value, { decimals: digits ? digits[1] : 2 });
     } else {
-        formatted = formatFloat(value, { digits });
+        formattedValue = formatFloat(value, { digits });
     }
 
     if (!currency || options.noSymbol) {
-        return formatted;
+        return formattedValue;
     }
+    const formatted = [currency.symbol, formattedValue];
     if (currency.position === "after") {
-        return `${formatted}\u00a0${currency.symbol}`;
-    } else {
-        return `${currency.symbol}\u00a0${formatted}`;
+        formatted.reverse();
     }
+    return formatted.join(nbsp);
 };
 
 /**
@@ -348,12 +356,14 @@ export const formatPercentage = (value, options = {}) => {
 /**
  * Returns a string of the value of the selection.
  *
- * @param {Object} [options]
+ * @param {Object} [options={}]
+ * @param {[string, string][]} [options.selection]
+ * @param {Object} [options.field]
  * @returns {string}
  */
 export const formatSelection = (value, options = {}) => {
-    if (!value || !options.selection) return "";
-    return Object.fromEntries(options.selection)[value] || "";
+    const selection = options.selection || (options.field && options.field.selection) || [];
+    return Object.fromEntries(selection)[value] || "";
 };
 
 /**
@@ -368,6 +378,7 @@ export const formatText = (value) => {
 
 registry
     .category("formatters")
+    .add("boolean", formatBoolean)
     .add("char", formatChar)
     .add("date", formatDate)
     .add("datetime", formatDateTime)

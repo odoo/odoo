@@ -23,9 +23,11 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
+import { indexBy } from "@web/core/utils/arrays";
+import { nbsp } from "@web/core/utils/strings";
+import { session } from "@web/session";
 import { KanbanAnimatedNumber } from "@web/views/kanban/kanban_animated_number";
 import { KanbanView } from "@web/views/kanban/kanban_view";
-import { session } from "../../src/session";
 
 const serviceRegistry = registry.category("services");
 
@@ -3607,7 +3609,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_kanban_group:nth-child(2) .o_kanban_record");
         assert.containsOnce(target, ".o_kanban_group:nth-child(3) .o_kanban_record");
 
-        assert.deepEqual(getCardTexts(0), ["blipdef", "blipghi"]);
+        assert.deepEqual(getCardTexts(0), ["blipDEF", "blipGHI"]);
 
         // second record of first column moved at first place
         await dragAndDrop(
@@ -3616,7 +3618,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // should still be able to resequence
-        assert.deepEqual(getCardTexts(0), ["blipghi", "blipdef"]);
+        assert.deepEqual(getCardTexts(0), ["blipGHI", "blipDEF"]);
     });
 
     QUnit.test("prevent drag and drop if grouped by date/datetime field", async (assert) => {
@@ -8694,7 +8696,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_field_image"));
     });
 
-    QUnit.skipWOWL("kanban view with boolean field", async (assert) => {
+    QUnit.test("kanban view with boolean field", async (assert) => {
         assert.expect(2);
 
         await makeView({
@@ -8715,7 +8717,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_kanban_record:contains(False)");
     });
 
-    QUnit.skipWOWL("kanban view with boolean widget", async (assert) => {
+    QUnit.test("kanban view with boolean widget", async (assert) => {
         assert.expect(1);
 
         await makeView({
@@ -8733,37 +8735,36 @@ QUnit.module("Views", (hooks) => {
             `,
         });
 
-        assert.containsOnce(getCard(0), "div.custom-checkbox.o_field_boolean");
+        assert.containsOnce(getCard(0), "div.o_field_boolean .custom-checkbox");
     });
 
-    QUnit.skipWOWL(
-        "kanban view with monetary and currency fields without widget",
-        async (assert) => {
-            assert.expect(1);
+    QUnit.test("kanban view with monetary and currency fields without widget", async (assert) => {
+        assert.expect(1);
 
-            await makeView({
-                type: "kanban",
-                resModel: "partner",
-                serverData,
-                arch: `
+        patchWithCleanup(session, {
+            currencies: indexBy(serverData.models.currency.records, "id"),
+        });
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
                 <kanban>
                     <field name="currency_id"/>
                     <templates><t t-name="kanban-box">
                         <div><field name="salary"/></div>
                     </t></templates>
                 </kanban>`,
-                session: {
-                    currencies: _.indexBy(serverData.models.currency.records, "id"),
-                },
-            });
+        });
 
-            const kanbanRecords = target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)");
-            assert.deepEqual(
-                [...kanbanRecords].map((r) => r.innerText),
-                ["$ 1750.00", "$ 1500.00", "2000.00 €", "$ 2222.00"]
-            );
-        }
-    );
+        assert.deepEqual(getCardTexts(), [
+            `$${nbsp}1750.00`,
+            `$${nbsp}1500.00`,
+            `2000.00${nbsp}€`,
+            `$${nbsp}2222.00`,
+        ]);
+    });
 
     QUnit.skipWOWL("quick create: keyboard navigation to buttons", async (assert) => {
         assert.expect(2);

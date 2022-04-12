@@ -2902,7 +2902,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual(
             target.querySelector(".o_field_widget[name=int_field] input").value,
-            "1,007",
+            "1007",
             "should contain input with onchange applied"
         );
     });
@@ -3856,7 +3856,6 @@ QUnit.module("Views", (hooks) => {
             </tree>`,
             serverData,
             resModel: "foo",
-            serverData,
         });
 
         assert.strictEqual(
@@ -5225,7 +5224,6 @@ QUnit.module("Views", (hooks) => {
             serverData,
             domain: Domain.FALSE_DOMAIN,
             resModel: "foo",
-            serverData,
         });
 
         // Check keynav is disabled
@@ -5339,7 +5337,6 @@ QUnit.module("Views", (hooks) => {
                 serverData,
                 domain: Domain.TRUE_DOMAIN,
                 resModel: "foo",
-                serverData,
                 viewOptions: {
                     action: {
                         help: '<p class="hello">click to add a partner</p>',
@@ -5382,7 +5379,6 @@ QUnit.module("Views", (hooks) => {
                 serverData,
                 domain: Domain.FALSE_DOMAIN,
                 resModel: "foo",
-                serverData,
                 viewOptions: {
                     action: {
                         help: '<p class="hello">click to add a partner</p>',
@@ -5428,7 +5424,6 @@ QUnit.module("Views", (hooks) => {
                 serverData,
                 domain: Domain.FALSE_DOMAIN,
                 resModel: "foo",
-                serverData,
                 viewOptions: {
                     action: {
                         help: '<p class="hello">click to add a partner</p>',
@@ -9738,7 +9733,6 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
                 serverData,
                 resModel: "foo",
-                serverData,
             });
 
             // select two records
@@ -9781,7 +9775,6 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
                 serverData,
                 resModel: "foo",
-                serverData,
             });
 
             // select two records
@@ -9824,7 +9817,6 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
                 serverData,
                 resModel: "foo",
-                serverData,
                 mockRPC(route, args) {
                     assert.step(args.method || route);
                     if (args.method === "write") {
@@ -10040,7 +10032,6 @@ QUnit.module("Views", (hooks) => {
                 },
             },
             resModel: "foo",
-            serverData,
         });
 
         // select 2 records
@@ -10161,7 +10152,6 @@ QUnit.module("Views", (hooks) => {
                     },
                 },
                 resModel: "foo",
-                serverData,
             });
 
             // Open both groups
@@ -10227,7 +10217,6 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
                 serverData,
                 resModel: "foo",
-                serverData,
             });
 
             // select a record
@@ -10285,7 +10274,6 @@ QUnit.module("Views", (hooks) => {
                 return this._super.apply(this, arguments);
             },
             resModel: "foo",
-            serverData,
         });
 
         assert.verifySteps(["/web/dataset/search_read"]);
@@ -13678,7 +13666,6 @@ QUnit.module("Views", (hooks) => {
             arch: '<tree editable="top"><field name="m2o"/></tree>',
             serverData,
             resModel: "foo",
-            serverData,
         });
 
         await click($(target).find(".o_data_row:first .o_data_cell:first"));
@@ -14009,7 +13996,6 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
             serverData,
             resModel: "foo",
-            serverData,
         });
 
         assert.containsOnce(target, ".o_data_row .text-danger");
@@ -14059,7 +14045,6 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
                 serverData,
                 resModel: "foo",
-                serverData,
             });
 
             assert.containsOnce(target, ".o_data_row .text-danger");

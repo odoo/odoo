@@ -53,6 +53,23 @@ function _getExtractorFrom(criterion) {
 }
 
 /**
+ * Given an array, and a criterion function that returns a key for each element
+ * in the array (or a property name), returns an object with an index of each
+ * item. Just like `groupBy`, but for when you know the keys are unique.
+ *
+ * @param {any[]} array
+ * @param {string | function} [criterion]
+ */
+export const indexBy = (array, criterion) => {
+    const extract = _getExtractorFrom(criterion);
+    const dict = {};
+    for (const element of array) {
+        dict[extract(element)] = element;
+    }
+    return dict;
+};
+
+/**
  * Returns the array of elements contained in both arrays.
  *
  * @param {any[]} array1

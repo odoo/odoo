@@ -1,23 +1,23 @@
 /** @odoo-module **/
 
+import { defaultLocalization } from "@web/../tests/helpers/mock_services";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { localization } from "@web/core/l10n/localization";
 import {
     formatFloat,
     formatFloatFactor,
     formatFloatTime,
     formatInteger,
-    formatX2many,
     formatMany2one,
     formatMonetary,
     formatPercentage,
+    formatX2many,
 } from "@web/fields/formatters";
 import { session } from "@web/session";
-import { defaultLocalization } from "../helpers/mock_services";
-import { patchWithCleanup } from "../helpers/utils";
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
-        patchWithCleanup(localization, defaultLocalization);
+        patchWithCleanup(localization, { ...defaultLocalization, grouping: [3, 0] });
     });
 
     QUnit.module("Formatters");

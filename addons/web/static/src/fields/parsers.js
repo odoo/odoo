@@ -4,7 +4,7 @@ import { parseDate, parseDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
-import { escapeRegExp } from "@web/core/utils/strings";
+import { escapeRegExp, nbsp } from "@web/core/utils/strings";
 import { session } from "@web/session";
 
 // -----------------------------------------------------------------------------
@@ -166,7 +166,7 @@ export function parsePercentage(value) {
 export function parseMonetary(value, options = {}) {
     // TODO GES help ?
     // const values = value.split("&nbsp;");
-    const values = value.split("\u00a0");
+    const values = value.split(nbsp);
     if (values.length === 1) {
         return parseFloat(value);
     }

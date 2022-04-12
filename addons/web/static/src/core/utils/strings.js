@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+export const nbsp = "\u00a0";
+
 /**
  * Escapes a string for HTML.
  * Note that it doesn't work for escaping node attributes.
@@ -91,9 +93,9 @@ export function intersperse(str, indices, separator = "") {
 export function sprintf(s, ...values) {
     if (values.length === 1 && Object.prototype.toString.call(values[0]) === "[object Object]") {
         const valuesDict = values[0];
-        s = s.replace(/\%\(?([^\)]+)\)s/g, (match, value) => valuesDict[value]);
+        s = s.replace(/%\(?([^)]+)\)s/g, (match, value) => valuesDict[value]);
     } else if (values.length > 0) {
-        s = s.replace(/\%s/g, () => values.shift());
+        s = s.replace(/%s/g, () => values.shift());
     }
     return s;
 }
@@ -315,3 +317,15 @@ export function unaccent(str, caseSensitive) {
     });
     return caseSensitive ? str : str.toLowerCase();
 }
+
+let idCounter = 0;
+/**
+ * Generates a globally-unique id, with a given `prefix` if any.
+ *
+ * @param {string} [prefix]
+ * @returns {string}
+ */
+export const uniqueId = (prefix) => {
+    const id = String(++idCounter);
+    return prefix ? prefix + id : id;
+};

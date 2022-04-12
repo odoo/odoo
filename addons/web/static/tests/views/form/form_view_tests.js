@@ -2653,7 +2653,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual(
             target.querySelector(".o_field_widget[name=int_field] input").value,
-            "1,007",
+            "1007",
             "should contain input with onchange applied"
         );
     });
