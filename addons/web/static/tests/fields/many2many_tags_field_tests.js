@@ -1,6 +1,15 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture, getNodesTextContent, nextTick } from "../helpers/utils";
+import {
+    click,
+    clickDropdown,
+    clickOpenedDropdownItem,
+    editInput,
+    getFixture,
+    getNodesTextContent,
+    nextTick,
+    selectDropdownItem,
+} from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -231,8 +240,8 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("Many2ManyTagsField");
 
-    QUnit.skipWOWL("fieldmany2many tags with and without color", async function (assert) {
-        assert.expect(5);
+    QUnit.test("fieldmany2many tags with and without color", async function (assert) {
+        assert.expect(4);
 
         serverData.models.partner.fields.partner_ids = {
             string: "Partner",
@@ -240,15 +249,14 @@ QUnit.module("Fields", (hooks) => {
             relation: "partner",
         };
 
-        var form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                '<field name="partner_ids" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
-                '<field name="timmy" widget="many2many_tags"/>' +
-                "</form>",
+            arch: `<form>
+                    <field name="partner_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="timmy" widget="many2many_tags"/>
+                </form>`,
             mockRPC: (route, { args, method, model }) => {
                 if (method === "read" && model === "partner_type") {
                     assert.deepEqual(
@@ -266,33 +274,25 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        // add a tag on field partner_ids
-        //await testUtils.fields.many2one.clickOpenDropdown("partner_ids");
-        //await testUtils.fields.many2one.clickHighlightedItem("partner_ids");
+        await selectDropdownItem(target, "partner_ids", "first record");
 
-        // add a tag on field timmy
-        const autocomplete = target.querySelector("div[name='timmy'] .o-autocomplete.dropdown");
-        await click(autocomplete);
-        target.querySelector('.o_field_many2many_tags[name="timmy"] input');
+        await clickDropdown(target, "timmy");
+        const autocomplete = target.querySelector("[name='timmy'] .o-autocomplete.dropdown");
         assert.strictEqual(
             autocomplete.querySelectorAll("li").length,
             3,
             "autocomplete dropdown should have 3 entries (2 values + 'Search and Edit...')"
         );
-        //await testUtils.fields.many2one.clickHighlightedItem("timmy");
-        assert.containsOnce(
-            form,
-            '.o_field_many2many_tags[name="timmy"] .badge',
-            "should contain 1 tag"
-        );
-        assert.containsOnce(
-            form,
-            '.o_field_many2many_tags[name="timmy"] .badge:contains("gold")',
-            "should contain newly added tag 'gold'"
+        await clickOpenedDropdownItem(target, "timmy", "gold");
+        assert.strictEqual(
+            getNodesTextContent(
+                target.querySelectorAll(`.o_field_many2many_tags[name="timmy"] .badge`)
+            ),
+            "gold"
         );
     });
 
-    QUnit.test("fieldmany2many tags with color: rendering and edition", async function (assert) {
+    QUnit.debug("fieldmany2many tags with color: rendering and edition", async function (assert) {
         assert.expect(26);
 
         serverData.models.partner.records[0].timmy = [12, 14];

@@ -622,15 +622,12 @@ export const dragAndDrop = async (fromSelector, toSelector) => {
 };
 
 export async function clickDropdown(target, fieldName) {
-    const dropdownInput = target.querySelector(`div[name='${fieldName}'] .o_input_dropdown input`);
+    const dropdownInput = target.querySelector(`[name='${fieldName}'] .o_input_dropdown input`);
     await click(dropdownInput);
 }
 
-export async function selectDropdownItem(target, fieldName, itemContent) {
-    await clickDropdown(target, fieldName);
-    const dropdownItems = target.querySelectorAll(
-        `div[name='${fieldName}'] .o_input_dropdown ul li`
-    );
+export async function clickOpenedDropdownItem(target, fieldName, itemContent) {
+    const dropdownItems = target.querySelectorAll(`[name='${fieldName}'] .o_input_dropdown ul li`);
     const indexToClick = Array.from(dropdownItems)
         .map((html) => html.textContent)
         .indexOf(itemContent);
@@ -638,6 +635,11 @@ export async function selectDropdownItem(target, fieldName, itemContent) {
         throw new Error(`The element '${itemContent}' does not exist in the dropdown`);
     }
     await click(dropdownItems[indexToClick], null, "click");
+}
+
+export async function selectDropdownItem(target, fieldName, itemContent) {
+    await clickDropdown(target, fieldName);
+    await clickOpenedDropdownItem(target, fieldName, itemContent);
 }
 
 export function getNodesTextContent(nodes) {
