@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
-const { Component, onMounted, onWillStart, onWillUpdateProps, useRef, useState } = owl;
+import { useBus } from "@web/core/utils/hooks";
+
+const { Component, onMounted, onWillStart, useRef, useState } = owl;
 
 /**
  * Search panel
@@ -23,6 +25,12 @@ export class SearchPanel extends Component {
 
         this.importState(this.props.importedState);
 
+        useBus(this.env.searchModel, "update", async () => {
+            await this.env.searchModel.sectionsPromise;
+            this.updateActiveValues();
+            this.render();
+        });
+
         onWillStart(async () => {
             await this.env.searchModel.sectionsPromise;
             this.expandDefaultValue();
@@ -34,11 +42,6 @@ export class SearchPanel extends Component {
             if (this.hasImportedState) {
                 this.root.el.scroll({ top: this.scrollTop });
             }
-        });
-
-        onWillUpdateProps(async () => {
-            await this.env.searchModel.sectionsPromise;
-            this.updateActiveValues();
         });
     }
 
@@ -121,7 +124,6 @@ export class SearchPanel extends Component {
             }
         }
         if (category.activeValueId !== value.id) {
-            this.state.active[category.id] = value.id;
             this.env.searchModel.toggleCategoryValue(category.id, value.id);
         }
     }
