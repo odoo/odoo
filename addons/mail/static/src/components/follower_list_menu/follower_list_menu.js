@@ -2,7 +2,7 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, onMounted, onWillUnmount, useRef, useState } = owl;
+const { Component, onMounted, onWillUnmount, useRef } = owl;
 
 export class FollowerListMenu extends Component {
 
@@ -11,12 +11,6 @@ export class FollowerListMenu extends Component {
      */
     setup() {
         super.setup();
-        this.state = useState({
-            /**
-             * Determine whether the dropdown is open or not.
-             */
-            isDropdownOpen: false,
-        });
         this._dropdownRef = useRef('dropdown');
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
         onMounted(() => this._mounted());
@@ -58,7 +52,7 @@ export class FollowerListMenu extends Component {
      * @private
      */
     _hide() {
-        this.state.isDropdownOpen = false;
+        this.followerListMenuView.update({ isDropdownOpen: false });
     }
 
     /**
@@ -107,7 +101,7 @@ export class FollowerListMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickFollowersButton(ev) {
-        this.state.isDropdownOpen = !this.state.isDropdownOpen;
+        this.followerListMenuView.update({ isDropdownOpen: !this.followerListMenuView.isDropdownOpen });
     }
 
     /**
