@@ -128,7 +128,6 @@ registerModel({
         _reset() {
             this.update({
                 attachments: clear(),
-                isLastStateChangeProgrammatic: true,
                 mentionedChannels: clear(),
                 mentionedPartners: clear(),
                 textInputContent: clear(),
@@ -136,6 +135,9 @@ registerModel({
                 textInputCursorStart: clear(),
                 textInputSelectionDirection: clear(),
             });
+            for (const composerView of this.composerViews) {
+                composerView.update({ hasToRestoreContent: true });
+            }
         },
     },
     fields: {
@@ -164,16 +166,6 @@ registerModel({
          */
         hasUploadingAttachment: attr({
             compute: '_computeHasUploadingAttachment',
-        }),
-        /**
-         * Determines whether the last change (since the last render) was
-         * programmatic. Useful to avoid restoring the state when its change was
-         * from a user action, in particular to prevent the cursor from jumping
-         * to its previous position after the user clicked on the textarea while
-         * it didn't have the focus anymore.
-         */
-        isLastStateChangeProgrammatic: attr({
-            default: false,
         }),
         /**
          * If true composer will log a note, else a comment will be posted.
