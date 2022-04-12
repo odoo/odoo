@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdate } from '@mail/component_hooks/use_update';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, useRef } = owl;
+const { Component } = owl;
 
 export class DiscussSidebar extends Component {
 
@@ -13,11 +14,7 @@ export class DiscussSidebar extends Component {
     setup() {
         super.setup();
         useUpdate({ func: () => this._update() });
-        /**
-         * Reference of the quick search input. Useful to filter channels and
-         * chats based on this input content.
-         */
-        this._quickSearchInputRef = useRef('quickSearchInput');
+        useRefToModel({ fieldName: 'quickSearchInputRef', modelName: 'DiscussView', refName: 'quickSearchInput' });
     }
 
     //--------------------------------------------------------------------------
@@ -42,8 +39,8 @@ export class DiscussSidebar extends Component {
         if (!this.discussView) {
             return;
         }
-        if (this._quickSearchInputRef.el) {
-            this._quickSearchInputRef.el.value = this.discussView.discuss.sidebarQuickSearchValue;
+        if (this.discussView.quickSearchInputRef.el) {
+            this.discussView.quickSearchInputRef.el.value = this.discussView.discuss.sidebarQuickSearchValue;
         }
     }
 
@@ -57,7 +54,7 @@ export class DiscussSidebar extends Component {
      */
     _onInputQuickSearch(ev) {
         ev.stopPropagation();
-        this.discussView.discuss.onInputQuickSearch(this._quickSearchInputRef.el.value);
+        this.discussView.discuss.onInputQuickSearch(this.discussView.quickSearchInputRef.el.value);
     }
 
 }

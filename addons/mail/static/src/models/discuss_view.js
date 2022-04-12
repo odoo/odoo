@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -33,5 +33,10 @@ registerModel({
             readonly: true,
             required: true,
         }),
+        /**
+         * Reference of the quick search input. Useful to filter channels and
+         * chats based on this input content.
+         */
+        quickSearchInputRef: attr(),
     },
 });
