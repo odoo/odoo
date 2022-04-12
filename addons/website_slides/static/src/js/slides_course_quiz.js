@@ -470,20 +470,14 @@
          * @private
          */
         _saveQuizAnswersToSession: function () {
-            var quizAnswers = this._getQuizAnswers();
-            if (quizAnswers.length === this.quiz.questions.length) {
-                this._hideErrorMessage();
+            this._hideErrorMessage();
 
-                return this._rpc({
-                    route: '/slides/slide/quiz/save_to_session',
-                    params: {
-                        'quiz_answers': {'slide_id': this.slide.id, 'slide_answers': quizAnswers},
-                    }
-                });
-            } else {
-                this._showErrorMessage('slide_quiz_incomplete');
-                return Promise.reject('The quiz is incomplete');
-            }
+            return this._rpc({
+                route: '/slides/slide/quiz/save_to_session',
+                params: {
+                    'quiz_answers': {'slide_id': this.slide.id, 'slide_answers': this._getQuizAnswers()},
+                }
+            });
         },
         /**
         * After joining the course, we immediately submit the quiz and get the correction.
