@@ -885,8 +885,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
             extra=f'References: {reply1_1.message_id} {self.fake_email.message_id}'
         )
         new_msg = self.test_record.message_ids[0]
-        # self.assertEqual(new_msg.parent_id, self.fake_email, 'Mail: flattening attach to original message')
-        self.assertEqual(new_msg.parent_id, reply1, 'Mail: flattening currently broken')
+        self.assertEqual(new_msg.parent_id, self.fake_email, 'Mail: flattening attach to original message')
         self.assertEqual(new_msg.subtype_id, self.env.ref('mail.mt_note'), 'Mail: reply to a note should be a note')
 
         # messed up history (two child branches): gateway initial parent is newest one
@@ -897,9 +896,8 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
             extra=f'References: {reply1_1.message_id} {reply2_1.message_id}'
         )
         new_msg = self.test_record.message_ids[0]
-        # self.assertEqual(new_msg.parent_id, self.fake_email, 'Mail: flattening attach to original message')
-        self.assertEqual(new_msg.parent_id, reply2, 'Mail: flattening currently broken')
-        self.assertEqual(new_msg.subtype_id, self.env.ref('mail.mt_comment'), 'Mail: reply to a comment should be a comment')
+        self.assertEqual(new_msg.parent_id, self.fake_email, 'Mail: flattening attach to original message')
+        self.assertEqual(new_msg.subtype_id, self.env.ref('mail.mt_comment'), 'Mail: parent should be a comment (before flattening)')
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_message_process_references_multi_parent_notflat(self):
