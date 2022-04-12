@@ -4852,6 +4852,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
         if (!url) {
             // As long as there is no URL, the image is not considered a link.
             linkEl.removeAttribute('href');
+            this.$target.trigger('href_changed');
             return;
         }
         if (!url.startsWith('/') && !url.startsWith('#')
