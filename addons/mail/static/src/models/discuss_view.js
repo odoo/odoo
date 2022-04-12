@@ -9,6 +9,17 @@ registerModel({
     identifyingFields: ['discuss'],
     recordMethods: {
         /**
+         * Called when clicking on a mailbox selection item.
+         *
+         * @param {Thread} mailbox
+         */
+        onClickMobileMailboxSelectionItem(mailbox) {
+            if (!mailbox.exists()) {
+                return;
+            }
+            mailbox.open();
+        },
+        /**
          * @private
          * @returns {FieldCommand}
          */
