@@ -596,3 +596,83 @@ class TestProcurement(TestMrpCommon):
         mo.button_mark_done()
 
         self.assertEqual(pick_output.move_ids_without_package.reserved_availability, 10, "Completed products should have been auto-reserved in picking")
+
+    def test_rr_with_dependance_between_bom(self):
+        self.warehouse = self.env.ref('stock.warehouse0')
+        route_mto = self.warehouse.mto_pull_id.route_id
+        route_mto.active = True
+        route_manufacture = self.warehouse.manufacture_pull_id.route_id
+        product_1 = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+            'route_ids': [(6, 0, [route_manufacture.id])]
+        })
+        product_2 = self.env['product.product'].create({
+            'name': 'Product B',
+            'type': 'product',
+            'route_ids': [(6, 0, [route_manufacture.id, route_mto.id])]
+        })
+        product_3 = self.env['product.product'].create({
+            'name': 'Product B',
+            'type': 'product',
+            'route_ids': [(6, 0, [route_manufacture.id])]
+        })
+        product_4 = self.env['product.product'].create({
+            'name': 'Product C',
+            'type': 'consu',
+        })
+
+        op1 = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Product A',
+            'location_id': self.warehouse.lot_stock_id.id,
+            'product_id': product_1.id,
+            'product_min_qty': 1,
+            'product_max_qty': 20,
+        })
+
+        op2 = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Product B',
+            'location_id': self.warehouse.lot_stock_id.id,
+            'product_id': product_3.id,
+            'product_min_qty': 5,
+            'product_max_qty': 50,
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': product_1.id,
+            'product_tmpl_id': product_1.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1,
+            'consumption': 'flexible',
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {'product_id': product_2.id, 'product_qty': 1})]
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': product_2.id,
+            'product_tmpl_id': product_2.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1,
+            'consumption': 'flexible',
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {'product_id': product_3.id, 'product_qty': 1})]
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': product_3.id,
+            'product_tmpl_id': product_3.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1,
+            'consumption': 'flexible',
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {'product_id': product_4.id, 'product_qty': 1})]
+        })
+
+        (op1 | op2)._procure_orderpoint_confirm()
+        mo1 = self.env['mrp.production'].search([('product_id', '=', product_1.id)])
+        mo3 = self.env['mrp.production'].search([('product_id', '=', product_3.id)])
+
+        self.assertEqual(len(mo1), 1)
+        self.assertEqual(len(mo3), 1)
+        self.assertEqual(mo1.product_qty, 20)
+        self.assertEqual(mo3.product_qty, 50)
