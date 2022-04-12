@@ -685,3 +685,35 @@ class TestSaleService(TestCommonSaleTimesheet):
         invoice_line = self.sale_order.invoice_ids.line_ids.filtered(lambda line: line.product_id == product_add)
         self.assertEqual(invoice_line.analytic_account_id, self.project_global.analytic_account_id,
              "SOL's analytic account should be the same as the project's")
+
+    def test_sale_timesheet_invoice(self):
+        """ Test timesheet is correctly linked to an invoice when its SOL is invoiced
+
+            Test Cases:
+            ==========
+            1) Create a SOL on a SO
+            2) Confirm the SO
+            3) Set the SOL on a new timesheet
+            4) Create an invoice for this SO
+            5) Check the timesheet is linked to the invoice
+        """
+        so_line = self.env['sale.order.line'].create({
+            'product_id': self.product_delivery_timesheet2.id,
+            'product_uom_qty': 10,
+            'order_id': self.sale_order.id,
+        })
+        self.sale_order.action_confirm()
+
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': so_line.task_id.project_id.id,
+            'task_id': so_line.task_id.id,
+            'unit_amount': 5,
+            'employee_id': self.employee_manager.id,
+        })
+
+        self.assertFalse(timesheet.timesheet_invoice_id)
+        invoice = self.sale_order._create_invoices()
+        invoice.action_post()
+
+        self.assertEqual(invoice, timesheet.timesheet_invoice_id)
