@@ -10,6 +10,8 @@ import re
 from collections import defaultdict
 import uuid
 
+from psycopg2 import sql
+
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, ValidationError, MissingError
 from odoo.tools import config, human_size, ustr, html_escape
@@ -317,6 +319,30 @@ class IrAttachment(models.Model):
         tools.create_index(self._cr, 'ir_attachment_res_idx',
                            self._table, ['res_model', 'res_id'])
         return res
+
+    def _register_hook(self):
+        super()._register_hook()
+
+        m2ms_to_self = (
+            field
+            for model in self.env.values()
+            for field in model._fields.values()
+            if field.type == 'many2many'
+            if field.comodel_name == 'ir.attachment'
+            if field.store
+        )
+
+        for f in m2ms_to_self:
+            self.env.cr.execute(sql.SQL("""
+            UPDATE ir_attachment a
+            SET res_model = %s, res_id = r.{id1}
+            FROM {rel} r
+            WHERE a.id = r.{id2} AND a.res_id = 0
+            """).format(
+                rel=sql.Identifier(f.relation),
+                id1=sql.Identifier(f.column1),
+                id2=sql.Identifier(f.column2)
+            ), [f.model_name])
 
     @api.constrains('type', 'url')
     def _check_serving_attachments(self):

@@ -19,6 +19,7 @@ except ImportError:
     from xmlrpclib import MAXINT
 
 import psycopg2
+from psycopg2.extras import execute_values
 
 from .tools import float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar, \
     ustr, OrderedSet, pycompat, sql, date_utils, unique, IterableGenerator, image_process, merge_sequences
@@ -3504,6 +3505,22 @@ class Many2many(_RelationalMulti):
                     self.relation, self.column1, self.column2, ", ".join(["%s"] * len(pairs)),
                 )
                 cr.execute(query, pairs)
+                # for ir.attachment, need to move ownership to new records
+                if self.comodel_name == 'ir.attachment':
+                    execute_values(cr, """
+                    UPDATE
+                        ir_attachment a
+                    SET
+                        res_model = data.model,
+                        res_id = data.res_id
+                    FROM
+                        (VALUES %s) AS data (model, res_id, att_id)
+                    WHERE a.id = data.att_id AND a.res_id = 0
+                    """, [(model._name, model_id, att_id) for model_id, att_id in pairs])
+                    model.env['ir.attachment'].invalidate_cache(
+                        fnames=['res_model', 'res_id'],
+                        ids={att_id for _, att_id in pairs}
+                    )
 
             # update the cache of inverse fields
             y_to_xs = defaultdict(set)
