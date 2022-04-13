@@ -43,25 +43,6 @@ export class NotificationGroup extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClick(ev) {
-        if (!this.notificationGroupView) {
-            return;
-        }
-        const markAsRead = this.notificationGroupView.markAsReadRef.el;
-        if (markAsRead && markAsRead.contains(ev.target)) {
-            // handled in `_onClickMarkAsRead`
-            return;
-        }
-        this.notificationGroupView.notificationGroup.openDocuments();
-        if (!this.messaging.device.isMobile) {
-            this.messaging.messagingMenu.close();
-        }
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     _onClickMarkAsRead(ev) {
         this.notificationGroupView.notificationGroup.notifyCancel();
     }

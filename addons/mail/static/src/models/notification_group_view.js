@@ -6,6 +6,25 @@ import { attr, one } from '@mail/model/model_field';
 registerModel({
     name: 'NotificationGroupView',
     identifyingFields: ['notificationListViewOwner', 'notificationGroup'],
+    recordMethods: {
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClick(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            const markAsRead = this.markAsReadRef.el;
+            if (markAsRead && markAsRead.contains(ev.target)) {
+                // handled in `_onClickMarkAsRead`
+                return;
+            }
+            this.notificationGroup.openDocuments();
+            if (!this.messaging.device.isMobile) {
+                this.messaging.messagingMenu.close();
+            }
+        },
+    },
     fields: {
         /**
          * Reference of the "mark as read" button. Useful to disable the
