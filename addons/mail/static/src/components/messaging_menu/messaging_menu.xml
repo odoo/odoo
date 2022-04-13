@@ -72,7 +72,7 @@
                 'btn-link': !messaging.device.isMobile,
                 'btn-secondary': messaging.device.isMobile,
                 'o-mobile': messaging.device.isMobile,
-            }" t-on-click="_onClickNewMessage" type="button"
+            }" t-on-click="messagingMenu.onClickNewMessage" type="button"
         >
             New message
         </button>

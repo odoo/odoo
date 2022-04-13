@@ -15,6 +15,17 @@ registerModel({
             this.update({ isOpen: false });
         },
         /**
+         * @param {MouseEvent} ev
+         */
+        onClickNewMessage(ev) {
+            if (!this.messaging.device.isMobile) {
+                this.messaging.chatWindowManager.openNewMessage();
+                this.close();
+            } else {
+                this.toggleMobileNewMessage();
+            }
+        },
+        /**
          * Toggle the visibility of the messaging menu "new message" input in
          * mobile.
          */
