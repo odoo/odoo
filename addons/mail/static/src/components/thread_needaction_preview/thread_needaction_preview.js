@@ -2,9 +2,10 @@
 
 import * as mailUtils from '@mail/js/utils';
 
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, useRef } = owl;
+const { Component } = owl;
 
 export class ThreadNeedactionPreview extends Component {
 
@@ -13,11 +14,7 @@ export class ThreadNeedactionPreview extends Component {
      */
     setup() {
         super.setup();
-        /**
-         * Reference of the "mark as read" button. Useful to disable the
-         * top-level click handler when clicking on this specific button.
-         */
-        this._markAsReadRef = useRef('markAsRead');
+        useRefToModel({ fieldName: 'markAsReadRef', modelName: 'ThreadNeedactionPreviewView', refName: 'markAsRead' });
     }
 
     //--------------------------------------------------------------------------
@@ -59,37 +56,6 @@ export class ThreadNeedactionPreview extends Component {
      */
     get threadNeedactionPreviewView() {
         return this.messaging && this.messaging.models['ThreadNeedactionPreviewView'].get(this.props.localId);
-    }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClick(ev) {
-        const markAsRead = this._markAsReadRef.el;
-        if (markAsRead && markAsRead.contains(ev.target)) {
-            // handled in `_onClickMarkAsRead`
-            return;
-        }
-        this.threadNeedactionPreviewView.thread.open();
-        if (!this.messaging.device.isMobile) {
-            this.messaging.messagingMenu.close();
-        }
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickMarkAsRead(ev) {
-        this.messaging.models['Message'].markAllAsRead([
-            ['model', '=', this.threadNeedactionPreviewView.thread.model],
-            ['res_id', '=', this.threadNeedactionPreviewView.thread.id],
-        ]);
     }
 
 }

@@ -53,6 +53,27 @@ registerModel({
                 threadViewer: this.threadViewer,
             });
         },
+        onClickRetryLoadMessages() {
+            if (!this.exists()) {
+                return;
+            }
+            if (!this.threadCache) {
+                return;
+            }
+            this.threadCache.update({ hasLoadingFailed: false });
+        },
+        /**
+         * Called when an element in the thread becomes focused.
+         */
+        onFocusin() {
+            if (!this.exists()) {
+                // prevent crash on destroy
+                return;
+            }
+            if (this.threadViewer.chatWindow) {
+                this.threadViewer.chatWindow.update({ isFocused: true });
+            }
+        },
         /**
          * Starts editing the last message of this thread from the current user.
          */

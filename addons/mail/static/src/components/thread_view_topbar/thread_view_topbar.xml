@@ -50,10 +50,10 @@
                         <button class="o_ThreadViewTopbar_unstarAllButton btn btn-secondary" t-att-disabled="threadViewTopbar.threadView.messages.length === 0" t-on-click="threadViewTopbar.onClickUnstarAll">Unstar all</button>
                     </t>
                     <t t-if="threadViewTopbar.thread and threadViewTopbar.thread.hasCallFeature and threadViewTopbar.thread.rtcSessions.length === 0">
-                        <button class="o_ThreadViewTopbar_callButton o_ThreadViewTopbar_button o-active" t-att-disabled="threadViewTopbar.thread.hasPendingRtcRequest" title="Start a Call" t-on-click="_onClickPhone">
+                        <button class="o_ThreadViewTopbar_callButton o_ThreadViewTopbar_button o-active" t-att-disabled="threadViewTopbar.thread.hasPendingRtcRequest" title="Start a Call" t-on-click="threadViewTopbar.onClickPhone">
                             <i class="fa fa-lg fa-phone"/>
                         </button>
-                        <button class="o_ThreadViewTopbar_callButton o_ThreadViewTopbar_button o-active" t-att-disabled="threadViewTopbar.thread.hasPendingRtcRequest" title="Start a Video Call" t-on-click="_onClickCamera">
+                        <button class="o_ThreadViewTopbar_callButton o_ThreadViewTopbar_button o-active" t-att-disabled="threadViewTopbar.thread.hasPendingRtcRequest" title="Start a Video Call" t-on-click="threadViewTopbar.onClickCamera">
                             <i class="fa fa-lg fa-video-camera"/>
                         </button>
                     </t>

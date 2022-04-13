@@ -17,6 +17,17 @@ registerModel({
     },
     recordMethods: {
         /**
+         * @param {MouseEvent} ev
+         */
+        async onClickCamera(ev) {
+            if (this.thread.hasPendingRtcRequest) {
+                return;
+            }
+            await this.thread.toggleCall({
+                startWithVideo: true,
+            });
+        },
+        /**
          * Handles click on the "hide member list" button.
          *
          * @param {Event} ev
@@ -44,6 +55,15 @@ registerModel({
             } else {
                 this.openInvitePopoverView();
             }
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        async onClickPhone(ev) {
+            if (this.thread.hasPendingRtcRequest) {
+                return;
+            }
+            await this.thread.toggleCall();
         },
         /**
          * Handles click on the "show member list" button.

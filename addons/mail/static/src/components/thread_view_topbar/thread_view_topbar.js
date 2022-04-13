@@ -31,34 +31,6 @@ export class ThreadViewTopbar extends Component {
         return this.messaging && this.messaging.models['ThreadViewTopbar'].get(this.props.localId);
     }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    async _onClickPhone(ev) {
-        if (this.threadViewTopbar.thread.hasPendingRtcRequest) {
-            return;
-        }
-        await this.threadViewTopbar.thread.toggleCall();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    async _onClickCamera(ev) {
-        if (this.threadViewTopbar.thread.hasPendingRtcRequest) {
-            return;
-        }
-        await this.threadViewTopbar.thread.toggleCall({
-            startWithVideo: true,
-        });
-    }
-
 }
 
 Object.assign(ThreadViewTopbar, {
