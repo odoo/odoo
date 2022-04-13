@@ -1603,7 +1603,7 @@ export class OdooEditor extends EventTarget {
         this.observerUnactive('_activateContenteditable');
         this.editable.setAttribute('contenteditable', this.options.isRootEditable);
 
-        for (const node of this.options.getContentEditableAreas()) {
+        for (const node of this.options.getContentEditableAreas(this)) {
             if (!node.isContentEditable) {
                 node.setAttribute('contenteditable', true);
             }
@@ -1615,7 +1615,7 @@ export class OdooEditor extends EventTarget {
         if (this.options.isRootEditable) {
             this.editable.setAttribute('contenteditable', !this.options.isRootEditable);
         }
-        for (const node of this.options.getContentEditableAreas()) {
+        for (const node of this.options.getContentEditableAreas(this)) {
             if (node.getAttribute('contenteditable') === 'true') {
                 node.setAttribute('contenteditable', false);
             }
@@ -2738,10 +2738,9 @@ export class OdooEditor extends EventTarget {
         const link = closestElement(ev.target, 'a');
         this.resetContenteditableLink();
         if (
-            link &&
+            link && link.isContentEditable &&
             !link.querySelector('div') &&
-            !closestElement(ev.target, '.o_not_editable') &&
-            link.getAttribute('contenteditable') !== 'false'
+            !closestElement(ev.target, '.o_not_editable')
         ) {
             this.setContenteditableLink(link);
         } else {
