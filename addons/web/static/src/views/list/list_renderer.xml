@@ -95,7 +95,7 @@
             <th class="o_group_name" t-att-colspan="getGroupNameCellColSpan(group)">
                 <span t-attf-class="fa {{group.isLoaded ? 'fa-caret-down' : 'fa-caret-right'}}"
                     t-attf-style="padding-left: {{2 + getGroupLevel(group) * 20}}px; padding-right: 5px"/>
-                <t t-esc="group.displayName"/> (<t t-esc="group.count"/>)
+                <t t-esc="group.displayName || 'None'"/> (<t t-esc="group.count"/>)
                 <div t-if="(groupByButtons[group.groupByField.name] and !group.isFolded)" class="o_group_buttons">
                     <t t-foreach="groupByButtons[group.groupByField.name]" t-as="button" t-key="button.id">
                         <t t-if="button.clickParams.type === 'edit'">

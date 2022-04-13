@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import {
+    addRow,
     click,
     clickM2OHighlightedItem,
     clickOpenM2ODropdown,
@@ -10,13 +12,13 @@ import {
     makeDeferred,
     nextTick,
     patchWithCleanup,
+    removeRow,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
-import { registerCleanup } from "@web/../tests/helpers/cleanup";
-import { ListRenderer } from "@web/views/list/list_renderer";
-import { session } from "@web/session";
 import { registry } from "@web/core/registry";
+import { session } from "@web/session";
+import { ListRenderer } from "@web/views/list/list_renderer";
 
 let serverData;
 let target;
@@ -51,14 +53,6 @@ async function clickEdit(target) {
 
 async function clickSave(target) {
     await click(target.querySelector(".o_form_button_save"));
-}
-
-async function addRow(target, selector) {
-    await click(target.querySelector(`${selector ? selector : ""} .o_field_x2many_list_row_add a`));
-}
-
-async function removeRow(target, index) {
-    await click(target.querySelectorAll(".o_list_record_remove")[index]);
 }
 
 QUnit.module("Fields", (hooks) => {

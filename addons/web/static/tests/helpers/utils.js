@@ -678,3 +678,12 @@ export async function clickM2OHighlightedItem(el, fieldName, selector) {
     // clicking on an li (no matter which one), will select the focussed one
     return click(matches[0].querySelector("li"));
 }
+
+// X2Many
+export async function addRow(target, selector) {
+    await click(target.querySelector(`${selector ? selector : ""} .o_field_x2many_list_row_add a`));
+}
+
+export async function removeRow(target, index) {
+    await click(target.querySelectorAll(".o_list_record_remove")[index]);
+}

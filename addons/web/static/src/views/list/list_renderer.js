@@ -204,39 +204,41 @@ export class ListRenderer extends Component {
         const aggregates = {};
         for (const fieldName in this.props.list.activeFields) {
             const field = this.fields[fieldName];
+            const fieldValues = [];
+            for (const value of values) {
+                const fieldValue = value[fieldName];
+                if (fieldValue) {
+                    fieldValues.push(fieldValue);
+                }
+            }
+            if (!fieldValues.length) {
+                continue;
+            }
             const type = field.type;
             if (type !== "integer" && type !== "float" && type !== "monetary") {
                 continue;
             }
-            const attrs = this.props.list.activeFields[fieldName].attrs;
+            const { attrs, widget } = this.props.list.activeFields[fieldName];
             const func =
                 (attrs.sum && "sum") ||
                 (attrs.avg && "avg") ||
                 (attrs.max && "max") ||
                 (attrs.min && "min");
             if (func) {
-                let count = 0;
                 let aggregateValue = 0;
                 if (func === "max") {
-                    aggregateValue = -Infinity;
+                    aggregateValue = Math.max(-Infinity, ...fieldValues);
                 } else if (func === "min") {
-                    aggregateValue = Infinity;
+                    aggregateValue = Math.min(Infinity, ...fieldValues);
+                } else if (func === "avg") {
+                    aggregateValue =
+                        fieldValues.reduce((acc, val) => acc + val) / fieldValues.length;
+                } else if (func === "sum") {
+                    aggregateValue = fieldValues.reduce((acc, val) => acc + val);
                 }
-                for (const vals of values) {
-                    count += 1;
-                    const value = vals[fieldName];
-                    if (func === "avg" || func === "sum") {
-                        aggregateValue += value;
-                    } else if (func === "max") {
-                        aggregateValue = Math.max(aggregateValue, value);
-                    } else if (func === "min") {
-                        aggregateValue = Math.min(aggregateValue, value);
-                    }
-                }
-                if (func === "avg") {
-                    aggregateValue = count > 0 ? aggregateValue / count : aggregateValue;
-                }
-                const formatter = formatterRegistry.get(type, false);
+
+                const formatter =
+                    formatterRegistry.get(widget, false) || formatterRegistry.get(type, false);
                 aggregates[fieldName] = {
                     help: attrs[func],
                     value: formatter ? formatter(aggregateValue) : aggregateValue,
