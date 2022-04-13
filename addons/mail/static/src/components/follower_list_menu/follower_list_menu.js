@@ -67,16 +67,6 @@ export class FollowerListMenu extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickAddFollowers(ev) {
-        ev.preventDefault();
-        this.followerListMenuView.hide();
-        this.thread.promptAddPartnerFollower();
-    }
-
-    /**
      * Close the dropdown when clicking outside of it.
      *
      * @private

@@ -13,7 +13,7 @@
                     <t t-if="followerListMenuView.isDropdownOpen">
                         <div class="o_FollowerListMenu_dropdown dropdown-menu dropdown-menu-right flex-column d-flex" role="menu">
                             <t t-if="thread.model !== 'channel' and thread.hasWriteAccess">
-                                <a class="o_FollowerListMenu_addFollowersButton dropdown-item" href="#" role="menuitem" t-on-click="_onClickAddFollowers">
+                                <a class="o_FollowerListMenu_addFollowersButton dropdown-item" href="#" role="menuitem" t-on-click="followerListMenuView.onClickAddFollowers">
                                     Add Followers
                                 </a>
                                 <t t-if="thread.followers.length > 0">

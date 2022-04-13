@@ -9,7 +9,15 @@ registerModel({
     recordMethods: {
         hide() {
             this.update({ isDropdownOpen: false });
-        }
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickAddFollowers(ev) {
+            ev.preventDefault();
+            this.hide();
+            this.chatterOwner.thread.promptAddPartnerFollower();
+        },
     },
     fields: {
         chatterOwner: one('Chatter', {
