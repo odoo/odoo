@@ -90,19 +90,6 @@ export class MessagingMenu extends Component {
 
     /**
      * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickToggler(ev) {
-        // avoid following dummy href
-        ev.preventDefault();
-        if (!this.messagingMenu) {
-            return;
-        }
-        this.messagingMenu.toggleOpen();
-    }
-
-    /**
-     * @private
      */
     _onHideMobileNewMessage() {
         this.messagingMenu.toggleMobileNewMessage();

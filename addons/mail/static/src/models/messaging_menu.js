@@ -15,6 +15,17 @@ registerModel({
             this.update({ isOpen: false });
         },
         /**
+         * @param {MouseEvent} ev
+         */
+        onClickToggler(ev) {
+            // avoid following dummy href
+            ev.preventDefault();
+            if (!this.exists()) {
+                return;
+            }
+            this.toggleOpen();
+        },
+        /**
          * Toggle the visibility of the messaging menu "new message" input in
          * mobile.
          */
