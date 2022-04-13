@@ -18,6 +18,14 @@ registerModel({
             return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
         },
         /**
+         * Called when clicking on apply button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickApply(ev) {
+            this.follower.updateSubtypes();
+        },
+        /**
          * @private
          * @returns {FieldCommand}
          */

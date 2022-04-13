@@ -40,16 +40,6 @@ export class FollowerSubtypeList extends Component {
         this.followerSubtypeList.follower.closeSubtypes();
     }
 
-    /**
-     * Called when clicking on apply button.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickApply(ev) {
-        this.followerSubtypeList.follower.updateSubtypes();
-    }
-
 }
 
 Object.assign(FollowerSubtypeList, {
