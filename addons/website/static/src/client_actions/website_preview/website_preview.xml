@@ -17,6 +17,7 @@
         <div class="o_iframe_container" t-att-class="{ 'o_is_mobile': this.websiteContext.isMobile }">
             <BlockIframe/>
             <iframe t-att-src="iframeFallbackUrl"
+                class="o_ignore_in_tour"
                 t-att-class="{ 'd-none': this.websiteContext.edition }"
                 t-ref="iframefallback"/>
             <iframe t-att-src="initialUrl"
