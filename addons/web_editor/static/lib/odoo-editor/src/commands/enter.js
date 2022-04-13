@@ -33,7 +33,10 @@ Text.prototype.oEnter = function (offset) {
  */
 HTMLElement.prototype.oEnter = function (offset, firstSplit = true) {
     let didSplit = false;
-    if (isUnbreakable(this)) {
+    if (isUnbreakable(this) || (offset && isBlock(this) && this.childNodes[offset - 1].nodeType === Node.ELEMENT_NODE &&
+        !isBlock(this.childNodes[offset - 1]) && !this.childNodes[offset - 1].isContentEditable)) {
+        // Prevents using oEnter if the previous element is an inline element
+        // contenteditable=false. oShiftEnter should be applied in this case.
         throw UNBREAKABLE_ROLLBACK_CODE;
     }
     let restore;

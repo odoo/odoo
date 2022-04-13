@@ -1460,6 +1460,12 @@ export function toggleClass(node, className) {
  * @returns {boolean}
  */
 export function isFakeLineBreak(brEl) {
+    if (brEl.previousSibling && brEl.previousSibling.nodeType === Node.ELEMENT_NODE &&
+        !isBlock(brEl.previousSibling) && !brEl.previousSibling.isContentEditable) {
+        // The line break is necessary for the caret if its previous sibling is
+        // an inline contenteditable=false. It should not be considered as fake.
+        return false;
+    }
     return !(getState(...rightPos(brEl), DIRECTIONS.RIGHT).cType & (CTGROUPS.INLINE | CTGROUPS.BR));
 }
 /**
