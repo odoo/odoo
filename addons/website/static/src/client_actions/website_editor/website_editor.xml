@@ -6,6 +6,7 @@
         <iframe t-if="!this.websiteContext.edition"
             t-att-src="iframeFallbackUrl"
             t-ref="iframefallback"
+            class="o_technical_iframe"
             t-att-class="{ 'o_is_mobile': this.websiteContext.isMobile }"/>
         <iframe t-att-src="initialUrl"
             t-ref="iframe"

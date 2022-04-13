@@ -47,7 +47,7 @@ function do_before_unload(if_unload_callback, if_not_unload_callback) {
 
 function get_jquery_element_from_selector(selector) {
     if (_.isString(selector) && selector.indexOf('iframe') !== -1) {
-        var $iframe = $(selector.split('iframe')[0] + ' iframe');
+        var $iframe = $(selector.split('iframe')[0] + ' iframe:not(.o_technical_iframe)');
         var $el = $iframe.contents()
             .find(selector.split('iframe')[1]);
         $el.iframeContainer = $iframe[0];
