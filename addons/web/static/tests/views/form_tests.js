@@ -2352,6 +2352,44 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('remove default value in subviews', async function (assert) {
+        assert.expect(2);
+
+        this.data.product.onchanges = {}
+        this.data.product.onchanges.name = function () {};
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            viewOptions: {
+                context: {default_state: "ab"}
+            },
+            arch: '<form string="Partners">' +
+                    '<field name="product_ids" context="{\'default_product_uom_qty\': 68}">' +
+                      '<tree editable="top">' +
+                        '<field name="name"/>' +
+                      '</tree>' +
+                    '</field>' +
+                  '</form>',
+            mockRPC: function (route, args) {
+                if (route === "/web/dataset/call_kw/partner/onchange") {
+                    assert.deepEqual(args.kwargs.context, {
+                        default_state: 'ab',
+                    })
+                }
+                else if (route === "/web/dataset/call_kw/product/onchange") {
+                    assert.deepEqual(args.kwargs.context, {
+                        default_product_uom_qty: 68,
+                    })
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        form.destroy();
+    });
+
     QUnit.test('reference field in one2many list', async function (assert) {
         assert.expect(1);
 
