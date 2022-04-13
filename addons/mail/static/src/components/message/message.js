@@ -320,18 +320,6 @@ export class Message extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickAuthorAvatar(ev) {
-        markEventHandled(ev, 'Message.ClickAuthorAvatar');
-        if (!this.messageView.hasAuthorOpenChat) {
-            return;
-        }
-        this.messageView.message.author.openChat();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     _onClickAuthorName(ev) {
         markEventHandled(ev, 'Message.ClickAuthorName');
         if (!this.messageView.message.author) {

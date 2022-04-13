@@ -27,6 +27,16 @@ registerModel({
         /**
          * @param {MouseEvent} ev
          */
+        onClickAuthorAvatar(ev) {
+            markEventHandled(ev, 'Message.ClickAuthorAvatar');
+            if (!this.hasAuthorOpenChat) {
+                return;
+            }
+            this.message.author.openChat();
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
         onClickFailure(ev) {
             markEventHandled(ev, 'Message.ClickFailure');
             this.message.openResendAction();
