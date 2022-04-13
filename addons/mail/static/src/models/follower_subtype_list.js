@@ -18,6 +18,14 @@ registerModel({
             return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
         },
         /**
+         * Called when clicking on cancel button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickCancel(ev) {
+            this.follower.closeSubtypes();
+        },
+        /**
          * @private
          * @returns {FieldCommand}
          */
