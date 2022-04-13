@@ -58,14 +58,6 @@ export class NotificationGroup extends Component {
         }
     }
 
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickMarkAsRead(ev) {
-        this.notificationGroupView.notificationGroup.notifyCancel();
-    }
-
 }
 
 Object.assign(NotificationGroup, {
