@@ -4,6 +4,7 @@ odoo.define('web.ActionMenus', function (require) {
     const Context = require('web.Context');
     const DropdownMenu = require('web.DropdownMenu');
     const Registry = require('web.Registry');
+    const {_t} = require('web.core');
 
     const { Component } = owl;
 
@@ -26,6 +27,11 @@ odoo.define('web.ActionMenus', function (require) {
         async willStart() {
             this.actionItems = await this._setActionItems(this.props);
             this.printItems = await this._setPrintItems(this.props);
+            // Workaround in legacy code to make dropdown strings translatable
+            this.printTitle = _t('Print');
+            this.printTooltip = _t('Printing options');
+            this.actionTitle = _t('Action');
+            this.actionTooltip = _t('Additional actions');
         }
 
         async willUpdateProps(nextProps) {
