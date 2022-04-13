@@ -340,15 +340,6 @@ export class Message extends Component {
         this.messageView.message.author.openProfile();
     }
 
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickOriginThread(ev) {
-        // avoid following dummy href
-        ev.preventDefault();
-        this.messageView.message.originThread.open();
-    }
 }
 
 Object.assign(Message, {

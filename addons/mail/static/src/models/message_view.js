@@ -31,6 +31,13 @@ registerModel({
             markEventHandled(ev, 'Message.ClickFailure');
             this.message.openResendAction();
         },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickOriginThread(ev) {
+            ev.preventDefault();
+            this.message.originThread.open();
+        },
         onComponentUpdate() {
             if (!this.exists()) {
                 return;
