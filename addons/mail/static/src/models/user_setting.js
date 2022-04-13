@@ -179,13 +179,10 @@ registerModel({
             const audioInputDeviceId = this.env.services.local_storage.getItem(
                 "mail_user_setting_audio_input_device_id"
             );
-            const voiceActivationThreshold = parseFloat(voiceActivationThresholdString);
-            if (voiceActivationThreshold > 0) {
-                this.update({
-                    voiceActivationThreshold,
-                    audioInputDeviceId,
-                });
-            }
+            this.update({
+                voiceActivationThreshold: voiceActivationThresholdString ? parseFloat(voiceActivationThresholdString) : undefined,
+                audioInputDeviceId: audioInputDeviceId || undefined,
+            });
         },
         /**
          * @private
