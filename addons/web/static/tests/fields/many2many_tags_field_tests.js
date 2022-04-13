@@ -681,7 +681,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.tes("fieldmany2many tags with no_edit_color option", async function (assert) {
+    QUnit.test("fieldmany2many tags with no_edit_color option", async function (assert) {
         serverData.models.partner.records[0].timmy = [12];
 
         await makeView({
