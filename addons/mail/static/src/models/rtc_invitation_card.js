@@ -26,6 +26,12 @@ registerModel({
             }
             await this.thread.toggleCall();
         },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickAvatar(ev) {
+            this.thread.open();
+        },
     },
     fields: {
         thread: one('Thread', {

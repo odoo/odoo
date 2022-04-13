@@ -1,10 +1,11 @@
 /** @odoo-module **/
 
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import Popover from "web.Popover";
 
-const { Component, useRef } = owl;
+const { Component } = owl;
 
 export class RtcCallParticipantCard extends Component {
 
@@ -13,7 +14,7 @@ export class RtcCallParticipantCard extends Component {
      */
     setup() {
         super.setup();
-        this._volumeMenuAnchorRef = useRef('volumeMenuAnchor');
+        useRefToModel({ fieldName: 'volumeMenuAnchorRef', modelName: 'RtcCallParticipantCard', refName: 'volumeMenuAnchor' });
     }
 
     //--------------------------------------------------------------------------
@@ -27,24 +28,6 @@ export class RtcCallParticipantCard extends Component {
         return this.messaging.models['RtcCallParticipantCard'].get(this.props.localId);
     }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * This listens to the right click event, and used to redirect the event
-     * as a click on the popover.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    async _onContextMenu(ev) {
-        ev.preventDefault();
-        if (!this._volumeMenuAnchorRef || !this._volumeMenuAnchorRef.el) {
-            return;
-        }
-        this._volumeMenuAnchorRef.el.click();
-    }
 }
 
 Object.assign(RtcCallParticipantCard, {
