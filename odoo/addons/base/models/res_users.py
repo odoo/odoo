@@ -415,6 +415,7 @@ class Users(models.Model):
         internal_users.share = False
         (self - internal_users).share = True
 
+    @api.depends('company_id')
     def _compute_companies_count(self):
         self.companies_count = self.env['res.company'].sudo().search_count([])
 
