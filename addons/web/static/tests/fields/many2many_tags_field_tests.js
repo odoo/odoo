@@ -3,6 +3,7 @@
 import {
     click,
     clickDropdown,
+    clickEdit,
     clickOpenedDropdownItem,
     editInput,
     getFixture,
@@ -347,7 +348,7 @@ QUnit.module("Fields", (hooks) => {
             "should have correctly set the color"
         );
 
-        await click(target.querySelector(".o_form_button_edit"));
+        await clickEdit(target);
 
         assert.containsN(
             target,
@@ -492,61 +493,69 @@ QUnit.module("Fields", (hooks) => {
         click(target.querySelector(".o_field_many2many_tags .badge :nth-child(1)"));
     });
 
-    QUnit.skipWOWL("fieldmany2many tags view a domain", async function (assert) {
+    QUnit.test("fieldmany2many tags view a domain", async function (assert) {
         assert.expect(7);
 
         serverData.models.partner.fields.timmy.domain = [["id", "<", 50]];
         serverData.models.partner.records[0].timmy = [12];
         serverData.models.partner_type.records.push({ id: 99, display_name: "red", color: 8 });
 
-        var form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                '<field name="timmy" widget="many2many_tags" options="{\'no_create_edit\': True}"/>' +
-                "</form>",
+            arch: `<form>
+                    <field name="timmy" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                </form>`,
             resId: 1,
-            mockRPC: (route, { kwargs, method }) => {
-                if (method === "name_search") {
+            mockRPC: (route, args, performRPC) => {
+                if (args.method === "name_search") {
                     assert.deepEqual(
-                        kwargs.args,
-                        [
-                            ["id", "<", 50],
-                            ["id", "not in", [12]],
-                        ],
+                        args.kwargs.args,
+                        ["&", ["id", "<", 50], "!", ["id", "in", [12]]],
                         "domain sent to name_search should be correct"
                     );
-                    return Promise.resolve([[14, "silver"]]);
                 }
+                return performRPC(route, args);
             },
         });
-        assert.containsOnce(form, ".o_field_many2many_tags .badge", "should contain 1 tag");
-        assert.ok(
-            target.querySelectorAll(".badge:contains(gold)").length,
+
+        assert.containsOnce(target, ".o_field_many2many_tags .badge", "should contain 1 tag");
+        assert.strictEqual(
+            getNodesTextContent(target.querySelectorAll(".badge")),
+            "gold",
             "should have fetched and rendered gold partner tag"
         );
 
-        await click(target.querySelector(".o_form_button_edit"));
+        await clickEdit(target);
 
-        // add an other existing tag
-        const autocomplete = target.querySelector("div[name='timmy'] .o-autocomplete.dropdown");
-        await click(autocomplete);
+        await clickDropdown(target, "timmy");
+
+        const autocompleteDropdown = target.querySelector(".o-autocomplete--dropdown-menu");
+
         assert.strictEqual(
-            autocomplete.querySelectorAll("li").length,
+            autocompleteDropdown.querySelectorAll("li").length,
             2,
             "autocomplete dropdown should have 2 entry"
         );
+
         assert.strictEqual(
-            autocomplete.querySelectorAll('li a:contains("silver")').length,
-            1,
+            autocompleteDropdown.querySelector("li a").innerText,
+            "silver",
             "autocomplete dropdown should contain 'silver'"
         );
-        //await testUtils.fields.many2one.clickHighlightedItem("timmy");
-        assert.containsN(form, ".o_field_many2many_tags .badge", 2, "should contain 2 tags");
-        assert.ok(
-            target.querySelectorAll('.o_field_many2many_tags .badge:contains("silver")').length,
+
+        await clickOpenedDropdownItem(target, "timmy", "silver");
+
+        assert.strictEqual(
+            target.querySelectorAll(".o_field_many2many_tags .badge").length,
+            2,
+            "should contain 2 tags"
+        );
+
+        assert.strictEqual(
+            getNodesTextContent(target.querySelectorAll(".badge")),
+            "goldsilver",
             "should contain newly added tag 'silver'"
         );
     });
@@ -641,7 +650,7 @@ QUnit.module("Fields", (hooks) => {
 
         // Update the color in edit
         color = 6;
-        await click(target.querySelector(".o_form_button_edit"));
+        await clickEdit(target);
         await click(target.querySelector(".badge .dropdown-toggle")); // choose color 6
         await click(target, '.o_colorpicker button[data-color="' + color + '"]');
         await nextTick();
@@ -891,7 +900,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
 
-        await click(target.querySelector(".o_form_button_edit"));
+        await clickEdit(target);
         assert.containsOnce(form, ".o_field_many2many_tags .badge", "should contain one tag");
 
         // update foo, which will trigger an onchange and update timmy
