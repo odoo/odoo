@@ -144,7 +144,7 @@ class ReplenishmentReport(models.AbstractModel):
             for index, in_ in enumerate(ins):
                 if float_is_zero(in_['qty'], precision_rounding=out.product_id.uom_id.rounding):
                     continue
-                if only_matching_move_dest and in_['move_dests'] and out.id not in in_['move_dests']:
+                if only_matching_move_dest and out.id not in in_['move_dests']:
                     continue
                 taken_from_in = min(demand, in_['qty'])
                 demand -= taken_from_in
