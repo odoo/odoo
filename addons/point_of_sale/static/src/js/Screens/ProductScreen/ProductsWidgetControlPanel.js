@@ -17,6 +17,8 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
 
             onMounted(() => {
                 this.env.posbus.on('search-product-from-info-popup', this, this.searchProductFromInfo)
+                if(!this.env.pos.config.limited_products_loading)
+                    this.env.pos.isEveryProductLoaded = true;
             });
 
             onWillUnmount(() => {

@@ -59,8 +59,8 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
         get hasNoCategories() {
             return this.env.pos.db.get_category_childs_ids(0).length === 0;
         }
-        get isEveryProductLoaded() {
-            return !this.env.pos.config.limited_products_loading || this.env.pos.config.product_load_background;
+        get shouldShowButton() {
+            return this.productsToDisplay.length === 0 && this.searchWord && !this.env.pos.isEveryProductLoaded;
         }
         _switchCategory(event) {
             this.env.pos.setSelectedCategoryId(event.detail);
