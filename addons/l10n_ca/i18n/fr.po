@@ -1,21 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* l10n_ca
-#
+# 
+# Translators:
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-05 15:45+0000\n"
-"PO-Revision-Date: 2015-11-03 17:52-0500\n"
-"Last-Translator: Maxime Chambreuil <maxime.chambreuil@savoirfairelinux.com>\n"
-"Language-Team: \n"
-"Language: \n"
+"PO-Revision-Date: 2022-04-08 12:41+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
+"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: \n"
-"X-Generator: Poedit 1.5.4\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: l10n_ca
 #: model:account.fiscal.position,name:l10n_ca.4_fiscal_position_template_ab_en
@@ -79,7 +81,7 @@ msgstr "Régime de pensions du Canada"
 #. module: l10n_ca
 #: model:ir.model,name:l10n_ca.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Sociétés"
 
 #. module: l10n_ca
 #: model:ir.model,name:l10n_ca.model_base_document_layout
@@ -104,6 +106,12 @@ msgstr ""
 #: model:account.account.template,name:l10n_ca.chart1151_en
 msgid "Customers Account"
 msgstr "Comptes clients"
+
+#. module: l10n_ca
+#: model:account.account,name:l10n_ca.4_chart11511_en
+#: model:account.account.template,name:l10n_ca.chart11511_en
+msgid "Customers Account (PoS)"
+msgstr ""
 
 #. module: l10n_ca
 #: model:account.account,name:l10n_ca.4_chart214111_en
@@ -203,6 +211,14 @@ msgstr "TPS + TVP sur les ventes (MB)"
 #: model:account.tax.template,name:l10n_ca.gstpst_sk_sale_en
 msgid "GST + PST for sales (SK)"
 msgstr "TPS + TVP sur les ventes (SK)"
+
+#. module: l10n_ca
+#: model:account.tax,description:l10n_ca.4_gstqst_purc_en
+#: model:account.tax,description:l10n_ca.4_gstqst_sale_en
+#: model:account.tax.template,description:l10n_ca.gstqst_purc_en
+#: model:account.tax.template,description:l10n_ca.gstqst_sale_en
+msgid "GST + QST"
+msgstr ""
 
 #. module: l10n_ca
 #: model:account.tax,name:l10n_ca.4_gstqst_purc_en
@@ -340,6 +356,29 @@ msgstr "Régime de pension collective à payer - Contribution des employés"
 #: model:account.account.template,name:l10n_ca.chart218502_en
 msgid "Group Pension Plan to pay - Employer Contribution"
 msgstr "Régime de pension collective à payer - Contribution de l'employeur"
+
+#. module: l10n_ca
+#: model:account.tax,description:l10n_ca.4_hst13_purc_en
+#: model:account.tax,description:l10n_ca.4_hst13_sale_en
+#: model:account.tax.group,name:l10n_ca.tax_group_hst_13
+#: model:account.tax.template,description:l10n_ca.hst13_purc_en
+#: model:account.tax.template,description:l10n_ca.hst13_sale_en
+msgid "HST 13%"
+msgstr ""
+
+#. module: l10n_ca
+#: model:account.tax.group,name:l10n_ca.tax_group_hst_14
+msgid "HST 14%"
+msgstr ""
+
+#. module: l10n_ca
+#: model:account.tax,description:l10n_ca.4_hst15_purc_en
+#: model:account.tax,description:l10n_ca.4_hst15_sale_en
+#: model:account.tax.group,name:l10n_ca.tax_group_hst_15
+#: model:account.tax.template,description:l10n_ca.hst15_purc_en
+#: model:account.tax.template,description:l10n_ca.hst15_sale_en
+msgid "HST 15%"
+msgstr ""
 
 #. module: l10n_ca
 #: model:account.tax,name:l10n_ca.4_hst13_purc_en
@@ -697,6 +736,15 @@ msgid "Purchases in non-harmonized provinces"
 msgstr "Achats dans des provinces non-harmonisées"
 
 #. module: l10n_ca
+#: model:account.tax,description:l10n_ca.4_qst_purc_en
+#: model:account.tax,description:l10n_ca.4_qst_sale_en
+#: model:account.tax.group,name:l10n_ca.tax_group_qst_9975
+#: model:account.tax.template,description:l10n_ca.qst_purc_en
+#: model:account.tax.template,description:l10n_ca.qst_sale_en
+msgid "QST 9.975%"
+msgstr ""
+
+#. module: l10n_ca
 #: model:account.tax,name:l10n_ca.4_qst_purc_en
 #: model:account.tax.template,name:l10n_ca.qst_purc_en
 msgid "QST for purchases - 9.975%"
@@ -773,7 +821,7 @@ msgstr "Marchandises reçues non-facturées"
 #. module: l10n_ca
 #: model:account.tax.group,name:l10n_ca.tax_group_fix
 msgid "Taxes"
-msgstr ""
+msgstr "Taxes"
 
 #. module: l10n_ca
 #: model:ir.model.fields,help:l10n_ca.field_base_document_layout__account_fiscal_country_id

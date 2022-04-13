@@ -1,20 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* l10n_ch
-#
+# 
+# Translators:
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.3alpha1+e\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-05 15:45+0000\n"
-"PO-Revision-Date: 2021-03-08 09:14+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: \n"
+"PO-Revision-Date: 2022-04-08 12:41+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
+"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: l10n_ch
 #: model:ir.actions.report,print_report_name:l10n_ch.l10n_ch_isr_report
@@ -334,6 +337,12 @@ msgid "3.7% purch. Incl."
 msgstr "3.7% Einkauf Inkl."
 
 #. module: l10n_ch
+#: model:account.tax,description:l10n_ch.5_vat_37
+#: model:account.tax.template,description:l10n_ch.vat_37
+msgid "3.70%%"
+msgstr ""
+
+#. module: l10n_ch
 #: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_302a
 msgid "302a"
 msgstr ""
@@ -647,8 +656,58 @@ msgstr "<span class=\"title\">Annahmestelle</span>"
 
 #. module: l10n_ch
 #: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span class=\"title\">Reference</span>"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span>Account / Payable to</span>"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span>Account / Payable to</span><br/>"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span>Additional information</span>"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span>Amount</span>"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span>Amount</span><br/>"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span>Currency</span>"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span>Payable by</span>"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span>Payment part</span>"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
 msgid "<span>Receipt</span>"
 msgstr "<span>Empfangsschein</span>"
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span>Reference</span>"
+msgstr ""
 
 #. module: l10n_ch
 #: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_solde
@@ -862,8 +921,8 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_ch.field_res_company__l10n_ch_isr_print_bank_location
 #: model:ir.model.fields,help:l10n_ch.field_res_config_settings__l10n_ch_isr_print_bank_location
 msgid ""
-"Boolean option field indicating whether or not the alternate layout (the one "
-"printing bank name and address) must be used when generating an ISR."
+"Boolean option field indicating whether or not the alternate layout (the one"
+" printing bank name and address) must be used when generating an ISR."
 msgstr ""
 
 #. module: l10n_ch
@@ -880,7 +939,8 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_ch.field_account_move__l10n_ch_isr_valid
 #: model:ir.model.fields,help:l10n_ch.field_account_payment__l10n_ch_isr_valid
 msgid ""
-"Boolean value. True iff all the data required to generate the ISR are present"
+"Boolean value. True iff all the data required to generate the ISR are "
+"present"
 msgstr ""
 
 #. module: l10n_ch
@@ -893,8 +953,8 @@ msgstr ""
 #: code:addons/l10n_ch/models/account_invoice.py:0
 #, python-format
 msgid ""
-"Cannot generate the QR-bill. Please check you have configured the address of "
-"your company and debtor. If you are using a QR-IBAN, also check the "
+"Cannot generate the QR-bill. Please check you have configured the address of"
+" your company and debtor. If you are using a QR-IBAN, also check the "
 "invoice's payment reference is a QR reference."
 msgstr ""
 
@@ -1031,6 +1091,12 @@ msgstr "Materialaufwand Produktion"
 #: model:ir.model.fields,field_description:l10n_ch.field_account_move__l10n_ch_currency_name
 #: model:ir.model.fields,field_description:l10n_ch.field_account_payment__l10n_ch_currency_name
 msgid "Currency Name"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax,name:l10n_ch.5_vat_100_import
+#: model:account.tax.template,name:l10n_ch.vat_100_import
+msgid "Customs VAT on goods and services"
 msgstr ""
 
 #. module: l10n_ch
@@ -1261,7 +1327,7 @@ msgstr "Handelswaren"
 #: model:account.account,name:l10n_ch.5_ch_coa_1770
 #: model:account.account.template,name:l10n_ch.ch_coa_1770
 msgid "Goodwill"
-msgstr ""
+msgstr "Goodwill"
 
 #. module: l10n_ch
 #: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__l10n_ch_isr_scan_line_left
@@ -1712,10 +1778,8 @@ msgstr ""
 #. module: l10n_ch
 #: model_terms:ir.ui.view,arch_db:l10n_ch.res_config_settings_view_form
 msgid ""
-"Print the coordinates of your bank under the 'Payment for' title of the "
-"ISR.\n"
-"                                Your address will be moved to the 'in favour "
-"of' section."
+"Print the coordinates of your bank under the 'Payment for' title of the ISR.\n"
+"                                Your address will be moved to the 'in favour of' section."
 msgstr ""
 
 #. module: l10n_ch
@@ -2049,8 +2113,8 @@ msgstr "Provisionen an Dritte"
 #: model:ir.model.fields,help:l10n_ch.field_res_partner_bank__l10n_ch_postal
 msgid ""
 "This field is used for the Swiss postal account number on a vendor account "
-"and for the client number on your own account. The client number is mostly 6 "
-"numbers without -, while the postal account number can be e.g. 01-162-8"
+"and for the client number on your own account. The client number is mostly 6"
+" numbers without -, while the postal account number can be e.g. 01-162-8"
 msgstr ""
 
 #. module: l10n_ch
@@ -2206,18 +2270,13 @@ msgid ""
 "\n"
 "                                   For this, you need to :\n"
 "\n"
-"                                   - set a valid postal account number (or "
-"an IBAN referencing one) for your company\n"
+"                                   - set a valid postal account number (or an IBAN referencing one) for your company\n"
 "\n"
 "                                   - define its bank\n"
 "\n"
-"                                   - associate this bank with a postal "
-"reference for the currency used in this invoice\n"
+"                                   - associate this bank with a postal reference for the currency used in this invoice\n"
 "\n"
-"                                   - fill the 'bank account' field of the "
-"invoice with the postal to be used to receive the related payment. A default "
-"account will be automatically set for all invoices created after you defined "
-"a postal account for your company."
+"                                   - fill the 'bank account' field of the invoice with the postal to be used to receive the related payment. A default account will be automatically set for all invoices created after you defined a postal account for your company."
 msgstr ""
 
 #. module: l10n_ch

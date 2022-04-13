@@ -1450,6 +1450,14 @@ msgstr "채널"
 #, python-format
 msgid ""
 "Channel \"%(channel_name)s\" only accepts members of group "
+"\"%(group_name)s\". Forbidden for: %(guest_names)s"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid ""
+"Channel \"%(channel_name)s\" only accepts members of group "
 "\"%(group_name)s\". Forbidden for: %(partner_names)s"
 msgstr ""
 
@@ -7549,6 +7557,12 @@ msgstr "<b>@%s</b>와(과) 비공개 대화를 하고 있습니다."
 #, python-format
 msgid "You are in channel <b>#%s</b>."
 msgstr "<b>#%s</b> 채널에 있습니다."
+
+#. module: mail
+#: code:addons/mail/controllers/discuss.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr "여기에 첨부 파일을 업로드할 수 없습니다."
 
 #. module: mail
 #. openerp-web
