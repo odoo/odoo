@@ -21,9 +21,10 @@ registerModel({
             this.dialogOwner.delete();
         },
         async onClickOk() {
+            const chatter = this.chatter;
             await this.attachment.remove();
-            if (this.chatter && this.chatter.component) {
-                this.chatter.component.trigger('o-attachments-changed');
+            if (chatter && chatter.component) {
+                chatter.component.trigger('o-attachments-changed');
             }
         },
         /**
