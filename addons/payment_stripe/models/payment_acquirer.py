@@ -232,9 +232,14 @@ class PaymentAcquirer(models.Model):
         :return: The connected account
         :rtype: dict
         """
-        return self._stripe_make_proxy_request(
-            'accounts', payload=self._stripe_prepare_connect_account_payload()
-        )
+        try:
+            return self._stripe_make_proxy_request(
+                'accounts', payload=self._stripe_prepare_connect_account_payload()
+            )
+        except ValidationError:
+            return self._stripe_make_proxy_request(
+                'accounts', payload=self._stripe_prepare_connect_account_payload_light()
+            )
 
     def _stripe_prepare_connect_account_payload(self):
         """ Prepare the payload for the creation of a connected account in Stripe format.
@@ -247,8 +252,7 @@ class PaymentAcquirer(models.Model):
         """
         self.ensure_one()
 
-        payload = {}
-        payload['type'] = 'standard'
+        payload = self._stripe_prepare_connect_account_payload_light()
         payload['business_type'] = 'individual'
 
         def set_if_defined(key, value):
@@ -274,6 +278,17 @@ class PaymentAcquirer(models.Model):
         set_if_defined('business_profile[name]', self.company_id.name)
 
         return payload
+
+    def _stripe_prepare_connect_account_payload_light(self):
+        """ Prepare the minimum payload for the creation of a connected account in Stripe format.
+
+        Note: This method serves as a hook for modules that would fully implement Stripe Connect.
+        Note: self.ensure_one()
+
+        :return: The Stripe-formatted payload for the creation request with only required fields.
+        :rtype: dict
+        """
+        return {'type': 'standard'}
 
     def _stripe_create_account_link(self, connected_account_id, menu_id):
         """ Create an account link and return its URL.
