@@ -681,25 +681,20 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("fieldmany2many tags with no_edit_color option", async function (assert) {
-        assert.expect(1);
-
+    QUnit.tes("fieldmany2many tags with no_edit_color option", async function (assert) {
         serverData.models.partner.records[0].timmy = [12];
 
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<field name=\"timmy\" widget=\"many2many_tags\" options=\"{'color_field': 'color', 'no_edit_color': 1}\"/>" +
-                "</form>",
+            arch: `<form><field name="timmy" widget="many2many_tags" options="{'color_field': 'color', 'no_edit_color': 1}"/></form>`,
             resId: 1,
         });
 
         // Click to try to open colorpicker
-        await click(target.querySelector(".badge .dropdown-toggle"));
-        assert.containsNone(document.body, ".o_colorpicker");
+        await click(target.querySelector(".o_tag.badge"));
+        assert.containsNone(target, ".o_colorlist");
     });
 
     QUnit.skipWOWL("fieldmany2many tags in editable list", async function (assert) {
