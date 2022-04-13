@@ -35,7 +35,6 @@ class TestRatingFlow(TestMailFullCommon, TestMailFullRecipients):
 
         # prepare rating token
         access_token = record_rating._rating_get_access_token()
-        record_rating.invalidate_cache(fnames=['rating_ids'])
 
         # check rating creation
         rating = record_rating.rating_ids
@@ -54,7 +53,6 @@ class TestRatingFlow(TestMailFullCommon, TestMailFullRecipients):
 
         # prepare rating token
         access_token = record_rating._rating_get_access_token()
-        record_rating.invalidate_cache(fnames=['rating_ids'])
 
         # apply a rate as note (first click)
         with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
@@ -107,17 +105,16 @@ class TestRatingFlow(TestMailFullCommon, TestMailFullRecipients):
 
         # prepare rating token
         access_0 = record_rating._rating_get_access_token()
-        record_rating.rating_apply(3, token=access_0, feedback="This record is meh but it's cheap.")
+        last_rating = record_rating.rating_apply(3, token=access_0, feedback="This record is meh but it's cheap.")
         # Make sure to update the write_date which is used to retrieve the last rating
-        record_rating.invalidate_cache(fnames=['rating_ids'])
-        record_rating.rating_ids.write_date = datetime(2022, 1, 1, 14, 00)
+        last_rating.write_date = datetime(2022, 1, 1, 14, 00)
         access_1 = record_rating._rating_get_access_token()
-        record_rating.rating_apply(1, token=access_1, feedback="This record sucks so much. I want to speak to the manager !")
-        record_rating.invalidate_cache(fnames=['rating_ids'])
-        record_rating.rating_ids[0].write_date = datetime(2022, 2, 1, 14, 00)
+        last_rating = record_rating.rating_apply(1, token=access_1, feedback="This record sucks so much. I want to speak to the manager !")
+        last_rating.write_date = datetime(2022, 2, 1, 14, 00)
         access_2 = record_rating._rating_get_access_token()
-        record_rating.rating_apply(5, token=access_2, feedback="This is the best record ever ! I wish I read the documentation before complaining !")
-        record_rating.invalidate_cache(fnames=['rating_ids'])
+        last_rating = record_rating.rating_apply(5, token=access_2, feedback="This is the best record ever ! I wish I read the documentation before complaining !")
+        last_rating.write_date = datetime(2022, 3, 1, 14, 00)
+        record_rating.rating_ids.flush(['write_date'])
 
         self.assertEqual(record_rating.rating_last_value, 5, "The last rating is kept.")
         self.assertEqual(record_rating.rating_avg, 3, "The average should be equal to 3")
@@ -126,10 +123,10 @@ class TestRatingFlow(TestMailFullCommon, TestMailFullRecipients):
             RECORD_COUNT = 100
             partners = self.env['res.partner'].create([
                 {'name': 'Jean-Luc %s' % (idx), 'email': 'jean-luc-%s@opoo.com' % (idx)} for idx in range(RECORD_COUNT)])
-            # 3810 requests if only test_mail_full is installed
-            # 5610 runbot community
-            # 6410 runbot enterprise
-            with self.assertQueryCount(__system__=6410):
+            # 3713 requests if only test_mail_full is installed
+            # 5513 runbot community
+            # 6313 runbot enterprise
+            with self.assertQueryCount(__system__=6313):
                 record_ratings = self.env['mail.test.rating'].create([{
                     'customer_id': partners[idx].id,
                     'name': 'Test Rating',
@@ -139,12 +136,15 @@ class TestRatingFlow(TestMailFullCommon, TestMailFullRecipients):
                     access_token = record._rating_get_access_token()
                     record.rating_apply(1, token=access_token)
 
-                record_ratings.invalidate_cache(fnames=['rating_ids'])
                 record_ratings.rating_ids.write_date = datetime(2022, 1, 1, 14, 00)
                 for record in record_ratings:
                     access_token = record._rating_get_access_token()
                     record.rating_apply(5, token=access_token)
 
-            record_ratings.invalidate_cache(fnames=['rating_ids'])
-            with self.assertQueryCount(__system__=101):
+            new_ratings = record_ratings.rating_ids.filtered(lambda r: r.rating == 1)
+            new_ratings.write_date = datetime(2022, 2, 1, 14, 00)
+            new_ratings.flush(['write_date'])
+            with self.assertQueryCount(__system__=2):
                 record_ratings._compute_rating_last_value()
+                vals = [val == 5 for val in record_ratings.mapped('rating_last_value')]
+                self.assertTrue(all(vals), "The last rating is kept.")
