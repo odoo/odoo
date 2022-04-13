@@ -527,11 +527,8 @@ class ProjectTask(models.Model):
     # Actions
     # ---------------------------------------------------
 
-    def _get_action_view_so_ids(self):
-        return self.sale_order_id.ids
-
     def action_view_so(self):
-        so_ids = self._get_action_view_so_ids()
+        so_ids = self.sale_order_id.ids
         action_window = {
             "type": "ir.actions.act_window",
             "res_model": "sale.order",

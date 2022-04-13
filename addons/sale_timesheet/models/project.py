@@ -628,9 +628,6 @@ class ProjectTask(models.Model):
         timesheet_ids = super(ProjectTask, self)._get_timesheet()
         return timesheet_ids.filtered(lambda t: t._is_not_billed())
 
-    def _get_action_view_so_ids(self):
-        return list(set((self.sale_order_id + self.timesheet_ids.so_line.order_id).ids))
-
 class ProjectTaskRecurrence(models.Model):
     _inherit = 'project.task.recurrence'
 
