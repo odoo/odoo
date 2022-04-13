@@ -266,30 +266,32 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("required fieldradio widget on a many2one", async function (assert) {
-        assert.expect(6);
+    QUnit.test("required fieldradio widget on a many2one", async function (assert) {
+        assert.expect(4);
 
-        // const form = await createView({
-        //     View: FormView,
-        //     model: "partner",
-        //     data: this.data,
-        //     arch: "<form>" + '<field name="product_id" widget="radio" required="1"/>' + "</form>",
-        // });
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: "<form>" + '<field name="product_id" widget="radio" required="1"/>' + "</form>",
+        });
 
-        // testUtils.mock.intercept(form, "call_service", function (event) {
-        //     if (event.data.service === "notification" && event.data.method === "notify") {
-        //         assert.step("danger");
-        //         assert.equal(event.data.args[0].type, "danger");
-        //         assert.equal(event.data.args[0].title, "Invalid fields:");
-        //         assert.equal(event.data.args[0].message, "<ul><li>Product</li></ul>");
-        //     }
-        // });
+        assert.containsNone(
+            target,
+            ".o_field_radio input:checked",
+            "none of the input should be checked"
+        );
 
-        // assert.containsNone(form, "input:checked", "none of the input should be checked");
-
-        // await testUtils.form.clickSave(form);
-        // assert.verifySteps(["danger"]);
-        // form.destroy();
+        await click(target, ".o_form_button_save");
+        assert.strictEqual(
+            target.querySelector(".o_notification_title").textContent,
+            "Invalid fields: "
+        );
+        assert.strictEqual(
+            target.querySelector(".o_notification_content").innerHTML,
+            "<ul><li>Product</li></ul>"
+        );
+        assert.hasClass(target.querySelector(".o_notification"), "border-danger");
     });
 
     QUnit.test("fieldradio change value by onchange", async function (assert) {
