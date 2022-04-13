@@ -9,7 +9,19 @@ registerModel({
     recordMethods: {
         hide() {
             this.update({ isDropdownOpen: false });
-        }
+        },
+        /**
+         * @param {KeyboardEvent} ev
+         */
+        onKeydown(ev) {
+            ev.stopPropagation();
+            switch (ev.key) {
+                case 'Escape':
+                    ev.preventDefault();
+                    this.hide();
+                    break;
+            }
+        },
     },
     fields: {
         chatterOwner: one('Chatter', {

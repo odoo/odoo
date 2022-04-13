@@ -45,24 +45,6 @@ export class FollowerListMenu extends Component {
     }
 
     //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {KeyboardEvent} ev
-     */
-    _onKeydown(ev) {
-        ev.stopPropagation();
-        switch (ev.key) {
-            case 'Escape':
-                ev.preventDefault();
-                this.followerListMenuView.hide();
-                break;
-        }
-    }
-
-    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
