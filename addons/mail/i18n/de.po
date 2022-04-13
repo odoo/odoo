@@ -1512,6 +1512,14 @@ msgstr "Kanal"
 #, python-format
 msgid ""
 "Channel \"%(channel_name)s\" only accepts members of group "
+"\"%(group_name)s\". Forbidden for: %(guest_names)s"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid ""
+"Channel \"%(channel_name)s\" only accepts members of group "
 "\"%(group_name)s\". Forbidden for: %(partner_names)s"
 msgstr ""
 "Channel \"%(channel_name)s\" erlaubt nur Mitglieder der Gruppe "
@@ -7833,6 +7841,12 @@ msgstr "Sie befinden sich in einem privaten Gespräch mit <b>@%s</b>."
 #, python-format
 msgid "You are in channel <b>#%s</b>."
 msgstr "Sie befinden sich im Kanal <b>#%s</b>."
+
+#. module: mail
+#: code:addons/mail/controllers/discuss.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr ""
 
 #. module: mail
 #. openerp-web

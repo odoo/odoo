@@ -21,7 +21,6 @@
 # vaalds <vaalds@gmail.com>, 2022
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2022
 # Arunas V. <arunas@devoro.com>, 2022
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2022
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2022
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
 # Rolandas <info@paninfo.lt>, 2022
@@ -33,6 +32,7 @@
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2022
 # Arunas Vaitekunas <vaitekunas@gmail.com>, 2022
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -40,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2022\n"
+"Last-Translator: Antanas Muliuolis <an.muliuolis@gmail.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4673,7 +4673,7 @@ msgstr "Klientas/Tiekėjas"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Customer:"
-msgstr ""
+msgstr "Klientas:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.res_partner_action_customer
@@ -9751,7 +9751,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Payment Method:"
-msgstr ""
+msgstr "Mokėjimo būdas:"
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_method
@@ -13309,6 +13309,18 @@ msgid ""
 "Journal Entries.- Processing: No longer editable with posted Journal "
 "entries, ready for the reconciliation.- Validated: All lines are reconciled."
 " There is nothing left to process."
+msgstr ""
+
+#. module: account
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid "The date of some related entries is protected by a lock date"
+msgstr ""
+
+#. module: account
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid "The date selected is protected by a lock date"
 msgstr ""
 
 #. module: account

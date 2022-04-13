@@ -17,6 +17,7 @@
 # Benson <Benson.Dr@Gmail.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 智能科技奇客罗方 <alanljj@gmail.com>, 2022
+# as co02 <asco02@163.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: 智能科技奇客罗方 <alanljj@gmail.com>, 2022\n"
+"Last-Translator: as co02 <asco02@163.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1457,6 +1458,14 @@ msgstr "已修改"
 #, python-format
 msgid "Channel"
 msgstr "频道"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid ""
+"Channel \"%(channel_name)s\" only accepts members of group "
+"\"%(group_name)s\". Forbidden for: %(guest_names)s"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -7565,6 +7574,12 @@ msgstr "您在与<b>@%s</b> 的私有对话中"
 #, python-format
 msgid "You are in channel <b>#%s</b>."
 msgstr "您在频道 <b>#%s</b>"
+
+#. module: mail
+#: code:addons/mail/controllers/discuss.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr "您无权在此处上传附件。"
 
 #. module: mail
 #. openerp-web

@@ -88,7 +88,7 @@ msgstr "%i órdenes de trabajo"
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "%s %s unbuilt in"
-msgstr ""
+msgstr "%s %s desmantelado en"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_routing.py:0
@@ -100,7 +100,7 @@ msgstr "%s (copia)"
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "%s (new) %s"
-msgstr ""
+msgstr "%s (nuevo) %s"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -144,7 +144,7 @@ msgstr "'Orden de Producción - %s' % object.name"
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
-msgstr ""
+msgstr "+ %d día(s)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -260,7 +260,7 @@ msgstr "<span class=\"o_stat_text\">Rendimiento </span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "<span class=\"o_stat_text\">Routing<br/>Performance</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Rendimiento<br/>enrutamiento</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -430,6 +430,8 @@ msgstr "Una orden de fabricación ya ha sido terminada o cancelada."
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
 msgstr ""
+"Un producto con una lista de materiales tipo kit no puede tener una regla de"
+" reordenamiento. "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
@@ -539,6 +541,8 @@ msgid ""
 "Allow manufacturing users to modify quantities to consume, without the need "
 "for prior approval"
 msgstr ""
+"Permitir a los usuarios de fabricación modificar las cantidades por consumir"
+" sin aprobación previa"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__use_create_components_lots
@@ -556,12 +560,12 @@ msgstr "Permitido"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
 msgid "Allowed to Reserve Production"
-msgstr ""
+msgstr "Se permite reservar producción"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unreserve_visible
 msgid "Allowed to Unreserve Production"
-msgstr ""
+msgstr "Se permite anular reserva de producción"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__consumption__warning
@@ -737,7 +741,7 @@ msgstr "Líneas de confirmación de pedidos pendientes"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Backorder MO"
-msgstr ""
+msgstr "Orden de fabricación parcial"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -954,6 +958,8 @@ msgstr "Subproducto"
 #, python-format
 msgid "By-product %s should not be the same as BoM product."
 msgstr ""
+"El subproducto %s no debe ser el mismo que el producto de la lista de "
+"materiales."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__byproduct_id
@@ -1282,7 +1288,7 @@ msgstr "Información de costes"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_backorder_count
 msgid "Count of linked backorder"
-msgstr ""
+msgstr "Recuento de órdenes parciales vinculadas"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
@@ -2855,7 +2861,7 @@ msgstr "Producción de fabricación"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_production_count
 msgid "Mrp Production Count"
-msgstr ""
+msgstr "Número de producción de fabricación"
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.production_order_server_action
@@ -4083,7 +4089,7 @@ msgstr "Configurar tiempo"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__show_apply
 msgid "Show Apply"
-msgstr ""
+msgstr "Mostrar aplicar"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__show_backorders
@@ -4421,7 +4427,7 @@ msgstr "Campo técnico para verificar cuándo podemos cancelar la reserva"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_assign_serial__show_apply
 msgid "Technical field to show the Apply button"
-msgstr ""
+msgstr "Campo técnico para mostrar el botón de aplicar"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_assign_serial__show_backorders
@@ -4565,6 +4571,9 @@ msgid ""
 "lead to undesirable behaviours. You should rather archive the product and "
 "create a new one with a new bill of materials."
 msgstr ""
+"El producto ya se usó al menos una vez, editar su estructura puede llevar a "
+"comportamientos no deseados. Archive el producto y cree uno nuevo con una "
+"nueva lista de materiales."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -5578,6 +5587,8 @@ msgid ""
 "You can not create a kit-type bill of materials for products that have at "
 "least one reordering rule."
 msgstr ""
+"No puede crear una lista de materiales de tipo kit para productos que tienen"
+" por lo menos una regla de reordenamiento."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -5665,6 +5676,15 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('mrp_production_count', '=', 1)]}\">these manufacturing orders</span>.\n"
 "                        </b>"
 msgstr ""
+"Consumió una cantidad diferente a la esperada para los siguientes productos.\n"
+"                        <b attrs=\"{'invisible': [('consumption', '=', 'strict')]}\">\n"
+"                            Por favor, confirme que lo hizo a propósito.\n"
+"                        </b>\n"
+"                        <b attrs=\"{'invisible': [('consumption', '!=', 'strict')]}\">\n"
+"                            Por favor, revise su consumo de componentes o solicite que un gerente valide \n"
+"                            <span attrs=\"{'invisible':[('mrp_production_count', '!=', 1)]}\">esta orden de facturación</span>\n"
+"                            <span attrs=\"{'invisible':[('mrp_production_count', '=', 1)]}\">estas órdenes de facturación</span>.\n"
+"                        </b>"
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:0
@@ -5672,7 +5692,7 @@ msgstr ""
 msgid ""
 "You have already processed %(quantity)s. Please input a quantity higher than"
 " %(minimum)s "
-msgstr ""
+msgstr "Ya procesó %(quantity)s. Ingrese una cantidad mayor a %(minimum)s "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
@@ -5681,6 +5701,9 @@ msgid ""
 "                        Create a backorder if you expect to process the remaining quantities later.<br/>\n"
 "                        Do not create a backorder if you will not process the remaining products."
 msgstr ""
+"Ingresó menos números de serie que la cantidad por producir.<br/>\n"
+"                        Cree una orden parcial si espera procesar las cantidades restantes más tarde<br/>\n"
+"                        No cree una orden parcial si no procesará los productos restantes"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_immediate_production
@@ -5697,6 +5720,8 @@ msgid ""
 "You must indicate a non-zero amount consumed for at least one of your "
 "components"
 msgstr ""
+"Debe indicar una cantidad consumida diferente de cero para al menos uno de "
+"sus componentes"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0

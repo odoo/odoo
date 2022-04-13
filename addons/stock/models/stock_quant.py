@@ -223,12 +223,16 @@ class StockQuant(models.Model):
                 fields.append('quantity')
             if 'reserved_quantity' not in fields:
                 fields.append('reserved_quantity')
+        if 'inventory_quantity_auto_apply' in fields and 'quantity' not in fields:
+            fields.append('quantity')
         result = super(StockQuant, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
         for group in result:
             if self.env.context.get('inventory_report_mode'):
                 group['inventory_quantity'] = False
             if 'available_quantity' in fields:
                 group['available_quantity'] = group['quantity'] - group['reserved_quantity']
+            if 'inventory_quantity_auto_apply' in fields:
+                group['inventory_quantity_auto_apply'] = group['quantity']
         return result
 
     def write(self, vals):
@@ -284,10 +288,12 @@ class StockQuant(models.Model):
             'domain': [('location_id.usage', 'in', ['internal', 'transit'])],
             'help': """
                 <p class="o_view_nocontent_smiling_face">
-                    Your stock is currently empty
+                    {}
                 </p><p>
-                    Press the CREATE button to define quantity for each product in your stock or import them from a spreadsheet throughout Favorites <span class="fa fa-long-arrow-right"/> Import</p>
-                """
+                    {} <span class="fa fa-long-arrow-right"/> {}</p>
+                """.format(_('Your stock is currently empty'),
+                           _('Press the CREATE button to define quantity for each product in your stock or import them from a spreadsheet throughout Favorites'),
+                           _('Import')),
         }
         return action
 
@@ -854,10 +860,10 @@ class StockQuant(models.Model):
             'context': ctx,
             'domain': domain or [],
             'help': """
-                <p class="o_view_nocontent_empty_folder">No Stock On Hand</p>
-                <p>This analysis gives you an overview of the current stock
-                level of your products.</p>
-                """
+                <p class="o_view_nocontent_empty_folder">{}</p>
+                <p>{}</p>
+                """.format(_('No Stock On Hand'),
+                           _('This analysis gives you an overview of the current stock level of your products.')),
         }
 
         target_action = self.env.ref('stock.dashboard_open_quants', False)

@@ -1455,6 +1455,14 @@ msgstr "群組"
 #, python-format
 msgid ""
 "Channel \"%(channel_name)s\" only accepts members of group "
+"\"%(group_name)s\". Forbidden for: %(guest_names)s"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid ""
+"Channel \"%(channel_name)s\" only accepts members of group "
 "\"%(group_name)s\". Forbidden for: %(partner_names)s"
 msgstr "頻道“%(channel_name)s”只接受群組“%(group_name)s”的成員。禁止用於：%(partner_names)s"
 
@@ -7554,6 +7562,12 @@ msgstr "您在與<b>@%s</b> 的私有對話框中"
 #, python-format
 msgid "You are in channel <b>#%s</b>."
 msgstr "您在頻道 <b>#%s</b>。"
+
+#. module: mail
+#: code:addons/mail/controllers/discuss.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr "您無權限進行附件的更新"
 
 #. module: mail
 #. openerp-web

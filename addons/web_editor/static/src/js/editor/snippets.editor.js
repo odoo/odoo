@@ -1317,8 +1317,9 @@ var SnippetsMenu = Widget.extend({
             if ($oeStructure.length && !$oeStructure.children().length && this.$snippets) {
                 // If empty oe_structure, encourage using snippets in there by
                 // making them "wizz" in the panel.
-                this._updateRightPanelContent({content: [], tab: this.tabs.BLOCKS});
-                this.$snippets.odooBounce();
+                this._activateSnippet(false).then(() => {
+                    this.$snippets.odooBounce();
+                });
                 return;
             }
             this._activateSnippet($target);
@@ -2730,6 +2731,10 @@ var SnippetsMenu = Widget.extend({
     /**
      * Update the options pannel as being empty.
      *
+     * TODO review the utility of that function and how to call it (it was not
+     * called inside a mutex then we had to do it... there must be better things
+     * to do).
+     *
      * @private
      */
     _activateEmptyOptionsTab() {
@@ -2922,19 +2927,17 @@ var SnippetsMenu = Widget.extend({
      * @private
      */
     _onBlocksTabClick: function (ev) {
-        this._activateSnippet(false).then(() => {
-            this._updateRightPanelContent({
-                content: [],
-                tab: this.tabs.BLOCKS,
-            });
-        });
+        this._activateSnippet(false);
     },
     /**
      * @private
      */
     _onOptionsTabClick: function (ev) {
         if (!ev.currentTarget.classList.contains('active')) {
-            this._activateEmptyOptionsTab();
+            this._activateSnippet(false);
+            this._mutex.exec(() => {
+                this._activateEmptyOptionsTab();
+            });
         }
     },
     /**
