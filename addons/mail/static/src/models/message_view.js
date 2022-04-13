@@ -27,6 +27,16 @@ registerModel({
         /**
          * @param {MouseEvent} ev
          */
+        onClickAuthorName(ev) {
+            markEventHandled(ev, 'Message.ClickAuthorName');
+            if (!this.message.author) {
+                return;
+            }
+            this.message.author.openProfile();
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
         onClickFailure(ev) {
             markEventHandled(ev, 'Message.ClickFailure');
             this.message.openResendAction();

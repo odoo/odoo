@@ -332,18 +332,6 @@ export class Message extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickAuthorName(ev) {
-        markEventHandled(ev, 'Message.ClickAuthorName');
-        if (!this.messageView.message.author) {
-            return;
-        }
-        this.messageView.message.author.openProfile();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     _onClickOriginThread(ev) {
         // avoid following dummy href
         ev.preventDefault();
