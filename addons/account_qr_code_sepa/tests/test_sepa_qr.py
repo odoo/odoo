@@ -2,8 +2,10 @@
 
 from odoo.exceptions import UserError
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestSEPAQRCode(AccountTestInvoicingCommon):
     """ Tests the generation of Swiss QR-codes on invoices
     """
@@ -60,4 +62,3 @@ class TestSEPAQRCode(AccountTestInvoicingCommon):
         """
         self.sepa_qr_invoice.generate_qr_code()
         self.assertEqual(self.sepa_qr_invoice.qr_code_method, 'sct_qr', "SEPA QR-code generator should have been chosen for this invoice.")
-
