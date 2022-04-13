@@ -2,6 +2,7 @@
 
 import {
     click,
+    clickDiscard,
     clickDropdown,
     clickEdit,
     clickOpenedDropdownItem,
@@ -296,7 +297,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("fieldmany2many tags with color: rendering and edition", async function (assert) {
-        assert.expect(26);
+        assert.expect(28);
 
         serverData.models.partner.records[0].timmy = [12, 14];
         serverData.models.partner_type.records.push({ id: 13, display_name: "red", color: 8 });
@@ -608,55 +609,75 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.skipWOWL("fieldmany2many tags: update color", async function (assert) {
-        assert.expect(5);
+    QUnit.test("fieldmany2many tags: update color", async function (assert) {
+        assert.expect(8);
 
+        serverData.models.partner.records[0].timmy = [12];
         serverData.models.partner_type.records[0].color = 0;
 
-        let color;
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                '<field name="timmy" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
-                "</form>",
+            arch: `<form><field name="timmy" widget="many2many_tags" options="{'color_field': 'color'}"/></form>`,
             mockRPC: (route, { args, method }) => {
                 if (method === "write") {
-                    assert.deepEqual(args[1], { color: color }, "shoud write the new color");
+                    console.log(JSON.stringify(args[1]));
+                    assert.step(JSON.stringify(args[1]));
                 }
             },
             resId: 1,
         });
 
         // First checks that default color 0 is rendered as 0 color
-        assert.ok(
-            target.querySelector(".badge.dropdown").is(".o_tag_color_0"),
-            "first tag color should be 0"
-        );
+        let badgeNode = target.querySelector(".o_tag.badge");
+        assert.strictEqual(badgeNode.dataset.color, "0", "first tag color should be 0");
 
-        // Update the color in readonly
-        color = 1;
-        await click(target.querySelector(".badge .dropdown-toggle"));
-        await click(target, '.o_colorpicker button[data-color="' + color + '"]');
+        // Update the color in readonly => write automatically
+        await click(badgeNode);
+        await click(target, '.o_colorlist button[data-color="1"]');
         await nextTick();
         assert.strictEqual(
-            target.querySelector(".badge").data("color"),
-            color,
+            badgeNode.dataset.color,
+            "1",
             "should have correctly updated the color (in readonly)"
         );
 
-        // Update the color in edit
-        color = 6;
+        // Update the color in edit => write on save with rest of the record
         await clickEdit(target);
-        await click(target.querySelector(".badge .dropdown-toggle")); // choose color 6
-        await click(target, '.o_colorpicker button[data-color="' + color + '"]');
+        await click(badgeNode);
+        await click(target, '.o_colorlist button[data-color="6"]');
         await nextTick();
         assert.strictEqual(
-            target.querySelector(".badge").data("color"),
-            color,
+            badgeNode.dataset.color,
+            "6",
             "should have correctly updated the color (in edit)"
+        );
+
+        await clickSave(target);
+
+        assert.verifySteps([`{"color":1}`, `{"timmy":[[1,12,{"color":6}]]}`]);
+
+        badgeNode = target.querySelector(".o_tag.badge"); // need to refresh the reference
+
+        // Update the color in edit without save => we don't go through RPC
+        // so it's not saved and it is lost on discard.
+        await clickEdit(target);
+        await click(badgeNode);
+        await click(target, '.o_colorlist button[data-color="8"]');
+        await nextTick();
+        assert.strictEqual(
+            badgeNode.dataset.color,
+            "8",
+            "should have correctly updated the color (in edit)"
+        );
+
+        await clickDiscard(target);
+
+        assert.strictEqual(
+            badgeNode.dataset.color,
+            "6",
+            "should have correctly cancel the color update"
         );
     });
 

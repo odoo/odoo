@@ -43,6 +43,7 @@ export class Many2ManyTagsField extends Component {
     switchTagColor(colorIndex, tag) {
         const tagRecord = this.props.value.records.find((record) => record.id === tag.id);
         tagRecord.update(this.props.colorField, colorIndex);
+        if (this.props.readonly) tagRecord.save();
     }
     onTagVisibilityChange(isHidden, tag) {
         const tagRecord = this.props.value.records.find((record) => record.id === tag.id);
@@ -53,6 +54,7 @@ export class Many2ManyTagsField extends Component {
             this.props.colorField,
             isHidden ? 0 : this.previousColorsMap[tagRecord.resId] || 1
         );
+        if (this.props.readonly) tagRecord.save();
     }
 
     get sources() {

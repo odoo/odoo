@@ -355,6 +355,16 @@ export function clickSave(htmlElement) {
     }
 }
 
+export function clickDiscard(htmlElement) {
+    if (htmlElement.querySelectorAll(".o_form_button_cancel").length) {
+        return click(htmlElement, ".o_form_button_cancel");
+    } else if (htmlElement.querySelectorAll(".o_list_button_cancel").length) {
+        return click(htmlElement, ".o_list_button_cancel");
+    } else {
+        throw new Error("No discard button found to be clicked.");
+    }
+}
+
 export async function mouseEnter(el, selector) {
     return triggerEvent(el, selector, "mouseenter");
 }
