@@ -7,7 +7,6 @@ try:
 except ImportError:
     pylint = None
 import subprocess
-from distutils.version import LooseVersion
 import os
 from os.path import join
 import sys
@@ -53,10 +52,10 @@ class TestPyLint(TransactionCase):
     def test_pylint(self):
         if pylint is None:
             self._skip_test('please install pylint')
-        required_pylint_version = LooseVersion('1.6.4')
+        required_pylint_version = tools.parse_version('1.6.4')
         if sys.version_info >= (3, 6):
-            required_pylint_version = LooseVersion('1.7.0')
-        if LooseVersion(getattr(pylint, '__version__', '0.0.1')) < required_pylint_version:
+            required_pylint_version = tools.parse_version('1.7.0')
+        if tools.parse_version(getattr(pylint, '__version__', '0.0.1')) < required_pylint_version:
             self._skip_test('please upgrade pylint to >= %s' % required_pylint_version)
 
         paths = [tools.config['root_path']]
