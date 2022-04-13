@@ -27,9 +27,25 @@ class RatingMixin(models.AbstractModel):
 
     @api.depends('rating_ids.rating', 'rating_ids.consumed')
     def _compute_rating_last_value(self):
+        # Pure SQL instead of calling read_group to allow ordering array_agg
+        self.flush(['rating_ids'])
+        if not self.ids:
+            self.rating_last_value = 0
+            return
+        self.env.cr.execute("""
+            SELECT
+                array_agg(rating ORDER BY write_date DESC) AS "ratings",
+                res_id as res_id
+            FROM "rating_rating"
+            WHERE
+                res_model = %s
+            AND res_id in %s
+            AND consumed = true
+            GROUP BY res_id""", [self._name, tuple(self.ids)])
+        read_group_raw = self.env.cr.dictfetchall()
+        rating_by_res_id = {e['res_id']: e['ratings'][0] for e in read_group_raw}
         for record in self:
-            ratings = self.env['rating.rating'].search([('res_model', '=', self._name), ('res_id', '=', record.id), ('consumed', '=', True)], limit=1)
-            record.rating_last_value = ratings and ratings.rating or 0
+            record.rating_last_value = rating_by_res_id.get(record.id, 0)
 
     @api.depends('rating_ids.res_id', 'rating_ids.rating')
     def _compute_rating_stats(self):
