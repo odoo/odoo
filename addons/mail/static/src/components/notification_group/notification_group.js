@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, useRef } = owl;
+const { Component } = owl;
 
 export class NotificationGroup extends Component {
 
@@ -11,11 +12,7 @@ export class NotificationGroup extends Component {
      */
     setup() {
         super.setup();
-        /**
-         * Reference of the "mark as read" button. Useful to disable the
-         * top-level click handler when clicking on this specific button.
-         */
-        this._markAsReadRef = useRef('markAsRead');
+        useRefToModel({ fieldName: 'markAsReadRef', modelName: 'NotificationGroupView', refName: 'markAsRead' });
     }
 
     //--------------------------------------------------------------------------
@@ -47,7 +44,10 @@ export class NotificationGroup extends Component {
      * @param {MouseEvent} ev
      */
     _onClick(ev) {
-        const markAsRead = this._markAsReadRef.el;
+        if (!this.notificationGroupView) {
+            return;
+        }
+        const markAsRead = this.notificationGroupView.markAsReadRef.el;
         if (markAsRead && markAsRead.contains(ev.target)) {
             // handled in `_onClickMarkAsRead`
             return;

@@ -17,23 +17,6 @@ export class ThreadView extends Component {
         return this.messaging && this.messaging.models['ThreadView'].get(this.props.localId);
     }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onClickRetryLoadMessages() {
-        if (!this.threadView) {
-            return;
-        }
-        if (!this.threadView.threadCache) {
-            return;
-        }
-        this.threadView.threadCache.update({ hasLoadingFailed: false });
-    }
-
 }
 
 Object.assign(ThreadView, {
@@ -41,7 +24,6 @@ Object.assign(ThreadView, {
         hasComposerDiscardButton: false,
         showComposerAttachmentsExtensions: true,
         showComposerAttachmentsFilenames: true,
-        onFocusin: () => {},
     },
     props: {
         hasComposerCurrentPartnerAvatar: {
@@ -61,10 +43,6 @@ Object.assign(ThreadView, {
             optional: true,
         },
         localId: String,
-        onFocusin: {
-            type: Function,
-            optional: true,
-        },
         showComposerAttachmentsExtensions: {
             type: Boolean,
             optional: true,

@@ -1627,6 +1627,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeRtcInvitationCard() {
+            if (this.rtcInvitingSession) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {Activity[]}
          */
         _computeTodayActivities() {
@@ -2321,6 +2331,11 @@ registerModel({
          */
         rtc: one('Rtc', {
             inverse: 'channel',
+        }),
+        rtcInvitationCard: one('RtcInvitationCard', {
+            compute: '_computeRtcInvitationCard',
+            inverse: 'thread',
+            isCausal: true,
         }),
         /**
          * The session that invited the current user, it is only set when the
