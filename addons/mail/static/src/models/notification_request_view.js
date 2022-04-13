@@ -22,6 +22,19 @@ registerModel({
                 });
             }
         },
+        onClick() {
+            if (!this.exists()) {
+                return;
+            }
+            const windowNotification = this.messaging.browser.Notification;
+            const def = windowNotification && windowNotification.requestPermission();
+            if (def) {
+                def.then(this.handleResponseNotificationPermission);
+            }
+            if (!this.messaging.device.isMobile) {
+                this.messaging.messagingMenu.close();
+            }
+        },
     },
     fields: {
         notificationListViewOwner: one('NotificationListView', {

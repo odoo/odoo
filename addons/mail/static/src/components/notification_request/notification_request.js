@@ -27,27 +27,6 @@ export class NotificationRequest extends Component {
         return this.messaging && this.messaging.models['NotificationRequestView'].get(this.props.localId);
     }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onClick() {
-        if (!this.notificationRequestView) {
-            return;
-        }
-        const windowNotification = this.messaging.browser.Notification;
-        const def = windowNotification && windowNotification.requestPermission();
-        if (def) {
-            def.then(this.notificationRequestView.handleResponseNotificationPermission.bind(this));
-        }
-        if (!this.messaging.device.isMobile) {
-            this.messaging.messagingMenu.close();
-        }
-    }
-
 }
 
 Object.assign(NotificationRequest, {
