@@ -2717,6 +2717,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    // Will change TASK-ID 2822174
     QUnit.skipWOWL(
         "aggregates digits can be set with digits field attribute",
         async function (assert) {
@@ -2726,19 +2727,19 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch:
-                    "<tree>" +
-                    '<field name="amount" widget="monetary" sum="Sum" digits="[69,3]"/>' +
-                    "</tree>",
+                arch: `
+                    <tree>
+                        <field name="amount" widget="monetary" sum="Sum" digits="[69,3]"/>
+                    </tree>`,
             });
 
             assert.strictEqual(
-                $(target).find(".o_data_row td:nth(1)").text(),
+                target.querySelectorAll(".o_data_row td")[1].textContent,
                 "1200.00",
                 "field should still be formatted based on currency"
             );
             assert.strictEqual(
-                $(target).find("tfoot td:nth(1)").text(),
+                target.querySelectorAll("tfoot td")[1].textContent,
                 "2000.000",
                 "aggregates monetary use digits attribute if available"
             );
@@ -4588,113 +4589,111 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("use default_order on editable tree: sort on save", async function (assert) {
-        assert.expect(8);
-
+    QUnit.test("use default_order on editable tree: sort on save", async function (assert) {
         serverData.models.foo.records[0].o2m = [1, 3];
 
-        var form = await makeView({
-            View: FormView,
+        await makeView({
+            type: "form",
             resModel: "foo",
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                '<field name="o2m">' +
-                '<tree editable="bottom" default_order="display_name">' +
-                '<field name="display_name"/>' +
-                "</tree>" +
-                "</field>" +
-                "</sheet>" +
-                "</form>",
-            res_id: 1,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="o2m">
+                            <tree editable="bottom" default_order="display_name">
+                                <field name="display_name"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>`,
+            resId: 1,
         });
 
-        await testUtils.form.clickEdit(form);
-        assert.ok(form.$("tbody tr:first td:contains(Value 1)").length, "Value 1 should be first");
-        assert.ok(form.$("tbody tr:eq(1) td:contains(Value 3)").length, "Value 3 should be second");
-
-        var $o2m = form.$(".o_field_widget[name=o2m]");
-        await click(form.$(".o_field_x2many_list_row_add a"));
-        await editInput($o2m.find(".o_field_widget"), "Value 2");
-        assert.ok(form.$("tbody tr:first td:contains(Value 1)").length, "Value 1 should be first");
-        assert.ok(form.$("tbody tr:eq(1) td:contains(Value 3)").length, "Value 3 should be second");
-        assert.ok(
-            form.$("tbody tr:eq(2) td input").val(),
-            "Value 2 should be third (shouldn't be sorted)"
+        await clickEdit(target);
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_field_x2many_list .o_data_row")].map(
+                (el) => el.textContent
+            ),
+            ["Value 1", "Value 3"]
         );
 
-        await testUtils.form.clickSave(form);
-        assert.ok(form.$("tbody tr:first td:contains(Value 1)").length, "Value 1 should be first");
-        assert.ok(
-            form.$("tbody tr:eq(1) td:contains(Value 2)").length,
-            "Value 2 should be second (should be sorted after saving)"
+        await addRow(target);
+        await editInput(target, ".o_field_widget[name=o2m] .o_field_widget input", "Value 2");
+        await click(target, ".o_form_view");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_field_x2many_list .o_data_row")].map(
+                (el) => el.textContent
+            ),
+            ["Value 1", "Value 3", "Value 2"]
         );
-        assert.ok(form.$("tbody tr:eq(2) td:contains(Value 3)").length, "Value 3 should be third");
 
-        form.destroy();
+        await clickSave(target);
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_field_x2many_list .o_data_row")].map(
+                (el) => el.textContent
+            ),
+            ["Value 1", "Value 2", "Value 3"]
+        );
     });
 
-    QUnit.skipWOWL("use default_order on editable tree: sort on demand", async function (assert) {
-        assert.expect(11);
-
+    QUnit.test("use default_order on editable tree: sort on demand", async function (assert) {
         serverData.models.foo.records[0].o2m = [1, 3];
-        serverData.models.bar.fields = { name: { string: "Name", type: "char", sortable: true } };
+        serverData.models.bar.fields = {
+            name: { string: "Name", type: "char", sortable: true },
+        };
         serverData.models.bar.records[0].name = "Value 1";
         serverData.models.bar.records[2].name = "Value 3";
 
-        var form = await makeView({
-            View: FormView,
+        await makeView({
+            type: "form",
             resModel: "foo",
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                '<field name="o2m">' +
-                '<tree editable="bottom" default_order="name">' +
-                '<field name="name"/>' +
-                "</tree>" +
-                "</field>" +
-                "</sheet>" +
-                "</form>",
-            res_id: 1,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="o2m">
+                            <tree editable="bottom" default_order="name">
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>`,
+            resId: 1,
         });
 
-        await testUtils.form.clickEdit(form);
-        assert.ok(form.$("tbody tr:first td:contains(Value 1)").length, "Value 1 should be first");
-        assert.ok(form.$("tbody tr:eq(1) td:contains(Value 3)").length, "Value 3 should be second");
-
-        var $o2m = form.$(".o_field_widget[name=o2m]");
-        await click(form.$(".o_field_x2many_list_row_add a"));
-        await editInput($o2m.find(".o_field_widget"), "Value 2");
-        assert.ok(form.$("tbody tr:first td:contains(Value 1)").length, "Value 1 should be first");
-        assert.ok(form.$("tbody tr:eq(1) td:contains(Value 3)").length, "Value 3 should be second");
-        assert.ok(
-            form.$("tbody tr:eq(2) td input").val(),
-            "Value 2 should be third (shouldn't be sorted)"
+        await clickEdit(target);
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_field_x2many_list .o_data_row")].map(
+                (el) => el.textContent
+            ),
+            ["Value 1", "Value 3"]
         );
 
-        await click(form.$(".o_form_sheet_bg"));
-
-        await click($o2m.find(".o_column_sortable"));
-        assert.strictEqual(form.$("tbody tr:first").text(), "Value 1", "Value 1 should be first");
-        assert.strictEqual(
-            form.$("tbody tr:eq(1)").text(),
-            "Value 2",
-            "Value 2 should be second (should be sorted after saving)"
+        await addRow(target);
+        await editInput(target, ".o_field_widget[name=o2m] .o_field_widget input", "Value 2");
+        await click(target, ".o_form_view");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_field_x2many_list .o_data_row")].map(
+                (el) => el.textContent
+            ),
+            ["Value 1", "Value 3", "Value 2"]
         );
-        assert.strictEqual(form.$("tbody tr:eq(2)").text(), "Value 3", "Value 3 should be third");
 
-        await click($o2m.find(".o_column_sortable"));
-        assert.strictEqual(form.$("tbody tr:first").text(), "Value 3", "Value 3 should be first");
-        assert.strictEqual(
-            form.$("tbody tr:eq(1)").text(),
-            "Value 2",
-            "Value 2 should be second (should be sorted after saving)"
+        await click(target, ".o_field_widget[name=o2m] .o_column_sortable");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_field_x2many_list .o_data_row")].map(
+                (el) => el.textContent
+            ),
+            ["Value 1", "Value 2", "Value 3"]
         );
-        assert.strictEqual(form.$("tbody tr:eq(2)").text(), "Value 1", "Value 1 should be third");
 
-        form.destroy();
+        await click(target, ".o_field_widget[name=o2m] .o_column_sortable");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_field_x2many_list .o_data_row")].map(
+                (el) => el.textContent
+            ),
+            ["Value 3", "Value 2", "Value 1"]
+        );
     });
 
     QUnit.skipWOWL(

@@ -259,7 +259,7 @@ export class ListRenderer extends Component {
             classNames.push("o_column_sortable");
         }
         const orderBy = this.props.list.orderBy;
-        if (orderBy.length && orderBy[0].fieldName === column.name) {
+        if (orderBy.length && orderBy[0].name === column.name) {
             classNames.push(orderBy[0].asc ? "o-sort-up" : "o-sort-down");
         }
         if (["float", "integer", "monetary"].includes(field.type)) {

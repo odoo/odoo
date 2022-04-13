@@ -2055,6 +2055,7 @@ export class StaticList extends DataPoint {
         this.parentRecord = params.parentRecord;
 
         this.orderBy = params.orderBy || [];
+        this.isOrder = true;
 
         // async computation that depends on previous params
         // to be initialized
@@ -2141,6 +2142,7 @@ export class StaticList extends DataPoint {
             await record.load();
         }
 
+        this.isOrder = false;
         this.records = this._getRecords();
         this.onChanges();
         this.model.notify(); // should be in onChanges?
@@ -2167,6 +2169,7 @@ export class StaticList extends DataPoint {
             this.notYetValidated = record.virtualId;
         }
 
+        this.isOrder = false;
         this.records = this._getRecords();
         this.onChanges();
         this.model.notify();
@@ -2184,6 +2187,7 @@ export class StaticList extends DataPoint {
     applyCommands(commands) {
         this._commands = this._getNormalizedCommands(this._commands, commands);
         this.currentIds = this._getCurrentIds(this.currentIds, commands);
+        this._mapping = this._getNextMapping(this._mapping, commands);
     }
 
     /**
@@ -2409,7 +2413,9 @@ export class StaticList extends DataPoint {
 
     async sortBy(fieldName) {
         if (this.orderBy.length && this.orderBy[0].name === fieldName) {
-            this.orderBy[0].asc = !this.orderBy[0].asc;
+            if (this.isOrder) {
+                this.orderBy[0].asc = !this.orderBy[0].asc;
+            }
         } else {
             this.orderBy = this.orderBy.filter((o) => o.name !== fieldName);
             this.orderBy.unshift({
@@ -2418,6 +2424,7 @@ export class StaticList extends DataPoint {
             });
         }
 
+        this.isOrder = true;
         await this.load();
         this.model.notify();
     }
@@ -2425,6 +2432,30 @@ export class StaticList extends DataPoint {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    // TO DISCUSS AND IMP
+    _getNextMapping(mapping, commands) {
+        let nextMapping = mapping;
+        for (const command of commands) {
+            const code = command[0];
+            const id = command[1];
+
+            switch (code) {
+                case UPDATE:
+                    nextMapping[id] = mapping[id];
+                    break;
+                case LINK_TO:
+                    nextMapping[id] = mapping[id];
+                    break;
+                case DELETE_ALL:
+                    nextMapping = {};
+                    break;
+                case REPLACE_WITH:
+                    break;
+            }
+        }
+        return nextMapping;
+    }
 
     /**
      * @param {Object} params
@@ -2633,11 +2664,11 @@ export class StaticList extends DataPoint {
         const proms = [];
         for (const id of displayedIds) {
             const recordId = this._mapping[id];
-            const createCommand = this._commandsById[id] && this._commandsById[id][CREATE];
-            if (!recordId || createCommand) {
+            if (!recordId) {
                 const key = typeof id === "number" ? "resId" : "virtualId";
                 const record = this._createRecord({ [key]: id, mode: "readonly" });
                 let changes;
+                const createCommand = this._commandsById[id] && this._commandsById[id][CREATE];
                 if (createCommand) {
                     changes = this._initialValues[id];
                 }
