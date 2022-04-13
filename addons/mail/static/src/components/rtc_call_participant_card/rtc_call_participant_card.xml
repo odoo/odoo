@@ -10,7 +10,7 @@
                     'o-isInvitation': callParticipantCard.isInvitation,
                 }"
                 t-attf-class="{{ className }}"
-                t-on-contextmenu="_onContextMenu"
+                t-on-contextmenu="callParticipantCard.onContextMenu"
                 t-ref="root"
             >
                 <div class="o_RtcCallParticipantCard_container align-items-center"

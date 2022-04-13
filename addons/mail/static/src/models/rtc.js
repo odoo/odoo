@@ -148,6 +148,12 @@ registerModel({
             this.messaging.soundEffects.mute.play();
         },
         /**
+         * @param {MouseEvent} ev
+         */
+        onClickActivityNoticeButton(ev) {
+            this.channel.open();
+        },
+        /**
          * Resets the state of the model and cleanly ends all connections and
          * streams.
          *

@@ -2,7 +2,7 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, onMounted, onWillUnmount, useRef, useState } = owl;
+const { Component, onMounted, onWillUnmount, useRef } = owl;
 
 export class FollowerListMenu extends Component {
 
@@ -11,17 +11,10 @@ export class FollowerListMenu extends Component {
      */
     setup() {
         super.setup();
-        this.state = useState({
-            /**
-             * Determine whether the dropdown is open or not.
-             */
-            isDropdownOpen: false,
-        });
         this._dropdownRef = useRef('dropdown');
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
         onMounted(() => this._mounted());
         onWillUnmount(() => this._willUnmount());
-        this._onClickFollower = this._onClickFollower.bind(this);
     }
 
     _mounted() {
@@ -51,31 +44,6 @@ export class FollowerListMenu extends Component {
     }
 
     //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _hide() {
-        this.state.isDropdownOpen = false;
-    }
-
-    /**
-     * @private
-     * @param {KeyboardEvent} ev
-     */
-    _onKeydown(ev) {
-        ev.stopPropagation();
-        switch (ev.key) {
-            case 'Escape':
-                ev.preventDefault();
-                this._hide();
-                break;
-        }
-    }
-
-    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
@@ -85,7 +53,7 @@ export class FollowerListMenu extends Component {
      */
     _onClickAddFollowers(ev) {
         ev.preventDefault();
-        this._hide();
+        this.followerListMenuView.hide();
         this.thread.promptAddPartnerFollower();
     }
 
@@ -98,25 +66,10 @@ export class FollowerListMenu extends Component {
     _onClickCaptureGlobal(ev) {
         // since dropdown is conditionally shown based on state, dropdownRef can be null
         if (this._dropdownRef.el && !this._dropdownRef.el.contains(ev.target)) {
-            this._hide();
+            this.followerListMenuView.hide();
         }
     }
 
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickFollowersButton(ev) {
-        this.state.isDropdownOpen = !this.state.isDropdownOpen;
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickFollower(ev) {
-        this._hide();
-    }
 }
 
 Object.assign(FollowerListMenu, {

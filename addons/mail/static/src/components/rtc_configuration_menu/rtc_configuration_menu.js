@@ -23,52 +23,17 @@ export class RtcConfigurationMenu extends Component {
         this.state.userDevices = await browser.navigator.mediaDevices.enumerateDevices();
     }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
     /**
-     * @private
-     * @param {Event} ev
+     * @returns {RtcConfigurationMenu|undefined}
      */
-    _onChangeDelay(ev) {
-        this.messaging.userSetting.rtcConfigurationMenu.onChangeDelay(ev.target.value);
+    get rtcConfigurationMenu() {
+        return this.messaging && this.messaging.models['RtcConfigurationMenu'].get(this.props.localId);
     }
 
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onChangePushToTalk(ev) {
-        this.messaging.userSetting.rtcConfigurationMenu.onChangePushToTalk();
-    }
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onChangeSelectAudioInput(ev) {
-        this.messaging.userSetting.rtcConfigurationMenu.onChangeSelectAudioInput(ev.target.value);
-    }
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onChangeThreshold(ev) {
-        this.messaging.userSetting.rtcConfigurationMenu.onChangeThreshold(ev.target.value);
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickRegisterKeyButton() {
-        this.messaging.userSetting.rtcConfigurationMenu.onClickRegisterKeyButton();
-    }
 }
 
 Object.assign(RtcConfigurationMenu, {
+    props: { localId: String },
     template: 'mail.RtcConfigurationMenu',
 });
 

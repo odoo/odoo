@@ -17,18 +17,6 @@ export class RtcInvitationCard extends Component {
         return this.messaging.models['RtcInvitationCard'].get(this.props.localId);
     }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickAvatar(ev) {
-        this.rtcInvitationCard.thread.open();
-    }
-
 }
 
 Object.assign(RtcInvitationCard, {

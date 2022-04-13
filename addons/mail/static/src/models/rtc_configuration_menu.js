@@ -20,10 +20,10 @@ registerModel({
     },
     recordMethods: {
         /**
-         * @param {String} value
+         * @param {Event} ev
          */
-        onChangeDelay(value) {
-            this.userSetting.setDelayValue(value);
+        onChangeDelay(ev) {
+            this.userSetting.setDelayValue(ev.target.value);
         },
         onChangePushToTalk() {
             if (this.userSetting.usePushToTalk) {
@@ -34,16 +34,16 @@ registerModel({
             this.userSetting.togglePushToTalk();
         },
         /**
-         * @param {String} value
+         * @param {Event} ev
          */
-        onChangeSelectAudioInput(value) {
-            this.userSetting.setAudioInputDevice(value);
+        onChangeSelectAudioInput(ev) {
+            this.userSetting.setAudioInputDevice(ev.target.value);
         },
         /**
-         * @param {String} value
+         * @param {MouseEvent} ev
          */
-        onChangeThreshold(value) {
-            this.userSetting.setThresholdValue(parseFloat(value));
+        onChangeThreshold(ev) {
+            this.userSetting.setThresholdValue(parseFloat(ev.target.value));
         },
         onClickRegisterKeyButton() {
             this.update({
