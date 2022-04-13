@@ -5,6 +5,7 @@ import {
     clickDropdown,
     clickEdit,
     clickOpenedDropdownItem,
+    clickSave,
     editInput,
     getFixture,
     getNodesTextContent,
@@ -560,14 +561,14 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("fieldmany2many tags in a new record", async function (assert) {
+    QUnit.test("fieldmany2many tags in a new record", async function (assert) {
         assert.expect(7);
 
-        var form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: "<form>" + '<field name="timmy" widget="many2many_tags"///>' + "</form>",
+            arch: `<form><field name="timmy" widget="many2many_tags"/></form>`,
             mockRPC: (route, { args }) => {
                 if (route === "/web/dataset/call_kw/partner/create") {
                     var commands = args[0].timmy;
@@ -581,32 +582,30 @@ QUnit.module("Fields", (hooks) => {
                 }
             },
         });
-        assert.hasClass(
-            target.querySelector(".o_form_view"),
-            "o_form_editable",
+        assert.strictEqual(
+            target.querySelectorAll(".o_form_view .o_form_editable").length,
+            1,
             "form should be in edit mode"
         );
 
-        const autocomplete = target.querySelector("div[name='timmy'] .o-autocomplete.dropdown");
-        await click(autocomplete);
+        await clickDropdown(target, "timmy");
+        const autocomplete = target.querySelector("[name='timmy'] .o-autocomplete.dropdown");
         assert.strictEqual(
-            target
-                .querySelector(".o_field_many2many_tags input")
-                .autocomplete("widget")
-                .querySelectorAll("li").length,
+            autocomplete.querySelectorAll("li").length,
             3,
             "autocomplete dropdown should have 3 entries (2 values + 'Search and Edit...')"
         );
-        //await testUtils.fields.many2one.clickHighlightedItem("timmy");
+        await clickOpenedDropdownItem(target, "timmy", "gold");
 
-        assert.containsOnce(form, ".o_field_many2many_tags .badge", "should contain 1 tag");
-        assert.ok(
-            target.querySelectorAll('.o_field_many2many_tags .badge:contains("gold")').length,
+        assert.containsOnce(target, ".o_field_many2many_tags .badge", "should contain 1 tag");
+        assert.strictEqual(
+            getNodesTextContent(target.querySelectorAll(".o_field_many2many_tags .badge")),
+            "gold",
             "should contain newly added tag 'gold'"
         );
 
         // save the record (should do the write RPC with the correct commands)
-        await click(target.querySelector(".o_form_button_save"));
+        await clickSave(target);
     });
 
     QUnit.skipWOWL("fieldmany2many tags: update color", async function (assert) {
