@@ -100,14 +100,6 @@ export class FollowerListMenu extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickFollowersButton(ev) {
-        this.followerListMenuView.update({ isDropdownOpen: !this.followerListMenuView.isDropdownOpen });
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     _onClickFollower(ev) {
         this._hide();
     }

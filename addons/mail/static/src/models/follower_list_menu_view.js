@@ -6,6 +6,14 @@ import { attr, one } from '@mail/model/model_field';
 registerModel({
     name: 'FollowerListMenuView',
     identifyingFields: [['chatterOwner']],
+    recordMethods: {
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickFollowersButton(ev) {
+            this.update({ isDropdownOpen: !this.isDropdownOpen });
+        },
+    },
     fields: {
         chatterOwner: one('Chatter', {
             inverse: 'followerListMenuView',
