@@ -27,6 +27,8 @@ class ResConfigSettings(models.TransientModel):
     module_website_sale_digital = fields.Boolean("Digital Content")
     module_website_sale_wishlist = fields.Boolean("Wishlists")
     module_website_sale_comparison = fields.Boolean("Product Comparison Tool")
+    module_website_sale_autocomplete = fields.Boolean('Address Autocomplete')
+
     module_account = fields.Boolean("Invoicing")
 
     cart_recovery_mail_template = fields.Many2one('mail.template', string='Cart Recovery Email', domain="[('model', '=', 'sale.order')]",

@@ -382,6 +382,20 @@
                     </div>
                 </div>
             </div>
+
+            <xpath expr="//div[@id='google_analytics_setting']" position="after">
+                <div class="col-12 col-lg-6 o_setting_box" id="autocomplete_googleplaces_setting">
+                    <div class="o_setting_left_pane">
+                        <field name="module_website_sale_autocomplete"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="module_website_sale_autocomplete"/>
+                        <div class="text-muted">
+                            Use Google Places API to validate addresses entered by your visitors
+                        </div>
+                    </div>
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>
