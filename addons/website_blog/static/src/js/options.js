@@ -111,7 +111,12 @@ options.registry.BlogPostTagSelection = options.Class.extend({
         if (!widgetValue) {
             return;
         }
-        const existing = Object.values(this.allTagsByID).some(tag => tag.name.toLowerCase() === widgetValue.toLowerCase());
+        const existing = Object.values(this.allTagsByID).some(tag => {
+            // A tag is already existing only if it was already defined (i.e.
+            // id is a number) or if it appears in the current list of tags.
+            return tag.name.toLowerCase() === widgetValue.toLowerCase()
+                && (typeof(tag.id) === 'number' || this.tagIDs.includes(tag.id));
+        });
         if (existing) {
             return this.displayNotification({
                 type: 'warning',
