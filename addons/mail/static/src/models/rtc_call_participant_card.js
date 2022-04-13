@@ -52,6 +52,19 @@ registerModel({
             markEventHandled(ev, 'CallParticipantCard.clickVolumeAnchor');
         },
         /**
+         * This listens to the right click event, and used to redirect the event
+         * as a click on the popover.
+         *
+         * @param {Event} ev
+         */
+        async onContextMenu(ev) {
+            ev.preventDefault();
+            if (!this.volumeMenuAnchorRef || !this.volumeMenuAnchorRef.el) {
+                return;
+            }
+            this.volumeMenuAnchorRef.el.click();
+        },
+        /**
          * @private
          * @returns {string}
          */
@@ -236,5 +249,6 @@ registerModel({
          * If set, this card represents a rtcSession.
          */
         rtcSession: one('RtcSession'),
+        volumeMenuAnchorRef: attr(),
     },
 });
