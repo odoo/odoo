@@ -367,3 +367,70 @@ class TestTraceability(TestMrpCommon):
 
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
+
+    def test_tracked_and_manufactured_component(self):
+        """
+        Suppose this structure:
+            productA --|- 1 x productB --|- 1 x productC
+            with productB tracked by lot
+        Ensure that, when we already have some qty of productB (with different lots),
+        the user can produce several productA and can then produce some productB again
+        """
+        stock_location = self.env.ref('stock.stock_location_stock')
+
+        productA, productB, productC = self.env['product.product'].create([{
+            'name': 'Product A',
+            'type': 'product',
+        }, {
+            'name': 'Product B',
+            'type': 'product',
+            'tracking': 'lot',
+        }, {
+            'name': 'Product C',
+            'type': 'consu',
+        }])
+
+        lot_B01, lot_B02, lot_B03 = self.env['stock.production.lot'].create([{
+            'name': 'lot %s' % i,
+            'product_id': productB.id,
+            'company_id': self.env.company.id,
+        } for i in [1, 2, 3]])
+
+        self.env['mrp.bom'].create([{
+            'product_id': finished.id,
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {'product_id': component.id, 'product_qty': 1})],
+        } for finished, component in [(productA, productB), (productB, productC)]])
+
+        self.env['stock.quant']._update_available_quantity(productB, stock_location, 10, lot_id=lot_B01)
+        self.env['stock.quant']._update_available_quantity(productB, stock_location, 5, lot_id=lot_B02)
+
+        # Produce 15 x productA
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = productA
+        mo_form.product_qty = 15
+        mo = mo_form.save()
+        mo.action_confirm()
+        action = mo.button_mark_done()
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        wizard.process()
+
+        # Produce 15 x productB
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = productB
+        mo_form.product_qty = 15
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo_form = Form(mo)
+        mo_form.qty_producing = 15
+        mo_form.lot_producing_id = lot_B03
+        mo = mo_form.save()
+        mo.button_mark_done()
+
+        self.assertEqual(lot_B01.product_qty, 0)
+        self.assertEqual(lot_B02.product_qty, 0)
+        self.assertEqual(lot_B03.product_qty, 15)
+        self.assertEqual(productA.qty_available, 15)
