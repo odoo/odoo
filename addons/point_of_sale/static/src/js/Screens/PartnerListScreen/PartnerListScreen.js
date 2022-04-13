@@ -8,7 +8,7 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
     const { debounce } = require("@web/core/utils/timing");
     const { useListener } = require("@web/core/utils/hooks");
 
-    const { onWillUnmount, useRef } = owl;
+    const { onWillUnmount, useRef, onMounted } = owl;
 
     /**
      * Render this screen using `showTempScreen` to select partner.
@@ -47,6 +47,10 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
             };
             this.updatePartnerList = debounce(this.updatePartnerList, 70);
             onWillUnmount(this.updatePartnerList.cancel);
+            onMounted(() => {
+                if(!this.env.pos.config.limited_partners_loading)
+                    this.env.pos.isEveryPartnerLoaded = true;
+            });
 
         }
         // Lifecycle hooks
@@ -93,9 +97,6 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
             }
             return res
         }
-        get isEveryPartnerLoaded() {
-            return !this.env.pos.config.limited_partners_loading || this.env.pos.config.partner_load_background;
-        }
         get isBalanceDisplayed() {
             return this.env.pos.config.module_pos_loyalty;
         }
@@ -107,7 +108,7 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
 
         async _onPressEnterKey() {
             if (!this.state.query) return;
-            if (!this.isEveryPartnerLoaded) {
+            if (!this.env.pos.isEveryPartnerLoaded) {
                 const result = await this.searchPartner();
                 this.showNotification(
                     _.str.sprintf(this.env._t('%s customer(s) found for "%s".'),
