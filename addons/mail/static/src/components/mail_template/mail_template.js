@@ -25,16 +25,6 @@ export class MailTemplate extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickPreview(ev) {
-        ev.stopPropagation();
-        ev.preventDefault();
-        this.mailTemplateView.mailTemplate.preview(this.mailTemplateView.activityViewOwner.activity);
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     _onClickSend(ev) {
         ev.stopPropagation();
         ev.preventDefault();
