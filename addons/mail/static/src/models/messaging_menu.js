@@ -15,6 +15,12 @@ registerModel({
             this.update({ isOpen: false });
         },
         /**
+         * @param {MouseEvent} ev
+         */
+        onClickDesktopTabButton(ev) {
+            this.update({ activeTabId: ev.currentTarget.dataset.tabId });
+        },
+        /**
          * Toggle the visibility of the messaging menu "new message" input in
          * mobile.
          */

@@ -71,14 +71,6 @@ export class MessagingMenu extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickDesktopTabButton(ev) {
-        this.messagingMenu.update({ activeTabId: ev.currentTarget.dataset.tabId });
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     _onClickNewMessage(ev) {
         if (!this.messaging.device.isMobile) {
             this.messaging.chatWindowManager.openNewMessage();

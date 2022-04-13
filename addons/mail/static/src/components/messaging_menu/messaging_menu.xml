@@ -24,7 +24,7 @@
                             <div class="o_MessagingMenu_dropdownMenuHeader border-bottom" t-att-class="{ 'o-mobile': messaging.device.isMobile }">
                                 <t t-if="!messaging.device.isMobile">
                                     <t t-foreach="['all', 'chat', 'channel']" t-as="tabId" t-key="tabId">
-                                        <button class="o_MessagingMenu_tabButton o-desktop btn btn-link" t-att-class="{ 'o-active': messagingMenu.activeTabId === tabId, }" t-on-click="_onClickDesktopTabButton" type="button" role="tab" t-att-data-tab-id="tabId">
+                                        <button class="o_MessagingMenu_tabButton o-desktop btn btn-link" t-att-class="{ 'o-active': messagingMenu.activeTabId === tabId, }" t-on-click="messagingMenu.onClickDesktopTabButton" type="button" role="tab" t-att-data-tab-id="tabId">
                                             <t t-if="tabId === 'all'">All</t>
                                             <t t-elif="tabId === 'chat'">Chat</t>
                                             <t t-elif="tabId === 'channel'">Channels</t>
