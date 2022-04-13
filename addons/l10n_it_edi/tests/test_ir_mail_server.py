@@ -53,6 +53,17 @@ class PecMailServerTests(AccountEdiTestCommon):
         # Initialize the company's codice fiscale
         cls.company.l10n_it_codice_fiscale = '01234560157'
         cls.company.vat = 'IT01234560157'
+        cls.test_bank = cls.env['res.partner.bank'].with_company(cls.company).create({
+                'partner_id': cls.company.partner_id.id,
+                'acc_number': 'IT1212341234123412341234123',
+                'bank_name': 'BIG BANK',
+                'bank_bic': 'BIGGBANQ',
+        })
+        cls.company.l10n_it_tax_system = "RF01"
+        cls.company.street = "1234 Test Street"
+        cls.company.zip = "12345"
+        cls.company.city = "Prova"
+        cls.company.country_id = cls.env.ref('base.it')
 
         # Build test data.
         # invoice_filename1 is used for vendor bill receipts tests
@@ -101,6 +112,7 @@ class PecMailServerTests(AccountEdiTestCommon):
             'country_id': cls.env.ref('base.it').id,
             'street': 'Via Privata Alessi 6',
             'zip': '28887',
+            'city': 'Milan',
             'company_id': cls.company.id,
         })
 
@@ -110,11 +122,11 @@ class PecMailServerTests(AccountEdiTestCommon):
             'price_unit': 800.40,
             'tax_ids': [(6, 0, [cls.company.account_sale_tax_id.id])]
         }
-
         cls.price_included_invoice = cls.env['account.move'].with_company(cls.company).create({
             'move_type': 'out_invoice',
             'invoice_date': datetime.date(2022, 3, 24),
             'partner_id': cls.italian_partner_a.id,
+            'partner_bank_id': cls.test_bank.id,
             'invoice_line_ids': [
                 (0, 0, {
                     **cls.standard_line,
@@ -137,6 +149,7 @@ class PecMailServerTests(AccountEdiTestCommon):
             'move_type': 'out_invoice',
             'invoice_date': datetime.date(2022, 3, 24),
             'partner_id': cls.italian_partner_a.id,
+            'partner_bank_id': cls.test_bank.id,
             'invoice_line_ids': [
                 (0, 0, {
                     **cls.standard_line,
@@ -159,6 +172,7 @@ class PecMailServerTests(AccountEdiTestCommon):
             'move_type': 'out_invoice',
             'invoice_date': datetime.date(2022, 3, 24),
             'partner_id': cls.italian_partner_a.id,
+            'partner_bank_id': cls.test_bank.id,
             'invoice_line_ids': [
                 (0, 0, {
                     **cls.standard_line,
