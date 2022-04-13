@@ -606,7 +606,7 @@ class AccountJournal(models.Model):
 
         # 'type' field is required.
         if not journal_type:
-            return
+            return vals
 
         # === Fill missing company ===
         company = self.env['res.company'].browse(vals['company_id']) if vals.get('company_id') else self.env.company
@@ -615,9 +615,6 @@ class AccountJournal(models.Model):
         # Don't get the digits on 'chart_template_id' since the chart template could be a custom one.
         random_account = self.env['account.account'].search([('company_id', '=', company.id)], limit=1)
         digits = len(random_account.code) if random_account else 6
-
-        liquidity_type = self.env.ref('account.data_account_type_liquidity')
-        current_assets_type = self.env.ref('account.data_account_type_current_assets')
 
         if journal_type in ('bank', 'cash'):
             has_liquidity_accounts = vals.get('default_account_id')
@@ -652,14 +649,18 @@ class AccountJournal(models.Model):
         if 'refund_sequence' not in vals:
             vals['refund_sequence'] = vals['type'] in ('sale', 'purchase')
 
+        return vals
+
     @api.model_create_multi
     def create(self, vals_list):
-        for vals in vals_list:
+        filled_vals = [
             self._fill_missing_values(vals)
+            for vals in vals_list
+        ]
 
-        journals = super(AccountJournal, self.with_context(mail_create_nolog=True)).create(vals_list)
+        journals = super(AccountJournal, self.with_context(mail_create_nolog=True)).create(filled_vals)
 
-        for journal, vals in zip(journals, vals_list):
+        for journal, vals in zip(journals, filled_vals):
             # Create the bank_account_id if necessary
             if journal.type == 'bank' and not journal.bank_account_id and vals.get('bank_acc_number'):
                 journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))

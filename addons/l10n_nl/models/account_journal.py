@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models, _
+from odoo import api, models, Command
 
 
 class AccountJournal(models.Model):
@@ -8,15 +8,17 @@ class AccountJournal(models.Model):
 
     @api.model
     def _fill_missing_values(self, vals):
-        super()._fill_missing_values(vals)
+        values = super()._fill_missing_values(vals)
 
-        if vals.get('type') != 'purchase':
-            return
+        if values.get('type') != 'purchase':
+            return values
 
-        company = self.env['res.company'].browse(vals['company_id']) if vals.get('company_id') else self.env.company
+        company = self.env['res.company'].browse(values['company_id']) if values.get('company_id') else self.env.company
         if company.country_id.code == "NL" and not vals.get('type_control_ids', [(6, 0, [])])[0][2]:
             type_control_ids = self.env.ref('account.data_account_type_direct_costs').ids
-            vals['type_control_ids'] = [(6, 0, type_control_ids)]
+            vals['type_control_ids'] = [Command.set(type_control_ids)]
+
+        return values
 
     @api.model
     def _prepare_liquidity_account_vals(self, company, code, vals):
