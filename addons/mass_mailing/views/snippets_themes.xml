@@ -119,7 +119,7 @@
                          <img t-if="company_id.logo" border="0" t-att-src="image_data_uri(company_id.logo)" style="height:auto;max-width:100%;" />
                     </a>
                 </div>
-                <div class="col-lg-8 o_mail_header_social" style="text-align: right;">
+                <div class="col-lg-8 o_mail_header_social o_not_editable" style="text-align: right;" data-name="Social Media">
                     <t t-call="mass_mailing.social_links"/>
                 </div>
             </div>
@@ -138,7 +138,7 @@
                         </a>
                     </h1>
                 </div>
-                <div class="col-lg-8 o_mail_header_social" style="text-align: right;">
+                <div class="col-lg-8 o_mail_header_social o_not_editable" style="text-align: right;" data-name="Social Media">
                     <t t-call="mass_mailing.social_links"/>
                 </div>
             </div>
@@ -193,7 +193,7 @@
     <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-200">
         <div class="container">
             <div class="row">
-                <div class="col-lg o_mail_footer_social">
+                <div class="col-lg o_mail_footer_social o_not_editable" data-name="Social Media">
                     <t t-call="mass_mailing.social_links"/>
                 </div>
             </div>
@@ -226,7 +226,7 @@
                     </div>
                 </div>
                 <div class="col-lg" align="right">
-                    <div class="o_mail_footer_social pb16"><t t-call="mass_mailing.social_links"/></div>
+                    <div class="o_mail_footer_social pb16 o_not_editable" data-name="Social Media"><t t-call="mass_mailing.social_links"/></div>
                     <p class="o_mail_footer_copy">© <t t-esc="datetime.datetime.now().year"/> All Rights Reserved</p>
                 </div>
             </div>
@@ -238,16 +238,19 @@
 
     <t t-set="social_links" t-value="company_id._get_social_media_links()"/>
 
-    <a t-att-href="social_links.get('social_facebook')" aria-label="Facebook" title="Facebook">
+    <a t-att-href="social_links.get('social_facebook')" style="margin-left:10px" aria-label="Facebook" title="Facebook" class="s_social_media_facebook">
         <span class="fa fa-facebook"></span>
     </a>&amp;nbsp;&amp;nbsp;
-    <a t-att-href="social_links.get('social_linkedin')" style="margin-left:10px" aria-label="LinkedIn" title="LinkedIn">
+    <a t-att-href="social_links.get('social_youtube')" style="margin-left:10px" aria-label="Youtube" title="Youtube" class="s_social_media_youtube">
+        <span class="fa fa-youtube"></span>
+    </a>&amp;nbsp;&amp;nbsp;
+    <a t-att-href="social_links.get('social_linkedin')" style="margin-left:10px" aria-label="LinkedIn" title="LinkedIn" class="s_social_media_linkedin">
         <span class="fa fa-linkedin"></span>
     </a>&amp;nbsp;&amp;nbsp;
-    <a t-att-href="social_links.get('social_twitter')" style="margin-left:10px" aria-label="Twitter" title="Twitter">
+    <a t-att-href="social_links.get('social_twitter')" style="margin-left:10px" aria-label="Twitter" title="Twitter" class="s_social_media_twitter">
         <span class="fa fa-twitter"></span>
     </a>&amp;nbsp;&amp;nbsp;
-    <a t-att-href="social_links.get('social_instagram')" style="margin-left:10px" aria-label="Instagram" title="Instagram">
+    <a t-att-href="social_links.get('social_instagram')" style="margin-left:10px" aria-label="Instagram" title="Instagram" class="s_social_media_instagram">
         <span class="fa fa-instagram"></span>
     </a>
 </template>
@@ -823,6 +826,15 @@
         </we-select>
     </div>
 
+    <div data-js="SocialMediaMassMailing"
+         data-selector=".o_mail_footer_social,.o_mail_header_social"
+         data-exclude=".o_mail_social_no_snippet_option">
+            <we-list string="Social Networks" data-add-item-title="Add New Social Network"
+                data-render-list-items="" data-has-default="multiple" data-name="social_media_list"
+                data-default-value="https://www.example.com" data-id-mode="name"
+                 data-new-elements-not-toggleable="true" data-no-preview="true"/>
+            <div class="d-flex"><we-button data-edit-company-social="">Edit Default Social Links</we-button></div>
+    </div>
     </xpath>
 </template>
 

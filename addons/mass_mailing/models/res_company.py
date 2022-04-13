@@ -13,5 +13,7 @@ class ResCompany(models.Model):
             'social_facebook': self.social_facebook,
             'social_linkedin': self.social_linkedin,
             'social_twitter': self.social_twitter,
-            'social_instagram': self.social_instagram
+            'social_instagram': self.social_instagram,
+            'social_youtube': self.social_youtube,
+            'social_github': self.social_github,
         }

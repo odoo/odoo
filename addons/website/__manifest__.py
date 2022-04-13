@@ -243,6 +243,7 @@
             'website/static/src/xml/website.editor.xml',
             'website/static/src/xml/website_form_editor.xml',
             'website/static/src/snippets/s_searchbar/options.js',
+            'website/static/src/snippets/s_social_media/options.js',
             'website/static/src/snippets/s_process_steps/options.js',
             'website/static/src/js/editor/wysiwyg.js',
             'website/static/src/js/editor/widget_link.js',

@@ -3,7 +3,7 @@ odoo.define('website.wysiwyg', function (require) {
 
 var Wysiwyg = require('web_editor.wysiwyg');
 var snippetsEditor = require('website.snippet.editor');
-let socialMediaOptions = require('@website/snippets/s_social_media/options')[Symbol.for("default")];
+let clearDbSocialValuesCache = require('@website/snippets/s_social_media/options').clearDbSocialValuesCache;
 
 /**
  * Show/hide the dropdowns associated to the given toggles and allows to wait
@@ -110,7 +110,7 @@ const WebsiteWysiwyg = Wysiwyg.extend({
         // destroy, options will have wrong social media values).
         // It would also survive (multi) website switch, not fetching the values
         // from the accessed website.
-        socialMediaOptions.clearDbSocialValuesCache();
+        clearDbSocialValuesCache();
 
         this._restoreMegaMenus();
         this._super.apply(this, arguments);

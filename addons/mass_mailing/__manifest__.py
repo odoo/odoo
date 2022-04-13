@@ -130,6 +130,7 @@
             'mass_mailing/static/src/snippets/s_media_list/options.js',
             'mass_mailing/static/src/snippets/s_showcase/options.js',
             'mass_mailing/static/src/snippets/s_rating/options.js',
+            'mass_mailing/static/src/snippets/s_social_media_mass_mailing/options.js',
             'mass_mailing/static/tests/mass_mailing_html_tests.js',
         ],
     },
