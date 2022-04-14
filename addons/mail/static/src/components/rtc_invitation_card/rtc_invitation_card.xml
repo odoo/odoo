@@ -8,7 +8,7 @@
                     <div class="o_RtcInvitationCard_partnerInfo">
                         <img class="o_RtcInvitationCard_partnerInfoImage rounded-circle"
                             t-att-src="rtcInvitationCard.thread.rtcInvitingSession.avatarUrl"
-                            t-on-click="_onClickAvatar"
+                            t-on-click="rtcInvitationCard.onClickAvatar"
                             alt="Avatar"/>
                         <span class="o_RtcInvitationCard_partnerInfoName" t-esc="rtcInvitationCard.thread.rtcInvitingSession.name"/>
                         <span class="o_RtcInvitationCard_partnerInfoText">Incoming Call...</span>
