@@ -304,13 +304,11 @@ class Project(models.Model):
             if domain:
                 action['domain'] = expression.AND([[('project_id', '=', self.id)], domain])
             action['context'].update(search_default_groupby_timesheet_invoice_type=False, **self.env.context)
-            pivot_view = False
+            graph_view = False
             if section_name == 'billable_time':
-                pivot_view = self.env.ref('sale_timesheet.view_hr_timesheet_pivot_view_per_invoice').id
-            else:
-                pivot_view = self.env.ref('sale_timesheet.timesheet_view_pivot_revenue').id
+                graph_view = self.env.ref('hr_timesheet.view_hr_timesheet_line_graph_all').id
             action['views'] = [
-                (view_id, view_type) if view_type != 'pivot' else (pivot_view, view_type)
+                (view_id, view_type) if view_type != 'graph' else (graph_view or view_id, view_type)
                 for view_id, view_type in action['views']
             ]
             if res_id:
