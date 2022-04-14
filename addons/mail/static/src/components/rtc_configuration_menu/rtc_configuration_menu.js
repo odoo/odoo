@@ -38,14 +38,6 @@ export class RtcConfigurationMenu extends Component {
      * @private
      * @param {Event} ev
      */
-    _onChangeDelay(ev) {
-        this.rtcConfigurationMenu.onChangeDelay(ev.target.value);
-    }
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
     _onChangePushToTalk(ev) {
         this.rtcConfigurationMenu.onChangePushToTalk();
     }

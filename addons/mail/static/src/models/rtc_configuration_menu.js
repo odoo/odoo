@@ -20,10 +20,10 @@ registerModel({
     },
     recordMethods: {
         /**
-         * @param {String} value
+         * @param {Event} ev
          */
-        onChangeDelay(value) {
-            this.userSetting.setDelayValue(value);
+        onChangeDelay(ev) {
+            this.userSetting.setDelayValue(ev.target.value);
         },
         onChangePushToTalk() {
             if (this.userSetting.usePushToTalk) {
