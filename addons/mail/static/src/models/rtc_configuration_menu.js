@@ -40,10 +40,10 @@ registerModel({
             this.userSetting.setAudioInputDevice(value);
         },
         /**
-         * @param {String} value
+         * @param {MouseEvent} ev
          */
-        onChangeThreshold(value) {
-            this.userSetting.setThresholdValue(parseFloat(value));
+        onChangeThreshold(ev) {
+            this.userSetting.setThresholdValue(parseFloat(ev.target.value));
         },
         onClickRegisterKeyButton() {
             this.update({
