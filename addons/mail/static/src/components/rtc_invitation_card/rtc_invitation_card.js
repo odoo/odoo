@@ -25,18 +25,6 @@ export class RtcInvitationCard extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    async _onClickAccept(ev) {
-        this.rtcInvitationCard.thread.open();
-        if (this.rtcInvitationCard.thread.hasPendingRtcRequest) {
-            return;
-        }
-        await this.rtcInvitationCard.thread.toggleCall();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     _onClickAvatar(ev) {
         this.rtcInvitationCard.thread.open();
     }
