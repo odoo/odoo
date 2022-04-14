@@ -2193,3 +2193,83 @@ class TestMrpOrder(TestMrpCommon):
         production_form.product_qty = 5
         production = production_form.save()
         self.assertEqual(production.workorder_ids[0].duration_expected, 30.0, "Produce 5 with capacity 2, expected is 10mn for each run -> 30mn")
+
+    def test_planning_workorder(self):
+        """
+            Check that the fastest work center is used when planning the workorder.
+
+            - create two work centers with similar production capacity
+                but the work_center_2 with a longer start and stop time.
+
+            1:/ produce 2 units > work_center_1 faster because
+                it does not need much time to start and to finish the production.
+
+            2/ - update the production capacity of the work_center_2 to 4
+                - produce 4 units > work_center_2 faster because
+                it must do a single cycle while the work_center_1 have to do two cycles.
+        """
+        workcenter_1 = self.env['mrp.workcenter'].create({
+            'name': 'wc1',
+            'capacity': 2,
+            'time_start': 1,
+            'time_stop': 1,
+            'time_efficiency': 100,
+        })
+
+        workcenter_2 = self.env['mrp.workcenter'].create({
+            'name': 'wc2',
+            'capacity': 2,
+            'time_start': 10,
+            'time_stop': 5,
+            'time_efficiency': 100,
+            'alternative_workcenter_ids': [workcenter_1.id]
+        })
+
+        product_to_build = self.env['product.product'].create({
+            'name': 'final product',
+            'type': 'product',
+        })
+
+        product_to_use = self.env['product.product'].create({
+            'name': 'component',
+            'type': 'product',
+        })
+
+        bom = self.env['mrp.bom'].create({
+            'product_id': product_to_build.id,
+            'product_tmpl_id': product_to_build.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'consumption': 'flexible',
+            'operation_ids': [
+                (0, 0, {'name': 'Test', 'workcenter_id': workcenter_2.id, 'time_cycle': 60, 'sequence': 1}),
+            ],
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_to_use.id, 'product_qty': 1}),
+            ]})
+
+        #MO_1
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_to_build
+        mo_form.bom_id = bom
+        mo_form.product_qty = 2
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_plan()
+        self.assertEqual(mo.workorder_ids[0].workcenter_id.id, workcenter_1.id, 'workcenter_1 is faster than workcenter_2 to manufacture 2 units')
+        # Unplan the mo to prevent the first workcenter from being busy
+        mo.button_unplan()
+
+        # Update the production capcity
+        workcenter_2.capacity = 4
+
+        #MO_2
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_to_build
+        mo_form.bom_id = bom
+        mo_form.product_qty = 4
+        mo_2 = mo_form.save()
+        mo_2.action_confirm()
+        mo_2.button_plan()
+        self.assertEqual(mo_2.workorder_ids[0].workcenter_id.id, workcenter_2.id, 'workcenter_2 is faster than workcenter_1 to manufacture 4 units')
