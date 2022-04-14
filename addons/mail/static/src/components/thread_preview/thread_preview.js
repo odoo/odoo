@@ -2,9 +2,10 @@
 
 import * as mailUtils from '@mail/js/utils';
 
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, useRef } = owl;
+const { Component } = owl;
 
 export class ThreadPreview extends Component {
 
@@ -13,11 +14,7 @@ export class ThreadPreview extends Component {
      */
     setup() {
         super.setup();
-        /**
-         * Reference of the "mark as read" button. Useful to disable the
-         * top-level click handler when clicking on this specific button.
-         */
-        this._markAsReadRef = useRef('markAsRead');
+        useRefToModel({ fieldName: 'markAsReadRef', modelName: 'ThreadPreviewView', refName: 'markAsRead' });
     }
 
     //--------------------------------------------------------------------------
@@ -64,7 +61,10 @@ export class ThreadPreview extends Component {
      * @param {MouseEvent} ev
      */
     _onClick(ev) {
-        const markAsRead = this._markAsReadRef.el;
+        if (!this.threadPreviewView) {
+            return;
+        }
+        const markAsRead = this.threadPreviewView.markAsReadRef.el;
         if (markAsRead && markAsRead.contains(ev.target)) {
             // handled in `_onClickMarkAsRead`
             return;
