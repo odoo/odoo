@@ -75,16 +75,6 @@ export class ThreadPreview extends Component {
         }
     }
 
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickMarkAsRead(ev) {
-        if (this.threadPreviewView.thread.lastNonTransientMessage) {
-            this.threadPreviewView.thread.markAsSeen(this.threadPreviewView.thread.lastNonTransientMessage);
-        }
-    }
-
 }
 
 Object.assign(ThreadPreview, {
