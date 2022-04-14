@@ -53,7 +53,7 @@
                         <button class="o_ThreadViewTopbar_callButton o_ThreadViewTopbar_button o-active" t-att-disabled="threadViewTopbar.thread.hasPendingRtcRequest" title="Start a Call" t-on-click="_onClickPhone">
                             <i class="fa fa-lg fa-phone"/>
                         </button>
-                        <button class="o_ThreadViewTopbar_callButton o_ThreadViewTopbar_button o-active" t-att-disabled="threadViewTopbar.thread.hasPendingRtcRequest" title="Start a Video Call" t-on-click="_onClickCamera">
+                        <button class="o_ThreadViewTopbar_callButton o_ThreadViewTopbar_button o-active" t-att-disabled="threadViewTopbar.thread.hasPendingRtcRequest" title="Start a Video Call" t-on-click="threadViewTopbar.onClickCamera">
                             <i class="fa fa-lg fa-video-camera"/>
                         </button>
                     </t>
