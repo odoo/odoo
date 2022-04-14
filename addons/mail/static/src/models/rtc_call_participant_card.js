@@ -50,6 +50,19 @@ registerModel({
             markEventHandled(ev, 'CallParticipantCard.clickVolumeAnchor');
         },
         /**
+         * This listens to the right click event, and used to redirect the event
+         * as a click on the popover.
+         *
+         * @param {Event} ev
+         */
+        async onContextMenu(ev) {
+            if (!this.volumeMenuAnchorRef || !this.volumeMenuAnchorRef.el) {
+                return;
+            }
+            ev.preventDefault();
+            this.volumeMenuAnchorRef.el.click();
+        },
+        /**
          * @private
          * @returns {string}
          */

@@ -28,24 +28,6 @@ export class RtcCallParticipantCard extends Component {
         return this.messaging.models['RtcCallParticipantCard'].get(this.props.localId);
     }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * This listens to the right click event, and used to redirect the event
-     * as a click on the popover.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    async _onContextMenu(ev) {
-        if (!this.callParticipantCard.volumeMenuAnchorRef || !this.callParticipantCard.volumeMenuAnchorRef.el) {
-            return;
-        }
-        ev.preventDefault();
-        this.callParticipantCard.volumeMenuAnchorRef.el.click();
-    }
 }
 
 Object.assign(RtcCallParticipantCard, {
