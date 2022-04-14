@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -23,6 +23,11 @@ registerModel({
         },
     },
     fields: {
+        /**
+         * Reference of the "mark as read" button. Useful to disable the
+         * top-level click handler when clicking on this specific button.
+         */
+        markAsReadRef: attr(),
         messageAuthorPrefixView: one('MessageAuthorPrefixView', {
             compute: '_computeMessageAuthorPrefixView',
             inverse: 'threadNeedactionPreviewViewOwner',
