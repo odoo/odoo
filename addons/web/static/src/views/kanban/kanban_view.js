@@ -2,7 +2,13 @@
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { combineAttributes, createElement, isTruthy, XMLParser } from "@web/core/utils/xml";
+import {
+    combineAttributes,
+    createElement,
+    isTruthy,
+    objectToString,
+    XMLParser,
+} from "@web/core/utils/xml";
 import { Field } from "@web/fields/field";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
@@ -33,13 +39,13 @@ const TRANSPILED_EXPRESSIONS = [
     {
         regex: /kanban_image\(([^)]*)\)/g,
         value: (_match, group) => {
-            const args = group.split(",");
-            return `imageSrcFromRecordInfo({
-                model: ${args[0]},
-                field: ${args[1]},
-                idOrIds: ${args[2]},
-                placeholder: ${args[3]},
-            }, record)`;
+            const [model, field, idOrIds, placeholder] = group.split(",");
+            const recordInfo = { model, field, idOrIds, placeholder };
+            const infoString = Object.entries(recordInfo)
+                .map(([k, v]) => `${k}:${v}`)
+                .join(",");
+            objectToString;
+            return `imageSrcFromRecordInfo({${infoString}},record)`;
         },
     },
     // `kanban_color(value)` => `getColorClass(record)`
@@ -49,9 +55,9 @@ const TRANSPILED_EXPRESSIONS = [
     // `bkanban_getcolorname(value)` => `getColorName(record)`
     { regex: /\bkanban_getcolorname\(([^)]*)\)/g, value: `getColorName($1)` },
     // `record.prop.value` => `getValue(record,'prop')`
-    { regex: /\brecord\.(\w+)\.value\b/g, value: `getValue(record, '$1')` },
+    { regex: /\brecord\.(\w+)\.value\b/g, value: `getValue(record,'$1')` },
     // `record.prop.raw_value` => `getRawValue(record,'prop')`
-    { regex: /\brecord\.(\w+)\.raw_value\b/g, value: `getRawValue(record, '$1')` },
+    { regex: /\brecord\.(\w+)\.raw_value\b/g, value: `getRawValue(record,'$1')` },
     // `record.prop` => `record.data.prop`
     { regex: /\brecord\.(\w+)\b/g, value: `record.data.$1` },
 ];
