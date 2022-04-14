@@ -22,6 +22,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
     custom_events: Object.assign({}, weSnippetEditor.SnippetsMenu.prototype.custom_events, {
         'gmap_api_request': '_onGMapAPIRequest',
         'gmap_api_key_request': '_onGMapAPIKeyRequest',
+        'reload_bundles': '_onReloadBundles',
     }),
     tabs: _.extend({}, weSnippetEditor.SnippetsMenu.prototype.tabs, {
         THEME: 'theme',
@@ -413,6 +414,28 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         this.$body.toggleClass('o_animated_text_highlighted');
         $(ev.target).toggleClass('fa-eye fa-eye-slash').toggleClass('text-success');
     },
+    /**
+     * On reload bundles, when it's from the theme tab, destroy any
+     * snippetEditor as they might hold outdated style values. (e.g. color palettes).
+     * We do not destroy the Theme tab editors as they should have the correct
+     * values with their compute widget states.
+     * NOTE: This is a bit janky, _computeWidgetState should modify the
+     * option's widget to reflect the style accordingly. But since
+     * color_palette widget is independent of the UserValueWidget, it's hard to
+     * modify its style using the options events.
+     *
+     * @private
+     */
+    _onReloadBundles(ev) {
+        if (this._currentTab === this.tabs.THEME) {
+            const excludeSelector = this.optionsTabStructure.map(element => element[0]).join(', ');
+            for (const editor of this.snippetEditors) {
+                if (!editor.$target[0].matches(excludeSelector)) {
+                    this._mutex.exec(() => editor.destroy());
+                }
+            }
+        }
+    }
 });
 
 weSnippetEditor.SnippetEditor.include({

@@ -306,7 +306,7 @@ QUnit.module('web_editor', {}, function () {
             // text is selected
 
             await openColorpicker('#toolbar .note-back-color-preview');
-            await testUtils.dom.click($('#toolbar .note-back-color-preview .o_we_color_btn.bg-o-color-3'));
+            await testUtils.dom.click($('#toolbar .note-back-color-preview [style="background-color: var(--we-cp-o-color-3);"]'));
 
             assert.strictEqual($field.find('.note-editable').html(),
                 '<p>t<font style="background-color: rgb(0, 255, 255);">oto t</font><font style="" class="bg-o-color-3">oto to</font>to</p><p>tata</p>',
