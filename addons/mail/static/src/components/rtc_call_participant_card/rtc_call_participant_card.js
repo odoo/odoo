@@ -1,10 +1,11 @@
 /** @odoo-module **/
 
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import Popover from "web.Popover";
 
-const { Component, useRef } = owl;
+const { Component } = owl;
 
 export class RtcCallParticipantCard extends Component {
 
@@ -13,7 +14,7 @@ export class RtcCallParticipantCard extends Component {
      */
     setup() {
         super.setup();
-        this._volumeMenuAnchorRef = useRef('volumeMenuAnchor');
+        useRefToModel({ fieldName: 'volumeMenuAnchorRef', modelName: 'RtcCallParticipantCard', refName: 'volumeMenuAnchor' });
     }
 
     //--------------------------------------------------------------------------
@@ -39,11 +40,11 @@ export class RtcCallParticipantCard extends Component {
      * @param {Event} ev
      */
     async _onContextMenu(ev) {
-        if (!this._volumeMenuAnchorRef || !this._volumeMenuAnchorRef.el) {
+        if (!this.callParticipantCard.volumeMenuAnchorRef || !this.callParticipantCard.volumeMenuAnchorRef.el) {
             return;
         }
         ev.preventDefault();
-        this._volumeMenuAnchorRef.el.click();
+        this.callParticipantCard.volumeMenuAnchorRef.el.click();
     }
 }
 
