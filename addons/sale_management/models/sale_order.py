@@ -115,6 +115,7 @@ class SaleOrder(models.Model):
 
     def _compute_line_data_for_template_change(self, line):
         return {
+            'sequence': line.sequence,
             'display_type': line.display_type,
             'name': line.name,
             'product_id': line.product_id.id,
