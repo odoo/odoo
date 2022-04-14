@@ -205,6 +205,5 @@ class HrEmployee(models.Model):
     def _compute_presence_icon(self):
         res = super()._compute_presence_icon()
         # All employee must chek in or check out. Everybody must have an icon
-        employee_to_define = self.filtered(lambda e: e.hr_icon_display == 'presence_undetermined')
-        employee_to_define.hr_icon_display = 'presence_to_define'
+        self.filtered(lambda employee: not employee.show_hr_icon_display).show_hr_icon_display = True
         return res
