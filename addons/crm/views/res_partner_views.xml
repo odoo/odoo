@@ -12,10 +12,16 @@
                 <field name="mobile" position="after">
                     <field name="opportunity_count"/>
                 </field>
-                <xpath expr="//span[hasclass('oe_kanban_partner_links')]" position="inside">
-                    <span class="badge badge-pill" t-if="record.opportunity_count.value>0">
-                        <i class="fa fa-fw fa-star" aria-label="Opportunities" role="img" title="Opportunities"/><t t-esc="record.opportunity_count.value"/>
-                    </span>
+                <xpath expr="//div[hasclass('oe_kanban_bottom_left')]" position="inside">
+                    <a t-if="record.opportunity_count.value>0" href="#"
+                       data-type="object" data-name="action_view_opportunity"
+                       class="oe_kanban_action oe_kanban_action_a mr-1">
+                        <span class="badge badge-pill">
+                            <i class="fa fa-fw fa-star" aria-label="Opportunities"
+                               role="img" title="Opportunities"/>
+                            <t t-out="record.opportunity_count.value"/>
+                        </span>
+                    </a>
                 </xpath>
             </field>
         </record>
