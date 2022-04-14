@@ -1013,8 +1013,8 @@ class HolidaysRequest(models.Model):
         return holidays
 
     def write(self, values):
-        if 'active' in values and not values['active'] and not self.env.context.get('from_cancel_wizard'):
-            raise UserError(_("You can't manually archive a time off."))
+        if 'active' in values and not self.env.context.get('from_cancel_wizard'):
+            raise UserError(_("You can't manually archive/unarchive a time off."))
 
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.is_superuser()
         if not is_officer and values.keys() - {'supported_attachment_ids', 'message_main_attachment_id'}:
@@ -1394,6 +1394,19 @@ class HolidaysRequest(models.Model):
 
         self.activity_update()
         return True
+
+    def _action_user_cancel(self, reason):
+        self.ensure_one()
+        if not self.can_cancel:
+            raise ValidationError(_('This time off cannot be canceled.'))
+
+        self.message_post(
+            body=_('The time off has been canceled: %s', reason)
+        )
+
+        leave_sudo = self.sudo()
+        leave_sudo.with_context(from_cancel_wizard=True).active = False
+        leave_sudo._remove_resource_leave()
 
     def action_documents(self):
         domain = [('id', 'in', self.attachment_ids.ids)]
