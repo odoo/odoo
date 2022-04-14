@@ -124,7 +124,8 @@ class PosOrder(models.Model):
             next(order for order in orders if order['id'] == order_id[0])['statement_ids'] = list(payment_lines)
 
     def _get_fields_for_draft_order(self):
-        return [
+        fields = super(PosOrder, self)._get_fields_for_draft_order()
+        fields.extend([
                     'id',
                     'pricelist_id',
                     'partner_id',
@@ -138,7 +139,8 @@ class PosOrder(models.Model):
                     'table_id',
                     'to_invoice',
                     'multiprint_resume',
-                    ]
+                    ])
+        return fields
 
     @api.model
     def get_table_draft_orders(self, table_id):
@@ -152,8 +154,8 @@ class PosOrder(models.Model):
         :returns: list -- list of dict representing the table orders
         """
         table_orders = self.search_read(
-                domain = [('state', '=', 'draft'), ('table_id', '=', table_id)],
-                fields = self._get_fields_for_draft_order())
+                domain=[('state', '=', 'draft'), ('table_id', '=', table_id)],
+                fields=self._get_fields_for_draft_order())
 
         self._get_order_lines(table_orders)
         self._get_payment_lines(table_orders)
@@ -172,6 +174,8 @@ class PosOrder(models.Model):
                 order['partner_id'] = order['partner_id'][0]
             if order['table_id']:
                 order['table_id'] = order['table_id'][0]
+            if order['employee_id']:
+                order['employee_id'] = order['employee_id'][0] if order['employee_id'] else False
 
             if not 'lines' in order:
                 order['lines'] = []
