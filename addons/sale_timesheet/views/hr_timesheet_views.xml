@@ -53,19 +53,6 @@
         </field>
     </record>
 
-    <record id="timesheet_view_pivot_revenue" model="ir.ui.view">
-        <field name="name">account.analytic.line.pivot.revenue</field>
-        <field name="model">account.analytic.line</field>
-        <field name="arch" type="xml">
-            <pivot string="Timesheet" sample="1">
-                <field name="employee_id" type="row"/>
-                <field name="date" interval="month" type="col"/>
-                <field name="unit_amount" type="measure"/>
-                <field name="amount" string="Timesheet Costs"/>
-            </pivot>
-        </field>
-    </record>
-
     <record id="view_hr_timesheet_line_pivot_billing_rate" model="ir.ui.view">
         <field name="name">account.analytic.line.pivot.billing.rate</field>
         <field name="model">account.analytic.line</field>
@@ -79,15 +66,16 @@
         </field>
     </record>
 
-    <record id="view_hr_timesheet_pivot_view_per_invoice" model="ir.ui.view">
-        <field name="name">account.analytic.line.pivot.per.invoice</field>
+    <record id="view_hr_timesheet_line_graph_employee_per_date" model="ir.ui.view">
+        <field name="name">account.analytic.line.graph.employee.per.date</field>
         <field name="model">account.analytic.line</field>
-        <field name="inherit_id" ref="view_hr_timesheet_line_pivot_billing_rate"/>
-        <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='timesheet_invoice_type']" position="attributes">
-                <attribute name="name">timesheet_invoice_id</attribute>
-            </xpath>
+            <graph string="Timesheet" sample="1" js_class="hr_timesheet_graphview">
+                <field name="date" interval="month" />
+                <field name="employee_id"/>
+                <field name="amount" type="measure" string="Timesheet Costs"/>
+                <field name="unit_amount" type="measure" widget="timesheet_uom"/>
+            </graph>
         </field>
     </record>
 
@@ -154,14 +142,14 @@
     <record id="timesheet_action_from_sales_order_item_pivot" model="ir.actions.act_window.view">
         <field name="sequence" eval="30"/>
         <field name="view_mode">pivot</field>
-        <field name="view_id" ref="sale_timesheet.view_hr_timesheet_line_pivot_billing_rate"/>
+        <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_pivot"/>
         <field name="act_window_id" ref="timesheet_action_from_sales_order_item"/>
     </record>
 
     <record id="timesheet_action_from_sales_order_item_graph" model="ir.actions.act_window.view">
         <field name="sequence" eval="40"/>
         <field name="view_mode">graph</field>
-        <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_graph_all"/>
+        <field name="view_id" ref="view_hr_timesheet_line_graph_employee_per_date"/>
         <field name="act_window_id" ref="timesheet_action_from_sales_order_item"/>
     </record>
 
