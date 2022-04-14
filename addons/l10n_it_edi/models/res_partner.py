@@ -38,7 +38,7 @@ class ResPartner(models.Model):
 
     @api.onchange('vat', 'country_id')
     def _l10n_it_onchange_vat(self):
-        if not self.l10n_it_codice_fiscale and (self.country_id.code == "IT" or (self.vat and self.vat.startswith("IT"))):
+        if not self.l10n_it_codice_fiscale and self.vat and (self.country_id.code == "IT" or self.vat.startswith("IT")):
             self.l10n_it_codice_fiscale = self._l10n_it_normalize_codice_fiscale(self.vat)
         elif self.country_id.code not in [False, "IT"]:
             self.l10n_it_codice_fiscale = ""
