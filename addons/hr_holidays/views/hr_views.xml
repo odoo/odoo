@@ -86,7 +86,8 @@
             <xpath expr="//templates" position="before">
                 <field name="is_absent"/>
             </xpath>
-            <xpath expr="//strong[hasclass('o_kanban_record_title')]" position="inside">
+            <xpath expr="//strong[hasclass('o_kanban_record_title')]" position="inside"
+                   t-if="record.show_hr_icon_display.raw_value">
                  <!-- Employee is absent, in holiday but he is connected -->
                 <div class="float-end"
                      t-if="record.hr_icon_display.raw_value == 'presence_holiday_present'">
@@ -116,7 +117,8 @@
                 <field name="leave_date_to"/>
                 <field name="is_absent"/>
             </xpath>
-            <xpath expr="//div[@name='presence_absent_active']" position="after">
+            <xpath expr="//div[@name='presence_absent_active']" position="after"
+                   t-if="record.show_hr_icon_display.raw_value">
                 <!-- Employee is absent, in holiday but he is connected -->
                 <!-- green plane -->
                 <div class="float-end"

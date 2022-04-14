@@ -121,11 +121,11 @@ class HrEmployeeBase(models.AbstractModel):
     def _compute_presence_icon(self):
         super()._compute_presence_icon()
         employees_absent = self.filtered(lambda employee:
-                                         employee.hr_icon_display not in ['presence_present', 'presence_absent_active']
+                                         employee.hr_presence_state != 'present'
                                          and employee.is_absent)
         employees_absent.update({'hr_icon_display': 'presence_holiday_absent'})
         employees_present = self.filtered(lambda employee:
-                                          employee.hr_icon_display in ['presence_present', 'presence_absent_active']
+                                          employee.hr_presence_state == 'present'
                                           and employee.is_absent)
         employees_present.update({'hr_icon_display': 'presence_holiday_present'})
 
