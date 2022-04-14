@@ -21,6 +21,7 @@ class MrpProductionSplit(models.TransientModel):
     product_id = fields.Many2one(related='production_id.product_id')
     product_qty = fields.Float(related='production_id.product_qty')
     product_uom_id = fields.Many2one(related='production_id.product_uom_id')
+    production_capacity = fields.Float(related='production_id.production_capacity')
     counter = fields.Integer(
         "Split #", default=0, compute="_compute_counter",
         store=True, readonly=False)
