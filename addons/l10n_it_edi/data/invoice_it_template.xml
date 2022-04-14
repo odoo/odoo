@@ -8,18 +8,18 @@
                 <CodiceArticolo t-if="line.product_id.barcode">
                     <!--2.2.1.3-->
                     <CodiceTipo>EAN</CodiceTipo>
-                    <CodiceValore t-esc="line.product_id.barcode"/>
+                    <CodiceValore t-esc="format_alphanumeric(line.product_id.barcode)"/>
                 </CodiceArticolo>
                  <CodiceArticolo t-if="line.product_id.default_code">
                     <CodiceTipo>INTERNAL</CodiceTipo>
-                    <CodiceValore t-esc="line.product_id.default_code"/>
+                    <CodiceValore t-esc="format_alphanumeric(line.product_id.default_code)"/>
                 </CodiceArticolo>
                 <Descrizione>
-                    <t t-esc="line.name[:1000]"/>
+                    <t t-esc="format_alphanumeric(line.name[:1000])"/>
                     <t t-if="not line.name" t-esc="'NO NAME'"/>
                 </Descrizione>
                 <Quantita t-esc="format_numbers(line.quantity)"/>
-                <UnitaMisura t-if="line.product_uom_id.category_id != env.ref('uom.product_uom_categ_unit')" t-esc="line.product_uom_id.name"/>
+                <UnitaMisura t-if="line.product_uom_id.category_id != env.ref('uom.product_uom_categ_unit')"  t-esc="format_alphanumeric(line.product_uom_id.name)"/>
                 <PrezzoUnitario t-esc="'%.06f' % (line.price_subtotal / (( 1 - (line.discount or 0.0) / 100.0) * line.quantity) if line.quantity and line.discount != 100.0 else line.price_unit)"/>
                 <ScontoMaggiorazione t-if="line.discount != 0">
                     <!-- [2.2.1.10] -->
@@ -36,9 +36,9 @@
 
         <template id="account_invoice_it_FatturaPA_sede">
             <Sede>
-                <Indirizzo><t t-if="partner.street" t-esc="partner.street"/> <t t-if="partner.street2" t-esc="partner.street2"/></Indirizzo>
+                <Indirizzo><t t-if="partner.street" t-esc="format_alphanumeric(partner.street)"/> <t t-if="partner.street2" t-esc="format_alphanumeric(partner.street2)"/></Indirizzo>
                 <CAP><t t-if="partner.country_id.code != 'IT'" t-esc="'00000'"/><t t-else="" t-esc="partner.zip"/></CAP>
-                <Comune t-esc="partner.city"/>
+                <Comune t-esc="format_alphanumeric(partner.city)"/>
                 <Provincia t-if="partner.country_id.code == 'IT'" t-esc="partner.state_id.code"/>
                 <Nazione t-esc="partner.country_id.code"/>
             </Sede>
@@ -54,14 +54,14 @@
                             <IdPaese t-esc="get_vat_country(record.company_id.vat)"/>
                             <IdCodice t-esc="record.company_id.l10n_it_codice_fiscale or get_vat_number(record.company_id.vat)"/>
                         </IdTrasmittente>
-                        <ProgressivoInvio t-esc="record.name.replace('/','')[-10:]"/>
+                        <ProgressivoInvio t-esc="format_alphanumeric(record.name.replace('/','')[-10:])"/>
                         <FormatoTrasmissione t-esc="formato_trasmissione"/>
                         <CodiceDestinatario t-if="record.commercial_partner_id.l10n_it_pa_index and record.commercial_partner_id.country_id.code == 'IT'" t-esc="record.commercial_partner_id.l10n_it_pa_index.upper()"/>
                         <CodiceDestinatario t-if="not record.commercial_partner_id.l10n_it_pa_index and record.commercial_partner_id.country_id.code == 'IT'" t-esc="'0000000'"/>
                         <CodiceDestinatario t-if="record.commercial_partner_id.country_id.code != 'IT'" t-esc="'XXXXXXX'"/>
                         <ContattiTrasmittente>
-                            <Telefono t-if="format_phone(record.company_id.partner_id.phone)" t-esc="format_phone(record.company_id.partner_id.phone)"/>
-                            <Telefono t-if="not format_phone(record.company_id.partner_id.phone) and format_phone(record.company_id.partner_id.mobile)" t-esc="format_phone(record.company_id.partner_id.mobile)"/>
+                            <Telefono t-if="format_phone(record.company_id.partner_id.phone)" t-esc="format_alphanumeric(format_phone(record.company_id.partner_id.phone))"/>
+                            <Telefono t-if="not format_phone(record.company_id.partner_id.phone) and format_phone(record.company_id.partner_id.mobile)" t-esc="format_alphanumeric(format_phone(record.company_id.partner_id.mobile))"/>
                             <Email t-if="record.company_id.email" t-esc="record.company_id.email"/>
                         </ContattiTrasmittente>
                         <PECDestinatario t-if="record.commercial_partner_id.l10n_it_pec_email" t-esc="record.commercial_partner_id.l10n_it_pec_email"/>
@@ -74,7 +74,7 @@
                             </IdFiscaleIVA>
                             <CodiceFiscale t-if="record.company_id.l10n_it_codice_fiscale" t-esc="record.company_id.l10n_it_codice_fiscale"/>
                             <Anagrafica>
-                                <Denominazione t-esc="record.company_id.partner_id.display_name"/>
+                                <Denominazione t-esc="format_alphanumeric(record.company_id.partner_id.display_name[:80])"/>
                             </Anagrafica>
                             <RegimeFiscale t-esc="record.company_id.l10n_it_tax_system"/>
                         </DatiAnagrafici>
@@ -84,7 +84,7 @@
                         <IscrizioneREA t-if="record.company_id.l10n_it_has_eco_index">
                             <!--1.2.4-->
                             <Ufficio t-esc="record.company_id.l10n_it_eco_index_office.code"/>
-                            <NumeroREA t-esc="record.company_id.l10n_it_eco_index_number"/>
+                            <NumeroREA t-esc="format_alphanumeric(record.company_id.l10n_it_eco_index_number)"/>
                             <CapitaleSociale t-if="record.company_id.l10n_it_eco_index_share_capital != 0" t-esc="format_numbers_two(record.company_id.l10n_it_eco_index_share_capital)"/>
                             <SocioUnico t-if="record.company_id.l10n_it_eco_index_sole_shareholder != 'NO'" t-esc="record.company_id.l10n_it_eco_index_sole_shareholder"/>
                             <StatoLiquidazione t-esc="record.company_id.l10n_it_eco_index_liquidation_state"/>
@@ -99,9 +99,9 @@
                             </IdFiscaleIVA>
                             <CodiceFiscale t-if="record.company_id.l10n_it_tax_representative_partner_id.l10n_it_codice_fiscale" t-esc="record.company_id.l10n_it_tax_representative_partner_id.l10n_it_codice_fiscale"/>
                             <Anagrafica>
-                                <Denominazione t-if="record.company_id.l10n_it_tax_representative_partner_id.is_company" t-esc="record.company_id.l10n_it_tax_representative_partner_id.display_name"/>
-                                <Nome t-if="not record.company_id.l10n_it_tax_representative_partner_id.is_company" t-esc="' '.join(record.company_id.l10n_it_tax_representative_partner_id.name.split()[:1])"/>
-                                <Cognome t-if="not record.company_id.l10n_it_tax_representative_partner_id.is_company" t-esc="' '.join(record.company_id.l10n_it_tax_representative_partner_id.name.split()[1:])"/>
+                                <Denominazione t-if="record.company_id.l10n_it_tax_representative_partner_id.is_company" t-esc="format_alphanumeric(record.company_id.l10n_it_tax_representative_partner_id.display_name[:80])"/>
+                                <Nome t-if="not record.company_id.l10n_it_tax_representative_partner_id.is_company" t-esc="format_alphanumeric(' '.join(record.company_id.l10n_it_tax_representative_partner_id.name.split()[:1])[:60])"/>
+                                <Cognome t-if="not record.company_id.l10n_it_tax_representative_partner_id.is_company" t-esc="format_alphanumeric(' '.join(record.company_id.l10n_it_tax_representative_partner_id.name.split()[1:])[:60])"/>
                             </Anagrafica>
                         </DatiAnagrafici>
                     </RappresentanteFiscale>
@@ -122,9 +122,9 @@
                             <CodiceFiscale t-if="not record.commercial_partner_id.vat" t-esc="record.commercial_partner_id.l10n_it_codice_fiscale"/>
                             <CodiceFiscale t-if="not record.commercial_partner_id.vat and not record.commercial_partner_id.l10n_it_codice_fiscale" t-esc="99999999999"/>
                             <Anagrafica>
-                                <Denominazione t-if="record.commercial_partner_id.is_company" t-esc="record.commercial_partner_id.display_name"/>
-                                <Nome t-if="not record.commercial_partner_id.is_company" t-esc="' '.join(record.commercial_partner_id.name.split()[:1])"/>
-                                <Cognome t-if="not record.commercial_partner_id.is_company" t-esc="' '.join(record.commercial_partner_id.name.split()[1:])"/>
+                                <Denominazione t-if="record.commercial_partner_id.is_company" t-esc="format_alphanumeric(record.commercial_partner_id.display_name[:80])"/>
+                                <Nome t-if="not record.commercial_partner_id.is_company" t-esc="format_alphanumeric(' '.join(record.commercial_partner_id.name.split()[:1])[:60])"/>
+                                <Cognome t-if="not record.commercial_partner_id.is_company" t-esc="format_alphanumeric(' '.join(record.commercial_partner_id.name.split()[1:])[:60])"/>
                             </Anagrafica>
                         </DatiAnagrafici>
                         <t t-call="l10n_it_edi.account_invoice_it_FatturaPA_sede">
@@ -139,7 +139,7 @@
                             <TipoDocumento t-esc="document_type"/>
                             <Divisa t-esc="currency.name"/>
                             <Data t-esc="format_date(record.invoice_date)"/>
-                            <Numero t-esc="record.name[-20:]"/>
+                            <Numero t-esc="format_alphanumeric(record.name[-20:])"/>
                             <DatiBollo t-if="record.l10n_it_stamp_duty">
                                 <!--2.1.1.6-->
                                 <BolloVirtuale>SI</BolloVirtuale>
@@ -147,11 +147,11 @@
                             </DatiBollo>
                         </DatiGeneraliDocumento>
                         <DatiOrdineAcquisto t-if="record.ref">
-                            <IdDocumento t-esc="record.ref[:20]" />
+                            <IdDocumento t-esc="format_alphanumeric(record.ref[:20])"/>
                         </DatiOrdineAcquisto>
                         <DatiDDT t-if="record.l10n_it_ddt_id">
                             <!--2.1.8-->
-                            <NumeroDDT t-esc="record.l10n_it_ddt_id.name"/>
+                            <NumeroDDT t-esc="format_alphanumeric(record.l10n_it_ddt_id.name[-20:])"/>
                             <DataDDT t-esc="format_date(record.l10n_it_ddt_id.date)"/>
                         </DatiDDT>
                     </DatiGenerali>
@@ -172,7 +172,7 @@
                                 <ImponibileImporto t-esc="format_monetary(abs(tax_dict['base_amount']), currency)"/>
                                 <Imposta t-esc="format_monetary(abs(tax_dict['tax_amount']), currency)"/>
                                 <EsigibilitaIVA t-if="not tax_dict['tax'].l10n_it_has_exoneration or tax_dict['tax'].l10n_it_kind_exoneration=='N6'" t-esc="tax_dict['tax'].l10n_it_vat_due_date"/>
-                                <RiferimentoNormativo t-if="tax_dict['tax'].l10n_it_has_exoneration" t-esc="tax_dict['tax'].l10n_it_law_reference"/>
+                                <RiferimentoNormativo t-if="tax_dict['tax'].l10n_it_has_exoneration" t-esc="format_alphanumeric(tax_dict['tax'].l10n_it_law_reference[:100])"/>
                             </DatiRiepilogo>
                         </t>
                     </DatiBeniServizi>
@@ -185,15 +185,15 @@
                                 <ModalitaPagamento>MP05</ModalitaPagamento>
                                 <DataScadenzaPagamento t-esc="format_date(payment.date_maturity)"/>
                                 <ImportoPagamento t-esc="format_monetary(abs(payment.price_total), currency)"/>
-                                <IstitutoFinanziario t-if="company_bank_account.bank_id" t-esc="company_bank_account.bank_id.name[:80]"/>
+                                <IstitutoFinanziario t-if="company_bank_account.bank_id" t-esc="format_alphanumeric(company_bank_account.bank_id.name[:80])"/>
                                 <IBAN t-if="company_bank_account.acc_type == 'iban'" t-esc="company_bank_account.sanitized_acc_number"/>
                                 <BIC t-if="company_bank_account.acc_type == 'bank' and company_bank_account.bank_id.bic" t-esc="company_bank_account.bank_id.bic"/>
-                                <CodicePagamento t-esc="record.payment_reference[:60]"/>
+                                <CodicePagamento t-esc="format_alphanumeric(record.payment_reference[:60])"/>
                             </DettaglioPagamento>
                         </t>
                     </DatiPagamento>
                     <Allegati t-if="pdf">
-                        <NomeAttachment t-esc="pdf_name"/>
+                        <NomeAttachment t-esc="format_alphanumeric(pdf_name[:60])"/>
                         <FormatoAttachment>PDF</FormatoAttachment>
                         <Attachment t-esc="pdf"/>
                     </Allegati>

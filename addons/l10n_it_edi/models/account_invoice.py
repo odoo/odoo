@@ -142,6 +142,9 @@ class AccountMove(models.Model):
                 return True
             return False
 
+        def format_alphanumeric(text_to_convert):
+            return text_to_convert.encode('latin-1', 'replace').decode('latin-1') if text_to_convert else False
+
         formato_trasmissione = "FPA12" if self._is_commercial_partner_pa() else "FPR12"
 
         if self.move_type == 'out_invoice':
@@ -184,6 +187,7 @@ class AccountMove(models.Model):
             'format_numbers': format_numbers,
             'format_numbers_two': format_numbers_two,
             'format_phone': format_phone,
+            'format_alphanumeric': format_alphanumeric,
             'discount_type': discount_type,
             'get_vat_number': get_vat_number,
             'get_vat_country': get_vat_country,
