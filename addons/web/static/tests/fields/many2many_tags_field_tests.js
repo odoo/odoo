@@ -303,10 +303,10 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<field name=\"timmy\" widget=\"many2many_tags\" options=\"{'color_field': 'color', 'no_create_edit': True }\"/>" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="timmy" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True }"/>
+                </form>`,
             resId: 1,
             mockRPC: (route, { args, method, model }) => {
                 if (route === "/web/dataset/call_kw/partner/write") {
@@ -317,10 +317,7 @@ QUnit.module("Fields", (hooks) => {
                         6,
                         "generated command should be REPLACE WITH"
                     );
-                    assert.ok(
-                        _.isEqual(_.sortBy(commands[0][2], _.identity.bind(_)), [12, 13]),
-                        "new value should be [12, 13]"
-                    );
+                    assert.deepEqual(commands[0][2], [12, 13], "new value should be [12, 13]");
                 }
                 if (method === "read" && model === "partner_type") {
                     assert.deepEqual(
@@ -630,7 +627,6 @@ QUnit.module("Fields", (hooks) => {
         // Update the color in readonly => write automatically
         await click(badgeNode);
         await click(target, '.o_colorlist button[data-color="1"]');
-        await nextTick();
         assert.strictEqual(
             badgeNode.dataset.color,
             "1",
