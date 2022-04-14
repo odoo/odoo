@@ -38,7 +38,7 @@
                     <div class="text-center">
                         <h1 class="mb-4" t-field="survey.title" />
                         <h2 class="mb-5 font-weight-normal">
-                            <span>Go to <a t-att-href="survey.session_link" t-esc="survey.session_link" target="_blank" /></span>
+                            <span class="text-break">Go to <a t-att-href="survey.session_link" t-esc="survey.session_link" target="_blank" /></span>
                             <i class="fa fa-link font-weight-normal ml-3 o_survey_session_copy" />
                             <input class="o_survey_session_copy_url d-none" type="text" t-att-value="survey.session_link" />
                         </h2>
@@ -114,7 +114,7 @@
                     class="font-weight-bold fa fa-chevron-right o_survey_session_navigation o_survey_session_navigation_next p-3" />
                 <a role="button"
                     class="font-weight-bold fa fa-chevron-left o_survey_session_navigation o_survey_session_navigation_previous p-3" />
-                <div class="o_survey_session_results flex-column flex-grow-1">
+                <div class="o_survey_session_results flex-column flex-grow-1 mx-5">
                     <div class="row">
                         <div class="col-lg-12"><h1 t-esc="question.title"></h1></div>
                     </div>
