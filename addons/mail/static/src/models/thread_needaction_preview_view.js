@@ -9,6 +9,15 @@ registerModel({
     identifyingFields: ['notificationListViewOwner', 'thread'],
     recordMethods: {
         /**
+         * @param {MouseEvent} ev
+         */
+        onClickMarkAsRead(ev) {
+            this.messaging.models['Message'].markAllAsRead([
+                ['model', '=', this.thread.model],
+                ['res_id', '=', this.thread.id],
+            ]);
+        },
+        /**
          * @private
          * @returns {FieldCommand}
          */

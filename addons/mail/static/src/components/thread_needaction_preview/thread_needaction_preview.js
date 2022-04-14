@@ -81,17 +81,6 @@ export class ThreadNeedactionPreview extends Component {
         }
     }
 
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickMarkAsRead(ev) {
-        this.messaging.models['Message'].markAllAsRead([
-            ['model', '=', this.threadNeedactionPreviewView.thread.model],
-            ['res_id', '=', this.threadNeedactionPreviewView.thread.id],
-        ]);
-    }
-
 }
 
 Object.assign(ThreadNeedactionPreview, {
