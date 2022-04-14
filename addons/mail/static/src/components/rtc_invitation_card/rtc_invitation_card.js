@@ -41,17 +41,6 @@ export class RtcInvitationCard extends Component {
         this.rtcInvitationCard.thread.open();
     }
 
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickRefuse(ev) {
-        if (this.rtcInvitationCard.thread.hasPendingRtcRequest) {
-            return;
-        }
-        this.rtcInvitationCard.thread.leaveCall();
-    }
-
 }
 
 Object.assign(RtcInvitationCard, {
