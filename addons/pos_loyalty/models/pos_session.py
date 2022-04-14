@@ -81,6 +81,9 @@ class PosSession(models.Model):
             query = self.env['loyalty.card']._search(
                 [('program_id', '=', self.config_id.loyalty_program_id.id), ('partner_id', 'in', partner_ids)]
             )
+            # query can be falsy
+            if not query:
+                return result
             query_str, params = query.select('id', 'partner_id', 'points')
             self.env.cr.execute(query_str, params)
             for res in self.env.cr.dictfetchall():
