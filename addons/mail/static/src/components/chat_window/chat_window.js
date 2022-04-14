@@ -22,7 +22,6 @@ export class ChatWindow extends Component {
         // the following are passed as props to children
         this._onAutocompleteSelect = this._onAutocompleteSelect.bind(this);
         this._onAutocompleteSource = this._onAutocompleteSource.bind(this);
-        this._onFocusinThread = this._onFocusinThread.bind(this);
     }
 
     //--------------------------------------------------------------------------
@@ -108,19 +107,6 @@ export class ChatWindow extends Component {
             keyword: _.escape(req.term),
             limit: 10,
         });
-    }
-
-    /**
-     * Called when an element in the thread becomes focused.
-     *
-     * @private
-     */
-    _onFocusinThread() {
-        if (!this.chatWindow) {
-            // prevent crash on destroy
-            return;
-        }
-        this.chatWindow.update({ isFocused: true });
     }
 
 }

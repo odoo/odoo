@@ -54,6 +54,18 @@ registerModel({
             });
         },
         /**
+         * Called when an element in the thread becomes focused.
+         */
+        onFocusin() {
+            if (!this.exists()) {
+                // prevent crash on destroy
+                return;
+            }
+            if (this.threadViewer.chatWindow) {
+                this.threadViewer.chatWindow.update({ isFocused: true });
+            }
+        },
+        /**
          * Starts editing the last message of this thread from the current user.
          */
         startEditingLastMessageFromCurrentUser() {

@@ -41,7 +41,6 @@ Object.assign(ThreadView, {
         hasComposerDiscardButton: false,
         showComposerAttachmentsExtensions: true,
         showComposerAttachmentsFilenames: true,
-        onFocusin: () => {},
     },
     props: {
         hasComposerCurrentPartnerAvatar: {
@@ -61,10 +60,6 @@ Object.assign(ThreadView, {
             optional: true,
         },
         localId: String,
-        onFocusin: {
-            type: Function,
-            optional: true,
-        },
         showComposerAttachmentsExtensions: {
             type: Boolean,
             optional: true,
