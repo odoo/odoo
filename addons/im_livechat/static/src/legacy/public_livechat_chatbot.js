@@ -242,7 +242,7 @@ const QWeb = core.qweb;
      */
     _chatbotEndScript: function () {
         this._chatWindow.$('.o_composer_text_field').addClass('d-none');
-        this._chatWindow.$('.o_livechat_chatbot_end').removeClass('d-none');
+        this._chatWindow.$('.o_livechat_chatbot_end').show();
         this._chatWindow.$('.o_livechat_chatbot_restart').one('click',
             this._onChatbotRestartScript.bind(this));
 
@@ -565,7 +565,7 @@ const QWeb = core.qweb;
         this._super(...arguments);
 
         this._chatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
-        this._chatWindow.$('.o_livechat_chatbot_end').addClass('d-none');
+        this._chatWindow.$('.o_livechat_chatbot_end').hide();
         this._chatWindow.$('.o_composer_text_field')
             .removeClass('d-none')
             .val('');
@@ -770,7 +770,7 @@ const QWeb = core.qweb;
      */
     _onChatbotRestartScript: async function (ev) {
         this._chatWindow.$('.o_composer_text_field').removeClass('d-none');
-        this._chatWindow.$('.o_livechat_chatbot_end').addClass('d-none');
+        this._chatWindow.$('.o_livechat_chatbot_end').hide();
 
         if (this.nextStepTimeout) {
             clearTimeout(this.nextStepTimeout);
