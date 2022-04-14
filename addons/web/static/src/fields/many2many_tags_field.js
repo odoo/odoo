@@ -47,7 +47,7 @@ export class Many2ManyTagsField extends Component {
     switchTagColor(colorIndex, tag) {
         const tagRecord = this.props.value.records.find((record) => record.id === tag.id);
         tagRecord.update(this.props.colorField, colorIndex);
-        if (this.props.readonly) tagRecord.save();
+        tagRecord.save();
     }
     onTagVisibilityChange(isHidden, tag) {
         const tagRecord = this.props.value.records.find((record) => record.id === tag.id);
@@ -58,7 +58,7 @@ export class Many2ManyTagsField extends Component {
             this.props.colorField,
             isHidden ? 0 : this.previousColorsMap[tagRecord.resId] || 1
         );
-        if (this.props.readonly) tagRecord.save();
+        tagRecord.save();
     }
 
     get sources() {
@@ -172,7 +172,6 @@ Many2ManyTagsField.template = "web.Many2ManyTagsField";
 Many2ManyTagsField.defaultProps = {
     canEditColor: true,
     canQuickCreate: true,
-    update: () => {},
 };
 Many2ManyTagsField.props = {
     ...standardFieldProps,
@@ -180,7 +179,6 @@ Many2ManyTagsField.props = {
     canQuickCreate: { type: Boolean, optional: true },
     colorField: { type: String, optional: true },
     placeholder: { type: String, optional: true },
-    update: { type: Function, optional: true },
     relation: { type: String },
     domain: { type: Domain },
     context: { type: Object },
@@ -197,10 +195,6 @@ Many2ManyTagsField.extractProps = (fieldName, record, attrs) => {
     return {
         colorField: colorField,
         canEditColor: !attrs.options.no_edit_color,
-        update: (colorIndex, tagRecord) => {
-            tagRecord.update(colorField, colorIndex);
-            tagRecord.save();
-        },
         relation: record.activeFields[fieldName].relation,
         domain: record.getFieldDomain(fieldName),
         context: record.getFieldContext(fieldName),
