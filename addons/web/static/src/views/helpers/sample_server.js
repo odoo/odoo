@@ -309,7 +309,7 @@ export class SampleServer {
      */
     _getRandomDate(format) {
         const delta = Math.floor((Math.random() - Math.random()) * SampleServer.DATE_DELTA);
-        return luxon.DateTime.local().plus({ hours: delta }).toFormat(format);
+        return luxon.DateTime.local().reconfigure({ numberingSystem: "latn" }).plus({ hours: delta }).toFormat(format);
     }
 
     /**
