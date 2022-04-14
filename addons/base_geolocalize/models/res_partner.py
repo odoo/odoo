@@ -56,6 +56,6 @@ class ResPartner(models.Model):
         if partners_not_geo_localized:
             self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
                 'title': _("Warning"),
-                'message': _('No address found for %(partner_names)s.', partner_names=', '.join(partners_not_geo_localized.mapped('name')))
+                'message': _('No match found for %(partner_names)s address(es).', partner_names=', '.join(partners_not_geo_localized.mapped('name')))
             })
         return True

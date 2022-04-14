@@ -218,7 +218,8 @@
                                 attrs="{'invisible': [('is_company', '=', True)]}"/>
                             <field name="active_lang_count" invisible="1"/>
                             <field name="lang" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}"/>
-                            <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags..."/>
+                            <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"
+                                   placeholder='e.g. "B2B", "VIP", "Consulting", ...'/>
                         </group>
                     </group>
 
@@ -279,6 +280,23 @@
                                     <sheet>
                                         <field name="type" required="1" widget="radio" options="{'horizontal': true}"/>
                                         <field name="parent_id" invisible="1"/>
+                                        <div class="text-muted oe_edit_only">
+                                            <p class="mb-0" attrs="{'invisible': [('type', '!=', 'contact')]}">
+                                                <span>Use this to organize the contact details of employees of a given company (e.g. CEO, CFO, ...).</span>
+                                            </p>
+                                            <p class="mb-0" attrs="{'invisible': [('type', '!=', 'invoice')]}">
+                                                <span>Preferred address for all invoices. Selected by default when you invoice an order that belongs to this company.</span>
+                                            </p>
+                                            <p class="mb-0" attrs="{'invisible': [('type', '!=', 'delivery')]}">
+                                                <span>Preferred address for all deliveries. Selected by default when you deliver an order that belongs to this company.</span>
+                                            </p>
+                                            <p class="mb-0" attrs="{'invisible': [('type', '!=', 'private')]}">
+                                                <span>Private addresses are only visible by authorized users and contain sensitive data (employee home addresses, ...).</span>
+                                            </p>
+                                            <p class="mb-0" attrs="{'invisible': [('type', '!=', 'other')]}">
+                                                <span>Other address for the company (e.g. subsidiary, ...)</span>
+                                            </p>
+                                        </div>
                                         <hr/>
                                         <group>
                                             <group>
@@ -307,7 +325,7 @@
                                             </group>
                                         </group>
                                         <group>
-                                            <field name="comment" placeholder="Internal notes..."/>
+                                            <field name="comment" placeholder="Internal notes..." nolabel="1"/>
                                         </group>
                                         <field name="lang" invisible="True"/>
                                         <field name="user_id" invisible="True"/>
@@ -318,7 +336,7 @@
                         <page name='sales_purchases' string="Sales &amp; Purchase">
                             <group name="container_row_2">
                                 <group string="Sales" name="sale" priority="1">
-                                    <field name="user_id" domain="[('share', '=', False)]"/>
+                                    <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                                 </group>
                                 <group string="Purchase" name="purchase" priority="2">
                                 </group>
@@ -330,7 +348,7 @@
                             </group>
                         </page>
                         <page name='internal_notes' string="Internal Notes">
-                            <field name="comment" placeholder="Internal note..."/>
+                            <field name="comment" placeholder="Internal notes..."/>
                         </page>
                     </notebook>
                 </sheet>
@@ -437,6 +455,7 @@
                     <field name="category_id"/>
                     <field name="avatar_128"/>
                     <field name="type"/>
+                    <field name="active"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_res_partner_kanban">
@@ -452,21 +471,27 @@
                                 <t t-else="">
                                     <div class="o_kanban_image_fill_left o_kanban_image_full" t-attf-style="background-image: url(#{kanban_image('res.partner', 'avatar_128', record.id.raw_value)})" role="img"/>
                                 </t>
-                                <div class="oe_kanban_details d-flex flex-column">
-                                    <strong class="o_kanban_record_title oe_partner_heading"><field name="display_name"/></strong>
-                                    <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
-                                    <ul>
-                                        <li t-if="record.parent_id.raw_value and !record.function.raw_value"><field name="parent_id"/></li>
-                                        <li t-if="!record.parent_id.raw_value and record.function.raw_value"><field name="function"/></li>
-                                        <li t-if="record.parent_id.raw_value and record.function.raw_value"><field name="function"/> at <field name="parent_id"/></li>
-                                        <li t-if="record.city.raw_value or record.country_id.raw_value">
-                                            <t t-if="record.city.raw_value"><field name="city"/><t t-if="record.country_id.raw_value">, </t></t>
-                                            <t t-if="record.country_id.raw_value"><field name="country_id"/></t>
-                                        </li>
-                                        <li t-if="record.email.raw_value" class="o_text_overflow"><field name="email"/></li>
-                                    </ul>
-                                    <div class="o_row">
-                                        <span class="oe_kanban_partner_links"/>
+                                <div class="ribbon ribbon-top-right" attrs="{'invisible': [('active', '=', True)]}">
+                                    <span class="bg-danger">Archived</span>
+                                </div>
+                                <div class="oe_kanban_details d-flex flex-column justify-content-between">
+                                    <div>
+                                        <strong class="o_kanban_record_title oe_partner_heading"><field name="display_name"/></strong>
+                                        <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
+                                        <ul>
+                                            <li t-if="record.parent_id.raw_value and !record.function.raw_value"><field name="parent_id"/></li>
+                                            <li t-elif="!record.parent_id.raw_value and record.function.raw_value"><field name="function"/></li>
+                                            <li t-elif="record.parent_id.raw_value and record.function.raw_value"><field name="function"/> at <field name="parent_id"/></li>
+                                            <li t-if="record.city.raw_value or record.country_id.raw_value">
+                                                <t t-if="record.city.raw_value"><field name="city"/><t t-if="record.country_id.raw_value">, </t></t>
+                                                <t t-if="record.country_id.raw_value"><field name="country_id"/></t>
+                                            </li>
+                                            <li t-if="record.email.raw_value" class="o_text_overflow"><field name="email"/></li>
+                                        </ul>
+                                    </div>
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left"/>
+                                        <div class="oe_kanban_bottom_right"/>
                                     </div>
                                 </div>
                             </div>

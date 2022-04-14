@@ -11,11 +11,14 @@
                 <field name="mobile" position="after">
                     <field name="meeting_count"/>
                 </field>
-                <xpath expr="//span[hasclass('oe_kanban_partner_links')]" position="inside">
-                    <span class="badge badge-pill" t-if="record.meeting_count.value>0">
-                        <i class="fa fa-fw fa-calendar" aria-label="Meetings" role="img" title="Meetings"/>
-                        <t t-esc="record.meeting_count.value"/>
-                    </span>
+                <xpath expr="//div[hasclass('oe_kanban_bottom_left')]" position="inside">
+                    <a t-if="record.meeting_count.value>0" data-type="object" data-name="schedule_meeting"
+                       href="#" class="oe_kanban_action oe_kanban_action_a mr-1">
+                        <span class="badge badge-pill">
+                            <i class="fa fa-fw fa-calendar" aria-label="Meetings" role="img" title="Meetings"/>
+                            <t t-out="record.meeting_count.value"/>
+                        </span>
+                    </a>
                 </xpath>
             </field>
         </record>

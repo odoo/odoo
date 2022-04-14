@@ -511,6 +511,18 @@
             </field>
         </record>
 
+        <record id="purchase_order_view_kanban_without_dashboard" model="ir.ui.view">
+            <field name="name">purchase.order.view.kanban.without.dashboard</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.view_purchase_order_kanban"/>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban" position="attributes">
+                    <attribute name="js_class"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="purchase_order_tree" model="ir.ui.view">
             <field name="name">purchase.order.tree</field>
             <field name="model">purchase.order</field>
