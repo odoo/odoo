@@ -23,6 +23,13 @@ export class RtcConfigurationMenu extends Component {
         this.state.userDevices = await browser.navigator.mediaDevices.enumerateDevices();
     }
 
+    /**
+     * @returns {RtcConfigurationMenu|undefined}
+     */
+    get rtcConfigurationMenu() {
+        return this.messaging && this.messaging.models['RtcConfigurationMenu'].get(this.props.localId);
+    }
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -32,7 +39,7 @@ export class RtcConfigurationMenu extends Component {
      * @param {Event} ev
      */
     _onChangeDelay(ev) {
-        this.messaging.userSetting.rtcConfigurationMenu.onChangeDelay(ev.target.value);
+        this.rtcConfigurationMenu.onChangeDelay(ev.target.value);
     }
 
     /**
@@ -40,7 +47,7 @@ export class RtcConfigurationMenu extends Component {
      * @param {Event} ev
      */
     _onChangePushToTalk(ev) {
-        this.messaging.userSetting.rtcConfigurationMenu.onChangePushToTalk();
+        this.rtcConfigurationMenu.onChangePushToTalk();
     }
 
     /**
@@ -48,7 +55,7 @@ export class RtcConfigurationMenu extends Component {
      * @param {Event} ev
      */
     _onChangeSelectAudioInput(ev) {
-        this.messaging.userSetting.rtcConfigurationMenu.onChangeSelectAudioInput(ev.target.value);
+        this.rtcConfigurationMenu.onChangeSelectAudioInput(ev.target.value);
     }
 
     /**
@@ -56,7 +63,7 @@ export class RtcConfigurationMenu extends Component {
      * @param {Event} ev
      */
     _onChangeThreshold(ev) {
-        this.messaging.userSetting.rtcConfigurationMenu.onChangeThreshold(ev.target.value);
+        this.rtcConfigurationMenu.onChangeThreshold(ev.target.value);
     }
 
     /**
@@ -64,11 +71,12 @@ export class RtcConfigurationMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickRegisterKeyButton() {
-        this.messaging.userSetting.rtcConfigurationMenu.onClickRegisterKeyButton();
+        this.rtcConfigurationMenu.onClickRegisterKeyButton();
     }
 }
 
 Object.assign(RtcConfigurationMenu, {
+    props: { localId: String },
     template: 'mail.RtcConfigurationMenu',
 });
 

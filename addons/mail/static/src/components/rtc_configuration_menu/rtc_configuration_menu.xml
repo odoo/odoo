@@ -30,10 +30,10 @@
                         <span class="o_RtcConfigurationMenu_optionName">Push-to-talk key</span>
                         <span class="o_RtcConfigurationMenu_optionPushToTalkGroup">
                             <t t-if="messaging.userSetting.pushToTalkKey">
-                                <span class="o_RtcConfigurationMenu_optionPushToTalkGroupKey" t-att-class="{ 'o-isRegistering': messaging.userSetting.rtcConfigurationMenu.isRegisteringKey }" t-esc="messaging.userSetting.pushToTalkKeyToString()"/>
+                                <span class="o_RtcConfigurationMenu_optionPushToTalkGroupKey" t-att-class="{ 'o-isRegistering': rtcConfigurationMenu.isRegisteringKey }" t-esc="messaging.userSetting.pushToTalkKeyToString()"/>
                             </t>
                             <button class="o_RtcConfigurationMenu_button" t-on-click="_onClickRegisterKeyButton">
-                                <t t-if="messaging.userSetting.rtcConfigurationMenu.isRegisteringKey">
+                                <t t-if="rtcConfigurationMenu.isRegisteringKey">
                                     <i title="Cancel" aria-label="Cancel" class="fa fa-2x fa-times-circle"/>
                                 </t>
                                 <t t-else="">
@@ -44,7 +44,7 @@
                     </label>
 
                 </div>
-                <div t-if="messaging.userSetting.rtcConfigurationMenu.isRegisteringKey">Press a key to register it as the push-to-talk shortcut</div>
+                <div t-if="rtcConfigurationMenu.isRegisteringKey">Press a key to register it as the push-to-talk shortcut</div>
                 <div class="o_RtcConfigurationMenu_option">
                     <label class="o_RtcConfigurationMenu_optionLabel" title="Delay after releasing push-to-talk" aria-label="Delay after releasing push-to-talk">
                         <span class="o_RtcConfigurationMenu_optionName">Delay after releasing push-to-talk</span>
