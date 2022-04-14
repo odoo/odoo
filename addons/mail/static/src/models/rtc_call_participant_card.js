@@ -177,5 +177,6 @@ registerModel({
          * If set, this card represents a rtcSession.
          */
         rtcSession: one('RtcSession'),
+        volumeMenuAnchorRef: attr(),
     },
 });
