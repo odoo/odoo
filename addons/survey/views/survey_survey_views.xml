@@ -13,11 +13,11 @@
                     <button name="action_send_survey" string="Share" type="object" class="oe_highlight" attrs="{'invisible': [('active', '=', False)]}"/>
                     <button name="action_result_survey" string="See results" type="object" class="oe_highlight"
                       attrs="{'invisible': [('answer_done_count', '&lt;=', 0)]}"/>
-                    <button name="action_start_session" string="Create Live Session" type="object"
+                    <button name="action_start_session" string="Create Live Session" type="object" class="d-none d-sm-block"
                         attrs="{'invisible': ['|', ('session_state', '!=', False), '|', ('active', '=', False), ('certification', '=', True)]}" />
-                    <button name="action_open_session_manager" string="Open Session Manager" type="object"
+                    <button name="action_open_session_manager" string="Open Session Manager" type="object" class="d-none d-sm-block"
                         attrs="{'invisible': [('session_state', '=', False)]}" />
-                    <button name="action_end_session" string="Close Live Session" type="object"
+                    <button name="action_end_session" string="Close Live Session" type="object" class="d-none d-sm-block"
                         attrs="{'invisible': [('session_state', 'not in', ['ready', 'in_progress'])]}" />
                     <button name="action_test_survey" string="Test" type="object" attrs="{'invisible': ['|', ('active', '=', False), ('question_ids', '=', [])]}"/>
                     <button name="action_unarchive" string="Reopen" class="btn-primary" type="object" attrs="{'invisible': [('active', '=', True)]}"/>
@@ -228,7 +228,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <div t-attf-class="col-lg-1 col-sm-4 py-0 my-2 col-#{selection_mode ? '12' : '6'}">
+                            <div t-attf-class="col-lg-1 col-sm-4 d-none d-sm-block py-0 my-2 col-#{selection_mode ? '12' : '6'}">
                                 <span class="font-weight-bold"><field name="question_count"/></span><br t-if="!selection_mode"/>
                                 <span class="text-muted">Questions</span>
                             </div>
@@ -249,7 +249,7 @@
                                     <span class="text-muted">Registered</span>
                                 </a>
                             </div>
-                            <div t-if="!selection_mode" class="col-lg-1 col-sm-4 col-6 py-0 my-2">
+                            <div t-if="!selection_mode" class="col-lg-1 col-sm-4 col-6 d-none d-sm-block py-0 my-2">
                                 <a type="object"
                                    name="action_survey_user_input_completed"
                                    class="font-weight-bold">
@@ -271,7 +271,7 @@
                                     <span class="text-muted" t-else="">Certified</span>
                                 </a>
                             </div>
-                            <div t-if="!selection_mode" class="col-lg-3 col-sm-12 py-0 my-2 pb-lg-3 ml-auto text-lg-right">
+                            <div t-if="!selection_mode" class="col-lg-3 col-sm-12 d-none d-sm-block py-0 my-2 pb-lg-3 ml-auto text-lg-right">
                                 <button name="action_send_survey"
                                         string="Share" type="object"
                                         class="btn btn-secondary border"
