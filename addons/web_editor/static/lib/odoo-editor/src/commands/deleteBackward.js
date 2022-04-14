@@ -65,7 +65,7 @@ Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
     setSelection(parentNode, firstSplitOffset);
 };
 
-HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
+HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, offsetLimit) {
     const contentIsZWS = this.textContent === '\u200B';
     let moveDest;
     if (offset) {
@@ -163,12 +163,22 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
     }
 
     let node = this.childNodes[offset];
-    let firstBlockIndex = offset;
-    while (node && !isBlock(node)) {
-        node = node.nextSibling;
-        firstBlockIndex++;
+    let currentNodeIndex = offset;
+
+    // `offsetLimit` will ensure we never move nodes that were not initialy in the element
+    //  => when Deleting and merging an element the containing node will temporary be hosted
+    //  in the common parent beside possible other nodes. We don't want to touch those others node when merging
+    //  two html elements
+    //  ex : <div>12<p>ab[]</p><p>cd</p>34</div> should never touch the 12 and 34 text node.
+    if (offsetLimit === undefined) {
+        while (node && !isBlock(node)) {
+            node = node.nextSibling;
+            currentNodeIndex++;
+        }
+    } else {
+        currentNodeIndex = offsetLimit;
     }
-    let [cursorNode, cursorOffset] = moveNodes(...moveDest, this, offset, firstBlockIndex);
+    let [cursorNode, cursorOffset] = moveNodes(...moveDest, this, offset, currentNodeIndex);
     setSelection(cursorNode, cursorOffset);
 
     // Propagate if this is still a block on the left of where the nodes were
@@ -183,7 +193,7 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
     if (cursorNode.nodeType !== Node.TEXT_NODE) {
         const { cType } = getState(cursorNode, cursorOffset, DIRECTIONS.LEFT);
         if (cType & CTGROUPS.BLOCK && (!alreadyMoved || cType === CTYPES.BLOCK_OUTSIDE)) {
-            cursorNode.oDeleteBackward(cursorOffset, alreadyMoved);
+            cursorNode.oDeleteBackward(cursorOffset, alreadyMoved, cursorOffset + currentNodeIndex - offset);
         }
     }
 };
