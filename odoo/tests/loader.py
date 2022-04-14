@@ -72,12 +72,12 @@ def run_suite(suite, module_name=None):
     # avoid dependency hell
     from ..modules import module
     module.current_test = module_name
-    threading.currentThread().testing = True
+    threading.current_thread().testing = True
 
     results = OdooTestResult()
     suite(results)
 
-    threading.currentThread().testing = False
+    threading.current_thread().testing = False
     module.current_test = None
     return results
 
