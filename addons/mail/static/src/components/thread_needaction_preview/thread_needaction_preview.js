@@ -66,25 +66,6 @@ export class ThreadNeedactionPreview extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClick(ev) {
-        if (!this.threadNeedactionPreviewView) {
-            return;
-        }
-        const markAsRead = this.threadNeedactionPreviewView.markAsReadRef.el;
-        if (markAsRead && markAsRead.contains(ev.target)) {
-            // handled in `_onClickMarkAsRead`
-            return;
-        }
-        this.threadNeedactionPreviewView.thread.open();
-        if (!this.messaging.device.isMobile) {
-            this.messaging.messagingMenu.close();
-        }
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     _onClickMarkAsRead(ev) {
         this.messaging.models['Message'].markAllAsRead([
             ['model', '=', this.threadNeedactionPreviewView.thread.model],
