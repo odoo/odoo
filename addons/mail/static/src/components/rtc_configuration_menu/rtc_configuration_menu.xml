@@ -21,7 +21,7 @@
             <div class="o_RtcConfigurationMenu_option">
                 <label class="o_RtcConfigurationMenu_optionLabel" title="Use Push-to-talk" aria-label="Use Push-to-talk">
                     <span class="o_RtcConfigurationMenu_optionName">Use Push-to-talk</span>
-                    <input type="checkbox" aria-label="toggle push-to-talk" title="toggle push-to-talk" t-on-change="_onChangePushToTalk" t-att-checked="messaging.userSetting.usePushToTalk ? 'checked' : ''"/>
+                    <input type="checkbox" aria-label="toggle push-to-talk" title="toggle push-to-talk" t-on-change="rtcConfigurationMenu.onChangePushToTalk" t-att-checked="messaging.userSetting.usePushToTalk ? 'checked' : ''"/>
                 </label>
             </div>
             <t t-if="messaging.userSetting.usePushToTalk">
