@@ -6,7 +6,7 @@
             <t t-foreach="discussView.discuss.orderedMailboxes" t-as="mailbox" t-key="mailbox.localId">
                 <button class="o_DiscussMobileMailboxSelection_button btn btn-secondary flex-grow-1 p-2"
                     t-att-class="{
-                        'active o-active': discussView.discuss.thread === mailbox,
+                        'active o-active shadow-none': discussView.discuss.thread === mailbox,
                     }" t-on-click="() => discussView.onClickMobileMailboxSelectionItem(mailbox)" t-att-data-mailbox-local-id="mailbox.localId" type="button"
                 >
                     <t t-esc="mailbox.name"/>
