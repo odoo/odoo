@@ -402,19 +402,19 @@
 <t t-name="web.ActionMenus" owl="1">
     <div class="o_cp_action_menus" t-on-item-selected.stop="_onItemSelected">
         <DropdownMenu t-if="printItems.length"
-            title="env._t('Print')"
+            title="printButtonStrings.title"
             items="printItems"
             icon="'fa fa-print'"
             hotkey="'shift+u'"
-            hotkeyTitle="'Printing options'"
+            hotkeyTitle="printButtonStrings.hotkey"
         />
         <DropdownMenu t-if="actionItems.length"
-            title="env._t('Action')"
+            title="actionButtonStrings.title"
             items="actionItems"
             icon="'fa fa-cog'"
             closeOnSelected="true"
             hotkey="'u'"
-            hotkeyTitle="'Additional actions'"
+            hotkeyTitle="actionButtonStrings.hotkey"
         />
     </div>
 </t>
