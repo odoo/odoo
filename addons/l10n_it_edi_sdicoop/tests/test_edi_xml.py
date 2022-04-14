@@ -55,6 +55,7 @@ class TestItEdi(AccountEdiTestCommon):
             'zip': '28887',
             'city': 'Milan',
             'company_id': cls.company.id,
+            'is_company': True,
         })
 
         cls.standard_line = {
@@ -124,6 +125,27 @@ class TestItEdi(AccountEdiTestCommon):
             ],
         })
 
+        cls.non_latin_and_latin_invoice = cls.env['account.move'].with_company(cls.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': datetime.date(2022, 3, 24),
+            'partner_id': cls.italian_partner_a.id,
+            'partner_bank_id': cls.test_bank.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    **cls.standard_line,
+                    'name': 'ʢ◉ᴥ◉ʡ',
+                    }),
+                (0, 0, {
+                    **cls.standard_line,
+                    'name': '–-',
+                    }),
+                (0, 0, {
+                    **cls.standard_line,
+                    'name': 'this should be the same as it was',
+                    }),
+                ],
+            })
+
         # We create this because we are unable to post without a proxy user existing
         cls.proxy_user = cls.env['account_edi_proxy_client.user'].create({
             'id_client': 'l10n_it_edi_sdicoop_test',
@@ -137,6 +159,7 @@ class TestItEdi(AccountEdiTestCommon):
         cls.price_included_invoice._post()
         cls.partial_discount_invoice._post()
         cls.full_discount_invoice._post()
+        cls.non_latin_and_latin_invoice._post()
 
         cls.edi_basis_xml = cls._get_test_file_content('IT00470550013_basis.xml')
 
@@ -312,6 +335,53 @@ class TestItEdi(AccountEdiTestCommon):
             </xpath>
             <xpath expr="//DettaglioPagamento//ImportoPagamento" position="inside">
                 0.00
+            </xpath>
+            ''')
+        invoice_etree = self.with_applied_xpath(invoice_etree, "<xpath expr='.//Allegati' position='replace'/>")
+        self.assertXmlTreeEqual(invoice_etree, expected_etree)
+
+    @freeze_time('2020-03-24')
+    def test_non_latin_and_latin_inovice(self):
+        invoice_etree = etree.fromstring(self.non_latin_and_latin_invoice._export_as_xml())
+        expected_etree = self.with_applied_xpath(
+            etree.fromstring(self.edi_basis_xml),
+            '''
+            <xpath expr="//FatturaElettronicaBody//DatiBeniServizi" position="replace">
+            <DatiBeniServizi>
+              <DettaglioLinee>
+                <NumeroLinea>1</NumeroLinea>
+                <Descrizione>?????</Descrizione>
+                <Quantita>1.00</Quantita>
+                <PrezzoUnitario>800.400000</PrezzoUnitario>
+                <PrezzoTotale>800.40</PrezzoTotale>
+                <AliquotaIVA>22.00</AliquotaIVA>
+              </DettaglioLinee>
+              <DettaglioLinee>
+                <NumeroLinea>2</NumeroLinea>
+                <Descrizione>?-</Descrizione>
+                <Quantita>1.00</Quantita>
+                <PrezzoUnitario>800.400000</PrezzoUnitario>
+                <PrezzoTotale>800.40</PrezzoTotale>
+                <AliquotaIVA>22.00</AliquotaIVA>
+              </DettaglioLinee>
+              <DettaglioLinee>
+                <NumeroLinea>3</NumeroLinea>
+                <Descrizione>this should be the same as it was</Descrizione>
+                <Quantita>1.00</Quantita>
+                <PrezzoUnitario>800.400000</PrezzoUnitario>
+                <PrezzoTotale>800.40</PrezzoTotale>
+                <AliquotaIVA>22.00</AliquotaIVA>
+              </DettaglioLinee>
+              <DatiRiepilogo>
+                <AliquotaIVA>22.00</AliquotaIVA>
+                <ImponibileImporto>2401.20</ImponibileImporto>
+                <Imposta>528.27</Imposta>
+                <EsigibilitaIVA>I</EsigibilitaIVA>
+              </DatiRiepilogo>
+            </DatiBeniServizi>
+            </xpath>
+            <xpath expr="//DettaglioPagamento//ImportoPagamento" position="inside">
+              2929.47
             </xpath>
             ''')
         invoice_etree = self.with_applied_xpath(invoice_etree, "<xpath expr='.//Allegati' position='replace'/>")
