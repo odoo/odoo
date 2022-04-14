@@ -41,6 +41,7 @@
                             <label string="Quantity" for="reward_product_quantity" attrs="{'invisible': ['|', ('reward_type', 'in', ('discount', 'free_shipping')), ('reward_product_id', '=',False)]}"/>
                             <div attrs="{'invisible': ['|', ('reward_type', 'in', ('discount', 'free_shipping')),('reward_product_id', '=',False)]}">
                                 <field name="reward_product_quantity" class="oe_inline"/>
+                                &amp;nbsp;
                                 <field name="reward_product_uom_id" class="oe_inline"/>
                             </div>
                             <label string="Apply Discount" for="discount_type" attrs="{'invisible': [('reward_type', 'in', ('product', 'free_shipping'))]}"/>
