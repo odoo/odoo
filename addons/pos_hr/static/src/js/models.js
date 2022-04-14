@@ -65,7 +65,7 @@ const PosHrOrder = (Order) => class PosHrOrder extends Order {
     }
     init_from_JSON(json) {
         super.init_from_JSON(...arguments);
-        if (this.pos.config.module_pos_hr) {
+        if (this.pos.config.module_pos_hr && json.employee_id) {
             this.cashier = this.pos.employee_by_id[json.employee_id];
         }
     }
