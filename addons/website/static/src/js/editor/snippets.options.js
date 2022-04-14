@@ -11,6 +11,7 @@ const weUtils = require('web_editor.utils');
 var options = require('web_editor.snippets.options');
 const wLinkPopoverWidget = require('@website/js/widgets/link_popover_widget')[Symbol.for("default")];
 const wUtils = require('website.utils');
+const compatibilityColorNames = require('web_editor.ColorPalette').compatibilityColorNames;
 require('website.s_popup_options');
 
 var _t = core._t;
@@ -392,6 +393,23 @@ const GPSPicker = InputUserValueWidget.extend({
     },
 });
 
+options.userValueWidgetsRegistry['we-colorpicker'].include({
+    async setValue() {
+        const returnValue = await this._super(...arguments);
+        const parentOption = this.getParent();
+        if (parentOption.options.isWebsite && (compatibilityColorNames.includes(this._value) || this._ccValue)) {
+            let ownerDocument;
+            this.trigger_up('request_editable', {callback: $editable => ownerDocument = $editable[0].ownerDocument});
+            const computedStyles = ownerDocument.defaultView.getComputedStyle(ownerDocument.documentElement);
+            const value = this._value || this._ccValue;
+            this.colorPreviewEl.style.backgroundColor = weUtils.getCSSVariableValue(value, computedStyles);
+            this.colorPreviewEl.classList.remove(this.options.dataAttributes.colorPrefix + this._value);
+        }
+
+        return returnValue;
+    }
+});
+
 options.userValueWidgetsRegistry['we-urlpicker'] = UrlPickerUserValueWidget;
 options.userValueWidgetsRegistry['we-fontfamilypicker'] = FontFamilyPickerUserValueWidget;
 options.userValueWidgetsRegistry['we-gpspicker'] = GPSPicker;
@@ -480,15 +498,18 @@ options.Class.include({
      * @override
      */
     _computeWidgetState: async function (methodName, params) {
-        const style = window.getComputedStyle(this.$target[0].ownerDocument.documentElement);
         switch (methodName) {
             case 'customizeWebsiteViews': {
                 return this._getEnabledCustomizeValues(params.possibleValues, true);
             }
             case 'customizeWebsiteVariable': {
+                const ownerDocument = this.$target[0].ownerDocument;
+                const style = ownerDocument.defaultView.getComputedStyle(ownerDocument.documentElement);
                 return weUtils.getCSSVariableValue(params.variable, style);
             }
             case 'customizeWebsiteColor': {
+                const ownerDocument = this.$target[0].ownerDocument;
+                const style = ownerDocument.defaultView.getComputedStyle(ownerDocument.documentElement);
                 return weUtils.getCSSVariableValue(params.color, style);
             }
             case 'customizeWebsiteAssets': {
@@ -536,6 +557,13 @@ options.Class.include({
                 onSuccess: () => resolve(),
                 onFailure: () => reject(),
             });
+        });
+        // Any option that require to reload bundle should probably
+        // also update the color preview of the theme tabs, as
+        // bundles can affect the look of the previews.
+        this.trigger_up('option_update', {
+            optionName: 'ThemeColors',
+            name: 'update_color_previews',
         });
 
         // Some public widgets may depend on the variables that were
@@ -1317,6 +1345,11 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
     // Public
     //--------------------------------------------------------------------------
 
+    notify(name, data) {
+        if (name === 'update_color_previews') {
+            this.updateColorPreviews = true;
+        }
+    },
     /**
      * @override
      */
@@ -1325,11 +1358,31 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
         const oldColorSystemEl = this.el.querySelector('.o_old_color_system_warning');
         oldColorSystemEl.classList.toggle('d-none', !this._showOldColorSystemWarning);
     },
+    /**
+     * @override
+     */
+    async updateUI() {
+        if (this.updateColorPreviews) {
+            const ccPreviewEls = this.el.querySelectorAll('.o_we_cc_preview_wrapper');
+            this.trigger_up('update_color_previews', {
+                ccPreviewEls,
+            });
+            this.updateColorPreviews = false;
+        }
+        await this._super(...arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    _select() {
+        this.updateColorPreviews = true;
+        return this._super(...arguments);
+    },
     /**
      * @override
      */
@@ -1354,18 +1407,22 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
         }
 
         const presetCollapseEl = uiFragment.querySelector('we-collapse.o_we_theme_presets_collapse');
+        let ccPreviewEls = [];
         for (let i = 1; i <= 5; i++) {
             const collapseEl = document.createElement('we-collapse');
             const ccPreviewEl = $(qweb.render('web_editor.color.combination.preview'))[0];
-            ccPreviewEl.classList.add('text-center', `o_cc${i}`, 'o_we_collapse_toggler');
+            ccPreviewEl.classList.add('text-center', `o_cc${i}`, 'o_colored_level', 'o_we_collapse_toggler');
             collapseEl.appendChild(ccPreviewEl);
             const editionEls = $(qweb.render('website.color_combination_edition', {number: i}));
             for (const el of editionEls) {
                 collapseEl.appendChild(el);
             }
+            ccPreviewEls.push(ccPreviewEl);
             presetCollapseEl.appendChild(collapseEl);
         }
-
+        this.trigger_up('update_color_previews', {
+            ccPreviewEls,
+        });
         await this._super(...arguments);
     },
 });

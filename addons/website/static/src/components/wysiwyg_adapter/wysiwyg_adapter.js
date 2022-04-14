@@ -521,6 +521,32 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
     _onWillReload(event) {
         return this.props.willReload(this.widget.el.cloneNode(true));
     }
+    _onColorPreviewsUpdate(event) {
+        const stylesToCopy = [
+            'background-color',
+            'border',
+            'color',
+        ];
+        const copyStyles = (from, to) => {
+            const cloneStyle = this.websiteService.contentWindow.getComputedStyle(from);
+            for (const style of stylesToCopy) {
+                to.style.setProperty(style, cloneStyle.getPropertyValue(style));
+            }
+        };
+
+        for (const ccPreviewEl of event.data.ccPreviewEls) {
+            ccPreviewEl.setAttribute('style', '');
+            Object.values(ccPreviewEl.children).forEach(child => child.setAttribute('style', ''));
+            const iframeClone = ccPreviewEl.cloneNode(true);
+            this.websiteService.pageDocument.body.appendChild(iframeClone);
+            copyStyles(iframeClone, ccPreviewEl);
+            copyStyles(iframeClone.querySelector('h1'), ccPreviewEl.querySelector('h1'));
+            copyStyles(iframeClone.querySelector('.btn-primary'), ccPreviewEl.querySelector('.btn-primary'));
+            copyStyles(iframeClone.querySelector('.btn-secondary'), ccPreviewEl.querySelector('.btn-secondary'));
+            copyStyles(iframeClone.querySelector('p'), ccPreviewEl.querySelector('p'));
+            iframeClone.remove();
+        }
+    }
 }
 WysiwygAdapterComponent.prototype.events = {
     'widgets_start_request': '_onRootEventRequest',
@@ -535,5 +561,6 @@ WysiwygAdapterComponent.prototype.events = {
     'reload_bundles': '_reloadBundles',
     'menu_dialog': '_onMenuDialogRequest',
     'request_public_widget': '_onPublicWidgetRequest',
+    'update_color_previews': '_onColorPreviewsUpdate',
     'will_reload': '_onWillReload',
 };
