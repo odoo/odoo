@@ -46,6 +46,15 @@ registerModel({
             }
         },
         /**
+         * @param {MouseEvent} ev
+         */
+        async onClickPhone(ev) {
+            if (this.thread.hasPendingRtcRequest) {
+                return;
+            }
+            await this.thread.toggleCall();
+        },
+        /**
          * Handles click on the "show member list" button.
          *
          * @param {Event} ev
