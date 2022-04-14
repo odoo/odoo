@@ -103,6 +103,7 @@ export const CLIPBOARD_WHITELISTS = {
         'STRONG',
         // Table
         'TABLE',
+        'THEAD',
         'TH',
         'TBODY',
         'TR',
@@ -137,6 +138,15 @@ export const CLIPBOARD_WHITELISTS = {
         /^fa/,
     ],
     attributes: ['class', 'href', 'src'],
+    spanStyle: {
+        'text-decoration': { defaultValues: ['', 'none'] },
+        'font-weight': { defaultValues: ['', '400'] },
+        'background-color': { defaultValues: ['', '#fff', '#ffffff', 'rgb(255, 255, 255)', 'rgba(255, 255, 255, 1)'] },
+        'color': { defaultValues: ['', '#000', '#000000', 'rgb(0, 0, 0)', 'rgba(0, 0, 0, 1)'] },
+        'font-style': { defaultValues: ['', 'none', 'normal'] },
+        'text-decoration-line': { defaultValues: ['', 'none'] },
+        'font-size': { defaultValues: ['', '16px'] },
+    }
 };
 
 function defaultOptions(defaultObject, object) {
@@ -2107,9 +2117,26 @@ export class OdooEditor extends EventTarget {
             // Remove all illegal attributes and classes from the node, then
             // clean its children.
             for (const attribute of [...node.attributes]) {
-                if (!this._isWhitelisted(attribute)) {
+                // we kee some style on span to be able to paste text styled in the editor
+                if (node.nodeName === 'SPAN' && attribute.name === 'style') {
+                    const spanInlineStyles = attribute.value.split(';');
+                    const allowedSpanInlineStyles = spanInlineStyles.filter(rawStyle => {
+                        const [styleName, styleValue] = rawStyle.split(':');
+                        const style = CLIPBOARD_WHITELISTS.spanStyle[styleName.trim()];
+                        return style && !style.defaultValues.includes(styleValue.trim());
+                    });
+                    node.removeAttribute(attribute.name);
+                    if (allowedSpanInlineStyles.length > 0) {
+                        node.setAttribute(attribute.name, allowedSpanInlineStyles.join(';'));
+                    } else {
+                        for (const unwrappedNode of unwrapContents(node)) {
+                            this._cleanForPaste(unwrappedNode);
+                        }
+                    }
+                } else if (!this._isWhitelisted(attribute)) {
                     node.removeAttribute(attribute.name);
                 }
+
             }
             for (const klass of [...node.classList]) {
                 if (!this._isWhitelisted(klass)) {
@@ -2137,9 +2164,13 @@ export class OdooEditor extends EventTarget {
                 okClass instanceof RegExp ? okClass.test(item) : okClass === item,
             );
         } else {
+            const allowedSpanStyles = Object.keys(CLIPBOARD_WHITELISTS.spanStyle).map(s => `span[style*="${s}"]`);
             return (
                 item.nodeType === Node.TEXT_NODE ||
-                (item.matches && item.matches(CLIPBOARD_WHITELISTS.nodes.join(',')))
+                (
+                    item.matches &&
+                    item.matches([...CLIPBOARD_WHITELISTS.nodes, ...allowedSpanStyles].join(','))
+                )
             );
         }
     }
