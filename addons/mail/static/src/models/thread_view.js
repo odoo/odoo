@@ -53,6 +53,15 @@ registerModel({
                 threadViewer: this.threadViewer,
             });
         },
+        onClickRetryLoadMessages() {
+            if (!this.exists()) {
+                return;
+            }
+            if (!this.threadCache) {
+                return;
+            }
+            this.threadCache.update({ hasLoadingFailed: false });
+        },
         /**
          * Starts editing the last message of this thread from the current user.
          */

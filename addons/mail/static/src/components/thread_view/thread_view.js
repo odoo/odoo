@@ -17,23 +17,6 @@ export class ThreadView extends Component {
         return this.messaging && this.messaging.models['ThreadView'].get(this.props.localId);
     }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onClickRetryLoadMessages() {
-        if (!this.threadView) {
-            return;
-        }
-        if (!this.threadView.threadCache) {
-            return;
-        }
-        this.threadView.threadCache.update({ hasLoadingFailed: false });
-    }
-
 }
 
 Object.assign(ThreadView, {
