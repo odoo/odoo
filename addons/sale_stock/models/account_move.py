@@ -125,7 +125,7 @@ class AccountMoveLine(models.Model):
         if so_line:
             is_line_reversing = bool(self.move_id.reversed_entry_id)
             qty_to_invoice = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
-            posted_invoice_lines = so_line.invoice_lines.filtered(lambda l: l.move_id.state == 'posted' and bool(l.move_id.reversed_entry_id) == is_line_reversing)
+            posted_invoice_lines = so_line.invoice_lines.filtered(lambda l: l.parent_state == 'posted' and bool(l.move_id.reversed_entry_id) == is_line_reversing)
             qty_invoiced = sum([x.product_uom_id._compute_quantity(x.quantity, x.product_id.uom_id) for x in posted_invoice_lines])
 
             product = self.product_id.with_company(self.company_id)

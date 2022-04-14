@@ -3386,7 +3386,7 @@ class AccountMoveLine(models.Model):
     move_name = fields.Char(string='Number', related='move_id.name', store=True, index='trigram')
     date = fields.Date(related='move_id.date', store=True, readonly=True, index=True, copy=False, group_operator='min')
     ref = fields.Char(related='move_id.ref', store=True, copy=False, index='trigram', readonly=True)
-    parent_state = fields.Selection(related='move_id.state', store=True, readonly=True)
+    parent_state = fields.Selection(related='move_id.state', store=True, readonly=True, index=True)
     journal_id = fields.Many2one(related='move_id.journal_id', store=True, index=True, copy=False)
     company_id = fields.Many2one(related='move_id.company_id', store=True, readonly=True)
     company_currency_id = fields.Many2one(related='company_id.currency_id', string='Company Currency',
@@ -4287,7 +4287,7 @@ class AccountMoveLine(models.Model):
         return self.tax_ids or self.tax_line_id or self.tax_tag_ids.filtered(lambda x: x.applicability == "taxes")
 
     def _check_tax_lock_date(self):
-        for line in self.filtered(lambda l: l.move_id.state == 'posted'):
+        for line in self.filtered(lambda l: l.parent_state == 'posted'):
             move = line.move_id
             if move.company_id.tax_lock_date and move.date <= move.company_id.tax_lock_date and line._affect_tax_report():
                 raise UserError(_("The operation is refused as it would impact an already issued tax statement. "
@@ -5295,7 +5295,7 @@ class AccountMoveLine(models.Model):
             if not line.account_id.reconcile and line.account_id.internal_type != 'liquidity':
                 raise UserError(_("Account %s does not allow reconciliation. First change the configuration of this account to allow it.")
                                 % line.account_id.display_name)
-            if line.move_id.state != 'posted':
+            if line.parent_state != 'posted':
                 raise UserError(_('You can only reconcile posted entries.'))
             if company is None:
                 company = line.company_id
