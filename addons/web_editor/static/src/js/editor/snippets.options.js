@@ -1480,18 +1480,17 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
 
         await this._colorPaletteRenderPromise;
 
-        const classes = weUtils.computeColorClasses(this.colorPalette.getColorNames());
-        this.colorPreviewEl.classList.remove(...classes);
         this.colorPreviewEl.style.removeProperty('background-color');
         this.colorPreviewEl.style.removeProperty('background-image');
+        const prefix = this.options.dataAttributes.colorPrefix || 'bg';
         if (this._ccValue) {
-            this.colorPreviewEl.classList.add('o_cc', `o_cc${this._ccValue}`);
+            this.colorPreviewEl.style.backgroundColor = `var(--we-cp-o-cc${this._ccValue}-${prefix.replace(/-/, '')})`;
         }
         if (this._value) {
             if (ColorpickerWidget.isCSSColor(this._value)) {
                 this.colorPreviewEl.style.backgroundColor = this._value;
             } else if (!weUtils.isColorGradient(this._value)) {
-                this.colorPreviewEl.classList.add(`bg-${this._value}`);
+                this.colorPreviewEl.style.backgroundColor = `var(--we-cp-${this._value}`;
             } else {
                 this.colorPreviewEl.style.backgroundImage = this._value;
             }
@@ -1535,8 +1534,10 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         if (this.options.dataAttributes.selectedTab) {
             options.selectedTab = this.options.dataAttributes.selectedTab;
         }
-        if (this.getParent().options.wysiwyg) {
-            options.ownerDocument = this.getParent().options.wysiwyg.el.ownerDocument;
+        const wysiwyg = this.getParent().options.wysiwyg;
+        if (wysiwyg) {
+            options.ownerDocument = wysiwyg.el.ownerDocument;
+            options.editable = wysiwyg.$editable[0];
         }
         const oldColorPalette = this.colorPalette;
         this.colorPalette = new ColorPaletteWidget(this, options);
@@ -4028,8 +4029,7 @@ const SnippetOptionWidget = Widget.extend({
                 }
             }
 
-            const reloadMessage = await this._checkIfWidgetsUpdateNeedReload(widgets);
-            requiresReload = !!reloadMessage;
+            requiresReload = !!await this._checkIfWidgetsUpdateNeedReload(widgets);
         }
 
         // Queue action so that we can later skip useless actions.

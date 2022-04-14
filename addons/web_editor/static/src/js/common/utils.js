@@ -249,7 +249,7 @@ function _computeColorClasses(colorNames, prefix = 'bg-') {
  */
 function _getCSSVariableValue(key, htmlStyle) {
     if (htmlStyle === undefined) {
-        htmlStyle = window.getComputedStyle(document.documentElement);
+        htmlStyle = editableWindow.getComputedStyle(editableWindow.document.documentElement);
     }
     // Get trimmed value from the HTML element
     let value = htmlStyle.getPropertyValue(`--${key}`).trim();

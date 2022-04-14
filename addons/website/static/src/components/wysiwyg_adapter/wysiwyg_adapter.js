@@ -331,7 +331,6 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
      async _reloadBundles(event) {
         const bundles = await this.rpc('/website/theme_customize_bundle_reload');
         let $allLinksIframe = $();
-        let $allLinksEditor = $();
         const proms = [];
         const createLinksProms = (bundleURLs, $insertionEl) => {
             let $newLinks = $();
@@ -339,7 +338,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 $newLinks = $newLinks.add('<link/>', {
                     type: 'text/css',
                     rel: 'stylesheet',
-                    href: url + `?${new Date().getTime()}`, // Insures that the css will be reloaded.
+                    href: url + `#t=${new Date().getTime()}`, // Insures that the css will be reloaded.
                 });
             }
             proms.push(new Promise((resolve, reject) => {
@@ -355,11 +354,6 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         _.map(bundles, (bundleURLs, bundleName) => {
             const selector = `link[href*="${bundleName}"]`;
             const $linksIframe = this.websiteService.contentWindow.$(selector);
-            const $linksEditor = $(selector);
-            if ($linksEditor.length) {
-                $allLinksEditor.add($linksEditor);
-                createLinksProms(bundleURLs, $linksEditor.last());
-            }
             if ($linksIframe.length) {
                 $allLinksIframe = $allLinksIframe.add($linksIframe);
                 createLinksProms(bundleURLs, $linksIframe.last());
@@ -367,7 +361,6 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         });
         await Promise.all(proms).then(() => {
             $allLinksIframe.remove();
-            $allLinksEditor.remove();
         });
         if (event.data.onSuccess) {
             return event.data.onSuccess();
@@ -604,6 +597,42 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             },
         });
     }
+    /***
+     * Updates the Color Preview elements to reflect
+     * the colors that are inside the iframe.
+     * See the web_editor.color.combination.preview QWeb template.
+     *
+     * @param event
+     * @param event.data.ccPreviewEls {HTMLElement} The color combination preview element.
+     * @private
+     */
+    _onColorPreviewsUpdate(event) {
+        this.widget.setCSSVariables(this.widget.snippetsMenu.el);
+        const stylesToCopy = [
+            'background-color',
+            'border',
+            'color',
+        ];
+        const copyStyles = (from, to) => {
+            const cloneStyle = this.websiteService.contentWindow.getComputedStyle(from);
+            for (const style of stylesToCopy) {
+                to.style.setProperty(style, cloneStyle.getPropertyValue(style));
+            }
+        };
+
+        for (const ccPreviewEl of event.data.ccPreviewEls) {
+            ccPreviewEl.setAttribute('style', '');
+            Object.values(ccPreviewEl.children).forEach(child => child.setAttribute('style', ''));
+            const iframeClone = ccPreviewEl.cloneNode(true);
+            this.websiteService.pageDocument.body.appendChild(iframeClone);
+            copyStyles(iframeClone, ccPreviewEl);
+            copyStyles(iframeClone.querySelector('h1'), ccPreviewEl.querySelector('h1'));
+            copyStyles(iframeClone.querySelector('.btn-primary'), ccPreviewEl.querySelector('.btn-primary'));
+            copyStyles(iframeClone.querySelector('.btn-secondary'), ccPreviewEl.querySelector('.btn-secondary'));
+            copyStyles(iframeClone.querySelector('p'), ccPreviewEl.querySelector('p'));
+            iframeClone.remove();
+        }
+    }
 }
 WysiwygAdapterComponent.prototype.events = {
     'widgets_start_request': '_onRootEventRequest',
@@ -619,4 +648,5 @@ WysiwygAdapterComponent.prototype.events = {
     'snippet_removed': '_onSnippetRemoved',
     'reload_bundles': '_reloadBundles',
     'menu_dialog': '_onMenuDialogRequest',
-}
+    'update_color_previews': '_onColorPreviewsUpdate',
+};

@@ -9,6 +9,7 @@ const Dialog = require('web.Dialog');
 const customColors = require('web_editor.custom_colors');
 const {ColorPaletteWidget} = require('web_editor.ColorPalette');
 const {ColorpickerWidget} = require('web.Colorpicker');
+const {compatibilityColorNames} = require('web_editor.ColorPalette');
 const concurrency = require('web.concurrency');
 const { device } = require('web.config');
 const { localization } = require('@web/core/l10n/localization');
@@ -342,6 +343,7 @@ const Wysiwyg = Widget.extend({
 
         this._onSelectionChange = this._onSelectionChange.bind(this);
         this.odooEditor.document.addEventListener('selectionchange', this._onSelectionChange);
+        this.setCSSVariables(this.snippetsMenu ? this.snippetsMenu.el : this.toolbar.el);
 
         return _super.apply(this, arguments).then(() => {
             if (this.options.autohideToolbar) {
@@ -1211,6 +1213,28 @@ const Wysiwyg = Widget.extend({
                 restoreSelection();
             }
         });
+    },
+    /**
+     * Sets custom CSS Variables on the snippet menu element.
+     * Used for color previews and color palette.
+     */
+    setCSSVariables(element) {
+        for (let i = 1; i <= 5; i++) {
+            element.style.setProperty(`--we-cp-o-color-${i}`, weUtils.getCSSVariableValue(`o-color-${i}`));
+            element.style.setProperty(`--we-cp-o-cc${i}-bg`, weUtils.getCSSVariableValue(`o-cc${i}-bg`));
+            element.style.setProperty(`--we-cp-o-cc${i}-h1`, weUtils.getCSSVariableValue(`o-cc${i}-h1`));
+            element.style.setProperty(`--we-cp-o-cc${i}-text`, weUtils.getCSSVariableValue(`o-cc${i}-text`));
+            element.style.setProperty(`--we-cp-o-cc${i}-btn-primary`, weUtils.getCSSVariableValue(`o-cc${i}-btn-primary`));
+            element.style.setProperty(`--we-cp-o-cc${i}-btn-primary-border`, weUtils.getCSSVariableValue(`o-cc${i}-btn-primary-border`));
+            element.style.setProperty(`--we-cp-o-cc${i}-btn-secondary`, weUtils.getCSSVariableValue(`o-cc${i}-btn-secondary`));
+            element.style.setProperty(`--we-cp-o-cc${i}-btn-secondary-border`, weUtils.getCSSVariableValue(`o-cc${i}-btn-secondary-border`));
+        }
+        for (let i = 100; i <= 900; i += 100) {
+            element.style.setProperty(`--we-cp-${i}`, weUtils.getCSSVariableValue(`${i}`));
+        }
+        for (const name of compatibilityColorNames) {
+            element.style.setProperty(`--we-cp-${name}`, weUtils.getCSSVariableValue(name));
+        }
     },
     /**
      * Detached function to allow overriding.
