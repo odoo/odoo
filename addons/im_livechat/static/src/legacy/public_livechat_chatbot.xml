@@ -10,7 +10,7 @@
     <!-- Extend the base livechat window to include a div allowing to restart the script at the end -->
     <t t-extend="im_livechat.legacy.mail.AbstractThreadWindow">
         <t t-jquery='div.o_chat_mini_composer' t-operation="after">
-            <div class="d-none o_livechat_chatbot_end bg-200 font-italic text-center border">
+            <div class="o_livechat_chatbot_end bg-200 font-italic text-center border" style="display: none;">
                 <span>Conversation ended...</span>
                 <a href="#" class="o_livechat_chatbot_restart">Restart</a>
             </div>
