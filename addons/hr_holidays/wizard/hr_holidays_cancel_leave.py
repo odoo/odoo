@@ -15,16 +15,7 @@ class HrHolidaysCancelLeave(models.TransientModel):
     def action_cancel_leave(self):
         self.ensure_one()
 
-        if not self.leave_id.can_cancel:
-            raise ValidationError(_('This time off cannot be canceled.'))
-
-        self.leave_id.message_post(
-            body=_('The time off has been canceled: %s', self.reason)
-        )
-
-        leave_sudo = self.leave_id.sudo()
-        leave_sudo.with_context(from_cancel_wizard=True).active = False
-        leave_sudo._remove_resource_leave()
+        self.leave_id._action_user_cancel(self.reason)
 
         return {
             'type': 'ir.actions.client',

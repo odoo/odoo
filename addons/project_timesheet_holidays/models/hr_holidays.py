@@ -113,3 +113,10 @@ class Holidays(models.Model):
         timesheets.write({'holiday_id': False})
         timesheets.unlink()
         return result
+
+    def _action_user_cancel(self, reason):
+        res = super()._action_user_cancel(reason)
+        timesheets = self.sudo().timesheet_ids
+        timesheets.write({'holiday_id': False})
+        timesheets.unlink()
+        return res
