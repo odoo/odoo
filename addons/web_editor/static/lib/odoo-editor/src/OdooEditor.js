@@ -1287,7 +1287,9 @@ export class OdooEditor extends EventTarget {
         let start = range.startContainer;
         let end = range.endContainer;
         // Let the DOM split and delete the range.
-        const doJoin = closestBlock(start) !== closestBlock(range.commonAncestorContainer);
+        const doJoin =
+            closestBlock(start) !== closestBlock(range.commonAncestorContainer) ||
+            closestBlock(end) !== closestBlock(range.commonAncestorContainer) ;
         let next = nextLeaf(end, this.editable);
         const splitEndTd = closestElement(end, 'td') && end.nextSibling;
         const contents = range.extractContents();
