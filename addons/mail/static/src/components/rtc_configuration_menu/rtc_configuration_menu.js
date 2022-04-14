@@ -66,13 +66,6 @@ export class RtcConfigurationMenu extends Component {
         this.rtcConfigurationMenu.onChangeThreshold(ev.target.value);
     }
 
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickRegisterKeyButton() {
-        this.rtcConfigurationMenu.onClickRegisterKeyButton();
-    }
 }
 
 Object.assign(RtcConfigurationMenu, {

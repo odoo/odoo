@@ -32,7 +32,7 @@
                             <t t-if="messaging.userSetting.pushToTalkKey">
                                 <span class="o_RtcConfigurationMenu_optionPushToTalkGroupKey" t-att-class="{ 'o-isRegistering': rtcConfigurationMenu.isRegisteringKey }" t-esc="messaging.userSetting.pushToTalkKeyToString()"/>
                             </t>
-                            <button class="o_RtcConfigurationMenu_button" t-on-click="_onClickRegisterKeyButton">
+                            <button class="o_RtcConfigurationMenu_button" t-on-click="rtcConfigurationMenu.onClickRegisterKeyButton">
                                 <t t-if="rtcConfigurationMenu.isRegisteringKey">
                                     <i title="Cancel" aria-label="Cancel" class="fa fa-2x fa-times-circle"/>
                                 </t>
