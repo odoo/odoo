@@ -60,6 +60,7 @@ class MrpProduction(models.Model):
         compute='_compute_product_id', store=True, copy=True,
         readonly=True, required=True, check_company=True,
         states={'draft': [('readonly', False)]})
+    product_variant_attributes = fields.Many2many('product.template.attribute.value', related='product_id.product_template_attribute_value_ids')
     product_tracking = fields.Selection(related='product_id.tracking')
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id')
     product_qty = fields.Float(
