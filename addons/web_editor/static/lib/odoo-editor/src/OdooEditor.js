@@ -2928,6 +2928,7 @@ export class OdooEditor extends EventTarget {
      */
     _onPaste(ev) {
         ev.preventDefault();
+        const sel = this.document.getSelection();
         const files = getImageFiles(ev.clipboardData);
         const clipboardHtml = ev.clipboardData.getData('text/html');
         if (files.length) {
@@ -2938,15 +2939,18 @@ export class OdooEditor extends EventTarget {
             const text = ev.clipboardData.getData('text/plain');
             const splitAroundUrl = text.split(URL_REGEX);
             const linkAttributes = this.options.defaultLinkAttributes || {};
+            const selectionIsInsideALink = !!closestElement(sel.anchorNode, 'a');
 
             for (let i = 0; i < splitAroundUrl.length; i++) {
+                const url = /^https?:\/\//gi.test(splitAroundUrl[i])
+                    ? splitAroundUrl[i]
+                    : 'https://' + splitAroundUrl[i];
+                const youtubeUrl = YOUTUBE_URL_GET_VIDEO_ID.exec(url);
+                const urlFileExtention = url.split('.').pop();
+                const isImageUrl = ['jpg', 'jpeg', 'png', 'gif'].includes(urlFileExtention.toLowerCase());
                 // Even indexes will always be plain text, and odd indexes will always be URL.
-                if (i % 2) {
-                    const url = /^https?:\/\//gi.test(splitAroundUrl[i])
-                        ? splitAroundUrl[i]
-                        : 'https://' + splitAroundUrl[i];
-                    const youtubeUrl = YOUTUBE_URL_GET_VIDEO_ID.exec(url);
-                    const urlFileExtention = url.split('.').pop();
+                // only allow images emebed inside an existing link. No other url or video embed.
+                if (i % 2 && (isImageUrl || !selectionIsInsideALink)) {
                     const baseEmbedCommand = [
                         {
                             groupName: 'paste',
@@ -2962,6 +2966,9 @@ export class OdooEditor extends EventTarget {
                                 }
                                 link.innerText = splitAroundUrl[i];
                                 const sel = this.document.getSelection();
+                                if (!sel.isCollapsed) {
+                                    this.deleteRange(sel);
+                                }
                                 if (sel.rangeCount) {
                                     sel.getRangeAt(0).insertNode(link);
                                     sel.collapseToEnd();
@@ -2987,7 +2994,7 @@ export class OdooEditor extends EventTarget {
                         this.historyStep(true);
                     };
 
-                    if (['jpg', 'jpeg', 'png', 'gif'].includes(urlFileExtention)) {
+                    if (isImageUrl) {
                         const stepIndexBeforeInsert = this._historySteps.length - 1;
                         this.execCommand('insertText', splitAroundUrl[i]);
                         this.commandBar.open({
@@ -3003,6 +3010,9 @@ export class OdooEditor extends EventTarget {
                                             const img = document.createElement('IMG');
                                             img.setAttribute('src', url);
                                             const sel = this.document.getSelection();
+                                            if (!sel.isCollapsed) {
+                                                this.deleteRange(sel);
+                                            }
                                             if (sel.rangeCount) {
                                                 sel.getRangeAt(0).insertNode(img);
                                                 sel.collapseToEnd();
@@ -3047,6 +3057,9 @@ export class OdooEditor extends EventTarget {
                                         execCommandAtStepIndex(stepIndexBeforeInsert, () => {
 
                                             const sel = this.document.getSelection();
+                                            if (!sel.isCollapsed) {
+                                                this.deleteRange(sel);
+                                            }
                                             if (sel.rangeCount) {
                                                 sel.getRangeAt(0).insertNode(videoElement);
                                                 sel.collapseToEnd();
@@ -3064,6 +3077,9 @@ export class OdooEditor extends EventTarget {
                         }
                         link.innerText = splitAroundUrl[i];
                         const sel = this.document.getSelection();
+                        if (!sel.isCollapsed) {
+                            this.deleteRange(sel);
+                        }
                         if (sel.rangeCount) {
                             sel.getRangeAt(0).insertNode(link);
                             sel.collapseToEnd();
