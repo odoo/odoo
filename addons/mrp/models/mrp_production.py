@@ -234,6 +234,7 @@ class MrpProduction(models.Model):
         ('available', 'Available'),
         ('expected', 'Expected'),
         ('late', 'Late')], compute='_compute_components_availability')
+    production_capacity = fields.Float(compute='_compute_production_capacity', help="Quantity that can be produced with the current stock of components")
     show_lot_ids = fields.Boolean('Display the serial number shortcut on the moves', compute='_compute_show_lot_ids')
     forecasted_issue = fields.Boolean(compute='_compute_forecasted_issue')
     show_serial_mass_produce = fields.Boolean('Display the serial mass produce wizard action', compute='_compute_show_serial_mass_produce')
@@ -355,6 +356,15 @@ class MrpProduction(models.Model):
                 continue
             if production.bom_id and production._origin.bom_id != production.bom_id:
                 production.product_qty = production.bom_id.product_qty
+
+    @api.depends('move_raw_ids')
+    def _compute_production_capacity(self):
+        for production in self:
+            production.production_capacity = production.product_qty
+            moves = production.move_raw_ids.filtered(lambda move: move.unit_factor and move.product_id.type != 'consu')
+            if moves:
+                production_capacity = min(moves.mapped(lambda move: move.product_id.uom_id._compute_quantity(move.product_id.qty_available, move.product_uom) / move.unit_factor))
+                production.production_capacity = min(production.product_qty, float_round(production_capacity, precision_rounding=production.product_id.uom_id.rounding))
 
     @api.depends('move_finished_ids.date_deadline')
     def _compute_date_deadline(self):
