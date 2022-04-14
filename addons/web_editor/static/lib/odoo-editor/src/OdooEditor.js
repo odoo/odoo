@@ -81,7 +81,7 @@ const CLIPBOARD_BLACKLISTS = {
     unwrap: ['.Apple-interchange-newline', 'DIV'], // These elements' children will be unwrapped.
     remove: ['META', 'STYLE', 'SCRIPT'], // These elements will be removed along with their children.
 };
-const CLIPBOARD_WHITELISTS = {
+export const CLIPBOARD_WHITELISTS = {
     nodes: [
         // Style
         'P',

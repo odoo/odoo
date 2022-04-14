@@ -62,7 +62,7 @@ describe('insetHTML', () => {
                 stepFunction: async editor => {
                     await editor.execCommand('insertHTML', '<p>b</p><p>c</p><p>d</p>');
                 },
-                contentAfter: 'a<p>b</p><p>c</p><p>d</p>[]e<br>',
+                contentAfter: 'ab<p>c</p>d[]e<br>',
             });
         });
     });

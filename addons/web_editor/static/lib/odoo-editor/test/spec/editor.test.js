@@ -86,6 +86,34 @@ describe('Editor', () => {
                         contentAfter: '<p>[]abc</p>',
                     });
                 });
+                it('should merge P node correctly ', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div>a<p>b[]</p><p>c</p>d</div>',
+                        stepFunction: deleteForward,
+                        contentAfter: '<div>a<p>b[]c</p>d</div>',
+                    });
+                });
+                it('should merge node correctly', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div>a<span>b[]</span><p>c</p>d</div>',
+                        stepFunction: deleteForward,
+                        contentAfter: '<div>a<span>b[]</span>c<br>d</div>',
+                    });
+                });
+                it('should merge SPAN node correctly ', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div>a<span>bc[]</span><span>de</span>f</div>',
+                        stepFunction: deleteForward,
+                        contentAfter: '<div>a<span>bc[]e</span>f</div>',
+                    });
+                });
+                it('should merge diferent element correctly', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div>a<span>b[]</span><p>c</p>d</div>',
+                        stepFunction: deleteForward,
+                        contentAfter: '<div>a<span>b[]</span>c<br>d</div>',
+                    });
+                });
                 it('should ignore ZWS', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: '<p>ab[]\u200Bc</p>',
@@ -829,6 +857,27 @@ X[]
                     contentAfter: '<p>ab[]ef</p>',
                 });
             });
+            it('should merge node correctly', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<div>a<span>b[c</span><p>d]e</p>f</div>',
+                    stepFunction: deleteForward,
+                    contentAfter: '<div>a<span>b[]</span>e<br>f</div>',
+                });
+            });
+            it('should delete part of the text across two paragraphs', async () => {
+                // Forward selection
+                await testEditor(BasicEditor, {
+                    contentBefore: '<div>a<p>b[c</p><p>d]e</p>f</div>',
+                    stepFunction: deleteForward,
+                    contentAfter: '<div>a<p>b[]e</p>f</div>',
+                });
+                // Backward selection
+                await testEditor(BasicEditor, {
+                    contentBefore: '<div>a<p>b]c</p><p>d[e</p>f</div>',
+                    stepFunction: deleteForward,
+                    contentAfter: '<div>a<p>b[]e</p>f</div>',
+                });
+            });
             it('should delete empty nodes ', async () => {
                 // Forward selection
                 await testEditor(BasicEditor, {
@@ -1087,6 +1136,13 @@ X[]
                         contentBefore: '<p><br></p><p>[]abc</p>',
                         stepFunction: deleteBackward,
                         contentAfter: '<p>[]abc</p>',
+                    });
+                });
+                it('should merge node correctly', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div>a<span>b</span><p>[]c</p>d</div>',
+                        stepFunction: deleteBackward,
+                        contentAfter: '<div>a<span>b[]</span>c<br>d</div>',
                     });
                 });
                 it('should ignore ZWS', async () => {
@@ -1750,7 +1806,7 @@ X[]
                     await testEditor(BasicEditor, {
                         contentBefore: 'ab<p>[]cd</p>ef',
                         stepFunction: deleteBackward,
-                        contentAfter: 'ab[]cdef', // FIXME for me this is wrong, I would expect ab[]cd<p>ef</p> or something like that ?
+                        contentAfter: 'ab[]cd<br>ef',
                     });
                 });
             });
@@ -2042,6 +2098,23 @@ X[]
                     contentAfter: '<div><p>ab <span class="style">x[]</span> f</p></div>',
                 });
             });
+            it('should merge node correctly (1)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<div>a<span>b[c</span><p>d]e</p>f<br>g</div>',
+                    stepFunction: deleteBackward,
+                    // FIXME ?? : Maybe this should bing the content inside the <p>
+                    // Instead of removing the <p>,
+                    // ex : <div><p>a<span>b[]</span>e</p>f<br>g</div>
+                    contentAfter: '<div>a<span>b[]</span>e<br>f<br>g</div>',
+                });
+            });
+            it('should merge node correctly (2)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<div>a<p>b[c</p><span>d]e</span>f<p>xxx</p></div>',
+                    stepFunction: deleteBackward,
+                    contentAfter: '<div>a<p>b[]<span>e</span>f</p><p>xxx</p></div>',
+                });
+            });
             it('should delete part of the text within a paragraph', async () => {
                 // Forward selection
                 await testEditor(BasicEditor, {
@@ -2068,6 +2141,20 @@ X[]
                     contentBefore: '<p>ab]cd</p><p>ef[gh</p>',
                     stepFunction: deleteBackward,
                     contentAfter: '<p>ab[]gh</p>',
+                });
+            });
+            it('should delete part of the text across two paragraphs', async () => {
+                // Forward selection
+                await testEditor(BasicEditor, {
+                    contentBefore: '<div>a<p>b[c</p><p>d]e</p>f</div>',
+                    stepFunction: deleteBackward,
+                    contentAfter: '<div>a<p>b[]e</p>f</div>',
+                });
+                // Backward selection
+                await testEditor(BasicEditor, {
+                    contentBefore: '<div>a<p>b]c</p><p>d[e</p>f</div>',
+                    stepFunction: deleteBackward,
+                    contentAfter: '<div>a<p>b[]e</p>f</div>',
                 });
             });
             it('should delete all the text in a paragraph', async () => {
