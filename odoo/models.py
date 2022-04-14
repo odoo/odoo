@@ -5063,7 +5063,9 @@ Fields:
         non-superuser mode, unless `user` is the superuser (by convention, the
         superuser is always in superuser mode.)
         """
-        if not user:
+        # if not user:
+        #     return self
+        if not user or int(user) == self._uid:
             return self
         return self.with_env(self.env(user=user, su=False))
 

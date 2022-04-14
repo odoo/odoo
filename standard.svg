@@ -1,0 +1,419 @@
+<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" width="1200" height="566" onload="init(evt)" viewBox="0 0 1200 566" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><!--Flame graph stack visualization. See https://github.com/brendangregg/FlameGraph for latest version, and http://www.brendangregg.com/flamegraphs.html for examples.--><!--NOTES: --><defs><linearGradient id="background" y1="0" y2="1" x1="0" x2="0"><stop stop-color="#eeeeee" offset="5%"/><stop stop-color="#eeeeb0" offset="95%"/></linearGradient></defs><style type="text/css">
+text { font-family:"Verdana"; font-size:12px; fill:rgb(0,0,0); }
+#title { text-anchor:middle; font-size:17px; }
+#search { opacity:0.1; cursor:pointer; }
+#search:hover, #search.show { opacity:1; }
+#subtitle { text-anchor:middle; font-color:rgb(160,160,160); }
+#unzoom { cursor:pointer; }
+#frames > *:hover { stroke:black; stroke-width:0.5; cursor:pointer; }
+.hide { display:none; }
+.parent { opacity:0.5; }
+</style><script type="text/ecmascript"><![CDATA[var nametype = 'Function:';
+var fontsize = 12;
+var fontwidth = 0.59;
+var xpad = 10;
+var inverted = true;
+var searchcolor = 'rgb(230,0,230)';
+var fluiddrawing = true;
+var truncate_text_right = false;]]><![CDATA["use strict";
+var details, searchbtn, unzoombtn, matchedtxt, svg, searching, frames;
+function init(evt) {
+    details = document.getElementById("details").firstChild;
+    searchbtn = document.getElementById("search");
+    unzoombtn = document.getElementById("unzoom");
+    matchedtxt = document.getElementById("matched");
+    svg = document.getElementsByTagName("svg")[0];
+    frames = document.getElementById("frames");
+    searching = 0;
+
+    // Use GET parameters to restore a flamegraph's state.
+    var restore_state = function() {
+        var params = get_params();
+        if (params.x && params.y)
+            zoom(find_group(document.querySelector('[x="' + params.x + '"][y="' + params.y + '"]')));
+        if (params.s)
+            search(params.s);
+    };
+
+    if (fluiddrawing) {
+        // Make width dynamic so the SVG fits its parent's width.
+        svg.removeAttribute("width");
+        // Edge requires us to have a viewBox that gets updated with size changes.
+        var isEdge = /Edge\/\d./i.test(navigator.userAgent);
+        if (!isEdge) {
+          svg.removeAttribute("viewBox");
+        }
+        var update_for_width_change = function() {
+            if (isEdge) {
+                svg.attributes.viewBox.value = "0 0 " + svg.width.baseVal.value + " " + svg.height.baseVal.value;
+            }
+
+            // Keep consistent padding on left and right of frames container.
+            frames.attributes.width.value = svg.width.baseVal.value - xpad * 2;
+
+            // Text truncation needs to be adjusted for the current width.
+            var el = frames.children;
+            for(var i = 0; i < el.length; i++) {
+                update_text(el[i]);
+            }
+
+            // Keep search elements at a fixed distance from right edge.
+            var svgWidth = svg.width.baseVal.value;
+            searchbtn.attributes.x.value = svgWidth - xpad - 100;
+            matchedtxt.attributes.x.value = svgWidth - xpad - 100;
+        };
+        window.addEventListener('resize', function() {
+            update_for_width_change();
+        });
+        // This needs to be done asynchronously for Safari to work.
+        setTimeout(function() {
+            unzoom();
+            update_for_width_change();
+            restore_state();
+        }, 0);
+    } else {
+        restore_state();
+    }
+}
+// event listeners
+window.addEventListener("click", function(e) {
+    var target = find_group(e.target);
+    if (target) {
+        if (target.nodeName == "a") {
+            if (e.ctrlKey === false) return;
+            e.preventDefault();
+        }
+        if (target.classList.contains("parent")) unzoom();
+        zoom(target);
+
+        // set parameters for zoom state
+        var el = target.querySelector("rect");
+        if (el && el.attributes && el.attributes.y && el.attributes._orig_x) {
+            var params = get_params()
+            params.x = el.attributes._orig_x.value;
+            params.y = el.attributes.y.value;
+            history.replaceState(null, null, parse_params(params));
+        }
+    }
+    else if (e.target.id == "unzoom") {
+        unzoom();
+
+        // remove zoom state
+        var params = get_params();
+        if (params.x) delete params.x;
+        if (params.y) delete params.y;
+        history.replaceState(null, null, parse_params(params));
+    }
+    else if (e.target.id == "search") search_prompt();
+}, false)
+// mouse-over for info
+// show
+window.addEventListener("mouseover", function(e) {
+    var target = find_group(e.target);
+    if (target) details.nodeValue = nametype + " " + g_to_text(target);
+}, false)
+// clear
+window.addEventListener("mouseout", function(e) {
+    var target = find_group(e.target);
+    if (target) details.nodeValue = ' ';
+}, false)
+// ctrl-F for search
+window.addEventListener("keydown",function (e) {
+    if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) {
+        e.preventDefault();
+        search_prompt();
+    }
+}, false)
+// functions
+function get_params() {
+    var params = {};
+    var paramsarr = window.location.search.substr(1).split('&');
+    for (var i = 0; i < paramsarr.length; ++i) {
+        var tmp = paramsarr[i].split("=");
+        if (!tmp[0] || !tmp[1]) continue;
+        params[tmp[0]]  = decodeURIComponent(tmp[1]);
+    }
+    return params;
+}
+function parse_params(params) {
+    var uri = "?";
+    for (var key in params) {
+        uri += key + '=' + encodeURIComponent(params[key]) + '&';
+    }
+    if (uri.slice(-1) == "&")
+        uri = uri.substring(0, uri.length - 1);
+    if (uri == '?')
+        uri = window.location.href.split('?')[0];
+    return uri;
+}
+function find_child(node, selector) {
+    var children = node.querySelectorAll(selector);
+    if (children.length) return children[0];
+    return;
+}
+function find_group(node) {
+    var parent = node.parentElement;
+    if (!parent) return;
+    if (parent.id == "frames") return node;
+    return find_group(parent);
+}
+function orig_save(e, attr, val) {
+    if (e.attributes["_orig_" + attr] != undefined) return;
+    if (e.attributes[attr] == undefined) return;
+    if (val == undefined) val = e.attributes[attr].value;
+    e.setAttribute("_orig_" + attr, val);
+}
+function orig_load(e, attr) {
+    if (e.attributes["_orig_"+attr] == undefined) return;
+    e.attributes[attr].value = e.attributes["_orig_" + attr].value;
+    e.removeAttribute("_orig_" + attr);
+}
+function g_to_text(e) {
+    var text = find_child(e, "title").firstChild.nodeValue;
+    return (text)
+}
+function g_to_func(e) {
+    var func = g_to_text(e);
+    // if there's any manipulation we want to do to the function
+    // name before it's searched, do it here before returning.
+    return (func);
+}
+function update_text(e) {
+    var r = find_child(e, "rect");
+    var t = find_child(e, "text");
+    var w = parseFloat(r.attributes.width.value) * frames.attributes.width.value / 100 - 3;
+    var txt = find_child(e, "title").textContent.replace(/\([^(]*\)$/,"");
+    t.attributes.x.value = format_percent((parseFloat(r.attributes.x.value) + (100 * 3 / frames.attributes.width.value)));
+    // Smaller than this size won't fit anything
+    if (w < 2 * fontsize * fontwidth) {
+        t.textContent = "";
+        return;
+    }
+    t.textContent = txt;
+    // Fit in full text width
+    if (/^ *\$/.test(txt) || t.getComputedTextLength() < w)
+        return;
+    if (truncate_text_right) {
+        // Truncate the right side of the text.
+        for (var x = txt.length - 2; x > 0; x--) {
+            if (t.getSubStringLength(0, x + 2) <= w) {
+                t.textContent = txt.substring(0, x) + "..";
+                return;
+            }
+        }
+    } else {
+        // Truncate the left side of the text.
+        for (var x = 2; x < txt.length; x++) {
+            if (t.getSubStringLength(x - 2, txt.length) <= w) {
+                t.textContent = ".." + txt.substring(x, txt.length);
+                return;
+            }
+        }
+    }
+    t.textContent = "";
+}
+// zoom
+function zoom_reset(e) {
+    if (e.attributes != undefined) {
+        orig_load(e, "x");
+        orig_load(e, "width");
+    }
+    if (e.childNodes == undefined) return;
+    for(var i = 0, c = e.childNodes; i < c.length; i++) {
+        zoom_reset(c[i]);
+    }
+}
+function zoom_child(e, x, ratio) {
+    if (e.attributes != undefined) {
+        if (e.attributes.x != undefined) {
+            orig_save(e, "x");
+            e.attributes.x.value = format_percent((parseFloat(e.attributes.x.value) - x) * ratio);
+            if (e.tagName == "text") {
+                e.attributes.x.value = format_percent(parseFloat(find_child(e.parentNode, "rect[x]").attributes.x.value) + (100 * 3 / frames.attributes.width.value));
+            }
+        }
+        if (e.attributes.width != undefined) {
+            orig_save(e, "width");
+            e.attributes.width.value = format_percent(parseFloat(e.attributes.width.value) * ratio);
+        }
+    }
+    if (e.childNodes == undefined) return;
+    for(var i = 0, c = e.childNodes; i < c.length; i++) {
+        zoom_child(c[i], x, ratio);
+    }
+}
+function zoom_parent(e) {
+    if (e.attributes) {
+        if (e.attributes.x != undefined) {
+            orig_save(e, "x");
+            e.attributes.x.value = "0.0%";
+        }
+        if (e.attributes.width != undefined) {
+            orig_save(e, "width");
+            e.attributes.width.value = "100.0%";
+        }
+    }
+    if (e.childNodes == undefined) return;
+    for(var i = 0, c = e.childNodes; i < c.length; i++) {
+        zoom_parent(c[i]);
+    }
+}
+function zoom(node) {
+    var attr = find_child(node, "rect").attributes;
+    var width = parseFloat(attr.width.value);
+    var xmin = parseFloat(attr.x.value);
+    var xmax = xmin + width;
+    var ymin = parseFloat(attr.y.value);
+    var ratio = 100 / width;
+    // XXX: Workaround for JavaScript float issues (fix me)
+    var fudge = 0.001;
+    unzoombtn.classList.remove("hide");
+    var el = frames.children;
+    for (var i = 0; i < el.length; i++) {
+        var e = el[i];
+        var a = find_child(e, "rect").attributes;
+        var ex = parseFloat(a.x.value);
+        var ew = parseFloat(a.width.value);
+        // Is it an ancestor
+        if (!inverted) {
+            var upstack = parseFloat(a.y.value) > ymin;
+        } else {
+            var upstack = parseFloat(a.y.value) < ymin;
+        }
+        if (upstack) {
+            // Direct ancestor
+            if (ex <= xmin && (ex+ew+fudge) >= xmax) {
+                e.classList.add("parent");
+                zoom_parent(e);
+                update_text(e);
+            }
+            // not in current path
+            else
+                e.classList.add("hide");
+        }
+        // Children maybe
+        else {
+            // no common path
+            if (ex < xmin || ex + fudge >= xmax) {
+                e.classList.add("hide");
+            }
+            else {
+                zoom_child(e, xmin, ratio);
+                update_text(e);
+            }
+        }
+    }
+}
+function unzoom() {
+    unzoombtn.classList.add("hide");
+    var el = frames.children;
+    for(var i = 0; i < el.length; i++) {
+        el[i].classList.remove("parent");
+        el[i].classList.remove("hide");
+        zoom_reset(el[i]);
+        update_text(el[i]);
+    }
+}
+// search
+function reset_search() {
+    var el = document.querySelectorAll("#frames rect");
+    for (var i = 0; i < el.length; i++) {
+        orig_load(el[i], "fill")
+    }
+    var params = get_params();
+    delete params.s;
+    history.replaceState(null, null, parse_params(params));
+}
+function search_prompt() {
+    if (!searching) {
+        var term = prompt("Enter a search term (regexp " +
+            "allowed, eg: ^ext4_)", "");
+        if (term != null) {
+            search(term)
+        }
+    } else {
+        reset_search();
+        searching = 0;
+        searchbtn.classList.remove("show");
+        searchbtn.firstChild.nodeValue = "Search"
+        matchedtxt.classList.add("hide");
+        matchedtxt.firstChild.nodeValue = ""
+    }
+}
+function search(term) {
+    var re = new RegExp(term);
+    var el = frames.children;
+    var matches = new Object();
+    var maxwidth = 0;
+    for (var i = 0; i < el.length; i++) {
+        var e = el[i];
+        var func = g_to_func(e);
+        var rect = find_child(e, "rect");
+        if (func == null || rect == null)
+            continue;
+        // Save max width. Only works as we have a root frame
+        var w = parseFloat(rect.attributes.width.value);
+        if (w > maxwidth)
+            maxwidth = w;
+        if (func.match(re)) {
+            // highlight
+            var x = parseFloat(rect.attributes.x.value);
+            orig_save(rect, "fill");
+            rect.attributes.fill.value = searchcolor;
+            // remember matches
+            if (matches[x] == undefined) {
+                matches[x] = w;
+            } else {
+                if (w > matches[x]) {
+                    // overwrite with parent
+                    matches[x] = w;
+                }
+            }
+            searching = 1;
+        }
+    }
+    if (!searching)
+        return;
+    var params = get_params();
+    params.s = term;
+    history.replaceState(null, null, parse_params(params));
+
+    searchbtn.classList.add("show");
+    searchbtn.firstChild.nodeValue = "Reset Search";
+    // calculate percent matched, excluding vertical overlap
+    var count = 0;
+    var lastx = -1;
+    var lastw = 0;
+    var keys = Array();
+    for (k in matches) {
+        if (matches.hasOwnProperty(k))
+            keys.push(k);
+    }
+    // sort the matched frames by their x location
+    // ascending, then width descending
+    keys.sort(function(a, b){
+        return a - b;
+    });
+    // Step through frames saving only the biggest bottom-up frames
+    // thanks to the sort order. This relies on the tree property
+    // where children are always smaller than their parents.
+    var fudge = 0.0001;    // JavaScript floating point
+    for (var k in keys) {
+        var x = parseFloat(keys[k]);
+        var w = matches[keys[k]];
+        if (x >= lastx + lastw - fudge) {
+            count += w;
+            lastx = x;
+            lastw = w;
+        }
+    }
+    // display matched percent
+    matchedtxt.classList.remove("hide");
+    var pct = 100 * count / maxwidth;
+    if (pct != 100) pct = pct.toFixed(1);
+    matchedtxt.firstChild.nodeValue = "Matched: " + pct + "%";
+}
+function format_percent(n) {
+    return n.toFixed(4) + "%";
+}
+]]></script><rect x="0" y="0" width="100%" height="566" fill="url(#background)"/><text id="title" x="50.0000%" y="24.00">py-spy</text><text id="details" x="10" y="549.00"> </text><text id="unzoom" class="hide" x="10" y="24.00">Reset Zoom</text><text id="search" x="1090" y="24.00">Search</text><text id="matched" x="1090" y="549.00"> </text><svg id="frames" x="10" width="1180"><g><title>__get__ (odoo/fields.py:1062) (322 samples, 4.10%)</title><rect x="4.0209%" y="436" width="4.0972%" height="15" fill="rgb(227,0,7)"/><text x="4.2709%" y="446.50">__ge..</text></g><g><title>convert_to_record (odoo/fields.py:2672) (267 samples, 3.40%)</title><rect x="4.7207%" y="452" width="3.3974%" height="15" fill="rgb(217,0,24)"/><text x="4.9707%" y="462.50">con..</text></g><g><title>__get__ (odoo/fields.py:2485) (588 samples, 7.48%)</title><rect x="3.5373%" y="420" width="7.4819%" height="15" fill="rgb(221,193,54)"/><text x="3.7873%" y="430.50">__get__ (o..</text></g><g><title>__get__ (odoo/fields.py:972) (90 samples, 1.15%)</title><rect x="9.8740%" y="436" width="1.1452%" height="15" fill="rgb(248,212,6)"/><text x="10.1240%" y="446.50"></text></g><g><title>_get_aml_line (account_reports/models/account_general_ledger.py:759) (730 samples, 9.29%)</title><rect x="1.9086%" y="404" width="9.2887%" height="15" fill="rgb(208,68,35)"/><text x="2.1586%" y="414.50">_get_aml_line..</text></g><g><title>get_lang (odoo/tools/misc.py:1244) (198 samples, 2.52%)</title><rect x="11.9354%" y="436" width="2.5194%" height="15" fill="rgb(232,128,0)"/><text x="12.1854%" y="446.50">ge..</text></g><g><title>get_installed (&lt;decorator-gen-93&gt;:2) (125 samples, 1.59%)</title><rect x="12.8642%" y="452" width="1.5905%" height="15" fill="rgb(207,160,47)"/><text x="13.1142%" y="462.50"></text></g><g><title>format_date (odoo/tools/misc.py:1320) (447 samples, 5.69%)</title><rect x="11.8208%" y="420" width="5.6877%" height="15" fill="rgb(228,23,34)"/><text x="12.0708%" y="430.50">format_..</text></g><g><title>get_lang (odoo/tools/misc.py:1252) (221 samples, 2.81%)</title><rect x="14.6965%" y="436" width="2.8121%" height="15" fill="rgb(218,30,26)"/><text x="14.9465%" y="446.50">ge..</text></g><g><title>_lang_get (odoo/addons/base/models/res_lang.py:210) (147 samples, 1.87%)</title><rect x="15.6381%" y="452" width="1.8705%" height="15" fill="rgb(220,122,19)"/><text x="15.8881%" y="462.50">_..</text></g><g><title>parse (babel/core.py:268) (82 samples, 1.04%)</title><rect x="19.0228%" y="452" width="1.0434%" height="15" fill="rgb(250,228,42)"/><text x="19.2728%" y="462.50"></text></g><g><title>exists (genericpath.py:19) (115 samples, 1.46%)</title><rect x="22.5856%" y="516" width="1.4633%" height="15" fill="rgb(240,193,28)"/><text x="22.8356%" y="526.50"></text></g><g><title>__init__ (babel/core.py:167) (223 samples, 2.84%)</title><rect x="21.9494%" y="484" width="2.8375%" height="15" fill="rgb(216,20,37)"/><text x="22.1994%" y="494.50">__..</text></g><g><title>exists (babel/localedata.py:53) (207 samples, 2.63%)</title><rect x="22.1529%" y="500" width="2.6339%" height="15" fill="rgb(206,188,39)"/><text x="22.4029%" y="510.50">ex..</text></g><g><title>format_date (odoo/tools/misc.py:1321) (574 samples, 7.30%)</title><rect x="17.5086%" y="420" width="7.3037%" height="15" fill="rgb(217,207,13)"/><text x="17.7586%" y="430.50">format_dat..</text></g><g><title>babel_locale_parse (odoo/tools/misc.py:1256) (491 samples, 6.25%)</title><rect x="18.5647%" y="436" width="6.2476%" height="15" fill="rgb(231,73,38)"/><text x="18.8147%" y="446.50">babel_lo..</text></g><g><title>parse (babel/core.py:288) (310 samples, 3.94%)</title><rect x="20.8678%" y="452" width="3.9445%" height="15" fill="rgb(225,20,46)"/><text x="21.1178%" y="462.50">pars..</text></g><g><title>_try_load (babel/core.py:273) (304 samples, 3.87%)</title><rect x="20.9441%" y="468" width="3.8682%" height="15" fill="rgb(210,31,41)"/><text x="21.1941%" y="478.50">_try..</text></g><g><title>format_date (odoo/tools/misc.py:1323) (146 samples, 1.86%)</title><rect x="24.8250%" y="420" width="1.8577%" height="15" fill="rgb(221,200,47)"/><text x="25.0750%" y="430.50">f..</text></g><g><title>_get_aml_line (account_reports/models/account_general_ledger.py:765) (1,441 samples, 18.34%)</title><rect x="11.2101%" y="404" width="18.3357%" height="15" fill="rgb(226,26,5)"/><text x="11.4601%" y="414.50">_get_aml_line (account_report..</text></g><g><title>format_date (odoo/tools/misc.py:1325) (225 samples, 2.86%)</title><rect x="26.6828%" y="420" width="2.8630%" height="15" fill="rgb(249,33,26)"/><text x="26.9328%" y="430.50">fo..</text></g><g><title>format_date (babel/dates.py:700) (163 samples, 2.07%)</title><rect x="27.4717%" y="436" width="2.0741%" height="15" fill="rgb(235,183,28)"/><text x="27.7217%" y="446.50">f..</text></g><g><title>apply (babel/dates.py:1232) (159 samples, 2.02%)</title><rect x="27.5226%" y="452" width="2.0232%" height="15" fill="rgb(221,5,38)"/><text x="27.7726%" y="462.50">a..</text></g><g><title>__mod__ (babel/dates.py:1229) (103 samples, 1.31%)</title><rect x="28.2351%" y="468" width="1.3106%" height="15" fill="rgb(247,18,42)"/><text x="28.4851%" y="478.50"></text></g><g><title>__get__ (odoo/fields.py:1062) (94 samples, 1.20%)</title><rect x="31.3908%" y="452" width="1.1961%" height="15" fill="rgb(241,131,45)"/><text x="31.6408%" y="462.50"></text></g><g><title>format_value (account_reports/models/account_report.py:1360) (291 samples, 3.70%)</title><rect x="30.3092%" y="420" width="3.7028%" height="15" fill="rgb(249,31,29)"/><text x="30.5592%" y="430.50">form..</text></g><g><title>__get__ (odoo/fields.py:2485) (225 samples, 2.86%)</title><rect x="31.1490%" y="436" width="2.8630%" height="15" fill="rgb(225,111,53)"/><text x="31.3990%" y="446.50">__..</text></g><g><title>format_value (account_reports/models/account_report.py:1361) (160 samples, 2.04%)</title><rect x="34.0120%" y="420" width="2.0359%" height="15" fill="rgb(238,160,17)"/><text x="34.2620%" y="430.50">f..</text></g><g><title>is_zero (odoo/addons/base/models/res_currency.py:172) (140 samples, 1.78%)</title><rect x="34.2664%" y="436" width="1.7814%" height="15" fill="rgb(214,148,48)"/><text x="34.5164%" y="446.50">i..</text></g><g><title>_get_aml_line (account_reports/models/account_general_ledger.py:768) (481 samples, 6.12%)</title><rect x="30.0674%" y="404" width="6.1204%" height="15" fill="rgb(232,36,49)"/><text x="30.3174%" y="414.50">_get_aml..</text></g><g><title>format_value (account_reports/models/account_report.py:1360) (256 samples, 3.26%)</title><rect x="36.3787%" y="420" width="3.2574%" height="15" fill="rgb(209,103,24)"/><text x="36.6287%" y="430.50">for..</text></g><g><title>__get__ (odoo/fields.py:2485) (209 samples, 2.66%)</title><rect x="36.9767%" y="436" width="2.6594%" height="15" fill="rgb(229,88,8)"/><text x="37.2267%" y="446.50">__..</text></g><g><title>format_value (account_reports/models/account_report.py:1361) (143 samples, 1.82%)</title><rect x="39.6361%" y="420" width="1.8196%" height="15" fill="rgb(213,181,19)"/><text x="39.8861%" y="430.50">f..</text></g><g><title>is_zero (odoo/addons/base/models/res_currency.py:172) (123 samples, 1.57%)</title><rect x="39.8906%" y="436" width="1.5651%" height="15" fill="rgb(254,191,54)"/><text x="40.1406%" y="446.50"></text></g><g><title>_get_aml_line (account_reports/models/account_general_ledger.py:769) (421 samples, 5.36%)</title><rect x="36.1878%" y="404" width="5.3569%" height="15" fill="rgb(241,83,37)"/><text x="36.4378%" y="414.50">_get_am..</text></g><g><title>__get__ (odoo/fields.py:1062) (82 samples, 1.04%)</title><rect x="42.3973%" y="452" width="1.0434%" height="15" fill="rgb(233,36,39)"/><text x="42.6473%" y="462.50"></text></g><g><title>format_value (account_reports/models/account_report.py:1360) (250 samples, 3.18%)</title><rect x="41.7865%" y="420" width="3.1811%" height="15" fill="rgb(226,3,54)"/><text x="42.0365%" y="430.50">for..</text></g><g><title>__get__ (odoo/fields.py:2485) (210 samples, 2.67%)</title><rect x="42.2955%" y="436" width="2.6721%" height="15" fill="rgb(245,192,40)"/><text x="42.5455%" y="446.50">__..</text></g><g><title>format_value (account_reports/models/account_report.py:1361) (136 samples, 1.73%)</title><rect x="44.9676%" y="420" width="1.7305%" height="15" fill="rgb(238,167,29)"/><text x="45.2176%" y="430.50"></text></g><g><title>is_zero (odoo/addons/base/models/res_currency.py:172) (121 samples, 1.54%)</title><rect x="45.1584%" y="436" width="1.5396%" height="15" fill="rgb(232,182,51)"/><text x="45.4084%" y="446.50"></text></g><g><title>_get_aml_line (account_reports/models/account_general_ledger.py:770) (416 samples, 5.29%)</title><rect x="41.5447%" y="404" width="5.2933%" height="15" fill="rgb(231,60,39)"/><text x="41.7947%" y="414.50">_get_a..</text></g><g><title>_has_group (&lt;decorator-gen-103&gt;:2) (176 samples, 2.24%)</title><rect x="49.9682%" y="452" width="2.2395%" height="15" fill="rgb(208,69,12)"/><text x="50.2182%" y="462.50">_..</text></g><g><title>__iter__ (_weakrefset.py:59) (79 samples, 1.01%)</title><rect x="54.2944%" y="500" width="1.0052%" height="15" fill="rgb(235,93,37)"/><text x="54.5444%" y="510.50"></text></g><g><title>__new__ (odoo/api.py:450) (103 samples, 1.31%)</title><rect x="54.2181%" y="484" width="1.3106%" height="15" fill="rgb(213,116,39)"/><text x="54.4681%" y="494.50"></text></g><g><title>__call__ (odoo/api.py:510) (297 samples, 3.78%)</title><rect x="53.1874%" y="468" width="3.7791%" height="15" fill="rgb(222,207,29)"/><text x="53.4374%" y="478.50">__ca..</text></g><g><title>__new__ (odoo/api.py:452) (108 samples, 1.37%)</title><rect x="55.5923%" y="484" width="1.3742%" height="15" fill="rgb(206,96,30)"/><text x="55.8423%" y="494.50"></text></g><g><title>__iter__ (_weakrefset.py:65) (99 samples, 1.26%)</title><rect x="55.7068%" y="500" width="1.2597%" height="15" fill="rgb(218,138,4)"/><text x="55.9568%" y="510.50"></text></g><g><title>_get_aml_line (account_reports/models/account_general_ledger.py:772) (894 samples, 11.38%)</title><rect x="46.8380%" y="404" width="11.3755%" height="15" fill="rgb(250,191,14)"/><text x="47.0880%" y="414.50">_get_aml_line (ac..</text></g><g><title>user_has_groups (odoo/models.py:1393) (771 samples, 9.81%)</title><rect x="48.4031%" y="420" width="9.8104%" height="15" fill="rgb(239,60,40)"/><text x="48.6531%" y="430.50">user_has_group..</text></g><g><title>has_group (odoo/addons/base/models/res_users.py:811) (705 samples, 8.97%)</title><rect x="49.2429%" y="436" width="8.9706%" height="15" fill="rgb(206,27,48)"/><text x="49.4929%" y="446.50">has_group (od..</text></g><g><title>with_user (odoo/models.py:5070) (472 samples, 6.01%)</title><rect x="52.2077%" y="452" width="6.0059%" height="15" fill="rgb(225,35,8)"/><text x="52.4577%" y="462.50">with_use..</text></g><g><title>with_env (odoo/models.py:5025) (98 samples, 1.25%)</title><rect x="56.9665%" y="468" width="1.2470%" height="15" fill="rgb(250,213,24)"/><text x="57.2165%" y="478.50"></text></g><g><title>_get_general_ledger_lines (account_reports/models/account_general_ledger.py:136) (4,700 samples, 59.80%)</title><rect x="1.3488%" y="388" width="59.8040%" height="15" fill="rgb(247,123,22)"/><text x="1.5988%" y="398.50">_get_general_ledger_lines (account_reports/models/account_general_ledger.py:136)</text></g><g><title>round (odoo/addons/base/models/res_currency.py:134) (177 samples, 2.25%)</title><rect x="58.9006%" y="404" width="2.2522%" height="15" fill="rgb(231,138,38)"/><text x="59.1506%" y="414.50">r..</text></g><g><title>&lt;listcomp&gt; (odoo/sql_db.py:269) (87 samples, 1.11%)</title><rect x="61.8272%" y="436" width="1.1070%" height="15" fill="rgb(231,145,46)"/><text x="62.0772%" y="446.50"></text></g><g><title>_do_query (account_reports/models/account_general_ledger.py:645) (135 samples, 1.72%)</title><rect x="61.4073%" y="404" width="1.7178%" height="15" fill="rgb(251,118,11)"/><text x="61.6573%" y="414.50"></text></g><g><title>dictfetchall (odoo/sql_db.py:269) (134 samples, 1.71%)</title><rect x="61.4200%" y="420" width="1.7051%" height="15" fill="rgb(217,147,25)"/><text x="61.6700%" y="430.50"></text></g><g><title>get_xlsx (account_reports/models/account_report.py:1523) (4,927 samples, 62.69%)</title><rect x="0.6235%" y="340" width="62.6925%" height="15" fill="rgb(247,81,37)"/><text x="0.8735%" y="350.50">get_xlsx (account_reports/models/account_report.py:1523)</text></g><g><title>_get_table (account_reports/models/account_report.py:802) (4,927 samples, 62.69%)</title><rect x="0.6235%" y="356" width="62.6925%" height="15" fill="rgb(209,12,38)"/><text x="0.8735%" y="366.50">_get_table (account_reports/models/account_report.py:802)</text></g><g><title>_get_lines (account_reports/models/account_general_ledger.py:66) (4,927 samples, 62.69%)</title><rect x="0.6235%" y="372" width="62.6925%" height="15" fill="rgb(227,1,9)"/><text x="0.8735%" y="382.50">_get_lines (account_reports/models/account_general_ledger.py:66)</text></g><g><title>_get_general_ledger_lines (account_reports/models/account_general_ledger.py:82) (166 samples, 2.11%)</title><rect x="61.2037%" y="388" width="2.1122%" height="15" fill="rgb(248,47,43)"/><text x="61.4537%" y="398.50">_..</text></g><g><title>get_xlsx (account_reports/models/account_report.py:1571) (102 samples, 1.30%)</title><rect x="63.5577%" y="340" width="1.2979%" height="15" fill="rgb(221,10,30)"/><text x="63.8077%" y="350.50"></text></g><g><title>cell_wrapper (xlsxwriter/worksheet.py:67) (92 samples, 1.17%)</title><rect x="63.6849%" y="356" width="1.1706%" height="15" fill="rgb(210,229,1)"/><text x="63.9349%" y="366.50"></text></g><g><title>write (xlsxwriter/worksheet.py:408) (90 samples, 1.15%)</title><rect x="63.7104%" y="372" width="1.1452%" height="15" fill="rgb(222,148,37)"/><text x="63.9604%" y="382.50"></text></g><g><title>_lang_get_id (&lt;decorator-gen-87&gt;:2) (102 samples, 1.30%)</title><rect x="70.6197%" y="388" width="1.2979%" height="15" fill="rgb(234,67,33)"/><text x="70.8697%" y="398.50"></text></g><g><title>_get_cell_type_value (account_reports/models/account_report.py:1597) (488 samples, 6.21%)</title><rect x="66.2552%" y="356" width="6.2094%" height="15" fill="rgb(247,98,35)"/><text x="66.5052%" y="366.50">_get_cel..</text></g><g><title>_lang_get (odoo/addons/base/models/res_lang.py:210) (159 samples, 2.02%)</title><rect x="70.4415%" y="372" width="2.0232%" height="15" fill="rgb(247,138,52)"/><text x="70.6915%" y="382.50">_..</text></g><g><title>_parse_localename (locale.py:481) (130 samples, 1.65%)</title><rect x="76.1547%" y="436" width="1.6542%" height="15" fill="rgb(213,79,30)"/><text x="76.4047%" y="446.50"></text></g><g><title>_strptime (_strptime.py:331) (186 samples, 2.37%)</title><rect x="75.7730%" y="388" width="2.3667%" height="15" fill="rgb(246,177,23)"/><text x="76.0230%" y="398.50">_s..</text></g><g><title>_getlang (_strptime.py:28) (178 samples, 2.26%)</title><rect x="75.8748%" y="404" width="2.2649%" height="15" fill="rgb(230,62,27)"/><text x="76.1248%" y="414.50">_..</text></g><g><title>getlocale (locale.py:591) (159 samples, 2.02%)</title><rect x="76.1166%" y="420" width="2.0232%" height="15" fill="rgb(216,154,8)"/><text x="76.3666%" y="430.50">g..</text></g><g><title>_strptime_datetime (_strptime.py:577) (305 samples, 3.88%)</title><rect x="75.3276%" y="372" width="3.8809%" height="15" fill="rgb(244,35,45)"/><text x="75.5776%" y="382.50">_str..</text></g><g><title>_get_cell_type_value (account_reports/models/account_report.py:1598) (535 samples, 6.81%)</title><rect x="72.4647%" y="356" width="6.8075%" height="15" fill="rgb(251,115,12)"/><text x="72.7147%" y="366.50">_get_cell..</text></g><g><title>get_xlsx (account_reports/models/account_report.py:1575) (1,122 samples, 14.28%)</title><rect x="65.0337%" y="340" width="14.2766%" height="15" fill="rgb(240,54,50)"/><text x="65.2837%" y="350.50">get_xlsx (account_repo..</text></g><g><title>_write (xlsxwriter/worksheet.py:430) (80 samples, 1.02%)</title><rect x="82.5041%" y="388" width="1.0179%" height="15" fill="rgb(233,84,52)"/><text x="82.7541%" y="398.50"></text></g><g><title>get_xlsx (account_reports/models/account_report.py:1579) (491 samples, 6.25%)</title><rect x="79.8575%" y="340" width="6.2476%" height="15" fill="rgb(207,117,47)"/><text x="80.1075%" y="350.50">get_xlsx..</text></g><g><title>cell_wrapper (xlsxwriter/worksheet.py:67) (423 samples, 5.38%)</title><rect x="80.7227%" y="356" width="5.3824%" height="15" fill="rgb(249,43,39)"/><text x="80.9727%" y="366.50">cell_wr..</text></g><g><title>write (xlsxwriter/worksheet.py:408) (390 samples, 4.96%)</title><rect x="81.1426%" y="372" width="4.9625%" height="15" fill="rgb(209,38,44)"/><text x="81.3926%" y="382.50">write ..</text></g><g><title>_write (xlsxwriter/worksheet.py:433) (198 samples, 2.52%)</title><rect x="83.5857%" y="388" width="2.5194%" height="15" fill="rgb(236,212,23)"/><text x="83.8357%" y="398.50">_w..</text></g><g><title>_write_token_as_string (xlsxwriter/worksheet.py:389) (121 samples, 1.54%)</title><rect x="84.5655%" y="404" width="1.5396%" height="15" fill="rgb(242,79,21)"/><text x="84.8155%" y="414.50"></text></g><g><title>_write_cell (xlsxwriter/worksheet.py:5590) (98 samples, 1.25%)</title><rect x="88.8663%" y="468" width="1.2470%" height="15" fill="rgb(211,96,35)"/><text x="89.1163%" y="478.50"></text></g><g><title>_write_cell (xlsxwriter/worksheet.py:5606) (126 samples, 1.60%)</title><rect x="90.4695%" y="468" width="1.6033%" height="15" fill="rgb(253,215,40)"/><text x="90.7195%" y="478.50"></text></g><g><title>_xml_string_element (xlsxwriter/xmlwriter.py:107) (82 samples, 1.04%)</title><rect x="92.4545%" y="484" width="1.0434%" height="15" fill="rgb(211,81,21)"/><text x="92.7045%" y="494.50"></text></g><g><title>_write_cell (xlsxwriter/worksheet.py:5614) (158 samples, 2.01%)</title><rect x="92.2255%" y="468" width="2.0104%" height="15" fill="rgb(208,190,38)"/><text x="92.4755%" y="478.50">_..</text></g><g><title>_write_cell (xlsxwriter/worksheet.py:5683) (84 samples, 1.07%)</title><rect x="94.2486%" y="468" width="1.0688%" height="15" fill="rgb(235,213,38)"/><text x="94.4986%" y="478.50"></text></g><g><title>_write_rows (xlsxwriter/worksheet.py:5425) (600 samples, 7.63%)</title><rect x="87.7084%" y="452" width="7.6346%" height="15" fill="rgb(237,122,38)"/><text x="87.9584%" y="462.50">_write_row..</text></g><g><title>_create_package (xlsxwriter/packager.py:132) (730 samples, 9.29%)</title><rect x="86.1560%" y="388" width="9.2887%" height="15" fill="rgb(244,218,35)"/><text x="86.4060%" y="398.50">_create_packa..</text></g><g><title>_write_worksheet_files (xlsxwriter/packager.py:190) (730 samples, 9.29%)</title><rect x="86.1560%" y="404" width="9.2887%" height="15" fill="rgb(240,68,47)"/><text x="86.4060%" y="414.50">_write_worksh..</text></g><g><title>_assemble_xml_file (xlsxwriter/worksheet.py:3741) (730 samples, 9.29%)</title><rect x="86.1560%" y="420" width="9.2887%" height="15" fill="rgb(210,16,53)"/><text x="86.4060%" y="430.50">_assemble_xml..</text></g><g><title>_write_sheet_data (xlsxwriter/worksheet.py:5232) (730 samples, 9.29%)</title><rect x="86.1560%" y="436" width="9.2887%" height="15" fill="rgb(235,124,12)"/><text x="86.4060%" y="446.50">_write_sheet_..</text></g><g><title>_store_workbook (xlsxwriter/workbook.py:649) (950 samples, 12.09%)</title><rect x="86.1560%" y="372" width="12.0881%" height="15" fill="rgb(224,169,11)"/><text x="86.4060%" y="382.50">_store_workbook (x..</text></g><g><title>_create_package (xlsxwriter/packager.py:140) (220 samples, 2.80%)</title><rect x="95.4447%" y="388" width="2.7993%" height="15" fill="rgb(250,166,2)"/><text x="95.6947%" y="398.50">_c..</text></g><g><title>_write_shared_strings_file (xlsxwriter/packager.py:287) (220 samples, 2.80%)</title><rect x="95.4447%" y="404" width="2.7993%" height="15" fill="rgb(242,216,29)"/><text x="95.6947%" y="414.50">_w..</text></g><g><title>_assemble_xml_file (xlsxwriter/sharedstrings.py:54) (220 samples, 2.80%)</title><rect x="95.4447%" y="420" width="2.7993%" height="15" fill="rgb(230,116,27)"/><text x="95.6947%" y="430.50">_a..</text></g><g><title>_write_sst_strings (xlsxwriter/sharedstrings.py:84) (216 samples, 2.75%)</title><rect x="95.4956%" y="436" width="2.7484%" height="15" fill="rgb(228,99,48)"/><text x="95.7456%" y="446.50">_w..</text></g><g><title>all (7,859 samples, 100%)</title><rect x="0.0000%" y="36" width="100.0000%" height="15" fill="rgb(253,11,6)"/><text x="0.2500%" y="46.50"></text></g><g><title>&lt;module&gt; (odoo-bin:8) (7,859 samples, 100.00%)</title><rect x="0.0000%" y="52" width="100.0000%" height="15" fill="rgb(247,143,39)"/><text x="0.2500%" y="62.50">&lt;module&gt; (odoo-bin:8)</text></g><g><title>main (odoo/cli/command.py:61) (7,859 samples, 100.00%)</title><rect x="0.0000%" y="68" width="100.0000%" height="15" fill="rgb(236,97,10)"/><text x="0.2500%" y="78.50">main (odoo/cli/command.py:61)</text></g><g><title>run (odoo/cli/shell.py:125) (7,859 samples, 100.00%)</title><rect x="0.0000%" y="84" width="100.0000%" height="15" fill="rgb(233,208,19)"/><text x="0.2500%" y="94.50">run (odoo/cli/shell.py:125)</text></g><g><title>shell (odoo/cli/shell.py:118) (7,859 samples, 100.00%)</title><rect x="0.0000%" y="100" width="100.0000%" height="15" fill="rgb(216,164,2)"/><text x="0.2500%" y="110.50">shell (odoo/cli/shell.py:118)</text></g><g><title>console (odoo/cli/shell.py:82) (7,859 samples, 100.00%)</title><rect x="0.0000%" y="116" width="100.0000%" height="15" fill="rgb(220,129,5)"/><text x="0.2500%" y="126.50">console (odoo/cli/shell.py:82)</text></g><g><title>ipython (odoo/cli/shell.py:91) (7,859 samples, 100.00%)</title><rect x="0.0000%" y="132" width="100.0000%" height="15" fill="rgb(242,17,10)"/><text x="0.2500%" y="142.50">ipython (odoo/cli/shell.py:91)</text></g><g><title>start_ipython (IPython/__init__.py:130) (7,859 samples, 100.00%)</title><rect x="0.0000%" y="148" width="100.0000%" height="15" fill="rgb(242,107,0)"/><text x="0.2500%" y="158.50">start_ipython (IPython/__init__.py:130)</text></g><g><title>launch_instance (traitlets/config/application.py:846) (7,859 samples, 100.00%)</title><rect x="0.0000%" y="164" width="100.0000%" height="15" fill="rgb(251,28,31)"/><text x="0.2500%" y="174.50">launch_instance (traitlets/config/application.py:846)</text></g><g><title>start (IPython/terminal/ipapp.py:356) (7,859 samples, 100.00%)</title><rect x="0.0000%" y="180" width="100.0000%" height="15" fill="rgb(233,223,10)"/><text x="0.2500%" y="190.50">start (IPython/terminal/ipapp.py:356)</text></g><g><title>mainloop (IPython/terminal/interactiveshell.py:566) (7,859 samples, 100.00%)</title><rect x="0.0000%" y="196" width="100.0000%" height="15" fill="rgb(215,21,27)"/><text x="0.2500%" y="206.50">mainloop (IPython/terminal/interactiveshell.py:566)</text></g><g><title>interact (IPython/terminal/interactiveshell.py:557) (7,858 samples, 99.99%)</title><rect x="0.0127%" y="212" width="99.9873%" height="15" fill="rgb(232,23,21)"/><text x="0.2627%" y="222.50">interact (IPython/terminal/interactiveshell.py:557)</text></g><g><title>run_cell (IPython/core/interactiveshell.py:2915) (7,858 samples, 99.99%)</title><rect x="0.0127%" y="228" width="99.9873%" height="15" fill="rgb(244,5,23)"/><text x="0.2627%" y="238.50">run_cell (IPython/core/interactiveshell.py:2915)</text></g><g><title>_run_cell (IPython/core/interactiveshell.py:2960) (7,858 samples, 99.99%)</title><rect x="0.0127%" y="244" width="99.9873%" height="15" fill="rgb(226,81,46)"/><text x="0.2627%" y="254.50">_run_cell (IPython/core/interactiveshell.py:2960)</text></g><g><title>_pseudo_sync_runner (IPython/core/async_helpers.py:78) (7,858 samples, 99.99%)</title><rect x="0.0127%" y="260" width="99.9873%" height="15" fill="rgb(247,70,30)"/><text x="0.2627%" y="270.50">_pseudo_sync_runner (IPython/core/async_helpers.py:78)</text></g><g><title>run_cell_async (IPython/core/interactiveshell.py:3186) (7,858 samples, 99.99%)</title><rect x="0.0127%" y="276" width="99.9873%" height="15" fill="rgb(212,68,19)"/><text x="0.2627%" y="286.50">run_cell_async (IPython/core/interactiveshell.py:3186)</text></g><g><title>run_ast_nodes (IPython/core/interactiveshell.py:3377) (7,858 samples, 99.99%)</title><rect x="0.0127%" y="292" width="99.9873%" height="15" fill="rgb(240,187,13)"/><text x="0.2627%" y="302.50">run_ast_nodes (IPython/core/interactiveshell.py:3377)</text></g><g><title>run_code (IPython/core/interactiveshell.py:3457) (7,858 samples, 99.99%)</title><rect x="0.0127%" y="308" width="99.9873%" height="15" fill="rgb(223,113,26)"/><text x="0.2627%" y="318.50">run_code (IPython/core/interactiveshell.py:3457)</text></g><g><title>&lt;module&gt; (&lt;ipython-input-1-caff16baaa01&gt;:14) (7,858 samples, 99.99%)</title><rect x="0.0127%" y="324" width="99.9873%" height="15" fill="rgb(206,192,2)"/><text x="0.2627%" y="334.50">&lt;module&gt; (&lt;ipython-input-1-caff16baaa01&gt;:14)</text></g><g><title>get_xlsx (account_reports/models/account_report.py:1581) (1,092 samples, 13.89%)</title><rect x="86.1051%" y="340" width="13.8949%" height="15" fill="rgb(241,108,4)"/><text x="86.3551%" y="350.50">get_xlsx (account_rep..</text></g><g><title>close (xlsxwriter/workbook.py:306) (1,092 samples, 13.89%)</title><rect x="86.1051%" y="356" width="13.8949%" height="15" fill="rgb(247,173,49)"/><text x="86.3551%" y="366.50">close (xlsxwriter/wor..</text></g><g><title>_store_workbook (xlsxwriter/workbook.py:670) (138 samples, 1.76%)</title><rect x="98.2441%" y="372" width="1.7559%" height="15" fill="rgb(224,114,35)"/><text x="98.4941%" y="382.50"></text></g><g><title>writestr (zipfile.py:1805) (132 samples, 1.68%)</title><rect x="98.3204%" y="388" width="1.6796%" height="15" fill="rgb(245,159,27)"/><text x="98.5704%" y="398.50"></text></g><g><title>write (zipfile.py:1129) (129 samples, 1.64%)</title><rect x="98.3586%" y="404" width="1.6414%" height="15" fill="rgb(245,172,44)"/><text x="98.6086%" y="414.50"></text></g></svg></svg>
