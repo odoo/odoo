@@ -54,14 +54,6 @@ export class RtcConfigurationMenu extends Component {
      * @private
      * @param {Event} ev
      */
-    _onChangeSelectAudioInput(ev) {
-        this.rtcConfigurationMenu.onChangeSelectAudioInput(ev.target.value);
-    }
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
     _onChangeThreshold(ev) {
         this.rtcConfigurationMenu.onChangeThreshold(ev.target.value);
     }

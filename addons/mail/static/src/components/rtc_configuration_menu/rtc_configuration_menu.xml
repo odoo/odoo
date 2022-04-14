@@ -7,7 +7,7 @@
                 <label class="o_RtcConfigurationMenu_optionLabel" title="Input device" aria-label="Input device">
                     <span class="o_RtcConfigurationMenu_optionName">Input device</span>
                     <div>
-                        <select name="inputDevice" class="o_RtcConfigurationMenu_optionDeviceSelect" t-att-value="messaging.userSetting.audioInputDeviceId" t-on-change="_onChangeSelectAudioInput">
+                        <select name="inputDevice" class="o_RtcConfigurationMenu_optionDeviceSelect" t-att-value="messaging.userSetting.audioInputDeviceId" t-on-change="rtcConfigurationMenu.onChangeSelectAudioInput">
                             <option value="">Browser default</option>
                             <t t-if="state.userDevices" t-foreach="state.userDevices" t-as="device" t-key="device_index">
                                 <t t-if="device.kind === 'audioinput'">

@@ -34,10 +34,10 @@ registerModel({
             this.userSetting.togglePushToTalk();
         },
         /**
-         * @param {String} value
+         * @param {Event} ev
          */
-        onChangeSelectAudioInput(value) {
-            this.userSetting.setAudioInputDevice(value);
+        onChangeSelectAudioInput(ev) {
+            this.userSetting.setAudioInputDevice(ev.target.value);
         },
         /**
          * @param {String} value
