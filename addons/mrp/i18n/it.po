@@ -23,8 +23,9 @@
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # David Minneci <david@numeko.it>, 2019
 # Iacopo Simonelli <lsi@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
-# Friederike Fasterling-Nesselbosch, 2021
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Livia Filippi, 2022
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
@@ -32,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -573,6 +574,9 @@ msgid ""
 "produced in the manufacturing order. You must complete the work orders "
 "before posting the inventory."
 msgstr ""
+"Almeno un ordine di lavoro ha quantità prodotta inferiore alla quantità "
+"prodotta nell'ordine di produzione. Devi completare gli ordini di lavoro "
+"prima di aggiornare l'inventario."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -666,7 +670,7 @@ msgstr "Righe della Distinta base di riferimento"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Barcode"
-msgstr "Codice a barre"
+msgstr "Barcode"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_mode_batch
@@ -1815,7 +1819,7 @@ msgstr "Altezza immagine"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_src
 msgid "Image Src"
-msgstr ""
+msgstr "Fonte immagine"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_width
@@ -1936,6 +1940,17 @@ msgstr "Utente operativo corrente"
 #, python-format
 msgid "It has already been unblocked."
 msgstr "E' gia' stato sbloccato."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid ""
+"It is not possible to unplan one single Work Order. You should unplan the "
+"Manufacturing Order instead in order to unplan all the linked operations."
+msgstr ""
+"Non è possibile de-pianificare un singolo ordine di lavoro. Dovresti invece "
+"ripianificare l'ordine di produzione per ripianificare tutte le operazioni "
+"collegate."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__phantom
@@ -2163,7 +2178,7 @@ msgstr "Allegato principale"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Make To Order"
-msgstr "Produzione su ordine"
+msgstr "Su ordine (MTO)"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
@@ -3995,6 +4010,18 @@ msgstr ""
 "La data di fine produzione pianificata dell'ordine di lavoro non può essere "
 "antecedente alla data di inizio pianificata, correggerla per poter salvare "
 "l'ordine di lavoro."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The product has already been used at least once, editing its structure may "
+"lead to undesirable behaviours. You should rather archive the product and "
+"create a new one with a new bill of materials."
+msgstr ""
+"Il prodotto è già stato usato almeno una volta, modificare la sua struttura "
+"può portare a comportamenti indesiderati. Si dovrebbe piuttosto archiviare "
+"il prodotto e crearne uno nuovo con una nuova distinta base."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:0

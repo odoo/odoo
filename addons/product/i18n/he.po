@@ -5,7 +5,7 @@
 # Translators:
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2019
 # שהאב חוסיין <shhab89@gmail.com>, 2019
-# hed shefetr <hed@laylinetech.com>, 2019
+# hed shefer <hed@laylinetech.com>, 2019
 # Amit Spilman <amit@laylinetech.com>, 2019
 # Martin Trigaux, 2019
 # ExcaliberX <excaliberx@gmail.com>, 2019
@@ -13,6 +13,7 @@
 # דודי מלכה <Dudimalka6@gmail.com>, 2019
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
 # Yihya Hugirat <hugirat@gmail.com>, 2020
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2020\n"
+"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2319,6 +2320,17 @@ msgid "This comes from the product form."
 msgstr "זה בא מטופס המוצר."
 
 #. module: product
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
+msgstr ""
+"תצורה זו של מאפייני מוצר, ערכים ואי הכללות לא תוביל לשום וריאציה אפשרית. נא "
+"להעביר לארכיון או למחוק את המוצר שלך ישירות אם אתה מתכוון."
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
 msgid "This is the sum of the extra price of all attributes"
 msgstr "זהו סכום המחיר הנוסף של כל התכונות"
@@ -2349,6 +2361,9 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please set a precision between %s and 1."
 msgstr ""
+"דיוק עיגול זה גבוה מהדיוק העשרוני (%s ספרות).\n"
+"זה עלול לגרום לחוסר עקביות בחישובים.\n"
+"נא להגדיר דיוק בין %s ל-1."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -2712,6 +2727,10 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
 msgstr ""
+"אתה מגדיר דיוק עשרוני פחות מדויק מה-UOMs:\n"
+"%s\n"
+"זה עלול לגרום לחוסר עקביות בחישובים.\n"
+"נא להגדיל את העיגול של יחידות המידה הללו, או את הספרות של דיוק עשרוני זה."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2

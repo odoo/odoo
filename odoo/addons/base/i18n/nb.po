@@ -6050,11 +6050,17 @@ msgid ""
 "                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
 "                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>"
 msgstr ""
+"<b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Firmaadresse</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Fakturaadresse</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Leveringsadresse</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Annen adresse</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Privat adresse</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Adresse</b>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_short_form
 msgid "<b>Company Address:</b>"
-msgstr ""
+msgstr "<b>Firmaadresse:</b>"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_10
@@ -20701,7 +20707,7 @@ msgstr "Salg"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Sales & Purchase"
-msgstr ""
+msgstr "Salg og kjøp"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_expense

@@ -5,7 +5,7 @@
 # Translators:
 # BATKHUYAG Ganbold <gbatkhuyag@gmail.com>, 2019
 # Ubuntu Erka <erdenebold10@gmail.com>, 2019
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
+# hish, 2019
 # Suren Ch <oyunsuren.ch@gmail.com>, 2019
 # Otgonbayar.A <gobi.mn@gmail.com>, 2019
 # Chinzorita <chinzorig.o@asterisk-tech.mn>, 2019
@@ -13,13 +13,13 @@
 # nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
 # Насан-Очир <nasaaskii@gmail.com>, 2019
 # Nurbahyt Kh <nurbahyt.kh@gmail.com>, 2019
-# Bayarkhuu Bataa, 2019
 # Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2019
 # Martin Trigaux, 2020
 # Minj P <pminj322@gmail.com>, 2020
 # Батболд <batbold.ts@gmail.com>, 2020
 # Munkhbaatar g <muuguu17@gmail.com>, 2021
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2021
+# Bayarkhuu Bataa, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2021\n"
+"Last-Translator: Bayarkhuu Bataa, 2022\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6200,14 +6200,9 @@ msgstr "Бараа"
 #, python-format
 msgid ""
 "The quantity done for the product \"%s\" doesn't respect the rounding "
-"precision                                   defined on the unit of measure "
-"\"%s\". Please change the quantity done or the"
-"                                   rounding precision of your unit of "
-"measure."
+"precision defined on the unit of measure \"%s\". Please change the quantity "
+"done or the rounding precision of your unit of measure."
 msgstr ""
-"\"%s\" барааг дуусгаж буй тоо хэмжээ нь \"%s\" хэмжих нэгжид тодорхойлогдсон"
-" оронгийн нарийвчлалд нийцэхгүй байна. Дуусгаж буй тоо хэмжээг өөрчлөх эсвэл"
-" хэмжих нэгжийн оронгийн нарийвчлалыг өөрчилнө үү."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7345,7 +7340,7 @@ msgstr "'Хийгдсэн' хөдөлгөөнийг цуцлах боломжг�
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
-msgstr ""
+msgstr "Дууссан эсвэл цуцалсан шилжүүлгийн товлосон огноог өөрчлөх боомжгүй."
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -7548,6 +7543,15 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You need to supply a Lot/Serial number for product %s."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You should not use a planned internal transfer to move some products between"
+" two warehouses. Instead, use an immediate internal transfer or the resupply"
+" route."
 msgstr ""
 
 #. module: stock
