@@ -169,7 +169,7 @@ function getImageUrl (file) {
                 return reject(reader.error);
             }
             resolve(e.target.result);
-        }
+        };
     });
 }
 export class OdooEditor extends EventTarget {
@@ -2077,7 +2077,7 @@ export class OdooEditor extends EventTarget {
 
         for (const tableElement of container.querySelectorAll('table')) {
             tableElement.classList.add('table', 'table-bordered');
-        };
+        }
 
         for (const child of [...container.childNodes]) {
             this._cleanForPaste(child);
@@ -2948,7 +2948,7 @@ export class OdooEditor extends EventTarget {
                         callback();
 
                         this.historyStep(true);
-                    }
+                    };
 
                     if (['jpg', 'jpeg', 'png', 'gif'].includes(urlFileExtention)) {
                         const stepIndexBeforeInsert = this._historySteps.length - 1;
