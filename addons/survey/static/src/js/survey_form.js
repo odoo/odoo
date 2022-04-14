@@ -4,6 +4,7 @@ odoo.define('survey.form', function (require) {
 var field_utils = require('web.field_utils');
 var publicWidget = require('web.public.widget');
 var time = require('web.time');
+var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
@@ -322,7 +323,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
      */
     _updateEnterButtonText: function (event) {
         const $target = event.target;
-        const isTextbox = event.type == "focusin" && $target.tagName.toLowerCase() === 'textarea';
+        const isTextbox = event.type === "focusin" && $target.tagName.toLowerCase() === 'textarea';
         const text = !isTextbox ? _t('or press Enter') : isMac ? _t("or press ⌘+Enter") : _t("or press CTRL+Enter");
         $('#enter-tooltip').text(text);
     },
@@ -575,8 +576,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             this.$('.o_survey_form_content').fadeIn(this.fadeInOutDelay);
             $("html, body").animate({ scrollTop: 0 }, this.fadeInOutDelay);
             self._focusOnFirstInput();
-        }
-        else if (result && result.fields && result.error === 'validation') {
+        } else if (result && result.fields && result.error === 'validation') {
             this.$('.o_survey_form_content').fadeIn(0);
             this._showErrors(result.fields);
         } else {
@@ -936,7 +936,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
 
             if (!this._checkIsMasterTab()) {
                 this.shouldReloadMasterTab = true;
-                this.masterTabCheckInterval = setInterval(function() {
+                this.masterTabCheckInterval = setInterval(function () {
                      if (self._checkIsMasterTab()) {
                         clearInterval(self.masterTabCheckInterval);
                      }
@@ -1007,7 +1007,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         }
 
         $dateGroup.datetimepicker({
-            format : datetimepickerFormat,
+            format: datetimepickerFormat,
             minDate: minDate,
             maxDate: maxDate,
             disabledDates: disabledDates,
@@ -1022,7 +1022,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                 up: 'fa fa-chevron-up',
                 down: 'fa fa-chevron-down',
             },
-            locale : moment.locale(),
+            locale: moment.locale(),
             allowInputToggle: true,
         });
         $dateGroup.on('error.datetimepicker', function (err) {
@@ -1039,7 +1039,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         });
     },
 
-    _formatDateTime: function (datetimeValue, format){
+    _formatDateTime: function (datetimeValue, format) {
         return moment(field_utils.format.datetime(moment(datetimeValue), null, {timezone: true}), format);
     },
 
@@ -1057,14 +1057,15 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
 
    /**
     * Will automatically focus on the first input to allow the user to complete directly the survey,
-    * without having to manually get the focus (only if the input has the right type - can write something inside -)
+    * without having to manually get the focus (only if the input has the right type - can write something inside -
+    * and if the device is not a mobile device to avoid missing information when the soft keyboard is opened)
     */
     _focusOnFirstInput: function () {
         var $firstTextInput = this.$('.js_question-wrapper').first()  // Take first question
                               .find("input[type='text'],input[type='number'],textarea")  // get 'text' inputs
                               .filter('.form-control')  // needed for the auto-resize
                               .not('.o_survey_comment');  // remove inputs for comments that does not count as answers
-        if ($firstTextInput.length > 0) {
+        if ($firstTextInput.length > 0 && !config.device.isMobile) {
             $firstTextInput.focus();
         }
     },
@@ -1085,7 +1086,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                 window.location.reload();
             }
            return true;
-        } else if (!$errorModal.modal._isShown){
+        } else if (!$errorModal.modal._isShown) {
             $errorModal.find('.text-danger').text(window.location.hostname);
             $errorModal.modal('show');
         }

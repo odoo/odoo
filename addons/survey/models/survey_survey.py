@@ -908,6 +908,7 @@ class Survey(models.Model):
         )
         return {
             'type': 'ir.actions.act_window',
+            'name': _("Share a Survey"),
             'view_mode': 'form',
             'res_model': 'survey.invite',
             'target': 'new',
