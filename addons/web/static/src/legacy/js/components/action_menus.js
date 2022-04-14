@@ -29,6 +29,14 @@ odoo.define('web.ActionMenus', function (require) {
      */
     class ActionMenus extends LegacyComponent {
         setup() {
+            this.actionButtonStrings = {
+                title: this.env._t("Action"),
+                hotkey: this.env._t("Additionnal actions"),
+            };
+            this.printButtonStrings = {
+                title: this.env._t("Print"),
+                hotkey: this.env._t("Printing options"),
+            };
             onWillStart(async () => {
                 this.actionItems = await this._setActionItems(this.props);
                 this.printItems = await this._setPrintItems(this.props);
