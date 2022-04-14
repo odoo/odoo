@@ -27,7 +27,7 @@ class ResCompany(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
-        if not getattr(threading.currentThread(), 'testing', False):
+        if not getattr(threading.current_thread(), 'testing', False):
             res.iap_enrich_auto()
         return res
 
