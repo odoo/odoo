@@ -12,10 +12,14 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
+        cls.company = cls.company_data["company"]
+
         # Create a users
         group_purchase_user = cls.env.ref('purchase.group_purchase_user')
         group_employee = cls.env.ref('base.group_user')
         group_partner_manager = cls.env.ref('base.group_partner_manager')
+        cls.group_purchase_manager = cls.env.ref('purchase.group_purchase_manager')
+        user_admin = cls.env.ref("base.user_admin")
 
         cls.purchase_user = cls.env['res.users'].with_context(
             no_reset_password=True
@@ -23,7 +27,13 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
             'name': 'Purchase user',
             'login': 'purchaseUser',
             'email': 'pu@odoo.com',
-            'groups_id': [(6, 0, [group_purchase_user.id, group_employee.id, group_partner_manager.id])],
+            'company_ids': [(4, cls.company.id)],
+            'company_id': cls.company.id,
+            'groups_id': [(6, 0, [
+                group_purchase_user.id,
+                group_employee.id,
+                group_partner_manager.id
+            ])],
         })
 
         cls.vendor = cls.env['res.partner'].create({
@@ -43,11 +53,35 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
             'property_account_expense_categ_id': cls.account_expense_product.id
         })
         cls.product = cls.env['product.product'].create({
+            'company_id': cls.company.id,
             'name': "Product",
             'standard_price': 200.0,
             'list_price': 180.0,
             'type': 'service',
         })
+
+        cls.purchase_order_1 = cls.env['purchase.order'].create({
+            "company_id": cls.company.id,
+            "partner_id": cls.vendor.id,
+            "user_id": user_admin.id,
+            "state": "draft",
+            "order_line": [(5, 0, 0),
+                (0, 0, {
+                    'product_id': cls.product.id,
+                    'name': f'{cls.product.name} {1:05}',
+                    'price_unit': 79.80,
+                    'product_qty': 15.0}),
+                (0, 0, {
+                    'product_id': cls.product.id,
+                    'name': f'{cls.product.name} {2:05}',
+                    'price_unit': 286.70,
+                    'product_qty': 5.0}),
+                (0, 0, {
+                    'product_id': cls.product.id,
+                    'name': f'{cls.product.name} {3:05}',
+                    'price_unit': 99.00,
+                    'product_qty': 4.0}),
+            ]})
 
     def test_create_purchase_order(self):
         """Check a purchase user can create a vendor bill from a purchase order but not post it"""
@@ -141,20 +175,17 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
     def test_double_validation(self):
         """Only purchase managers can approve a purchase order when double
         validation is enabled"""
-        group_purchase_manager = self.env.ref('purchase.group_purchase_manager')
-        order = self.env.ref("purchase.purchase_order_1")
-        company = order.sudo().company_id
-        company.po_double_validation = 'two_step'
-        company.po_double_validation_amount = 0
-        self.purchase_user.write({
-            'company_ids': [(4, company.id)],
-            'company_id': company.id,
-            'groups_id': [(3, group_purchase_manager.id)],
-        })
+
+        self.company.po_double_validation = 'two_step'
+        self.company.po_double_validation_amount = 0
+        self.purchase_user.write({'groups_id': [(3, 0, self.group_purchase_manager.id)]})
+
+        order = self.purchase_order_1
         order.with_user(self.purchase_user).button_confirm()
         self.assertEqual(order.state, 'to approve')
         order.with_user(self.purchase_user).button_approve()
         self.assertEqual(order.state, 'to approve')
-        self.purchase_user.groups_id += group_purchase_manager
+        self.purchase_user.groups_id += self.group_purchase_manager
+
         order.with_user(self.purchase_user).button_approve()
         self.assertEqual(order.state, 'purchase')
