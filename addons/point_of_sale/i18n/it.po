@@ -10,19 +10,19 @@
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2019
 # p_amoruso <p.amoruso@elvenstudio.it>, 2019
 # Fabio Genovese <ing.fabiogenovese@gmail.com>, 2019
+# Stefano Consolaro <stefano.consolaro@mymage.it>, 2019
 # Simone Bernini <simone@aperturelabs.it>, 2019
 # Christian <chris@effeci.info>, 2019
 # efraimbiffi <eab@odoo.com>, 2019
-# Stefano Consolaro <stefano.consolaro@mymage.it>, 2019
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2019
 # Martin Trigaux, 2019
 # SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2019
 # Paolo Valier, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Simone Sanfilippo <s.sanfilippo@hinge16.eu>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # BigBlu <paolo.moroni@air-srl.com>, 2021
-# Friederike Fasterling-Nesselbosch, 2021
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-27 11:49+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -670,18 +670,18 @@ msgstr "Riga estratto conto bancario"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
 #, python-format
 msgid "Barcode"
-msgstr "Codice"
+msgstr "Barcode"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__barcode_nomenclature_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Barcode Nomenclature"
-msgstr "Nomenclatura codice a barre"
+msgstr "Nomenclatura barcode"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_barcode_rule
 msgid "Barcode Rule"
-msgstr "Regola codice"
+msgstr "Regola barcode"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1368,8 +1368,8 @@ msgid ""
 "Defines what kind of barcodes are available and how they are assigned to "
 "products, customers and cashiers."
 msgstr ""
-"Definisce quali tipi di codice sono disponibili e come vengono assegnati ai "
-"prodotti, clienti e cassieri."
+"Definisce quali tipi di barcode sono disponibili e come vengono assegnati ai"
+" prodotti, clienti e cassieri."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__delay_validation
@@ -1542,7 +1542,7 @@ msgstr "Sconti"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Dismiss"
-msgstr ""
+msgstr "Scarta"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_display_categ_images
@@ -1815,14 +1815,14 @@ msgstr "Per touchscreen industriali poco precisi."
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Force Done"
-msgstr ""
+msgstr "Forza completamento"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Force done"
-msgstr ""
+msgstr "Forza completamento"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1900,7 +1900,7 @@ msgstr "Intestazione e piè di pagina"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__hide_use_payment_terminal
 msgid "Hide Use Payment Terminal"
-msgstr ""
+msgstr "Nascondi usa un terminale di pagamento"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1978,6 +1978,8 @@ msgid ""
 "If ticked, each payment will generate a separated journal item. Ticking that"
 " option will slow the closing of the PoS."
 msgstr ""
+"Se selezionata, ciascun pagamento genera un movimento contabile separato. La"
+" selezione dell'opzione rallenta la chiusura del POS."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image_128
@@ -2020,6 +2022,9 @@ msgid ""
 "                Invocing/Accounting app will create Bank and Cash payment\n"
 "                methods automatically."
 msgstr ""
+"I metodi di pagamento banca e cassa vengono creati in modo automatico\n"
+"                installando il piano dei conti dalle impostazioni generali\n"
+"                dell'applicazione di fatturazione/contabilità."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_mercury
@@ -2113,7 +2118,7 @@ msgstr "È fatturato"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__is_in_company_currency
 msgid "Is Using Company Currency"
-msgstr ""
+msgstr "Sta usando la valuta aziendale"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_restaurant
@@ -2123,7 +2128,7 @@ msgstr "È un bar/ristorante"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_installed_account_accountant
 msgid "Is the Full Accounting Installed"
-msgstr ""
+msgstr "La contabilità completa è installata"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_bank_statement__account_id
@@ -2402,7 +2407,7 @@ msgstr "Varie"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 msgid "Module Pos Hr"
-msgstr ""
+msgstr "Modulo POS RU"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
@@ -2466,7 +2471,7 @@ msgstr "Nuova sessione"
 #: model:product.product,name:point_of_sale.newspaper_rack
 #: model:product.template,name:point_of_sale.newspaper_rack_product_template
 msgid "Newspaper Rack"
-msgstr ""
+msgstr "Cremagliera per giornali"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -2660,7 +2665,7 @@ msgstr "Apri menù POS"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Open PoS sessions that are using this payment method."
-msgstr ""
+msgstr "Sessioni PoS aperte che utilizzano questo metodo di pagamento."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3236,7 +3241,7 @@ msgstr "Resoconto fattura punto vendita"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Make Payment Wizard"
-msgstr ""
+msgstr "Procedura per effettuare pagamenti nel punto vendita"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_manager_id
@@ -4020,7 +4025,7 @@ msgstr "Imposta peso"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Set barcodes to scan products, customer cards, etc."
-msgstr "Imposta i codici per la lettura di prodotti, tessere clienti ecc."
+msgstr "Imposta i barcode per la lettura di prodotti, tessere clienti ecc."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4097,6 +4102,9 @@ msgid ""
 "errors. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
+"Alcuni ordini non possono essere inviati al server a causa di errori di "
+"configurazione. Puoi uscire dal punto vendita, ma non chiudere la sessione "
+"prima che il problema sia stato risolto."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4107,6 +4115,9 @@ msgid ""
 "issues. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
+"Alcuni ordini non possono essere inviati al server a causa di problemi di "
+"connessione internet. Puoi uscire dal punto vendita, ma non chiudere la "
+"sessione prima che il problema sia stato risolto."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
@@ -4364,8 +4375,8 @@ msgid ""
 "The Point of Sale could not find any product, client, employee\n"
 "                    or action associated with the scanned barcode."
 msgstr ""
-"Il punto vendita non ha trovato alcun prodotto, cliente, impiegato\n"
-"                    o azione associati al codice acquisito."
+"Il punto vendita non ha trovato nessun prodotto, cliente, dipendente\n"
+"o azione associata al barcode scansionato."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -4507,6 +4518,9 @@ msgid ""
 "selected category trees. If no category is specified, all available products"
 " will be shown"
 msgstr ""
+"Il punto vendita mostrerà solo i prodotti che si trovano all'interno di uno "
+"degli alberi delle categorie selezionate. Se non viene specificata alcuna "
+"categoria, verranno mostrati tutti i prodotti disponibili"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__pricelist_id
@@ -4714,6 +4728,11 @@ msgid ""
 "this maximum is reached, the user will have an error message at the closing "
 "of his session saying that he needs to contact his manager."
 msgstr ""
+"Il campo rappresenta, quando viene chiusa una sessione, la massima "
+"differenza consentita tra saldo finale e cassa teorica per supervisori "
+"diversi da quelli del POS. Se questo massimo viene raggiunto, l'utente "
+"ottiene un messaggio di errore, alla chiusura della sessione, che indica la "
+"necessità di contattare il suo supervisore."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_manager_id
@@ -5049,7 +5068,7 @@ msgstr "Unità"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Unknown Barcode"
-msgstr "Codice sconosciuto"
+msgstr "Barcode sconosciuto"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5094,8 +5113,7 @@ msgstr "Usare un terminale di pagamento"
 #: model:ir.model.fields,help:point_of_sale.field_res_partner__barcode
 msgid "Use a barcode to identify this contact from the Point of Sale."
 msgstr ""
-"Utilizzare un codice a barre per identificare questo contatto dal punto "
-"vendita."
+"Utilizzare un barcode per identificare questo contatto dal punto vendita."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5262,6 +5280,8 @@ msgid ""
 "You can't validate a bank statement that is used in an opened Session of a "
 "Point of Sale."
 msgstr ""
+"Non si può convalidare un estratto conto utilizzato in una sessione aperta "
+"di un punto vendita."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -5408,6 +5428,9 @@ msgid ""
 "(%.2f), the maximum allowed is: %.2f. You can contact your manager to force "
 "it."
 msgstr ""
+"Il saldo finale è troppo diverso dalla chiusura di cassa teorica (%.2f), il "
+"massimo consentito è: %.2f. Per forzarlo è possibile contattare il "
+"supervisore."
 
 #. module: point_of_sale
 #. openerp-web

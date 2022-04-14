@@ -8,8 +8,9 @@
 # Martin Trigaux, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Paolo Valier, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # BigBlu <paolo.moroni@air-srl.com>, 2021
+# Friederike Fasterling-Nesselbosch, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: BigBlu <paolo.moroni@air-srl.com>, 2021\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -88,6 +89,8 @@ msgid ""
 "Affect landed costs on reception operations and split them among products to"
 " update their cost price."
 msgstr ""
+"Riguarda i costi sbarcati nelle operazioni di ricezione, suddividendoli tra "
+"i prodotti per aggiornare il loro prezzo di costo."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -192,6 +195,8 @@ msgstr "Metodo ci calcolo costi"
 #, python-format
 msgid "Costing method change for product category %s: from %s to %s."
 msgstr ""
+"Modifica del metodo di imputazione dei costi per la categoria prodotti %s: "
+"da %s a %s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__counterpart_account_id
@@ -260,6 +265,9 @@ msgid ""
 "                                has changed for product template %s: from %s"
 " to %s."
 msgstr ""
+"A causa di un cambiamento di categoria di prodotto (da %s a %s), il metodo "
+"di imputazione dei costi è cambiato per il template di prodotto %s: da %s a "
+"%s."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -274,7 +282,7 @@ msgstr "Raggruppa per..."
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory__has_account_moves
 msgid "Has Account Moves"
-msgstr ""
+msgstr "Contiene movimenti contabili"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__id
@@ -369,7 +377,7 @@ msgstr "Ultimo aggiornamento il"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_id
 msgid "Linked To"
-msgstr ""
+msgstr "Collegati a "
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
@@ -400,6 +408,8 @@ msgid ""
 "Please define an expense account for this product: \"%s\" (id:%d) - or for "
 "its category: \"%s\"."
 msgstr ""
+"Definire un conto di costo per il prodotto \"%s\" (ID:%d) o per la sua "
+"categoria \"%s\"."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__new_price
@@ -435,7 +445,7 @@ msgstr "Modello prodotto"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Product value manually modified (from %s to %s)"
-msgstr ""
+msgstr "Valore del prodotto modificato manualmente (da %s a %s)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
@@ -446,7 +456,7 @@ msgstr "Quantità"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__quantity_svl
 msgid "Quantity Svl"
-msgstr ""
+msgstr "Quantità LVG"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -551,7 +561,7 @@ msgstr "Conto valutazione di magazzino (uscita)"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__stock_valuation_layer_ids
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_ids
 msgid "Stock Valuation Layer"
-msgstr ""
+msgstr "Livello valutazione giacenze"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_move_line__is_anglo_saxon_line
@@ -603,6 +613,9 @@ msgid ""
 "There is no valuation layers. Valuation layers are created when some product"
 " moves should impact the valuation of the stock."
 msgstr ""
+"Non ci sono livelli di valutazione. I livelli di valutazione si creano "
+"quando certi spostamenti di prodotti hanno un impatto sulla valutazione "
+"delle scorte."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__value
@@ -644,7 +657,7 @@ msgstr "Aggiorna il costo"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
 msgid "Update quantities on SO/PO"
-msgstr ""
+msgstr "Aggiornare le quantità sull'ordine di vendita/ordine di acquisto"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
@@ -693,6 +706,8 @@ msgstr ""
 #, python-format
 msgid "Valuation method change for product category %s: from %s to %s."
 msgstr ""
+"Modifica del metodo di valutazione per la categoria di prodotti %s: da %s a "
+"%s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
@@ -702,7 +717,7 @@ msgstr "Valore"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl
 msgid "Value Svl"
-msgstr ""
+msgstr "Valore LVG"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -754,6 +769,8 @@ msgid ""
 "You don't have any input valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"Non hai nessun conto di valutazione d'entrata definito sulla tua categoria "
+"di prodotti. Devi definirne uno prima di elaborare questa operazione."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0

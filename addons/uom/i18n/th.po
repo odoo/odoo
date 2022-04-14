@@ -9,6 +9,7 @@
 # Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2020
 # gsong <gsong2014@foxmail.com>, 2020
 # Odoo Thaidev <odoothaidev@gmail.com>, 2021
+# Wichanon Jamwutthipreecha, 2022
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Odoo Thaidev <odoothaidev@gmail.com>, 2021\n"
+"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,12 +49,12 @@ msgstr "เปิดใช้งาน"
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
 msgid "Add a new unit of measure"
-msgstr ""
+msgstr "เพิ่มหน่วยวัดใหม่"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
 msgid "Add a new unit of measure category"
-msgstr ""
+msgstr "เพิ่มหมวดหมู่หน่วยวัดใหม่"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
@@ -63,12 +64,12 @@ msgstr "ถูกเก็บ"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
 msgid "Bigger Ratio"
-msgstr ""
+msgstr "อัตราส่วนที่ใหญ่กว่า"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__bigger
 msgid "Bigger than the reference Unit of Measure"
-msgstr ""
+msgstr "ใหญ่กว่าหน่วยวัดอ้างอิง"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__category_id
@@ -135,7 +136,7 @@ msgstr "ชื่อที่ใช้แสดง"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_dozen
 msgid "Dozens"
-msgstr ""
+msgstr "โหล"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_hour
@@ -148,6 +149,8 @@ msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
+"หน่วยวัดนี้ใหญ่กว่าหน่วยวัดอ้างอิงในหมวดหมู่นี้กี่ครั้ง: 1 * (หน่วยนี้) = "
+"อัตราส่วน * (หน่วยอ้างอิง)"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor
@@ -155,6 +158,8 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
 msgstr ""
+"หน่วยนี้ใหญ่กว่าหรือเล็กกว่ามากเมื่อเทียบกับหน่วยวัดอ้างอิงสำหรับหมวดหมู่นี้:"
+" 1 * (หน่วยอ้างอิง) = อัตราส่วน * (หน่วยนี้)"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
@@ -193,7 +198,7 @@ msgstr ""
 #. module: uom
 #: model:res.groups,name:uom.group_uom
 msgid "Manage Multiple Units of Measure"
-msgstr ""
+msgstr "จัดการหน่วยวัดหลายหน่วย"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_uom
@@ -213,7 +218,7 @@ msgstr "อัตราส่วน"
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__reference
 msgid "Reference Unit of Measure for this category"
-msgstr ""
+msgstr "หน่วยอ้างอิงสำหรับหมวดหมู่นี้"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
@@ -223,12 +228,12 @@ msgstr "Rounding Factor"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
 msgid "Search UOM"
-msgstr ""
+msgstr "ค้นหา UOM"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
 msgid "Smaller than the reference Unit of Measure"
-msgstr ""
+msgstr "เล็กกว่าหน่วยวัดอ้างอิง"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
@@ -281,7 +286,7 @@ msgstr ""
 #: model:ir.model.fields,help:uom.field_uom_uom__active
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
-msgstr ""
+msgstr "ยกเลิกการเลือกช่องที่ใช้งานอยู่เพื่อปิดใช้งานหน่วยวัดโดยไม่ต้องลบ"
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_unit
@@ -329,6 +334,10 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
+"หน่วยวัดที่อยู่ในหมวดหมู่เดียวกันสามารถเป็น\n"
+"            เปลี่ยนระหว่างกัน ตัวอย่างเช่น ในหมวดหมู่\n"
+"            <i>'เวลา'</i>คุณจะมีหน่วยวัดต่อไปนี้:\n"
+"            ชั่วโมง วัน"
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
@@ -342,7 +351,7 @@ msgstr ""
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
-msgstr ""
+msgstr "หมวดหมู่ UoM %s ควรมีหน่วยอ้างอิงเพียงหนึ่งหน่วยวัดเท่านั้น"
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_vol
@@ -384,6 +393,8 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
+"คุณต้องกำหนดอัตราการแปลงระหว่างหน่วยวัดหลายหน่วย\n"
+"            ในหมวดเดียวกัน"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cm

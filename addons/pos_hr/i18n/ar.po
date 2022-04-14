@@ -7,6 +7,7 @@
 # Martin Trigaux, 2019
 # Shaima Safar <shaima.safar@open-inside.com>, 2019
 # Husam Migdadi <samwatson18@gmail.com>, 2019
+# Farid Fox, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Husam Migdadi <samwatson18@gmail.com>, 2019\n"
+"Last-Translator: Farid Fox, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +26,7 @@ msgstr ""
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 msgid "<span class=\"o_form_label oe_edit_only\">Allowed Employees </span>"
-msgstr ""
+msgstr "<span class=\"o_form_label oe_edit_only\">موظفون مسموح لهم</span>"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
@@ -61,17 +62,18 @@ msgstr "الموظف"
 #: code:addons/pos_hr/models/hr_employee.py:0
 #, python-format
 msgid "Employee: %s - PoS Config(s): %s \n"
-msgstr ""
+msgstr "موظف: %s - إعدادات نقطة البيع: %s \n"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__employee_ids
 msgid "Employees with access"
-msgstr ""
+msgstr "موظفون لديهم صلاحيات الوصول"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__employee_ids
 msgid "If left empty, all employees can log in to the PoS session"
 msgstr ""
+"إذا تم تركه فارغاً، سيتمكن كل الموظفين من تسجيل الدخول لجلسات نقطة البيع"
 
 #. module: pos_hr
 #. openerp-web
@@ -92,7 +94,7 @@ msgstr "إغلاق"
 #: code:addons/pos_hr/static/src/xml/pos.xml:0
 #, python-format
 msgid "Log in to"
-msgstr ""
+msgstr "تسجيل الدخول إلى"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
@@ -155,7 +157,7 @@ msgstr "مسح شارتك"
 #: code:addons/pos_hr/static/src/xml/pos.xml:0
 #, python-format
 msgid "Select Cashier"
-msgstr ""
+msgstr "إختيار الكاشير"
 
 #. module: pos_hr
 #. openerp-web
@@ -171,6 +173,8 @@ msgid ""
 "You cannot delete an employee that may be used in an active PoS session, "
 "close the session(s) first: \n"
 msgstr ""
+"لا يمكنك حذف موظف ربما يكون مستخدم في جلسة نقطة بيع نشطة، إغلق الجلسة "
+"(الجلسات) أولاً: \n"
 
 #. module: pos_hr
 #. openerp-web
