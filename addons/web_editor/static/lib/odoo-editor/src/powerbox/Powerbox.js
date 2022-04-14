@@ -12,6 +12,7 @@ function cycle(num, max) {
 
 export class Powerbox {
     constructor(options = {}) {
+        this._active = false;
         this.options = options;
         if (!this.options._t) this.options._t = string => string;
 
