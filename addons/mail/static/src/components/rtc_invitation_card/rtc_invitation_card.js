@@ -11,10 +11,10 @@ export class RtcInvitationCard extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {Thread}
+     * @returns {RtcInvitationCard|undefined}
      */
-    get thread() {
-        return this.messaging.models['Thread'].get(this.props.threadLocalId);
+    get rtcInvitationCard() {
+        return this.messaging.models['RtcInvitationCard'].get(this.props.localId);
     }
 
     //--------------------------------------------------------------------------
@@ -26,11 +26,11 @@ export class RtcInvitationCard extends Component {
      * @param {MouseEvent} ev
      */
     async _onClickAccept(ev) {
-        this.thread.open();
-        if (this.thread.hasPendingRtcRequest) {
+        this.rtcInvitationCard.thread.open();
+        if (this.rtcInvitationCard.thread.hasPendingRtcRequest) {
             return;
         }
-        await this.thread.toggleCall();
+        await this.rtcInvitationCard.thread.toggleCall();
     }
 
     /**
@@ -38,7 +38,7 @@ export class RtcInvitationCard extends Component {
      * @param {MouseEvent} ev
      */
     _onClickAvatar(ev) {
-        this.thread.open();
+        this.rtcInvitationCard.thread.open();
     }
 
     /**
@@ -46,16 +46,16 @@ export class RtcInvitationCard extends Component {
      * @param {MouseEvent} ev
      */
     _onClickRefuse(ev) {
-        if (this.thread.hasPendingRtcRequest) {
+        if (this.rtcInvitationCard.thread.hasPendingRtcRequest) {
             return;
         }
-        this.thread.leaveCall();
+        this.rtcInvitationCard.thread.leaveCall();
     }
 
 }
 
 Object.assign(RtcInvitationCard, {
-    props: { threadLocalId: String },
+    props: { localId: String },
     template: 'mail.RtcInvitationCard',
 });
 

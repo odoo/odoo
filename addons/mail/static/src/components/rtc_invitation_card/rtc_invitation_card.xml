@@ -2,15 +2,15 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.RtcInvitationCard" owl="1">
-        <t t-if="thread">
+        <t t-if="rtcInvitationCard">
             <div class="o_RtcInvitationCard" t-attf-class="{{ className }}" t-ref="root">
-                <t t-if="thread.rtcInvitingSession">
+                <t t-if="rtcInvitationCard.thread.rtcInvitingSession">
                     <div class="o_RtcInvitationCard_partnerInfo">
                         <img class="o_RtcInvitationCard_partnerInfoImage rounded-circle"
-                            t-att-src="thread.rtcInvitingSession.avatarUrl"
+                            t-att-src="rtcInvitationCard.thread.rtcInvitingSession.avatarUrl"
                             t-on-click="_onClickAvatar"
                             alt="Avatar"/>
-                        <span class="o_RtcInvitationCard_partnerInfoName" t-esc="thread.rtcInvitingSession.name"/>
+                        <span class="o_RtcInvitationCard_partnerInfoName" t-esc="rtcInvitationCard.thread.rtcInvitingSession.name"/>
                         <span class="o_RtcInvitationCard_partnerInfoText">Incoming Call...</span>
                     </div>
                 </t>
