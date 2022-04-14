@@ -11,7 +11,6 @@
                     <h2>Employees</h2>
                     <div class="row mt16 o_settings_container" name="employees_setting_container">
                         <div class="col-12 col-lg-6 o_setting_box" id="presence_control_setting" title="Presence of employees">
-
                             <div class="o_setting_right_pane">
                                 <span class="o_form_label">Presence Control</span>
                                 <div class="content-group" name="hr_presence_options">
@@ -85,6 +84,18 @@
                                             domain="[('company_id', '=', company_id)]"
                                             context="{'default_company_id': company_id}"/>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="home_working_setting">
+                            <div class="o_setting_left_pane">
+                                <field name="module_hr_homeworking"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_hr_homeworking"/>
+                                <div class="text-muted">
+                                        Display Homeworking settings for each employee and dedicated reports.
+                                        Presence icons will be updated with homeworking location.
                                 </div>
                             </div>
                         </div>

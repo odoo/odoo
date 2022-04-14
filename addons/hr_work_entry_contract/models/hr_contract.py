@@ -379,7 +379,7 @@ class HrContract(models.Model):
         # retrieve contracts for the current month
         today = fields.Date.today()
         start = today + relativedelta(day=1, hour=0)
-        stop = today + relativedelta(month=start.month + 1, day=31, hour=23, minute=59, second=59)
+        stop = today + relativedelta(months=1, day=31, hour=23, minute=59, second=59)
         contracts = self.env['hr.employee']._get_all_contracts(
             start, stop, states=['open', 'close'])
         # determine contracts to do (the ones whose generated dates have open periods this month)
