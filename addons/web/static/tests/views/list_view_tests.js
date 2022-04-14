@@ -24,6 +24,7 @@ import {
     getButtons,
     getFacetTexts,
     groupByMenu,
+    pagerNext,
     toggleActionMenu,
     toggleFavoriteMenu,
     toggleFilterMenu,
@@ -46,7 +47,6 @@ let testUtils,
     widgetRegistry,
     widgetRegistryOwl,
     cpHelpers,
-    FormView,
     ListView,
     ListRenderer,
     core,
@@ -3031,10 +3031,10 @@ QUnit.module("Views", (hooks) => {
                 relation: "foo",
             };
             const form = await makeView({
-                View: FormView,
+                type: "form",
                 resModel: "foo",
                 serverData,
-                res_id: 1,
+                resId: 1,
                 viewOptions: { mode: "edit" },
                 arch: `<form>
                     <sheet>
@@ -3267,10 +3267,10 @@ QUnit.module("Views", (hooks) => {
                 ],
             };
             const form = await makeView({
-                View: FormView,
+                type: "form",
                 resModel: "foo",
                 serverData,
-                res_id: 1,
+                resId: 1,
                 viewOptions: { mode: "edit" },
                 arch:
                     "<form>" +
@@ -3336,10 +3336,10 @@ QUnit.module("Views", (hooks) => {
                 ],
             };
             var form = await makeView({
-                View: FormView,
+                type: "form",
                 resModel: "foo",
                 serverData,
-                res_id: 1,
+                resId: 1,
                 viewOptions: { mode: "edit" },
                 arch:
                     "<form>" +
@@ -3387,10 +3387,10 @@ QUnit.module("Views", (hooks) => {
             },
         };
         var form = await makeView({
-            View: FormView,
+            type: "form",
             resModel: "foo",
             serverData,
-            res_id: 1,
+            resId: 1,
             viewOptions: { mode: "edit" },
             arch:
                 "<form>" +
@@ -3467,10 +3467,10 @@ QUnit.module("Views", (hooks) => {
         serverData.models.foo.records = [{ id: 1, o2m: [1] }];
         serverData.models.bar.records = [{ id: 1, display_name: "Oui" }];
         var form = await makeView({
-            View: FormView,
+            type: "form",
             resModel: "foo",
             serverData,
-            res_id: 1,
+            resId: 1,
             viewOptions: { mode: "edit" },
             arch:
                 "<form>" +
@@ -4696,11 +4696,9 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "use default_order on editable tree: sort on demand in page",
         async function (assert) {
-            assert.expect(4);
-
             serverData.models.bar.fields = {
                 name: { string: "Name", type: "char", sortable: true },
             };
@@ -4716,48 +4714,46 @@ QUnit.module("Views", (hooks) => {
             }
             serverData.models.foo.records[0].o2m = ids;
 
-            var form = await makeView({
-                View: FormView,
+            await makeView({
+                type: "form",
                 resModel: "foo",
                 serverData,
-                arch:
-                    "<form>" +
-                    "<sheet>" +
-                    '<field name="o2m">' +
-                    '<tree editable="bottom" default_order="name">' +
-                    '<field name="name"/>' +
-                    "</tree>" +
-                    "</field>" +
-                    "</sheet>" +
-                    "</form>",
-                res_id: 1,
+                arch: `
+                    <form>
+                        <sheet>
+                            <field name="o2m">
+                                <tree editable="bottom" default_order="name">
+                                    <field name="name"/>
+                                </tree>
+                            </field>
+                        </sheet>
+                    </form>`,
+                resId: 1,
             });
 
-            await testUtils.controlPanel.pagerNext(".o_field_widget[name=o2m]");
+            await pagerNext(target.querySelector(".o_field_widget[name=o2m]"));
             assert.strictEqual(
-                form.$("tbody tr:first").text(),
+                target.querySelector("tbody tr").textContent,
                 "Value 44",
                 "record 44 should be first"
             );
             assert.strictEqual(
-                form.$("tbody tr:eq(4)").text(),
+                target.querySelectorAll("tbody tr")[4].textContent,
                 "Value 48",
                 "record 48 should be last"
             );
 
-            await click(form.$(".o_column_sortable"));
+            await click(target.querySelector(".o_column_sortable"));
             assert.strictEqual(
-                form.$("tbody tr:first").text(),
+                target.querySelector("tbody tr").textContent,
                 "Value 08",
                 "record 48 should be first"
             );
             assert.strictEqual(
-                form.$("tbody tr:eq(4)").text(),
+                target.querySelectorAll("tbody tr")[4].textContent,
                 "Value 04",
                 "record 44 should be first"
             );
-
-            form.destroy();
         }
     );
 
@@ -4885,9 +4881,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, "tbody tr", 4, "should have 4 rows");
     });
 
-    QUnit.skipWOWL("support row decoration (with unset numeric values)", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("support row decoration (with unset numeric values)", async function (assert) {
         serverData.models.foo.records = [];
 
         await makeView({
@@ -4901,13 +4895,13 @@ QUnit.module("Views", (hooks) => {
         });
 
         await click(target.querySelector(".o_list_button_add"));
-
         assert.containsNone(
             target,
             "tr.o_data_row.text-danger",
             "the data row should not have .text-danger decoration (int_field is unset)"
         );
-        await editInput($(target).find('input[name="int_field"]'), "-3");
+
+        await editInput(target, '[name="int_field"] input', "-3");
         assert.containsOnce(
             target,
             "tr.o_data_row.text-danger",
@@ -4969,38 +4963,42 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, "tbody td.o_list_number.text-danger");
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "bounce create button when no data and click on empty area",
         async function (assert) {
-            assert.expect(4);
-
-            const list = await makeView({
+            patchWithCleanup(browser, {
+                setTimeout: () => {},
+            });
+            await makeView({
                 type: "list",
                 resModel: "foo",
                 serverData,
                 arch: '<tree><field name="foo"/></tree>',
-                viewOptions: {
-                    action: {
-                        help: '<p class="hello">click to add a record</p>',
-                    },
-                },
+                noContentHelp: '<p class="hello">click to add a record</p>',
+                searchViewArch: `
+                    <search>
+                        <filter name="Empty List" domain="[('id', '&lt;', 0)]"/>
+                    </search>`,
             });
 
             assert.containsNone(target, ".o_view_nocontent");
-            await click($(target).find(".o_list_view"));
-            assert.doesNotHaveClass($(target).find(".o_list_button_add"), "o_catch_attention");
+            await click(target, ".o_list_view");
+            assert.doesNotHaveClass(
+                target.querySelector(".o_list_button_add"),
+                "o_catch_attention"
+            );
 
-            await list.reload({ domain: [["id", "<", 0]] });
+            await toggleFilterMenu(target);
+            await toggleMenuItem(target, "Empty List");
             assert.containsOnce(target, ".o_view_nocontent");
-            await click($(target).find(".o_view_nocontent"));
-            assert.hasClass($(target).find(".o_list_button_add"), "o_catch_attention");
+
+            await click(target, ".o_view_nocontent");
+            assert.hasClass(target.querySelector(".o_list_button_add"), "o_catch_attention");
         }
     );
 
-    QUnit.skipWOWL("no content helper when no data", async function (assert) {
-        assert.expect(5);
-
-        var records = serverData.models.foo.records;
+    QUnit.test("no content helper when no data", async function (assert) {
+        const records = serverData.models.foo.records;
 
         serverData.models.foo.records = [];
 
@@ -5009,21 +5007,13 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: '<tree><field name="foo"/></tree>',
-            viewOptions: {
-                action: {
-                    help: '<p class="hello">click to add a partner</p>',
-                },
-            },
+            noContentHelp: '<p class="hello">click to add a partner</p>',
         });
-
         assert.containsOnce(target, ".o_view_nocontent", "should display the no content helper");
-
-        assert.containsNone(target, "table", "should not have a table in the dom");
-
-        assert.strictEqual(
-            $(target).find(".o_view_nocontent p.hello:contains(add a partner)").length,
-            1,
-            "should have rendered no content helper from action"
+        assert.containsNone(target, ".o_list_view table", "should not have a table in the dom");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_view_nocontent p.hello")].map((el) => el.textContent),
+            ["click to add a partner"]
         );
 
         serverData.models.foo.records = records;
@@ -5034,12 +5024,10 @@ QUnit.module("Views", (hooks) => {
             ".o_view_nocontent",
             "should not display the no content helper"
         );
-        assert.containsOnce(target, "table", "should have a table in the dom");
+        assert.containsOnce(target, ".o_list_view table", "should have a table in the dom");
     });
 
-    QUnit.skipWOWL("no nocontent helper when no data and no help", async function (assert) {
-        assert.expect(3);
-
+    QUnit.test("no nocontent helper when no data and no help", async function (assert) {
         serverData.models.foo.records = [];
 
         await makeView({
@@ -5054,16 +5042,12 @@ QUnit.module("Views", (hooks) => {
             ".o_view_nocontent",
             "should not display the no content helper"
         );
-
         assert.containsNone(target, "tr.o_data_row", "should not have any data row");
-
-        assert.containsOnce(target, "table", "should have a table in the dom");
+        assert.containsOnce(target, ".o_list_view table", "should have a table in the dom");
     });
 
-    QUnit.skipWOWL("empty list with sample data", async function (assert) {
-        assert.expect(19);
-
-        const list = await makeView({
+    QUnit.test("empty list with sample data", async function (assert) {
+        await makeView({
             type: "list",
             resModel: "foo",
             serverData,
@@ -5077,15 +5061,17 @@ QUnit.module("Views", (hooks) => {
                     <field name="date"/>
                     <field name="datetime"/>
                 </tree>`,
-            domain: [["id", "<", 0]], // such that no record matches the domain
-            viewOptions: {
-                action: {
-                    help: '<p class="hello">click to add a partner</p>',
-                },
-            },
+            context: { search_default_empty: true },
+            noContentHelp: '<p class="hello">click to add a partner</p>',
+            searchViewArch: `
+                    <search>
+                        <filter name="empty" domain="[('id', '&lt;', 0)]"/>
+                        <filter name="True Domain" domain="[(1,'=',1)]"/>
+                        <filter name="False Domain" domain="[(1,'=',0)]"/>
+                    </search>`,
         });
 
-        assert.hasClass($(target).findel, "o_view_sample_data");
+        assert.hasClass(target.querySelector(".o_list_view .o_content"), "o_view_sample_data");
         assert.containsOnce(target, ".o_list_table");
         assert.containsN(target, ".o_data_row", 10);
         assert.containsOnce(target, ".o_nocontent_help .hello");
@@ -5102,7 +5088,7 @@ QUnit.module("Views", (hooks) => {
         assert.notOk(isNaN(cells[2].innerText.trim()), "Intger value is a number");
         assert.ok(cells[3].innerText.trim(), "Many2one field is a string");
 
-        const firstM2MTag = cells[4].querySelector(":scope span.o_badge_text").innerText.trim();
+        const firstM2MTag = cells[4].querySelector(":scope span.o_tag_badge_text").innerText.trim();
         assert.ok(firstM2MTag.length > 0, "Many2many contains at least one string tag");
 
         assert.ok(
@@ -5114,33 +5100,73 @@ QUnit.module("Views", (hooks) => {
             "Datetime field should have the right format"
         );
 
-        const textContent = $(target).findel.text();
-        await reloadListView(target);
-        assert.strictEqual(
-            textContent,
-            $(target).findel.text(),
-            "The content should be the same after reloading the view without change"
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "empty");
+        await toggleMenuItem(target, "False Domain");
+        assert.doesNotHaveClass(
+            target.querySelector(".o_list_view .o_content"),
+            "o_view_sample_data"
         );
-
-        // reload with another domain -> should no longer display the sample records
-        await list.reload({ domain: Domain.FALSE_DOMAIN });
-
-        assert.doesNotHaveClass($(target).findel, "o_view_sample_data");
         assert.containsNone(target, ".o_list_table");
         assert.containsOnce(target, ".o_nocontent_help .hello");
 
-        // reload with another domain matching records
-        await list.reload({ domain: Domain.TRUE_DOMAIN });
-
-        assert.doesNotHaveClass($(target).findel, "o_view_sample_data");
+        await toggleMenuItem(target, "False Domain");
+        await toggleMenuItem(target, "True Domain");
+        assert.doesNotHaveClass(
+            target.querySelector(".o_list_view .o_content"),
+            "o_view_sample_data"
+        );
         assert.containsOnce(target, ".o_list_table");
         assert.containsN(target, ".o_data_row", 4);
         assert.containsNone(target, ".o_nocontent_help .hello");
     });
 
-    QUnit.skipWOWL("empty list with sample data: toggle optional field", async function (assert) {
-        assert.expect(9);
+    QUnit.test("refresh empty list with sample data", async function (assert) {
+        serverData.views = {
+            "foo,false,search": `
+                <search>
+                    <filter name="empty" domain="[('id', '&lt;', 0)]"/>
+                </search>`,
+            "foo,false,list": `
+                <tree sample="1">
+                    <field name="foo"/>
+                    <field name="bar"/>
+                    <field name="int_field"/>
+                    <field name="m2o"/>
+                    <field name="m2m" widget="many2many_tags"/>
+                    <field name="date"/>
+                    <field name="datetime"/>
+                </tree>`,
+            "foo,false,kanban": "<kanban></kanban>",
+        };
 
+        const webClient = await createWebClient({ serverData });
+
+        await doAction(webClient, {
+            res_model: "foo",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "list"],
+                [false, "kanban"],
+            ],
+            context: { search_default_empty: true },
+            help: '<p class="hello">click to add a partner</p>',
+        });
+        assert.hasClass(target.querySelector(".o_list_view .o_content"), "o_view_sample_data");
+        assert.containsOnce(target, ".o_list_table");
+        assert.containsN(target, ".o_data_row", 10);
+        assert.containsOnce(target, ".o_nocontent_help .hello");
+
+        const textContent = target.querySelector(".o_list_view").textContent;
+        await click(target, ".o_cp_switch_buttons .o_list");
+        assert.hasClass(target.querySelector(".o_list_view .o_content"), "o_view_sample_data");
+        assert.containsOnce(target, ".o_list_table");
+        assert.containsN(target, ".o_data_row", 10);
+        assert.containsOnce(target, ".o_nocontent_help .hello");
+        assert.strictEqual(target.querySelector(".o_list_view").textContent, textContent);
+    });
+
+    QUnit.test("empty list with sample data: toggle optional field", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
@@ -5150,9 +5176,9 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo"/>
                     <field name="m2o" optional="hide"/>
                 </tree>`,
-            domain: Domain.FALSE_DOMAIN,
+            domain: Domain.FALSE.toList(),
         });
-        assert.hasClass(target, "o_view_sample_data");
+        assert.hasClass(target.querySelector(".o_list_view .o_content"), "o_view_sample_data");
         assert.ok(target.querySelectorAll(".o_data_row").length > 0);
         assert.hasClass(target.querySelectorAll(".o_data_row"), "o_sample_data_disabled");
         assert.containsN(target, "th", 2, "should have 2 th, 1 for selector and 1 for foo");
@@ -5162,16 +5188,14 @@ QUnit.module("Views", (hooks) => {
 
         await click(target, ".o_optional_columns_dropdown span.dropdown-item:first-child label");
 
-        assert.hasClass(target, "o_view_sample_data");
+        assert.hasClass(target.querySelector(".o_list_view .o_content"), "o_view_sample_data");
         assert.ok(target.querySelectorAll(".o_data_row").length > 0);
         assert.hasClass(target.querySelector(".o_data_row"), "o_sample_data_disabled");
         assert.containsN(target, "th", 3);
     });
 
     QUnit.skipWOWL("empty list with sample data: keyboard navigation", async function (assert) {
-        assert.expect(11);
-
-        const list = await makeView({
+        await makeView({
             arch: `
                 <tree sample="1">
                     <field name="foo"/>
@@ -5179,7 +5203,7 @@ QUnit.module("Views", (hooks) => {
                     <field name="int_field"/>
                 </tree>`,
             serverData,
-            domain: Domain.FALSE_DOMAIN,
+            domain: Domain.FALSE.toList(),
             resModel: "foo",
         });
 
@@ -5190,7 +5214,7 @@ QUnit.module("Views", (hooks) => {
             target.querySelector(".o_list_table > thead .o_list_record_selector"),
             "o_sample_data_disabled"
         );
-        assert.containsNone(list.renderer, 'input:not([tabindex="-1"])');
+        assert.containsNone(target.querySelector(".o_list_renderer"), 'input:not([tabindex="-1"])');
 
         // From search bar
         assert.hasClass(document.activeElement, "o_searchview_input");
@@ -5222,37 +5246,7 @@ QUnit.module("Views", (hooks) => {
         assert.ok(document.activeElement.dataset.name === "foo");
     });
 
-    QUnit.skipWOWL("non empty list with sample data", async function (assert) {
-        assert.expect(6);
-
-        const list = await makeView({
-            type: "list",
-            resModel: "foo",
-            serverData,
-            arch: `
-                <tree sample="1">
-                    <field name="foo"/>
-                    <field name="bar"/>
-                    <field name="int_field"/>
-                </tree>`,
-            domain: Domain.TRUE_DOMAIN,
-        });
-
-        assert.containsOnce(target, ".o_list_table");
-        assert.containsN(target, ".o_data_row", 4);
-        assert.doesNotHaveClass($(target).findel, "o_view_sample_data");
-
-        // reload with another domain matching no record (should not display the sample records)
-        await list.reload({ domain: Domain.FALSE_DOMAIN });
-
-        assert.containsOnce(target, ".o_list_table");
-        assert.containsNone(target, ".o_data_row");
-        assert.doesNotHaveClass($(target).findel, "o_view_sample_data");
-    });
-
-    QUnit.skipWOWL("click on header in empty list with sample data", async function (assert) {
-        assert.expect(4);
-
+    QUnit.test("non empty list with sample data", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
@@ -5263,47 +5257,84 @@ QUnit.module("Views", (hooks) => {
                     <field name="bar"/>
                     <field name="int_field"/>
                 </tree>`,
-            domain: Domain.FALSE_DOMAIN,
+            domain: Domain.TRUE.toList(),
+            context: { search_default_true_domain: true },
+            searchViewArch: `
+                    <search>
+                        <filter name="true_domain" domain="[(1,'=',1)]"/>
+                        <filter name="false_domain" domain="[(1,'=',0)]"/>
+                    </search>`,
         });
 
-        assert.hasClass(target, "o_view_sample_data");
+        assert.containsOnce(target, ".o_list_table");
+        assert.containsN(target, ".o_data_row", 4);
+        assert.doesNotHaveClass(
+            target.querySelector(".o_list_view .o_content"),
+            "o_view_sample_data"
+        );
+
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "true_domain");
+        await toggleMenuItem(target, "false_domain");
+        assert.containsOnce(target, ".o_list_table");
+        assert.containsNone(target, ".o_data_row");
+        assert.doesNotHaveClass(
+            target.querySelector(".o_list_view .o_content"),
+            "o_view_sample_data"
+        );
+    });
+
+    QUnit.test("click on header in empty list with sample data", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree sample="1">
+                    <field name="foo"/>
+                    <field name="bar"/>
+                    <field name="int_field"/>
+                </tree>`,
+            domain: Domain.FALSE.toList(),
+        });
+
+        assert.hasClass(target.querySelector(".o_list_view .o_content"), "o_view_sample_data");
         assert.containsOnce(target, ".o_list_table");
         assert.containsN(target, ".o_data_row", 10);
 
-        const content = $(target).findel.text();
-        await click($(target).find("tr:first .o_column_sortable:first"));
+        const content = target.querySelector(".o_list_view").textContent;
+
+        await click(target.querySelector("tr .o_column_sortable"));
         assert.strictEqual(
-            $(target).findel.text(),
+            target.querySelector(".o_list_view").textContent,
             content,
             "the content should still be the same"
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "non empty editable list with sample data: delete all records",
         async function (assert) {
-            assert.expect(7);
-
             await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
                 arch: `
                 <tree editable="top" sample="1">
                     <field name="foo"/>
                     <field name="bar"/>
                     <field name="int_field"/>
                 </tree>`,
-                serverData,
-                domain: Domain.TRUE_DOMAIN,
-                resModel: "foo",
-                viewOptions: {
-                    action: {
-                        help: '<p class="hello">click to add a partner</p>',
-                    },
-                },
+                domain: Domain.TRUE.toList(),
+                noContentHelp: '<p class="hello">click to add a partner</p>',
                 actionMenus: {},
             });
 
             // Initial state: all records displayed
-            assert.doesNotHaveClass(target, "o_view_sample_data");
+            assert.doesNotHaveClass(
+                target.querySelector(".o_list_view .o_content"),
+                "o_view_sample_data"
+            );
             assert.containsOnce(target, ".o_list_table");
             assert.containsN(target, ".o_data_row", 4);
             assert.containsNone(target, ".o_nocontent_help");
@@ -5312,10 +5343,13 @@ QUnit.module("Views", (hooks) => {
             await click(target.querySelector("thead .o_list_record_selector input"));
             await toggleActionMenu(target);
             await toggleMenuItem(target, "Delete");
-            await click($(".modal-footer .btn-primary"));
+            await click(target.querySelector(".modal-footer .btn-primary"));
 
             // Final state: no more sample data, but nocontent helper displayed
-            assert.doesNotHaveClass(target, "o_view_sample_data");
+            assert.doesNotHaveClass(
+                target.querySelector(".o_list_view .o_content"),
+                "o_view_sample_data"
+            );
             assert.containsNone(target, ".o_list_table");
             assert.containsOnce(target, ".o_nocontent_help");
         }
@@ -6659,7 +6693,7 @@ QUnit.module("Views", (hooks) => {
             serverData.models.bar.records[1].stage = "open";
 
             const form = await makeView({
-                View: FormView,
+                type: "form",
                 resModel: "foo",
                 serverData,
                 arch: `<form>
@@ -6670,7 +6704,7 @@ QUnit.module("Views", (hooks) => {
                         </tree>
                     </field>
                 </form>`,
-                res_id: 1,
+                resId: 1,
                 viewOptions: {
                     mode: "edit",
                 },
@@ -7411,7 +7445,7 @@ QUnit.module("Views", (hooks) => {
 
             serverData.models.foo.records[0].o2m = [1, 2];
             var form = await makeView({
-                View: FormView,
+                type: "form",
                 resModel: "foo",
                 serverData,
                 arch:
@@ -7423,7 +7457,7 @@ QUnit.module("Views", (hooks) => {
                     "</field>" +
                     '<field name="foo"/>' +
                     "</sheet></form>",
-                res_id: 1,
+                resId: 1,
                 viewOptions: {
                     mode: "edit",
                 },
@@ -7536,9 +7570,9 @@ QUnit.module("Views", (hooks) => {
             serverData.models.bar.records[0].o2m = [1, 4];
 
             var form = await makeView({
-                View: FormView,
+                type: "form",
                 model: "bar",
-                res_id: 1,
+                resId: 1,
                 serverData,
                 arch:
                     "<form>" +
@@ -7739,7 +7773,7 @@ QUnit.module("Views", (hooks) => {
                     '<field name="bar" invisible="1"/>' +
                     '<field name="int_field"/>' +
                     "</tree>",
-                res_id: 1,
+                resId: 1,
             });
 
             await click($(target).find("td:contains(gnap)"));
@@ -7771,7 +7805,7 @@ QUnit.module("Views", (hooks) => {
                     '<field name="foo"/>' +
                     '<button name="kikou" string="Kikou" type="object"/>' +
                     "</tree>",
-                res_id: 1,
+                resId: 1,
             });
 
             await click($(target).find("tbody tr:eq(2) td:eq(1)"));
@@ -7809,7 +7843,7 @@ QUnit.module("Views", (hooks) => {
                     '<button name="kikou" string="Kikou" type="object"/>' +
                     '<field name="int_field"/>' +
                     "</tree>",
-                res_id: 1,
+                resId: 1,
             });
 
             await click($(target).find("tbody tr:eq(2) td:eq(2)"));
@@ -13353,7 +13387,7 @@ QUnit.module("Views", (hooks) => {
             serverData.models.foo.records[0].o2m = [1, 2];
 
             const form = await makeView({
-                View: FormView,
+                type: "form",
                 resModel: "foo",
                 serverData,
                 arch: `
@@ -13372,7 +13406,7 @@ QUnit.module("Views", (hooks) => {
                         </notebook>
                     </sheet>
                 </form>`,
-                res_id: 1,
+                resId: 1,
             });
 
             const listWidth = form.el.querySelector(".o_list_view").offsetWidth;
@@ -13755,7 +13789,7 @@ QUnit.module("Views", (hooks) => {
             serverData.models.foo.records[0].o2m = [1, 2];
 
             const form = await makeView({
-                View: FormView,
+                type: "form",
                 resModel: "foo",
                 serverData,
                 arch: `
@@ -13775,7 +13809,7 @@ QUnit.module("Views", (hooks) => {
                         </field>
                     </group>
                 </form>`,
-                res_id: 1,
+                resId: 1,
             });
 
             const th = form.el.getElementsByTagName("th")[0];
@@ -13819,7 +13853,7 @@ QUnit.module("Views", (hooks) => {
             serverData.models.foo.records[0].o2m = [1, 2];
 
             const form = await makeView({
-                View: FormView,
+                type: "form",
                 resModel: "foo",
                 serverData,
                 arch: `
@@ -13839,7 +13873,7 @@ QUnit.module("Views", (hooks) => {
                         </notebook>
                     </sheet>
                 </form>`,
-                res_id: 1,
+                resId: 1,
             });
 
             const th = form.el.getElementsByTagName("th")[0];
@@ -14369,9 +14403,9 @@ QUnit.module("Views", (hooks) => {
             serverData.models.bar.records[0].o2m = [1, 4];
 
             var form = await makeView({
-                View: FormView,
+                type: "form",
                 model: "bar",
-                res_id: 1,
+                resId: 1,
                 serverData,
                 arch:
                     "<form>" +

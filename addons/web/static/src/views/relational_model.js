@@ -2797,6 +2797,10 @@ export class RelationalModel extends Model {
         return new DpClass(this, params, state);
     }
 
+    hasData() {
+        return this.root.count > 0;
+    }
+
     get nextVirtualId() {
         return `virtual_${this.nextId++}`;
     }

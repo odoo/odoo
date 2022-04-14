@@ -9,9 +9,11 @@ import { Field } from "@web/fields/field";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { useBounceButton } from "../helpers/view_hook";
 
 const {
     Component,
+    markup,
     onPatched,
     onWillPatch,
     onWillUpdateProps,
@@ -76,6 +78,13 @@ export class ListRenderer extends Component {
             }
             this.cellToFocus = null;
         });
+        const rootRef = useRef("root");
+        useBounceButton(rootRef, () => {
+            return this.showNoContentHelper;
+        });
+        this.noContentHelp = this.props.noContentHelp
+            ? markup(this.props.noContentHelp)
+            : undefined;
     }
 
     get fields() {
@@ -285,6 +294,9 @@ export class ListRenderer extends Component {
         if (record.isInEdition) {
             classNames.push("o_selected_row");
         }
+        if (this.props.list.model.useSampleModel) {
+            classNames.push("o_sample_data_disabled");
+        }
         return classNames.join(" ");
     }
 
@@ -398,7 +410,7 @@ export class ListRenderer extends Component {
     }
 
     onClickSortColumn(column) {
-        if (this.props.list.editedRecord) {
+        if (this.props.list.editedRecord || this.props.list.model.useSampleModel) {
             return;
         }
         const fieldName = column.name;
@@ -440,6 +452,16 @@ export class ListRenderer extends Component {
         browser.localStorage[this.keyOptionalFields] = Object.keys(
             this.optionalActiveFields
         ).filter((fieldName) => this.optionalActiveFields[fieldName]);
+    }
+
+    get showNoContentHelper() {
+        const { model } = this.props.list;
+        return this.noContentHelp && (model.useSampleModel || !model.hasData());
+    }
+
+    get showTable() {
+        const { model } = this.props.list;
+        return model.hasData() || !this.noContentHelp;
     }
 
     toggleGroup(group) {
@@ -503,5 +525,6 @@ ListRenderer.props = [
     "creates?",
     "hasSelectors?",
     "editable?",
+    "noContentHelp?",
 ];
 ListRenderer.defaultProps = { hasSelectors: false };

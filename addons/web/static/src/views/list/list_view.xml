@@ -17,7 +17,7 @@
                             resModel="model.root.resModel"/>
                     </t>
                 </t>
-                <ListRenderer list="model.root" archInfo="archInfo" hasSelectors="props.hasSelectors" editable="editable" openRecord.bind="openRecord"/>
+                <ListRenderer list="model.root" archInfo="archInfo" hasSelectors="props.hasSelectors" editable="editable" openRecord.bind="openRecord" noContentHelp="props.info.noContentHelp"/>
             </Layout>
         </div>
     </t>
@@ -34,7 +34,7 @@
                     </button>
                 </t>
                 <t t-elif="activeActions['create'] and !model.root.isGrouped">
-                    <button type="button" class="btn btn-primary o_list_button_add" data-tooltip="Create record" aria-label="Create record" data-hotkey="c" t-on-click="onClickCreate">
+                    <button type="button" class="btn btn-primary o_list_button_add" data-tooltip="Create record" aria-label="Create record" data-hotkey="c" t-on-click="onClickCreate" data-bounce-button="">
                         Create
                     </button>
                 </t>
