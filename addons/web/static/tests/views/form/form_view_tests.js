@@ -6743,7 +6743,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         function getVisibleButtonTexts() {
-            return [...target.querySelectorAll(".o_form_view .modal-footer button")].map((x) =>
+            return [...target.querySelectorAll(".modal-footer button:not(.d-none)")].map((x) =>
                 x.innerHTML.trim()
             );
         }
@@ -6774,8 +6774,8 @@ QUnit.module("Views", (hooks) => {
         await doAction(webClient, 1);
         await nextTick();
 
-        assert.containsOnce(target.querySelector(".o_form_view .modal-footer"), "button.infooter");
-        assert.containsNone(target.querySelector(".o_form_view .o_content"), "button.infooter");
+        assert.containsOnce(target.querySelector(".modal-footer"), "button.infooter");
+        assert.containsNone(target.querySelector(".o_form_view"), "button.infooter");
     });
 
     QUnit.skipWOWL("open new record even with warning message", async function (assert) {

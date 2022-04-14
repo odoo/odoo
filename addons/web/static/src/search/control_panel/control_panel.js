@@ -34,6 +34,7 @@ export class ControlPanel extends Component {
                 "top-left": true,
                 "top-right": true,
                 "bottom-left": true,
+                "bottom-left-buttons": true,
                 "bottom-right": true,
             },
             this.props.display || this.env.searchModel.display.controlPanel

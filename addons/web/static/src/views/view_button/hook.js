@@ -4,7 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-const { useRef, useSubEnv } = owl;
+const { useEnv, useRef, useSubEnv } = owl;
 
 function disableButtons(el) {
     // WOWL: can we do this non-imperatively?
@@ -20,9 +20,10 @@ export function useViewButtons(model, beforeExecuteAction = () => {}, refName = 
     const dialog = useService("dialog");
     const comp = owl.useComponent();
     const ref = useRef(refName);
+    const env = useEnv();
     useSubEnv({
         async onClickViewButton({ clickParams, record }) {
-            const manuallyDisabledButtons = disableButtons(ref.el);
+            const manuallyDisabledButtons = disableButtons(getEl());
 
             await beforeExecuteAction(clickParams);
 
@@ -68,7 +69,7 @@ export function useViewButtons(model, beforeExecuteAction = () => {}, refName = 
                     await action.doActionButton(doActionParams);
                 }
             } finally {
-                if (ref.el) {
+                if (getEl()) {
                     for (const btn of manuallyDisabledButtons) {
                         btn.removeAttribute("disabled");
                     }
@@ -76,4 +77,12 @@ export function useViewButtons(model, beforeExecuteAction = () => {}, refName = 
             }
         },
     });
+
+    function getEl() {
+        if (env.inDialog) {
+            return ref.el.closest(".modal");
+        } else {
+            return ref.el;
+        }
+    }
 }

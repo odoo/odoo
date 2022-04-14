@@ -23,12 +23,14 @@ export class Layout extends Component {
         this.components = extractLayoutComponents(this.env.config);
         if (this.env.inDialog) {
             display.controlPanel["top-left"] = false;
-            display.controlPanel["bottom-left"] = false;
+            display.controlPanel["bottom-left-buttons"] = false;
         }
         this.display = display;
     }
     get controlPanelSlots() {
         const slots = { ...this.props.slots };
+        slots["control-panel-bottom-left-buttons"] = slots["layout-buttons"];
+        delete slots["layout-buttons"];
         delete slots.default;
         return slots;
     }

@@ -16,16 +16,18 @@
                             </h4>
                             <button type="button" class="close" aria-label="Close" tabindex="-1" t-on-click="data.close">×</button>
                         </header>
-                        <main class="modal-body">
-                            <t t-slot="default"/>
-                        </main>
-                        <footer t-if="props.footer" class="modal-footer justify-content-around justify-content-sm-start flex-wrap gap-1">
+                        <!-- FIXME: WOWL there is a bug on t-portal on owl, in which t-portal don't work on multinode.
+                        To avoid this we place the footer before the body -->
+                        <footer t-if="renderFooter" class="modal-footer justify-content-around justify-content-sm-start flex-wrap gap-1" style="order:2" t-ref="dialogFooter">
                             <t t-slot="footer">
                                 <button class="btn btn-primary" t-on-click="data.close">
                                     <t>Ok</t>
                                 </button>
                             </t>
                         </footer>
+                        <main class="modal-body">
+                            <t t-slot="default"/>
+                        </main>
                     </div>
                 </div>
             </div>

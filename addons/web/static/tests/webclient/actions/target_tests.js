@@ -93,9 +93,9 @@ QUnit.module("ActionManager", (hooks) => {
             "the button should be in the footer"
         );
         assert.containsOnce(
-            $(".o_technical_modal .modal-footer")[0],
-            "button",
-            "the modal footer should only contain one button"
+            target,
+            ".modal-footer button:not(.d-none)",
+            "the modal footer should only contain one visible button"
         );
     });
 
@@ -208,13 +208,13 @@ QUnit.module("ActionManager", (hooks) => {
             assert.containsNone(target, '.o_technical_modal .modal-body button[special="save"]');
             assert.containsNone(target, ".o_technical_modal .modal-body button.infooter");
             assert.containsOnce(target, ".o_technical_modal .modal-footer button.infooter");
-            assert.containsOnce(target, ".o_technical_modal .modal-footer button");
+            assert.containsOnce(target, ".o_technical_modal .modal-footer button:not(.d-none)");
             await doAction(webClient, 25);
             assert.containsNone(target, ".o_technical_modal .modal-body button.infooter");
             assert.containsNone(target, ".o_technical_modal .modal-footer button.infooter");
             assert.containsNone(target, '.o_technical_modal .modal-body button[special="save"]');
             assert.containsOnce(target, '.o_technical_modal .modal-footer button[special="save"]');
-            assert.containsOnce(target, ".o_technical_modal .modal-footer button");
+            assert.containsOnce(target, ".o_technical_modal .modal-footer button:not(.d-none)");
         }
     );
 
