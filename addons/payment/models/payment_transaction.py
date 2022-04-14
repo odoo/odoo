@@ -200,11 +200,14 @@ class PaymentTransaction(models.Model):
                 'partner_phone': partner.phone,
             })
 
-            # Compute fees
-            currency = self.env['res.currency'].browse(values.get('currency_id')).exists()
-            values['fees'] = acquirer._compute_fees(
-                values.get('amount', 0), currency, partner.country_id
-            )
+            # Compute fees, for validation transactions fees are zero
+            if values.get('operation') == 'validation':
+                values['fees'] = 0
+            else:
+                currency = self.env['res.currency'].browse(values.get('currency_id')).exists()
+                values['fees'] = acquirer._compute_fees(
+                    values.get('amount', 0), currency, partner.country_id,
+                )
 
             # Include acquirer-specific create values
             values.update(self._get_specific_create_values(acquirer.provider, values))
