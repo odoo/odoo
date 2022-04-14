@@ -7,8 +7,5 @@ class ListMany2ManyTagsField extends Many2ManyTagsField {
     get canOpenColorDropdown() {
         return false;
     }
-    get showM2OSelectionField() {
-        return false;
-    }
 }
 registry.category("fields").add("list.many2many_tags", ListMany2ManyTagsField);

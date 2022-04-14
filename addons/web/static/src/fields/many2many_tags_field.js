@@ -32,12 +32,16 @@ export class Many2ManyTagsField extends Component {
         }));
     }
     get canOpenColorDropdown() {
-        return this.props.canEditColor;
+        return this.handlesColor() && this.props.canEditColor;
     }
     get showM2OSelectionField() {
         return !this.props.readonly;
     }
+    handlesColor() {
+        return !(this.props.colorField === undefined || this.props.colorField === null);
+    }
     tagColorClass(tag) {
+        if (!this.handlesColor()) return;
         return `o_tag_color_${tag.colorIndex}`;
     }
     switchTagColor(colorIndex, tag) {

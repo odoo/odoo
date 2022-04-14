@@ -697,64 +697,63 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".o_colorlist");
     });
 
-    QUnit.skipWOWL("fieldmany2many tags in editable list", async function (assert) {
+    QUnit.test("fieldmany2many tags in editable list", async function (assert) {
         assert.expect(7);
 
         serverData.models.partner.records[0].timmy = [12];
 
-        var list = await makeView({
+        await makeView({
             type: "list",
             resModel: "partner",
             serverData,
             context: { take: "five" },
-            arch:
-                '<tree editable="bottom">' +
-                '<field name="foo"/>' +
-                '<field name="timmy" widget="many2many_tags"/>' +
-                "</tree>",
+            arch: `<tree editable="bottom">
+                    <field name="timmy" widget="many2many_tags" />
+                </tree>`,
             mockRPC: (route, { kwargs, method, model }) => {
                 if (method === "read" && model === "partner_type") {
-                    assert.deepEqual(
-                        kwargs.context,
-                        { take: "five" },
+                    assert.strictEqual(
+                        kwargs.context.take,
+                        "five",
                         "The context should be passed to the RPC"
                     );
                 }
             },
         });
 
+        const firstRow = target.querySelectorAll(".o_data_row")[0];
+        const m2mTagsCell = firstRow.querySelector(".o_many2many_tags_cell");
+
         assert.containsOnce(
-            list,
-            ".o_data_row:first .o_field_many2many_tags .badge",
+            firstRow,
+            ".o_field_many2many_tags .badge",
             "m2m field should contain one tag"
         );
 
         // edit first row
-        await click(list.el.querySelector(".o_data_row:first td:nth(2)"));
+        await click(m2mTagsCell);
 
-        var m2o = list.el.querySelector(
-            ".o_data_row:first .o_field_many2many_tags .o_field_many2one"
+        assert.containsOnce(
+            m2mTagsCell,
+            ".o_field_many2many_selection",
+            "a many2one widget should have been instantiated"
         );
-        assert.strictEqual(m2o.length, 1, "a many2one widget should have been instantiated");
 
         // add a tag
-        const autocomplete = target.querySelector("div[name='timmy'] .o-autocomplete.dropdown");
-        await click(autocomplete);
-        //await testUtils.fields.many2one.clickHighlightedItem("timmy");
+        await selectDropdownItem(firstRow, "timmy", "silver");
 
         assert.containsN(
-            list,
-            ".o_data_row:first .o_field_many2many_tags .badge",
+            firstRow,
+            ".o_field_many2many_tags .badge",
             2,
             "m2m field should contain 2 tags"
         );
 
-        // leave edition
-        await click(list.el.querySelector(".o_data_row:nth(1) td:nth(2)"));
+        await clickSave(target);
 
         assert.containsN(
-            list,
-            ".o_data_row:first .o_field_many2many_tags .badge",
+            firstRow,
+            ".o_field_many2many_tags .badge",
             2,
             "m2m field should contain 2 tags"
         );
