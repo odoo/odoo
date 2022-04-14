@@ -3,6 +3,7 @@
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 
 from odoo import fields, SUPERUSER_ID
 
@@ -122,3 +123,23 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         })
         holiday.with_user(SUPERUSER_ID).action_validate()
         self.assertEqual(len(holiday.timesheet_ids), 0, 'Number of generated timesheets should be zero since the leave type does not generate timesheet')
+
+    @freeze_time('2018-02-05')  # useful to be able to cancel the validated time off
+    def test_cancel_validate_holidays(self):
+        number_of_days = (self.leave_end_datetime - self.leave_start_datetime).days
+        holiday = self.Requests.with_user(self.user_employee).create({
+            'name': 'Leave 1',
+            'employee_id': self.empl_employee.id,
+            'holiday_status_id': self.hr_leave_type_with_ts.id,
+            'date_from': self.leave_start_datetime,
+            'date_to': self.leave_end_datetime,
+            'number_of_days': number_of_days,
+        })
+        holiday.with_user(self.env.user).action_validate()
+        self.assertEqual(len(holiday.timesheet_ids), number_of_days, 'Number of generated timesheets should be the same as the leave duration (1 per day between %s and %s)' % (fields.Datetime.to_string(self.leave_start_datetime), fields.Datetime.to_string(self.leave_end_datetime)))
+
+        self.env['hr.holidays.cancel.leave'].with_user(self.user_employee).with_context(default_leave_id=holiday.id) \
+            .new({'reason': 'Test remove holiday'}) \
+            .action_cancel_leave()
+        self.assertFalse(holiday.active, 'The time off should be archived')
+        self.assertEqual(len(holiday.timesheet_ids), 0, 'The timesheets generated should be unlink.')
