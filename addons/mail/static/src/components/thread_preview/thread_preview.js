@@ -60,25 +60,6 @@ export class ThreadPreview extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClick(ev) {
-        if (!this.threadPreviewView) {
-            return;
-        }
-        const markAsRead = this.threadPreviewView.markAsReadRef.el;
-        if (markAsRead && markAsRead.contains(ev.target)) {
-            // handled in `_onClickMarkAsRead`
-            return;
-        }
-        this.threadPreviewView.thread.open();
-        if (!this.messaging.device.isMobile) {
-            this.messaging.messagingMenu.close();
-        }
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     _onClickMarkAsRead(ev) {
         if (this.threadPreviewView.thread.lastNonTransientMessage) {
             this.threadPreviewView.thread.markAsSeen(this.threadPreviewView.thread.lastNonTransientMessage);

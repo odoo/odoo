@@ -9,6 +9,23 @@ registerModel({
     identifyingFields: ['notificationListViewOwner', 'thread'],
     recordMethods: {
         /**
+         * @param {MouseEvent} ev
+         */
+        onClick(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            const markAsRead = this.markAsReadRef.el;
+            if (markAsRead && markAsRead.contains(ev.target)) {
+                // handled in `_onClickMarkAsRead`
+                return;
+            }
+            this.thread.open();
+            if (!this.messaging.device.isMobile) {
+                this.messaging.messagingMenu.close();
+            }
+        },
+        /**
          * @private
          * @returns {FieldCommand}
          */
