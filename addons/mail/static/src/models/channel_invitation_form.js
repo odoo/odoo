@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
 registerModel({
@@ -57,11 +57,9 @@ registerModel({
                     },
                 }));
             }
-            this.update({
-                searchTerm: "",
-                selectedPartners: unlinkAll(),
-            });
-            this.delete();
+            if (this.exists()) {
+                this.delete();
+            }
         },
         /**
          * @param {Partner} partner

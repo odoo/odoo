@@ -26,9 +26,12 @@ QUnit.test('receive visitor typing status "is typing"', async function (assert) 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         anonymous_name: "Visitor 20",
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+        ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
-        channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
     });
     const { messaging, widget } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({

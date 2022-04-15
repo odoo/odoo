@@ -16,9 +16,12 @@ QUnit.test('livechats should be in "chat" filter', async function (assert) {
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         anonymous_name: "Visitor 11",
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+        ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
-        channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
     });
     const { createMessagingMenuComponent, messaging } = await start();
     await createMessagingMenuComponent();

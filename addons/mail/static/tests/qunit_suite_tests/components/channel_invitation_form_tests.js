@@ -20,8 +20,11 @@ QUnit.test('should display the channel invitation form after clicking on the inv
     });
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
     const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId1 }],
+        ],
         channel_type: 'chat',
-        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
         public: 'private',
     });
     const { click } = await start({
@@ -56,8 +59,11 @@ QUnit.test('should be able to search for a new user to invite from an existing c
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
     pyEnv['res.users'].create({ partner_id: resPartnerId2 });
     const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId1 }],
+        ],
         channel_type: 'chat',
-        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
         public: 'private',
     });
     const { click } = await start({
@@ -93,8 +99,11 @@ QUnit.test('should be able to create a new group chat from an existing chat', as
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
     pyEnv['res.users'].create({ partner_id: resPartnerId2 });
     const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId1 }],
+        ],
         channel_type: 'chat',
-        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
         public: 'private',
     });
     const { click } = await start({
@@ -109,8 +118,7 @@ QUnit.test('should be able to create a new group chat from an existing chat', as
 
     await click(`.o_ThreadViewTopbar_inviteButton`);
     await afterNextRender(() => document.execCommand('insertText', false, "TestPartner2"));
-    document.querySelector(`.o_ChannelInvitationForm_selectablePartnerCheckbox`).click();
-    await click(`.o_ChannelInvitationForm_inviteButton`);
+    await click(`.o_ChannelInvitationForm_selectablePartnerCheckbox`);
     await click(`.o_ChannelInvitationForm_inviteButton`);
     assert.strictEqual(
        document.querySelector(`.o_ThreadViewTopbar_threadName`).textContent,

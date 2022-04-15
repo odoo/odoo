@@ -701,14 +701,14 @@ MockServer.include({
      */
     _mockMailChannelActionUnfollow(ids) {
         const channel = this._getRecords('mail.channel', [['id', 'in', ids]])[0];
-        if (!channel.channel_partner_ids.includes(this.currentPartnerId)) {
+        const [channelMember] = this._getRecords('mail.channel.partner', [['channel_id', 'in', ids], ['partner_id', '=', this.currentPartnerId]]);
+        if (!channelMember) {
             return true;
         }
         this._mockWrite('mail.channel', [
             [channel.id],
             {
-                is_pinned: false,
-                channel_partner_ids: [[3, this.currentPartnerId]],
+                channel_last_seen_partner_ids: [[2, channelMember.id]],
             },
         ]);
         this._widget.call('bus_service', 'trigger', 'notification', [{
@@ -733,26 +733,24 @@ MockServer.include({
     },
     /**
      * Simulates `add_members` on `mail.channel`.
-     * For simplicity only handles the current partner joining himself.
      *
      * @private
      * @param {integer[]} ids
      * @param {integer[]} partner_ids
      */
     _mockMailChannelAddMembers(ids, partner_ids) {
-        const id = ids[0]; // ensure one
-        const channel = this._getRecords('mail.channel', [['id', '=', id]])[0];
-        // channel.partner not handled here for simplicity
-        if (!channel.is_pinned) {
-            this._mockWrite('mail.channel', [
-                [channel.id],
-                { is_pinned: true },
-            ]);
-            const body = `<div class="o_mail_notification">joined <a href="#" class="o_channel_redirect" data-oe-id="${channel.id}">#${channel.name}</a></div>`;
+        const [channel] = this._getRecords('mail.channel', [['id', 'in', ids]]);
+        const partners = this._getRecords('res.partner', [['id', 'in', partner_ids]]);
+        for (const partner of partners) {
+            this._mockCreate('mail.channel.partner', {
+                channel_id: channel.id,
+                partner_id: partner.id,
+            });
+            const body = `<div class="o_mail_notification">invited ${partner.name} to the channel</div>`;
             const message_type = "notification";
             const subtype_xmlid = "mail.mt_comment";
             this._mockMailChannelMessagePost(
-                [channel.id],
+                channel.id,
                 { body, message_type, subtype_xmlid },
             );
         }
@@ -792,16 +790,12 @@ MockServer.include({
                 continue;
             }
             // Note: `channel_info` on the server is supposed to be called with
-            // the proper user context, but this is not done here for simplicity
-            // of not having `channel.partner`.
+            // the proper user context but this is not done here for simplicity.
             const channelInfos = this._mockMailChannelChannelInfo(ids);
             for (const channelInfo of channelInfos) {
                 notifications.push({
                     type: 'mail.channel/legacy_insert',
-                    payload: {
-                        id: channelInfo.id,
-                        state: channelInfo.is_minimized ? 'open' : 'closed',
-                    },
+                    payload: channelInfo,
                 });
             }
         }
@@ -830,8 +824,9 @@ MockServer.include({
             if (!lastMessage) {
                 continue;
             }
-            this._mockWrite('mail.channel', [
-                [channel.id],
+            const [memberOfCurrentUser] = this._getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
+            this._mockWrite('mail.channel.partner', [
+                [memberOfCurrentUser.id],
                 { fetched_message_id: lastMessage.id },
             ]);
             this._widget.call('bus_service', 'trigger', 'notification', [{
@@ -881,19 +876,18 @@ MockServer.include({
      */
     _mockMailChannelChannelFold(uuid, state) {
         const channel = this._getRecords('mail.channel', [['uuid', '=', uuid]])[0];
-        this._mockWrite('mail.channel', [
-            [channel.id],
-            {
-                is_minimized: state !== 'closed',
-                state,
-            }
-        ]);
-        const channelInfo = this._mockMailChannelChannelInfo([channel.id])[0];
+        const [memberOfCurrentUser] = this._getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
+        const foldState = state ? state : memberOfCurrentUser.fold_state === 'open' ? 'folded' : 'open';
+        const vals = {
+            fold_state: foldState,
+            is_minimized: foldState !== 'closed',
+        };
+        this._mockWrite('mail.channel.partner', [[memberOfCurrentUser.id], vals]);
         this._widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel/insert',
             payload: {
-                id: channelInfo.id,
-                serverFoldState: channelInfo.is_minimized ? 'open' : 'closed',
+                id: channel.id,
+                serverFoldState: memberOfCurrentUser.fold_state,
             },
         }]);
     },
@@ -913,21 +907,18 @@ MockServer.include({
             partners_to.push(this.currentPartnerId);
         }
         const partners = this._getRecords('res.partner', [['id', 'in', partners_to]]);
-
         // NOTE: this mock is not complete, which is done for simplicity.
         // Indeed if a chat already exists for the given partners, the server
         // is supposed to return this existing chat. But the mock is currently
         // always creating a new chat, because no test is relying on receiving
         // an existing chat.
         const id = this._mockCreate('mail.channel', {
+            channel_last_seen_partner_ids: partners.map(partner => [0, 0, {
+                partner_id: partner.id,
+            }]),
             channel_type: 'chat',
-            is_minimized: true,
-            is_pinned: true,
-            last_interest_dt: datetime_to_str(new Date()),
-            channel_partner_ids: [[6, 0, partners_to]],
             name: partners.map(partner => partner.name).join(", "),
             public: 'private',
-            state: 'open',
         });
         return this._mockMailChannelChannelInfo([id])[0];
     },
@@ -940,18 +931,9 @@ MockServer.include({
      */
     _mockMailChannelChannelInfo(ids) {
         const channels = this._getRecords('mail.channel', [['id', 'in', ids]]);
-        const all_partners = [...new Set(channels.reduce((all_partners, channel) => {
-            return [...all_partners, ...channel.channel_partner_ids];
-        }, []))];
-        const direct_partners = [...new Set(channels.reduce((all_partners, channel) => {
-            if (channel.channel_type === 'chat') {
-                return [...all_partners, ...channel.channel_partner_ids];
-            }
-            return all_partners;
-        }, []))];
-        const partnerInfos = this._mockMailChannelPartnerInfo(all_partners, direct_partners);
         return channels.map(channel => {
-            const members = channel.channel_partner_ids.map(partnerId => partnerInfos[partnerId]);
+            const members = this._getRecords('mail.channel.partner', [['id', 'in', channel.channel_last_seen_partner_ids]]);
+            const partnerIds = members.filter(member => member.partner_id).map(member => member.partner_id);
             const messages = this._getRecords('mail.message', [
                 ['model', '=', 'mail.channel'],
                 ['res_id', '=', channel.id],
@@ -969,17 +951,33 @@ MockServer.include({
             ]).length;
             const res = Object.assign({}, channel, {
                 last_message_id: lastMessageId,
-                members,
+                members: [...this._mockResPartnerMailPartnerFormat(partnerIds).values()],
                 message_needaction_counter: messageNeedactionCounter,
             });
             if (channel.channel_type === 'channel') {
                 delete res.members;
             } else {
-                res['seen_partners_info'] = [{
-                    partner_id: this.currentPartnerId,
-                    seen_message_id: channel.seen_message_id,
-                    fetched_message_id: channel.fetched_message_id,
-                }];
+                res['seen_partners_info'] = members.filter(member => member.partner_id).map(member => {
+                    return {
+                        partner_id: member.partner_id,
+                        seen_message_id: member.seen_message_id,
+                        fetched_message_id: member.fetched_message_id,
+                    };
+                });
+            }
+            const [memberOfCurrentUser] = this._getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
+            if (memberOfCurrentUser) {
+                Object.assign(res, {
+                    custom_channel_name: memberOfCurrentUser.custom_channel_name,
+                    is_minimized: memberOfCurrentUser.is_minimized,
+                    is_pinned: memberOfCurrentUser.is_pinned,
+                    last_interest_dt: memberOfCurrentUser.last_interest_dt,
+                    message_unread_counter: memberOfCurrentUser.message_unread_counter,
+                    state: memberOfCurrentUser.fold_state || 'open',
+                });
+                if (memberOfCurrentUser.rtc_inviting_session_id) {
+                    res['rtc_inviting_session'] = { 'id': memberOfCurrentUser.rtc_inviting_session_id };
+                }
             }
             return res;
         });
@@ -993,10 +991,13 @@ MockServer.include({
      */
     async _mockMailChannelChannelPin(uuid, pinned = false) {
         const channel = this._getRecords('mail.channel', [['uuid', '=', uuid]])[0];
-        this._mockWrite('mail.channel', [
-            [channel.id],
-            { is_pinned: false },
-        ]);
+        const [memberOfCurrentUser] = this._getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId], ['is_pinned', '!=', pinned]]);
+        if (memberOfCurrentUser) {
+            this._mockWrite('mail.channel.partner', [
+                [memberOfCurrentUser.id],
+                { is_pinned: pinned },
+            ]);
+        }
         if (!pinned) {
             this._widget.call('bus_service', 'trigger', 'notification', [{
                 type: 'mail.channel/unpin',
@@ -1034,7 +1035,8 @@ MockServer.include({
         if (!channel) {
             return;
         }
-        if (channel.seen_message_id && channel.seen_message_id >= last_message_id) {
+        const [memberOfCurrentUser] = this._getRecords('mail.channel.partner', [['channel_id', '=', channel_id], ['partner_id', '=', this.currentPartnerId]]);
+        if (memberOfCurrentUser.seen_message_id && memberOfCurrentUser.seen_message_id >= last_message_id) {
             return;
         }
         this._mockMailChannel_SetLastSeenMessage([channel.id], last_message_id);
@@ -1088,7 +1090,7 @@ MockServer.include({
         }]);
     },
     /**
-     * Simulates the `/mail/create_group` route.
+     * Simulates the `create_group` on `mail.channel`.
      *
      * @private
      * @param {integer[]} partners_to
@@ -1098,11 +1100,9 @@ MockServer.include({
         const partners = this._getRecords('res.partner', [['id', 'in', partners_to]]);
         const id = this._mockCreate('mail.channel', {
             channel_type: 'group',
-            is_pinned: true,
-            channel_partner_ids: [[6, 0, partners.map(partner => partner.id)]],
+            channel_last_seen_partner_ids: partners.map(partner => [0, 0, { partner_id: partner.id }]),
             name: '',
             public: 'private',
-            state: 'open',
         });
         this._mockMailChannel_broadcast(id, partners.map(partner => partner.id));
         return this._mockMailChannelChannelInfo([id])[0];
@@ -1129,10 +1129,12 @@ MockServer.include({
         const ids = args.args[0];
         const channels = this._getRecords('mail.channel', [['id', 'in', ids]]);
         for (const channel of channels) {
-            const members = channel.channel_partner_ids.map(memberId => this._getRecords('res.partner', [['id', '=', memberId]])[0].name);
+            const members = this._getRecords('mail.channel.partner', [['id', 'in', channel.channel_last_seen_partner_ids]]);
+            const otherPartnerIds = members.filter(member => member.partner_id && member.partner_id !== this.currentPartnerId).map(member => member.partner_id);
+            const otherPartners = this._getRecords('res.partner', [['id', 'in', otherPartnerIds]]);
             let message = "You are alone in this channel.";
-            if (members.length > 0) {
-                message = `Users in this channel: ${members.join(', ')} and you`;
+            if (otherPartners.length > 0) {
+                message = `Users in this channel: ${otherPartners.map(partner => partner.name).join(', ')} and you`;
             }
             this._widget.call('bus_service', 'trigger', 'notification', [{
                 type: 'mail.channel/transient_message',
@@ -1228,9 +1230,9 @@ MockServer.include({
         const message_type = kwargs.message_type || 'notification';
         const channel = this._getRecords('mail.channel', [['id', '=', id]])[0];
         if (channel.channel_type !== 'channel') {
-            // channel.partner not handled here for simplicity
-            this._mockWrite('mail.channel', [
-                [channel.id],
+            const [memberOfCurrentUser] = this._getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
+            this._mockWrite('mail.channel.partner', [
+                [memberOfCurrentUser.id],
                 {
                     last_interest_dt: datetime_to_str(new Date()),
                     is_pinned: true,
@@ -1247,10 +1249,13 @@ MockServer.include({
         );
         if (kwargs.author_id === this.currentPartnerId) {
             this._mockMailChannel_SetLastSeenMessage([channel.id], messageData.id);
-        } else {
-            this._mockWrite('mail.channel', [
-                [channel.id],
-                { message_unread_counter: (channel.message_unread_counter || 0) + 1 },
+        }
+        // simulate compute of message_unread_counter
+        const otherMembers = this._getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '!=', this.currentPartnerId]]);
+        for (const member of otherMembers) {
+            this._mockWrite('mail.channel.partner', [
+                [member.id],
+                { message_unread_counter: member.message_unread_counter + 1 },
             ]);
         }
         return messageData;
@@ -1323,7 +1328,8 @@ MockServer.include({
      * @param {integer} message_id
      */
     _mockMailChannel_SetLastSeenMessage(ids, message_id) {
-        this._mockWrite('mail.channel', [ids, {
+        const [memberOfCurrentUser] = this._getRecords('mail.channel.partner', [['channel_id', 'in', ids], ['partner_id', '=', this.currentPartnerId]]);
+        this._mockWrite('mail.channel.partner', [[memberOfCurrentUser.id], {
             fetched_message_id: message_id,
             seen_message_id: message_id,
         }]);
@@ -1875,30 +1881,35 @@ MockServer.include({
         if (message.author_id) {
             notifications.push([notificationData]);
         }
-        // members
-        const channels = this._getRecords('mail.channel', [['id', '=', message.res_id]]);
-        for (const channel of channels) {
-            notifications.push({
-                type: 'mail.channel/new_message',
-                payload: {
-                    id: channel.id,
-                    message: messageFormat,
+        if (model === 'mail.channel') {
+            // members
+            const channels = this._getRecords('mail.channel', [['id', '=', message.res_id]]);
+            for (const channel of channels) {
+                notifications.push({
+                    type: 'mail.channel/new_message',
+                    payload: {
+                        id: channel.id,
+                        message: messageFormat,
+                    }
+                });
+                // notify update of last_interest_dt
+                const now = datetime_to_str(new Date());
+                const members = this._getRecords('mail.channel.partner', [['id', 'in', channel.channel_last_seen_partner_ids]]);
+                this._mockWrite('mail.channel.partner', [
+                    members.map(member => member.id),
+                    { last_interest_dt: now },
+                ]);
+                for (const member of members) {
+                    // simplification, send everything on the current user "test" bus, but it should send to each member instead
+                    notifications.push({
+                        type: 'mail.channel/last_interest_dt_changed',
+                        payload: {
+                            id: channel.id,
+                            last_interest_dt: member.last_interest_dt,
+                        },
+                    });
                 }
-            });
-
-            // notify update of last_interest_dt
-            const now = datetime_to_str(new Date());
-            this._mockWrite('mail.channel', [
-                [channel.id],
-                { last_interest_dt: now },
-            ]);
-            notifications.push({
-                type: 'mail.channel/last_interest_dt_changed',
-                payload: {
-                    id: channel.id,
-                    last_interest_dt: now, // channel.partner not used for simplicity
-                },
-            });
+            }
         }
         this._widget.call('bus_service', 'trigger', 'notification', notifications);
     },
@@ -2083,14 +2094,15 @@ MockServer.include({
      */
     _mockResPartner_GetChannelsAsMember(ids) {
         const partner = this._getRecords('res.partner', [['id', 'in', ids]])[0];
+        const channelMembers = this._getRecords('mail.channel.partner', [['partner_id', '=', partner.id]]);
         const channels = this._getRecords('mail.channel', [
             ['channel_type', 'in', ['channel', 'group']],
-            ['channel_partner_ids', 'in', partner.id],
+            ['channel_last_seen_partner_ids', 'in', channelMembers.map(member => member.id)],
         ]);
+        const directMessagesMembers = this._getRecords('mail.channel.partner', [['partner_id', '=', partner.id], ['is_pinned', '=', true]]);
         const directMessages = this._getRecords('mail.channel', [
             ['channel_type', '=', 'chat'],
-            ['is_pinned', '=', true],
-            ['channel_partner_ids', 'in', partner.id],
+            ['channel_last_seen_partner_ids', 'in', directMessagesMembers.map(member => member.id)],
         ]);
         return [
             ...channels,

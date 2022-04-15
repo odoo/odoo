@@ -7,12 +7,12 @@ const MockServer = require('web.MockServer');
 
 MockServer.include({
     /**
-     * Overrides to add visitor information to livechat channels.
+     * Overrides to add out of office to employees.
      *
      * @override
      */
-    _mockMailChannelPartnerInfo(ids, extra_info) {
-        const partnerInfos = this._super(...arguments);
+    _mockResPartnerMailPartnerFormat(ids) {
+        const partnerFormats = this._super(...arguments);
         const partners = this._getRecords(
             'res.partner',
             [['id', 'in', ids]],
@@ -20,9 +20,9 @@ MockServer.include({
         );
         for (const partner of partners) {
             // Not a real field but ease the testing
-            partnerInfos[partner.id].out_of_office_date_end = partner.out_of_office_date_end;
+            partnerFormats.get(partner.id).out_of_office_date_end = partner.out_of_office_date_end;
         }
-        return partnerInfos;
+        return partnerFormats;
     },
 });
 

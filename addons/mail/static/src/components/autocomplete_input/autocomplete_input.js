@@ -121,6 +121,9 @@ export class AutocompleteInput extends Component {
         if (this.props.source) {
             this.props.source(req, res);
         }
+        if (this.messaging) {
+            this.messaging.messagingBus.trigger('o-AutocompleteInput-source', {});
+        }
     }
 
     /**

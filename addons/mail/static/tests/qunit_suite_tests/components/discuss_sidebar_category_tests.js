@@ -432,8 +432,13 @@ QUnit.test('chat - counter: should not have a counter if the category is unfolde
 
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, {
+                message_unread_counter: 0,
+                partner_id: pyEnv.currentPartnerId,
+            }],
+        ],
         channel_type: 'chat',
-        message_unread_counter: 0,
         public: 'private',
     });
 
@@ -450,8 +455,13 @@ QUnit.test('chat - counter: should not have a counter if the category is unfolde
 
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, {
+                message_unread_counter: 10,
+                partner_id: pyEnv.currentPartnerId,
+            }],
+        ],
         channel_type: 'chat',
-        message_unread_counter: 10,
         public: 'private',
     });
     await this.start();
@@ -467,8 +477,13 @@ QUnit.test('chat - counter: should not have a counter if category is folded and 
 
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, {
+                message_unread_counter: 0,
+                partner_id: pyEnv.currentPartnerId,
+            }],
+        ],
         channel_type: 'chat',
-        message_unread_counter: 0,
         public: 'private',
     });
     const { click } = await this.start();
@@ -486,13 +501,23 @@ QUnit.test('chat - counter: should have correct value of unread threads if categ
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create([
         {
+            channel_last_seen_partner_ids: [
+                [0, 0, {
+                    message_unread_counter: 10,
+                    partner_id: pyEnv.currentPartnerId,
+                }],
+            ],
             channel_type: 'chat',
-            message_unread_counter: 10,
             public: 'private',
         },
         {
+            channel_last_seen_partner_ids: [
+                [0, 0, {
+                    message_unread_counter: 20,
+                    partner_id: pyEnv.currentPartnerId,
+                }],
+            ],
             channel_type: 'chat',
-            message_unread_counter: 20,
             public: 'private',
         },
     ]);
@@ -539,7 +564,6 @@ QUnit.test('chat - states: close manually by clicking the title', async function
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        message_unread_counter: 0,
         public: 'private',
     });
     pyEnv['res.users.settings'].create({
@@ -566,7 +590,6 @@ QUnit.test('chat - states: open manually by clicking the title', async function 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        message_unread_counter: 0,
         public: 'private',
     });
     pyEnv['res.users.settings'].create({
@@ -664,7 +687,6 @@ QUnit.test('chat - states: close from the bus', async function (assert) {
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        message_unread_counter: 0,
         public: 'private',
     });
     pyEnv['res.users.settings'].create({
@@ -699,7 +721,6 @@ QUnit.test('chat - states: open from the bus', async function (assert) {
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        message_unread_counter: 0,
         public: 'private',
     });
     pyEnv['res.users.settings'].create({
@@ -734,7 +755,6 @@ QUnit.test('chat - states: the active category item should be visble even if the
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        message_unread_counter: 0,
         public: 'private',
     });
     const { click, messaging } = await this.start();

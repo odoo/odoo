@@ -2190,7 +2190,12 @@ var MockServer = Class.extend({
                 // convert commands
                 for (const command of value || []) {
                     if (command[0] === 0) { // CREATE
-                        const newId = self._mockCreate(field.relation, command[2]);
+                        const inverseData = command[2]; // write in place instead of copy, because some tests rely on the object given being updated
+                        const inverseFieldName = field.inverse_fname_by_model_name && field.inverse_fname_by_model_name[field.relation];
+                        if (inverseFieldName) {
+                            inverseData[inverseFieldName] = id;
+                        }
+                        const newId = self._mockCreate(field.relation, inverseData);
                         ids.push(newId);
                     } else if (command[0] === 1) { // UPDATE
                         self._mockWrite(field.relation, [[command[1]], command[2]]);

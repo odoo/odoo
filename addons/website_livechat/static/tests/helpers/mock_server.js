@@ -54,17 +54,17 @@ MockServer.include({
                 ? this._getRecords('res.country', [['id', '=', visitor.country_id]])
                 : undefined;
             const visitor_name = `${visitor.display_name}${country ? `(${country.name})` : ''}`;
-            const members = [this.currentPartnerId];
+            const membersToAdd = [[0, 0, { partner_id: this.currentPartnerId }]];
             if (visitor.partner_id) {
-                members.push(visitor.partner_id);
+                membersToAdd.push([0, 0, { partner_id: visitor.partner_id }]);
             } else {
-                members.push(this.publicPartnerId);
+                membersToAdd.push([0, 0, { partner_id: this.publicPartnerId }]);
             }
             const livechatId = this._mockCreate('mail.channel', {
                 anonymous_name: visitor_name,
+                channel_last_seen_partner_ids: membersToAdd,
                 channel_type: 'livechat',
                 livechat_operator_id: this.currentPartnerId,
-                channel_partner_ids: members,
                 public: 'private',
             });
             // notify operator

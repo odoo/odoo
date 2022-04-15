@@ -29,8 +29,11 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
         name: 'Demo',
     });
     const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId1 }],
+        ],
         channel_type: 'chat',
-        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
     const { messaging, widget } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
