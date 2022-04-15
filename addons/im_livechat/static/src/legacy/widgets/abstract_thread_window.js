@@ -44,7 +44,7 @@ var AbstractThreadWindow = Widget.extend({
      * @param {Object} [options={}]
      * @param {im_livechat.legacy.mail.model.AbstractThread} [options.thread]
      */
-    init: function (parent, thread, options) {
+    init(parent, thread, options) {
         this._super(parent);
 
         this.options = _.defaults(options || {}, {
@@ -65,7 +65,7 @@ var AbstractThreadWindow = Widget.extend({
             this._folded = false;
         }
     },
-    start: function () {
+    start() {
         var self = this;
         this.$input = this.$('.o_composer_text_field');
         this.$header = this.$('.o_thread_window_header');
@@ -97,21 +97,21 @@ var AbstractThreadWindow = Widget.extend({
     /**
      * @override
      */
-    do_hide: function () {
+    do_hide() {
         this._hidden = true;
         this._super.apply(this, arguments);
     },
     /**
      * @override
      */
-    do_show: function () {
+    do_show() {
         this._hidden = false;
         this._super.apply(this, arguments);
     },
     /**
      * @override
      */
-    do_toggle: function (display) {
+    do_toggle(display) {
         this._hidden = _.isBoolean(display) ? !display : !this._hidden;
         this._super.apply(this, arguments);
     },
@@ -125,20 +125,20 @@ var AbstractThreadWindow = Widget.extend({
      *
      * @abstract
      */
-    close: function () {},
+    close() {},
     /**
      * Get the ID of the thread window, which is equivalent to the ID of the
      * thread related to this window
      *
      * @returns {integer|string}
      */
-    getID: function () {
+    getID() {
         return this._getThreadID();
     },
     /**
      * @returns {mail.model.Thread|undefined}
      */
-    getThread: function () {
+    getThread() {
         if (!this.hasThread()) {
             return undefined;
         }
@@ -151,7 +151,7 @@ var AbstractThreadWindow = Widget.extend({
      *
      * @returns {string|undefined}
      */
-    getThreadStatus: function () {
+    getThreadStatus() {
         if (!this.hasThread()) {
             return undefined;
         }
@@ -163,7 +163,7 @@ var AbstractThreadWindow = Widget.extend({
      *
      * @returns {string}
      */
-    getTitle: function () {
+    getTitle() {
         if (!this.hasThread()) {
             return _t("Undefined");
         }
@@ -175,7 +175,7 @@ var AbstractThreadWindow = Widget.extend({
      *
      * @returns {integer}
      */
-    getUnreadCounter: function () {
+    getUnreadCounter() {
         if (!this.hasThread()) {
             return 0;
         }
@@ -190,7 +190,7 @@ var AbstractThreadWindow = Widget.extend({
      *
      * @returns {boolean}
      */
-    hasThread: function () {
+    hasThread() {
         return !! this._thread;
     },
     /**
@@ -199,7 +199,7 @@ var AbstractThreadWindow = Widget.extend({
      *
      * @returns {boolean}
      */
-    isAtBottom: function () {
+    isAtBottom() {
         return this._threadWidget.isAtBottom();
     },
     /**
@@ -209,7 +209,7 @@ var AbstractThreadWindow = Widget.extend({
      *
      * @returns {boolean}
      */
-    isFolded: function () {
+    isFolded() {
         if (!this.hasThread()) {
             return this._folded;
         }
@@ -221,7 +221,7 @@ var AbstractThreadWindow = Widget.extend({
      *
      * @returns {boolean}
      */
-    isMobile: function () {
+    isMobile() {
         return config.device.isMobile;
     },
     /**
@@ -229,7 +229,7 @@ var AbstractThreadWindow = Widget.extend({
      *
      * @returns {boolean}
      */
-    isHidden: function () {
+    isHidden() {
         return this._hidden;
     },
     /**
@@ -238,13 +238,13 @@ var AbstractThreadWindow = Widget.extend({
      *
      * @returns {boolean}
      */
-    needsComposer: function () {
+    needsComposer() {
         return this.hasThread();
     },
     /**
      * Render the thread window
      */
-    render: function () {
+    render() {
         this.renderHeader();
         if (this.hasThread()) {
             this._threadWidget.render(this._thread, { displayLoadMore: false });
@@ -257,7 +257,7 @@ var AbstractThreadWindow = Widget.extend({
      *
      * @private
      */
-    renderHeader: function () {
+    renderHeader() {
         var options = this._getHeaderRenderingOptions();
         this.$header.html(
             QWeb.render('im_livechat.legacy.mail.AbstractThreadWindow.HeaderContent', options));
@@ -265,7 +265,7 @@ var AbstractThreadWindow = Widget.extend({
     /**
      * Scroll to the bottom of the thread in the thread window
      */
-    scrollToBottom: function () {
+    scrollToBottom() {
         this._threadWidget.scrollToBottom();
     },
     /**
@@ -276,7 +276,7 @@ var AbstractThreadWindow = Widget.extend({
      * @param {boolean} [folded] if not a boolean, toggle the fold state.
      *   Otherwise, fold/unfold the window if set/unset.
      */
-    toggleFold: function (folded) {
+    toggleFold(folded) {
         if (!_.isBoolean(folded)) {
             folded = !this.isFolded();
         }
@@ -287,7 +287,7 @@ var AbstractThreadWindow = Widget.extend({
      * fold state. This is useful in case the related thread has its fold state
      * that has been changed.
      */
-    updateVisualFoldState: function () {
+    updateVisualFoldState() {
         if (!this.isFolded()) {
             this._threadWidget.scrollToBottom();
             if (this.options.autofocus) {
@@ -309,7 +309,7 @@ var AbstractThreadWindow = Widget.extend({
      * @private
      * Set the focus on the input of the window
      */
-    _focusInput: function () {
+    _focusInput() {
         if (
             config.device.touch &&
             config.device.size_class <= config.device.SIZES.SM
@@ -324,7 +324,7 @@ var AbstractThreadWindow = Widget.extend({
      * @private
      * @returns {Object}
      */
-    _getHeaderRenderingOptions: function () {
+    _getHeaderRenderingOptions() {
         return {
             status: this.getThreadStatus(),
             thread: this.getThread(),
@@ -342,7 +342,7 @@ var AbstractThreadWindow = Widget.extend({
      * @returns {integer|string} the threadID, or '_blank' for the window that
      *   is not related to any thread.
      */
-    _getThreadID: function () {
+    _getThreadID() {
         if (!this.hasThread()) {
             return '_blank';
         }
@@ -355,7 +355,7 @@ var AbstractThreadWindow = Widget.extend({
      * @private
      * @returns {boolean}
      */
-    _hasFocus: function () {
+    _hasFocus() {
         return this.$input.is(':focus');
     },
     /**
@@ -365,7 +365,7 @@ var AbstractThreadWindow = Widget.extend({
      * @private
      * @param {Object} messageData
      */
-    _postMessage: function (messageData) {
+    _postMessage(messageData) {
         var self = this;
         if (!this.hasThread()) {
             return;
@@ -385,7 +385,7 @@ var AbstractThreadWindow = Widget.extend({
      * @private
      * @param {boolean} folded
      */
-    _updateThreadFoldState: function (folded) {
+    _updateThreadFoldState(folded) {
         if (this.hasThread()) {
             this._thread.fold(folded);
         } else {
@@ -405,7 +405,7 @@ var AbstractThreadWindow = Widget.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickClose: function (ev) {
+    _onClickClose(ev) {
         ev.stopPropagation();
         ev.preventDefault();
         if (
@@ -423,7 +423,7 @@ var AbstractThreadWindow = Widget.extend({
      *
      * @private
      */
-    _onClickFold: function () {
+    _onClickFold() {
         if (!config.device.isMobile) {
             this.toggleFold();
         }
@@ -435,7 +435,7 @@ var AbstractThreadWindow = Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onComposerClick: function (ev) {
+    _onComposerClick(ev) {
         if ($(ev.target).closest('a, button').length) {
             return;
         }
@@ -444,7 +444,7 @@ var AbstractThreadWindow = Widget.extend({
     /**
      * @private
      */
-    _onDocumentViewerClose: function () {
+    _onDocumentViewerClose() {
         this._focusInput();
     },
     /**
@@ -453,7 +453,7 @@ var AbstractThreadWindow = Widget.extend({
      * @private
      * @param {KeyboardEvent} ev
      */
-    _onKeydown: function (ev) {
+    _onKeydown(ev) {
         ev.stopPropagation(); // to prevent jquery's blockUI to cancel event
         // ENTER key (avoid requiring jquery ui for external livechat)
         if (ev.which === 13) {
@@ -473,13 +473,13 @@ var AbstractThreadWindow = Widget.extend({
      * @private
      * @param {KeyboardEvent} ev
      */
-    _onKeypress: function (ev) {
+    _onKeypress(ev) {
         ev.stopPropagation(); // to prevent jquery's blockUI to cancel event
     },
     /**
      * @private
      */
-    _onScroll: function () {
+    _onScroll() {
         if (this.hasThread() && this.isAtBottom()) {
             this._thread.markAsRead();
         }
@@ -490,7 +490,7 @@ var AbstractThreadWindow = Widget.extend({
      *
      * @private
      */
-    _onThreadWindowClicked: function () {
+    _onThreadWindowClicked() {
         var selectObj = window.getSelection();
         if (selectObj.anchorOffset === selectObj.focusOffset) {
             this.$input.focus();

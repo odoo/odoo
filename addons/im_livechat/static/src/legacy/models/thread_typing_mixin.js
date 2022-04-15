@@ -29,7 +29,7 @@ var ThreadTypingMixin = {
      *     possibility to immediately notify if he types something right away,
      *     instead of waiting for a throttle behaviour.
      */
-    init: function () {
+    init() {
         // Store the last "myself typing" status that has been sent to the
         // server. This is useful in order to not notify the same typing
         // status multiple times.
@@ -116,7 +116,7 @@ var ThreadTypingMixin = {
      * @returns {string} list of members that are typing something on the thread
      *   (excluding the current user).
      */
-    getTypingMembersToText: function () {
+    getTypingMembersToText() {
         var typingPartnerIDs = this._typingPartnerIDs;
         var typingMembers = _.filter(this._members, function (member) {
             return _.contains(typingPartnerIDs, member.id);
@@ -145,7 +145,7 @@ var ThreadTypingMixin = {
      *
      * @returns {boolean}
      */
-    hasTypingNotification: function () {
+    hasTypingNotification() {
         return true;
     },
     /**
@@ -154,7 +154,7 @@ var ThreadTypingMixin = {
      *
      * @returns {boolean}
      */
-    isSomeoneTyping: function () {
+    isSomeoneTyping() {
         return !(_.isEmpty(this._typingPartnerIDs));
     },
     /**
@@ -168,7 +168,7 @@ var ThreadTypingMixin = {
      * @param {integer} params.partnerID ID of the partner linked to the user
      *   currently typing something on the thread.
      */
-    registerTyping: function (params) {
+    registerTyping(params) {
         if (this._isTypingMyselfInfo(params)) {
             return;
         }
@@ -190,7 +190,7 @@ var ThreadTypingMixin = {
      * @param {Object} params
      * @param {boolean} params.typing tell whether the current is typing or not.
      */
-    setMyselfTyping: function (params) {
+    setMyselfTyping(params) {
         var typing = params.typing;
         if (this._lastNotifiedMyselfTyping === typing) {
             this._throttleNotifyMyselfTyping.cancel();
@@ -211,7 +211,7 @@ var ThreadTypingMixin = {
      * @param {integer} params.partnerID ID of the partner related to the user
      *   that is currently typing something
      */
-    unregisterTyping: function (params) {
+    unregisterTyping(params) {
         var partnerID = params.partnerID;
         this._othersTypingTimers.unregisterTimer({ timerID: partnerID });
         if (!_.contains(this._typingPartnerIDs, partnerID)) {
@@ -236,7 +236,7 @@ var ThreadTypingMixin = {
      * @param {Object} params
      * @param {integer} params.partner ID of partner to check
      */
-    _isTypingMyselfInfo: function (params) {
+    _isTypingMyselfInfo(params) {
         return false;
     },
     /**
@@ -250,7 +250,7 @@ var ThreadTypingMixin = {
      * @returns {Promise} resolved if the server is notified, rejected
      *   otherwise
      */
-    _notifyMyselfTyping: function (params) {
+    _notifyMyselfTyping(params) {
         return Promise.resolve();
     },
     /**
@@ -260,7 +260,7 @@ var ThreadTypingMixin = {
      * @abstract
      * @private
      */
-    _warnUpdatedTypingPartners: function () {},
+    _warnUpdatedTypingPartners() {},
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -273,7 +273,7 @@ var ThreadTypingMixin = {
      *
      * @private
      */
-    _onMyselfLongTypingTimeout: function () {
+    _onMyselfLongTypingTimeout() {
         this._throttleNotifyMyselfTyping.clear();
         this._throttleNotifyMyselfTyping({ typing: true });
     },
@@ -284,7 +284,7 @@ var ThreadTypingMixin = {
      *
      * @private
      */
-    _onMyselfTypingInactivityTimeout: function () {
+    _onMyselfTypingInactivityTimeout() {
         this._throttleNotifyMyselfTyping.clear();
         this._throttleNotifyMyselfTyping({ typing: false });
     },
@@ -299,7 +299,7 @@ var ThreadTypingMixin = {
      * @param {Object} params
      * @param {boolean} params.typing whether we are typing something or not.
      */
-    _onNotifyMyselfTyping: function (params) {
+    _onNotifyMyselfTyping(params) {
         var typing = params.typing;
         this._lastNotifiedMyselfTyping = typing;
         this._notifyMyselfTyping(params);
@@ -318,7 +318,7 @@ var ThreadTypingMixin = {
      * @param {integer} partnerID partnerID of the person we assume he is no
      *   longer typing something.
      */
-    _onOthersTypingTimeout: function (partnerID) {
+    _onOthersTypingTimeout(partnerID) {
         this.unregisterTyping({ partnerID: partnerID });
     },
     /**
@@ -329,7 +329,7 @@ var ThreadTypingMixin = {
      * @private
      * @param {mail.model.AbstractMessage} message
      */
-    _onTypingMessageAdded: function (message) {
+    _onTypingMessageAdded(message) {
         var partnerID = message.hasAuthor() ?
                         message.getAuthorID() :
                         this._DEFAULT_TYPING_PARTNER_ID;
@@ -348,7 +348,7 @@ var ThreadTypingMixin = {
      *
      * @private
      */
-    _onTypingMessagePosted: function () {
+    _onTypingMessagePosted() {
         this._lastNotifiedMyselfTyping = false;
         this._throttleNotifyMyselfTyping.clear();
         this._myselfLongTypingTimer.clear();

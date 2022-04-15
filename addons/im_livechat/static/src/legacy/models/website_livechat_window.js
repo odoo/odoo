@@ -46,7 +46,7 @@ var LivechatWindow = AbstractThreadWindow.extend({
     /**
      * @override
      */
-    close: function () {
+    close() {
         this.trigger_up('close_chat_window');
     },
     /**
@@ -54,7 +54,7 @@ var LivechatWindow = AbstractThreadWindow.extend({
      *
      * @param {$.Element} $element
      */
-    replaceContentWith: function ($element) {
+    replaceContentWith($element) {
         $element.replace(this._threadWidget.$el);
     },
     /**
@@ -63,7 +63,7 @@ var LivechatWindow = AbstractThreadWindow.extend({
      * @override
      * @param {boolean} folded
      */
-    toggleFold: function () {
+    toggleFold() {
         this._super.apply(this, arguments);
         this.trigger_up('save_chat_window');
         this.updateVisualFoldState();
@@ -78,7 +78,7 @@ var LivechatWindow = AbstractThreadWindow.extend({
      * @private
      * @param {Object} messageData
      */
-    _postMessage: function (messageData) {
+    _postMessage(messageData) {
         this.trigger_up('post_message_chat_window', { messageData: messageData });
         this._super.apply(this, arguments);
     },
@@ -92,7 +92,7 @@ var LivechatWindow = AbstractThreadWindow.extend({
      *
      * @private
      */
-    _onInput: function () {
+    _onInput() {
         if (this.hasThread() && this._thread.hasTypingNotification()) {
             var isTyping = this.$input.val().length > 0;
             this._thread.setMyselfTyping({ typing: isTyping });

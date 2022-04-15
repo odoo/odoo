@@ -51,7 +51,7 @@ var ThreadWidget = Widget.extend({
      * @param {widget} parent
      * @param {Object} options
      */
-    init: function (parent, options) {
+    init(parent, options) {
         this._super.apply(this, arguments);
         this.attachments = [];
         // options when the thread is enabled (e.g. can send message,
@@ -93,7 +93,7 @@ var ThreadWidget = Widget.extend({
      *
      * @override
      */
-    destroy: function () {
+    destroy() {
         clearInterval(this._updateTimestampsInterval);
         if (this._messageMailPopover) {
             this._messageMailPopover.popover('hide');
@@ -114,7 +114,7 @@ var ThreadWidget = Widget.extend({
      * @param {boolean} [options.scrollToBottom=false]
      * @param {boolean} [options.squashCloseMessages]
      */
-    render: function (thread, options) {
+    render(thread, options) {
         var self = this;
 
         var shouldScrollToBottomAfterRendering = false;
@@ -213,7 +213,7 @@ var ThreadWidget = Widget.extend({
      * Render thread widget when loading, i.e. when messaging is not yet ready.
      * @see /mail/init_messaging
      */
-    renderLoading: function () {
+    renderLoading() {
         this.$el.html(QWeb.render('im_livechat.legacy.mail.widget.ThreadLoading'));
     },
 
@@ -221,7 +221,7 @@ var ThreadWidget = Widget.extend({
     // Public
     //--------------------------------------------------------------------------
 
-    getScrolltop: function () {
+    getScrolltop() {
         return this.$el.scrollTop();
     },
     /**
@@ -230,7 +230,7 @@ var ThreadWidget = Widget.extend({
      *
      * @return {boolean}
      */
-    isAtBottom: function () {
+    isAtBottom() {
         var fullHeight = this.el.scrollHeight;
         var topHiddenHeight = this.$el.scrollTop();
         var visibleHeight = this.$el.outerHeight();
@@ -246,13 +246,13 @@ var ThreadWidget = Widget.extend({
      *   `messageID`).
      * @param {Object} [options] options for the thread rendering
      */
-    removeMessageAndRender: function (messageID, thread, options) {
+    removeMessageAndRender(messageID, thread, options) {
         var self = this;
         this._currentThreadID = thread.getID();
         return new Promise(function (resolve, reject) {
             self.$('.o_thread_message[data-message-id="' + messageID + '"]')
             .fadeOut({
-                done: function () {
+                done() {
                     if (self._currentThreadID === thread.getID()) {
                         self.render(thread, options);
                     }
@@ -265,7 +265,7 @@ var ThreadWidget = Widget.extend({
     /**
      * Scroll to the bottom of the thread
      */
-    scrollToBottom: function () {
+    scrollToBottom() {
         this.$el.scrollTop(this.el.scrollHeight);
     },
     /**
@@ -275,7 +275,7 @@ var ThreadWidget = Widget.extend({
      * @param {integer} [options.duration]
      * @param {boolean} [options.onlyIfNecessary]
      */
-    scrollToMessage: function (options) {
+    scrollToMessage(options) {
         var $target = this.$('.o_thread_message[data-message-id="' + options.messageID + '"]');
         if (options.onlyIfNecessary) {
             var delta = $target.parent().height() - $target.height();
@@ -296,7 +296,7 @@ var ThreadWidget = Widget.extend({
      * @param {integer} [position] distance from top to position in pixels.
      *    If not provided, scroll to the bottom.
      */
-    scrollToPosition: function (position) {
+    scrollToPosition(position) {
         if (position) {
             this.$el.scrollTop(position);
         } else {
@@ -309,13 +309,13 @@ var ThreadWidget = Widget.extend({
      * @param {boolean} checked if true, check the boxes,
      *      otherwise uncheck them.
      */
-    toggleModerationCheckboxes: function (checked) {
+    toggleModerationCheckboxes(checked) {
         this.$('.moderation_checkbox').prop('checked', checked);
     },
     /**
      * Unselect the selected message
      */
-    unselectMessage: function () {
+    unselectMessage() {
         this.$('.o_thread_message').removeClass('o_thread_selected_message');
         this._selectedMessageID = null;
     },
@@ -334,7 +334,7 @@ var ThreadWidget = Widget.extend({
      * @private
      * @param {jQuery} $element
      */
-    _insertReadMore: function ($element) {
+    _insertReadMore($element) {
         var self = this;
 
         var groups = [];
@@ -410,7 +410,7 @@ var ThreadWidget = Widget.extend({
     * @private
     * @param {MouseEvent} ev
     */
-    _onDeleteAttachment: function (ev) {
+    _onDeleteAttachment(ev) {
         ev.stopPropagation();
         var $target = $(ev.currentTarget);
         this.trigger_up('delete_attachment', {
@@ -455,7 +455,7 @@ var ThreadWidget = Widget.extend({
             placement: 'auto',
             trigger: 'hover',
             offset: '0, 1',
-            content: function () {
+            content() {
                 var messageID = $(this).data('message-id');
                 var message = _.find(messages, function (message) {
                     return message.getID() === messageID;
@@ -469,7 +469,7 @@ var ThreadWidget = Widget.extend({
     /**
      * @private
      */
-    _updateTimestamps: function () {
+    _updateTimestamps() {
         var isAtBottom = this.isAtBottom();
         this.$('.o_mail_timestamp').each(function () {
             var date = $(this).data('date');
@@ -488,14 +488,14 @@ var ThreadWidget = Widget.extend({
      * @private
      * @param {MouseEvent} event
      */
-    _onAttachmentDownload: function (event) {
+    _onAttachmentDownload(event) {
         event.stopPropagation();
     },
     /**
      * @private
      * @param {MouseEvent} event
      */
-    _onAttachmentView: function (event) {
+    _onAttachmentView(event) {
         event.stopPropagation();
         var activeAttachmentID = $(event.currentTarget).data('id');
         if (activeAttachmentID) {
@@ -507,13 +507,13 @@ var ThreadWidget = Widget.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onChangeModerationCheckbox: function (ev) {
+    _onChangeModerationCheckbox(ev) {
         this.trigger_up('update_moderation_buttons');
     },
     /**
      * @private
      */
-    _onClick: function () {
+    _onClick() {
         if (this._selectedMessageID) {
             this.unselectMessage();
             this.trigger('unselect_message');
@@ -523,21 +523,21 @@ var ThreadWidget = Widget.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickMailExpand: function (ev) {
+    _onClickMailExpand(ev) {
         ev.preventDefault();
     },
     /**
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickMessage: function (ev) {
+    _onClickMessage(ev) {
         $(ev.currentTarget).toggleClass('o_thread_selected_message');
     },
     /**
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickMessageNeedaction: function (ev) {
+    _onClickMessageNeedaction(ev) {
         var messageID = $(ev.currentTarget).data('message-id');
         this.trigger('mark_as_read', messageID);
     },
@@ -557,7 +557,7 @@ var ThreadWidget = Widget.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickMessageReply: function (ev) {
+    _onClickMessageReply(ev) {
         this._selectedMessageID = $(ev.currentTarget).data('message-id');
         this.$('.o_thread_message').removeClass('o_thread_selected_message');
         this.$('.o_thread_message[data-message-id="' + this._selectedMessageID + '"]')
@@ -569,7 +569,7 @@ var ThreadWidget = Widget.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickMessageStar: function (ev) {
+    _onClickMessageStar(ev) {
         var messageID = $(ev.currentTarget).data('message-id');
         this.trigger('toggle_star_status', messageID);
     },
@@ -577,7 +577,7 @@ var ThreadWidget = Widget.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickMessageModeration: function (ev) {
+    _onClickMessageModeration(ev) {
         var $button = $(ev.currentTarget);
         var messageID = $button.data('message-id');
         var decision = $button.data('decision');
@@ -590,7 +590,7 @@ var ThreadWidget = Widget.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickRedirect: function (ev) {
+    _onClickRedirect(ev) {
         // ignore inherited branding
         if ($(ev.target).data('oe-field') !== undefined) {
             return;
@@ -614,7 +614,7 @@ var ThreadWidget = Widget.extend({
     /**
      * @private
      */
-    _onClickShowMore: function () {
+    _onClickShowMore() {
         this.trigger('load_more_messages');
     },
 });

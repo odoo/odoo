@@ -19,7 +19,7 @@ var Timers = Class.extend({
      * @param {function} params.onTimeout a function to call back for underlying
      *   timers on timeout.
      */
-    init: function (params) {
+    init(params) {
         this._duration = params.duration;
         this._timeoutCallback = params.onTimeout;
         this._timers = {};
@@ -40,7 +40,7 @@ var Timers = Class.extend({
      * @param {Array} [params.timeoutCallbackArguments]
      * @param {integer} params.timerID
      */
-    registerTimer: function (params) {
+    registerTimer(params) {
         var timerID = params.timerID;
         if (this._timers[timerID]) {
             this._timers[timerID].clear();
@@ -67,7 +67,7 @@ var Timers = Class.extend({
      * @param {Object} params
      * @param {integer} params.timerID
      */
-    unregisterTimer: function (params) {
+    unregisterTimer(params) {
         var timerID = params.timerID;
         if (this._timers[timerID]) {
             this._timers[timerID].clear();

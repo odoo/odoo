@@ -41,7 +41,7 @@ var DocumentViewer = Widget.extend({
      * @param {Array<Object>} attachments list of attachments
      * @param {integer} activeAttachmentID
      */
-    init: function (parent, attachments, activeAttachmentID) {
+    init(parent, attachments, activeAttachmentID) {
         this._super.apply(this, arguments);
         this.attachment = _.filter(attachments, function (attachment) {
             var match = attachment.type === 'url' ? attachment.url.match("(youtu|.png|.jpg|.gif)") : attachment.mimetype.match("(image|video|application/pdf|text)");
@@ -73,7 +73,7 @@ var DocumentViewer = Widget.extend({
      * Open a modal displaying the active attachment
      * @override
      */
-    start: function () {
+    start() {
         this.$el.modal('show');
         this.$el.on('hidden.bs.modal', _.bind(this._onDestroy, this));
         this.$('.o_viewer_img').on("load", _.bind(this._onImageLoaded, this));
@@ -83,7 +83,7 @@ var DocumentViewer = Widget.extend({
     /**
      * @override
      */
-    destroy: function () {
+    destroy() {
         if (this.isDestroyed()) {
             return;
         }
@@ -100,7 +100,7 @@ var DocumentViewer = Widget.extend({
     /**
      * @private
      */
-    _next: function () {
+    _next() {
         var index = _.findIndex(this.attachment, this.activeAttachment);
         index = (index + 1) % this.attachment.length;
         this.activeAttachment = this.attachment[index];
@@ -109,7 +109,7 @@ var DocumentViewer = Widget.extend({
     /**
      * @private
      */
-    _previous: function () {
+    _previous() {
         var index = _.findIndex(this.attachment, this.activeAttachment);
         index = index === 0 ? this.attachment.length - 1 : index - 1;
         this.activeAttachment = this.attachment[index];
@@ -118,7 +118,7 @@ var DocumentViewer = Widget.extend({
     /**
      * @private
      */
-    _reset: function () {
+    _reset() {
         this.scale = 1;
         this.dragStartX = this.dragstopX = 0;
         this.dragStartY = this.dragstopY = 0;
@@ -128,7 +128,7 @@ var DocumentViewer = Widget.extend({
      *
      * @private
      */
-    _updateContent: function () {
+    _updateContent() {
         this.$('.o_viewer_content').html(QWeb.render('im_livechat.legacy.mail.DocumentViewer.Content', {
             widget: this
         }));
@@ -146,7 +146,7 @@ var DocumentViewer = Widget.extend({
      * @param {float} scale
      * @param {float} angle
      */
-    _getTransform: function (scale, angle) {
+    _getTransform(scale, angle) {
         return 'scale3d(' + scale + ', ' + scale + ', 1) rotate(' + angle + 'deg)';
     },
     /**
@@ -155,7 +155,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {float} angle
      */
-    _rotate: function (angle) {
+    _rotate(angle) {
         this._reset();
         var new_angle = (this.angle || 0) + angle;
         this.$('.o_viewer_img').css('transform', this._getTransform(this.scale, new_angle));
@@ -169,7 +169,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {integer} scale
      */
-    _zoom: function (scale) {
+    _zoom(scale) {
         if (scale > 0.5) {
             this.$('.o_viewer_img').css('transform', this._getTransform(scale, this.angle || 0));
             this.scale = scale;
@@ -185,7 +185,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onClose: function (e) {
+    _onClose(e) {
         e.preventDefault();
         this.destroy();
     },
@@ -194,14 +194,14 @@ var DocumentViewer = Widget.extend({
      *
      * @private
      */
-    _onDestroy: function () {
+    _onDestroy() {
         this.destroy();
     },
     /**
      * @private
      * @param {MouseEvent} e
      */
-    _onDownload: function (e) {
+    _onDownload(e) {
         e.preventDefault();
         window.location = '/web/content/' + this.modelName + '/' + this.activeAttachment.id + '/' + 'datas' + '?download=true';
     },
@@ -209,7 +209,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onDrag: function (e) {
+    _onDrag(e) {
         e.preventDefault();
         if (this.enableDrag) {
             var $image = this.$('.o_viewer_img');
@@ -224,7 +224,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onEndDrag: function (e) {
+    _onEndDrag(e) {
         e.preventDefault();
         if (this.enableDrag) {
             this.enableDrag = false;
@@ -239,14 +239,14 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onImageClicked: function (e) {
+    _onImageClicked(e) {
         e.stopPropagation();
     },
     /**
      * Remove loading indicator when image loaded
      * @private
      */
-    _onImageLoaded: function () {
+    _onImageLoaded() {
         this.$('.o_loading_img').hide();
     },
     /**
@@ -255,7 +255,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {KeyEvent} e
      */
-    _onKeydown: function (e) {
+    _onKeydown(e) {
         switch (e.which) {
             case $.ui.keyCode.RIGHT:
                 e.preventDefault();
@@ -273,7 +273,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {KeyEvent} e
      */
-    _onKeyUp: function (e) {
+    _onKeyUp(e) {
         switch (e.which) {
             case $.ui.keyCode.ESCAPE:
                 e.preventDefault();
@@ -285,7 +285,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onNext: function (e) {
+    _onNext(e) {
         e.preventDefault();
         this._next();
     },
@@ -293,7 +293,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onPrevious: function (e) {
+    _onPrevious(e) {
         e.preventDefault();
         this._previous();
     },
@@ -301,7 +301,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onPrint: function (e) {
+    _onPrint(e) {
         e.preventDefault();
         var src = this.$('.o_viewer_img').prop('src');
         var script = QWeb.render('im_livechat.legacy.mail.PrintImage', {
@@ -318,7 +318,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onScroll: function (e) {
+    _onScroll(e) {
         var scale;
         if (e.originalEvent.wheelDelta > 0 || e.originalEvent.detail < 0) {
             scale = this.scale + SCROLL_ZOOM_STEP;
@@ -332,7 +332,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onStartDrag: function (e) {
+    _onStartDrag(e) {
         e.preventDefault();
         this.enableDrag = true;
         this.dragStartX = e.clientX - (this.dragstopX || 0);
@@ -345,7 +345,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onVideoClicked: function (e) {
+    _onVideoClicked(e) {
         e.stopPropagation();
         var videoElement = e.target;
         if (videoElement.paused) {
@@ -358,7 +358,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onRotate: function (e) {
+    _onRotate(e) {
         e.preventDefault();
         this._rotate(90);
     },
@@ -366,7 +366,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onZoomIn: function (e) {
+    _onZoomIn(e) {
         e.preventDefault();
         var scale = this.scale + ZOOM_STEP;
         this._zoom(scale);
@@ -375,7 +375,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onZoomOut: function (e) {
+    _onZoomOut(e) {
         e.preventDefault();
         var scale = this.scale - ZOOM_STEP;
         this._zoom(scale);
@@ -384,7 +384,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onZoomReset: function (e) {
+    _onZoomReset(e) {
         e.preventDefault();
         this.$('.o_viewer_zoomer').css("transform", "");
         this._zoom(1);

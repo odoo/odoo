@@ -31,7 +31,7 @@ var Feedback = Widget.extend({
      * @param {?} parent
      * @param {im_livechat.legacy.im_livechat.model.WebsiteLivechat} livechat
      */
-    init: function (parent, livechat) {
+    init(parent, livechat) {
         this._super(parent);
         this._livechat = livechat;
         this.server_origin = session.origin;
@@ -47,7 +47,7 @@ var Feedback = Widget.extend({
      * @private
      * @param {Object} options
      */
-    _sendFeedback: function (reason) {
+    _sendFeedback(reason) {
         var self = this;
         var args = {
             uuid: this._livechat.getUUID(),
@@ -68,7 +68,7 @@ var Feedback = Widget.extend({
     /**
     * @private
     */
-    _showThanksMessage: function () {
+    _showThanksMessage() {
         this.$('.o_livechat_rating_box').empty().append($('<div />', {
             text: _t('Thank you for your feedback'),
             class: 'text-muted'
@@ -82,13 +82,13 @@ var Feedback = Widget.extend({
     /**
      * @private
      */
-    _onClickNoFeedback: function () {
+    _onClickNoFeedback() {
         this.trigger('feedback_sent'); // will close the chat
     },
     /**
      * @private
      */
-    _onClickSend: function () {
+    _onClickSend() {
         this.$('.o_livechat_rating_reason').hide();
         this._showThanksMessage();
         if (_.isNumber(this.rating)) {
@@ -99,7 +99,7 @@ var Feedback = Widget.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickSmiley: function (ev) {
+    _onClickSmiley(ev) {
         this.rating = parseInt($(ev.currentTarget).data('value'));
         this.$('.o_livechat_rating_choices img').removeClass('selected');
         this.$('.o_livechat_rating_choices img[data-value="' + this.rating + '"]').addClass('selected');
@@ -117,7 +117,7 @@ var Feedback = Widget.extend({
     /**
     * @private
     */
-    _onEmailChat: function () {
+    _onEmailChat() {
         var self = this;
         var $email = this.$('#o_email');
 
@@ -143,7 +143,7 @@ var Feedback = Widget.extend({
     /**
     * @private
     */
-    _onTryAgain: function () {
+    _onTryAgain() {
         this.$('#o_email').prop('disabled', false);
         this.$('.o_email_chat_button').prop('disabled', false);
         this.$('.o_livechat_email_error').hide();

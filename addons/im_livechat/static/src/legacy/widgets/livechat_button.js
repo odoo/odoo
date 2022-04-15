@@ -29,7 +29,7 @@ var LivechatButton = Widget.extend({
     events: {
         'click': '_openChat'
     },
-    init: function (parent, serverURL, options) {
+    init(parent, serverURL, options) {
         this._super(parent);
         this.options = _.defaults(options || {}, {
             input_placeholder: _t("Ask something ..."),
@@ -61,7 +61,7 @@ var LivechatButton = Widget.extend({
         }
         return this._loadQWebTemplate();
     },
-    start: function () {
+    start() {
         this.$el.text(this.options.button_text);
         if (this._history) {
             this._history.forEach(m => this._addMessage(m));
@@ -100,7 +100,7 @@ var LivechatButton = Widget.extend({
      * @param {Object} data
      * @param {Object} [options={}]
      */
-    _addMessage: function (data, options) {
+    _addMessage(data, options) {
         options = _.extend({}, this.options, options, {
             serverURL: this._serverURL,
         });
@@ -126,7 +126,7 @@ var LivechatButton = Widget.extend({
     /**
      * @private
      */
-    _askFeedback: function () {
+    _askFeedback() {
         this._chatWindow.$('.o_thread_composer input').prop('disabled', true);
 
         var feedback = new Feedback(this, this._livechat);
@@ -138,7 +138,7 @@ var LivechatButton = Widget.extend({
     /**
      * @private
      */
-    _closeChat: function () {
+    _closeChat() {
         this._chatWindow.destroy();
         utils.set_cookie('im_livechat_session', "", -1); // remove cookie
     },
@@ -148,7 +148,7 @@ var LivechatButton = Widget.extend({
      * @param {Object} notification.payload
      * @param {string} notification.type
      */
-    _handleNotification: function ({ payload, type }) {
+    _handleNotification({ payload, type }) {
         switch (type) {
             case 'im_livechat.history_command': {
                 if (payload.id !== this._livechat._id) {
@@ -201,7 +201,7 @@ var LivechatButton = Widget.extend({
     /**
      * @private
      */
-    _loadQWebTemplate: function () {
+    _loadQWebTemplate() {
         return session.rpc('/im_livechat/load_templates').then(function (templates) {
             _.each(templates, function (template) {
                 QWeb.add_template(template);
@@ -287,7 +287,7 @@ var LivechatButton = Widget.extend({
      * @private
      * @return {integer} operator_id.partner_id.id if the cookie is set
      */
-    _get_previous_operator_id: function () {
+    _get_previous_operator_id() {
         var cookie = utils.get_cookie('im_livechat_previous_operator_pid');
         if (cookie) {
             return cookie;
@@ -299,7 +299,7 @@ var LivechatButton = Widget.extend({
      * @private
      * @return {Promise}
      */
-    _openChatWindow: function () {
+    _openChatWindow() {
         var self = this;
         var options = {
             displayStars: false,
@@ -318,7 +318,7 @@ var LivechatButton = Widget.extend({
     /**
      * @private
      */
-    _prepareGetSessionParameters: function () {
+    _prepareGetSessionParameters() {
         return {
             channel_id: this.options.channel_id,
             anonymous_name: this.options.default_username,
@@ -328,7 +328,7 @@ var LivechatButton = Widget.extend({
     /**
      * @private
      */
-    _renderMessages: function () {
+    _renderMessages() {
         var shouldScroll = !this._chatWindow.isFolded() && this._chatWindow.isAtBottom();
         this._livechat.setMessages(this._messages);
         this._chatWindow.render();
@@ -341,7 +341,7 @@ var LivechatButton = Widget.extend({
      * @param {Object} message
      * @return {Promise}
      */
-    _sendMessage: function (message) {
+    _sendMessage(message) {
         var self = this;
         this._livechat._notifyMyselfTyping({ typing: false });
         return session
@@ -372,7 +372,7 @@ var LivechatButton = Widget.extend({
     /**
      * @private
      */
-    _sendWelcomeMessage: function () {
+    _sendWelcomeMessage() {
         if (this.options.default_message) {
             this._addMessage({
                 id: '_welcome',
@@ -394,7 +394,7 @@ var LivechatButton = Widget.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onCloseChatWindow: function (ev) {
+    _onCloseChatWindow(ev) {
         ev.stopPropagation();
         var isComposerDisabled = this._chatWindow.$('.o_thread_composer input').prop('disabled');
         var shouldAskFeedback = !isComposerDisabled && _.find(this._messages, function (message) {
@@ -412,7 +412,7 @@ var LivechatButton = Widget.extend({
      * @private
      * @param {Array[]} notifications
      */
-    _onNotification: function (notifications) {
+    _onNotification(notifications) {
         var self = this;
         _.each(notifications, function (notification) {
             self._handleNotification(notification);
@@ -423,7 +423,7 @@ var LivechatButton = Widget.extend({
      * @param {OdooEvent} ev
      * @param {Object} ev.data.messageData
      */
-    _onPostMessageChatWindow: function (ev) {
+    _onPostMessageChatWindow(ev) {
         ev.stopPropagation();
         var self = this;
         var messageData = ev.data.messageData;
@@ -436,7 +436,7 @@ var LivechatButton = Widget.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onSaveChatWindow: function (ev) {
+    _onSaveChatWindow(ev) {
         ev.stopPropagation();
         utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this._livechat.toData()), true), 60 * 60);
     },
@@ -452,7 +452,7 @@ var LivechatButton = Widget.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onUpdatedUnreadCounter: function (ev) {
+    _onUpdatedUnreadCounter(ev) {
         ev.stopPropagation();
         this._chatWindow.renderHeader();
     },
@@ -461,7 +461,7 @@ var LivechatButton = Widget.extend({
      * Called when the visitor leaves the livechat chatter the first time (first click on X button)
      * this will deactivate the mail_channel, notify operator that visitor has left the channel.
      */
-    _visitorLeaveSession: function () {
+    _visitorLeaveSession() {
         var cookie = utils.get_cookie('im_livechat_session');
         if (cookie) {
             var channel = JSON.parse(cookie);

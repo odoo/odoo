@@ -16,7 +16,7 @@ WebsiteLivechatMessage.include({
      * @param {string} options.default_username
      * @param {string} options.serverURL
      */
-    init: function (parent, data, options) {
+    init(parent, data, options) {
         this._super(...arguments);
 
         if (parent._isChatbot) {
@@ -39,7 +39,7 @@ WebsiteLivechatMessage.include({
      *
      * @return {string}
      */
-    getChatbotStepId: function () {
+    getChatbotStepId() {
         return this._chatbotStepId;
     },
     /**
@@ -47,7 +47,7 @@ WebsiteLivechatMessage.include({
      *
      * @return {string}
      */
-    getChatbotStepAnswers: function () {
+    getChatbotStepAnswers() {
         return this._chatbotStepAnswers;
     },
     /**
@@ -55,13 +55,13 @@ WebsiteLivechatMessage.include({
      *
      * @return {string}
      */
-    getChatbotStepAnswerId: function () {
+    getChatbotStepAnswerId() {
         return this._chatbotStepAnswerId;
     },
     /**
      * @override
      */
-    setChatbotStepAnswerId: function (chatbotStepAnswerId) {
+    setChatbotStepAnswerId(chatbotStepAnswerId) {
         this._chatbotStepAnswerId = chatbotStepAnswerId;
     }
 });
