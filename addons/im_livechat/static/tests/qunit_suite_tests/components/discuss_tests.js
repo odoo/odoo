@@ -19,9 +19,12 @@ QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         anonymous_name: "Visitor 11",
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+        ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
-        channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
     });
     const { messaging } = await start({
         autoOpenDiscuss: true,
@@ -72,9 +75,12 @@ QUnit.test('livechat in the sidebar: existing user with country', async function
         name: "Jean",
     });
     pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId1 }],
+        ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
-        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
     await start({
         autoOpenDiscuss: true,
@@ -142,11 +148,16 @@ QUnit.test('do not add livechat in the sidebar on visitor typing', async functio
         user_ids: [pyEnv.currentUserId],
     });
     const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, {
+                is_pinned: false,
+                partner_id: pyEnv.currentPartnerId,
+            }],
+            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+        ],
         channel_type: 'livechat',
-        is_pinned: false,
         livechat_channel_id: imLivechatChannelId1,
         livechat_operator_id: pyEnv.currentPartnerId,
-        channel_partner_ids: [pyEnv.publicPartnerId, pyEnv.currentPartnerId],
     });
     const { env } = await start({
         autoOpenDiscuss: true,
@@ -192,12 +203,17 @@ QUnit.test('add livechat in the sidebar on visitor sending first message', async
     });
     const mailChannelId1 = pyEnv['mail.channel'].create({
         anonymous_name: "Visitor (Belgium)",
+        channel_last_seen_partner_ids: [
+            [0, 0, {
+                is_pinned: false,
+                partner_id: pyEnv.currentPartnerId,
+            }],
+            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+        ],
         channel_type: 'livechat',
         country_id: resCountryId1,
-        is_pinned: false,
         livechat_channel_id: imLivechatChannelId1,
         livechat_operator_id: pyEnv.currentPartnerId,
-        channel_partner_ids: [pyEnv.publicPartnerId, pyEnv.currentPartnerId],
     });
     const { env } = await start({
         autoOpenDiscuss: true,
@@ -245,17 +261,27 @@ QUnit.test('livechats are sorted by last activity time in the sidebar: most rece
     const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([
         {
             anonymous_name: "Visitor 11",
+            channel_last_seen_partner_ids: [
+                [0, 0, {
+                    last_interest_dt: datetime_to_str(new Date(2021, 0, 1)),
+                    partner_id: pyEnv.currentPartnerId,
+                }],
+                [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            ],
             channel_type: 'livechat',
             livechat_operator_id: pyEnv.currentPartnerId,
-            channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
-            last_interest_dt: datetime_to_str(new Date(2021, 0, 1)), // less recent one
         },
         {
             anonymous_name: "Visitor 12",
+            channel_last_seen_partner_ids: [
+                [0, 0, {
+                    last_interest_dt: datetime_to_str(new Date(2021, 0, 2)),
+                    partner_id: pyEnv.currentPartnerId,
+                }],
+                [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            ],
             channel_type: 'livechat',
             livechat_operator_id: pyEnv.currentPartnerId,
-            channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
-            last_interest_dt: datetime_to_str(new Date(2021, 0, 2)), // more recent one
         },
     ]);
     const { messaging } = await start({
@@ -317,9 +343,12 @@ QUnit.test('invite button should be present on livechat', async function (assert
     const mailChannelId1 = pyEnv['mail.channel'].create(
         {
             anonymous_name: "Visitor 11",
+            channel_last_seen_partner_ids: [
+                [0, 0, { partner_id: pyEnv.currentPartnerId }],
+                [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            ],
             channel_type: 'livechat',
             livechat_operator_id: pyEnv.currentPartnerId,
-            channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
         },
     );
     await start({
@@ -345,9 +374,12 @@ QUnit.test('call buttons should not be present on livechat', async function (ass
     const mailChannelId1 = pyEnv['mail.channel'].create(
         {
             anonymous_name: "Visitor 11",
+            channel_last_seen_partner_ids: [
+                [0, 0, { partner_id: pyEnv.currentPartnerId }],
+                [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            ],
             channel_type: 'livechat',
             livechat_operator_id: pyEnv.currentPartnerId,
-            channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
         },
     );
     await start({

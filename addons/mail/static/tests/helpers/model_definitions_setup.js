@@ -14,7 +14,7 @@ import {
 
 addModelNamesToFetch([
     'ir.attachment', 'ir.model', 'ir.model.fields', 'mail.activity', 'mail.activity.type',
-    'mail.channel', 'mail.followers', 'mail.message', 'mail.message.subtype',
+    'mail.channel', 'mail.channel.partner', 'mail.followers', 'mail.message', 'mail.message.subtype',
     'mail.notification', 'mail.shortcode', 'mail.template', 'mail.tracking.value',
     'res.company', 'res.country', 'res.partner', 'res.users', 'res.users.settings',
 ]);
@@ -44,22 +44,19 @@ insertModelFields('mail.channel', {
         },
     },
     avatarCacheKey: { string: "Avatar Cache Key", type: "datetime" },
-    channel_partner_ids: {
+    channel_last_seen_partner_ids: {
         default() {
-            return [this.currentPartnerId];
+            return [[0, 0, { partner_id: this.currentPartnerId }]];
         },
     },
     channel_type: { default: 'channel' },
-    custom_channel_name: { string: "Custom channel name", type: 'char' },
-    fetched_message_id: { relation: 'mail.message', string: "Last Fetched", type: 'many2one' },
     group_based_subscription: { string: "Group based subscription", type: "boolean" },
-    is_minimized: { string: "isMinimized", type: "boolean" },
-    is_pinned: { default: true, string: "isPinned", type: "boolean" },
-    last_interest_dt: { string: "Last Interest", type: "datetime" },
-    message_unread_counter: { string: 'Unread counter', type: 'integer' },
-    seen_message_id:  { relation: 'mail.message', string: "Last Seen", type: 'many2one' },
-    state: { default: 'open', string: "FoldState", type: "char" },
     uuid: { default: () => _.uniqueId('mail.channel_uuid-') },
+});
+insertModelFields('mail.channel.partner', {
+    fold_state: { default: 'open' },
+    is_pinned: { default: true },
+    message_unread_counter: { default: 0 },
 });
 insertModelFields('mail.message', {
     author_id: { default: TEST_USER_IDS.currentPartnerId },

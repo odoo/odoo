@@ -25,10 +25,13 @@ QUnit.test('rendering of visitor banner', async function (assert) {
         website_name: "General website",
     });
     const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+        ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
         livechat_visitor_id: websiteVisitorId1,
-        channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
     });
     await start({
         autoOpenDiscuss: true,
@@ -122,10 +125,13 @@ QUnit.test('livechat with non-logged visitor should show visitor banner', async 
         website_name: "General website",
     });
     const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+        ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
         livechat_visitor_id: websiteVisitorId1,
-        channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
     });
     await start({
         autoOpenDiscuss: true,
@@ -163,10 +169,13 @@ QUnit.test('livechat with logged visitor should show visitor banner', async func
         website_name: "General website",
     });
     const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId1 }],
+        ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
         livechat_visitor_id: websiteVisitorId1,
-        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
     await start({
         autoOpenDiscuss: true,
@@ -195,9 +204,12 @@ QUnit.test('livechat without visitor should not show visitor banner', async func
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
     const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId1 }],
+        ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
-        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
     await start({
         autoOpenDiscuss: true,

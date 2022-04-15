@@ -24,9 +24,12 @@ QUnit.test('livechat - avatar: should have a smiley face avatar for an anonymous
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         anonymous_name: "Visitor 11",
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+        ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
-        channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.currentPartnerId],
     });
     const { messaging } = await this.start();
 
@@ -58,9 +61,12 @@ QUnit.test('livechat - avatar: should have a partner profile picture for a livec
         name: "Jean",
     });
     const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId1 }],
+        ],
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
-        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
     const { messaging } = await this.start();
 
