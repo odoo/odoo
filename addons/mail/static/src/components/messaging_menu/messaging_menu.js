@@ -21,7 +21,6 @@ export class MessagingMenu extends Component {
         this._onMobileNewMessageInputSelect = this._onMobileNewMessageInputSelect.bind(this);
         this._onMobileNewMessageInputSource = this._onMobileNewMessageInputSource.bind(this);
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
-        this._onHideMobileNewMessage = this._onHideMobileNewMessage.bind(this);
         onMounted(() => this._mounted());
         onWillUnmount(() => this._willUnmount());
     }
@@ -65,13 +64,6 @@ export class MessagingMenu extends Component {
         }
         // in all other cases: close the messaging menu when clicking outside
         this.messagingMenu.close();
-    }
-
-    /**
-     * @private
-     */
-    _onHideMobileNewMessage() {
-        this.messagingMenu.toggleMobileNewMessage();
     }
 
     /**
