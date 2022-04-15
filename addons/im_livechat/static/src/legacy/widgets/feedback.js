@@ -1,22 +1,23 @@
 odoo.define('im_livechat.legacy.im_livechat.Feedback', function (require) {
 "use strict";
 
-var concurrency = require('web.concurrency');
-var core = require('web.core');
-var session = require('web.session');
-var utils = require('web.utils');
-var Widget = require('web.Widget');
+const concurrency = require('web.concurrency');
+const core = require('web.core');
+const session = require('web.session');
+const utils = require('web.utils');
+const Widget = require('web.Widget');
 
-var { RATING_TO_EMOJI } = require('im_livechat.legacy.im_livechat.Constants');
+const { RATING_TO_EMOJI } = require('im_livechat.legacy.im_livechat.Constants');
+const { sprintf } = require('web.utils');
 
-var _t = core._t;
+const _t = core._t;
 /*
  * Rating for Livechat
  *
  * This widget displays the 3 rating smileys, and a textarea to add a reason
  * (only for red smiley), and sends the user feedback to the server.
  */
-var Feedback = Widget.extend({
+const Feedback = Widget.extend({
     template: 'im_livechat.legacy.im_livechat.FeedBack',
 
     events: {
@@ -31,7 +32,7 @@ var Feedback = Widget.extend({
      * @param {?} parent
      * @param {im_livechat.legacy.im_livechat.model.WebsiteLivechat} livechat
      */
-    init: function (parent, livechat) {
+    init(parent, livechat) {
         this._super(parent);
         this._livechat = livechat;
         this.server_origin = session.origin;
@@ -47,28 +48,28 @@ var Feedback = Widget.extend({
      * @private
      * @param {Object} options
      */
-    _sendFeedback: function (reason) {
-        var self = this;
-        var args = {
+     _sendFeedback(reason) {
+        const args = {
             uuid: this._livechat.getUUID(),
             rate: this.rating,
-            reason: reason,
+            reason,
         };
-        this.dp.add(session.rpc('/im_livechat/feedback', args)).then(function (response) {
-            var emoji = RATING_TO_EMOJI[self.rating] || "??";
+        this.dp.add(session.rpc('/im_livechat/feedback', args)).then((response) => {
+            const emoji = RATING_TO_EMOJI[this.rating] || "??";
+            let content;
             if (!reason) {
-                var content = utils.sprintf(_t("Rating: %s"), emoji);
+                content = sprintf(_t("Rating: %s"), emoji);
             }
             else {
-                var content = "Rating reason: \n" + reason;
+                content = "Rating reason: \n" + reason;
             }
-            self.trigger('send_message', { content: content, isFeedback: true });
+            this.trigger('send_message', { content, isFeedback: true });
         });
     },
     /**
     * @private
     */
-    _showThanksMessage: function () {
+    _showThanksMessage() {
         this.$('.o_livechat_rating_box').empty().append($('<div />', {
             text: _t('Thank you for your feedback'),
             class: 'text-muted'
@@ -82,13 +83,13 @@ var Feedback = Widget.extend({
     /**
      * @private
      */
-    _onClickNoFeedback: function () {
+    _onClickNoFeedback() {
         this.trigger('feedback_sent'); // will close the chat
     },
     /**
      * @private
      */
-    _onClickSend: function () {
+    _onClickSend() {
         this.$('.o_livechat_rating_reason').hide();
         this._showThanksMessage();
         if (_.isNumber(this.rating)) {
@@ -99,7 +100,7 @@ var Feedback = Widget.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickSmiley: function (ev) {
+    _onClickSmiley(ev) {
         this.rating = parseInt($(ev.currentTarget).data('value'));
         this.$('.o_livechat_rating_choices img').removeClass('selected');
         this.$('.o_livechat_rating_choices img[data-value="' + this.rating + '"]').addClass('selected');
@@ -117,9 +118,8 @@ var Feedback = Widget.extend({
     /**
     * @private
     */
-    _onEmailChat: function () {
-        var self = this;
-        var $email = this.$('#o_email');
+    _onEmailChat() {
+        const $email = this.$('#o_email');
 
         if (utils.is_email($email.val())) {
             $email.removeAttr('title').removeClass('is-invalid').prop('disabled', true);
@@ -130,11 +130,13 @@ var Feedback = Widget.extend({
                     uuid: this._livechat.getUUID(),
                     email: $email.val(),
                 }
-            }).then(function () {
-                self.$('.o_livechat_email').html($('<strong />', { text: _t('Conversation Sent') }));
-            }).guardedCatch(function () {
-                self.$('.o_livechat_email').hide();
-                self.$('.o_livechat_email_error').show();
+            }).then(() => {
+                this.$('o_livechat_email_sentLabel').show();
+                this.$('o_livechat_email_receiveCopyLabel').hide();
+                this.$('o_livechat_email_receiveCopyForm').hide();
+            }).guardedCatch(() => {
+                this.$('.o_livechat_email').hide();
+                this.$('.o_livechat_email_error').show();
             });
         } else {
             $email.addClass('is-invalid').prop('title', _t('Invalid email address'));
@@ -143,7 +145,7 @@ var Feedback = Widget.extend({
     /**
     * @private
     */
-    _onTryAgain: function () {
+    _onTryAgain() {
         this.$('#o_email').prop('disabled', false);
         this.$('.o_email_chat_button').prop('disabled', false);
         this.$('.o_livechat_email_error').hide();

@@ -1,13 +1,13 @@
 odoo.define('im_livechat.legacy.mail.model.CCThrottleFunctionObject', function (require) {
 "use strict";
 
-var Class = require('web.Class');
+const Class = require('web.Class');
 
 /**
  * This object models the behaviour of the clearable and cancellable (CC)
  * throttle version of a provided function.
  */
-var CCThrottleFunctionObject = Class.extend({
+const CCThrottleFunctionObject = Class.extend({
 
     /**
      * @param {Object} params
@@ -17,7 +17,7 @@ var CCThrottleFunctionObject = Class.extend({
      * @param {function} params.func provided function for making the CC
      *   throttled version.
      */
-    init: function (params) {
+    init(params) {
         this._arguments = undefined;
         this._cooldownTimeout = undefined;
         this._duration = params.duration;
@@ -32,7 +32,7 @@ var CCThrottleFunctionObject = Class.extend({
     /**
      * Cancel any buffered function call, but keep the cooldown phase running.
      */
-    cancel: function () {
+    cancel() {
         this._arguments = undefined;
         this._shouldCallFunctionAfterCD = false;
     },
@@ -40,7 +40,7 @@ var CCThrottleFunctionObject = Class.extend({
      * Clear the internal throttle timer, so that the following function call
      * is immediate. For instance, if there is a cooldown stage, it is aborted.
      */
-    clear: function () {
+    clear() {
         if (this._cooldownTimeout) {
             clearTimeout(this._cooldownTimeout);
             this._onCooldownTimeout();
@@ -59,7 +59,7 @@ var CCThrottleFunctionObject = Class.extend({
      * Note that after the cooldown stage, only the last attempted function
      * call will be considered.
      */
-    do: function () {
+    do() {
         this._arguments = Array.prototype.slice.call(arguments);
         if (this._cooldownTimeout === undefined) {
             this._callFunction();
@@ -78,7 +78,7 @@ var CCThrottleFunctionObject = Class.extend({
      *
      * @private
      */
-    _callFunction: function () {
+    _callFunction() {
         this._func.apply(null, this._arguments);
         this._cooldown();
     },
@@ -89,7 +89,7 @@ var CCThrottleFunctionObject = Class.extend({
      *
      * @private
      */
-    _cooldown: function () {
+    _cooldown() {
         this.cancel();
         this._cooldownTimeout = setTimeout(
             this._onCooldownTimeout.bind(this),
@@ -107,7 +107,7 @@ var CCThrottleFunctionObject = Class.extend({
      *
      * @private
      */
-    _onCooldownTimeout: function () {
+    _onCooldownTimeout() {
         if (this._shouldCallFunctionAfterCD) {
             this._callFunction();
         } else {

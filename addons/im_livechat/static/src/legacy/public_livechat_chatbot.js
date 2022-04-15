@@ -20,7 +20,7 @@ const QWeb = core.qweb;
  *   message for a couple seconds and then trigger the next step of the script
  */
  LivechatButton.include({
-    init: function () {
+    init() {
         this._super(...arguments);
 
         this._chatbotMessageDelay = 3500;  // in milliseconds
@@ -49,7 +49,7 @@ const QWeb = core.qweb;
      *
      * @override
      */
-    willStart: async function () {
+    async willStart() {
         const superResult = await this._super(...arguments);
 
         this._isChatbot = false;
@@ -122,7 +122,7 @@ const QWeb = core.qweb;
      *
      * It also helps while running test tours since those don't have the bus enabled.
      */
-    _chatbotAddMessage: function (message, options) {
+    _chatbotAddMessage(message, options) {
         message.body = utils.Markup(message.body);
         this._addMessage(message, options);
         if (this._chatWindow.isFolded() || !this._chatWindow.isAtBottom()) {
@@ -147,7 +147,7 @@ const QWeb = core.qweb;
      * First we check if the last message was sent by the user, to make sure we always let him type
      * at least one message before moving on.
      */
-    _chatbotAwaitUserInput: function () {
+    _chatbotAwaitUserInput() {
         if (this._isLastMessageFromCustomer()) {
             if (this._chatbotShouldEndScript()) {
                 this._chatbotEndScript();
@@ -172,7 +172,7 @@ const QWeb = core.qweb;
      * It also allows tying any first response / question_selection choice to a chatbot.message
      * that has a linked mail.message.
      */
-    _chatbotPostWelcomeMessages: async function () {
+    async _chatbotPostWelcomeMessages() {
         const welcomeMessages = this._getWelcomeMessages();
 
         if (welcomeMessages.length === 0) {
@@ -207,7 +207,7 @@ const QWeb = core.qweb;
      *
      * @private
      */
-    _chatbotDisableInput: function (disableText) {
+    _chatbotDisableInput(disableText) {
         this._chatWindow.$('.o_composer_text_field')
             .prop('disabled', true)
             .addClass('text-center font-italic bg-200')
@@ -217,7 +217,7 @@ const QWeb = core.qweb;
     /**
      * @private
      */
-    _chatbotEnableInput: function () {
+    _chatbotEnableInput() {
         const $composerTextField = this._chatWindow.$('.o_composer_text_field');
         $composerTextField
             .prop('disabled', false)
@@ -240,7 +240,7 @@ const QWeb = core.qweb;
      *
      * @private
      */
-    _chatbotEndScript: function () {
+    _chatbotEndScript() {
         this._chatWindow.$('.o_composer_text_field').addClass('d-none');
         this._chatWindow.$('.o_livechat_chatbot_end').show();
         this._chatWindow.$('.o_livechat_chatbot_restart').one('click',
@@ -255,7 +255,7 @@ const QWeb = core.qweb;
      *
      * @private
      */
-    _chatbotDisplayRestartButton: function () {
+    _chatbotDisplayRestartButton() {
         return this._isChatbot && (!this._chatbotCurrentStep ||
             (this._chatbotCurrentStep.chatbot_step_type !== 'forward_operator' ||
              !this._chatbotCurrentStep.chatbot_operator_found));
@@ -265,7 +265,7 @@ const QWeb = core.qweb;
      *
      * @private
      */
-    _chatbotIsExpectingUserInput: function () {
+    _chatbotIsExpectingUserInput() {
         return [
             'question_phone',
             'question_email',
@@ -300,7 +300,7 @@ const QWeb = core.qweb;
      *
      * @private
      */
-    _chatbotProcessStep: function () {
+    _chatbotProcessStep() {
         if (this._chatbotShouldEndScript()) {
             this._chatbotEndScript();
         } else if (this._chatbotCurrentStep.chatbot_step_type === 'forward_operator'
@@ -358,7 +358,7 @@ const QWeb = core.qweb;
       *
       * @private
       */
-    _chatbotRestoreSession: function (sessionCookie) {
+    _chatbotRestoreSession(sessionCookie) {
         const sessionKey = 'im_livechat.chatbot.state.uuid_' + JSON.parse(sessionCookie).uuid;
         const browserLocalStorage = window.localStorage;
         if (browserLocalStorage && browserLocalStorage.length) {
@@ -388,7 +388,7 @@ const QWeb = core.qweb;
      *
      * @private
      */
-    _chatbotSaveSession: function () {
+    _chatbotSaveSession() {
         const chatUuid = this._livechat.toData().uuid;
         localStorage.setItem('im_livechat.chatbot.state.uuid_' + chatUuid, JSON.stringify({
             '_chatbot': this._chatbot,
@@ -400,7 +400,7 @@ const QWeb = core.qweb;
      *
      * @private
      */
-    _chatbotSetIsTyping: function (isWelcomeMessage=false) {
+    _chatbotSetIsTyping(isWelcomeMessage=false) {
         if (this.isTypingTimeout) {
             clearTimeout(this.isTypingTimeout);
         }
@@ -431,7 +431,7 @@ const QWeb = core.qweb;
      * @returns {Boolean}
      * @private
      */
-    _chatbotShouldEndScript: function () {
+    _chatbotShouldEndScript() {
         if (this._chatbotCurrentStep.chatbot_step_is_last &&
             (this._chatbotCurrentStep.chatbot_step_type !== 'forward_operator' ||
              !this._chatbotCurrentStep.chatbot_operator_found)) {
@@ -469,7 +469,7 @@ const QWeb = core.qweb;
      *
      * @private
      */
-    _chatbotValidateEmail: async function () {
+    async _chatbotValidateEmail() {
         let emailValidResult = await session.rpc('/chatbot/step/validate_email', {
             channel_uuid: this._livechat.getUUID(),
         });
@@ -495,7 +495,7 @@ const QWeb = core.qweb;
      *
      * @private
      */
-    _chatbotTriggerNextStep: async function () {
+    async _chatbotTriggerNextStep() {
         let triggerNextStep = true;
         if (this._chatbotCurrentStep && this._chatbotCurrentStep.chatbot_step_type === 'question_email') {
             triggerNextStep = await this._chatbotValidateEmail();
@@ -535,7 +535,7 @@ const QWeb = core.qweb;
      *
      * @private
      */
-    _getWelcomeMessages: function () {
+    _getWelcomeMessages() {
         return this._messages.filter((message) => {
             return message._id && typeof message._id === 'string' && message._id.startsWith('_welcome_');
         });
@@ -545,7 +545,7 @@ const QWeb = core.qweb;
      *
      * @private
      */
-    _isLastMessageFromCustomer: function () {
+    _isLastMessageFromCustomer() {
         const lastMessage = this._messages.length !== 0 ? this._messages[this._messages.length - 1] : null;
         return lastMessage && lastMessage.getAuthorID() !== this._livechat.getOperatorPID()[0];
     },
@@ -561,7 +561,7 @@ const QWeb = core.qweb;
      * @override
      * @private
      */
-     _askFeedback: function () {
+     _askFeedback() {
         this._super(...arguments);
 
         this._chatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
@@ -581,7 +581,7 @@ const QWeb = core.qweb;
      * @private
      * @override
      */
-    _openChatWindow: function () {
+    _openChatWindow() {
         return this._super(...arguments).then(() => {
             window.addEventListener('resize', () => {
                 if (this._chatWindow) {
@@ -598,7 +598,7 @@ const QWeb = core.qweb;
      * @private
      * @override
      */
-    _prepareGetSessionParameters: function () {
+    _prepareGetSessionParameters() {
         const parameters = this._super(...arguments);
 
         if (this._isChatbot) {
@@ -610,10 +610,10 @@ const QWeb = core.qweb;
     /**
      * @private
      */
-    _renderMessages: function () {
+    _renderMessages() {
         this._super(...arguments);
 
-        var self = this;
+        const self = this;
 
         this._chatWindow.$('.o_thread_message:last .o_livechat_chatbot_options li').each(function () {
             $(this).on('click', self._onChatbotOptionClicked.bind(self));
@@ -648,7 +648,7 @@ const QWeb = core.qweb;
      *
      * @private
      */
-    _sendMessage: async function (message) {
+    async _sendMessage(message) {
         const superArguments = arguments;
         const superMethod = this._super;
 
@@ -683,7 +683,7 @@ const QWeb = core.qweb;
      * Small override to handle chatbot welcome message(s).
      * @private
      */
-    _sendWelcomeMessage: function () {
+    _sendWelcomeMessage() {
         if (this._isChatbot) {
             this._sendWelcomeChatbotMessage(
                 0,
@@ -714,7 +714,7 @@ const QWeb = core.qweb;
      *
      * @private
      */
-    _sendWelcomeChatbotMessage: function (stepIndex, welcomeMessageDelay) {
+    _sendWelcomeChatbotMessage(stepIndex, welcomeMessageDelay) {
         const chatbotStep = this._chatbot.chatbot_welcome_steps[stepIndex];
         this._chatbotCurrentStep = chatbotStep;
 
@@ -768,7 +768,7 @@ const QWeb = core.qweb;
      *
      * @private
      */
-    _onChatbotRestartScript: async function (ev) {
+    async _onChatbotRestartScript(ev) {
         this._chatWindow.$('.o_composer_text_field').removeClass('d-none');
         this._chatWindow.$('.o_livechat_chatbot_end').hide();
 
@@ -795,7 +795,7 @@ const QWeb = core.qweb;
             this._chatbotTriggerNextStep.bind(this), this._chatbotMessageDelay);
     },
 
-    _onChatbotInputKeyDown: function () {
+    _onChatbotInputKeyDown() {
         if (this._chatbotCurrentStep &&
             this._chatbotCurrentStep.chatbot_step_type === 'free_input_multi') {
             this._debouncedChatbotAwaitUserInput();
@@ -813,7 +813,7 @@ const QWeb = core.qweb;
      * @param {MouseEvent} ev
      * @private
      */
-    _onChatbotOptionClicked: async function (ev) {
+    async _onChatbotOptionClicked(ev) {
         ev.stopPropagation();
 
         const $target = $(ev.currentTarget);

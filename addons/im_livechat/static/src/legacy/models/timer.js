@@ -1,12 +1,12 @@
 odoo.define('im_livechat.legacy.mail.model.Timer', function (require) {
 "use strict";
 
-var Class = require('web.Class');
+const Class = require('web.Class');
 
 /**
  * This class creates a timer which, when times out, calls a function.
  */
-var Timer = Class.extend({
+const Timer = Class.extend({
 
     /**
      * Instantiate a new timer. Note that the timer is not started on
@@ -18,7 +18,7 @@ var Timer = Class.extend({
      * @param {function} params.onTimeout function that is called when the
      *   timer times out.
      */
-    init: function (params) {
+    init(params) {
         this._duration = params.duration;
         this._timeout = undefined;
         this._timeoutCallback = params.onTimeout;
@@ -31,13 +31,13 @@ var Timer = Class.extend({
     /**
      * Clears the countdown of the timer.
      */
-    clear: function () {
+    clear() {
         clearTimeout(this._timeout);
     },
     /**
      * Resets the timer, i.e. resets its duration.
      */
-    reset: function () {
+    reset() {
         this.clear();
         this.start();
     },
@@ -45,7 +45,7 @@ var Timer = Class.extend({
      * Starts the timer, i.e. after a certain duration, it times out and calls
      * a function back.
      */
-    start: function () {
+    start() {
         this._timeout = setTimeout(this._onTimeout.bind(this), this._duration);
     },
 
@@ -58,7 +58,7 @@ var Timer = Class.extend({
      *
      * @private
      */
-    _onTimeout: function () {
+    _onTimeout() {
         this._timeoutCallback();
     },
 

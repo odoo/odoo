@@ -1,14 +1,14 @@
 odoo.define('im_livechat.legacy.mail.model.AbstractMessage', function (require) {
 "use strict";
 
-var mailUtils = require('@mail/js/utils');
+const mailUtils = require('@mail/js/utils');
 
-var Class = require('web.Class');
-var core = require('web.core');
-var session = require('web.session');
-var time = require('web.time');
+const Class = require('web.Class');
+const core = require('web.core');
+const session = require('web.session');
+const time = require('web.time');
 
-var _t = core._t;
+const _t = core._t;
 
 /**
  * This is an abstract class for modeling messages in JS.
@@ -21,7 +21,7 @@ var _t = core._t;
  * and this module should not leak outside of the backend, hence the use of
  * mail.model.AbstractMessage as a work-around.
  */
-var AbstractMessage = Class.extend({
+const AbstractMessage = Class.extend({
 
     /**
      * @param {Widget} parent
@@ -36,7 +36,7 @@ var AbstractMessage = Class.extend({
      * @param {boolean} [data.is_notification = false]
      * @param {string} [data.message_type = undefined]
      */
-    init: function (parent, data) {
+    init(parent, data) {
         this._attachmentIDs = data.attachment_ids || [];
         this._body = data.body || "";
         // by default: current datetime
@@ -63,7 +63,7 @@ var AbstractMessage = Class.extend({
      *
      * @return {Object[]}
      */
-    getAttachments: function () {
+    getAttachments() {
         return this._attachmentIDs;
     },
     /**
@@ -72,7 +72,7 @@ var AbstractMessage = Class.extend({
      *
      * @return {integer}
      */
-    getAuthorID: function () {
+    getAuthorID() {
         if (!this.hasAuthor()) {
             return -1;
         }
@@ -83,7 +83,7 @@ var AbstractMessage = Class.extend({
      *
      * @return {undefined}
      */
-    getAuthorImStatus: function () {
+    getAuthorImStatus() {
         return undefined;
     },
     /**
@@ -92,7 +92,7 @@ var AbstractMessage = Class.extend({
      * @abstract
      * @return {string}
      */
-    getAvatarSource: function () {
+    getAvatarSource() {
         if (this.hasAuthor()) {
             return '/web/image/res.partner/' + this.getAuthorID() + '/avatar_128';
         }
@@ -102,13 +102,13 @@ var AbstractMessage = Class.extend({
      *
      * @return {string}
      */
-    getBody: function () {
+    getBody() {
         return this._body;
     },
     /**
      * @return {moment}
      */
-    getDate: function () {
+    getDate() {
         return this._date;
     },
     /**
@@ -116,8 +116,8 @@ var AbstractMessage = Class.extend({
      *
      * @return {string}
      */
-    getDateDay: function () {
-        var date = this.getDate().format('YYYY-MM-DD');
+    getDateDay() {
+        const date = this.getDate().format('YYYY-MM-DD');
         if (date === moment().format('YYYY-MM-DD')) {
             return _t("Today");
         } else if (date === moment().subtract(1, 'days').format('YYYY-MM-DD')) {
@@ -131,7 +131,7 @@ var AbstractMessage = Class.extend({
      *
      * @return {string}
      */
-    getDisplayedAuthor: function () {
+    getDisplayedAuthor() {
         return this.hasAuthor() ? this._getAuthorName() : null;
     },
     /**
@@ -140,7 +140,7 @@ var AbstractMessage = Class.extend({
      * @override
      * @return {integer}
      */
-    getID: function () {
+    getID() {
         return this._id;
     },
     /**
@@ -149,7 +149,7 @@ var AbstractMessage = Class.extend({
      *
      * @return {Object[]}
      */
-    getImageAttachments: function () {
+    getImageAttachments() {
         return _.filter(this.getAttachments(), function (attachment) {
             return attachment.mimetype && attachment.mimetype.split('/')[0] === 'image';
         });
@@ -160,7 +160,7 @@ var AbstractMessage = Class.extend({
      *
      * @return {Object[]}
      */
-    getNonImageAttachments: function () {
+    getNonImageAttachments() {
         return _.difference(this.getAttachments(), this.getImageAttachments());
     },
     /**
@@ -196,7 +196,7 @@ var AbstractMessage = Class.extend({
      *
      * @return {string}
      */
-    getTimeElapsed: function () {
+    getTimeElapsed() {
         return mailUtils.timeFromNow(this.getDate());
     },
     /**
@@ -206,7 +206,7 @@ var AbstractMessage = Class.extend({
      * @override
      * @return {string|undefined}
      */
-    getType: function () {
+    getType() {
         return this._type;
     },
     /**
@@ -215,7 +215,7 @@ var AbstractMessage = Class.extend({
      * @override
      * @return {boolean}
      */
-    hasAttachments: function () {
+    hasAttachments() {
         return this.getAttachments().length > 0;
     },
     /**
@@ -223,7 +223,7 @@ var AbstractMessage = Class.extend({
      *
      * @return {boolean}
      */
-    hasAuthor: function () {
+    hasAuthor() {
         return !!(this._serverAuthorID && this._serverAuthorID[0]);
     },
     /**
@@ -232,7 +232,7 @@ var AbstractMessage = Class.extend({
      *
      * @return {string}
      */
-    hasEmailFrom: function () {
+    hasEmailFrom() {
         return false;
     },
     /**
@@ -240,7 +240,7 @@ var AbstractMessage = Class.extend({
      *
      * @return {boolean}
      */
-    hasImageAttachments: function () {
+    hasImageAttachments() {
         return _.some(this.getAttachments(), function (attachment) {
             return attachment.mimetype && attachment.mimetype.split('/')[0] === 'image';
         });
@@ -250,7 +250,7 @@ var AbstractMessage = Class.extend({
      *
      * @return {boolean}
      */
-    hasNonImageAttachments: function () {
+    hasNonImageAttachments() {
         return _.some(this.getAttachments(), function (attachment) {
             return !(attachment.mimetype && attachment.mimetype.split('/')[0] === 'image');
         });
@@ -281,7 +281,7 @@ var AbstractMessage = Class.extend({
      * @override
      * @return {boolean}
      */
-    originatesFromChannel: function () {
+    originatesFromChannel() {
         return false;
     },
     /**
@@ -290,7 +290,7 @@ var AbstractMessage = Class.extend({
      *
      * @return {boolean}
      */
-    hasSubject: function () {
+    hasSubject() {
         return false;
     },
     /**
@@ -298,7 +298,7 @@ var AbstractMessage = Class.extend({
      *
      * @return {boolean}
      */
-    isEmpty: function () {
+    isEmpty() {
         return !this.hasTrackingValues() &&
         !this.hasAttachments() &&
         !this.getBody();
@@ -308,7 +308,7 @@ var AbstractMessage = Class.extend({
      *
      * @return {boolean}
      */
-    hasSubtypeDescription: function () {
+    hasSubtypeDescription() {
         return false;
     },
     /**
@@ -317,7 +317,7 @@ var AbstractMessage = Class.extend({
      *
      * @return {boolean}
      */
-    hasTrackingValues: function () {
+    hasTrackingValues() {
         return false;
     },
     /**
@@ -325,7 +325,7 @@ var AbstractMessage = Class.extend({
      *
      * @return {boolean}
      */
-    isDiscussion: function () {
+    isDiscussion() {
         return this._isDiscussion;
     },
     /**
@@ -334,7 +334,7 @@ var AbstractMessage = Class.extend({
      *
      * @return {boolean}
      */
-    isLinkedToDocumentThread: function () {
+    isLinkedToDocumentThread() {
         return false;
     },
     /**
@@ -343,7 +343,7 @@ var AbstractMessage = Class.extend({
      *
      * @return {boolean}
      */
-    isNeedaction: function () {
+    isNeedaction() {
         return false;
     },
     /**
@@ -351,7 +351,7 @@ var AbstractMessage = Class.extend({
      *
      * @return {boolean}
      */
-    isNote: function () {
+    isNote() {
         return this._isNote;
     },
     /**
@@ -367,7 +367,7 @@ var AbstractMessage = Class.extend({
      *
      * @returns {boolean}
      */
-    isNotification: function () {
+    isNotification() {
         return this._isNotification;
     },
     /**
@@ -376,7 +376,7 @@ var AbstractMessage = Class.extend({
      *
      * @return {boolean}
      */
-    isStarred: function () {
+    isStarred() {
         return false;
     },
     /**
@@ -386,7 +386,7 @@ var AbstractMessage = Class.extend({
      * @override
      * @return {boolean}
      */
-    isSystemNotification: function () {
+    isSystemNotification() {
         return false;
     },
     /**
@@ -395,13 +395,13 @@ var AbstractMessage = Class.extend({
      *
      * @returns {boolean}
      */
-    needsModeration: function () {
+    needsModeration() {
         return false;
     },
     /**
      * @params {integer[]} attachmentIDs
      */
-    removeAttachments: function (attachmentIDs) {
+    removeAttachments(attachmentIDs) {
         this._attachmentIDs = _.reject(this._attachmentIDs, function (attachment) {
             return _.contains(attachmentIDs, attachment.id);
         });
@@ -414,7 +414,7 @@ var AbstractMessage = Class.extend({
      *
      * @return {boolean}
      */
-    shouldRedirectToAuthor: function () {
+    shouldRedirectToAuthor() {
         return !this._isMyselfAuthor();
     },
 
@@ -429,7 +429,7 @@ var AbstractMessage = Class.extend({
      * @private
      * @returns {string}
      */
-    _getAuthorName: function () {
+    _getAuthorName() {
         if (!this.hasAuthor()) {
             return "";
         }
@@ -441,7 +441,7 @@ var AbstractMessage = Class.extend({
      * @private
      * @return {boolean}
      */
-    _isMyselfAuthor: function () {
+    _isMyselfAuthor() {
         return this.hasAuthor() && (this.getAuthorID() === session.partner_id);
     },
     /**
@@ -449,10 +449,10 @@ var AbstractMessage = Class.extend({
      *
      * @private
      */
-    _processAttachmentURL: function () {
-        _.each(this.getAttachments(), function (attachment) {
+    _processAttachmentURL() {
+        for (let attachment of this.getAttachments()) {
             attachment.url = '/web/content/' + attachment.id + '?download=true';
-        });
+        }
     },
 
 });
