@@ -32,7 +32,7 @@ registerModel({
                 globalWindowInnerHeight: this.env.browser.innerHeight,
                 globalWindowInnerWidth: this.env.browser.innerWidth,
                 isMobile: this.env.device.isMobile,
-                isMobileDevice: this.messaging.device.isMobileDevice,
+                isMobileDevice: this.env.device.isMobileDevice,
                 sizeClass: this.env.device.size_class,
             });
         },
