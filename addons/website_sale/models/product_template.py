@@ -487,3 +487,7 @@ class ProductTemplate(models.Model):
         if website:
             return website.get_current_pricelist()
         return pricelist
+
+    def _get_possible_combination_count(self, attribute_values):
+        ptav = self.env['product.template.attribute.value'].search([('product_tmpl_id', '=', self.id), ('product_attribute_value_id', 'in', attribute_values)])
+        return len(list(self._get_possible_combinations(necessary_values=ptav)))

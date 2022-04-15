@@ -285,6 +285,9 @@ class WebsiteSale(http.Controller):
             limit=None, order=self._get_search_order(post), options=options)
         search_product = details[0].get('results', request.env['product.template']).with_context(bin_size=True)
 
+        if attrib_set:
+            search_product = search_product.filtered(lambda product: product._get_possible_combination_count(list(attrib_set)))
+
         filter_by_price_enabled = website.is_view_active('website_sale.filter_products_price')
         if filter_by_price_enabled:
             # TODO Find an alternative way to obtain the domain through the search metadata.
