@@ -2134,7 +2134,7 @@ class AccountMove(models.Model):
                 values['total_amount_currency'] += sign * line.amount_currency
                 values['total_residual_currency'] += sign * line.amount_residual_currency
 
-            elif not line.tax_exigible and not line.reconciled:
+            elif not line.tax_exigible:
 
                 values['to_process_lines'] += line
                 currencies.add(line.currency_id or line.company_currency_id)
@@ -3653,6 +3653,16 @@ class AccountMoveLine(models.Model):
             vals = {'price_unit': 0.0}
         return vals
 
+    def _get_invoiced_qty_per_product(self):
+        qties = defaultdict(float)
+        for aml in self:
+            qty = aml.product_uom_id._compute_quantity(aml.quantity, aml.product_id.uom_id)
+            if aml.move_id.move_type == 'out_invoice':
+                qties[aml.product_id] += qty
+            elif aml.move_id.move_type == 'out_refund':
+                qties[aml.product_id] -= qty
+        return qties
+
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
@@ -4600,7 +4610,7 @@ class AccountMoveLine(models.Model):
                 # to compute the residual amount for each of them.
                 # ==========================================================================
 
-                for line in move_values['to_process_lines']:
+                for line in move_values['to_process_lines'].filtered(lambda x: not x.reconciled):
 
                     vals = {
                         'currency_id': line.currency_id.id,
