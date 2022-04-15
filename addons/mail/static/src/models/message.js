@@ -7,9 +7,7 @@ import emojis from '@mail/js/emojis';
 import { addLink, htmlToTextContentInline, parseAndTransform } from '@mail/js/utils';
 
 import { session } from '@web/session';
-import { sprintf } from '@web/core/utils/strings';
 
-import { format } from 'web.field_utils';
 import { getLangDatetimeFormat, str_to_datetime } from 'web.time';
 
 const { markup } = owl;
@@ -125,8 +123,8 @@ registerModel({
             if ('subtype_id' in data) {
                 data2.subtype_id = data.subtype_id;
             }
-            if ('tracking_value_ids' in data) {
-                data2.tracking_value_ids = data.tracking_value_ids;
+            if ('trackingValues' in data) {
+                data2.trackingValues = data.trackingValues;
             }
 
             return data2;
@@ -333,7 +331,7 @@ registerModel({
             if (!this.originThread) {
                 return false;
             }
-            if (this.tracking_value_ids.length > 0) {
+            if (this.trackingValues.length > 0) {
                 return false;
             }
             if (this.message_type !== 'comment') {
@@ -479,7 +477,7 @@ registerModel({
             return (
                 this.isBodyEmpty &&
                 !this.hasAttachments &&
-                this.tracking_value_ids.length === 0 &&
+                this.trackingValues.length === 0 &&
                 !this.subtype_description
             );
         },
@@ -598,88 +596,6 @@ registerModel({
                 threads.push(this.originThread);
             }
             return replace(threads);
-        },
-        /**
-         * @private
-         * @returns {Object[]}
-         */
-        _computeTrackingValues() {
-            return this.tracking_value_ids.map(trackingValue => {
-                const value = Object.assign({}, trackingValue);
-                value.changed_field = sprintf(this.env._t("%s:"), value.changed_field);
-                /**
-                 * Maps tracked field type to a JS formatter. Tracking values are
-                 * not always stored in the same field type as their origin type.
-                 * Field types that are not listed here are not supported by
-                 * tracking in Python. Also see `create_tracking_values` in Python.
-                 */
-                switch (value.field_type) {
-                    case 'boolean':
-                        value.old_value = value.old_value ? this.env._t('Yes') : this.env._t('No');
-                        value.new_value = value.new_value ? this.env._t('Yes') : this.env._t('No');
-                        break;
-                    /**
-                     * many2one formatter exists but is expecting id/name_get or data
-                     * object but only the target record name is known in this context.
-                     *
-                     * Selection formatter exists but requires knowing all
-                     * possibilities and they are not given in this context.
-                     */
-                    case 'char':
-                    case 'many2one':
-                    case 'selection':
-                        value.old_value = format.char(value.old_value);
-                        value.new_value = format.char(value.new_value);
-                        break;
-                    case 'date':
-                        if (value.old_value) {
-                            value.old_value = moment.utc(value.old_value);
-                        }
-                        if (value.new_value) {
-                            value.new_value = moment.utc(value.new_value);
-                        }
-                        value.old_value = format.date(value.old_value);
-                        value.new_value = format.date(value.new_value);
-                        break;
-                    case 'datetime':
-                        if (value.old_value) {
-                            value.old_value = moment.utc(value.old_value);
-                        }
-                        if (value.new_value) {
-                            value.new_value = moment.utc(value.new_value);
-                        }
-                        value.old_value = format.datetime(value.old_value);
-                        value.new_value = format.datetime(value.new_value);
-                        break;
-                    case 'float':
-                        value.old_value = format.float(value.old_value);
-                        value.new_value = format.float(value.new_value);
-                        break;
-                    case 'integer':
-                        value.old_value = format.integer(value.old_value);
-                        value.new_value = format.integer(value.new_value);
-                        break;
-                    case 'monetary':
-                        value.old_value = format.monetary(value.old_value, undefined, {
-                            currency: value.currency_id
-                                ? this.env.session.currencies[value.currency_id]
-                                : undefined,
-                            forceString: true,
-                        });
-                        value.new_value = format.monetary(value.new_value, undefined, {
-                            currency: value.currency_id
-                                ? this.env.session.currencies[value.currency_id]
-                                : undefined,
-                            forceString: true,
-                        });
-                        break;
-                    case 'text':
-                        value.old_value = format.text(value.old_value);
-                        value.new_value = format.text(value.new_value);
-                        break;
-                }
-                return value;
-            });
         },
     },
     fields: {
@@ -922,11 +838,9 @@ registerModel({
             compute: '_computeThreads',
             inverse: 'messages',
         }),
-        trackingValues: attr({
-            compute: '_computeTrackingValues',
-        }),
-        tracking_value_ids: attr({
-            default: [],
+        trackingValues: many('TrackingValue', {
+            inverse: 'messageOwner',
+            isCausal: true,
         }),
     },
 });

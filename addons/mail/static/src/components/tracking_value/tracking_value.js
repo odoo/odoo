@@ -4,7 +4,16 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class TrackingValue extends Component {}
+export class TrackingValue extends Component {
+
+    /**
+     * @returns {TrackingValue}
+     */
+    get trackingValue() {
+        return this.props.value;
+    }
+
+}
 
 Object.assign(TrackingValue, {
     props: { value: Object },

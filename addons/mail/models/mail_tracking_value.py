@@ -88,34 +88,49 @@ class MailTracking(models.Model):
             return values
         return {}
 
-    def get_display_value(self, type):
-        assert type in ('new', 'old')
+    def _tracking_value_format(self):
+        tracking_values = [{
+            'changedField': tracking.field_desc,
+            'id': tracking.id,
+            'newValue': [('insert-and-replace', {
+                'currencyId': tracking.currency_id.id,
+                'fieldType': tracking.field_type,
+                'value': tracking._get_new_display_value()[0]})],
+            'oldValue': [('insert-and-replace', {
+                'currencyId': tracking.currency_id.id,
+                'fieldType': tracking.field_type,
+                'value': tracking._get_old_display_value()[0]})],
+        } for tracking in self]
+        return tracking_values
+
+    def _get_display_value(self, prefix):
+        assert prefix in ('new', 'old')
         result = []
         for record in self:
             if record.field_type in ['integer', 'float', 'char', 'text', 'monetary']:
-                result.append(getattr(record, '%s_value_%s' % (type, record.field_type)))
+                result.append(record[f'{prefix}_value_{record.field_type}'])
             elif record.field_type == 'datetime':
-                if record['%s_value_datetime' % type]:
-                    new_datetime = getattr(record, '%s_value_datetime' % type)
-                    result.append('%sZ' % new_datetime)
+                if record[f'{prefix}_value_datetime']:
+                    new_datetime = record[f'{prefix}_value_datetime']
+                    result.append(f'{new_datetime}Z')
                 else:
-                    result.append(record['%s_value_datetime' % type])
+                    result.append(record[f'{prefix}_value_datetime'])
             elif record.field_type == 'date':
-                if record['%s_value_datetime' % type]:
-                    new_date = record['%s_value_datetime' % type]
+                if record[f'{prefix}_value_datetime']:
+                    new_date = record[f'{prefix}_value_datetime']
                     result.append(fields.Date.to_string(new_date))
                 else:
-                    result.append(record['%s_value_datetime' % type])
+                    result.append(record[f'{prefix}_value_datetime'])
             elif record.field_type == 'boolean':
-                result.append(bool(record['%s_value_integer' % type]))
+                result.append(bool(record[f'{prefix}_value_integer']))
             else:
-                result.append(record['%s_value_char' % type])
+                result.append(record[f'{prefix}_value_char'])
         return result
 
-    def get_old_display_value(self):
+    def _get_old_display_value(self):
         # grep : # old_value_integer | old_value_datetime | old_value_char
-        return self.get_display_value('old')
+        return self._get_display_value('old')
 
-    def get_new_display_value(self):
+    def _get_new_display_value(self):
         # grep : # new_value_integer | new_value_datetime | new_value_char
-        return self.get_display_value('new')
+        return self._get_display_value('new')
