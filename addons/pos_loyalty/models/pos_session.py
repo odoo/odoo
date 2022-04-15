@@ -101,3 +101,12 @@ class PosSession(models.Model):
                 (rewards.all_discount_product_ids | rewards.reward_product_ids)
             result['search_params']['domain'] = OR([result['search_params']['domain'], [('id', 'in', products.ids)]])
         return result
+
+    def _get_pos_ui_product_product(self, params):
+        result = super()._get_pos_ui_product_product(params)
+        rewards = self.config_id.all_program_ids.reward_ids
+        products = rewards.discount_line_product_id | rewards.reward_product_ids
+        products = self.env['product.product'].search_read([('id', 'in', products.ids)], fields=params['search_params']['fields'])
+        self._process_pos_ui_product_product(products)
+        result.extend(products)
+        return result
