@@ -1428,12 +1428,12 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("onchange followed by edition on the second page", async function (assert) {
-        assert.expect(12);
+    QUnit.test("onchange followed by edition on the second page", async function (assert) {
+        assert.expect(10);
 
-        var ids = [];
-        for (var i = 1; i < 85; i++) {
-            var id = 10 + i;
+        const ids = [];
+        for (let i = 1; i < 85; i++) {
+            const id = 10 + i;
             ids.push(id);
             serverData.models.turtle.records.push({
                 id: id,
@@ -1449,7 +1449,7 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -1470,108 +1470,128 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await clickEdit(target);
-        await click(form.$(".o_field_widget[name=turtles] .o_pager_next"));
+        await click(target.querySelector(".o_field_widget[name=turtles] .o_pager_next"));
 
-        await click(form.$(".o_field_one2many .o_list_view tbody tr:eq(1) td:first"));
-        await testUtils.fields.editInput(
-            form.$(".o_field_one2many .o_list_view tbody tr:eq(1) input:first"),
+        await click(
+            target.querySelectorAll(
+                ".o_field_one2many .o_list_renderer tbody tr td.o_handle_cell"
+            )[1]
+        );
+        await editInput(
+            target,
+            '.o_field_one2many .o_list_renderer tbody div[name="turtle_foo"] input',
             "value 1"
         );
-        await click(form.$(".o_field_one2many .o_list_view tbody tr:eq(2) td:first"));
-        await testUtils.fields.editInput(
-            form.$(".o_field_one2many .o_list_view tbody tr:eq(2) input:first"),
+        await click(
+            target.querySelectorAll(
+                ".o_field_one2many .o_list_renderer tbody tr td.o_handle_cell"
+            )[2]
+        );
+        await editInput(
+            target,
+            '.o_field_one2many .o_list_renderer tbody div[name="turtle_foo"] input',
             "value 2"
         );
 
-        assert.containsN(form, ".o_data_row", 40, "should display 40 records");
+        assert.containsN(target, ".o_data_row", 40, "should display 40 records");
         assert.strictEqual(
-            form.$(".o_data_row:has(.o_data_cell:contains(#39))").index(),
-            0,
+            target.querySelector('.o_field_one2many .o_list_renderer tbody div[name="turtle_foo"]')
+                .innerText,
+            "#39",
             "should display '#39' at the first line"
         );
 
         await addRow(target);
 
-        assert.containsN(form, ".o_data_row", 40, "should display 39 records and the create line");
-        assert.containsOnce(
-            form,
-            ".o_data_row:first .o_field_char",
+        assert.containsN(
+            target,
+            ".o_data_row",
+            40,
+            "should display 39 records and the create line"
+        );
+
+        assert.hasClass(
+            target.querySelector(".o_data_row"),
+            "o_selected_row",
             "should display the create line in first position"
         );
         assert.strictEqual(
-            form.$(".o_data_row:first .o_field_char").val(),
+            target.querySelector('.o_field_one2many .o_list_renderer tbody div[name="turtle_foo"]')
+                .innerText,
             "",
-            "should an empty input"
+            "should be an empty input"
         );
         assert.strictEqual(
-            form.$(".o_data_row:has(.o_data_cell:contains(#39))").index(),
-            1,
+            target.querySelectorAll(
+                '.o_field_one2many .o_list_renderer tbody div[name="turtle_foo"]'
+            )[1].innerText,
+            "#39",
             "should display '#39' at the second line"
         );
 
-        await testUtils.fields.editInput(form.$(".o_data_row input:first"), "value 3");
+        await editInput(target, ".o_data_row input", "value 3");
 
-        assert.containsOnce(
-            form,
-            ".o_data_row:first .o_field_char",
-            "should display the create line in first position after onchange"
+        assert.hasClass(
+            target.querySelector(".o_data_row"),
+            "o_selected_row",
+            "should display the create line in first position"
         );
         assert.strictEqual(
-            form.$(".o_data_row:has(.o_data_cell:contains(#39))").index(),
-            1,
+            target.querySelectorAll(
+                '.o_field_one2many .o_list_renderer tbody div[name="turtle_foo"]'
+            )[1].innerText,
+            "#39",
             "should display '#39' at the second line after onchange"
         );
 
         await addRow(target);
 
-        assert.containsN(form, ".o_data_row", 40, "should display 39 records and the create line");
-        assert.containsOnce(
-            form,
-            ".o_data_row:first .o_field_char",
-            "should display the create line in first position"
+        assert.containsN(
+            target,
+            ".o_data_row",
+            40,
+            "should display 39 records and the create line"
         );
-        assert.strictEqual(
-            form.$(".o_data_row:has(.o_data_cell:contains(value 3))").index(),
-            1,
-            "should display the created line at the second position"
-        );
-        assert.strictEqual(
-            form.$(".o_data_row:has(.o_data_cell:contains(#39))").index(),
-            2,
-            "should display '#39' at the third line"
+        assert.deepEqual(
+            [
+                ...target.querySelectorAll(
+                    '.o_field_one2many .o_list_renderer tbody div[name="turtle_foo"]'
+                ),
+            ]
+                .slice(0, 3)
+                .map((el) => el.innerText),
+            ["", "value 3", "#39"]
         );
     });
 
-    QUnit.skipWOWL(
-        "onchange followed by edition on the second page (part 2)",
-        async function (assert) {
-            assert.expect(8);
+    QUnit.test("onchange followed by edition on the second page (part 2)", async function (assert) {
+        assert.expect(9);
 
-            var ids = [];
-            for (var i = 1; i < 85; i++) {
-                var id = 10 + i;
-                ids.push(id);
-                serverData.models.turtle.records.push({
-                    id: id,
-                    turtle_int: (id / 3) | 0,
-                    turtle_foo: "#" + i,
-                });
-            }
-            ids.splice(41, 0, 1, 2, 3);
-            serverData.models.partner.records[0].turtles = ids;
-            serverData.models.partner.onchanges = {
-                turtles: function (obj) {
-                    obj.turtles = [[5]].concat(obj.turtles);
-                },
-            };
+        const ids = [];
+        for (let i = 1; i < 85; i++) {
+            const id = 10 + i;
+            ids.push(id);
+            serverData.models.turtle.records.push({
+                id: id,
+                turtle_int: (id / 3) | 0,
+                turtle_foo: "#" + i,
+            });
+        }
+        ids.splice(41, 0, 1, 2, 3);
+        serverData.models.partner.records[0].turtles = ids;
+        serverData.models.partner.onchanges = {
+            turtles: function (obj) {
+                obj.turtles = [[5]].concat(obj.turtles);
+            },
+        };
 
-            // bottom order
+        // bottom order
 
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
                     <form>
                         <sheet>
                             <group>
@@ -1584,70 +1604,98 @@ QUnit.module("Fields", (hooks) => {
                             </group>
                         </sheet>
                     </form>`,
-                resId: 1,
-            });
+            resId: 1,
+        });
 
-            await clickEdit(target);
-            await click(form.$(".o_field_widget[name=turtles] .o_pager_next"));
+        await clickEdit(target);
+        await click(target.querySelector(".o_field_widget[name=turtles] .o_pager_next"));
 
-            await click(form.$(".o_field_one2many .o_list_view tbody tr:eq(1) td:first"));
-            await testUtils.fields.editInput(
-                form.$(".o_field_one2many .o_list_view tbody tr:eq(1) input:first"),
-                "value 1"
-            );
-            await click(form.$(".o_field_one2many .o_list_view tbody tr:eq(2) td:first"));
-            await testUtils.fields.editInput(
-                form.$(".o_field_one2many .o_list_view tbody tr:eq(2) input:first"),
-                "value 2"
-            );
+        await click(
+            target.querySelectorAll(
+                ".o_field_one2many .o_list_renderer tbody tr td.o_handle_cell"
+            )[1]
+        );
+        await editInput(
+            target,
+            '.o_field_one2many .o_list_renderer tbody div[name="turtle_foo"] input',
+            "value 1"
+        );
+        await click(
+            target.querySelectorAll(
+                ".o_field_one2many .o_list_renderer tbody tr td.o_handle_cell"
+            )[2]
+        );
+        await editInput(
+            target,
+            '.o_field_one2many .o_list_renderer tbody div[name="turtle_foo"] input',
+            "value 2"
+        );
 
-            assert.containsN(form, ".o_data_row", 40, "should display 40 records");
-            assert.strictEqual(
-                form.$(".o_data_row:has(.o_data_cell:contains(#77))").index(),
-                39,
-                "should display '#77' at the last line"
-            );
+        assert.containsN(target, ".o_data_row", 40, "should display 40 records");
+        assert.strictEqual(
+            target.querySelector('.o_field_one2many .o_list_renderer tbody div[name="turtle_foo"]')
+                .innerText,
+            "#39",
+            "should display '#39' at the first line"
+        );
+        assert.strictEqual(
+            target.querySelectorAll(
+                '.o_field_one2many .o_list_renderer tbody div[name="turtle_foo"]'
+            )[39].innerText,
+            "#77",
+            "should display '#77' at the last line"
+        );
 
-            await addRow(target);
+        await addRow(target);
 
-            assert.containsN(
-                form,
-                ".o_data_row",
-                41,
-                "should display 41 records and the create line"
-            );
-            assert.strictEqual(
-                form.$(".o_data_row:has(.o_data_cell:contains(#76))").index(),
-                38,
-                "should display '#76' at the penultimate line"
-            );
-            assert.strictEqual(
-                form.$(".o_data_row:has(.o_field_char)").index(),
-                40,
-                "should display the create line at the last position"
-            );
+        assert.containsN(
+            target,
+            ".o_data_row",
+            41,
+            "should display 41 records and the create line"
+        );
+        assert.strictEqual(
+            target.querySelectorAll(
+                '.o_field_one2many .o_list_renderer tbody div[name="turtle_foo"]'
+            )[39].innerText,
+            "#77",
+            "should display '#77' at the penultimate line"
+        );
+        assert.hasClass(
+            target.querySelectorAll(".o_data_row")[40],
+            "o_selected_row",
+            "should display the create line in first position"
+        );
 
-            await testUtils.fields.editInput(form.$(".o_data_row input:first"), "value 3");
-            await addRow(target);
+        await editInput(
+            target,
+            '.o_field_one2many .o_list_renderer tbody div[name="turtle_foo"] input',
+            "value 3"
+        );
+        await addRow(target);
 
-            assert.containsN(
-                form,
-                ".o_data_row",
-                42,
-                "should display 42 records and the create line"
-            );
-            assert.strictEqual(
-                form.$(".o_data_row:has(.o_data_cell:contains(#76))").index(),
-                38,
-                "should display '#76' at the penultimate line"
-            );
-            assert.strictEqual(
-                form.$(".o_data_row:has(.o_field_char)").index(),
-                41,
-                "should display the create line at the last position"
-            );
-        }
-    );
+        assert.containsN(
+            target,
+            ".o_data_row",
+            42,
+            "should display 42 records and the create line"
+        );
+        assert.deepEqual(
+            [
+                ...target.querySelectorAll(
+                    '.o_field_one2many .o_list_renderer tbody div[name="turtle_foo"]'
+                ),
+            ]
+                .slice(39)
+                .map((el) => el.innerText),
+            ["#77", "value 3", ""]
+        );
+        assert.hasClass(
+            target.querySelectorAll(".o_data_row")[41],
+            "o_selected_row",
+            "should display the create line in first position"
+        );
+    });
 
     QUnit.test("onchange returning a command 6 for an x2many", async function (assert) {
         serverData.models.partner.onchanges = {
