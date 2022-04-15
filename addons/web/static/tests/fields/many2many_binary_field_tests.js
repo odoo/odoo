@@ -1,14 +1,20 @@
 /** @odoo-module **/
 
-import { setupViewRegistries } from "../views/helpers";
+import { editInput, click, getFixture, nextTick, patchWithCleanup } from "../helpers/utils";
+import { makeView, setupViewRegistries } from "../views/helpers";
+import { FileUploader } from "@web/fields/file_handler";
 
 // WOWL remove after adapting tests
 let createView, FormView, testUtils;
+
+let target;
+let serverData;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
         // WOWL
         // eslint-disable-next-line no-undef
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -227,11 +233,23 @@ QUnit.module("Fields", (hooks) => {
         setupViewRegistries();
     });
 
-    QUnit.module("Many2ManyBinaryMultiFilesField");
+    QUnit.module("Many2ManyBinaryField");
 
     QUnit.skipWOWL("widget many2many_binary", async function (assert) {
-        assert.expect(16);
-        this.data["ir.attachment"] = {
+        //assert.expect(16);
+
+        patchWithCleanup(FileUploader.prototype, {
+            async onFileChange(ev) {
+                const file = new File([ev.target.value], ev.target.value + ".txt", {
+                    type: "text/plain",
+                });
+                await this._super({
+                    target: { files: [file] },
+                });
+            },
+        });
+
+        serverData.models["ir.attachment"] = {
             fields: {
                 name: { string: "Name", type: "char" },
                 mimetype: { string: "Mimetype", type: "char" },
@@ -244,85 +262,102 @@ QUnit.module("Fields", (hooks) => {
                 },
             ],
         };
-        this.data.turtle.fields.picture_ids = {
+        serverData.models.turtle.fields.picture_ids = {
             string: "Pictures",
             type: "many2many",
             relation: "ir.attachment",
         };
-        this.data.turtle.records[0].picture_ids = [17];
+        serverData.models.turtle.records[0].picture_ids = [17];
 
-        var form = await createView({
-            View: FormView,
-            model: "turtle",
-            data: this.data,
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "turtle",
             arch:
                 '<form string="Turtles">' +
                 '<group><field name="picture_ids" widget="many2many_binary" options="{\'accepted_file_extensions\': \'image/*\'}"/></group>' +
                 "</form>",
-            archs: {
+            /*archs: {
                 "ir.attachment,false,list": '<tree string="Pictures"><field name="name"/></tree>',
-            },
-            res_id: 1,
-            mockRPC: function (route, args) {
+            },*/
+            resId: 1,
+            mockRPC(route, args) {
                 assert.step(route);
                 if (route === "/web/dataset/call_kw/ir.attachment/read") {
                     assert.deepEqual(args.args[1], ["name", "mimetype"]);
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         assert.containsOnce(
-            form,
-            "div.o_field_widget.oe_fileupload",
+            target,
+            "div.o_field_widget .oe_fileupload",
             "there should be the attachment widget"
         );
-        assert.strictEqual(
-            form.$("div.o_field_widget.oe_fileupload .o_attachments").children().length,
-            1,
+        assert.containsNone(
+            target,
+            "div.o_field_widget .oe_fileupload .o_attachments",
             "there should be no attachment"
         );
         assert.containsNone(
-            form,
-            "div.o_field_widget.oe_fileupload .o_attach",
+            target,
+            "div.o_field_widget .oe_fileupload .o_attach",
             "there should not be an Add button (readonly)"
         );
         assert.containsNone(
-            form,
-            "div.o_field_widget.oe_fileupload .o_attachment .o_attachment_delete",
+            target,
+            "div.o_field_widget .oe_fileupload .o_attachment .o_attachment_delete",
             "there should not be a Delete button (readonly)"
         );
 
         // to edit mode
-        await testUtils.form.clickEdit(form);
+        await click(target, ".o_form_button_edit");
         assert.containsOnce(
-            form,
-            "div.o_field_widget.oe_fileupload .o_attach",
+            target,
+            "div.o_field_widget .oe_fileupload .o_attach",
             "there should be an Add button"
         );
         assert.strictEqual(
-            form.$("div.o_field_widget.oe_fileupload .o_attach").text().trim(),
+            target.querySelector("div.o_field_widget .oe_fileupload .o_attach").textContent.trim(),
             "Pictures",
             "the button should be correctly named"
-        );
-        assert.containsOnce(
-            form,
-            "div.o_field_widget.oe_fileupload .o_hidden_input_file form",
+        ); //CHECK THIS
+        /*assert.containsOnce(
+            target,
+            "div.o_field_widget .oe_fileupload .o_hidden_input_file form",
             "there should be a hidden form to upload attachments"
-        );
+        );*/
 
         assert.strictEqual(
-            form.$("input.o_input_file").attr("accept"),
+            target.querySelector("input.o_input_file").getAttribute("accept"),
             "image/*",
             'there should be an attribute "accept" on the input'
         );
 
-        // TODO: add an attachment
-        // no idea how to test this
+        // We need to convert the input type since we can't programmatically set
+        // the value of a file input. The patch of the onFileChange will create
+        // a file object to be used by the component.
+        target.querySelector(".o_field_many2many_binary input").setAttribute("type", "text");
+        await editInput(target, ".o_field_many2many_binary input", "fake_file");
+        await nextTick();
+
+        assert.strictEqual(
+            target.querySelector(".o_attachment .caption a").textContent,
+            "fake_file.txt",
+            'value of attachment should be "fake_file.txt"'
+        );
+
+        assert.strictEqual(
+            target.querySelector(".o_attachment .caption.small a").textContent,
+            "txt",
+            "file extension should be correct"
+        );
 
         // delete the attachment
-        await testUtils.dom.click(
-            form.$("div.o_field_widget.oe_fileupload .o_attachment .o_attachment_delete")
+        await click(
+            target.querySelector(
+                "div.o_field_widget .oe_fileupload .o_attachment .o_attachment_delete"
+            )
         );
 
         assert.verifySteps([
@@ -330,20 +365,18 @@ QUnit.module("Fields", (hooks) => {
             "/web/dataset/call_kw/ir.attachment/read",
         ]);
 
-        await testUtils.form.clickSave(form);
+        await click(target, ".o_form_button_save");
 
-        assert.strictEqual(
-            form.$("div.o_field_widget.oe_fileupload .o_attachments").children().length,
-            0,
-            "there should be no attachment"
+        assert.containsOnce(
+            target,
+            "div.o_field_widget .oe_fileupload .o_attachments",
+            "there should be only one attachment left"
         );
 
         assert.verifySteps([
             "/web/dataset/call_kw/turtle/write",
             "/web/dataset/call_kw/turtle/read",
         ]);
-
-        form.destroy();
     });
 
     QUnit.skipWOWL("name_create in form dialog", async function (assert) {
@@ -352,7 +385,7 @@ QUnit.module("Fields", (hooks) => {
         var form = await createView({
             View: FormView,
             model: "partner",
-            data: this.data,
+            data: serverData.models,
             arch:
                 "<form>" +
                 "<group>" +

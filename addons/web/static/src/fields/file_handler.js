@@ -48,35 +48,39 @@ export class FileUploader extends Component {
      */
     async onFileChange(ev) {
         if (!ev.target.files.length) return;
-        const file = ev.target.files[0];
-        if (file.size > this.maxUploadSize) {
-            this.notification.add(
-                sprintf(
-                    this.env._t("The selected file exceed the maximum file size of %s."),
-                    formatFloat(this.maxUploadSize, { humanReadable: true })
-                ),
-                {
-                    title: this.env._t("File upload"),
-                    type: "danger",
-                }
-            );
-        }
-        this.state.isUploading = true;
-        const data = await getDataURLFromFile(file);
-        if (!file.size) {
-            console.warn(`Error while uploading file : ${file.name}`);
-            this.notification.add(this.env._t("There was a problem while uploading your file."), {
-                type: "danger",
+        for (const file of ev.target.files) {
+            if (file.size > this.maxUploadSize) {
+                this.notification.add(
+                    sprintf(
+                        this.env._t("The selected file exceed the maximum file size of %s."),
+                        formatFloat(this.maxUploadSize, { humanReadable: true })
+                    ),
+                    {
+                        title: this.env._t("File upload"),
+                        type: "danger",
+                    }
+                );
+            }
+            this.state.isUploading = true;
+            const data = await getDataURLFromFile(file);
+            if (!file.size) {
+                console.warn(`Error while uploading file : ${file.name}`);
+                this.notification.add(
+                    this.env._t("There was a problem while uploading your file."),
+                    {
+                        type: "danger",
+                    }
+                );
+            }
+            this.props.onUploaded({
+                name: file.name,
+                size: file.size,
+                type: file.type,
+                data: data.split(",")[1],
+                objectUrl: file.type === "application/pdf" ? URL.createObjectURL(file) : null,
             });
+            this.state.isUploading = false;
         }
-        this.props.onUploaded({
-            name: file.name,
-            size: file.size,
-            type: file.type,
-            data: data.split(",")[1],
-            objectUrl: file.type === "application/pdf" ? URL.createObjectURL(file) : null,
-        });
-        this.state.isUploading = false;
     }
 
     onSelectFileButtonClick() {
