@@ -271,7 +271,7 @@ export class KanbanRenderer extends Component {
                     key: `group_key_${isNull(group.value) ? i : String(group.value)}`,
                 }));
         } else {
-            return list.records.map((record) => ({ record, key: record.resId }));
+            return list.records.map((record) => ({ record, key: record.id }));
         }
     }
 
@@ -465,11 +465,17 @@ export class KanbanRenderer extends Component {
 
     deleteRecord(record, group) {
         const listOrGroup = group || this.props.list;
-        this.dialog.add(ConfirmationDialog, {
-            body: this.env._t("Are you sure you want to delete this record?"),
-            confirm: () => listOrGroup.deleteRecords([record]),
-            cancel: () => {},
-        });
+        // WOWL TODO refactor this but how?
+        if (listOrGroup.deleteRecords) {
+            this.dialog.add(ConfirmationDialog, {
+                body: this.env._t("Are you sure you want to delete this record?"),
+                confirm: () => listOrGroup.deleteRecords([record]),
+                cancel: () => {},
+            });
+        } else {
+            // static list case
+            listOrGroup.removeRecord(record);
+        }
     }
 
     async selectColor(record, colorIndex) {

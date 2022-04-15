@@ -1878,6 +1878,10 @@ QUnit.module("Fields", (hooks) => {
                 obj.turtles = [[0, false, { turtle_foo: "new record" }]];
             },
         };
+        serverData.views = {
+            "partner,false,list": '<tree><field name="foo"/></tree>',
+            "partner,false,search": "<search></search>",
+        };
 
         const form = await makeView({
             type: "form",
@@ -1899,43 +1903,32 @@ QUnit.module("Fields", (hooks) => {
                         </form>
                     </field>
                 </form>`,
-            archs: {
-                "partner,false,list": '<tree><field name="foo"/></tree>',
-                "partner,false,search": "<search></search>",
-            },
         });
 
         assert.containsOnce(
-            form,
+            target,
             ".o_data_row",
             "the onchange should have created one record in the relation"
         );
 
         // open the created o2m record in a form view, and add a m2m subrecord
         // in its relation
-        await click(form.$(".o_data_row"));
+        await click(target, ".o_data_row");
 
-        assert.strictEqual($(".modal").length, 1, "should have opened a dialog");
-        assert.strictEqual(
-            $(".modal .o_data_row").length,
-            0,
-            "there should be no record in the one2many in the dialog"
-        );
+        assert.containsOnce(target, ".modal");
+        assert.containsNone(target, ".modal .o_data_row");
 
         // add a many2many subrecord
-        await click($(".modal .o_field_x2many_list_row_add a"));
+        await addRow(target.querySelector(".modal"));
 
-        assert.strictEqual($(".modal").length, 2, "should have opened a second dialog");
+        assert.containsN(target, ".modal", 2, "should have opened a second dialog");
 
         // select a many2many subrecord
         await click($(".modal:nth(1) .o_list_view .o_data_cell:first"));
 
-        assert.strictEqual($(".modal").length, 1, "second dialog should be closed");
-        assert.strictEqual(
-            $(".modal .o_data_row").length,
-            1,
-            "there should be one record in the one2many in the dialog"
-        );
+        assert.containsOnce(target, ".modal");
+        assert.containsOnce(target, ".modal .o_data_row");
+
         assert.containsNone(
             $(".modal"),
             ".o_x2m_control_panel .o_pager",
@@ -2384,12 +2377,12 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("edition of one2many field with pager", async function (assert) {
-        assert.expect(31);
+    QUnit.test("edition of one2many field with pager", async function (assert) {
+        assert.expect(30);
 
-        var ids = [];
-        for (var i = 0; i < 45; i++) {
-            var id = 10 + i;
+        const ids = [];
+        for (let i = 0; i < 45; i++) {
+            const id = 10 + i;
             ids.push(id);
             serverData.models.partner.records.push({
                 id: id,
@@ -2397,11 +2390,14 @@ QUnit.module("Fields", (hooks) => {
             });
         }
         serverData.models.partner.records[0].p = ids;
+        serverData.views = {
+            "partner,false,form": '<form><field name="display_name"/></form>',
+        };
 
-        var saveCount = 0;
-        var checkRead = false;
-        var readIDs;
-        const form = await makeView({
+        let saveCount = 0;
+        let checkRead = false;
+        let readIDs;
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -2421,9 +2417,6 @@ QUnit.module("Fields", (hooks) => {
                         </kanban>
                     </field>
                 </form>`,
-            archs: {
-                "partner,false,form": '<form><field name="display_name"/></form>',
-            },
             mockRPC(route, args) {
                 if (args.method === "read" && checkRead) {
                     readIDs = args.args[0];
@@ -2431,8 +2424,8 @@ QUnit.module("Fields", (hooks) => {
                 }
                 if (args.method === "write") {
                     saveCount++;
-                    var nbCommands = args.args[1].p.length;
-                    var nbLinkCommands = _.filter(args.args[1].p, function (command) {
+                    const nbCommands = args.args[1].p.length;
+                    const nbLinkCommands = _.filter(args.args[1].p, function (command) {
                         return command[0] === 4;
                     }).length;
                     switch (saveCount) {
@@ -2502,18 +2495,18 @@ QUnit.module("Fields", (hooks) => {
                             break;
                     }
                 }
-                return this._super.apply(this, arguments);
             },
             resId: 1,
         });
 
-        assert.strictEqual(
-            form.$('.o_kanban_record:not(".o_kanban_ghost")').length,
+        assert.containsN(
+            target,
+            '.o_kanban_record:not(".o_kanban_ghost")',
             40,
             "there should be 40 records on page 1"
         );
         assert.strictEqual(
-            form.$(".o_x2m_control_panel .o_pager_counter").text().trim(),
+            target.querySelector(".o_x2m_control_panel .o_pager_counter").innerText,
             "1-40 / 45",
             "pager range should be correct"
         );
@@ -2521,31 +2514,31 @@ QUnit.module("Fields", (hooks) => {
         // add a record on page one
         checkRead = true;
         await clickEdit(target);
-        await click(form.$(".o-kanban-button-new"));
-        await testUtils.fields.editInput($(".modal input"), "new record");
-        await click($(".modal .modal-footer .btn-primary:first"));
+        await click(target.querySelector(".o-kanban-button-new"));
+        await editInput(target, ".modal input", "new record");
+
+        await click(target.querySelector(".modal .modal-footer .btn-primary"));
+
         // checks
         assert.strictEqual(readIDs, undefined, "should not have read any record");
-        assert.strictEqual(
-            form.$("span:contains(new record)").length,
-            0,
-            "new record should be on page 2"
+        assert.notOk(
+            [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].some(
+                (el) => el.innerText === "new record"
+            )
         );
-        assert.strictEqual(
-            form.$('.o_kanban_record:not(".o_kanban_ghost")').length,
+
+        assert.containsN(
+            target,
+            '.o_kanban_record:not(".o_kanban_ghost")',
             40,
             "there should be 40 records on page 1"
         );
         assert.strictEqual(
-            form.$(".o_x2m_control_panel .o_pager_counter").text().trim(),
+            target.querySelector(".o_x2m_control_panel .o_pager_counter").innerText,
             "1-40 / 46",
             "pager range should be correct"
         );
-        assert.strictEqual(
-            form.$(".o_kanban_record:first span:contains(new record)").length,
-            0,
-            "new record should not be on page 1"
-        );
+
         // save
         await clickSave(target);
 
@@ -2553,24 +2546,26 @@ QUnit.module("Fields", (hooks) => {
         checkRead = true;
         await clickEdit(target);
         assert.strictEqual(
-            form.$(".o_kanban_record:first span:contains(relational record 10)").length,
-            1,
-            "first record should be the one with id 10 (next checks rely on that)"
+            target.querySelector(".o_kanban_record:not(.o_kanban_ghost)").innerText,
+            "relational record 10"
         );
-        await click(form.$(".delete_icon:first"));
+
+        await click(target.querySelector(".delete_icon")); // should remove record!!!
+
         // checks
         assert.deepEqual(
             readIDs,
             [50],
             "should have read a record (to display 40 records on page 1)"
         );
-        assert.strictEqual(
-            form.$('.o_kanban_record:not(".o_kanban_ghost")').length,
+        assert.containsN(
+            target,
+            '.o_kanban_record:not(".o_kanban_ghost")',
             40,
             "there should be 40 records on page 1"
         );
         assert.strictEqual(
-            form.$(".o_x2m_control_panel .o_pager_counter").text().trim(),
+            target.querySelector(".o_x2m_control_panel .o_pager_counter").innerText,
             "1-40 / 45",
             "pager range should be correct"
         );
@@ -2582,53 +2577,61 @@ QUnit.module("Fields", (hooks) => {
         checkRead = true;
         readIDs = undefined;
         // add and delete a record in page 1
-        await click(form.$(".o-kanban-button-new"));
-        await testUtils.fields.editInput($(".modal input"), "new record page 1");
-        await click($(".modal .modal-footer .btn-primary:first"));
+        await click(target.querySelector(".o-kanban-button-new"));
+        await editInput(target, ".modal input", "new record page 1");
+        await click(target.querySelector(".modal .modal-footer .btn-primary"));
         assert.strictEqual(
-            form.$(".o_kanban_record:first span:contains(relational record 11)").length,
-            1,
+            target.querySelector(".o_kanban_record:not(.o_kanban_ghost)").innerText,
+            "relational record 11",
             "first record should be the one with id 11 (next checks rely on that)"
         );
-        await click(form.$(".delete_icon:first"));
+
+        await click(target.querySelector(".delete_icon")); // should remove record!!!
         assert.deepEqual(
             readIDs,
             [51],
             "should have read a record (to display 40 records on page 1)"
         );
         // add and delete a record in page 2
-        await click(form.$(".o_x2m_control_panel .o_pager_next"));
+        await click(target.querySelector(".o_x2m_control_panel .o_pager_next"));
+
         assert.strictEqual(
-            form.$(".o_kanban_record:first span:contains(relational record 52)").length,
-            1,
+            target.querySelector(".o_kanban_record:not(.o_kanban_ghost)").innerText,
+            "relational record 52",
             "first record should be the one with id 52 (next checks rely on that)"
         );
+
         checkRead = true;
         readIDs = undefined;
-        await click(form.$(".delete_icon:first"));
-        await click(form.$(".o-kanban-button-new"));
-        await testUtils.fields.editInput($(".modal input"), "new record page 2");
-        await click($(".modal .modal-footer .btn-primary:first"));
+        await click(target.querySelector(".delete_icon")); // should remove record!!!
+        await click(target.querySelector(".o-kanban-button-new"));
+
+        await editInput(target, ".modal input", "new record page 2");
+        await click(target.querySelector(".modal .modal-footer .btn-primary"));
+
         assert.strictEqual(readIDs, undefined, "should not have read any record");
         // checks
-        assert.strictEqual(
-            form.$('.o_kanban_record:not(".o_kanban_ghost")').length,
+        assert.containsN(
+            target,
+            ".o_kanban_record:not(.o_kanban_ghost)",
             5,
             "there should be 5 records on page 2"
         );
         assert.strictEqual(
-            form.$(".o_x2m_control_panel .o_pager_counter").text().trim(),
+            target.querySelector(".o_x2m_control_panel .o_pager_counter").innerText,
             "41-45 / 45",
             "pager range should be correct"
         );
-        assert.strictEqual(
-            form.$(".o_kanban_record span:contains(new record page 1)").length,
-            1,
+        assert.ok(
+            [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].some(
+                (el) => el.innerText === "new record page 1"
+            ),
             "new records should be on page 2"
         );
-        assert.strictEqual(
-            form.$(".o_kanban_record span:contains(new record page 2)").length,
-            1,
+        assert.ok(
+            [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].some(
+                (el) => el.innerText === "new record page 2"
+            ),
             "new records should be on page 2"
         );
         // save
@@ -2644,40 +2647,45 @@ QUnit.module("Fields", (hooks) => {
                 obj.turtle_foo = String(obj.turtle_int);
             };
             serverData.models.partner.onchanges.turtles = function () {};
+            serverData.views = {
+                "turtle,false,list": `
+                    <tree>
+                        <field name="turtle_foo"/>
+                    </tree>
+                `,
+                "turtle,false,form": `
+                    <form>
+                        <group>
+                            <field name="turtle_foo"/>
+                            <field name="turtle_int"/>
+                        </group>
+                    </form>
+                `,
+            };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
-                arch: `<form><field name="turtles"/></form>`,
-                archs: {
-                    "turtle,false,list": '<tree><field name="turtle_foo"/></tree>',
-                    "turtle,false,form":
-                        '<form><group><field name="turtle_foo"/><field name="turtle_int"/></group></form>',
-                },
-                mockRPC: function () {
-                    return this._super.apply(this, arguments);
-                },
+                arch: `
+                    <form>
+                        <field name="turtles"/>
+                    </form>
+                `,
                 resId: 1,
             });
             await clickEdit(target);
             await addRow(target);
-            await testUtils.fields.editInput($('input[name="turtle_int"]'), "5");
-            await click($(".modal-footer button.btn-primary").first());
-            assert.strictEqual(
-                form.$("tbody tr:eq(1) td.o_data_cell").text(),
-                "5",
-                "should display 5 in the foo field"
-            );
-            await click(form.$("tbody tr:eq(1) td.o_data_cell"));
+            await editInput(target, 'div[name="turtle_int"] input', "5");
+            await click(target.querySelector(".modal-footer button.btn-primary"));
+            let firstCellOfSecondRow = target.querySelectorAll('div[name="turtle_foo"]')[1];
+            assert.strictEqual(firstCellOfSecondRow.innerText, "5");
+            await click(firstCellOfSecondRow);
 
-            await testUtils.fields.editInput($('input[name="turtle_int"]'), "3");
-            await click($(".modal-footer button.btn-primary").first());
-            assert.strictEqual(
-                form.$("tbody tr:eq(1) td.o_data_cell").text(),
-                "3",
-                "should now display 3 in the foo field"
-            );
+            await editInput(target, 'div[name="turtle_int"] input', "3");
+            await click(target.querySelector(".modal-footer button.btn-primary"));
+            firstCellOfSecondRow = target.querySelectorAll('div[name="turtle_foo"]')[1];
+            assert.strictEqual(firstCellOfSecondRow.innerText, "3");
         }
     );
 
@@ -3156,24 +3164,12 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
         });
-        assert.containsNone(
-            target,
-            ".o-kanban-button-new",
-            '"Add" button should not be available in readonly'
-        );
+        assert.containsNone(target, ".o-kanban-button-new");
 
         await clickEdit(target);
 
-        assert.containsNone(
-            target,
-            ".o-kanban-button-new",
-            '"Add" button should not be available in edit'
-        );
-        assert.containsOnce(
-            target,
-            ".o_field_x2many_kanban .delete_icon",
-            "delete icon should be visible in edit"
-        );
+        assert.containsNone(target, ".o-kanban-button-new");
+        assert.containsOnce(target, ".o_field_x2many_kanban .delete_icon");
     });
 
     QUnit.skipWOWL("one2many kanban: conditional create/delete actions", async function (assert) {

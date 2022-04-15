@@ -6298,19 +6298,22 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("button executes action and reloads", async (assert) => {
-        assert.expect(7);
+        assert.expect(6);
 
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch:
-                "<kanban>" +
-                '<templates><div t-name="kanban-box">' +
-                '<field name="foo"/>' +
-                '<button type="object" name="a1" class="a1"/>' +
-                "</div></templates>" +
-                "</kanban>",
+            arch: `
+                <kanban>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="foo"/>
+                            <button type="object" name="a1" class="a1"/>
+                        </div>
+                    </templates>
+                </kanban>
+            `,
             async mockRPC(route) {
                 assert.step(route);
             },
@@ -6329,16 +6332,14 @@ QUnit.module("Views", (hooks) => {
                 onClose();
             },
         });
+        click(target.querySelector("button.a1"));
         await click(target.querySelector("button.a1"));
-        assert.strictEqual(count, 1, "should have triggered a execute action");
 
+        assert.strictEqual(count, 1, "should have triggered an execute action only once");
         assert.verifySteps(
             ["/web/dataset/call_kw/partner/web_search_read"],
             "the records should be reloaded after executing a button action"
         );
-
-        await click(target.querySelector("button.a1"));
-        assert.strictEqual(count, 1, "double-click on kanban actions should be debounced");
     });
 
     QUnit.test("button executes action and check domain", async (assert) => {

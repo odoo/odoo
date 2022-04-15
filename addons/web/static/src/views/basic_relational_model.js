@@ -720,6 +720,12 @@ export class StaticList extends DataPoint {
         this.model.notify();
     }
 
+    removeRecord(record) {
+        // if (true) { see _onRemoveRecord in rel fields
+        this.delete(record.id);
+        // }
+    }
+
     async delete(recordId) {
         const legDP = this.model.__bm__.localData[this.__bm_handle__];
         const parentLegDP = this.model.__bm__.localData[legDP.parentID];

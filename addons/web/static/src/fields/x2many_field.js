@@ -10,6 +10,7 @@ import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { evalDomain } from "@web/views/relational_model";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { FormArchParser } from "@web/views/form/form_view";
 
 const { Component, onWillDestroy } = owl;
 
@@ -21,6 +22,8 @@ const X2M_RENDERERS = {
 export class X2ManyField extends Component {
     setup() {
         this.dialogService = useService("dialog");
+        this.viewService = useService("view");
+
         this.dialogClose = [];
         this.fieldInfo = this.props.record.activeFields[this.props.name];
         // FIXME WOWL: is it normal to get here without fieldInfo.views?
@@ -70,12 +73,7 @@ export class X2ManyField extends Component {
         //     delete: Boolean;
         //     duplicate: Boolean;
         // }
-        if (this.viewMode !== "list") {
-            return null;
-        }
-        const { evalContext } = this.props.record;
-        const { options } = this.fieldInfo;
-        const subViewInfo = this.fieldInfo.views[this.viewMode];
+
         // options set on field is of the form
         // interface Options {
         //     create: Boolean;
@@ -86,13 +84,22 @@ export class X2ManyField extends Component {
 
         // We need to take care of tags "control" and "create" to set create stuff
 
+        const { evalContext } = this.props.record;
+        const { options } = this.fieldInfo;
+        const subViewInfo = this.fieldInfo.views[this.viewMode];
+
         let canCreate = "create" in options ? evalDomain(options.create, evalContext) : true;
+        canCreate = canCreate && subViewInfo.activeActions.create;
+
+        if (this.viewMode !== "list") {
+            return { canCreate };
+        }
+
         let canDelete = "delete" in options ? evalDomain(options.delete, evalContext) : true;
+        canDelete = canDelete && subViewInfo.activeActions.delete;
+
         const canLink = "link" in options ? evalDomain(options.link, evalContext) : true;
         const canUnlink = "unlink" in options ? evalDomain(options.unlink, evalContext) : true;
-
-        canCreate = canCreate && subViewInfo.activeActions.create;
-        canDelete = canDelete && subViewInfo.activeActions.delete;
 
         // We need to compute some object used by (x2many renderers) based on that
 
@@ -103,13 +110,20 @@ export class X2ManyField extends Component {
             list.delete(record.id);
             // + update pager info
             this.render();
-        };
+        }; // use this in kanban and adapt (forget,...)?
 
         if (canDelete) {
             result.onDelete = onDelete;
         }
 
         return result;
+    }
+
+    get displayAddButton() {
+        return (
+            this.viewMode === "kanban" && this.activeActions.canCreate
+            // && this.props.record.mode === "readonly"
+        );
     }
 
     get pagerProps() {
@@ -127,7 +141,7 @@ export class X2ManyField extends Component {
     }
 
     async openRecord(record) {
-        const form = this.fieldInfo.views.form;
+        const form = await this._getFormViewInfo();
         const newRecord = await this.list.model.duplicateDatapoint(record, {
             mode: this.props.readonly ? "readonly" : "edit",
             viewMode: "form",
@@ -157,15 +171,15 @@ export class X2ManyField extends Component {
         if (editable) {
             this.list.addNew({ context, mode: "edit", position: editable });
         } else {
-            const form = this.fieldInfo.views.form;
+            const form = await this._getFormViewInfo();
             const record = this.list.model.createDataPoint("record", {
                 context: makeContext([this.list.context, context]),
                 resModel: this.list.resModel,
                 fields: {
-                    ...(form || {}).fields,
+                    ...form.fields,
                     id: { name: "id", type: "integer", readonly: true },
                 },
-                activeFields: (form || {}).activeFields || {},
+                activeFields: form.activeFields || {},
                 views: { form },
                 mode: "edit",
                 viewType: "form",
@@ -186,6 +200,23 @@ export class X2ManyField extends Component {
                 })
             );
         }
+    }
+
+    async _getFormViewInfo() {
+        let formViewInfo = this.fieldInfo.views.form;
+        if (formViewInfo) {
+            return formViewInfo;
+        }
+
+        const comodel = this.list.resModel;
+        const { fields: comodelFields, views } = await this.viewService.loadViews({
+            context: {},
+            resModel: comodel,
+            views: [[false, "form"]],
+        });
+        const archInfo = new FormArchParser().parse(views.form.arch, comodelFields);
+        return { ...archInfo, fields: comodelFields }; // should be good to memorize this on activeField
+        // fieldInfo.relatedFields = comodelFields;
     }
 }
 
