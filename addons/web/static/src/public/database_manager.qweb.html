@@ -123,13 +123,13 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="name" class="col-md-4 col-form-label">Database Name</label>
+                                <label for="dbname_restore" class="col-md-4 col-form-label">Database Name</label>
                                 <div class="col-md-8">
                                     <input id="dbname_restore" type="text" name="name" class="form-control" required="required" t-att-pattern="pattern" title="Only alphanumerical characters, underscore, hyphen and dot are allowed"/>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="copy">This database might have been moved or copied.</label>
+                                <label for="radio_copy_true">This database might have been moved or copied.</label>
                                 <p class="form-text">
                                     In order to avoid conflicts between databases, Odoo needs to know if this database was moved or copied.<br/>
                                     If you don't know, answer "This database is a copy".
@@ -194,7 +194,7 @@
                             <t t-set="set_master_pwd" t-value="False" />
                             <t t-call="master_input" />
                             <div class="form-group">
-                                <label for="name" class="col-form-label">Database Name</label>
+                                <label for="dbname_duplicate" class="col-form-label">Database Name</label>
                                 <input id="dbname_duplicate" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
                             </div>
                             <div class="form-group">
@@ -222,7 +222,7 @@
                         <div class="modal-body">
                             <t t-call="master_input" />
                             <div class="form-group">
-                                <label for="name" class="col-form-label">Database</label>
+                                <label for="dbname_delete" class="col-form-label">Database</label>
                                 <input id="dbname_delete" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
                             </div>
                         </div>
@@ -246,7 +246,7 @@
                         <div class="modal-body">
                             <t t-call="master_input" />
                             <div class="form-group">
-                                <label for="name" class="col-form-label">Database Name</label>
+                                <label for="dbname_backup" class="col-form-label">Database Name</label>
                                 <input id="dbname_backup" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
                             </div>
                             <div class="form-group">
