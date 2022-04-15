@@ -60,6 +60,22 @@ registerModel({
             mailbox.open();
         },
         /**
+         * @param {Event} ev
+         * @param {Object} ui
+         * @param {Object} ui.item
+         * @param {integer} ui.item.id
+         */
+        onMobileAddItemHeaderInputSelect(ev, ui) {
+            if (!this.exists()) {
+                return;
+            }
+            if (this.discuss.isAddingChannel) {
+                this.discuss.handleAddChannelAutocompleteSelect(ev, ui);
+            } else {
+                this.discuss.handleAddChatAutocompleteSelect(ev, ui);
+            }
+        },
+        /**
          * @private
          * @returns {FieldCommand}
          */
