@@ -29,18 +29,18 @@
     <t t-name="web.FormView.Buttons" owl="1">
         <div class="o_cp_buttons" role="toolbar" aria-label="Main actions" t-ref="cpButtons">
             <div t-if="model.root.isInEdition" class="o_form_buttons_edit">
-                <button type="button" class="btn btn-primary o_form_button_save" data-tooltip="Save record" data-hotkey="s" t-on-click="save">
+                <button type="button" class="btn btn-primary o_form_button_save" data-tooltip="Save record" data-hotkey="s" t-on-click.stop="save">
                     Save
                 </button>
-                <button t-if="canCreate" type="button" class="btn btn-secondary o_form_button_cancel" data-tooltip="Discard changes" data-hotkey="j" t-on-click="discard">
+                <button t-if="canCreate" type="button" class="btn btn-secondary o_form_button_cancel" data-tooltip="Discard changes" data-hotkey="j" t-on-click.stop="discard">
                     Discard
                 </button>
             </div>
             <div t-else="" class="o_form_buttons_view">
-                <button t-if="canEdit" type="button" class="btn btn-primary o_form_button_edit" data-tooltip="Edit record" data-hotkey="a" t-on-click="edit">
+                <button t-if="canEdit" type="button" class="btn btn-primary o_form_button_edit" data-tooltip="Edit record" data-hotkey="a" t-on-click.stop="edit">
                     Edit
                 </button>
-                <button t-if="canCreate" type="button" class="btn btn-secondary o_form_button_create" data-tooltip="Create record" data-hotkey="c" t-on-click="create">
+                <button t-if="canCreate" type="button" class="btn btn-secondary o_form_button_create" data-tooltip="Create record" data-hotkey="c" t-on-click.stop="create">
                     Create
                 </button>
             </div>

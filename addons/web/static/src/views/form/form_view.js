@@ -64,7 +64,7 @@ export async function loadSubViews(
             continue; // no need to fetch the sub view if the field is always invisible
         }
         if (fieldInfo.views[fieldInfo.viewMode]) {
-            continue; // the sub view is inline in the main form view
+            continue; // the sub view is inline in the main form view // TODO: check this (not sure about this (DAM))
         }
         if (!fieldInfo.FieldComponent.useSubView) {
             continue; // the FieldComponent used to render the field doesn't need a sub view
@@ -88,7 +88,7 @@ export async function loadSubViews(
         // (e.g. create: 0) to apply to sub views (same logic as the one applied by
         // the server for inline views)
         refinedContext.base_model_name = resModel;
-        let viewMode = fieldInfo.attrs.mode;
+        let viewMode = fieldInfo.viewMode;
         if (!viewMode) {
             viewMode = "list,kanban";
         } else if (viewMode === "tree") {
@@ -99,16 +99,17 @@ export async function loadSubViews(
             viewMode = /** env.isSmall  ? "kanban" : */ "list";
         }
         fieldInfo.viewMode = viewMode;
-        let viewType = fieldInfo.viewMode;
-        const { fields: subViewFields, views } = await viewService.loadViews({
-            resModel: field.relation,
+        let viewType = viewMode;
+        const comodel = field.relation;
+        const { fields: comodelFields, views } = await viewService.loadViews({
+            resModel: comodel,
             views: [[false, viewType]],
             context: makeContext([fieldContext, userService.context, refinedContext]),
         });
         const { ArchParser } = viewRegistry.get(viewType);
-        const archInfo = new ArchParser().parse(views[viewType].arch, subViewFields);
-        fieldInfo.views[viewType] = { ...archInfo, fields: subViewFields };
-        fieldInfo.relatedFields = subViewFields;
+        const archInfo = new ArchParser().parse(views[viewType].arch, comodelFields);
+        fieldInfo.views[viewType] = { ...archInfo, fields: comodelFields };
+        fieldInfo.relatedFields = comodelFields;
     }
 }
 

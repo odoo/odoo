@@ -16,9 +16,10 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { Domain } from "@web/core/domain";
 import { Model } from "@web/views/helpers/model";
 import { KeepLast } from "@web/core/utils/concurrency";
+import { escape } from "@web/core/utils/strings";
 
 const { date: parseDate, datetime: parseDateTime } = parse;
-const { xml } = owl;
+const { markup, xml } = owl;
 // const preloadedDataRegistry = registry.category("preloadedData");
 
 const warningDialogBodyTemplate = xml`<t t-esc="props.message"/>`;
@@ -55,15 +56,17 @@ function mapViews(views) {
             node.attrs.modifiers = node.attrs.modifiers ? JSON.parse(node.attrs.modifiers) : {};
             return true;
         });
+        // the basic model expects the former shape of load_views result, where we don't know
+        // all co-model fields, only those in the subview, so we filter the fields here
+        const fields = {};
+        for (const f in viewDescr.activeFields) {
+            fields[f] = viewDescr.fields[f];
+        }
         res[viewType] = {
             arch,
-            fields: viewDescr.fields,
+            fields,
             type: viewType,
-            fieldsInfo: mapActiveFieldsToFieldsInfo(
-                viewDescr.activeFields,
-                viewDescr.fields,
-                viewType
-            ),
+            fieldsInfo: mapActiveFieldsToFieldsInfo(viewDescr.activeFields, fields, viewType),
         };
         for (const fieldName in res[viewType].fieldsInfo[viewType]) {
             if (!res[viewType].fields[fieldName]) {
@@ -88,9 +91,14 @@ function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType) {
         } else {
             Widget = fieldRegistry.getAny([`${viewType}.${fieldDescr.type}`, fieldDescr.type]);
         }
+        Widget = Widget || fieldRegistry.get("abstract");
+        let domain;
+        if (fieldDescr.domain && fieldDescr.domain.toString() !== "[]") {
+            domain = fieldDescr.domain.toString();
+        }
         const fieldInfo = {
-            Widget: Widget || fieldRegistry.get("abstract"),
-            domain: fieldDescr.domain ? fieldDescr.domain.toString() : [],
+            Widget,
+            domain,
             context: fieldDescr.context,
             fieldDependencies: {}, // ??
             mode: fieldDescr.viewMode,
@@ -100,8 +108,31 @@ function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType) {
             views,
             __WOWL_FIELD_DESCR__: fieldDescr,
         };
+
+        if (Widget.prototype.fieldsToFetch) {
+            fieldInfo.relatedFields = { ...Widget.prototype.fieldsToFetch };
+            fieldInfo.viewType = "default";
+            const defaultView = {};
+            for (const fieldName of Object.keys(Widget.prototype.fieldsToFetch)) {
+                defaultView[fieldName] = {};
+                if (fieldDescr.fieldsToFetch[fieldName]) {
+                    defaultView[fieldName].__WOWL_FIELD_DESCR__ =
+                        fieldDescr.fieldsToFetch[fieldName];
+                }
+            }
+            fieldInfo.fieldsInfo = { default: defaultView };
+            const colorField = fieldInfo.options && fieldInfo.options.color_field;
+            if (colorField) {
+                fieldInfo.relatedFields[colorField] = { type: "integer" };
+                fieldInfo.fieldsInfo.default[colorField] = {};
+                if (fieldDescr.fieldsToFetch[colorField]) {
+                    fieldInfo.fieldsInfo.default[colorField].__WOWL_FIELD_DESCR__ =
+                        fieldDescr.fieldsToFetch[colorField];
+                }
+            }
+        }
         if (fieldDescr.views && fieldDescr.views[fieldDescr.viewMode]) {
-            fieldInfo.limit = fieldDescr.views[fieldDescr.viewMode].limit;
+            fieldInfo.limit = fieldDescr.views[fieldDescr.viewMode].limit || 40;
             fieldInfo.orderedBy = fieldDescr.views[fieldDescr.viewMode].defaultOrder;
         }
         if (fieldDescr.onChange && !fields[fieldName].onChange) {
@@ -147,15 +178,17 @@ class DataPoint {
         } else {
             throw new Error("Datapoint needs load params or handle");
         }
+        this.context = info.context;
         this.resModel = info.model || info.modelName;
         this.fields = info.fields;
         this.activeFields = {};
-        const fieldsInfo = (info.fieldsInfo && info.fieldsInfo[info.viewType]) || {};
+
+        this.__viewType = params.viewType || info.viewType;
+        const fieldsInfo = (info.fieldsInfo && info.fieldsInfo[this.__viewType]) || {};
         for (const [name, descr] of Object.entries(fieldsInfo)) {
-            this.activeFields[name] = descr.__WOWL_FIELD_DESCR__;
+            this.activeFields[name] = descr.__WOWL_FIELD_DESCR__ || {};
         }
         this.fieldNames = Object.keys(this.activeFields);
-        this.context = info.context;
 
         this.setup(params, state);
     }
@@ -166,6 +199,20 @@ class DataPoint {
      * @param {Object} state
      */
     setup() {}
+
+    get evalContext() {
+        const datapoint = this.model.__bm__.localData[this.__bm_handle__];
+        const evalContext = this.model.__bm__._getEvalContext(datapoint);
+        // FIXME: in the basic model, we set the toJSON function on x2many values
+        // s.t. we send commands to the server. In wowl Domain, we JSON.stringify
+        // values to compare them, so it doesn't work as expected.
+        for (const key in evalContext) {
+            if (evalContext[key]) {
+                delete evalContext[key].toJSON;
+            }
+        }
+        return evalContext;
+    }
 
     exportState() {
         return {};
@@ -186,7 +233,15 @@ export class Record extends DataPoint {
         this._onChangePromise = Promise.resolve({});
         this._domains = {};
 
-        this.__viewType = params.viewType;
+        this.canBeAbandoned = this.isVirtual;
+
+        this._requiredFields = {};
+        for (const [fieldName, activeField] of Object.entries(this.activeFields)) {
+            const { modifiers } = activeField;
+            if (modifiers && modifiers.required) {
+                this._requiredFields[fieldName] = modifiers.required;
+            }
+        }
 
         this.mode = params.mode || (this.resId ? state.mode || "readonly" : "edit");
         this._onWillSwitchMode = params.onRecordWillSwitchMode || (() => {});
@@ -216,18 +271,6 @@ export class Record extends DataPoint {
 
     get resIds() {
         return this.model.__bm__.localData[this.__bm_handle__].res_ids;
-    }
-
-    get evalContext() {
-        const datapoint = this.model.__bm__.localData[this.__bm_handle__];
-        const evalContext = this.model.__bm__._getEvalContext(datapoint);
-        // FIXME: in the basic model, we set the toJSON function on x2many values
-        // s.t. we send commands to the server. In wowl Domain, we JSON.stringify
-        // values to compare them, so it doesn't work as expected.
-        for (const key in evalContext) {
-            delete evalContext[key].toJSON;
-        }
-        return evalContext;
     }
 
     get isDirty() {
@@ -260,11 +303,43 @@ export class Record extends DataPoint {
         return this.mode === "edit";
     }
 
+    checkValidity() {
+        for (const fieldName in this.activeFields) {
+            const fieldType = this.fields[fieldName].type;
+            if (fieldName in this._requiredFields) {
+                if (!evalDomain(this._requiredFields[fieldName], this.evalContext)) {
+                    this._removeInvalidField(fieldName);
+                    continue;
+                }
+            }
+            switch (fieldType) {
+                case "boolean":
+                case "float":
+                case "integer":
+                    continue;
+                case "one2many":
+                case "many2many":
+                    if (!this.checkX2ManyValidity(fieldName)) {
+                        this.setInvalidField(fieldName);
+                    }
+                    break;
+                default:
+                    if (this.isRequired(fieldName) && !this.data[fieldName]) {
+                        this.setInvalidField(fieldName);
+                    }
+            }
+        }
+        return !this._invalidFields.size;
+    }
+
     async switchMode(mode) {
         if (this.mode === mode) {
             return;
         }
-        await this._onWillSwitchMode(this, mode);
+        const preventSwitch = await this._onWillSwitchMode(this, mode);
+        if (preventSwitch === false) {
+            return;
+        }
         if (mode === "readonly") {
             for (const fieldName in this.activeFields) {
                 if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
@@ -285,7 +360,7 @@ export class Record extends DataPoint {
      * @returns {boolean}
      */
     isReadonly(fieldName) {
-        const { readonly } = this.activeFields[fieldName].modifiers;
+        const { readonly } = this.activeFields[fieldName].modifiers || {};
         return evalDomain(readonly, this.evalContext);
     }
 
@@ -295,20 +370,38 @@ export class Record extends DataPoint {
      * @returns {boolean}
      */
     isRequired(fieldName) {
-        const { required } = this.activeFields[fieldName].modifiers;
+        const { required } = this.activeFields[fieldName].modifiers || {};
         return evalDomain(required, this.evalContext);
     }
 
+    checkX2ManyValidity(fieldName) {
+        const value = this.data[fieldName];
+        const toAbandon = [];
+        let isValid = true;
+        for (const record of value.records) {
+            if (!record.checkValidity()) {
+                if (record.canBeAbandoned) {
+                    toAbandon.push(record);
+                } else {
+                    isValid = false;
+                }
+            }
+        }
+        for (const record of toAbandon) {
+            value.abandonRecord(record.id);
+        }
+        return isValid;
+    }
+
     setInvalidField(fieldName) {
-        this._invalidFields.add({ fieldName });
+        this._invalidFields.add(fieldName);
+        const bm = this.model.__bm__;
+        bm.setDirty(this.__bm_handle__);
         this.model.notify();
     }
 
     isInvalid(fieldName) {
-        for (const invalid of this._invalidFields) {
-            if (invalid.fieldName === fieldName) return true;
-        }
-        return false;
+        return this._invalidFields.has(fieldName);
     }
 
     async load() {
@@ -330,7 +423,9 @@ export class Record extends DataPoint {
     }
 
     __syncData(force) {
-        const legDP = this.model.__bm__.get(this.__bm_handle__);
+        const bm = this.model.__bm__;
+        const legDP = bm.get(this.__bm_handle__);
+        this.canBeAbandoned = bm.canBeAbandoned(this.__bm_handle__);
         const data = Object.assign({}, legDP.data);
         for (const fieldName of Object.keys(data)) {
             const fieldType = legDP.fields[fieldName].type;
@@ -355,7 +450,10 @@ export class Record extends DataPoint {
                     } else {
                         data[fieldName] = new StaticList(this.model, {
                             handle: data[fieldName].id,
+                            viewType: this.activeFields[fieldName].viewMode,
+                            parentViewType: this.__viewType,
                         });
+                        data[fieldName].__fieldName__ = fieldName;
                     }
                     break;
                 case "many2one":
@@ -374,12 +472,18 @@ export class Record extends DataPoint {
     }
 
     getFieldContext(fieldName) {
-        return this.model.__bm__.localData[this.__bm_handle__].getContext({ fieldName });
+        return this.model.__bm__.localData[this.__bm_handle__].getContext({
+            fieldName,
+            viewType: this.__viewType,
+        });
     }
 
     getFieldDomain(fieldName) {
         return Domain.and([
-            this.model.__bm__.localData[this.__bm_handle__].getDomain({ fieldName }),
+            this.model.__bm__.localData[this.__bm_handle__].getDomain({
+                fieldName,
+                viewType: this.__viewType,
+            }),
         ]);
     }
 
@@ -408,6 +512,7 @@ export class Record extends DataPoint {
         const fieldType = this.fields[fieldName].type;
         const parentID = this.model.__bm__.localData[this.__bm_handle__].parentID;
         if (parentID) {
+            //  && fieldType === "one2many"
             // inside an x2many (parentID is the id of the static list datapoint)
             const mainRecordId = this.model.__bm__.localData[parentID].parentID;
             const mainRecordDP = this.model.__bm__.localData[mainRecordId];
@@ -430,16 +535,8 @@ export class Record extends DataPoint {
             await this.model.__bm__.notifyChanges(this.__bm_handle__, changes);
             this.__syncData();
         }
-        let toDelete;
-        for (let x of this._invalidFields) {
-            if (x.fieldName === fieldName) {
-                toDelete = x;
-                break;
-            }
-        }
-        if (toDelete) {
-            this._invalidFields.delete(toDelete);
-        }
+        this._removeInvalidField(fieldName);
+        this.canBeAbandoned = false;
         this.model.notify();
     }
 
@@ -452,28 +549,28 @@ export class Record extends DataPoint {
      * @returns {Promise<boolean>}
      */
     async save(options = { stayInEdition: false, noReload: false, savePoint: false }) {
-        if (this._invalidFields.size > 0) {
-            let invalidStringArr = [];
-            for (const invalid of this._invalidFields) {
-                // TODO only add debugMessage if debug mode is active.
-                if (invalid.debugMessage) {
-                    invalidStringArr.push(invalid.fieldName + ":" + invalid.debugMessage);
-                } else {
-                    invalidStringArr.push(invalid.fieldName);
-                }
-            }
-            this.model.notificationService.add(
-                this.model.env._t("Invalid fields: ") + invalidStringArr.join(", ")
-            );
+        if (!this.checkValidity()) {
+            const invalidFields = [...this._invalidFields].map((fieldName) => {
+                return `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`;
+            }, this);
+            this.model.notificationService.add(markup(`<ul>${invalidFields.join("")}</ul>`), {
+                title: this.model.env._t("Invalid fields: "),
+                type: "danger",
+            });
             return false;
         }
-        const { noReload, savePoint } = options;
-        await this.model.__bm__.save(this.__bm_handle__, { reload: !noReload, savePoint });
+        const saveOptions = {
+            reload: !options.noReload,
+            savePoint: options.savePoint,
+        };
+        const changedFields = await this.model.__bm__.save(this.__bm_handle__, saveOptions);
         this.__syncData(true);
         if (!options.stayInEdition) {
             this.switchMode("readonly");
         }
-        this.model.notify();
+        if (this.isVirtual || changedFields.length) {
+            this.model.notify();
+        }
         return true;
     }
 
@@ -525,21 +622,24 @@ export class Record extends DataPoint {
         }
         this.model.notify();
     }
+
+    _removeInvalidField(fieldName) {
+        this._invalidFields.delete(fieldName);
+    }
 }
 
 export class StaticList extends DataPoint {
     setup(params, state) {
         // this.isOne2Many = params.field.type === "one2many"; // bof
 
-        const legDP = this.model.__bm__.get(params.handle);
+        // const legDP = this.model.__bm__.get(params.handle);
         /** @type {Record[]} */
         this.records = [];
 
-        this.views = legDP.fieldsInfo;
-        this.viewMode = legDP.viewType;
-        this.orderBy = legDP.orderedBy;
-        this.limit = legDP.limit;
-        this.offset = legDP.offset;
+        this.__parentViewType = params.parentViewType;
+
+        // this.views = legDP.fieldsInfo;
+        // this.viewMode = legDP.viewType;
 
         // this.validated = {};
         // this.rawContext = params.rawContext;
@@ -552,6 +652,9 @@ export class StaticList extends DataPoint {
             }
             const editedRecord = this.editedRecord;
             this.editedRecord = null;
+            if (editedRecord && editedRecord.id === record.id && mode === "readonly") {
+                return record.checkValidity();
+            }
             if (editedRecord) {
                 await editedRecord.switchMode("readonly");
             }
@@ -573,6 +676,8 @@ export class StaticList extends DataPoint {
                 record = new Record(this.model, {
                     handle: dp.id,
                     onRecordWillSwitchMode: this.onRecordWillSwitchMode,
+                    mode: "readonly",
+                    viewType: this.__viewType,
                 });
                 if (record.mode === "edit" && this.editedRecord) {
                     this.editedRecord.mode = "readonly";
@@ -583,35 +688,95 @@ export class StaticList extends DataPoint {
         this.editedRecord = this.records.find((r) => r.mode === "edit") || null;
     }
 
+    // FIXME: remove?
     get resIds() {
         return this.model.__bm__.get(this.__bm_handle__).res_ids;
     }
+    get currentIds() {
+        return this.model.__bm__.get(this.__bm_handle__).res_ids;
+    }
 
-    async delete(record) {
+    get orderBy() {
+        return this.model.__bm__.localData[this.__bm_handle__].orderedBy;
+    }
+    get limit() {
+        return this.model.__bm__.localData[this.__bm_handle__].limit;
+    }
+    get offset() {
+        return this.model.__bm__.localData[this.__bm_handle__].offset;
+    }
+    get count() {
+        return this.currentIds.length;
+    }
+
+    abandonRecord(recordId) {
+        const record = this.records.find((r) => r.id === recordId);
+        this.model.__bm__.removeLine(record.__bm_handle__);
+        this.__syncData();
+        this.model.notify();
+    }
+
+    async delete(recordId) {
         const legDP = this.model.__bm__.localData[this.__bm_handle__];
         const parentLegDP = this.model.__bm__.localData[legDP.parentID];
         const parentValues = { ...parentLegDP.data, ...parentLegDP._changes };
         const fieldName = Object.keys(parentValues).find(
             (name) => parentValues[name] === this.__bm_handle__
         );
+        // can use this.__fieldName__
         const changes = {};
+        const record = this.records.find((r) => r.id === recordId);
         changes[fieldName] = { operation: "DELETE", ids: [record.__bm_handle__] };
         await this.model.__bm__.notifyChanges(parentLegDP.id, changes);
         this.model.root.__syncData();
         this.model.notify();
     }
 
-    async add(context) {
+    async add(res) {
+        if (!(res instanceof Record)) {
+            throw new Error("LPE CRASH => the RelationalModel.add API is unclear");
+        }
         const legDP = this.model.__bm__.localData[this.__bm_handle__];
         const parentLegDP = this.model.__bm__.localData[legDP.parentID];
         const parentValues = { ...parentLegDP.data, ...parentLegDP._changes };
+        // can use this.__fieldName
         const fieldName = Object.keys(parentValues).find(
             (name) => parentValues[name] === this.__bm_handle__
         );
+
+        const record = res;
+
+        const recHandle = record.__bm_handle__;
+        await this.model.__bm__.save(recHandle, { savePoint: true });
         const changes = {};
-        changes[fieldName] = { context: [context], operation: "CREATE", position: "bottom" }; // FIXME position
+        changes[fieldName] = { operation: "ADD", id: recHandle };
         await this.model.__bm__.notifyChanges(parentLegDP.id, changes);
-        this.model.root.__syncData();
+        this.__syncData();
+        this.model.notify();
+    }
+
+    /** Creates a Draft record from nothing and edits it. Relevant in editable x2m's */
+    async addNew(params) {
+        const legDP = this.model.__bm__.localData[this.__bm_handle__];
+        const parentLegDP = this.model.__bm__.localData[legDP.parentID];
+        const parentValues = { ...parentLegDP.data, ...parentLegDP._changes };
+        // can use this.__fieldName
+        const fieldName = Object.keys(parentValues).find(
+            (name) => parentValues[name] === this.__bm_handle__
+        );
+        const position = params.position;
+        const changes = {};
+        changes[fieldName] = { context: [params.context], operation: "CREATE", position };
+        await this.model.__bm__.save(this.__bm_handle__, { savePoint: true });
+        this.model.__bm__.freezeOrder(this.__bm_handle__);
+        await this.model.__bm__.notifyChanges(parentLegDP.id, changes, {
+            viewType: this.__parentViewType,
+        });
+        this.__syncData();
+        if (params.mode === "edit") {
+            const newRecord = this.records[position === "bottom" ? this.records.length - 1 : 0];
+            await newRecord.switchMode("edit");
+        }
         this.model.notify();
     }
 
@@ -633,14 +798,43 @@ export class StaticList extends DataPoint {
         };
     }
 
-    get count() {
-        return this.model.__bm__.localData[this.__bm_handle__].count;
+    async load(params) {
+        await this.model.__bm__._reload(this.__bm_handle__, params);
+        this.__syncData();
     }
-
-    async load() {}
 
     async sortBy(fieldName) {
         await this.model.__bm__.setSort(this.__bm_handle__, fieldName);
+        this.__syncData();
+        this.model.notify();
+    }
+
+    async replaceWith(resIds) {
+        const basicModel = this.model.__bm__;
+        const addedIds = resIds.filter((id) => !this.currentIds.includes(id));
+        const deletedIds = this.currentIds.filter((id) => !resIds.includes(id));
+        let operation;
+        if (addedIds.length && deletedIds.length) {
+            operation = {
+                ids: resIds,
+                operation: "REPLACE_WITH",
+            };
+        } else if (addedIds.length) {
+            operation = {
+                ids: addedIds.map((id) => ({ id })),
+                operation: "ADD_M2M",
+            };
+        } else if (deletedIds.length) {
+            operation = {
+                ids: deletedIds,
+                operation: "FORGET",
+            };
+        } else {
+            // no change?
+            return;
+        }
+        const changes = { [this.__fieldName__]: operation };
+        await basicModel.notifyChanges(basicModel.localData[this.__bm_handle__].parentID, changes);
         this.__syncData();
         this.model.notify();
     }
@@ -677,18 +871,21 @@ export class RelationalModel extends Model {
         window.basicmodel = this;
     }
 
-    duplicateDatapoint(record, params) {
+    async duplicateDatapoint(record, params) {
         const fieldsInfo = mapViews(params.views);
-        this.__bm__.addFieldsInfo(record.__bm_handle__, {
+        await this.__bm__.addFieldsInfo(record.__bm_handle__, {
             fields: params.fields,
             viewType: params.viewMode,
             fieldInfo: fieldsInfo[params.viewMode].fieldsInfo[params.viewMode],
         });
-        return new Record(this, {
+        const newRecord = new Record(this, {
             handle: record.__bm_handle__,
             viewType: params.viewMode,
             mode: params.mode,
         });
+        newRecord.canBeAbandoned = record.canBeAbandoned;
+        await newRecord.load();
+        return newRecord;
     }
 
     /**
@@ -758,6 +955,29 @@ export class RelationalModel extends Model {
             }
         }
         throw new Error(`trigger_up(${evType}) not handled in relational model`);
+    }
+    createDataPoint(type, params, state = {}) {
+        if (type !== "record") {
+            throw new Error("LPE CRASH");
+        }
+        const fieldsInfo = mapActiveFieldsToFieldsInfo(
+            params.activeFields,
+            params.fields,
+            params.viewType
+        );
+        fieldsInfo.context = params.context;
+        params = Object.assign({}, params, {
+            __bm_load_params__: {
+                type: "record",
+                modelName: params.resModel,
+                fields: params.fields || {},
+                viewType: "form",
+                fieldsInfo,
+                parentID: params.parentID,
+                context: params.context,
+            },
+        });
+        return new Record(this, params, state);
     }
 }
 RelationalModel.services = ["dialog", "notification"];

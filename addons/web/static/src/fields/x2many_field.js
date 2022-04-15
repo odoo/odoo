@@ -119,9 +119,7 @@ export class X2ManyField extends Component {
             limit: list.limit,
             total: list.count,
             onUpdate: async ({ offset, limit }) => {
-                list.offset = offset;
-                list.limit = limit;
-                await list.load();
+                await list.load({ limit, offset });
                 this.render();
             },
             withAccessKey: false,
@@ -129,31 +127,20 @@ export class X2ManyField extends Component {
     }
 
     async openRecord(record) {
-        const form = this.list.views.form;
-        const newRecord = this.list.model.createDataPoint("record", {
-            context: record.context,
-            resModel: record.resModel,
-            fields: { ...form.fields, id: { name: "id", type: "integer", readonly: true } },
-            activeFields: form.activeFields,
-            views: { form },
-            mode: "edit",
+        const form = this.fieldInfo.views.form;
+        const newRecord = await this.list.model.duplicateDatapoint(record, {
+            mode: this.props.readonly ? "readonly" : "edit",
             viewMode: "form",
-            resId: record.resId,
-            getParentRecordContext: record.getParentRecordContext,
-        });
-        await newRecord.load({
-            values: record._values,
-            changes: record.getChanges(true),
+            fields: { ...form.fields, id: { name: "id", type: "integer", readonly: true } },
+            views: { form },
         });
         this.dialogClose.push(
             this.dialogService.add(FormViewDialog, {
                 archInfo: form, // FIXME: might not be there
                 record: newRecord,
                 save: () => {
-                    Object.assign(record._values, newRecord._values);
-                    Object.assign(record._changes, newRecord._changes); // don't work with x2many inside,...
-                    record.data = { ...record._values, ...record._changes };
-                    record.onChanges();
+                    newRecord.save({ savePoint: true, stayInEdition: true });
+                    record.__syncData();
                     record.model.notify();
                 },
                 title: sprintf(
@@ -164,12 +151,13 @@ export class X2ManyField extends Component {
         );
     }
 
-    onAdd(context) {
+    async onAdd(context) {
         const archInfo = this.fieldInfo.views[this.viewMode];
-        if (archInfo.editable) {
-            this.list.addNew({ context, mode: "edit" });
+        const editable = archInfo.editable;
+        if (editable) {
+            this.list.addNew({ context, mode: "edit", position: editable });
         } else {
-            const form = this.list.views.form;
+            const form = this.fieldInfo.views.form;
             const record = this.list.model.createDataPoint("record", {
                 context: makeContext([this.list.context, context]),
                 resModel: this.list.resModel,
@@ -180,25 +168,16 @@ export class X2ManyField extends Component {
                 activeFields: (form || {}).activeFields || {},
                 views: { form },
                 mode: "edit",
-                viewMode: "form",
+                viewType: "form",
             });
-            record.load(); //AAB TO DISCUSS
+            await record.load(); //AAB TO DISCUSS
             this.dialogClose.push(
                 this.dialogService.add(FormViewDialog, {
                     archInfo: form, // FIXME: might not be there
                     record,
-                    save: () => {
+                    save: async () => {
                         record.switchMode("readonly");
-                        this.list.addNew({
-                            context: makeContext([this.list.context, context]),
-                            resModel: this.list.resModel,
-                            fields: this.list.fields,
-                            activeFields: this.list.activeFields,
-                            views: this.list.views,
-                            mode: "readonly",
-                            values: record._values,
-                            changes: record._changes,
-                        });
+                        await this.list.add(record);
                     },
                     title: sprintf(
                         this.env._t("Open: %s"),

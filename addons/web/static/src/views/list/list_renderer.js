@@ -494,8 +494,14 @@ export class ListRenderer extends Component {
     }
 
     async unselectRow() {
-        if (this.props.list.editedRecord) {
-            return this.props.list.editedRecord.switchMode("readonly");
+        const editedRecord = this.props.list.editedRecord;
+        if (editedRecord) {
+            const canBeAbandoned = editedRecord.canBeAbandoned;
+            if (editedRecord.isDirty && !canBeAbandoned && editedRecord.checkValidity()) {
+                return editedRecord.switchMode("readonly");
+            } else if (canBeAbandoned) {
+                return this.props.list.abandonRecord(editedRecord.id);
+            }
         }
     }
 

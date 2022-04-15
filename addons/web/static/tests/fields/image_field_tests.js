@@ -280,24 +280,14 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        assert.ok(
-            document.querySelector(`img[data-src="data:image/png;base64,${MY_IMAGE}"]`),
-            "The view's image is in the DOM"
-        );
-        assert.containsOnce(
-            target,
-            ".o_kanban_record.oe_kanban_global_click",
-            "There should be one record in the many2many"
-        );
+        assert.containsOnce(target, `img[data-src="data:image/png;base64,${MY_IMAGE}"]`);
+        assert.containsOnce(target, ".o_kanban_record.oe_kanban_global_click");
 
         // Actual flow: click on an element of the m2m to get its form view
         await click(target, ".oe_kanban_global_click");
-        assert.containsOnce(document.body, ".modal", "The modal should have opened");
+        assert.containsOnce(target, ".modal", "The modal should have opened");
 
-        assert.ok(
-            document.querySelector(`img[data-src="data:image/gif;base64,${PRODUCT_IMAGE}"]`),
-            "The dialog's image is in the DOM"
-        );
+        assert.containsOnce(target, `img[data-src="data:image/gif;base64,${PRODUCT_IMAGE}"]`);
     });
 
     QUnit.test("ImageField in x2many list is loaded correctly", async function (assert) {

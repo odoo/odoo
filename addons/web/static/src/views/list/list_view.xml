@@ -26,7 +26,7 @@
         <div class="o_list_buttons d-flex" role="toolbar" aria-label="Main actions">
             <t t-if="props.showButtons">
                 <t t-if="model.root.editedRecord">
-                    <button type="button" class="btn btn-primary o_list_button_save" data-tooltip="Save record" aria-label="Save record" data-hotkey="s" t-on-click="onClickSave">
+                    <button type="button" class="btn btn-primary o_list_button_save" data-tooltip="Save record" aria-label="Save record" data-hotkey="s" t-on-click.stop="onClickSave">
                         Save
                     </button>
                     <button type="button" class="btn btn-secondary o_list_button_discard" data-tooltip="Discard changes" aria-label="Discard changes" data-hotkey="j" t-on-click="onClickDiscard">

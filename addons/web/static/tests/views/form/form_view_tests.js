@@ -2377,7 +2377,7 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector('button[name="15"]'), "btn o_this_is_a_button");
     });
 
-    QUnit.skipWOWL("button in form view and long willStart", async function (assert) {
+    QUnit.test("button in form view and long willStart", async function (assert) {
         // FIXME: there should be no dependency from views to actionService
         const mockedActionService = {
             start() {

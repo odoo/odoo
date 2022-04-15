@@ -133,7 +133,6 @@ QUnit.module("ActionManager", (hooks) => {
                     additional_context: {
                         active_id: 4,
                         active_ids: [4, 8],
-                        active_model: undefined,
                     },
                 });
             }

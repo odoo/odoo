@@ -98,3 +98,4 @@ ImageField.components = {
     });
 
 registry.category("fields").add("image", ImageField);
+registry.category("fields").add("kanban.image", ImageField); // FIXME WOWL: s.t. we don't use the legacy one

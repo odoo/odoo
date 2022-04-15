@@ -203,3 +203,4 @@ Many2ManyTagsField.extractProps = (fieldName, record, attrs) => {
 };
 
 registry.category("fields").add("many2many_tags", Many2ManyTagsField);
+registry.category("fields").add("form.many2many_tags", Many2ManyTagsField); // WOWL: because it exists in legacy

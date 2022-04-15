@@ -222,7 +222,6 @@ Field.parseFieldNode = function (node, fields, viewType) {
         props: {},
         rawAttrs: {},
         options: evaluateExpr(node.getAttribute("options") || "{}"),
-        viewMode: node.getAttribute("mode"),
     };
     fieldInfo.attrs = {
         options: fieldInfo.options,
@@ -254,27 +253,27 @@ Field.parseFieldNode = function (node, fields, viewType) {
             const xmlSerializer = new XMLSerializer();
             const subArch = xmlSerializer.serializeToString(child);
             const archInfo = new ArchParser().parse(subArch, field.relatedFields);
+
             views[viewType] = {
                 ...archInfo,
                 fields: field.relatedFields,
             };
+            fieldInfo.relatedFields = field.relatedFields;
         }
         fieldInfo.viewMode =
-            fieldInfo.viewMode || Object.keys(views).find((v) => ["list", "kanban"].includes(v));
-        fieldInfo.views = views;
-        fieldInfo.relation = field.relation; // not really necessary
+            node.getAttribute("mode") ||
+            Object.keys(views).find((v) => ["list", "kanban"].includes(v));
 
-        const relatedFields = {
-            ...field.relatedFields,
-            ...fieldInfo.FieldComponent.fieldsToFetch,
-        };
+        const fieldsToFetch = { ...fieldInfo.FieldComponent.fieldsToFetch }; // should become an array?
         // special case for color field
         // GES: this is not nice, we will look for something better.
         const colorField = fieldInfo.attrs.options.color_field;
         if (colorField) {
-            relatedFields[colorField] = { name: colorField, type: "integer", active: true };
+            fieldsToFetch[colorField] = { name: colorField, type: "integer", active: true };
         }
-        fieldInfo.relatedFields = relatedFields;
+        fieldInfo.fieldsToFetch = fieldsToFetch;
+        fieldInfo.relation = field.relation; // not really necessary
+        fieldInfo.views = views;
     }
 
     return fieldInfo;

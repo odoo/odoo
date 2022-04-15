@@ -653,6 +653,7 @@ QUnit.module("Fields", (hooks) => {
                             </tree>
                             <form>
                                 <!-- display datetime in readonly as modal will open in edit -->
+                                <!-- WOWL: no longer necessary: no more quick edit -->
                                 <field name="datetime" widget="date" attrs="{'readonly': 1}" />
                             </form>
                         </field>

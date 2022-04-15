@@ -2823,7 +2823,10 @@ QUnit.module("Fields", (hooks) => {
             `,
             mockRPC(route, { args, method }) {
                 count++;
-                if (method === "name_get" && args[0][0] === 2) {
+                if (method === "name_get" && args[0] === 2) {
+                    // LPE: any call_kw route can take either [ids] or id as the first
+                    // argument as model.browse() in python supports both
+                    // With the basic_model, name_get is passed only an id, not an array
                     return Promise.resolve([[2, "hello world\nso much noise"]]);
                 }
             },

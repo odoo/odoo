@@ -58,7 +58,10 @@ BadgeSelectionField.extractProps = (fieldName, record, attrs) => {
     const getOptions = () => {
         switch (record.fields[fieldName].type) {
             case "many2one":
-                return record.preloadedData[fieldName];
+                // WOWL: conversion needed while we keep using the legacy model
+                return Object.values(record.preloadedData[fieldName]).map((v) => {
+                    return [v.id, v.display_name];
+                });
             case "selection":
                 return record.fields[fieldName].selection;
             default:

@@ -412,6 +412,8 @@ export class Record extends DataPoint {
 
         this._onWillSwitchMode = params.onRecordWillSwitchMode || (() => {});
 
+        this.canBeAbandoned = !this.isVirtual;
+
         markRaw(this);
     }
 
@@ -871,6 +873,7 @@ export class Record extends DataPoint {
         }
         proms.push(this.loadPreloadedData());
         await Promise.all(proms);
+        this.canBeAbandoned = false;
         this.model.notify();
     }
 
@@ -895,18 +898,19 @@ export class Record extends DataPoint {
     _createStaticList(fieldName) {
         const field = this.fields[fieldName];
         const activeField = this.activeFields[fieldName];
-        const { relatedFields = {}, views = {}, viewMode, FieldComponent } = activeField;
+        const { fieldsToFetch, relatedFields = {}, views = {}, viewMode } = activeField;
         const fields = {
             id: { name: "id", type: "integer", readonly: true },
             ...relatedFields,
-            ...FieldComponent.fieldsToFetch,
+            ...fieldsToFetch,
         };
         const activeFields = (views[viewMode] && views[viewMode].activeFields) || {
-            ...FieldComponent.fieldsToFetch,
+            ...fieldsToFetch,
         };
         for (const fieldName in relatedFields) {
             if (relatedFields[fieldName].active) {
-                activeFields[fieldName] = relatedFields[fieldName];
+                activeFields[fieldName] = relatedFields[fieldName]; // a field and an active field are not the same thing
+                // bad idea
             }
         }
         const limit = views[viewMode] && views[viewMode].limit;
@@ -955,6 +959,7 @@ export class Record extends DataPoint {
                         }
                     }
                 }
+                this.canBeAbandoned = false;
                 await Promise.all(proms);
                 this.onChanges();
             },
@@ -1199,6 +1204,10 @@ class DynamicList extends DataPoint {
     // -------------------------------------------------------------------------
     // Public
     // -------------------------------------------------------------------------
+
+    abandonRecord(recordId) {
+        // TODO
+    }
 
     /**
      * @param {boolean} [isSelected]
@@ -2071,7 +2080,6 @@ export class StaticList extends DataPoint {
         this.views = params.views || {};
         this.viewMode = params.viewMode;
 
-        this.notYetValidated = null;
         this.onChanges = params.onChanges || (() => {});
 
         this.getParentRecordContext = params.getParentRecordContext;
@@ -2081,16 +2089,6 @@ export class StaticList extends DataPoint {
             const editedRecord = this.editedRecord;
             this.editedRecord = null;
             if (editedRecord === record && mode === "readonly") {
-                if (this.notYetValidated) {
-                    const virtualId = this.notYetValidated;
-                    this.notYetValidated = null;
-                    this.applyCommand(x2ManyCommands.delete(virtualId));
-                    delete this._cache[this._mapping[virtualId]]; // won't be used anymore
-                    this.records = this._getRecords();
-                    this.onChanges();
-                    this.model.notify();
-                    return false;
-                }
                 return record.checkValidity();
             }
             if (editedRecord) {
@@ -2168,10 +2166,6 @@ export class StaticList extends DataPoint {
 
         this.limit++;
         this.applyCommand(x2ManyCommands.create(record.virtualId, symbolValues));
-
-        if (!record.checkValidity()) {
-            this.notYetValidated = record.virtualId;
-        }
 
         this.isOrder = false;
         this.records = this._getRecords();
@@ -2477,9 +2471,6 @@ export class StaticList extends DataPoint {
                 this.applyCommand(
                     x2ManyCommands.update(record.resId || record.virtualId, symbolValues)
                 );
-                if (this.notYetValidated === record.virtualId) {
-                    this.notYetValidated = null;
-                }
                 this.onChanges();
             },
             rawContext: {

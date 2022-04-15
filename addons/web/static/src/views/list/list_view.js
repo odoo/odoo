@@ -263,11 +263,8 @@ export class ListView extends Component {
         }
     }
 
-    async onClickSave() {
-        // this is useless since we save on click outside
-        // await this.editedRecord.save();
-        // this.editedRecord = null;
-        // this.render();
+    onClickSave() {
+        this.model.root.editedRecord.save();
     }
 
     getSelectedResIds() {
