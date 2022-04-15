@@ -1256,6 +1256,16 @@ Send it ASAP, its urgent.</field>
         <function model="project.task" name="rating_apply"
             eval="([ref('project.project_1_task_4')], 5, 'PROJECT_3', None, 'Exactly what I asked for, thank you!')"/>
 
+        <record id="rating_task_3_part2" model="rating.rating">
+            <field name="access_token">PROJECT_3_part2</field>
+            <field name="res_model_id" ref="project.model_project_task"/>
+            <field name="rated_partner_id" ref="base.partner_root"/>
+            <field name="partner_id" ref="base.partner_demo_portal"/>
+            <field name="res_id" ref="project.project_1_task_4"/>
+        </record>
+        <function model="project.task" name="rating_apply"
+            eval="([ref('project.project_1_task_4')], 4, 'PROJECT_3_part2', None, 'Exactly what I asked for, but one day late from the deadline')"/>
+
         <record id="rating_task_4" model="rating.rating">
             <field name="access_token">PROJECT_4</field>
             <field name="res_model_id" ref="project.model_project_task"/>
