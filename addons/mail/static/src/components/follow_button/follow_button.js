@@ -46,8 +46,14 @@ export class FollowButton extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickUnfollow(ev) {
-        this.thread.unfollow();
+    async _onClickUnfollow(ev) {
+        await this.thread.unfollow();
+        if (this.props.chatterLocalId) {
+            const chatter = this.messaging.models['Chatter'].get(this.props.chatterLocalId);
+            if (chatter) {
+                chatter.reloadParentView({ fieldNames: ['message_follower_ids'] });
+            }
+        }
     }
 
     /**
@@ -73,6 +79,10 @@ Object.assign(FollowButton, {
         isDisabled: false,
     },
     props: {
+        chatterLocalId: {
+            type: String,
+            optional: true,
+        },
         isDisabled: Boolean,
         threadLocalId: String,
     },

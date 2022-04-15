@@ -123,9 +123,17 @@ registerModel({
             }
             this.thread.fetchData(requestData);
         },
-        reloadParentView() {
+        /**
+         * @param {Object} [param0={}]
+         * @param {string[]} [fieldNames]
+         */
+        reloadParentView({ fieldNames } = {}) {
             if (this.component) {
-                this.component.trigger('reload', { keepChanges: true });
+                const options = { keepChanges: true };
+                if (fieldNames) {
+                    options.fieldNames = fieldNames;
+                }
+                this.component.trigger('reload', options);
             }
         },
         showLogNote() {
