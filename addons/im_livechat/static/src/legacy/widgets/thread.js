@@ -86,9 +86,6 @@ var ThreadWidget = Widget.extend({
         this._selectedMessageID = null;
         this._currentThreadID = null;
         this._messageMailPopover = null;
-        this._messageSeenPopover = null;
-        // used to track popover IDs to destroy on re-rendering of popovers
-        this._openedSeenPopoverIDs = [];
     },
     /**
      * The message mail popover may still be shown at this moment. If we do not
@@ -101,10 +98,6 @@ var ThreadWidget = Widget.extend({
         if (this._messageMailPopover) {
             this._messageMailPopover.popover('hide');
         }
-        if (this._messageSeenPopover) {
-            this._messageSeenPopover.popover('hide');
-        }
-        this._destroyOpenSeenPopoverIDs();
         this._super();
     },
     /**
@@ -214,9 +207,6 @@ var ThreadWidget = Widget.extend({
         }
 
         this._renderMessageNotificationPopover(messages);
-        if (thread.hasSeenFeature()) {
-            this._renderMessageSeenPopover(thread, messages);
-        }
     },
 
     /**
@@ -334,15 +324,6 @@ var ThreadWidget = Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     */
-    _destroyOpenSeenPopoverIDs: function () {
-        _.each(this._openedSeenPopoverIDs, function (popoverID) {
-            $('#' + popoverID).remove();
-        });
-        this._openedSeenPopoverIDs = [];
-    },
     /**
      * Modifies $element to add the 'read more/read less' functionality
      * All element nodes with 'data-o-mail-quote' attribute are concerned.
@@ -481,46 +462,6 @@ var ThreadWidget = Widget.extend({
                 });
                 return QWeb.render('im_livechat.legacy.mail.widget.Thread.Message.MailTooltip', {
                     notifications: message.getNotifications(),
-                });
-            },
-        });
-    },
-    /**
-     * Render the popover when mouse hovering on the seen icon of a message
-     * in the thread. Only seen icons in non-squashed message have popover,
-     * because squashed messages hides this icon on message mouseover.
-     *
-     * @private
-     * @param {im_livechat.legacy.mail.model.AbstractThread} thread with thread seen mixin,
-     *   @see {im_livechat.legacy.mail.model.ThreadSeenMixin}
-     * @param {im_livechat.legacy.mail.model.Message[]} messages list of messages in the
-     *   rendered thread.
-     */
-    _renderMessageSeenPopover: function (thread, messages) {
-        var self = this;
-        this._destroyOpenSeenPopoverIDs();
-        if (this._messageSeenPopover) {
-            this._messageSeenPopover.popover('hide');
-        }
-        if (!this.$('.o_thread_message_core .o_mail_thread_message_seen_icon').length) {
-            return;
-        }
-        this._messageSeenPopover = this.$('.o_thread_message_core .o_mail_thread_message_seen_icon').popover({
-            html: true,
-            boundary: 'viewport',
-            placement: 'auto',
-            trigger: 'hover',
-            offset: '0, 1',
-            content: function () {
-                var $this = $(this);
-                self._openedSeenPopoverIDs.push($this.attr('aria-describedby'));
-                var messageID = $this.data('message-id');
-                var message = _.find(messages, function (message) {
-                    return message.getID() === messageID;
-                });
-                return QWeb.render('im_livechat.legacy.mail.widget.Thread.Message.SeenIconPopoverContent', {
-                    thread: thread,
-                    message: message,
                 });
             },
         });

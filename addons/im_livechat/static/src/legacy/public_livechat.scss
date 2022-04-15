@@ -322,10 +322,6 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
             .o_thread_message_side_date {
                 opacity: 0;
             }
-
-            .o_mail_thread_message_seen_icon:not(.o_all_seen) {
-                opacity: $o-mail-thread-icon-opacity*0.5;
-            }
         }
         .o_thread_icon {
             cursor: pointer;
@@ -346,11 +342,6 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
                 opacity: $o-mail-thread-icon-opacity;
                 &:hover {
                     opacity: 1;
-                }
-            }
-            .o_thread_message_sidebar {
-                .o_mail_thread_message_seen_icon {
-                    display: none;
                 }
             }
         }
@@ -507,34 +498,6 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     }
     20% {
         transform: translateY(-5px);
-    }
-}
-
-// ------------------------------------------------------------------
-// Thread seen icon: shared between discuss and chat windows
-// ------------------------------------------------------------------
-
-.o_mail_thread_message_seen_icon {
-    position: relative;
-    opacity: 0.6;
-
-    &.o_all_seen {
-        color: $o-enterprise-color;
-    }
-
-    &:hover {
-        cursor: pointer;
-        opacity: 0.8;
-    }
-
-    .fa-check:nth-child(1) {
-        padding-left: 3px;
-    }
-
-    .fa-check:nth-child(2) {
-        position: absolute;
-        top: -1px;
-        left: 0px;
     }
 }
 
