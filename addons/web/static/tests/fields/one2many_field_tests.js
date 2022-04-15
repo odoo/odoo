@@ -987,7 +987,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "onchange for embedded one2many in a one2many updated by server",
         async function (assert) {
             // here we test that after an onchange, the embedded one2many field has
@@ -1053,9 +1053,11 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
             assert.deepEqual(
-                [...target.querySelectorAll(".o_data_cell.o_many2many_tags_cell")].map(
-                    (el) => el.textContent
-                ),
+                [
+                    ...target.querySelectorAll(
+                        ".o_data_cell.o_many2many_tags_cell .o_tag_badge_text"
+                    ),
+                ].map((el) => el.textContent),
                 ["second record"]
             );
 
@@ -1064,10 +1066,12 @@ QUnit.module("Fields", (hooks) => {
             await editSelect(target, ".o_selected_row [name=turtle_foo] input", "hop");
             await clickSave(target);
             assert.deepEqual(
-                [...target.querySelectorAll(".o_data_cell.o_many2many_tags_cell")].map(
-                    (el) => el.textContent
-                ),
-                ["second", "record", "aaa"]
+                [
+                    ...target.querySelectorAll(
+                        ".o_data_cell.o_many2many_tags_cell .o_tag_badge_text"
+                    ),
+                ].map((el) => el.textContent),
+                ["second record", "aaa"]
             );
         }
     );
