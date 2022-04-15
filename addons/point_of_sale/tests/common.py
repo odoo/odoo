@@ -356,8 +356,20 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             return cls.env['account.account.tag'].create({
                 'name': name,
                 'applicability': 'taxes',
-                'country_id': cls.env.company.country_id.id
+                'country_id': cls.env.company.country_id.id,
+                'tax_report_line_ids': [
+                    (0, 0, {
+                        'name': name,
+                        'tag_name': name,
+                        'report_id': cls.tax_report.id,
+                        'sequence': 10,
+                    })
+                ]
             })
+        cls.tax_report = cls.env['account.tax.report'].create({
+            'name': "Tax report",
+            'country_id': cls.company_data['company'].country_id.id,
+        })
 
         cls.tax_tag_invoice_base = create_tag('Invoice Base tag')
         cls.tax_tag_invoice_tax = create_tag('Invoice Tax tag')

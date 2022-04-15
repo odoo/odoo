@@ -361,11 +361,11 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             credit_line.credit = 1100.0
 
         move = move_form.save()
-
+        # pylint: disable=C0326 bad-whitespace
         self.assertRecordValues(move.line_ids.sorted('balance'), [
-            {'balance': -1100.0,    'tax_ids': [],              'tax_tag_ids': [],                      'tax_base_amount': 0,       'tax_repartition_line_id': False},
-            {'balance': 100.0,      'tax_ids': [],              'tax_tag_ids': self.tax_tag_neg.ids,    'tax_base_amount': 1000,    'tax_repartition_line_id': ref_tax_rep_ln.id},
-            {'balance': 1000.0,     'tax_ids': sale_tax.ids,    'tax_tag_ids': self.base_tag_neg.ids,   'tax_base_amount': 0,       'tax_repartition_line_id': False},
+            {'balance': -1100.0,    'tax_ids': [],              'tax_tag_ids': [],                      'tax_base_amount': 0,       'tax_repartition_line_id': False,             'tax_audit': False},
+            {'balance': 100.0,      'tax_ids': [],              'tax_tag_ids': self.tax_tag_neg.ids,    'tax_base_amount': 1000,    'tax_repartition_line_id': ref_tax_rep_ln.id, 'tax_audit': self._get_tax_audit_string(move, self.tax_tag_neg, -100.0)},
+            {'balance': 1000.0,     'tax_ids': sale_tax.ids,    'tax_tag_ids': self.base_tag_neg.ids,   'tax_base_amount': 0,       'tax_repartition_line_id': False,             'tax_audit': self._get_tax_audit_string(move, self.base_tag_neg, -1000.0)},
         ])
 
         # === Tax in credit ===
@@ -390,11 +390,11 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             debit_line.debit = 1100.0
 
         move = move_form.save()
-
+        # pylint: disable=C0326 bad-whitespace
         self.assertRecordValues(move.line_ids.sorted('balance'), [
-            {'balance': -1000.0,    'tax_ids': sale_tax.ids,    'tax_tag_ids': self.base_tag_neg.ids,   'tax_base_amount': 0,       'tax_repartition_line_id': False},
-            {'balance': -100.0,     'tax_ids': [],              'tax_tag_ids': self.tax_tag_neg.ids,    'tax_base_amount': 1000,    'tax_repartition_line_id': inv_tax_rep_ln.id},
-            {'balance': 1100.0,     'tax_ids': [],              'tax_tag_ids': [],                      'tax_base_amount': 0,       'tax_repartition_line_id': False},
+            {'balance': -1000.0,    'tax_ids': sale_tax.ids,    'tax_tag_ids': self.base_tag_neg.ids,   'tax_base_amount': 0,       'tax_repartition_line_id': False,               'tax_audit': self._get_tax_audit_string(move, self.base_tag_neg, -1000.0)},
+            {'balance': -100.0,     'tax_ids': [],              'tax_tag_ids': self.tax_tag_neg.ids,    'tax_base_amount': 1000,    'tax_repartition_line_id': inv_tax_rep_ln.id,   'tax_audit': self._get_tax_audit_string(move, self.tax_tag_neg, -100.0)},
+            {'balance': 1100.0,     'tax_ids': [],              'tax_tag_ids': [],                      'tax_base_amount': 0,       'tax_repartition_line_id': False,               'tax_audit': False},
         ])
 
     def test_misc_journal_entry_tax_tags_purchase(self):
@@ -440,7 +440,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         # Debit base tax line.
         with move_form.line_ids.new() as credit_line:
             credit_line.name = 'debit_line_1'
-            credit_line.account_id = self.company_data['default_account_revenue']
+            credit_line.account_id = self.company_data['default_account_expense']
             credit_line.debit = 1000.0
             credit_line.tax_ids.clear()
             credit_line.tax_ids.add(purch_tax)
@@ -450,15 +450,15 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         # Balance the journal entry.
         with move_form.line_ids.new() as credit_line:
             credit_line.name = 'balance'
-            credit_line.account_id = self.company_data['default_account_revenue']
+            credit_line.account_id = self.company_data['default_account_expense']
             credit_line.credit = 1100.0
 
         move = move_form.save()
-
+        # pylint: disable=C0326 bad-whitespace
         self.assertRecordValues(move.line_ids.sorted('balance'), [
-            {'balance': -1100.0,    'tax_ids': [],              'tax_tag_ids': [],                      'tax_base_amount': 0,       'tax_repartition_line_id': False},
-            {'balance': 100.0,      'tax_ids': [],              'tax_tag_ids': self.tax_tag_pos.ids,    'tax_base_amount': 1000,    'tax_repartition_line_id': inv_tax_rep_ln.id},
-            {'balance': 1000.0,     'tax_ids': purch_tax.ids,   'tax_tag_ids': self.base_tag_pos.ids,   'tax_base_amount': 0,       'tax_repartition_line_id': False},
+            {'balance': -1100.0,    'tax_ids': [],              'tax_tag_ids': [],                      'tax_base_amount': 0,       'tax_repartition_line_id': False,               'tax_audit': False},
+            {'balance': 100.0,      'tax_ids': [],              'tax_tag_ids': self.tax_tag_pos.ids,    'tax_base_amount': 1000,    'tax_repartition_line_id': inv_tax_rep_ln.id,   'tax_audit': self._get_tax_audit_string(move, self.tax_tag_pos, 100.0)},
+            {'balance': 1000.0,     'tax_ids': purch_tax.ids,   'tax_tag_ids': self.base_tag_pos.ids,   'tax_base_amount': 0,       'tax_repartition_line_id': False,               'tax_audit': self._get_tax_audit_string(move, self.base_tag_pos, 1000.0)},
         ])
 
         # === Tax in credit ===
@@ -469,7 +469,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         # Debit base tax line.
         with move_form.line_ids.new() as credit_line:
             credit_line.name = 'debit_line_1'
-            credit_line.account_id = self.company_data['default_account_revenue']
+            credit_line.account_id = self.company_data['default_account_expense']
             credit_line.credit = 1000.0
             credit_line.tax_ids.clear()
             credit_line.tax_ids.add(purch_tax)
@@ -479,11 +479,11 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         # Balance the journal entry.
         with move_form.line_ids.new() as debit_line:
             debit_line.name = 'balance'
-            debit_line.account_id = self.company_data['default_account_revenue']
+            debit_line.account_id = self.company_data['default_account_expense']
             debit_line.debit = 1100.0
 
         move = move_form.save()
-
+        # pylint: disable=C0326 bad-whitespace
         self.assertRecordValues(move.line_ids.sorted('balance'), [
             {'balance': -1000.0,    'tax_ids': purch_tax.ids,   'tax_tag_ids': self.base_tag_pos.ids,   'tax_base_amount': 0,       'tax_repartition_line_id': False},
             {'balance': -100.0,     'tax_ids': [],              'tax_tag_ids': self.tax_tag_pos.ids,    'tax_base_amount': 1000,    'tax_repartition_line_id': ref_tax_rep_ln.id},

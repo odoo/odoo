@@ -329,12 +329,13 @@ class TestPoSProductsWithTax(TestPoSCommon):
         lines = self.pos_session.move_id.line_ids.sorted('balance')
         self.assertEqual(2, len(lines.filtered(lambda l: l.tax_ids)), "Taxes should have been set on 2 lines")
         self.assertEqual(4, len(lines.filtered(lambda l: l.tax_tag_ids)), "Tags should have been set on 4 lines")
+        # pylint: disable=C0326 bad-whitespace
         self.assertRecordValues(lines, [
-            {'account_id': self.sale_account.id,           'balance': -10.0, 'tax_ids': tax_21_incl.ids, 'tax_tag_ids': self.tax_tag_invoice_base.ids},
-            {'account_id': self.tax_received_account.id,   'balance': -2.10, 'tax_ids': [],              'tax_tag_ids': self.tax_tag_invoice_tax.ids},
-            {'account_id': self.tax_received_account.id,   'balance':  1.05, 'tax_ids': [],              'tax_tag_ids': self.tax_tag_refund_tax.ids},
-            {'account_id': self.sale_account.id,           'balance':  5.00, 'tax_ids': tax_21_incl.ids, 'tax_tag_ids': self.tax_tag_refund_base.ids},
-            {'account_id': self.pos_receivable_account.id, 'balance':  6.05, 'tax_ids': [],              'tax_tag_ids': []},
+            {'account_id': self.sale_account.id,           'balance': -10.0, 'tax_ids': tax_21_incl.ids, 'tax_tag_ids': self.tax_tag_invoice_base.ids, 'tax_audit': self._get_tax_audit_string(self.pos_session.move_id, self.tax_tag_invoice_base, 10.0)},
+            {'account_id': self.tax_received_account.id,   'balance': -2.10, 'tax_ids': [],              'tax_tag_ids': self.tax_tag_invoice_tax.ids, 'tax_audit': self._get_tax_audit_string(self.pos_session.move_id, self.tax_tag_invoice_tax, 2.10)},
+            {'account_id': self.tax_received_account.id,   'balance':  1.05, 'tax_ids': [],              'tax_tag_ids': self.tax_tag_refund_tax.ids, 'tax_audit': self._get_tax_audit_string(self.pos_session.move_id, self.tax_tag_refund_tax, -1.05)},
+            {'account_id': self.sale_account.id,           'balance':  5.00, 'tax_ids': tax_21_incl.ids, 'tax_tag_ids': self.tax_tag_refund_base.ids, 'tax_audit': self._get_tax_audit_string(self.pos_session.move_id, self.tax_tag_refund_base, -5.0)},
+            {'account_id': self.pos_receivable_account.id, 'balance':  6.05, 'tax_ids': [],              'tax_tag_ids': [], 'tax_audit': False},
         ])
 
     def test_pos_create_account_move_round_globally(self):

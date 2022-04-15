@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields
 from odoo.tests.common import SavepointCase, HttpSavepointCase, tagged, Form
+from odoo.tools.misc import formatLang
 
 import time
 import base64
@@ -490,6 +491,15 @@ class AccountTestInvoicingCommon(SavepointCase):
         :return:                An instance of etree.
         '''
         return etree.fromstring(xml_tree_str)
+
+    @classmethod
+    def _get_tax_audit_string(cls, move, tag, amount):
+        audit_string = ''
+        separator = '        '
+        for report_line in tag.tax_report_line_ids:
+            audit_string += separator if audit_string else ''
+            audit_string += report_line.tag_name + ': ' + formatLang(cls.env, amount, currency_obj=move.currency_id)
+        return audit_string
 
 
 @tagged('post_install', '-at_install')
