@@ -52,7 +52,7 @@ var Timers = Class.extend({
         if ('timeoutCallbackArguments' in params) {
             timerParams.onTimeout = this._timeoutCallback.bind.apply(
                 this._timeoutCallback,
-                [null].concat(params.timeoutCallbackArguments)
+                [null, ...params.timeoutCallbackArguments]
             );
         } else {
             timerParams.onTimeout = this._timeoutCallback;

@@ -99,21 +99,21 @@ var AbstractThreadWindow = Widget.extend({
      */
     do_hide: function () {
         this._hidden = true;
-        this._super.apply(this, arguments);
+        this._super(...arguments);
     },
     /**
      * @override
      */
     do_show: function () {
         this._hidden = false;
-        this._super.apply(this, arguments);
+        this._super(...arguments);
     },
     /**
      * @override
      */
     do_toggle: function (display) {
         this._hidden = _.isBoolean(display) ? !display : !this._hidden;
-        this._super.apply(this, arguments);
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------

@@ -20,7 +20,7 @@ var WebsiteLivechatMessage = AbstractMessage.extend({
      * @param {string} options.serverURL
      */
     init: function (parent, data, options) {
-        this._super.apply(this, arguments);
+        this._super(...arguments);
 
         this._defaultUsername = options.default_username;
         this._serverURL = options.serverURL;
@@ -56,7 +56,7 @@ var WebsiteLivechatMessage = AbstractMessage.extend({
      * @return {string}
      */
     getDisplayedAuthor: function () {
-        return this._super.apply(this, arguments) || this._defaultUsername;
+        return this._super(...arguments) || this._defaultUsername;
     },
 
 });

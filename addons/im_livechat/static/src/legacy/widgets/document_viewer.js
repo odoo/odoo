@@ -42,7 +42,7 @@ var DocumentViewer = Widget.extend({
      * @param {integer} activeAttachmentID
      */
     init: function (parent, attachments, activeAttachmentID) {
-        this._super.apply(this, arguments);
+        this._super(...arguments);
         this.attachment = _.filter(attachments, function (attachment) {
             var match = attachment.type === 'url' ? attachment.url.match("(youtu|.png|.jpg|.gif)") : attachment.mimetype.match("(image|video|application/pdf|text)");
             if (match) {
@@ -78,7 +78,7 @@ var DocumentViewer = Widget.extend({
         this.$el.on('hidden.bs.modal', _.bind(this._onDestroy, this));
         this.$('.o_viewer_img').on("load", _.bind(this._onImageLoaded, this));
         this.$('[data-toggle="tooltip"]').tooltip({ delay: 0 });
-        return this._super.apply(this, arguments);
+        return this._super(...arguments);
     },
     /**
      * @override
@@ -90,7 +90,7 @@ var DocumentViewer = Widget.extend({
         this.trigger_up('document_viewer_closed');
         this.$el.modal('hide');
         this.$el.remove();
-        this._super.apply(this, arguments);
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------

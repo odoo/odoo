@@ -31,7 +31,7 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @param {im_livechat.legacy.im_livechat.LivechatButton} params.parent
      */
     init: function (params) {
-        this._super.apply(this, arguments);
+        this._super(...arguments);
         ThreadTypingMixin.init.call(this, arguments);
 
         this._members = [];

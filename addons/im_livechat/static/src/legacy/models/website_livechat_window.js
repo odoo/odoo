@@ -21,7 +21,7 @@ var LivechatWindow = AbstractThreadWindow.extend({
      * @param {string} [options.titleColor]
      */
     init(parent, thread, options = {}) {
-        this._super.apply(this, arguments);
+        this._super(...arguments);
         this._thread = thread;
     },
     /**
@@ -64,7 +64,7 @@ var LivechatWindow = AbstractThreadWindow.extend({
      * @param {boolean} folded
      */
     toggleFold: function () {
-        this._super.apply(this, arguments);
+        this._super(...arguments);
         this.trigger_up('save_chat_window');
         this.updateVisualFoldState();
     },
@@ -80,7 +80,7 @@ var LivechatWindow = AbstractThreadWindow.extend({
      */
     _postMessage: function (messageData) {
         this.trigger_up('post_message_chat_window', { messageData: messageData });
-        this._super.apply(this, arguments);
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------

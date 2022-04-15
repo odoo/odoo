@@ -41,7 +41,7 @@ var CCThrottleFunction = function (params) {
     });
 
     var callable = function () {
-        return throttleFunctionObject.do.apply(throttleFunctionObject, arguments);
+        return throttleFunctionObject.do(...arguments);
     };
     callable.cancel = function () {
         throttleFunctionObject.cancel();

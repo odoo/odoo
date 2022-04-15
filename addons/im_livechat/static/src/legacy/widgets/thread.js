@@ -52,7 +52,7 @@ var ThreadWidget = Widget.extend({
      * @param {Object} options
      */
     init: function (parent, options) {
-        this._super.apply(this, arguments);
+        this._super(...arguments);
         this.attachments = [];
         // options when the thread is enabled (e.g. can send message,
         // interact on messages, etc.)

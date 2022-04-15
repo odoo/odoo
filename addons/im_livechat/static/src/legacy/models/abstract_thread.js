@@ -41,7 +41,7 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      * @param {im_livechat.legacy.mail.model.AbstractMessage} message
      */
     addMessage: function (message) {
-        this._addMessage.apply(this, arguments);
+        this._addMessage(...arguments);
         this.trigger('message_added', message);
     },
     /**
@@ -130,7 +130,7 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      *   server
      */
     postMessage: function () {
-        return this._postMessage.apply(this, arguments)
+        return this._postMessage(...arguments)
                                 .then(this.trigger.bind(this, 'message_posted'));
     },
     /**
