@@ -7,6 +7,7 @@ const components = {
 const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
+const { markEventHandled } = require('mail/static/src/utils/utils.js');
 const { Component } = owl;
 
 class Follower extends Component {
@@ -61,8 +62,11 @@ class Follower extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickRemove(ev) {
-        this.follower.remove();
+    async _onClickRemove(ev) {
+        markEventHandled(ev, 'Follower.clickRemove');
+        await this.follower.remove();
+        this.trigger('reload', { fieldNames:['message_follower_ids'], keepChanges: true });
+        this.trigger('o-hide-follower-list-menu');
     }
 
 }
