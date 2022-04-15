@@ -58,7 +58,7 @@ class AccountEdiFormat(models.Model):
         if not edi_document.attachment_id:
             return
 
-        pdf_writer.embed_odoo_attachment(edi_document.attachment_id, subtype='application/xml')
+        pdf_writer.embed_odoo_attachment(edi_document.attachment_id, subtype='text/xml')
         if not pdf_writer.is_pdfa and str2bool(self.env['ir.config_parameter'].sudo().get_param('edi.use_pdfa', 'False')):
             try:
                 pdf_writer.convert_to_pdfa()
@@ -80,23 +80,46 @@ class AccountEdiFormat(models.Model):
 
         def format_monetary(number, currency):
             # Format the monetary values to avoid trailing decimals (e.g. 90.85000000000001).
+            if currency.is_zero(number):  # Ensure that we never return -0.0
+                number = 0.0
             return float_repr(number, currency.decimal_places)
 
         self.ensure_one()
         # Create file content.
+        seller_siret = 'siret' in invoice.company_id._fields and invoice.company_id.siret or invoice.company_id.company_registry
+        buyer_siret = 'siret' in invoice.commercial_partner_id._fields and invoice.commercial_partner_id.siret
         template_values = {
             'record': invoice,
             'format_date': format_date,
             'format_monetary': format_monetary,
             'invoice_line_values': [],
+            'seller_specified_legal_organization': seller_siret,
+            'buyer_specified_legal_organization': buyer_siret,
         }
-
         # Tax lines.
-        aggregated_taxes_details = {line.tax_line_id.id: {
-            'line': line,
-            'tax_amount': -line.amount_currency if line.currency_id else -line.balance,
-            'tax_base_amount': 0.0,
-        } for line in invoice.line_ids.filtered('tax_line_id')}
+        # The old system was making one total "line" per tax in the xml, by using the tax_line_id.
+        # The new one is making one total "line" for each tax category and rate group.
+        aggregated_taxes_details = invoice._prepare_edi_tax_details(
+            grouping_key_generator=lambda tax_values: {
+                'unece_tax_category_code': tax_values['tax_id']._get_unece_category_code(invoice.commercial_partner_id, invoice.company_id),
+                'amount': tax_values['tax_id'].amount
+            }
+        )['tax_details']
+
+        balance_multiplicator = -1 if invoice.is_inbound() else 1
+        # Map the new keys from the backported _prepare_edi_tax_details into the old ones for compatibility with the old
+        # template. Also apply the multiplication here for consistency between the old and new template.
+        for tax_detail in aggregated_taxes_details.values():
+            tax_detail['tax_base_amount'] = balance_multiplicator * tax_detail['base_amount_currency']
+            tax_detail['tax_amount'] = balance_multiplicator * tax_detail['tax_amount_currency']
+
+            # The old template would get the amount from a tax line given to it, while
+            # the new one would get the amount from the dictionary returned by _prepare_edi_tax_details directly.
+            # As the line was only used to get the tax amount, giving it any line with the same amount will give a correct
+            # result even if the tax line doesn't make much sense as this is a total that is not linked to a specific tax.
+            # I don't have a solution for 0% taxes, we will give an empty line that will allow to render the xml, but it
+            # won't be completely correct. (The RateApplicablePercent will be missing for that line)
+            tax_detail['line'] = invoice.line_ids.filtered(lambda l: l.tax_line_id and l.tax_line_id.amount == tax_detail['amount'])[:1]
 
         # Invoice lines.
         for i, line in enumerate(invoice.invoice_line_ids.filtered(lambda l: not l.display_type)):
@@ -115,18 +138,18 @@ class AccountEdiFormat(models.Model):
                 'index': i + 1,
                 'tax_details': [],
                 'net_price_subtotal': taxes_res['total_excluded'],
+                'unece_uom_code': line.product_id.product_tmpl_id.uom_id._get_unece_code(),
             }
 
             for tax_res in taxes_res['taxes']:
                 tax = self.env['account.tax'].browse(tax_res['id'])
+                tax_category_code = tax._get_unece_category_code(invoice.commercial_partner_id, invoice.company_id)
                 line_template_values['tax_details'].append({
                     'tax': tax,
                     'tax_amount': tax_res['amount'],
                     'tax_base_amount': tax_res['base'],
+                    'unece_tax_category_code': tax_category_code,
                 })
-
-                if tax.id in aggregated_taxes_details:
-                    aggregated_taxes_details[tax.id]['tax_base_amount'] += tax_res['base']
 
             template_values['invoice_line_values'].append(line_template_values)
 
@@ -236,31 +259,34 @@ class AccountEdiFormat(models.Model):
             if elements:
                 invoice_form.narration = elements[0].text
 
-            # Total amount.
-            elements = tree.xpath('//ram:GrandTotalAmount', namespaces=tree.nsmap)
+            # Get currency string for new invoices, or invoices coming from outside
+            elements = tree.xpath('//ram:InvoiceCurrencyCode', namespaces=tree.nsmap)
             if elements:
-
-                # Currency.
-                if elements[0].attrib.get('currencyID'):
+                currency_str = elements[0].text
+            # Fallback for old invoices from odoo where the InvoiceCurrencyCode was not present
+            else:
+                elements = tree.xpath('//ram:TaxTotalAmount', namespaces=tree.nsmap)
+                if elements:
                     currency_str = elements[0].attrib['currencyID']
-                    currency = self.env.ref('base.%s' % currency_str.upper(), raise_if_not_found=False)
-                    if currency and not currency.active:
-                        error_msg = _('The currency (%s) of the document you are uploading is not active in this database.\n'
-                                      'Please activate it before trying again to import.', currency.name)
-                        error_action = {
-                            'view_mode': 'form',
-                            'res_model': 'res.currency',
-                            'type': 'ir.actions.act_window',
-                            'target': 'new',
-                            'res_id': currency.id,
-                            'views': [[False, 'form']]
-                        }
-                        raise RedirectWarning(error_msg, error_action, _('Display the currency'))
-                    if currency != self.env.company.currency_id and currency.active:
-                        invoice_form.currency_id = currency
 
-                    # Store xml total amount.
-                    amount_total_import = total_amount * refund_sign
+            currency = self.env.ref('base.%s' % currency_str.upper(), raise_if_not_found=False)
+            if currency and not currency.active:
+                error_msg = _('The currency (%s) of the document you are uploading is not active in this database.\n'
+                              'Please activate it before trying again to import.', currency.name)
+                error_action = {
+                    'view_mode': 'form',
+                    'res_model': 'res.currency',
+                    'type': 'ir.actions.act_window',
+                    'target': 'new',
+                    'res_id': currency.id,
+                    'views': [[False, 'form']]
+                }
+                raise RedirectWarning(error_msg, error_action, _('Display the currency'))
+            if currency != self.env.company.currency_id and currency.active:
+                invoice_form.currency_id = currency
+
+            # Store xml total amount.
+            amount_total_import = total_amount * refund_sign
 
             # Date.
             elements = tree.xpath('//rsm:ExchangedDocument/ram:IssueDateTime/udt:DateTimeString', namespaces=tree.nsmap)
