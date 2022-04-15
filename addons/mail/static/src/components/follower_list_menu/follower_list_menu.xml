@@ -24,6 +24,7 @@
                                 <Follower
                                     t-foreach="thread.followers" t-as="follower" t-key="follower.localId"
                                     className="'o_FollowerMenu_follower dropdown-item'"
+                                    chatterLocalId="props.chatterLocalId"
                                     followerLocalId="follower.localId"
                                     onClick="_onClickFollower"
                                 />
