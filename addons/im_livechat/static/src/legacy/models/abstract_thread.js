@@ -104,16 +104,6 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
         return !_.isEmpty(this.getMessages());
     },
     /**
-     * States whether this thread is compatible with the 'seen' feature.
-     * By default, threads do not have thsi feature active.
-     * @see {im_livechat.legacy.mail.model.ThreadSeenMixin} to enable this feature on a thread.
-     *
-     * @returns {boolean}
-     */
-    hasSeenFeature: function () {
-        return false;
-    },
-    /**
      * States whether this thread is folded or not.
      *
      * @return {boolean}
