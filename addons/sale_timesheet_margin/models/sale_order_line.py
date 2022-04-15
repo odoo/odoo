@@ -11,7 +11,11 @@ class SaleOrderLine(models.Model):
             lambda sol: sol.qty_delivered_method == 'timesheet' and not sol.product_id.standard_price and not sol.product_id.service_policy == 'ordered_timesheet'
         )
         already_computed_service = self.filtered(lambda sol: sol.create_date is not False and sol.product_id.service_policy == 'ordered_timesheet')
-        super(SaleOrderLine, self - timesheet_sols - already_computed_service)._compute_purchase_price()
+        manual_purchase_price = self.filtered(
+            lambda sol: sol.purchase_price != sol._convert_price(sol.product_id.standard_price, sol.product_id.uom_id)
+                        and sol.purchase_price != 0 != sol.product_id.standard_price
+        )
+        super(SaleOrderLine, self - timesheet_sols - already_computed_service - manual_purchase_price)._compute_purchase_price()
         if timesheet_sols:
             group_amount = self.env['account.analytic.line'].read_group(
                 [('so_line', 'in', timesheet_sols.ids), ('project_id', '!=', False)],
