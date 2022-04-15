@@ -1,7 +1,7 @@
 odoo.define('im_livechat.legacy.im_livechat.model.WebsiteLivechatMessage', function (require) {
 "use strict";
 
-var AbstractMessage = require('im_livechat.legacy.mail.model.AbstractMessage');
+const AbstractMessage = require('im_livechat.legacy.mail.model.AbstractMessage');
 
 /**
  * This is a message that is handled by im_livechat, without making use of the
@@ -10,7 +10,7 @@ var AbstractMessage = require('im_livechat.legacy.mail.model.AbstractMessage');
  *
  * @see im_livechat.legacy.mail.model.AbstractMessage for more information.
  */
-var WebsiteLivechatMessage = AbstractMessage.extend({
+const WebsiteLivechatMessage = AbstractMessage.extend({
 
     /**
      * @param {im_livechat.legacy.im_livechat.LivechatButton} parent
@@ -19,8 +19,8 @@ var WebsiteLivechatMessage = AbstractMessage.extend({
      * @param {string} options.default_username
      * @param {string} options.serverURL
      */
-    init: function (parent, data, options) {
-        this._super.apply(this, arguments);
+    init(parent, data, options) {
+        this._super(...arguments);
 
         this._defaultUsername = options.default_username;
         this._serverURL = options.serverURL;
@@ -36,8 +36,8 @@ var WebsiteLivechatMessage = AbstractMessage.extend({
      * @override
      * @return {string}
      */
-    getAvatarSource: function () {
-        var source = this._serverURL;
+     getAvatarSource() {
+        let source = this._serverURL;
         if (this.hasAuthor()) {
             source += `/im_livechat/operator/${this.getAuthorID()}/avatar`;
         } else {
@@ -55,8 +55,8 @@ var WebsiteLivechatMessage = AbstractMessage.extend({
      * @override
      * @return {string}
      */
-    getDisplayedAuthor: function () {
-        return this._super.apply(this, arguments) || this._defaultUsername;
+    getDisplayedAuthor() {
+        return this._super(...arguments) || this._defaultUsername;
     },
 
 });

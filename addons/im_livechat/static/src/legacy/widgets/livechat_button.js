@@ -1,23 +1,23 @@
 odoo.define('im_livechat.legacy.im_livechat.LivechatButton', function (require) {
 "use strict";
 
-var config = require('web.config');
-var core = require('web.core');
-var session = require('web.session');
-var time = require('web.time');
-var utils = require('web.utils');
-var Widget = require('web.Widget');
+const config = require('web.config');
+const core = require('web.core');
+const session = require('web.session');
+const time = require('web.time');
+const utils = require('web.utils');
+const Widget = require('web.Widget');
 
-var { LIVECHAT_COOKIE_HISTORY } = require('im_livechat.legacy.im_livechat.Constants');
-var Feedback = require('im_livechat.legacy.im_livechat.Feedback');
-var WebsiteLivechat = require('im_livechat.legacy.im_livechat.model.WebsiteLivechat');
-var WebsiteLivechatMessage = require('im_livechat.legacy.im_livechat.model.WebsiteLivechatMessage');
-var WebsiteLivechatWindow = require('im_livechat.legacy.im_livechat.WebsiteLivechatWindow');
+const { LIVECHAT_COOKIE_HISTORY } = require('im_livechat.legacy.im_livechat.Constants');
+const Feedback = require('im_livechat.legacy.im_livechat.Feedback');
+const WebsiteLivechat = require('im_livechat.legacy.im_livechat.model.WebsiteLivechat');
+const WebsiteLivechatMessage = require('im_livechat.legacy.im_livechat.model.WebsiteLivechatMessage');
+const WebsiteLivechatWindow = require('im_livechat.legacy.im_livechat.WebsiteLivechatWindow');
 
-var _t = core._t;
-var QWeb = core.qweb;
+const _t = core._t;
+const QWeb = core.qweb;
 
-var LivechatButton = Widget.extend({
+const LivechatButton = Widget.extend({
     className: 'openerp o_livechat_button d-print-none',
     custom_events: {
         'close_chat_window': '_onCloseChatWindow',
@@ -29,7 +29,7 @@ var LivechatButton = Widget.extend({
     events: {
         'click': '_openChat'
     },
-    init: function (parent, serverURL, options) {
+    init(parent, serverURL, options) {
         this._super(parent);
         this.options = _.defaults(options || {}, {
             input_placeholder: _t("Ask something ..."),
@@ -47,9 +47,9 @@ var LivechatButton = Widget.extend({
         this._serverURL = serverURL;
     },
     async willStart() {
-        var cookie = utils.get_cookie('im_livechat_session');
+        const cookie = utils.get_cookie('im_livechat_session');
         if (cookie) {
-            var channel = JSON.parse(cookie);
+            const channel = JSON.parse(cookie);
             this._history = await session.rpc('/mail/chat_history', {uuid: channel.uuid, limit: 100});
             this._history.reverse().forEach(message => { message.body = utils.Markup(message.body); });
         } else {
@@ -61,13 +61,13 @@ var LivechatButton = Widget.extend({
         }
         return this._loadQWebTemplate();
     },
-    start: function () {
+    start() {
         this.$el.text(this.options.button_text);
         if (this._history) {
             this._history.forEach(m => this._addMessage(m));
             this._openChat();
         } else if (!config.device.isMobile && this._rule.action === 'auto_popup') {
-            var autoPopupCookie = utils.get_cookie('im_livechat_auto_popup');
+            const autoPopupCookie = utils.get_cookie('im_livechat_auto_popup');
             if (!autoPopupCookie || JSON.parse(autoPopupCookie)) {
                 this._autoPopupTimeout =
                     setTimeout(this._openChat.bind(this), this._rule.auto_popup_timer * 1000);
@@ -82,7 +82,7 @@ var LivechatButton = Widget.extend({
         }
 
         // If website_event_track installed, put the livechat banner above the PWA banner.
-        var pwaBannerHeight = $('.o_pwa_install_banner').outerHeight(true);
+        const pwaBannerHeight = $('.o_pwa_install_banner').outerHeight(true);
         if (pwaBannerHeight) {
             this.$el.css('bottom', pwaBannerHeight + 'px');
         }
@@ -100,13 +100,13 @@ var LivechatButton = Widget.extend({
      * @param {Object} data
      * @param {Object} [options={}]
      */
-    _addMessage: function (data, options) {
-        options = _.extend({}, this.options, options, {
+    _addMessage(data, options) {
+        options = Object.assign({}, this.options, options, {
             serverURL: this._serverURL,
         });
-        var message = new WebsiteLivechatMessage(this, data, options);
+        const message = new WebsiteLivechatMessage(this, data, options);
 
-        var hasAlreadyMessage = _.some(this._messages, function (msg) {
+        const hasAlreadyMessage = _.some(this._messages, function (msg) {
             return message.getID() === msg.getID();
         });
         if (hasAlreadyMessage) {
@@ -126,10 +126,10 @@ var LivechatButton = Widget.extend({
     /**
      * @private
      */
-    _askFeedback: function () {
+    _askFeedback() {
         this._chatWindow.$('.o_thread_composer input').prop('disabled', true);
 
-        var feedback = new Feedback(this, this._livechat);
+        const feedback = new Feedback(this, this._livechat);
         this._chatWindow.replaceContentWith(feedback);
 
         feedback.on('send_message', this, this._sendMessage);
@@ -138,7 +138,7 @@ var LivechatButton = Widget.extend({
     /**
      * @private
      */
-    _closeChat: function () {
+    _closeChat() {
         this._chatWindow.destroy();
         utils.set_cookie('im_livechat_session', "", -1); // remove cookie
     },
@@ -148,7 +148,7 @@ var LivechatButton = Widget.extend({
      * @param {Object} notification.payload
      * @param {string} notification.type
      */
-    _handleNotification: function ({ payload, type }) {
+    _handleNotification({ payload, type }) {
         switch (type) {
             case 'im_livechat.history_command': {
                 if (payload.id !== this._livechat._id) {
@@ -202,7 +202,7 @@ var LivechatButton = Widget.extend({
                     return;
                 }
                 message._body = utils.Markup(payload.body);
-                this._renderMessages()
+                this._renderMessages();
                 return;
             }
         }
@@ -210,11 +210,11 @@ var LivechatButton = Widget.extend({
     /**
      * @private
      */
-    _loadQWebTemplate: function () {
+    _loadQWebTemplate() {
         return session.rpc('/im_livechat/load_templates').then(function (templates) {
-            _.each(templates, function (template) {
+            for (let template of templates) {
                 QWeb.add_template(template);
-            });
+            }
         });
     },
     /**
@@ -224,9 +224,8 @@ var LivechatButton = Widget.extend({
         if (this._openingChat) {
             return;
         }
-        var self = this;
-        var cookie = utils.get_cookie('im_livechat_session');
-        var def;
+        const cookie = utils.get_cookie('im_livechat_session');
+        let def;
         this._openingChat = true;
         clearTimeout(this._autoPopupTimeout);
         if (cookie) {
@@ -239,10 +238,10 @@ var LivechatButton = Widget.extend({
                 { shadow: true },
             );
         }
-        def.then(function (livechatData) {
+        def.then((livechatData) => {
             if (!livechatData || !livechatData.operator_pid) {
                 try {
-                    self.displayNotification({
+                    this.displayNotification({
                         message: _t("No available collaborator, please try again later."),
                         sticky: true,
                     });
@@ -257,33 +256,33 @@ var LivechatButton = Widget.extend({
                     console.warn(_t("No available collaborator, please try again later."));
                 }
             } else {
-                self._livechat = new WebsiteLivechat({
-                    parent: self,
+                this._livechat = new WebsiteLivechat({
+                    parent: this,
                     data: livechatData
                 });
-                return self._openChatWindow().then(function () {
-                    if (!self._history) {
-                        self._sendWelcomeMessage();
+                return this._openChatWindow().then(() => {
+                    if (!this._history) {
+                        this._sendWelcomeMessage();
                     }
-                    self._renderMessages();
-                    self.call('bus_service', 'addChannel', self._livechat.getUUID());
-                    self.call('bus_service', 'startPolling');
+                    this._renderMessages();
+                    this.call('bus_service', 'addChannel', this._livechat.getUUID());
+                    this.call('bus_service', 'startPolling');
 
-                    utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(self._livechat.toData()), true), 60 * 60);
+                    utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this._livechat.toData()), true), 60 * 60);
                     utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60 * 60);
                     if (livechatData.operator_pid[0]) {
                         // livechatData.operator_pid contains a tuple (id, name)
                         // we are only interested in the id
-                        var operatorPidId = livechatData.operator_pid[0];
-                        var oneWeek = 7 * 24 * 60 * 60;
+                        const operatorPidId = livechatData.operator_pid[0];
+                        const oneWeek = 7 * 24 * 60 * 60;
                         utils.set_cookie('im_livechat_previous_operator_pid', operatorPidId, oneWeek);
                     }
                 });
             }
-        }).then(function () {
-            self._openingChat = false;
-        }).guardedCatch(function () {
-            self._openingChat = false;
+        }).then(() => {
+            this._openingChat = false;
+        }).guardedCatch(() => {
+            this._openingChat = false;
         });
     }, 200, true),
     /**
@@ -296,8 +295,8 @@ var LivechatButton = Widget.extend({
      * @private
      * @return {integer} operator_id.partner_id.id if the cookie is set
      */
-    _get_previous_operator_id: function () {
-        var cookie = utils.get_cookie('im_livechat_previous_operator_pid');
+     _get_previous_operator_id() {
+        const cookie = utils.get_cookie('im_livechat_previous_operator_pid');
         if (cookie) {
             return cookie;
         }
@@ -308,26 +307,25 @@ var LivechatButton = Widget.extend({
      * @private
      * @return {Promise}
      */
-    _openChatWindow: function () {
-        var self = this;
-        var options = {
+     _openChatWindow() {
+        const options = {
             displayStars: false,
             headerBackgroundColor: this.options.header_background_color,
             placeholder: this.options.input_placeholder || "",
             titleColor: this.options.title_color,
         };
         this._chatWindow = new WebsiteLivechatWindow(this, this._livechat, options);
-        return this._chatWindow.appendTo($('body')).then(function () {
-            var cssProps = { bottom: 0 };
+        return this._chatWindow.appendTo($('body')).then(() => {
+            const cssProps = { bottom: 0 };
             cssProps[_t.database.parameters.direction === 'rtl' ? 'left' : 'right'] = 0;
-            self._chatWindow.$el.css(cssProps);
-            self.$el.hide();
+            this._chatWindow.$el.css(cssProps);
+            this.$el.hide();
         });
     },
     /**
      * @private
      */
-    _prepareGetSessionParameters: function () {
+    _prepareGetSessionParameters() {
         return {
             channel_id: this.options.channel_id,
             anonymous_name: this.options.default_username,
@@ -337,8 +335,8 @@ var LivechatButton = Widget.extend({
     /**
      * @private
      */
-    _renderMessages: function () {
-        var shouldScroll = !this._chatWindow.isFolded() && this._chatWindow.isAtBottom();
+     _renderMessages() {
+        const shouldScroll = !this._chatWindow.isFolded() && this._chatWindow.isAtBottom();
         this._livechat.setMessages(this._messages);
         this._chatWindow.render();
         if (shouldScroll) {
@@ -350,15 +348,14 @@ var LivechatButton = Widget.extend({
      * @param {Object} message
      * @return {Promise}
      */
-    _sendMessage: function (message) {
-        var self = this;
+     _sendMessage(message) {
         this._livechat._notifyMyselfTyping({ typing: false });
         return session
             .rpc('/mail/chat_post', { uuid: this._livechat.getUUID(), message_content: message.content })
-            .then(function (messageId) {
+            .then((messageId) => {
                 if (!messageId) {
                     try {
-                        self.displayNotification({
+                        this.displayNotification({
                             message: _t("Session expired... Please refresh and try again."),
                             sticky: true,
                         });
@@ -373,15 +370,15 @@ var LivechatButton = Widget.extend({
                          */
                         console.warn(_t("Session expired... Please refresh and try again."));
                     }
-                    self._closeChat();
+                    this._closeChat();
                 }
-                self._chatWindow.scrollToBottom();
+                this._chatWindow.scrollToBottom();
             });
     },
     /**
      * @private
      */
-    _sendWelcomeMessage: function () {
+    _sendWelcomeMessage() {
         if (this.options.default_message) {
             this._addMessage({
                 id: '_welcome',
@@ -403,10 +400,10 @@ var LivechatButton = Widget.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onCloseChatWindow: function (ev) {
+    _onCloseChatWindow(ev) {
         ev.stopPropagation();
-        var isComposerDisabled = this._chatWindow.$('.o_thread_composer input').prop('disabled');
-        var shouldAskFeedback = !isComposerDisabled && _.find(this._messages, function (message) {
+        const isComposerDisabled = this._chatWindow.$('.o_thread_composer input').prop('disabled');
+        const shouldAskFeedback = !isComposerDisabled && this._messages.find(function (message) {
             return message.getID() !== '_welcome';
         });
         if (shouldAskFeedback) {
@@ -421,31 +418,29 @@ var LivechatButton = Widget.extend({
      * @private
      * @param {Array[]} notifications
      */
-    _onNotification: function (notifications) {
-        var self = this;
-        _.each(notifications, function (notification) {
-            self._handleNotification(notification);
-        });
+     _onNotification(notifications) {
+        for (let notification of notifications) {
+            this._handleNotification(notification);
+        }
     },
     /**
      * @private
      * @param {OdooEvent} ev
      * @param {Object} ev.data.messageData
      */
-    _onPostMessageChatWindow: function (ev) {
+    _onPostMessageChatWindow(ev) {
         ev.stopPropagation();
-        var self = this;
-        var messageData = ev.data.messageData;
-        this._sendMessage(messageData).guardedCatch(function (reason) {
+        const messageData = ev.data.messageData;
+        this._sendMessage(messageData).guardedCatch((reason) => {
             reason.event.preventDefault();
-            return self._sendMessage(messageData); // try again just in case
+            return this._sendMessage(messageData); // try again just in case
         });
     },
     /**
      * @private
      * @param {OdooEvent} ev
      */
-    _onSaveChatWindow: function (ev) {
+    _onSaveChatWindow(ev) {
         ev.stopPropagation();
         utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this._livechat.toData()), true), 60 * 60);
     },
@@ -461,7 +456,7 @@ var LivechatButton = Widget.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onUpdatedUnreadCounter: function (ev) {
+    _onUpdatedUnreadCounter(ev) {
         ev.stopPropagation();
         this._chatWindow.renderHeader();
     },
@@ -470,10 +465,10 @@ var LivechatButton = Widget.extend({
      * Called when the visitor leaves the livechat chatter the first time (first click on X button)
      * this will deactivate the mail_channel, notify operator that visitor has left the channel.
      */
-    _visitorLeaveSession: function () {
-        var cookie = utils.get_cookie('im_livechat_session');
+     _visitorLeaveSession() {
+        const cookie = utils.get_cookie('im_livechat_session');
         if (cookie) {
-            var channel = JSON.parse(cookie);
+            const channel = JSON.parse(cookie);
             session.rpc('/im_livechat/visitor_leave_session', {uuid: channel.uuid});
             utils.set_cookie('im_livechat_session', "", -1); // remove cookie
         }

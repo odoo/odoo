@@ -1,15 +1,15 @@
 odoo.define('im_livechat.legacy.im_livechat.WebsiteLivechatWindow', function (require) {
 "use strict";
 
-var AbstractThreadWindow = require('im_livechat.legacy.mail.AbstractThreadWindow');
+const AbstractThreadWindow = require('im_livechat.legacy.mail.AbstractThreadWindow');
 
 /**
  * This is the widget that represent windows of livechat in the frontend.
  *
  * @see im_livechat.legacy.mail.AbstractThreadWindow for more information
  */
-var LivechatWindow = AbstractThreadWindow.extend({
-    events: _.extend(AbstractThreadWindow.prototype.events, {
+const LivechatWindow = AbstractThreadWindow.extend({
+    events: Object.assign(AbstractThreadWindow.prototype.events, {
         'input .o_composer_text_field': '_onInput',
     }),
     /**
@@ -21,7 +21,7 @@ var LivechatWindow = AbstractThreadWindow.extend({
      * @param {string} [options.titleColor]
      */
     init(parent, thread, options = {}) {
-        this._super.apply(this, arguments);
+        this._super(...arguments);
         this._thread = thread;
     },
     /**
@@ -46,7 +46,7 @@ var LivechatWindow = AbstractThreadWindow.extend({
     /**
      * @override
      */
-    close: function () {
+    close() {
         this.trigger_up('close_chat_window');
     },
     /**
@@ -54,7 +54,7 @@ var LivechatWindow = AbstractThreadWindow.extend({
      *
      * @param {$.Element} $element
      */
-    replaceContentWith: function ($element) {
+    replaceContentWith($element) {
         $element.replace(this._threadWidget.$el);
     },
     /**
@@ -63,8 +63,8 @@ var LivechatWindow = AbstractThreadWindow.extend({
      * @override
      * @param {boolean} folded
      */
-    toggleFold: function () {
-        this._super.apply(this, arguments);
+    toggleFold() {
+        this._super(...arguments);
         this.trigger_up('save_chat_window');
         this.updateVisualFoldState();
     },
@@ -78,9 +78,9 @@ var LivechatWindow = AbstractThreadWindow.extend({
      * @private
      * @param {Object} messageData
      */
-    _postMessage: function (messageData) {
-        this.trigger_up('post_message_chat_window', { messageData: messageData });
-        this._super.apply(this, arguments);
+    _postMessage(messageData) {
+        this.trigger_up('post_message_chat_window', { messageData });
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -92,9 +92,9 @@ var LivechatWindow = AbstractThreadWindow.extend({
      *
      * @private
      */
-    _onInput: function () {
+    _onInput() {
         if (this.hasThread() && this._thread.hasTypingNotification()) {
-            var isTyping = this.$input.val().length > 0;
+            const isTyping = this.$input.val().length > 0;
             this._thread.setMyselfTyping({ typing: isTyping });
         }
     },

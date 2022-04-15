@@ -1,14 +1,14 @@
 odoo.define('im_livechat.legacy.im_livechat.HistoryTracking', function (require) {
 "use strict";
 
-var utils = require('web.utils');
+const utils = require('web.utils');
 
-var { HISTORY_LIMIT, LIVECHAT_COOKIE_HISTORY } = require ("im_livechat.legacy.im_livechat.Constants");
+const { HISTORY_LIMIT, LIVECHAT_COOKIE_HISTORY } = require ("im_livechat.legacy.im_livechat.Constants");
 
 // History tracking
-var page = window.location.href.replace(/^.*\/\/[^/]+/, '');
-var pageHistory = utils.get_cookie(LIVECHAT_COOKIE_HISTORY);
-var urlHistory = [];
+const page = window.location.href.replace(/^.*\/\/[^/]+/, '');
+const pageHistory = utils.get_cookie(LIVECHAT_COOKIE_HISTORY);
+let urlHistory = [];
 if (pageHistory) {
     urlHistory = JSON.parse(pageHistory) || [];
 }
