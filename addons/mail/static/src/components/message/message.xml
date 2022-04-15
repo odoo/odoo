@@ -147,8 +147,10 @@
                             </t>
                             <t t-if="messageView.message.trackingValues.length > 0">
                                 <ul class="o_Message_trackingValues mt-2">
-                                    <t t-foreach="messageView.message.trackingValues" t-as="value" t-key="value.id">
-                                        <TrackingValue value="value"/>
+                                    <t t-foreach="messageView.message.trackingValues" t-as="trackingValue" t-key="trackingValue.id">
+                                        <li>
+                                            <TrackingValue value="trackingValue"/>
+                                        </li>
                                     </t>
                                 </ul>
                             </t>
