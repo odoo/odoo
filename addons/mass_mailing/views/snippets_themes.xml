@@ -476,6 +476,12 @@
             data-color-prefix="bg-"/>
     </div>
 
+    <!-- Allow changing background images in Masonry -->
+    <t t-call="web_editor.snippet_options_background_options">
+        <t t-set="selector" t-value="'.s_masonry_block .row > div'"/>
+        <t t-set="with_images" t-value="True"/>
+    </t>
+
     <!-- COLOR | .s_three_columns | .s_comparisons -->
     <div data-js="Box"
          data-selector=".s_three_columns .row > div, .s_comparisons .row > div"
