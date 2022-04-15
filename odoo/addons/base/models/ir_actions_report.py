@@ -378,16 +378,20 @@ class IrActionsReport(models.Model):
             footer_node.append(node)
 
         # Retrieve bodies
+        layout_sections = None
         for node in root.xpath(match_klass.format('article')):
             layout_with_lang = layout
-            # set context language to body language
             if node.get('data-oe-lang'):
+                # context language to body language
                 layout_with_lang = layout_with_lang.with_context(lang=node.get('data-oe-lang'))
+                # set header/lang to body lang prioritizing current user language
+                if not layout_sections or node.get('data-oe-lang') == self.env.lang:
+                    layout_sections = layout_with_lang
             body = layout_with_lang._render({
                 'subst': False,
                 'body': Markup(lxml.html.tostring(node, encoding='unicode')),
                 'base_url': base_url,
-                'report_xml_id' : self.xml_id
+                'report_xml_id': self.xml_id
             })
             bodies.append(body)
             if node.get('data-oe-model') == self.model:
@@ -406,12 +410,12 @@ class IrActionsReport(models.Model):
             if attribute[0].startswith('data-report-'):
                 specific_paperformat_args[attribute[0]] = attribute[1]
 
-        header = layout._render({
+        header = (layout_sections or layout)._render({
             'subst': True,
             'body': Markup(lxml.html.tostring(header_node, encoding='unicode')),
             'base_url': base_url
         })
-        footer = layout._render({
+        footer = (layout_sections or layout)._render({
             'subst': True,
             'body': Markup(lxml.html.tostring(footer_node, encoding='unicode')),
             'base_url': base_url
