@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
+import { isEventHandled } from '@mail/utils/utils';
 
 const { Component, onMounted, onWillUnmount, useRef, useState } = owl;
 
@@ -18,6 +19,7 @@ export class FollowerListMenu extends Component {
             isDropdownOpen: false,
         });
         this._dropdownRef = useRef('dropdown');
+        this._onHideFollowerListMenu = this._onHideFollowerListMenu.bind(this);
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
         onMounted(() => this._mounted());
         onWillUnmount(() => this._willUnmount());
@@ -108,6 +110,16 @@ export class FollowerListMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickFollower(ev) {
+        if (isEventHandled(ev, 'Follower.clickRemove')) {
+            return;
+        }
+        this._hide();
+    }
+
+    /**
+     * @private
+     */
+    _onHideFollowerListMenu() {
         this._hide();
     }
 }
@@ -117,6 +129,10 @@ Object.assign(FollowerListMenu, {
         isDisabled: false,
     },
     props: {
+        chatterLocalId: {
+            type: String,
+            optional: true,
+        },
         isDisabled: Boolean,
         threadLocalId: String,
     },
