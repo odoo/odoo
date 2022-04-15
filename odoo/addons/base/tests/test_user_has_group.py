@@ -185,6 +185,8 @@ class TestHasGroup(TransactionCase):
         group_0 = self.env.ref(self.group0)  # the group to which test_user already belongs
         group_U = self.env["res.groups"].create({"name": "U", "implied_ids": [Command.set([self.grp_internal.id])]})
         self.grp_internal.implied_ids = False  # only there to simplify the test by not having to care about its trans_implied_ids
+        # account module adds TaxB2b as an implied group
+        self.grp_portal.implied_ids = False
 
         self.test_user.write({'groups_id': [Command.link(group_U.id)]})
         self.assertEqual(
@@ -220,6 +222,10 @@ class TestHasGroup(TransactionCase):
         group_user = self.env.ref('base.group_user')
         group_portal = self.env.ref('base.group_portal')
         group_no_one = self.env.ref('base.group_no_one')
+
+        # The "account" module brings in unwanted implied groups, so we have to normalize them here
+        group_portal.implied_ids = False
+        group_user.implied_ids = [Command.set([group_no_one.id])]
 
         group_A = G.create({"name": "A"})
         group_AA = G.create({"name": "AA", "implied_ids": [Command.set([group_A.id])]})
