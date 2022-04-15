@@ -549,14 +549,14 @@ class ResPartner(models.Model):
 
     def action_view_partner_with_same_bank(self):
         self.ensure_one()
-        partners = self._get_duplicated_bank_accounts()
+        bank_partners = self._get_duplicated_bank_accounts()
         # Open a list view or form view of the partner(s) with the same bank accounts
         if self.duplicated_bank_account_partners_count == 1:
             action_vals = {
                 'type': 'ir.actions.act_window',
                 'res_model': 'res.partner',
                 'view_mode': 'form',
-                'res_id': partners.id,
+                'res_id': bank_partners.partner_id.id,
                 'views': [(False, 'form')],
             }
         else:
@@ -566,7 +566,7 @@ class ResPartner(models.Model):
                 'res_model': 'res.partner',
                 'view_mode': 'tree,form',
                 'views': [(False, 'list'), (False, 'form')],
-                'domain': [('id', 'in', partners.ids)],
+                'domain': [('id', 'in', bank_partners.partner_id.ids)],
             }
 
         return action_vals
