@@ -237,7 +237,8 @@ QUnit.test('counter is taking into account failure notification', async function
         model: 'mail.channel',
         res_id: mailChannelId1,
     });
-    pyEnv['mail.channel'].write([mailChannelId1], { seen_message_id: mailMessageId1 });
+    const [mailChannelPartnerId] = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId1], ['partner_id', '=', pyEnv.currentPartnerId]]);
+    pyEnv['mail.channel.partner'].write([mailChannelPartnerId], { seen_message_id: mailMessageId1 });
     // failure that is expected to be used in the test
     pyEnv['mail.notification'].create({
         mail_message_id: mailMessageId1, // id of the related message
@@ -949,7 +950,6 @@ QUnit.test('Group chat should be displayed inside the chat section of the messag
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'group',
-        is_pinned: true,
     });
     const { click, createMessagingMenuComponent, messaging } = await start();
     await createMessagingMenuComponent();

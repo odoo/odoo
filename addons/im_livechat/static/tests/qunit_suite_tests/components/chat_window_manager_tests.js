@@ -19,9 +19,14 @@ QUnit.test('closing a chat window with no message from admin side unpins it', as
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
     const mailChannelId1 = pyEnv['mail.channel'].create(
         {
+            channel_last_seen_partner_ids: [
+                [0, 0, {
+                    is_pinned: true,
+                    partner_id: pyEnv.currentPartnerId,
+                }],
+                [0, 0, { partner_id: resPartnerId1 }],
+            ],
             channel_type: "livechat",
-            is_pinned: true,
-            channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
             uuid: 'channel-10-uuid',
         },
     );
@@ -33,7 +38,7 @@ QUnit.test('closing a chat window with no message from admin side unpins it', as
     await afterNextRender(() => document.querySelector(`.o_ChatWindowHeader_commandClose`).click());
     const channels = await env.services.rpc({
         model: 'mail.channel',
-        method: 'read',
+        method: 'channel_info',
         args: [mailChannelId1],
     }, { shadow: true });
     assert.strictEqual(

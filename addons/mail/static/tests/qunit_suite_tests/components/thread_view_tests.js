@@ -16,19 +16,8 @@ QUnit.test('dragover files on thread with composer', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([
-        {
-            email: "john@example.com",
-            name: "John",
-        },
-        {
-            email: "fred@example.com",
-            name: "Fred",
-        },
-    ]);
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1, resPartnerId2],
         name: "General",
         public: 'public',
     });
@@ -56,19 +45,8 @@ QUnit.test('message list desc order', async function (assert) {
     assert.expect(5);
 
     const pyEnv = await startServer();
-    const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([
-        {
-            email: "john@example.com",
-            name: "John",
-        },
-        {
-            email: "fred@example.com",
-            name: "Fred",
-        },
-    ]);
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1, resPartnerId2],
         name: "General",
         public: 'public',
     });
@@ -153,19 +131,8 @@ QUnit.test('message list asc order', async function (assert) {
     assert.expect(5);
 
     const pyEnv = await startServer();
-    const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([
-        {
-            email: "john@example.com",
-            name: "John",
-        },
-        {
-            email: "fred@example.com",
-            name: "Fred",
-        },
-    ]);
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1, resPartnerId2],
         name: "General",
         public: 'public',
     });
@@ -256,12 +223,13 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
         partner_id: resPartnerId1,
     });
     const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId1 }],
+        ],
         channel_type: 'chat',
-        is_pinned: true,
-        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
     const { afterEvent, createThreadViewComponent, env, messaging } = await start({
-        data: this.data,
         mockRPC(route, args) {
             if (args.method === 'channel_fetched') {
                 assert.strictEqual(
@@ -475,9 +443,13 @@ QUnit.test('[technical] new messages separator on posting message', async functi
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, {
+                message_unread_counter: 0,
+                partner_id: pyEnv.currentPartnerId,
+            }],
+        ],
         channel_type: 'channel',
-        is_pinned: true,
-        message_unread_counter: 0,
         name: "General",
     });
     const mailMessageId1 = pyEnv['mail.message'].create({
@@ -485,7 +457,8 @@ QUnit.test('[technical] new messages separator on posting message', async functi
         model: "mail.channel",
         res_id: mailChannelId1,
     });
-    pyEnv['mail.channel'].write([mailChannelId1], { seen_message_id: mailMessageId1 });
+    const [mailChannelPartnerId] = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId1], ['partner_id', '=', pyEnv.currentPartnerId]]);
+    pyEnv['mail.channel.partner'].write([mailChannelPartnerId], { seen_message_id: mailMessageId1 });
     const { createThreadViewComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
@@ -542,9 +515,13 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
         partner_id: resPartnerId1,
     });
     const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, {
+                message_unread_counter: 0,
+                partner_id: pyEnv.currentPartnerId,
+            }],
+        ],
         channel_type: 'channel',
-        is_pinned: true,
-        message_unread_counter: 0,
         name: "General",
         uuid: 'randomuuid',
     });
@@ -553,7 +530,8 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
         model: "mail.channel",
         res_id: mailChannelId1,
     });
-    pyEnv['mail.channel'].write([mailChannelId1], { seen_message_id: mailMessageId1 });
+    const [mailChannelPartnerId] = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId1], ['partner_id', '=', pyEnv.currentPartnerId]]);
+    pyEnv['mail.channel.partner'].write([mailChannelPartnerId], { seen_message_id: mailMessageId1 });
     const { afterEvent, createThreadViewComponent, env, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
@@ -643,9 +621,13 @@ QUnit.test('new messages separator on posting message', async function (assert) 
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, {
+                message_unread_counter: 0,
+                partner_id: pyEnv.currentPartnerId,
+            }],
+        ],
         channel_type: 'channel',
-        is_pinned: true,
-        message_unread_counter: 0,
         name: "General",
     });
     const { click, createThreadViewComponent, messaging } = await start();
@@ -1530,7 +1512,6 @@ QUnit.test('first unseen message should be directly preceded by the new message 
     });
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        is_pinned: true,
         name: "General",
         uuid: 'channel20uuid',
     });
@@ -1615,7 +1596,6 @@ QUnit.test('failure on loading messages should display error', async function (a
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        is_pinned: true,
         name: "General",
     });
     const { createThreadViewComponent, messaging } = await start({
@@ -1650,7 +1630,6 @@ QUnit.test('failure on loading messages should prompt retry button', async funct
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        is_pinned: true,
         name: "General",
     });
     const { createThreadViewComponent, messaging } = await start({
@@ -1689,7 +1668,6 @@ QUnit.test('failure on loading more messages should not alter message list displ
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        is_pinned: true,
         name: "General",
     });
     pyEnv['mail.message'].create([...Array(60).keys()].map(() => {
@@ -1740,7 +1718,6 @@ QUnit.test('failure on loading more messages should display error and prompt ret
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        is_pinned: true,
         name: "General",
     });
     pyEnv['mail.message'].create([...Array(60).keys()].map(() => {
@@ -1800,7 +1777,6 @@ QUnit.test('Retry loading more messages on failed load more messages should load
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        is_pinned: true,
         name: "General",
     });
     pyEnv['mail.message'].create([...Array(90).keys()].map(() => {
@@ -1858,7 +1834,6 @@ QUnit.test("highlight the message mentioning the current user inside the channel
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        is_pinned: true,
         name: "General",
     });
     pyEnv['mail.message'].create({
@@ -1897,7 +1872,6 @@ QUnit.test("not highlighting the message if not mentioning the current user insi
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
-        is_pinned: true,
         name: "General",
     });
     pyEnv['mail.message'].create({

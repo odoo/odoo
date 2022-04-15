@@ -10,12 +10,24 @@ QUnit.test('mark as read', async function (assert) {
     assert.expect(6);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create({ message_unread_counter: 1 });
+    const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo" });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, {
+                message_unread_counter: 1, // mandatory for good working of test, but ideally should be deduced by other server data
+                partner_id: pyEnv.currentPartnerId,
+            }],
+            [0, 0, {
+                partner_id: resPartnerId1,
+            }],
+        ],
+    });
     const [mailMessageId1] = pyEnv['mail.message'].create([
-        { model: 'mail.channel', res_id: mailChannelId1 },
-        { model: 'mail.channel', res_id: mailChannelId1 },
+        { author_id: resPartnerId1, model: 'mail.channel', res_id: mailChannelId1 },
+        { author_id: resPartnerId1, model: 'mail.channel', res_id: mailChannelId1 },
     ]);
-    pyEnv['mail.channel'].write([mailChannelId1], { seen_message_id: mailMessageId1 });
+    const [mailChannelPartnerId] = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId1], ['partner_id', '=', pyEnv.currentPartnerId]]);
+    pyEnv['mail.channel.partner'].write([mailChannelPartnerId], { seen_message_id: mailMessageId1 });
 
     const { click, createMessagingMenuComponent } = await start({
         hasChatWindow: true,

@@ -22,8 +22,11 @@ QUnit.test('out of office message on direct chat with out of office partner', as
         out_of_office_date_end: returningDate.format("YYYY-MM-DD"),
     });
     const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId1 }],
+        ],
         channel_type: 'chat',
-        channel_partner_ids: [pyEnv.currentPartnerId, resPartnerId1],
     });
     const { createThreadViewComponent, messaging } = await start({ data: this.data });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
