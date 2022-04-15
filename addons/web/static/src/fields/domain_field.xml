@@ -6,9 +6,9 @@
             <t t-if="getResModel(props)">
                 <DomainSelector
                     resModel="getResModel(props)"
-                    value="getDomain(props.value).toString()"
+                    value="displayedDomain"
                     readonly="props.readonly"
-                    update="(newDomain) => props.update(newDomain)"
+                    update.bind="update"
                     isDebugMode="!!env.debug"
                     className="props.readonly ? 'o_read_mode' : 'o_edit_mode'"
                 />
@@ -31,6 +31,7 @@
                                 role="img"
                                 aria-label="Refresh"
                                 title="Refresh"
+                                t-on-click="() => this.loadCount(props)"
                             />
                         </t>
                     </t>

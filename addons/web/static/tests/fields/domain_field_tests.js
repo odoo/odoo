@@ -10,12 +10,10 @@ import {
     patchWithCleanup,
     triggerEvent,
 } from "../helpers/utils";
+import { createWebClient, doAction } from "../webclient/helpers";
 
 let serverData;
 let target;
-
-// WOWL remove after adapting tests
-let testUtils;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -24,96 +22,24 @@ QUnit.module("Fields", (hooks) => {
             models: {
                 partner: {
                     fields: {
-                        date: { string: "A date", type: "date", searchable: true },
-                        datetime: { string: "A datetime", type: "datetime", searchable: true },
-                        display_name: { string: "Displayed name", type: "char", searchable: true },
+                        date: { string: "A date", type: "date" },
+                        display_name: { string: "Displayed name", type: "char" },
                         foo: {
                             string: "Foo",
                             type: "char",
                             default: "My little Foo Value",
-                            searchable: true,
-                            trim: true,
                         },
-                        bar: { string: "Bar", type: "boolean", default: true, searchable: true },
-                        empty_string: {
-                            string: "Empty string",
-                            type: "char",
-                            default: false,
-                            searchable: true,
-                            trim: true,
-                        },
-                        txt: {
-                            string: "txt",
-                            type: "text",
-                            default: "My little txt Value\nHo-ho-hoooo Merry Christmas",
-                        },
-                        int_field: {
-                            string: "int_field",
-                            type: "integer",
-                            sortable: true,
-                            searchable: true,
-                        },
-                        qux: { string: "Qux", type: "float", digits: [16, 1], searchable: true },
-                        p: {
-                            string: "one2many field",
-                            type: "one2many",
-                            relation: "partner",
-                            searchable: true,
-                        },
-                        trululu: {
-                            string: "Trululu",
-                            type: "many2one",
-                            relation: "partner",
-                            searchable: true,
-                        },
-                        timmy: {
-                            string: "pokemon",
-                            type: "many2many",
-                            relation: "partner_type",
-                            searchable: true,
-                        },
-                        product_id: {
-                            string: "Product",
-                            type: "many2one",
-                            relation: "product",
-                            searchable: true,
-                        },
-                        sequence: { type: "integer", string: "Sequence", searchable: true },
-                        currency_id: {
-                            string: "Currency",
-                            type: "many2one",
-                            relation: "currency",
-                            searchable: true,
-                        },
-                        selection: {
-                            string: "Selection",
-                            type: "selection",
-                            searchable: true,
-                            selection: [
-                                ["normal", "Normal"],
-                                ["blocked", "Blocked"],
-                                ["done", "Done"],
-                            ],
-                        },
-                        document: { string: "Binary", type: "binary" },
-                        hex_color: { string: "hexadecimal color", type: "char" },
+                        bar: { string: "Bar", type: "boolean", default: true },
+                        int_field: { string: "int_field", type: "integer" },
                     },
                     records: [
                         {
                             id: 1,
                             date: "2017-02-03",
-                            datetime: "2017-02-08 10:00:00",
                             display_name: "first record",
                             bar: true,
                             foo: "yop",
                             int_field: 10,
-                            qux: 0.44444,
-                            p: [],
-                            timmy: [],
-                            trululu: 4,
-                            selection: "blocked",
-                            document: "coucou==\n",
-                            hex_color: "#ff0000",
                         },
                         {
                             id: 2,
@@ -121,25 +47,15 @@ QUnit.module("Fields", (hooks) => {
                             bar: true,
                             foo: "blip",
                             int_field: 0,
-                            qux: 0,
-                            p: [],
-                            timmy: [],
-                            trululu: 1,
-                            sequence: 4,
-                            currency_id: 2,
-                            selection: "normal",
                         },
                         {
                             id: 4,
                             display_name: "aaa",
                             foo: "abc",
-                            sequence: 9,
                             int_field: false,
-                            qux: false,
-                            selection: "done",
                         },
-                        { id: 3, bar: true, foo: "gnap", int_field: 80, qux: -3.89859 },
-                        { id: 5, bar: false, foo: "blop", int_field: -4, qux: 9.1, currency_id: 1 },
+                        { id: 3, bar: true, foo: "gnap", int_field: 80 },
+                        { id: 5, bar: false, foo: "blop", int_field: -4 },
                     ],
                     onchanges: {},
                 },
@@ -567,7 +483,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.skipWOWL("domain field: manually edit domain with textarea", async function (assert) {
-        assert.expect(9);
+        assert.expect(11);
 
         patchWithCleanup(odoo, { debug: true });
 
@@ -575,23 +491,39 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.fields.bar.type = "char";
         serverData.models.partner.records[0].bar = "product";
 
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            resId: 1,
-            serverData,
-            arch: `
+        serverData.views = {
+            "partner,false,form": `
                 <form>
                     <field name="bar"/>
                     <field name="foo" widget="domain" options="{'model': 'bar'}"/>
                 </form>
             `,
+            "partner,false,search": `<search />`,
+        };
+
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "test",
+                res_id: 1,
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+            },
+        };
+
+        const webClient = await createWebClient({
+            serverData,
             mockRPC(route, { method, args }) {
                 if (method === "search_count") {
                     assert.step(JSON.stringify(args[0]));
                 }
             },
         });
+
+        await doAction(webClient, 1);
+        assert.verifySteps(["[]"]);
+
         await click(target, ".o_form_button_edit");
 
         assert.strictEqual(
@@ -630,17 +562,29 @@ QUnit.module("Fields", (hooks) => {
             serverData.models.partner.fields.bar.type = "char";
             serverData.models.partner.records[0].bar = "product";
 
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                resId: 1,
-                serverData,
-                arch: `
+            serverData.views = {
+                "partner,false,form": `
                     <form>
                         <field name="bar"/>
                         <field name="foo" widget="domain" options="{'model': 'bar'}"/>
                     </form>
                 `,
+                "partner,false,search": `<search />`,
+            };
+
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "test",
+                    res_id: 1,
+                    res_model: "partner",
+                    type: "ir.actions.act_window",
+                    views: [[false, "form"]],
+                },
+            };
+
+            const webClient = await createWebClient({
+                serverData,
                 mockRPC(route, { method, args }) {
                     if (method === "search_count") {
                         assert.step(JSON.stringify(args[0]));
@@ -650,6 +594,10 @@ QUnit.module("Fields", (hooks) => {
                     }
                 },
             });
+
+            await doAction(webClient, 1);
+            assert.verifySteps(["[]"]);
+
             await click(target, ".o_form_button_edit");
 
             assert.strictEqual(
@@ -681,10 +629,10 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "domain field: reload count by clicking on the refresh button",
         async function (assert) {
-            assert.expect(7);
+            assert.expect(9);
 
             patchWithCleanup(odoo, { debug: true });
 
@@ -692,23 +640,39 @@ QUnit.module("Fields", (hooks) => {
             serverData.models.partner.fields.bar.type = "char";
             serverData.models.partner.records[0].bar = "product";
 
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                resId: 1,
-                serverData,
-                arch: `
+            serverData.views = {
+                "partner,false,form": `
                     <form>
                         <field name="bar"/>
                         <field name="foo" widget="domain" options="{'model': 'bar'}"/>
                     </form>
                 `,
+                "partner,false,search": `<search />`,
+            };
+
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "test",
+                    res_id: 1,
+                    res_model: "partner",
+                    type: "ir.actions.act_window",
+                    views: [[false, "form"]],
+                },
+            };
+
+            const webClient = await createWebClient({
+                serverData,
                 mockRPC(route, { method, args }) {
                     if (method === "search_count") {
                         assert.step(JSON.stringify(args[0]));
                     }
                 },
             });
+
+            await doAction(webClient, 1);
+            assert.verifySteps(["[]"]);
+
             await click(target, ".o_form_button_edit");
 
             assert.strictEqual(
@@ -725,7 +689,7 @@ QUnit.module("Fields", (hooks) => {
             assert.verifySteps(["[]"]);
 
             // click on the refresh button
-            await testUtils.dom.click(target.querySelector(".o_refresh_count"));
+            await click(target, ".o_refresh_count");
             assert.strictEqual(
                 target.querySelector(".o_domain_show_selection_button").textContent.trim(),
                 "1 record(s)"
@@ -776,7 +740,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("domain field: edit domain with dynamic content", async function (assert) {
+    QUnit.test("domain field: edit domain with dynamic content", async function (assert) {
         assert.expect(2);
 
         patchWithCleanup(odoo, { debug: true });
@@ -790,23 +754,38 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.fields.bar.type = "char";
         serverData.models.partner.records[0].bar = "partner";
 
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            resId: 1,
-            serverData,
-            arch: `
+        serverData.views = {
+            "partner,false,form": `
                 <form>
                     <field name="bar"/>
                     <field name="foo" widget="domain" options="{'model': 'bar'}"/>
                 </form>
             `,
+            "partner,false,search": `<search />`,
+        };
+
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "test",
+                res_id: 1,
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+            },
+        };
+
+        const webClient = await createWebClient({
+            serverData,
             mockRPC(route, { method, args }) {
                 if (method === "write") {
                     assert.strictEqual(args[1].foo, rawDomain);
                 }
             },
         });
+
+        await doAction(webClient, 1);
+
         await click(target, ".o_form_button_edit");
 
         assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);

@@ -19,11 +19,19 @@ export class DomainField extends Component {
         });
         this.dialog = useService("dialog");
 
+        this.displayedDomain = null;
+        this.isDebugEdited = false;
+
         onWillStart(() => {
+            this.displayedDomain = this.props.value;
             this.loadCount(this.props);
         });
         onWillUpdateProps((nextProps) => {
-            this.loadCount(nextProps);
+            this.isDebugEdited = this.isDebugEdited && this.props.readonly === nextProps.readonly;
+            if (!this.isDebugEdited) {
+                this.displayedDomain = nextProps.value;
+                this.loadCount(nextProps);
+            }
         });
     }
 
@@ -84,6 +92,11 @@ export class DomainField extends Component {
                 isValid: false,
             });
         }
+    }
+
+    update(domain, isDebugEdited) {
+        this.isDebugEdited = isDebugEdited;
+        return this.props.update(domain);
     }
 }
 
