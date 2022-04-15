@@ -56,6 +56,7 @@
                                 <t t-if="chatter.thread.channel_type !== 'chat'">
                                     <FollowButton
                                         className="'o_ChatterTopbar_followButton'"
+                                        chatterLocalId="chatter.localId"
                                         isDisabled="chatter.isDisabled"
                                         threadLocalId="chatter.thread.localId"
                                         isChatterButton="true"
@@ -63,6 +64,7 @@
                                 </t>
                                 <FollowerListMenu
                                     className="'o_ChatterTopbar_followerListMenu'"
+                                    chatterLocalId="chatter.localId"
                                     isDisabled="chatter.isDisabled"
                                     threadLocalId="chatter.thread.localId"
                                     isChatterButton="true"
