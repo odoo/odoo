@@ -15,10 +15,18 @@ class AccountInvoiceReport(models.Model):
     }
 
     def _select(self):
-        return super()._select() + ", contact_partner.state_id as l10n_ar_state_id, move.date"
+        """ If sale is installed we have the partner_shipping_id column, then use this field to get the state """
+        if self.env['account.move']._fields.get('partner_shipping_id'):
+            select = ", COALESCE( delivery_partner.state_id, contact_partner.state_id) as l10n_ar_state_id, move.date"
+        else:
+            select = ", contact_partner.state_id as l10n_ar_state_id, move.date"
+        return super()._select() + select
 
     def _group_by(self):
-        return super()._group_by() + ", contact_partner.state_id, move.date"
+        return super()._group_by() + ", l10n_ar_state_id, move.date"
 
     def _from(self):
-        return super()._from() + " LEFT JOIN res_partner contact_partner ON contact_partner.id = move.partner_id"
+        res = super()._from() + " LEFT JOIN res_partner contact_partner ON contact_partner.id = move.partner_id"
+        if self.env['account.move']._fields.get('partner_shipping_id'):
+            res += " LEFT JOIN res_partner delivery_partner ON delivery_partner.id = move.partner_shipping_id"
+        return res
