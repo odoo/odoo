@@ -389,17 +389,20 @@ class IrActionsReport(models.Model):
             footer_node.append(node)
 
         # Retrieve bodies
+        IrQweb_sections = None
         for node in root.xpath(match_klass.format('article')):
             # set context language to body language
             IrQweb = self.env['ir.qweb']
             if node.get('data-oe-lang'):
                 IrQweb = IrQweb.with_context(lang=node.get('data-oe-lang'))
+                if not IrQweb_sections or node.get('data-oe-lang') == self.env.lang:
+                    IrQweb_sections = IrQweb
             body = IrQweb._render(layout.id, {
                     'subst': False,
                     'body': Markup(lxml.html.tostring(node, encoding='unicode')),
                     'base_url': base_url,
-                    'report_xml_id' : self.xml_id
-                }, raise_if_not_found=False)
+                    'report_xml_id': self.xml_id
+            }, raise_if_not_found=False)
             bodies.append(body)
             if node.get('data-oe-model') == report_model:
                 res_ids.append(int(node.get('data-oe-id', 0)))
@@ -417,12 +420,12 @@ class IrActionsReport(models.Model):
             if attribute[0].startswith('data-report-'):
                 specific_paperformat_args[attribute[0]] = attribute[1]
 
-        header = self.env['ir.qweb']._render(layout.id, {
+        header = (IrQweb_sections or self.env['ir.qweb'])._render(layout.id, {
             'subst': True,
             'body': Markup(lxml.html.tostring(header_node, encoding='unicode')),
             'base_url': base_url
         })
-        footer = self.env['ir.qweb']._render(layout.id, {
+        footer = (IrQweb_sections or self.env['ir.qweb'])._render(layout.id, {
             'subst': True,
             'body': Markup(lxml.html.tostring(footer_node, encoding='unicode')),
             'base_url': base_url
