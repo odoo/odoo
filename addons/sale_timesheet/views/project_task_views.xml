@@ -42,7 +42,7 @@
                             <field name="employee_id" options="{'no_create': True}"/>
                             <field name="sale_line_id" attrs="{'required': True}" options="{'no_create': True}"/>
                             <field name="price_unit" widget="monetary" force_save="1" options="{'currency_field': 'currency_id'}"/>
-                            <field name="cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="display_cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="is_cost_changed" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="cost_currency_id" invisible="1"/>
@@ -58,10 +58,20 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="hr_timesheet.project_project_view_form_simplified_inherit_timesheet"/>
         <field name="arch" type="xml">
-            <field name="allow_timesheets" position="before">
-                <field name="company_id" invisible="1"/>
-                <field name="allow_billable"/>
-            </field>
+            <xpath expr="//div[hasclass('o_setting_box')]" position="before">
+                <div class="col-lg-6 o_setting_box">
+                    <div class="o_setting_left_pane">
+                        <field name="company_id" invisible="1"/>
+                        <field name="allow_billable"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="allow_billable"/>
+                        <div class="text-muted" id="allow_billable_setting">
+                            Invoice your time and material to customers
+                        </div>
+                    </div>
+                </div>
+            </xpath>
         </field>
     </record>
 

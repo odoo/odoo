@@ -1060,8 +1060,6 @@ class Task(models.Model):
 
     @api.model
     def _default_personal_stage_type_id(self):
-        if self._context.get('default_project_id'):
-            return False
         return self.env['project.task.type'].search([('user_id', '=', self.env.user.id)], limit=1).id
 
     @api.model
