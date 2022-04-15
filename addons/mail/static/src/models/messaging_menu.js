@@ -42,6 +42,9 @@ registerModel({
             }
             this.toggleOpen();
         },
+        onHideMobileNewMessage() {
+            this.update({ isMobileNewMessageToggled: false });
+        },
         /**
          * Toggle the visibility of the messaging menu "new message" input in
          * mobile.
