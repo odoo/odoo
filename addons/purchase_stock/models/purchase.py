@@ -109,7 +109,7 @@ class PurchaseOrder(models.Model):
                         move_dest_ids = order_line.move_dest_ids
                         if order_line.propagate_cancel:
                             move_dest_ids._action_cancel()
-                        else:
+                        elif order_line.move_ids:
                             move_dest_ids.write({'procure_method': 'make_to_stock'})
                             move_dest_ids._recompute_state()
 

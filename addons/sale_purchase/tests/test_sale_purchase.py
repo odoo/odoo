@@ -4,6 +4,7 @@
 from odoo.exceptions import UserError, AccessError
 from odoo.tests import tagged
 from odoo.addons.sale_purchase.tests.common import TestCommonSalePurchaseNoChart
+from odoo.tests.common import Form
 
 
 @tagged('-at_install', 'post_install')
@@ -273,3 +274,50 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
 
         po = self.env['purchase.order'].search([('partner_id', '=', self.partner_vendor_service.id)], order='id desc', limit=1)
         self.assertEqual(po.order_line.name, "[C01] Name01")
+
+    def test_decrease_ordered_sale_quantity(self):
+        """
+            - Create a SO for a product with route buy and MTO
+            - Cancel the PO created automatically
+            - Decrease the qty sold
+            - Check that the delivery is reduced by the same qty and that a picking return is not created
+        """
+        mto_route = self.env['stock.location.route'].with_context(active_test=False).search([('name', '=', 'Replenish on Order (MTO)')])
+        buy_route = self.env['stock.location.route'].search([('name', '=', 'Buy')])
+        mto_route.active = True
+
+        product_storable = self.env['product.product'].create({
+            'name': 'Storable',
+            'type': 'product',
+            'route_ids': [(6, 0, [buy_route.id, mto_route.id])],
+            'seller_ids': [
+                (0, 0, {
+                    'name': self.partner_a.id,
+                    'min_qty': 1,
+                    'price': 10,
+                }),
+            ]
+        })
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.partner_b
+        with so_form.order_line.new() as so_line:
+            so_line.product_id = product_storable
+            so_line.product_uom_qty = 2
+        so = so_form.save()
+        so.action_confirm()
+        # Check that only one purchase order and picking are created
+        self.assertEqual(so.purchase_order_count, 1)
+        self.assertEqual(len(so.picking_ids), 1)
+        self.assertEqual(so.picking_ids.move_lines.product_uom_qty, 2)
+        # Cancel the purchase order
+        po = so._get_purchase_orders()
+        po.button_cancel()
+        self.assertEqual(po.state, 'cancel')
+        # Decrease the ordered sale qty
+        so.write({
+            'order_line': [[1, so.order_line.id, {"product_uom_qty": 1}]]
+        })
+        # Make sure that a return picking is not created
+        self.assertEqual(len(so.picking_ids), 1)
+        # Check that the qty is updated in the stock_move
+        self.assertEqual(so.picking_ids.move_lines.product_uom_qty, 1)
