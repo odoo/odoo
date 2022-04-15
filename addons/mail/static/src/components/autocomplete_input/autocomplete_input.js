@@ -57,6 +57,13 @@ export class AutocompleteInput extends Component {
         $(this.root.el).autocomplete('destroy');
     }
 
+    /**
+     * @returns {AutocompleteInputView}
+     */
+     get autocompleteInputView() {
+        return this.messaging && this.messaging.models['AutocompleteInputView'].get(this.props.localId);
+    }
+
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -154,8 +161,6 @@ Object.assign(AutocompleteInput, {
     defaultProps: {
         isFocusOnMount: false,
         isHtml: false,
-        placeholder: '',
-        onFocusin: () => {},
     },
     props: {
         customClass: {
@@ -174,10 +179,7 @@ Object.assign(AutocompleteInput, {
             type: Boolean,
             optional: true,
         },
-        onFocusin: {
-            type: Function,
-            optional: true,
-        },
+        localId: String,
         onHide: {
             type: Function,
             optional: true,
