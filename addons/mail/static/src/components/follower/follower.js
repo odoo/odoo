@@ -2,6 +2,7 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
+import { markEventHandled } from '@mail/utils/utils';
 const { Component } = owl;
 
 export class Follower extends Component {
@@ -44,8 +45,13 @@ export class Follower extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickRemove(ev) {
-        this.follower.remove();
+    async _onClickRemove(ev) {
+        markEventHandled(ev, 'Follower.clickRemove');
+        await this.follower.remove();
+        this.trigger('reload', { fieldNames:['message_follower_ids'], keepChanges: true });
+        if (this.props.onHideFollowerListMenu) {
+            this.props.onHideFollowerListMenu();
+        }
     }
 
 }
@@ -54,6 +60,10 @@ Object.assign(Follower, {
     props: {
         followerLocalId: String,
         onClick: {
+            type: Function,
+            optional: true,
+        },
+        onHideFollowerListMenu: {
             type: Function,
             optional: true,
         },
