@@ -1,14 +1,14 @@
 odoo.define('im_livechat.legacy.mail.model.Timers', function (require) {
 "use strict";
 
-var Timer = require('im_livechat.legacy.mail.model.Timer');
+const Timer = require('im_livechat.legacy.mail.model.Timer');
 
-var Class = require('web.Class');
+const Class = require('web.Class');
 
 /**
  * This class lists several timers that use a same callback and duration.
  */
-var Timers = Class.extend({
+const Timers = Class.extend({
 
     /**
      * Instantiate a new list of timers
@@ -19,7 +19,7 @@ var Timers = Class.extend({
      * @param {function} params.onTimeout a function to call back for underlying
      *   timers on timeout.
      */
-    init: function (params) {
+    init(params) {
         this._duration = params.duration;
         this._timeoutCallback = params.onTimeout;
         this._timers = {};
@@ -40,19 +40,19 @@ var Timers = Class.extend({
      * @param {Array} [params.timeoutCallbackArguments]
      * @param {integer} params.timerID
      */
-    registerTimer: function (params) {
-        var timerID = params.timerID;
+     registerTimer(params) {
+        const timerID = params.timerID;
         if (this._timers[timerID]) {
             this._timers[timerID].clear();
         }
-        var timerParams = {
+        const timerParams = {
             duration: this._duration,
             onTimeout: this._timeoutCallback,
         };
         if ('timeoutCallbackArguments' in params) {
             timerParams.onTimeout = this._timeoutCallback.bind.apply(
                 this._timeoutCallback,
-                [null].concat(params.timeoutCallbackArguments)
+                [null, ...params.timeoutCallbackArguments]
             );
         } else {
             timerParams.onTimeout = this._timeoutCallback;
@@ -67,8 +67,8 @@ var Timers = Class.extend({
      * @param {Object} params
      * @param {integer} params.timerID
      */
-    unregisterTimer: function (params) {
-        var timerID = params.timerID;
+     unregisterTimer(params) {
+        const timerID = params.timerID;
         if (this._timers[timerID]) {
             this._timers[timerID].clear();
             delete this._timers[timerID];

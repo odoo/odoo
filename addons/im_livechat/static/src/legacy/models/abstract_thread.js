@@ -1,8 +1,8 @@
 odoo.define('im_livechat.legacy.mail.model.AbstractThread', function (require) {
 "use strict";
 
-var Class = require('web.Class');
-var Mixins = require('web.mixins');
+const Class = require('web.Class');
+const Mixins = require('web.mixins');
 
 /**
  * Abstract thread is the super class of all threads, either backend threads
@@ -10,7 +10,7 @@ var Mixins = require('web.mixins');
  *
  * Abstract threads contain abstract messages
  */
-var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
+const AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
     /**
      * @param {Object} params
      * @param {Object} params.data
@@ -20,7 +20,7 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      * @param {Object} params.parent Object with the event-dispatcher mixin
      *   (@see {web.mixins.EventDispatcherMixin})
      */
-    init: function (params) {
+    init(params) {
         Mixins.EventDispatcherMixin.init.call(this, arguments);
         this.setParent(params.parent);
 
@@ -40,8 +40,8 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      *
      * @param {im_livechat.legacy.mail.model.AbstractMessage} message
      */
-    addMessage: function (message) {
-        this._addMessage.apply(this, arguments);
+    addMessage(message) {
+        this._addMessage(...arguments);
         this.trigger('message_added', message);
     },
     /**
@@ -49,7 +49,7 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      *
      * @param {boolean} folded
      */
-    fold: function (folded) {
+    fold(folded) {
         this._folded = folded;
     },
     /**
@@ -57,21 +57,21 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      *
      * @returns {integer|string}
      */
-    getID: function () {
+    getID() {
         return this._id;
     },
     /**
      * @abstract
      * @returns {im_livechat.legacy.mail.model.AbstractMessage[]}
      */
-    getMessages: function () {},
+    getMessages() {},
     /**
      * Get the name of this thread. If the name of the thread has been created
      * by the user from an input, it may be escaped.
      *
      * @returns {string}
      */
-    getName: function () {
+    getName() {
         return this._name;
     },
     /**
@@ -79,7 +79,7 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      *
      * @returns {string}
      */
-    getStatus: function () {
+    getStatus() {
         return this._status;
     },
     /**
@@ -87,20 +87,20 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      *
      * @returns {string} the name of the thread by default (see @getName)
      */
-    getTitle: function () {
+    getTitle() {
         return this.getName();
     },
-    getType: function () {},
+    getType() {},
     /**
      * @returns {integer}
      */
-    getUnreadCounter: function () {
+    getUnreadCounter() {
         return this._unreadCounter;
     },
     /**
      * @returns {boolean}
      */
-    hasMessages: function () {
+    hasMessages() {
         return !_.isEmpty(this.getMessages());
     },
     /**
@@ -108,7 +108,7 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      *
      * @return {boolean}
      */
-    isFolded: function () {
+    isFolded() {
         return this._folded;
     },
     /**
@@ -117,7 +117,7 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      *
      * @returns {Promise}
      */
-    markAsRead: function () {
+    markAsRead() {
         if (this._unreadCounter > 0) {
             return this._markAsRead();
         }
@@ -129,14 +129,14 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      * @returns {Promise} resolved with the message object to be sent to the
      *   server
      */
-    postMessage: function () {
-        return this._postMessage.apply(this, arguments)
+    postMessage() {
+        return this._postMessage(...arguments)
                                 .then(this.trigger.bind(this, 'message_posted'));
     },
     /**
      * Resets the unread counter of this thread to 0.
      */
-    resetUnreadCounter: function () {
+    resetUnreadCounter() {
         this._unreadCounter = 0;
         this._warnUpdatedUnreadCounter();
     },
@@ -152,13 +152,13 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      * @private
      * @param {im_livechat.legacy.mail.model.AbstractMessage} message
      */
-    _addMessage: function (message) {},
+    _addMessage(message) {},
     /**
      * Increments the unread counter of this thread by 1 unit.
      *
      * @private
      */
-    _incrementUnreadCounter: function () {
+    _incrementUnreadCounter() {
         this._unreadCounter++;
     },
     /**
@@ -167,7 +167,7 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      * @private
      * @returns {Promise}
      */
-    _markAsRead: function () {
+    _markAsRead() {
         this.resetUnreadCounter();
         return Promise.resolve();
     },
@@ -179,7 +179,7 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      * @returns {Promise} resolved with the message object to be sent to the
      *   server
      */
-    _postMessage: function () {
+    _postMessage() {
         return Promise.resolve();
     },
     /**
@@ -189,7 +189,7 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      * @abstract
      * @private
      */
-    _warnUpdatedUnreadCounter: function () {},
+    _warnUpdatedUnreadCounter() {},
 });
 
 return AbstractThread;

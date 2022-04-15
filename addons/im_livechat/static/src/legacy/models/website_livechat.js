@@ -1,16 +1,16 @@
 odoo.define('im_livechat.legacy.im_livechat.model.WebsiteLivechat', function (require) {
 "use strict";
 
-var AbstractThread = require('im_livechat.legacy.mail.model.AbstractThread');
-var ThreadTypingMixin = require('im_livechat.legacy.mail.model.ThreadTypingMixin');
+const AbstractThread = require('im_livechat.legacy.mail.model.AbstractThread');
+const ThreadTypingMixin = require('im_livechat.legacy.mail.model.ThreadTypingMixin');
 
-var session = require('web.session');
+const session = require('web.session');
 
 /**
  * Thread model that represents a livechat on the website-side. This livechat
  * is not linked to the mail service.
  */
-var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
+const WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
 
     /**
      * @override
@@ -30,8 +30,8 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @param {string} params.data.uuid the UUID of this livechat.
      * @param {im_livechat.legacy.im_livechat.LivechatButton} params.parent
      */
-    init: function (params) {
-        this._super.apply(this, arguments);
+    init(params) {
+        this._super(...arguments);
         ThreadTypingMixin.init.call(this, arguments);
 
         this._members = [];
@@ -64,20 +64,20 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @override
      * @returns {im_livechat.legacy.im_livechat.model.WebsiteLivechatMessage[]}
      */
-    getMessages: function () {
+     getMessages() {
         // ignore removed messages
         return this._messages.filter(message => !message.isEmpty());
     },
     /**
      * @returns {Array}
      */
-    getOperatorPID: function () {
+    getOperatorPID() {
         return this._operatorPID;
     },
     /**
      * @returns {string}
      */
-    getUUID: function () {
+    getUUID() {
         return this._uuid;
     },
     /**
@@ -87,7 +87,7 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * for website livechat is external. This method should be dropped when
      * this class handles messages by itself.
      */
-    incrementUnreadCounter: function () {
+    incrementUnreadCounter() {
         this._incrementUnreadCounter();
     },
     /**
@@ -95,13 +95,13 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      *
      * @param {im_livechat.legacy.im_livechat.model.WebsiteLivechatMessage[]} messages
      */
-    setMessages: function (messages) {
+    setMessages(messages) {
         this._messages = messages;
     },
     /**
      * @returns {Object}
      */
-    toData: function () {
+    toData() {
         return {
             folded: this.isFolded(),
             id: this.getID(),
@@ -123,7 +123,7 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @param {boolean} params.isWebsiteUser
      * @returns {boolean}
      */
-    _isTypingMyselfInfo: function (params) {
+    _isTypingMyselfInfo(params) {
         return params.isWebsiteUser;
     },
     /**
@@ -133,7 +133,7 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @param {boolean} params.typing
      * @returns {Promise}
      */
-    _notifyMyselfTyping: function (params) {
+    _notifyMyselfTyping(params) {
         return session.rpc('/im_livechat/notify_typing', {
             uuid: this.getUUID(),
             is_typing: params.typing,
@@ -146,7 +146,7 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @override {mail.model.ThreadTypingMixin}
      * @private
      */
-    _warnUpdatedTypingPartners: function () {
+    _warnUpdatedTypingPartners() {
         this.trigger_up('updated_typing_partners');
     },
     /**
@@ -155,7 +155,7 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @override
      * @private
      */
-    _warnUpdatedUnreadCounter: function () {
+    _warnUpdatedUnreadCounter() {
         this.trigger_up('updated_unread_counter');
     },
 
@@ -174,8 +174,8 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @private
      * @param {mail.model.AbstractMessage} message
      */
-    _onTypingMessageAdded: function (message) {
-        var operatorID = this.getOperatorPID()[0];
+     _onTypingMessageAdded(message) {
+        const operatorID = this.getOperatorPID()[0];
         if (message.hasAuthor() && message.getAuthorID() === operatorID) {
             this.unregisterTyping({ partnerID: operatorID });
         }

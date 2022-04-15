@@ -1,16 +1,16 @@
 odoo.define('im_livechat.legacy.mail.DocumentViewer', function (require) {
 "use strict";
 
-var core = require('web.core');
-var Widget = require('web.Widget');
-var { hidePDFJSButtons } = require('@web/legacy/js/libs/pdfjs');
+const core = require('web.core');
+const Widget = require('web.Widget');
+const { hidePDFJSButtons } = require('@web/legacy/js/libs/pdfjs');
 
-var QWeb = core.qweb;
+const QWeb = core.qweb;
 
-var SCROLL_ZOOM_STEP = 0.1;
-var ZOOM_STEP = 0.5;
+const SCROLL_ZOOM_STEP = 0.1;
+const ZOOM_STEP = 0.5;
 
-var DocumentViewer = Widget.extend({
+const DocumentViewer = Widget.extend({
     template: "im_livechat.legacy.mail.DocumentViewer",
     events: {
         'click .o_download_btn': '_onDownload',
@@ -41,21 +41,21 @@ var DocumentViewer = Widget.extend({
      * @param {Array<Object>} attachments list of attachments
      * @param {integer} activeAttachmentID
      */
-    init: function (parent, attachments, activeAttachmentID) {
-        this._super.apply(this, arguments);
+    init(parent, attachments, activeAttachmentID) {
+        this._super(...arguments);
         this.attachment = _.filter(attachments, function (attachment) {
-            var match = attachment.type === 'url' ? attachment.url.match("(youtu|.png|.jpg|.gif)") : attachment.mimetype.match("(image|video|application/pdf|text)");
+            const match = attachment.type === 'url' ? attachment.url.match("(youtu|.png|.jpg|.gif)") : attachment.mimetype.match("(image|video|application/pdf|text)");
             if (match) {
                 attachment.fileType = match[1];
                 if (match[1].match("(.png|.jpg|.gif)")) {
                     attachment.fileType = 'image';
                 }
                 if (match[1] === 'youtu') {
-                    var youtube_array = attachment.url.split('/');
-                    var youtube_token = youtube_array[youtube_array.length - 1];
+                    const youtube_array = attachment.url.split('/');
+                    let youtube_token = youtube_array[youtube_array.length - 1];
                     if (youtube_token.indexOf('watch') !== -1) {
                         youtube_token = youtube_token.split('v=')[1];
-                        var amp = youtube_token.indexOf('&');
+                        const amp = youtube_token.indexOf('&');
                         if (amp !== -1) {
                             youtube_token = youtube_token.substring(0, amp);
                         }
@@ -73,24 +73,24 @@ var DocumentViewer = Widget.extend({
      * Open a modal displaying the active attachment
      * @override
      */
-    start: function () {
+    start() {
         this.$el.modal('show');
         this.$el.on('hidden.bs.modal', _.bind(this._onDestroy, this));
         this.$('.o_viewer_img').on("load", _.bind(this._onImageLoaded, this));
         this.$('[data-toggle="tooltip"]').tooltip({ delay: 0 });
-        return this._super.apply(this, arguments);
+        return this._super(...arguments);
     },
     /**
      * @override
      */
-    destroy: function () {
+    destroy() {
         if (this.isDestroyed()) {
             return;
         }
         this.trigger_up('document_viewer_closed');
         this.$el.modal('hide');
         this.$el.remove();
-        this._super.apply(this, arguments);
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -100,8 +100,8 @@ var DocumentViewer = Widget.extend({
     /**
      * @private
      */
-    _next: function () {
-        var index = _.findIndex(this.attachment, this.activeAttachment);
+     _next() {
+        let index = _.findIndex(this.attachment, this.activeAttachment);
         index = (index + 1) % this.attachment.length;
         this.activeAttachment = this.attachment[index];
         this._updateContent();
@@ -109,8 +109,8 @@ var DocumentViewer = Widget.extend({
     /**
      * @private
      */
-    _previous: function () {
-        var index = _.findIndex(this.attachment, this.activeAttachment);
+     _previous() {
+        let index = _.findIndex(this.attachment, this.activeAttachment);
         index = index === 0 ? this.attachment.length - 1 : index - 1;
         this.activeAttachment = this.attachment[index];
         this._updateContent();
@@ -118,7 +118,7 @@ var DocumentViewer = Widget.extend({
     /**
      * @private
      */
-    _reset: function () {
+    _reset() {
         this.scale = 1;
         this.dragStartX = this.dragstopX = 0;
         this.dragStartY = this.dragstopY = 0;
@@ -128,7 +128,7 @@ var DocumentViewer = Widget.extend({
      *
      * @private
      */
-    _updateContent: function () {
+    _updateContent() {
         this.$('.o_viewer_content').html(QWeb.render('im_livechat.legacy.mail.DocumentViewer.Content', {
             widget: this
         }));
@@ -146,7 +146,7 @@ var DocumentViewer = Widget.extend({
      * @param {float} scale
      * @param {float} angle
      */
-    _getTransform: function (scale, angle) {
+    _getTransform(scale, angle) {
         return 'scale3d(' + scale + ', ' + scale + ', 1) rotate(' + angle + 'deg)';
     },
     /**
@@ -155,9 +155,9 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {float} angle
      */
-    _rotate: function (angle) {
+    _rotate(angle) {
         this._reset();
-        var new_angle = (this.angle || 0) + angle;
+        const new_angle = (this.angle || 0) + angle;
         this.$('.o_viewer_img').css('transform', this._getTransform(this.scale, new_angle));
         this.$('.o_viewer_img').css('max-width', new_angle % 180 !== 0 ? $(document).height() : '100%');
         this.$('.o_viewer_img').css('max-height', new_angle % 180 !== 0 ? $(document).width() : '100%');
@@ -169,7 +169,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {integer} scale
      */
-    _zoom: function (scale) {
+    _zoom(scale) {
         if (scale > 0.5) {
             this.$('.o_viewer_img').css('transform', this._getTransform(scale, this.angle || 0));
             this.scale = scale;
@@ -185,7 +185,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onClose: function (e) {
+    _onClose(e) {
         e.preventDefault();
         this.destroy();
     },
@@ -194,14 +194,14 @@ var DocumentViewer = Widget.extend({
      *
      * @private
      */
-    _onDestroy: function () {
+    _onDestroy() {
         this.destroy();
     },
     /**
      * @private
      * @param {MouseEvent} e
      */
-    _onDownload: function (e) {
+    _onDownload(e) {
         e.preventDefault();
         window.location = '/web/content/' + this.modelName + '/' + this.activeAttachment.id + '/' + 'datas' + '?download=true';
     },
@@ -209,13 +209,13 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onDrag: function (e) {
+    _onDrag(e) {
         e.preventDefault();
         if (this.enableDrag) {
-            var $image = this.$('.o_viewer_img');
-            var $zoomer = this.$('.o_viewer_zoomer');
-            var top = $image.prop('offsetHeight') * this.scale > $zoomer.height() ? e.clientY - this.dragStartY : 0;
-            var left = $image.prop('offsetWidth') * this.scale > $zoomer.width() ? e.clientX - this.dragStartX : 0;
+            const $image = this.$('.o_viewer_img');
+            const $zoomer = this.$('.o_viewer_zoomer');
+            const top = $image.prop('offsetHeight') * this.scale > $zoomer.height() ? e.clientY - this.dragStartY : 0;
+            const left = $image.prop('offsetWidth') * this.scale > $zoomer.width() ? e.clientX - this.dragStartX : 0;
             $zoomer.css("transform", "translate3d(" + left + "px, " + top + "px, 0)");
             $image.css('cursor', 'move');
         }
@@ -224,7 +224,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onEndDrag: function (e) {
+    _onEndDrag(e) {
         e.preventDefault();
         if (this.enableDrag) {
             this.enableDrag = false;
@@ -239,14 +239,14 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onImageClicked: function (e) {
+    _onImageClicked(e) {
         e.stopPropagation();
     },
     /**
      * Remove loading indicator when image loaded
      * @private
      */
-    _onImageLoaded: function () {
+    _onImageLoaded() {
         this.$('.o_loading_img').hide();
     },
     /**
@@ -255,7 +255,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {KeyEvent} e
      */
-    _onKeydown: function (e) {
+    _onKeydown(e) {
         switch (e.which) {
             case $.ui.keyCode.RIGHT:
                 e.preventDefault();
@@ -273,7 +273,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {KeyEvent} e
      */
-    _onKeyUp: function (e) {
+    _onKeyUp(e) {
         switch (e.which) {
             case $.ui.keyCode.ESCAPE:
                 e.preventDefault();
@@ -285,7 +285,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onNext: function (e) {
+    _onNext(e) {
         e.preventDefault();
         this._next();
     },
@@ -293,7 +293,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onPrevious: function (e) {
+    _onPrevious(e) {
         e.preventDefault();
         this._previous();
     },
@@ -301,13 +301,13 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onPrint: function (e) {
+    _onPrint(e) {
         e.preventDefault();
-        var src = this.$('.o_viewer_img').prop('src');
-        var script = QWeb.render('im_livechat.legacy.mail.PrintImage', {
-            src: src
+        const src = this.$('.o_viewer_img').prop('src');
+        const script = QWeb.render('im_livechat.legacy.mail.PrintImage', {
+            src
         });
-        var printWindow = window.open('about:blank', "_new");
+        const printWindow = window.open('about:blank', "_new");
         printWindow.document.open();
         printWindow.document.write(script);
         printWindow.document.close();
@@ -318,13 +318,12 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onScroll: function (e) {
-        var scale;
+    _onScroll(e) {
         if (e.originalEvent.wheelDelta > 0 || e.originalEvent.detail < 0) {
-            scale = this.scale + SCROLL_ZOOM_STEP;
+            const scale = this.scale + SCROLL_ZOOM_STEP;
             this._zoom(scale);
         } else {
-            scale = this.scale - SCROLL_ZOOM_STEP;
+            const scale = this.scale - SCROLL_ZOOM_STEP;
             this._zoom(scale);
         }
     },
@@ -332,7 +331,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onStartDrag: function (e) {
+    _onStartDrag(e) {
         e.preventDefault();
         this.enableDrag = true;
         this.dragStartX = e.clientX - (this.dragstopX || 0);
@@ -345,9 +344,9 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onVideoClicked: function (e) {
+    _onVideoClicked(e) {
         e.stopPropagation();
-        var videoElement = e.target;
+        const videoElement = e.target;
         if (videoElement.paused) {
             videoElement.play();
         } else {
@@ -358,7 +357,7 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onRotate: function (e) {
+    _onRotate(e) {
         e.preventDefault();
         this._rotate(90);
     },
@@ -366,25 +365,25 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
-    _onZoomIn: function (e) {
+    _onZoomIn(e) {
         e.preventDefault();
-        var scale = this.scale + ZOOM_STEP;
+        const scale = this.scale + ZOOM_STEP;
         this._zoom(scale);
     },
     /**
      * @private
      * @param {MouseEvent} e
      */
-    _onZoomOut: function (e) {
+    _onZoomOut(e) {
         e.preventDefault();
-        var scale = this.scale - ZOOM_STEP;
+        const scale = this.scale - ZOOM_STEP;
         this._zoom(scale);
     },
     /**
      * @private
      * @param {MouseEvent} e
      */
-    _onZoomReset: function (e) {
+    _onZoomReset(e) {
         e.preventDefault();
         this.$('.o_viewer_zoomer').css("transform", "");
         this._zoom(1);
