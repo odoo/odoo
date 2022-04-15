@@ -426,7 +426,7 @@ class HolidaysAllocation(models.Model):
                 # If accruals are lost at the beginning of year, skip accrual until beginning of this year
                 if current_level.action_with_unused_accruals == 'lost':
                     this_year_first_day = today + relativedelta(day=1, month=1)
-                    if period_end < this_year_first_day or period_start < period_end:
+                    if period_end < this_year_first_day:
                         allocation.lastcall = allocation.nextcall
                         allocation.nextcall = nextcall
                         continue
@@ -443,9 +443,7 @@ class HolidaysAllocation(models.Model):
                 allocation.lastcall = allocation.nextcall
                 allocation.nextcall = nextcall
             if days_added_per_level:
-                number_of_days_to_add = 0
-                for value in days_added_per_level.values():
-                    number_of_days_to_add += value
+                number_of_days_to_add = sum(days_added_per_level.values())
                 # Let's assume the limit of the last level is the correct one
                 allocation.write({'number_of_days': min(allocation.number_of_days + number_of_days_to_add, current_level.maximum_leave)})
 
