@@ -4675,6 +4675,11 @@ QUnit.module('basic_fields', {
             viewOptions: {
                 mode: 'edit',
             },
+            session: {
+                getTZOffset: function () {
+                    return 120;
+                },
+            },
         });
 
         const year = (new Date()).getFullYear();
