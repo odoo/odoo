@@ -595,8 +595,8 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
         });
-        assert.strictEqual(target.querySelector("td").innerText, "01/25/2017");
-        assert.strictEqual(target.querySelectorAll("td")[1].innerText, "12/12/2016 12:55:05");
+        assert.strictEqual(target.querySelector("td").textContent, "01/25/2017");
+        assert.strictEqual(target.querySelectorAll("td")[1].textContent, "12/12/2016 12:55:05");
     });
 
     QUnit.test("rendering with embedded one2many", async function (assert) {
@@ -623,9 +623,9 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
         const firstHeader = target.querySelector("thead th");
-        assert.strictEqual(firstHeader.innerText, "Foo");
+        assert.strictEqual(firstHeader.textContent, "Foo");
         const firstValue = target.querySelector("tbody td");
-        assert.strictEqual(firstValue.innerText, "blip");
+        assert.strictEqual(firstValue.textContent, "blip");
     });
 
     QUnit.test(
@@ -714,7 +714,7 @@ QUnit.module("Fields", (hooks) => {
         });
         assert.deepEqual(
             [...target.querySelectorAll(".o_field_one2many .o_data_cell")].map(
-                (el) => el.innerText
+                (el) => el.textContent
             ),
             ["9", "blip", "21", "kawa", "0", "yop"]
         );
@@ -1732,7 +1732,7 @@ QUnit.module("Fields", (hooks) => {
             assert.strictEqual(
                 target
                     .querySelector(".o_data_row .o_field_widget[name=partner_ids]")
-                    .innerText.replace(/\s/g, ""),
+                    .textContent.replace(/\s/g, ""),
                 "secondrecordaaa",
                 "many2many_tags should be correctly displayed"
             );
@@ -1750,7 +1750,7 @@ QUnit.module("Fields", (hooks) => {
             assert.strictEqual(
                 target
                     .querySelector(".o_data_row .o_field_widget[name=partner_ids]")
-                    .innerText.trim(),
+                    .textContent.trim(),
                 "first record",
                 "many2many_tags should be correctly displayed"
             );
@@ -1981,7 +1981,7 @@ QUnit.module("Fields", (hooks) => {
             assert.containsOnce(document.body, ".modal", "should have opened a dialog");
             assert.containsOnce(document.body, ".modal .o_data_row");
             assert.strictEqual(
-                document.querySelector(".modal .o_data_row").innerText.trim(),
+                document.querySelector(".modal .o_data_row").textContent.trim(),
                 "hello"
             );
 
@@ -2041,7 +2041,7 @@ QUnit.module("Fields", (hooks) => {
             assert.containsOnce(document.body, ".modal", "should have opened a dialog");
             assert.containsOnce(document.body, ".modal .o_data_row");
             assert.strictEqual(
-                document.querySelector(".modal .o_data_row").innerText.trim(),
+                document.querySelector(".modal .o_data_row").textContent.trim(),
                 "hello"
             );
 
@@ -2658,20 +2658,20 @@ QUnit.module("Fields", (hooks) => {
 
         rpcCount = 0;
         assert.strictEqual(
-            [...target.querySelectorAll(".o_data_cell")].map((c) => c.innerText).join(" "),
+            [...target.querySelectorAll(".o_data_cell")].map((c) => c.textContent).join(" "),
             "abc xyz def"
         );
 
         await click(target.querySelector("table thead .o_column_sortable"));
         assert.strictEqual(rpcCount, 0, "in memory sort, no RPC should have been done");
         assert.strictEqual(
-            [...target.querySelectorAll(".o_data_cell")].map((c) => c.innerText).join(" "),
+            [...target.querySelectorAll(".o_data_cell")].map((c) => c.textContent).join(" "),
             "abc def xyz"
         );
 
         await click(target.querySelector("table thead .o_column_sortable"));
         assert.strictEqual(
-            [...target.querySelectorAll(".o_data_cell")].map((c) => c.innerText).join(" "),
+            [...target.querySelectorAll(".o_data_cell")].map((c) => c.textContent).join(" "),
             "xyz def abc"
         );
     });
@@ -2699,7 +2699,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_field_one2many tbody td").innerText,
+            target.querySelector(".o_field_one2many tbody td").textContent,
             "relational record 1"
         );
 
@@ -2731,7 +2731,7 @@ QUnit.module("Fields", (hooks) => {
         await clickDiscard(target);
         assert.containsNone(target, ".modal");
         assert.strictEqual(
-            target.querySelector(".o_field_one2many tbody td").innerText,
+            target.querySelector(".o_field_one2many tbody td").textContent,
             "relational record 1"
         );
 
@@ -2743,7 +2743,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
 
         assert.strictEqual(
-            target.querySelector(".o_field_one2many tbody td").innerText,
+            target.querySelector(".o_field_one2many tbody td").textContent,
             "new value",
             "display name of first record in o2m list should be 'new value'"
         );
@@ -2959,10 +2959,10 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(target, ".o_kanban_record:not(.o_kanban_ghost)");
         assert.strictEqual(
-            target.querySelector(".o_kanban_record span").innerText,
+            target.querySelector(".o_kanban_record span").textContent,
             "second record"
         );
-        assert.strictEqual(target.querySelectorAll(".o_kanban_record span")[1].innerText, "Red");
+        assert.strictEqual(target.querySelectorAll(".o_kanban_record span")[1].textContent, "Red");
         assert.containsOnce(target, ".delete_icon");
         assert.containsOnce(target, ".o_field_one2many .o-kanban-button-new");
         assert.hasClass(
@@ -2970,7 +2970,7 @@ QUnit.module("Fields", (hooks) => {
             "btn-secondary"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_one2many .o-kanban-button-new").innerText,
+            target.querySelector(".o_field_one2many .o-kanban-button-new").textContent,
             "Add"
         );
 
@@ -3210,7 +3210,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target);
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget[name=turtles] .o_pager").innerText.trim(),
+            target.querySelector(".o_field_widget[name=turtles] .o_pager").textContent.trim(),
             "1-4 / 5"
         );
     });
@@ -3258,7 +3258,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(target, "td.o_list_number", 2);
         assert.strictEqual(
-            target.querySelector(".o_list_renderer tbody td").innerText,
+            target.querySelector(".o_list_renderer tbody td").textContent,
             "second record"
         );
         assert.containsN(target, ".o_list_record_remove", 2);
@@ -3270,13 +3270,19 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".modal .o_form_editable input", "new name");
 
         await click(target, ".modal .modal-footer .btn-primary");
-        assert.strictEqual(target.querySelector(".o_list_renderer tbody td").innerText, "new name");
+        assert.strictEqual(
+            target.querySelector(".o_list_renderer tbody td").textContent,
+            "new name"
+        );
         assert.strictEqual(nbWrite, 0, "should not have write anything in DB");
 
         // remove subrecords
         await click(target.querySelectorAll(".o_list_record_remove")[1]);
         assert.containsOnce(target, "td.o_list_number");
-        assert.strictEqual(target.querySelector(".o_list_renderer tbody td").innerText, "new name");
+        assert.strictEqual(
+            target.querySelector(".o_list_renderer tbody td").textContent,
+            "new name"
+        );
 
         await clickSave(target); // save the record
         assert.strictEqual(nbWrite, 1, "should have write the changes in DB");
@@ -3320,7 +3326,10 @@ QUnit.module("Fields", (hooks) => {
         const secondRow = target.querySelectorAll(".o_list_renderer tbody tr")[1];
         await click(secondRow.querySelector("td"));
         assert.doesNotHaveClass(target, ".o_list_renderer tbody tr", "o_selected_row");
-        assert.strictEqual(target.querySelector(".o_list_renderer tbody td").innerText, "new name");
+        assert.strictEqual(
+            target.querySelector(".o_list_renderer tbody td").textContent,
+            "new name"
+        );
 
         // create new subrecords
         // TODO when 'Add an item' will be implemented
@@ -3361,7 +3370,7 @@ QUnit.module("Fields", (hooks) => {
         // click again on Add an item
         await addRow(target);
         assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
-        assert.strictEqual(target.querySelectorAll("td .o_field_char")[1].innerText, "kartoffel");
+        assert.strictEqual(target.querySelectorAll("td .o_field_char")[1].textContent, "kartoffel");
         assert.containsOnce(target, ".o_selected_row > td input");
         assert.containsN(target, "tr.o_data_row", 2);
 
@@ -3369,8 +3378,8 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_selected_row > td input", "gemuse");
         await clickSave(target);
         assert.containsN(target, "tr.o_data_row", 2);
-        assert.strictEqual(target.querySelector("td .o_field_char").innerText, "gemuse");
-        assert.strictEqual(target.querySelectorAll("td .o_field_char")[1].innerText, "kartoffel");
+        assert.strictEqual(target.querySelector("td .o_field_char").textContent, "gemuse");
+        assert.strictEqual(target.querySelectorAll("td .o_field_char")[1].textContent, "kartoffel");
     });
 
     QUnit.test("one2many list (editable): edition, part 3", async function (assert) {
@@ -3557,7 +3566,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
         assert.containsOnce(target, ".o_field_widget[name=turtles] .o_pager");
         assert.strictEqual(
-            target.querySelector(".o_field_widget[name=turtles] .o_pager").innerText,
+            target.querySelector(".o_field_widget[name=turtles] .o_pager").textContent,
             "1-3 / 4"
         );
     });
@@ -3592,7 +3601,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.isVisible(target.querySelector(".o_field_widget[name=turtles] .o_pager"));
         assert.strictEqual(
-            target.querySelector(".o_field_widget[name=turtles] .o_pager").innerText.trim(),
+            target.querySelector(".o_field_widget[name=turtles] .o_pager").textContent.trim(),
             "1-3 / 4"
         );
     });
@@ -3663,12 +3672,12 @@ QUnit.module("Fields", (hooks) => {
             await click(target.querySelector(".o_field_widget[name=turtles] .o_pager_next"));
 
             assert.strictEqual(
-                target.querySelector(".o_field_widget[name=turtles] .o_pager").innerText,
+                target.querySelector(".o_field_widget[name=turtles] .o_pager").textContent,
                 "1-4 / 5"
             );
 
             assert.strictEqual(
-                target.querySelector(".o_field_widget[name=turtles] .o_pager").innerText,
+                target.querySelector(".o_field_widget[name=turtles] .o_pager").textContent,
                 "1-4 / 5"
             );
             assert.containsOnce(target, ".o_field_one2many input.o_field_invalid");
@@ -3847,12 +3856,12 @@ QUnit.module("Fields", (hooks) => {
 
         assert.strictEqual(
             target.querySelector('.o_data_row td .o_field_widget[name="turtle_foo"] span')
-                .innerText,
+                .textContent,
             "aubergine"
         );
         assert.strictEqual(
             target.querySelector('.o_data_row td .o_field_widget[name="turtle_int"] span')
-                .innerText,
+                .textContent,
             "9"
         );
 
@@ -4091,7 +4100,7 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        assert.strictEqual(target.querySelector("td").innerText, "from onchange");
+        assert.strictEqual(target.querySelector("td").textContent, "from onchange");
     });
 
     QUnit.test("one2many and default_get (with date)", async function (assert) {
@@ -4112,7 +4121,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_data_cell").innerText,
+            target.querySelector(".o_data_cell").textContent,
             "10/08/2017",
             "should correctly display the date"
         );
@@ -4142,7 +4151,7 @@ QUnit.module("Fields", (hooks) => {
         });
         await clickEdit(target);
         const td = target.querySelector("td");
-        assert.strictEqual(td.innerText, "9");
+        assert.strictEqual(td.textContent, "9");
         await click(td);
         await editInput(target, 'td [name="turtle_int"] input', "3");
         assert.verifySteps(["read", "read", "onchange"]);
@@ -4173,7 +4182,7 @@ QUnit.module("Fields", (hooks) => {
         });
         await clickEdit(target);
         const td = target.querySelector("td");
-        assert.strictEqual(td.innerText, "01/25/2017");
+        assert.strictEqual(td.textContent, "01/25/2017");
 
         await click(td);
         await click(target.querySelector(".o_datepicker_input"));
@@ -4184,7 +4193,7 @@ QUnit.module("Fields", (hooks) => {
         );
         await click(
             [...document.body.querySelectorAll(".bootstrap-datetimepicker-widget .year")].filter(
-                (el) => el.innerText === "2017"
+                (el) => el.textContent === "2017"
             )[0]
         );
         await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .month")[1]);
@@ -4505,7 +4514,7 @@ QUnit.module("Fields", (hooks) => {
         });
         await clickEdit(target);
         assert.deepEqual(
-            [...target.querySelectorAll(".o_data_cell")].map((el) => el.innerText),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["first record", "second record", "aaa"]
         );
 
@@ -4513,7 +4522,7 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_selected_row .o_field_widget[name=display_name] input", "new");
         await click(target, ".o_form_view");
         assert.deepEqual(
-            [...target.querySelectorAll(".o_data_cell")].map((el) => el.innerText),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["new", "second record", "aaa"]
         );
     });
@@ -4969,7 +4978,7 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, "td .o_field_widget input", "abc");
         await clickSave(target);
         assert.strictEqual(
-            [...target.querySelectorAll("td")].filter((el) => el.innerText === "abc").length,
+            [...target.querySelectorAll("td")].filter((el) => el.textContent === "abc").length,
             1,
             "should have a row with the correct value"
         );
@@ -8793,7 +8802,7 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target, ".o_form_button_edit");
         assert.deepEqual(
-            [...target.querySelectorAll(".o_data_cell.foo")].map((el) => el.innerText),
+            [...target.querySelectorAll(".o_data_cell.foo")].map((el) => el.textContent),
             ["blip", "kawa"]
         );
 
@@ -8806,7 +8815,7 @@ QUnit.module("Fields", (hooks) => {
         );
         await click(target, ".o_form_view");
         assert.deepEqual(
-            [...target.querySelectorAll(".o_data_cell.foo")].map((el) => el.innerText),
+            [...target.querySelectorAll(".o_data_cell.foo")].map((el) => el.textContent),
             ["blip", "kawa"]
         );
 
@@ -8846,7 +8855,7 @@ QUnit.module("Fields", (hooks) => {
             });
             assert.deepEqual(
                 [...target.querySelectorAll(".o_data_row")].map(
-                    (el) => el.querySelector(".o_data_cell").innerText
+                    (el) => el.querySelector(".o_data_cell").textContent
                 ),
                 ["yop", "blip"]
             );
@@ -8854,7 +8863,7 @@ QUnit.module("Fields", (hooks) => {
             await clickSave(target);
             assert.deepEqual(
                 [...target.querySelectorAll(".o_data_row")].map(
-                    (el) => el.querySelector(".o_data_cell").innerText
+                    (el) => el.querySelector(".o_data_cell").textContent
                 ),
                 ["yop", "blip"]
             );
@@ -9026,7 +9035,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".modal .modal-footer .btn-primary"));
 
         assert.deepEqual(
-            [...target.querySelectorAll(".o_data_row .o_data_cell")].map((el) => el.innerText),
+            [...target.querySelectorAll(".o_data_row .o_data_cell")].map((el) => el.textContent),
             ["new record"]
         );
 
@@ -9039,7 +9048,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(target, ".modal");
         assert.strictEqual(
-            target.querySelector(".modal .o_field_widget").innerText,
+            target.querySelector(".modal .o_field_widget").textContent,
             "",
             "should have cleared the input"
         );
@@ -9048,7 +9057,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".modal .modal-footer .btn-primary"));
 
         assert.deepEqual(
-            [...target.querySelectorAll(".o_data_row .o_data_cell")].map((el) => el.innerText),
+            [...target.querySelectorAll(".o_data_row .o_data_cell")].map((el) => el.textContent),
             ["new record", "editedanother new record"]
         );
     });
@@ -9083,7 +9092,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(rowAdd.length, 1);
         assert.strictEqual(rowAdd[0].closest("tr").querySelectorAll("td").length, 1);
         assert.deepEqual(
-            [...rowAdd[0].querySelectorAll("a")].map((el) => el.innerText),
+            [...rowAdd[0].querySelectorAll("a")].map((el) => el.textContent),
             ["Add food", "Add pizza", "Add pasta"]
         );
 
@@ -9091,7 +9100,7 @@ QUnit.module("Fields", (hooks) => {
         // check it's empty
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
         assert.deepEqual(
-            [...target.querySelectorAll(".o_data_cell")].map((el) => el.innerText),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             [""]
         );
 
@@ -9107,7 +9116,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelectorAll(".o_field_x2many_list_row_add a")[2]);
         await clickSave(target);
         assert.deepEqual(
-            [...target.querySelectorAll(".o_data_cell")].map((el) => el.innerText),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["", "pizza", "pasta"]
         );
     });
@@ -9143,7 +9152,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(rowAdd.length, 1);
         assert.containsN(rowAdd[0].closest("tr"), "td", 1);
         assert.deepEqual(
-            [...rowAdd[0].querySelectorAll("a")].map((el) => el.innerText),
+            [...rowAdd[0].querySelectorAll("a")].map((el) => el.textContent),
             ["Add food", "Add pizza", "Add pasta"]
         );
 
@@ -9152,7 +9161,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
         await click(target.querySelector(".modal .modal-footer .btn-primary"));
         assert.deepEqual(
-            [...target.querySelectorAll(".o_data_cell")].map((el) => el.innerText),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             [""]
         );
 
@@ -9162,7 +9171,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelectorAll(".o_field_x2many_list_row_add a")[1]);
         await click(target.querySelector(".modal .modal-footer .btn-primary"));
         assert.deepEqual(
-            [...target.querySelectorAll(".o_data_cell")].map((el) => el.innerText),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["", "pizza"]
         );
 
@@ -9172,7 +9181,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelectorAll(".o_field_x2many_list_row_add a")[2]);
         await click(target.querySelector(".modal .modal-footer .btn-primary"));
         assert.deepEqual(
-            [...target.querySelectorAll(".o_data_cell")].map((el) => el.innerText),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["", "pizza", "pasta"]
         );
     });
@@ -9196,8 +9205,8 @@ QUnit.module("Fields", (hooks) => {
         const tr = target.querySelector(".o_field_x2many_list_row_add").closest("tr");
         assert.containsN(tr, "td", 2);
         const tds = tr.querySelectorAll("td");
-        assert.strictEqual(tds[0].innerText, "");
-        assert.strictEqual(tds[1].innerText, "Add a line");
+        assert.strictEqual(tds[0].textContent, "");
+        assert.strictEqual(tds[1].textContent, "Add a line");
     });
 
     QUnit.skipWOWL("one2many form view with action button", async function (assert) {
@@ -9250,7 +9259,7 @@ QUnit.module("Fields", (hooks) => {
         await clickEdit(target);
 
         assert.containsOnce(target, ".o_data_row");
-        assert.strictEqual(target.querySelector(".o_data_cell").innerText, "second record");
+        assert.strictEqual(target.querySelector(".o_data_cell").textContent, "second record");
 
         // open one2many record in form view
         await click(target.querySelector(".o_data_cell"));
@@ -9260,7 +9269,7 @@ QUnit.module("Fields", (hooks) => {
         // click on the action button
         await click(target.querySelector(".modal .o_form_view button"));
         assert.containsOnce(target, ".modal .o_data_row");
-        assert.strictEqual(target.querySelector(".modal .o_data_cell").innerText, "gold");
+        assert.strictEqual(target.querySelector(".modal .o_data_cell").textContent, "gold");
 
         // save the dialog
         await click(target.querySelector(".modal .modal-footer .btn-primary"));
@@ -9619,7 +9628,7 @@ QUnit.module("Fields", (hooks) => {
 
             assert.containsOnce(target, ".o_form_readonly");
             assert.strictEqual(
-                target.querySelector(".o_data_row").innerText.trim(),
+                target.querySelector(".o_data_row").textContent.trim(),
                 "some foo value"
             );
             assert.verifySteps([
@@ -9679,8 +9688,8 @@ QUnit.module("Fields", (hooks) => {
 
         let cells = target.querySelectorAll(".o_data_cell");
 
-        assert.equal(cells[0].innerText, "");
-        assert.equal(cells[1].innerText, "michelangelo");
+        assert.equal(cells[0].textContent, "");
+        assert.equal(cells[1].textContent, "michelangelo");
 
         // Save the whole thing
         await clickSave(target);
@@ -9697,8 +9706,8 @@ QUnit.module("Fields", (hooks) => {
         // newlyAdded = x2mList.find(".o_data_row").eq(0);
 
         // cells = newlyAdded.querySelectorAll(".o_data_cell");
-        // assert.equal(cells[0].innerText,"04/05/2018 12:00:00");
-        // assert.equal(cells[1].innerText,"michelangelo");
+        // assert.equal(cells[0].textContent,"04/05/2018 12:00:00");
+        // assert.equal(cells[1].textContent,"michelangelo");
     });
 
     QUnit.test("one2many invisible depends on parent field", async function (assert) {
@@ -10452,7 +10461,7 @@ QUnit.module("Fields", (hooks) => {
             assert.containsN(document.body, ".modal .o_field_widget[name=turtles] .o_data_row", 2);
             assert.isVisible(target.querySelector(".modal .o_field_x2many_list .o_pager"));
             assert.strictEqual(
-                target.querySelector(".modal .o_field_x2many_list .o_pager").innerText.trim(),
+                target.querySelector(".modal .o_field_x2many_list .o_pager").textContent.trim(),
                 "1-2 / 3"
             );
         }
@@ -11254,7 +11263,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         const recordIdList = [...target.querySelectorAll(".o_field_x2many_list .o_data_row")].map(
-            (record) => record.querySelector(".o_data_cell").innerText
+            (record) => record.querySelector(".o_data_cell").textContent
         );
         const expectedOrderId = ["1", "5", "6", "3", "7", "2", "4"];
         assert.deepEqual(recordIdList, expectedOrderId);
@@ -11289,7 +11298,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
         const recordIdList = [...target.querySelectorAll(".o_field_x2many_list .o_data_row")].map(
-            (record) => record.querySelector(".o_data_cell").innerText
+            (record) => record.querySelector(".o_data_cell").textContent
         );
         const expectedOrderId = ["1", "5", "6", "3"];
         assert.deepEqual(recordIdList, expectedOrderId);

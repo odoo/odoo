@@ -303,7 +303,7 @@ QUnit.module("Fields", (hooks) => {
             arch: '<tree editable="bottom">' + '<field name="int_field"/>' + "</tree>",
         });
         var zeroValues = Array.from(target.querySelectorAll("td")).filter(
-            (el) => el.innerText === "0"
+            (el) => el.textContent === "0"
         );
         assert.strictEqual(
             zeroValues.length,
@@ -330,7 +330,7 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target.querySelector(".o_list_button_save"));
         assert.strictEqual(
-            target.querySelector("td:not(.o_list_record_selector)").innerText,
+            target.querySelector("td:not(.o_list_record_selector)").textContent,
             "-28",
             "The new value should be saved and displayed properly."
         );

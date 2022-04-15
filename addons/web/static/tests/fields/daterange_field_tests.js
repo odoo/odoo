@@ -432,12 +432,12 @@ QUnit.module("Fields", (hooks) => {
 
             // check date display correctly in readonly
             assert.strictEqual(
-                target.querySelector(".o_field_daterange").innerText,
+                target.querySelector(".o_field_daterange").textContent,
                 "02/08/2017 15:30:00",
                 "the start date should be correctly displayed in readonly"
             );
             assert.strictEqual(
-                target.querySelectorAll(".o_field_daterange")[1].innerText,
+                target.querySelectorAll(".o_field_daterange")[1].textContent,
                 "03/13/2017 05:30:00",
                 "the end date should be correctly displayed in readonly"
             );
@@ -454,7 +454,7 @@ QUnit.module("Fields", (hooks) => {
             await click(target.querySelector(".o_form_button_save"));
 
             assert.strictEqual(
-                target.querySelector(".o_field_daterange").innerText,
+                target.querySelector(".o_field_daterange").textContent,
                 "02/08/2017 11:30:00",
                 "the start date should be correctly displayed in readonly after manual update"
             );

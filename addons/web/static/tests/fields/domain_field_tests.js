@@ -517,7 +517,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.equal(
-            target.querySelector(".o_domain_show_selection_button").innerText.trim().substr(0, 2),
+            target.querySelector(".o_domain_show_selection_button").textContent.trim().substr(0, 2),
             "2 ",
             "selection should contain 2 records"
         );
@@ -560,7 +560,7 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target, ".o_domain_show_selection_button");
         assert.deepEqual(
-            [...target.querySelectorAll(".modal .o_data_row")].map((x) => x.innerText),
+            [...target.querySelectorAll(".modal .o_data_row")].map((x) => x.textContent),
             ["12", "14"],
             "should have picked the correct list view"
         );
@@ -595,7 +595,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_form_button_edit");
 
         assert.strictEqual(
-            target.querySelector(".o_domain_show_selection_button").innerText.trim(),
+            target.querySelector(".o_domain_show_selection_button").textContent.trim(),
             "2 record(s)"
         );
         assert.verifySteps(["[]"]);
@@ -603,14 +603,14 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_domain_debug_input", "[['id', '<', 40]]");
         // the count should not be re-computed when editing with the textarea
         assert.strictEqual(
-            target.querySelector(".o_domain_show_selection_button").innerText.trim(),
+            target.querySelector(".o_domain_show_selection_button").textContent.trim(),
             "2 record(s)"
         );
         assert.verifySteps([]);
 
         await click(target, ".o_form_button_save");
         assert.strictEqual(
-            target.querySelector(".o_domain_show_selection_button").innerText.trim(),
+            target.querySelector(".o_domain_show_selection_button").textContent.trim(),
             "1 record(s)"
         );
         assert.verifySteps([
@@ -653,7 +653,7 @@ QUnit.module("Fields", (hooks) => {
             await click(target, ".o_form_button_edit");
 
             assert.strictEqual(
-                target.querySelector(".o_domain_show_selection_button").innerText.trim(),
+                target.querySelector(".o_domain_show_selection_button").textContent.trim(),
                 "2 record(s)"
             );
             assert.verifySteps(["[]"]);
@@ -661,7 +661,7 @@ QUnit.module("Fields", (hooks) => {
             await editInput(target, ".o_domain_debug_input", "[['abc']]");
             // the count should not be re-computed when editing with the textarea
             assert.strictEqual(
-                target.querySelector(".o_domain_show_selection_button").innerText.trim(),
+                target.querySelector(".o_domain_show_selection_button").textContent.trim(),
                 "2 record(s)"
             );
             assert.verifySteps([]);
@@ -712,14 +712,14 @@ QUnit.module("Fields", (hooks) => {
             await click(target, ".o_form_button_edit");
 
             assert.strictEqual(
-                target.querySelector(".o_domain_show_selection_button").innerText.trim(),
+                target.querySelector(".o_domain_show_selection_button").textContent.trim(),
                 "2 record(s)"
             );
 
             await editInput(target, ".o_domain_debug_input", "[['id', '<', 40]]");
             // the count should not be re-computed when editing with the textarea
             assert.strictEqual(
-                target.querySelector(".o_domain_show_selection_button").innerText.trim(),
+                target.querySelector(".o_domain_show_selection_button").textContent.trim(),
                 "2 record(s)"
             );
             assert.verifySteps(["[]"]);
@@ -727,7 +727,7 @@ QUnit.module("Fields", (hooks) => {
             // click on the refresh button
             await testUtils.dom.click(target.querySelector(".o_refresh_count"));
             assert.strictEqual(
-                target.querySelector(".o_domain_show_selection_button").innerText.trim(),
+                target.querySelector(".o_domain_show_selection_button").textContent.trim(),
                 "1 record(s)"
             );
             assert.verifySteps(['[["id","<",40]]']);

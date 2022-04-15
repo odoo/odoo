@@ -70,7 +70,7 @@ QUnit.module("Fields", (hooks) => {
         });
         let mailtoLink = target.querySelector(".o_field_email a.o_form_uri.o_text_overflow");
         assert.containsOnce(target, mailtoLink, "should have a anchor with correct classes");
-        assert.strictEqual(mailtoLink.innerText, "yop", "the value should be displayed properly");
+        assert.strictEqual(mailtoLink.textContent, "yop", "the value should be displayed properly");
         assert.hasAttrValue(mailtoLink, "href", "mailto:yop", "should have proper mailto prefix");
 
         // switch to edit mode and check the result
@@ -89,7 +89,7 @@ QUnit.module("Fields", (hooks) => {
         // save
         await click(target.querySelector(".o_form_button_save"));
         mailtoLink = target.querySelector(".o_field_email a");
-        assert.strictEqual(mailtoLink.innerText, "new", "new value should be displayed properly");
+        assert.strictEqual(mailtoLink.textContent, "new", "new value should be displayed properly");
         assert.hasAttrValue(
             mailtoLink,
             "href",
@@ -113,7 +113,7 @@ QUnit.module("Fields", (hooks) => {
             "should have 2 cells with a link"
         );
         assert.strictEqual(
-            target.querySelector("tbody td:not(.o_list_record_selector)").innerText,
+            target.querySelector("tbody td:not(.o_list_record_selector)").textContent,
             "yop",
             "value should be displayed properly as text"
         );
@@ -152,7 +152,7 @@ QUnit.module("Fields", (hooks) => {
             "should not be in edit mode anymore"
         );
         assert.strictEqual(
-            target.querySelector("tbody td:not(.o_list_record_selector)").innerText,
+            target.querySelector("tbody td:not(.o_list_record_selector)").textContent,
             "new",
             "value should be properly updated"
         );
@@ -185,7 +185,7 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target.querySelector(".o_form_button_save"));
         const mailtoLink = target.querySelector(".o_field_email a");
-        assert.strictEqual(mailtoLink.innerText, "", "the value should be displayed properly");
+        assert.strictEqual(mailtoLink.textContent, "", "the value should be displayed properly");
     });
 
     QUnit.test("EmailField trim user value", async function (assert) {
@@ -240,7 +240,7 @@ QUnit.module("Fields", (hooks) => {
             });
             // check initial rendering
             assert.strictEqual(
-                target.querySelector(".o_field_email").innerText,
+                target.querySelector(".o_field_email").textContent,
                 "dolores.abernathy@delos",
                 "Initial email text should be set"
             );
@@ -252,7 +252,7 @@ QUnit.module("Fields", (hooks) => {
 
             // check rendering after changes
             assert.strictEqual(
-                target.querySelector(".o_field_email").innerText,
+                target.querySelector(".o_field_email").textContent,
                 "lara.espin@unknown",
                 "email text should be updated"
             );

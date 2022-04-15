@@ -55,7 +55,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
         assert.strictEqual(
-            target.querySelector(".o_field_widget").innerText,
+            target.querySelector(".o_field_widget").textContent,
             "44.4%",
             "The value should be displayed properly."
         );
@@ -66,7 +66,7 @@ QUnit.module("Fields", (hooks) => {
             "The input should be rendered without the percentage symbol."
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget[name=float_field] span").innerText,
+            target.querySelector(".o_field_widget[name=float_field] span").textContent,
             "%",
             "The input should be followed by a span containing the percentage symbol."
         );
@@ -75,7 +75,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(field.value, "24", "The value should not be formated yet.");
         await click(target.querySelector(".o_form_button_save"));
         assert.strictEqual(
-            target.querySelector(".o_field_widget").innerText,
+            target.querySelector(".o_field_widget").textContent,
             "24%",
             "The new value should be formatted properly."
         );

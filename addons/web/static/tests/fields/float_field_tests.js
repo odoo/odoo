@@ -358,7 +358,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget[name=monetary]").innerText,
+            target.querySelector(".o_field_widget[name=monetary]").textContent,
             "9.99",
             "value should be correctly formatted (with the float formatter)"
         );
@@ -406,7 +406,7 @@ QUnit.module("Fields", (hooks) => {
         );
         await click(target.querySelector(".o_form_button_save"));
         assert.strictEqual(
-            target.querySelector(".o_field_widget").innerText,
+            target.querySelector(".o_field_widget").textContent,
             "123,456.79",
             "Float value must be formatted in readonly view even if the input type is number."
         );
@@ -458,7 +458,7 @@ QUnit.module("Fields", (hooks) => {
             );
             await click(target.querySelector(".o_form_button_save"));
             assert.strictEqual(
-                target.querySelector(".o_field_widget").innerText,
+                target.querySelector(".o_field_widget").textContent,
                 "123.456,79",
                 "Float value must be formatted in readonly view even if the input type is number."
             );

@@ -62,7 +62,7 @@ QUnit.module("Fields", (hooks) => {
             "_blank",
             "should have target attribute set to _blank"
         );
-        assert.strictEqual(matchingEl.innerText, "yop", "the value should be displayed properly");
+        assert.strictEqual(matchingEl.textContent, "yop", "the value should be displayed properly");
 
         // switch to edit mode and check the result
         await click(target.querySelector(".o_form_button_edit"));
@@ -93,7 +93,7 @@ QUnit.module("Fields", (hooks) => {
             "http://limbo",
             "should have proper new href link"
         );
-        assert.strictEqual(editedElement.innerText, "limbo", "the new value should be displayed");
+        assert.strictEqual(editedElement.textContent, "limbo", "the new value should be displayed");
 
         await click(target.querySelector(".o_form_button_edit"));
         await editInput(target, ".o_field_widget input[type='text']", "/web/limbo");
@@ -122,7 +122,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector('.o_field_widget[name="foo"] a').innerText,
+            target.querySelector('.o_field_widget[name="foo"] a').textContent,
             "kebeclibre",
             "url text should come from the text attribute"
         );
@@ -210,7 +210,7 @@ QUnit.module("Fields", (hooks) => {
             "should have proper href link"
         );
         assert.strictEqual(
-            target.querySelector("tbody td:not(.o_list_record_selector)").innerText,
+            target.querySelector("tbody td:not(.o_list_record_selector)").textContent,
             "yop",
             "value should be displayed properly as text"
         );
@@ -242,7 +242,7 @@ QUnit.module("Fields", (hooks) => {
             "should still have anchors with correct classes"
         );
         assert.hasAttrValue(resultEl, "href", "http://brolo", "should have proper new href link");
-        assert.strictEqual(resultEl.innerText, "brolo", "value should be properly updated");
+        assert.strictEqual(resultEl.textContent, "brolo", "value should be properly updated");
     });
 
     QUnit.test("UrlField with falsy value", async function (assert) {
@@ -258,7 +258,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.containsOnce(target, "[name=foo]");
-        assert.strictEqual(target.querySelector("[name=foo]").innerText, "");
+        assert.strictEqual(target.querySelector("[name=foo]").textContent, "");
 
         await click(target.querySelector(".o_form_button_edit"));
 
@@ -292,7 +292,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget[name=foo]").innerText,
+            target.querySelector(".o_field_widget[name=foo]").textContent,
             "yop",
             "the starting value should be displayed properly"
         );
@@ -305,10 +305,10 @@ QUnit.module("Fields", (hooks) => {
         );
         await editInput(target, ".o_field_widget[name=foo2] input", "bonjour");
         assert.strictEqual(
-            target.querySelector(".o_field_widget[name=foo]").innerText,
+            target.querySelector(".o_field_widget[name=foo]").textContent,
             "bonjour",
             "Url widget should show the new value and not " +
-                target.querySelector(".o_field_widget[name=foo]").innerText
+                target.querySelector(".o_field_widget[name=foo]").textContent
         );
     });
 });

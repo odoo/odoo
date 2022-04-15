@@ -362,7 +362,7 @@ QUnit.module("Fields", (hooks) => {
         // this checks that the view did not ask for confirmation that the
         // record is dirty
         assert.strictEqual(
-            target.querySelector(".o_pager").innerText.trim(),
+            target.querySelector(".o_pager").textContent.trim(),
             "2 / 2",
             "pager should be at second page"
         );
@@ -448,7 +448,7 @@ QUnit.module("Fields", (hooks) => {
             // this checks that the view did not ask for confirmation that the
             // record is dirty
             assert.strictEqual(
-                target.querySelector(".o_pager").innerText.trim(),
+                target.querySelector(".o_pager").textContent.trim(),
                 "2 / 2",
                 "pager should be at second page"
             );

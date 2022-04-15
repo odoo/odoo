@@ -115,12 +115,12 @@ QUnit.module("Fields", (hooks) => {
             "the binary field should be rendered as a downloadable link in readonly"
         );
         assert.strictEqual(
-            target.querySelector('.o_field_widget[name="document"] span').innerText.trim(),
+            target.querySelector('.o_field_widget[name="document"] span').textContent.trim(),
             "coucou.txt",
             "the binary field should display the name of the file in the link"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_char").innerText,
+            target.querySelector(".o_field_char").textContent,
             "coucou.txt",
             "the filename field should have the file name as value"
         );
@@ -149,7 +149,8 @@ QUnit.module("Fields", (hooks) => {
             "the binary field should not be rendered as a downloadable link in edit"
         );
         assert.strictEqual(
-            target.querySelector('.o_field_widget[name="document"].o_field_binary span').innerText,
+            target.querySelector('.o_field_widget[name="document"].o_field_binary span')
+                .textContent,
             "coucou.txt",
             "the binary field should display the file name in the input edit mode"
         );
@@ -231,7 +232,7 @@ QUnit.module("Fields", (hooks) => {
             await nextTick();
 
             assert.strictEqual(
-                target.querySelector(".o_field_binary span").innerText,
+                target.querySelector(".o_field_binary span").textContent,
                 "fake_file.txt",
                 'displayed value should be changed to "fake_file.txt"'
             );

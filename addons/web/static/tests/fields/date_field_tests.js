@@ -512,7 +512,7 @@ QUnit.module("Fields", (hooks) => {
 
         const cell = target.querySelector("tr.o_data_row td:not(.o_list_record_selector)");
         assert.strictEqual(
-            cell.innerText,
+            cell.textContent,
             "02/03/2017",
             "the date should be displayed correctly in readonly"
         );
@@ -566,7 +566,7 @@ QUnit.module("Fields", (hooks) => {
         // save
         await click(target.querySelector(".o_list_button_save"));
         assert.strictEqual(
-            target.querySelector("tr.o_data_row td:not(.o_list_record_selector)").innerText,
+            target.querySelector("tr.o_data_row td:not(.o_list_record_selector)").textContent,
             "02/22/2017",
             "the selected date should be displayed after saving"
         );
@@ -729,7 +729,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
 
-        const dateViewForm = target.querySelector(".o_field_date").innerText;
+        const dateViewForm = target.querySelector(".o_field_date").textContent;
         await click(target.querySelector(".o_form_button_edit"));
         await click(target, ".o_datepicker input");
 
@@ -742,7 +742,7 @@ QUnit.module("Fields", (hooks) => {
         const dateEditForm = target.querySelector(".o_datepicker_input").value;
         await click(target.querySelector(".o_form_button_save"));
         assert.strictEqual(
-            target.querySelector(".o_field_date").innerText,
+            target.querySelector(".o_field_date").textContent,
             dateEditForm,
             "date field should be the same as the one selected in the view form"
         );

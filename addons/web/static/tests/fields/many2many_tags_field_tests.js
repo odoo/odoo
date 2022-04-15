@@ -330,12 +330,12 @@ QUnit.module("Fields", (hooks) => {
         });
         assert.containsN(target, ".o_field_many2many_tags .badge", 2, "should contain 2 tags");
         assert.strictEqual(
-            target.querySelector(".badge .o_tag_badge_text").innerText,
+            target.querySelector(".badge .o_tag_badge_text").textContent,
             "gold",
             "should have fetched and rendered gold partner tag"
         );
         assert.strictEqual(
-            target.querySelectorAll(".badge .o_tag_badge_text")[1].innerText,
+            target.querySelectorAll(".badge .o_tag_badge_text")[1].textContent,
             "silver",
             "should have fetched and rendered silver partner tag"
         );
@@ -354,7 +354,7 @@ QUnit.module("Fields", (hooks) => {
             "should still contain 2 tags in edit mode"
         );
         assert.ok(
-            target.querySelector(".o_tag_color_2 .o_tag_badge_text").innerText === "gold",
+            target.querySelector(".o_tag_color_2 .o_tag_badge_text").textContent === "gold",
             'first tag should still contain "gold" and be color 2 in edit mode'
         );
         assert.containsN(
@@ -376,7 +376,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         assert.strictEqual(
-            autocompleteDropdown.querySelector("li a").innerText,
+            autocompleteDropdown.querySelector("li a").textContent,
             "red",
             "autocomplete dropdown should contain 'red'"
         );
@@ -390,7 +390,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             target.querySelectorAll(".o_field_many2many_tags .badge .o_tag_badge_text")[2]
-                .innerText,
+                .textContent,
             "red",
             "should contain newly added tag 'red'"
         );
@@ -534,7 +534,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         assert.strictEqual(
-            autocompleteDropdown.querySelector("li a").innerText,
+            autocompleteDropdown.querySelector("li a").textContent,
             "silver",
             "autocomplete dropdown should contain 'silver'"
         );
@@ -983,7 +983,7 @@ QUnit.module("Fields", (hooks) => {
                 .querySelector(
                     '.o_field_one2many[name="turtles"] .o_list_view .o_field_many2many_tags[name="partner_ids"]'
                 )
-                .innerText.replace(/\s/g, ""),
+                .textContent.replace(/\s/g, ""),
             "secondrecordaaa",
             "the tags should be correctly rendered"
         );
@@ -998,7 +998,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             $(
                 '.modal .o_form_view .o_field_many2many[name="partner_ids"] .o_list_view .o_data_cell'
-            ).innerText,
+            ).textContent,
             "blipMy little Foo Value",
             "the list view should be correctly rendered with foo"
         );
@@ -1009,7 +1009,7 @@ QUnit.module("Fields", (hooks) => {
                 .querySelector(
                     '.o_field_one2many[name="turtles"] .o_list_view .o_field_many2many_tags[name="partner_ids"]'
                 )
-                .innerText.replace(/\s/g, ""),
+                .textContent.replace(/\s/g, ""),
             "secondrecordaaa",
             "the tags should still be correctly rendered"
         );
@@ -1019,7 +1019,7 @@ QUnit.module("Fields", (hooks) => {
                 .querySelector(
                     '.o_field_one2many[name="turtles"] .o_list_view .o_field_many2many_tags[name="partner_ids"]'
                 )
-                .innerText.replace(/\s/g, ""),
+                .textContent.replace(/\s/g, ""),
             "secondrecordaaa",
             "the tags should still be correctly rendered"
         );
@@ -1204,7 +1204,7 @@ QUnit.module("Fields", (hooks) => {
                 .querySelector(
                     ".o_data_row:first .o_many2many_tags_avatar_cell .o_field_many2many_tags div"
                 )
-                .innerText.trim(),
+                .textContent.trim(),
             "first record",
             "should display like many2one avatar if there is only one record"
         );
@@ -1229,7 +1229,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             list.el
                 .querySelector(".o_data_row:eq(1) .o_field_many2many_tags .o_m2m_avatar_empty")
-                .innerText.trim(),
+                .textContent.trim(),
             "+2",
             "should have +2 in o_m2m_avatar_empty"
         );
@@ -1280,7 +1280,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             list.el
                 .querySelector(".o_data_row:eq(3) .o_field_many2many_tags .o_m2m_avatar_empty")
-                .innerText.trim(),
+                .textContent.trim(),
             "+9",
             "should have +9 in o_m2m_avatar_empty"
         );
@@ -1291,7 +1291,7 @@ QUnit.module("Fields", (hooks) => {
         await nextTick();
         assert.containsOnce(list, ".popover", "should open a popover hover on o_m2m_avatar_empty");
         assert.strictEqual(
-            list.el.querySelector(".popover .popover-body > div").innerText.trim(),
+            list.el.querySelector(".popover .popover-body > div").textContent.trim(),
             "record 6record 7",
             "should have a right text in popover"
         );
@@ -1425,7 +1425,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             kanban.el
                 .querySelector(".o_kanban_record:eq(2) .o_field_many2many_tags .o_m2m_avatar_empty")
-                .innerText.trim(),
+                .textContent.trim(),
             "+2",
             "should have +2 in o_m2m_avatar_empty"
         );
@@ -1444,7 +1444,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             kanban.el
                 .querySelector(".o_kanban_record:eq(3) .o_field_many2many_tags .o_m2m_avatar_empty")
-                .innerText.trim(),
+                .textContent.trim(),
             "9+",
             "should have 9+ in o_m2m_avatar_empty"
         );
@@ -1459,7 +1459,7 @@ QUnit.module("Fields", (hooks) => {
             "should open a popover hover on o_m2m_avatar_empty"
         );
         assert.strictEqual(
-            kanban.el.querySelector(".popover .popover-body > div").innerText.trim(),
+            kanban.el.querySelector(".popover .popover-body > div").textContent.trim(),
             "aaarecord 5",
             "should have a right text in popover"
         );
@@ -1489,7 +1489,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".o_form_button_save"));
 
         assert.strictEqual(
-            target.querySelector(".o_field_many2many_tags").innerText.trim(),
+            target.querySelector(".o_field_many2many_tags").textContent.trim(),
             "new value"
         );
     });
@@ -1519,7 +1519,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(document.body, ".modal");
         assert.containsOnce(form, ".o_field_many2many_tags .badge");
         assert.strictEqual(
-            target.querySelector(".o_field_many2many_tags .badge").innerText.trim(),
+            target.querySelector(".o_field_many2many_tags .badge").textContent.trim(),
             "gold"
         );
     });

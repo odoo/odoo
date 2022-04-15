@@ -81,7 +81,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsN(target, "span.o_selection_badge", 2, "should have 2 possible choices");
         assert.strictEqual(
-            target.querySelector("span.o_selection_badge").innerText,
+            target.querySelector("span.o_selection_badge").textContent,
             "xphone",
             "one of them should be xphone"
         );
@@ -116,7 +116,7 @@ QUnit.module("Fields", (hooks) => {
             );
             assert.containsN(target, "span.o_selection_badge", 2, "should have 2 possible choices");
             assert.strictEqual(
-                target.querySelector("span.o_selection_badge").innerText,
+                target.querySelector("span.o_selection_badge").textContent,
                 "Red",
                 "one of them should be Red"
             );

@@ -243,12 +243,12 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(selection.length, 5, "should have five label on selection widgets");
         assert.strictEqual(
-            selection.filter((el) => el.innerText === "Done").length,
+            selection.filter((el) => el.textContent === "Done").length,
             1,
             "should have one Done status label"
         );
         assert.strictEqual(
-            selection.filter((el) => el.innerText === "Normal").length,
+            selection.filter((el) => el.textContent === "Normal").length,
             3,
             "should have three Normal status label"
         );

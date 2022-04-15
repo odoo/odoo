@@ -464,7 +464,7 @@ QUnit.module("Fields", (hooks) => {
         const expectedDateString = "02/08/2017 12:00:00"; // 10:00:00 without timezone
         const cell = target.querySelector("tr.o_data_row td:not(.o_list_record_selector)");
         assert.strictEqual(
-            cell.innerText,
+            cell.textContent,
             expectedDateString,
             "the datetime should be correctly displayed in readonly"
         );
@@ -534,7 +534,7 @@ QUnit.module("Fields", (hooks) => {
         // save
         await click(target.querySelector(".o_list_button_save"));
         assert.strictEqual(
-            target.querySelector("tr.o_data_row td:not(.o_list_record_selector)").innerText,
+            target.querySelector("tr.o_data_row td:not(.o_list_record_selector)").textContent,
             newExpectedDateString,
             "the selected datetime should be displayed after saving"
         );

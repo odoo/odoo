@@ -66,7 +66,7 @@ QUnit.module("Fields", (hooks) => {
             phone,
             "should have rendered the phone number as a link with correct classes"
         );
-        assert.strictEqual(phone.innerText, "yop", "value should be displayed properly");
+        assert.strictEqual(phone.textContent, "yop", "value should be displayed properly");
         assert.hasAttrValue(phone, "href", "tel:yop", "should have proper tel prefix");
 
         // switch to edit mode and check the result
@@ -88,7 +88,7 @@ QUnit.module("Fields", (hooks) => {
         // save
         await click(target.querySelector(".o_form_button_save"));
         assert.strictEqual(
-            target.querySelector(".o_field_phone a").innerText,
+            target.querySelector(".o_field_phone a").textContent,
             "new",
             "new value should be displayed properly"
         );
@@ -111,7 +111,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(target, "tbody td:not(.o_list_record_selector).o_data_cell", 2);
         assert.strictEqual(
-            target.querySelector("tbody td:not(.o_list_record_selector) a").innerText,
+            target.querySelector("tbody td:not(.o_list_record_selector) a").textContent,
             "yop",
             "value should be displayed properly with a link to send SMS"
         );
@@ -143,7 +143,7 @@ QUnit.module("Fields", (hooks) => {
             "should not be in edit mode anymore"
         );
         assert.strictEqual(
-            target.querySelector("tbody td:not(.o_list_record_selector) a").innerText,
+            target.querySelector("tbody td:not(.o_list_record_selector) a").textContent,
             "new",
             "value should be properly updated"
         );

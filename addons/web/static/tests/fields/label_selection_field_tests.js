@@ -89,7 +89,7 @@ QUnit.module("Fields", (hooks) => {
             "should not have a success status since selection is the second, blocked state"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget .badge.badge-warning").innerText,
+            target.querySelector(".o_field_widget .badge.badge-warning").textContent,
             "Blocked",
             "the label should say 'Blocked' since this is the label value for that state"
         );
@@ -112,7 +112,7 @@ QUnit.module("Fields", (hooks) => {
             "should not have a success status since selection is the second, blocked state"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget .badge.badge-warning").innerText,
+            target.querySelector(".o_field_widget .badge.badge-warning").textContent,
             "Blocked",
             "the label should say 'Blocked' since this is the label value for that state"
         );
@@ -135,7 +135,7 @@ QUnit.module("Fields", (hooks) => {
             "should not have a success status since selection is the second, blocked state"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget .badge.badge-warning").innerText,
+            target.querySelector(".o_field_widget .badge.badge-warning").textContent,
             "Blocked",
             "the label should say 'Blocked' since this is the label value for that state"
         );
@@ -167,7 +167,7 @@ QUnit.module("Fields", (hooks) => {
             "should have one warning status label"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget .badge.badge-warning").innerText,
+            target.querySelector(".o_field_widget .badge.badge-warning").textContent,
             "Blocked",
             "the warning label should read 'Blocked'"
         );
@@ -177,7 +177,7 @@ QUnit.module("Fields", (hooks) => {
             "should have one default status label"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget .badge.badge-secondary").innerText,
+            target.querySelector(".o_field_widget .badge.badge-secondary").textContent,
             "Normal",
             "the default label should read 'Normal'"
         );
@@ -187,7 +187,7 @@ QUnit.module("Fields", (hooks) => {
             "should have one success status label"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget .badge.badge-success").innerText,
+            target.querySelector(".o_field_widget .badge.badge-success").textContent,
             "Done",
             "the success label should read 'Done'"
         );
@@ -205,7 +205,7 @@ QUnit.module("Fields", (hooks) => {
             "should have one warning status label"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget .badge.badge-warning").innerText,
+            target.querySelector(".o_field_widget .badge.badge-warning").textContent,
             "Blocked",
             "the warning label should read 'Blocked'"
         );
@@ -215,7 +215,7 @@ QUnit.module("Fields", (hooks) => {
             "should have one default status label"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget .badge.badge-secondary").innerText,
+            target.querySelector(".o_field_widget .badge.badge-secondary").textContent,
             "Normal",
             "the default label should read 'Normal'"
         );
@@ -225,7 +225,7 @@ QUnit.module("Fields", (hooks) => {
             "should have one success status label"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget .badge.badge-success").innerText,
+            target.querySelector(".o_field_widget .badge.badge-success").textContent,
             "Done",
             "the success label should read 'Done'"
         );
@@ -243,7 +243,7 @@ QUnit.module("Fields", (hooks) => {
             "should have one warning status label"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget .badge.badge-warning").innerText,
+            target.querySelector(".o_field_widget .badge.badge-warning").textContent,
             "Blocked",
             "the warning label should read 'Blocked'"
         );
@@ -253,7 +253,7 @@ QUnit.module("Fields", (hooks) => {
             "should have one default status label"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget .badge.badge-secondary").innerText,
+            target.querySelector(".o_field_widget .badge.badge-secondary").textContent,
             "Normal",
             "the default label should read 'Normal'"
         );
@@ -263,7 +263,7 @@ QUnit.module("Fields", (hooks) => {
             "should have one success status label"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget .badge.badge-success").innerText,
+            target.querySelector(".o_field_widget .badge.badge-success").textContent,
             "Done",
             "the success label should read 'Done'"
         );

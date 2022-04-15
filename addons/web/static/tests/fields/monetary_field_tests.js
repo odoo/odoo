@@ -548,7 +548,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_field_monetary").innerText,
+            target.querySelector(".o_field_monetary").textContent,
             "9.10\u00a0€",
             "field monetary should be formatted with correct currency"
         );

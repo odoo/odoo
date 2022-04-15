@@ -53,7 +53,7 @@ QUnit.module("Fields", (hooks) => {
 
         // 9 + 0.1 * 60 = 9.06
         assert.strictEqual(
-            target.querySelector(".o_field_widget").innerText,
+            target.querySelector(".o_field_widget").textContent,
             "09:06",
             "The formatted time value should be displayed properly."
         );
@@ -78,7 +78,7 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target, ".o_form_button_save");
         assert.strictEqual(
-            target.querySelector(".o_field_widget").innerText,
+            target.querySelector(".o_field_widget").textContent,
             "-11:48",
             "The new value should be saved and displayed properly."
         );
@@ -107,7 +107,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget").innerText,
+            target.querySelector(".o_field_widget").textContent,
             "09:06",
             "The formatted time value should be displayed properly."
         );
@@ -122,7 +122,7 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target, ".o_form_button_save");
         assert.strictEqual(
-            target.querySelector(".o_field_widget").innerText,
+            target.querySelector(".o_field_widget").textContent,
             "09:30",
             "The new value should be saved and displayed properly."
         );

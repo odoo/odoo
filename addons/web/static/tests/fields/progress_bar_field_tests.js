@@ -88,7 +88,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_progressbar_value").innerText,
+            target.querySelector(".o_progressbar_value").textContent,
             "10 / 2",
             "The initial value of the progress bar should be correct"
         );
@@ -99,7 +99,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".o_form_button_save"));
 
         assert.strictEqual(
-            target.querySelector(".o_progressbar_value").innerText,
+            target.querySelector(".o_progressbar_value").textContent,
             "999 / 5",
             "The value of the progress bar should be correct after the update"
         );
@@ -150,7 +150,7 @@ QUnit.module("Fields", (hooks) => {
             await click(target.querySelector(".o_form_button_save"));
 
             assert.strictEqual(
-                target.querySelector(".o_progressbar_value").innerText,
+                target.querySelector(".o_progressbar_value").textContent,
                 "69%",
                 "New value should be different than initial after click"
             );
@@ -189,7 +189,7 @@ QUnit.module("Fields", (hooks) => {
             assert.ok(target.querySelector(".o_form_view .o_form_editable"), "Form in edit mode");
             assert.ok(
                 target.querySelector(".o_progressbar_value").value === "99" &&
-                    target.querySelectorAll(".o_progressbar_value")[1].innerText === "0.44444",
+                    target.querySelectorAll(".o_progressbar_value")[1].textContent === "0.44444",
                 "Initial value should be correct"
             );
 
@@ -203,7 +203,7 @@ QUnit.module("Fields", (hooks) => {
             await click(target.querySelector(".o_form_button_save"));
 
             assert.strictEqual(
-                target.querySelector(".o_progressbar_value").innerText,
+                target.querySelector(".o_progressbar_value").textContent,
                 "69 / 0",
                 "New value should be different than initial after click"
             );
@@ -238,7 +238,7 @@ QUnit.module("Fields", (hooks) => {
             });
 
             assert.strictEqual(
-                target.querySelector(".o_progressbar_value").innerText,
+                target.querySelector(".o_progressbar_value").textContent,
                 "99 / 0",
                 "Initial value should be correct"
             );
@@ -257,7 +257,7 @@ QUnit.module("Fields", (hooks) => {
             await click(target.querySelector(".o_form_button_save"));
 
             assert.strictEqual(
-                target.querySelector(".o_progressbar_value").innerText,
+                target.querySelector(".o_progressbar_value").textContent,
                 "99 / 69",
                 "New value should be different than initial after click"
             );
@@ -293,7 +293,7 @@ QUnit.module("Fields", (hooks) => {
             });
 
             assert.strictEqual(
-                target.querySelector(".o_progressbar_value").innerText,
+                target.querySelector(".o_progressbar_value").textContent,
                 "99 / 0",
                 "Initial value should be correct"
             );
@@ -315,7 +315,7 @@ QUnit.module("Fields", (hooks) => {
             await click(target.querySelector(".o_form_button_save"));
 
             assert.strictEqual(
-                target.querySelector(".o_progressbar_value").innerText,
+                target.querySelector(".o_progressbar_value").textContent,
                 "2k / 69",
                 "New value should be different than initial after click"
             );
@@ -344,7 +344,7 @@ QUnit.module("Fields", (hooks) => {
         assert.ok(target.querySelector(".o_form_view .o_form_readonly"), "Form in readonly mode");
 
         assert.strictEqual(
-            target.querySelector(".o_progressbar_value").innerText,
+            target.querySelector(".o_progressbar_value").textContent,
             "99 / 0",
             "Initial value should be correct"
         );
@@ -391,7 +391,7 @@ QUnit.module("Fields", (hooks) => {
                 );
 
             assert.strictEqual(
-                target.querySelector(".o_progressbar_value").innerText,
+                target.querySelector(".o_progressbar_value").textContent,
                 "99%",
                 "Initial value should be correct"
             );
@@ -409,7 +409,7 @@ QUnit.module("Fields", (hooks) => {
             await click(target.querySelector(".o_form_button_save"));
 
             assert.strictEqual(
-                target.querySelector(".o_progressbar_value").innerText,
+                target.querySelector(".o_progressbar_value").textContent,
                 "1k%",
                 "New value should be different than initial after click"
             );

@@ -226,7 +226,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             target.querySelector(".o_field_percent_pie.o_field_widget .o_pie .o_pie_value")
-                .innerText,
+                .textContent,
             "10%",
             "should have 10% as pie value since int_field=10"
         );
@@ -252,7 +252,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             target.querySelector(".o_field_percent_pie.o_field_widget .o_pie .o_pie_value")
-                .innerText,
+                .textContent,
             "10%",
             "should have 10% as pie value since int_field=10"
         );
@@ -282,7 +282,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             target.querySelector(".o_field_percent_pie.o_field_widget .o_pie .o_pie_value")
-                .innerText,
+                .textContent,
             "10%",
             "should have 10% as pie value since int_field=10"
         );
@@ -325,7 +325,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             target.querySelector(".o_field_percent_pie.o_field_widget .o_pie .o_pie_value")
-                .innerText,
+                .textContent,
             "80%",
             "should have 80% as pie value since int_field=80"
         );
@@ -352,7 +352,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             target.querySelector(".o_field_percent_pie.o_field_widget .o_pie .o_pie_value")
-                .innerText,
+                .textContent,
             "80%",
             "should have 80% as pie value since int_field=80"
         );
@@ -377,7 +377,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             target.querySelector(".o_field_percent_pie.o_field_widget .o_pie .o_pie_value")
-                .innerText,
+                .textContent,
             "80%",
             "should have 80% as pie value since int_field=80"
         );
@@ -415,7 +415,7 @@ QUnit.module("Fields", (hooks) => {
     //
     //     assert.containsN(list, '.o_field_percent_pie .o_pie', 5,
     //         "should have five pie charts");
-    //     assert.strictEqual(target.querySelector('.o_field_percent_pie:first .o_pie .o_pie_value').innerText,
+    //     assert.strictEqual(target.querySelector('.o_field_percent_pie:first .o_pie .o_pie_value').textContent,
     //         '10%', "should have 10% as pie value since int_field=10");
     //     assert.strictEqual(target.querySelector('.o_field_percent_pie:first .o_pie .o_mask').attr('style'),
     //         'rotate(180deg)', "left mask should be covering the whole left side of the pie");
@@ -424,7 +424,7 @@ QUnit.module("Fields", (hooks) => {
     //
     //     // switch to edit mode and check the result
     //    testUtils.dom.click(     target.querySelector('tbody td:not(.o_list_record_selector)'));
-    //     assert.strictEqual(target.querySelector('.o_field_percent_pie:first .o_pie .o_pie_value').innerText,
+    //     assert.strictEqual(target.querySelector('.o_field_percent_pie:first .o_pie .o_pie_value').textContent,
     //         '10%', "should have 10% as pie value since int_field=10");
     //     assert.strictEqual(target.querySelector('.o_field_percent_pie:first .o_pie .o_mask').attr('style'),
     //         'rotate(180deg)', "left mask should be covering the whole right side of the pie");
@@ -433,7 +433,7 @@ QUnit.module("Fields", (hooks) => {
     //
     //     // save
     //    testUtils.dom.click(     list.$buttons.find('.o_list_button_save'));
-    //     assert.strictEqual(target.querySelector('.o_field_percent_pie:first .o_pie .o_pie_value').innerText,
+    //     assert.strictEqual(target.querySelector('.o_field_percent_pie:first .o_pie .o_pie_value').textContent,
     //         '10%', "should have 10% as pie value since int_field=10");
     //     assert.strictEqual(target.querySelector('.o_field_percent_pie:first .o_pie .o_mask').attr('style'),
     //         'rotate(180deg)', "left mask should be covering the whole right side of the pie");
