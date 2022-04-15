@@ -65,6 +65,28 @@
             <field name="perm_unlink" eval="False"/>
         </record>
 
+        <record id="mail_template_employee_rule" model="ir.rule">
+            <field name="name">Employees can only change their own templates</field>
+            <field name="model_id" ref="model_mail_template"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="mail_template_editor_rule" model="ir.rule">
+            <field name="name">Mail Template Editors - Edit All Templates</field>
+            <field name="model_id" ref="model_mail_template"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[Command.link(ref('group_mail_template_editor')), Command.link(ref('base.group_system'))]"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
         <record id="res_users_settings_rule_admin" model="ir.rule">
             <field name="name">Administrators can access all User Settings.</field>
             <field name="model_id" ref="model_res_users_settings"/>
