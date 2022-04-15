@@ -57,9 +57,25 @@ class TestMailTemplate(MailCommon):
         mail_template.with_user(self.user_admin).name = 'New name'
         self.assertEqual(mail_template.name, 'New name')
 
-        # Standard employee can not
+        # Standard employee can create and edit non-dynamic templates
+        employee_template = self.env['mail.template'].with_user(self.user_employee).create({'body_html': '<p>foo</p>'})
+
+        employee_template.with_user(self.user_employee).body_html = '<p>bar</p>'
+
+        employee_template = self.env['mail.template'].with_user(self.user_employee).create({'email_to': 'foo@bar.com'})
+
+        employee_template.with_user(self.user_employee).email_to = 'bar@foo.com'
+
+        # Standard employee cannot create and edit templates with dynamic qweb
         with self.assertRaises(AccessError):
-            self.env['mail.template'].with_user(self.user_employee).create({})
+            self.env['mail.template'].with_user(self.user_employee).create({'body_html': '<p t-esc="\'foo\'"></p>'})
 
         with self.assertRaises(AccessError):
-            mail_template.with_user(self.user_employee).name = 'Test write'
+            mail_template.with_user(self.user_employee).body_html = '<p t-esc="\'foo\'"></p>'
+
+        # Standard employee cannot create and edit templates with dynamic inline fields
+        with self.assertRaises(AccessError):
+            self.env['mail.template'].with_user(self.user_employee).create({'email_to': '{{ object.partner_id.email }}'})
+
+        with self.assertRaises(AccessError):
+            mail_template.with_user(self.user_employee).email_to = '{{ object.partner_id.email }}'
