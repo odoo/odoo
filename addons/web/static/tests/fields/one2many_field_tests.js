@@ -13,6 +13,7 @@ import {
     nextTick,
     patchWithCleanup,
     removeRow,
+    selectDropdownItem,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
@@ -9720,6 +9721,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.test("one2many invisible depends on parent field", async function (assert) {
         serverData.models.partner.records[0].p = [2];
+
         await makeView({
             type: "form",
             resModel: "partner",
@@ -9745,6 +9747,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
         });
+
         assert.containsN(
             target,
             "th:not(.o_list_record_remove_header)",
@@ -9753,27 +9756,21 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await clickEdit(target);
-        await click(target.querySelector('.o_field_many2one[name="product_id"] input'));
-        const item = [...target.querySelectorAll("li.ui-menu-item a")].filter(
-            (el) => el.textContent === "xpad"
-        )[0];
-        await triggerEvent(item, null, "mouseenter");
-        await click(item);
+        await selectDropdownItem(target, "product_id", "xphone");
+
         assert.containsOnce(
             target,
             "th:not(.o_list_record_remove_header)",
             "should be 1 column when the product_id is set"
         );
-
-        await editInput(target, '.o_field_many2one[name="product_id"] input', "");
-        await triggerEvent(target, '.o_field_many2one[name="product_id"] input', "keyup");
+        await editInput(target, ".o_field_many2one[name=product_id] input", "");
         assert.containsN(
             target,
             "th:not(.o_list_record_remove_header)",
             2,
             "should be 2 columns in the one2many when product_id is not set"
         );
-        await click(target.querySelector('.o_field_boolean[name="bar"] input'));
+        await click(target.querySelector(".o_field_boolean[name=bar] input"));
         assert.containsOnce(
             target,
             "th:not(.o_list_record_remove_header)",
@@ -11826,159 +11823,6 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["world"]);
     });
 
-    QUnit.skipWOWL("one2many with extra field from server not in form", async function (assert) {
-        assert.expect(6);
-
-        const form = await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
-                <form>
-                    <field name="p">
-                        <tree>
-                            <field name="datetime"/>
-                            <field name="display_name"/>
-                        </tree>
-                    </field>
-                </form>`,
-            resId: 1,
-            archs: {
-                "partner,false,form": `<form> <field name="display_name"/> </form>`,
-            },
-            mockRPC(route, args) {
-                if (route === "/web/dataset/call_kw/partner/write") {
-                    args.args[1].p[0][2].datetime = "2018-04-05 12:00:00";
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
-
-        await clickEdit(target);
-
-        var x2mList = form.$(".o_field_x2many_list[name=p]");
-
-        // Add a record in the list
-        await click(x2mList.find(".o_field_x2many_list_row_add a"));
-
-        var modal = $(".modal-lg");
-
-        var nameInput = modal.find("input.o_input[name=display_name]");
-        await testUtils.fields.editInput(nameInput, "michelangelo");
-
-        // Save the record in the modal (though it is still virtual)
-        await click(modal.find(".btn-primary").first());
-
-        assert.equal(
-            x2mList.find(".o_data_row").length,
-            1,
-            "There should be 1 records in the x2m list"
-        );
-
-        var newlyAdded = x2mList.find(".o_data_row").eq(0);
-
-        assert.equal(
-            newlyAdded.find(".o_data_cell").first().text(),
-            "",
-            "The create_date field should be empty"
-        );
-        assert.equal(
-            newlyAdded.find(".o_data_cell").eq(1).text(),
-            "michelangelo",
-            "The display name field should have the right value"
-        );
-
-        // Save the whole thing
-        await clickSave(target);
-
-        x2mList = form.$(".o_field_x2many_list[name=p]");
-
-        // Redo asserts in RO mode after saving
-        assert.equal(
-            x2mList.find(".o_data_row").length,
-            1,
-            "There should be 1 records in the x2m list"
-        );
-
-        newlyAdded = x2mList.find(".o_data_row").eq(0);
-
-        assert.equal(
-            newlyAdded.find(".o_data_cell").first().text(),
-            "04/05/2018 12:00:00",
-            "The create_date field should have the right value"
-        );
-        assert.equal(
-            newlyAdded.find(".o_data_cell").eq(1).text(),
-            "michelangelo",
-            "The display name field should have the right value"
-        );
-    });
-
-    QUnit.skipWOWL("one2many invisible depends on parent field", async function (assert) {
-        assert.expect(4);
-
-        serverData.models.partner.records[0].p = [2];
-        const form = await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
-                <form>
-                    <sheet>
-                        <group>
-                            <field name="product_id"/>
-                        </group>
-                        <notebook>
-                            <page string="Partner page">
-                                <field name="bar"/>
-                                <field name="p">
-                                    <tree>
-                                        <field name="foo" attrs="{'column_invisible': [('parent.product_id', '!=', False)]}"/>
-                                        <field name="bar" attrs="{'column_invisible': [('parent.bar', '=', False)]}"/>
-                                    </tree>
-                                </field>
-                            </page>
-                        </notebook>
-                    </sheet>
-                </form>`,
-            resId: 1,
-        });
-        assert.containsN(
-            form,
-            "th:not(.o_list_record_remove_header)",
-            2,
-            "should be 2 columns in the one2many"
-        );
-        await clickEdit(target);
-        await testUtils.fields.many2one.clickOpenDropdown("product_id");
-        await testUtils.fields.many2one.clickHighlightedItem("product_id");
-        await testUtils.owlCompatibilityExtraNextTick();
-        assert.containsOnce(
-            form,
-            "th:not(.o_list_record_remove_header)",
-            "should be 1 column when the product_id is set"
-        );
-        await testUtils.fields.editAndTrigger(
-            form.$('.o_field_many2one[name="product_id"] input'),
-            "",
-            "keyup"
-        );
-        await testUtils.owlCompatibilityExtraNextTick();
-        assert.containsN(
-            form,
-            "th:not(.o_list_record_remove_header)",
-            2,
-            "should be 2 columns in the one2many when product_id is not set"
-        );
-        await click(form.$('.o_field_boolean[name="bar"] input'));
-        await testUtils.owlCompatibilityExtraNextTick();
-        assert.containsOnce(
-            form,
-            "th:not(.o_list_record_remove_header)",
-            "should be 1 column after the value change"
-        );
-    });
-
     QUnit.test(
         "one2many column visiblity depends on onchange of parent field",
         async function (assert) {
@@ -12222,6 +12066,146 @@ QUnit.module("Fields", (hooks) => {
                 "th",
                 3,
                 "should still have 3 th in the one2many after reloading whole form view"
+            );
+        }
+    );
+
+    QUnit.skipWOWL("x2many list sorted by many2one", async function (assert) {
+        assert.expect(3);
+
+        serverData.models.partner.records[0].p = [1, 2, 4];
+        serverData.models.partner.fields.trululu.sortable = true;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree>
+                            <field name="id" />
+                            <field name="trululu" />
+                        </tree>
+                    </field>
+                </form>
+            `,
+        });
+
+        assert.strictEqual(
+            target.querySelectorAll(".o_data_row .o_list_number").textContent,
+            "124",
+            "should have correct order initially"
+        );
+
+        await click(target, ".o_list_view thead th:nth(1)");
+
+        assert.strictEqual(
+            target.querySelectorAll(".o_data_row .o_list_number").textContent,
+            "412",
+            "should have correct order (ASC)"
+        );
+
+        await click(target, ".o_list_view thead th:nth(1)");
+
+        assert.strictEqual(
+            target.querySelectorAll(".o_data_row .o_list_number").textContent,
+            "214",
+            "should have correct order (DESC)"
+        );
+    });
+
+    QUnit.skipWOWL(
+        "one2many with extra field from server not in (inline) form",
+        async function (assert) {
+            assert.expect(1);
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree>
+                                <field name="datetime" />
+                                <field name="display_name" />
+                            </tree>
+                            <form>
+                                <field name="display_name" />
+                            </form>
+                        </field>
+                    </form>
+                `,
+            });
+
+            await click(target, ".o_form_button_edit");
+
+            var x2mList = target.querySelectorAll(".o_field_x2many_list[name=p]");
+
+            // Add a record in the list
+            await click(x2mList.find(".o_field_x2many_list_row_add a"));
+
+            var modal = document.body.querySelector(".modal-lg");
+
+            var nameInput = modal.find("input.o_input[name=display_name]");
+            await testUtils.fields.editInput(nameInput, "michelangelo");
+
+            // Save the record in the modal (though it is still virtual)
+            await click(modal.find(".btn-primary").first());
+
+            assert.equal(
+                x2mList.find(".o_data_row").length,
+                1,
+                "There should be 1 records in the x2m list"
+            );
+        }
+    );
+
+    QUnit.skipWOWL(
+        "one2many with extra X2many field from server not in inline form",
+        async function (assert) {
+            assert.expect(1);
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree>
+                                <field name="turtles" />
+                                <field name="display_name" />
+                            </tree>
+                            <form>
+                                <field name="display_name" />
+                            </form>
+                        </field>
+                    </form>
+                `,
+            });
+
+            await click(target, ".o_form_button_edit");
+
+            var x2mList = target.querySelectorAll(".o_field_x2many_list[name=p]");
+
+            // Add a first record in the list
+            await click(x2mList.find(".o_field_x2many_list_row_add a"));
+
+            // Save & New
+            await click(document.body.querySelector(".modal-lg").find(".btn-primary").eq(1));
+
+            // Save & Close
+            await click(document.body.querySelector(".modal-lg").find(".btn-primary").eq(0));
+
+            assert.equal(
+                x2mList.find(".o_data_row").length,
+                2,
+                "There should be 2 records in the x2m list"
             );
         }
     );
