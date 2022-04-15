@@ -34,7 +34,7 @@ import {
 import { createWebClient, doAction } from "../webclient/helpers";
 import { makeView, setupViewRegistries } from "./helpers";
 
-const { onWillStart } = owl;
+const { markup, onWillStart } = owl;
 
 const serviceRegistry = registry.category("services");
 
@@ -4974,7 +4974,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: '<tree><field name="foo"/></tree>',
-                noContentHelp: '<p class="hello">click to add a record</p>',
+                noContentHelp: "click to add a record",
                 searchViewArch: `
                     <search>
                         <filter name="Empty List" domain="[('id', '&lt;', 0)]"/>
@@ -5007,7 +5007,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: '<tree><field name="foo"/></tree>',
-            noContentHelp: '<p class="hello">click to add a partner</p>',
+            noContentHelp: markup('<p class="hello">click to add a partner</p>'),
         });
         assert.containsOnce(target, ".o_view_nocontent", "should display the no content helper");
         assert.containsNone(target, ".o_list_view table", "should not have a table in the dom");
@@ -5062,7 +5062,7 @@ QUnit.module("Views", (hooks) => {
                     <field name="datetime"/>
                 </tree>`,
             context: { search_default_empty: true },
-            noContentHelp: '<p class="hello">click to add a partner</p>',
+            noContentHelp: markup('<p class="hello">click to add a partner</p>'),
             searchViewArch: `
                     <search>
                         <filter name="empty" domain="[('id', '&lt;', 0)]"/>
@@ -5150,7 +5150,7 @@ QUnit.module("Views", (hooks) => {
                 [false, "kanban"],
             ],
             context: { search_default_empty: true },
-            help: '<p class="hello">click to add a partner</p>',
+            help: markup('<p class="hello">click to add a partner</p>'),
         });
         assert.hasClass(target.querySelector(".o_list_view .o_content"), "o_view_sample_data");
         assert.containsOnce(target, ".o_list_table");
@@ -5326,7 +5326,7 @@ QUnit.module("Views", (hooks) => {
                     <field name="int_field"/>
                 </tree>`,
                 domain: Domain.TRUE.toList(),
-                noContentHelp: '<p class="hello">click to add a partner</p>',
+                noContentHelp: "click to add a partner",
                 actionMenus: {},
             });
 
@@ -5355,90 +5355,90 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "empty editable list with sample data: start create record and cancel",
         async function (assert) {
-            assert.expect(10);
-
             await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
                 arch: `
                 <tree editable="top" sample="1">
                     <field name="foo"/>
                     <field name="bar"/>
                     <field name="int_field"/>
                 </tree>`,
-                serverData,
-                domain: Domain.FALSE_DOMAIN,
-                resModel: "foo",
-                viewOptions: {
-                    action: {
-                        help: '<p class="hello">click to add a partner</p>',
-                    },
-                },
+                domain: Domain.FALSE.toList(),
+                noContentHelp: "click to add a partner",
             });
 
             // Initial state: sample data and nocontent helper displayed
-            assert.hasClass(target, "o_view_sample_data");
+            assert.hasClass(target.querySelector(".o_list_view .o_content"), "o_view_sample_data");
             assert.containsOnce(target, ".o_list_table");
             assert.containsN(target, ".o_data_row", 10);
             assert.containsOnce(target, ".o_nocontent_help");
 
             // Start creating a record
             await click(target.querySelector(".btn.o_list_button_add"));
-
-            assert.doesNotHaveClass(target, "o_view_sample_data");
+            assert.doesNotHaveClass(
+                target.querySelector(".o_list_view .o_content"),
+                "o_view_sample_data"
+            );
             assert.containsOnce(target, ".o_data_row");
 
             // Discard temporary record
             await click(target.querySelector(".btn.o_list_button_discard"));
 
-            // Final state: table should be displayed with no data at all
-            assert.doesNotHaveClass(target, "o_view_sample_data");
-            assert.containsOnce(target, ".o_list_table");
-            assert.containsNone(target, ".o_data_row");
-            assert.containsNone(target, ".o_nocontent_help");
+            // Final state: there should be no table, but the no content helper
+            assert.doesNotHaveClass(
+                target.querySelector(".o_list_view .o_content"),
+                "o_view_sample_data"
+            );
+            assert.containsNone(target, ".o_list_table");
+            assert.containsOnce(target, ".o_nocontent_help");
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "empty editable list with sample data: create and delete record",
         async function (assert) {
             assert.expect(13);
 
             await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
                 arch: `
                 <tree editable="top" sample="1">
                     <field name="foo"/>
                     <field name="bar"/>
                     <field name="int_field"/>
                 </tree>`,
-                serverData,
-                domain: Domain.FALSE_DOMAIN,
-                resModel: "foo",
-                viewOptions: {
-                    action: {
-                        help: '<p class="hello">click to add a partner</p>',
-                    },
-                },
+                domain: Domain.FALSE.toList(),
+                noContentHelp: "click to add a partner",
                 actionMenus: {},
             });
 
             // Initial state: sample data and nocontent helper displayed
-            assert.hasClass(target, "o_view_sample_data");
+            assert.hasClass(target.querySelector(".o_list_view .o_content"), "o_view_sample_data");
             assert.containsOnce(target, ".o_list_table");
             assert.containsN(target, ".o_data_row", 10);
             assert.containsOnce(target, ".o_nocontent_help");
 
             // Start creating a record
             await click(target.querySelector(".btn.o_list_button_add"));
-
-            assert.doesNotHaveClass(target, "o_view_sample_data");
+            assert.doesNotHaveClass(
+                target.querySelector(".o_list_view .o_content"),
+                "o_view_sample_data"
+            );
             assert.containsOnce(target, ".o_data_row");
 
             // Save temporary record
-            await click(target.querySelector(".btn.o_list_button_save"));
-
-            assert.doesNotHaveClass(target, "o_view_sample_data");
+            await clickSave(target);
+            assert.doesNotHaveClass(
+                target.querySelector(".o_list_view .o_content"),
+                "o_view_sample_data"
+            );
             assert.containsOnce(target, ".o_list_table");
             assert.containsOnce(target, ".o_data_row");
             assert.containsNone(target, ".o_nocontent_help");
@@ -5447,41 +5447,15 @@ QUnit.module("Views", (hooks) => {
             await click(target.querySelector(".o_data_row input"));
             await toggleActionMenu(target);
             await toggleMenuItem(target, "Delete");
-            await click($(".modal-footer .btn-primary"));
+            await click(target.querySelector(".modal-footer .btn-primary"));
 
             // Final state: there should be no table, but the no content helper
-            assert.doesNotHaveClass(target, "o_view_sample_data");
+            assert.doesNotHaveClass(
+                target.querySelector(".o_list_view .o_content"),
+                "o_view_sample_data"
+            );
             assert.containsNone(target, ".o_list_table");
             assert.containsOnce(target, ".o_nocontent_help");
-        }
-    );
-
-    QUnit.skipWOWL(
-        "Do not display nocontent when it is an empty html tag",
-        async function (assert) {
-            assert.expect(2);
-
-            serverData.models.foo.records = [];
-
-            await makeView({
-                type: "list",
-                resModel: "foo",
-                serverData,
-                arch: '<tree><field name="foo"/></tree>',
-                viewOptions: {
-                    action: {
-                        help: '<p class="hello"></p>',
-                    },
-                },
-            });
-
-            assert.containsNone(
-                target,
-                ".o_view_nocontent",
-                "should not display the no content helper"
-            );
-
-            assert.containsOnce(target, "table", "should have a table in the dom");
         }
     );
 
@@ -5844,7 +5818,7 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
             viewOptions: {
                 action: {
-                    help: '<p class="hello">click to add a partner</p>',
+                    help: "click to add a partner",
                 },
             },
             mockRPC(route, args) {

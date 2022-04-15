@@ -1370,6 +1370,10 @@ export class DynamicRecordList extends DynamicList {
             onRecordWillSwitchMode: this.onRecordWillSwitchMode,
             ...params,
         });
+        if (this.model.useSampleModel) {
+            this.model.useSampleModel = false;
+            await this.load();
+        }
         await this.model.mutex.exec(() => newRecord.load());
         this.editedRecord = newRecord;
         return this.addRecord(newRecord, atFirstPosition ? 0 : this.count);

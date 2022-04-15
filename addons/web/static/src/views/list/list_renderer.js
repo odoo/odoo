@@ -13,7 +13,6 @@ import { useBounceButton } from "../helpers/view_hook";
 
 const {
     Component,
-    markup,
     onPatched,
     onWillPatch,
     onWillUpdateProps,
@@ -82,9 +81,6 @@ export class ListRenderer extends Component {
         useBounceButton(rootRef, () => {
             return this.showNoContentHelper;
         });
-        this.noContentHelp = this.props.noContentHelp
-            ? markup(this.props.noContentHelp)
-            : undefined;
     }
 
     get fields() {
@@ -456,12 +452,12 @@ export class ListRenderer extends Component {
 
     get showNoContentHelper() {
         const { model } = this.props.list;
-        return this.noContentHelp && (model.useSampleModel || !model.hasData());
+        return this.props.noContentHelp && (model.useSampleModel || !model.hasData());
     }
 
     get showTable() {
         const { model } = this.props.list;
-        return model.hasData() || !this.noContentHelp;
+        return model.hasData() || !this.props.noContentHelp;
     }
 
     toggleGroup(group) {

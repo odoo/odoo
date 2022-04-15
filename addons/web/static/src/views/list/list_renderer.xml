@@ -4,7 +4,7 @@
     <t t-name="web.ListRenderer" owl="1">
         <div class="o_list_renderer table-responsive" t-ref="root">
             <t t-if="showNoContentHelper" t-call="web.ActionHelper">
-                <t t-set="noContentHelp" t-value="noContentHelp"/>
+                <t t-set="noContentHelp" t-value="props.noContentHelp"/>
             </t>
             <table t-if="showTable" t-attf-class="o_list_table table table-sm table-hover table-striped {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped'}}" t-ref="table">
                 <thead>
