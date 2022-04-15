@@ -12,6 +12,8 @@ class SaleOrderLine(models.Model):
 
     name_short = fields.Char(compute="_compute_name_short")
 
+    shop_warning = fields.Char('Warning')
+
     #=== COMPUTE METHODS ===#
 
     @api.depends('linked_line_id', 'option_line_ids')
@@ -45,3 +47,10 @@ class SaleOrderLine(models.Model):
 
     def get_description_following_lines(self):
         return self.name.splitlines()[1:]
+
+    def _get_shop_warning(self, clear=True):
+        self.ensure_one()
+        warn = self.shop_warning
+        if clear:
+            self.shop_warning = ''
+        return warn

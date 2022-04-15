@@ -171,20 +171,22 @@
                                                 <img t-attf-src="/web/image/product.product/#{wish.product_id.id}/image_128" class="img img-fluid" style="margin:auto;" alt="Product image"/>
                                             </a>
                                         </td>
-                                        <td class='text-left'>
+                                        <td class='text-left align-middle'>
                                             <strong><a t-att-href="wish.product_id.website_url"><t t-esc="wish.product_id.display_name" /></a></strong>
                                             <small class='d-none d-md-block'><p t-field="wish.product_id.description_sale" class="text-muted"/></small>
                                             <button type="button" class="btn btn-link o_wish_rm no-decoration"><small><i class='fa fa-trash-o'></i> Remove</small></button>
                                         </td>
-                                        <td class="align-middle">
+                                        <td class="align-middle o_wish_price">
                                             <t t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}"/>
-                                            <small t-if="wish.product_id.base_unit_price" class="cart_product_base_unit_price d-block text-muted" groups="website_sale.group_show_uom_price">
+                                            <small t-if="combination_info['base_unit_price']" class="cart_product_base_unit_price d-block text-muted" groups="website_sale.group_show_uom_price">
                                                 <t t-call='website_sale.base_unit_price'><t t-set='product' t-value='wish.product_id' /></t>
                                             </small>
                                         </td>
                                         <td class='text-center td-wish-btn align-middle'>
                                             <input name="product_id" t-att-value="wish.product_id.id" type="hidden"/>
-                                            <button type="button" role="button" class="btn btn-secondary btn-block o_wish_add mb4" >Add <span class='d-none d-md-inline'>to Cart</span></button>
+                                            <button type="button" role="button" class="btn btn-secondary btn-block o_wish_add mb4" >
+                                                Add <span class='d-none d-md-inline'>to Cart</span>
+                                            </button>
                                         </td>
                                     </tr>
                                 </t>

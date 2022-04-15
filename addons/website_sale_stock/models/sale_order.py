@@ -1,65 +1,71 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import models, _
 
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    warning_stock = fields.Char('Warning')
-
     def _verify_updated_quantity(self, order_line, product_id, new_qty, **kwargs):
         self.ensure_one()
         product = self.env['product.product'].browse(product_id)
         if product.type == 'product' and not product.allow_out_of_stock_order:
-            available_qty = product.with_context(warehouse=self.warehouse_id.id).free_qty
-            product_qty_in_cart = sum(
-                self.order_line.filtered(
-                    lambda p: p.product_id.id == product_id
-                ).mapped('product_uom_qty')
+            product_qty_in_cart, available_qty = self._get_cart_and_free_qty(
+                line=order_line, product=product, **kwargs
             )
 
             old_qty = order_line.product_uom_qty if order_line else 0
             added_qty = new_qty - old_qty
-
-            if available_qty < (product_qty_in_cart + added_qty):
+            total_cart_qty = product_qty_in_cart + added_qty
+            if available_qty < total_cart_qty:
                 allowed_line_qty = available_qty - (product_qty_in_cart - old_qty)
                 if allowed_line_qty > 0:
-                    warning = _(
-                        'You ask for %s products but only %s is available',
-                        product_qty_in_cart + added_qty,
-                        available_qty,
-                    )
                     if order_line:
-                        order_line.warning_stock = warning
+                        order_line._set_shop_warning_stock(total_cart_qty, available_qty)
                     else:
-                        self.warning_stock = warning
+                        self._set_shop_warning_stock(total_cart_qty, available_qty)
                 else:  # 0 or negative allowed_qty
                     # if existing line: it will be deleted
                     # if no existing line: no line will be created
-                    self.warning_stock = _(
+                    self.shop_warning = _(
                         "Some products became unavailable and your cart has been updated. We're sorry for the inconvenience.")
-                return allowed_line_qty, order_line.warning_stock or self.warning_stock
+                return allowed_line_qty, order_line.shop_warning or self.shop_warning
 
         return super()._verify_updated_quantity(order_line, product_id, new_qty, **kwargs)
 
-    def _get_stock_warning(self, clear=True):
+    def _get_cart_and_free_qty(self, line=None, product=None, **kwargs):
+        """ Get cart quantity and free quantity for given product or line's product.
+
+        Note: self.ensure_one()
+
+        :param SaleOrderLine line: The optional line
+        :param ProductProduct product: The optional product
+        """
         self.ensure_one()
-        warn = self.warning_stock
-        if clear:
-            self.warning_stock = ''
-        return warn
+        if not line and not product:
+            return 0, 0
+        cart_qty = sum(
+            self._get_common_product_lines(line, product, **kwargs).mapped('product_uom_qty')
+        )
+        free_qty = (product or line.product_id).with_context(warehouse=self.warehouse_id.id).free_qty
+        return cart_qty, free_qty
 
+    def _get_common_product_lines(self, line=None, product=None, **kwargs):
+        """ Get the lines with the same product or line's product
 
-class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+        :param SaleOrderLine line: The optional line
+        :param ProductProduct product: The optional product
+        """
+        if not line and not product:
+            return self.env['sale.order.line']
+        product = product or line.product_id
+        return self.order_line.filtered(lambda l: l.product_id == product)
 
-    warning_stock = fields.Char('Warning')
-
-    def _get_stock_warning(self, clear=True):
+    def _set_shop_warning_stock(self, desired_qty, new_qty):
         self.ensure_one()
-        warn = self.warning_stock
-        if clear:
-            self.warning_stock = ''
-        return warn
+        self.shop_warning = _(
+            'You ask for %(desired_qty)s products but only %(new_qty)s is available',
+            desired_qty=desired_qty, new_qty=new_qty
+        )
+        return self.shop_warning

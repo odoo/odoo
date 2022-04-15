@@ -379,7 +379,9 @@ class SaleOrderLine(models.Model):
                 line.pricelist_item_id = False
             else:
                 line.pricelist_item_id = line.order_id.pricelist_id._get_product_rule(
-                    line.product_id, line.product_uom_qty or 1.0, line.product_uom, line.order_id.date_order)
+                    line.product_id, line.product_uom_qty or 1.0, line.product_uom,
+                    line.order_id.date_order, **line._get_price_computing_kwargs()
+                )
 
     def _get_price_rule_id(self, **product_context):
         self.ensure_one()
@@ -389,18 +391,9 @@ class SaleOrderLine(models.Model):
         product = self.product_id.with_context(**product_context)
         qty = self.product_uom_qty or 1.0
 
-        if pricelist_rule:
-            price = pricelist_rule._compute_price(
-                product, qty, self.product_uom, order_date)
-        else:
-            # fall back on Sales Price if no rule is found
-            price = product.price_compute('list_price', uom=self.product_uom, date=order_date)[product.id]
+        price = pricelist_rule._compute_price(
+            product, qty, self.product_uom, order_date, self.currency_id)
 
-            # Note: we do not rely on the currency parameter of price_compute
-            # to avoid rounding the resulting price value to the currency decimal precision
-            if product.currency_id != self.currency_id:
-                price = product.currency_id._convert(
-                    price, self.currency_id, self.env.company, order_date, round=False)
         return price, pricelist_rule.id
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
@@ -511,7 +504,8 @@ class SaleOrderLine(models.Model):
             if pricelist_item.pricelist_id.discount_policy == 'without_discount':
                 while pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id and pricelist_item.base_pricelist_id.discount_policy == 'without_discount':
                     _price, rule_id = pricelist_item.base_pricelist_id._get_product_price_rule(
-                        product, qty, uom=uom, date=date)
+                        product, qty, uom=uom, date=date, **self._get_price_computing_kwargs()
+                    )
                     pricelist_item = PricelistItem.browse(rule_id)
 
             if pricelist_item.base == 'standard_price':
@@ -519,7 +513,8 @@ class SaleOrderLine(models.Model):
                 currency = product.cost_currency_id
             elif pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id:
                 price = pricelist_item.base_pricelist_id._get_product_price(
-                    product, qty, uom=uom, date=date)
+                    product, qty, uom=uom, date=date, **self._get_price_computing_kwargs()
+                )
                 currency = pricelist_item.base_pricelist_id.currency_id
             else:
                 price = product.lst_price
@@ -1074,3 +1069,14 @@ class SaleOrderLine(models.Model):
     def _is_not_sellable_line(self):
         # True if the line is a computed line (reward, delivery, ...) that user cannot add manually
         return False
+
+    #=== PRICE COMPUTING HOOKS ===#
+
+    def _get_price_computing_kwargs(self):
+        """ Get optional fields which may impact price computing
+        """
+        if not self:
+            return {}
+
+        self.ensure_one()
+        return {}

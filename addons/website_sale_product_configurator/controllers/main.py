@@ -78,19 +78,22 @@ class WebsiteSale(main.WebsiteSale):
                 add_qty=main_product['quantity'],
                 product_custom_attribute_values=main_product['product_custom_attribute_values'],
                 no_variant_attribute_values=main_product['no_variant_attribute_values'],
+                **kwargs
             )
 
-            # Link option with its parent.
-            option_parent = {main_product['unique_id']: value['line_id']}
-            for option in product_and_options[1:]:
-                parent_unique_id = option['parent_unique_id']
-                option_value = order._cart_update(
-                    product_id=option['product_id'],
-                    set_qty=option['quantity'],
-                    linked_line_id=option_parent[parent_unique_id],
-                    product_custom_attribute_values=option['product_custom_attribute_values'],
-                    no_variant_attribute_values=option['no_variant_attribute_values'],
-                )
-                option_parent[option['unique_id']] = option_value['line_id']
+            if value['line_id']:
+                # Link option with its parent iff line has been created.
+                option_parent = {main_product['unique_id']: value['line_id']}
+                for option in product_and_options[1:]:
+                    parent_unique_id = option['parent_unique_id']
+                    option_value = order._cart_update(
+                        product_id=option['product_id'],
+                        set_qty=option['quantity'],
+                        linked_line_id=option_parent[parent_unique_id],
+                        product_custom_attribute_values=option['product_custom_attribute_values'],
+                        no_variant_attribute_values=option['no_variant_attribute_values'],
+                        **kwargs
+                    )
+                    option_parent[option['unique_id']] = option_value['line_id']
 
         return str(order.cart_quantity)
