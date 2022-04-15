@@ -369,4 +369,19 @@ options.registry.DesignTab = options.Class.extend({
     },
 });
 
+options.registry.Parallax = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        // Parallax is not supported in emails.
+        return false;
+    },
+});
+
 });
