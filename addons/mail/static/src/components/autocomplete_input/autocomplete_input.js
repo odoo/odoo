@@ -162,7 +162,6 @@ Object.assign(AutocompleteInput, {
         isFocusOnMount: false,
         isHtml: false,
         placeholder: '',
-        onFocusin: () => {},
     },
     props: {
         customClass: {
@@ -182,10 +181,6 @@ Object.assign(AutocompleteInput, {
             optional: true,
         },
         localId: String,
-        onFocusin: {
-            type: Function,
-            optional: true,
-        },
         onHide: {
             type: Function,
             optional: true,

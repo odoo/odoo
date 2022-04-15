@@ -11,6 +11,17 @@ registerModel({
         'discussViewOwnerAsMobileAddItemHeader',
         'messagingMenuOwnerAsMobileNewMessageInput',
     ]],
+    recordMethods: {
+        /**
+         * @param {FocusEvent} ev
+         */
+        onFocusin(ev) {
+            if (this.chatWindowOwnerAsNewMessage) {
+                this.chatWindowOwnerAsNewMessage.onFocusInNewMessageFormInput(ev);
+                return;
+            }
+        },
+    },
     fields: {
         chatWindowOwnerAsNewMessage: one('ChatWindow', {
             inverse: 'newMessageAutocompleteInputView',
