@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ListRenderer" owl="1">
-        <div class="o_list_renderer table-responsive" t-ref="root">
+        <div class="o_list_renderer" t-att-class="{'table-responsive': showTable}" t-ref="root">
             <t t-if="showNoContentHelper" t-call="web.ActionHelper">
                 <t t-set="noContentHelp" t-value="props.noContentHelp"/>
             </t>
@@ -145,6 +145,7 @@
                                 className="button.className"
                                 clickParams="button.clickParams"
                                 defaultRank="button.defaultRank"
+                                disabled="record.isVirtual"
                                 icon="button.icon"
                                 record="record"
                                 string="button.string"

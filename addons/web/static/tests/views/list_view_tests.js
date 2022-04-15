@@ -5799,9 +5799,7 @@ QUnit.module("Views", (hooks) => {
         await editInput($(target).find(".o_field_widget[name=foo]"), "new value");
     });
 
-    QUnit.skipWOWL("list view, editable, without data", async function (assert) {
-        assert.expect(12);
-
+    QUnit.test("list view, editable, without data", async function (assert) {
         serverData.models.foo.records = [];
         serverData.models.foo.fields.date.default = "2017-02-10";
 
@@ -5816,14 +5814,10 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo"/>
                     <button type="object" icon="fa-plus-square" name="method"/>
                 </tree>`,
-            viewOptions: {
-                action: {
-                    help: "click to add a partner",
-                },
-            },
+            noContentHelp: "click to add a partner",
             mockRPC(route, args) {
                 if (args.method === "create") {
-                    assert.ok(true, "should have created a record");
+                    assert.step("create");
                 }
             },
         });
@@ -5833,7 +5827,6 @@ QUnit.module("Views", (hooks) => {
             ".o_view_nocontent",
             "should have a no content helper displayed"
         );
-
         assert.containsNone(
             target,
             "div.table-responsive",
@@ -5842,48 +5835,45 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, "table", "should not have rendered a table");
 
         await click(target.querySelector(".o_list_button_add"));
-
         assert.containsNone(
             target,
             ".o_view_nocontent",
             "should not have a no content helper displayed"
         );
         assert.containsOnce(target, "table", "should have rendered a table");
-
         assert.hasClass(
-            $(target).find("tbody tr:eq(0)"),
+            target.querySelector("tbody tr"),
             "o_selected_row",
             "the date field td should be in edit mode"
         );
         assert.strictEqual(
-            $(target).find("tbody tr:eq(0) td:eq(1)").text().trim(),
+            target.querySelector("tbody tr").querySelectorAll("td")[1].textContent,
             "",
             "the date field td should not have any content"
         );
-
         assert.strictEqual(
-            $(target).find("tr.o_selected_row .o_list_record_selector input").prop("disabled"),
+            target.querySelector("tr.o_selected_row .o_list_record_selector input").disabled,
             true,
             "record selector checkbox should be disabled while the record is not yet created"
         );
         assert.strictEqual(
-            $(target).find(".o_list_button button").prop("disabled"),
+            target.querySelector(".o_list_button button").disabled,
             true,
             "buttons should be disabled while the record is not yet created"
         );
 
-        await click(target.querySelector(".o_list_button_save"));
-
+        await clickSave(target);
         assert.strictEqual(
-            $(target).find("tbody tr:eq(0) .o_list_record_selector input").prop("disabled"),
+            target.querySelector("tbody tr .o_list_record_selector input").disabled,
             false,
             "record selector checkbox should not be disabled once the record is created"
         );
         assert.strictEqual(
-            $(target).find(".o_list_button button").prop("disabled"),
+            target.querySelector(".o_list_button button").disabled,
             false,
             "buttons should not be disabled once the record is created"
         );
+        assert.verifySteps(["create"]);
     });
 
     QUnit.test("list view, editable, with a button", async function (assert) {

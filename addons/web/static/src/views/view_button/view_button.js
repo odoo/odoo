@@ -33,16 +33,20 @@ function iconFromString(iconString) {
 
 export class ViewButton extends Component {
     setup() {
-        const { name, type, special, debounce } = this.props.clickParams;
-        this.disabled = !name && !type && !special;
         this.className = this.getButtonClassName();
 
         if (this.props.icon) {
             this.icon = iconFromString(this.props.icon);
         }
+        const { debounce } = this.props.clickParams;
         if (debounce) {
             this.onClick = debounceFn(this.onClick.bind(this), debounce, true);
         }
+    }
+
+    get disabled() {
+        const { name, type, special } = this.props.clickParams;
+        return (!name && !type && !special) || this.props.disabled;
     }
 
     onClick() {
@@ -80,6 +84,7 @@ ViewButton.props = [
     "clickParams?",
     "icon?",
     "defaultRank?",
+    "disabled?",
     "size?",
     "title?",
     "string?",
