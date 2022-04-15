@@ -265,20 +265,6 @@
                             for (var j=0; j&lt;y.length; ++j)
                                 y[j].textContent = vars[x[i]];
                         }
-
-                        var index = vars['webpage'].split('.', 4)[3];
-                        var header = document.getElementById('minimal_layout_report_headers');
-                        if(header){
-                            var companyHeader = header.children[index];
-                            header.textContent = '';
-                            header.appendChild(companyHeader);
-                        }
-                        var footer = document.getElementById('minimal_layout_report_footers');
-                        if(footer){
-                            var companyFooter = footer.children[index];
-                            footer.textContent = '';
-                            footer.appendChild(companyFooter);
-                        }
                     }
                 </script>
             </head>
@@ -308,7 +294,7 @@
     </template>
 
     <template id="external_layout_striped">
-        <div t-attf-class="o_company_#{company.id}_layout header" t-att-style="report_header_style">
+        <div t-attf-class="o_company_#{company.id}_layout header" t-att-style="report_header_style" t-att-data-oe-lang="o and o.env.context.get('lang')">
             <div class="o_background_header">
             <div class="float-right">
                 <h3 class="mt0 text-right" t-field="company.report_header"/>
@@ -326,7 +312,7 @@
             <t t-out="0"/>
         </div>
 
-        <div t-attf-class="o_company_#{company.id}_layout footer o_background_footer">
+        <div t-attf-class="o_company_#{company.id}_layout footer o_background_footer" t-att-data-oe-lang="o and o.env.context.get('lang')">
             <div class="text-center">
                 <ul class="list-inline">
                     <div t-field="company.report_footer"/>
@@ -342,7 +328,7 @@
     </template>
 
     <template id="external_layout_boxed">
-        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
+        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style" t-att-data-oe-lang="o and o.env.context.get('lang')">
             <div class="o_boxed_header">
             <div class="row mb8">
                 <div class="col-6">
@@ -366,7 +352,7 @@
             <t t-out="0"/>
         </div>
 
-        <div t-attf-class="footer o_boxed_footer o_company_#{company.id}_layout">
+        <div t-attf-class="footer o_boxed_footer o_company_#{company.id}_layout" t-att-data-oe-lang="o and o.env.context.get('lang')">
             <div class="text-center">
                 <div t-field="company.report_footer"/>
                 <div t-if="report_type == 'pdf'">
@@ -377,7 +363,7 @@
     </template>
 
     <template id="external_layout_bold">
-        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
+        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style" t-att-data-oe-lang="o and o.env.context.get('lang')">
             <div class="o_clean_header">
             <div class="row">
                 <div class="col-6">
@@ -405,7 +391,7 @@
             <t t-out="0"/>
         </div>
 
-        <div t-attf-class="footer o_clean_footer o_company_#{company.id}_layout">
+        <div t-attf-class="footer o_clean_footer o_company_#{company.id}_layout" t-att-data-oe-lang="o and o.env.context.get('lang')">
             <div class="row">
                 <div class="col-4">
                     <span t-field="company.report_footer"/>
@@ -426,7 +412,7 @@
     </template>
 
     <template id="external_layout_standard">
-        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
+        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style" t-att-data-oe-lang="o and o.env.context.get('lang')">
             <div class="row">
                 <div class="col-3 mb4">
                     <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 45px;" alt="Logo"/>
@@ -453,7 +439,7 @@
             <t t-out="0"/>
         </div>
 
-        <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+        <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout" t-att-data-oe-lang="o and o.env.context.get('lang')">
             <div class="text-center" style="border-top: 1px solid black;">
                 <ul class="list-inline mb4">
                     <div t-field="company.report_footer"/>

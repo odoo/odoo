@@ -305,19 +305,38 @@ class IrActionsReport(models.Model):
 
         return command_args
 
+    def _render_node_into_html(self, layout, node, report_data=None):
+        '''Render a single lxml.html node into an HTML file that will be used into
+        the wkhtmltopdf tool. Substition is advised for footers/headers that use dynamic
+        content (such as the index of the page, etc.). See the content of the javascript script
+        for more details (see minimal_layout template).
+
+        :param layout: Layout to use as HTML template to render the node.
+        :type node: lxml.html node of the element that we want to render.
+        :tpye report_data: dict with the data to parse the report template
+        :return: Content of the html as string
+        :rtype: str
+        '''
+        if not report_data:
+            report_data = {}
+
+        IrQweb = self.env['ir.qweb']
+        # set context language to body language
+        if node.get('data-oe-lang'):
+            IrQweb = IrQweb.with_context(lang=node.get('data-oe-lang'))
+        report_data['body'] = Markup(lxml.html.tostring(node, encoding='unicode'))
+        return IrQweb._render(layout.id, report_data, raise_if_not_found=False)
+
     def _prepare_html(self, html, report_model=False):
-        '''Divide and recreate the header/footer html by merging all found in html.
-        The bodies are extracted and added to a list. Then, extract the specific_paperformat_args.
-        The idea is to put all headers/footers together. Then, we will use a javascript trick
-        (see minimal_layout template) to set the right header/footer during the processing of wkhtmltopdf.
-        This allows the computation of multiple reports in a single call to wkhtmltopdf.
+        '''The bodies, headers and footers are extracted and added to a list.
+        Then, extract the specific_paperformat_args.
 
         :param html: The html rendered by render_qweb_html.
         :type: bodies: list of string representing each one a html body.
-        :type header: string representing the html header.
-        :type footer: string representing the html footer.
+        :type headers: list of string representing each one a html header.
+        :type footers: list of string representing each one a html footer.
         :type specific_paperformat_args: dictionary of prioritized paperformat values.
-        :return: bodies, header, footer, specific_paperformat_args
+        :return: bodies, headers, footers, specific_paperformat_args
         '''
         IrConfig = self.env['ir.config_parameter'].sudo()
 
@@ -330,37 +349,34 @@ class IrActionsReport(models.Model):
         root = lxml.html.fromstring(html)
         match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
 
-        header_node = etree.Element('div', id='minimal_layout_report_headers')
-        footer_node = etree.Element('div', id='minimal_layout_report_footers')
+        headers = []
+        footers = []
         bodies = []
         res_ids = []
 
         body_parent = root.xpath('//main')[0]
         # Retrieve headers
         for node in root.xpath(match_klass.format('header')):
-            body_parent = node.getparent()
-            node.getparent().remove(node)
-            header_node.append(node)
+            headers.append(self._render_node_into_html(layout, node, report_data={
+                'base_url': base_url,
+                'subst': True
+            }))
 
         # Retrieve footers
         for node in root.xpath(match_klass.format('footer')):
-            body_parent = node.getparent()
-            node.getparent().remove(node)
-            footer_node.append(node)
+            footers.append(self._render_node_into_html(layout, node, report_data={
+                'base_url': base_url,
+                'subst': True
+            }))
 
         # Retrieve bodies
         for node in root.xpath(match_klass.format('article')):
-            # set context language to body language
-            IrQweb = self.env['ir.qweb']
-            if node.get('data-oe-lang'):
-                IrQweb = IrQweb.with_context(lang=node.get('data-oe-lang'))
-            body = IrQweb._render(layout.id, {
-                    'subst': False,
-                    'body': Markup(lxml.html.tostring(node, encoding='unicode')),
-                    'base_url': base_url,
-                    'report_xml_id' : self.xml_id
-                }, raise_if_not_found=False)
-            bodies.append(body)
+            # 'report_xml_id' : self.xml_id
+            bodies.append(self._render_node_into_html(layout, node, report_data={
+                'base_url': base_url,
+                'subst': False,
+                'report_xml_id': self.xml_id
+            }))
             if node.get('data-oe-model') == report_model:
                 res_ids.append(int(node.get('data-oe-id', 0)))
             else:
@@ -377,25 +393,14 @@ class IrActionsReport(models.Model):
             if attribute[0].startswith('data-report-'):
                 specific_paperformat_args[attribute[0]] = attribute[1]
 
-        header = self.env['ir.qweb']._render(layout.id, {
-            'subst': True,
-            'body': Markup(lxml.html.tostring(header_node, encoding='unicode')),
-            'base_url': base_url
-        })
-        footer = self.env['ir.qweb']._render(layout.id, {
-            'subst': True,
-            'body': Markup(lxml.html.tostring(footer_node, encoding='unicode')),
-            'base_url': base_url
-        })
-
-        return bodies, res_ids, header, footer, specific_paperformat_args
+        return bodies, res_ids, headers, footers, specific_paperformat_args
 
     @api.model
     def _run_wkhtmltopdf(
             self,
             bodies,
-            header=None,
-            footer=None,
+            headers=None,
+            footers=None,
             landscape=False,
             specific_paperformat_args=None,
             set_viewport_size=False):
@@ -420,36 +425,28 @@ class IrActionsReport(models.Model):
             specific_paperformat_args=specific_paperformat_args,
             set_viewport_size=set_viewport_size)
 
-        files_command_args = []
+        def _make_tmp_file(temporary_files, file_suffix, file_prefix, content=None):
+            with tempfile.NamedTemporaryFile(suffix=file_suffix, prefix=file_prefix, delete=False) as file:
+                if content:
+                    file.write(content.encode())
+            temporary_files.append(file.name)
+            return file.name
+
         temporary_files = []
-        if header:
-            head_file_fd, head_file_path = tempfile.mkstemp(suffix='.html', prefix='report.header.tmp.')
-            with closing(os.fdopen(head_file_fd, 'wb')) as head_file:
-                head_file.write(header.encode())
-            temporary_files.append(head_file_path)
-            files_command_args.extend(['--header-html', head_file_path])
-        if footer:
-            foot_file_fd, foot_file_path = tempfile.mkstemp(suffix='.html', prefix='report.footer.tmp.')
-            with closing(os.fdopen(foot_file_fd, 'wb')) as foot_file:
-                foot_file.write(footer.encode())
-            temporary_files.append(foot_file_path)
-            files_command_args.extend(['--footer-html', foot_file_path])
-
-        paths = []
+        files_command_args = []
         for i, body in enumerate(bodies):
-            prefix = '%s%d.' % ('report.body.tmp.', i)
-            body_file_fd, body_file_path = tempfile.mkstemp(suffix='.html', prefix=prefix)
-            with closing(os.fdopen(body_file_fd, 'wb')) as body_file:
-                body_file.write(body.encode())
-            paths.append(body_file_path)
-            temporary_files.append(body_file_path)
+            body_file_path = _make_tmp_file(temporary_files, '.html', '%s%d.' % ('report.body.tmp.', i), content=body)
+            files_command_args.append(body_file_path)
+            if footers and i < len(footers):
+                footer_file_path = _make_tmp_file(temporary_files, '.html', '%s%d.' % ('report.footer.tmp.', i), content=footers[i])
+                files_command_args.extend(['--footer-html', footer_file_path])
+            if headers and i < len(headers):
+                header_file_path = _make_tmp_file(temporary_files, '.html', '%s%d.' % ('report.header.tmp.', i), content=headers[i])
+                files_command_args.extend(['--header-html', header_file_path])
 
-        pdf_report_fd, pdf_report_path = tempfile.mkstemp(suffix='.pdf', prefix='report.tmp.')
-        os.close(pdf_report_fd)
-        temporary_files.append(pdf_report_path)
-
+        pdf_report_path = _make_tmp_file(temporary_files, '.pdf', 'report.tmp.', content=None)
         try:
-            wkhtmltopdf = [_get_wkhtmltopdf_bin()] + command_args + files_command_args + paths + [pdf_report_path]
+            wkhtmltopdf = [_get_wkhtmltopdf_bin()] + command_args + files_command_args + [pdf_report_path]
             process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             out, err = process.communicate()
 
@@ -687,7 +684,7 @@ class IrActionsReport(models.Model):
 
             html = self_sudo.with_context(**additional_context)._render_qweb_html(res_ids_wo_stream, data=data)[0]
 
-            bodies, html_ids, header, footer, specific_paperformat_args = self._prepare_html(html, report_model=self_sudo.model)
+            bodies, html_ids, headers, footers, specific_paperformat_args = self._prepare_html(html, report_model=self_sudo.model)
 
             if self_sudo.attachment and set(res_ids) != set(html_ids):
                 raise UserError(_(
@@ -699,8 +696,8 @@ class IrActionsReport(models.Model):
 
             pdf_content = self._run_wkhtmltopdf(
                 bodies,
-                header=header,
-                footer=footer,
+                headers=headers,
+                footers=footers,
                 landscape=self._context.get('landscape'),
                 specific_paperformat_args=specific_paperformat_args,
                 set_viewport_size=self._context.get('set_viewport_size'),

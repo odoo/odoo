@@ -226,7 +226,7 @@ class MrpStockReport(models.TransientModel):
 
         return self.env['ir.actions.report']._run_wkhtmltopdf(
             [body],
-            header=header.decode(),
+            headers=[header.decode()],
             landscape=True,
             specific_paperformat_args={'data-report-margin-top': 17, 'data-report-header-spacing': 12}
         )
