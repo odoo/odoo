@@ -323,11 +323,22 @@
                 <tree string="Task Stage" delete="0" sample="1" multi_edit="1">
                     <field name="sequence" widget="handle" optional="show"/>
                     <field name="name"/>
-                    <field name="mail_template_id" optional="hide"/>
-                    <field name="rating_template_id" optional="hide" groups="project.group_project_rating"/>
-                    <field name="project_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color'}" />
                     <field name="fold" optional="show"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="task_type_tree_inherited" model="ir.ui.view">
+            <field name="name">project.task.type.tree.inherited</field>
+            <field name="model">project.task.type</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="task_type_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="mail_template_id" optional="hide"/>
+                    <field name="rating_template_id" optional="hide" groups="project.group_project_rating"/>
+                    <field name="project_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                </xpath>
             </field>
         </record>
 
@@ -364,7 +375,7 @@
             <field name="name">Task Stages</field>
             <field name="res_model">project.task.type</field>
             <field name="view_mode">tree,kanban,form</field>
-            <field name="view_id" ref="task_type_tree"/>
+            <field name="view_id" ref="task_type_tree_inherited"/>
             <field name="domain">[('user_id', '=', False)]</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -380,7 +391,7 @@
             <field name="res_model">project.task.type</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="domain">[('project_ids','=', project_id)]</field>
-            <field name="view_id" ref="task_type_tree"/>
+            <field name="view_id" ref="task_type_tree_inherited"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                 Create a new stage in the task pipeline
@@ -515,8 +526,8 @@
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title">
                         <h1 class="d-flex flex-row">
-                            <field name="is_favorite" nolabel="1" widget="boolean_favorite" class="me-3"/>
-                            <field name="name" class="text-break" placeholder="Project Name"/>
+                            <field name="is_favorite" nolabel="1" widget="boolean_favorite" class="me-2"/>
+                            <field name="name" class="o_text_overflow" placeholder="e.g. Office Party"/>
                         </h1>
                     </div>
                     <group>
@@ -756,13 +767,16 @@
             <field name="model">project.project</field>
             <field name="arch" type="xml">
                 <form string="Project">
-                    <group>
-                        <field name="name" class="o_project_name oe_inline"
-                            string="Project Name" placeholder="e.g. Office Party"/>
-                        <field name="user_id" invisible="1"/>
-                    </group>
+                    <div class="oe_title">
+                        <label for="name" string="Name"/>
+                        <h1>
+                            <field name="name" class="o_project_name oe_inline" placeholder="e.g. Office Party"/>
+                        </h1>
+                    </div>
+                    <field name="user_id" invisible="1"/>
+                    <div class="row mt16 o_settings_container"/>
                     <div name="alias_def" colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                        <label for="alias_name" class="oe_inline" string="Create tasks by sending an email to"/>
+                        <label for="alias_name" class="oe_inline mt-4" string="Create tasks by sending an email to"/>
                         <field name="alias_enabled" invisible="1"/>
                         <span>
                             <field name="alias_name" class="oe_inline" placeholder="e.g. office-party"/>@<field name="alias_domain" class="oe_inline" readonly="1" />
@@ -778,9 +792,9 @@
             <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <xpath expr="//group" position="after">
+                <xpath expr="//div[@name='alias_def']" position="after">
                     <footer>
-                        <button string="Create Project" name="action_view_tasks" type="object" class="btn-primary o_open_tasks" data-hotkey="q"/>
+                        <button string="Create project" name="action_view_tasks" type="object" class="btn-primary o_open_tasks" data-hotkey="q"/>
                         <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
                     </footer>
                 </xpath>
@@ -943,6 +957,18 @@
             </field>
         </record>
 
+        <record id="view_project_config_kanban" model="ir.ui.view">
+            <field name="name">project.kanban.inherit.config.project</field>
+            <field name="model">project.project</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="view_project_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban" position="attributes">
+                    <attribute name="action"></attribute>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_project_calendar" model="ir.ui.view">
             <field name="name">project.project.calendar</field>
             <field name="model">project.project</field>
@@ -1014,7 +1040,7 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_ids" eval="[(5, 0, 0),
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('view_project')}),
-                (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_project_kanban')})]"/>
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_project_config_kanban')})]"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{}</field>
             <field name="help" type="html">
@@ -1055,7 +1081,7 @@
             <field name="sequence" eval="20"/>
             <field name="view_mode">kanban</field>
             <field name="act_window_id" ref="project.open_view_project_all_config_group_stage"/>
-            <field name="view_id" ref="view_project_kanban"/>
+            <field name="view_id" ref="view_project_config_kanban"/>
         </record>
 
         <!-- Task -->
@@ -1314,6 +1340,7 @@
                                 <group>
                                     <field name="is_analytic_account_id_changed" invisible="1"/>
                                     <field name="parent_id" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
+                                    <field name="personal_stage_type_id" string="Personal Stage" groups="base.group_no_one" domain="[('user_id', '!=', False)]" context="{'default_user_id' : uid}" readonly="0" required="1"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" context="{'default_partner_id': partner_id}"/>
                                     <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
