@@ -1810,7 +1810,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "reference fields inside x2manys are fetched after an onchange",
         async function (assert) {
             assert.expect(5);
@@ -1865,9 +1865,9 @@ QUnit.module("Fields", (hooks) => {
             await editInput(target, ".o_field_widget[name=foo] input", "some value");
 
             assert.containsN(target, ".o_data_row", 3);
-            assert.strictEqual(
+            assert.deepEqual(
                 [...target.querySelectorAll(".ref_field")].map((el) => el.textContent),
-                ["xpad", "xphone"]
+                ["", "xpad", "xphone"]
             );
         }
     );
