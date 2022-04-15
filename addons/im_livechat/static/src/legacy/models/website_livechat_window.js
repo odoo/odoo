@@ -1,14 +1,14 @@
 odoo.define('im_livechat.legacy.im_livechat.WebsiteLivechatWindow', function (require) {
 "use strict";
 
-var AbstractThreadWindow = require('im_livechat.legacy.mail.AbstractThreadWindow');
+const AbstractThreadWindow = require('im_livechat.legacy.mail.AbstractThreadWindow');
 
 /**
  * This is the widget that represent windows of livechat in the frontend.
  *
  * @see im_livechat.legacy.mail.AbstractThreadWindow for more information
  */
-var LivechatWindow = AbstractThreadWindow.extend({
+const LivechatWindow = AbstractThreadWindow.extend({
     events: _.extend(AbstractThreadWindow.prototype.events, {
         'input .o_composer_text_field': '_onInput',
     }),
@@ -94,7 +94,7 @@ var LivechatWindow = AbstractThreadWindow.extend({
      */
     _onInput: function () {
         if (this.hasThread() && this._thread.hasTypingNotification()) {
-            var isTyping = this.$input.val().length > 0;
+            const isTyping = this.$input.val().length > 0;
             this._thread.setMyselfTyping({ typing: isTyping });
         }
     },

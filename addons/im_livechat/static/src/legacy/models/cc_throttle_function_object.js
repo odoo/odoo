@@ -1,13 +1,13 @@
 odoo.define('im_livechat.legacy.mail.model.CCThrottleFunctionObject', function (require) {
 "use strict";
 
-var Class = require('web.Class');
+const Class = require('web.Class');
 
 /**
  * This object models the behaviour of the clearable and cancellable (CC)
  * throttle version of a provided function.
  */
-var CCThrottleFunctionObject = Class.extend({
+const CCThrottleFunctionObject = Class.extend({
 
     /**
      * @param {Object} params

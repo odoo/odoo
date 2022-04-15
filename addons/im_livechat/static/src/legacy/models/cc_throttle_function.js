@@ -1,7 +1,7 @@
 odoo.define('im_livechat.legacy.mail.model.CCThrottleFunction', function (require) {
 "use strict";
 
-var CCThrottleFunctionObject = require('im_livechat.legacy.mail.model.CCThrottleFunctionObject');
+const CCThrottleFunctionObject = require('im_livechat.legacy.mail.model.CCThrottleFunctionObject');
 
 /**
  * A function that creates a cancellable and clearable (CC) throttle version
@@ -31,16 +31,16 @@ var CCThrottleFunctionObject = require('im_livechat.legacy.mail.model.CCThrottle
  * @returns {function} the cancellable and clearable throttle version of the
  *   provided function in argument.
  */
-var CCThrottleFunction = function (params) {
-    var duration = params.duration;
-    var func = params.func;
+const CCThrottleFunction = function (params) {
+    const duration = params.duration;
+    const func = params.func;
 
-    var throttleFunctionObject = new CCThrottleFunctionObject({
+    const throttleFunctionObject = new CCThrottleFunctionObject({
         duration: duration,
         func: func,
     });
 
-    var callable = function () {
+    const callable = function () {
         return throttleFunctionObject.do.apply(throttleFunctionObject, arguments);
     };
     callable.cancel = function () {

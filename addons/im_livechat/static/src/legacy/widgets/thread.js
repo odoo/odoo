@@ -1,30 +1,30 @@
 odoo.define('im_livechat.legacy.mail.widget.Thread', function (require) {
 "use strict";
 
-var DocumentViewer = require('im_livechat.legacy.mail.DocumentViewer');
-var mailUtils = require('@mail/js/utils');
+const DocumentViewer = require('im_livechat.legacy.mail.DocumentViewer');
+const mailUtils = require('@mail/js/utils');
 
-var core = require('web.core');
-var time = require('web.time');
-var Widget = require('web.Widget');
+const core = require('web.core');
+const time = require('web.time');
+const Widget = require('web.Widget');
 
-var QWeb = core.qweb;
-var _lt = core._lt;
+const QWeb = core.qweb;
+const _lt = core._lt;
 
-var ORDER = {
+const ORDER = {
     ASC: 1, // visually, ascending order of message IDs (from top to bottom)
     DESC: -1, // visually, descending order of message IDs (from top to bottom)
 };
 
-var READ_MORE = _lt("read more");
-var READ_LESS = _lt("read less");
+const READ_MORE = _lt("read more");
+const READ_LESS = _lt("read less");
 
 /**
  * This is a generic widget to render a thread.
  * Any thread that extends mail.model.AbstractThread can be used with this
  * widget.
  */
-var ThreadWidget = Widget.extend({
+const ThreadWidget = Widget.extend({
     className: 'o_mail_thread',
 
     events: {
@@ -115,18 +115,18 @@ var ThreadWidget = Widget.extend({
      * @param {boolean} [options.squashCloseMessages]
      */
     render: function (thread, options) {
-        var self = this;
+        const self = this;
 
-        var shouldScrollToBottomAfterRendering = false;
+        let shouldScrollToBottomAfterRendering = false;
         if (this._currentThreadID === thread.getID() && this.isAtBottom()) {
             shouldScrollToBottomAfterRendering = true;
         }
         this._currentThreadID = thread.getID();
 
         // copy so that reverse do not alter order in the thread object
-        var messages = _.clone(thread.getMessages({ domain: options.domain || [] }));
+        const messages = _.clone(thread.getMessages({ domain: options.domain || [] }));
 
-        var modeOptions = options.isCreateMode ? this._disabledOptions :
+        const modeOptions = options.isCreateMode ? this._disabledOptions :
                                                     this._enabledOptions;
 
         // attachments ordered by messages order (increasing ID)
@@ -140,13 +140,13 @@ var ThreadWidget = Widget.extend({
 
         // dict where key is message ID, and value is whether it should display
         // the author of message or not visually
-        var displayAuthorMessages = {};
+        const displayAuthorMessages = {};
 
         // Hide avatar and info of a message if that message and the previous
         // one are both comments wrote by the same author at the same minute
         // and in the same document (users can now post message in documents
         // directly from a channel that follows it)
-        var prevMessage;
+        let prevMessage;
         _.each(messages, function (message) {
             if (
                 // is first message of thread
@@ -190,7 +190,7 @@ var ThreadWidget = Widget.extend({
         }));
 
         _.each(messages, function (message) {
-            var $message = self.$('.o_thread_message[data-message-id="' + message.getID() + '"]');
+            const $message = self.$('.o_thread_message[data-message-id="' + message.getID() + '"]');
             $message.find('.o_mail_timestamp').data('date', message.getDate());
 
             self._insertReadMore($message);
@@ -231,10 +231,10 @@ var ThreadWidget = Widget.extend({
      * @return {boolean}
      */
     isAtBottom: function () {
-        var fullHeight = this.el.scrollHeight;
-        var topHiddenHeight = this.$el.scrollTop();
-        var visibleHeight = this.$el.outerHeight();
-        var bottomHiddenHeight = fullHeight - topHiddenHeight - visibleHeight;
+        const fullHeight = this.el.scrollHeight;
+        const topHiddenHeight = this.$el.scrollTop();
+        const visibleHeight = this.$el.outerHeight();
+        const bottomHiddenHeight = fullHeight - topHiddenHeight - visibleHeight;
         return bottomHiddenHeight < 5;
     },
     /**
@@ -247,7 +247,7 @@ var ThreadWidget = Widget.extend({
      * @param {Object} [options] options for the thread rendering
      */
     removeMessageAndRender: function (messageID, thread, options) {
-        var self = this;
+        const self = this;
         this._currentThreadID = thread.getID();
         return new Promise(function (resolve, reject) {
             self.$('.o_thread_message[data-message-id="' + messageID + '"]')
@@ -276,10 +276,10 @@ var ThreadWidget = Widget.extend({
      * @param {boolean} [options.onlyIfNecessary]
      */
     scrollToMessage: function (options) {
-        var $target = this.$('.o_thread_message[data-message-id="' + options.messageID + '"]');
+        const $target = this.$('.o_thread_message[data-message-id="' + options.messageID + '"]');
         if (options.onlyIfNecessary) {
-            var delta = $target.parent().height() - $target.height();
-            var offset = delta < 0 ?
+            const delta = $target.parent().height() - $target.height();
+            let offset = delta < 0 ?
                             0 :
                             delta - ($target.offset().top - $target.offsetParent().offset().top);
             offset = - Math.min(offset, 0);
@@ -335,14 +335,14 @@ var ThreadWidget = Widget.extend({
      * @param {jQuery} $element
      */
     _insertReadMore: function ($element) {
-        var self = this;
+        const self = this;
 
-        var groups = [];
-        var readMoreNodes;
+        const groups = [];
+        let readMoreNodes;
 
         // nodeType 1: element_node
         // nodeType 3: text_node
-        var $children = $element.contents()
+        const $children = $element.contents()
             .filter(function () {
                 return this.nodeType === 1 ||
                         this.nodeType === 3 &&
@@ -350,7 +350,7 @@ var ThreadWidget = Widget.extend({
             });
 
         _.each($children, function (child) {
-            var $child = $(child);
+            let $child = $(child);
 
             // Hide Text nodes if "stopSpelling"
             if (
@@ -387,14 +387,14 @@ var ThreadWidget = Widget.extend({
 
         _.each(groups, function (group) {
             // Insert link just before the first node
-            var $readMore = $('<a>', {
+            const $readMore = $('<a>', {
                 class: 'o_mail_read_more',
                 href: '#',
                 text: READ_MORE,
             }).insertBefore(group[0]);
 
             // Toggle All next nodes
-            var isReadMore = true;
+            let isReadMore = true;
             $readMore.click(function (e) {
                 e.preventDefault();
                 isReadMore = !isReadMore;
@@ -412,7 +412,7 @@ var ThreadWidget = Widget.extend({
     */
     _onDeleteAttachment: function (ev) {
         ev.stopPropagation();
-        var $target = $(ev.currentTarget);
+        const $target = $(ev.currentTarget);
         this.trigger_up('delete_attachment', {
             attachmentId: $target.data('id'),
             attachmentName: $target.data('name')
@@ -456,8 +456,8 @@ var ThreadWidget = Widget.extend({
             trigger: 'hover',
             offset: '0, 1',
             content: function () {
-                var messageID = $(this).data('message-id');
-                var message = _.find(messages, function (message) {
+                const messageID = $(this).data('message-id');
+                const message = _.find(messages, function (message) {
                     return message.getID() === messageID;
                 });
                 return QWeb.render('im_livechat.legacy.mail.widget.Thread.Message.MailTooltip', {
@@ -470,9 +470,9 @@ var ThreadWidget = Widget.extend({
      * @private
      */
     _updateTimestamps: function () {
-        var isAtBottom = this.isAtBottom();
+        const isAtBottom = this.isAtBottom();
         this.$('.o_mail_timestamp').each(function () {
-            var date = $(this).data('date');
+            const date = $(this).data('date');
             $(this).text(mailUtils.timeFromNow(date));
         });
         if (isAtBottom && !this.isAtBottom()) {
@@ -497,9 +497,9 @@ var ThreadWidget = Widget.extend({
      */
     _onAttachmentView: function (event) {
         event.stopPropagation();
-        var activeAttachmentID = $(event.currentTarget).data('id');
+        const activeAttachmentID = $(event.currentTarget).data('id');
         if (activeAttachmentID) {
-            var attachmentViewer = new DocumentViewer(this, this.attachments, activeAttachmentID);
+            const attachmentViewer = new DocumentViewer(this, this.attachments, activeAttachmentID);
             attachmentViewer.appendTo($('body'));
         }
     },
@@ -538,7 +538,7 @@ var ThreadWidget = Widget.extend({
      * @param {MouseEvent} ev
      */
     _onClickMessageNeedaction: function (ev) {
-        var messageID = $(ev.currentTarget).data('message-id');
+        const messageID = $(ev.currentTarget).data('message-id');
         this.trigger('mark_as_read', messageID);
     },
     /**
@@ -570,7 +570,7 @@ var ThreadWidget = Widget.extend({
      * @param {MouseEvent} ev
      */
     _onClickMessageStar: function (ev) {
-        var messageID = $(ev.currentTarget).data('message-id');
+        const messageID = $(ev.currentTarget).data('message-id');
         this.trigger('toggle_star_status', messageID);
     },
     /**
@@ -578,9 +578,9 @@ var ThreadWidget = Widget.extend({
      * @param {MouseEvent} ev
      */
     _onClickMessageModeration: function (ev) {
-        var $button = $(ev.currentTarget);
-        var messageID = $button.data('message-id');
-        var decision = $button.data('decision');
+        const $button = $(ev.currentTarget);
+        const messageID = $button.data('message-id');
+        const decision = $button.data('decision');
         this.trigger_up('message_moderation', {
             messageID: messageID,
             decision: decision,
@@ -595,11 +595,11 @@ var ThreadWidget = Widget.extend({
         if ($(ev.target).data('oe-field') !== undefined) {
             return;
         }
-        var id = $(ev.target).data('oe-id');
+        const id = $(ev.target).data('oe-id');
         if (id) {
             ev.preventDefault();
-            var model = $(ev.target).data('oe-model');
-            var options;
+            const model = $(ev.target).data('oe-model');
+            let options;
             if (model && (model !== 'mail.channel')) {
                 options = {
                     model: model,

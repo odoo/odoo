@@ -1,12 +1,12 @@
 odoo.define('im_livechat.legacy.mail.model.Timer', function (require) {
 "use strict";
 
-var Class = require('web.Class');
+const Class = require('web.Class');
 
 /**
  * This class creates a timer which, when times out, calls a function.
  */
-var Timer = Class.extend({
+const Timer = Class.extend({
 
     /**
      * Instantiate a new timer. Note that the timer is not started on

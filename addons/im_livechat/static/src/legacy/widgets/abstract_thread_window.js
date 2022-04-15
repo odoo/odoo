@@ -1,20 +1,20 @@
 odoo.define('im_livechat.legacy.mail.AbstractThreadWindow', function (require) {
 "use strict";
 
-var ThreadWidget = require('im_livechat.legacy.mail.widget.Thread');
+const ThreadWidget = require('im_livechat.legacy.mail.widget.Thread');
 
-var config = require('web.config');
-var core = require('web.core');
-var Widget = require('web.Widget');
+const config = require('web.config');
+const core = require('web.core');
+const Widget = require('web.Widget');
 
-var QWeb = core.qweb;
-var _t = core._t;
+const QWeb = core.qweb;
+const _t = core._t;
 
 /**
  * This is an abstract widget for rendering thread windows.
  * AbstractThreadWindow is kept for legacy reasons.
  */
-var AbstractThreadWindow = Widget.extend({
+const AbstractThreadWindow = Widget.extend({
     template: 'im_livechat.legacy.mail.AbstractThreadWindow',
     custom_events: {
         document_viewer_closed: '_onDocumentViewerClose',
@@ -66,10 +66,10 @@ var AbstractThreadWindow = Widget.extend({
         }
     },
     start: function () {
-        var self = this;
+        const self = this;
         this.$input = this.$('.o_composer_text_field');
         this.$header = this.$('.o_thread_window_header');
-        var options = {
+        const options = {
             displayMarkAsRead: false,
             displayStars: this.options.displayStars,
         };
@@ -86,10 +86,10 @@ var AbstractThreadWindow = Widget.extend({
             this._focusInput();
         }
         if (!config.device.isMobile) {
-            var margin_dir = _t.database.parameters.direction === "rtl" ? "margin-left" : "margin-right";
+            const margin_dir = _t.database.parameters.direction === "rtl" ? "margin-left" : "margin-right";
             this.$el.css(margin_dir, $.position.scrollbarWidth());
         }
-        var def = this._threadWidget.replace(this.$('.o_thread_window_content')).then(function () {
+        const def = this._threadWidget.replace(this.$('.o_thread_window_content')).then(function () {
             self._threadWidget.$el.on('scroll', self, self._debouncedOnScroll);
         });
         return Promise.all([this._super(), def]);
@@ -258,7 +258,7 @@ var AbstractThreadWindow = Widget.extend({
      * @private
      */
     renderHeader: function () {
-        var options = this._getHeaderRenderingOptions();
+        const options = this._getHeaderRenderingOptions();
         this.$header.html(
             QWeb.render('im_livechat.legacy.mail.AbstractThreadWindow.HeaderContent', options));
     },
@@ -294,7 +294,7 @@ var AbstractThreadWindow = Widget.extend({
                 this._focusInput();
             }
         }
-        var height = this.isFolded() ? this.HEIGHT_FOLDED : this.HEIGHT_OPEN;
+        const height = this.isFolded() ? this.HEIGHT_FOLDED : this.HEIGHT_OPEN;
         this.$el.css({ height: height });
     },
 
@@ -366,7 +366,7 @@ var AbstractThreadWindow = Widget.extend({
      * @param {Object} messageData
      */
     _postMessage: function (messageData) {
-        var self = this;
+        const self = this;
         if (!this.hasThread()) {
             return;
         }
@@ -457,8 +457,8 @@ var AbstractThreadWindow = Widget.extend({
         ev.stopPropagation(); // to prevent jquery's blockUI to cancel event
         // ENTER key (avoid requiring jquery ui for external livechat)
         if (ev.which === 13) {
-            var content = _.str.trim(this.$input.val());
-            var messageData = {
+            const content = _.str.trim(this.$input.val());
+            const messageData = {
                 content: content,
                 attachment_ids: [],
                 partner_ids: [],
@@ -491,7 +491,7 @@ var AbstractThreadWindow = Widget.extend({
      * @private
      */
     _onThreadWindowClicked: function () {
-        var selectObj = window.getSelection();
+        const selectObj = window.getSelection();
         if (selectObj.anchorOffset === selectObj.focusOffset) {
             this.$input.focus();
         }

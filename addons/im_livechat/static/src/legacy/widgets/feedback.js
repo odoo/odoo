@@ -1,22 +1,22 @@
 odoo.define('im_livechat.legacy.im_livechat.Feedback', function (require) {
 "use strict";
 
-var concurrency = require('web.concurrency');
-var core = require('web.core');
-var session = require('web.session');
-var utils = require('web.utils');
-var Widget = require('web.Widget');
+const concurrency = require('web.concurrency');
+const core = require('web.core');
+const session = require('web.session');
+const utils = require('web.utils');
+const Widget = require('web.Widget');
 
-var { RATING_TO_EMOJI } = require('im_livechat.legacy.im_livechat.Constants');
+const { RATING_TO_EMOJI } = require('im_livechat.legacy.im_livechat.Constants');
 
-var _t = core._t;
+const _t = core._t;
 /*
  * Rating for Livechat
  *
  * This widget displays the 3 rating smileys, and a textarea to add a reason
  * (only for red smiley), and sends the user feedback to the server.
  */
-var Feedback = Widget.extend({
+const Feedback = Widget.extend({
     template: 'im_livechat.legacy.im_livechat.FeedBack',
 
     events: {
@@ -48,19 +48,20 @@ var Feedback = Widget.extend({
      * @param {Object} options
      */
     _sendFeedback: function (reason) {
-        var self = this;
-        var args = {
+        const self = this;
+        const args = {
             uuid: this._livechat.getUUID(),
             rate: this.rating,
             reason: reason,
         };
         this.dp.add(session.rpc('/im_livechat/feedback', args)).then(function (response) {
-            var emoji = RATING_TO_EMOJI[self.rating] || "??";
+            const emoji = RATING_TO_EMOJI[self.rating] || "??";
+            let content;
             if (!reason) {
-                var content = utils.sprintf(_t("Rating: %s"), emoji);
+                content = utils.sprintf(_t("Rating: %s"), emoji);
             }
             else {
-                var content = "Rating reason: \n" + reason;
+                content = "Rating reason: \n" + reason;
             }
             self.trigger('send_message', { content: content, isFeedback: true });
         });
@@ -118,8 +119,8 @@ var Feedback = Widget.extend({
     * @private
     */
     _onEmailChat: function () {
-        var self = this;
-        var $email = this.$('#o_email');
+        const self = this;
+        const $email = this.$('#o_email');
 
         if (utils.is_email($email.val())) {
             $email.removeAttr('title').removeClass('is-invalid').prop('disabled', true);

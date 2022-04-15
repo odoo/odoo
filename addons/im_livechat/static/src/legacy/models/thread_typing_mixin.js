@@ -1,19 +1,19 @@
 odoo.define('im_livechat.legacy.mail.model.ThreadTypingMixin', function (require) {
 "use strict";
 
-var CCThrottleFunction = require('im_livechat.legacy.mail.model.CCThrottleFunction');
-var Timer = require('im_livechat.legacy.mail.model.Timer');
-var Timers = require('im_livechat.legacy.mail.model.Timers');
+const CCThrottleFunction = require('im_livechat.legacy.mail.model.CCThrottleFunction');
+const Timer = require('im_livechat.legacy.mail.model.Timer');
+const Timers = require('im_livechat.legacy.mail.model.Timers');
 
-var core = require('web.core');
+const core = require('web.core');
 const { sprintf } = require('web.utils');
 
-var _t = core._t;
+const _t = core._t;
 
 /**
  * Mixin for enabling the "is typing..." notification on a type of thread.
  */
-var ThreadTypingMixin = {
+const ThreadTypingMixin = {
     // Default partner infos
     _DEFAULT_TYPING_PARTNER_ID: '_default',
     _DEFAULT_TYPING_PARTNER_NAME: 'Someone',
@@ -117,14 +117,14 @@ var ThreadTypingMixin = {
      *   (excluding the current user).
      */
     getTypingMembersToText: function () {
-        var typingPartnerIDs = this._typingPartnerIDs;
-        var typingMembers = _.filter(this._members, function (member) {
+        const typingPartnerIDs = this._typingPartnerIDs;
+        const typingMembers = _.filter(this._members, function (member) {
             return _.contains(typingPartnerIDs, member.id);
         });
-        var sortedTypingMembers = _.sortBy(typingMembers, function (member) {
+        const sortedTypingMembers = _.sortBy(typingMembers, function (member) {
             return _.indexOf(typingPartnerIDs, member.id);
         });
-        var displayableTypingMembers = sortedTypingMembers.slice(0, 3);
+        const displayableTypingMembers = sortedTypingMembers.slice(0, 3);
 
         if (displayableTypingMembers.length === 0) {
             return '';
@@ -172,7 +172,7 @@ var ThreadTypingMixin = {
         if (this._isTypingMyselfInfo(params)) {
             return;
         }
-        var partnerID = params.partnerID;
+        const partnerID = params.partnerID;
         this._othersTypingTimers.registerTimer({
             timeoutCallbackArguments: [partnerID],
             timerID: partnerID,
@@ -191,7 +191,7 @@ var ThreadTypingMixin = {
      * @param {boolean} params.typing tell whether the current is typing or not.
      */
     setMyselfTyping: function (params) {
-        var typing = params.typing;
+        const typing = params.typing;
         if (this._lastNotifiedMyselfTyping === typing) {
             this._throttleNotifyMyselfTyping.cancel();
         } else {
@@ -212,7 +212,7 @@ var ThreadTypingMixin = {
      *   that is currently typing something
      */
     unregisterTyping: function (params) {
-        var partnerID = params.partnerID;
+        const partnerID = params.partnerID;
         this._othersTypingTimers.unregisterTimer({ timerID: partnerID });
         if (!_.contains(this._typingPartnerIDs, partnerID)) {
             return;
@@ -300,7 +300,7 @@ var ThreadTypingMixin = {
      * @param {boolean} params.typing whether we are typing something or not.
      */
     _onNotifyMyselfTyping: function (params) {
-        var typing = params.typing;
+        const typing = params.typing;
         this._lastNotifiedMyselfTyping = typing;
         this._notifyMyselfTyping(params);
         if (typing) {
@@ -330,7 +330,7 @@ var ThreadTypingMixin = {
      * @param {mail.model.AbstractMessage} message
      */
     _onTypingMessageAdded: function (message) {
-        var partnerID = message.hasAuthor() ?
+        const partnerID = message.hasAuthor() ?
                         message.getAuthorID() :
                         this._DEFAULT_TYPING_PARTNER_ID;
         this.unregisterTyping({ partnerID: partnerID });

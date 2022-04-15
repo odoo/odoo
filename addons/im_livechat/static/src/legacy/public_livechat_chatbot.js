@@ -613,7 +613,7 @@ const QWeb = core.qweb;
     _renderMessages: function () {
         this._super(...arguments);
 
-        var self = this;
+        const self = this;
 
         this._chatWindow.$('.o_thread_message:last .o_livechat_chatbot_options li').each(function () {
             $(this).on('click', self._onChatbotOptionClicked.bind(self));

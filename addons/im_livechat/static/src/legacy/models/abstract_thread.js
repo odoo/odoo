@@ -1,8 +1,8 @@
 odoo.define('im_livechat.legacy.mail.model.AbstractThread', function (require) {
 "use strict";
 
-var Class = require('web.Class');
-var Mixins = require('web.mixins');
+const Class = require('web.Class');
+const Mixins = require('web.mixins');
 
 /**
  * Abstract thread is the super class of all threads, either backend threads
@@ -10,7 +10,7 @@ var Mixins = require('web.mixins');
  *
  * Abstract threads contain abstract messages
  */
-var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
+const AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
     /**
      * @param {Object} params
      * @param {Object} params.data

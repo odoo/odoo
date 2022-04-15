@@ -1,23 +1,23 @@
 odoo.define('im_livechat.legacy.im_livechat.LivechatButton', function (require) {
 "use strict";
 
-var config = require('web.config');
-var core = require('web.core');
-var session = require('web.session');
-var time = require('web.time');
-var utils = require('web.utils');
-var Widget = require('web.Widget');
+const config = require('web.config');
+const core = require('web.core');
+const session = require('web.session');
+const time = require('web.time');
+const utils = require('web.utils');
+const Widget = require('web.Widget');
 
-var { LIVECHAT_COOKIE_HISTORY } = require('im_livechat.legacy.im_livechat.Constants');
-var Feedback = require('im_livechat.legacy.im_livechat.Feedback');
-var WebsiteLivechat = require('im_livechat.legacy.im_livechat.model.WebsiteLivechat');
-var WebsiteLivechatMessage = require('im_livechat.legacy.im_livechat.model.WebsiteLivechatMessage');
-var WebsiteLivechatWindow = require('im_livechat.legacy.im_livechat.WebsiteLivechatWindow');
+const { LIVECHAT_COOKIE_HISTORY } = require('im_livechat.legacy.im_livechat.Constants');
+const Feedback = require('im_livechat.legacy.im_livechat.Feedback');
+const WebsiteLivechat = require('im_livechat.legacy.im_livechat.model.WebsiteLivechat');
+const WebsiteLivechatMessage = require('im_livechat.legacy.im_livechat.model.WebsiteLivechatMessage');
+const WebsiteLivechatWindow = require('im_livechat.legacy.im_livechat.WebsiteLivechatWindow');
 
-var _t = core._t;
-var QWeb = core.qweb;
+const _t = core._t;
+const QWeb = core.qweb;
 
-var LivechatButton = Widget.extend({
+const LivechatButton = Widget.extend({
     className: 'openerp o_livechat_button d-print-none',
     custom_events: {
         'close_chat_window': '_onCloseChatWindow',
@@ -47,9 +47,9 @@ var LivechatButton = Widget.extend({
         this._serverURL = serverURL;
     },
     async willStart() {
-        var cookie = utils.get_cookie('im_livechat_session');
+        const cookie = utils.get_cookie('im_livechat_session');
         if (cookie) {
-            var channel = JSON.parse(cookie);
+            const channel = JSON.parse(cookie);
             this._history = await session.rpc('/mail/chat_history', {uuid: channel.uuid, limit: 100});
             this._history.reverse().forEach(message => { message.body = utils.Markup(message.body); });
         } else {
@@ -67,7 +67,7 @@ var LivechatButton = Widget.extend({
             this._history.forEach(m => this._addMessage(m));
             this._openChat();
         } else if (!config.device.isMobile && this._rule.action === 'auto_popup') {
-            var autoPopupCookie = utils.get_cookie('im_livechat_auto_popup');
+            const autoPopupCookie = utils.get_cookie('im_livechat_auto_popup');
             if (!autoPopupCookie || JSON.parse(autoPopupCookie)) {
                 this._autoPopupTimeout =
                     setTimeout(this._openChat.bind(this), this._rule.auto_popup_timer * 1000);
@@ -82,7 +82,7 @@ var LivechatButton = Widget.extend({
         }
 
         // If website_event_track installed, put the livechat banner above the PWA banner.
-        var pwaBannerHeight = $('.o_pwa_install_banner').outerHeight(true);
+        const pwaBannerHeight = $('.o_pwa_install_banner').outerHeight(true);
         if (pwaBannerHeight) {
             this.$el.css('bottom', pwaBannerHeight + 'px');
         }
@@ -104,9 +104,9 @@ var LivechatButton = Widget.extend({
         options = _.extend({}, this.options, options, {
             serverURL: this._serverURL,
         });
-        var message = new WebsiteLivechatMessage(this, data, options);
+        const message = new WebsiteLivechatMessage(this, data, options);
 
-        var hasAlreadyMessage = _.some(this._messages, function (msg) {
+        const hasAlreadyMessage = _.some(this._messages, function (msg) {
             return message.getID() === msg.getID();
         });
         if (hasAlreadyMessage) {
@@ -129,7 +129,7 @@ var LivechatButton = Widget.extend({
     _askFeedback: function () {
         this._chatWindow.$('.o_thread_composer input').prop('disabled', true);
 
-        var feedback = new Feedback(this, this._livechat);
+        const feedback = new Feedback(this, this._livechat);
         this._chatWindow.replaceContentWith(feedback);
 
         feedback.on('send_message', this, this._sendMessage);
@@ -215,9 +215,9 @@ var LivechatButton = Widget.extend({
         if (this._openingChat) {
             return;
         }
-        var self = this;
-        var cookie = utils.get_cookie('im_livechat_session');
-        var def;
+        const self = this;
+        const cookie = utils.get_cookie('im_livechat_session');
+        let def;
         this._openingChat = true;
         clearTimeout(this._autoPopupTimeout);
         if (cookie) {
@@ -265,8 +265,8 @@ var LivechatButton = Widget.extend({
                     if (livechatData.operator_pid[0]) {
                         // livechatData.operator_pid contains a tuple (id, name)
                         // we are only interested in the id
-                        var operatorPidId = livechatData.operator_pid[0];
-                        var oneWeek = 7 * 24 * 60 * 60;
+                        const operatorPidId = livechatData.operator_pid[0];
+                        const oneWeek = 7 * 24 * 60 * 60;
                         utils.set_cookie('im_livechat_previous_operator_pid', operatorPidId, oneWeek);
                     }
                 });
@@ -288,7 +288,7 @@ var LivechatButton = Widget.extend({
      * @return {integer} operator_id.partner_id.id if the cookie is set
      */
     _get_previous_operator_id: function () {
-        var cookie = utils.get_cookie('im_livechat_previous_operator_pid');
+        const cookie = utils.get_cookie('im_livechat_previous_operator_pid');
         if (cookie) {
             return cookie;
         }
@@ -300,8 +300,8 @@ var LivechatButton = Widget.extend({
      * @return {Promise}
      */
     _openChatWindow: function () {
-        var self = this;
-        var options = {
+        const self = this;
+        const options = {
             displayStars: false,
             headerBackgroundColor: this.options.header_background_color,
             placeholder: this.options.input_placeholder || "",
@@ -309,7 +309,7 @@ var LivechatButton = Widget.extend({
         };
         this._chatWindow = new WebsiteLivechatWindow(this, this._livechat, options);
         return this._chatWindow.appendTo($('body')).then(function () {
-            var cssProps = { bottom: 0 };
+            const cssProps = { bottom: 0 };
             cssProps[_t.database.parameters.direction === 'rtl' ? 'left' : 'right'] = 0;
             self._chatWindow.$el.css(cssProps);
             self.$el.hide();
@@ -329,7 +329,7 @@ var LivechatButton = Widget.extend({
      * @private
      */
     _renderMessages: function () {
-        var shouldScroll = !this._chatWindow.isFolded() && this._chatWindow.isAtBottom();
+        const shouldScroll = !this._chatWindow.isFolded() && this._chatWindow.isAtBottom();
         this._livechat.setMessages(this._messages);
         this._chatWindow.render();
         if (shouldScroll) {
@@ -342,7 +342,7 @@ var LivechatButton = Widget.extend({
      * @return {Promise}
      */
     _sendMessage: function (message) {
-        var self = this;
+        const self = this;
         this._livechat._notifyMyselfTyping({ typing: false });
         return session
             .rpc('/mail/chat_post', { uuid: this._livechat.getUUID(), message_content: message.content })
@@ -396,8 +396,8 @@ var LivechatButton = Widget.extend({
      */
     _onCloseChatWindow: function (ev) {
         ev.stopPropagation();
-        var isComposerDisabled = this._chatWindow.$('.o_thread_composer input').prop('disabled');
-        var shouldAskFeedback = !isComposerDisabled && _.find(this._messages, function (message) {
+        const isComposerDisabled = this._chatWindow.$('.o_thread_composer input').prop('disabled');
+        const shouldAskFeedback = !isComposerDisabled && _.find(this._messages, function (message) {
             return message.getID() !== '_welcome';
         });
         if (shouldAskFeedback) {
@@ -413,7 +413,7 @@ var LivechatButton = Widget.extend({
      * @param {Array[]} notifications
      */
     _onNotification: function (notifications) {
-        var self = this;
+        const self = this;
         _.each(notifications, function (notification) {
             self._handleNotification(notification);
         });
@@ -425,8 +425,8 @@ var LivechatButton = Widget.extend({
      */
     _onPostMessageChatWindow: function (ev) {
         ev.stopPropagation();
-        var self = this;
-        var messageData = ev.data.messageData;
+        const self = this;
+        const messageData = ev.data.messageData;
         this._sendMessage(messageData).guardedCatch(function (reason) {
             reason.event.preventDefault();
             return self._sendMessage(messageData); // try again just in case
@@ -462,9 +462,9 @@ var LivechatButton = Widget.extend({
      * this will deactivate the mail_channel, notify operator that visitor has left the channel.
      */
     _visitorLeaveSession: function () {
-        var cookie = utils.get_cookie('im_livechat_session');
+        const cookie = utils.get_cookie('im_livechat_session');
         if (cookie) {
-            var channel = JSON.parse(cookie);
+            const channel = JSON.parse(cookie);
             session.rpc('/im_livechat/visitor_leave_session', {uuid: channel.uuid});
             utils.set_cookie('im_livechat_session', "", -1); // remove cookie
         }

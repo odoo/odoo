@@ -1,14 +1,14 @@
 odoo.define('im_livechat.legacy.mail.model.AbstractMessage', function (require) {
 "use strict";
 
-var mailUtils = require('@mail/js/utils');
+const mailUtils = require('@mail/js/utils');
 
-var Class = require('web.Class');
-var core = require('web.core');
-var session = require('web.session');
-var time = require('web.time');
+const Class = require('web.Class');
+const core = require('web.core');
+const session = require('web.session');
+const time = require('web.time');
 
-var _t = core._t;
+const _t = core._t;
 
 /**
  * This is an abstract class for modeling messages in JS.
@@ -21,7 +21,7 @@ var _t = core._t;
  * and this module should not leak outside of the backend, hence the use of
  * mail.model.AbstractMessage as a work-around.
  */
-var AbstractMessage = Class.extend({
+const AbstractMessage = Class.extend({
 
     /**
      * @param {Widget} parent
@@ -117,7 +117,7 @@ var AbstractMessage = Class.extend({
      * @return {string}
      */
     getDateDay: function () {
-        var date = this.getDate().format('YYYY-MM-DD');
+        const date = this.getDate().format('YYYY-MM-DD');
         if (date === moment().format('YYYY-MM-DD')) {
             return _t("Today");
         } else if (date === moment().subtract(1, 'days').format('YYYY-MM-DD')) {
