@@ -161,7 +161,6 @@ Object.assign(AutocompleteInput, {
     defaultProps: {
         isFocusOnMount: false,
         isHtml: false,
-        placeholder: '',
         onFocusin: () => {},
     },
     props: {
