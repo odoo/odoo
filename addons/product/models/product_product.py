@@ -704,12 +704,4 @@ class ProductProduct(models.Model):
 
     def _get_contextual_price(self):
         self.ensure_one()
-        # YTI TODO: During website_sale cleaning, we should get rid of those crappy context thing
-        pricelist = self.product_tmpl_id._get_contextual_pricelist()
-        if not pricelist:
-            return 0.0
-
-        quantity = self.env.context.get('quantity', 1.0)
-        uom = self.env['uom.uom'].browse(self.env.context.get('uom'))
-        date = self.env.context.get('date')
-        return pricelist._get_product_price(self, quantity, uom=uom, date=date)
+        return self.product_tmpl_id._get_contextual_price(self)

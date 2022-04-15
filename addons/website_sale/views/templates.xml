@@ -214,7 +214,8 @@
             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
             <input name="product_id" t-att-value="product_variant_id" type="hidden"/>
             <t t-if="product_variant_id">
-                <a href="#" role="button" class="btn btn-primary a-submit" aria-label="Shopping cart" title="Shopping cart">
+                <a t-if="product._website_show_quick_add()"
+                   href="#" role="button" class="btn btn-primary a-submit" aria-label="Shopping cart" title="Shopping cart">
                     <span class="fa fa-shopping-cart"/>
                 </a>
             </t>
@@ -589,8 +590,10 @@
     </template>
 
     <template id="base_unit_price" name="Product Bas eunit price">
-        (<span class="o_base_unit_price" t-field="product.base_unit_price" t-options="{'display_currency': website.currency_id}"/>
-         / <span class="oe_custom_base_unit" t-field="product.base_unit_name"/>)
+        <t>
+            (<span class="o_base_unit_price" t-field="product.base_unit_price" t-options="{'display_currency': website.currency_id}"/>
+            / <span class="oe_custom_base_unit" t-field="product.base_unit_name"/>)
+        </t>
     </template>
 
     <template id="product" name="Product" track="1">
@@ -655,7 +658,8 @@
                                 <div class="js_product js_main_product mb-3">
                                     <div>
                                         <t t-call="website_sale.product_price" />
-                                        <small class="ml-1 text-muted o_base_unit_price_wrapper d-none" groups="website_sale.group_show_uom_price">
+                                        <small t-if="combination_info['base_unit_price']"
+                                               class="ml-1 text-muted o_base_unit_price_wrapper d-none" groups="website_sale.group_show_uom_price">
                                             <t t-call='website_sale.base_unit_price'/>
                                         </small>
                                     </div>
@@ -846,6 +850,7 @@
                 <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
                 <span t-attf-class="text-danger oe_default_price ml-1 h5 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="text-decoration: line-through; white-space: nowrap;"
                     t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                    itemprop="listPrice"
                 />
                 <del t-if="product.compare_list_price">
                     <span t-field="product.compare_list_price"
@@ -1057,6 +1062,11 @@
         <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="js_cart_lines alert alert-info">
             Your cart is empty!
         </div>
+        <t t-if='website_sale_order'>
+            <div t-if='website_sale_order._get_shop_warning(clear=False)' class="alert alert-warning" role="alert">
+                <strong>Warning!</strong> <t t-esc='website_sale_order._get_shop_warning()'/>
+            </div>
+        </t>
         <table t-if="website_sale_order and website_sale_order.website_order_line" class="mb16 table table-striped table-sm js_cart_lines" id="cart_products">
             <t t-set="show_qty" t-value="is_view_active('website_sale.product_quantity')"/>
             <thead>
@@ -1110,7 +1120,12 @@
                                         </div>
                                         <input type="text" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
                                         <div class="input-group-append">
-                                            <a t-attf-href="#" class="btn btn-link float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
+                                            <div t-if="line._get_shop_warning(clear=False)" class="input-group-append">
+                                                <a t-attf-href="#" class="btn btn-link">
+                                                <i class='fa fa-warning text-warning' t-att-title="line._get_shop_warning()" role="img" aria-label="Warning"/>
+                                                </a>
+                                            </div>
+                                            <a t-else='' t-attf-href="#" class="btn btn-link float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
                                                 <i class="fa fa-plus"></i>
                                             </a>
                                         </div>
@@ -1284,7 +1299,8 @@
                         </td>
                         <td class="w-25 text-center">
                             <input class="js_quantity" name="product_id" t-att-data-product-id="product.id" type="hidden" />
-                            <a role="button" class="btn btn-link js_add_suggested_products">
+                            <a t-if="product._website_show_quick_add()"
+                               role="button" class="btn btn-link js_add_suggested_products">
                                 <strong>Add to Cart</strong>
                             </a>
                         </td>
@@ -1770,6 +1786,9 @@
                                 </t>
                                 <td class='td-qty'>
                                     <div t-esc="line.product_uom_qty" />
+                                    <t t-if='line._get_shop_warning(clear=False)'>
+                                        <i class='fa fa-warning text-warning' t-att-title="line._get_shop_warning()" role="img" aria-label="Warning"/>
+                                    </t>
                                 </td>
                                 <td class="text-center td-price">
                                     <span t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" groups="account.group_show_line_subtotals_tax_excluded" />
@@ -1778,6 +1797,12 @@
                             </tr>
                         </tbody>
                     </table>
+                    <t t-if='website_sale_order'>
+                        <t t-set='warning' t-value='website_sale_order._get_shop_warning(clear=False)' />
+                        <div t-if='warning' class="alert alert-warning" role="alert">
+                            <strong>Warning!</strong> <t t-esc='website_sale_order._get_shop_warning()'/>
+                        </div>
+                    </t>
                     <t t-call="website_sale.total">
                         <t t-set='redirect' t-value="redirect or '/shop/payment'"></t>
                     </t>

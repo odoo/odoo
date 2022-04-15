@@ -72,6 +72,7 @@ var VariantMixin = {
                     'add_qty': parseInt($currentOptionalProduct.find('input[name="add_qty"]').val()),
                     'pricelist_id': this.pricelistId || false,
                     'parent_combination': combination,
+                    ...this._getOptionalCombinationInfoParam($currentOptionalProduct),
                 }).then((combinationData) => {
                     this._onChangeCombination(ev, $currentOptionalProduct, combinationData);
                     this._checkExclusions($currentOptionalProduct, childCombination, combinationData.parent_exclusions);
@@ -90,10 +91,20 @@ var VariantMixin = {
             'add_qty': parseInt($parent.find('input[name="add_qty"]').val()),
             'pricelist_id': this.pricelistId || false,
             'parent_combination': parentCombination,
+            ...this._getOptionalCombinationInfoParam($parent),
         }).then((combinationData) => {
             this._onChangeCombination(ev, $parent, combinationData);
             this._checkExclusions($parent, combination, combinationData.parent_exclusions);
         });
+    },
+
+    /**
+     * Hook to add optional info to the combination info call.
+     *
+     * @param {$.Element} $product
+     */
+    _getOptionalCombinationInfoParam($product) {
+        return {};
     },
 
     /**

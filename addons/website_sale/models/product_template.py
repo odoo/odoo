@@ -224,33 +224,29 @@ class ProductTemplate(models.Model):
             parent_combination=parent_combination, only_template=only_template)
 
         if self.env.context.get('website_id'):
-            context = dict(self.env.context, ** {
-                'quantity': self.env.context.get('quantity', add_qty),
-                'pricelist': pricelist and pricelist.id
-            })
-
-            product = (self.env['product.product'].browse(combination_info['product_id']) or self).with_context(context)
+            product = self.env['product.product'].browse(combination_info['product_id']) or self
             partner = self.env.user.partner_id
             company_id = current_website.company_id
 
-            tax_display = self.user_has_groups('account.group_show_line_subtotals_tax_excluded') and 'total_excluded' or 'total_included'
             fpos = self.env['account.fiscal.position'].sudo()._get_fiscal_position(partner)
             product_taxes = product.sudo().taxes_id.filtered(lambda x: x.company_id == company_id)
             taxes = fpos.map_tax(product_taxes)
 
-            # The list_price is always the price of one.
-            quantity_1 = 1
-            combination_info['price'] = self.env['account.tax']._fix_tax_included_price_company(
-                combination_info['price'], product_taxes, taxes, company_id)
-            price = taxes.compute_all(combination_info['price'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
+            price = self._price_with_tax_computed(
+                combination_info['price'], product_taxes, taxes, company_id, pricelist, product,
+                partner
+            )
             if pricelist.discount_policy == 'without_discount':
-                combination_info['list_price'] = self.env['account.tax']._fix_tax_included_price_company(
-                    combination_info['list_price'], product_taxes, taxes, company_id)
-                list_price = taxes.compute_all(combination_info['list_price'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
+                list_price = self._price_with_tax_computed(
+                    combination_info['list_price'], product_taxes, taxes, company_id, pricelist,
+                    product, partner
+                )
             else:
                 list_price = price
-            combination_info['price_extra'] = self.env['account.tax']._fix_tax_included_price_company(combination_info['price_extra'], product_taxes, taxes, company_id)
-            price_extra = taxes.compute_all(combination_info['price_extra'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
+            price_extra = self._price_with_tax_computed(
+                combination_info['price_extra'], product_taxes, taxes, company_id, pricelist,
+                product, partner
+            )
             has_discounted_price = pricelist.currency_id.compare_amounts(list_price, price) == 1
 
             combination_info.update(
@@ -263,6 +259,17 @@ class ProductTemplate(models.Model):
             )
 
         return combination_info
+
+    def _price_with_tax_computed(
+        self, price, product_taxes, taxes, company_id, pricelist, product, partner
+    ):
+        price = self.env['account.tax']._fix_tax_included_price_company(
+            price, product_taxes, taxes, company_id
+        )
+        show_tax_excluded = self.user_has_groups('account.group_show_line_subtotals_tax_excluded')
+        tax_display = 'total_excluded' if show_tax_excluded else 'total_included'
+        # The list_price is always the price of one.
+        return taxes.compute_all(price, pricelist.currency_id, 1, product, partner)[tax_display]
 
     def _create_first_product_variant(self, log_warning=False):
         """Create if necessary and possible and return the first product
@@ -453,10 +460,11 @@ class ProductTemplate(models.Model):
         for product, data in zip(self, results_data):
             if with_price:
                 combination_info = product._get_combination_info(only_template=True)
-                monetary_options = {'display_currency': mapping['detail']['display_currency']}
-                data['price'] = self.env['ir.qweb.field.monetary'].value_to_html(combination_info['price'], monetary_options)
-                if combination_info['has_discounted_price']:
-                    data['list_price'] = self.env['ir.qweb.field.monetary'].value_to_html(combination_info['list_price'], monetary_options)
+                data['price'], list_price = self._search_render_results_prices(
+                    mapping, combination_info
+                )
+                if list_price:
+                    data['list_price'] = list_price
             if with_image:
                 data['image_url'] = '/web/image/product.template/%s/image_128' % data['id']
             if with_category and product.public_categ_ids:
@@ -465,6 +473,18 @@ class ProductTemplate(models.Model):
                     {'categories': product.public_categ_ids, 'slug': slug}
                 )
         return results_data
+
+    def _search_render_results_prices(self, mapping, combination_info):
+        monetary_options = {'display_currency': mapping['detail']['display_currency']}
+        price = self.env['ir.qweb.field.monetary'].value_to_html(
+            combination_info['price'], monetary_options
+        )
+        if combination_info['has_discounted_price']:
+            list_price = self.env['ir.qweb.field.monetary'].value_to_html(
+                combination_info['list_price'], monetary_options
+            )
+
+        return price, list_price if combination_info['has_discounted_price'] else None
 
     @api.model
     def get_google_analytics_data(self, combination):
@@ -487,3 +507,6 @@ class ProductTemplate(models.Model):
         if website:
             return website.get_current_pricelist()
         return pricelist
+
+    def _website_show_quick_add(self):
+        return self.sale_ok

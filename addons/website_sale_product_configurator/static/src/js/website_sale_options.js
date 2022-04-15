@@ -106,8 +106,10 @@ publicWidget.registry.WebsiteSale.include({
         this.optionalProductsModal.getAndCreateSelectedProducts()
             .then((products) => {
                 const productAndOptions = JSON.stringify(products);
-                ajax.post('/shop/cart/update_option', {product_and_options: productAndOptions})
-                    .then(function (quantity) {
+                ajax.post('/shop/cart/update_option', {
+                    product_and_options: productAndOptions,
+                    ...this._getOptionalCombinationInfoParam()
+                }).then(function (quantity) {
                         if (goToShop) {
                             window.location.pathname = "/shop/cart";
                         }
