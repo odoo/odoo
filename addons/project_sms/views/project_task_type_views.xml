@@ -15,7 +15,7 @@
     <record id="task_type_edit_view_tree_inherit_project_sms" model="ir.ui.view">
         <field name="name">project.task.type.view.tree.inherit.project.sms</field>
         <field name="model">project.task.type</field>
-        <field name="inherit_id" ref="project.task_type_tree"/>
+        <field name="inherit_id" ref="project.task_type_tree_inherited"/>
         <field name="arch" type="xml">
             <field name="mail_template_id" position="after">
                 <field name="sms_template_id" optional="hide"/>

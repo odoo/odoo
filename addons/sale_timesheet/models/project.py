@@ -56,6 +56,14 @@ class Project(models.Model):
         compute='_compute_partner_id', store=True, readonly=False)
     allocated_hours = fields.Float(compute='_compute_allocated_hours', store=True, readonly=False, copy=False)
 
+    @api.model
+    def _get_view(self, view_id=None, view_type='form', **options):
+        arch, view = super()._get_view(view_id, view_type, **options)
+        if view_type == 'form' and self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
+            for node in arch.xpath("//field[@name='display_cost'][not(@string)]"):
+                node.set('string', 'Daily Cost')
+        return arch, view
+
     @api.depends('sale_line_id', 'sale_line_employee_ids', 'allow_billable')
     def _compute_pricing_type(self):
         billable_projects = self.filtered('allow_billable')
