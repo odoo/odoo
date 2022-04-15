@@ -10,6 +10,9 @@
     .modal-dialog {
         height: auto;
         min-height: 100%;
+        @include media-breakpoint-down(xs) {
+            min-height: calc(100% - 2 * #{$modal-dialog-margin});
+        }
     }
 
     // Close icon
