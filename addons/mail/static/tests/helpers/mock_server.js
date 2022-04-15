@@ -1469,13 +1469,7 @@ MockServer.include({
             const trackingValueIds = this.getRecords('mail.tracking.value', [
                 ['id', 'in', message.tracking_value_ids],
             ]);
-            const formattedTrackingValues = trackingValueIds.map(tracking => ({
-                changed_field: tracking.field_desc,
-                field_type: tracking.field_type,
-                id: tracking.id,
-                new_value: this._mockMailTrackingValue_GetDisplayValue(tracking, 'new'),
-                old_value: this._mockMailTrackingValue_GetDisplayValue(tracking, 'old'),
-            }));
+            const formattedTrackingValues = [['insert-and-replace', this._mockMailTrackingValue_TrackingValueFormat(trackingValueIds)]];
             const partners = this.getRecords(
                 'res.partner',
                 [['id', 'in', message.partner_ids]],
@@ -1489,7 +1483,7 @@ MockServer.include({
                 parentMessage: message.parent_id ? this._mockMailMessageMessageFormat([message.parent_id])[0] : false,
                 recipients: partners.map(p => ({ id: p.id, name: p.name })),
                 record_name: thread && (thread.name !== undefined ? thread.name : thread.display_name),
-                tracking_value_ids: formattedTrackingValues,
+                trackingValues: formattedTrackingValues,
             });
             if (message.subtype_id) {
                 const subtype = this.getRecords('mail.message.subtype', [
@@ -2041,7 +2035,25 @@ MockServer.include({
         return false;
     },
     /**
-     * Simulates `get_display_value` on `mail.tracking.value`
+     * Simulates `_tracking_value_format` on `mail.tracking.value`
+     */
+    _mockMailTrackingValue_TrackingValueFormat(tracking_value_ids) {
+        const trackingValues = tracking_value_ids.map(tracking => ({
+            changedField: tracking.field_desc,
+            id: tracking.id,
+            newValue: [['insert-and-replace', {
+                fieldType: tracking.field_type,
+                value: this._mockMailTrackingValue_GetDisplayValue(tracking, 'new')
+            }]],
+            oldValue: [['insert-and-replace', {
+                fieldType: tracking.field_type,
+                value: this._mockMailTrackingValue_GetDisplayValue(tracking, 'old')
+            }]],
+        }));
+        return trackingValues;
+    },
+    /**
+     * Simulates `_get_display_value` on `mail.tracking.value`
      */
     _mockMailTrackingValue_GetDisplayValue(record, type) {
         switch (record.field_type) {

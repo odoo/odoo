@@ -2458,8 +2458,8 @@ class MailThread(models.AbstractModel):
                 groups = tracking_value.field_groups
                 if not groups or self.env.is_superuser() or self.user_has_groups(groups):
                     tracking.append((tracking_value.field_desc,
-                                     tracking_value.get_old_display_value()[0],
-                                     tracking_value.get_new_display_value()[0]))
+                                     tracking_value._get_old_display_value()[0],
+                                     tracking_value._get_new_display_value()[0]))
 
         subtype_id = msg_vals.get('subtype_id') if msg_vals and 'subtype_id' in msg_vals else message.subtype_id.id
         is_discussion = subtype_id == self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')

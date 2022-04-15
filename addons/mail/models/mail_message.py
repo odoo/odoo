@@ -844,20 +844,6 @@ class Message(models.Model):
             else:
                 author = (0, message_sudo.email_from)
 
-            # Tracking values
-            tracking_value_ids = []
-            for tracking in message_sudo.tracking_value_ids:
-                groups = tracking.field_groups
-                if not groups or self.env.is_superuser() or self.user_has_groups(groups):
-                    tracking_value_ids.append({
-                        'id': tracking.id,
-                        'changed_field': tracking.field_desc,
-                        'old_value': tracking.get_old_display_value()[0],
-                        'new_value': tracking.get_new_display_value()[0],
-                        'field_type': tracking.field_type,
-                        'currency_id': tracking.currency_id.id,
-                    })
-
             if message_sudo.model and message_sudo.res_id:
                 record_name = self.env[message_sudo.model] \
                     .browse(message_sudo.res_id) \
@@ -886,10 +872,11 @@ class Message(models.Model):
             } for content, reactions in reactions_per_content.items()])]
             if format_reply and message_sudo.model == 'mail.channel' and message_sudo.parent_id:
                 vals['parentMessage'] = message_sudo.parent_id.message_format(format_reply=False)[0]
+            allowed_tracking_ids = message_sudo.tracking_value_ids.filtered(lambda tracking: not tracking.field_groups or self.env.is_superuser() or self.user_has_groups(tracking.field_groups))
             vals.update({
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
                 'attachment_ids': message_sudo.attachment_ids._attachment_format(),
-                'tracking_value_ids': tracking_value_ids,
+                'trackingValues': [('insert-and-replace', allowed_tracking_ids._tracking_value_format())],
                 'messageReactionGroups': reaction_groups,
                 'record_name': record_name,
             })
@@ -930,12 +917,20 @@ class Message(models.Model):
                     ],
                     'needaction_partner_ids': [], # list of partner ids
                     'res_id': 7,
-                    'tracking_value_ids': [
+                    'trackingValues': [('insert-and-replace',
                         {
-                            'old_value': "",
-                            'changed_field': "Customer",
+                            'changedField': "Customer",
                             'id': 2965,
-                            'new_value': "Axelor"
+                            'newValue': [('insert-and-replace', {
+                                'currencyId': "",
+                                'fieldType': 'char',
+                                'value': "Axelor",
+                            })],
+                            'oldValue': [('insert-and-replace', {
+                                'currencyId': "",
+                                'fieldType': 'char',
+                                'value': "",
+                            })],
                         }
                     ],
                     'author_id': (3, u'Administrator'),
