@@ -8150,7 +8150,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("display correct value after validation error", async function (assert) {
+    QUnit.test("display correct value after validation error", async function (assert) {
         assert.expect(4);
 
         serverData.models.partner.onchanges.turtles = function () {};
@@ -8380,7 +8380,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.skipWOWL("one2many with multiple pages and sequence field", async function (assert) {
+    QUnit.test("one2many with multiple pages and sequence field", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.records[0].turtles = [3, 2, 1];
@@ -9594,7 +9594,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "no deadlock when leaving a one2many line with uncommitted changes",
         async function (assert) {
             // Before unselecting a o2m line, field widgets are asked to commit their changes (new values
@@ -11102,8 +11102,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    // WOWL to unskip after context ref
-    QUnit.skipWOWL("combine contexts on o2m field and create tags", async function (assert) {
+    QUnit.test("combine contexts on o2m field and create tags", async function (assert) {
         assert.expect(1);
 
         await makeView({

@@ -493,7 +493,7 @@ export class ListRenderer extends Component {
         );
     }
 
-    async unselectRow() {
+    unselectRow() {
         const editedRecord = this.props.list.editedRecord;
         if (editedRecord) {
             const canBeAbandoned = editedRecord.canBeAbandoned;

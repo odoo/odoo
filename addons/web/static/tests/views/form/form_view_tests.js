@@ -3778,10 +3778,8 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("discard changes on a new (dirty) form view", async function (assert) {
+    QUnit.test("discard changes on a new (dirty) form view", async function (assert) {
         serverData.models.partner.fields.foo.default = "ABC";
-
-        // TODO WOWL: handle save point?
 
         await makeView({
             type: "form",
