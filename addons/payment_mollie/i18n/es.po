@@ -6,6 +6,7 @@
 # Martin Trigaux, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # Jonatan Gk, 2022
+# marcescu, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Jonatan Gk, 2022\n"
+"Last-Translator: marcescu, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,13 +31,13 @@ msgstr "Clave API"
 #: code:addons/payment_mollie/models/payment_transaction.py:0
 #, python-format
 msgid "Canceled payment with status: %s"
-msgstr ""
+msgstr "Pago cancelado con el estado: %s"
 
 #. module: payment_mollie
 #: code:addons/payment_mollie/models/payment_acquirer.py:0
 #, python-format
 msgid "Could not establish the connection to the API."
-msgstr ""
+msgstr "No se ha podido establecer la conexión con el API."
 
 #. module: payment_mollie
 #: model:account.payment.method,name:payment_mollie.payment_method_mollie
@@ -47,7 +48,7 @@ msgstr "Mollie"
 #. module: payment_mollie
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_acquirer__mollie_api_key
 msgid "Mollie API Key"
-msgstr ""
+msgstr "Clave API de Mollie"
 
 #. module: payment_mollie
 #: code:addons/payment_mollie/models/payment_transaction.py:0
@@ -80,7 +81,7 @@ msgstr "Proveedor"
 #: code:addons/payment_mollie/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
-msgstr ""
+msgstr "Información recibida con estado de pago no válido: %s"
 
 #. module: payment_mollie
 #: model:ir.model.fields,help:payment_mollie.field_payment_acquirer__provider
@@ -92,3 +93,5 @@ msgstr "El proveedor de servicios de pago a utilizar con este adquirente"
 msgid ""
 "The Test or Live API Key depending on the configuration of the acquirer"
 msgstr ""
+"La clave API de prueba o en vivo, dependiendo de la configuración del método"
+" de pago"
