@@ -8,9 +8,10 @@ from odoo.addons.test_mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.exceptions import AccessError, except_orm
 from odoo.tools import mute_logger, formataddr
-from odoo.tests import tagged
+from odoo.tests import tagged, users
 
 
+@tagged('mail_message')
 class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
 
     @classmethod
@@ -25,8 +26,79 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
         })
         cls.Message = cls.env['mail.message'].with_user(cls.user_employee)
 
+    def test_mail_message_values_body_base64_image(self):
+        msg = self.env['mail.message'].with_user(self.user_employee).create({
+            'body': 'taratata <img src="data:image/png;base64,iV/+OkI=" width="2"> <img src="data:image/png;base64,iV/+OkI=" width="2">',
+        })
+        self.assertEqual(len(msg.attachment_ids), 1)
+        self.assertEqual(
+            msg.body,
+            '<p>taratata <img src="/web/image/{attachment.id}?access_token={attachment.access_token}" alt="image0" width="2"> '
+            '<img src="/web/image/{attachment.id}?access_token={attachment.access_token}" alt="image0" width="2"></p>'.format(attachment=msg.attachment_ids[0])
+        )
+
     @mute_logger('odoo.models.unlink')
-    def test_mail_message_values_no_document_values(self):
+    @users('employee')
+    def test_mail_message_values_fromto_long_name(self):
+        """ Long headers may break in python if above 78 chars as folding is not
+        done correctly (see ``_notify_get_reply_to_formatted_email`` docstring
+        + commit linked to this test). """
+        # name would make it blow up: keep only email
+        test_record = self.env['mail.test'].browse(self.alias_record.ids)
+        test_record.write({
+            'name': 'Super Long Name That People May Enter "Even with an internal quoting of stuff"'
+        })
+        msg = self.env['mail.message'].create({
+            'model': test_record._name,
+            'res_id': test_record.id
+        })
+        reply_to_email = f"{test_record.alias_name}@{self.alias_domain}"
+        self.assertEqual(msg.reply_to, reply_to_email,
+                         'Reply-To: use only email when formataddr > 78 chars')
+
+        # name + company_name would make it blow up: keep record_name in formatting
+        test_record.write({'name': 'Name that would be more than 78 with company name'})
+        msg = self.env['mail.message'].create({
+            'model': test_record._name,
+            'res_id': test_record.id
+        })
+        self.assertEqual(msg.reply_to, formataddr((test_record.name, reply_to_email)),
+                         'Reply-To: use recordname as name in format if recordname + company > 78 chars')
+
+        # no record_name: keep company_name in formatting if ok
+        test_record.write({'name': ''})
+        msg = self.env['mail.message'].create({
+            'model': test_record._name,
+            'res_id': test_record.id
+        })
+        self.assertEqual(msg.reply_to, formataddr((self.env.user.company_id.name, reply_to_email)),
+                         'Reply-To: use company as name in format when no record name and still < 78 chars')
+
+        # no record_name and company_name make it blow up: keep only email
+        self.env.user.company_id.write({'name': 'Super Long Name That People May Enter "Even with an internal quoting of stuff"'})
+        msg = self.env['mail.message'].create({
+            'model': test_record._name,
+            'res_id': test_record.id
+        })
+        self.assertEqual(msg.reply_to, reply_to_email,
+                         'Reply-To: use only email when formataddr > 78 chars')
+
+        # whatever the record and company names, email is too long: keep only email
+        test_record.write({
+            'alias_name': 'Waaaay too long alias name that should make any reply-to blow the 78 characters limit',
+            'name': 'Short',
+        })
+        self.env.user.company_id.write({'name': 'Comp'})
+        sanitized_alias_name = 'waaaay-too-long-alias-name-that-should-make-any-reply-to-blow-the-78-characters-limit'
+        msg = self.env['mail.message'].create({
+            'model': test_record._name,
+            'res_id': test_record.id
+        })
+        self.assertEqual(msg.reply_to, f"{sanitized_alias_name}@{self.alias_domain}",
+                         'Reply-To: even a long email is ok as only formataddr is problematic')
+
+    @mute_logger('odoo.models.unlink')
+    def test_mail_message_values_fromto_no_document_values(self):
         msg = self.Message.create({
             'reply_to': 'test.reply@example.com',
             'email_from': 'test.from@example.com',
@@ -36,7 +108,7 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
         self.assertEqual(msg.email_from, 'test.from@example.com')
 
     @mute_logger('odoo.models.unlink')
-    def test_mail_message_values_no_document(self):
+    def test_mail_message_values_fromto_no_document(self):
         msg = self.Message.create({})
         self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
         reply_to_name = self.env.user.company_id.name
@@ -62,7 +134,7 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
         self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
 
     @mute_logger('odoo.models.unlink')
-    def test_mail_message_values_document_alias(self):
+    def test_mail_message_values_fromto_document_alias(self):
         msg = self.Message.create({
             'model': 'mail.test',
             'res_id': self.alias_record.id
@@ -99,7 +171,7 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
         self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
 
     @mute_logger('odoo.models.unlink')
-    def test_mail_message_values_document_no_alias(self):
+    def test_mail_message_values_fromto_document_no_alias(self):
         test_record = self.env['mail.test.simple'].create({'name': 'Test', 'email_from': 'ignasse@example.com'})
 
         msg = self.Message.create({
@@ -113,7 +185,7 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
         self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
 
     @mute_logger('odoo.models.unlink')
-    def test_mail_message_values_document_manual_alias(self):
+    def test_mail_message_values_fromto_document_manual_alias(self):
         test_record = self.env['mail.test.simple'].create({'name': 'Test', 'email_from': 'ignasse@example.com'})
         alias = self.env['mail.alias'].create({
             'alias_name': 'MegaLias',
@@ -134,7 +206,7 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
         self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
         self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
 
-    def test_mail_message_values_no_auto_thread(self):
+    def test_mail_message_values_fromto_no_auto_thread(self):
         msg = self.Message.create({
             'model': 'mail.test',
             'res_id': self.alias_record.id,
@@ -143,15 +215,6 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
         self.assertIn('reply_to', msg.message_id.split('@')[0])
         self.assertNotIn('mail.test', msg.message_id.split('@')[0])
         self.assertNotIn('-%d-' % self.alias_record.id, msg.message_id.split('@')[0])
-
-    def test_mail_message_base64_image(self):
-        msg = self.env['mail.message'].with_user(self.user_employee).create({
-            'body': 'taratata <img src="data:image/png;base64,iV/+OkI=" width="2"> <img src="data:image/png;base64,iV/+OkI=" width="2">',
-        })
-        self.assertEqual(len(msg.attachment_ids), 1)
-        body = '<p>taratata <img src="/web/image/%s?access_token=%s" alt="image0" width="2"> <img src="/web/image/%s?access_token=%s" alt="image0" width="2"></p>'
-        body = body % (msg.attachment_ids[0].id, msg.attachment_ids[0].access_token, msg.attachment_ids[0].id, msg.attachment_ids[0].access_token)
-        self.assertEqual(msg.body, body)
 
 
 class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
@@ -263,7 +326,8 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
             'datas': base64.b64encode(b'My attachment'),
             'name': 'doc.txt',
             'res_model': self.message._name,
-            'res_id': self.message.id})
+            'res_id': self.message.id,
+        })
         # attach the attachment to the message
         self.message.write({'attachment_ids': [(4, attachment.id)]})
         self.message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
