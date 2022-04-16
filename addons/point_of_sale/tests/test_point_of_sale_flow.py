@@ -473,10 +473,12 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             pos_make_payment.with_context(context_payment).check()
 
             self.assertEqual(pos_order.state, 'paid')
-            self.assertEqual(pos_order.picking_ids.move_line_ids[0].lot_id, lot)
-            self.assertFalse(pos_order.picking_ids.move_line_ids[1].lot_id)
-            self.assertEqual(pos_order.picking_ids.move_line_ids[0].location_id, shelf1_location)
-            self.assertEqual(pos_order.picking_ids.move_line_ids[1].location_id, shelf1_location)
+            tracked_line = pos_order.picking_ids.move_line_ids.filtered(lambda ml: ml.product_id.id == tracked_product.id)
+            untracked_line = pos_order.picking_ids.move_line_ids - tracked_line
+            self.assertEqual(tracked_line.lot_id, lot)
+            self.assertFalse(untracked_line.lot_id)
+            self.assertEqual(tracked_line.location_id, shelf1_location)
+            self.assertEqual(untracked_line.location_id, shelf1_location)
 
         self.pos_config.current_session_id.action_pos_session_closing_control()
 
@@ -1086,3 +1088,61 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertEqual(lot02_ml.product_qty, 1)
         self.assertEqual(lot03_ml.product_qty, 1)
         self.assertEqual(lot03_ml.lot_id.name, "Lot03")
+
+    def test_order_multi_step_route(self):
+        """ Test that orders in sessions with "Ship Later" enabled and "Specific Route" set to a
+            multi-step (2/3) route can be validated. This config implies multiple picking types
+            and multiple move_lines.
+        """
+        tracked_product = self.env['product.product'].create({
+            'name': 'SuperProduct Tracked',
+            'type': 'product',
+            'tracking': 'lot',
+            'available_in_pos': True
+        })
+        warehouse_id = self.company_data['default_warehouse']
+        warehouse_id.delivery_steps = 'pick_ship'
+
+        self.pos_config.ship_later = True
+        self.pos_config.warehouse_id = warehouse_id
+        self.pos_config.route_id = warehouse_id.route_ids[-1]
+        self.pos_config.open_session_cb()
+        self.pos_config.current_session_id.update_stock_at_closing = False
+
+        untax, tax = self.compute_tax(tracked_product, 1.15, 1)
+
+        pos_order = self.PosOrder.create({
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'pricelist_id': self.partner1.property_product_pricelist.id,
+            'partner_id': self.partner1.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': tracked_product.id,
+                'price_unit': 1.15,
+                'qty': 1.0,
+                'price_subtotal': untax,
+                'price_subtotal_incl': untax + tax,
+            })],
+            'amount_tax': tax,
+            'amount_total': untax+tax,
+            'amount_paid': 0,
+            'amount_return': 0,
+            'to_ship': True,
+        })
+
+        context_make_payment = {
+            "active_ids": [pos_order.id],
+            "active_id": pos_order.id,
+        }
+        pos_make_payment = self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': untax+tax,
+        })
+        context_payment = {'active_id': pos_order.id}
+        pos_make_payment.with_context(context_payment).check()
+
+        pickings = pos_order.picking_ids
+        picking_mls = pickings.move_line_ids
+        self.assertEqual(pos_order.state, 'paid')
+        self.assertEqual(len(picking_mls), 2)
+        self.assertEqual(len(pickings.picking_type_id), 2)

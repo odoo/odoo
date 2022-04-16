@@ -454,7 +454,7 @@ class MrpProduction(models.Model):
         produce and all work orders has been finished.
         """
         for production in self:
-            if not production.state:
+            if not production.state or not production.product_uom_id:
                 production.state = 'draft'
             elif production.state == 'cancel' or (production.move_finished_ids and all(move.state == 'cancel' for move in production.move_finished_ids)):
                 production.state = 'cancel'
@@ -462,7 +462,7 @@ class MrpProduction(models.Model):
                 production.state = 'done'
             elif production.workorder_ids and all(wo_state in ('done', 'cancel') for wo_state in production.workorder_ids.mapped('state')):
                 production.state = 'to_close'
-            elif not production.workorder_ids and production.qty_producing >= production.product_qty:
+            elif not production.workorder_ids and float_compare(production.qty_producing, production.product_qty, precision_rounding=production.product_uom_id.rounding) >= 0:
                 production.state = 'to_close'
             elif any(wo_state in ('progress', 'done') for wo_state in production.workorder_ids.mapped('state')):
                 production.state = 'progress'
@@ -1441,8 +1441,8 @@ class MrpProduction(models.Model):
         for order in self:
             finish_moves = order.move_finished_ids.filtered(lambda m: m.product_id == order.product_id and m.state not in ('done', 'cancel'))
             # the finish move can already be completed by the workorder.
-            if not finish_moves.quantity_done:
-                finish_moves.quantity_done = float_round(order.qty_producing - order.qty_produced, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP')
+            if finish_moves and not finish_moves.quantity_done:
+                finish_moves._set_quantity_done(float_round(order.qty_producing - order.qty_produced, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP'))
                 finish_moves.move_line_ids.lot_id = order.lot_producing_id
             order._cal_price(moves_to_do_by_order[order.id])
         moves_to_finish = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
