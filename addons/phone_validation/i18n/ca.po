@@ -9,6 +9,8 @@
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2020
 # Susanna Pujol, 2020
 # jabelchi, 2021
+# Jonatan Gk, 2022
+# marcescu, 2022
 # 
 msgid ""
 msgstr ""
@@ -16,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: jabelchi, 2021\n"
+"Last-Translator: marcescu, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,12 +69,12 @@ msgstr "Llista negra"
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_tree
 msgid "Blacklist Date"
-msgstr ""
+msgstr "Data de llista negra"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__mobile_blacklisted
 msgid "Blacklisted Phone Is Mobile"
-msgstr ""
+msgstr "Telèfon a la llista negra és mòbil"
 
 #. module: phone_validation
 #: model:ir.actions.act_window,name:phone_validation.phone_blacklist_action
@@ -82,7 +84,7 @@ msgstr ""
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr ""
+msgstr "El telèfon a la llista negra és el telèfon"
 
 #. module: phone_validation
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
@@ -181,6 +183,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
+"Si el número de telèfon sanejat està en la llista negra, el contacte no "
+"rebrà més sms de correu massiu, de cap llista"
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:0
@@ -195,6 +199,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Indica si un número de telèfon a la llista negra és un número de mòbil. "
+"Ajuda a distingir quin número està a la llista negra             quan hi ha "
+"un camp mòbil i un telèfon en un model."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_blacklisted
@@ -323,7 +330,7 @@ msgstr ""
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr ""
+msgstr "Telèfon a la llista negra"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__number
@@ -351,7 +358,7 @@ msgstr ""
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized
 msgid "Sanitized Number"
-msgstr ""
+msgstr "Número Sanitat"
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:0
@@ -362,13 +369,13 @@ msgstr ""
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
 msgid "Unblacklist"
-msgstr ""
+msgstr "Llista negra"
 
 #. module: phone_validation
 #: code:addons/phone_validation/models/phone_blacklist.py:0
 #, python-format
 msgid "Unblacklisting Reason: %s"
-msgstr ""
+msgstr "Motiu sense llista negra: %s"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_unread
