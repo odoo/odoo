@@ -13,6 +13,7 @@
 # Martin Trigaux, 2022
 # Tamás Németh <ntomasz81@gmail.com>, 2022
 # gezza <geza.nagy@oregional.hu>, 2022
+# Gergő Kertész <gergo.kertesz@maxflow.hu>, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2016-08-05 13:07+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2022\n"
+"Last-Translator: Gergő Kertész <gergo.kertesz@maxflow.hu>, 2022\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +45,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "<i class=\"fa fa-arrow-right mr-1\"/>Back to edit mode"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right mr-1\"/>Vissza szerkesztés módba"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
@@ -73,7 +74,7 @@ msgstr "<i class=\"fa fa-pencil\"/> Szerkesztés"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
-msgstr ""
+msgstr "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -82,6 +83,9 @@ msgid ""
 " not allowed once document(s) have been issued for your account. <br/>Please"
 " contact us directly for this operation.</small>"
 msgstr ""
+"<small class=\"form-text text-muted\">A cégnév és az adószám változtatása az"
+" önkiszolgáló portálon keresztül nem lehetséges, amennyiben már rendelt "
+"tőlünk. <br/>A változtatáshoz kérjük vegye fel velünk a kapcsolatot.</small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -96,7 +100,7 @@ msgstr "<span class=\"small mr-1 navbar-text\">Csoportosítás:</span>"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small mr-1 navbar-text\">Sort By:</span>"
-msgstr ""
+msgstr "<span class=\"small mr-1 navbar-text\">Rendezés:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -272,6 +276,9 @@ msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Az adószám változtatása az önkiszolgáló portálon keresztül nem lehetséges, "
+"amennyiben már rendelt tőlünk. Változtatáshoz kérjük vegye fel velünk a "
+"kapcsolatot."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -279,13 +286,16 @@ msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"A cégnév módosítása az önkiszolgáló portálon keresztül nem lehetséges, "
+"amennyiben már rendelt tőlünk. Változtatáshoz kérjük vegye fel velünk a "
+"kapcsolatot."
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Check failed"
-msgstr ""
+msgstr "Ellenőrzés sikertelen"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -498,7 +508,7 @@ msgstr ""
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Enter a description of and purpose for the key."
-msgstr ""
+msgstr "Adjon meg egy célt és egy leírást a kulcsnak."
 
 #. module: portal
 #. openerp-web
@@ -536,6 +546,8 @@ msgid ""
 "Here is your new API key, use it instead of a password for RPC access.\n"
 "                Your login is still necessary for interactive usage."
 msgstr ""
+"Elkészült az új API kulcs, használja jelszó helyett az RPC kapcsolathoz.\n"
+"                A belépés továbbra is szükséges az interaktív használathoz."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -554,7 +566,7 @@ msgstr "Azonosító ID"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Important:"
-msgstr ""
+msgstr "Fontos:"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -571,7 +583,7 @@ msgstr "Érvénytelen Email! Kérem adjon meg valós e-mail címeket"
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Invalid report type: %s"
-msgstr ""
+msgstr "Érvénytelen riport típus: %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__welcome_message
@@ -596,6 +608,8 @@ msgid ""
 "It is very important that this description be clear\n"
 "                and complete,"
 msgstr ""
+"Nagyon fontos, hogy a leírás érthető\n"
+"                és teljes legyen,"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
@@ -679,7 +693,7 @@ msgstr "Név"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Name your key"
-msgstr ""
+msgstr "Nevezze el a kulcsot"
 
 #. module: portal
 #. openerp-web
@@ -736,12 +750,12 @@ msgstr "Partnerek"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Password Updated!"
-msgstr ""
+msgstr "Jelszó frissítve!"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Password:"
-msgstr ""
+msgstr "Jelszó:"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -753,7 +767,7 @@ msgstr "Telefon"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Please enter your password to confirm you own this account"
-msgstr ""
+msgstr "Add meg a jelszavad a folytatáshoz"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -825,7 +839,7 @@ msgstr "Címzettek"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__resource_ref
 msgid "Related Document"
-msgstr ""
+msgstr "Kapcsolódó Dokumentum"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_id
@@ -840,7 +854,7 @@ msgstr "Vonatkozó dokumentum modell"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Revoke Access"
-msgstr ""
+msgstr "Hozzáférés Visszavonása"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -987,7 +1001,7 @@ msgstr ""
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "The key cannot be retrieved later and provides"
-msgstr ""
+msgstr "A kulcsot később nem lehet előhívni és"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -1081,7 +1095,7 @@ msgstr "ÁFA/ADÓ szám"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Verify New Password:"
-msgstr ""
+msgstr "Új jelszó megerősítése"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_ui_view
@@ -1170,7 +1184,7 @@ msgstr "Weboldal  kommunikáció történet"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "What's this key for?"
-msgstr ""
+msgstr "Mire való ez a kulcs?"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__wizard_id
@@ -1189,7 +1203,7 @@ msgstr "Írjon egy üzenetet..."
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Write down your key"
-msgstr ""
+msgstr "Mentse el a kulcsot"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_share.py:0
@@ -1235,7 +1249,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Zip / Postal Code"
-msgstr "Irányítószám / Postai kód"
+msgstr "Irányítószám"
 
 #. module: portal
 #. openerp-web
@@ -1263,7 +1277,7 @@ msgstr "megjegyzések"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "full access"
-msgstr ""
+msgstr "teljes hozzáférés"
 
 #. module: portal
 #. openerp-web
@@ -1273,6 +1287,8 @@ msgid ""
 "it will be the only way to\n"
 "                identify the key once created"
 msgstr ""
+"mert ez lesz az egyetlen lehetőség\n"
+"                a kulcs azonosítására miután elkészült"
 
 #. module: portal
 #. openerp-web
@@ -1289,7 +1305,7 @@ msgstr "odoo"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "password"
-msgstr ""
+msgstr "jelszó"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_users_apikeys_description
@@ -1314,3 +1330,5 @@ msgstr "Megjegyzés közzétételéhez"
 #, python-format
 msgid "to your user account, it is very important to store it securely."
 msgstr ""
+"biztosít a felhasználói fiókjához, nagyon fontos, hogy biztonságosan "
+"tárolja."

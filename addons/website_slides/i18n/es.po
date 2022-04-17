@@ -870,6 +870,9 @@ msgid ""
 "                                            <i class=\"fa fa-arrows-alt\"/>\n"
 "                                        </span>"
 msgstr ""
+"<span id=\"fullscreen\" class=\"ml-1 ml-sm-2\" title=\"View fullscreen\" aria-label=\"Fullscreen\" role=\"button\">\n"
+"                                            <i class=\"fa fa-arrows-alt\"/>\n"
+"                                        </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -881,6 +884,12 @@ msgid ""
 "                                            <i class=\"fa fa-search-plus\"/>\n"
 "                                        </span>"
 msgstr ""
+"<span id=\"zoomout\" class=\"d-none d-sm-inline ml-2 mr-2\" title=\"Zoom out\" aria-label=\"Zoom out\" role=\"button\">\n"
+"                                            <i class=\"fa fa-search-minus\"/>\n"
+"                                        </span>\n"
+"                                        <span id=\"zoomin\" class=\"d-none d-sm-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
+"                                            <i class=\"fa fa-search-plus\"/>\n"
+"                                        </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -980,6 +989,8 @@ msgid ""
 "A good course has a structure. Pick a name for your first section and click "
 "<b>Save</b> to create it."
 msgstr ""
+"Un buen curso tiene una estructura. Elija un nombre para su primer sección y"
+" haga clic en <b>guardar</b> para crearla."
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_resource_check_file_type
@@ -1127,21 +1138,21 @@ msgstr "Agregar una sección"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
 #, python-format
 msgid "Add a tag"
-msgstr ""
+msgstr "Agregar etiqueta"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "Add an answer below this one"
-msgstr ""
+msgstr "Agregar una respuesta debajo de esta"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "Add comment on this answer"
-msgstr ""
+msgstr "Agregar un comentario en esta respuesta"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
@@ -1688,6 +1699,9 @@ msgid ""
 "answering questions. In this course, you'll study those topics with "
 "activities about mathematics, science and logic."
 msgstr ""
+"Las tareas comunes de un informático son hacer las preguntas adecuadas y "
+"responder preguntas. En este curso, estudiará estos temas con actividades "
+"sobre matemáticas, ciencia y lógica."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -1783,6 +1797,9 @@ msgid ""
 "available here. The tag \"<b>New</b>\" indicates that this lesson was "
 "created less than 7 days ago."
 msgstr ""
+"¡Felicidades! Su primera lección está disponible. Veamos las opciones "
+"disponibles. La etiqueta \"<b>nuevo</b>\" indica que esta lección fue creada"
+" hace menos de 7 días."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
@@ -1797,6 +1814,8 @@ msgid ""
 "Congratulations, you've created your first course.<br/>Click on the title of"
 " this content to see it in fullscreen mode."
 msgstr ""
+"Felicidades, ha creado su primer curso.<br/>Haga clic en el título de este "
+"contenido para verlo en pantalla completa."
 
 #. module: website_slides
 #. openerp-web
@@ -2840,6 +2859,9 @@ msgid ""
 "If you want to be sure that attendees have understood and memorized the "
 "content, you can add a Quiz on the lesson. Click on <b>Add Quiz</b>."
 msgstr ""
+"Si desea asegurarse de que los asistentes entendieron y memorizaron el "
+"contenido, puede agregar una prueba en esta lección. Haga clic en <b>agregar"
+" prueba</b>."
 
 #. module: website_slides
 #. openerp-web
@@ -3673,7 +3695,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "Once you're done, don't forget to <b>Publish</b> your course."
-msgstr ""
+msgstr "En cuanto acabe, no olvide <b>publicar</b> su curso."
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__visibility__public
@@ -3947,13 +3969,15 @@ msgstr "Pregunta"
 #: code:addons/website_slides/models/slide_question.py:0
 #, python-format
 msgid "Question \"%s\" must have 1 correct answer"
-msgstr ""
+msgstr "La pregunta \"%s\" debe tener 1 respuesta correcta"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_question.py:0
 #, python-format
 msgid "Question \"%s\" must have 1 correct answer and at least 1 incorrect answer"
 msgstr ""
+"La pregunta \"%s\" debe tener 1 respuesta correcta y por lo menos 1 "
+"respuesta incorrecta"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__question
@@ -4562,6 +4586,8 @@ msgid ""
 "Skill up and have an impact! Your business career starts here.<br/>Time to "
 "start a course."
 msgstr ""
+"¡Aumente sus habilidades y tenga un impacto! Su carrera empresarial empieza "
+"aquí. <br/> Es hora de iniciar un curso."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__slide_id
@@ -4822,6 +4848,9 @@ msgid ""
 "document. You can change this number if your attendees will need more time "
 "to assimilate the content."
 msgstr ""
+"La <b>duración</b> de la lección se basa en el número de páginas de su "
+"documento. Puede cambiar este número si sus asistentes necesitarán más "
+"tiempo para asimilar el contenido."
 
 #. module: website_slides
 #. openerp-web
@@ -4832,6 +4861,9 @@ msgid ""
 "you want.</br>A <b>Preview</b> of your file is available on the right side "
 "of the screen."
 msgstr ""
+"El <b>título</b> de su lección se autocompleta pero puede cambiarlo si lo "
+"desea. </br> Una <b>vista previa</b> de su archivo esta disponible en el "
+"lado derecho de la pantalla. "
 
 #. module: website_slides
 #. openerp-web
@@ -5383,6 +5415,8 @@ msgid ""
 "Welcome on your course's home page. It's still empty for now. Click on "
 "\"<b>New</b>\" to write your first course."
 msgstr ""
+"Bienvenido a la página de inicio de su curso. Sigue vacío por ahora. Haga "
+"clic en \"<b>nuevo</b>\" para redactar su primer curso."
 
 #. module: website_slides
 #. openerp-web
@@ -5765,7 +5799,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
 msgid "e.g. Your Level"
-msgstr ""
+msgstr "ej. Su nivel"
 
 #. module: website_slides
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_root

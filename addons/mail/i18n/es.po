@@ -101,6 +101,8 @@ msgid ""
 "%(email)s is not recognized as a valid email. This is required to create a "
 "new customer."
 msgstr ""
+"%(email)s no se reconoce como un correo electrónico válido. Esto es "
+"necesario para crear un nuevo cliente."
 
 #. module: mail
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
@@ -324,6 +326,10 @@ msgid ""
 "            Type <b>#channel</b> to mention a channel.<br>\n"
 "            Type <b>/command</b> to execute a command.<br>"
 msgstr ""
+"<br><br>\n"
+"            Escriba <b>@nombredeusuario</b> para mencionar a alguien y llamar su atención.<br>\n"
+"            Escriba <b>#canal</b> para mencionar un canal.<br>\n"
+"            Escriba <b>/comando</b>para ejecutar un comando.<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -428,6 +434,11 @@ msgid ""
 "Please make sure you are using the correct address or contact us at %(default_email)s instead.<br /><br />\n"
 "Kind Regards,</p>"
 msgstr ""
+"<p>Estimado remitente,<br /><br />\n"
+"El siguiente mensaje no pudo entregarse a la dirección%(alias_display_name)s.\n"
+"Solo %(contact_description)s están autorizados a ponerse en contacto.<br /><br />\n"
+"Asegúrese de utilizar la dirección correcta o póngase en contacto con nosotros en %(default_email)s.<br /><br />\n"
+"Saludos cordiales,</p>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -5657,7 +5668,7 @@ msgstr "Sesiones de comunicación en tiempo real"
 #: model:ir.actions.act_window,name:mail.mail_channel_rtc_session_action
 #: model:ir.ui.menu,name:mail.mail_channel_rtc_session_menu
 msgid "RTC sessions"
-msgstr ""
+msgstr "Sesión de comunicación de tiempo real"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings_volumes__volume
@@ -6028,6 +6039,8 @@ msgstr "Limitar las plantillas de correo y la creación por Jinja."
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Restrict mail templates edition and QWEB placeholders usage."
 msgstr ""
+"Restringir la edición de plantillas de correo y el uso de marcadores de la "
+"posición QWEB."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -6068,7 +6081,7 @@ msgstr "Girar (r)"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__rtc_session_ids
 msgid "Rtc Session"
-msgstr ""
+msgstr "Sesión de comunicación en tiempo real"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
@@ -6859,6 +6872,9 @@ msgid ""
 "The e-mail alias %(matching_alias_name)s is already linked with "
 "%(alias_model_name)s. Choose another alias or change it on the linked model."
 msgstr ""
+"El seudónimo %(matching_alias_name)s del correo electrónico ya está "
+"vinculado con %(alias_model_name)s. Escoja otro seudónimo o cámbielo en el "
+"modelo vinculado."
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -6867,6 +6883,8 @@ msgid ""
 "The e-mail alias %(matching_alias_name)s is already used as "
 "%(alias_duplicate)s alias. Please choose another alias."
 msgstr ""
+"%(alias_duplicate)s ya está usando el seudónimo %(matching_alias_name)s de "
+"correo electrónico. Escoja otro."
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -7927,6 +7945,8 @@ msgid ""
 "You do not have the access right to unblacklist emails. Please contact your "
 "administrator."
 msgstr ""
+"No tiene derecho a acceder a la lista negra de correos electrónicos. Por "
+"favor, póngase en contacto con su administrador."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -8178,7 +8198,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "e.g. \"mycompany.com\""
-msgstr ""
+msgstr "ej. \"miempresa.com\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -8188,7 +8208,7 @@ msgstr "ej. 65ea4f9e948b693N5156F350256bd152"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "e.g. ACd5543a0b450ar4c7t95f1b6e8a39t543"
-msgstr ""
+msgstr "ej. ACd5543a0b450ar4c7t95f1b6e8a39t543"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -8204,17 +8224,17 @@ msgstr "Por ejemplo, conversación de una propuesta"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 msgid "e.g. Schedule a meeting"
-msgstr ""
+msgstr "ej. agendar una reunión"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "e.g. support"
-msgstr ""
+msgstr "ej. soporte"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_users_settings_view_form
 msgid "e.g. true.true..f"
-msgstr ""
+msgstr "ej. true.true..f"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -8284,6 +8304,8 @@ msgid ""
 "message_post does not support model and res_id parameters anymore. Please "
 "call message_post on record."
 msgstr ""
+"message_post ya no admite los parámetros model y res_id. Solicite "
+"message_post en el registro."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0

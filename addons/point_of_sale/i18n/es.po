@@ -90,7 +90,7 @@ msgstr "%(pos_name)s (no usado)"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "%s POS payment of %s in %s"
-msgstr ""
+msgstr "%s Pago de PdV %s en %s"
 
 #. module: point_of_sale
 #. openerp-web
@@ -185,6 +185,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('is_total_cost_computed','=', "
 "True)]}\">TBD</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('is_total_cost_computed','=', True)]}\">Por "
+"definir</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -259,6 +261,8 @@ msgid ""
 "<strong> &gt; Payment Terminals</strong>\n"
 "                                    in order to install a Payment Terminal and make a fully integrated payment method."
 msgstr ""
+"<strong>Terminales de pago</strong>\n"
+"                                    con el fin de| instalar una terminal de pago y crear un método de pago totalmente integrado."
 
 #. module: point_of_sale
 #. openerp-web
@@ -338,7 +342,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
 #, python-format
 msgid "AMOUNT"
-msgstr ""
+msgstr "IMPORTE"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -856,6 +860,9 @@ msgid ""
 "When the session is open, we keep on loading all remaining partners in the background.\n"
 "In the meantime, you can use the 'Load Customers' button to load partners from database."
 msgstr ""
+"Se cargan 100 partners de forma predeterminada.\n"
+"Al abrir la sesión, seguimos cargado los partners restantes en segundo plano.\n"
+"Mientras tanto, puede utilizar el botón de \"Cargar clientes\" para cargar partners desde la base de datos."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_via_proxy
@@ -1164,7 +1171,7 @@ msgstr "Revisar la cantidad en caja al inicio y al cierre."
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
 #, python-format
 msgid "Check the internet connection then try again."
-msgstr ""
+msgstr "Compruebe la conexión a internet y vuelva a intentarlo."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1208,7 +1215,7 @@ msgstr "Ciudad"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Click here to close the session"
-msgstr ""
+msgstr "Haga clic aquí para cerrar la sesión"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__client
@@ -1444,7 +1451,7 @@ msgstr "Conectando al IoT Box"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Connection Error"
-msgstr ""
+msgstr "Error de conexión"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1458,7 +1465,7 @@ msgstr "Error de conexión"
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
 #, python-format
 msgid "Connection is aborted"
-msgstr ""
+msgstr "Se perdió la conexión"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1806,6 +1813,8 @@ msgid ""
 "Defines the name of the payment method that will be displayed in the Point "
 "of Sale when the payments are selected."
 msgstr ""
+"Define el nombre del método de pago que se mostrará en el Punto de venta al "
+"seleccionar el pago."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__barcode_nomenclature_id
@@ -2043,7 +2052,7 @@ msgstr "No mostrar de nuevo"
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
 #, python-format
 msgid "Done by"
-msgstr ""
+msgstr "Hecho por"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2954,6 +2963,8 @@ msgid ""
 "Leave empty to use the default account from the company setting.\n"
 "Account used as outstanding account when creating accounting payment records for bank payments."
 msgstr ""
+"Deje vacío para utilizar la cuenta predeterminada de los ajustes de la empresa.\n"
+"La cuenta que se utiliza como cuenta pendiente al crear registros de pagos contables para los pagos bancarios."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__receivable_account_id
@@ -2961,6 +2972,8 @@ msgid ""
 "Leave empty to use the default account from the company setting.\n"
 "Overrides the company's receivable account (for Point of Sale) used in the journal entries."
 msgstr ""
+"Dejar vacío para utilizar la cuenta predeterminada de los ajustes de la empresa.\n"
+"Anula la cuenta por cobrar de la empresa (para el punto de venta) utilizada en los asientos de diario."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
@@ -2976,6 +2989,11 @@ msgid ""
 "For bank journal, we write to the outstanding account specified in this payment method.\n"
 "Only cash and bank journals are allowed."
 msgstr ""
+"Dejar vacío para utilizar la cuenta por cobrar del cliente.\n"
+"Define el diario en el que se anotan los pagos acumulados (o el pago individual si Identificar cliente es verdadero) después de cerrar la sesión.\n"
+"Para el diario de efectivo, escribimos directamente en la cuenta predeterminada del diario a través de las líneas de estado de cuenta.\n"
+"Para el diario de bancos, escribimos en la cuenta pendiente especificada en este método de pago.\n"
+"Solo se permiten los diarios de efectivo y de bancos."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limited_partners_amount
@@ -3240,6 +3258,8 @@ msgstr "Necesita un cliente para facturar"
 msgid ""
 "Need loss account for the following journals to post the lost amount: %s\n"
 msgstr ""
+"Necesita una cuenta de pérdidas para para publicar el importe perdido en los"
+" siguientes diarios: %s\n"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -3247,6 +3267,8 @@ msgstr ""
 msgid ""
 "Need profit account for the following journals to post the gained amount: %s"
 msgstr ""
+"Necesita una cuenta de ganancias para publicar el importe ganado en los "
+"siguientes diarios: %s"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3818,7 +3840,7 @@ msgstr "Cuenta pendiente"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_procurement_group__pos_order_id
 msgid "POS Order"
-msgstr ""
+msgstr "Orden del PdV"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -4477,14 +4499,14 @@ msgstr "Unidad de precio"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Price discount from %s -> %s"
-msgstr ""
+msgstr "Descuento del precio de %s -> %s"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Price excl. VAT:"
-msgstr ""
+msgstr "Precio sin incluir IVA:"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4679,6 +4701,8 @@ msgid ""
 "Product is not loaded. Tried loading the product from the server but there "
 "is a network error."
 msgstr ""
+"No se cargó el producto. Se intentó cargar el producto desde el servidor "
+"pero hay un error de red."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -6012,6 +6036,8 @@ msgid ""
 "The requested quantity to be refunded is higher than the ordered quantity. "
 "%s is requested while only %s can be refunded."
 msgstr ""
+"La cantidad por reembolsar solicitada es mayor a la cantidad ordenada. Se "
+"solicitan %s cuando solo se pueden reembolsar %s."
 
 #. module: point_of_sale
 #. openerp-web
@@ -6198,6 +6224,8 @@ msgid ""
 "This account is used as intermediary account when nothing is set in a "
 "payment method."
 msgstr ""
+"Esta cuenta se utiliza como una cuenta intermediaria cuando no hay un método"
+" de pago establecido."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
@@ -6266,6 +6294,7 @@ msgstr ""
 msgid ""
 "This journal is associated with a payment method. You cannot modify its type"
 msgstr ""
+"Este diario está asociado con un método de pago. No puede modificar su tipo."
 
 #. module: point_of_sale
 #. openerp-web
@@ -7007,6 +7036,7 @@ msgstr "Necesita una cuenta de pérdidas y ganancias en su diario de caja."
 msgid ""
 "You need to select the customer before you can invoice or ship an order."
 msgstr ""
+"Debe seleccionar el cliente antes de poder facturar o enviar una orden."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -7176,6 +7206,9 @@ msgid ""
 "When the session is open, we keep on loading all remaining products in the background.\n"
 "In the meantime, you can click on the 'database icon' in the searchbar to load products from database."
 msgstr ""
+"cargamos todos los productos destacados (favoritos), todos los servicios, los últimos movimientos de inventario de los productos y los productos actualizados más recientes.\n"
+"Cuando la sesión está abierta, seguimos cargando los productos restantes en segundo plano.\n"
+"Mientras tanto, puede hacer clic en el icono de la base de datos en la barra de búsqueda para cargar productos desde la base de datos."
 
 #. module: point_of_sale
 #. openerp-web

@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Susanna Pujol, 2020
-# Martin Trigaux, 2021
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2021
 # Sandra Franch <sandra.franch@upc.edu>, 2021
 # M Palau <mpalau@tda.ad>, 2021
@@ -15,6 +14,7 @@
 # Arnau Ros, 2022
 # Jonatan Gk, 2022
 # jabelchi, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: jabelchi, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3359,6 +3359,12 @@ msgid "Immediate transfer?"
 msgstr "Transferència immediata?"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Import"
+msgstr "Importa"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
 msgstr "Tipus d'entrada"
@@ -4666,6 +4672,12 @@ msgid "No stock move found"
 msgstr "No s' ha trobat cap moviment a la pila principal"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "No Stock On Hand"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_all
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_backorder
@@ -5386,6 +5398,14 @@ msgstr "Rutes preferides"
 #: model:ir.model.fields,help:stock.field_stock_move__route_ids
 msgid "Preferred route"
 msgstr "Ruta preferida"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Press the CREATE button to define quantity for each product in your stock or"
+" import them from a spreadsheet throughout Favorites"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -7819,6 +7839,14 @@ msgid "There's no product move yet"
 msgstr "Encara no hi ha moviment de productes"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"This analysis gives you an overview of the current stock level of your "
+"products."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
 msgid "This field will fill the packing origin and the name of its moves"
 msgstr "Aquest camp emplenarà el paquet d'origen i el nom dels seus moviments"
@@ -9311,6 +9339,12 @@ msgstr ""
 "Aquí trobareu propostes intel·ligents de replenament basades en projeccions d'inventari.\n"
 "            Seleccioneu la quantitat de comprar o fabricar i llançar ordres en un clic.\n"
 "            Per a estalviar temps en el futur, establiu les regles com a \"automatats.\""
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Your stock is currently empty"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zpl
