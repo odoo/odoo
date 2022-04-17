@@ -7,7 +7,7 @@
 # Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2020
 # Tim Siu Lai <tl@roomsfor.hk>, 2020
 # Yoon Nankyung <nankyung.yoon@pro-spire.co.jp>, 2020
-# 江口 和志 <k_eguchi@enzantrades.co.jp>, 2020
+# 江口和志 <k_eguchi@enzantrades.co.jp>, 2020
 # Tsuda Ryoko <ryoko04nov@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Shigekazu N. <shigekazu.noka@gmail.com>, 2020
@@ -976,12 +976,6 @@ msgid "Invalid token found! Token acquirer %s != %s"
 msgstr "無効なトークンが見つかりました!トークン取得者%s!=%s"
 
 #. module: payment
-#: code:addons/payment/models/account_invoice.py:0
-#, python-format
-msgid "Invalid token found! Token partner %s != %s"
-msgstr "無効なトークンが見つかりました!トークンパートナー%s!=%s"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Invoice(s)"
 msgstr ""
@@ -1776,6 +1770,14 @@ msgstr ""
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "The transaction %s with %s for %s is pending."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/account_invoice.py:0
+#, python-format
+msgid ""
+"The transaction was aborted because you are not the customer of this "
+"invoice. Log in as %s to be able to use this payment method."
 msgstr ""
 
 #. module: payment
