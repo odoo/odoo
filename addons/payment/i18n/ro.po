@@ -984,12 +984,6 @@ msgid "Invalid token found! Token acquirer %s != %s"
 msgstr "Token nevalid găsit! Dobânditor jetoane %s != %s"
 
 #. module: payment
-#: code:addons/payment/models/account_invoice.py:0
-#, python-format
-msgid "Invalid token found! Token partner %s != %s"
-msgstr "Jeton nevalid găsit! Partener de jetoane%s != %s"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Invoice(s)"
 msgstr "Facturi"
@@ -1800,6 +1794,14 @@ msgstr ""
 #, python-format
 msgid "The transaction %s with %s for %s is pending."
 msgstr "Tranzacția  %scu %s pentru %s este în așteptare."
+
+#. module: payment
+#: code:addons/payment/models/account_invoice.py:0
+#, python-format
+msgid ""
+"The transaction was aborted because you are not the customer of this "
+"invoice. Log in as %s to be able to use this payment method."
+msgstr ""
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0

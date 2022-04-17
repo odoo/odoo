@@ -970,12 +970,6 @@ msgid "Invalid token found! Token acquirer %s != %s"
 msgstr "រកឃើញនិមិត្តសញ្ញាមិនត្រឹមត្រូវ! អ្នកទិញថូខឹន។%s!= %s"
 
 #. module: payment
-#: code:addons/payment/models/account_invoice.py:0
-#, python-format
-msgid "Invalid token found! Token partner %s != %s"
-msgstr "រកឃើញនិមិត្តសញ្ញាមិនត្រឹមត្រូវ! ដៃគូថូនី។%s!= %s"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Invoice(s)"
 msgstr "វ(s)"
@@ -1792,6 +1786,14 @@ msgstr ""
 #, python-format
 msgid "The transaction %s with %s for %s is pending."
 msgstr "ប្រតិបត្តិការ %sជាមួយ %s សម្រាប់ %sកំពុងរង់ចាំ"
+
+#. module: payment
+#: code:addons/payment/models/account_invoice.py:0
+#, python-format
+msgid ""
+"The transaction was aborted because you are not the customer of this "
+"invoice. Log in as %s to be able to use this payment method."
+msgstr ""
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0

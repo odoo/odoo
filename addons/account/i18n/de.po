@@ -38,6 +38,7 @@
 # Christopher Rogos <crogos@gmail.com>, 2021
 # EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2021
 # Felix Schubert <felix.schubert@go-erp.com>, 2022
+# jufeodoo, 2022
 # Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
@@ -1292,7 +1293,7 @@ msgstr "Konto Steuergruppe"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_report
 msgid "Account Tax Report"
-msgstr ""
+msgstr "Steuerbericht"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_report_line
@@ -9727,7 +9728,7 @@ msgstr "Menge:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
-msgstr ""
+msgstr "Neu sequenzieren"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -11889,6 +11890,10 @@ msgid ""
 "The prefix* groups are the separators between the year, month and the actual increasing sequence number (seq).\n"
 "e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 msgstr ""
+"Technisches Feld, das verwendet wird, um eine komplexe Sequenzzusammensetzung zu erzwingen, die das System normalerweise missverstehen würde.\n"
+"Es handelt sich um eine Regex, die alle folgenden Erfassungsgruppen enthalten kann: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"
+"Die Präfix*-Gruppen sind die Trennzeichen zwischen dem Jahr, dem Monat und der eigentlichen aufsteigenden Sequenznummer (seq).\n"
+"Z.B: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__exclude_from_invoice_tab

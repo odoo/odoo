@@ -23,11 +23,10 @@
 # Felix Yang <felixyangsh@aliyun.com>, 2020
 # GritLuo <dooms21day@163.com>, 2020
 # Martin Trigaux, 2020
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2020
 # bf2549c5415a9287249cba2b8a5823c7, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # keecome <7017511@qq.com>, 2020
-# Zang <minoscc@gmail.com>, 2020
+# mino <minoscc@gmail.com>, 2020
 # ljsrzc007 <ljsrzc007@gmail.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
 # 洋 任 <1042636194@qq.com>, 2020
@@ -35,6 +34,7 @@
 # Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
 # Jeffery CHEN <jeffery9@gmail.com>, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -42,7 +42,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2021\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2129,6 +2129,14 @@ msgid "It has already been unblocked."
 msgstr "已经解除阻塞"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid ""
+"It is not possible to unplan one single Work Order. You should unplan the "
+"Manufacturing Order instead in order to unplan all the linked operations."
+msgstr "无法取消计划一个工单。您应该取消计划制造订单，以便取消计划所有链接的操作。"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned
 msgid "Its Operations are Planned"
 msgstr "已计划其作业"
@@ -2787,6 +2795,7 @@ msgid ""
 "of Materials, which means that operations can still be planned on it/them. "
 "To prevent this, deletion of the work center is recommended instead."
 msgstr ""
+"请注意，已归档的工作中心：'%s'仍然与活动的物料清单相联系，这意味着仍然可以对它/它们进行操作计划。为了防止这种情况，建议删除该工作中心。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
@@ -4177,6 +4186,15 @@ msgid ""
 msgstr "工作订单的计划结束日期不能早于计划开始日期，请更正此日期以保存工单。"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The product has already been used at least once, editing its structure may "
+"lead to undesirable behaviours. You should rather archive the product and "
+"create a new one with a new bill of materials."
+msgstr "该产品已至少使用过一次，编辑其结构可能会导致不良行为。您应该归档产品并使用新的物料清单创建一个新产品。"
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_qty_positive
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
@@ -5173,7 +5191,7 @@ msgstr "您尚未记录<i>生产量</i>，通过单击<i>应用</i>Odoo将生产
 msgid ""
 "You must indicate a non-zero amount consumed for at least one of your "
 "components"
-msgstr ""
+msgstr "你必须表明至少有一个组件的消耗量不为零"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0

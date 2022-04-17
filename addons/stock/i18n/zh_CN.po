@@ -26,7 +26,6 @@
 # Martin Trigaux, 2020
 # niulin lnc. <admin@niulin.net>, 2020
 # Gary Wei <Gary.wei@elico-corp.com>, 2020
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2020
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2020
 # 老窦 北京 <2662059195@qq.com>, 2020
 # bf2549c5415a9287249cba2b8a5823c7, 2020
@@ -37,7 +36,7 @@
 # GritLuo <dooms21day@163.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # snow wang <147156565@qq.com>, 2020
-# Zang <minoscc@gmail.com>, 2020
+# mino <minoscc@gmail.com>, 2020
 # ljsrzc007 <ljsrzc007@gmail.com>, 2020
 # Melvin Liu <betien@msn.cn>, 2020
 # Jeffery CHEN <jeffery9@gmail.com>, 2021
@@ -45,6 +44,7 @@
 # Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
 # Benson <Benson.Dr@Gmail.com>, 2021
 # Chris H, 2021
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -52,7 +52,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Chris H, 2021\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1699,7 +1699,7 @@ msgstr "客户位置"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL 快递连接器"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -6618,10 +6618,8 @@ msgstr "产品数量不足"
 #, python-format
 msgid ""
 "The quantity done for the product \"%s\" doesn't respect the rounding "
-"precision                                   defined on the unit of measure "
-"\"%s\". Please change the quantity done or the"
-"                                   rounding precision of your unit of "
-"measure."
+"precision defined on the unit of measure \"%s\". Please change the quantity "
+"done or the rounding precision of your unit of measure."
 msgstr "产品”%s“的数量小数位与单位”%s“的定义不同。 请修改数量或者修正单位的小数点保留设置值。"
 
 #. module: stock
@@ -7978,6 +7976,15 @@ msgstr ""
 #, python-format
 msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "您需要提供产品%s的批号/序列号。"
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You should not use a planned internal transfer to move some products between"
+" two warehouses. Instead, use an immediate internal transfer or the resupply"
+" route."
+msgstr "您不应使用计划的内部转移在两个仓库之间移动某些产品。相反，使用立即内部转移或补给路线。"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0

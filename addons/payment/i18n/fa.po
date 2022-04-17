@@ -970,12 +970,6 @@ msgid "Invalid token found! Token acquirer %s != %s"
 msgstr ""
 
 #. module: payment
-#: code:addons/payment/models/account_invoice.py:0
-#, python-format
-msgid "Invalid token found! Token partner %s != %s"
-msgstr ""
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Invoice(s)"
 msgstr "فاکتور(ها)"
@@ -1770,6 +1764,14 @@ msgstr ""
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "The transaction %s with %s for %s is pending."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/account_invoice.py:0
+#, python-format
+msgid ""
+"The transaction was aborted because you are not the customer of this "
+"invoice. Log in as %s to be able to use this payment method."
 msgstr ""
 
 #. module: payment

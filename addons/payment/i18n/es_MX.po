@@ -6,6 +6,7 @@
 # Cécile Collart <cco@odoo.com>, 2021
 # Daniela Cervantes <dace@odoo.com>, 2021
 # Lucia Pacheco <lpo@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2021\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -267,7 +268,7 @@ msgstr "Activo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_active
 msgid "Add Extra Fees"
-msgstr "Añadir cargos extra"
+msgstr "Agregar cuotas adicionales"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -713,7 +714,7 @@ msgstr "Nombre mostrado"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__display_as
 msgid "Displayed as"
-msgstr "Mostrado como"
+msgstr "Se muestra como"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__done
@@ -980,12 +981,6 @@ msgstr "Error de servidor interno"
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
 msgstr "¡Token no válido! Token de comprador %s!=%s"
-
-#. module: payment
-#: code:addons/payment/models/account_invoice.py:0
-#, python-format
-msgid "Invalid token found! Token partner %s != %s"
-msgstr "¡Token no válido! Token del contacto %s != %s"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
@@ -1806,6 +1801,14 @@ msgstr ""
 #, python-format
 msgid "The transaction %s with %s for %s is pending."
 msgstr "La transacción %s con %s para %s está pendiente."
+
+#. module: payment
+#: code:addons/payment/models/account_invoice.py:0
+#, python-format
+msgid ""
+"The transaction was aborted because you are not the customer of this "
+"invoice. Log in as %s to be able to use this payment method."
+msgstr ""
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0

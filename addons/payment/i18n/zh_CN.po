@@ -7,18 +7,18 @@
 # Felix Yuen <fyu@odoo.com>, 2020
 # 开源智造OSCG-老杨 <yangxunbo@163.com>, 2020
 # Martin Trigaux, 2020
-# r <263737@qq.com>, 2020
+# rsh <263737@qq.com>, 2020
 # Gary Wei <Gary.wei@elico-corp.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # keecome <7017511@qq.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # ChinaMaker <liuct@chinamaker.net>, 2020
 # snow wang <147156565@qq.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
+# Felix Yang <felixyangsh@aliyun.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
 # Mandy Choy <mnc@odoo.com>, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2021
+# Jeffery CHEN <jeffery9@gmail.com>, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
 # 
 msgid ""
@@ -981,12 +981,6 @@ msgid "Invalid token found! Token acquirer %s != %s"
 msgstr "路由缺失%s!=%s"
 
 #. module: payment
-#: code:addons/payment/models/account_invoice.py:0
-#, python-format
-msgid "Invalid token found! Token partner %s != %s"
-msgstr "找不到该伙伴的对应路由 %s != %s"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Invoice(s)"
 msgstr "结算单"
@@ -1782,6 +1776,14 @@ msgstr "交易 %s 与 %s 对 %s 返回失败，错误信息如下: %s"
 #, python-format
 msgid "The transaction %s with %s for %s is pending."
 msgstr "%s的%s的交易%s正在等待处理。"
+
+#. module: payment
+#: code:addons/payment/models/account_invoice.py:0
+#, python-format
+msgid ""
+"The transaction was aborted because you are not the customer of this "
+"invoice. Log in as %s to be able to use this payment method."
+msgstr ""
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0

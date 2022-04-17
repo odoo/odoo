@@ -15,6 +15,7 @@
 # Susanna Pujol, 2020
 # AncesLatino2004, 2022
 # jabelchi, 2022
+# marcescu, 2022
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: jabelchi, 2022\n"
+"Last-Translator: marcescu, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,12 +48,14 @@ msgid ""
 "%(date_start)s at %(time_start)s To\n"
 " %(date_end)s at %(time_end)s (%(timezone)s)"
 msgstr ""
+"%(date_start)s en %(time_start)s a\n"
+" %(date_end)s en %(time_end)s (%(timezone)s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
-msgstr ""
+msgstr "%(day)s en (%(start)s a %(end)s) (%(timezone)s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_attendee.py:0
@@ -312,7 +315,7 @@ msgstr "<span> hores</span>"
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_contacts_user_id_partner_id_unique
 msgid "A user cannot have the same contact twice."
-msgstr ""
+msgstr "Un usuari no pot tenir el mateix contacte dues vegades."
 
 #. module: calendar
 #. openerp-web
@@ -380,12 +383,12 @@ msgstr "Tot el dia"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "All Day, %(day)s"
-msgstr ""
+msgstr "Tot el dia, %(day)s"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__all_events
 msgid "All events"
-msgstr ""
+msgstr "Tots els esdeveniments"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -418,7 +421,7 @@ msgstr "Disponibilitat"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__base_event_id
 msgid "Base Event"
-msgstr ""
+msgstr "Esdeveniment base"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
@@ -436,7 +439,7 @@ msgstr "Per dia"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__byday
 msgid "Byday"
-msgstr ""
+msgstr "Dia a dia"
 
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.mail_menu_calendar
@@ -491,6 +494,8 @@ msgid ""
 "Choose what to do with other events in the recurrence. Updating All Events "
 "is not allowed when dates or time is modified"
 msgstr ""
+"Trieu què fer amb altres esdeveniments de la recurrència. No es permet "
+"actualitzar tots els esdeveniments quan es modifiquen les dates o l'hora"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__common_name
@@ -637,7 +642,7 @@ msgstr "Nom del document model"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__dtstart
 msgid "Dtstart"
-msgstr ""
+msgstr "Dtstart"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__duration
@@ -656,12 +661,12 @@ msgstr "Duració en minuts"
 #: code:addons/calendar/static/src/js/calendar_controller.js:0
 #, python-format
 msgid "Edit Recurrent event"
-msgstr ""
+msgstr "Edita l'esdeveniment recurrent"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Edit recurring event"
-msgstr ""
+msgstr "Edita l'esdeveniment recurrent"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__email
@@ -672,12 +677,12 @@ msgstr "Correu electrònic"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1
 msgid "Email - 3 Hours"
-msgstr ""
+msgstr "Correu electrònic - 3 hores"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_2
 msgid "Email - 6 Hours"
-msgstr ""
+msgstr "Correu electrònic - 6 hores"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__email
@@ -698,7 +703,7 @@ msgstr "Data final"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__end_type
 msgid "End Type"
-msgstr ""
+msgstr "Tipus de final"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__end_date
@@ -729,7 +734,7 @@ msgstr "Tipus de reunió d'esdeveniments"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_recurrence
 msgid "Event Recurrence Rule"
-msgstr ""
+msgstr "Regla de recurrència d'esdeveniments"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
@@ -740,7 +745,7 @@ msgstr "Hora del esdeveniment"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(count)s %(period)s"
-msgstr ""
+msgstr "Cada %(count)s %(period)s"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__public
@@ -768,7 +773,7 @@ msgstr "Primer heu d'especificar la data d'invitació. "
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__follow_recurrence
 msgid "Follow Recurrence"
-msgstr ""
+msgstr "Segueix la recurrencia"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_follower_ids

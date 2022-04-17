@@ -1397,6 +1397,8 @@ msgid ""
 "Define the components and finished products you wish to use in\n"
 "                bill of materials and manufacturing orders."
 msgstr ""
+"Defina los componentes y los productos terminados que desea utilizar en\n"
+"                las listas de materiales y las órdenes de fabricación."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__resource_calendar_id
@@ -2630,6 +2632,8 @@ msgid ""
 "Manufacturing operations are processed at Work Centers. A Work Center can be composed of\n"
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc."
 msgstr ""
+"Las operaciones de fabricación se procesan en centros de trabajo. Un centro de trabajo se compone de\n"
+"                trabajadores y/o maquinaria, se utilizan para calcular costos, programar actividades, planear capacidad, etc."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
@@ -2638,6 +2642,9 @@ msgid ""
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
 "                They can be defined via the configuration menu."
 msgstr ""
+"Las operaciones de fabricación se procesan en centros de trabajo. Un centro de trabajo se puede componer de\n"
+"                trabajadores y/o maquinaria, se utilizan para calcular costos, programar actividades, planear la capacidad, etc.\n"
+"                Se pueden definir a través del menú de configuración."
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_mark_done
@@ -2792,7 +2799,7 @@ msgstr "No hay información aún"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "No manufacturing order found. Let's create one."
-msgstr ""
+msgstr "No se encontró ninguna orden de fabricación. Vamos a crear una."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
@@ -2807,7 +2814,7 @@ msgstr "No hay pérdida de productividad para este equipo"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid "No unbuild order found"
-msgstr ""
+msgstr "No se encontró ninguna orden de desarmado"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -2852,6 +2859,10 @@ msgid ""
 "of Materials, which means that operations can still be planned on it/them. "
 "To prevent this, deletion of the work center is recommended instead."
 msgstr ""
+"Tome en cuenta que los centros de trabajo archivados: \"%s\" aún están "
+"vinculados a listas de materiales activas, lo que significa que aún se "
+"pueden planear operaciones en ellos. Se recomienda eliminar los centros de "
+"trabajo para prevenir esto."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
@@ -2966,6 +2977,8 @@ msgid ""
 "Operation define that need to be done to realize a Work Order.\n"
 "                Each operation is done at a specific Work Center and has a specific duration."
 msgstr ""
+"Las operaciones definen lo que se necesita hacer para realizar una orden de trabajo.\n"
+"                Cada operación se realiza en un centro de trabajo en específico y tiene una duración específica."
 
 #. module: mrp
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
@@ -4231,6 +4244,8 @@ msgid ""
 "The attribute value %(attribute)s set on product %(product)s does not match "
 "the BoM product %(bom_product)s."
 msgstr ""
+"El valor del atributo %(attribute)s establecido en el producto %(product)s "
+"no coincide con el producto en la lista de materiales %(bom_product)s."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
@@ -4373,6 +4388,11 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
+"Este campo se utiliza para calcular la duración esperada de una orden de "
+"trabajo en este centro de trabajo. Por ejemplo, si una orden de trabajo "
+"tarda una hora y su factor de eficiencia es del 100%, entonces la duración "
+"esperada será de una hora. Sin embargo, si el factor de eficiencia es del "
+"200%, la duración esperada será de 30 minutos."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
@@ -4400,13 +4420,15 @@ msgid ""
 "This menu gives you the full traceability of inventory operations on a specific product.\n"
 "                You can filter on the product to see all the past movements for the product."
 msgstr ""
+"Este menú le da trazabilidad total a las operaciones de inventario en productos específicos.\n"
+"                Puede filtrar en el producto para ver todos los movimientos pasados para el producto."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "This serial number for product %s has already been produced"
-msgstr ""
+msgstr "Ya se produjo este número de serie para el producto %s"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__time_ids
@@ -5105,6 +5127,8 @@ msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
 "                    Operations are defined in the bill of materials or added in the manufacturing order directly."
 msgstr ""
+"Las órdenes de trabajo son operaciones que se hacen como parte de una orden de fabricación.\n"
+"                    Las operaciones se definen en la lista de materiales o se agregan directamente en la orden de fabricación."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -5115,6 +5139,8 @@ msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
 "            Operations are defined in the bill of materials or added in the manufacturing order directly."
 msgstr ""
+"Las órdenes de trabajo son operaciones que se hacen como parte de una orden de fabricación.\n"
+"            Las operaciones se definen en la lista de materiales o se agregan directamente en la orden de fabricación."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -5322,6 +5348,9 @@ msgid ""
 "<i>apply</i> Odoo will produce all the finished products and consume all "
 "components."
 msgstr ""
+"No tienen ninguna cantidad <i>producida</i> registrada aún. Al dar clic en "
+"<i>aplicar</i> Odoo producirá todos los productos terminados y consumirá "
+"todos los componentes."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -5385,7 +5414,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
 msgid "You produced less than initial demand"
-msgstr ""
+msgstr "Produjo menos que la demanda inicial"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -5405,7 +5434,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "and build finished products using"
-msgstr ""
+msgstr "y construir productos terminados utilizando"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action

@@ -3,7 +3,7 @@
 # 	* payment
 # 
 # Translators:
-# JustinC <dev@dottdot.com>, 2021
+# dott.dev <dottdot.dev@gmail.com>, 2021
 # Benson <Benson.Dr@Gmail.com>, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # 
@@ -968,12 +968,6 @@ msgid "Invalid token found! Token acquirer %s != %s"
 msgstr "Token錯誤！%s != %s"
 
 #. module: payment
-#: code:addons/payment/models/account_invoice.py:0
-#, python-format
-msgid "Invalid token found! Token partner %s != %s"
-msgstr "Token錯誤！合作夥伴 Token %s!=%s"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Invoice(s)"
 msgstr "應收憑單"
@@ -1769,6 +1763,14 @@ msgstr "具有 %s 為 %s 的交易 %s 已返回失敗，並顯示以下錯誤訊
 #, python-format
 msgid "The transaction %s with %s for %s is pending."
 msgstr "%s的%s的交易%s正在等待處理。"
+
+#. module: payment
+#: code:addons/payment/models/account_invoice.py:0
+#, python-format
+msgid ""
+"The transaction was aborted because you are not the customer of this "
+"invoice. Log in as %s to be able to use this payment method."
+msgstr ""
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0

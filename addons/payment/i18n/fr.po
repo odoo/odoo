@@ -1018,12 +1018,6 @@ msgid "Invalid token found! Token acquirer %s != %s"
 msgstr "Token trouvé invalid! Acquéreur du token %s != %s"
 
 #. module: payment
-#: code:addons/payment/models/account_invoice.py:0
-#, python-format
-msgid "Invalid token found! Token partner %s != %s"
-msgstr "Token trouvé invalide! Partenaire du token %s != %s"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Invoice(s)"
 msgstr "Facture(s)"
@@ -1847,6 +1841,14 @@ msgstr ""
 #, python-format
 msgid "The transaction %s with %s for %s is pending."
 msgstr "La transaction %s avec %s pour %s est en attente."
+
+#. module: payment
+#: code:addons/payment/models/account_invoice.py:0
+#, python-format
+msgid ""
+"The transaction was aborted because you are not the customer of this "
+"invoice. Log in as %s to be able to use this payment method."
+msgstr ""
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0

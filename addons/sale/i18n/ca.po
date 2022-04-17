@@ -19,6 +19,7 @@
 # Harcogourmet, 2022
 # Jonatan Gk, 2022
 # jabelchi, 2022
+# marcescu, 2022
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: jabelchi, 2022\n"
+"Last-Translator: marcescu, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1803,7 +1804,7 @@ msgstr "Agrupar per"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_pricelist
 msgid "Has Pricelist Changed"
-msgstr ""
+msgstr "Ha canviat la llista de preus"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
@@ -2209,14 +2210,14 @@ msgstr "Deixar als clients entrar a veure els seus documents "
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Let's send the quote."
-msgstr ""
+msgstr "Enviem el pressupost."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Lets keep electronic signature for now."
-msgstr ""
+msgstr "Mantinguem la signatura electrònica per ara."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -2308,7 +2309,7 @@ msgstr "Mitja"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_seller_account
 msgid "Merchant Account ID"
-msgstr ""
+msgstr "ID del compte comercial"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error
@@ -2451,7 +2452,7 @@ msgstr "Res a facturar"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Now, we'll create a sample quote."
-msgstr ""
+msgstr "Ara crearem una cita de mostra."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -2556,6 +2557,8 @@ msgstr ""
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
 msgstr ""
+"Només es permet un valor personalitzat per valor d'atribut per línia de "
+"comandes de vendes."
 
 #. module: sale
 #. openerp-web
@@ -2564,6 +2567,8 @@ msgstr ""
 #, python-format
 msgid "Open Sales app to send your first quotation in a few clicks."
 msgstr ""
+"Obri l'aplicació de vendes per a enviar el seu primer pressupost en uns pocs"
+" clics."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2624,7 +2629,7 @@ msgstr "Estat de la comanda"
 #. module: sale
 #: model:mail.activity.type,name:sale.mail_act_sale_upsell
 msgid "Order Upsell"
-msgstr ""
+msgstr "Demanar una venda addicional"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -2641,7 +2646,7 @@ msgstr "Comanda a facturar"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Ordered Quantity: %(old_qty)s -> %(new_qty)s"
-msgstr ""
+msgstr "Quantitat demanada: %(old_qty)s -> %(new_qty)s"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__invoice_policy
@@ -2650,6 +2655,8 @@ msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
+"Quantitat ordenada: Quantitats de factura ordenades pel client.\n"
+"Quantitat lliurament: Quantitats de factura lliurades al client."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__order
@@ -2688,7 +2695,7 @@ msgstr "Un altre mètode de pagament"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
-msgstr ""
+msgstr "Token d'identitat PDT"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
@@ -3033,6 +3040,7 @@ msgstr "Pressupost enviat"
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
 msgid "Quotation Validity is required and must be greater than 0."
 msgstr ""
+"La validesa de les qualificacions és necessària i ha de ser superior a 0."
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
@@ -3050,7 +3058,7 @@ msgstr "Pressupost enviat"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Quotation viewed by customer %s"
-msgstr ""
+msgstr "Quotació vista pel client %s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -3094,12 +3102,12 @@ msgstr "Despeses de Refactura"
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_expense_policy
 msgid "Re-Invoice Policy visible"
-msgstr ""
+msgstr "Política de refacturació visible"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
-msgstr ""
+msgstr "Recalcular tots els preus sobre la base d'aquesta llista de preus"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3143,7 +3151,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Request an online payment to confirm orders"
-msgstr ""
+msgstr "Request an online payment to confirm orders"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_payment
@@ -3157,7 +3165,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Request an online signature to confirm orders"
-msgstr ""
+msgstr "Demana una signatura en línia per confirmar les comandes"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -3213,12 +3221,12 @@ msgstr "Avisos de comanda de venda"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_acquirer_onboarding_wizard
 msgid "Sale Payment acquire onboarding wizard"
-msgstr ""
+msgstr "Pagament de venda adquireix l'auxiliar dincorporació"
 
 #. module: sale
 #: model:utm.source,name:sale.utm_source_sale_order_0
 msgid "Sale Promotion 1"
-msgstr ""
+msgstr "Promoció de venda 1"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3228,7 +3236,7 @@ msgstr "Avisos de venda"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr ""
+msgstr "Incorporació  de la venta de la forma de pagament seleccionada"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
@@ -3281,7 +3289,7 @@ msgstr "Comanda de venda"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_cancel
 msgid "Sales Order Cancel"
-msgstr ""
+msgstr "Cancel·lació de la comanda de venda"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
@@ -3293,7 +3301,7 @@ msgstr "Comanda de venda confirmada "
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__so_line
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_view_form_readonly
 msgid "Sales Order Item"
-msgstr ""
+msgstr "Posició de comanda de client"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -3379,7 +3387,7 @@ msgstr "Avisos de vendes"
 #. module: sale
 #: model:ir.model,name:sale.model_report_all_channels_sales
 msgid "Sales by Channel (All in One)"
-msgstr ""
+msgstr "Vendes per canal (tot en un)"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -3407,7 +3415,7 @@ msgstr "Comercial"
 #: code:addons/sale/models/res_company.py:0
 #, python-format
 msgid "Sample Order Line"
-msgstr ""
+msgstr "Línia de comanda de mostra"
 
 #. module: sale
 #: code:addons/sale/models/res_company.py:0
@@ -3452,11 +3460,13 @@ msgstr "Seleccioneu un producte o creeu-ne un de nou al moment."
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Select product attributes and optional products from the sales order"
 msgstr ""
+"Seleccioneu els atributs del producte i els productes opcionals de la "
+"comanda de vendes"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Select specific invoice and delivery addresses"
-msgstr ""
+msgstr "Seleccioneu les adreces específiques de factura i lliurament"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_line_warn
@@ -3487,6 +3497,7 @@ msgstr "Vendre productes per múltiples nombres de unitat per paquet"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
 msgstr ""
+"Variants de la Venda d'un producte utilitzant atributs (mida, color, etc.)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3535,7 +3546,7 @@ msgstr "Seqüència"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set a default validity on your quotations"
-msgstr ""
+msgstr "Estableixi una validesa per defecte en les seves cotitzacions"
 
 #. module: sale
 #. openerp-web
@@ -3886,12 +3897,13 @@ msgstr "La quantitat demanada ha estat actualitzada."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
 msgid "The payment communication of this sale order."
-msgstr ""
+msgstr "La comunicació de pagament d'aquesta ordre de venda."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
 msgid "The percentage of amount to be invoiced in advance, taxes excluded."
 msgstr ""
+"El percentatge de l'import a facturar per endavant, els impostos exclosos."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -3921,6 +3933,8 @@ msgid ""
 "The rate of the currency to the currency of rate 1 applicable at the date of"
 " the order"
 msgstr ""
+"La taxa de la moneda a la moneda de la taxa 1 aplicable a la data de la "
+"comanda"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -4392,7 +4406,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your feedback..."
-msgstr ""
+msgstr "Els vostres comentaris..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

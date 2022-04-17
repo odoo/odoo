@@ -66,24 +66,25 @@ msgstr ""
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Attendances can't overlap."
-msgstr ""
+msgstr "No se pueden superponer las asistencias."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
 msgid "Average Hour per Day"
-msgstr ""
+msgstr "Promedio de horas al día"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__hours_per_day
 msgid ""
 "Average hours per day a resource is supposed to work with this calendar."
 msgstr ""
+"El recurso de horas promedio al día debe trabajar con este calendario."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_calendar
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__two_weeks_calendar
 msgid "Calendar in 2 weeks mode"
-msgstr ""
+msgstr "Calendario en modo de 2 semanas"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -127,7 +128,7 @@ msgstr "Creado el"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__day_period
 msgid "Day Period"
-msgstr ""
+msgstr "Periodo el día"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__dayofweek
@@ -216,6 +217,7 @@ msgstr "Viernes por la mañana"
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
 msgid "Gives the sequence of this line when displaying the resource calendar."
 msgstr ""
+"Da la secuencia de esta línea cuando se muestra el calendario de recursos"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
@@ -257,6 +259,8 @@ msgid ""
 "If empty, this is a generic time off for the company. If a resource is set, "
 "the time off is only for this resource"
 msgstr ""
+"Si está vacío, son ausencias genéricas para la empresa. Si un recurso está "
+"configurado, la ausencia es solo para este recurso."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__active
@@ -273,6 +277,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Working "
 "Time without removing it."
 msgstr ""
+"Si el campo activo está configurado a \"falso\" le permitirá ocultar las "
+"\"horas trabajadas\" sin quitarlas."
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -444,7 +450,7 @@ msgstr "Recursos"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Time Off"
-msgstr ""
+msgstr "Recursos de ausencias"
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -471,7 +477,7 @@ msgstr "Buscar recurso"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Search Working Period Time Off"
-msgstr ""
+msgstr "Buscar ausencias del horario de trabajo"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
@@ -505,6 +511,8 @@ msgid ""
 "Start and End time of working.\n"
 "A specific value of 24:00 is interpreted as 23:59:59.999999."
 msgstr ""
+"Inicio y final del trabajo\n"
+"Un valor específico como 24:00 se interpretará como 23:59:59.999999."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__date_from
@@ -552,6 +560,7 @@ msgstr "El factor de eficiencia no puede ser igual a 0."
 #, python-format
 msgid "The start date of the time off must be earlier than the end date."
 msgstr ""
+"La fecha de inicio del tiempo libre debe ser antes que la fecha final."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__tz
@@ -574,6 +583,11 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
+"Este campo se utiliza para calcular la duración esperada de una orden de "
+"trabajo en este centro de trabajo. Por ejemplo, si una orden de trabajo "
+"tarda una hora y su factor de eficiencia es del 100%, entonces la duración "
+"esperada será de una hora. Sin embargo, si el factor de eficiencia es del "
+"200%, la duración esperada será de 30 minutos."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3
@@ -584,7 +598,7 @@ msgstr "Jueves"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Thursday Afternoon"
-msgstr ""
+msgstr "Jueves en la tarde"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -626,7 +640,7 @@ msgstr "Martes"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Tuesday Afternoon"
-msgstr ""
+msgstr "Martes en la tarde"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -659,7 +673,7 @@ msgstr "Miércoles"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Wednesday Afternoon"
-msgstr ""
+msgstr "Miércoles en la tarde"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -678,6 +692,8 @@ msgid ""
 "Whether this should be computed as a time off or as work time (eg: "
 "formation)"
 msgstr ""
+"Si esto debe calcularse como vacaciones o como tiempo de trabajo (por "
+"ejemplo, formación)"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
@@ -740,7 +756,7 @@ msgstr "Tiempos de Trabajo"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "You can't delete section between weeks."
-msgstr ""
+msgstr "No puede eliminar secciones entre semanas"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0

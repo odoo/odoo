@@ -11,6 +11,8 @@
 # M Palau <mpalau@tda.ad>, 2020
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
 # jabelchi, 2021
+# Harcogourmet, 2022
+# marcescu, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: jabelchi, 2021\n"
+"Last-Translator: marcescu, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,6 +75,9 @@ msgid ""
 "                            Last Month\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            El mes passat\n"
+"                        </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -84,13 +89,13 @@ msgstr "<span class=\"o_stat_text\">Assistència</span>"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Attended Since</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Va assistir des de</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Not Attended Since</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">No va assistit des de</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
@@ -189,7 +194,7 @@ msgstr "Reservat"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee_base
 msgid "Basic Employee"
-msgstr ""
+msgstr "Empleat bàsic"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:0
@@ -491,7 +496,7 @@ msgstr "Hores"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_last_month
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month
 msgid "Hours Last Month"
-msgstr ""
+msgstr "Horari el mes passat"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month_display
@@ -499,14 +504,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_last_month_display
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month_display
 msgid "Hours Last Month Display"
-msgstr ""
+msgstr "Visualització de les hores del darrer mes"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_today
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__hours_today
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_today
 msgid "Hours Today"
-msgstr ""
+msgstr "Horari d'avui"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -526,7 +531,7 @@ msgstr "ID"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Identify Manually"
-msgstr ""
+msgstr "Identificar manualment"
 
 #. module: hr_attendance
 #. openerp-web
@@ -623,6 +628,7 @@ msgstr "Encara no hi han dades!"
 #, python-format
 msgid "No employee corresponding to Badge ID '%(barcode)s.'"
 msgstr ""
+"No s'ha trobat cap treballador corresponent a l'ID número '%(barcode)s.'"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -725,7 +731,7 @@ msgstr "Qui matina fa farina"
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_kiosk
 msgid ""
 "The user will be able to open the kiosk mode and validate the employee PIN."
-msgstr ""
+msgstr "L'usuari podrà obrir el mode quiosc i validar el PIN de treballador"
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance
@@ -751,7 +757,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Today's work hours:"
-msgstr ""
+msgstr "Horari laboral d'avui:"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -807,7 +813,7 @@ msgstr "Benvingut!"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Work Hours"
-msgstr ""
+msgstr "Horari de treball"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__worked_hours
@@ -818,7 +824,7 @@ msgstr "Hores treballades"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Worked hours last month"
-msgstr ""
+msgstr "Hores treballades el mes passat"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
