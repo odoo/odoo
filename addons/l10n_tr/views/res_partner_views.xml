@@ -6,8 +6,9 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <field name="vat" position="after">
-                <field name="l10n_tr_tax_office_id" attrs="{'invisible': [('country_code', '!=', 'TR')]}"/>
+                <field name="l10n_tr_tax_office_id" attrs="{'invisible': [('country_code', '!=', 'TR')], 'required':[('country_code', '=', 'TR'), ('vat', '!=', False)]}"/>
             </field>
         </field>
     </record>
+
 </odoo>

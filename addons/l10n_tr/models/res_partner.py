@@ -15,10 +15,7 @@ class ResPartner(models.Model):
         return super()._commercial_fields() + ['l10n_tr_tax_office_id']
 
     def _display_address_depends(self):
-        # Not sure if it works properly
-        return super()._display_address_depends() + [
-            'l10n_tr_tax_office_id',
-        ]
+        return super()._display_address_depends() + ['l10n_tr_tax_office_id']
 
     def _prepare_display_address(self, without_company=False):
         address_format, args = super()._prepare_display_address(without_company=without_company)
