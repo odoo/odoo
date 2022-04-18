@@ -115,14 +115,14 @@ class ProductTemplate(models.Model):
 
         :param product_template_attribute_value_ids: the combination for which
             to get or create variant
-        :type product_template_attribute_value_ids: json encoded list of id
+        :type product_template_attribute_value_ids: list of id
             of `product.template.attribute.value`
 
         :return: id of the product variant matching the combination or 0
         :rtype: int
         """
         combination = self.env['product.template.attribute.value'] \
-            .browse(json.loads(product_template_attribute_value_ids))
+            .browse(product_template_attribute_value_ids)
 
         return self._create_product_variant(combination, log_warning=True).id or 0
 
