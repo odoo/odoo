@@ -22,3 +22,15 @@ class ResCompany(models.Model):
         if self.l10n_in_edi_token and self.l10n_in_edi_token_validity > fields.Datetime.now():
             return True
         return False
+
+    def _neutralize(self):
+        super()._neutralize()
+        self.flush()
+        self.invalidate_cache()
+        self.env.cr.execute("""UPDATE res_company SET
+            l10n_in_edi_production_env = false,
+            l10n_in_edi_username = Null,
+            l10n_in_edi_password = Null,
+            l10n_in_edi_token = Null,
+            l10n_in_edi_token_validity = Null
+        """)
