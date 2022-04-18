@@ -194,7 +194,10 @@ class TestChannelInternals(MailCommon):
         self.assertEqual(channel.message_partner_ids, self.env['res.partner'])
         self.assertEqual(channel.channel_partner_ids, self.test_partner)
 
-        channel._action_remove_members(self.test_partner)
+        self.env['mail.channel.partner'].sudo().search([
+            ('partner_id', 'in', self.test_partner.ids),
+            ('channel_id', 'in', channel.ids)
+        ]).unlink()
         self.assertEqual(channel.message_partner_ids, self.env['res.partner'])
         self.assertEqual(channel.channel_partner_ids, self.env['res.partner'])
 
