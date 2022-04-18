@@ -448,15 +448,6 @@ class Channel(models.Model):
                     current_channel_partner._rtc_invite_members(partner_ids=partners.ids, guest_ids=guests.ids)
         self.env['bus.bus']._sendmany(notifications)
 
-    def _action_remove_members(self, partners):
-        """ Private implementation to remove members from channels. Done as sudo
-        to avoid ACLs issues with channel partners. """
-        self.env['mail.channel.partner'].sudo().search([
-            ('partner_id', 'in', partners.ids),
-            ('channel_id', 'in', self.ids)
-        ]).unlink()
-        self.invalidate_cache(fnames=['channel_partner_ids', 'channel_last_seen_partner_ids'])
-
     def _can_invite(self, partner_id):
         """Return True if the current user can invite the partner to the channel.
 
