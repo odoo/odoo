@@ -647,7 +647,6 @@ class AccountBankStatementLine(models.Model):
         :return:                    The values to create a new account.move.line move_line.
         '''
         self.ensure_one()
-
         statement = self.statement_id
         journal = statement.journal_id
         company_currency = journal.company_id.currency_id
@@ -655,11 +654,30 @@ class AccountBankStatementLine(models.Model):
         foreign_currency = self.foreign_currency_id or journal_currency or company_currency
         statement_line_rate = (self.amount_currency / self.amount) if self.amount else 0.0
 
+        # TODO: this code should be refactored since non-straightforward logic:
+        # Wrong values get assigned in first instance for several multi-currency scenarios
+        # followed by difficult to read logic to correct afterwards.
+        # A straightforward logic to assign to assign the correct values from the beginning
+        # would be less error prone.
         balance_to_reconcile = counterpart_vals.pop('balance', None)
-        amount_residual = -counterpart_vals.pop('amount_residual', move_line.amount_residual if move_line else 0.0) \
-            if balance_to_reconcile is None else balance_to_reconcile
-        amount_residual_currency = -counterpart_vals.pop('amount_residual_currency', move_line.amount_residual_currency if move_line else 0.0)\
-            if balance_to_reconcile is None else balance_to_reconcile
+        # Add a non-supported use case upfront (quick & dirty workaround until code has been refactored)
+        # The use case is a bank statement line with foreign currency == company currency and counterpart move in same currency as bank journal
+        if foreign_currency == company_currency and journal_currency != company_currency and move_line and move_line.currency_id == journal_currency:
+            if balance_to_reconcile is None:
+                amount_residual_currency = -counterpart_vals.pop('amount_residual_currency', move_line.amount_residual_currency)
+            else:
+                amount_residual_currency = balance_to_reconcile
+            if move_line and amount_residual_currency == -move_line.amount_residual_currency:
+                # no need to recalculate if the 'balance' is equal to move_line.amount_residual_currency
+                amount_residual = -move_line.amount_residual
+            else:
+                amount_residual = statement_line_rate * amount_residual_currency
+        else:
+            # use existing code for other use cases
+            amount_residual = -counterpart_vals.pop('amount_residual', move_line.amount_residual if move_line else 0.0) \
+                if balance_to_reconcile is None else balance_to_reconcile
+            amount_residual_currency = -counterpart_vals.pop('amount_residual_currency', move_line.amount_residual_currency if move_line else 0.0)\
+                if balance_to_reconcile is None else balance_to_reconcile
 
         if 'currency_id' in counterpart_vals:
             currency_id = counterpart_vals['currency_id'] or company_currency.id
@@ -684,8 +702,8 @@ class AccountBankStatementLine(models.Model):
         if currency_id == journal_currency.id and journal_currency != company_currency:
             if foreign_currency != company_currency:
                 amounts[company_currency.id] = journal_currency._convert(amounts[currency_id], company_currency, journal.company_id, self.date)
-            if statement_line_rate:
-                amounts[foreign_currency.id] = amounts[currency_id] * statement_line_rate
+                if statement_line_rate:
+                    amounts[foreign_currency.id] = amounts[currency_id] * statement_line_rate
         elif currency_id == foreign_currency.id and self.foreign_currency_id:
             if statement_line_rate:
                 amounts[journal_currency.id] = amounts[foreign_currency.id] / statement_line_rate
@@ -704,7 +722,7 @@ class AccountBankStatementLine(models.Model):
         if foreign_currency != company_currency and self.foreign_currency_id:
             amount_currency = amounts[foreign_currency.id]
             currency_id = foreign_currency.id
-        elif journal_currency != company_currency and not self.foreign_currency_id:
+        elif journal_currency != company_currency and not self.foreign_currency_id or self.foreign_currency_id == company_currency:
             amount_currency = amounts[journal_currency.id]
             currency_id = journal_currency.id
         else:
@@ -937,7 +955,12 @@ class AccountBankStatementLine(models.Model):
 
                 if len(suspense_lines) == 1:
 
-                    if journal_currency and suspense_lines.currency_id == journal_currency:
+                    # Add fix for a non-supported use case upfront.
+                    # The use case is a bank statement line with foreign currency == company currency and counterpart move in same currency as bank journal
+                    if journal_currency and st_line.foreign_currency_id == company_currency:
+                        pass
+
+                    elif journal_currency and suspense_lines.currency_id == journal_currency:
 
                         # The suspense line is expressed in the journal's currency meaning the foreign currency
                         # set on the statement line is no longer needed.
