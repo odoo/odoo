@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from odoo import http
 from odoo.http import request
 
@@ -29,7 +31,7 @@ class VariantController(http.Controller):
 
     @http.route(['/sale/create_product_variant'], type='json', auth="user", methods=['POST'])
     def create_product_variant(self, product_template_id, product_template_attribute_value_ids, **kwargs):
-        return request.env['product.template'].browse(int(product_template_id)).create_product_variant(product_template_attribute_value_ids)
+        return request.env['product.template'].browse(int(product_template_id)).create_product_variant(json.loads(product_template_attribute_value_ids))
 
     def _get_pricelist(self, pricelist_id, pricelist_fallback=False):
         return request.env['product.pricelist'].browse(int(pricelist_id or 0))
