@@ -206,7 +206,7 @@ class ReportBomStructure(models.AbstractModel):
             else:
                 prod_qty = line.product_qty * factor / bom.product_qty
                 company = bom.company_id or self.env.company
-                not_rounded_price = line.product_id.uom_id._compute_price(line.product_id.with_context(force_comany=company.id).standard_price, line.product_uom_id) * prod_qty
+                not_rounded_price = line.product_id.uom_id._compute_price(line.product_id.with_company(company).standard_price, line.product_uom_id) * prod_qty
                 price += company.currency_id.round(not_rounded_price)
         return price
 
