@@ -855,6 +855,25 @@ registerModel({
          * @private
          * @returns {boolean|FieldCommand}
          */
+        _computeHasCurrentPartnerAvatar() {
+            if (this.messageViewInEditing) {
+                return false;
+            }
+            if (!this.threadView) {
+                return clear();
+            }
+            if (this.threadView.threadViewer.chatWindow) {
+                return false;
+            }
+            if (this.threadView.threadViewer.discuss) {
+                return !this.messaging.device.isMobile;
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {boolean|FieldCommand}
+         */
         _computeHasFollowers() {
             if (this.chatter) {
                 return true;
@@ -1372,6 +1391,10 @@ registerModel({
             isCausal: true,
             readonly: true,
             required: true,
+        }),
+        hasCurrentPartnerAvatar: attr({
+            default: true,
+            compute: '_computeHasCurrentPartnerAvatar',
         }),
         hasFollowers: attr({
             compute: '_computeHasFollowers',

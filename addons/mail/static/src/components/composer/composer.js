@@ -51,17 +51,12 @@ export class Composer extends Component {
 
 Object.assign(Composer, {
     defaultProps: {
-        hasCurrentPartnerAvatar: true,
         hasDiscardButton: false,
         hasSendButton: true,
         isExpandable: false,
     },
     props: {
         localId: String,
-        hasCurrentPartnerAvatar: {
-            type: Boolean,
-            optional: true,
-        },
         hasDiscardButton: {
             type: Boolean,
             optional: true,

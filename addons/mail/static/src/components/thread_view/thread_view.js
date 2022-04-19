@@ -44,10 +44,6 @@ Object.assign(ThreadView, {
         onFocusin: () => {},
     },
     props: {
-        hasComposerCurrentPartnerAvatar: {
-            type: Boolean,
-            optional: true,
-        },
         hasComposerDiscardButton: {
             type: Boolean,
             optional: true,
