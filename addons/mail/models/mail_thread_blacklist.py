@@ -47,7 +47,7 @@ class MailBlackListMixin(models.AbstractModel):
     def _compute_email_normalized(self):
         self._assert_primary_email()
         for record in self:
-            record.email_normalized = tools.email_normalize(record[self._primary_email])
+            record.email_normalized = tools.email_normalize(record[self._primary_email], strict=False)
 
     @api.model
     def _search_is_blacklisted(self, operator, value):
