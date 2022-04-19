@@ -4,6 +4,7 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
     const { isConnectionError } = require('point_of_sale.utils');
+    const { useAsyncLockedMethod } = require('point_of_sale.custom_hooks');
 
     const { debounce } = require("@web/core/utils/timing");
     const { useListener } = require("@web/core/utils/hooks");
@@ -28,9 +29,15 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
     class PartnerListScreen extends PosComponent {
         setup() {
             super.setup();
+            this.lockedSaveChanges = useAsyncLockedMethod(this.saveChanges);
             useListener('click-save', () => this.env.bus.trigger('save-partner'));
+<<<<<<< HEAD
             useListener('save-changes', this.saveChanges);
             this.searchWordInputRef = useRef('search-word-input-partner');
+=======
+            useListener('click-edit', () => this.editPartner());
+            useListener('save-changes', this.lockedSaveChanges);
+>>>>>>> 0f1e6ff13fa... temp
 
             // We are not using useState here because the object
             // passed to useState converts the object and its contents
