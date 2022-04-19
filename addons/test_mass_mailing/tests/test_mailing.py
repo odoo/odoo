@@ -207,6 +207,8 @@ class TestMassMailing(TestMassMailCommon):
                 # as it uses email_normalized if possible
                 if dst_model == 'mailing.test.customer':
                     formatted_mailmail_email = '"Formatted Record" <record.format@example.com>'
+                    multi_mail_mail_email = 'record.multi.1@example.com, "Record Multi 2" <record.multi.2@example.com>'
+                    multi_outgoing_emails = ['record.multi.1@example.com', '"Record Multi 2" <record.multi.2@example.com>']
                     unicode_email = '"Unicode Record" <record.😊@example.com>'
                     unicode_mailmail_email = '"Unicode Record" <record.😊@example.com>'
                     record_case_email = 'TEST.RECORD.CASE@EXAMPLE.COM'
@@ -217,6 +219,8 @@ class TestMassMailing(TestMassMailCommon):
                 else:
                     formatted_mailmail_email = 'record.format@example.com'
                     unicode_email = 'record.😊@example.com'
+                    multi_mail_mail_email = 'record.multi.1@example.com'
+                    multi_outgoing_emails = ['record.multi.1@example.com']
                     unicode_mailmail_email = 'record.😊@example.com'
                     record_case_email = 'test.record.case@example.com'
                     record_weird_email = 'test.record.weird@example.comweirdformat'
@@ -258,8 +262,8 @@ class TestMassMailing(TestMassMailCommon):
                          'partner': customer_weird_2,
                          'trace_status': 'sent'},
                         {'email': 'record.multi.1@example.com',
-                         'email_to_mail': 'record.multi.1@example.com, "Record Multi 2" <record.multi.2@example.com>',
-                         'email_to_recipients': [['record.multi.1@example.com', '"Record Multi 2" <record.multi.2@example.com>']],
+                         'email_to_mail': multi_mail_mail_email,
+                         'email_to_recipients': [multi_outgoing_emails],
                          'failure_type': False,
                          'trace_status': 'sent'},
                         {'email': 'record.format@example.com',

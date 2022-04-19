@@ -560,8 +560,11 @@ def email_normalize(text, strict=True):
         - Possible Input Email : 'Name <NaMe@DoMaIn.CoM>'
         - Normalized Output Email : 'name@domain.com'
 
-    :param bool strict: text should contain exactly one email (default behavior
-      and unique behavior before Odoo16);
+    :param boolean strict: if True, text should contain a single email
+      (default behavior in stable 14+). If more than one email is found no
+      normalized email is returned. If False the first found candidate is used
+      e.g. if email is 'tony@e.com, "Tony2" <tony2@e.com>', result is either
+      False (strict=True), either 'tony@e.com' (strict=False).
 
     :return: False if no email found (or if more than 1 email found when being
       in strict mode); normalized email otherwise;
