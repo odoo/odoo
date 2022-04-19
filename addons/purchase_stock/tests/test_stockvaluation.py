@@ -359,7 +359,6 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.env.company.anglo_saxon_accounting = True
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
-        self.product1.property_account_creditor_price_difference = self.price_diff_account
 
         # Receive 10@10 ; create the vendor bill
         po1 = self.env['purchase.order'].create({
@@ -417,9 +416,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.assertEqual(self.product1.value_svl, 300)
 
         # return the second po
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=receipt_po2.ids, active_id=receipt_po2.ids[0],
-            active_model='stock.picking'))
+        stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(
+            active_ids=receipt_po2.ids, active_id=receipt_po2.ids[0], active_model='stock.picking'))
         stock_return_picking = stock_return_picking_form.save()
         stock_return_picking.product_return_moves.quantity = 10
         stock_return_picking_action = stock_return_picking.create_returns()
@@ -449,14 +447,15 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         creditnote_po2.action_post()
 
         # check the anglo saxon entries
-        price_diff_entry = self.env['account.move.line'].search([('account_id', '=', self.price_diff_account.id)])
+        price_diff_entry = self.env['account.move.line'].search([
+            ('account_id', '=', self.stock_valuation_account.id),
+            ('move_id', '=', creditnote_po2.id)])
         self.assertEqual(price_diff_entry.credit, 100)
 
     def test_anglosaxon_valuation(self):
         self.env.company.anglo_saxon_accounting = True
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
-        self.product1.property_account_creditor_price_difference = self.price_diff_account
 
         # Create PO
         po_form = Form(self.env['purchase.order'])
@@ -473,6 +472,11 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         receipt.move_ids.quantity_done = 1
         receipt.button_validate()
 
+        stock_valuation_aml = self.env['account.move.line'].search([('account_id', '=', self.stock_valuation_account.id)])
+        receipt_aml = stock_valuation_aml[0]
+        self.assertEqual(len(stock_valuation_aml), 1, "For now, only one line for the stock valuation account")
+        self.assertAlmostEqual(receipt_aml.debit, 10, "Should be equal to the PO line unit price (10)")
+
         # Create an invoice with a different price
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.invoice_date = move_form.date
@@ -484,12 +488,16 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         invoice.action_post()
 
         # Check what was posted in the price difference account
-        price_diff_aml = self.env['account.move.line'].search([('account_id','=', self.price_diff_account.id)])
-        self.assertEqual(len(price_diff_aml), 1, "Only one line should have been generated in the price difference account.")
+        stock_valuation_aml = self.env['account.move.line'].search([('account_id', '=', self.stock_valuation_account.id)])
+        price_diff_aml = stock_valuation_aml - receipt_aml
+        self.assertEqual(len(stock_valuation_aml), 2, "A second line should have been generated for the price difference.")
         self.assertAlmostEqual(price_diff_aml.debit, 5, "Price difference should be equal to 5 (15-10)")
+        self.assertAlmostEqual(
+            sum(stock_valuation_aml.mapped('debit')), 15,
+            "Total debit value on stock valuation account should be equal to the invoiced price of the product.")
 
         # Check what was posted in stock input account
-        input_aml = self.env['account.move.line'].search([('account_id','=',self.stock_input_account.id)])
+        input_aml = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id)])
         self.assertEqual(len(input_aml), 3, "Only three lines should have been generated in stock input account: one when receiving the product, one when making the invoice.")
         invoice_amls = input_aml.filtered(lambda l: l.move_id == invoice)
         picking_aml = input_aml - invoice_amls
@@ -551,8 +559,6 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.product1.product_tmpl_id.cost_method = 'average'
         self.product1.product_tmpl_id.valuation = 'real_time'
         self.product1.product_tmpl_id.purchase_method = 'purchase'
-
-        self.product1.property_account_creditor_price_difference = self.price_diff_account
 
         # SetUp currency and rates
         self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", (self.usd_currency.id, company.id))
@@ -636,10 +642,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         date_invoice = '2019-01-16'
 
         # SetUp product Average
-        self.product1.product_tmpl_id.write({
-            'purchase_method': 'purchase',
-            'property_account_creditor_price_difference': self.price_diff_account.id,
-        })
+        self.product1.product_tmpl_id.purchase_method = 'purchase'
 
         # SetUp product Standard
         # should have bought at 60 USD
@@ -656,7 +659,6 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'categ_id': product_categ_standard.id,
             'name': 'Standard Val',
             'standard_price': 60,
-            'property_account_creditor_price_difference': self.price_diff_account.id
         })
 
         # SetUp currency and rates
@@ -818,7 +820,6 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'purchase_method': 'purchase',
             'name': 'AVG',
             'standard_price': 60,
-            'property_account_creditor_price_difference': self.price_diff_account.id
         })
 
         # SetUp currency and rates
@@ -854,8 +855,10 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         # To allow testing validation of PO and Delivery
         today = date_po
+
         def _today(*args, **kwargs):
             return datetime.strptime(today, "%Y-%m-%d").date()
+
         def _now(*args, **kwargs):
             return datetime.strptime(today + ' 01:00:00', "%Y-%m-%d %H:%M:%S")
 
@@ -957,7 +960,6 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'purchase_method': 'purchase',
             'name': 'AVG',
             'standard_price': 0,
-            'property_account_creditor_price_difference': self.price_diff_account.id
         })
 
         # SetUp currency and rates
@@ -994,7 +996,6 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'currency_id': self.eur_currency.id,
             'company_id': company.id,
         }])
-
 
         # Proceed
         with freeze_time(date_po):
@@ -1134,7 +1135,6 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.env.company.anglo_saxon_accounting = True
         self.product1.categ_id.property_cost_method = 'fifo'
         self.product1.categ_id.property_valuation = 'real_time'
-        self.product1.property_account_creditor_price_difference = self.price_diff_account
 
         # Create PO
         po_form = Form(self.env['purchase.order'])
@@ -1161,10 +1161,13 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         invoice = invoice_form.save()
         invoice.action_post()
 
-        # Check what was posted in the price difference account
-        price_diff_aml = self.env['account.move.line'].search([('account_id','=', self.price_diff_account.id)])
-        self.assertEqual(len(price_diff_aml), 1, "Only one line should have been generated in the price difference account.")
-        self.assertAlmostEqual(price_diff_aml.credit, 20, "Price difference should be equal to 20 (110-90)")
+        # Check what was posted in the stock valuation account
+        stock_valuation_aml = self.env['account.move.line'].search([('account_id', '=', self.stock_valuation_account.id)])
+        self.assertEqual(
+            len(stock_valuation_aml), 2,
+            "Two lines for the stock valuation account: one from the receipt (debit 110) and one from the bill (credit 20)")
+        self.assertAlmostEqual(sum(stock_valuation_aml.mapped('debit')), 110)
+        self.assertAlmostEqual(sum(stock_valuation_aml.mapped('credit')), 20, "Credit of 20 because of the difference between the PO and its invoice")
 
         # Check what was posted in stock input account
         input_aml = self.env['account.move.line'].search([('account_id','=', self.stock_input_account.id)])
@@ -1181,7 +1184,6 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.env.company.anglo_saxon_accounting = True
         self.product1.categ_id.property_cost_method = 'fifo'
         self.product1.categ_id.property_valuation = 'real_time'
-        self.product1.property_account_creditor_price_difference = self.price_diff_account
 
         # Create PO
         po_form = Form(self.env['purchase.order'])
@@ -1208,10 +1210,11 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         invoice = invoice_form.save()
         invoice.action_post()
 
-        # Check what was posted in the price difference account
-        price_diff_aml = self.env['account.move.line'].search([('account_id', '=', self.price_diff_account.id)])
-        self.assertEqual(len(price_diff_aml), 1, "Only one line should have been generated in the price difference account.")
-        self.assertAlmostEqual(price_diff_aml.credit, 10, "Price difference should be equal to 10 (100-90)")
+        # Check what was posted in the stock valuation account
+        stock_valuation_aml = self.env['account.move.line'].search([('account_id', '=', self.stock_valuation_account.id)])
+        self.assertEqual(len(stock_valuation_aml), 2, "Only one line should have been generated in the price difference account.")
+        self.assertAlmostEqual(sum(stock_valuation_aml.mapped('debit')), 100)
+        self.assertAlmostEqual(sum(stock_valuation_aml.mapped('credit')), 10, "Credit of 10 because of the 10% discount")
 
         # Check what was posted in stock input account
         input_aml = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id)])
@@ -1228,7 +1231,6 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.env.company.anglo_saxon_accounting = True
         self.product1.categ_id.property_cost_method = 'fifo'
         self.product1.categ_id.property_valuation = 'real_time'
-        self.product1.property_account_creditor_price_difference = self.price_diff_account
 
         # Create PO
         po_form = Form(self.env['purchase.order'])
@@ -1256,11 +1258,11 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         invoice.action_post()
 
         # Check if something was posted in the price difference account
-        price_diff_aml = self.env['account.move.line'].search([('account_id','=', self.price_diff_account.id)])
-        self.assertEqual(len(price_diff_aml), 0, "No line should have been generated in the price difference account.")
+        price_diff_aml = self.env['account.move.line'].search([('account_id', '=', self.stock_valuation_account.id)])
+        self.assertEqual(price_diff_aml.debit, 90, "Should have only one line in the stock valuation account, created by the receipt.")
 
         # Check what was posted in stock input account
-        input_aml = self.env['account.move.line'].search([('account_id','=', self.stock_input_account.id)])
+        input_aml = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id)])
         self.assertEqual(len(input_aml), 2, "Only two lines should have been generated in stock input account: one when receiving the product, one when making the invoice.")
         self.assertAlmostEqual(sum(input_aml.mapped('debit')), 90, "Total debit value on stock input account should be equal to the original PO price of the product.")
         self.assertAlmostEqual(sum(input_aml.mapped('credit')), 90, "Total credit value on stock input account should be equal to the original PO price of the product.")
@@ -1272,7 +1274,6 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.env.company.anglo_saxon_accounting = True
         self.product1.categ_id.property_cost_method = 'average'
         self.product1.categ_id.property_valuation = 'real_time'
-        self.product1.categ_id.property_account_creditor_price_difference_categ = self.price_diff_account
         self.product1.standard_price = 1.01
 
         invoice = self.env['account.move'].create({
@@ -1284,35 +1285,6 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             ]
         })
 
-        invoice.action_post()
-
-        # Check if something was posted in the price difference account
-        price_diff_aml = invoice.line_ids.filtered(lambda l: l.account_id == self.price_diff_account)
-        self.assertEqual(len(price_diff_aml), 0, "No line should have been generated in the price difference account.")
-
-    def test_anglosaxon_valuation_price_unit_diff_standard(self):
-        """
-        Check the price unit difference account is hit with the correct amount
-        """
-        self.env.ref("product.decimal_price").digits = 6
-        self.env.company.anglo_saxon_accounting = True
-        self.product1.categ_id.property_cost_method = 'standard'
-        self.product1.categ_id.property_valuation = 'real_time'
-        self.product1.categ_id.property_account_creditor_price_difference_categ = self.price_diff_account
-        self.product1.standard_price = 0.01719
-
-        invoice = self.env['account.move'].create({
-            'move_type': 'in_invoice',
-            'invoice_date': '2022-03-31',
-            'partner_id': self.partner_id.id,
-            'invoice_line_ids': [
-                (0, 0, {'product_id': self.product1.id, 'quantity': 30000, 'price_unit': 0.01782, 'tax_ids': self.tax_purchase_a.ids})
-            ]
-        })
-
-        invoice.action_post()
-
-        # Check if something was posted in the price difference account
-        price_diff_aml = invoice.line_ids.filtered(lambda l: l.account_id == self.price_diff_account)
-        self.assertEqual(len(price_diff_aml), 1, "A line should have been generated in the price difference account.")
-        self.assertAlmostEqual(price_diff_aml.balance, 18.90)
+        # Check if something was posted in the stock valuation account.
+        stock_val_aml = invoice.line_ids.filtered(lambda l: l.account_id == self.stock_valuation_account)
+        self.assertEqual(len(stock_val_aml), 0, "No line should have been generated in the stock valuation account.")
