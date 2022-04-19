@@ -67,7 +67,7 @@
                             <i class="fa fa-angle-right"/>
                         </div>
                     </t>
-                    <t t-if="props.isExpandable">
+                    <t t-if="chatWindow.isExpandable">
                         <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandExpand" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-on-click="chatWindow.onClickExpand" title="Open in Discuss">
                             <i class="fa fa-expand"/>
                         </div>

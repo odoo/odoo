@@ -397,6 +397,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeIsExpandable() {
+            if (this.isVisible && !this.messaging.device.isMobile && this.thread) {
+                return true;
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeIsFolded() {
@@ -600,6 +610,10 @@ registerModel({
          */
         isDoFocus: attr({
             default: false,
+        }),
+        isExpandable: attr({
+            default: false,
+            compute: '_computeIsExpandable',
         }),
         /**
          * States whether `this` is focused. Useful for visual clue.
