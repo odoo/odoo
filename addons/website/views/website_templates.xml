@@ -51,7 +51,11 @@
             'data-oe-company-name': res_company.name,
         })"/>
     </xpath>
-    <xpath expr="//head" position="before">
+
+    <xpath expr="//head" position="attributes">
+        <attribute name="t-cache">main_object if main_object and main_object._name == 'website.page' and not (editable or translatable) else None</attribute>
+    </xpath>
+    <xpath expr="//head/*[1]" position="before">
         <t t-if="not title">
             <t t-if="not additional_title and main_object and 'name' in main_object">
                 <t t-set="additional_title" t-value="main_object.name"/>

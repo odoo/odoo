@@ -420,7 +420,7 @@ class TestOnlineEventPerformance(EventPerformanceCase, UtilPerf):
         ])
 
     def _test_url_open(self, url):
-        url += ('?' not in url and '?' or '') + '&nocache'
+        url += ('?' not in url and '?' or '') + '&debug=disable-t-cache'
         return self.url_open(url)
 
     @warmup

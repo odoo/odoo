@@ -332,7 +332,7 @@ class WebsiteSale(http.Controller):
             categs_domain.append(('id', 'in', search_categories.ids))
         else:
             search_categories = Category
-        categs = Category.search(categs_domain)
+        categs = lazy(lambda: Category.search(categs_domain))
 
         if category:
             url = "/shop/category/%s" % slug(category)
@@ -344,12 +344,12 @@ class WebsiteSale(http.Controller):
         ProductAttribute = request.env['product.attribute']
         if products:
             # get all products without limit
-            attributes = ProductAttribute.search([
+            attributes = lazy(lambda: ProductAttribute.search([
                 ('product_tmpl_ids', 'in', search_product.ids),
                 ('visibility', '=', 'visible'),
-            ])
+            ]))
         else:
-            attributes = ProductAttribute.browse(attributes_ids)
+            attributes = lazy(lambda: ProductAttribute.browse(attributes_ids))
 
         layout_mode = request.session.get('website_sale_shop_layout_mode')
         if not layout_mode:

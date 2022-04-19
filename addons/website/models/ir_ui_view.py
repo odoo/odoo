@@ -105,14 +105,6 @@ class View(models.Model):
 
             pages = view.page_ids
 
-            # Disable cache of page if we guess some dynamic content (form with csrf, ...)
-            if vals.get('arch'):
-                to_invalidate = pages.filtered(
-                    lambda p: p.cache_time and not p._can_be_cached(vals['arch'])
-                )
-                to_invalidate and _logger.info('Disable cache for page %s', to_invalidate)
-                to_invalidate.cache_time = 0
-
             # No need of COW if the view is already specific
             if view.website_id:
                 super(View, view).write(vals)

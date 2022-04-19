@@ -31,9 +31,6 @@ class Page(models.Model):
     is_homepage = fields.Boolean(compute='_compute_homepage', inverse='_set_homepage', string='Homepage')
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
 
-    cache_time = fields.Integer(default=3600, help='Time to cache the page. (0 = no cache)')
-    cache_key_expr = fields.Char(help='Expression (tuple) to evaluate the cached key. \nE.g.: "(request.params.get("currency"), )"')
-
     # Page options
     header_overlay = fields.Boolean()
     header_color = fields.Char()
@@ -220,36 +217,6 @@ class Page(models.Model):
     def get_website_meta(self):
         self.ensure_one()
         return self.view_id.get_website_meta()
-
-    @api.model
-    def _get_cached_blacklist(self):
-        return ('data-snippet="s_website_form"', 'data-no-page-cache=', )
-
-    def _can_be_cached(self, response):
-        """ return False if at least one blacklisted's word is present in content """
-        blacklist = self._get_cached_blacklist()
-        return not any(black in str(response) for black in blacklist)
-
-    def _get_cache_key(self, req):
-        # Always call me with super() AT THE END to have cache_key_expr appended as last element
-        # It is the only way for end user to not use cache via expr.
-        # E.g  (None if 'token' in request.params else 1,)  will bypass cache_time
-        cache_key = (req.website.id, req.lang, req.httprequest.path)
-        if self.cache_key_expr:  # e.g. (request.geoip.get('country_code'),)
-            cache_key += safe_eval(self.cache_key_expr, {'request': req})
-        return cache_key
-
-    def _get_cache_response(self, cache_key):
-        """ Return the cached response corresponding to ``self`` and ``cache_key``.
-        Raise a KeyError if the item is not in cache.
-        """
-        # HACK: we use the same LRU as ormcache to take advantage from its
-        # distributed invalidation, but we don't explicitly use ormcache
-        return self.pool._Registry__cache[('website.page', _cached_response, self.id, cache_key)]
-
-    def _set_cache_response(self, cache_key, response):
-        """ Put in cache the given response. """
-        self.pool._Registry__cache[('website.page', _cached_response, self.id, cache_key)] = response
 
     @api.model
     def _search_get_detail(self, website, order, options):
