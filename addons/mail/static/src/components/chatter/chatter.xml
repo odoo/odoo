@@ -11,8 +11,8 @@
                     />
                     <t t-if="chatter.composerView">
                         <Composer
-                            className="'o_Chatter_composer'"
-                            classNameObj="{ 'o-bordered': chatter.hasExternalBorder }"
+                            class="o_Chatter_composer"
+                            t-att-class="{ 'o-bordered': chatter.hasExternalBorder }"
                             localId="chatter.composerView.localId"
                             hasFollowers="true"
                             hasMentionSuggestionsBelowPosition="true"
