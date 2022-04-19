@@ -6,13 +6,6 @@ from odoo.tests.common import Form, tagged
 
 @tagged('post_install', '-at_install')
 class TestValuationReconciliation(ValuationReconciliationTestCommon):
-
-    @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
-
-        cls.stock_account_product_categ.property_account_creditor_price_difference_categ = cls.company_data['default_account_stock_price_diff']
-
     @classmethod
     def setup_company_data(cls, company_name, chart_template=None, **kwargs):
         company_data = super().setup_company_data(company_name, chart_template=chart_template, **kwargs)
@@ -290,7 +283,6 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         )
         product_A.categ_id.write(
             {
-                "property_account_creditor_price_difference_categ": False,
                 "property_valuation": "real_time",
                 "property_cost_method": "standard",
             }
