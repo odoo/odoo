@@ -142,7 +142,7 @@
             <t t-if="props.hasSendButton">
                 <button class="o_Composer_actionButton o_Composer_button o_Composer_buttonSend btn btn-primary"
                     t-att-class="{
-                        'o-last': messaging.device.isMobile or !props.hasDiscardButton,
+                        'o-last': !composerView.hasDiscardButton,
                         'o-composer-is-compact': composerView.isCompact,
                         'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
                     }"
@@ -154,7 +154,7 @@
                     <t t-else=""><i class="fa fa-paper-plane-o"/></t>
                 </button>
             </t>
-            <t t-if="!messaging.device.isMobile and props.hasDiscardButton">
+            <t t-if="composerView.hasDiscardButton">
                 <button class="o_Composer_actionButton o-last o_Composer_button o_Composer_buttonDiscard btn btn-secondary" t-att-class="{ 'o-composer-is-compact': composerView.isCompact, 'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar }" type="button" t-on-click="composerView.onClickDiscard">
                     Discard
                 </button>

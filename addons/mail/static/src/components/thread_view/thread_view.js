@@ -38,17 +38,12 @@ export class ThreadView extends Component {
 
 Object.assign(ThreadView, {
     defaultProps: {
-        hasComposerDiscardButton: false,
         showComposerAttachmentsExtensions: true,
         showComposerAttachmentsFilenames: true,
         onFocusin: () => {},
     },
     props: {
         hasComposerCurrentPartnerAvatar: {
-            type: Boolean,
-            optional: true,
-        },
-        hasComposerDiscardButton: {
             type: Boolean,
             optional: true,
         },

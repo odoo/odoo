@@ -838,6 +838,25 @@ registerModel({
             return '/web/static/img/user_menu_avatar.png';
         },
         /**
+         * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeHasDiscardButton() {
+            if (this.messageViewInEditing) {
+                return false;
+            }
+            if (this.messaging.device.isMobile) {
+                return false;
+            }
+            if (!this.threadView) {
+                return clear();
+            }
+            if (this.threadView.threadViewer.discuss) {
+                return this.threadView.threadViewer.discuss.thread === this.messaging.inbox;
+            }
+            return clear();
+        },
+        /**
          * Clears the extra suggestions on closing mentions, and ensures
          * the extra list does not contain any element already present in the
          * main list, which is a requirement for the navigation process.
@@ -1372,6 +1391,10 @@ registerModel({
             isCausal: true,
             readonly: true,
             required: true,
+        }),
+        hasDiscardButton: attr({
+            compute: '_computeHasDiscardButton',
+            default: false,
         }),
         hasFollowers: attr({
             compute: '_computeHasFollowers',
