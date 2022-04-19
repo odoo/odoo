@@ -106,6 +106,16 @@ class TestMailingABTesting(MassMailCommon):
         self.assertEqual(ab_mailing.ab_testing_winner_selection, 'manual', "The selection winner has been propagated correctly")
         self.assertEqual(ab_mailing.ab_testing_schedule_datetime, schedule_datetime, "The schedule date has been propagated correctly")
 
+    @users('user_marketing')
+    def test_mailing_ab_testing_compare(self):
+        # compare version feature should returns all mailings of the same
+        # campaign having a/b testing enabled.
+        compare_version = self.ab_testing_mailing_1.action_compare_versions()
+        self.assertEqual(
+            self.env['mailing.mailing'].search(compare_version.get('domain')),
+            self.ab_testing_mailing_1 + self.ab_testing_mailing_2
+        )
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     @users('user_marketing')
     def test_mailing_ab_testing_manual_flow(self):
