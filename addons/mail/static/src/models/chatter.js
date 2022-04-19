@@ -148,6 +148,16 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
+        _computeFollowButtonView() {
+            if (this.hasFollowers && this.thread && this.thread.channel_type !== 'chat') {
+                return insertAndReplace();
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
         _computeFollowerListMenuView() {
             if (this.hasFollowers && this.thread) {
                 return insertAndReplace();
@@ -291,6 +301,11 @@ registerModel({
         }),
         context: attr({
             default: {},
+        }),
+        followButtonView: one('FollowButtonView', {
+            compute: '_computeFollowButtonView',
+            inverse: 'chatterOwner',
+            isCausal: true,
         }),
         followerListMenuView: one('FollowerListMenuView', {
             compute: '_computeFollowerListMenuView',

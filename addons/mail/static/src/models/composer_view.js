@@ -838,6 +838,25 @@ registerModel({
             return '/web/static/img/user_menu_avatar.png';
         },
         /**
+         * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeHasDiscardButton() {
+            if (this.messageViewInEditing) {
+                return false;
+            }
+            if (this.messaging.device.isMobile) {
+                return false;
+            }
+            if (!this.threadView) {
+                return clear();
+            }
+            if (this.threadView.threadViewer.discuss) {
+                return this.threadView.threadViewer.discuss.thread === this.messaging.inbox;
+            }
+            return clear();
+        },
+        /**
          * Clears the extra suggestions on closing mentions, and ensures
          * the extra list does not contain any element already present in the
          * main list, which is a requirement for the navigation process.
@@ -850,6 +869,25 @@ registerModel({
                 return clear();
             }
             return unlink(this.mainSuggestions);
+        },
+        /**
+         * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeHasCurrentPartnerAvatar() {
+            if (this.messageViewInEditing) {
+                return false;
+            }
+            if (!this.threadView) {
+                return clear();
+            }
+            if (this.threadView.threadViewer.chatWindow) {
+                return false;
+            }
+            if (this.threadView.threadViewer.discuss) {
+                return !this.messaging.device.isMobile;
+            }
+            return clear();
         },
         /**
          * @private
@@ -886,6 +924,19 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeHasMentionSuggestionsBelowPosition() {
+            if (this.threadView && this.threadView.threadViewer.chatter) {
+                return true;
+            }
+            if (this.messageViewInEditing) {
+                return false;
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @return {boolean}
          */
         _computeHasSuggestions() {
@@ -910,6 +961,29 @@ registerModel({
                 return false;
             }
             if (this.messageViewInEditing) {
+                return true;
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeHasSendButton() {
+            if (this.messageViewInEditing) {
+                return false;
+            }
+            if (this.threadView && this.threadView.threadViewer.chatWindow) {
+                return this.messaging.device.isMobile;
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeIsExpandable() {
+            if (this.chatter) {
                 return true;
             }
             return clear();
@@ -1373,6 +1447,14 @@ registerModel({
             readonly: true,
             required: true,
         }),
+        hasCurrentPartnerAvatar: attr({
+            default: true,
+            compute: '_computeHasCurrentPartnerAvatar',
+        }),
+        hasDiscardButton: attr({
+            compute: '_computeHasDiscardButton',
+            default: false,
+        }),
         hasFollowers: attr({
             compute: '_computeHasFollowers',
             default: false,
@@ -1388,6 +1470,14 @@ registerModel({
          */
         hasHeader: attr({
             compute: '_computeHasHeader',
+        }),
+        hasMentionSuggestionsBelowPosition: attr({
+            compute: '_computeHasMentionSuggestionsBelowPosition',
+            default: false,
+        }),
+        hasSendButton: attr({
+            compute: '_computeHasSendButton',
+            default: true,
         }),
         /**
          * States whether there is any result currently found for the current
@@ -1425,6 +1515,10 @@ registerModel({
         isCompact: attr({
             compute: '_computeIsCompact',
             default: true,
+        }),
+        isExpandable: attr({
+            compute: '_computeIsExpandable',
+            default: false,
         }),
         isFocused: attr({
             default: false,

@@ -1856,8 +1856,20 @@ MockServer.include({
      * @returns {boolean}
      */
     _mockMailThreadMessageSubscribe(model, ids, partner_ids, subtype_ids) {
-        // message_subscribe is too complex for a generic mock.
-        // mockRPC should be considered for a specific result.
+        for (const id of ids) {
+            for (const partner_id of partner_ids) {
+                const followerId = this._mockCreate('mail.followers', {
+                    is_active: true,
+                    partner_id,
+                    res_id: id,
+                    res_model: model,
+                    subtype_ids: subtype_ids,
+                });
+                this._mockWrite('res.partner', [[partner_id], {
+                    message_follower_ids: [followerId],
+                }]);
+            }
+        }
     },
     /**
      * Simulates `_notify_thread` on `mail.thread`.

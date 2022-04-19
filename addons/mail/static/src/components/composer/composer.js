@@ -50,43 +50,7 @@ export class Composer extends Component {
 }
 
 Object.assign(Composer, {
-    defaultProps: {
-        hasCurrentPartnerAvatar: true,
-        hasDiscardButton: false,
-        hasSendButton: true,
-        isExpandable: false,
-    },
-    props: {
-        localId: String,
-        hasCurrentPartnerAvatar: {
-            type: Boolean,
-            optional: true,
-        },
-        hasDiscardButton: {
-            type: Boolean,
-            optional: true,
-        },
-        hasMentionSuggestionsBelowPosition: {
-            type: Boolean,
-            optional: true,
-        },
-        hasSendButton: {
-            type: Boolean,
-            optional: true,
-        },
-        showAttachmentsExtensions: {
-            type: Boolean,
-            optional: true,
-        },
-        showAttachmentsFilenames: {
-            type: Boolean,
-            optional: true,
-        },
-        isExpandable: {
-            type: Boolean,
-            optional: true,
-        },
-    },
+    props: { localId: String },
     template: 'mail.Composer',
 });
 
