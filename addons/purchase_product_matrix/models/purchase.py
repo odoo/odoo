@@ -87,7 +87,6 @@ class PurchaseOrder(models.Model):
                             raise ValidationError(_("You cannot change the quantity of a product present in multiple purchase lines."))
                         else:
                             order_lines[0].product_qty = qty
-                            order_lines[0]._onchange_quantity()
                             # If we want to support multiple lines edition:
                             # removal of other lines.
                             # For now, an error is raised instead
@@ -116,7 +115,6 @@ class PurchaseOrder(models.Model):
                 # Recompute prices for new/modified lines:
                 for line in self.order_line.filtered(lambda line: line.product_id.id in product_ids):
                     line._product_id_change()
-                    line._onchange_quantity()
                     res = line.onchange_product_id_warning() or res
                 return res
 

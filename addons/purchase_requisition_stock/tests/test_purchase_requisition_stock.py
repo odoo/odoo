@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields
-from datetime import datetime
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons.purchase_requisition.tests.common import TestPurchaseRequisitionCommon
 
 
@@ -191,13 +188,10 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
                 'product_id': product_2.id,
                 'product_qty': 5.0,
                 'product_uom': product_2.uom_po_id.id,
-                'price_unit': 0,
-                'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
             })
         ]})
         order_line = self.env['purchase.order.line'].search([
             ('product_id', '=', product_2.id),
             ('product_qty', '=', 5.0),
         ])
-        order_line._onchange_quantity()
         self.assertEqual(order_line.price_unit, 50, 'The supplier info chosen should be the one without requisition id')
