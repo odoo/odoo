@@ -123,7 +123,7 @@ tour.register('course_member', {
 {
     trigger: 'a:contains("Basics of Gardening")'
 }, {
-    trigger: 'button[data-target="#ratingpopupcomposer"]'
+    trigger: 'button[data-bs-target="#ratingpopupcomposer"]'
 }, {
     trigger: 'div.o_portal_chatter_composer_input i.fa:eq(2)',
     extra_trigger: 'div.modal_shown',
