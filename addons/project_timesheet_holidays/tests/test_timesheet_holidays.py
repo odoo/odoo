@@ -7,6 +7,7 @@ from freezegun import freeze_time
 
 from odoo import fields, SUPERUSER_ID
 
+from odoo.exceptions import UserError
 from odoo.tests import common, new_test_user
 from odoo.addons.hr_timesheet.tests.test_timesheet import TestCommonTimesheet
 import time
@@ -186,6 +187,20 @@ class TestTimesheetHolidays(TestCommonTimesheet):
             ('date', '<=', leave_end_datetime),
             ('employee_id', '=', self.empl_employee.id),
         ])
+
+        # should not able to update timeoff timesheets
+        with self.assertRaises(UserError):
+            timesheets.with_user(self.empl_employee).write({'task_id': 4})
+
+        # should not able to create timesheet in timeoff task
+        with self.assertRaises(UserError):
+            self.env['account.analytic.line'].with_user(self.empl_employee).create({
+                'name': "my timesheet",
+                'project_id': self.internal_project.id,
+                'task_id': self.internal_task_leaves.id,
+                'date': '2021-10-04',
+                'unit_amount': 8.0,
+            })
 
         self.assertEqual(len(timesheets.filtered('holiday_id')), 4, "4 timesheet should be linked to employee's timeoff")
         self.assertEqual(len(timesheets.filtered('global_leave_id')), 1, '1 timesheet should be linked to global leave')
