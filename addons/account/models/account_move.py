@@ -483,7 +483,7 @@ class AccountMove(models.Model):
         if warning:
             return {'warning': warning}
 
-    @api.onchange('date', 'currency_id')
+    @api.onchange('invoice_date', 'date', 'currency_id')
     def _onchange_currency(self):
         currency = self.currency_id or self.company_id.currency_id
 
@@ -733,7 +733,11 @@ class AccountMove(models.Model):
                 continue
 
             # tax_base_amount field is expressed using the company currency.
-            tax_base_amount = currency._convert(taxes_map_entry['tax_base_amount'], self.company_currency_id, self.company_id, self.date or fields.Date.context_today(self))
+            tax_base_amount = currency._convert(taxes_map_entry['tax_base_amount'],
+                                                self.company_currency_id,
+                                                self.company_id, self.invoice_date or
+            self.date or
+                fields.Date.context_today(self))
 
             # Recompute only the tax_base_amount.
             if recompute_tax_base_amount:
@@ -745,7 +749,7 @@ class AccountMove(models.Model):
                 taxes_map_entry['amount'],
                 self.company_currency_id,
                 self.company_id,
-                self.date or fields.Date.context_today(self),
+                self.invoice_date or self.date or fields.Date.context_today(self),
             )
             to_write_on_line = {
                 'amount_currency': taxes_map_entry['amount'],
@@ -844,7 +848,10 @@ class AccountMove(models.Model):
                 diff_amount_currency = diff_balance = difference
             else:
                 diff_amount_currency = difference
-                diff_balance = self.currency_id._convert(diff_amount_currency, self.company_id.currency_id, self.company_id, self.date)
+                diff_balance = self.currency_id._convert(diff_amount_currency,
+                                                         self.company_id.currency_id,
+                                                         self.company_id,
+                                                         self.invoice_date or self.date)
             return diff_balance, diff_amount_currency
 
         def _apply_cash_rounding(self, diff_balance, diff_amount_currency, cash_rounding_line):
@@ -1460,7 +1467,10 @@ class AccountMove(models.Model):
             to_write = []
 
             amount_currency = abs(move.amount_total)
-            balance = move.currency_id._convert(amount_currency, move.company_currency_id, move.company_id, move.date)
+            balance = move.currency_id._convert(amount_currency,
+                                                move.company_currency_id,
+                                                move.company_id,
+                                                move.invoice_date or move.date)
 
             for line in move.line_ids:
                 if not line.currency_id.is_zero(balance - abs(line.balance)):
@@ -1551,7 +1561,7 @@ class AccountMove(models.Model):
                         abs(line.amount_residual),
                         move.currency_id,
                         move.company_id,
-                        line.date,
+                        line.move_id.invoice_date or line.date,
                     )
 
                 if move.currency_id.is_zero(amount):
@@ -3529,7 +3539,7 @@ class AccountMoveLine(models.Model):
             move_type=move_type or self.move_id.move_type,
             currency=currency or self.currency_id,
             company=company or self.move_id.company_id,
-            date=date or self.move_id.date,
+            date=date or self.move_id.invoice_date or self.move_id.date,
         )
 
     @api.model
@@ -3740,7 +3750,11 @@ class AccountMoveLine(models.Model):
     def _onchange_amount_currency(self):
         for line in self:
             company = line.move_id.company_id
-            balance = line.currency_id._convert(line.amount_currency, company.currency_id, company, line.move_id.date or fields.Date.context_today(line))
+            balance = line.currency_id._convert(line.amount_currency,
+                                                company.currency_id, company,
+                                                line.move_id.invoice_date or
+                                                line.move_id.date or
+                fields.Date.context_today(line))
             line.debit = balance if balance > 0.0 else 0.0
             line.credit = -balance if balance < 0.0 else 0.0
 
@@ -3767,7 +3781,12 @@ class AccountMoveLine(models.Model):
             if line.move_id.is_invoice(include_receipts=True):
                 line._onchange_price_subtotal()
             elif not line.move_id.reversed_entry_id:
-                balance = line.currency_id._convert(line.amount_currency, company.currency_id, company, line.move_id.date or fields.Date.context_today(line))
+                balance = line.currency_id._convert(line.amount_currency,
+                                                    company.currency_id, company,
+                                                    line.move_id.invoice_date or
+                                                    line.move_id.date \
+                                                                   or \
+fields.Date.context_today(line))
                 line.debit = balance if balance > 0.0 else 0.0
                 line.credit = -balance if balance < 0.0 else 0.0
 
@@ -4061,7 +4080,7 @@ class AccountMoveLine(models.Model):
                         move.move_type,
                         currency,
                         move.company_id,
-                        move.date,
+                        move.invoice_date or move.date,
                     ))
 
         lines = super(AccountMoveLine, self).create(vals_list)
@@ -4452,7 +4471,7 @@ class AccountMoveLine(models.Model):
                     min_amount_residual,
                     debit_line.currency_id,
                     credit_line.company_id,
-                    credit_line.date,
+                    credit_line.move_id.invoice_date or credit_line.date,
                 )
                 min_debit_amount_residual_currency = fix_remaining_cent(
                     debit_line.currency_id,
@@ -4463,7 +4482,7 @@ class AccountMoveLine(models.Model):
                     min_amount_residual,
                     credit_line.currency_id,
                     debit_line.company_id,
-                    debit_line.date,
+                    debit_line.move_id.invoice_date or debit_line.date,
                 )
                 min_credit_amount_residual_currency = fix_remaining_cent(
                     credit_line.currency_id,
