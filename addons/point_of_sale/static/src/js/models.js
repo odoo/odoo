@@ -2724,6 +2724,9 @@ class Order extends PosModel {
     }
     get_total_discount() {
         return round_pr(this.orderlines.reduce((function(sum, orderLine) {
+            if (orderLine.pos.config.down_payment_product_id[0] === orderLine.product.id) {
+                return 0;
+            }
             sum += (orderLine.get_unit_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
             if (orderLine.display_discount_policy() === 'without_discount'){
                 sum += ((orderLine.get_lst_price() - orderLine.get_unit_price()) * orderLine.get_quantity());
