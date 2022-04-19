@@ -1,35 +1,66 @@
 /** @odoo-module **/
 
+import { makeDeferred } from '@mail/utils/deferred';
 import {
     afterNextRender,
-    createRootMessagingComponent,
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
+
+import FormView from 'web.FormView';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('follow_button_tests.js', {
     beforeEach() {
-        this.createFollowButtonComponent = async (thread, target, otherProps = {}) => {
-            const props = Object.assign({ threadLocalId: thread.localId }, otherProps);
-            await createRootMessagingComponent(thread.env, "FollowButton", {
-                props,
-                target,
+        // FIXME archs could be removed once task-2248306 is done
+        // The mockServer will try to get the list view
+        // of every relational fields present in the main view.
+        // In the case of mail fields, we don't really need them,
+        // but they still need to be defined.
+        this.createView = async (viewParams, ...args) => {
+            const startResult = makeDeferred();
+            await afterNextRender(async () => {
+                const viewArgs = Object.assign(
+                    {
+                        archs: {
+                            'mail.activity,false,list': '<tree/>',
+                            'mail.followers,false,list': '<tree/>',
+                            'mail.message,false,list': '<tree/>',
+                        },
+                    },
+                    viewParams,
+                );
+                startResult.resolve(await start(viewArgs, ...args));
             });
+            return startResult;
         };
     },
 });
 
 QUnit.test('base rendering not editable', async function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
-    const { messaging, widget } = await start();
-    const thread = messaging.models['Thread'].create({
-        id: 100,
+    const pyEnv = await startServer();
+    await this.createView({
+        hasDialog: true,
+        hasView: true,
+        // View params
+        View: FormView,
         model: 'res.partner',
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                </div>
+            </form>
+        `,
+        res_id: pyEnv.currentPartnerId,
     });
-    await this.createFollowButtonComponent(thread, widget.el, { isDisabled: true });
     assert.containsOnce(
         document.body,
         '.o_FollowButton',
@@ -39,35 +70,6 @@ QUnit.test('base rendering not editable', async function (assert) {
         document.body,
         '.o_FollowButton_follow',
         "should have 'Follow' button"
-    );
-    assert.ok(
-        document.querySelector('.o_FollowButton_follow').disabled,
-        "'Follow' button should be disabled"
-    );
-});
-
-QUnit.test('base rendering editable', async function (assert) {
-    assert.expect(3);
-
-    const { messaging, widget } = await start();
-    const thread = messaging.models['Thread'].create({
-        id: 100,
-        model: 'res.partner',
-    });
-    await this.createFollowButtonComponent(thread, widget.el);
-    assert.containsOnce(
-        document.body,
-        '.o_FollowButton',
-        "should have follow button component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_FollowButton_follow',
-        "should have 'Follow' button"
-    );
-    assert.notOk(
-        document.querySelector('.o_FollowButton_follow').disabled,
-        "'Follow' button should be disabled"
     );
 });
 
@@ -76,19 +78,34 @@ QUnit.test('hover following button', async function (assert) {
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    pyEnv['mail.followers'].create({
+    const followerId = pyEnv['mail.followers'].create({
         is_active: true,
         partner_id: pyEnv.currentPartnerId,
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { messaging, widget } = await start();
-    const thread = messaging.models['Thread'].create({
-        id: resPartnerId1,
-        model: 'res.partner',
+    pyEnv['res.partner'].write([pyEnv.currentPartnerId], {
+        message_follower_ids: [followerId],
     });
-    thread.follow();
-    await this.createFollowButtonComponent(thread, widget.el);
+    await this.createView({
+        hasDialog: true,
+        hasView: true,
+        // View params
+        View: FormView,
+        model: 'res.partner',
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                </div>
+            </form>
+        `,
+        res_id: pyEnv.currentPartnerId,
+    });
     assert.containsOnce(
         document.body,
         '.o_FollowButton',
@@ -142,14 +159,24 @@ QUnit.test('click on "follow" button', async function (assert) {
     assert.expect(6);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
-    pyEnv['mail.followers'].create({
-        is_active: true,
-        partner_id: pyEnv.currentPartnerId,
-        res_id: resPartnerId1,
-        res_model: 'res.partner',
-    });
-    const { click, messaging, widget } = await start({
+    const { click } = await this.createView({
+        hasDialog: true,
+        hasView: true,
+        // View params
+        View: FormView,
+        model: 'res.partner',
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                </div>
+            </form>
+        `,
+        res_id: pyEnv.currentPartnerId,
         async mockRPC(route, args) {
             if (route.includes('message_subscribe')) {
                 assert.step('rpc:message_subscribe');
@@ -157,11 +184,6 @@ QUnit.test('click on "follow" button', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const thread = messaging.models['Thread'].create({
-        id: resPartnerId1,
-        model: 'res.partner',
-    });
-    await this.createFollowButtonComponent(thread, widget.el);
     assert.containsOnce(
         document.body,
         '.o_FollowButton',
@@ -194,13 +216,33 @@ QUnit.test('click on "unfollow" button', async function (assert) {
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    pyEnv['mail.followers'].create({
+    const followerId = pyEnv['mail.followers'].create({
         is_active: true,
         partner_id: pyEnv.currentPartnerId,
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, messaging, widget } = await start({
+    pyEnv['res.partner'].write([pyEnv.currentPartnerId], {
+        message_follower_ids: [followerId],
+    });
+    const { click } = await this.createView({
+        hasDialog: true,
+        hasView: true,
+        // View params
+        View: FormView,
+        model: 'res.partner',
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                </div>
+            </form>
+        `,
+        res_id: pyEnv.currentPartnerId,
         async mockRPC(route, args) {
             if (route.includes('message_unsubscribe')) {
                 assert.step('rpc:message_unsubscribe');
@@ -208,12 +250,6 @@ QUnit.test('click on "unfollow" button', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const thread = messaging.models['Thread'].create({
-        id: resPartnerId1,
-        model: 'res.partner',
-    });
-    thread.follow();
-    await this.createFollowButtonComponent(thread, widget.el);
     assert.containsOnce(
         document.body,
         '.o_FollowButton',

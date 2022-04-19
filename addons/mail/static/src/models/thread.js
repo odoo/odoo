@@ -894,12 +894,6 @@ registerModel({
             });
         },
         /**
-         * @param {MouseEvent} ev
-         */
-        onClickFollow(ev) {
-            this.follow();
-        },
-        /**
          * Handles click on the avatar of the given member in the member list of
          * this channel.
          *
@@ -916,12 +910,6 @@ registerModel({
          */
         onClickMemberName(member) {
             member.openProfile();
-        },
-        /**
-         * @param {MouseEvent} ev
-         */
-        onClickUnfollow(ev) {
-            this.unfollow();
         },
         /**
          * Opens this thread either as form view, in discuss app, or as a chat

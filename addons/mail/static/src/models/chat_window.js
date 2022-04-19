@@ -344,6 +344,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeHasCloseAsBackButton() {
+            if (this.isVisible && this.messaging.device.isMobile) {
+                return true;
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeHasInviteFeature() {
@@ -397,6 +407,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeIsExpandable() {
+            if (this.isVisible && !this.messaging.device.isMobile && this.thread) {
+                return true;
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeIsFolded() {
@@ -405,6 +425,16 @@ registerModel({
                 return thread.foldState === 'folded';
             }
             return this.isFolded;
+        },
+        /**
+         * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeIsFullscreen() {
+            if (this.isVisible && this.messaging.device.isMobile) {
+                return true;
+            }
+            return clear();
         },
         /**
          * @private
@@ -566,6 +596,10 @@ registerModel({
             default: false,
             compute: '_computeHasCallButtons',
         }),
+        hasCloseAsBackButton: attr({
+            compute: '_computeHasCloseAsBackButton',
+            default: false,
+        }),
         /**
          * States whether this chat window has the invite feature.
          */
@@ -601,6 +635,10 @@ registerModel({
         isDoFocus: attr({
             default: false,
         }),
+        isExpandable: attr({
+            default: false,
+            compute: '_computeIsExpandable',
+        }),
         /**
          * States whether `this` is focused. Useful for visual clue.
          */
@@ -612,6 +650,10 @@ registerModel({
          */
         isFolded: attr({
             default: false,
+        }),
+        isFullscreen: attr({
+            default: false,
+            compute: '_computeIsFullscreen',
         }),
         /**
          * Determines whether the member list of this chat window is opened.

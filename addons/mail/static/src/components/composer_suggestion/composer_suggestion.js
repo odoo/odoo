@@ -39,7 +39,7 @@ export class ComposerSuggestion extends Component {
             this.composerSuggestion &&
             this.composerSuggestion.composerViewOwner &&
             this.composerSuggestion.composerViewOwner.hasToScrollToActiveSuggestion &&
-            this.props.isActive
+            this.composerSuggestion.isActive
         ) {
             this.root.el.scrollIntoView({
                 block: 'center',
@@ -51,13 +51,7 @@ export class ComposerSuggestion extends Component {
 }
 
 Object.assign(ComposerSuggestion, {
-    defaultProps: {
-        isActive: false,
-    },
-    props: {
-        isActive: { type: Boolean, optional: true },
-        localId: String,
-    },
+    props: { localId: String },
     template: 'mail.ComposerSuggestion',
 });
 
