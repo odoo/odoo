@@ -267,48 +267,12 @@ class Http(models.AbstractModel):
                 path += '?' + request.httprequest.query_string.decode('utf-8')
             return request.redirect(path, code=301)
 
-        if page:
-            # prefetch all menus (it will prefetch website.page too)
-            menu_pages_ids = request.website._get_menu_page_ids()
-            page.browse([page.id] + menu_pages_ids).mapped('view_id.name')
-            request.website.menu_id
-
         if page and (request.website.is_publisher() or page.is_visible):
-            need_to_cache = False
-            cache_key = page._get_cache_key(request)
-            if (
-                page.cache_time  # cache > 0
-                and request.httprequest.method == "GET"
-                and request.env.user._is_public()    # only cache for unlogged user
-                and 'nocache' not in request.httprequest.args  # allow bypass cache / debug
-                and not request.session.debug
-                and len(cache_key) and cache_key[-1] is not None  # nocache via expr
-            ):
-                need_to_cache = True
-                try:
-                    r = page._get_cache_response(cache_key)
-                    if r['time'] + page.cache_time > time.time():
-                        response = odoo.http.Response(r['content'], mimetype=r['contenttype'])
-                        response._cached_template = r['template']
-                        response._cached_page = page
-                        return response
-                except KeyError:
-                    pass
-
             _, ext = os.path.splitext(req_page)
             response = request.render(page.view_id.id, {
                 'deletable': True,
                 'main_object': page,
             }, mimetype=_guess_mimetype(ext))
-
-            if need_to_cache and response.status_code == 200:
-                r = response.render()
-                page._set_cache_response(cache_key, {
-                    'content': r,
-                    'contenttype': response.headers['Content-Type'],
-                    'time': time.time(),
-                    'template': getattr(response, 'qcontext', {}).get('response_template')
-                })
             return response
         return False
 

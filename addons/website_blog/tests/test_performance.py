@@ -13,8 +13,8 @@ class TestBlogPerformance(UtilPerf):
             self.env['website'].search([]).channel_id = False
 
     def test_10_perf_sql_blog_standard_data(self):
-        self.assertEqual(self._get_url_hot_query('/blog'), 14)
-        self.assertEqual(self._get_url_hot_query('/blog', cache=False), 14)
+        self.assertEqual(self._get_url_hot_query('/blog'), 11)
+        self.assertEqual(self._get_url_hot_query('/blog', cache=False), 27)
 
     def test_20_perf_sql_blog_bigger_data_scaling(self):
         BlogPost = self.env['blog.post']
@@ -26,10 +26,10 @@ class TestBlogPerformance(UtilPerf):
         for blog_post in blog_posts:
             blog_post.tag_ids += blog_tags
             blog_tags = blog_tags[:-1]
-        self.assertEqual(self._get_url_hot_query('/blog'), 14)
-        self.assertEqual(self._get_url_hot_query('/blog', cache=False), 14)
-        self.assertEqual(self._get_url_hot_query(blog_post[0].website_url), 28)
-        self.assertEqual(self._get_url_hot_query(blog_post[0].website_url, cache=False), 28)
+        self.assertEqual(self._get_url_hot_query('/blog'), 11)
+        self.assertEqual(self._get_url_hot_query('/blog', cache=False), 34)
+        self.assertEqual(self._get_url_hot_query(blog_post[0].website_url), 26)
+        self.assertEqual(self._get_url_hot_query(blog_post[0].website_url, cache=False), 29)
 
     def test_30_perf_sql_blog_bigger_data_scaling(self):
         BlogPost = self.env['blog.post']
@@ -42,6 +42,6 @@ class TestBlogPerformance(UtilPerf):
             blog_post.write({'tag_ids': [[6, 0, random.choices(blog_tags.ids, k=random.randint(0, len(blog_tags)))]]})
 
         self.assertLessEqual(self._get_url_hot_query('/blog'), 29)
-        self.assertLessEqual(self._get_url_hot_query('/blog', cache=False), 28)
+        self.assertLessEqual(self._get_url_hot_query('/blog', cache=False), 71)
         self.assertLessEqual(self._get_url_hot_query(blog_post[0].website_url), 34)
         self.assertLessEqual(self._get_url_hot_query(blog_post[0].website_url, cache=False), 33)

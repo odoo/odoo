@@ -273,13 +273,12 @@ class Website(models.Model):
         self = self.with_company(self.company_id)
         SaleOrder = self.env['sale.order'].sudo()
 
-        partner_sudo = self.env.user.partner_id
         sale_order_id = request.session.get('sale_order_id')
 
         if sale_order_id:
             sale_order_sudo = SaleOrder.browse(sale_order_id).exists()
         elif not self.env.user._is_public():
-            sale_order_sudo = partner_sudo.last_website_so_id
+            sale_order_sudo = self.env.user.partner_id.last_website_so_id
             if sale_order_sudo:
                 available_pricelists = self.get_pricelist_available()
                 if sale_order_sudo.pricelist_id not in available_pricelists:
@@ -308,6 +307,8 @@ class Website(models.Model):
 
         # Only set when neeeded
         pricelist_id = False
+
+        partner_sudo = self.env.user.partner_id
 
         # cart creation was requested
         if not sale_order_sudo:
