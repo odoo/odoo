@@ -807,3 +807,25 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         open_and_check(pos01_data)
         open_and_check(pos02_data)
+
+    def test_load_pos_data_should_not_fail(self):
+        """load_pos_data shouldn't fail
+
+        (Include test conditions here if possible)
+
+        - When there are partners that belong to different company
+        """
+
+        # create a partner that belongs to different company
+        company2 = self.company_data_2['company']
+        self.env['res.partner'].create({
+            'name': 'Test',
+            'company_id': company2.id,
+        })
+
+        # activate limited partners loading
+        self.config.limited_partners_loading = True
+        self.open_new_session()
+
+        # calling load_pos_data should not raise an error
+        self.pos_session.load_pos_data()

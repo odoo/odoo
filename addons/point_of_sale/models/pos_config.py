@@ -729,8 +729,11 @@ class PosConfig(models.Model):
             LEFT JOIN pm
             ON        (
                                 partner.id = pm.partner_id)
+            WHERE (
+                partner.company_id=%s OR partner.company_id IS NULL
+            )
             ORDER BY  COALESCE(pm.order_count, 0) DESC,
                       NAME limit %s;
-        """, [str(self.limited_partners_amount)])
+        """, [self.company_id.id, str(self.limited_partners_amount)])
         result = self.env.cr.fetchall()
         return result
