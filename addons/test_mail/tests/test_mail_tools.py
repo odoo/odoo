@@ -132,7 +132,7 @@ class TestMailTools(TestMailCommon, TestRecipients):
             (f'{self._test_email}, {_test_email_2}', True),  # multi-email, both matching, depends on comparison
             (f'{self._test_email}, {_test_email_2}', False)  # multi-email, both matching, depends on comparison
         ]
-        expected = [self.env['res.partner'], self.env['res.partner'],
+        expected = [follower_partner, test_partner,
                     self.env['res.partner'], self.env['res.partner'],
                     self.env['res.partner'], self.env['res.partner'],
                     self.env['res.partner'], self.env['res.partner']]

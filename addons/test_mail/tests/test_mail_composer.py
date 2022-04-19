@@ -664,15 +664,14 @@ class TestComposerResultsComment(TestMailComposer):
         # FIXME: currently email finding based on formatted / multi emails does
         # not work
         new_partners = self.env['res.partner'].search([]).search([('id', 'not in', existing_partners.ids)])
-        self.assertEqual(len(new_partners), 9,
-                         'Mail (FIXME): multiple partner creation due to formatted / multi emails: 2 extra partners')
+        self.assertEqual(len(new_partners), 8,
+                         'Mail (FIXME): multiple partner creation due to formatted / multi emails: 1 extra partners')
         self.assertIn(partner_format_tofind, new_partners)
         self.assertIn(partner_multi_tofind, new_partners)
         self.assertEqual(
             sorted(new_partners.mapped('email')),
             sorted(['"FindMe Format" <find.me.format@test.example.com>',
                     'find.me.multi.1@test.example.com, "FindMe Multi" <find.me.multi.2@test.example.com>',
-                    'find.me.multi.1@test.example.com',
                     'find.me.multi.2@test.example.com',
                     'test.cc.1@example.com', 'test.cc.2@example.com', 'test.cc.2.2@example.com',
                     'test.to.1@example.com', 'test.to.2@example.com']),
@@ -682,7 +681,6 @@ class TestComposerResultsComment(TestMailComposer):
             sorted(new_partners.mapped('email_formatted')),
             sorted(['"FindMe Format" <find.me.format@test.example.com>',
                     '"FindMe Multi" <find.me.multi.1@test.example.com,find.me.multi.2@test.example.com>',
-                    '"find.me.multi.1@test.example.com" <find.me.multi.1@test.example.com>',
                     '"find.me.multi.2@test.example.com" <find.me.multi.2@test.example.com>',
                     '"test.cc.1@example.com" <test.cc.1@example.com>',
                     '"test.cc.2@example.com" <test.cc.2@example.com>',
@@ -694,7 +692,6 @@ class TestComposerResultsComment(TestMailComposer):
             sorted(new_partners.mapped('name')),
             sorted(['FindMe Format',
                     'FindMe Multi',
-                    'find.me.multi.1@test.example.com',
                     'find.me.multi.2@test.example.com',
                     'test.cc.1@example.com', 'test.to.1@example.com', 'test.to.2@example.com',
                     'test.cc.2@example.com', 'test.cc.2.2@example.com']),
@@ -708,14 +705,10 @@ class TestComposerResultsComment(TestMailComposer):
         # FIXME: more partners created than real emails (see above) -> due to
         #   transformation from email -> partner in template 'generate_recipients'
         #   there are more partners than email to notify;
-        # NOTE: 'Findme Multi' is excluded as it has the same email as 'find.me.multi.1@test.example.com'
-        #   (created by template) and comes second in a search based on email
-        mailed_new_partners = new_partners.filtered(lambda p: p.name != 'FindMe Multi')
-        self.assertEqual(len(mailed_new_partners), 8)
         self.assertEqual(len(self._new_mails), 2, 'Should have created 2 mail.mail')
         self.assertEqual(
-            len(self._mails), len(mailed_new_partners) + 3,
-            f'Should have sent {len(mailed_new_partners) + 3} emails, one / recipient ({len(mailed_new_partners)} mailed partners + partner_1 + partner_2 + partner_employee)')
+            len(self._mails), len(new_partners) + 3,
+            f'Should have sent {len(new_partners) + 3} emails, one / recipient ({len(new_partners)} mailed partners + partner_1 + partner_2 + partner_employee)')
         self.assertMailMail(
             self.partner_employee_2, 'sent',
             author=self.partner_employee,
@@ -732,12 +725,14 @@ class TestComposerResultsComment(TestMailComposer):
             mail_message=self.test_record.message_ids[0],
         )
         self.assertMailMail(
-            self.partner_1 + self.partner_2 + mailed_new_partners, 'sent',
+            self.partner_1 + self.partner_2 + new_partners, 'sent',
             author=self.partner_employee,
             email_to_recipients=[
                 [self.partner_1.email_formatted],
                 [f'"{self.partner_2.name}" <valid.other.1@agrolait.com>', f'"{self.partner_2.name}" <valid.other.cc@agrolait.com>'],
-            ] + [[email] for email in mailed_new_partners.mapped('email_formatted')],
+            ] + [[new_partners[0]['email_formatted']],
+                 ['"FindMe Multi" <find.me.multi.1@test.example.com>', '"FindMe Multi" <find.me.multi.2@test.example.com>']
+            ] + [[email] for email in new_partners[2:].mapped('email_formatted')],
             email_values={
                 'body_content': f'TemplateBody {self.test_record.name}',
                 # single email event if email field is multi-email
@@ -1112,15 +1107,14 @@ class TestComposerResultsMass(TestMailComposer):
         # FIXME: currently email finding based on formatted / multi emails does
         # not work
         new_partners = self.env['res.partner'].search([]).search([('id', 'not in', existing_partners.ids)])
-        self.assertEqual(len(new_partners), 9,
-                         'Mail (FIXME): did not find existing partners for formatted / multi emails: 2 extra partners')
+        self.assertEqual(len(new_partners), 8,
+                         'Mail (FIXME): did not find existing partners for formatted / multi emails: 1 extra partners')
         self.assertIn(partner_format_tofind, new_partners)
         self.assertIn(partner_multi_tofind, new_partners)
         self.assertEqual(
             sorted(new_partners.mapped('email')),
             sorted(['"FindMe Format" <find.me.format@test.example.com>',
                     'find.me.multi.1@test.example.com, "FindMe Multi" <find.me.multi.2@test.example.com>',
-                    'find.me.multi.1@test.example.com',
                     'find.me.multi.2@test.example.com',
                     'test.cc.1@example.com', 'test.cc.2@example.com', 'test.cc.2.2@example.com',
                     'test.to.1@example.com', 'test.to.2@example.com']),
@@ -1130,7 +1124,6 @@ class TestComposerResultsMass(TestMailComposer):
             sorted(new_partners.mapped('email_formatted')),
             sorted(['"FindMe Format" <find.me.format@test.example.com>',
                     '"FindMe Multi" <find.me.multi.1@test.example.com,find.me.multi.2@test.example.com>',
-                    '"find.me.multi.1@test.example.com" <find.me.multi.1@test.example.com>',
                     '"find.me.multi.2@test.example.com" <find.me.multi.2@test.example.com>',
                     '"test.cc.1@example.com" <test.cc.1@example.com>',
                     '"test.cc.2@example.com" <test.cc.2@example.com>',
@@ -1142,7 +1135,6 @@ class TestComposerResultsMass(TestMailComposer):
             sorted(new_partners.mapped('name')),
             sorted(['FindMe Format',
                     'FindMe Multi',
-                    'find.me.multi.1@test.example.com',
                     'find.me.multi.2@test.example.com',
                     'test.cc.1@example.com', 'test.to.1@example.com', 'test.to.2@example.com',
                     'test.cc.2@example.com', 'test.cc.2.2@example.com']),
@@ -1157,23 +1149,21 @@ class TestComposerResultsMass(TestMailComposer):
         # FIXME: more partners created than real emails (see above) -> due to
         #   transformation from email -> partner in template 'generate_recipients'
         #   there are more partners than email to notify;
-        # NOTE: 'Findme Multi' is excluded as it has the same email as 'find.me.multi.1@test.example.com'
-        #   (created by template) and comes second in a search based on email
-        mailed_new_partners = new_partners.filtered(lambda p: p.name != 'FindMe Multi')
-        self.assertEqual(len(mailed_new_partners), 8)
         self.assertEqual(len(self._new_mails), 2, 'Should have created 2 mail.mail')
         self.assertEqual(
-            len(self._mails), (len(mailed_new_partners) + 2) * 2,
-            f'Should have sent {(len(mailed_new_partners) + 2) * 2} emails, one / recipient ({len(mailed_new_partners)} mailed partners + partner_1 + partner_2) * 2 records')
+            len(self._mails), (len(new_partners) + 2) * 2,
+            f'Should have sent {(len(new_partners) + 2) * 2} emails, one / recipient ({len(new_partners)} mailed partners + partner_1 + partner_2) * 2 records')
         for record in self.test_records:
             self.assertMailMail(
-                self.partner_1 + self.partner_2 + mailed_new_partners,
+                self.partner_1 + self.partner_2 + new_partners,
                 'sent',
                 author=self.partner_employee,
                 email_to_recipients=[
                     [self.partner_1.email_formatted],
                     [f'"{self.partner_2.name}" <valid.other.1@agrolait.com>', f'"{self.partner_2.name}" <valid.other.cc@agrolait.com>'],
-                ] + [[email] for email in mailed_new_partners.mapped('email_formatted')],
+                ] + [[new_partners[0]['email_formatted']],
+                     ['"FindMe Multi" <find.me.multi.1@test.example.com>', '"FindMe Multi" <find.me.multi.2@test.example.com>']
+                ] + [[email] for email in new_partners[2:].mapped('email_formatted')],
                 email_values={
                     'body_content': f'TemplateBody {record.name}',
                     # single email event if email field is multi-email
