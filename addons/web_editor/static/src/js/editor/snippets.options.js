@@ -2638,18 +2638,6 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
      * @private
      */
     async _search(needle) {
-        this._userValueWidgets = this._userValueWidgets.filter(widget => !widget.isDestroyed());
-        // Remove select options
-        this._userValueWidgets
-            .filter(widget => {
-                return widget instanceof ButtonUserValueWidget &&
-                    widget.el.parentElement.matches('we-selection-items');
-            }).forEach(button => {
-                if (button.isPreviewed()) {
-                    button.notifyValueChange('reset');
-                }
-                button.destroy();
-            });
         const recTuples = await this._rpc({
             model: this.options.model,
             method: 'name_search',
@@ -2665,6 +2653,18 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             method: 'read',
             args: [recTuples.map(([id, _name]) => id), this.options.fields],
         });
+        // Remove select options.
+        this._userValueWidgets.filter(widget => {
+            return widget instanceof ButtonUserValueWidget &&
+                !widget.isDestroyed() &&
+                widget.el.parentElement.matches('we-selection-items');
+        }).forEach(button => {
+            if (button.isPreviewed()) {
+                button.notifyValueChange('reset');
+            }
+            button.destroy();
+        });
+        this._userValueWidgets = this._userValueWidgets.filter(widget => !widget.isDestroyed());
         records.forEach(record => {
             this.displayNameCache[record.id] = record.display_name;
         });
