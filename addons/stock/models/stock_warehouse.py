@@ -923,6 +923,8 @@ class Warehouse(models.Model):
             },
             'pack_type_id': {
                 'active': self.delivery_steps == 'pick_pack_ship' and self.active,
+                'default_location_dest_id': output_loc.id if self.delivery_steps == 'pick_ship' else self.wh_pack_stock_loc_id.id,
+
                 'barcode': self.code.replace(" ", "").upper() + "-PACK",
             },
             'int_type_id': {
