@@ -132,6 +132,9 @@ class SaleOrder(models.Model):
         else:
             return fixed_amount
 
+    def _get_coupon_program_domain(self):
+        return []
+
     def _get_cheapest_line(self):
         # Unit prices tax included
         return min(self.order_line.filtered(lambda x: not x.is_reward_line and x.price_reduce > 0), key=lambda x: x['price_reduce'])
