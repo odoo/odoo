@@ -167,7 +167,7 @@ class AccountChartTemplate(models.AbstractModel):
 
         irt_cursor = IrTranslationImport(self._cr, True)
         for model, data in defer(list(data.items())):
-            _logger.info("Loading model %s ...", model)
+            _logger.debug("Loading model %s ...", model)
             translate_vals = defaultdict(list)
             create_vals = []
             for xml_id, record in data.items():
@@ -193,9 +193,9 @@ class AccountChartTemplate(models.AbstractModel):
                     'values': deref(record, self.env[model]),
                     'noupdate': True,
                 })
-            _logger.info('Loading records for model %s...', model)
+            _logger.debug('Loading records for model %s...', model)
             created = self.env[model].sudo()._load_records(create_vals)
-            _logger.info('Loaded records for model %s', model)
+            _logger.debug('Loaded records for model %s', model)
             for vals, record in zip(create_vals, created):
                 for translation in translate_vals[vals['xml_id']]:
                     irt_cursor.push({**translation, 'res_id': record.id})
@@ -234,9 +234,9 @@ class AccountChartTemplate(models.AbstractModel):
         try:
             with open(path, 'r', encoding="utf-8") as csv_file:
                 relative_path = '/'.join(path_parts)
-                _logger.info('loading %s', relative_path)
+                _logger.debug('loading %s', relative_path)
                 ret = {f"{cid}_{row['id']}": sanitize_csv(row) for row in csv.DictReader(csv_file)}
-                _logger.info('loaded %s', relative_path)
+                _logger.debug('loaded %s', relative_path)
                 return ret
         except OSError as e:
             if path:
