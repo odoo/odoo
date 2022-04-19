@@ -45,14 +45,16 @@ class IrActionsReport(models.Model):
                     }
                     const carrying_text = carrying.toFixed(2) + '&euro;';
                     const html = '' +
-                        '<tr class="text-right font-weight-bold">' +
-                            td_repeat +
-                            '<td> Carrying: </td>' +
-                            '<td>' + carrying_text + '</td>' +
-                        '</tr>' +
-                        '</tbody></table>' +
-                        '<div>BREAK</div>' +
-                        //'<div style="page-break-before: always;">BREAK</div>' +
+                                '<tr class="text-right font-weight-bold">' +
+                                    td_repeat +
+                                    '<td> Carrying: </td>' +
+                                    '<td>' + carrying_text + '</td>' +
+                                '</tr>' +
+                            '</tbody>' + 
+                        '</table>' +
+                        '<div>BREAK p1</div>' +
+                        '<p style="page-break-after: always; height: 1px;">--BREAK--</p>' +
+                        '<div>BREAK p2</div>' +
                         '<table>' +
                             '<thead>' +
                                 '<tr>' +
