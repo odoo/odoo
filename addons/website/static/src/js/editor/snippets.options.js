@@ -1584,11 +1584,11 @@ options.registry.Carousel = options.Class.extend({
     _assignUniqueID: function () {
         const id = 'myCarousel' + Date.now();
         this.$target.attr('id', id);
-        this.$target.find('[data-target]').attr('data-target', '#' + id);
+        this.$target.find('[data-bs-target]').attr('data-bs-target', '#' + id);
         _.each(this.$target.find('[data-slide], [data-slide-to]'), function (el) {
             var $el = $(el);
-            if ($el.attr('data-target')) {
-                $el.attr('data-target', '#' + id);
+            if ($el.attr('data-bs-target')) {
+                $el.attr('data-bs-target', '#' + id);
             } else if ($el.attr('href')) {
                 $el.attr('href', '#' + id);
             }
@@ -1604,7 +1604,7 @@ options.registry.Carousel = options.Class.extend({
         this.$controls.removeClass('d-none');
         const $active = $items.filter('.active');
         this.$indicators.append($('<li>', {
-            'data-target': '#' + this.$target.attr('id'),
+            'data-bs-target': '#' + this.$target.attr('id'),
             'data-slide-to': $items.length,
         }));
         this.$indicators.append(' ');
@@ -1924,11 +1924,11 @@ options.registry.collapse = options.Class.extend({
 
         const tablistId = setUniqueId($tablist, 'myCollapse');
         $panel.attr('data-parent', '#' + tablistId);
-        $panel.data('parent', '#' + tablistId);
+        $panel.data('bs-parent', '#' + tablistId);
 
         const panelId = setUniqueId($panel, 'myCollapseTab');
-        $tab.attr('data-target', '#' + panelId);
-        $tab.data('target', '#' + panelId);
+        $tab.attr('data-bs-target', '#' + panelId);
+        $tab.data('bs-target', '#' + panelId);
     },
 });
 

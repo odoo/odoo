@@ -22,7 +22,7 @@ options.registry.gallery = options.Class.extend({
         this.$target.on('image_changed', 'img', function (ev) {
             var $img = $(ev.currentTarget);
             var index = self.$target.find('.carousel-item.active').index();
-            self.$('.carousel:first li[data-target]:eq(' + index + ')')
+            self.$('.carousel:first li[data-bs-target]:eq(' + index + ')')
                 .css('background-image', 'url(' + $img.attr('src') + ')');
         });
 
@@ -365,8 +365,8 @@ options.registry.gallery = options.Class.extend({
         this.$target.find('.carousel').attr('id', 'slideshow_' + uuid);
         _.each(this.$target.find('[data-slide], [data-slide-to]'), function (el) {
             var $el = $(el);
-            if ($el.attr('data-target')) {
-                $el.attr('data-target', '#slideshow_' + uuid);
+            if ($el.attr('data-bs-target')) {
+                $el.attr('data-bs-target', '#slideshow_' + uuid);
             } else if ($el.attr('href')) {
                 $el.attr('href', '#slideshow_' + uuid);
             }

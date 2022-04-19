@@ -652,7 +652,7 @@
                 </div>
                 <div t-if="uid and request.env.user.forum_waiting_posts_count"
                     title="You already have a pending post"
-                    data-toggle="popover" data-trigger="hover" data-content="Please wait for a moderator to validate your previous post before continuing.">
+                    data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="Please wait for a moderator to validate your previous post before continuing.">
                     <a class="disabled btn btn-secondary btn-block mb-3 mb-md-0" t-attf-href="/forum/#{slug(forum)}/ask">New Post</a>
                 </div>
                 <a t-else="" role="button" type="button" class="btn btn-primary btn-block o_forum_ask_btn mb-3 mb-md-0" t-att-href="uid and '/forum/' + slug(forum) + '/ask' or '/web/login'">New Post</a>
@@ -1425,7 +1425,7 @@
     </t>
 
     <div t-attf-class="o_wforum_author_box d-inline-flex #{display_info and 'o_show_info'} #{compact and 'o_compact align-items-center'} #{bio_popover_data and 'o_wforum_bio_popover'}"
-         t-att-data-content="bio_popover_data">
+         t-att-data-bs-content="bio_popover_data">
         <t t-set="user_profile_url" value="#"/>
         <t t-if="object.create_uid.id == request.session.uid or object.create_uid.sudo().website_published">
             <t t-set="user_profile_url" t-value="'/forum/%s/user/%s' % (slug(forum), object.create_uid.id) + '?forum_origin=' + request.httprequest.path"/>

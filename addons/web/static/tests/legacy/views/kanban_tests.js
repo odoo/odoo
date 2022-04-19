@@ -6079,7 +6079,7 @@ QUnit.module('LegacyViews', {
             "tooltip of first column should not defined, since group_by_tooltip title and the many2one field has no value");
         assert.ok(kanban.$('.o_kanban_group:eq(1) span.o_column_title:contains(hello)').length,
             "second column should have a title with a value from the many2one");
-        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_header_title').data('original-title'),
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_header_title').data('bs-original-title'),
             "<div>Kikou</br>hello</div>",
             "second column should have a tooltip with the group_by_tooltip title and many2one field value");
 
