@@ -17,8 +17,8 @@
                         </t>
                         <a class="o_wevent_sponsor o_wevent_sponsor_card h-100" tabindex="0" role="button"
                             t-att-data-publish="'on' if sponsor.website_published else 'off'"
-                            t-att-data-content="popover_content"
-                            data-html="true" data-trigger="focus" data-toggle="popover" data-placement="bottom">
+                            t-att-data-bs-content="popover_content"
+                            data-bs-html="true" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-placement="bottom">
                             <t t-call="website_event_exhibitor.event_sponsor_thumb_details"/>
                         </a>
                     </t>
