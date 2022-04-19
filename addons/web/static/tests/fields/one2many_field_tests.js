@@ -656,7 +656,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipNotInline(
+    QUnit.test(
         "use the limit attribute in arch (in field o2m non inline tree view)",
         async function (assert) {
             assert.expect(2);
@@ -685,9 +685,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipNotInline("one2many with default_order on view not inline", async function (assert) {
-        assert.expect(1);
-
+    QUnit.test("one2many with default_order on view not inline", async function (assert) {
         serverData.models.partner.records[0].turtles = [1, 2, 3];
         serverData.views = {
             "turtle,false,list": `
