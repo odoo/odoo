@@ -173,6 +173,7 @@ class TestXMLID(TransactionCase):
             model._load_records(data_list)
 
 
+@tagged('post_install', '-at_install')
 class TestIrModel(TransactionCase):
 
     @classmethod
