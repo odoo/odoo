@@ -525,7 +525,7 @@ class TestEmailTools(BaseCase):
         ]
         for source, expected in zip(sources, expected_list):
             with self.subTest(source=source):
-                self.assertEqual(email_normalize(source), expected)
+                self.assertEqual(email_normalize(source, strict=True), expected)
 
     def test_email_re(self):
         """ Test 'email_re', finding emails in a given text """
