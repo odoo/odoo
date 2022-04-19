@@ -78,15 +78,19 @@ class MailMail(models.Model):
     auto_delete = fields.Boolean(
         'Auto Delete',
         help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
-    scheduled_date = fields.Char('Scheduled Send Date',
+    scheduled_date = fields.Datetime('Scheduled Send Date',
         help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible.")
 
     @api.model_create_multi
     def create(self, values_list):
-        # notification field: if not set, set if mail comes from an existing mail.message
         for values in values_list:
+            # notification field: if not set, set if mail comes from an existing mail.message
             if 'is_notification' not in values and values.get('mail_message_id'):
                 values['is_notification'] = True
+            # scheduled_date field: if not set in mail_template, set its value to False
+            # this line is required to avoid casting problem when create is triggered in mail_template
+            if 'scheduled_date' in values and not values['scheduled_date']:
+                values['scheduled_date'] = False
 
         new_mails = super(MailMail, self).create(values_list)
 

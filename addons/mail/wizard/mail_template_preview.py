@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+from dateutil import parser
 
 
 class MailTemplatePreview(models.TransientModel):
@@ -43,7 +44,7 @@ class MailTemplatePreview(models.TransientModel):
                            help="Comma-separated recipient addresses")
     email_cc = fields.Char('Cc', compute='_compute_mail_template_fields', help="Carbon copy recipients")
     reply_to = fields.Char('Reply-To', compute='_compute_mail_template_fields', help="Preferred response address")
-    scheduled_date = fields.Char('Scheduled Date', compute='_compute_mail_template_fields',
+    scheduled_date = fields.Datetime('Scheduled Date', compute='_compute_mail_template_fields',
                                  help="The queue manager will send the email after the date")
     body_html = fields.Html('Body', compute='_compute_mail_template_fields', sanitize=False)
     attachment_ids = fields.Many2many('ir.attachment', 'Attachments', compute='_compute_mail_template_fields')
@@ -82,5 +83,7 @@ class MailTemplatePreview(models.TransientModel):
     def _set_mail_attributes(self, values=None):
         for field in self._MAIL_TEMPLATE_FIELDS:
             field_value = values.get(field, False) if values else self.mail_template_id[field]
+            if field == 'scheduled_date' and field_value:
+                field_value = parser.parse(field_value)
             self[field] = field_value
         self.partner_ids = values.get('partner_ids', False) if values else False
