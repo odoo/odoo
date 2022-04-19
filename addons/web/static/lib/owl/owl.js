@@ -2004,6 +2004,9 @@
         }
         return fiber;
     }
+    function throwOnRender() {
+        throw new Error("Attempted to render cancelled fiber");
+    }
     /**
      * @returns number of not-yet rendered fibers cancelled
      */
@@ -2011,6 +2014,7 @@
         let result = 0;
         for (let fiber of fibers) {
             let node = fiber.node;
+            fiber.render = throwOnRender;
             if (node.status === 0 /* NEW */) {
                 node.destroy();
             }
@@ -2675,7 +2679,7 @@
                 let renders = this.delayedRenders;
                 this.delayedRenders = [];
                 for (let f of renders) {
-                    if (f.root && f.node.status !== 2 /* DESTROYED */) {
+                    if (f.root && f.node.status !== 2 /* DESTROYED */ && f.node.fiber === f) {
                         f.render();
                     }
                 }
@@ -5603,8 +5607,8 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
 
 
     __info__.version = '2.0.0-beta-6';
-    __info__.date = '2022-04-11T09:02:17.726Z';
-    __info__.hash = '41344ef';
+    __info__.date = '2022-04-19T10:09:08.600Z';
+    __info__.hash = '41f1262';
     __info__.url = 'https://github.com/odoo/owl';
 
 
