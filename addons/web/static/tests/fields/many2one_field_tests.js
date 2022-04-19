@@ -5,6 +5,7 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import {
     click,
+    editInput,
     getFixture,
     makeDeferred,
     nextTick,
@@ -21,14 +22,7 @@ let serverData;
 let target;
 
 // WOWL remove after adapting tests
-let createView,
-    FormView,
-    testUtils,
-    cpHelpers,
-    Widget,
-    BasicModel,
-    StandaloneFieldManagerMixin,
-    relationalFields;
+let testUtils, cpHelpers, Widget, BasicModel, StandaloneFieldManagerMixin, relationalFields;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -744,7 +738,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual($("tr.o_data_row").length, 0, "should display 0 records");
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "onchanges on many2ones trigger when editing record in form view",
         async function (assert) {
             assert.expect(10);
@@ -791,7 +785,11 @@ QUnit.module("Fields", (hooks) => {
             // open the many2one in form view and change something
             await click(target, ".o_form_button_edit");
             await click(target, ".o_external_button");
-            await testUtils.fields.editInput($('.modal-body input[name="other_field"]'), "wood");
+            await editInput(
+                document.body,
+                ".modal-body .o_field_widget[name='other_field'] input",
+                "wood"
+            );
 
             // save the modal and make sure an onchange is triggered
             await click(document.body, ".modal .modal-footer .btn-primary");
@@ -1019,62 +1017,62 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "empty many2one should not be considered modified on onchange if still empty",
         async function (assert) {
             assert.expect(6);
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 foo: function () {},
             };
 
             assert.strictEqual(
-                this.data.partner.records[2].trululu,
+                serverData.models.partner.records[2].trululu,
                 undefined,
                 "no value must be provided for trululu to make sure the test works as expected"
             );
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    '<form string="Partners">' +
-                    "<sheet>" +
-                    "<group>" +
-                    '<field name="trululu"/>' +
-                    '<field name="foo"/>' + // onchange will be triggered on this field
-                    "</group>" +
-                    "</sheet>" +
-                    "</form>",
-                res_id: 4, // trululu m2o must be empty
-                viewOptions: { mode: "edit" },
-                mockRPC: function (route, args) {
-                    if (args.method === "onchange") {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 4, // trululu m2o must be empty
+                serverData,
+                arch: `
+                    <form>
+                        <sheet>
+                            <group>
+                                <field name="trululu" />
+                                <field name="foo" /> <!-- onchange will be triggered on this field -->
+                            </group>
+                        </sheet>
+                    </form>
+                `,
+                mockRPC(route, { method, args }) {
+                    if (method === "onchange") {
                         assert.step("onchange");
                         return Promise.resolve({
                             value: {
                                 trululu: false,
                             },
                         });
-                    } else if (args.method === "write") {
+                    } else if (method === "write") {
                         assert.step("write");
                         // non modified trululu should not be sent
                         // as write value
-                        assert.deepEqual(args.args[1], { foo: "3" });
+                        assert.deepEqual(args[1], { foo: "3" });
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
 
+            await click(target, ".o_form_button_edit");
+
             // trigger the onchange
-            await testUtils.fields.editInput($('input[name="foo"]'), "3");
+            await editInput(target, ".o_field_widget[name='foo'] input", "3");
             assert.verifySteps(["onchange"]);
 
             // save
-            await testUtils.form.clickSave(form);
+            await click(target, ".o_form_button_save");
             assert.verifySteps(["write"]);
-            form.destroy();
         }
     );
 
@@ -3221,10 +3219,10 @@ QUnit.module("Fields", (hooks) => {
         await click(document.body.querySelector(".modal .o_form_button_cancel"));
     });
 
-    QUnit.skipWOWL("select a many2one value by focusing out", async function (assert) {
+    QUnit.test("select a many2one value by focusing out", async function (assert) {
         assert.expect(3);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -3235,13 +3233,12 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        const input = target.querySelector(".o_field_many2one input");
-        input.value = "xph";
-        await triggerEvents(input, null, ["input", "change"]);
+        await editInput(target, ".o_field_many2one input", "xph");
+        await triggerEvent(target, ".o_field_many2one input", "blur");
 
         assert.containsNone(document.body, ".modal");
         assert.strictEqual(target.querySelector(".o_field_many2one input").value, "xphone");
-        assert.containsOnce(form, ".o_external_button");
+        assert.containsOnce(target, ".o_external_button");
     });
 
     QUnit.skipWOWL("no_create option on a many2one", async function (assert) {

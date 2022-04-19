@@ -143,7 +143,7 @@ export class Many2OneField extends Component {
         this.dialogClose.push(
             this.dialog.add(FormViewDialog, {
                 resId,
-                mode: this.props.readonly ? "readonly" : "edit",
+                mode: this.props.canWrite ? "edit" : "readonly",
                 context: this.props.record.getFieldContext(this.props.name),
                 resModel: this.props.relation,
                 viewId,
@@ -151,6 +151,14 @@ export class Many2OneField extends Component {
                     this.env._t("Open: %s"),
                     this.props.record.activeFields[this.props.name].string
                 ),
+                save: async (record) => {
+                    await record.save({ stayInEdition: true, noReload: true });
+                    await this.props.record.load();
+                    await this.props.update(this.props.value);
+                },
+                discard: (record) => {
+                    record.discard();
+                },
             })
         );
     }
@@ -176,7 +184,7 @@ export class Many2OneField extends Component {
         console.log("create");
     }
     onCreateEdit() {
-        console.log("create edit");
+        this.onSearchMore();
     }
 
     onClick() {

@@ -45,6 +45,7 @@ export class AutoComplete extends Component {
 
     loadSources(useInput) {
         const sources = [];
+        const proms = [];
         for (const pSource of this.props.sources) {
             const source = this.makeSource(pSource);
             sources.push(source);
@@ -55,16 +56,20 @@ export class AutoComplete extends Component {
             );
             if (options instanceof Promise) {
                 source.isLoading = true;
-                options.then((options) => {
+                const prom = options.then((options) => {
                     source.options = options.map((option) => this.makeOption(option));
                     source.isLoading = false;
                     this.state.optionsRev++;
                 });
+                proms.push(prom);
             } else {
                 source.options = options.map((option) => this.makeOption(option));
             }
         }
         this.sources = sources;
+        Promise.all(proms).then(() => {
+            this.navigate(0);
+        });
     }
     loadOptions(options, request) {
         if (typeof options === "function") {
@@ -111,7 +116,8 @@ export class AutoComplete extends Component {
     navigate(direction) {
         let step = Math.sign(direction);
         if (!step) {
-            return;
+            this.state.activeSourceOption = null;
+            step = 1;
         }
 
         if (this.state.activeSourceOption) {
@@ -174,11 +180,12 @@ export class AutoComplete extends Component {
     }
     onInputBlur() {
         this.unregisterHotkeys();
-        if (this.props.autoSelect && this.state.activeSourceOption) {
+        const value = this.inputRef.el.value;
+        if (this.props.autoSelect && this.state.activeSourceOption && this.props.value !== value) {
             this.selectOption(this.state.activeSourceOption);
         } else {
             this.props.onBlur({
-                inputValue: this.inputRef.el.value,
+                inputValue: value,
             });
             this.close();
         }
