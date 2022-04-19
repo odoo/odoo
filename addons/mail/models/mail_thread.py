@@ -1725,6 +1725,9 @@ class MailThread(models.AbstractModel):
         """ Utility method to find partners from email addresses. If no partner is
         found, create new partners if force_create is enabled. Search heuristics
 
+          * 0: clean incoming email list to use only normalized emails. Exclude
+               those used in aliases to avoid setting partner emails to emails
+               used as aliases;
           * 1: check in records (record set) followers if records is mail.thread
                enabled and if check_followers parameter is enabled;
           * 2: search for partners with user;
@@ -1744,8 +1747,13 @@ class MailThread(models.AbstractModel):
             followers = self.env['res.partner']
         catchall_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
 
-        # first, build a normalized email list and remove those linked to aliases to avoid adding aliases as partners
-        normalized_emails = [tools.email_normalize(contact) for contact in emails if tools.email_normalize(contact)]
+        # first, build a normalized email list and remove those linked to aliases
+        # to avoid adding aliases as partners. In case of multi-email input, use
+        # the first found valid one to be tolerant against multi emails encoding
+        normalized_emails = [email_normalized
+                             for email_normalized in (tools.email_normalize(contact, strict=False) for contact in emails)
+                             if email_normalized
+                            ]
         if catchall_domain:
             domain_left_parts = [email.split('@')[0] for email in normalized_emails if email and email.split('@')[1] == catchall_domain.lower()]
             if domain_left_parts:
@@ -1766,7 +1774,7 @@ class MailThread(models.AbstractModel):
         # iterate and keep ordering
         partners = []
         for contact in emails:
-            normalized_email = tools.email_normalize(contact)
+            normalized_email = tools.email_normalize(contact, strict=False)
             partner = next((partner for partner in done_partners if partner.email_normalized == normalized_email), self.env['res.partner'])
             if not partner and force_create and normalized_email in normalized_emails:
                 partner = self.env['res.partner'].browse(self.env['res.partner'].name_create(contact)[0])
