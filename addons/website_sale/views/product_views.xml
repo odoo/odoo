@@ -101,7 +101,7 @@
                             <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
                             <field name="alternative_product_ids" widget="many2many_tags" domain="[('id', '!=', active_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
                             <field name="accessory_product_ids" widget="many2many_tags"/>
-                            <field name="website_ribbon_id" groups="base.group_no_one"/>
+                            <field name="website_ribbon_id" groups="base.group_no_one" options="{'no_quick_create': True'}"/>
                         </group>
                     </group>
                     <group name="product_template_images" string="Extra Product Media">
@@ -170,6 +170,16 @@
             Categories are used to browse your products through the
             touchscreen interface.
           </p>
+        </field>
+    </record>
+
+    <record id="product_ribbon_view_tree" model="ir.ui.view">
+        <field name="name">product.ribbon.tree</field>
+        <field name="model">product.ribbon</field>
+        <field name="arch" type="xml">
+            <tree string="Products Ribbon">
+                <field name="html" string="Name"/>
+            </tree>
         </field>
     </record>
 
