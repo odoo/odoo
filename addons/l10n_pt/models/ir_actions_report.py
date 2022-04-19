@@ -44,7 +44,32 @@ class IrActionsReport(models.Model):
                         td_repeat += '<td> </td>';
                     }
                     const carrying_text = carrying.toFixed(2) + '&euro;';
-                    row.insertAdjacentHTML('afterend', '<tr class="text-right font-weight-bold">' + td_repeat + '<td> Carrying: </td> <td>' + carrying_text + '</td></tr></tbody></table> <div style="page-break-before: always;">BREAK</div> <table><thead><tr><th>Description2</th><th>Quantity2</th><th>Unit price2</th><th>Taxes2</th><th>Amount2</th></tr></thead><tbody><tr class="text-right font-weight-bold">' + td_repeat + '<td> Carried: </td> <td>' + carrying_text + '</td></tr>');
+                    const html = '' +
+                        '<tr class="text-right font-weight-bold">' +
+                            td_repeat +
+                            '<td> Carrying: </td>' +
+                            '<td>' + carrying_text + '</td>' +
+                        '</tr>' +
+                        '</tbody></table>' +
+                        '<div>BREAK</div>' +
+                        //'<div style="page-break-before: always;">BREAK</div>' +
+                        '<table>' +
+                            '<thead>' +
+                                '<tr>' +
+                                    '<th>Description2</th>' +
+                                    '<th>Quantity2</th>' +
+                                    '<th>Unit price2</th>' +
+                                    '<th>Taxes2</th>' + 
+                                    '<th>Amount2</th>' +
+                                '</tr>' +
+                            '</thead>' +
+                            '<tbody>' +
+                                '<tr class="text-right font-weight-bold">' +
+                                    td_repeat +
+                                    '<td> Carried: </td>' +
+                                    '<td>' + carrying_text + '</td>' +
+                                '</tr>'
+                    row.insertAdjacentHTML('afterend',  html);
                 }
             }
             rows[rows.length-1].insertAdjacentHTML('afterend', '</tbody></table>');
