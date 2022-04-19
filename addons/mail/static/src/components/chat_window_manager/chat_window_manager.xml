@@ -11,7 +11,6 @@
                 <t t-foreach="messaging.chatWindowManager.allOrderedVisible" t-as="chatWindow" t-key="chatWindow.localId">
                     <ChatWindow
                         localId="chatWindow.localId"
-                        hasCloseAsBackButton="messaging.device.isMobile"
                         isExpandable="!messaging.device.isMobile and !!chatWindow.thread"
                         isFullscreen="messaging.device.isMobile"
                     />

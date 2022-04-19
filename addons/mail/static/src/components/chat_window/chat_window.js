@@ -127,13 +127,11 @@ export class ChatWindow extends Component {
 
 Object.assign(ChatWindow, {
     defaultProps: {
-        hasCloseAsBackButton: false,
         isExpandable: false,
         isFullscreen: false,
     },
     props: {
         localId: String,
-        hasCloseAsBackButton: { type: Boolean, optional: true },
         isExpandable: { type: Boolean, optional: true },
         isFullscreen: { type: Boolean, optional: true },
     },

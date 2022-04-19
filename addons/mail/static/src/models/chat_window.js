@@ -344,6 +344,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeHasCloseAsBackButton() {
+            if (this.isVisible && this.messaging.device.isMobile) {
+                return true;
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeHasInviteFeature() {
@@ -565,6 +575,10 @@ registerModel({
         hasCallButtons: attr({
             default: false,
             compute: '_computeHasCallButtons',
+        }),
+        hasCloseAsBackButton: attr({
+            compute: '_computeHasCloseAsBackButton',
+            default: false,
         }),
         /**
          * States whether this chat window has the invite feature.

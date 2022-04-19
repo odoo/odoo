@@ -46,15 +46,10 @@ export class ChatWindowHeader extends Component {
 
 Object.assign(ChatWindowHeader, {
     defaultProps: {
-        hasCloseAsBackButton: false,
         isExpandable: false,
     },
     props: {
         chatWindowLocalId: String,
-        hasCloseAsBackButton: {
-            type: Boolean,
-            optional: true,
-        },
         isExpandable: {
             type: Boolean,
             optional: true,
