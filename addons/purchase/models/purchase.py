@@ -904,18 +904,23 @@ class PurchaseOrderLine(models.Model):
     _description = 'Purchase Order Line'
     _order = 'order_id, sequence, id'
 
-    name = fields.Text(string='Description', required=True)
+    name = fields.Text(
+        string='Description', required=True, compute='_compute_price_unit_and_date_planned_and_name', store=True, readonly=False)
     sequence = fields.Integer(string='Sequence', default=10)
     product_qty = fields.Float(string='Quantity', digits='Product Unit of Measure', required=True)
     product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
-    date_planned = fields.Datetime(string='Expected Arrival', index=True,
+    date_planned = fields.Datetime(
+        string='Expected Arrival', index=True,
+        compute="_compute_price_unit_and_date_planned_and_name", readonly=False, store=True,
         help="Delivery date expected from vendor. This date respectively defaults to vendor pricelist lead time then today's date.")
     taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
     product_uom = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True)
     product_type = fields.Selection(related='product_id.detailed_type', readonly=True)
-    price_unit = fields.Float(string='Unit Price', required=True, digits='Product Price')
+    price_unit = fields.Float(
+        string='Unit Price', required=True, digits='Product Price',
+        compute="_compute_price_unit_and_date_planned_and_name", readonly=False, store=True)
 
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', store=True)
     price_total = fields.Monetary(compute='_compute_amount', string='Total', store=True)
@@ -1153,7 +1158,6 @@ class PurchaseOrderLine(models.Model):
         self._product_id_change()
 
         self._suggest_quantity()
-        self._onchange_quantity()
 
     def _product_id_change(self):
         if not self.product_id:
@@ -1189,60 +1193,52 @@ class PurchaseOrderLine(models.Model):
             return {'warning': warning}
         return {}
 
-    @api.onchange('product_qty', 'product_uom')
-    def _onchange_quantity(self):
-        if not self.product_id:
-            return
-        params = {'order_id': self.order_id}
-        seller = self.product_id._select_seller(
-            partner_id=self.partner_id,
-            quantity=self.product_qty,
-            date=self.order_id.date_order and self.order_id.date_order.date(),
-            uom_id=self.product_uom,
-            params=params)
+    @api.depends('product_qty', 'product_uom')
+    def _compute_price_unit_and_date_planned_and_name(self):
+        for line in self:
+            if not line.product_id:
+                continue
+            params = {'order_id': line.order_id}
+            seller = line.product_id._select_seller(
+                partner_id=line.partner_id,
+                quantity=line.product_qty,
+                date=line.order_id.date_order and line.order_id.date_order.date(),
+                uom_id=line.product_uom,
+                params=params)
 
-        if seller or not self.date_planned:
-            self.date_planned = self._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            if seller or not line.date_planned:
+                line.date_planned = line._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
-        # If not seller, use the standard price. It needs a proper currency conversion.
-        if not seller:
-            po_line_uom = self.product_uom or self.product_id.uom_po_id
-            price_unit = self.env['account.tax']._fix_tax_included_price_company(
-                self.product_id.uom_id._compute_price(self.product_id.standard_price, po_line_uom),
-                self.product_id.supplier_taxes_id,
-                self.taxes_id,
-                self.company_id,
-            )
-            if price_unit and self.order_id.currency_id and self.order_id.company_id.currency_id != self.order_id.currency_id:
-                price_unit = self.order_id.company_id.currency_id._convert(
-                    price_unit,
-                    self.order_id.currency_id,
-                    self.order_id.company_id,
-                    self.date_order or fields.Date.today(),
+            # If not seller, use the standard price. It needs a proper currency conversion.
+            if not seller:
+                po_line_uom = line.product_uom or line.product_id.uom_po_id
+                price_unit = line.env['account.tax']._fix_tax_included_price_company(
+                    line.product_id.uom_id._compute_price(line.product_id.standard_price, po_line_uom),
+                    line.product_id.supplier_taxes_id,
+                    line.taxes_id,
+                    line.company_id,
                 )
+                line.price_unit = line.currency_id._convert(
+                    price_unit,
+                    line.currency_id,
+                    line.company_id,
+                    line.date_order,
+                )
+                continue
 
-            self.price_unit = price_unit
-            return
+            price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.taxes_id, line.company_id) if seller else 0.0
+            price_unit = seller.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order)
+            line.price_unit = seller.product_uom._compute_price(price_unit, line.product_uom)
 
-        price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, self.product_id.supplier_taxes_id, self.taxes_id, self.company_id) if seller else 0.0
-        if price_unit and seller and self.order_id.currency_id and seller.currency_id != self.order_id.currency_id:
-            price_unit = seller.currency_id._convert(
-                price_unit, self.order_id.currency_id, self.order_id.company_id, self.date_order or fields.Date.today())
-
-        if seller and self.product_uom and seller.product_uom != self.product_uom:
-            price_unit = seller.product_uom._compute_price(price_unit, self.product_uom)
-
-        self.price_unit = price_unit
-
-        default_names = []
-        vendors = self.product_id._prepare_sellers({})
-        for vendor in vendors:
-            product_ctx = {'seller_id': vendor.id, 'lang': get_lang(self.env, self.partner_id.lang).code}
-            default_names.append(self._get_product_purchase_description(self.product_id.with_context(product_ctx)))
-
-        if (self.name in default_names or not self.name):
-            product_ctx = {'seller_id': seller.id, 'lang': get_lang(self.env, self.partner_id.lang).code}
-            self.name = self._get_product_purchase_description(self.product_id.with_context(product_ctx))
+            # record product names to avoid resetting custom descriptions
+            default_names = []
+            vendors = line.product_id._prepare_sellers({})
+            for vendor in vendors:
+                product_ctx = {'seller_id': vendor.id, 'lang': get_lang(line.env, line.partner_id.lang).code}
+                default_names.append(line._get_product_purchase_description(line.product_id.with_context(product_ctx)))
+            if not line.name or line.name in default_names:
+                product_ctx = {'seller_id': seller.id, 'lang': get_lang(line.env, line.partner_id.lang).code}
+                line.name = line._get_product_purchase_description(line.product_id.with_context(product_ctx))
 
     @api.onchange('product_id', 'product_qty', 'product_uom')
     def _onchange_suggest_packaging(self):

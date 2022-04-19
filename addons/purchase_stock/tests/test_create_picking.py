@@ -6,7 +6,6 @@ from datetime import date, datetime, timedelta
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.product.tests import common
 from odoo.tests import Form
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 class TestCreatePicking(common.TestProductCommon):
@@ -36,7 +35,6 @@ class TestCreatePicking(common.TestProductCommon):
                     'product_qty': 5.0,
                     'product_uom': cls.product_id_1.uom_po_id.id,
                     'price_unit': 500.0,
-                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 })],
         }
 
@@ -70,7 +68,6 @@ class TestCreatePicking(common.TestProductCommon):
                 'product_qty': 5.0,
                 'product_uom': self.product_id_2.uom_po_id.id,
                 'price_unit': 250.0,
-                'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 })]})
         self.assertEqual(self.po.incoming_picking_count, 2, 'New picking should be created')
         moves = self.po.order_line.mapped('move_ids').filtered(lambda x: x.state not in ('done', 'cancel'))
@@ -162,7 +159,6 @@ class TestCreatePicking(common.TestProductCommon):
                     'product_qty': 100.0,
                     'product_uom': product.uom_po_id.id,
                     'price_unit': 11.0,
-                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 })],
         })
         self.assertTrue(purchase, 'RFQ should be created')

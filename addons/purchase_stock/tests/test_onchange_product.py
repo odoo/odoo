@@ -77,11 +77,9 @@ class TestOnchangeProductId(TransactionCase):
 
         supplierinfo.write({'min_qty': 24})
         po_line.write({'product_qty': 20})
-        po_line._onchange_quantity()
         self.assertEqual(0, po_line.price_unit, "Unit price should be reset to 0 since the supplier supplies minimum of 24 quantities")
 
         po_line.write({'product_qty': 3, 'product_uom': self.ref("uom.product_uom_dozen")})
-        po_line._onchange_quantity()
         self.assertEqual(1200, po_line.price_unit, "Unit price should be 1200 for one Dozen")
         ipad_uom = self.env['uom.category'].create({'name': 'Ipad Unit'})
         ipad_lot = self.env['uom.uom'].create({
