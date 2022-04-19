@@ -449,15 +449,15 @@ class AccountChartTemplate(models.AbstractModel):
                 'show_on_dashboard': False,
                 'sequence': 10,
             },
-            f"{cid}_cash": {
-                'name': _('Cash'),
-                'type': 'cash',
-                'show_on_dashboard': True,
-                'sequence': 11
-            },
             f"{cid}_bank": {
                 'name': _('Bank'),
                 'type': 'bank',
+                'show_on_dashboard': True,
+                'sequence': 11
+            },
+            f"{cid}_cash": {
+                'name': _('Cash'),
+                'type': 'cash',
                 'show_on_dashboard': True,
                 'sequence': 12
             },
