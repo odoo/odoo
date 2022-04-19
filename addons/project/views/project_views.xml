@@ -948,6 +948,14 @@
                                         <span attrs="{'invisible': ['|', ('repeat_show_week', '=', False), ('repeat_show_month', '=', False)]}">of</span>
                                         <field name="repeat_month" attrs="{'invisible': [('repeat_show_month', '=', False)], 'required': [('repeat_show_month', '=', True)]}" />
                                     </div>
+                                    <!-- Those fields are added to trigger the compute method for the recurrence feature. -->
+                                    <field name="mon" invisible="1"/>
+                                    <field name="tue" invisible="1"/>
+                                    <field name="wed" invisible="1"/>
+                                    <field name="thu" invisible="1"/>
+                                    <field name="fri" invisible="1"/>
+                                    <field name="sat" invisible="1"/>
+                                    <field name="sun" invisible="1"/>
 
                                     <label for="repeat_type" />
                                     <div class="o_row">
