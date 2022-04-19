@@ -181,6 +181,8 @@
             'website/static/src/components/navbar/navbar.js',
             'website/static/src/components/editor/editor.js',
             'website/static/src/components/editor/editor.scss',
+            'website/static/src/components/ace_editor/ace_editor.js',
+            'website/static/src/components/ace_editor/ace_editor.scss',
             'website/static/src/components/dialog/*.js',
             'website/static/src/components/dialog/*.scss',
             'website/static/src/components/switch/switch.js',
@@ -282,7 +284,6 @@
             'website/static/src/js/set_view_track.js',
             'website/static/src/js/tours/homepage.js',
             'website/static/src/js/tours/tour_utils.js',
-            'website/static/src/js/widgets/ace.js',
         ],
         'web.assets_qweb': [
             'website/static/src/xml/website.backend.xml',
