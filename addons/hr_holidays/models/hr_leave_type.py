@@ -234,7 +234,7 @@ class HolidaysType(models.Model):
         ])
 
         if not date:
-            date = self.env.context.get('default_date_from', fields.Date.context_today(self))
+            date = self.env.context.get('default_date_from') or fields.Date.context_today(self)
         allocations = self.env['hr.leave.allocation'].search([
             ('employee_id', 'in', employee_ids),
             ('state', 'in', ['confirm', 'validate1', 'validate']),
