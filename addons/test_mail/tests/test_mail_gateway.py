@@ -486,8 +486,8 @@ class TestMailgateway(TestMailCommon):
             record = self.format_and_process(
                 MAIL_TEMPLATE, f'"Valid Lelitre" <{test_email}>', 'groups@test.com', subject='Test3')
 
-        self.assertFalse(record.message_ids[0].author_id,
-                         'message_process (FIXME): unrecognized email -> author_id due to multi email')
+        self.assertEqual(record.message_ids[0].author_id, self.partner_1,
+                         'message_process: found author based on first found email normalized, even with multi emails')
         self.assertEqual(record.message_ids[0].email_from, f'"Valid Lelitre" <{test_email}>')
         self.assertNotSentEmail()  # No notification / bounce should be sent
 
@@ -496,8 +496,8 @@ class TestMailgateway(TestMailCommon):
             record = self.format_and_process(
                 MAIL_TEMPLATE, test_email, 'groups@test.com', subject='Test4')
 
-        self.assertFalse(record.message_ids[0].author_id,
-                         'message_process (FIXME): unrecognized email -> author_id due to multi email')
+        self.assertEqual(record.message_ids[0].author_id, self.partner_1,
+                         'message_process: found author based on first found email normalized, even with multi emails')
         self.assertEqual(record.message_ids[0].email_from, test_email)
         self.assertNotSentEmail()  # No notification / bounce should be sent
 
@@ -717,7 +717,7 @@ class TestMailgateway(TestMailCommon):
 
         for partner_email, passed in [
             (formataddr((self.partner_1.name, self.partner_1.email_normalized)), True),
-            (f'{self.partner_1.email_normalized}, "Multi Email" <multi.email@test.example.com>', False),
+            (f'{self.partner_1.email_normalized}, "Multi Email" <multi.email@test.example.com>', True),
             (f'"Multi Email" <multi.email@test.example.com>, {self.partner_1.email_normalized}', False),
         ]:
             with self.subTest(partner_email=partner_email):

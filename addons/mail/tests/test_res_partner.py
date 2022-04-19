@@ -126,9 +126,11 @@ class TestPartner(MailCommon):
              '"FindMe Format" <find.me.format@test.example.com>',
              '"FindMe Multi" <find.me.multi.1@test.example.com,find.me.multi.2@test.example.com>']
         )
+        # when having multi emails, first found one is taken as normalized email
         self.assertEqual(
             partners.mapped('email_normalized'),
-            ['classic.format@test.example.com', 'find.me.format@test.example.com', False]
+            ['classic.format@test.example.com', 'find.me.format@test.example.com',
+             'find.me.multi.1@test.example.com']
         )
 
         # classic find or create: use normalized email to compare records
@@ -140,11 +142,18 @@ class TestPartner(MailCommon):
             with self.subTest(email=email):
                 self.assertEqual(self.env['res.partner'].find_or_create(email), partners[1])
         # multi-emails -> no normalized email -> fails each time, create new partner (FIXME)
-        for email in ('find.me.multi.1@test.example.com', 'find.me.multi.2@test.example.com'):
-            with self.subTest(email=email):
-                partner = self.env['res.partner'].find_or_create(email)
-                self.assertNotIn(partner, partners)
-                self.assertEqual(partner.email, email)
+        for email_input, match_partner in [
+            ('find.me.multi.1@test.example.com', partners[2]),
+            ('find.me.multi.2@test.example.com', self.env['res.partner']),
+        ]:
+            with self.subTest(email_input=email_input):
+                partner = self.env['res.partner'].find_or_create(email_input)
+                # either matching existing, either new partner
+                if match_partner:
+                    self.assertEqual(partner, match_partner)
+                else:
+                    self.assertNotIn(partner, partners)
+                    self.assertEqual(partner.email, email_input)
                 partner.unlink()  # do not mess with subsequent tests
 
         # now input is multi email -> '_parse_partner_name' used in 'find_or_create'
