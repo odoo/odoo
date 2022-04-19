@@ -266,6 +266,7 @@ const FieldEditor = FormEditor.extend({
         const classList = this.$target[0].classList;
         const textarea = this.$target[0].querySelector('textarea');
         const input = this.$target[0].querySelector('input[type="text"], input[type="email"], input[type="number"], input[type="tel"], input[type="url"], textarea');
+        const fileInputEl = this.$target[0].querySelector("input[type=file]");
         const description = this.$target[0].querySelector('.s_website_form_field_description');
         field.placeholder = input && input.placeholder;
         if (input) {
@@ -273,6 +274,9 @@ const FieldEditor = FormEditor.extend({
             field.value = input.getAttribute('value') || input.value;
         } else if (field.type === 'boolean') {
             field.value = !!this.$target[0].querySelector('input[type="checkbox"][checked]');
+        } else if (fileInputEl) {
+            field.maxFilesNumber = fileInputEl.dataset.maxFilesNumber;
+            field.maxFileSize = fileInputEl.dataset.maxFileSize;
         }
         // property value is needed for date/datetime (formated date).
         field.propertyValue = input && input.value;
@@ -1071,6 +1075,16 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
     setVisibilityDependency(previewMode, widgetValue, params) {
         this._setVisibilityDependency(widgetValue);
     },
+    /**
+     * @override
+     */
+    async selectDataAttribute(previewMode, widgetValue, params) {
+        await this._super(...arguments);
+        if (params.attributeName === "maxFilesNumber") {
+            const allowMultipleFiles = params.activeValue > 1;
+            this.$target[0].toggleAttribute("multiple", allowMultipleFiles);
+        }
+    },
 
     //----------------------------------------------------------------------
     // Private
@@ -1172,6 +1186,13 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             case 'hidden_opt':
             case 'type_opt':
                 return !this.$target[0].classList.contains('s_website_form_model_required');
+            case "max_files_number_opt": {
+                // Do not display the option if only one file is supposed to be
+                // uploaded in the field.
+                const fieldEl = this.$target[0].closest(".s_website_form_field");
+                return fieldEl.classList.contains("s_website_form_custom") ||
+                    ["one2many", "many2many"].includes(fieldEl.dataset.type);
+            }
         }
         return this._super(...arguments);
     },

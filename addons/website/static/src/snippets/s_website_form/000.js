@@ -266,7 +266,19 @@
 
             self.$el.find('#s_website_form_result, #o_website_form_result').empty(); // !compatibility
             if (!self.check_error_fields({})) {
-                self.update_status('error', _t("Please fill in the form correctly."));
+                if (this.fileInputError) {
+                    const errorMessage = this.fileInputError.type === "number"
+                        ? _.str.sprintf(_t(
+                            "Please fill in the form correctly. You uploaded too many files. (Maximum %s files)"
+                        ), this.fileInputError.limit)
+                        : _.str.sprintf(_t(
+                            "Please fill in the form correctly. The file \"%s\" is too big. (Maximum %s MB)"
+                        ), this.fileInputError.fileName, this.fileInputError.limit);
+                    this.update_status("error", errorMessage);
+                    delete this.fileInputError;
+                } else {
+                    this.update_status("error", _t("Please fill in the form correctly."));
+                }
                 return false;
             }
 
@@ -439,6 +451,8 @@
                         if (!self.is_datetime_valid(input.value, 'datetime')) {
                             return true;
                         }
+                    } else if (input.type === "file" && !self.isFileInputValid(input)) {
+                        return true;
                     }
 
                     // Note that checkValidity also takes care of the case where
@@ -529,6 +543,39 @@
             this.__started.then(() => $result.replaceWith(qweb.render(`website.s_website_form_status_${status}`, {
                 message: message,
             })));
+        },
+
+        /**
+         * Checks if the file input is valid: if the number of files uploaded
+         * and their size do not exceed the limits that were set.
+         *
+         * @param {HTMLElement} inputEl an input of type file
+         * @returns {Boolean} true if the input is valid, false otherwise.
+         */
+        isFileInputValid(inputEl) {
+            // Note: the `maxFilesNumber` and `maxFileSize` data-attributes may
+            // not always be present, if the Form comes from an older version
+            // for example.
+
+            // Checking the number of files.
+            const maxFilesNumber = inputEl.dataset.maxFilesNumber;
+            if (maxFilesNumber && inputEl.files.length > maxFilesNumber) {
+                // Store information to display the error message later.
+                this.fileInputError = {type: "number", limit: maxFilesNumber};
+                return false;
+            }
+            // Checking the files size.
+            const maxFileSize = inputEl.dataset.maxFileSize; // in megabytes.
+            const bytesInMegabyte = 1_000_000;
+            if (maxFileSize) {
+                for (const file of Object.values(inputEl.files)) {
+                    if (file.size / bytesInMegabyte > maxFileSize) {
+                        this.fileInputError = {type: "size", limit: maxFileSize, fileName: file.name};
+                        return false;
+                    }
+                }
+            }
+            return true;
         },
 
         //----------------------------------------------------------------------

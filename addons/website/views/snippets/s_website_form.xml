@@ -137,6 +137,22 @@
                            data-apply-to=".s_website_form_date input"/>
             <we-checkbox string="Required" data-name="required_opt" data-no-preview="true"
                 data-toggle-required="s_website_form_required"/>
+
+            <we-input data-name="max_files_number_opt"
+                string="Max # of files"
+                title="The maximum number of files that can be uploaded."
+                data-attribute-name="maxFilesNumber"
+                data-select-data-attribute="1"
+                data-apply-to="input[type='file']"
+                data-step="1"/>
+
+            <we-input string="Max file size"
+                title="The maximum size (in MB) an uploaded file can have."
+                data-attribute-name="maxFileSize"
+                data-select-data-attribute="1MB"
+                data-apply-to="input[type='file']"
+                data-unit="MB"/>
+
             <we-select string="Visibility" data-no-preview="true">
                 <we-button data-set-visibility="visible" data-select-class="">Always Visible</we-button>
                 <we-button data-set-visibility="hidden" data-select-class="s_website_form_field_hidden">Hidden</we-button>
