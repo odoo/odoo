@@ -2314,6 +2314,8 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
             this.outputEl.classList.add('ms-2');
             this.containerEl.appendChild(this.outputEl);
         }
+
+        this._onInputChange = _.debounce(this._onInputChange, 100);
     },
 
     //--------------------------------------------------------------------------
