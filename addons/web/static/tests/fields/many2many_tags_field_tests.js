@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { Many2ManyTagsField } from "@web/fields/many2many_tags_field";
 import {
     click,
     clickDropdown,
@@ -10,6 +11,7 @@ import {
     getFixture,
     getNodesTextContent,
     nextTick,
+    patchWithCleanup,
     selectDropdownItem,
 } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
@@ -17,7 +19,7 @@ import { makeView, setupViewRegistries } from "../views/helpers";
 let serverData;
 let target;
 // WOWL remove after adapting tests
-let cpHelpers, relationalFields, KanbanView;
+let cpHelpers, KanbanView;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -791,15 +793,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                "<group>" +
-                '<field name="trululu"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
-
+            arch: `<form><field name="trululu"/></form>`,
             resId: 1,
             archs: {
                 "partner,false,list": '<tree limit="7"><field name="display_name"/></tree>',
@@ -830,7 +824,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("many2many_tags can load more than 40 records", async function (assert) {
+    QUnit.test("many2many_tags can load more than 40 records", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.fields.partner_ids = {
@@ -843,7 +837,7 @@ QUnit.module("Fields", (hooks) => {
             serverData.models.partner.records.push({ id: i, display_name: "walter" + i });
             serverData.models.partner.records[0].partner_ids.push(i);
         }
-        var form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -851,20 +845,22 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
         assert.containsN(
-            form,
+            target,
             '.o_field_widget[name="partner_ids"] .badge',
             100,
             "should have rendered 100 tags"
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "many2many_tags loads records according to limit defined on widget prototype",
         async function (assert) {
             assert.expect(1);
 
-            const M2M_LIMIT = relationalFields.FieldMany2ManyTags.prototype.limit;
-            relationalFields.FieldMany2ManyTags.prototype.limit = 30;
+            patchWithCleanup(Many2ManyTagsField, {
+                limit: 30,
+            });
+
             serverData.models.partner.fields.partner_ids = {
                 string: "Partner",
                 type: "many2many",
@@ -884,12 +880,10 @@ QUnit.module("Fields", (hooks) => {
             });
 
             assert.strictEqual(
-                target.querySelector('.o_field_widget[name="partner_ids"] .badge').length,
+                target.querySelectorAll('.o_field_widget[name="partner_ids"] .badge').length,
                 30,
                 "should have rendered 30 tags even though 35 records linked"
             );
-
-            relationalFields.FieldMany2ManyTags.prototype.limit = M2M_LIMIT;
         }
     );
 

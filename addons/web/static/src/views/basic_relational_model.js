@@ -109,6 +109,10 @@ function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType) {
             __WOWL_FIELD_DESCR__: fieldDescr,
         };
 
+        if (fieldDescr.FieldComponent && fieldDescr.FieldComponent.limit) {
+            fieldInfo.limit = fieldDescr.FieldComponent.limit;
+        }
+
         if (Widget.prototype.fieldsToFetch) {
             fieldInfo.relatedFields = { ...Widget.prototype.fieldsToFetch };
             fieldInfo.viewType = "default";
