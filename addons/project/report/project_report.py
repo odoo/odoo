@@ -31,7 +31,7 @@ class ReportProjectTaskUser(models.Model):
     working_hours_open = fields.Float(string='Working Hours to Assign', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Working Hours to open the task")
     working_hours_close = fields.Float(string='Working Hours to Close', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Working Hours to close the task")
     rating_last_value = fields.Float('Rating Value (/5)', group_operator="avg", readonly=True, groups="project.group_project_rating")
-    rating_avg = fields.Float('Average Rating', readonly=True)
+    rating_avg = fields.Float('Average Rating', readonly=True, group_operator='avg', groups="project.group_project_rating")
     priority = fields.Selection([
         ('0', 'Low'),
         ('1', 'High')
@@ -110,7 +110,7 @@ class ReportProjectTaskUser(models.Model):
         return f"""
                 project_task t
                     LEFT JOIN project_task_user_rel tu on t.id=tu.task_id
-                    LEFT JOIN rating_rating rt ON rt.parent_res_id = t.id
+                    LEFT JOIN rating_rating rt ON rt.res_id = t.id
                         AND rt.res_model = 'project.task'
                         AND rt.consumed = True
                         AND rt.rating >= {RATING_LIMIT_MIN}
