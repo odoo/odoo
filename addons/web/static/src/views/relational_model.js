@@ -271,6 +271,8 @@ class DataPoint {
 
         this.rawContext = params.rawContext;
         this.setup(params, state);
+
+        markRaw(this);
     }
 
     // -------------------------------------------------------------------------
@@ -410,8 +412,6 @@ export class Record extends DataPoint {
         this._onWillSwitchMode = params.onRecordWillSwitchMode || (() => {});
 
         this.canBeAbandoned = !this.isVirtual;
-
-        markRaw(this);
     }
 
     // -------------------------------------------------------------------------
@@ -1981,12 +1981,12 @@ export class Group extends DataPoint {
     }
 
     async load() {
+        if (!this.record && this.recordParams) {
+            this.record = this.makeRecord(this.recordParams);
+            await this.record.load();
+        }
         if (!this.isFolded && this.count) {
             await this.list.load();
-            if (this.recordParams) {
-                this.record = this.makeRecord(this.recordParams);
-                await this.record.load();
-            }
         }
     }
 

@@ -430,6 +430,7 @@ export class KanbanRenderer extends Component {
                 save: async (record) => {
                     await record.save({ noReload: true });
                     await this.props.list.load();
+                    this.props.list.model.notify();
                 },
             })
         );

@@ -5517,104 +5517,66 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["button_method"]);
     });
 
-    QUnit.skipWOWL("groupby node with a button in inner groupbys", async function (assert) {
-        assert.expect(5);
-
+    QUnit.test("groupby node with a button in inner groupbys", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch:
-                "<tree>" +
-                '<field name="foo"/>' +
-                '<groupby name="currency_id">' +
-                '<button string="Button 1" type="object" name="button_method"/>' +
-                "</groupby>" +
-                "</tree>",
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <groupby name="currency_id">
+                        <button string="Button 1" type="object" name="button_method"/>
+                    </groupby>
+                </tree>`,
             groupBy: ["bar", "currency_id"],
         });
 
         assert.containsN(target, ".o_group_header", 2, "there should be 2 group headers");
-        assert.containsNone(
-            target,
-            ".o_group_header button",
-            "there should be no button in the header"
-        );
+        assert.containsNone(target, ".o_group_header button");
 
         await click(target, ".o_group_header:first-child");
-
-        assert.containsN(
-            target,
-            "tbody:eq(1) .o_group_header",
-            2,
-            "there should be 2 inner groups header"
-        );
-        assert.containsNone(
-            target,
-            "tbody:eq(1) .o_group_header button",
-            "there should be no button in the header"
-        );
-
-        await click($(target).find("tbody:eq(1) .o_group_header:eq(0)"));
-
-        assert.containsOnce(
-            target,
-            ".o_group_header button",
-            "there should be one button in the header"
-        );
+        assert.containsN(target, ".o_list_view .o_group_header", 3);
+        assert.containsNone(target, ".o_group_header button");
+        await click(target, ".o_group_header:nth-child(2)");
+        assert.containsOnce(target, ".o_group_header button");
     });
 
-    QUnit.skipWOWL("groupby node with a button with modifiers", async function (assert) {
-        assert.expect(11);
-
+    QUnit.test("groupby node with a button with modifiers", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch:
-                "<tree>" +
-                '<field name="foo"/>' +
-                '<groupby name="currency_id">' +
-                '<field name="position"/>' +
-                '<button string="Button 1" type="object" name="button_method" attrs=\'{"invisible": [("position", "=", "after")]}\'/>' +
-                "</groupby>" +
-                "</tree>",
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <groupby name="currency_id">
+                        <field name="position"/>
+                        <button string="Button 1" type="object" name="button_method" attrs=\'{"invisible": [("position", "=", "after")]}\'/>
+                    </groupby>
+                </tree>`,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 if (args.method === "read" && args.model === "res_currency") {
-                    assert.deepEqual(args.args, [[2, 1], ["position"]]);
+                    assert.deepEqual(args.args, [[1, 2], ["position"]]);
                 }
-                return this._super.apply(this, arguments);
             },
             groupBy: ["currency_id"],
         });
 
         assert.verifySteps(["web_read_group", "read"]);
+        assert.containsNone(target, ".o_group_header button");
+        assert.containsNone(target, ".o_data_row");
 
-        await click($(target).find(".o_group_header:eq(0)"));
+        await click(target, ".o_group_header:nth-child(2)");
+        assert.verifySteps(["web_search_read"]);
+        assert.containsNone(target, ".o_group_header button");
+        assert.containsN(target, ".o_data_row", 1);
 
-        assert.verifySteps(["/web/dataset/search_read"]);
-        assert.containsOnce(
-            target,
-            ".o_group_header button.o_invisible_modifier",
-            "the first group (EUR) should have an invisible button"
-        );
-
-        await click($(target).find(".o_group_header:eq(1)"));
-
-        assert.verifySteps(["/web/dataset/search_read"]);
-        assert.containsN(
-            target,
-            ".o_group_header button",
-            2,
-            "there should be two buttons (one by header)"
-        );
-        assert.doesNotHaveClass(
-            target,
-            ".o_group_header:eq(1) button",
-            "o_invisible_modifier",
-            "the second header button should be visible"
-        );
+        await click(target, ".o_group_header:first-child");
+        assert.verifySteps(["web_search_read"]);
+        assert.containsOnce(target, ".o_group_header button");
+        assert.containsN(target, ".o_data_row", 4);
     });
 
     QUnit.skipWOWL(

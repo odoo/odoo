@@ -209,6 +209,7 @@ class KanbanGroup extends Group {
         // Do not update progress bars data when filtering on them.
         this.model.trigger("group-updated", { group: this, withProgressBars: false });
         await Promise.all([this.list.load()]);
+        this.list.model.notify();
     }
 
     /**

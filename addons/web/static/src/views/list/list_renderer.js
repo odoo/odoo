@@ -340,6 +340,17 @@ export class ListRenderer extends Component {
         return !!(modifier && new Domain(modifier).contains(record.evalContext));
     }
 
+    getGroupDisplayName(group) {
+        const { _t } = this.env;
+        if (group.groupByField.type === "boolean") {
+            return group.value === undefined ? _t("None") : group.value ? _t("Yes") : _t("No");
+        } else {
+            return group.value === undefined || group.value === false
+                ? _t("None")
+                : group.displayName;
+        }
+    }
+
     get getEmptyRowIds() {
         const nbEmptyRow = Math.max(0, 4 - this.props.list.records.length);
         return Array.from(Array(nbEmptyRow).keys());
