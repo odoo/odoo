@@ -98,10 +98,8 @@ class Menu(models.Model):
         return menus
 
     def write(self, values):
-        res = super().write(values)
-        if 'website_id' in values or 'sequence' in values or 'page_id' in values:
-            self.clear_caches()
-        return res
+        self.clear_caches()
+        return super().write(values)
 
     def unlink(self):
         self.clear_caches()

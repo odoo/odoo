@@ -201,6 +201,10 @@ class Lang(models.Model):
     def _lang_get_id(self, code):
         return self.with_context(active_test=True).search([('code', '=', code)]).id
 
+    @tools.ormcache('code')
+    def _lang_get_direction(self, code):
+        return self.with_context(active_test=True).search([('code', '=', code)]).direction
+
     @tools.ormcache('url_code')
     def _lang_get_code(self, url_code):
         return self.with_context(active_test=True).search([('url_code', '=', url_code)]).code or url_code
