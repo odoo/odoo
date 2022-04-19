@@ -379,8 +379,10 @@
                 class="form-control s_website_form_input"
                 t-att-name="field.name"
                 t-att-required="field.required || field.modelRequired || None"
-                t-att-multiple="multiple"
+                t-att="field.maxFilesNumber > 1 and {'multiple': ''} or {}"
                 t-att-id="field.id"
+                t-att-data-max-files-number="field.maxFilesNumber or '1'"
+                t-att-data-max-file-size="field.maxFileSize or '1'"
             />
         </t>
     </t>
