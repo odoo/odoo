@@ -2551,3 +2551,21 @@ class TestMrpOrder(TestMrpCommon):
         mo_2.action_confirm()
         mo_2.button_plan()
         self.assertEqual(mo_2.workorder_ids[0].workcenter_id.id, workcenter_2.id, 'workcenter_2 is faster than workcenter_1 to manufacture 4 units')
+
+    def test_timers_after_cancelling_mo(self):
+        """
+            Check that the timers in the workorders are stopped after the cancellation of the MO
+        """
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_2
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_plan()
+
+        wo = mo.workorder_ids
+        wo.button_start()
+        mo.action_cancel()
+        self.assertEqual(mo.state, 'cancel', 'Manufacturing order should be cancelled.')
+        self.assertEqual(wo.state, 'cancel', 'Workorders should be cancelled.')
+        self.assertTrue(mo.workorder_ids.time_ids.date_end, 'The timers must stop after the cancellation of the MO')
