@@ -53,7 +53,7 @@ const WebsiteWysiwyg = Wysiwyg.extend({
         const $editableWindow = this.$editable[0].ownerDocument.defaultView;
         // Dropdown menu initialization: handle dropdown openings by hand
         var $dropdownMenuToggles = $editableWindow.$('.o_mega_menu_toggle, #top_menu_container .dropdown-toggle');
-        $dropdownMenuToggles.removeAttr('data-toggle').dropdown('dispose');
+        $dropdownMenuToggles.removeAttr('data-bs-toggle').dropdown('dispose');
         $dropdownMenuToggles.on('click.wysiwyg_megamenu', ev => {
             this.odooEditor.observerUnactive();
             var $toggle = $(ev.currentTarget);
@@ -236,7 +236,7 @@ const WebsiteWysiwyg = Wysiwyg.extend({
     _restoreMegaMenus: function () {
         var $megaMenuToggles = this.$('.o_mega_menu_toggle');
         $megaMenuToggles.off('.wysiwyg_megamenu')
-            .attr('data-toggle', 'dropdown')
+            .attr('data-bs-toggle', 'dropdown')
             .dropdown({});
         return toggleDropdown($megaMenuToggles, false);
     },
