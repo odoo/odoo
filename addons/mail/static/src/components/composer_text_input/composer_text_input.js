@@ -117,16 +117,7 @@ export class ComposerTextInput extends Component {
 }
 
 Object.assign(ComposerTextInput, {
-    defaultProps: {
-        hasMentionSuggestionsBelowPosition: false,
-    },
-    props: {
-        localId: String,
-        hasMentionSuggestionsBelowPosition: {
-            type: Boolean,
-            optional: true,
-        },
-    },
+    props: { localId: String },
     template: 'mail.ComposerTextInput',
 });
 

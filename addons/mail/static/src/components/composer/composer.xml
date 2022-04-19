@@ -6,7 +6,7 @@
             <div class="o_Composer"
                 t-att-class="{
                     'o-focused': composerView.isFocused,
-                    'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
+                    'o-has-current-partner-avatar': composerView.hasCurrentPartnerAvatar,
                     'o-has-footer': composerView.hasFooter,
                     'o-has-header': composerView.hasHeader,
                     'o-is-in-thread-view': composerView.threadView,
@@ -52,7 +52,7 @@
                         </t>
                     </div>
                 </t>
-                <t t-if="props.hasCurrentPartnerAvatar">
+                <t t-if="composerView.hasCurrentPartnerAvatar">
                     <div class="o_Composer_sidebarMain">
                         <t t-if="!messaging.currentGuest or composerView.composer.activeThread.model !== 'mail.channel'">
                             <img class="o_Composer_currentPartnerAvatar rounded-circle" t-att-src="composerView.currentPartnerAvatar" alt="Avatar of user"/>
@@ -73,16 +73,15 @@
                         classNameObj="{
                             'o-composer-is-compact': composerView.isCompact,
                             'o_Composer_textInput-mobile': messaging.device.isMobile,
-                            'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
+                            'o-has-current-partner-avatar': composerView.hasCurrentPartnerAvatar,
                         }"
                         localId="composerView.localId"
-                        hasMentionSuggestionsBelowPosition="props.hasMentionSuggestionsBelowPosition"
                         t-key="composerView.localId"
                     />
                     <div class="o_Composer_buttons" t-att-class="{ 'o-composer-is-compact': composerView.isCompact, 'o-mobile': messaging.device.isMobile, 'o-messaging-in-editing': composerView and composerView.messageViewInEditing }">
                         <div class="o_Composer_toolButtons"
                             t-att-class="{
-                                'o-composer-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
+                                'o-composer-has-current-partner-avatar': composerView.hasCurrentPartnerAvatar,
                                 'o-composer-is-compact': composerView.isCompact,
                             }">
                             <t t-if="composerView.isCompact">
@@ -103,7 +102,7 @@
                                 <PopoverView t-if="composerView.emojisPopoverView" localId="composerView.emojisPopoverView.localId"/>
                                 <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-light fa fa-paperclip" t-att-class="{ 'o-mobile': messaging.device.isMobile }" title="Add attachment" type="button" t-on-click="composerView.onClickAddAttachment"/>
                             </div>
-                            <t t-if="props.isExpandable">
+                            <t t-if="composerView.isExpandable">
                                 <div class="o_Composer_secondaryToolButtons">
                                     <button class="btn btn-light fa fa-expand o_Composer_button o_Composer_buttonFullComposer o_Composer_toolButton" t-att-class="{ 'o-mobile': messaging.device.isMobile }" title="Full composer" type="button" t-on-click="composerView.onClickFullComposer"/>
                                 </div>
@@ -139,12 +138,12 @@
 
     <t t-name="mail.Composer.actionButtons" owl="1">
         <div class="o_Composer_actionButtons" t-att-class="{ 'o-composer-is-compact': composerView.isCompact }">
-            <t t-if="props.hasSendButton">
+            <t t-if="composerView.hasSendButton">
                 <button class="o_Composer_actionButton o_Composer_button o_Composer_buttonSend btn btn-primary"
                     t-att-class="{
-                        'o-last': messaging.device.isMobile or !props.hasDiscardButton,
+                        'o-last': !composerView.hasDiscardButton,
                         'o-composer-is-compact': composerView.isCompact,
-                        'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
+                        'o-has-current-partner-avatar': composerView.hasCurrentPartnerAvatar,
                     }"
                     t-att-disabled="!composerView.composer.canPostMessage ? 'disabled' : ''"
                     type="button"
@@ -154,8 +153,8 @@
                     <t t-else=""><i class="fa fa-paper-plane-o"/></t>
                 </button>
             </t>
-            <t t-if="!messaging.device.isMobile and props.hasDiscardButton">
-                <button class="o_Composer_actionButton o-last o_Composer_button o_Composer_buttonDiscard btn btn-secondary" t-att-class="{ 'o-composer-is-compact': composerView.isCompact, 'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar }" type="button" t-on-click="composerView.onClickDiscard">
+            <t t-if="composerView.hasDiscardButton">
+                <button class="o_Composer_actionButton o-last o_Composer_button o_Composer_buttonDiscard btn btn-secondary" t-att-class="{ 'o-composer-is-compact': composerView.isCompact, 'o-has-current-partner-avatar': composerView.hasCurrentPartnerAvatar }" type="button" t-on-click="composerView.onClickDiscard">
                     Discard
                 </button>
             </t>
