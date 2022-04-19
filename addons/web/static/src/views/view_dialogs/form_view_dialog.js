@@ -90,7 +90,11 @@ export class FormViewDialog extends Dialog {
 
     async save() {
         if (this.props.save) {
-            await this.props.save(this.record);
+            if (this.record.checkValidity()) {
+                await this.props.save(this.record);
+            } else {
+                return;
+            }
         }
         this.close();
     }

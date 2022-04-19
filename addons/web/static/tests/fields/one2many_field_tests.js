@@ -5487,7 +5487,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.skipWOWL("sub form view with a required field", async function (assert) {
+    QUnit.test("sub form view with a required field", async function (assert) {
         serverData.models.partner.fields.foo.required = true;
         serverData.models.partner.fields.foo.default = null;
 
