@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import threading
 from odoo import api, fields, models
 from odoo.tools.translate import xml_translate
 from odoo.modules.module import get_resource_from_path
@@ -275,6 +276,12 @@ class IrUiView(models.Model):
     theme_template_id = fields.Many2one('theme.ir.ui.view', copy=False)
 
     def write(self, vals):
+        # During a theme module update, theme views' copies receiving an arch
+        # update should not be considered as `arch_updated`, as this is not a
+        # user made change.
+        test_mode = getattr(threading.currentThread(), 'testing', False)
+        if not (test_mode or self.pool._init):
+            return super().write(vals)
         no_arch_updated_views = other_views = self.env['ir.ui.view']
         for record in self:
             # Do not mark the view as user updated if original view arch is similar
