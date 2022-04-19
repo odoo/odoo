@@ -505,7 +505,7 @@ def email_split_and_format(text):
         return []
     return [formataddr((name, email)) for (name, email) in email_split_tuples(text)]
 
-def email_normalize(text):
+def email_normalize(text, force_single=True):
     """ Sanitize and standardize email address entries.
         A normalized email is considered as :
         - having a left part + @ + a right part (the domain can be without '.something')
@@ -514,9 +514,15 @@ def email_normalize(text):
         Ex:
         - Possible Input Email : 'Name <NaMe@DoMaIn.CoM>'
         - Normalized Output Email : 'name@domain.com'
+
+    :param boolean force_single: if True, text should contain a single email
+      (default behavior in stable 14+). If more than one email is found no
+      normalized email is returned. If False the first found candidate is used
+      e.g. if email is 'tony@e.com, "Tony2" <tony2@e.com>', result is either
+      False (force_single=True), either 'tony@e.com' (force_single=False).
     """
     emails = email_split(text)
-    if not emails or len(emails) != 1:
+    if not emails or (len(emails) != 1 and force_single):
         return False
     return emails[0].lower()
 
