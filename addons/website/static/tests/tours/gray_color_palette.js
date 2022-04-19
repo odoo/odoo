@@ -43,6 +43,11 @@ wTourUtils.registerWebsitePreviewTour('website_gray_color_palette', {
             slider.dispatchEvent(new InputEvent('change', {bubbles: true}));
         },
     },
+    {
+        content: "Check the preview of the gray 900 after hue change",
+        trigger: '[variable="900"][style="background-color: rgb(36, 41, 33) !important;"]',
+        run: () => {}, // This is a check.
+    },
     ...waitForCSSReload(),
     {
         content: "Drag the saturation slider",
@@ -53,6 +58,11 @@ wTourUtils.registerWebsitePreviewTour('website_gray_color_palette', {
             slider.value = 15;
             slider.dispatchEvent(new InputEvent('change', {bubbles: true}));
         }
+    },
+    {
+        content: "Check the preview of the gray 900 after saturation change",
+        trigger: '[variable="900"][style="background-color: rgb(34, 47, 27) !important;"]',
+        run: () => {}, // This is a check.
     },
     ...waitForCSSReload(),
     {
