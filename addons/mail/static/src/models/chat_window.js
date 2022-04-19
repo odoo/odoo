@@ -408,6 +408,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeIsFullscreen() {
+            if (this.isVisible && this.messaging.device.isMobile) {
+                return true;
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeIsVisible() {
@@ -612,6 +622,10 @@ registerModel({
          */
         isFolded: attr({
             default: false,
+        }),
+        isFullscreen: attr({
+            default: false,
+            compute: '_computeIsFullscreen',
         }),
         /**
          * Determines whether the member list of this chat window is opened.
