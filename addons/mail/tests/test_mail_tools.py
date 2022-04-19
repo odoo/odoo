@@ -161,14 +161,14 @@ class TestMailTools(MailCommon):
         expected = [follower_partner, test_partner,
                     self.env['res.partner'], self.env['res.partner'],
                     self.env['res.partner'], self.env['res.partner'],
-                    self.env['res.partner'], self.env['res.partner']]
+                    follower_partner, test_partner]
         for (source, follower_check), expected in zip(sources, expected):
             with self.subTest(source=source, follower_check=follower_check):
                 partner = self.env['res.partner']._mail_find_partner_from_emails(
                     [source], records=linked_record if follower_check else None
                 )[0]
                 self.assertEqual(partner, expected,
-                                'Mail (FIXME): not recognized due to usage of email_normalize that does not accept multi emails')
+                                'Mail (FIXME): partial recognition of multi email through email_normalize')
 
     @users('employee')
     def test_tools_email_re(self):
