@@ -30,9 +30,9 @@ class TestMailThread(MailCommon, TestRecipients):
                       (' ', False)]
         multi_pairs = [
             (f'{base_email}, other.email@test.example.com',
-             False),  # multi not supported currently
+             base_email),  # multi supports first found
             (f'{tools.formataddr(("Another Name", base_email))}, other.email@test.example.com',
-             False),  # multi not supported currently
+             base_email),  # multi supports first found
         ]
         for email_from, exp_email_normalized in valid_pairs + void_pairs + multi_pairs:
             with self.subTest(email_from=email_from, exp_email_normalized=exp_email_normalized):
