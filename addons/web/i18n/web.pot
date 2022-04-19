@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.2\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-11 14:34+0000\n"
-"PO-Revision-Date: 2022-02-11 14:34+0000\n"
+"POT-Creation-Date: 2022-04-19 13:58+0000\n"
+"PO-Revision-Date: 2022-04-19 13:58+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -165,6 +165,13 @@ msgstr ""
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "(count)"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/webclient/burger_menu/mobile_switch_company_menu/mobile_switch_company_menu.xml:0
+#, python-format
+msgid "(current)"
 msgstr ""
 
 #. module: web
@@ -859,7 +866,7 @@ msgid "Become Superuser"
 msgstr ""
 
 #. module: web
-#: code:addons/web/controllers/main.py:0
+#: code:addons/web/controllers/export.py:0
 #, python-format
 msgid ""
 "Binary fields can not be exported to Excel unless their content is "
@@ -1072,6 +1079,14 @@ msgid "Close"
 msgstr ""
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/webclient/burger_menu/burger_menu.xml:0
+#: code:addons/web/static/src/webclient/burger_menu/burger_menu.xml:0
+#, python-format
+msgid "Close menu"
+msgstr ""
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Colors"
 msgstr ""
@@ -1098,7 +1113,10 @@ msgid "Command"
 msgstr ""
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/webclient/burger_menu/mobile_switch_company_menu/mobile_switch_company_menu.xml:0
 #: model:ir.model,name:web.model_res_company
+#, python-format
 msgid "Companies"
 msgstr ""
 
@@ -1781,7 +1799,7 @@ msgid "Enable profiling"
 msgstr ""
 
 #. module: web
-#: code:addons/web/controllers/main.py:0
+#: code:addons/web/controllers/session.py:0
 #, python-format
 msgid "Error, password not changed !"
 msgstr ""
@@ -1847,14 +1865,15 @@ msgid "Export Format:"
 msgstr ""
 
 #. module: web
-#: code:addons/web/controllers/main.py:0
+#: code:addons/web/controllers/export.py:0
 #, python-format
 msgid "Exporting grouped data to csv is not supported."
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/controllers/main.py:0 code:addons/web/controllers/main.py:0
+#: code:addons/web/controllers/export.py:0
+#: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/legacy/js/widgets/data_export.js:0
 #, python-format
 msgid "External ID"
@@ -2187,7 +2206,8 @@ msgid "Invalid data"
 msgstr ""
 
 #. module: web
-#: code:addons/web/controllers/main.py:0 code:addons/web/controllers/main.py:0
+#: code:addons/web/controllers/database.py:0
+#: code:addons/web/controllers/database.py:0
 #, python-format
 msgid ""
 "Invalid database name. Only alphanumerical characters, underscore, hyphen "
@@ -2228,7 +2248,7 @@ msgid "Invalid fields:"
 msgstr ""
 
 #. module: web
-#: code:addons/web/controllers/main.py:0
+#: code:addons/web/controllers/utils.py:0
 #, python-format
 msgid "Invalid inherit mode. Module %s and template name %s"
 msgstr ""
@@ -2267,7 +2287,7 @@ msgid "Kanban: no action for type: "
 msgstr ""
 
 #. module: web
-#: code:addons/web/controllers/main.py:0
+#: code:addons/web/controllers/session.py:0
 #, python-format
 msgid "Languages"
 msgstr ""
@@ -2545,7 +2565,10 @@ msgid "Meeting Subject:"
 msgstr ""
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/webclient/burger_menu/burger_menu.xml:0
 #: model:ir.model,name:web.model_ir_ui_menu
+#, python-format
 msgid "Menu"
 msgstr ""
 
@@ -2586,7 +2609,7 @@ msgid "Modifiers:"
 msgstr ""
 
 #. module: web
-#: code:addons/web/controllers/main.py:0
+#: code:addons/web/controllers/utils.py:0
 #, python-format
 msgid ""
 "Module %s not loaded or inexistent, or templates of addon being loaded (%s) "
@@ -2804,7 +2827,7 @@ msgid "No result found"
 msgstr ""
 
 #. module: web
-#: code:addons/web/controllers/main.py:0
+#: code:addons/web/controllers/utils.py:0
 #, python-format
 msgid "No template found to inherit from. Module %s and template name %s"
 msgstr ""
@@ -2984,7 +3007,7 @@ msgid "One2many"
 msgstr ""
 
 #. module: web
-#: code:addons/web/controllers/main.py:0
+#: code:addons/web/controllers/home.py:0
 #, python-format
 msgid ""
 "Only employees can access this database. Please contact the administrator."
@@ -3544,6 +3567,13 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
+#, python-format
+msgid "Recording..."
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
@@ -4048,7 +4078,7 @@ msgid ""
 msgstr ""
 
 #. module: web
-#: code:addons/web/controllers/main.py:0
+#: code:addons/web/controllers/binary.py:0
 #, python-format
 msgid "Something horrible happened"
 msgstr ""
@@ -4168,7 +4198,7 @@ msgid "Tel:"
 msgstr ""
 
 #. module: web
-#: code:addons/web/controllers/main.py:0
+#: code:addons/web/controllers/utils.py:0
 #, python-format
 msgid "Template %s already exists in module %s"
 msgstr ""
@@ -4195,7 +4225,7 @@ msgid ""
 msgstr ""
 
 #. module: web
-#: code:addons/web/controllers/main.py:0
+#: code:addons/web/controllers/export.py:0
 #, python-format
 msgid ""
 "The content of this cell is too long for an XLSX file (more than %s "
@@ -4210,13 +4240,13 @@ msgid "The field is empty, there's nothing to save."
 msgstr ""
 
 #. module: web
-#: code:addons/web/controllers/main.py:0
+#: code:addons/web/controllers/session.py:0
 #, python-format
 msgid "The new password and its confirmation must be identical."
 msgstr ""
 
 #. module: web
-#: code:addons/web/controllers/main.py:0
+#: code:addons/web/controllers/session.py:0
 #, python-format
 msgid ""
 "The old password you provided is incorrect, your password was not changed."
@@ -4249,7 +4279,7 @@ msgid ""
 msgstr ""
 
 #. module: web
-#: code:addons/web/controllers/main.py:0
+#: code:addons/web/controllers/export.py:0
 #, python-format
 msgid ""
 "There are too many rows (%s rows, limit: %s) to export as Excel 2007-2013 "
@@ -4354,6 +4384,14 @@ msgstr ""
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #, python-format
 msgid "Toggle"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/webclient/burger_menu/burger_menu.xml:0
+#: code:addons/web/static/src/webclient/burger_menu/burger_menu.xml:0
+#, python-format
+msgid "Toggle menu"
 msgstr ""
 
 #. module: web
@@ -4472,7 +4510,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/controllers/main.py:0
+#: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/legacy/js/views/calendar/calendar_model.js:0
 #: code:addons/web/static/src/legacy/js/views/graph/graph_model.js:0
 #: code:addons/web/static/src/legacy/js/views/graph/graph_renderer.js:0
@@ -4796,7 +4834,7 @@ msgid "Wrap raw html within an iframe"
 msgstr ""
 
 #. module: web
-#: code:addons/web/controllers/main.py:0
+#: code:addons/web/controllers/home.py:0
 #, python-format
 msgid "Wrong login/password"
 msgstr ""
@@ -4846,7 +4884,7 @@ msgid "Yesterday"
 msgstr ""
 
 #. module: web
-#: code:addons/web/controllers/main.py:0
+#: code:addons/web/controllers/binary.py:0
 #, python-format
 msgid "You are not allowed to upload an attachment here."
 msgstr ""
@@ -4859,7 +4897,7 @@ msgid "You cannot follow relations for this field chain construction"
 msgstr ""
 
 #. module: web
-#: code:addons/web/controllers/main.py:0
+#: code:addons/web/controllers/session.py:0
 #, python-format
 msgid "You cannot leave any password empty."
 msgstr ""
