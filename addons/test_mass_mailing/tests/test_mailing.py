@@ -200,9 +200,13 @@ class TestMassMailing(TestMassMailCommon):
                 # as it uses email_normalized if possible
                 if dst_model == 'mailing.test.customer':
                     formatted_mailmail_email = '"Formatted Record" <record.format@example.com>'
+                    multi_trace_email = 'record.multi.1@example.com, "Record Multi 2" <record.multi.2@example.com>'
+                    multi_state = 'ignored'
                     unicode_mailmail_email = '"Unicode Record" <record.😊@example.com>'
                 else:
                     formatted_mailmail_email = 'record.format@example.com'
+                    multi_trace_email = 'record.multi.1@example.com'
+                    multi_state = 'sent'
                     unicode_mailmail_email = 'record.😊@example.com'
                 self.assertMailTraces(
                     [
@@ -221,20 +225,23 @@ class TestMassMailing(TestMassMailCommon):
                          'partner': customer_unic,
                          'state': 'ignored'},  # email_re usage forbids mailing to unicode
                         {'email': 'test.customer.case@example.com',
+                         'email_to_recipients': [[f'"{customer_case.name}" <test.customer.case@example.com>']],
                          'failure_type': False,
                          'partner': customer_case,
                          'state': 'sent'},  # lower cased
                         {'email': 'test.customer.weird@example.comweirdformat',
+                         'email_to_recipients': [[f'"{customer_weird.name}" <test.customer.weird@example.comweirdformat>']],
                          'failure_type': False,
                          'partner': customer_weird,
                          'state': 'sent'},  # concatenates everything after domain
                         {'email': 'weird format2 test.customer.weird.2@example.com',
+                        'email_to_recipients': [[f'"{customer_weird_2.name}" <weird format2 test.customer.weird.2@example.com>']],
                          'failure_type': False,
                          'partner': customer_weird_2,
                          'state': 'sent'},
-                        {'email': 'record.multi.1@example.com, "Record Multi 2" <record.multi.2@example.com>',
+                        {'email': multi_trace_email,
                          'failure_type': False,
-                         'state': 'ignored'},
+                         'state': multi_state},
                         {'email': 'record.format@example.com',
                          'email_to_mail': formatted_mailmail_email,
                          'failure_type': False,
