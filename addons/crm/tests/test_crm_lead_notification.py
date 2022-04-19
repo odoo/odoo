@@ -66,7 +66,10 @@ class NewLeadNotification(TestCrmCommon):
                'team_id': self.sales_team_1.id,
               }),
              (False, '"Multi Name" <new.customer.multi.1@test.example.com,new.customer.2@test.example.com>', None, 'Customer Email',
-              {}),  # no email_normalized -> no information
+              {'company_name': 'Multi Name', 'email': 'new.customer.multi.1@test.example.com',
+                'name': 'Multi Name', 'user_id': self.user_sales_leads.id,
+                'team_id': self.sales_team_1.id,
+              }),
              (False, '"Std Name" <new.customer.simple@test.example.com>', None, 'Customer Email',
               {'company_name': 'Std Name', 'email': 'new.customer.simple@test.example.com',
                'name': 'Std Name', 'user_id': self.user_sales_leads.id,
