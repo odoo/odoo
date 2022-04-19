@@ -30,7 +30,7 @@ class AccountMove(models.Model):
         res = super(AccountMove, self)._get_invoiced_lot_values()
 
         if self.state == 'draft' or not self.invoice_date or self.move_type not in ('out_invoice', 'out_refund'):
-            return []
+            return res
 
         current_invoice_amls = self.invoice_line_ids.filtered(lambda aml: not aml.display_type and aml.product_id and aml.quantity)
         all_invoices_amls = current_invoice_amls.sale_line_ids.invoice_lines.filtered(lambda aml: aml.move_id.state == 'posted').sorted(lambda aml: (aml.date, aml.move_name, aml.id))
@@ -69,14 +69,13 @@ class AccountMove(models.Model):
 
             qties_per_lot[sml.lot_id] += qty_done
 
-        lot_values = []
         for lot, qty in qties_per_lot.items():
             if float_is_zero(invoiced_qties[lot.product_id], precision_rounding=lot.product_uom_id.rounding) \
                     or float_compare(qty, 0, precision_rounding=lot.product_uom_id.rounding) <= 0:
                 continue
             invoiced_lot_qty = min(qty, invoiced_qties[lot.product_id])
             invoiced_qties[lot.product_id] -= invoiced_lot_qty
-            lot_values.append({
+            res.append({
                 'product_name': lot.product_id.display_name,
                 'quantity': formatLang(self.env, invoiced_lot_qty, dp='Product Unit of Measure'),
                 'uom_name': lot.product_uom_id.name,
@@ -85,7 +84,7 @@ class AccountMove(models.Model):
                 'lot_id': lot.id,
             })
 
-        return lot_values
+        return res
 
 
 class AccountMoveLine(models.Model):
