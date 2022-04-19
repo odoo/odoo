@@ -211,11 +211,13 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo" type="measure"/>
                 </pivot>`,
             mockRPC(route, args) {
-                assert.strictEqual(
-                    args.kwargs.lazy,
-                    false,
-                    "the read_group should be done with the lazy=false option"
-                );
+                if (args.method === "read_group") {
+                    assert.strictEqual(
+                        args.kwargs.lazy,
+                        false,
+                        "the read_group should be done with the lazy=false option"
+                    );
+                }
             },
         });
 
@@ -404,6 +406,11 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("clicking on a cell triggers a doAction", async function (assert) {
         assert.expect(2);
 
+        serverData.views = {
+            "partner,2,form": "<form/>",
+            "partner,false,list": "<list/>",
+            "partner,5,kanban": "<kanban/>",
+        };
         patchWithCleanup(session, {
             user_context: { userContextKey: true },
         });
@@ -748,14 +755,16 @@ QUnit.module("Views", (hooks) => {
                     <field name="date" interval="month" type="col"/>
                     <field name="foo" type="measure"/>
                 </pivot>`,
-            mockRPC(route, params) {
-                const wrongFields = params.kwargs.fields.filter((field) => {
-                    return !(field.split(":")[0] in serverData.models.partner.fields);
-                });
-                assert.ok(
-                    !wrongFields.length,
-                    "fields given to read_group should exist on the model"
-                );
+            mockRPC(route, args) {
+                if (args.method === "read_group") {
+                    const wrongFields = args.kwargs.fields.filter((field) => {
+                        return !(field.split(":")[0] in serverData.models.partner.fields);
+                    });
+                    assert.ok(
+                        !wrongFields.length,
+                        "fields given to read_group should exist on the model"
+                    );
+                }
             },
         });
     });
@@ -850,7 +859,6 @@ QUnit.module("Views", (hooks) => {
         assert.expect(7);
 
         let rpcCount = 0;
-
         await makeView({
             type: "pivot",
             resModel: "partner",
@@ -860,8 +868,10 @@ QUnit.module("Views", (hooks) => {
                     <field name="product_id" type="row"/>
                     <field name="foo" type="measure"/>
                 </pivot>`,
-            mockRPC() {
-                rpcCount++;
+            mockRPC(route, args) {
+                if (args.method === "read_group") {
+                    rpcCount++;
+                }
             },
         });
         assert.containsN(
@@ -4571,23 +4581,25 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo" type="measure"/>
                 </pivot>`,
             mockRPC(route, args) {
-                if (args.method === "read_group" && isSecondReadGroup) {
-                    return Promise.resolve([
-                        {
-                            customer: [2, "Second"],
-                            foo: 18,
-                            __count: 2,
-                            __domain: [["customer", "=", 2]],
-                        },
-                        {
-                            customer: [1, "First"],
-                            foo: 14,
-                            __count: 2,
-                            __domain: [["customer", "=", 1]],
-                        },
-                    ]);
+                if (args.method === "read_group") {
+                    if (isSecondReadGroup) {
+                        return Promise.resolve([
+                            {
+                                customer: [2, "Second"],
+                                foo: 18,
+                                __count: 2,
+                                __domain: [["customer", "=", 2]],
+                            },
+                            {
+                                customer: [1, "First"],
+                                foo: 14,
+                                __count: 2,
+                                __domain: [["customer", "=", 1]],
+                            },
+                        ]);
+                    }
+                    isSecondReadGroup = true;
                 }
-                isSecondReadGroup = true;
             },
         });
 

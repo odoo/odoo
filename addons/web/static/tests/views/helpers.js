@@ -3,7 +3,6 @@
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { getFixture, mount } from "@web/../tests/helpers/utils";
 import { getDefaultConfig, View } from "@web/views/view";
-import { _getView } from "../helpers/mock_server";
 import { addLegacyMockEnvironment } from "../webclient/helpers";
 
 /**
@@ -35,28 +34,18 @@ export const makeView = async (params) => {
     delete props.legacyParams;
     delete props.config;
 
-    const env = await makeTestEnv({ serverData, mockRPC, config });
-
     if (props.arch) {
-        const defaultFields = serverData.models[props.resModel].fields;
-        if (!props.fields) {
-            props.fields = Object.assign({}, defaultFields);
-            // write the field name inside the field description (as done by fields_get)
-            for (const fieldName in props.fields) {
-                props.fields[fieldName].name = fieldName;
-            }
-        }
-        const view = _getView({
-            arch: props.arch,
-            modelName: props.resModel,
-            fields: props.fields,
-            context: props.context || {},
-            models: serverData.models,
-        });
-        props.arch = view.arch;
-        props.searchViewArch = props.searchViewArch || "<search/>";
-        props.searchViewFields = props.searchViewFields || Object.assign({}, props.fields);
+        serverData.views = serverData.views || {};
+        props.viewId = 100000001; // hopefully will not conflict with an id already in views
+        serverData.views[`${props.resModel},${props.viewId},${props.type}`] = props.arch;
+        delete props.arch;
+        props.searchViewId = 100000002; // hopefully will not conflict with an id already in views
+        const searchViewArch = props.searchViewArch || "<search/>";
+        serverData.views[`${props.resModel},${props.searchViewId},search`] = searchViewArch;
+        delete props.searchViewArch;
     }
+
+    const env = await makeTestEnv({ serverData, mockRPC, config });
 
     /** Legacy Environment, for compatibility sakes
      *  Remove this as soon as we drop the legacy support

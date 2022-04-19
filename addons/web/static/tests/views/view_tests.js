@@ -10,13 +10,12 @@ import {
     patchWithCleanup,
 } from "@web/../tests/helpers/utils";
 import { setupControlPanelServiceRegistry } from "@web/../tests/search/helpers";
-import { makeView } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 import { OnboardingBanner } from "@web/views/onboarding_banner";
 import { View } from "@web/views/view";
 import { actionService } from "@web/webclient/actions/action_service";
 
-const { Component, useState, xml } = owl;
+const { Component, onWillStart, onWillUpdateProps, useState, xml } = owl;
 
 const serviceRegistry = registry.category("services");
 const viewRegistry = registry.category("views");
@@ -128,21 +127,22 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await makeView({
-            serverData,
-            mockRPC: (_, args) => {
-                assert.strictEqual(args.model, "animal");
-                assert.strictEqual(args.method, "get_views");
-                assert.deepEqual(args.kwargs.views, [[false, "toy"]]);
-                assert.deepEqual(args.kwargs.options, {
-                    action_id: false,
-                    load_filters: false,
-                    toolbar: false,
-                });
-            },
+        const mockRPC = (_, args) => {
+            assert.strictEqual(args.model, "animal");
+            assert.strictEqual(args.method, "get_views");
+            assert.deepEqual(args.kwargs.views, [[false, "toy"]]);
+            assert.deepEqual(args.kwargs.options, {
+                action_id: false,
+                load_filters: false,
+                toolbar: false,
+            });
+        };
+        const env = await makeTestEnv({ serverData, mockRPC });
+        const props = {
             resModel: "animal",
             type: "toy",
-        });
+        };
+        await mount(View, target, { env, props });
         assert.containsOnce(target, ".o_toy_view.o_view_controller");
         assert.strictEqual(
             target.querySelector(".o_toy_view.toy").innerHTML,
@@ -165,20 +165,21 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await makeView({
-            serverData,
-            mockRPC: (_, args) => {
-                assert.deepEqual(args.kwargs.views, [[1, "toy"]]);
-                assert.deepEqual(args.kwargs.options, {
-                    action_id: false,
-                    load_filters: false,
-                    toolbar: false,
-                });
-            },
+        const mockRPC = (_, args) => {
+            assert.deepEqual(args.kwargs.views, [[1, "toy"]]);
+            assert.deepEqual(args.kwargs.options, {
+                action_id: false,
+                load_filters: false,
+                toolbar: false,
+            });
+        };
+        const env = await makeTestEnv({ serverData, mockRPC });
+        const props = {
             resModel: "animal",
             type: "toy",
             viewId: 1,
-        });
+        };
+        await mount(View, target, { env, props });
         assert.containsOnce(target, ".o_toy_view");
         assert.strictEqual(
             target.querySelector(".o_toy_view.toy").innerHTML,
@@ -201,23 +202,23 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await makeView({
-            serverData,
-            mockRPC: (_, args) => {
-                console.log(_);
-                assert.deepEqual(args.kwargs.views, [[1, "toy"]]);
-                assert.deepEqual(args.kwargs.options, {
-                    action_id: false,
-                    load_filters: false,
-                    toolbar: false,
-                });
-            },
+        const mockRPC = (_, args) => {
+            assert.deepEqual(args.kwargs.views, [[1, "toy"]]);
+            assert.deepEqual(args.kwargs.options, {
+                action_id: false,
+                load_filters: false,
+                toolbar: false,
+            });
+        };
+        const config = {
+            views: [[1, "toy"]],
+        };
+        const env = await makeTestEnv({ serverData, mockRPC, config });
+        const props = {
             resModel: "animal",
             type: "toy",
-            config: {
-                views: [[1, "toy"]],
-            },
-        });
+        };
+        await mount(View, target, { env, props });
         assert.containsOnce(target, ".o_toy_view");
         assert.strictEqual(
             target.querySelector(".o_toy_view.toy").innerHTML,
@@ -242,25 +243,26 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            await makeView({
-                serverData,
-                mockRPC: (_, args) => {
-                    assert.deepEqual(args.kwargs.views, [
-                        [false, "other"],
-                        [false, "toy"],
-                    ]);
-                    assert.deepEqual(args.kwargs.options, {
-                        action_id: false,
-                        load_filters: false,
-                        toolbar: false,
-                    });
-                },
+            const mockRPC = (_, args) => {
+                assert.deepEqual(args.kwargs.views, [
+                    [false, "other"],
+                    [false, "toy"],
+                ]);
+                assert.deepEqual(args.kwargs.options, {
+                    action_id: false,
+                    load_filters: false,
+                    toolbar: false,
+                });
+            };
+            const config = {
+                views: [[false, "other"]],
+            };
+            const env = await makeTestEnv({ serverData, mockRPC, config });
+            const props = {
                 resModel: "animal",
                 type: "toy",
-                config: {
-                    views: [[false, "other"]],
-                },
-            });
+            };
+            await mount(View, target, { env, props });
             assert.containsOnce(target, ".o_toy_view");
             assert.strictEqual(
                 target.querySelector(".o_toy_view.toy").innerHTML,
@@ -284,29 +286,30 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await makeView({
-            serverData,
-            mockRPC: (_, args) => {
-                assert.deepEqual(args.kwargs.views, [
-                    [1, "toy"],
-                    [false, "other"],
-                ]);
-                assert.deepEqual(args.kwargs.options, {
-                    action_id: false,
-                    load_filters: false,
-                    toolbar: false,
-                });
-            },
+        const mockRPC = (_, args) => {
+            assert.deepEqual(args.kwargs.views, [
+                [1, "toy"],
+                [false, "other"],
+            ]);
+            assert.deepEqual(args.kwargs.options, {
+                action_id: false,
+                load_filters: false,
+                toolbar: false,
+            });
+        };
+        const config = {
+            views: [
+                [3, "toy"],
+                [false, "other"],
+            ],
+        };
+        const env = await makeTestEnv({ serverData, mockRPC, config });
+        const props = {
             resModel: "animal",
             type: "toy",
             viewId: 1,
-            config: {
-                views: [
-                    [3, "toy"],
-                    [false, "other"],
-                ],
-            },
-        });
+        };
+        await mount(View, target, { env, props });
         assert.containsOnce(target, ".o_toy_view");
         assert.strictEqual(
             target.querySelector(".o_toy_view.toy").innerHTML,
@@ -329,16 +332,17 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await makeView({
-            serverData,
-            mockRPC: () => {
-                throw new Error("no RPC expected");
-            },
+        const mockRPC = () => {
+            throw new Error("no RPC expected");
+        };
+        const env = await makeTestEnv({ serverData, mockRPC });
+        const props = {
             resModel: "animal",
             type: "toy",
             arch: `<toy>Specific arch content</toy>`,
             fields: {},
-        });
+        };
+        await mount(View, target, { env, props });
         assert.containsOnce(target, ".o_toy_view");
         assert.strictEqual(
             target.querySelector(".o_toy_view.toy").innerHTML,
@@ -361,21 +365,22 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await makeView({
-            serverData,
-            mockRPC: (_, args) => {
-                // the rpc is done for fields
-                assert.deepEqual(args.kwargs.views, [[false, "toy"]]);
-                assert.deepEqual(args.kwargs.options, {
-                    action_id: false,
-                    load_filters: false,
-                    toolbar: true,
-                });
-            },
+        const mockRPC = (_, args) => {
+            // the rpc is done for fields
+            assert.deepEqual(args.kwargs.views, [[false, "toy"]]);
+            assert.deepEqual(args.kwargs.options, {
+                action_id: false,
+                load_filters: false,
+                toolbar: true,
+            });
+        };
+        const env = await makeTestEnv({ serverData, mockRPC });
+        const props = {
             resModel: "animal",
             type: "toy",
             loadActionMenus: true,
-        });
+        };
+        await mount(View, target, { env, props });
         assert.containsOnce(target, ".o_toy_view");
         assert.strictEqual(
             target.querySelector(".o_toy_view.toy").innerHTML,
@@ -400,23 +405,24 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            await makeView({
-                serverData,
-                mockRPC: (_, args) => {
-                    // the rpc is done for fields
-                    assert.deepEqual(args.kwargs.views, [[false, "toy"]]);
-                    assert.deepEqual(args.kwargs.options, {
-                        action_id: false,
-                        load_filters: false,
-                        toolbar: true,
-                    });
-                },
+            const mockRPC = (_, args) => {
+                // the rpc is done for fields
+                assert.deepEqual(args.kwargs.views, [[false, "toy"]]);
+                assert.deepEqual(args.kwargs.options, {
+                    action_id: false,
+                    load_filters: false,
+                    toolbar: true,
+                });
+            };
+            const env = await makeTestEnv({ serverData, mockRPC });
+            const props = {
                 resModel: "animal",
                 type: "toy",
                 arch: `<toy>Specific arch content</toy>`,
                 fields: {},
                 loadActionMenus: true,
-            });
+            };
+            await mount(View, target, { env, props });
             assert.containsOnce(target, ".o_toy_view");
             assert.strictEqual(
                 target.querySelector(".o_toy_view.toy").innerHTML,
@@ -442,11 +448,11 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            await makeView({
-                serverData,
-                mockRPC: () => {
-                    throw new Error("no RPC expected");
-                },
+            const mockRPC = () => {
+                throw new Error("no RPC expected");
+            };
+            const env = await makeTestEnv({ serverData, mockRPC });
+            const props = {
                 resModel: "animal",
                 type: "toy",
                 arch: `<toy>Specific arch content</toy>`,
@@ -455,7 +461,8 @@ QUnit.module("Views", (hooks) => {
                     /** ... */
                 },
                 loadActionMenus: true,
-            });
+            };
+            await mount(View, target, { env, props });
             assert.containsOnce(target, ".o_toy_view");
             assert.strictEqual(
                 target.querySelector(".o_toy_view.toy").innerHTML,
@@ -484,24 +491,25 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await makeView({
-            serverData,
-            mockRPC: (_, args) => {
-                // the rpc is done for fields
-                assert.deepEqual(args.kwargs.views, [
-                    [false, "toy"],
-                    [false, "search"],
-                ]);
-                assert.deepEqual(args.kwargs.options, {
-                    action_id: false,
-                    load_filters: false,
-                    toolbar: false,
-                });
-            },
+        const mockRPC = (_, args) => {
+            // the rpc is done for fields
+            assert.deepEqual(args.kwargs.views, [
+                [false, "toy"],
+                [false, "search"],
+            ]);
+            assert.deepEqual(args.kwargs.options, {
+                action_id: false,
+                load_filters: false,
+                toolbar: false,
+            });
+        };
+        const env = await makeTestEnv({ serverData, mockRPC });
+        const props = {
             resModel: "animal",
             type: "toy",
             searchViewId: false,
-        });
+        };
+        await mount(View, target, { env, props });
         assert.containsOnce(target, ".o_toy_view");
         assert.strictEqual(
             target.querySelector(".o_toy_view").innerText,
@@ -531,11 +539,11 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            await makeView({
-                serverData,
-                mockRPC: () => {
-                    throw new Error("no RPC expected");
-                },
+            const mockRPC = () => {
+                throw new Error("no RPC expected");
+            };
+            const env = await makeTestEnv({ serverData, mockRPC });
+            const props = {
                 resModel: "animal",
                 type: "toy",
                 arch: `<toy>Specific arch content</toy>`,
@@ -543,7 +551,8 @@ QUnit.module("Views", (hooks) => {
                 searchViewId: false,
                 searchViewArch: `<search/>`,
                 searchViewFields: {},
-            });
+            };
+            await mount(View, target, { env, props });
             assert.containsOnce(target, ".o_toy_view");
             assert.strictEqual(
                 target.querySelector(".o_toy_view").innerText,
@@ -574,18 +583,19 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            await makeView({
-                serverData,
-                mockRPC: () => {
-                    throw new Error("no RPC expected");
-                },
+            const mockRPC = () => {
+                throw new Error("no RPC expected");
+            };
+            const env = await makeTestEnv({ serverData, mockRPC });
+            const props = {
                 resModel: "animal",
                 type: "toy",
                 arch: `<toy>Specific arch content</toy>`,
                 fields: {},
                 searchViewArch: `<search/>`,
                 searchViewFields: {},
-            });
+            };
+            await mount(View, target, { env, props });
             assert.containsOnce(target, ".o_toy_view");
             assert.strictEqual(
                 target.querySelector(".o_toy_view").innerText,
@@ -616,20 +626,20 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            await makeView({
-                serverData,
-                mockRPC: (_, args) => {
-                    // the rpc is done for fields
-                    assert.deepEqual(args.kwargs.views, [
-                        [false, "toy"],
-                        [false, "search"],
-                    ]);
-                    assert.deepEqual(args.kwargs.options, {
-                        action_id: false,
-                        load_filters: true,
-                        toolbar: false,
-                    });
-                },
+            const mockRPC = (_, args) => {
+                // the rpc is done for fields
+                assert.deepEqual(args.kwargs.views, [
+                    [false, "toy"],
+                    [false, "search"],
+                ]);
+                assert.deepEqual(args.kwargs.options, {
+                    action_id: false,
+                    load_filters: true,
+                    toolbar: false,
+                });
+            };
+            const env = await makeTestEnv({ serverData, mockRPC });
+            const props = {
                 resModel: "animal",
                 type: "toy",
                 arch: `<toy>Specific arch content</toy>`,
@@ -638,7 +648,8 @@ QUnit.module("Views", (hooks) => {
                 searchViewArch: `<search/>`,
                 searchViewFields: {},
                 loadIrFilters: true,
-            });
+            };
+            await mount(View, target, { env, props });
             assert.containsOnce(target, ".o_toy_view");
             assert.strictEqual(
                 target.querySelector(".o_toy_view").innerText,
@@ -680,11 +691,11 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            await makeView({
-                serverData,
-                mockRPC: () => {
-                    throw new Error("no RPC expected");
-                },
+            const mockRPC = () => {
+                throw new Error("no RPC expected");
+            };
+            const env = await makeTestEnv({ serverData, mockRPC });
+            const props = {
                 resModel: "animal",
                 type: "toy",
                 arch: `<toy>Specific arch content</toy>`,
@@ -693,7 +704,8 @@ QUnit.module("Views", (hooks) => {
                 searchViewFields: {},
                 loadIrFilters: true,
                 irFilters,
-            });
+            };
+            await mount(View, target, { env, props });
             assert.containsOnce(target, ".o_toy_view");
             assert.strictEqual(
                 target.querySelector(".o_toy_view").innerText,
@@ -741,16 +753,15 @@ QUnit.module("Views", (hooks) => {
                 };
             }
         };
-
-        await makeView({
-            serverData,
-            mockRPC,
+        const config = {
+            views: [[1, "toy"]],
+        };
+        const env = await makeTestEnv({ serverData, mockRPC, config });
+        const props = {
             resModel: "animal",
             type: "toy",
-            config: {
-                views: [[1, "toy"]],
-            },
-        });
+        };
+        await mount(View, target, { env, props });
 
         assert.containsOnce(target, "a");
         await click(target.querySelector("a"));
@@ -788,14 +799,15 @@ QUnit.module("Views", (hooks) => {
                 <a type="action" name="myLittleAction" data-context="{ &quot;somekey&quot;: &quot;somevalue&quot; }"/>
             </toy>`;
 
-        await makeView({
-            serverData,
+        const config = {
+            views: [[1, "toy"]],
+        };
+        const env = await makeTestEnv({ serverData, config });
+        const props = {
             resModel: "animal",
             type: "toy",
-            config: {
-                views: [[1, "toy"]],
-            },
-        });
+        };
+        await mount(View, target, { env, props });
 
         assert.containsOnce(target, "a");
         await click(target.querySelector("a"));
@@ -840,14 +852,15 @@ QUnit.module("Views", (hooks) => {
                 <a type="action" title="myTitle" data-model="animal" data-resId="66" data-views="[[55, 'toy']]" data-domain="[['field', '=', 'val']]" data-context="{ &quot;somekey&quot;: &quot;somevalue&quot; }"/>
             </toy>`;
 
-        await makeView({
-            serverData,
+        const config = {
+            views: [[1, "toy"]],
+        };
+        const env = await makeTestEnv({ serverData, config });
+        const props = {
             resModel: "animal",
             type: "toy",
-            config: {
-                views: [[1, "toy"]],
-            },
-        });
+        };
+        await mount(View, target, { env, props });
 
         assert.containsOnce(target, "a");
         await click(target.querySelector("a"));
@@ -866,16 +879,15 @@ QUnit.module("Views", (hooks) => {
                 return { html: `<div class="setmybodyfree">myBanner</div>` };
             }
         };
-
-        await makeView({
-            serverData,
-            mockRPC,
+        const config = {
+            views: [[1, "toy"]],
+        };
+        const env = await makeTestEnv({ serverData, mockRPC, config });
+        const props = {
             resModel: "animal",
             type: "toy",
-            config: {
-                views: [[1, "toy"]],
-            },
-        });
+        };
+        await mount(View, target, { env, props });
 
         assert.verifySteps(["/mybody/isacage"]);
         assert.containsOnce(target, ".setmybodyfree");
@@ -929,15 +941,15 @@ QUnit.module("Views", (hooks) => {
 
         patchWithCleanup(document, { createElement });
 
-        await makeView({
-            serverData,
-            mockRPC,
+        const config = {
+            views: [[1, "toy"]],
+        };
+        const env = await makeTestEnv({ serverData, mockRPC, config });
+        const props = {
             resModel: "animal",
             type: "toy",
-            config: {
-                views: [[1, "toy"]],
-            },
-        });
+        };
+        await mount(View, target, { env, props });
 
         assert.verifySteps(["/mybody/isacage", "js loaded", "css loaded"]);
         assert.containsOnce(target, ".setmybodyfree");
@@ -946,7 +958,6 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("banner can re-render with new HTML", async (assert) => {
-        assert.expect(10);
         assert.expect(8);
 
         serviceRegistry.add("action", actionService, { force: true });
@@ -975,16 +986,15 @@ QUnit.module("Views", (hooks) => {
                 };
             }
         };
-
-        await makeView({
-            serverData,
-            mockRPC,
+        const config = {
+            views: [[1, "toy"]],
+        };
+        const env = await makeTestEnv({ serverData, mockRPC, config });
+        const props = {
             resModel: "animal",
             type: "toy",
-            config: {
-                views: [[1, "toy"]],
-            },
-        });
+        };
+        await mount(View, target, { env, props });
 
         assert.verifySteps(["/mybody/isacage"]);
         assert.containsOnce(target, ".banner1");
@@ -1007,22 +1017,31 @@ QUnit.module("Views", (hooks) => {
                 myBanner
             </div>`;
 
+        let toy;
+        const ToyView = viewRegistry.get("toy");
+        class ToyViewExtended extends ToyView {
+            setup() {
+                super.setup();
+                toy = this;
+            }
+        }
+        viewRegistry.add("toy", ToyViewExtended, { force: true });
+
         const mockRPC = (route) => {
             if (route === "/mybody/isacage") {
                 assert.step(route);
                 return { html: bannerArch };
             }
         };
-
-        const toy = await makeView({
-            serverData,
-            mockRPC,
+        const config = {
+            views: [[1, "toy"]],
+        };
+        const env = await makeTestEnv({ serverData, mockRPC, config });
+        const props = {
             resModel: "animal",
             type: "toy",
-            config: {
-                views: [[1, "toy"]],
-            },
-        });
+        };
+        await mount(View, target, { env, props });
 
         assert.verifySteps(["/mybody/isacage"]);
         assert.containsOnce(target, ".setmybodyfree");
@@ -1081,16 +1100,15 @@ QUnit.module("Views", (hooks) => {
                 };
             }
         };
-
-        await makeView({
-            mockRPC,
-            serverData,
+        const config = {
+            views: [[1, "toy"]],
+        };
+        const env = await makeTestEnv({ serverData, mockRPC, config });
+        const props = {
             resModel: "animal",
             type: "toy",
-            config: {
-                views: [[1, "toy"]],
-            },
-        });
+        };
+        await mount(View, target, { env, props });
 
         await click(target.querySelector("a[data-method='setTheControl']"));
         click(target.querySelector("a[data-method='heartOfTheSun']"));
@@ -1147,16 +1165,15 @@ QUnit.module("Views", (hooks) => {
                 return true;
             }
         };
-
-        await makeView({
-            serverData,
-            mockRPC,
+        const config = {
+            views: [[1, "toy"]],
+        };
+        const env = await makeTestEnv({ serverData, mockRPC, config });
+        const props = {
             resModel: "animal",
             type: "toy",
-            config: {
-                views: [[1, "toy"]],
-            },
-        });
+        };
+        await mount(View, target, { env, props });
 
         const prom = new Promise((resolve) => {
             const complete = (ev) => {
@@ -1191,19 +1208,20 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("rendering with given jsClass", async function (assert) {
         assert.expect(4);
-        await makeView({
-            serverData,
-            mockRPC: (_, args) => {
-                assert.deepEqual(args.kwargs.views, [[false, "toy"]]);
-                assert.deepEqual(args.kwargs.options, {
-                    action_id: false,
-                    load_filters: false,
-                    toolbar: false,
-                });
-            },
+        const mockRPC = (_, args) => {
+            assert.deepEqual(args.kwargs.views, [[false, "toy"]]);
+            assert.deepEqual(args.kwargs.options, {
+                action_id: false,
+                load_filters: false,
+                toolbar: false,
+            });
+        };
+        const env = await makeTestEnv({ serverData, mockRPC });
+        const props = {
             resModel: "animal",
             type: "toy_imp",
-        });
+        };
+        await mount(View, target, { env, props });
         assert.containsOnce(target, ".o_toy_view.toy_imp");
         assert.strictEqual(
             target.querySelector(".o_toy_view.toy_imp").innerText,
@@ -1213,20 +1231,21 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("rendering with loaded arch attribute 'js_class'", async function (assert) {
         assert.expect(4);
-        await makeView({
-            serverData,
-            mockRPC: (_, args) => {
-                assert.deepEqual(args.kwargs.views, [[2, "toy"]]);
-                assert.deepEqual(args.kwargs.options, {
-                    action_id: false,
-                    load_filters: false,
-                    toolbar: false,
-                });
-            },
+        const mockRPC = (_, args) => {
+            assert.deepEqual(args.kwargs.views, [[2, "toy"]]);
+            assert.deepEqual(args.kwargs.options, {
+                action_id: false,
+                load_filters: false,
+                toolbar: false,
+            });
+        };
+        const env = await makeTestEnv({ serverData, mockRPC });
+        const props = {
             resModel: "animal",
             type: "toy",
             viewId: 2,
-        });
+        };
+        await mount(View, target, { env, props });
         assert.containsOnce(target, ".o_toy_view.toy_imp");
         assert.strictEqual(
             target.querySelector(".o_toy_view.toy_imp").innerText,
@@ -1235,17 +1254,17 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("rendering with given arch attribute 'js_class'", async function (assert) {
-        assert.expect(2);
-        await makeView({
-            serverData,
-            mockRPC: () => {
-                throw new Error("no RPC expected");
-            },
+        const mockRPC = () => {
+            throw new Error("no RPC expected");
+        };
+        const env = await makeTestEnv({ serverData, mockRPC });
+        const props = {
             resModel: "animal",
             type: "toy",
             arch: `<toy js_class="toy_imp">Specific arch content for specific class</toy>`,
             fields: {},
-        });
+        };
+        await mount(View, target, { env, props });
         assert.containsOnce(target, ".o_toy_view.toy_imp");
         assert.strictEqual(
             target.querySelector(".o_toy_view.toy_imp").innerText,
@@ -1263,20 +1282,21 @@ QUnit.module("Views", (hooks) => {
             ToyView2.type = "toy";
             viewRegistry.add("toy_2", ToyView2);
 
-            await makeView({
-                serverData,
-                mockRPC: (_, args) => {
-                    assert.deepEqual(args.kwargs.views, [[2, "toy"]]);
-                    assert.deepEqual(args.kwargs.options, {
-                        action_id: false,
-                        load_filters: false,
-                        toolbar: false,
-                    });
-                },
+            const mockRPC = (_, args) => {
+                assert.deepEqual(args.kwargs.views, [[2, "toy"]]);
+                assert.deepEqual(args.kwargs.options, {
+                    action_id: false,
+                    load_filters: false,
+                    toolbar: false,
+                });
+            };
+            const env = await makeTestEnv({ serverData, mockRPC });
+            const props = {
                 resModel: "animal",
                 type: "toy_2",
                 viewId: 2,
-            });
+            };
+            await mount(View, target, { env, props });
             assert.containsOnce(target, ".o_toy_view.toy_imp", "jsClass from arch prefered");
         }
     );
@@ -1284,23 +1304,22 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "rendering with given arch attribute 'js_class' and given jsClass",
         async function (assert) {
-            assert.expect(1);
-
             class ToyView2 extends Component {}
             ToyView2.template = xml`<div class="o_toy_view_2"/>`;
             ToyView2.type = "toy";
             viewRegistry.add("toy_2", ToyView2);
 
-            await makeView({
-                serverData,
-                mockRPC: () => {
-                    throw new Error("no RPC expected");
-                },
+            const mockRPC = () => {
+                throw new Error("no RPC expected");
+            };
+            const env = await makeTestEnv({ serverData, mockRPC });
+            const props = {
                 resModel: "animal",
                 type: "toy_2",
                 arch: `<toy js_class="toy_imp"/>`,
                 fields: {},
-            });
+            };
+            await mount(View, target, { env, props });
             assert.containsOnce(target, ".o_toy_view.toy_imp", "jsClass from arch prefered");
         }
     );
@@ -1310,9 +1329,10 @@ QUnit.module("Views", (hooks) => {
     ////////////////////////////////////////////////////////////////////////////
 
     QUnit.test("'resModel' must be passed as prop", async function (assert) {
-        assert.expect(2);
+        const env = await makeTestEnv({ serverData });
+        const props = {};
         try {
-            await makeView({ serverData });
+            await mount(View, target, { env, props });
         } catch (error) {
             assert.step(error.message);
         }
@@ -1320,9 +1340,10 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("'type' must be passed as prop", async function (assert) {
-        assert.expect(2);
+        const env = await makeTestEnv({ serverData });
+        const props = { resModel: "animal" };
         try {
-            await makeView({ serverData, resModel: "animal" });
+            await mount(View, target, { env, props });
         } catch (error) {
             assert.step(error.message);
         }
@@ -1330,9 +1351,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("'arch' cannot be passed as prop alone", async function (assert) {
-        assert.expect(2);
         const env = await makeTestEnv({ serverData });
-        const target = getFixture();
         const props = { resModel: "animal", type: "toy", arch: "<toy/>" };
         try {
             await mount(View, target, { env, props });
@@ -1343,9 +1362,10 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("'fields' cannot be passed as prop alone", async function (assert) {
-        assert.expect(2);
+        const env = await makeTestEnv({ serverData });
+        const props = { resModel: "animal", type: "toy", fields: {} };
         try {
-            await makeView({ serverData, resModel: "animal", type: "toy", fields: {} });
+            await mount(View, target, { env, props });
         } catch (error) {
             assert.step(error.message);
         }
@@ -1353,14 +1373,10 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("'searchViewArch' cannot be passed as prop alone", async function (assert) {
-        assert.expect(2);
+        const env = await makeTestEnv({ serverData });
+        const props = { resModel: "animal", type: "toy", searchViewArch: "<toy/>" };
         try {
-            await makeView({
-                serverData,
-                resModel: "animal",
-                type: "toy",
-                searchViewArch: "<toy/>",
-            });
+            await mount(View, target, { env, props });
         } catch (error) {
             assert.step(error.message);
         }
@@ -1370,9 +1386,10 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("'searchViewFields' cannot be passed as prop alone", async function (assert) {
-        assert.expect(2);
+        const env = await makeTestEnv({ serverData });
+        const props = { resModel: "animal", type: "toy", searchViewFields: {} };
         try {
-            await makeView({ serverData, resModel: "animal", type: "toy", searchViewFields: {} });
+            await mount(View, target, { env, props });
         } catch (error) {
             assert.step(error.message);
         }
@@ -1409,15 +1426,16 @@ QUnit.module("Views", (hooks) => {
 
             viewRegistry.add("toy", ToyView, { force: true });
 
-            await makeView({
-                serverData,
+            const env = await makeTestEnv({ serverData });
+            const props = {
                 resModel: "animal",
                 type: "toy",
                 domain: [[0, "=", 1]],
                 groupBy: ["birthday"],
                 context: { key: "val" },
                 orderBy: ["bar"],
-            });
+            };
+            await mount(View, target, { env, props });
         }
     );
 
@@ -1433,12 +1451,13 @@ QUnit.module("Views", (hooks) => {
         ToyView.type = "toy";
         viewRegistry.add("toy", ToyView, { force: true });
 
-        await makeView({
-            serverData,
+        const env = await makeTestEnv({ serverData });
+        const props = {
             resModel: "animal",
             type: "toy",
             noContentHelp: "<div>Help</div>",
-        });
+        };
+        await mount(View, target, { env, props });
     });
 
     QUnit.test("useSampleModel false by default", async function (assert) {
@@ -1453,7 +1472,9 @@ QUnit.module("Views", (hooks) => {
         ToyView.type = "toy";
         viewRegistry.add("toy", ToyView, { force: true });
 
-        await makeView({ serverData, resModel: "animal", type: "toy" });
+        const env = await makeTestEnv({ serverData });
+        const props = { resModel: "animal", type: "toy" };
+        await mount(View, target, { env, props });
     });
 
     QUnit.test("sample='1' on arch", async function (assert) {
@@ -1468,13 +1489,14 @@ QUnit.module("Views", (hooks) => {
         ToyView.type = "toy";
         viewRegistry.add("toy", ToyView, { force: true });
 
-        await makeView({
-            serverData,
+        const env = await makeTestEnv({ serverData });
+        const props = {
             resModel: "animal",
             type: "toy",
             arch: `<toy sample="1"/>`,
             fields: {},
-        });
+        };
+        await mount(View, target, { env, props });
     });
 
     QUnit.test("sample='0' on arch and useSampleModel=true", async function (assert) {
@@ -1489,14 +1511,15 @@ QUnit.module("Views", (hooks) => {
         ToyView.type = "toy";
         viewRegistry.add("toy", ToyView, { force: true });
 
-        await makeView({
-            serverData,
+        const env = await makeTestEnv({ serverData });
+        const props = {
             resModel: "animal",
             type: "toy",
             useSampleModel: true,
             arch: `<toy sample="0"/>`,
             fields: {},
-        });
+        };
+        await mount(View, target, { env, props });
     });
 
     QUnit.test("sample='1' on arch and useSampleModel=false", async function (assert) {
@@ -1511,14 +1534,15 @@ QUnit.module("Views", (hooks) => {
         ToyView.type = "toy";
         viewRegistry.add("toy", ToyView, { force: true });
 
-        await makeView({
-            serverData,
+        const env = await makeTestEnv({ serverData });
+        const props = {
             resModel: "animal",
             type: "toy",
             useSampleModel: false,
             arch: `<toy sample="1"/>`,
             fields: {},
-        });
+        };
+        await mount(View, target, { env, props });
     });
 
     QUnit.test("useSampleModel=true", async function (assert) {
@@ -1533,7 +1557,9 @@ QUnit.module("Views", (hooks) => {
         ToyView.type = "toy";
         viewRegistry.add("toy", ToyView, { force: true });
 
-        await makeView({ serverData, resModel: "animal", type: "toy", useSampleModel: true });
+        const env = await makeTestEnv({ serverData });
+        const props = { resModel: "animal", type: "toy", useSampleModel: true };
+        await mount(View, target, { env, props });
     });
 
     QUnit.test("rendering with given prop", async function (assert) {
@@ -1548,12 +1574,9 @@ QUnit.module("Views", (hooks) => {
         ToyView.type = "toy";
         viewRegistry.add("toy", ToyView, { force: true });
 
-        await makeView({
-            serverData,
-            resModel: "animal",
-            type: "toy",
-            specificProp: "specificProp",
-        });
+        const env = await makeTestEnv({ serverData });
+        const props = { resModel: "animal", type: "toy", specificProp: "specificProp" };
+        await mount(View, target, { env, props });
     });
 
     QUnit.test(
@@ -1578,8 +1601,8 @@ QUnit.module("Views", (hooks) => {
             ToyView.type = "toy";
             viewRegistry.add("toy", ToyView, { force: true });
 
-            await makeView({
-                serverData,
+            const env = await makeTestEnv({ serverData });
+            const props = {
                 type: "toy",
                 resModel: "animal",
                 searchViewId: 1,
@@ -1587,7 +1610,8 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["birthday"],
                 context: { search_default_filter: 1, search_default_group_by: 1 },
                 orderBy: ["bar"],
-            });
+            };
+            await mount(View, target, { env, props });
         }
     );
 
@@ -1600,10 +1624,10 @@ QUnit.module("Views", (hooks) => {
 
         class ToyView extends Component {
             setup() {
-                owl.onWillStart(() => {
+                onWillStart(() => {
                     assert.deepEqual(this.props.domain, [["type", "=", "carnivorous"]]);
                 });
-                owl.onWillUpdateProps((nextProps) => {
+                onWillUpdateProps((nextProps) => {
                     assert.deepEqual(nextProps.domain, [["type", "=", "herbivorous"]]);
                 });
             }
@@ -1626,7 +1650,6 @@ QUnit.module("Views", (hooks) => {
         Parent.template = xml`<View t-props="state"/>`;
         Parent.components = { View };
 
-        const target = getFixture();
         const parent = await mount(Parent, target, { env });
 
         parent.state.domain = [["type", "=", "herbivorous"]];
