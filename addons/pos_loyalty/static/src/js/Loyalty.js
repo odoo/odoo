@@ -1055,6 +1055,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             pointCost = Math.min(maxDiscount, discountable) / reward.discount;
         }
         // These are considered payments and do not require to be either taxed or split by tax
+        const discountProduct = reward.discount_line_product_id;
         if (['ewallet', 'gift_card'].includes(reward.program_id.program_type)) {
             return [{
                 product: discountProduct,
@@ -1069,7 +1070,6 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             }];
         }
         const discountFactor = discountable ? Math.min(1, (maxDiscount / discountable)) : 1;
-        const discountProduct = reward.discount_line_product_id;
         const result = Object.entries(discountablePerTax).reduce((lst, entry) => {
             const taxIds = entry[0] === '' ? [] : entry[0].split(',').map((str) => parseInt(str));
             lst.push({
