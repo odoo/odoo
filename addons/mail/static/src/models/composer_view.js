@@ -918,6 +918,16 @@ registerModel({
          * @private
          * @returns {boolean|FieldCommand}
          */
+        _computeIsExpandable() {
+            if (this.chatter) {
+                return true;
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {boolean|FieldCommand}
+         */
         _computeHasThreadName() {
             if (this.threadView) {
                 return this.threadView.hasComposerThreadName;
@@ -1425,6 +1435,10 @@ registerModel({
         isCompact: attr({
             compute: '_computeIsCompact',
             default: true,
+        }),
+        isExpandable: attr({
+            compute: '_computeIsExpandable',
+            default: false,
         }),
         isFocused: attr({
             default: false,

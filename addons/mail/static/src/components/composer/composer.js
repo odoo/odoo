@@ -54,7 +54,6 @@ Object.assign(Composer, {
         hasCurrentPartnerAvatar: true,
         hasDiscardButton: false,
         hasSendButton: true,
-        isExpandable: false,
     },
     props: {
         localId: String,
@@ -79,10 +78,6 @@ Object.assign(Composer, {
             optional: true,
         },
         showAttachmentsFilenames: {
-            type: Boolean,
-            optional: true,
-        },
-        isExpandable: {
             type: Boolean,
             optional: true,
         },

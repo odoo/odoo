@@ -103,7 +103,7 @@
                                 <PopoverView t-if="composerView.emojisPopoverView" localId="composerView.emojisPopoverView.localId"/>
                                 <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-light fa fa-paperclip" t-att-class="{ 'o-mobile': messaging.device.isMobile }" title="Add attachment" type="button" t-on-click="composerView.onClickAddAttachment"/>
                             </div>
-                            <t t-if="props.isExpandable">
+                            <t t-if="composerView.isExpandable">
                                 <div class="o_Composer_secondaryToolButtons">
                                     <button class="btn btn-light fa fa-expand o_Composer_button o_Composer_buttonFullComposer o_Composer_toolButton" t-att-class="{ 'o-mobile': messaging.device.isMobile }" title="Full composer" type="button" t-on-click="composerView.onClickFullComposer"/>
                                 </div>
