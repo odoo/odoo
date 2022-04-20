@@ -813,7 +813,7 @@ class IrQWeb(models.AbstractModel):
         )
         if not self.env.context.get('minimal_qcontext'):
             values.setdefault('debug', request and request.session.debug or '')
-            values.setdefault('user_id', self.env["res.users"].browse(self.env.user.id))
+            values.setdefault('user_id', self.env.user.with_env(self.env))
             values.setdefault('res_company', self.env.company.sudo())
 
             values.update(
