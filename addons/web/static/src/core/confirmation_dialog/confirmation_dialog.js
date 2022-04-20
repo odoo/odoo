@@ -3,27 +3,27 @@
 import { Dialog } from "../dialog/dialog";
 import { _lt } from "../l10n/translation";
 
-export class ConfirmationDialog extends Dialog {
-    setup() {
-        super.setup();
-        this.title = this.props.title;
-    }
+const { Component } = owl;
+
+export class ConfirmationDialog extends Component {
     _cancel() {
         if (this.props.cancel) {
             this.props.cancel();
         }
-        this.close();
+        this.props.close();
     }
 
     _confirm() {
         if (this.props.confirm) {
             this.props.confirm();
         }
-        this.close();
+        this.props.close();
     }
 }
+ConfirmationDialog.template = "web.ConfirmationDialog";
+ConfirmationDialog.components = { Dialog };
 ConfirmationDialog.props = {
-    ...Dialog.props,
+    close: Function,
     title: {
         validate: (m) => {
             return (
@@ -40,23 +40,12 @@ ConfirmationDialog.defaultProps = {
     title: _lt("Confirmation"),
 };
 
-ConfirmationDialog.bodyTemplate = "web.ConfirmationDialogBody";
-ConfirmationDialog.footerTemplate = "web.ConfirmationDialogFooter";
-ConfirmationDialog.size = "modal-md";
-
-export class AlertDialog extends ConfirmationDialog {
-    setup() {
-        super.setup();
-        if ("contentClass" in this.props) {
-            this.contentClass = this.props.contentClass;
-        }
-    }
-}
-AlertDialog.size = "modal-sm";
-AlertDialog.props = Object.assign(Object.create(ConfirmationDialog.props), {
+export class AlertDialog extends ConfirmationDialog {}
+AlertDialog.template = "web.AlertDialog";
+AlertDialog.props = {
+    ...ConfirmationDialog.props,
     contentClass: { type: String, optional: true },
-});
-
+};
 AlertDialog.defaultProps = {
     title: _lt("Alert"),
 };

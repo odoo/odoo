@@ -6,11 +6,11 @@ import { formatDateTime, parseDateTime } from "@web/core/l10n/dates";
 import { formatMany2one } from "@web/fields/formatters";
 import { registry } from "@web/core/registry";
 
-const { onWillStart, useState } = owl;
+const { Component, onWillStart, useState } = owl;
 
 const debugRegistry = registry.category("debug");
 
-class GetMetadataDialog extends Dialog {
+class GetMetadataDialog extends Component {
     setup() {
         super.setup();
         this.state = useState({});
@@ -44,9 +44,10 @@ class GetMetadataDialog extends Dialog {
         this.state.write_date = formatDateTime(parseDateTime(metadata.write_date));
     }
 }
-GetMetadataDialog.bodyTemplate = "web.DebugMenu.getMetadataBody";
+GetMetadataDialog.template = "web.DebugMenu.GetMetadataDialog";
+GetMetadataDialog.components = { Dialog };
 GetMetadataDialog.title = _lt("View Metadata");
-class SetDefaultDialog extends Dialog {
+class SetDefaultDialog extends Component {
     setup() {
         super.setup();
         this.state = {
@@ -184,11 +185,11 @@ class SetDefaultDialog extends Dialog {
             true,
             this.state.condition || false,
         ]);
-        this.trigger("dialog-closed");
+        this.props.close();
     }
 }
-SetDefaultDialog.bodyTemplate = "web.DebugMenu.setDefaultBody";
-SetDefaultDialog.footerTemplate = "web.DebugMenu.SetDefaultFooter";
+SetDefaultDialog.template = "web.DebugMenu.SetDefaultDialog";
+SetDefaultDialog.components = { Dialog };
 SetDefaultDialog.title = _lt("Set Default");
 
 // Form view items
