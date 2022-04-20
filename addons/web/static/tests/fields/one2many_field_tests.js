@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import {
     addRow,
@@ -260,9 +261,6 @@ QUnit.module("Fields", (hooks) => {
 
         // patchWithCleanup(AutoComplete, {
         //     delay: 0,
-        // });
-        // patchWithCleanup(browser, {
-        //     setTimeout: (fn) => fn(),
         // });
     });
 
@@ -3471,8 +3469,9 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, "tr.o_data_row");
     });
 
-    QUnit.skipWOWL("one2many list (editable): edition, part 4", async function (assert) {
+    QUnit.test("one2many list (editable): edition, part 4", async function (assert) {
         assert.expect(3);
+        patchWithCleanup(browser, { setTimeout: (fn) => fn() });
         let i = 0;
         serverData.models.turtle.onchanges = {
             turtle_trululu: function (obj) {
@@ -3509,8 +3508,8 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(target.querySelector(".o_data_row textarea").value, "");
 
         // add a value in the turtle_trululu field to trigger an onchange
-        await testUtils.fields.many2one.clickOpenDropdown("turtle_trululu");
-        await testUtils.fields.many2one.clickHighlightedItem("turtle_trululu");
+        await clickOpenM2ODropdown(target, "turtle_trululu");
+        await clickM2OHighlightedItem(target, "turtle_trululu");
         assert.strictEqual(target.querySelector(".o_data_row textarea").value, "Some Description");
     });
 
@@ -9832,7 +9831,7 @@ QUnit.module("Fields", (hooks) => {
         "column_invisible attrs on a button in a one2many list",
         async function (assert) {
             assert.expect(6);
-
+            patchWithCleanup(browser, { setTimeout: (fn) => fn() });
             serverData.models.partner.records[0].p = [2];
             await makeView({
                 type: "form",
@@ -9859,7 +9858,7 @@ QUnit.module("Fields", (hooks) => {
             assert.containsN(target, ".o_list_table th", 2); // foo + trash bin
             assert.containsNone(target, ".some_button");
             await clickOpenM2ODropdown(target, "product_id");
-            await clickM2OHighlightedItem(target, "product_id"); // to fix clickM2OHighlightedItem ??
+            await clickM2OHighlightedItem(target, "product_id");
 
             assert.strictEqual(
                 target.querySelector(".o_field_widget[name=product_id] input").value,

@@ -688,7 +688,7 @@ export async function clickM2OHighlightedItem(el, fieldName, selector) {
         );
     }
     // clicking on an li (no matter which one), will select the focussed one
-    return click(matches[0].querySelector("li"));
+    return click(matches[0].parentElement.querySelector("li"));
 }
 
 // X2Many
