@@ -221,6 +221,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         if (this.$welcomeMessage) {
             this.$welcomeMessage.detach(); // detach from the readonly rendering before the clone by wysiwyg.
         }
+        $(".o_livechat_button, .o_thread_window").css("display", "none");
         this.editModeEnable = true;
 
         await this._createWysiwyg();
