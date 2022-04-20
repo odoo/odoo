@@ -1129,24 +1129,6 @@ var utils = Object.assign({
         }
         return curr;
     },
-    /**
-     * Returns the domain targeting assets files.
-     *
-     * @returns {Array} Domain of assets files
-     */
-    assetsDomain: function () {
-        return [
-            '&',
-            ['res_model', '=', 'ir.ui.view'],
-            '|',
-            '|',
-            '|',
-            ['name', '=like', '%.assets\_%.css'],
-            ['name', '=like', '%.assets\_%.js'],
-            ['name', '=like', '%.report_assets\_%.css'],
-            ['name', '=like', '%.assets\_%.map'],
-        ];
-    },
 }, cookieUtils);
 
 return utils;
