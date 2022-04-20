@@ -1,13 +1,12 @@
-odoo.define("website.ace", function (require) {
-"use strict";
+/** @odoo-module */
 
-var AceEditor = require('web_editor.ace');
+import {ComponentAdapter} from 'web.OwlCompatibility';
+import {useService} from '@web/core/utils/hooks';
+import AceEditor from 'web_editor.ace';
 
-/**
- * Extends the default view editor so that the URL hash is updated with view ID
- */
-var WebsiteAceEditor = AceEditor.extend({
-    hash: '#advanced-view-editor',
+const {Component} = owl;
+
+export const WebsiteAceEditor = AceEditor.extend({
 
     //--------------------------------------------------------------------------
     // Public
@@ -16,9 +15,8 @@ var WebsiteAceEditor = AceEditor.extend({
     /**
      * @override
      */
-    do_hide: function () {
-        this._super.apply(this, arguments);
-        window.location.hash = "";
+    do_hide() {
+        this.options.toggleAceEditor(false);
     },
 
     //--------------------------------------------------------------------------
@@ -28,16 +26,9 @@ var WebsiteAceEditor = AceEditor.extend({
     /**
      * @override
      */
-    _displayResource: function () {
-        this._super.apply(this, arguments);
-        this._updateHash();
-    },
-    /**
-     * @override
-     */
-    _saveResources: function () {
-        return this._super.apply(this, arguments).then((function () {
-            var defs = [];
+    _saveResources() {
+        return this._super.apply(this, arguments).then(() => {
+            const defs = [];
             if (this.currentType === 'xml') {
                 // When saving a view, the view ID might change. Thus, the
                 // active ID in the URL will be incorrect. After the save
@@ -45,10 +36,10 @@ var WebsiteAceEditor = AceEditor.extend({
                 // We need to find the new ID (either because the view became
                 // specific or because its parent was edited too and the view
                 // got copy/unlink).
-                var selectedView = _.findWhere(this.views, {id: this._getSelectedResource()});
-                var context;
+                const selectedView = _.findWhere(this.views, {id: this._getSelectedResource()});
+                let context;
                 this.trigger_up('context_get', {
-                    callback: function (ctx) {
+                    callback: (ctx) => {
                         context = ctx;
                     },
                 });
@@ -57,17 +48,13 @@ var WebsiteAceEditor = AceEditor.extend({
                     method: 'search_read',
                     fields: ['id'],
                     domain: [['key', '=', selectedView.key], ['website_id', '=', context.website_id]],
-                }).then((function (view) {
-                    if (view[0]) {
-                        this._updateHash(view[0].id);
-                    }
-                }).bind(this)));
+                }));
             }
-            return Promise.all(defs).then((function () {
-                window.location.reload();
-                return new Promise(function () {});
+            return Promise.all(defs).then((async () => {
+                await this._updateEditor();
+                this.options.reload();
             }));
-        }).bind(this));
+        });
     },
     /**
      * @override
@@ -88,21 +75,72 @@ var WebsiteAceEditor = AceEditor.extend({
     /**
      * @override
      */
-    _resetResource: function () {
-        return this._super.apply(this, arguments).then((function () {
-            window.location.reload();
-            return new Promise(function () {});
+    _resetResource() {
+        return this._super.apply(this, arguments).then((() => {
+            this._updateEditor();
+            this.options.reload();
         }).bind(this));
     },
     /**
-     * Adds the current resource ID in the URL.
+     * Used to update UI (resource display, toggle resetButton visibility,...)
+     * on save/reset since we reload the iframe only after an update.
      *
      * @private
      */
-    _updateHash: function (resID) {
-        window.location.hash = this.hash + "?res=" + (resID || this._getSelectedResource());
+    async _updateEditor() {
+        if (['js', 'scss'].includes(this.currentType)) {
+            await this._loadResources();
+            return this._displayResource(this._getSelectedResource());
+        }
+    },
+    /**
+     * @override
+     */
+    _rpc(options) {
+        let context;
+        this.trigger_up('context_get', {
+            callback: (ctx) => {
+                context = ctx;
+            },
+        });
+        return this._super({...options, context: context});
     },
 });
 
-return WebsiteAceEditor;
-});
+export class AceEditorAdapterComponent extends ComponentAdapter {
+    setup() {
+        super.setup();
+
+        this.website = useService("website");
+        this.user = useService("user");
+        this.env = Component.env;
+    }
+
+    _trigger_up(event) {
+        if (event.name === 'context_get') {
+            return event.data.callback({...this.user.context, website_id: this.website.currentWebsite.id});
+        }
+        super._trigger_up(event);
+    }
+
+    /**
+     * @override
+     */
+    get widgetArgs() {
+        return [
+            this.website.pageDocument && this.website.pageDocument.documentElement.dataset.viewXmlid,
+            {
+                toggleAceEditor: this.props.toggleAceEditor,
+                defaultBundlesRestriction: [
+                    'web.assets_frontend',
+                    'web.assets_frontend_minimal',
+                    'web.assets_frontend_lazy',
+                ],
+                reload: () => {
+                    this.website.contentWindow.location.reload();
+                },
+            }
+        ];
+    }
+
+}

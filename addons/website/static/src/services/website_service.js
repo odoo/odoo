@@ -36,6 +36,7 @@ export const websiteService = {
         let Wysiwyg;
         const context = reactive({
             showNewContentModal: false,
+            showAceEditor: false,
             edition: false,
             isPublicRootReady: false,
             snippetsLoaded: false,
