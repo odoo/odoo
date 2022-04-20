@@ -76,6 +76,9 @@ export const websiteService = {
             get context() {
                 return context;
             },
+            get bus() {
+                return bus;
+            },
             set pageDocument(document) {
                 pageDocument = document;
                 if (!document) {
@@ -143,6 +146,12 @@ export const websiteService = {
                     Wysiwyg = await getWysiwygClass({wysiwygAlias: 'website.wysiwyg'}, ['website.compiled_assets_wysiwyg']);
                 }
                 return Wysiwyg;
+            },
+            blockIframe(showLoader = true, loaderDelay = 0) {
+                bus.trigger('BLOCK', {showLoader, loaderDelay});
+            },
+            unblockIframe() {
+                bus.trigger('UNBLOCK');
             }
         };
     },

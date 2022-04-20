@@ -7,6 +7,41 @@ import { WebsiteEditorComponent } from '../../components/editor/editor';
 
 const { Component, onWillStart, useRef, useEffect, useState } = owl;
 
+class BlockIframe extends Component {
+    setup() {
+        this.websiteService = useService('website');
+        this.state = useState({
+            blockIframe: false,
+            showLoader: false,
+        });
+        this.iframeLocks = 0;
+        this.websiteService.bus.addEventListener("BLOCK", this.block.bind(this));
+        this.websiteService.bus.addEventListener("UNBLOCK", this.unblock.bind(this));
+    }
+    block(event) {
+        if (event.detail.showLoader && !this.state.showLoader) {
+            setTimeout(() => {
+                this.state.showLoader = true;
+            }, event.detail.loaderDelay);
+        }
+        if (this.iframeLocks === 0) {
+            this.state.blockIframe = true;
+        }
+        this.iframeLocks++;
+    }
+    unblock() {
+        this.iframeLocks--;
+        if (this.iframeLocks < 0) {
+            this.iframeLocks = 0;
+        }
+        if (this.iframeLocks === 0) {
+            this.state.blockIframe = false;
+            this.state.showLoader = false;
+        }
+    }
+}
+BlockIframe.template = 'website.BlockIframe';
+
 export class WebsitePreview extends Component {
     setup() {
         this.websiteService = useService('website');
@@ -44,6 +79,11 @@ export class WebsitePreview extends Component {
                 this.addWelcomeMessage();
             }
         }, () => [this.websiteContext.edition]);
+
+        useEffect(() => {
+            this.websiteService.blockIframe();
+            this.iframe.el.addEventListener('OdooFrameContentLoaded', () => this.websiteService.unblockIframe(), { once: true });
+        }, () => []);
     }
 
     get websiteId() {
@@ -171,6 +211,9 @@ export class WebsitePreview extends Component {
     }
 }
 WebsitePreview.template = 'website.WebsitePreview';
-WebsitePreview.components = { WebsiteEditorComponent };
+WebsitePreview.components = {
+    WebsiteEditorComponent,
+    BlockIframe
+};
 
 registry.category('actions').add('website_preview', WebsitePreview);

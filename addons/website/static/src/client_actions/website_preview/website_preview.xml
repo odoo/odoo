@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
+<t t-name="website.BlockIframe" owl="1">
+    <t t-if="this.state.blockIframe">
+        <div class="o_block_iframe position-absolute d-flex justify-content-center align-items-center flex-column h-100 w-100" t-att-class="{ 'bg-black-50': this.state.showLoader }">
+            <t t-if="this.state.showLoader">
+                <div class="o_spinner mb-4">
+                    <img src="/web/static/img/spin.svg" alt="Loading..."/>
+                </div>
+            </t>
+        </div>
+    </t>
+</t>
+
 <t t-name="website.WebsitePreview" owl="1">
     <div class="o_website_preview" t-att-class="{ 'editor_enable editor_has_snippets': this.websiteContext.snippetsLoaded }">
         <div class="o_iframe_container" t-att-class="{ 'o_is_mobile': this.websiteContext.isMobile }">
+            <BlockIframe/>
             <iframe t-att-src="iframeFallbackUrl"
                 t-att-class="{ 'd-none': this.websiteContext.edition }"
                 t-ref="iframefallback"/>
