@@ -200,15 +200,13 @@ class Project(models.Model):
         uoms_dict = {uom.id: uom for uom in self.env['uom.uom'].browse(uom_ids)}
 
         for project in self:
-            if not project.sale_line_id:
-                project.allocated_hours = 0
-                continue
+            project_id = project.id or project._origin.id
             # sale order line may be stored in a different unit of measure, so first
             # we convert all of them to the reference unit
             # if the sol has no product_uom_id then we take the one of the project
             allocated_hours = sum([
                 product_uom_qty * uoms_dict.get(product_uom, project.timesheet_encode_uom_id.id).factor_inv
-                for product_uom, product_uom_qty in sol_qty_dict[project.id]
+                for product_uom, product_uom_qty in sol_qty_dict[project_id]
             ], 0.0)
             # Now convert to the unit of measure to hours
             allocated_hours *= uom_hour.factor
