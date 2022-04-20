@@ -897,12 +897,6 @@ registerModel({
             });
         },
         /**
-         * @param {MouseEvent} ev
-         */
-        onClickFollow(ev) {
-            this.follow();
-        },
-        /**
          * Handles click on the avatar of the given member in the member list of
          * this channel.
          *
