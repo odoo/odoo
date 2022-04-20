@@ -17,12 +17,14 @@ import {
     makeDeferred,
     mouseEnter,
     nextTick,
+    patchTimeZone,
     patchWithCleanup,
     triggerEvent,
 } from "../helpers/utils";
 import {
     getButtons,
     getFacetTexts,
+    getPagerValue,
     groupByMenu,
     pagerNext,
     toggleActionMenu,
@@ -5706,7 +5708,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelectorAll(".o_group_header button")[1]);
     });
 
-    QUnit.skipWOWL("groupby node with subfields, and onchange", async function (assert) {
+    QUnit.test("groupby node with subfields, and onchange", async function (assert) {
         assert.expect(1);
 
         serverData.models.foo.onchanges = {
@@ -5736,12 +5738,10 @@ QUnit.module("Views", (hooks) => {
                         "onchange spec should not follow relation of many2one fields"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
-
-        await click($(target).find(".o_data_row:first .o_data_cell:first"));
-        await editInput($(target).find(".o_field_widget[name=foo]"), "new value");
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        await editInput(target, ".o_field_widget[name=foo] input", "new value");
     });
 
     QUnit.test("list view, editable, without data", async function (assert) {
@@ -5931,55 +5931,54 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["create"]);
     });
 
-    QUnit.skipWOWL("click on a button in a list view", async function (assert) {
+    QUnit.test("click on a button in a list view", async function (assert) {
         assert.expect(9);
 
-        await makeView({
+        const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch:
-                "<tree>" +
-                '<field name="foo"/>' +
-                '<button string="a button" name="button_action" icon="fa-car" type="object"/>' +
-                "</tree>",
+            arch:`
+                <tree>
+                    <field name="foo"/>
+                    <button string="a button" name="button_action" icon="fa-car" type="object"/>
+                </tree>`,
             mockRPC: function (route) {
                 assert.step(route);
-                return this._super.apply(this, arguments);
             },
-            intercepts: {
-                execute_action: function (event) {
-                    assert.deepEqual(event.data.env.currentID, 1, "should call with correct id");
-                    assert.strictEqual(
-                        event.data.env.model,
-                        "foo",
-                        "should call with correct model"
-                    );
-                    assert.strictEqual(
-                        event.data.action_data.name,
-                        "button_action",
-                        "should call correct method"
-                    );
-                    assert.strictEqual(
-                        event.data.action_data.type,
-                        "object",
-                        "should have correct type"
-                    );
-                    event.data.on_closed();
-                },
+        });
+        patchWithCleanup(list.env.services.action, {
+            doActionButton: (action) => {
+                assert.deepEqual(action.resId, 1, "should call with correct id");
+                assert.strictEqual(
+                    action.resModel,
+                    "foo",
+                    "should call with correct model"
+                );
+                assert.strictEqual(
+                    action.name,
+                    "button_action",
+                    "should call correct method"
+                );
+                assert.strictEqual(
+                    action.type,
+                    "object",
+                    "should have correct type"
+                );
+                action.onClose();
             },
         });
 
         assert.containsN(target, "tbody .o_list_button", 4, "there should be one button per row");
-        assert.containsOnce(
+        assert.containsN(
             target,
-            "tbody .o_list_button:first .o_icon_button .fa.fa-car",
-            "buttons should have correct icon"
+            ".o_data_row .o_list_button .o_button_icon.fa.fa-car",
+            4
         );
 
-        await click($(target).find("tbody .o_list_button:first > button"));
+        await click(target.querySelector(".o_data_row .o_list_button > button"));
         assert.verifySteps(
-            ["/web/dataset/search_read", "/web/dataset/search_read"],
+            ["/web/dataset/call_kw/foo/web_search_read", "/web/dataset/call_kw/foo/web_search_read"],
             "should have reloaded the view (after the action is complete)"
         );
     });
@@ -6013,26 +6012,23 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
     });
 
-    QUnit.skipWOWL("monetary fields are properly rendered", async function (assert) {
-        assert.expect(3);
-
-        var currencies = {};
-        _.each(serverData.models.res_currency.records, function (currency) {
+    QUnit.test("monetary fields are properly rendered", async function (assert) {
+        const currencies = {};
+        serverData.models.res_currency.records.forEach((currency) => {
             currencies[currency.id] = currency;
         });
+        patchWithCleanup(session, { currencies });
+
         await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch:
-                "<tree>" +
-                '<field name="id"/>' +
-                '<field name="amount"/>' +
-                '<field name="currency_id" invisible="1"/>' +
-                "</tree>",
-            session: {
-                currencies: currencies,
-            },
+            arch:`
+                <tree>
+                    <field name="id"/>
+                    <field name="amount"/>
+                    <field name="currency_id" invisible="1"/>
+                </tree>`,
         });
 
         assert.containsN(
@@ -6042,39 +6038,34 @@ QUnit.module("Views", (hooks) => {
             "currency_id column should not be in the table"
         );
         assert.strictEqual(
-            $(target).find("tbody tr:first td:nth(2)").text().replace(/\s/g, " "),
+            target.querySelector("tbody .o_data_row:first-child .o_data_cell:nth-child(3)").textContent.replace(/\s/g, " "),
             "1200.00 €",
             "currency_id column should not be in the table"
         );
         assert.strictEqual(
-            $(target).find("tbody tr:nth(1) td:nth(2)").text().replace(/\s/g, " "),
+            target.querySelector("tbody .o_data_row:nth-child(2) .o_data_cell:nth-child(3)").textContent.replace(/\s/g, " "),
             "$ 500.00",
             "currency_id column should not be in the table"
         );
     });
 
-    QUnit.skipWOWL("simple list with date and datetime", async function (assert) {
-        assert.expect(2);
+    QUnit.test("simple list with date and datetime", async function (assert) {
+        patchTimeZone(120)
 
         await makeView({
             type: "list",
             resModel: "foo",
             serverData,
             arch: '<tree><field name="date"/><field name="datetime"/></tree>',
-            session: {
-                getTZOffset: function () {
-                    return 120;
-                },
-            },
         });
-
+        const cells = target.querySelectorAll(".o_data_row .o_data_cell")
         assert.strictEqual(
-            $(target).find("td:eq(1)").text(),
+            cells[0].textContent,
             "01/25/2017",
             "should have formatted the date"
         );
         assert.strictEqual(
-            $(target).find("td:eq(2)").text(),
+            cells[1].textContent,
             "12/12/2016 12:55:05",
             "should have formatted the datetime"
         );
@@ -6314,9 +6305,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("grouped list on selection field at level 2", async function (assert) {
-        assert.expect(4);
-
+    QUnit.test("grouped list on selection field at level 2", async function (assert) {
         serverData.models.foo.fields.priority = {
             string: "Priority",
             type: "selection",
@@ -6353,19 +6342,21 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_group_header", 2, "should contain 2 groups at first level");
 
         // open the first group
-        await click($(target).find(".o_group_header:first"));
-
-        var $openGroup = $(target).find("tbody:nth(1)");
-        assert.strictEqual($openGroup.find("tr").length, 3, "should have 3 subgroups");
-        assert.strictEqual($openGroup.find("tr").length, 3, "should have 3 subgroups");
-        assert.strictEqual(
-            $openGroup.find(".o_group_name:first").text(),
-            "Low (3)",
-            "should display the selection name in the group header"
+        await click(target.querySelector(".o_group_header"));
+        assert.containsN(target, ".o_group_header", 5, "should contain 2 groups at first level and 3 groups at second level");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_group_header .o_group_name")].map(el => el.innerText),
+            [
+                "Value 1 (5)",
+                "Low (3)",
+                "Medium (1)",
+                "High (1)",
+                "Value 2 (1)"
+              ],
         );
     });
 
-    QUnit.skipWOWL("grouped list with a pager in a group", async function (assert) {
+    QUnit.test("grouped list with a pager in a group", async function (assert) {
         assert.expect(6);
         serverData.models.foo.records[3].bar = true;
 
@@ -6375,40 +6366,34 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<tree><field name="foo"/><field name="bar"/></tree>',
             groupBy: ["bar"],
-            viewOptions: {
-                limit: 3,
-            },
+            limit: 3,
         });
-        var headerHeight = $(target).find(".o_group_header").css("height");
-
+        const headerHeight = target.querySelector(".o_group_header").offsetHeight;
         // basic rendering checks
-        await click($(target).find(".o_group_header"));
+        await click(target.querySelector(".o_group_header"));
         assert.strictEqual(
-            $(target).find(".o_group_header").css("height"),
+            target.querySelector(".o_group_header").offsetHeight,
             headerHeight,
             "height of group header shouldn't have changed"
         );
         assert.hasClass(
-            $(target).find(".o_group_header th:eq(1) > nav"),
+            target.querySelector(".o_group_header th > nav"),
             "o_pager",
             "last cell of open group header should have classname 'o_pager'"
         );
-
-        assert.strictEqual(
-            testUtils.controlPanel.getPagerValue(".o_group_header"),
-            "1-3",
-            "pager's value should be correct"
+        assert.deepEqual(
+            getPagerValue(target.querySelector(".o_group_header")),
+            [1, 3],
         );
-        assert.containsN(target, ".o_data_row", 3, "open group should display 3 records");
+        assert.containsN(target, ".o_data_row", 3);
 
         // go to next page
-        await testUtils.controlPanel.pagerNext(".o_group_header");
-        assert.strictEqual(
-            testUtils.controlPanel.getPagerValue(".o_group_header"),
-            "4-4",
-            "pager's value should be correct"
+        await pagerNext(target.querySelector(".o_group_header"));
+        assert.deepEqual(
+            getPagerValue(target.querySelector(".o_group_header")),
+            [4, 4],
         );
-        assert.containsOnce(target, ".o_data_row", "open group should display 1 record");
+        assert.containsOnce(target, ".o_data_row");
     });
 
     QUnit.test("edition: create new line, then discard", async function (assert) {

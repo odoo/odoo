@@ -121,6 +121,9 @@
                     </t>
                 </div>
             </th>
+            <th t-if="showGroupPager(group)">
+                <Pager t-props="getGroupPagerProps(group)"/>
+            </th>
             <td t-foreach="getAggregateColumns(group)" t-as="column" t-key="getColumnKey(column, column_index)" class="o_list_number">
                 <t t-esc="group.aggregates[column.name]"/>
             </td>

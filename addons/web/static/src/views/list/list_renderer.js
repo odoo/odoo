@@ -1,15 +1,16 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
+import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Domain } from "@web/core/domain";
 import { CheckBoxDropdownItem } from "@web/core/dropdown/checkbox_dropdown_item";
+import { Dropdown } from "@web/core/dropdown/dropdown";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { Field } from "@web/fields/field";
 import { ViewButton } from "@web/views/view_button/view_button";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useBounceButton } from "../helpers/view_hook";
+import { Pager } from "@web/core/pager/pager";
 
 const {
     Component,
@@ -403,6 +404,20 @@ export class ListRenderer extends Component {
         }
     }
 
+    getGroupPagerProps(group) {
+        const list = group.list;
+        return {
+            offset: list.offset,
+            limit: list.limit,
+            total: list.count,
+            onUpdate: async ({ offset, limit }) => {
+                await list.load({ limit, offset });
+                this.render(true);
+            },
+            withAccessKey: false,
+        };
+    }
+
     getOptionalActiveFields() {
         this.optionalActiveFields = {};
         let optionalActiveFields = browser.localStorage[this.keyOptionalFields];
@@ -468,6 +483,10 @@ export class ListRenderer extends Component {
         return this.props.noContentHelp && (model.useSampleModel || !model.hasData());
     }
 
+    showGroupPager(group) {
+        return !group.isFolded && (group.list.limit < group.list.count)
+    }
+
     get showTable() {
         const { model } = this.props.list;
         return model.hasData() || !this.props.noContentHelp;
@@ -530,7 +549,7 @@ export class ListRenderer extends Component {
 }
 
 ListRenderer.template = "web.ListRenderer";
-ListRenderer.components = { CheckBoxDropdownItem, Field, ViewButton, CheckBox, Dropdown };
+ListRenderer.components = { CheckBoxDropdownItem, Field, ViewButton, CheckBox, Dropdown, Pager };
 ListRenderer.props = [
     "activeActions?",
     "list",

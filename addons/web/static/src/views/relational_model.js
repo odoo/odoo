@@ -1417,7 +1417,9 @@ export class DynamicRecordList extends DynamicList {
         this.count = 0;
     }
 
-    async load() {
+    async load(params = {}) {
+        this.limit = params.limit === undefined ? this.limit : params.limit;
+        this.offset = params.offset === undefined ? this.offset : params.offset;
         this.records = await this._loadRecords();
         await this._adjustOffset();
     }
