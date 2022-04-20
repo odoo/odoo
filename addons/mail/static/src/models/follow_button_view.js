@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'FollowButtonView',
@@ -10,6 +10,9 @@ registerModel({
         chatterOwner: one('Chatter', {
             inverse: 'followButtonView',
             readonly: true,
+        }),
+        isUnfollowButtonHighlighted: attr({
+            default: false,
         }),
     },
 });
