@@ -4,6 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { insertAndReplace } from '@mail/model/model_field_command';
 import { markEventHandled } from '@mail/utils/utils';
+import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'MessageReactionGroup',
@@ -60,15 +61,15 @@ registerModel({
             ];
             switch (length) {
                 case 1:
-                    return _.str.sprintf(this.env._t('%s has reacted with %s'), firstUser, this.content);
+                    return sprintf(this.env._t('%s has reacted with %s'), firstUser, this.content);
                 case 2:
-                    return _.str.sprintf(this.env._t('%s and %s have reacted with %s'), firstUser, secondUser, this.content);
+                    return sprintf(this.env._t('%s and %s have reacted with %s'), firstUser, secondUser, this.content);
                 case 3:
-                    return _.str.sprintf(this.env._t('%s, %s, %s have reacted with %s'), firstUser, secondUser, thirdUser, this.content);
+                    return sprintf(this.env._t('%s, %s, %s have reacted with %s'), firstUser, secondUser, thirdUser, this.content);
                 case 4:
-                    return _.str.sprintf(this.env._t('%s, %s, %s and 1 other person have reacted with %s'), firstUser, secondUser, thirdUser, this.content);
+                    return sprintf(this.env._t('%s, %s, %s and 1 other person have reacted with %s'), firstUser, secondUser, thirdUser, this.content);
                 default:
-                    return _.str.sprintf(this.env._t('%s, %s, %s and %s other persons have reacted with %s'), firstUser, secondUser, thirdUser, length - 3, this.content);
+                    return sprintf(this.env._t('%s, %s, %s and %s other persons have reacted with %s'), firstUser, secondUser, thirdUser, length - 3, this.content);
             }
         },
     },

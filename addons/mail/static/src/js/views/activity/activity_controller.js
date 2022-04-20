@@ -5,6 +5,7 @@ import '@mail/js/activity';
 import BasicController from 'web.BasicController';
 import core from 'web.core';
 import field_registry from 'web.field_registry';
+import { sprintf } from '@web/core/utils/strings';
 import ViewDialogs from 'web.view_dialogs';
 
 var KanbanActivity = field_registry.get('kanban_activity');
@@ -62,7 +63,7 @@ var ActivityController = BasicController.extend({
             res_model: state.model,
             searchViewId: this.searchViewId,
             domain: this.model.originalDomain,
-            title: _.str.sprintf(_t("Search: %s"), this.title),
+            title: sprintf(_t("Search: %s"), this.title),
             no_create: !this.activeActions.create,
             disable_multiple_selection: true,
             context: state.context,

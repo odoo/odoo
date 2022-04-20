@@ -3,7 +3,7 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
-import { escape } from '@web/core/utils/strings';
+import { escape, sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'Discuss',
@@ -79,14 +79,14 @@ registerModel({
             // XDU FIXME could use a component but be careful with owl's
             // renderToString https://github.com/odoo/owl/issues/708
             items.push({
-                label: _.str.sprintf(
+                label: sprintf(
                     `<strong>${this.env._t('Create %s')}</strong>`,
                     `<em><span class="fa fa-hashtag"/>${escapedValue}</em>`,
                 ),
                 escapedValue,
                 special: 'public'
             }, {
-                label: _.str.sprintf(
+                label: sprintf(
                     `<strong>${this.env._t('Create %s')}</strong>`,
                     `<em><span class="fa fa-lock"/>${escapedValue}</em>`,
                 ),

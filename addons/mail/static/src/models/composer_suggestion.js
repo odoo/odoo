@@ -3,6 +3,7 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear, replace } from '@mail/model/model_field_command';
+import { sprintf } from '@web/core/utils/strings';
 
 /**
  * Models a suggestion in the composer suggestion.
@@ -90,17 +91,17 @@ registerModel({
          */
         _computeTitle() {
             if (this.cannedResponse) {
-                return _.str.sprintf("%s: %s", this.record.source, this.record.substitution);
+                return sprintf("%s: %s", this.record.source, this.record.substitution);
             }
             if (this.thread) {
                 return this.record.name;
             }
             if (this.channelCommand) {
-                return _.str.sprintf("%s: %s", this.record.name, this.record.help);
+                return sprintf("%s: %s", this.record.name, this.record.help);
             }
             if (this.partner) {
                 if (this.record.email) {
-                    return _.str.sprintf("%s (%s)", this.record.nameOrDisplayName, this.record.email);
+                    return sprintf("%s (%s)", this.record.nameOrDisplayName, this.record.email);
                 }
                 return this.record.nameOrDisplayName;
             }

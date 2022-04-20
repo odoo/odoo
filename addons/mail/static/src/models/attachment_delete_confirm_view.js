@@ -3,6 +3,7 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear, replace } from '@mail/model/model_field_command';
+import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'AttachmentDeleteConfirmView',
@@ -45,7 +46,7 @@ registerModel({
          * @returns {string}
          */
         _computeBody() {
-            return _.str.sprintf(this.env._t(`Do you really want to delete "%s"?`), this.attachment.displayName);
+            return sprintf(this.env._t(`Do you really want to delete "%s"?`), this.attachment.displayName);
         },
         /**
          * @private

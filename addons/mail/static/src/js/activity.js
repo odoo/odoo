@@ -6,6 +6,7 @@ import config from 'web.config';
 import core from 'web.core';
 import field_registry from 'web.field_registry';
 import session from 'web.session';
+import { sprintf } from '@web/core/utils/strings';
 import framework from 'web.framework';
 import time from 'web.time';
 
@@ -91,13 +92,13 @@ var setDelayLabel = function (activities) {
                 if (diff === -1) {
                     toDisplay = _t("Yesterday");
                 } else {
-                    toDisplay = _.str.sprintf(_t("%d days overdue"), Math.abs(diff));
+                    toDisplay = sprintf(_t("%s days overdue"), Math.round(Math.abs(diff)));
                 }
             } else { // due
                 if (diff === 1) {
                     toDisplay = _t("Tomorrow");
                 } else {
-                    toDisplay = _.str.sprintf(_t("Due in %d days"), Math.abs(diff));
+                    toDisplay = sprintf(_t("Due in %s days"), Math.round(Math.abs(diff)));
                 }
             }
         }

@@ -6,6 +6,7 @@ var Timer = require('im_livechat.legacy.mail.model.Timer');
 var Timers = require('im_livechat.legacy.mail.model.Timers');
 
 var core = require('web.core');
+const { sprintf } = require('web.utils');
 
 var _t = core._t;
 
@@ -128,13 +129,13 @@ var ThreadTypingMixin = {
         if (displayableTypingMembers.length === 0) {
             return '';
         } else if (displayableTypingMembers.length === 1) {
-            return _.str.sprintf(_t("%s is typing..."), displayableTypingMembers[0].name);
+            return sprintf(_t("%s is typing..."), displayableTypingMembers[0].name);
         } else if (displayableTypingMembers.length === 2) {
-            return _.str.sprintf(_t("%s and %s are typing..."),
+            return sprintf(_t("%s and %s are typing..."),
                                     displayableTypingMembers[0].name,
                                     displayableTypingMembers[1].name);
         } else {
-            return _.str.sprintf(_t("%s, %s and more are typing..."),
+            return sprintf(_t("%s, %s and more are typing..."),
                                     displayableTypingMembers[0].name,
                                     displayableTypingMembers[1].name);
         }

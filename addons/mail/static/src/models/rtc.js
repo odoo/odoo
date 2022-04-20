@@ -6,6 +6,7 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, replace, unlink } from '@mail/model/model_field_command';
 import { monitorAudio } from '@mail/utils/media_monitoring';
+import { sprintf } from '@web/core/utils/strings';
 
 /**
  * The order in which transceivers are added, relevant for RTCPeerConnection.getTransceivers which returns
@@ -243,7 +244,7 @@ registerModel({
                     audioTrack = audioStream.getAudioTracks()[0];
                 } catch (_e) {
                     this.env.services.notification.notify({
-                        message: _.str.sprintf(
+                        message: sprintf(
                             this.env._t(`"%s" requires microphone access`),
                             window.location.host,
                         ),
@@ -1001,7 +1002,7 @@ registerModel({
                 }
             } catch (_e) {
                 this.env.services.notification.notify({
-                    message: _.str.sprintf(
+                    message: sprintf(
                         this.env._t(`"%s" requires "%s" access`),
                         window.location.host,
                         type === 'user-video' ? 'camera' : 'display',

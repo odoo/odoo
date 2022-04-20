@@ -3,6 +3,7 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, replace, unlinkAll } from '@mail/model/model_field_command';
+import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'MessageSeenIndicator',
@@ -181,19 +182,19 @@ registerModel({
                     return partner.nameOrDisplayName;
                 });
                 if (partnersThatHaveSeen.length === 1) {
-                    return _.str.sprintf(
+                    return sprintf(
                         this.env._t("Seen by %s"),
                         partnersThatHaveSeen[0]
                     );
                 }
                 if (partnersThatHaveSeen.length === 2) {
-                    return _.str.sprintf(
+                    return sprintf(
                         this.env._t("Seen by %s and %s"),
                         partnersThatHaveSeen[0],
                         partnersThatHaveSeen[1]
                     );
                 }
-                return _.str.sprintf(
+                return sprintf(
                     this.env._t("Seen by %s, %s and more"),
                     partnersThatHaveSeen[0],
                     partnersThatHaveSeen[1]
@@ -210,19 +211,19 @@ registerModel({
                     return partner.nameOrDisplayName;
                 });
                 if (partnersThatHaveFetched.length === 1) {
-                    return _.str.sprintf(
+                    return sprintf(
                         this.env._t("Received by %s"),
                         partnersThatHaveFetched[0]
                     );
                 }
                 if (partnersThatHaveFetched.length === 2) {
-                    return _.str.sprintf(
+                    return sprintf(
                         this.env._t("Received by %s and %s"),
                         partnersThatHaveFetched[0],
                         partnersThatHaveFetched[1]
                     );
                 }
-                return _.str.sprintf(
+                return sprintf(
                     this.env._t("Received by %s, %s and more"),
                     partnersThatHaveFetched[0],
                     partnersThatHaveFetched[1]

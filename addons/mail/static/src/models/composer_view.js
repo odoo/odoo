@@ -8,7 +8,7 @@ import { OnChange } from '@mail/model/model_onchange';
 import { addLink, escapeAndCompactTextContent, parseAndTransform } from '@mail/js/utils';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
-import { escape } from '@web/core/utils/strings';
+import { escape, sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'ComposerView',
@@ -635,7 +635,7 @@ registerModel({
                             this.delete();
                         }
                         this.env.services['notification'].notify({
-                            message: _.str.sprintf(this.env._t(`Message posted on "%s"`), message.originThread.displayName),
+                            message: sprintf(this.env._t(`Message posted on "%s"`), message.originThread.displayName),
                             type: 'info',
                         });
                     }

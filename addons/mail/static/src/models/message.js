@@ -7,6 +7,7 @@ import emojis from '@mail/js/emojis';
 import { addLink, htmlToTextContentInline, parseAndTransform, timeFromNow } from '@mail/js/utils';
 
 import { session } from '@web/session';
+import { sprintf } from '@web/core/utils/strings';
 
 import { format } from 'web.field_utils';
 import { getLangDatetimeFormat, str_to_datetime } from 'web.time';
@@ -610,7 +611,7 @@ registerModel({
         _computeTrackingValues() {
             return this.tracking_value_ids.map(trackingValue => {
                 const value = Object.assign({}, trackingValue);
-                value.changed_field = _.str.sprintf(this.env._t("%s:"), value.changed_field);
+                value.changed_field = sprintf(this.env._t("%s:"), value.changed_field);
                 /**
                  * Maps tracked field type to a JS formatter. Tracking values are
                  * not always stored in the same field type as their origin type.
