@@ -28,6 +28,7 @@ export const websiteService = {
         let currentMetadata = {};
         const context = reactive({
             showNewContentModal: false,
+            showAceEditor: false,
             edition: false,
             isPublicRootReady: false,
             snippetsLoaded: false,

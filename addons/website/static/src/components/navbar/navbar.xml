@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="website.NavBar" t-inherit="web.NavBar" t-inherit-mode="extension">
+    <xpath expr="//header" position="after">
+        <AceEditorAdapterComponent t-if="canShowAceEditor() and websiteContext.showAceEditor" Component="aceEditor" toggleAceEditor="toggleAceEditor"/>
+    </xpath>
+</t>
+
+</templates>

@@ -295,6 +295,7 @@
             'website/static/src/client_actions/*/*.xml',
             'website/static/src/systray_items/*.xml',
             'website/static/src/components/translator/*.xml',
+            'website/static/src/components/navbar/navbar.xml',
         ],
         'website.test_bundle': [
             '/web/static/lib/qweb/qweb2.js',

@@ -6,14 +6,18 @@ import { registry } from "@web/core/registry";
 import { patch } from 'web.utils';
 import { EditMenuDialog } from '@website/components/dialog/edit_menu';
 import { OptimizeSEODialog } from '@website/components/dialog/seo';
+import {WebsiteAceEditor, AceEditorAdapterComponent} from '@website/components/ace_editor/ace_editor';
 
 const websiteSystrayRegistry = registry.category('website_systray');
+const {useState} = owl;
 
 patch(NavBar.prototype, 'website_navbar', {
     setup() {
         this._super();
         this.websiteService = useService('website');
         this.dialogService = useService('dialog');
+        this.websiteContext = useState(this.websiteService.context);
+        this.aceEditor = WebsiteAceEditor;
 
         if (this.env.debug) {
             registry.category('website_systray').add('DebugMenu', registry.category('systray').get('web.debug_mode_menu'), { sequence: 100 });
@@ -22,7 +26,11 @@ patch(NavBar.prototype, 'website_navbar', {
         useBus(websiteSystrayRegistry, 'EDIT-WEBSITE', () => this.render(true));
         useBus(websiteSystrayRegistry, 'CONTENT-UPDATED', () => this.render(true));
 
-        this.websiteDialogMenus = {
+        this.toggleAceEditor = (show) => {
+            this.websiteContext.showAceEditor = show;
+        };
+
+        this.websiteEditingMenus = {
             'website.menu_edit_menu': {
                 component: EditMenuDialog,
                 isDisplayed: () => !!this.websiteService.currentWebsite,
@@ -31,13 +39,17 @@ patch(NavBar.prototype, 'website_navbar', {
                 component: OptimizeSEODialog,
                 isDisplayed: () => this.websiteService.currentWebsite && !!this.websiteService.currentWebsite.metadata.mainObject,
             },
+            'website.menu_ace_editor': {
+                openWidget: () => this.toggleAceEditor(true),
+                isDisplayed: () => this.canShowAceEditor(),
+            },
         };
     },
 
     filterWebsiteMenus(sections) {
         const filteredSections = [];
         for (const section of sections) {
-            if (!this.websiteDialogMenus[section.xmlid] || this.websiteDialogMenus[section.xmlid].isDisplayed()) {
+            if (!this.websiteEditingMenus[section.xmlid] || this.websiteEditingMenus[section.xmlid].isDisplayed()) {
                 let subSections = [];
                 if (section.childrenTree.length) {
                     subSections = this.filterWebsiteMenus(section.childrenTree);
@@ -77,10 +89,17 @@ patch(NavBar.prototype, 'website_navbar', {
      * @overrid
      */
     onNavBarDropdownItemSelection(menu) {
-        const dialogMenu = this.websiteDialogMenus[menu.xmlid];
-        if (dialogMenu) {
-            return this.dialogService.add(dialogMenu.component, dialogMenu.props, dialogMenu.options);
+        const websiteMenu = this.websiteEditingMenus[menu.xmlid];
+        if (websiteMenu) {
+            return websiteMenu.openWidget ? websiteMenu.openWidget() : this.dialogService.add(websiteMenu.component, websiteMenu.props, websiteMenu.options);
         }
         return this._super(menu);
-    }
+    },
+
+    canShowAceEditor() {
+        return this.websiteService.pageDocument && this.websiteService.pageDocument.documentElement.dataset.viewXmlid
+        && !this.websiteContext.showNewContentModal && !this.websiteContext.edition;
+    },
 });
+
+NavBar.components.AceEditorAdapterComponent = AceEditorAdapterComponent;
