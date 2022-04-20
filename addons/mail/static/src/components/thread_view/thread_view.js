@@ -23,7 +23,6 @@ Object.assign(ThreadView, {
     defaultProps: {
         hasComposerDiscardButton: false,
         showComposerAttachmentsExtensions: true,
-        showComposerAttachmentsFilenames: true,
     },
     props: {
         hasComposerCurrentPartnerAvatar: {
@@ -44,10 +43,6 @@ Object.assign(ThreadView, {
         },
         localId: String,
         showComposerAttachmentsExtensions: {
-            type: Boolean,
-            optional: true,
-        },
-        showComposerAttachmentsFilenames: {
             type: Boolean,
             optional: true,
         },

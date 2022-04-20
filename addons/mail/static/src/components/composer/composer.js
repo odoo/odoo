@@ -78,10 +78,6 @@ Object.assign(Composer, {
             type: Boolean,
             optional: true,
         },
-        showAttachmentsFilenames: {
-            type: Boolean,
-            optional: true,
-        },
         isExpandable: {
             type: Boolean,
             optional: true,
