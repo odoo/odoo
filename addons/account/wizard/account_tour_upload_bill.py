@@ -75,7 +75,7 @@ class AccountTourUploadBill(models.TransientModel):
             purchase_journal = self.env['account.journal'].search([('type', '=', 'purchase')], limit=1)
 
         if self.selection == 'upload':
-            return purchase_journal.with_context(default_journal_id=purchase_journal.id, default_move_type='in_invoice').create_invoice_from_attachment(attachment_ids=self.attachment_ids.ids)
+            return purchase_journal.with_context(default_journal_id=purchase_journal.id, default_move_type='in_invoice').create_document_from_attachment(attachment_ids=self.attachment_ids.ids)
         elif self.selection == 'sample':
             bodies = self.env['ir.actions.report']._prepare_html(self.preview_invoice)[0]
             sample_pdf = self.env['ir.actions.report']._run_wkhtmltopdf(bodies)

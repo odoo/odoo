@@ -687,6 +687,7 @@ class AccountJournal(models.Model):
                 'bank_id': bank_id,
                 'currency_id': self.currency_id.id,
                 'partner_id': self.company_id.partner_id.id,
+                'journal_id': self,
             }).id
 
     def name_get(self):
@@ -705,7 +706,7 @@ class AccountJournal(models.Model):
         # We simply call the setup bar function.
         return self.env['res.company'].setting_init_bank_account_action()
 
-    def create_invoice_from_attachment(self, attachment_ids=[]):
+    def create_document_from_attachment(self, attachment_ids=None):
         ''' Create the invoices from files.
          :return: A action redirecting to account.move tree/form view.
         '''
@@ -716,7 +717,7 @@ class AccountJournal(models.Model):
         invoices = self.env['account.move']
         for attachment in attachments:
             attachment.write({'res_model': 'mail.compose.message'})
-            decoders = self.env['account.move']._get_create_invoice_from_attachment_decoders()
+            decoders = self.env['account.move']._get_create_document_from_attachment_decoders()
             invoice = False
             for decoder in sorted(decoders, key=lambda d: d[0]):
                 invoice = decoder[1](attachment)

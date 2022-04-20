@@ -397,7 +397,7 @@ class AccountEdiFormat(models.Model):
 
         return to_process
 
-    def _create_invoice_from_attachment(self, attachment):
+    def _create_document_from_attachment(self, attachment):
         """Decodes an ir.attachment to create an invoice.
 
         :param attachment:  An ir.attachment record.
