@@ -821,7 +821,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("field many2many_tags keeps focus when being edited", async function (assert) {
+    QUnit.test("field many2many_tags keeps focus when being edited", async function (assert) {
         assert.expect(7);
 
         serverData.models.partner.records[0].timmy = [12];
@@ -829,127 +829,47 @@ QUnit.module("Fields", (hooks) => {
             obj.timmy = [[5]]; // DELETE command
         };
 
-        var form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                '<field name="foo"/>' +
-                '<field name="timmy" widget="many2many_tags"/>' +
-                "</form>",
+            arch: `<form>
+                    <field name="foo"/>
+                    <field name="timmy" widget="many2many_tags"/>
+                </form>`,
             resId: 1,
         });
 
         await clickEdit(target);
-        assert.containsOnce(form, ".o_field_many2many_tags .badge", "should contain one tag");
+        assert.containsOnce(target, ".o_field_many2many_tags .badge", "should contain one tag");
 
         // update foo, which will trigger an onchange and update timmy
         // -> m2mtags input should not have taken the focus
-        target.querySelector("input[name=foo]").focus();
-        await editInput(target.querySelector("input[name=foo]"), "trigger onchange");
-        assert.containsNone(form, ".o_field_many2many_tags .badge", "should contain no tags");
+        const textInput = target.querySelector("[name=foo] input");
+        textInput.focus();
+        await editInput(textInput, null, "trigger onchange");
+        assert.containsNone(target, ".o_field_many2many_tags .badge", "should contain no tags");
         assert.strictEqual(
-            target.querySelector("input[name=foo]").get(0),
+            textInput,
             document.activeElement,
             "foo input should have kept the focus"
         );
 
-        // add a tag -> m2mtags input should still have the focus
-        const autocomplete = target.querySelector("div[name='timmy'] .o-autocomplete.dropdown");
-        await click(autocomplete);
-        //await testUtils.fields.many2one.clickHighlightedItem("timmy");
-
-        assert.containsOnce(form, ".o_field_many2many_tags .badge", "should contain a tag");
+        await selectDropdownItem(target, "timmy", "gold");
+        assert.containsOnce(target, ".o_field_many2many_tags .badge", "should contain a tag");
         assert.strictEqual(
-            target.querySelector(".o_field_many2many_tags input").get(0),
+            target.querySelector(".o_field_many2many_tags input"),
             document.activeElement,
             "m2m tags input should have kept the focus"
         );
 
         // remove a tag -> m2mtags input should still have the focus
         await click(target.querySelector(".o_field_many2many_tags .o_delete"));
-        assert.containsNone(form, ".o_field_many2many_tags .badge", "should contain no tags");
+        assert.containsNone(target, ".o_field_many2many_tags .badge", "should contain no tags");
         assert.strictEqual(
-            target.querySelector(".o_field_many2many_tags input").get(0),
+            target.querySelector(".o_field_many2many_tags input"),
             document.activeElement,
             "m2m tags input should have kept the focus"
-        );
-    });
-
-    QUnit.skipWOWL("widget many2many_tags in one2many with display_name", async function (assert) {
-        assert.expect(4);
-        serverData.models.turtle.records[0].partner_ids = [2];
-
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                '<field name="turtles">' +
-                "<tree>" +
-                '<field name="partner_ids" widget="many2many_tags"/>' + // will use display_name
-                "</tree>" +
-                "<form>" +
-                "<sheet>" +
-                '<field name="partner_ids"/>' +
-                "</sheet>" +
-                "</form>" +
-                "</field>" +
-                "</sheet>" +
-                "</form>",
-            archs: {
-                "partner,false,list": '<tree><field name="foo"/></tree>',
-            },
-            resId: 1,
-        });
-
-        assert.strictEqual(
-            target
-                .querySelector(
-                    '.o_field_one2many[name="turtles"] .o_list_view .o_field_many2many_tags[name="partner_ids"]'
-                )
-                .textContent.replace(/\s/g, ""),
-            "secondrecordaaa",
-            "the tags should be correctly rendered"
-        );
-
-        // open the x2m form view
-        await click(
-            target.querySelector(
-                '.o_field_one2many[name="turtles"] .o_list_view td.o_data_cell:first'
-            )
-        );
-        await nextTick(); // wait for quick edit
-        assert.strictEqual(
-            $(
-                '.modal .o_form_view .o_field_many2many[name="partner_ids"] .o_list_view .o_data_cell'
-            ).textContent,
-            "blipMy little Foo Value",
-            "the list view should be correctly rendered with foo"
-        );
-
-        await click($(".modal button.o_form_button_cancel"));
-        assert.strictEqual(
-            target
-                .querySelector(
-                    '.o_field_one2many[name="turtles"] .o_list_view .o_field_many2many_tags[name="partner_ids"]'
-                )
-                .textContent.replace(/\s/g, ""),
-            "secondrecordaaa",
-            "the tags should still be correctly rendered"
-        );
-
-        assert.strictEqual(
-            target
-                .querySelector(
-                    '.o_field_one2many[name="turtles"] .o_list_view .o_field_many2many_tags[name="partner_ids"]'
-                )
-                .textContent.replace(/\s/g, ""),
-            "secondrecordaaa",
-            "the tags should still be correctly rendered"
         );
     });
 
@@ -1109,6 +1029,82 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             target.querySelector(".o_field_many2many_tags .badge").textContent.trim(),
             "gold"
+        );
+    });
+
+    QUnit.skipWOWL("widget many2many_tags in one2many with display_name", async function (assert) {
+        assert.expect(4);
+        serverData.models.turtle.records[0].partner_ids = [2];
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch:
+                "<form>" +
+                "<sheet>" +
+                '<field name="turtles">' +
+                "<tree>" +
+                '<field name="partner_ids" widget="many2many_tags"/>' + // will use display_name
+                "</tree>" +
+                "<form>" +
+                "<sheet>" +
+                '<field name="partner_ids"/>' +
+                "</sheet>" +
+                "</form>" +
+                "</field>" +
+                "</sheet>" +
+                "</form>",
+            archs: {
+                "partner,false,list": '<tree><field name="foo"/></tree>',
+            },
+            resId: 1,
+        });
+
+        assert.strictEqual(
+            target
+                .querySelector(
+                    '.o_field_one2many[name="turtles"] .o_list_view .o_field_many2many_tags[name="partner_ids"]'
+                )
+                .textContent.replace(/\s/g, ""),
+            "secondrecordaaa",
+            "the tags should be correctly rendered"
+        );
+
+        // open the x2m form view
+        await click(
+            target.querySelector(
+                '.o_field_one2many[name="turtles"] .o_list_view td.o_data_cell:first'
+            )
+        );
+        await nextTick(); // wait for quick edit
+        assert.strictEqual(
+            $(
+                '.modal .o_form_view .o_field_many2many[name="partner_ids"] .o_list_view .o_data_cell'
+            ).textContent,
+            "blipMy little Foo Value",
+            "the list view should be correctly rendered with foo"
+        );
+
+        await click($(".modal button.o_form_button_cancel"));
+        assert.strictEqual(
+            target
+                .querySelector(
+                    '.o_field_one2many[name="turtles"] .o_list_view .o_field_many2many_tags[name="partner_ids"]'
+                )
+                .textContent.replace(/\s/g, ""),
+            "secondrecordaaa",
+            "the tags should still be correctly rendered"
+        );
+
+        assert.strictEqual(
+            target
+                .querySelector(
+                    '.o_field_one2many[name="turtles"] .o_list_view .o_field_many2many_tags[name="partner_ids"]'
+                )
+                .textContent.replace(/\s/g, ""),
+            "secondrecordaaa",
+            "the tags should still be correctly rendered"
         );
     });
 });
