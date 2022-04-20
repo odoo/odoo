@@ -194,9 +194,9 @@ MockServer.include({
             return this._mockMailChannelAddMembers(ids, partner_ids);
         }
         if (args.model === 'mail.channel' && args.method === 'channel_pin') {
-            const uuid = args.args[0] || args.kwargs.uuid;
+            const ids = args.args[0];
             const pinned = args.args[1] || args.kwargs.pinned;
-            return this._mockMailChannelChannelPin(uuid, pinned);
+            return this._mockMailChannelChannelPin(ids, pinned);
         }
         if (args.model === 'mail.channel' && args.method === 'channel_rename') {
             const ids = args.args[0];
@@ -986,11 +986,11 @@ MockServer.include({
      * Simulates the `channel_pin` method of `mail.channel`.
      *
      * @private
-     * @param {string} uuid
+     * @param {number[]} ids
      * @param {boolean} [pinned=false]
      */
-    async _mockMailChannelChannelPin(uuid, pinned = false) {
-        const channel = this._getRecords('mail.channel', [['uuid', '=', uuid]])[0];
+    async _mockMailChannelChannelPin(ids, pinned = false) {
+        const [channel] = this._getRecords('mail.channel', [['id', 'in', ids]]);
         const [memberOfCurrentUser] = this._getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId], ['is_pinned', '!=', pinned]]);
         if (memberOfCurrentUser) {
             this._mockWrite('mail.channel.partner', [
