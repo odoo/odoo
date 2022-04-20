@@ -22,7 +22,6 @@ export class ThreadView extends Component {
 Object.assign(ThreadView, {
     defaultProps: {
         hasComposerDiscardButton: false,
-        showComposerAttachmentsExtensions: true,
         showComposerAttachmentsFilenames: true,
     },
     props: {
@@ -43,10 +42,6 @@ Object.assign(ThreadView, {
             optional: true,
         },
         localId: String,
-        showComposerAttachmentsExtensions: {
-            type: Boolean,
-            optional: true,
-        },
         showComposerAttachmentsFilenames: {
             type: Boolean,
             optional: true,

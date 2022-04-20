@@ -74,10 +74,6 @@ Object.assign(Composer, {
             type: Boolean,
             optional: true,
         },
-        showAttachmentsExtensions: {
-            type: Boolean,
-            optional: true,
-        },
         showAttachmentsFilenames: {
             type: Boolean,
             optional: true,
