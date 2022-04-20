@@ -195,7 +195,7 @@ export class ORM {
             fields,
             context: ctx,
         };
-        assignOptions(kwargs, options, ["lazy", "offset", "orderby", "limit"]);
+        assignOptions(kwargs, options, ["lazy", "offset", "orderby", "limit", "expand"]);
         return this.call(model, "web_read_group", [], kwargs);
     }
 

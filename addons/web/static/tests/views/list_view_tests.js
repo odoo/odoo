@@ -5579,11 +5579,9 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row", 4);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "groupby node with a button with modifiers using a many2one",
         async function (assert) {
-            assert.expect(5);
-
             serverData.models.res_currency.fields.m2o = {
                 string: "Currency M2O",
                 type: "many2one",
@@ -5605,48 +5603,37 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
                 mockRPC(route, args) {
                     assert.step(args.method);
-                    return this._super(...arguments);
                 },
                 groupBy: ["currency_id"],
             });
-
-            assert.containsOnce(target, ".o_group_header:eq(0) button.o_invisible_modifier");
-            assert.containsOnce(target, ".o_group_header:eq(1) button:not(.o_invisible_modifier)");
+            const groupHeaders = target.querySelectorAll(".o_group_header");
+            assert.containsOnce(groupHeaders[0], "button");
+            assert.containsNone(groupHeaders[1], "button");
 
             assert.verifySteps(["web_read_group", "read"]);
         }
     );
 
-    QUnit.skipWOWL("reload list view with groupby node", async function (assert) {
-        assert.expect(2);
-
-        const list = await makeView({
+    QUnit.test("reload list view with groupby node", async function (assert) {
+        await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch:
-                '<tree expand="1">' +
-                '<field name="foo"/>' +
-                '<groupby name="currency_id">' +
-                '<field name="position"/>' +
-                '<button string="Button 1" type="object" name="button_method" attrs=\'{"invisible": [("position", "=", "after")]}\'/>' +
-                "</groupby>" +
-                "</tree>",
+            arch: `
+                <tree expand="1">
+                    <field name="foo"/>
+                    <groupby name="currency_id">
+                        <field name="position"/>
+                        <button string="Button 1" type="object" name="button_method" attrs=\'{"invisible": [("position", "=", "after")]}\'/>
+                    </groupby>
+                </tree>`,
             groupBy: ["currency_id"],
         });
 
-        assert.containsOnce(
-            target,
-            ".o_group_header button:not(.o_invisible_modifier)",
-            "there should be one visible button"
-        );
+        assert.containsOnce(target, ".o_group_header button");
 
-        await list.reload({ domain: [] });
-        assert.containsOnce(
-            target,
-            ".o_group_header button:not(.o_invisible_modifier)",
-            "there should still be one visible button"
-        );
+        await reloadListView(target);
+        assert.containsOnce(target, ".o_group_header button");
     });
 
     QUnit.skipWOWL("editable list view with groupby node and modifiers", async function (assert) {
@@ -5656,14 +5643,14 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch:
-                '<tree expand="1" editable="bottom">' +
-                '<field name="foo"/>' +
-                '<groupby name="currency_id">' +
-                '<field name="position"/>' +
-                '<button string="Button 1" type="object" name="button_method" attrs=\'{"invisible": [("position", "=", "after")]}\'/>' +
-                "</groupby>" +
-                "</tree>",
+            arch: `
+                <tree expand="1" editable="bottom">
+                    <field name="foo"/>
+                    <groupby name="currency_id">
+                        <field name="position"/>
+                        <button string="Button 1" type="object" name="button_method" attrs=\'{"invisible": [("position", "=", "after")]}\'/>
+                    </groupby>
+                </tree>`,
             groupBy: ["currency_id"],
         });
 
@@ -5688,39 +5675,35 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("groupby node with edit button", async function (assert) {
+    QUnit.test("groupby node with edit button", async function (assert) {
         assert.expect(1);
 
-        await makeView({
+        const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch:
-                '<tree expand="1">' +
-                '<field name="foo"/>' +
-                '<groupby name="currency_id">' +
-                '<button string="Button 1" type="edit" name="edit"/>' +
-                "</groupby>" +
-                "</tree>",
+            arch: `
+                <tree expand="1">
+                    <field name="foo"/>
+                    <groupby name="currency_id">
+                        <button string="Button 1" type="edit" name="edit"/>
+                    </groupby>
+                </tree>`,
             groupBy: ["currency_id"],
-            intercepts: {
-                do_action: function (event) {
-                    assert.deepEqual(
-                        event.data.action,
-                        {
-                            context: { create: false },
-                            res_id: 2,
-                            res_model: "res_currency",
-                            type: "ir.actions.act_window",
-                            views: [[false, "form"]],
-                            flags: { mode: "edit" },
-                        },
-                        "should trigger do_action with correct action parameter"
-                    );
-                },
+        });
+        patchWithCleanup(list.env.services.action, {
+            doAction: (action) => {
+                assert.deepEqual(action, {
+                    context: { create: false },
+                    res_id: 2,
+                    res_model: "res_currency",
+                    type: "ir.actions.act_window",
+                    views: [[false, "form"]],
+                    flags: { mode: "edit" },
+                });
             },
         });
-        await click($(target).find(".o_group_header:eq(0) button"));
+        await click(target.querySelectorAll(".o_group_header button")[1]);
     });
 
     QUnit.skipWOWL("groupby node with subfields, and onchange", async function (assert) {

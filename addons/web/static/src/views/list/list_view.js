@@ -71,6 +71,7 @@ export class ListArchParser extends XMLParser {
         const decorations = getDecoration(xmlDoc);
         const editable = activeActions.edit ? xmlDoc.getAttribute("editable") : false;
         const defaultOrder = stringToOrderBy(xmlDoc.getAttribute("default_order") || null);
+        const expand = xmlDoc.getAttribute("expand") === "1";
         const activeFields = {};
         const columns = [];
         let buttonId = 0;
@@ -161,6 +162,7 @@ export class ListArchParser extends XMLParser {
             activeActions,
             creates,
             editable,
+            expand,
             limit,
             headerButtons,
             activeFields,
@@ -193,6 +195,7 @@ export class ListView extends Component {
             groupByInfo: this.archInfo.groupBy.fields,
             limit: this.archInfo.limit || this.props.limit,
             defaultOrder: this.archInfo.defaultOrder,
+            expand: this.archInfo.expand,
         });
         useViewButtons(this.model);
 

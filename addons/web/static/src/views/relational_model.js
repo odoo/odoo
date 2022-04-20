@@ -1537,6 +1537,7 @@ export class DynamicGroupList extends DynamicList {
         this.activeFields = params.activeFields;
         this.isGrouped = true;
         this.quickCreateInfo = null; // Lazy loaded;
+        this.expand = params.expand;
     }
 
     // -------------------------------------------------------------------------
@@ -1733,7 +1734,7 @@ export class DynamicGroupList extends DynamicList {
             this.domain,
             this.fieldNames,
             this.groupBy,
-            { orderby, lazy: true }
+            { orderby, lazy: true, expand: this.expand }
         );
         this.count = length;
 
@@ -1810,7 +1811,7 @@ export class DynamicGroupList extends DynamicList {
         });
 
         // Unfold groups that can still be unfolded by default
-        if (this.openGroupsByDefault) {
+        if (this.openGroupsByDefault || this.expand) {
             for (const [params, state] of groupsParams) {
                 if (openGroups >= this.constructor.DEFAULT_LOAD_LIMIT) {
                     break;
@@ -2706,6 +2707,7 @@ export class RelationalModel extends Model {
         } else {
             this.rootParams.openGroupsByDefault = params.openGroupsByDefault || false;
             this.rootParams.limit = params.limit;
+            this.rootParams.expand = params.expand;
         }
 
         // this.db = Object.create(null);

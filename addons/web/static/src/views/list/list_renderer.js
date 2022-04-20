@@ -125,12 +125,14 @@ export class ListRenderer extends Component {
     editGroupRecord(group) {
         const { resId, resModel } = group.record;
         this.env.services.action.doAction({
+            context: {
+                create: false,
+            },
             res_model: resModel,
             res_id: resId,
             type: "ir.actions.act_window",
             views: [[false, "form"]],
-            view_mode: "form",
-            flags: { action_buttons: true, headless: true },
+            flags: { mode: "edit" },
         });
     }
 
