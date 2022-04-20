@@ -24,6 +24,13 @@ export class FollowButton extends Component {
     //--------------------------------------------------------------------------
 
     /**
+     * @return {FollowButtonView}
+     */
+    get followButtonView() {
+        return this.messaging && this.messaging.models['FollowButtonView'].get(this.props.localId);
+    }
+
+    /**
      * @return {Thread}
      */
     get thread() {
@@ -61,6 +68,7 @@ Object.assign(FollowButton, {
         isDisabled: { type: Boolean, optional: true },
         threadLocalId: String,
         isChatterButton: { type: Boolean, optional: true },
+        localId: String,
     },
     template: 'mail.FollowButton',
 });

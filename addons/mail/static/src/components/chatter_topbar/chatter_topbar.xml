@@ -53,10 +53,11 @@
                                 </t>
                             </button>
                             <t t-if="chatter.hasFollowers and chatter.thread">
-                                <t t-if="chatter.thread.channel_type !== 'chat'">
+                                <t t-if="chatter.followButtonView">
                                     <FollowButton
                                         className="'o_ChatterTopbar_followButton'"
                                         isDisabled="chatter.isDisabled"
+                                        localId="chatter.followButtonView.localId"
                                         threadLocalId="chatter.thread.localId"
                                         isChatterButton="true"
                                     />
