@@ -540,7 +540,9 @@ export class Record extends DataPoint {
         } else {
             const changes = {};
             changes[fieldName] = mapWowlValueToLegacy(value, fieldType);
-            await this.model.__bm__.notifyChanges(this.__bm_handle__, changes);
+            await this.model.__bm__.notifyChanges(this.__bm_handle__, changes, {
+                viewType: this.__viewType,
+            });
             this.__syncData();
         }
         this._removeInvalidField(fieldName);

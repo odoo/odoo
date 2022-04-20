@@ -2643,7 +2643,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "edition of one2many field, with onchange and not inline sub view",
         async function (assert) {
             assert.expect(2);
@@ -2674,7 +2674,7 @@ QUnit.module("Fields", (hooks) => {
                 serverData,
                 arch: `
                     <form>
-                        <field name="turtles"/>
+                        <field name="turtles" widget="one2many"/>
                     </form>
                 `,
                 resId: 1,
