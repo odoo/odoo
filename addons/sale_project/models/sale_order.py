@@ -355,8 +355,9 @@ class SaleOrderLine(models.Model):
         """
         values = super(SaleOrderLine, self)._prepare_invoice_line(**optional_values)
         if not values.get('analytic_account_id'):
-            if self.task_id.analytic_account_id:
-                values['analytic_account_id'] = self.task_id._get_task_analytic_account_id().id
+            task_analytic_account = self.task_id._get_task_analytic_account_id() if self.task_id else False
+            if task_analytic_account:
+                values['analytic_account_id'] = task_analytic_account.id
             elif self.project_id.analytic_account_id:
                 values['analytic_account_id'] = self.project_id.analytic_account_id.id
             elif self.is_service and not self.is_expense:
