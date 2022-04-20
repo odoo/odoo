@@ -389,6 +389,12 @@ QUnit.module("Fields", (hooks) => {
             type: "many2one",
             relation: "turtle",
         };
+        serverData.views = {
+            ["turtle,false,form"]: `
+                <form>
+                    <field name="parent_id" domain="[('id', 'in', parent.turtles)]"/>
+                </form>`,
+        };
         const form = await makeView({
             type: "form",
             resModel: "partner",
@@ -401,9 +407,6 @@ QUnit.module("Fields", (hooks) => {
                         </tree>
                     </field>
                 </form>`,
-            archs: {
-                "turtle,false,form": `<form><field name="parent_id" domain="[('id', 'in', parent.turtles)]"/></form>`,
-            },
             mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/turtle/name_search") {
                     // We are going to pass twice here
@@ -411,11 +414,10 @@ QUnit.module("Fields", (hooks) => {
                     // Second time, a virtual_id has been created
                     assert.deepEqual(args.kwargs.args, [["id", "in", []]]);
                 }
-                return this._super(route, args);
             },
         });
 
-        await click(form.$(".o_field_x2many_list[name=turtles] .o_field_x2many_list_row_add a"));
+        await addRow(target);
 
         await testUtils.fields.many2one.createAndEdit("parent_id");
 
@@ -662,7 +664,7 @@ QUnit.module("Fields", (hooks) => {
             serverData.views = {
                 "turtle,false,list": `
                     <tree limit="2">
-                        <field name="turtle_foo"/>
+                        <field name="turtle_foo" widget="one2many"/>
                     </tree>
                 `,
             };
@@ -701,7 +703,7 @@ QUnit.module("Fields", (hooks) => {
                     <sheet>
                         <notebook>
                             <page string="Turtles">
-                                <field name="turtles"/>
+                                <field name="turtles" widget="one2many"/>
                             </page>
                         </notebook>
                     </sheet>
