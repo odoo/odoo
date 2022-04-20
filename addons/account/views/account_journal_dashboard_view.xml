@@ -161,7 +161,7 @@
                                     </a>
                                 </div>
                                 <div t-if="journal_type == 'sale'">
-                                    <a class="o_button_upload_bill" journal_type="sale" groups="account.group_account_invoice">
+                                    <a class="o_button_upload_document" journal_type="sale" groups="account.group_account_invoice">
                                         <span>Upload Invoices</span>
                                     </a>
                                 </div>
@@ -312,7 +312,7 @@
                             <t t-if="journal_type == 'purchase'">
                                 <field name="entries_count" invisible="1"/>
                                 <t t-if="record.entries_count.raw_value > 0">
-                                    <button class="btn btn-primary o_button_upload_bill oe_kanban_action_button" journal_type="purchase" groups="account.group_account_invoice">
+                                    <button class="btn btn-primary o_button_upload_document oe_kanban_action_button" journal_type="purchase" groups="account.group_account_invoice">
                                         <span>Upload</span>
                                     </button>
                                 </t>

@@ -166,7 +166,7 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
             'res_model': 'account.move',
         })
         journal_id = self.company_data['default_journal_sale']
-        action_vals = journal_id.with_context(default_move_type='in_invoice').create_invoice_from_attachment(attachment.ids)
+        action_vals = journal_id.with_context(default_move_type='in_invoice').create_document_from_attachment(attachment.ids)
         return self.env['account.move'].browse(action_vals['res_id'])
 
     def assert_generated_file_equal(self, invoice, expected_values, applied_xpath=None):
