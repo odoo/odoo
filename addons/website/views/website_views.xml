@@ -130,6 +130,58 @@
             </field>
         </record>
 
+        <record id="website_page_properties_view_form" model="ir.ui.view">
+            <field name="name">website.page.properties.form.view</field>
+            <field name="model">website.page</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <notebook>
+                            <page string="Name">
+                                <div class="d-flex mt16 mb16">
+                                    <label for="name" string="Page Name" class="col-lg-3"/>
+                                    <field name="name" class="col-lg-8"/>
+                                </div>
+                                <div class="d-flex">
+                                    <field name="website_id" groups="website.group_multi_website" invisible="1"/>
+                                    <label for="name" string="Page URL" class="col-lg-3"/>
+                                    <field name="url" widget="page_url" class="col-lg-8 p-0"/>
+                                </div>
+                            </page>
+                            <page string="Publish">
+                                <div class="d-flex mt16">
+                                    <label for="is_homepage" string="Use as Homepage" class="col-lg-3"/>
+                                    <field name="is_homepage" widget="boolean_toggle"/>
+                                </div>
+                                <div class="d-flex mt16">
+                                    <label for="website_indexed" string="Indexed" class="col-lg-3"/>
+                                    <field name="website_indexed" widget="boolean_toggle"/>
+                                </div>
+                                <div class="d-flex mt16">
+                                    <label for="is_published" string="Publish" class="col-lg-3"/>
+                                    <field name="is_published" widget="boolean_toggle"/>
+                                </div>
+                                <div class="d-flex mt16">
+                                    <label for="date_publish" string="Publishing Date" class="col-lg-3"/>
+                                    <field name="date_publish" widget="datetime"/>
+                                </div>
+                                <div class="d-flex mt16">
+                                    <label for="visibility" string="Visibility" class="col-3"/>
+                                    <field name="visibility" class="col-6"/>
+                                </div>
+                                <div class="d-flex mt16">
+                                    <label for="visibility_password_display" string="Password" class="col-3" attrs="{'invisible': [('visibility', '!=', 'password')]}"/>
+                                    <field name="visibility_password_display" attrs="{'invisible': [('visibility', '!=', 'password')]}" password="True" string="Password" class="col-6"/>
+                                    <label for="groups_id" string="Authorized Group" class="col-3" attrs="{'invisible': [('visibility', '!=', 'restricted_group')]}"/>
+                                    <field name="groups_id" widget="many2many_tags" attrs="{'invisible': [('visibility', '!=', 'restricted_group')]}" string="Authorized Group" class="col-6"/>
+                                </div>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record id="website_pages_tree_view" model="ir.ui.view">
             <field name="name">website.page.list</field>
             <field name="model">website.page</field>
@@ -569,6 +621,12 @@
             parent="menu_site"
             sequence="40"
             name="HTML / CSS Editor"
+            action="website.website_editor"/>
+
+        <menuitem id="menu_page_properties"
+            parent="menu_site"
+            sequence="50"
+            name="Page Properties"
             action="website.website_editor"/>
 
         <menuitem id="menu_website_dashboard"

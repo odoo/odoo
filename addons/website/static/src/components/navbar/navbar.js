@@ -7,6 +7,7 @@ import { patch } from 'web.utils';
 import { EditMenuDialog } from '@website/components/dialog/edit_menu';
 import { OptimizeSEODialog } from '@website/components/dialog/seo';
 import {WebsiteAceEditor, AceEditorAdapterComponent} from '@website/components/ace_editor/ace_editor';
+import {PagePropertiesDialogWrapper} from '@website/components/dialog/page_properties';
 
 const websiteSystrayRegistry = registry.category('website_systray');
 const {useState} = owl;
@@ -29,6 +30,9 @@ patch(NavBar.prototype, 'website_navbar', {
         this.toggleAceEditor = (show) => {
             this.websiteContext.showAceEditor = show;
         };
+        this.setPagePropertiesDialog = (dialog) => {
+            this.pagePropertiesDialog = dialog;
+        };
 
         this.websiteEditingMenus = {
             'website.menu_edit_menu': {
@@ -42,6 +46,10 @@ patch(NavBar.prototype, 'website_navbar', {
             'website.menu_ace_editor': {
                 openWidget: () => this.toggleAceEditor(true),
                 isDisplayed: () => this.canShowAceEditor(),
+            },
+            'website.menu_page_properties': {
+                openWidget: () => this.pagePropertiesDialog.open(),
+                isDisplayed: () => this.canShowPageProperties(),
             },
         };
     },
@@ -96,10 +104,15 @@ patch(NavBar.prototype, 'website_navbar', {
         return this._super(menu);
     },
 
+    canShowPageProperties() {
+        return this.websiteService.currentWebsite && !!this.websiteService.currentWebsite.metadata.mainObject
+        && this.websiteService.currentWebsite.metadata.mainObject.model === 'website.page';
+    },
+
     canShowAceEditor() {
         return this.websiteService.pageDocument && this.websiteService.pageDocument.documentElement.dataset.viewXmlid
         && !this.websiteContext.showNewContentModal && !this.websiteContext.edition;
     },
 });
 
-NavBar.components.AceEditorAdapterComponent = AceEditorAdapterComponent;
+NavBar.components = {...NavBar.components, AceEditorAdapterComponent, PagePropertiesDialogWrapper};

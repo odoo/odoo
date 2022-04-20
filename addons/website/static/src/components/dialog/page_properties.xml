@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="website.FieldPageUrl" owl="1">
+        <div>
+            <div class="d-flex">
+                <a href="#" class="input-group-text rounded-left text-lowercase border-0" t-esc="serverUrl.length > 30 ? serverUrl.slice(0,14) + '..' + serverUrl.slice(-14) : serverUrl"/>
+                <input t-model="state.url" type="text" class="o_input"/>
+            </div>
+            <div t-if="enableRedirect">
+                <div class="d-flex mt-4">
+                    <Switch extraClasses="'mr-auto'" label="'Redirect Old URL'" value="state.redirectOldUrl" onChange="(value) => this.onChangeRedirectOldUrl(value)"/>
+                    <PageDependencies pageId="resId" mode="'popover'"/>
+                </div>
+                <div t-if="state.redirectOldUrl" class="d-flex mt-4">
+                    <label class="my-0 mr-4 font-weight-bold" for="redirect_type">Type</label>
+                    <select class="o_input w-50" id="redirect_type" t-model="state.redirectType">
+                        <option value="301">301 Moved permanently</option>
+                        <option value="302">302 Moved temporarily</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.PageDependencies" owl="1">
+        <t t-if="!!Object.keys(dependencies).length">
+            <t t-if="props.mode === 'popover'">
+                <t t-set="depTemplate">
+                    <t t-call="{{ constructor.popoverTemplate }}"/>
+                </t>
+                <div t-att-data-template="depTemplate" data-html="true" title="Dependencies" t-ref="action">
+                    (could be used in <a href="#" t-on-click="showDependencies"><t t-esc="depText" /></a>)
+                </div>
+            </t>
+            <t t-else="">
+                <p class="text-warning">We found these ones:</p>
+                <div t-foreach="dependencies" t-as="dependency" t-key="dependency" class="ml16 mb16">
+                    <a class="collapsed fa fa-caret-right" data-toggle="collapse"
+                    t-attf-aria-controls="collapseDependencies{{ dependency_index }}"
+                    t-attf-href="#collapseDependencies{{ dependency_index }}"
+                    aria-expanded="false">
+                         <t t-esc="dependency"/>
+                        <span class="text-muted"> <t t-esc="dependency_value.length"/> found(s)</span>
+                    </a>
+                    <div t-attf-id="collapseDependencies{{ dependency_index }}" class="collapse" aria-expanded="false">
+                        <ul>
+                            <li t-foreach="dependency_value" t-as="item" t-key="item">
+                                <a t-att-href="item.link" t-out="item.text"/>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="website.PageDependencies.Tooltip">
+        <t t-foreach="dependencies" t-as="dependency" t-key="dependency">
+            <b><t t-esc="dependency"/></b>
+            <ul>
+                <li t-foreach="dependency_value" t-as="item" t-key="item">
+                    <a t-att-href="item_value['link']" t-att-title="item_value['item']" class="o_text_overflow">
+                        <t t-esc="item_value['item']"/>
+                    </a>
+                </li>
+            </ul>
+        </t>
+    </t>
+
+    <t t-name="website.DeletePageContent" owl="1">
+        <p>Are you sure you want to delete this page ?</p>
+        <p class="text-warning">Don't forget to update all links referring to this page.</p>
+        <PageDependencies pageId="props.pageId" mode="'collapse'"/>
+        <CheckBox onChange.bind="onConfirmCheckboxChange">
+            <p class="text-warning">I am sure about this.</p>
+        </CheckBox>
+    </t>
+
+    <t t-name="website.DeletePageAction" t-inherit="website.DialogFooter" t-inherit-mode="primary" owl="1">
+        <xpath expr="//button[hasclass('btn-primary')]" position="attributes">
+            <attribute name="t-att-disabled">!state.confirm</attribute>
+        </xpath>
+    </t>
+</templates>
