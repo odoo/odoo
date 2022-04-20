@@ -964,14 +964,7 @@ class Channel(models.Model):
                 'serverFoldState': state,
             })
 
-    @api.model
-    def channel_pin(self, uuid, pinned=False):
-        # add the person in the channel, and pin it (or unpin it)
-        channel = self.search([('uuid', '=', uuid)])
-        channel._execute_channel_pin(pinned)
-
-    def _execute_channel_pin(self, pinned=False):
-        """ Hook for website_livechat channel unpin and cleaning """
+    def channel_pin(self, pinned=False):
         self.ensure_one()
         channel_partners = self.env['mail.channel.partner'].search(
             [('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', self.id), ('is_pinned', '!=', pinned)])
@@ -1267,7 +1260,7 @@ class Channel(models.Model):
         if self.channel_type in ('channel', 'group'):
             self.action_unfollow()
         else:
-            self.channel_pin(self.uuid, False)
+            self.channel_pin(False)
 
     def execute_command_who(self, **kwargs):
         partner = self.env.user.partner_id

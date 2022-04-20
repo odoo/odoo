@@ -350,7 +350,7 @@ class ChatbotScriptStep(models.Model):
                 Markup('<div class="o_mail_notification">%s</div>') % _('%s has joined', human_operator.partner_id.name))
 
             mail_channel._broadcast(human_operator.partner_id.ids)
-            mail_channel.channel_pin(mail_channel.uuid, pinned=True)
+            mail_channel.channel_pin(pinned=True)
 
         return posted_message
 
