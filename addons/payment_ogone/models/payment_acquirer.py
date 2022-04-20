@@ -27,9 +27,9 @@ class PaymentAcquirer(models.Model):
     ogone_password = fields.Char(
         string="API User Password", required_if_provider='ogone', groups='base.group_system')
     ogone_shakey_in = fields.Char(
-        string="SHA Key IN", size=32, required_if_provider='ogone', groups='base.group_system')
+        string="SHA Key IN", required_if_provider='ogone', groups='base.group_system')
     ogone_shakey_out = fields.Char(
-        string="SHA Key OUT", size=32, required_if_provider='ogone', groups='base.group_system')
+        string="SHA Key OUT", required_if_provider='ogone', groups='base.group_system')
 
     @api.model
     def _get_compatible_acquirers(self, *args, is_validation=False, **kwargs):
