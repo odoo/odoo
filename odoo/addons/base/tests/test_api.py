@@ -3,7 +3,7 @@
 
 from odoo import api, models, Command
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
-from odoo.tools import mute_logger, unique
+from odoo.tools import mute_logger, unique, lazy
 from odoo.exceptions import AccessError
 
 
@@ -453,15 +453,33 @@ class TestAPI(SavepointCaseWithUserDemo):
     @mute_logger('odoo.models')
     def test_80_contains(self):
         """ Test membership on recordset. """
-        p1 = self.env['res.partner'].search([('name', 'ilike', 'a'), ('id', 'in', self.partners.ids)], limit=1).ensure_one()
-        ps = self.env['res.partner'].search([('name', 'ilike', 'a'), ('id', 'in', self.partners.ids)])
+        p1 = self.partners[0]
+        ps = self.partners
         self.assertTrue(p1 in ps)
+
+        with self.assertRaisesRegex(TypeError, r"unsupported operand types in: 42 in res\.partner.*"):
+            42 in ps
+        with self.assertRaisesRegex(TypeError, r"inconsistent models in: ir\.ui\.menu.* in res\.partner.*"):
+            self.env['ir.ui.menu'] in ps
+
+    @mute_logger('odoo.models')
+    def test_80_lazy_contains(self):
+        """ Test membership on recordset. """
+        p1 = lazy(lambda: self.partners[0])
+        ps = lazy(lambda: self.partners)
+        self.assertTrue(p1 in ps)
+
+        with self.assertRaisesRegex(TypeError, r"unsupported operand types in: 42 in res\.partner.*"):
+            lazy(lambda: 42) in ps
+        with self.assertRaisesRegex(TypeError, r"inconsistent models in: ir\.ui\.menu.* in res\.partner.*"):
+            lazy(lambda: self.env['ir.ui.menu']) in ps
 
     @mute_logger('odoo.models')
     def test_80_set_operations(self):
         """ Check set operations on recordsets. """
         pa = self.env['res.partner'].search([('name', 'ilike', 'a'), ('id', 'in', self.partners.ids)])
         pb = self.env['res.partner'].search([('name', 'ilike', 'b'), ('id', 'in', self.partners.ids)])
+
         self.assertTrue(pa)
         self.assertTrue(pb)
         self.assertTrue(set(pa) & set(pb))
@@ -493,22 +511,80 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertNotEqual(ps._name, ms._name)
         self.assertNotEqual(ps, ms)
 
+        with self.assertRaisesRegex(TypeError, r"unsupported operand types in: res\.partner.* \+ 'string'"):
+            ps + 'string'
+        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* \+ ir\.ui\.menu.*"):
+            ps + ms
+        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* - ir\.ui\.menu.*"):
+            ps - ms
+        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* & ir\.ui\.menu.*"):
+            ps & ms
+        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* \| ir\.ui\.menu.*"):
+            ps | ms
         with self.assertRaises(TypeError):
-            res = ps + ms
+            ps < ms
         with self.assertRaises(TypeError):
-            res = ps - ms
+            ps <= ms
         with self.assertRaises(TypeError):
-            res = ps & ms
+            ps > ms
         with self.assertRaises(TypeError):
-            res = ps | ms
+            ps >= ms
+
+    @mute_logger('odoo.models')
+    def test_80_lazy_set_operations(self):
+        """ Check set operations on recordsets. """
+        pa = lazy(lambda: self.env['res.partner'].search([('name', 'ilike', 'a'), ('id', 'in', self.partners.ids)]))
+        pb = lazy(lambda: self.env['res.partner'].search([('name', 'ilike', 'b'), ('id', 'in', self.partners.ids)]))
+
+        self.assertTrue(pa)
+        self.assertTrue(pb)
+        self.assertTrue(set(pa) & set(pb))
+
+        concat = pa + pb
+        self.assertEqual(list(concat), list(pa) + list(pb))
+        self.assertEqual(len(concat), len(pa) + len(pb))
+
+        difference = pa - pb
+        self.assertEqual(len(difference), len(set(difference)))
+        self.assertEqual(set(difference), set(pa) - set(pb))
+        self.assertLessEqual(difference, pa)
+
+        intersection = pa & pb
+        self.assertEqual(len(intersection), len(set(intersection)))
+        self.assertEqual(set(intersection), set(pa) & set(pb))
+        self.assertLessEqual(intersection, pa)
+        self.assertLessEqual(intersection, pb)
+
+        union = pa | pb
+        self.assertEqual(len(union), len(set(union)))
+        self.assertEqual(set(union), set(pa) | set(pb))
+        self.assertGreaterEqual(union, pa)
+        self.assertGreaterEqual(union, pb)
+
+        # one cannot mix different models with set operations
+        ps = pa
+        ms = lazy(lambda: self.env['ir.ui.menu'].search([]))
+        self.assertNotEqual(ps._name, ms._name)
+        self.assertNotEqual(ps, ms)
+
+        with self.assertRaisesRegex(TypeError, r"unsupported operand types in: res\.partner.* \+ 'string'"):
+            ps + 'string'
+        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* \+ ir\.ui\.menu.*"):
+            ps + ms
+        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* - ir\.ui\.menu.*"):
+            ps - ms
+        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* & ir\.ui\.menu.*"):
+            ps & ms
+        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* \| ir\.ui\.menu.*"):
+            ps | ms
         with self.assertRaises(TypeError):
-            res = ps < ms
+            ps < ms
         with self.assertRaises(TypeError):
-            res = ps <= ms
+            ps <= ms
         with self.assertRaises(TypeError):
-            res = ps > ms
+            ps > ms
         with self.assertRaises(TypeError):
-            res = ps >= ms
+            ps >= ms
 
     @mute_logger('odoo.models')
     def test_80_filter(self):
