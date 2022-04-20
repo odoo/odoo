@@ -11,7 +11,7 @@ const { Component } = owl;
 
 export class StateSelectionField extends Component {
     setup() {
-        this.initiateCommand(); //TODO only if view === form
+        this.props.addCommand && this.initiateCommand();
     }
     get colorClass() {
         if (this.currentValue === "blocked") {
@@ -69,21 +69,24 @@ StateSelectionField.components = {
     DropdownItem,
 };
 StateSelectionField.defaultProps = {
-    hideLabel: false,
+    addCommand: false,
+    showLabel: false,
 };
 StateSelectionField.props = {
     ...standardFieldProps,
-    hideLabel: { type: Boolean, optional: true },
+    addCommand: { type: Boolean, optional: true },
+    showLabel: { type: Boolean, optional: true },
     options: Object,
 };
 StateSelectionField.displayName = _lt("Label Selection");
 StateSelectionField.supportedTypes = ["selection"];
 StateSelectionField.extractProps = (fieldName, record, attrs) => {
     return {
-        hideLabel: attrs.options.hide_label,
+        addCommand: record.activeFields[fieldName].viewType === "form",
+        showLabel: record.activeFields[fieldName].viewType === "list" && !attrs.options.hide_label,
         options: record.fields[fieldName].selection,
         readonly: record.isReadonly(fieldName),
     };
 };
 registry.category("fields").add("state_selection", StateSelectionField);
-registry.category("fields").add("list.state_selection", StateSelectionField); // WOWL: because it exists in legacy
+registry.category("fields").add("list.state_selection", StateSelectionField);

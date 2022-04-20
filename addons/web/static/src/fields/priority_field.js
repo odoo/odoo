@@ -16,7 +16,7 @@ export class PriorityField extends Component {
         this.state = useState({
             index: -1,
         });
-        this.initiateCommand();
+        this.props.addCommand && this.initiateCommand();
     }
 
     get index() {
@@ -72,10 +72,12 @@ PriorityField.template = "web.PriorityField";
 PriorityField.props = {
     options: Object,
     ...standardFieldProps,
+    addCommand: { type: Boolean, optional: true },
     tooltipLabel: { type: String, optional: true },
 };
 PriorityField.extractProps = (fieldName, record) => {
     return {
+        addCommand: record.activeFields[fieldName].viewType === "form",
         options: record.fields[fieldName].selection,
         tooltipLabel: record.fields[fieldName].string,
     };

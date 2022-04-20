@@ -13,7 +13,7 @@ const { Component } = owl;
 
 export class StatusBarField extends Component {
     setup() {
-        this.initiateCommand();
+        this.props.addCommand && this.initiateCommand();
     }
 
     get dropdownClassNames() {
@@ -120,6 +120,7 @@ export class StatusBarField extends Component {
 StatusBarField.template = "web.StatusBarField";
 StatusBarField.props = {
     ...standardFieldProps,
+    addCommand: { type: Boolean, optional: true },
     canCreate: { type: Boolean, optional: true },
     canWrite: { type: Boolean, optional: true },
     displayName: { type: String, optional: true },
@@ -134,6 +135,7 @@ StatusBarField.supportedTypes = ["many2one", "selection"];
 StatusBarField.isEmpty = () => false;
 StatusBarField.extractProps = (fieldName, record, attrs) => {
     return {
+        addCommand: record.activeFields[fieldName].viewType === "form",
         canCreate: Boolean(attrs.can_create),
         canWrite: Boolean(attrs.can_write),
         displayName: record.fields[fieldName].string,

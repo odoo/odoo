@@ -5,7 +5,7 @@
         <t t-if="props.readonly">
             <button class="d-flex align-items-center btn btn-link disabled">
                 <span t-attf-class="{{ 'mx-2 o_status ' + colorClass }} "/>
-                <span t-if="!props.hideLabel" class="o_status_label" t-esc="label"/>
+                <span t-if="props.showLabel" class="o_status_label" t-esc="label"/>
             </button>
         </t>
         <t t-else="">
@@ -13,7 +13,7 @@
                 <t t-set-slot="toggler">
                     <div class="d-flex align-items-center">
                         <span t-attf-class="{{ 'mx-2 o_status ' + colorClass }} "/>
-                        <span t-if="!props.hideLabel" class="o_status_label" t-esc="label"/>
+                        <span t-if="props.showLabel" class="o_status_label" t-esc="label"/>
                     </div>
                 </t>
                 <t t-foreach="props.options" t-as="option" t-key="option[0]">

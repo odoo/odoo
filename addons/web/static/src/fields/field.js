@@ -60,7 +60,7 @@ export function fieldVisualFeedback(record, fieldName) {
         readonly,
         required: record.isRequired(fieldName),
         invalid: record.isInvalid(fieldName),
-        empty
+        empty,
     };
 }
 
@@ -73,7 +73,10 @@ export class Field extends Component {
     }
 
     get classNames() {
-        const { readonly, required, invalid, empty } = fieldVisualFeedback(this.props.record, this.props.name);
+        const { readonly, required, invalid, empty } = fieldVisualFeedback(
+            this.props.record,
+            this.props.name
+        );
         const classNames = {
             o_field_widget: true,
             o_readonly_modifier: readonly,
@@ -221,6 +224,7 @@ Field.parseFieldNode = function (node, fields, viewType) {
     const field = fields[name];
     const fieldInfo = {
         name,
+        viewType,
         context: node.getAttribute("context") || "{}",
         domain: new Domain(node.getAttribute("domain") || []),
         string: node.getAttribute("string") || field.string,
