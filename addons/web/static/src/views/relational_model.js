@@ -1155,7 +1155,11 @@ class DynamicList extends DataPoint {
             this.editedRecord = null;
             if (!params.onRecordWillSwitchMode && editedRecord) {
                 // not really elegant, but we only need the root list to save the record
-                await editedRecord.save();
+                const isSaved = await editedRecord.save();
+                if (!isSaved) {
+                    this.editedRecord = editedRecord;
+                    return false;
+                }
             }
             if (mode === "edit") {
                 this.editedRecord = record;

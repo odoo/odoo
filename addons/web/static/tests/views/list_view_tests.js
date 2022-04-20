@@ -20,6 +20,7 @@ import {
     patchTimeZone,
     patchWithCleanup,
     triggerEvent,
+    editSelect,
 } from "../helpers/utils";
 import {
     getButtons,
@@ -6545,14 +6546,12 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "modifiers of other x2many rows a re-evaluated when a subrecord is updated",
         async function (assert) {
             // In an x2many, a change on a subrecord might trigger an onchange on the x2many that
             // updates other sub-records than the edited one. For that reason, modifiers must be
             // re-evaluated.
-            assert.expect(5);
-
             serverData.models.foo.onchanges = {
                 o2m: function (obj) {
                     obj.o2m = [
@@ -6576,7 +6575,7 @@ QUnit.module("Views", (hooks) => {
             serverData.models.bar.records[0].stage = "draft";
             serverData.models.bar.records[1].stage = "open";
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "foo",
                 serverData,
@@ -6589,54 +6588,37 @@ QUnit.module("Views", (hooks) => {
                     </field>
                 </form>`,
                 resId: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
             });
-
-            assert.hasClass(
-                form.$(".o_field_widget[name=o2m] tbody tr:nth(1) td:nth(0)"),
-                "o_invisible_modifier",
-                "first cell of second row should have o_invisible_modifier class"
-            );
-            assert.doesNotHaveClass(
-                form.$(".o_field_widget[name=o2m] tbody tr:nth(0) td:nth(0)"),
-                "o_invisible_modifier",
-                "first cell of first row should not have o_invisible_modifier class"
-            );
+            await clickEdit(target);
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_field_widget[name=o2m] .o_data_row .o_data_cell:first-child")].map(el => el.innerText),
+                [ "Value 1", "" ],
+            )
 
             // Make a change in the list to trigger the onchange
-            await click(form.$(".o_field_widget[name=o2m] tbody tr:nth(0) td:nth(1)"));
-            await testUtils.fields.editSelect(
-                form.$('.o_field_widget[name=o2m] tbody select[name="stage"]'),
+            await click(target.querySelector(".o_field_widget[name=o2m] .o_data_row .o_data_cell:nth-child(2)"));
+            await editSelect(
+                target, '.o_field_widget[name=o2m] .o_data_row [name="stage"] select',
                 '"open"'
             );
-
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_field_widget[name=o2m] .o_data_row .o_data_cell:first-child")].map(el => el.innerText),
+                [ "", "Value 2" ],
+            )
             assert.strictEqual(
-                form.$(".o_data_row:nth(1)").text(),
+                target.querySelector(".o_data_row:nth-child(2)").textContent,
                 "Value 2Draft",
                 "the onchange should have been applied"
             );
-            assert.doesNotHaveClass(
-                form.$(".o_field_widget[name=o2m] tbody tr:nth(1) td:nth(0)"),
-                "o_invisible_modifier",
-                "first cell of second row should not have o_invisible_modifier class"
-            );
-            assert.hasClass(
-                form.$(".o_field_widget[name=o2m] tbody tr:nth(0) td:nth(0)"),
-                "o_invisible_modifier",
-                "first cell of first row should have o_invisible_modifier class"
-            );
 
-            form.destroy();
         }
     );
 
-    QUnit.skipWOWL("leaving unvalid rows in edition", async function (assert) {
+    QUnit.test("leaving unvalid rows in edition", async function (assert) {
         assert.expect(4);
 
         var warnings = 0;
-        await makeView({
+        const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
@@ -6645,42 +6627,38 @@ QUnit.module("Views", (hooks) => {
                 '<field name="foo" required="1"/>' +
                 '<field name="bar"/>' +
                 "</tree>",
-            services: {
-                notification: {
-                    notify: function (params) {
-                        if (params.type === "danger") {
-                            warnings++;
-                        }
-                    },
-                },
+        });
+        patchWithCleanup(list.env.services.notification, {
+            add: (message, {type}) => {
+                if (type === "danger") {
+                    warnings++;
+                }
             },
         });
 
         // Start first line edition
-        var $firstFooTd = $(target).find("tbody tr:nth(0) td:nth(1)");
-        await click($firstFooTd);
+        const rows = target.querySelectorAll(".o_data_row")
+        const firstRowFoo = rows[0].querySelector(".o_data_cell [name=foo]")
+        await click(firstRowFoo);
 
         // Remove required foo field value
-        await editInput($firstFooTd.find("input"), "");
+        await editInput(firstRowFoo, "input", "");
 
         // Try starting other line edition
-        var $secondFooTd = $(target).find("tbody tr:nth(1) td:nth(1)");
-        await click($secondFooTd);
-        await testUtils.nextTick();
-
-        assert.strictEqual(
-            $firstFooTd.parent(".o_selected_row").length,
-            1,
+        const secondRowFoo = rows[1].querySelector(".o_data_cell [name=foo]")
+        await click(secondRowFoo);
+        assert.hasClass(
+            rows[0],
+            "o_selected_row",
             "first line should still be in edition as invalid"
         );
         assert.containsOnce(
             target,
-            "tbody tr.o_selected_row",
+            ".o_selected_row",
             "no other line should be in edition"
         );
-        assert.strictEqual(
-            $firstFooTd.find("input.o_field_invalid").length,
-            1,
+        assert.containsOnce(
+            rows[0], ".o_field_invalid input",
             "the required field should be marked as invalid"
         );
         assert.strictEqual(warnings, 1, "a warning should have been displayed");
