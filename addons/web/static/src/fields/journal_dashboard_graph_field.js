@@ -139,10 +139,10 @@ JournalDashboardGraphField.props = {
     className: { type: String, optional: true },
     graphType: String,
 };
-JournalDashboardGraphField.extractProps = (fieldName, record) => {
+JournalDashboardGraphField.extractProps = (fieldName, record, attrs) => {
     return {
         className: record.data["graph_type"] ? `o_graph_${record.data["graph_type"]}chart` : "",
-        graphType: record.data["graph_type"],
+        graphType: record.data["graph_type"] || attrs["t-att-graph_type"].replaceAll("'", ""),
     };
 };
 

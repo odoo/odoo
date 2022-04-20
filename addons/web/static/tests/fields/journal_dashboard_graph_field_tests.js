@@ -1,7 +1,9 @@
 /** @odoo-module **/
 
+import { getFixture } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
+let target;
 let serverData;
 
 QUnit.module("Fields", (hooks) => {
@@ -11,6 +13,7 @@ QUnit.module("Fields", (hooks) => {
         { value: 100, label: "19-25 Dec" },
     ];
     hooks.beforeEach(() => {
+        target = getFixture();
         serverData = {
             models: {
                 partner: {
@@ -62,51 +65,10 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("JournalDashboardGraphField");
 
-    QUnit.skipWOWL("JournalDashboardGraphField attach/detach callbacks", async function (assert) {
-        // This widget is rendered with Chart.js.
-        assert.expect(6);
-
-        /*testUtils.mock.patch(JournalDashboardGraph, {
-            on_attach_callback: function () {
-                assert.step("on_attach_callback");
-            },
-            on_detach_callback: function () {
-                assert.step("on_detach_callback");
-            },
-        });*/
-
-        makeView({
-            serverData,
-            type: "kanban",
-            resModel: "partner",
-            arch:
-                '<kanban class="o_kanban_test">' +
-                '<field name="graph_type"/>' +
-                '<templates><t t-name="kanban-box">' +
-                "<div>" +
-                '<field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>' +
-                "</div>" +
-                "</t>" +
-                "</templates></kanban>",
-            domain: [["id", "in", [1, 2]]],
-        });
-        /*.then(function (kanban) {
-            assert.verifySteps(["on_attach_callback", "on_attach_callback"]);
-
-            kanban.on_detach_callback();
-
-            assert.verifySteps(["on_detach_callback", "on_detach_callback"]);
-
-            kanban.destroy();
-            testUtils.mock.unpatch(JournalDashboardGraph);
-            done();
-        });*/
-    });
-
     QUnit.skipWOWL("JournalDashboardGraphField is rendered correctly", async function (assert) {
         assert.expect(3);
 
-        const kanban = await makeView({
+        await makeView({
             serverData,
             type: "kanban",
             resModel: "partner",
@@ -122,17 +84,17 @@ QUnit.module("Fields", (hooks) => {
             domain: [["id", "in", [1, 2]]],
         });
         assert.containsOnce(
-            kanban,
+            target,
             ".o_kanban_record:first-child .o_graph_barchart",
             "graph of first record should be a barchart"
         );
         assert.containsOnce(
-            kanban,
+            target,
             ".o_kanban_record:nth-child(1) .o_graph_barchart",
             "graph of first record should be a barchart"
         );
         assert.containsOnce(
-            kanban,
+            target,
             ".o_kanban_record:first-child canvas",
             "there should be only one rendered graph by record"
         );
@@ -167,7 +129,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            const kanban = await makeView({
+            await makeView({
                 serverData,
                 type: "kanban",
                 resModel: "partner",
@@ -183,7 +145,7 @@ QUnit.module("Fields", (hooks) => {
                 domain: [["id", "in", [1, 2]]],
             });
             assert.containsN(
-                kanban,
+                target,
                 ".o_dashboard_graph canvas",
                 2,
                 "there should be two graph rendered"
@@ -222,7 +184,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            const kanban = await makeView({
+            await makeView({
                 serverData,
                 type: "kanban",
                 resModel: "partner",
@@ -238,7 +200,7 @@ QUnit.module("Fields", (hooks) => {
                 domain: [["id", "in", [1, 2]]],
             });
             assert.containsN(
-                kanban,
+                target,
                 ".o_dashboard_graph canvas",
                 2,
                 "there should be two graph rendered"
@@ -251,7 +213,7 @@ QUnit.module("Fields", (hooks) => {
             });*/
 
             assert.containsOnce(
-                kanban,
+                target,
                 ".o_dashboard_graph canvas",
                 "there should be one graph rendered"
             );
