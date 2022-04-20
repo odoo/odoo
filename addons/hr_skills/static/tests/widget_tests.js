@@ -132,7 +132,7 @@ odoo.define('hr_skills.field_one_to_many_group_tests', function (require) {
             };
         }
     }, function () {
-        QUnit.test('resumé one2many field group by field render', async function (assert) {
+        QUnit.test('Resume one2many field group by field render', async function (assert) {
             assert.expect(16);
             var form = await createView({
                 View: FormView,
@@ -180,7 +180,7 @@ odoo.define('hr_skills.field_one_to_many_group_tests', function (require) {
 
             form.destroy();
         });
-        QUnit.test('resumé one2many field group by field create', async function (assert) {
+        QUnit.test('Resume one2many field group by field create', async function (assert) {
             assert.expect(5);
             var form = await createView({
                 View: FormView,
@@ -234,7 +234,7 @@ odoo.define('hr_skills.field_one_to_many_group_tests', function (require) {
             await testUtils.form.clickSave(form);
             form.destroy();
         });
-        QUnit.test('resumé one2many field group by field delete', async function (assert) {
+        QUnit.test('Resume one2many field group by field delete', async function (assert) {
             assert.expect(2);
             var form = await createView({
                 View: FormView,

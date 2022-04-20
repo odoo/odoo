@@ -7,7 +7,7 @@ from odoo import api, fields, models
 class Employee(models.Model):
     _inherit = 'hr.employee'
 
-    resume_line_ids = fields.One2many('hr.resume.line', 'employee_id', string="Resumé lines")
+    resume_line_ids = fields.One2many('hr.resume.line', 'employee_id', string="Resume lines")
     employee_skill_ids = fields.One2many('hr.employee.skill', 'employee_id', string="Skills")
 
     @api.model_create_multi
@@ -30,13 +30,13 @@ class Employee(models.Model):
 class EmployeePublic(models.Model):
     _inherit = 'hr.employee.public'
 
-    resume_line_ids = fields.One2many('hr.resume.line', 'employee_id', string="Resumé lines")
+    resume_line_ids = fields.One2many('hr.resume.line', 'employee_id', string="Resume lines")
     employee_skill_ids = fields.One2many('hr.employee.skill', 'employee_id', string="Skills")
 
 
 class ResumeLine(models.Model):
     _name = 'hr.resume.line'
-    _description = "Resumé line of an employee"
+    _description = "Resume line of an employee"
     _order = "line_type_id, date_end desc, date_start desc"
 
     employee_id = fields.Many2one('hr.employee', required=True, ondelete='cascade')
@@ -56,7 +56,7 @@ class ResumeLine(models.Model):
 
 class ResumeLineType(models.Model):
     _name = 'hr.resume.line.type'
-    _description = "Type of a resumé line"
+    _description = "Type of a Resume line"
     _order = "sequence"
 
     name = fields.Char(required=True)
