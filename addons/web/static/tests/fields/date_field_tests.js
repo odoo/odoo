@@ -621,8 +621,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         "do not trigger a field_changed for datetime field with date widget",
         async function (assert) {
-            assert.expect(3);
-
             await makeView({
                 type: "form",
                 resModel: "partner",
@@ -650,7 +648,7 @@ QUnit.module("Fields", (hooks) => {
             await triggerEvents(input, null, ["input", "change", "focusout"]);
             await click(target, ".o_form_button_save");
 
-            assert.verifySteps(["read"]); // should not have save as nothing changed
+            assert.verifySteps(["get_views", "read"]); // should not have save as nothing changed
         }
     );
 

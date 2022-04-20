@@ -525,12 +525,11 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
             mockRPC(route, args) {
-                if (args.method !== "read") {
-                    throw new Error("No rpc apart from read");
-                }
+                assert.step(args.method);
             },
         });
 
+        assert.verifySteps(["get_views", "read", "read"]);
         assert.containsNone(target, "td.o_list_record_selector");
         assert.containsOnce(target, ".o_field_x2many_list_row_add");
         assert.containsOnce(target, "td.o_list_record_remove", 1);
@@ -1871,8 +1870,10 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.skipWOWL("onchange on one2many containing x2many in form view", async function (assert) {
-        assert.expect(16);
-
+        serverData.views = {
+            "partner,false,list": '<tree><field name="foo"/></tree>',
+            "partner,false,search": "<search></search>",
+        };
         serverData.models.partner.onchanges = {
             foo: function (obj) {
                 obj.turtles = [[0, false, { turtle_foo: "new record" }]];
@@ -1883,7 +1884,7 @@ QUnit.module("Fields", (hooks) => {
             "partner,false,search": "<search></search>",
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -1913,7 +1914,7 @@ QUnit.module("Fields", (hooks) => {
 
         // open the created o2m record in a form view, and add a m2m subrecord
         // in its relation
-        await click(target, ".o_data_row");
+        await click(target.querySelector(".o_data_row .o_data_cell"));
 
         assert.containsOnce(target, ".modal");
         assert.containsNone(target, ".modal .o_data_row");
@@ -1924,59 +1925,61 @@ QUnit.module("Fields", (hooks) => {
         assert.containsN(target, ".modal", 2, "should have opened a second dialog");
 
         // select a many2many subrecord
-        await click($(".modal:nth(1) .o_list_view .o_data_cell:first"));
+        let secondDialog = target.querySelectorAll(".modal")[1];
+        await click(secondDialog.querySelector(".o_list_view .o_data_cell"));
 
         assert.containsOnce(target, ".modal");
         assert.containsOnce(target, ".modal .o_data_row");
-
         assert.containsNone(
-            $(".modal"),
-            ".o_x2m_control_panel .o_pager",
+            target,
+            ".modal .o_x2m_control_panel .o_pager",
             "m2m pager should be hidden"
         );
 
         // click on 'Save & Close'
-        await click($(".modal-footer .btn-primary:first"));
+        await click(target.querySelector(".modal-footer .btn-primary"));
 
-        assert.strictEqual($(".modal").length, 0, "dialog should be closed");
+        assert.containsNone(target, ".modal", "dialog should be closed");
 
         // reopen o2m record, and another m2m subrecord in its relation, but
         // discard the changes
-        await click(form.$(".o_data_row"));
+        await click(target.querySelector(".o_data_row .o_data_cell"));
 
-        assert.strictEqual($(".modal").length, 1, "should have opened a dialog");
-        assert.strictEqual(
-            $(".modal .o_data_row").length,
-            1,
+        assert.containsOnce(target, ".modal", "should have opened a dialog");
+        assert.containsOnce(
+            target,
+            ".modal .o_data_row",
             "there should be one record in the one2many in the dialog"
         );
 
         // add another m2m subrecord
-        await click($(".modal .o_field_x2many_list_row_add a"));
+        await click(target.querySelector(".modal .o_field_x2many_list_row_add a"));
 
-        assert.strictEqual($(".modal").length, 2, "should have opened a second dialog");
+        assert.containsN(target, ".modal", 2, "should have opened a second dialog");
 
-        await click($(".modal:nth(1) .o_list_view .o_data_cell:first"));
+        secondDialog = target.querySelectorAll(".modal")[1];
+        await click(secondDialog.querySelector(".o_list_view .o_data_cell"));
 
-        assert.strictEqual($(".modal").length, 1, "second dialog should be closed");
-        assert.strictEqual(
-            $(".modal .o_data_row").length,
+        assert.containsOnce(target, ".modal", "second dialog should be closed");
+        assert.containsN(
+            target,
+            ".modal .o_data_row",
             2,
             "there should be two records in the one2many in the dialog"
         );
 
         // click on 'Discard'
-        await click($(".modal-footer .btn-secondary"));
+        await click(target.querySelector(".modal-footer .btn-secondary"));
 
-        assert.strictEqual($(".modal").length, 0, "dialog should be closed");
+        assert.containsNone(target, ".modal", "dialog should be closed");
 
         // reopen o2m record to check that second changes have properly been discarded
-        await click(form.$(".o_data_row"));
+        await click(target.querySelector(".o_data_row .o_data_cell"));
 
-        assert.strictEqual($(".modal").length, 1, "should have opened a dialog");
-        assert.strictEqual(
-            $(".modal .o_data_row").length,
-            1,
+        assert.containsOnce(target, ".modal", "should have opened a dialog");
+        assert.containsOnce(
+            target,
+            ".modal .o_data_row",
             "there should be one record in the one2many in the dialog"
         );
     });
@@ -2306,8 +2309,10 @@ QUnit.module("Fields", (hooks) => {
                         </kanban>
                     </field>
                 </form>`,
-            mockRPC() {
-                count++;
+            mockRPC(route, args) {
+                if (args.method !== "get_views") {
+                    count++;
+                }
             },
             resId: 1,
             resIds: [1, 2],
@@ -3580,7 +3585,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
         assert.containsNone(target, "tr.o_data_row");
 
-        assert.verifySteps(["read", "onchange", "onchange"]);
+        assert.verifySteps(["get_views", "read", "onchange", "onchange"]);
     });
 
     QUnit.test("editable one2many list, adding line when only one page", async function (assert) {
@@ -3857,8 +3862,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("editing a o2m, with required field and onchange", async function (assert) {
-        assert.expect(11);
-
         serverData.models.turtle.fields.turtle_foo.required = true;
         delete serverData.models.turtle.fields.turtle_foo.default;
         serverData.models.turtle.onchanges = {
@@ -3916,7 +3919,7 @@ QUnit.module("Fields", (hooks) => {
             "9"
         );
 
-        assert.verifySteps(["read", "onchange", "onchange", "write", "read", "read"]);
+        assert.verifySteps(["get_views", "read", "onchange", "onchange", "write", "read", "read"]);
     });
 
     QUnit.skipWOWL("editable o2m, pressing ESC discard current changes", async function (assert) {
@@ -4034,8 +4037,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         "editable o2m with onchange and required field: delete an invalid line",
         async function (assert) {
-            assert.expect(5);
-
             serverData.models.partner.onchanges = {
                 turtles: function () {},
             };
@@ -4060,10 +4061,11 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
 
+            assert.verifySteps(["get_views", "read", "read"]);
             await clickEdit(target);
             await click(target.querySelector(".o_data_cell"));
             await editInput(target, ".o_field_widget[name=product_id] input", "");
-            assert.verifySteps(["read", "read"], "no onchange should be done as line is invalid");
+            assert.verifySteps([], "no onchange should be done as line is invalid");
             await click(target.querySelector(".o_list_record_remove"));
             assert.verifySteps(["onchange"], "onchange should have been done");
         }
@@ -4205,7 +4207,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(td.textContent, "9");
         await click(td);
         await editInput(target, 'td [name="turtle_int"] input', "3");
-        assert.verifySteps(["read", "read", "onchange"]);
+        assert.verifySteps(["get_views", "read", "read", "onchange"]);
     });
 
     QUnit.test("one2many and onchange (with date)", async function (assert) {
@@ -4251,7 +4253,7 @@ QUnit.module("Fields", (hooks) => {
         await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .day")[22]);
         await clickSave(target);
 
-        assert.verifySteps(["read", "read", "onchange", "write", "read", "read"]);
+        assert.verifySteps(["get_views", "read", "read", "onchange", "write", "read", "read"]);
     });
 
     QUnit.test("one2many and onchange (with command DELETE_ALL)", async function (assert) {
@@ -5388,7 +5390,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         "parent data is properly sent on an onchange rpc, new record",
         async function (assert) {
-            assert.expect(4);
+            assert.expect(5);
 
             serverData.models.turtle.onchanges = { turtle_bar: function () {} };
             await makeView({
@@ -5417,7 +5419,7 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
             await addRow(target);
-            assert.verifySteps(["onchange", "onchange"]);
+            assert.verifySteps(["get_views", "onchange", "onchange"]);
         }
     );
 
@@ -5876,7 +5878,6 @@ QUnit.module("Fields", (hooks) => {
         "many2manytag in one2many, onchange, some modifiers, and more than one page",
         async function (assert) {
             serverData.models.partner.records[0].turtles = [1, 2, 3];
-
             serverData.models.partner.onchanges.turtles = function () {};
 
             await makeView({
@@ -5907,6 +5908,7 @@ QUnit.module("Fields", (hooks) => {
             assert.containsOnce(target, ".o_data_row");
 
             assert.verifySteps([
+                "get_views", // main form view
                 "read", // initial read on partner
                 "read", // initial read on turtle
                 "read", // batched read on partner (field partner_ids)
@@ -7076,7 +7078,7 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector('.o_field_widget[name="int_field"] input').value,
             "0"
         );
-        assert.verifySteps(["read", "onchange"]);
+        assert.verifySteps(["get_views", "read", "onchange"]);
 
         await editInput(target, '.o_field_widget[name="turtle_foo"] input', "some text");
         assert.verifySteps(["onchange"]);
@@ -7605,7 +7607,7 @@ QUnit.module("Fields", (hooks) => {
         await clickEdit(target);
 
         await editInput(target, '[name="foo"] input', "abcd");
-        assert.verifySteps(["read", "onchange"]);
+        assert.verifySteps(["get_views", "read", "onchange"]);
     });
 
     QUnit.test(
@@ -7739,8 +7741,6 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test("onchange and required fields with override in arch", async function (assert) {
-        assert.expect(4);
-
         serverData.models.partner.onchanges = {
             turtles: function () {},
         };
@@ -7770,7 +7770,7 @@ QUnit.module("Fields", (hooks) => {
         // triggers an onchange on partner, because the new record is valid
         await addRow(target);
 
-        assert.verifySteps(["read", "onchange", "onchange"]);
+        assert.verifySteps(["get_views", "read", "onchange", "onchange"]);
     });
 
     QUnit.skipWOWL("onchange on a one2many containing a one2many", async function (assert) {
@@ -7821,7 +7821,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("editing tabbed one2many (editable=bottom)", async function (assert) {
-        assert.expect(12);
+        assert.expect(13);
 
         serverData.models.partner.records[0].turtles = [];
         for (let i = 0; i < 42; i++) {
@@ -7867,7 +7867,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
         assert.containsN(target, "tr.o_data_row", 40);
 
-        assert.verifySteps(["read", "read", "onchange", "write", "read", "read"]);
+        assert.verifySteps(["get_views", "read", "read", "onchange", "write", "read", "read"]);
     });
 
     QUnit.test("editing tabbed one2many (editable=bottom), again...", async function (assert) {
@@ -7905,7 +7905,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("editing tabbed one2many (editable=top)", async function (assert) {
-        assert.expect(15);
+        assert.expect(16);
 
         serverData.models.partner.records[0].turtles = [];
         serverData.models.turtle.fields.turtle_foo.default = "default foo";
@@ -7952,7 +7952,16 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
         assert.containsN(target, "tr.o_data_row", 40);
 
-        assert.verifySteps(["read", "read", "read", "onchange", "write", "read", "read"]);
+        assert.verifySteps([
+            "get_views",
+            "read",
+            "read",
+            "read",
+            "onchange",
+            "write",
+            "read",
+            "read",
+        ]);
     });
 
     QUnit.skipWOWL(
@@ -8255,7 +8264,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("propagate context to sub views without default_* keys", async function (assert) {
-        assert.expect(7);
+        assert.expect(8);
 
         await makeView({
             type: "form",
@@ -9681,6 +9690,7 @@ QUnit.module("Fields", (hooks) => {
                 "some foo value"
             );
             assert.verifySteps([
+                "get_views", // main form view
                 "onchange", // main record
                 "onchange", // line 1
                 "onchange", // line 2
@@ -11242,8 +11252,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("do not call name_get if display_name already known", async function (assert) {
-        assert.expect(4);
-
         serverData.models.partner.fields.product_id.default = 37;
         serverData.models.partner.onchanges = {
             trululu: function (obj) {
@@ -11274,7 +11282,7 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_field_widget[name=product_id] input").value,
             "xphone"
         );
-        assert.verifySteps(["onchange on partner"]);
+        assert.verifySteps(["get_views on partner", "onchange on partner"]);
     });
 
     QUnit.test("x2many default_order multiple fields", async function (assert) {

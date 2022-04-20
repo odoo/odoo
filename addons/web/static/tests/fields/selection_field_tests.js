@@ -94,8 +94,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("SelectionField, edition and on many2one field", async function (assert) {
-        assert.expect(18);
-
         serverData.models.partner.onchanges = { product_id: function () {} };
         serverData.models.partner.records[0].product_id = 37;
         serverData.models.partner.records[0].trululu = false;
@@ -185,7 +183,7 @@ QUnit.module("Fields", (hooks) => {
             "should have correct value in color field"
         );
 
-        assert.verifySteps(["read", "name_search", "name_search", "onchange"]);
+        assert.verifySteps(["get_views", "read", "name_search", "name_search", "onchange"]);
     });
 
     QUnit.test("unset selection field with 0 as key", async function (assert) {

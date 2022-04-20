@@ -1,12 +1,10 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { deepCopy } from "@web/core/utils/objects";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { getFixture, mount } from "@web/../tests/helpers/utils";
 import { getDefaultConfig, View } from "@web/views/view";
 import { MainComponentsContainer } from "@web/core/main_components_container";
-import { _getView } from "../helpers/mock_server";
 import {
     setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,

@@ -305,8 +305,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("do not trigger a field_changed if they have not changed", async function (assert) {
-        assert.expect(2);
-
         serverData.models.partner.records[0].float_field = false;
         serverData.models.partner.records[0].int_field = false;
         await makeView({
@@ -329,7 +327,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".o_form_button_edit"));
         await click(target.querySelector(".o_form_button_save"));
 
-        assert.verifySteps(["read"]); // should not have save as nothing changed
+        assert.verifySteps(["get_views", "read"]); // should not have save as nothing changed
     });
 
     QUnit.skipWOWL("float widget on monetary field", async function (assert) {

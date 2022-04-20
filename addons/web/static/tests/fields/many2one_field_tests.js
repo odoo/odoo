@@ -741,7 +741,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         "onchanges on many2ones trigger when editing record in form view",
         async function (assert) {
-            assert.expect(10);
+            assert.expect(11);
 
             serverData.models.partner.onchanges.user_id = function () {};
             serverData.models.user.fields.other_field = { string: "Other Field", type: "char" };
@@ -794,6 +794,7 @@ QUnit.module("Fields", (hooks) => {
             // save the modal and make sure an onchange is triggered
             await click(document.body, ".modal .modal-footer .btn-primary");
             assert.verifySteps([
+                "get_views",
                 "read",
                 "get_formview_id",
                 "get_views",
@@ -2799,8 +2800,6 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test("creating record with many2one with option always_reload", async function (assert) {
-        assert.expect(2);
-
         serverData.models.partner.fields.trululu.default = 1;
         serverData.models.partner.onchanges = {
             trululu(obj) {
@@ -2830,7 +2829,7 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        assert.strictEqual(count, 2, "should have done 2 rpcs (onchange and name_get)");
+        assert.strictEqual(count, 3, "should have done 3 rpcs (get_views, onchange and name_get)");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name='trululu'] input").value,
             "hello world",
@@ -3839,7 +3838,7 @@ QUnit.module("Fields", (hooks) => {
         // when the user clicks on 'Search More...' in a many2one dropdown, and there is no text
         // in the input (i.e. no value to search on), we bypass the name_search that is meant to
         // return a list of preselected ids to filter on in the list view (opened in a dialog)
-        assert.expect(6);
+        assert.expect(7);
 
         for (let i = 0; i < 8; i++) {
             serverData.models.partner.records.push({ id: 100 + i, display_name: `test_${i}` });
@@ -3863,7 +3862,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>
             `,
             mockRPC(route, { kwargs, method }) {
-                assert.step(method || route);
+                assert.step(method);
                 if (method === "web_search_read") {
                     assert.deepEqual(
                         kwargs.domain,
@@ -3882,6 +3881,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, `.o_field_widget[name="trululu"] .o_m2o_dropdown_option_search_more`);
 
         assert.verifySteps([
+            "get_views", // main form view
             "onchange",
             "name_search", // to display results in the dropdown
             "get_views", // list view in dialog

@@ -1034,7 +1034,10 @@ QUnit.module("Views", (hooks) => {
             });
 
             await click(target.querySelector(".o_list_button_add"));
-            assert.verifySteps(["web_search_read", "onchange"], "no nameget should be done");
+            assert.verifySteps(
+                ["get_views", "web_search_read", "onchange"],
+                "no nameget should be done"
+            );
         }
     );
 
@@ -2658,11 +2661,13 @@ QUnit.module("Views", (hooks) => {
                         <field name="qux" widget="float_time" sum="Sum"/>
                     </tree>`,
                 mockRPC: async function (route, args, performRPC) {
-                    const result = await performRPC(route, args);
-                    result.groups.forEach((group) => {
-                        delete group.qux;
-                    });
-                    return Promise.resolve(result);
+                    if (args.method === "web_read_group") {
+                        const result = await performRPC(route, args);
+                        result.groups.forEach((group) => {
+                            delete group.qux;
+                        });
+                        return Promise.resolve(result);
+                    }
                 },
             });
 
@@ -4200,7 +4205,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("archiving one record", async function (assert) {
-        assert.expect(12);
+        assert.expect(13);
 
         // add active field on foo model and make all records active
         serverData.models.foo.fields.active = { string: "Active", type: "boolean", default: true };
@@ -4223,7 +4228,10 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(target, "div.o_control_panel .o_cp_action_menus");
 
-        assert.verifySteps(["/web/dataset/call_kw/foo/web_search_read"]);
+        assert.verifySteps([
+            "/web/dataset/call_kw/foo/get_views",
+            "/web/dataset/call_kw/foo/web_search_read",
+        ]);
         await toggleActionMenu(target);
         await toggleMenuItem(target, "Archive");
 
@@ -4783,7 +4791,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("can display a list with a many2many field", async function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         await makeView({
             type: "list",
@@ -4794,7 +4802,7 @@ QUnit.module("Views", (hooks) => {
                 assert.step(args.method);
             },
         });
-        assert.verifySteps(["web_search_read"], "should have done 1 web_search_read");
+        assert.verifySteps(["get_views", "web_search_read"], "should have done 1 web_search_read");
         assert.ok(
             $(target).find("td:contains(3 records)").length,
             "should have a td with correct formatted value"
@@ -5462,7 +5470,7 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test("groupby node with a button", async function (assert) {
-        assert.expect(16);
+        assert.expect(17);
 
         serverData.models.foo.fields.currency_id.sortable = true;
         const list = await makeView({
@@ -5494,7 +5502,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.verifySteps(["web_search_read"]);
+        assert.verifySteps(["get_views", "web_search_read"]);
         assert.containsOnce(
             target,
             "thead th:not(.o_list_record_selector)",
@@ -5545,6 +5553,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("groupby node with a button with modifiers", async function (assert) {
+        assert.expect(15);
         await makeView({
             type: "list",
             resModel: "foo",
@@ -5554,7 +5563,7 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo"/>
                     <groupby name="currency_id">
                         <field name="position"/>
-                        <button string="Button 1" type="object" name="button_method" attrs=\'{"invisible": [("position", "=", "after")]}\'/>
+                        <button string="Button 1" type="object" name="button_method" attrs='{"invisible": [("position", "=", "after")]}'/>
                     </groupby>
                 </tree>`,
             mockRPC: function (route, args) {
@@ -5566,7 +5575,7 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["currency_id"],
         });
 
-        assert.verifySteps(["web_read_group", "read"]);
+        assert.verifySteps(["get_views", "web_read_group", "read"]);
         assert.containsNone(target, ".o_group_header button");
         assert.containsNone(target, ".o_data_row");
 
@@ -5612,7 +5621,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(groupHeaders[0], "button");
             assert.containsNone(groupHeaders[1], "button");
 
-            assert.verifySteps(["web_read_group", "read"]);
+            assert.verifySteps(["get_views", "web_read_group", "read"]);
         }
     );
 
@@ -5626,7 +5635,7 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo"/>
                     <groupby name="currency_id">
                         <field name="position"/>
-                        <button string="Button 1" type="object" name="button_method" attrs=\'{"invisible": [("position", "=", "after")]}\'/>
+                        <button string="Button 1" type="object" name="button_method" attrs='{"invisible": [("position", "=", "after")]}'/>
                     </groupby>
                 </tree>`,
             groupBy: ["currency_id"],
@@ -5650,7 +5659,7 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo"/>
                     <groupby name="currency_id">
                         <field name="position"/>
-                        <button string="Button 1" type="object" name="button_method" attrs=\'{"invisible": [("position", "=", "after")]}\'/>
+                        <button string="Button 1" type="object" name="button_method" attrs='{"invisible": [("position", "=", "after")]}'/>
                     </groupby>
                 </tree>`,
             groupBy: ["currency_id"],
@@ -5932,13 +5941,13 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("click on a button in a list view", async function (assert) {
-        assert.expect(9);
+        assert.expect(10);
 
         const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch:`
+            arch: `
                 <tree>
                     <field name="foo"/>
                     <button string="a button" name="button_action" icon="fa-car" type="object"/>
@@ -5950,35 +5959,23 @@ QUnit.module("Views", (hooks) => {
         patchWithCleanup(list.env.services.action, {
             doActionButton: (action) => {
                 assert.deepEqual(action.resId, 1, "should call with correct id");
-                assert.strictEqual(
-                    action.resModel,
-                    "foo",
-                    "should call with correct model"
-                );
-                assert.strictEqual(
-                    action.name,
-                    "button_action",
-                    "should call correct method"
-                );
-                assert.strictEqual(
-                    action.type,
-                    "object",
-                    "should have correct type"
-                );
+                assert.strictEqual(action.resModel, "foo", "should call with correct model");
+                assert.strictEqual(action.name, "button_action", "should call correct method");
+                assert.strictEqual(action.type, "object", "should have correct type");
                 action.onClose();
             },
         });
 
         assert.containsN(target, "tbody .o_list_button", 4, "there should be one button per row");
-        assert.containsN(
-            target,
-            ".o_data_row .o_list_button .o_button_icon.fa.fa-car",
-            4
-        );
+        assert.containsN(target, ".o_data_row .o_list_button .o_button_icon.fa.fa-car", 4);
 
         await click(target.querySelector(".o_data_row .o_list_button > button"));
         assert.verifySteps(
-            ["/web/dataset/call_kw/foo/web_search_read", "/web/dataset/call_kw/foo/web_search_read"],
+            [
+                "/web/dataset/call_kw/foo/get_views",
+                "/web/dataset/call_kw/foo/web_search_read",
+                "/web/dataset/call_kw/foo/web_search_read",
+            ],
             "should have reloaded the view (after the action is complete)"
         );
     });
@@ -6023,7 +6020,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch:`
+            arch: `
                 <tree>
                     <field name="id"/>
                     <field name="amount"/>
@@ -6038,19 +6035,23 @@ QUnit.module("Views", (hooks) => {
             "currency_id column should not be in the table"
         );
         assert.strictEqual(
-            target.querySelector("tbody .o_data_row:first-child .o_data_cell:nth-child(3)").textContent.replace(/\s/g, " "),
+            target
+                .querySelector("tbody .o_data_row:first-child .o_data_cell:nth-child(3)")
+                .textContent.replace(/\s/g, " "),
             "1200.00 €",
             "currency_id column should not be in the table"
         );
         assert.strictEqual(
-            target.querySelector("tbody .o_data_row:nth-child(2) .o_data_cell:nth-child(3)").textContent.replace(/\s/g, " "),
+            target
+                .querySelector("tbody .o_data_row:nth-child(2) .o_data_cell:nth-child(3)")
+                .textContent.replace(/\s/g, " "),
             "$ 500.00",
             "currency_id column should not be in the table"
         );
     });
 
     QUnit.test("simple list with date and datetime", async function (assert) {
-        patchTimeZone(120)
+        patchTimeZone(120);
 
         await makeView({
             type: "list",
@@ -6058,12 +6059,8 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<tree><field name="date"/><field name="datetime"/></tree>',
         });
-        const cells = target.querySelectorAll(".o_data_row .o_data_cell")
-        assert.strictEqual(
-            cells[0].textContent,
-            "01/25/2017",
-            "should have formatted the date"
-        );
+        const cells = target.querySelectorAll(".o_data_row .o_data_cell");
+        assert.strictEqual(cells[0].textContent, "01/25/2017", "should have formatted the date");
         assert.strictEqual(
             cells[1].textContent,
             "12/12/2016 12:55:05",
@@ -6343,16 +6340,15 @@ QUnit.module("Views", (hooks) => {
 
         // open the first group
         await click(target.querySelector(".o_group_header"));
-        assert.containsN(target, ".o_group_header", 5, "should contain 2 groups at first level and 3 groups at second level");
+        assert.containsN(
+            target,
+            ".o_group_header",
+            5,
+            "should contain 2 groups at first level and 3 groups at second level"
+        );
         assert.deepEqual(
-            [...target.querySelectorAll(".o_group_header .o_group_name")].map(el => el.innerText),
-            [
-                "Value 1 (5)",
-                "Low (3)",
-                "Medium (1)",
-                "High (1)",
-                "Value 2 (1)"
-              ],
+            [...target.querySelectorAll(".o_group_header .o_group_name")].map((el) => el.innerText),
+            ["Value 1 (5)", "Low (3)", "Medium (1)", "High (1)", "Value 2 (1)"]
         );
     });
 
@@ -6381,18 +6377,12 @@ QUnit.module("Views", (hooks) => {
             "o_pager",
             "last cell of open group header should have classname 'o_pager'"
         );
-        assert.deepEqual(
-            getPagerValue(target.querySelector(".o_group_header")),
-            [1, 3],
-        );
+        assert.deepEqual(getPagerValue(target.querySelector(".o_group_header")), [1, 3]);
         assert.containsN(target, ".o_data_row", 3);
 
         // go to next page
         await pagerNext(target.querySelector(".o_group_header"));
-        assert.deepEqual(
-            getPagerValue(target.querySelector(".o_group_header")),
-            [4, 4],
-        );
+        assert.deepEqual(getPagerValue(target.querySelector(".o_group_header")), [4, 4]);
         assert.containsOnce(target, ".o_data_row");
     });
 

@@ -411,8 +411,12 @@ export class Record extends DataPoint {
     async load() {
         if (!this.__bm_handle__) {
             this.__bm_handle__ = await this.model.__bm__.load({ ...this.__bm_load_params__ });
-        } else {
+        } else if (!this.isVirtual) {
             await this.model.__bm__.reload(this.__bm_handle__, { viewType: this.__viewType });
+        } else {
+            this.model.__bm__.generateDefaultValues(this.__bm_handle__, {
+                viewType: this.__viewType,
+            });
         }
         this.__syncData();
         this._invalidFields = new Set();

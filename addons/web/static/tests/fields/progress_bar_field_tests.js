@@ -323,18 +323,17 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test("ProgressBarField: Standard readonly mode is readonly", async function (assert) {
-        assert.expect(5);
         serverData.models.partner.records[0].int_field = 99;
 
         await makeView({
             serverData,
             type: "form",
             resModel: "partner",
-            arch:
-                "<form>" +
-                '<field name="float_field" invisible="1" />' +
-                "<field name=\"int_field\" widget=\"progressbar\" options=\"{'editable': true, 'max_value': 'float_field', 'edit_max_value': true}\" />" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="float_field" invisible="1"/>
+                    <field name="int_field" widget="progressbar" options="{'editable': true, 'max_value': 'float_field', 'edit_max_value': true}"/>
+                </form>`,
             resId: 1,
             mockRPC(route) {
                 assert.step(route);
@@ -353,7 +352,10 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsNone(target, ".o_progressbar_value.o_input", "no input in readonly mode");
 
-        assert.verifySteps(["/web/dataset/call_kw/partner/read"]);
+        assert.verifySteps([
+            "/web/dataset/call_kw/partner/get_views",
+            "/web/dataset/call_kw/partner/read",
+        ]);
     });
 
     QUnit.test(

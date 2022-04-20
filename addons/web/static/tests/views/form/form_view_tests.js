@@ -570,16 +570,18 @@ QUnit.module("Views", (hooks) => {
             arch: '<form><field name="foo"/></form>',
             resId: 1,
             mockRPC(route, args) {
-                assert.deepEqual(
-                    args.args[1],
-                    ["foo", "display_name"],
-                    "should only fetch requested fields"
-                );
-                assert.strictEqual(
-                    args.kwargs.context.bin_size,
-                    true,
-                    "bin_size should always be in the context"
-                );
+                if (args.method === "read") {
+                    assert.deepEqual(
+                        args.args[1],
+                        ["foo", "display_name"],
+                        "should only fetch requested fields"
+                    );
+                    assert.strictEqual(
+                        args.kwargs.context.bin_size,
+                        true,
+                        "bin_size should always be in the context"
+                    );
+                }
             },
         });
     });
@@ -1762,7 +1764,8 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("readonly attrs on lines are re-evaluated on field change 2",
+    QUnit.test(
+        "readonly attrs on lines are re-evaluated on field change 2",
         async function (assert) {
             assert.expect(4);
 
@@ -1825,92 +1828,89 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test(
-        "empty fields have o_form_empty class in readonly mode",
-        async function (assert) {
-            assert.expect(8);
+    QUnit.test("empty fields have o_form_empty class in readonly mode", async function (assert) {
+        assert.expect(8);
 
-            serverData.models.partner.fields.foo.default = false; // no default value for this test
-            serverData.models.partner.records[1].foo = false; // 1 is record with id=2
-            serverData.models.partner.records[1].trululu = false; // 1 is record with id=2
-            serverData.models.partner.fields.int_field.readonly = true;
-            serverData.models.partner.onchanges.foo = function (obj) {
-                if (obj.foo === "hello") {
-                    obj.int_field = false;
-                }
-            };
+        serverData.models.partner.fields.foo.default = false; // no default value for this test
+        serverData.models.partner.records[1].foo = false; // 1 is record with id=2
+        serverData.models.partner.records[1].trululu = false; // 1 is record with id=2
+        serverData.models.partner.fields.int_field.readonly = true;
+        serverData.models.partner.onchanges.foo = function (obj) {
+            if (obj.foo === "hello") {
+                obj.int_field = false;
+            }
+        };
 
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch:
-                    "<form>" +
-                    "<sheet>" +
-                    "<group>" +
-                    '<field name="foo"/>' +
-                    "<field name=\"trululu\" attrs=\"{'readonly': [['foo', '=', False]]}\"/>" +
-                    '<field name="int_field"/>' +
-                    "</group>" +
-                    "</sheet>" +
-                    "</form>",
-                resId: 2,
-            });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch:
+                "<form>" +
+                "<sheet>" +
+                "<group>" +
+                '<field name="foo"/>' +
+                "<field name=\"trululu\" attrs=\"{'readonly': [['foo', '=', False]]}\"/>" +
+                '<field name="int_field"/>' +
+                "</group>" +
+                "</sheet>" +
+                "</form>",
+            resId: 2,
+        });
 
-            const form = target.querySelector(".o_form_view");
-            assert.containsN(
-                form,
-                ".o_field_widget.o_field_empty",
-                2,
-                "should have 2 empty fields with correct class"
-            );
-            assert.containsN(
-                form,
-                ".o_form_label_empty",
-                2,
-                "should have 2 muted labels (for the empty fieds) in readonly"
-            );
+        const form = target.querySelector(".o_form_view");
+        assert.containsN(
+            form,
+            ".o_field_widget.o_field_empty",
+            2,
+            "should have 2 empty fields with correct class"
+        );
+        assert.containsN(
+            form,
+            ".o_form_label_empty",
+            2,
+            "should have 2 muted labels (for the empty fieds) in readonly"
+        );
 
-            await click(form.querySelector(".o_form_button_edit"));
+        await click(form.querySelector(".o_form_button_edit"));
 
-            assert.containsOnce(
-                form,
-                ".o_field_empty",
-                "in edit mode, only empty readonly fields should have the o_field_empty class"
-            );
-            assert.containsOnce(
-                form,
-                ".o_form_label_empty",
-                "in edit mode, only labels associated to empty readonly fields should have the o_form_label_empty class"
-            );
+        assert.containsOnce(
+            form,
+            ".o_field_empty",
+            "in edit mode, only empty readonly fields should have the o_field_empty class"
+        );
+        assert.containsOnce(
+            form,
+            ".o_form_label_empty",
+            "in edit mode, only labels associated to empty readonly fields should have the o_form_label_empty class"
+        );
 
-            await editInput(form, ".o_field_widget[name=foo] input", "test");
+        await editInput(form, ".o_field_widget[name=foo] input", "test");
 
-            assert.containsNone(
-                form,
-                ".o_field_empty",
-                "after readonly modifier change, the o_field_empty class should have been removed"
-            );
-            assert.containsNone(
-                form,
-                ".o_form_label_empty",
-                "after readonly modifier change, the o_form_label_empty class should have been removed"
-            );
+        assert.containsNone(
+            form,
+            ".o_field_empty",
+            "after readonly modifier change, the o_field_empty class should have been removed"
+        );
+        assert.containsNone(
+            form,
+            ".o_form_label_empty",
+            "after readonly modifier change, the o_form_label_empty class should have been removed"
+        );
 
-            await editInput(form, ".o_field_widget[name=foo] input", "hello");
+        await editInput(form, ".o_field_widget[name=foo] input", "hello");
 
-            assert.containsOnce(
-                form,
-                ".o_field_empty",
-                "after value changed to false for a readonly field, the o_field_empty class should have been added"
-            );
-            assert.containsOnce(
-                form,
-                ".o_form_label_empty",
-                "after value changed to false for a readonly field, the o_form_label_empty class should have been added"
-            );
-        }
-    );
+        assert.containsOnce(
+            form,
+            ".o_field_empty",
+            "after value changed to false for a readonly field, the o_field_empty class should have been added"
+        );
+        assert.containsOnce(
+            form,
+            ".o_form_label_empty",
+            "after value changed to false for a readonly field, the o_form_label_empty class should have been added"
+        );
+    });
 
     QUnit.test(
         "empty fields' labels still get the empty class after widget rerender",
@@ -2173,7 +2173,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("required float fields works as expected", async function (assert) {
-        assert.expect(10);
+        assert.expect(11);
 
         serverData.models.partner.fields.qux.required = true;
         await makeView({
@@ -2222,7 +2222,7 @@ QUnit.module("Views", (hooks) => {
             "qux input is properly formatted"
         );
 
-        assert.verifySteps(["onchange", "create", "read", "write", "read"]);
+        assert.verifySteps(["get_views", "onchange", "create", "read", "write", "read"]);
     });
 
     QUnit.test("separators", async function (assert) {
@@ -2266,7 +2266,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("buttons in form view", async function (assert) {
-        assert.expect(9);
+        assert.expect(10);
 
         // FIXME: there should be no dependency from views to actionService
         const mockedActionService = {
@@ -2320,6 +2320,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_form_statusbar button.s"));
 
         assert.verifySteps([
+            "get_views",
             "read", // initial read
             "post",
             "read", // reload (successfully clicked on p)
@@ -2425,8 +2426,10 @@ QUnit.module("Views", (hooks) => {
                     </sheet>
                 </form>`,
             resId: 2,
-            mockRPC() {
-                rpcCount++;
+            mockRPC(route, args) {
+                if (args.method !== "get_views") {
+                    rpcCount++;
+                }
             },
         });
         assert.verifySteps(["load 1"]);
@@ -2440,7 +2443,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("buttons in form view, new record", async function (assert) {
         // this test simulates a situation similar to the settings forms.
-        assert.expect(8);
+        assert.expect(9);
 
         serverData.models.partner.records = []; // such that we know the created record will be id 1
         // FIXME: there should be no depencency from views to actionService
@@ -2482,7 +2485,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.verifySteps(["onchange"]);
+        assert.verifySteps(["get_views", "onchange"]);
 
         await click(target.querySelector(".o_form_statusbar button.p"));
 
@@ -2490,7 +2493,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("buttons in form view, new record, with field id in view", async function (assert) {
-        assert.expect(7);
+        assert.expect(8);
         // buttons in form view are one of the rare example of situation when we
         // save a record without reloading it immediately, because we only care
         // about its id for the next step.  But at some point, if the field id
@@ -2538,7 +2541,7 @@ QUnit.module("Views", (hooks) => {
 
         await click(target.querySelector(".o_form_statusbar button.p"));
 
-        assert.verifySteps(["onchange", "create", "read", "execute_action", "read"]);
+        assert.verifySteps(["get_views", "onchange", "create", "read", "execute_action", "read"]);
     });
 
     QUnit.test("change and save char", async function (assert) {
@@ -2995,19 +2998,18 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("basic default record", async function (assert) {
         serverData.models.partner.fields.foo.default = "default foo value";
 
-        let count = 0;
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
             arch: '<form><field name="foo"/></form>',
-            mockRPC() {
-                count++;
+            mockRPC(route, args) {
+                assert.step(args.method);
             },
         });
 
         assert.strictEqual(target.querySelector("input").value, "default foo value");
-        assert.strictEqual(count, 1, "should do only one rpc");
+        assert.verifySteps(["get_views", "onchange"]);
     });
 
     QUnit.skipWOWL("make default record with non empty one2many", async function (assert) {
@@ -3147,7 +3149,14 @@ QUnit.module("Views", (hooks) => {
         await toggleActionMenu(target);
         assert.containsOnce(target, ".o_cp_action_menus span:contains(Archive)");
 
-        assert.verifySteps(["read", "action_archive", "read", "action_unarchive", "read"]);
+        assert.verifySteps([
+            "get_views",
+            "read",
+            "action_archive",
+            "read",
+            "action_unarchive",
+            "read",
+        ]);
     });
 
     QUnit.test("archive action with active field not in view", async function (assert) {
@@ -3299,7 +3308,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(target, ".o_form_editable", "form view should be in edit mode");
         assert.strictEqual(count, 2, "should have triggered a execute action");
-        assert.verifySteps(["read", "write", "read"]);
+        assert.verifySteps(["get_views", "read", "write", "read"]);
     });
 
     QUnit.test("clicking on stat buttons save and reload in edit mode", async function (assert) {
@@ -3435,7 +3444,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_form_button_edit"));
         await editInput(target, ".o_field_widget[name=foo] input", "tralala");
         await click(target.querySelector(".o_content button.btn-primary"));
-        assert.verifySteps(["read", "write", "read", "execute_action"]);
+        assert.verifySteps(["get_views", "read", "write", "read", "execute_action"]);
     });
 
     QUnit.test("missing widgets do not crash", async function (assert) {
@@ -4245,7 +4254,7 @@ QUnit.module("Views", (hooks) => {
         await click(document.body.querySelector(".modal-footer button.btn-primary"));
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
 
-        assert.verifySteps(["read", "unlink", "history-back"]);
+        assert.verifySteps(["get_views", "read", "unlink", "history-back"]);
     });
 
     QUnit.test("empty required fields cannot be saved", async function (assert) {
@@ -7015,12 +7024,14 @@ QUnit.module("Views", (hooks) => {
                     },
                 });
                 return {
-                    get size() { return screenSize; },
+                    get size() {
+                        return screenSize;
+                    },
                     isSmall: false,
                 };
-            }
+            },
         };
-        registry.category("services").add('ui', uiService, {force: true});
+        registry.category("services").add("ui", uiService, { force: true });
 
         const buttons = Array(8).join(
             '<button type="object" class="oe_stat_button" icon="fa-check-square">' +
@@ -7078,11 +7089,13 @@ QUnit.module("Views", (hooks) => {
                 bin_size: false,
             },
             mockRPC(route, args) {
-                assert.strictEqual(
-                    args.kwargs.context.bin_size,
-                    false,
-                    "bin_size should always be in the context and should be false"
-                );
+                if (args.method === "read") {
+                    assert.strictEqual(
+                        args.kwargs.context.bin_size,
+                        false,
+                        "bin_size should always be in the context and should be false"
+                    );
+                }
             },
         });
     });
@@ -8185,7 +8198,7 @@ QUnit.module("Views", (hooks) => {
         const topGroupRect = form.querySelector(".top_group").getBoundingClientRect();
 
         assert.ok(
-             bottomGroupRect.top  - topGroupRect.top >= 200,
+            bottomGroupRect.top - topGroupRect.top >= 200,
             "outergroup children should not be on the same line"
         );
     });
@@ -10723,23 +10736,23 @@ QUnit.module("Views", (hooks) => {
                             assert.step("doActionButton");
                             delete args.onClose;
                             assert.deepEqual(args, {
-                                "buttonContext": {},
-                                "context": {
-                                    "lang": "en",
-                                    "tz": "taht",
-                                    "uid": 7
+                                buttonContext: {},
+                                context: {
+                                    lang: "en",
+                                    tz: "taht",
+                                    uid: 7,
                                 },
-                                "resId": 2,
-                                "resIds": [],
-                                "resModel": "partner",
-                                "special": "save"
+                                resId: 2,
+                                resIds: [],
+                                resModel: "partner",
+                                special: "save",
                             });
-                        }
+                        },
                     };
-                }
+                },
             };
 
-            registry.category("services").add("action", actionService, {force: true});
+            registry.category("services").add("action", actionService, { force: true });
 
             await makeView({
                 type: "form",
