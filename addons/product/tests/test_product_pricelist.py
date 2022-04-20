@@ -168,7 +168,7 @@ class TestProductPricelist(TransactionCase):
             'pricelist': pricelist.id, 'quantity': 1
         })
         # product price use the currency of the pricelist
-        self.assertEqual(product.price, 4510)
+        self.assertEqual(product.price, 3100)
 
     def test_22_price_diff_cur_max_margin_pricelist(self):
         pricelist = self.ProductPricelist.create({
@@ -185,4 +185,4 @@ class TestProductPricelist(TransactionCase):
             'pricelist': pricelist.id, 'quantity': 1
         })
         # product price use the currency of the pricelist
-        self.assertEqual(product.price, 4590)
+        self.assertEqual(product.price, 3090)

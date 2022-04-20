@@ -1559,7 +1559,7 @@ exports.Product = Backbone.Model.extend({
                 price = price - (price * (rule.percent_price / 100));
                 return true;
             } else {
-                var price_limit = price;
+                var price_limit = self.standard_price;
                 price = price - (price * (rule.price_discount / 100));
                 if (rule.price_round) {
                     price = round_pr(price, rule.price_round);

@@ -593,7 +593,7 @@ class PricelistItem(models.Model):
             price = (price - (price * (self.percent_price / 100))) or 0.0
         else:
             # complete formula
-            price_limit = price
+            price_limit = product.standard_price
             price = (price - (price * (self.price_discount / 100))) or 0.0
             if self.base == 'standard_price':
                 price_currency = product.cost_currency_id
