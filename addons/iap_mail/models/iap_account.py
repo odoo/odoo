@@ -11,6 +11,11 @@ class IapAccount(models.Model):
     def notify_no_more_credit(self, service_name, notification_parameter=None, notify_records=None):
         """ Notify about the number of credit. In order to avoid to spam people
         an ir.config_parameter can be checked. """
+        self.env['iap.account']._send_iap_bus_notification(
+            service_name='invoice_ocr',
+            title=_lt("Not enough credits for Bill Digitalization"),
+            error_type='credit')
+
         if notification_parameter:
             already_notified = self.env['ir.config_parameter'].sudo().get_param(notification_parameter, False)
             if already_notified:
