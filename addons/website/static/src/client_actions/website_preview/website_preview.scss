@@ -42,6 +42,10 @@
                     border-radius: 25px;
                     box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
                 }
+
+                .o_block_iframe {
+                    border-radius: 25px;
+                }
             }
         }
     }
@@ -67,4 +71,8 @@ header {
     .o_main_navbar {
         transition: transform 400ms ease, height 400ms ease, border-bottom 400ms ease;
     }
+}
+
+.o_block_iframe {
+    z-index: $zindex-dropdown - 1;
 }

@@ -2716,21 +2716,15 @@ var SnippetsMenu = Widget.extend({
      */
     _createLoadingElement() {
         const loaderContainer = document.createElement('div');
-        const loader = document.createElement('i');
+        const loader = document.createElement('img');
         const loaderContainerClassList = [
             'o_we_ui_loading',
             'd-flex',
             'justify-content-center',
             'align-items-center',
         ];
-        const loaderClassList = [
-            'fa',
-            'fa-circle-o-notch',
-            'fa-spin',
-            'fa-4x',
-        ];
         loaderContainer.classList.add(...loaderContainerClassList);
-        loader.classList.add(...loaderClassList);
+        loader.setAttribute('src', '/web/static/img/spin.svg');
         loaderContainer.appendChild(loader);
         return loaderContainer;
     },

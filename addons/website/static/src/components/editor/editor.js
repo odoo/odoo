@@ -24,6 +24,7 @@ export class WebsiteEditorComponent extends Component {
         useChildSubEnv(legacyEnv);
 
         onWillStart(async () => {
+            this.websiteService.blockIframe(false);
             this.Wysiwyg = await this.websiteService.loadWysiwyg();
         });
 
@@ -38,6 +39,7 @@ export class WebsiteEditorComponent extends Component {
         this.websiteContext.snippetsLoaded = true;
         this.state.reloading = false;
         this.wysiwygOptions.invalidateSnippetCache = false;
+        this.websiteService.unblockIframe();
     }
     /**
      * Prepares the editor for reload. Copies the widget element tree
@@ -47,6 +49,7 @@ export class WebsiteEditorComponent extends Component {
      * @param widgetEl {HTMLElement} Widget element of the editor to copy.
      */
     willReload(widgetEl) {
+        this.websiteService.blockIframe();
         if (widgetEl) {
             widgetEl.querySelectorAll('#oe_manipulators').forEach(el => el.remove());
             widgetEl.querySelectorAll('we-input input').forEach((input, index) => {
@@ -82,12 +85,14 @@ export class WebsiteEditorComponent extends Component {
      * @returns {Promise<void>}
      */
     async quit() {
+        this.websiteService.blockIframe(true, 400);
         document.body.classList.remove('editor_has_snippets');
         this.websiteContext.snippetsLoaded = false;
         setTimeout(async () => {
             this.state.showWysiwyg = false;
             await this.props.reloadIframe();
             this.websiteContext.edition = false;
+            this.websiteService.unblockIframe();
         }, 400);
     }
 }
