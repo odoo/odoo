@@ -68,6 +68,7 @@ QUnit.module("Fields", (hooks) => {
                         foo: { string: "Foo", type: "char", default: "My little Foo Value" },
                         bar: { string: "Bar", type: "boolean", default: true },
                         int_field: { string: "int_field", type: "integer", sortable: true },
+                        qux: { string: "Qux", type: "float", digits: [16, 1] },
                         p: {
                             string: "one2many field",
                             type: "one2many",
@@ -104,7 +105,6 @@ QUnit.module("Fields", (hooks) => {
                                 ["partner", "Partner"],
                             ],
                         },
-                        qux: { string: "Qux", type: "float", digits: [16, 1] },
                     },
                     records: [
                         {
@@ -113,6 +113,7 @@ QUnit.module("Fields", (hooks) => {
                             bar: true,
                             foo: "yop",
                             int_field: 10,
+                            qux: 0.44,
                             p: [],
                             turtles: [2],
                             timmy: [],
@@ -126,6 +127,7 @@ QUnit.module("Fields", (hooks) => {
                             bar: true,
                             foo: "blip",
                             int_field: 9,
+                            qux: 13,
                             p: [],
                             timmy: [],
                             trululu: 1,
@@ -159,7 +161,6 @@ QUnit.module("Fields", (hooks) => {
                 },
                 partner_type: {
                     fields: {
-                        display_name: { string: "Partner Type", type: "char" },
                         name: { string: "Partner Type", type: "char" },
                         color: { string: "Color index", type: "integer" },
                     },
@@ -173,7 +174,6 @@ QUnit.module("Fields", (hooks) => {
                         display_name: { string: "Displayed name", type: "char" },
                         turtle_foo: { string: "Foo", type: "char" },
                         turtle_bar: { string: "Bar", type: "boolean", default: true },
-                        turtle_description: { string: "Description", type: "text" },
                         turtle_int: { string: "int", type: "integer", sortable: true },
                         turtle_qux: {
                             string: "Qux",
@@ -182,6 +182,7 @@ QUnit.module("Fields", (hooks) => {
                             required: true,
                             default: 1.5,
                         },
+                        turtle_description: { string: "Description", type: "text" },
                         turtle_trululu: {
                             string: "Trululu",
                             type: "many2one",
@@ -226,6 +227,7 @@ QUnit.module("Fields", (hooks) => {
                             turtle_bar: false,
                             turtle_foo: "kawa",
                             turtle_int: 21,
+                            turtle_qux: 9.8,
                             partner_ids: [],
                             turtle_ref: "product,37",
                         },
@@ -4315,7 +4317,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.skipWOWL("one2many and onchange only write modified field", async function (assert) {
+    QUnit.test("one2many and onchange only write modified field", async function (assert) {
         assert.expect(2);
 
         serverData.models.partner.onchanges = {
@@ -4351,15 +4353,15 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <field name="foo"/>
                     <field name="turtles">
-                    <tree editable="bottom">
-                        <field name="display_name"/>
-                        <field name="product_id"/>
-                        <field name="turtle_bar"/>
-                        <field name="turtle_foo"/>
-                        <field name="turtle_int"/>
-                        <field name="turtle_qux"/>
-                        <field name="turtle_ref"/>
-                    </tree>
+                        <tree editable="bottom">
+                            <field name="display_name"/>
+                            <field name="product_id"/>
+                            <field name="turtle_bar"/>
+                            <field name="turtle_foo"/>
+                            <field name="turtle_int"/>
+                            <field name="turtle_qux"/>
+                            <field name="turtle_ref"/>
+                        </tree>
                     </field>
                 </form>`,
             mockRPC: function (method, args) {
