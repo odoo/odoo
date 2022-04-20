@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { Dialog } from "@web/core/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _lt } from "@web/core/l10n/translation";
 import { KeepLast } from "@web/core/utils/concurrency";
@@ -9,7 +10,7 @@ import { fuzzyLookup } from "@web/core/utils/search";
 import { debounce } from "@web/core/utils/timing";
 import { escapeRegExp } from "../utils/strings";
 
-const { Component, onWillStart, useRef, useState, markRaw } = owl;
+const { Component, onWillStart, useRef, useState, markRaw, useExternalListener } = owl;
 
 const DEFAULT_PLACEHOLDER = _lt("Search...");
 const DEFAULT_EMPTY_MESSAGE = _lt("No result found");
@@ -92,6 +93,7 @@ export class CommandPalette extends Component {
             bypassEditableProtection: true,
             allowRepeat: true,
         });
+        useExternalListener(window, "mousedown", this.onWindowMouseDown);
 
         /**
          * @type {{ commands: CommandItem[],
@@ -104,6 +106,7 @@ export class CommandPalette extends Component {
          */
         this.state = useState({});
 
+        this.root = useRef("root");
         this.listboxRef = useRef("listbox");
 
         onWillStart(() => this.setCommandPaletteConfig(this.props.config));
@@ -241,7 +244,7 @@ export class CommandPalette extends Component {
         if (config) {
             this.setCommandPaletteConfig(config);
         } else {
-            this.props.closeMe();
+            this.props.close();
         }
     }
 
@@ -295,6 +298,15 @@ export class CommandPalette extends Component {
         }
     }
 
+    /**
+     * Close the palette on outside click.
+     */
+    onWindowMouseDown(ev) {
+        if (!this.root.el.contains(ev.target)) {
+            this.props.close();
+        }
+    }
+
     switchNamespace(namespace) {
         if (this.lastDebounceSearch) {
             this.lastDebounceSearch.cancel();
@@ -317,3 +329,4 @@ export class CommandPalette extends Component {
     }
 }
 CommandPalette.template = "web.CommandPalette";
+CommandPalette.components = { Dialog };

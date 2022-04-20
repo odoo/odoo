@@ -56,8 +56,9 @@ QUnit.module("DialogManager", {
 });
 QUnit.test("Simple rendering with a single dialog", async (assert) => {
     assert.expect(4);
-    class CustomDialog extends Dialog {}
-    CustomDialog.title = "Welcome";
+    class CustomDialog extends Component {}
+    CustomDialog.components = { Dialog };
+    CustomDialog.template = xml`<Dialog title="'Welcome'">content</Dialog>`;
     await mount(PseudoWebClient, target, { env });
     assert.containsNone(target, ".o_dialog_container .o_dialog");
     env.services.dialog.add(CustomDialog);
@@ -71,8 +72,9 @@ QUnit.test("Simple rendering with a single dialog", async (assert) => {
 QUnit.test("Simple rendering and close a single dialog", async (assert) => {
     assert.expect(4);
 
-    class CustomDialog extends Dialog {}
-    CustomDialog.title = "Welcome";
+    class CustomDialog extends Component {}
+    CustomDialog.components = { Dialog };
+    CustomDialog.template = xml`<Dialog title="'Welcome'">content</Dialog>`;
 
     await mount(PseudoWebClient, target, { env });
     assert.containsNone(target, ".o_dialog_container .o_dialog");
@@ -94,12 +96,10 @@ QUnit.test("Simple rendering and close a single dialog", async (assert) => {
 
 QUnit.test("rendering with two dialogs", async (assert) => {
     assert.expect(7);
-    class CustomDialog extends Dialog {
-        setup() {
-            super.setup();
-            this.title = this.props.title;
-        }
-    }
+    class CustomDialog extends Component {}
+    CustomDialog.components = { Dialog };
+    CustomDialog.template = xml`<Dialog title="props.title">content</Dialog>`;
+
     await mount(PseudoWebClient, target, { env });
     assert.containsNone(target, ".o_dialog_container .o_dialog");
     env.services.dialog.add(CustomDialog, { title: "Hello" });
@@ -120,12 +120,9 @@ QUnit.test("rendering with two dialogs", async (assert) => {
 
 QUnit.test("multiple dialogs can become the UI active element", async (assert) => {
     assert.expect(3);
-    class CustomDialog extends Dialog {
-        setup() {
-            super.setup();
-            this.title = this.props.title;
-        }
-    }
+    class CustomDialog extends Component {}
+    CustomDialog.components = { Dialog };
+    CustomDialog.template = xml`<Dialog title="props.title">content</Dialog>`;
     await mount(PseudoWebClient, target, { env });
 
     env.services.dialog.add(CustomDialog, { title: "Hello" });
@@ -165,12 +162,9 @@ QUnit.test("Interactions between multiple dialogs", async (assert) => {
         return { active, names };
     }
 
-    class CustomDialog extends Dialog {
-        setup() {
-            super.setup();
-            this.title = this.props.title;
-        }
-    }
+    class CustomDialog extends Component {}
+    CustomDialog.components = { Dialog };
+    CustomDialog.template = xml`<Dialog title="props.title">content</Dialog>`;
     await mount(PseudoWebClient, target, { env });
 
     env.services.dialog.add(CustomDialog, { title: "Hello" });
@@ -215,13 +209,13 @@ QUnit.test("Interactions between multiple dialogs", async (assert) => {
 QUnit.test("dialog component crashes", async (assert) => {
     assert.expect(4);
 
-    class FailingDialog extends Dialog {
+    class FailingDialog extends Component {
         setup() {
-            super.setup();
             throw new Error("Some Error");
         }
     }
-    FailingDialog.title = "Error";
+    FailingDialog.components = { Dialog };
+    FailingDialog.template = xml`<Dialog title="'Error'">content</Dialog>`;
 
     const prom = makeDeferred();
     patchWithCleanup(ErrorDialog.prototype, {

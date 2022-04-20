@@ -6,6 +6,8 @@ import { registry } from "../../core/registry";
 import { _lt } from "../../core/l10n/translation";
 import { session } from "@web/session";
 
+const { Component } = owl;
+
 function documentationItem(env) {
     const documentationURL = "https://www.odoo.com/documentation/master";
     return {
@@ -34,9 +36,10 @@ function supportItem(env) {
     };
 }
 
-class ShortCutsDialog extends Dialog {}
-ShortCutsDialog.bodyTemplate = "web.UserMenu.shortcutsTable";
-ShortCutsDialog.title = _lt("Shortcuts");
+class ShortcutsDialog extends Component {}
+ShortcutsDialog.template = "web.UserMenu.ShortcutsDialog";
+ShortcutsDialog.components = { Dialog };
+ShortcutsDialog.title = _lt("Shortcuts");
 
 function shortCutsItem(env) {
     return {
@@ -45,7 +48,7 @@ function shortCutsItem(env) {
         hide: env.isSmall,
         description: env._t("Shortcuts"),
         callback: () => {
-            env.services.dialog.add(ShortCutsDialog);
+            env.services.dialog.add(ShortcutsDialog);
         },
         sequence: 30,
     };

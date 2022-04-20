@@ -24,7 +24,11 @@ const {
     xml,
 } = owl;
 
-const warningDialogBodyTemplate = xml`<t t-esc="props.message"/>`;
+class WarningDialog extends Component {}
+WarningDialog.template = xml`<Dialog title="props.title">
+    <t t-esc="props.message"/>
+</Dialog>`;
+WarningDialog.components = { Dialog };
 
 class ActionAdapter extends ComponentAdapter {
     setup() {
@@ -134,13 +138,6 @@ class ActionAdapter extends ComponentAdapter {
             this.title.setParts({ [part]: title || null });
         } else if (ev.name === "warning") {
             if (payload.type === "dialog") {
-                class WarningDialog extends Dialog {
-                    setup() {
-                        super.setup();
-                        this.title = this.props.title;
-                    }
-                }
-                WarningDialog.bodyTemplate = warningDialogBodyTemplate;
                 this.dialogs.add(WarningDialog, {
                     title: payload.title,
                     message: payload.message,

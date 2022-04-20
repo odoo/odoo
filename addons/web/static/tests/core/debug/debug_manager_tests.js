@@ -170,6 +170,10 @@ QUnit.module("DebugMenu", (hooks) => {
 
     QUnit.test("Don't display the DebugMenu if debug mode is disabled", async (assert) => {
         const env = await makeTestEnv(testConfig);
+        env.dialogData = {
+            isActive: true,
+            close() {},
+        };
         await mount(ActionDialog, target, {
             env,
             props: { close: () => {} },
@@ -223,6 +227,10 @@ QUnit.module("DebugMenu", (hooks) => {
             }
             patchWithCleanup(odoo, { debug: "1" });
             const env = await makeTestEnv(testConfig);
+            env.dialogData = {
+                isActive: true,
+                close() {},
+            };
             await mount(WithCustom, target, {
                 env,
                 props: { close: () => {} },

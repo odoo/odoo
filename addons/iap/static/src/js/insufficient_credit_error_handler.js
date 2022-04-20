@@ -3,11 +3,12 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
-class InsufficientCreditDialog extends Dialog {
+const { Component, onWillStart } = owl;
+
+class InsufficientCreditDialog extends Component {
     setup() {
-        super.setup(...arguments);
         this.orm = useService("orm");
-        owl.onWillStart(this.onWillStart);
+        onWillStart(this.onWillStart);
     }
 
     async onWillStart() {
@@ -30,11 +31,11 @@ class InsufficientCreditDialog extends Dialog {
 
     buyCredits() {
         window.open(this.url, "_blank");
-        this.close();
+        this.props.close();
     }
 }
-InsufficientCreditDialog.bodyTemplate = "iap.redirect_to_odoo_credit";
-InsufficientCreditDialog.footerTemplate = "iap.InsufficientCreditFooter";
+InsufficientCreditDialog.components = { Dialog };
+InsufficientCreditDialog.template = "iap.InsufficientCreditDialog";
 
 function insufficientCreditHandler(env, error, originalError) {
     if (!originalError) {

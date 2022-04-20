@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="web_tour.ToursDialog" owl="1">
-    <div>
+    <Dialog title="this.constructor.title">
         <t t-call="web_tour.ToursDialog.Table">
             <t t-set="caption">Onboarding tours</t>
             <t t-set="tours" t-value="onboardingTours"/>
@@ -11,7 +11,7 @@
             <t t-set="caption">Testing tours</t>
             <t t-set="tours" t-value="testingTours"/>
         </t>
-    </div>
+    </Dialog>
 </t>
 
 <t t-name="web_tour.ToursDialog.Table" owl="1">

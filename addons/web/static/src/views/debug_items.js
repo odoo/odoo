@@ -5,16 +5,18 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { editModelDebug } from "@web/core/debug/debug_utils";
 import { registry } from "@web/core/registry";
 
-const { xml } = owl;
+const { Component, xml } = owl;
 
 const debugRegistry = registry.category("debug");
 
-class FieldViewGetDialog extends Dialog {}
+class FieldViewGetDialog extends Component {}
+FieldViewGetDialog.template = xml`<Dialog title="this.constructor.title">
+    <pre t-esc="props.arch"/>
+</Dialog>`;
+FieldViewGetDialog.components = { Dialog };
 FieldViewGetDialog.props = {
-    ...Dialog.props,
     arch: { type: String },
 };
-FieldViewGetDialog.bodyTemplate = xml`<pre t-esc="props.arch"/>`;
 FieldViewGetDialog.title = _lt("Fields View Get");
 
 function viewSeparator() {

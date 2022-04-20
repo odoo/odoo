@@ -9,40 +9,19 @@ import { makeTestEnv } from "../helpers/mock_env";
 import { click, destroy, getFixture, mount } from "../helpers/utils";
 import { makeFakeDialogService } from "../helpers/mock_services";
 
-const { Component, useEffect, useState, xml } = owl;
+const { Component, useState, onMounted, xml } = owl;
 const serviceRegistry = registry.category("services");
 let parent;
 let target;
 
-class SimpleDialog extends Dialog {
-    setup() {
-        super.setup();
-        this.title = "title" in this.props ? this.props.title : this.constructor.title;
-        this.renderHeader =
-            "renderHeader" in this.props ? this.props.renderHeader : this.constructor.renderHeader;
-        this.renderFooter =
-            "renderFooter" in this.props ? this.props.renderFooter : this.constructor.renderFooter;
-        this.contentClass =
-            "contentClass" in this.props ? this.props.contentClass : this.constructor.contentClass;
-        this.size = "size" in this.props ? this.props.size : this.constructor.size;
-        this.fullscreen =
-            "fullscreen" in this.props ? this.props.fullscreen : this.constructor.fullscreen;
-
-        const setRef = () => {
-            if (this.props.setModalRef) {
-                this.props.setModalRef(this.modalRef.el);
-            }
-        };
-
-        useEffect(setRef);
-    }
+async function makeDialogTestEnv() {
+    const env = await makeTestEnv();
+    env.dialogData = {
+        isActive: true,
+        close: () => {},
+    };
+    return env;
 }
-SimpleDialog.bodyTemplate = xml`<t t-slot="default"/>`;
-SimpleDialog.props = {
-    ...Dialog.props,
-    close: { type: Function, optional: true },
-};
-SimpleDialog.defaultProps = { close: () => {} };
 
 QUnit.module("Components", (hooks) => {
     hooks.beforeEach(async () => {
@@ -61,15 +40,15 @@ QUnit.module("Components", (hooks) => {
 
     QUnit.test("simple rendering", async function (assert) {
         assert.expect(8);
-        class Parent extends Dialog {}
-        Parent.title = "Wow(l) Effect";
-        Parent.bodyTemplate = xml`
-            <t>
+        class Parent extends Component {}
+        Parent.components = { Dialog };
+        Parent.template = xml`
+            <Dialog title="'Wow(l) Effect'">
                 Hello!
-            </t>
+            </Dialog>
             `;
 
-        const env = await makeTestEnv();
+        const env = await makeDialogTestEnv();
         parent = await mount(Parent, target, { env, props: {} });
         assert.containsOnce(target, ".o_dialog");
         assert.containsOnce(
@@ -97,16 +76,16 @@ QUnit.module("Components", (hooks) => {
         class Parent extends Component {}
         Parent.template = xml`
               <div>
-                  <SimpleDialog title="'First Title'">
+                  <Dialog title="'First Title'">
                       Hello!
-                  </SimpleDialog>
-                  <SimpleDialog title="'Second Title'">
+                  </Dialog>
+                  <Dialog title="'Second Title'">
                       Hello again!
-                  </SimpleDialog>
+                  </Dialog>
               </div>
           `;
-        Parent.components = { SimpleDialog };
-        const env = await makeTestEnv();
+        Parent.components = { Dialog };
+        const env = await makeDialogTestEnv();
         parent = await mount(Parent, target, { env });
         assert.containsN(target, ".o_dialog", 2);
         assert.deepEqual(
@@ -121,20 +100,16 @@ QUnit.module("Components", (hooks) => {
 
     QUnit.test("click on the button x triggers the service close", async function (assert) {
         assert.expect(3);
-        const env = await makeTestEnv();
-        class MyDialog extends SimpleDialog {}
-        class Parent extends Component {
-            close() {
-                assert.step("close");
-            }
-        }
+        const env = await makeDialogTestEnv();
+        env.dialogData.close = () => assert.step("close");
 
+        class Parent extends Component {}
         Parent.template = xml`
-            <MyDialog close="close">
+            <Dialog>
                 Hello!
-            </MyDialog>
+            </Dialog>
         `;
-        Parent.components = { MyDialog };
+        Parent.components = { Dialog };
         parent = await mount(Parent, target, { env });
         assert.containsOnce(target, ".o_dialog");
         await click(target, ".o_dialog header button.close");
@@ -144,21 +119,17 @@ QUnit.module("Components", (hooks) => {
     QUnit.test(
         "click on the default footer button triggers the service close",
         async function (assert) {
-            const env = await makeTestEnv();
+            const env = await makeDialogTestEnv();
+            env.dialogData.close = () => assert.step("close");
             assert.expect(3);
-            class MyDialog extends SimpleDialog {}
-            class Parent extends Component {
-                close() {
-                    assert.step("close");
-                }
-            }
+            class Parent extends Component {}
 
             Parent.template = xml`
-                <MyDialog close="close">
+                <Dialog>
                     Hello!
-                </MyDialog>
+                </Dialog>
             `;
-            Parent.components = { MyDialog };
+            Parent.components = { Dialog };
             parent = await mount(Parent, target, { env });
             assert.containsOnce(target, ".o_dialog");
             await click(target, ".o_dialog footer button");
@@ -168,17 +139,18 @@ QUnit.module("Components", (hooks) => {
 
     QUnit.test("render custom footer buttons is possible", async function (assert) {
         assert.expect(2);
-        class SimpleButtonsDialog extends Dialog {}
-        SimpleButtonsDialog.props = {
-            ...Dialog.props,
-            close: { type: Function, optional: true },
-        };
-        SimpleButtonsDialog.defaultProps = { close: () => {} };
-        SimpleButtonsDialog.footerTemplate = xml`
-            <div>
-                <button class="btn btn-primary">The First Button</button>
-                <button class="btn btn-primary">The Second Button</button>
-            </div>
+        class SimpleButtonsDialog extends Component {}
+        SimpleButtonsDialog.components = { Dialog };
+        SimpleButtonsDialog.template = xml`
+            <Dialog>
+                content
+                <t t-set-slot="footer">
+                    <div>
+                        <button class="btn btn-primary">The First Button</button>
+                        <button class="btn btn-primary">The Second Button</button>
+                    </div>
+                </t>
+            </Dialog>
           `;
         class Parent extends Component {
             setup() {
@@ -194,7 +166,7 @@ QUnit.module("Components", (hooks) => {
               </div>
           `;
         Parent.components = { SimpleButtonsDialog };
-        const env = await makeTestEnv();
+        const env = await makeDialogTestEnv();
         parent = await mount(Parent, target, { env });
         assert.containsOnce(target, ".o_dialog");
         assert.containsN(target, ".o_dialog footer button", 2);
@@ -216,13 +188,13 @@ QUnit.module("Components", (hooks) => {
                 assert.step("message received by parent");
             }
         }
-        Parent.components = { SimpleDialog, SubComponent };
+        Parent.components = { Dialog, SubComponent };
         Parent.template = xml`
-              <SimpleDialog>
+              <Dialog>
                   <SubComponent text="'Wow(l) Effect'" onClicked="_onSubcomponentClicked"/>
-              </SimpleDialog>
+              </Dialog>
           `;
-        const env = await makeTestEnv();
+        const env = await makeDialogTestEnv();
         parent = await mount(Parent, target, { env });
         assert.containsOnce(target, ".o_dialog");
         assert.containsOnce(target, ".o_dialog main .o_subcomponent");
@@ -235,10 +207,10 @@ QUnit.module("Components", (hooks) => {
         assert.expect(4);
         class Parent extends Component {}
         Parent.template = xml`
-              <SimpleDialog renderHeader="false" renderFooter="false"/>
+              <Dialog header="false" footer="false">content</Dialog>
           `;
-        const env = await makeTestEnv();
-        Parent.components = { SimpleDialog };
+        const env = await makeDialogTestEnv();
+        Parent.components = { Dialog };
         parent = await mount(Parent, target, { env });
         assert.containsOnce(target, ".o_dialog");
         assert.containsNone(target, ".o_dialog header");
@@ -251,13 +223,13 @@ QUnit.module("Components", (hooks) => {
         class Parent extends Component {}
         Parent.template = xml`
       <div>
-        <SimpleDialog contentClass="'xl'" size="'modal-xl'"/>
-        <SimpleDialog contentClass="'lg'"/>
-        <SimpleDialog contentClass="'md'" size="'modal-md'"/>
-        <SimpleDialog contentClass="'sm'" size="'modal-sm'"/>
+        <Dialog contentClass="'xl'" size="'xl'">content</Dialog>
+        <Dialog contentClass="'lg'">content</Dialog>
+        <Dialog contentClass="'md'" size="'md'">content</Dialog>
+        <Dialog contentClass="'sm'" size="'sm'">content</Dialog>
       </div>`;
-        Parent.components = { SimpleDialog };
-        const env = await makeTestEnv();
+        Parent.components = { Dialog };
+        const env = await makeDialogTestEnv();
         parent = await mount(Parent, target, { env });
         assert.containsN(target, ".o_dialog", 4);
         assert.containsOnce(
@@ -282,41 +254,38 @@ QUnit.module("Components", (hooks) => {
         assert.expect(2);
         class Parent extends Component {}
         Parent.template = xml`
-              <div><SimpleDialog fullscreen="true"/></div>
+            <Dialog fullscreen="true">content</Dialog>
           `;
-        Parent.components = { SimpleDialog };
-        const env = await makeTestEnv();
+        Parent.components = { Dialog };
+        const env = await makeDialogTestEnv();
         parent = await mount(Parent, target, { env });
         assert.containsOnce(target, ".o_dialog");
         assert.hasClass(target.querySelector(".o_dialog .modal"), "o_modal_full");
     });
 
     QUnit.test("can be the UI active element", async function (assert) {
-        assert.expect(3);
+        assert.expect(4);
         class Parent extends Component {
             setup() {
                 this.ui = useService("ui");
-                this.modal = null;
                 assert.strictEqual(
                     this.ui.activeElement,
                     document,
                     "UI active element should be the default (document) as Parent is not mounted yet"
                 );
-                owl.onMounted(() => {
+                onMounted(() => {
+                    assert.containsOnce(target, ".modal");
                     assert.strictEqual(
                         this.ui.activeElement,
-                        this.modal,
+                        target.querySelector(".modal"),
                         "UI active element should be the dialog modal"
                     );
                 });
             }
-            setModalRef(modalEl) {
-                this.modal = modalEl;
-            }
         }
-        const env = await makeTestEnv();
-        Parent.template = xml`<div><SimpleDialog setModalRef="el => this.setModalRef(el)"/></div>`;
-        Parent.components = { SimpleDialog };
+        const env = await makeDialogTestEnv();
+        Parent.template = xml`<Dialog>content</Dialog>`;
+        Parent.components = { Dialog };
 
         const parent = await mount(Parent, target, { env });
         destroy(parent);

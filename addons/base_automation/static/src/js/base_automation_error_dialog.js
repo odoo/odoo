@@ -31,7 +31,7 @@ export class BaseAutomationErrorDialog extends ErrorDialog {
         await this.orm.write("base.automation", [this.actionId], {
             active: false,
         });
-        this.close();
+        this.props.close();
     }
     /**
      * This method is called when the user clicks on the 'Edit action' button
@@ -50,10 +50,10 @@ export class BaseAutomationErrorDialog extends ErrorDialog {
             type: "ir.actions.act_window",
             view_mode: "form",
         });
-        this.close();
+        this.props.close();
     }
 }
 
-BaseAutomationErrorDialog.bodyTemplate = "base_automation.ErrorDialogBody";
+BaseAutomationErrorDialog.template = "base_automation.ErrorDialog";
 
 registry.category("error_dialogs").add("base_automation", BaseAutomationErrorDialog);
