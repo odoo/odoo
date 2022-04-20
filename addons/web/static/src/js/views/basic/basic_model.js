@@ -1460,11 +1460,11 @@ var BasicModel = AbstractModel.extend({
         var makeDefaultRecords = [];
         if (additionalContexts){
             _.each(additionalContexts, function (context) {
-                params.context = self._getContext(list, {additionalContext: context});
+                params.context = self._getContext(list, {additionalContext: context, sanitize_default_values: true});
                 makeDefaultRecords.push(self._makeDefaultRecord(list.model, params));
             });
         } else {
-            params.context = self._getContext(list);
+            params.context = self._getContext(list, {sanitize_default_values: true});
             makeDefaultRecords.push(self._makeDefaultRecord(list.model, params));
         }
 
@@ -3424,7 +3424,12 @@ var BasicModel = AbstractModel.extend({
         context.set_eval_context(this._getEvalContext(element));
 
         if (options.full || !(options.fieldName || options.additionalContext)) {
-            context.add(element.context);
+            var context_to_add = options.sanitize_default_values ?
+                _.omit(element.context, function (val, key) {
+                    return _.str.startsWith(key, 'default_');
+                })
+                : element.context;
+            context.add(context_to_add);
         }
         if (options.fieldName) {
             var viewType = options.viewType || element.viewType;
