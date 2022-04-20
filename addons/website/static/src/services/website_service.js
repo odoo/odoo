@@ -64,6 +64,9 @@ export const websiteService = {
             },
             set pageDocument(document) {
                 pageDocument = document;
+                if (!document) {
+                    return;
+                }
                 const { mainObject, seoObject, isPublished, canPublish, editableInBackend, translatable } = document.documentElement.dataset;
                 currentMetadata = {
                     path: document.location.href,
