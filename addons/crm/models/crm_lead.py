@@ -589,7 +589,7 @@ class Lead(models.Model):
         # stage change with new stage: update probability and date_closed
         if vals.get('probability', 0) >= 100 or not vals.get('active', True):
             vals['date_closed'] = fields.Datetime.now()
-        elif 'probability' in vals:
+        elif tools.float_compare(vals.get('probability', 0), 0, precision_digits=2) > 0:
             vals['date_closed'] = False
 
         if any(field in ['active', 'stage_id'] for field in vals):
