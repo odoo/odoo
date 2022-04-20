@@ -2425,11 +2425,11 @@ class AccountMove(models.Model):
                 values['total_amount_currency'] += sign * line.amount_currency
                 values['total_residual_currency'] += sign * line.amount_residual_currency
 
-            elif line.tax_line_id.tax_exigibility == 'on_payment' and not line.reconciled:
+            elif line.tax_line_id.tax_exigibility == 'on_payment':
                 values['to_process_lines'].append(('tax', line))
                 currencies.add(line.currency_id)
 
-            elif 'on_payment' in line.tax_ids.mapped('tax_exigibility') and not line.reconciled:
+            elif 'on_payment' in line.tax_ids.mapped('tax_exigibility'):
                 values['to_process_lines'].append(('base', line))
                 currencies.add(line.currency_id)
 
@@ -4086,6 +4086,16 @@ class AccountMoveLine(models.Model):
 
         return self.move_id.move_type in ('in_refund', 'out_refund')
 
+    def _get_invoiced_qty_per_product(self):
+        qties = defaultdict(float)
+        for aml in self:
+            qty = aml.product_uom_id._compute_quantity(aml.quantity, aml.product_id.uom_id)
+            if aml.move_id.move_type == 'out_invoice':
+                qties[aml.product_id] += qty
+            elif aml.move_id.move_type == 'out_refund':
+                qties[aml.product_id] -= qty
+        return qties
+
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
@@ -5051,7 +5061,7 @@ class AccountMoveLine(models.Model):
                         'credit': line.credit,
                     }
 
-                    if caba_treatment == 'tax':
+                    if caba_treatment == 'tax' and not line.reconciled:
                         # Tax line.
                         grouping_key = self.env['account.partial.reconcile']._get_cash_basis_tax_line_grouping_key_from_record(line)
                         if grouping_key in account_vals_to_fix:
