@@ -5,6 +5,7 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import {
     click,
+    clickDropdown,
     clickEdit,
     editInput,
     getFixture,
@@ -24,12 +25,13 @@ import {
     toggleMenuItem,
 } from "../search/helpers";
 import { makeView, setupViewRegistries } from "../views/helpers";
+import { session } from "@web/session";
 
 let serverData;
 let target;
 
 // WOWL remove after adapting tests
-let testUtils, cpHelpers, Widget, BasicModel, StandaloneFieldManagerMixin, relationalFields;
+let testUtils, Widget, BasicModel, StandaloneFieldManagerMixin, relationalFields;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -1084,7 +1086,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("many2one in edit mode", async function (assert) {
+    QUnit.test("many2one in edit mode", async function (assert) {
         assert.expect(17);
 
         // create 10 partners to have the 'Search More' option in the autocomplete dropdown
@@ -1106,7 +1108,7 @@ QUnit.module("Fields", (hooks) => {
             `,
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -1129,55 +1131,55 @@ QUnit.module("Fields", (hooks) => {
 
         // the SelectCreateDialog requests the session, so intercept its custom
         // event to specify a fake session to prevent it from crashing
-        testUtils.mock.intercept(form, "get_session", function (event) {
-            event.data.callback({ user_context: {} });
-        });
+        patchWithCleanup(session.user_context, {});
 
         await click(target, ".o_form_button_edit");
+        await clickDropdown(target, "trululu");
 
-        var $dropdown = target.querySelectorAll(".o_field_many2one input").autocomplete("widget");
-
-        await testUtils.fields.many2one.clickOpenDropdown("trululu");
-        assert.ok(
-            $dropdown.is(":visible"),
+        let dropdown = target.querySelector(".o_field_many2one[name='trululu'] .dropdown-menu");
+        assert.isVisible(
+            dropdown,
             "clicking on the m2o input should open the dropdown if it is not open yet"
         );
-        assert.strictEqual(
-            $dropdown.find("li:not(.o_m2o_dropdown_option)").length,
-            7,
+        assert.containsN(
+            dropdown,
+            "li:not(.o_m2o_dropdown_option)",
+            8,
             "autocomplete should contains 8 suggestions"
         );
-        assert.strictEqual(
-            $dropdown.find("li.o_m2o_dropdown_option").length,
-            1,
+        assert.containsOnce(
+            dropdown,
+            "li.o_m2o_dropdown_option",
             'autocomplete should contain "Search More"'
         );
         assert.containsNone(
-            $dropdown,
+            dropdown,
             "li.o_m2o_start_typing",
             "autocomplete should not contains start typing option if value is available"
         );
 
-        await testUtils.fields.many2one.clickOpenDropdown("trululu");
-        assert.ok(
-            !$dropdown.is(":visible"),
+        await click(target.querySelector(".o_field_many2one[name='trululu'] input"));
+        assert.containsNone(
+            target,
+            ".o_field_many2one[name='trululu'] .dropdown-menu",
             "clicking on the m2o input should close the dropdown if it is open"
         );
 
         // change the value of the m2o with a suggestion of the dropdown
-        await testUtils.fields.many2one.clickOpenDropdown("trululu");
-        await testUtils.fields.many2one.clickHighlightedItem("trululu");
-        assert.ok(!$dropdown.is(":visible"), "clicking on a value should close the dropdown");
+        await selectDropdownItem(target, "trululu", "first record");
+        dropdown = target.querySelector(".o_field_many2one[name='trululu'] .dropdown-menu");
+        assert.isNotVisible(dropdown, "clicking on a value should close the dropdown");
         assert.strictEqual(
-            target.querySelectorAll(".o_field_many2one input").value,
+            target.querySelector(".o_field_many2one input").value,
             "first record",
             "value of the m2o should have been correctly updated"
         );
 
         // change the value of the m2o with a record in the 'Search More' modal
-        await testUtils.fields.many2one.clickOpenDropdown("trululu");
+        await clickDropdown(target, "trululu");
         // click on 'Search More' (mouseenter required by ui-autocomplete)
-        await testUtils.fields.many2one.clickItem("trululu", "Search");
+        dropdown = target.querySelector(".o_field_many2one[name='trululu'] .dropdown-menu");
+        await click(dropdown.querySelector(".o_m2o_dropdown_option_search_more"));
         assert.containsOnce(
             document.body,
             ".modal .o_list_view",
@@ -1198,8 +1200,8 @@ QUnit.module("Fields", (hooks) => {
             "list should contain more than 10 records"
         );
         const modal = document.body.querySelector(".modal");
-        await cpHelpers.editSearch(modal, "P");
-        await cpHelpers.validateSearch(modal);
+        await editInput(modal, ".o_searchview_input", "P");
+        await triggerEvent(modal, ".o_searchview_input", "keydown", { key: "Enter" });
         assert.containsN(
             document.body,
             ".modal tbody tr",
@@ -1207,9 +1209,10 @@ QUnit.module("Fields", (hooks) => {
             "list should be restricted to records containing a P (10 records)"
         );
         // choose a record
-        await click(document.body, ".modal tbody tr:contains(Partner 20)");
+        await click(modal.querySelector(".o_data_cell[title='Partner 20']"));
         assert.containsNone(document.body, ".modal", "should have closed the modal");
-        assert.ok(!$dropdown.is(":visible"), "should have closed the dropdown");
+        dropdown = target.querySelector(".o_field_many2one[name='trululu'] .dropdown-menu");
+        assert.isNotVisible(dropdown, "should have closed the dropdown");
         assert.strictEqual(
             target.querySelector(".o_field_many2one input").value,
             "Partner 20",
