@@ -424,7 +424,10 @@ class StockWarehouseOrderpoint(models.Model):
 
         orderpoints = self.env['stock.warehouse.orderpoint'].with_user(SUPERUSER_ID).create(orderpoint_values_list)
         for orderpoint in orderpoints:
-            orderpoint.route_id = orderpoint.product_id.route_ids[:1] or orderpoint._set_default_route_id()
+            orderpoint_wh = orderpoint.location_id.warehouse_id
+            orderpoint.route_id = next((r for r in orderpoint.product_id.route_ids if not r.supplied_wh_id or r.supplied_wh_id == orderpoint_wh), orderpoint.route_id)
+            if not orderpoint.route_id:
+                orderpoint._set_default_route_id()
             orderpoint.qty_multiple = orderpoint._get_qty_multiple_to_order()
         return action
 
