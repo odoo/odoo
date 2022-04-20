@@ -185,11 +185,15 @@ QUnit.module("ViewDialogs", (hooks) => {
 
         serverData.models.instrument.records = [{ id: 1, name: "Tromblon", badassery: [1] }];
         serverData.models.partner.records[0].instrument = 1;
+        // This is an old test, written before "get_views" (formerly "load_views") automatically
+        // inlines x2many subviews. As the purpose of this test is to assert that the js fetches
+        // the correct sub view when it is not inline (which can still happen in nested form views),
+        // we bypass the inline mecanism of "get_views" by setting widget="many2many" on the field.
         serverData.views = {
             "instrument,false,form": `
                         <form>
                             <field name="name"/>
-                            <field name="badassery" context="{'tree_view_ref': 'some_other_tree_view'}"/>
+                            <field name="badassery" widget="many2many" context="{'tree_view_ref': 'some_other_tree_view'}"/>
                         </form>`,
             "badassery,false,list": `
                         <tree>
