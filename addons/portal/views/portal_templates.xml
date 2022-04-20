@@ -132,7 +132,12 @@
                                 <div class="o_portal_my_security mt-3">
                                     <h4>Account Security </h4>
                                     <hr class="mt-1 mb-1"/>
-                                    <a href="/my/security"><i class="fa fa-pencil mx-1"/>Edit Security Settings</a>
+                                    <div>
+                                        <a href="/my/security"><i class="fa fa-pencil mx-1"/>Edit Security Settings</a>
+                                    </div>
+                                    <div class="mt-1">
+                                        <a href="/my/removal"><i class="fa fa-trash mx-1"/>Request Profile Removal</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -529,6 +534,39 @@
                 <div>
                     <button type="submit" class="btn btn-primary o_portal_new_api_key">New API Key</button>
                 </div>
+            </section>
+        </div></t>
+    </template>
+
+    <template id="portal_my_removal">
+        <t t-call="portal.portal_layout"><div class="o_portal_security_body">
+            <t t-set="additional_title">Security</t>
+            <t t-set="no_breadcrumbs" t-value="1"/>
+            <div class="alert alert-danger" role="alert" t-if="get_error(errors)">
+                <t t-esc="errors"/>
+            </div>
+            <section>
+                <h3>Request Profile Removal</h3>
+                <div class="alert alert-success" role="alert" t-if="success and success.get('password')">
+                    Request Submitted!
+                </div>
+                <div class="alert alert-danger" role="alert" t-if="get_error(errors, 'password')">
+                    <t t-esc="errors['password']"/>
+                </div>
+                <form action="/my/removal" method="post" class="oe_reset_password_form">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="hidden" name="op" value="password"/>
+                    <div class="form-group">
+                        <label for="current">Password:</label>
+                        <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_error(errors, 'password.old') else '' }}"
+                               id="current" name="password"
+                               autocomplete="current-password" required="required"/>
+                        <div class="invalid-feedback">
+                            <t t-esc="get_error(errors, 'password.old')"/>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-danger">Validate</button>
+                </form>
             </section>
         </div></t>
     </template>

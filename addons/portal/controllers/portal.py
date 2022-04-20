@@ -219,6 +219,24 @@ class CustomerPortal(Controller):
     def on_account_update(self, values, partner):
         pass
 
+    @route('/my/removal', type='http', auth='user', website=True, methods=['GET', 'POST'])
+    def removal(self, **post):
+        values = self._prepare_portal_layout_values()
+        values['get_error'] = get_error
+
+        if request.httprequest.method == 'POST':
+            try:
+                request.env.user._check_credentials(post['password'].strip(), {'interactive': True})
+                values.update({'success': {'password': True}})
+
+            except UserError as dummy:
+                msg = _('The old password you provided is incorrect, your request has not been taken into account.')
+                values.update({'errors': {'password': msg}})
+
+        return request.render('portal.portal_my_removal', values, headers={
+            'X-Frame-Options': 'DENY'
+        })
+
     @route('/my/security', type='http', auth='user', website=True, methods=['GET', 'POST'])
     def security(self, **post):
         values = self._prepare_portal_layout_values()
