@@ -321,6 +321,60 @@ class TestProcRule(TransactionCase):
         self.assertAlmostEqual(picking_pick.move_lines.product_uom_qty, 5.0)
         self.assertAlmostEqual(picking_ship.move_lines.product_uom_qty, 3.0)
 
+    def test_orderpoint_replenishment_view(self):
+        """ Create two warehouses + two moves
+        verify that the replenishment view is consistent"""
+        warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse_2, warehouse_3 = self.env['stock.warehouse'].create([{
+            'name': 'Warehouse Two',
+            'code': 'WH2',
+            'resupply_wh_ids': [warehouse_1.id],
+        }, {
+            'name': 'Warehouse Three',
+            'code': 'WH3',
+            'resupply_wh_ids': [warehouse_1.id],
+        }])
+        route_2 = self.env['stock.location.route'].search([
+            ('supplied_wh_id', '=', warehouse_2.id),
+            ('supplier_wh_id', '=', warehouse_1.id),
+        ])
+        route_3 = self.env['stock.location.route'].search([
+            ('supplied_wh_id', '=', warehouse_3.id),
+            ('supplier_wh_id', '=', warehouse_1.id),
+        ])
+        product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'type': 'product',
+            'route_ids': [route_2.id, route_3.id]
+        })
+        moves = self.env['stock.move'].create([{
+            'name': 'Move WH2',
+            'location_id': warehouse_2.lot_stock_id.id,
+            'location_dest_id': self.partner.property_stock_customer.id,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'product_uom_qty': 1,
+        }, {
+            'name': 'Move WH3',
+            'location_id': warehouse_3.lot_stock_id.id,
+            'location_dest_id': self.partner.property_stock_customer.id,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'product_uom_qty': 1,
+        }])
+        moves._action_confirm()
+        # activate action of opening the replenishment view
+        self.env['report.stock.quantity'].flush()
+        self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
+        replenishments = self.env['stock.warehouse.orderpoint'].search([
+            ('product_id', '=', product.id),
+        ])
+        # Verify that the location and the route make sense
+        self.assertRecordValues(replenishments, [
+            {'location_id': warehouse_2.lot_stock_id.id, 'route_id': route_2.id},
+            {'location_id': warehouse_3.lot_stock_id.id, 'route_id': route_3.id},
+        ])
+
 
 class TestProcRuleLoad(TransactionCase):
     def setUp(cls):

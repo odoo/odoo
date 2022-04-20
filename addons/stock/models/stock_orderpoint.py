@@ -408,8 +408,9 @@ class StockWarehouseOrderpoint(models.Model):
 
         orderpoints = self.env['stock.warehouse.orderpoint'].with_user(SUPERUSER_ID).create(orderpoint_values_list)
         for orderpoint in orderpoints:
-            orderpoint.route_id = orderpoint.product_id.route_ids[:1]
-        orderpoints.filtered(lambda o: not o.route_id)._set_default_route_id()
+            orderpoint_wh = orderpoint.location_id.get_warehouse()
+            orderpoint.route_id = next((r for r in orderpoint.product_id.route_ids if not r.supplied_wh_id or r.supplied_wh_id == orderpoint_wh), None) \
+                                  or orderpoint._set_default_route_id()
         return action
 
     @api.model
