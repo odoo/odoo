@@ -665,6 +665,10 @@ class Users(models.Model):
 
         return frozendict(context)
 
+    @tools.ormcache('self._uid')
+    def _get_company_ids(self):
+        return frozenset(self.company_ids.ids)
+
     @api.model
     def action_get(self):
         return self.sudo().env.ref('base.action_res_users_my').read()[0]
@@ -675,7 +679,7 @@ class Users(models.Model):
     @api.model
     def _get_invalidation_fields(self):
         return {
-            'groups_id', 'active', 'lang', 'tz', 'company_id',
+            'groups_id', 'active', 'lang', 'tz', 'company_id', 'company_ids',
             *USER_PRIVATE_FIELDS,
             *self._get_session_token_fields()
         }
