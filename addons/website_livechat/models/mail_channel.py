@@ -10,7 +10,7 @@ class MailChannel(models.Model):
 
     livechat_visitor_id = fields.Many2one('website.visitor', string='Visitor')
 
-    def _execute_channel_pin(self, pinned=False):
+    def channel_pin(self, pinned=False):
         """ Override to clean an empty livechat channel.
          This is typically called when the operator send a chat request to a website.visitor
          but don't speak to him and closes the chatter.
@@ -18,7 +18,7 @@ class MailChannel(models.Model):
          If active empty livechat channel,
          delete mail_channel as not useful to keep empty chat
          """
-        super(MailChannel, self)._execute_channel_pin(pinned)
+        super().channel_pin(pinned=pinned)
         if self.livechat_active and not self.message_ids:
             self.unlink()
 

@@ -439,15 +439,15 @@ registerModel({
          * Performs the `channel_pin` RPC on `mail.channel`.
          *
          * @param {Object} param0
+         * @param {number} param0.channelId
          * @param {boolean} [param0.pinned=false]
-         * @param {string} param0.uuid
          */
-        async performRpcChannelPin({ pinned = false, uuid }) {
+        async performRpcChannelPin({ channelId, pinned = false }) {
             return this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'channel_pin',
+                args: [[channelId]],
                 kwargs: {
-                    uuid,
                     pinned,
                 },
             }, { shadow: true });
@@ -892,8 +892,8 @@ registerModel({
                 return;
             }
             await this.messaging.models['Thread'].performRpcChannelPin({
+                channelId: this.id,
                 pinned: this.isPendingPinned,
-                uuid: this.uuid,
             });
         },
         /**
