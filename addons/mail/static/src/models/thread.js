@@ -388,16 +388,16 @@ registerModel({
         /**
          * Performs the `channel_fold` RPC on `mail.channel`.
          *
-         * @param {string} uuid
+         * @param {number} channelId
          * @param {string} state
          */
-        async performRpcChannelFold(uuid, state) {
+        async performRpcChannelFold(channelId, state) {
             return this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'channel_fold',
+                args: [[channelId]],
                 kwargs: {
                     state,
-                    uuid,
                 }
             }, { shadow: true });
         },
@@ -875,10 +875,7 @@ registerModel({
                 // Server sync of fold state is only supported for channels.
                 return;
             }
-            if (!this.uuid) {
-                return;
-            }
-            return this.messaging.models['Thread'].performRpcChannelFold(this.uuid, state);
+            return this.messaging.models['Thread'].performRpcChannelFold(this.id, state);
         },
         /**
          * Notify server to leave the current channel. Useful for cross-tab

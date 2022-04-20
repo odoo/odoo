@@ -520,7 +520,7 @@ QUnit.test('chat window: fold', async function (assert) {
     assert.expect(9);
 
     const pyEnv = await startServer();
-    pyEnv['mail.channel'].create({ uuid: 'channel-uuid' });
+    pyEnv['mail.channel'].create({});
     const { click, createMessagingMenuComponent } = await this.start({
         mockRPC(route, args) {
             if (args.method === 'channel_fold') {
@@ -572,7 +572,7 @@ QUnit.test('chat window: open / close', async function (assert) {
     assert.expect(10);
 
     const pyEnv = await startServer();
-    pyEnv['mail.channel'].create({ uuid: 'channel-uuid' });
+    pyEnv['mail.channel'].create({});
     const { click, createMessagingMenuComponent } = await this.start({
         mockRPC(route, args) {
             if (args.method === 'channel_fold') {
