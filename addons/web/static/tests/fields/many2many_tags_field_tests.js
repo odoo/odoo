@@ -873,28 +873,25 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("widget many2many_tags: tags title attribute", async function (assert) {
+    QUnit.test("widget many2many_tags: tags title attribute", async function (assert) {
         assert.expect(1);
         serverData.models.turtle.records[0].partner_ids = [2];
 
         await makeView({
             type: "form",
-            model: "turtle",
             serverData,
-            arch:
-                '<form string="Turtles">' +
-                "<sheet>" +
-                '<field name="display_name"/>' +
-                '<field name="partner_ids" widget="many2many_tags"/>' +
-                "</sheet>" +
-                "</form>",
+            resModel: "turtle",
             resId: 1,
+            arch: `<form string="Turtles">
+                    <sheet>
+                        <field name="display_name"/>
+                        <field name="partner_ids" widget="many2many_tags"/>
+                    </sheet>
+                </form>`,
         });
 
         assert.deepEqual(
-            target
-                .querySelector(".o_field_many2many_tags.o_field_widget .badge .o_badge_text")
-                .attr("title"),
+            target.querySelector(".o_field_many2many_tags .o_tag.badge").title,
             "second record",
             "the title should be filled in"
         );
