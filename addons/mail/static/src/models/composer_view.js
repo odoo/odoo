@@ -886,6 +886,19 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeHasMentionSuggestionsBelowPosition() {
+            if (this.threadView && this.threadView.threadViewer.chatter) {
+                return true;
+            }
+            if (this.messageViewInEditing) {
+                return false;
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @return {boolean}
          */
         _computeHasSuggestions() {
@@ -1388,6 +1401,10 @@ registerModel({
          */
         hasHeader: attr({
             compute: '_computeHasHeader',
+        }),
+        hasMentionSuggestionsBelowPosition: attr({
+            compute: '_computeHasMentionSuggestionsBelowPosition',
+            default: false,
         }),
         /**
          * States whether there is any result currently found for the current

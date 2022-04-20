@@ -66,10 +66,6 @@ Object.assign(Composer, {
             type: Boolean,
             optional: true,
         },
-        hasMentionSuggestionsBelowPosition: {
-            type: Boolean,
-            optional: true,
-        },
         hasSendButton: {
             type: Boolean,
             optional: true,
