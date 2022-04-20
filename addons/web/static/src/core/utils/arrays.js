@@ -53,6 +53,17 @@ function _getExtractorFrom(criterion) {
 }
 
 /**
+ * Returns the array of elements contained in both arrays.
+ *
+ * @param {any[]} array1
+ * @param {any[]} array2
+ * @returns {any[]}
+ */
+export function intersection(array1, array2) {
+    return array1.filter((v) => array2.includes(v));
+}
+
+/**
  * Returns an object holding different groups defined by a given criterion
  * or a default one. Each group is a subset of the original given list.
  * The given criterion can either be:
