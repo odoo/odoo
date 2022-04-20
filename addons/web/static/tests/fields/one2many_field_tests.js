@@ -4642,8 +4642,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".o_x2m_control_panel .o_pager", "o2m pager should be hidden");
     });
 
-    // AAB Not inline
-    QUnit.skipNotInline("one2many list with a many2one", async function (assert) {
+    QUnit.test("one2many list with a many2one", async function (assert) {
         assert.expect(5);
 
         let checkOnchange = false;
@@ -4692,8 +4691,8 @@ QUnit.module("Fields", (hooks) => {
         await addRow(target);
 
         checkOnchange = true;
-        await testUtils.fields.many2one.clickOpenDropdown("product_id");
-        testUtils.fields.many2one.clickItem("product_id", "xpad");
+        await clickOpenM2ODropdown(target, "product_id");
+        await click(target.querySelectorAll('div[name="product_id"] .o_input_dropdown li')[1]);
 
         await click(target.querySelector(".modal .modal-footer button"));
         assert.containsOnce(target, ".o_data_cell[title='xphone']");
