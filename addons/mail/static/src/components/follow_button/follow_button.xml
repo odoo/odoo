@@ -15,7 +15,7 @@
                     </button>
                 </t>
                 <t t-else="">
-                    <button class="o_FollowButton_follow btn btn-link text-600" t-att-disabled="props.isDisabled" t-on-click="thread.onClickFollow" t-att-class="{ 'o_ChatterTopbar_button': props.isChatterButton }">
+                    <button class="o_FollowButton_follow btn btn-link text-600" t-att-disabled="followButtonView.isDisabled" t-on-click="thread.onClickFollow" t-att-class="{ 'o_ChatterTopbar_button': props.isChatterButton }">
                         Follow
                     </button>
                 </t>
