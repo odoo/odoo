@@ -2,6 +2,7 @@
 
 import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
+import { BlockUI } from "@web/core/ui/block_ui";
 import core from 'web.core';
 
 import { WebsiteEditorComponent } from '../../components/editor/editor';
@@ -48,7 +49,6 @@ export class WebsiteEditorClientAction extends Component {
                         $().getScrollingElement(this.iframefallback.el.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;
                     }
                 });
-
                 this.iframe.el.contentWindow.addEventListener('PUBLIC-ROOT-READY', (event) => {
                     if (!this.websiteContext.edition) {
                         this.addWelcomeMessage();
@@ -70,6 +70,11 @@ export class WebsiteEditorClientAction extends Component {
                 this.addWelcomeMessage();
             }
         }, () => [this.websiteContext.edition]);
+
+        useEffect(() => {
+            this.websiteService.blockIframe();
+            this.iframe.el.addEventListener('load', () => this.websiteService.unblockIframe(), { once: true });
+        }, () => []);
     }
 
     get websiteId() {
@@ -117,6 +122,6 @@ export class WebsiteEditorClientAction extends Component {
     }
 }
 WebsiteEditorClientAction.template = 'website.WebsiteEditorClientAction';
-WebsiteEditorClientAction.components = { WebsiteEditorComponent };
+WebsiteEditorClientAction.components = { WebsiteEditorComponent, BlockUI };
 
 registry.category('actions').add('website_editor', WebsiteEditorClientAction);

@@ -34,3 +34,17 @@
         margin-right: 0 !important;
     }
 }
+body.editor_has_snippets {
+    .o_website_editor {
+        .o_blockUI {
+            right: $o-we-sidebar-width;
+        }
+    }
+}
+body:not(.editor_has_snippets) {
+    .o_website_editor {
+        .o_blockUI {
+            top: $o-navbar-height;
+        }
+    }
+}

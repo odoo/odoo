@@ -5,7 +5,7 @@ import core from 'web.core';
 import ajax from 'web.ajax';
 import { getWysiwygClass } from 'web_editor.loader';
 
-const { reactive } = owl;
+const { reactive, EventBus } = owl;
 
 const websiteSystrayRegistry = registry.category('website_systray');
 
@@ -38,6 +38,8 @@ export const websiteService = {
         let editedObjectPath;
         let websiteRootInstance;
         let Wysiwyg;
+        let bus = new EventBus();
+        let iframeLocks = 0;
         return {
             set currentWebsiteId(id) {
                 currentWebsiteId = id;
@@ -55,6 +57,9 @@ export const websiteService = {
             },
             get context() {
                 return context;
+            },
+            get bus() {
+                return bus;
             },
             set pageDocument(document) {
                 pageDocument = document;
@@ -118,6 +123,21 @@ export const websiteService = {
                     Wysiwyg = await getWysiwygClass({wysiwygAlias: 'website.wysiwyg'}, ['website.compiled_assets_wysiwyg']);
                 }
                 return Wysiwyg;
+            },
+            blockIframe() {
+              if (iframeLocks === 0) {
+                  bus.trigger('BLOCK');
+                  iframeLocks++;
+              }
+            },
+            unblockIframe() {
+                iframeLocks--
+                if (iframeLocks < 0) {
+                    iframeLocks = 0;
+                }
+                if (iframeLocks === 0) {
+                    bus.trigger('UNBLOCK');
+                }
             }
         };
     },

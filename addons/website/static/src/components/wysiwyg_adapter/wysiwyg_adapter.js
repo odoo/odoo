@@ -57,8 +57,12 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 this._setObserver();
 
                 if (this.props.snippetSelector) {
-                    const snippetEl = $(this.websiteService.pageDocument).find(this.props.snippetSelector);
-                    await this.widget.snippetsMenu.activateSnippet($(snippetEl));
+                    const $snippetEl = $(this.websiteService.pageDocument).find(this.props.snippetSelector);
+                    await this.widget.snippetsMenu.activateSnippet($snippetEl);
+                    if ($snippetEl.length) {
+                        $snippetEl[0].scrollIntoView();
+                    }
+                    this.websiteService.unblockIframe();
                 }
 
                 this.props.wysiwygReady();
@@ -519,6 +523,8 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         return callback(Widget);
     }
     _onWillReload(event) {
+        this.widget.trigger_up('disable_loading_effects')
+        this.websiteService.blockIframe();
         return this.props.willReload(this.widget.el.cloneNode(true));
     }
     _onColorPreviewsUpdate(event) {

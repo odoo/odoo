@@ -426,6 +426,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      * @see this.selectClass for params
      */
     changeSequence: function (previewMode, widgetValue, params) {
+        this.trigger_up('will_reload');
         this._rpc({
             route: '/shop/config/product',
             params: {
