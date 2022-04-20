@@ -28,6 +28,31 @@ class MailTestGateway(models.Model):
     custom_field = fields.Char()
 
 
+class MailTestGatewayGroups(models.Model):
+    """ A model looking like discussion channels / groups (flat thread and
+    alias). Used notably for advanced gatewxay tests. """
+    _description = 'Channel/Group-like Chatter Model for Mail Gateway'
+    _name = 'mail.test.gateway.groups'
+    _inherit = ['mail.thread.blacklist', 'mail.alias.mixin']
+    _mail_flat_thread = False
+    _primary_email = 'email_from'
+
+    name = fields.Char()
+    email_from = fields.Char()
+    custom_field = fields.Char()
+    customer_id = fields.Many2one('res.partner', 'Customer')
+
+    def get_alias_model_name(self, vals):
+        return vals.get('alias_model', 'mail.test.gateway.groups')
+
+    def get_alias_values(self):
+        self.ensure_one()
+        res = super(MailTestGatewayGroups, self).get_alias_values()
+        res['alias_force_thread_id'] = self.id
+        res['alias_parent_thread_id'] = self.id
+        return res
+
+
 class MailTestStandard(models.Model):
     """ This model can be used in tests when automatic subscription and simple
     tracking is necessary. Most features are present in a simple way. """
