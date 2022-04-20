@@ -34,10 +34,6 @@ Object.assign(ThreadView, {
             type: Boolean,
             optional: true,
         },
-        hasComposerSendButton: {
-            type: Boolean,
-            optional: true,
-        },
         hasScrollAdjust: {
             type: Boolean,
             optional: true,

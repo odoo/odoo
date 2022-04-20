@@ -918,6 +918,19 @@ registerModel({
          * @private
          * @returns {boolean|FieldCommand}
          */
+        _computeHasSendButton() {
+            if (this.messageViewInEditing) {
+                return false;
+            }
+            if (this.threadView && this.threadView.threadViewer.chatWindow) {
+                return this.messaging.device.isMobile;
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {boolean|FieldCommand}
+         */
         _computeHasThreadName() {
             if (this.threadView) {
                 return this.threadView.hasComposerThreadName;
@@ -1388,6 +1401,10 @@ registerModel({
          */
         hasHeader: attr({
             compute: '_computeHasHeader',
+        }),
+        hasSendButton: attr({
+            compute: '_computeHasSendButton',
+            default: true,
         }),
         /**
          * States whether there is any result currently found for the current

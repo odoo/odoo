@@ -53,7 +53,6 @@ Object.assign(Composer, {
     defaultProps: {
         hasCurrentPartnerAvatar: true,
         hasDiscardButton: false,
-        hasSendButton: true,
         isExpandable: false,
     },
     props: {
@@ -67,10 +66,6 @@ Object.assign(Composer, {
             optional: true,
         },
         hasMentionSuggestionsBelowPosition: {
-            type: Boolean,
-            optional: true,
-        },
-        hasSendButton: {
             type: Boolean,
             optional: true,
         },
