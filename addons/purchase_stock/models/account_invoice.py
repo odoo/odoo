@@ -42,8 +42,7 @@ class AccountMove(models.Model):
                 continue
 
             move = move.with_company(move.company_id)
-            for line in move.invoice_line_ids.filtered(lambda line: line.product_id.type == 'product' and line.product_id.valuation == 'real_time'):
-
+            for line in move.invoice_line_ids:
                 # Filter out lines being not eligible for price difference.
                 if line.product_id.type != 'product' or line.product_id.valuation != 'real_time':
                     continue
