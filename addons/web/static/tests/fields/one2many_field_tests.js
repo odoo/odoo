@@ -2862,7 +2862,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, "td.o_list_record_remove button");
     });
 
-    QUnit.skipWOWL("many2many list: unlink two records", async function (assert) {
+    QUnit.test("many2many list: unlink two records", async function (assert) {
         assert.expect(7);
         serverData.models.partner.records[0].p = [1, 2, 4];
         serverData.views = {
@@ -2910,7 +2910,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector("td.o_list_record_remove button"));
         assert.containsN(target, "td.o_list_record_remove button", 2);
 
-        await click(target.querySelector("tr.o_data_row"));
+        await click(target.querySelector("tr.o_data_row td"));
         assert.containsNone(target, ".modal .modal-footer .o_btn_remove");
 
         await click(target.querySelector(".modal .btn-secondary"));

@@ -26,6 +26,11 @@ export class X2ManyField extends Component {
 
         this.dialogClose = [];
         this.fieldInfo = this.props.record.activeFields[this.props.name];
+
+        this.isMany2Many =
+            this.props.record.fields[this.props.name].type === "many2many" ||
+            this.fieldInfo.widget === "many2many";
+
         // FIXME WOWL: is it normal to get here without fieldInfo.views?
         if (this.fieldInfo.views && this.fieldInfo.viewMode in this.fieldInfo.views) {
             this.Renderer = X2M_RENDERERS[this.fieldInfo.viewMode];
@@ -107,7 +112,8 @@ export class X2ManyField extends Component {
 
         const onDelete = (record) => {
             const list = this.list;
-            list.delete(record.id);
+            const operation = this.isMany2Many ? "FORGET" : "DELETE";
+            list.delete(record.id, operation);
             // + update pager info
             this.render();
         }; // use this in kanban and adapt (forget,...)?
