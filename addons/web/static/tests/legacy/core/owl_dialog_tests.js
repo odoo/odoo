@@ -8,6 +8,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
 
     const { makeLegacyDialogMappingTestEnv } = require('@web/../tests/helpers/legacy_env_utils');
     const { Dialog: WowlDialog } = require("@web/core/dialog/dialog");
+    const { WithEnv } = require("@web/core/utils/components");
     const {
         getFixture,
         nextTick,
@@ -17,7 +18,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
     const { createWebClient, doAction } = require("@web/../tests/webclient/helpers");
     const { LegacyComponent } = require("@web/legacy/legacy_component");
 
-    const { useState, xml } = owl;
+    const { Component, useState, xml } = owl;
     const EscapeKey = { key: 'Escape', keyCode: 27, which: 27 };
 
     QUnit.module('core', {}, function () {
@@ -290,12 +291,9 @@ odoo.define('web.owl_dialog_tests', function (require) {
                 />
             `;
             OwlDialogWrapper.components = { Dialog };
-            class WowlDialogSubClass extends WowlDialog{
-                setup() {
-                    super.setup();
-                    this.contentClass = this.props.contentClass;
-                }
-            }
+            class WowlDialogWrapper extends Component {}
+            WowlDialogWrapper.components = { WowlDialog };
+            WowlDialogWrapper.template = xml`<WowlDialog contentClass="props.contentClass">content</WowlDialog>`;
             class Parent extends LegacyComponent {
                 setup() {
                     this.dialogs = useState([]);
@@ -309,20 +307,25 @@ odoo.define('web.owl_dialog_tests', function (require) {
             Parent.template = xml`
                 <div>
                     <div class="o_dialog_container"/>
-                    <t t-foreach="dialogs" t-as="dialog" t-key="dialog.id" t-component="dialog.class"
-                        contentClass="'dialog_' + dialog.id"
-                        close="() => this._onDialogClosed(dialog.id)"
-                    />
+                    <t t-foreach="dialogs" t-as="dialog" t-key="dialog.id">
+                        <WithEnv env="{ dialogData: { isActive: true, close: () => this._onDialogClosed(dialog.id) } }">
+                            <t t-component="dialog.class"
+                                contentClass="'dialog_' + dialog.id"
+                                close="() => this._onDialogClosed(dialog.id)"
+                            />
+                        </WithEnv>
+                    </t>
                 </div>`;
+            Parent.components = { WithEnv };
 
             const target = getFixture();
             const parent = await mount(Parent, target, { env });
 
-            parent.dialogs.push({ id: 1, class: WowlDialogSubClass });
+            parent.dialogs.push({ id: 1, class: WowlDialogWrapper });
             await nextTick();
             parent.dialogs.push({ id: 2, class: OwlDialogWrapper });
             await nextTick();
-            parent.dialogs.push({ id: 3, class: WowlDialogSubClass });
+            parent.dialogs.push({ id: 3, class: WowlDialogWrapper });
             await nextTick();
 
             assert.verifySteps([]);

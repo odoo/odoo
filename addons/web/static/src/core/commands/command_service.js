@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { CommandPaletteDialog } from "./command_palette_dialog";
+import { CommandPalette } from "./command_palette";
 
 const { Component, xml } = owl;
 
@@ -136,7 +136,7 @@ export const commandService = {
             // Open Command Palette dialog
             isPaletteOpened = true;
             dialog.add(
-                CommandPaletteDialog,
+                CommandPalette,
                 {
                     config,
                 },

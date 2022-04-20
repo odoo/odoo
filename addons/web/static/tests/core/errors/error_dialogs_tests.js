@@ -20,6 +20,15 @@ let target;
 let env;
 const serviceRegistry = registry.category("services");
 
+async function makeDialogTestEnv() {
+    const env = await makeTestEnv();
+    env.dialogData = {
+        isActive: true,
+        close() {},
+    };
+    return env;
+}
+
 QUnit.module("Error dialogs", {
     async beforeEach() {
         target = getFixture();
@@ -33,7 +42,7 @@ QUnit.module("Error dialogs", {
 QUnit.test("ErrorDialog with traceback", async (assert) => {
     assert.expect(11);
     assert.containsNone(target, ".o_dialog");
-    env = await makeTestEnv();
+    env = await makeDialogTestEnv();
     await mount(ErrorDialog, target, {
         env,
         props: {
@@ -84,7 +93,7 @@ QUnit.test("ErrorDialog with traceback", async (assert) => {
 QUnit.test("Client ErrorDialog with traceback", async (assert) => {
     assert.expect(11);
     assert.containsNone(target, ".o_dialog");
-    env = await makeTestEnv();
+    env = await makeDialogTestEnv();
     await mount(ClientErrorDialog, target, {
         env,
         props: {
@@ -153,7 +162,7 @@ QUnit.test("button clipboard copy error traceback", async (assert) => {
             },
         },
     });
-    env = await makeTestEnv();
+    env = await makeDialogTestEnv();
     await mount(ErrorDialog, target, {
         env,
         props: {
@@ -171,7 +180,7 @@ QUnit.test("button clipboard copy error traceback", async (assert) => {
 QUnit.test("WarningDialog", async (assert) => {
     assert.expect(6);
     assert.containsNone(target, ".o_dialog");
-    env = await makeTestEnv();
+    env = await makeDialogTestEnv();
     await mount(WarningDialog, target, {
         env,
         props: {
@@ -201,7 +210,7 @@ QUnit.test("RedirectWarningDialog", async (assert) => {
         },
     };
     serviceRegistry.add("action", faceActionService);
-    env = await makeTestEnv();
+    env = await makeDialogTestEnv();
     assert.containsNone(target, ".o_dialog");
     await mount(RedirectWarningDialog, target, {
         env,
@@ -221,7 +230,7 @@ QUnit.test("RedirectWarningDialog", async (assert) => {
     assert.containsOnce(target, ".o_dialog");
     assert.strictEqual(target.querySelector("header .modal-title").textContent, "Odoo Warning");
     assert.strictEqual(target.querySelector("main").textContent, "Some strange unreadable message");
-    let footerButtons = target.querySelectorAll("footer button");
+    const footerButtons = target.querySelectorAll("footer button");
     assert.deepEqual(
         [...footerButtons].map((el) => el.textContent),
         ["Buy book on cryptography", "Cancel"]
@@ -236,7 +245,7 @@ QUnit.test("RedirectWarningDialog", async (assert) => {
 QUnit.test("Error504Dialog", async (assert) => {
     assert.expect(5);
     assert.containsNone(target, ".o_dialog");
-    env = await makeTestEnv();
+    env = await makeDialogTestEnv();
     await mount(Error504Dialog, target, { env, props: { close() {} } });
     assert.containsOnce(target, ".o_dialog");
     assert.strictEqual(target.querySelector("header .modal-title").textContent, "Request timeout");
@@ -256,7 +265,7 @@ QUnit.test("SessionExpiredDialog", async (assert) => {
             },
         },
     });
-    env = await makeTestEnv();
+    env = await makeDialogTestEnv();
     assert.containsNone(target, ".o_dialog");
     await mount(SessionExpiredDialog, target, { env, props: { close() {} } });
     assert.containsOnce(target, ".o_dialog");

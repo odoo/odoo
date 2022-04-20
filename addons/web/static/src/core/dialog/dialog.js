@@ -3,52 +3,41 @@
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useActiveElement } from "../ui/ui_service";
 
-const { Component, useRef, useChildSubEnv, xml } = owl;
-
+const { Component, useRef, useChildSubEnv, useState } = owl;
 export class Dialog extends Component {
     setup() {
-        if (this.constructor === Dialog) {
-            throw new Error(
-                "Dialog should not be used by itself. Please use the dialog service with a Dialog subclass."
-            );
-        }
         this.modalRef = useRef("modal");
         useActiveElement("modal");
+        this.data = useState(this.env.dialogData);
         useHotkey("escape", () => {
-            this.close();
+            this.data.close();
         });
         useChildSubEnv({ inDialog: true });
-        this.close = this.close.bind(this);
-        this.contentClass = this.constructor.contentClass;
-        this.fullscreen = this.constructor.fullscreen;
-        this.renderFooter = this.constructor.renderFooter;
-        this.renderHeader = this.constructor.renderHeader;
-        this.size = this.constructor.size;
-        this.technical = this.constructor.technical;
-        this.title = this.constructor.title;
-    }
-
-    /**
-     * Send an event signaling that the dialog should be closed.
-     * @private
-     */
-    close() {
-        this.props.close();
     }
 }
-
 Dialog.template = "web.Dialog";
-Dialog.contentClass = null;
-Dialog.fullscreen = false;
-Dialog.renderFooter = true;
-Dialog.renderHeader = true;
-Dialog.size = "modal-lg";
-Dialog.technical = true;
-Dialog.title = "Odoo";
-Dialog.bodyTemplate = xml`<div/>`;
-Dialog.footerTemplate = "web.DialogFooterDefault";
 Dialog.props = {
-    close: Function,
-    isActive: { optional: true },
-    "*": true,
+    contentClass: { type: String, optional: true },
+    fullscreen: { type: Boolean, optional: true },
+    footer: { type: Boolean, optional: true },
+    header: { type: Boolean, optional: true },
+    size: { type: String, optional: true, validate: (s) => ["sm", "md", "lg", "xl"].includes(s) },
+    technical: { type: Boolean, optional: true },
+    title: { type: String, optional: true },
+    slots: {
+        type: Object,
+        shape: {
+            default: Object, // Content is not optional
+            footer: { type: Object, optional: true },
+        },
+    },
+};
+Dialog.defaultProps = {
+    contentClass: "",
+    fullscreen: false,
+    footer: true,
+    header: true,
+    size: "lg",
+    technical: true,
+    title: "Odoo",
 };

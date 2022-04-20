@@ -8,9 +8,10 @@ import { useLegacyRefs } from "@web/legacy/utils";
 const { useEffect } = owl;
 
 const LEGACY_SIZE_CLASSES = {
-    "extra-large": "modal-xl",
-    large: "modal-lg",
-    small: "modal-sm",
+    "extra-large": "xl",
+    large: "lg",
+    medium: "md",
+    small: "sm",
 };
 
 // -----------------------------------------------------------------------------
@@ -23,14 +24,14 @@ class ActionDialog extends Dialog {
         const actionProps = this.props && this.props.actionProps;
         const action = actionProps && actionProps.action;
         this.actionType = action && action.type;
-        this.title = "title" in this.props ? this.props.title : this.constructor.title;
     }
 }
 ActionDialog.components = { ...Dialog.components, DebugMenu };
 ActionDialog.template = "web.ActionDialog";
-ActionDialog.bodyTemplate = "web.ActionDialogBody";
 ActionDialog.props = {
     ...Dialog.props,
+    close: Function,
+    slots: { optional: true },
     ActionComponent: { optional: true },
     actionProps: { optional: true },
     title: { optional: true },
@@ -38,7 +39,8 @@ ActionDialog.props = {
 
 /**
  * This LegacyAdaptedActionDialog class will disappear when legacy code will be entirely rewritten.
- * The "ActionDialog" class should get exported from this file when the cleaning will occur.
+ * The "ActionDialog" class should get exported from this file when the cleaning will occur, and it
+ * should stop extending Dialog and use it normally instead at that point.
  */
 class LegacyAdaptedActionDialog extends ActionDialog {
     setup() {
@@ -47,7 +49,7 @@ class LegacyAdaptedActionDialog extends ActionDialog {
         const action = actionProps && actionProps.action;
         const actionContext = action && action.context;
         const actionDialogSize = actionContext && actionContext.dialog_size;
-        this.size = LEGACY_SIZE_CLASSES[actionDialogSize] || this.constructor.size;
+        this.props.size = LEGACY_SIZE_CLASSES[actionDialogSize] || Dialog.defaultProps.size;
         const ControllerComponent = this.props && this.props.ActionComponent;
         const Controller = ControllerComponent && ControllerComponent.Component;
         this.isLegacy = Controller && Controller.isLegacy;
@@ -64,6 +66,6 @@ class LegacyAdaptedActionDialog extends ActionDialog {
         );
     }
 }
-LegacyAdaptedActionDialog.footerTemplate = "web.LegacyAdaptedActionDialogFooter";
+LegacyAdaptedActionDialog.template = "web.LegacyAdaptedActionDialog";
 
 export { LegacyAdaptedActionDialog as ActionDialog };

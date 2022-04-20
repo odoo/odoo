@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { CommandPaletteDialog } from "@web/core/commands/command_palette_dialog";
+import { CommandPalette } from "@web/core/commands/command_palette";
 import { commandService } from "@web/core/commands/command_service";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
@@ -40,7 +40,7 @@ TestComponent.template = xml`
   </div>
 `;
 
-QUnit.module("Command Palette Dialog", {
+QUnit.module("Command Palette", {
     async beforeEach() {
         serviceRegistry.add("ui", uiService);
         serviceRegistry.add("dialog", dialogService);
@@ -64,7 +64,7 @@ QUnit.test("empty providers", async (assert) => {
     const config = {
         providers: [],
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -104,7 +104,7 @@ QUnit.test("custom empty message", async (assert) => {
         configByNamespace,
         providers,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -168,7 +168,7 @@ QUnit.test("custom debounce delay", async (assert) => {
         configByNamespace,
         providers,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -227,7 +227,7 @@ QUnit.test("concurrency with custom debounce delay", async (assert) => {
         configByNamespace,
         providers,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -266,7 +266,7 @@ QUnit.test("custom placeholder", async (assert) => {
         placeholder: "placeholder test",
         providers: [],
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -285,7 +285,7 @@ QUnit.test("add a footer", async (assert) => {
         providers: [],
         FooterComponent,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -323,7 +323,7 @@ QUnit.test("command with a Custom Component", async (assert) => {
     const config = {
         providers,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -376,7 +376,7 @@ QUnit.test("multi namespace with provider", async (assert) => {
     const config = {
         providers,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -430,7 +430,7 @@ QUnit.test("apply a fuzzysearch on the namespace default not on the others", asy
     const config = {
         providers,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -493,7 +493,7 @@ QUnit.test("multi provider with the same namespace", async (assert) => {
     const config = {
         providers,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -531,7 +531,7 @@ QUnit.test("check the concurrency during a research", async (assert) => {
     const config = {
         providers,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -584,7 +584,7 @@ QUnit.test(
             searchValue: "C1",
             providers,
         };
-        env.services.dialog.add(CommandPaletteDialog, {
+        env.services.dialog.add(CommandPalette, {
             config,
         });
         await nextTick();
@@ -632,7 +632,7 @@ QUnit.test("open the command palette with a namespace already in the searchbar",
         searchValue: "@",
         providers,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -679,7 +679,7 @@ QUnit.test("open the command palette with a searchValue with a namespace", async
         searchValue: "@Test",
         providers,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -726,7 +726,7 @@ QUnit.test("open the command palette with a searchValue without namespace", asyn
         searchValue: "Command1",
         providers,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -799,7 +799,7 @@ QUnit.test("multi provider with categories", async (assert) => {
         configByNamespace,
         providers,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -901,7 +901,7 @@ QUnit.test("don't display by categories if there is a search value", async (asse
         configByNamespace,
         providers,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -956,7 +956,7 @@ QUnit.test("click on command", async (assert) => {
     const config = {
         providers,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -966,7 +966,7 @@ QUnit.test("click on command", async (assert) => {
         [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
         ["Command1", "Command2"]
     );
-    let focusedCommand = target.querySelector(".o_command.focused");
+    const focusedCommand = target.querySelector(".o_command.focused");
     assert.strictEqual(focusedCommand.textContent, commands[0].name);
     await click(target, ".o_command.focused");
     assert.verifySteps(["C1"]);
@@ -996,7 +996,7 @@ QUnit.test("press enter on command", async (assert) => {
     const config = {
         providers,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -1006,7 +1006,7 @@ QUnit.test("press enter on command", async (assert) => {
         [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
         ["Command1", "Command2"]
     );
-    let focusedCommand = target.querySelector(".o_command.focused");
+    const focusedCommand = target.querySelector(".o_command.focused");
     assert.strictEqual(focusedCommand.textContent, commands[0].name);
     triggerHotkey("arrowdown");
     await nextTick();
@@ -1032,7 +1032,7 @@ QUnit.test("keyboard navigation scroll", async (assert) => {
     const config = {
         providers,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
 
@@ -1202,7 +1202,7 @@ QUnit.test("multi level command", async (assert) => {
         placeholder: "placeholder test",
         providers,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -1225,7 +1225,7 @@ QUnit.test("multi level command", async (assert) => {
         [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
         ["Command1"]
     );
-    let focusedCommand = target.querySelector(".o_command.focused");
+    const focusedCommand = target.querySelector(".o_command.focused");
     assert.strictEqual(focusedCommand.textContent, commands[0].name);
     triggerHotkey("enter");
     await nextTick();
@@ -1254,14 +1254,14 @@ QUnit.test("command palette dialog can be rendered and closed on outside click",
     const config = {
         providers: [],
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
     assert.containsOnce(target, ".o_command_palette");
 
     // Close on outside click
-    window.dispatchEvent(new MouseEvent("mousedown"));
+    document.body.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
     await nextTick();
     assert.containsNone(target, ".o_command_palette");
 });
@@ -1293,7 +1293,7 @@ QUnit.test("navigate in the command palette with the arrows", async (assert) => 
     const config = {
         providers,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -1339,7 +1339,7 @@ QUnit.test("navigate in the command palette with an empty list", async (assert) 
     const config = {
         providers,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -1391,7 +1391,7 @@ QUnit.test("bold the searchValue on the commands", async (assert) => {
         searchValue: "@",
         providers,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -1429,7 +1429,7 @@ QUnit.test("bold the searchValue on the commands with special char", async (asse
         searchValue: "&",
         providers,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();
@@ -1460,7 +1460,7 @@ QUnit.test("remove namespace with backspace", async (assert) => {
     const config = {
         providers,
     };
-    env.services.dialog.add(CommandPaletteDialog, {
+    env.services.dialog.add(CommandPalette, {
         config,
     });
     await nextTick();

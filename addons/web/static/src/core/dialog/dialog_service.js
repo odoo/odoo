@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
 import { registry } from "../registry";
-import { Dialog } from "./dialog";
 import { DialogContainer } from "./dialog_container";
 
-const { EventBus } = owl;
+const { reactive } = owl;
 
 /**
  *  @typedef {{
@@ -24,28 +23,28 @@ const { EventBus } = owl;
 export const dialogService = {
     /** @returns {DialogServiceInterface} */
     start() {
-        const dialogs = {};
-        const bus = new EventBus();
+        const dialogs = reactive({});
         let dialogId = 0;
 
         registry.category("main_components").add("DialogContainer", {
             Component: DialogContainer,
-            props: { bus, dialogs },
+            props: { dialogs },
         });
 
         function add(dialogClass, props, options = {}) {
-            if (!(dialogClass.prototype instanceof Dialog)) {
-                throw new Error(`${dialogClass.name} must be a subclass of Dialog`);
+            for (const dialog of Object.values(dialogs)) {
+                dialog.dialogData.isActive = false;
             }
-
             const id = ++dialogId;
             function close() {
                 if (dialogs[id]) {
                     delete dialogs[id];
+                    Object.values(dialogs).forEach((dialog, i, dialogArr) => {
+                        dialog.dialogData.isActive = i === dialogArr.length - 1;
+                    });
                     if (options.onClose) {
                         options.onClose();
                     }
-                    bus.trigger("UPDATE");
                 }
             }
 
@@ -53,9 +52,9 @@ export const dialogService = {
                 id,
                 class: dialogClass,
                 props: { ...props, close },
+                dialogData: { isActive: true, close },
             };
             dialogs[id] = dialog;
-            bus.trigger("UPDATE");
 
             return close;
         }
