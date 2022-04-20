@@ -76,6 +76,8 @@
     <record id="mrp_production_subcontracting_tree_view" model="ir.ui.view">
         <field name="name">mrp.production.subcontracting.tree</field>
         <field name="model">mrp.production</field>
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
         <field name="inherit_id" ref="mrp.mrp_production_tree_view" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
@@ -87,6 +89,8 @@
     <record id="mrp_production_subcontracting_filter" model="ir.ui.view">
         <field name="name">mrp.production.subcontracting.select</field>
         <field name="model">mrp.production</field>
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
         <field name="inherit_id" ref="mrp.view_mrp_production_filter" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
