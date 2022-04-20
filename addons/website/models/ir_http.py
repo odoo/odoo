@@ -202,7 +202,7 @@ class Http(models.AbstractModel):
         if user.id == website._get_cached('user_id'):
             # avoid a read on res_company_user_rel in case of public user
             allowed_company_ids = [website_company_id]
-        elif website_company_id in user.company_ids.ids:
+        elif website_company_id in user._get_company_ids():
             allowed_company_ids = [website_company_id]
         else:
             allowed_company_ids = user.company_id.ids
