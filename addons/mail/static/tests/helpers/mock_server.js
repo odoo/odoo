@@ -171,9 +171,9 @@ MockServer.include({
             return this._mockMailChannelChannelFetchPreview(ids);
         }
         if (args.model === 'mail.channel' && args.method === 'channel_fold') {
-            const uuid = args.args[0] || args.kwargs.uuid;
+            const ids = args.args[0];
             const state = args.args[1] || args.kwargs.state;
-            return this._mockMailChannelChannelFold(uuid, state);
+            return this._mockMailChannelChannelFold(ids, state);
         }
         if (args.model === 'mail.channel' && args.method === 'channel_get') {
             const partners_to = args.args[0] || args.kwargs.partners_to;
@@ -871,25 +871,27 @@ MockServer.include({
      * In particular sends a notification on the bus.
      *
      * @private
-     * @param {string} uuid
+     * @param {number} ids
      * @param {state} [state]
      */
-    _mockMailChannelChannelFold(uuid, state) {
-        const channel = this._getRecords('mail.channel', [['uuid', '=', uuid]])[0];
-        const [memberOfCurrentUser] = this._getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
-        const foldState = state ? state : memberOfCurrentUser.fold_state === 'open' ? 'folded' : 'open';
-        const vals = {
-            fold_state: foldState,
-            is_minimized: foldState !== 'closed',
-        };
-        this._mockWrite('mail.channel.partner', [[memberOfCurrentUser.id], vals]);
-        this._widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel/insert',
-            payload: {
-                id: channel.id,
-                serverFoldState: memberOfCurrentUser.fold_state,
-            },
-        }]);
+    _mockMailChannelChannelFold(ids, state) {
+        const channels = this._getRecords('mail.channel', [['id', 'in', ids]]);
+        for (const channel of channels) {
+            const [memberOfCurrentUser] = this._getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
+            const foldState = state ? state : memberOfCurrentUser.fold_state === 'open' ? 'folded' : 'open';
+            const vals = {
+                fold_state: foldState,
+                is_minimized: foldState !== 'closed',
+            };
+            this._mockWrite('mail.channel.partner', [[memberOfCurrentUser.id], vals]);
+            this._widget.call('bus_service', 'trigger', 'notification', [{
+                type: 'mail.channel/insert',
+                payload: {
+                    id: channel.id,
+                    serverFoldState: memberOfCurrentUser.fold_state,
+                },
+            }]);
+        }
     },
     /**
      * Simulates 'channel_get' on 'mail.channel'.
