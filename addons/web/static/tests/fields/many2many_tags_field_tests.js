@@ -19,7 +19,7 @@ import { makeView, setupViewRegistries } from "../views/helpers";
 let serverData;
 let target;
 // WOWL remove after adapting tests
-let cpHelpers, KanbanView;
+let KanbanView;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -757,70 +757,6 @@ QUnit.module("Fields", (hooks) => {
             ".o_field_many2many_tags .badge",
             2,
             "m2m field should contain 2 tags"
-        );
-    });
-
-    QUnit.skipWOWL("search more in many2one: group and use the pager", async function (assert) {
-        assert.expect(2);
-
-        serverData.models.partner.records.push(
-            {
-                id: 5,
-                display_name: "Partner 4",
-            },
-            {
-                id: 6,
-                display_name: "Partner 5",
-            },
-            {
-                id: 7,
-                display_name: "Partner 6",
-            },
-            {
-                id: 8,
-                display_name: "Partner 7",
-            },
-            {
-                id: 9,
-                display_name: "Partner 8",
-            },
-            {
-                id: 10,
-                display_name: "Partner 9",
-            }
-        );
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `<form><field name="trululu"/></form>`,
-            resId: 1,
-            archs: {
-                "partner,false,list": '<tree limit="7"><field name="display_name"/></tree>',
-                "partner,false,search":
-                    "<search><group>" +
-                    '    <filter name="bar" string="Bar" context="{\'group_by\': \'bar\'}"/>' +
-                    "</group></search>",
-            },
-        });
-        //await testUtils.fields.many2one.clickOpenDropdown("trululu");
-        //await testUtils.fields.many2one.clickItem("trululu", "Search");
-        const modal = document.body.querySelector(".modal");
-        await cpHelpers.toggleGroupByMenu(modal);
-        await cpHelpers.toggleMenuItem(modal, "Bar");
-
-        await click($(".modal .o_group_header:first"));
-
-        assert.strictEqual(
-            $(".modal tbody:nth(1) .o_data_row").length,
-            7,
-            "should display 7 records in the first page"
-        );
-        await click($(".modal .o_group_header:first .o_pager_next"));
-        assert.strictEqual(
-            $(".modal tbody:nth(1) .o_data_row").length,
-            1,
-            "should display 1 record in the second page"
         );
     });
 

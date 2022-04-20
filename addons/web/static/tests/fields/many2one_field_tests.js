@@ -5,6 +5,7 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import {
     click,
+    clickEdit,
     editInput,
     getFixture,
     makeDeferred,
@@ -15,7 +16,13 @@ import {
     triggerEvents,
     triggerScroll,
 } from "../helpers/utils";
-import { applyFilter, toggleAddCustomFilter, toggleFilterMenu } from "../search/helpers";
+import {
+    applyFilter,
+    toggleAddCustomFilter,
+    toggleFilterMenu,
+    toggleGroupByMenu,
+    toggleMenuItem,
+} from "../search/helpers";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -4185,5 +4192,73 @@ QUnit.module("Fields", (hooks) => {
 
         await triggerScroll(target, { top: 50 });
         assert.containsNone(target, ".o_field_many2one .dropdown-menu");
+    });
+
+    QUnit.skipWOWL("search more in many2one: group and use the pager", async function (assert) {
+        assert.expect(2);
+
+        serverData.models.partner.records.push(
+            {
+                id: 5,
+                display_name: "Partner 4",
+            },
+            {
+                id: 6,
+                display_name: "Partner 5",
+            },
+            {
+                id: 7,
+                display_name: "Partner 6",
+            },
+            {
+                id: 8,
+                display_name: "Partner 7",
+            },
+            {
+                id: 9,
+                display_name: "Partner 8",
+            },
+            {
+                id: 10,
+                display_name: "Partner 9",
+            }
+        );
+
+        serverData.views = {
+            "partner,false,list": '<tree limit="7"><field name="display_name"/></tree>',
+            "partner,false,search":
+                "<search><group>" +
+                '    <filter name="bar" string="Bar" context="{\'group_by\': \'bar\'}"/>' +
+                "</group></search>",
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="trululu"/></form>`,
+            resId: 1,
+        });
+
+        await clickEdit(target);
+        await selectDropdownItem(target, "trululu", "Search More...");
+
+        const modal = document.body.querySelector(".modal");
+        await toggleGroupByMenu(modal);
+        await toggleMenuItem(modal, "Bar");
+
+        await click($(".modal .o_group_header:first"));
+
+        assert.strictEqual(
+            $(".modal tbody:nth(1) .o_data_row").length,
+            7,
+            "should display 7 records in the first page"
+        );
+        await click($(".modal .o_group_header:first .o_pager_next"));
+        assert.strictEqual(
+            $(".modal tbody:nth(1) .o_data_row").length,
+            1,
+            "should display 1 record in the second page"
+        );
     });
 });
