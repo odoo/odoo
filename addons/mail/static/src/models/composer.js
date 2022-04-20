@@ -3,6 +3,7 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, replace, unlink } from '@mail/model/model_field_command';
+import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'Composer',
@@ -98,9 +99,9 @@ registerModel({
             }
             if (this.thread.model === 'mail.channel') {
                 if (this.thread.correspondent) {
-                    return _.str.sprintf(this.env._t("Message %s..."), this.thread.correspondent.nameOrDisplayName);
+                    return sprintf(this.env._t("Message %s..."), this.thread.correspondent.nameOrDisplayName);
                 }
-                return _.str.sprintf(this.env._t("Message #%s..."), this.thread.displayName);
+                return sprintf(this.env._t("Message #%s..."), this.thread.displayName);
             }
             if (this.isLog) {
                 return this.env._t("Log an internal note...");

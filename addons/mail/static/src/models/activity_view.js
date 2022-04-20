@@ -5,6 +5,7 @@ import { attr, many, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 import { auto_str_to_date, getLangDateFormat, getLangDatetimeFormat } from 'web.time';
+import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'ActivityView',
@@ -64,7 +65,7 @@ registerModel({
             if (!this.activity.assignee) {
                 return clear();
             }
-            return _.str.sprintf(this.env._t("for %s"), this.activity.assignee.nameOrDisplayName);
+            return sprintf(this.env._t("for %s"), this.activity.assignee.nameOrDisplayName);
         },
         /**
          * @private
@@ -83,11 +84,11 @@ registerModel({
             } else if (diff === -1) {
                 return this.env._t("Yesterday:");
             } else if (diff < 0) {
-                return _.str.sprintf(this.env._t("%d days overdue:"), Math.abs(diff));
+                return sprintf(this.env._t("%s days overdue:"), Math.round(Math.abs(diff)));
             } else if (diff === 1) {
                 return this.env._t("Tomorrow:");
             } else {
-                return _.str.sprintf(this.env._t("Due in %d days:"), Math.abs(diff));
+                return sprintf(this.env._t("Due in %s days:"), Math.round(Math.abs(diff)));
             }
         },
         /**
@@ -150,7 +151,7 @@ registerModel({
             if (!this.activity.summary) {
                 return clear();
             }
-            return _.str.sprintf(this.env._t("“%s”"), this.activity.summary);
+            return sprintf(this.env._t("“%s”"), this.activity.summary);
         },
     },
     fields: {

@@ -9,6 +9,7 @@ import Timer from '@mail/utils/timer';
 import { cleanSearchTerm } from '@mail/utils/utils';
 import * as mailUtils from '@mail/js/utils';
 
+import { sprintf } from '@web/core/utils/strings';
 import { str_to_datetime } from 'web.time';
 
 const getSuggestedRecipientInfoNextTemporaryId = (function () {
@@ -1651,19 +1652,19 @@ registerModel({
                 return this.constructor.fields.typingStatusText.default;
             }
             if (this.orderedOtherTypingMembers.length === 1) {
-                return _.str.sprintf(
+                return sprintf(
                     this.env._t("%s is typing..."),
                     this.getMemberName(this.orderedOtherTypingMembers[0])
                 );
             }
             if (this.orderedOtherTypingMembers.length === 2) {
-                return _.str.sprintf(
+                return sprintf(
                     this.env._t("%s and %s are typing..."),
                     this.getMemberName(this.orderedOtherTypingMembers[0]),
                     this.getMemberName(this.orderedOtherTypingMembers[1])
                 );
             }
-            return _.str.sprintf(
+            return sprintf(
                 this.env._t("%s, %s and more are typing..."),
                 this.getMemberName(this.orderedOtherTypingMembers[0]),
                 this.getMemberName(this.orderedOtherTypingMembers[1])

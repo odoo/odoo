@@ -4,7 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { decrement, increment, insert, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
 import { htmlToTextContentInline } from '@mail/js/utils';
 
-import { escape } from '@web/core/utils/strings';
+import { escape, sprintf } from '@web/core/utils/strings';
 import { str_to_datetime } from 'web.time';
 import { Markup } from 'web.utils';
 import { renderToString } from "@web/core/utils/render";
@@ -190,7 +190,7 @@ registerModel({
             if (this.messaging.currentUser && invitedByUserId !== this.messaging.currentUser.id) {
                 // Current user was invited by someone else.
                 this.env.services['notification'].notify({
-                    message: _.str.sprintf(
+                    message: sprintf(
                         this.env._t("You have been invited to #%s"),
                         channel.displayName
                     ),
@@ -612,7 +612,7 @@ registerModel({
             if (!channel) {
                 return;
             }
-            const message = _.str.sprintf(this.env._t("You unsubscribed from %s."), channel.displayName);
+            const message = sprintf(this.env._t("You unsubscribed from %s."), channel.displayName);
             this.env.services['notification'].notify({ message, type: 'info' });
             // We assume that arriving here the server has effectively
             // unpinned the channel
@@ -634,7 +634,7 @@ registerModel({
             if (!channel) {
                 return;
             }
-            const message = _.str.sprintf(this.env._t("You unpinned your conversation with %s."), channel.displayName);
+            const message = sprintf(this.env._t("You unpinned your conversation with %s."), channel.displayName);
             this.env.services['notification'].notify({ message, type: 'info' });
             // We assume that arriving here the server has effectively
             // unpinned the channel
@@ -653,7 +653,7 @@ registerModel({
             // If the current user invited a new user, and the new user is
             // connecting for the first time while the current user is present
             // then open a chat for the current user with the new user.
-            const message = _.str.sprintf(this.env._t('%s connected'), username);
+            const message = sprintf(this.env._t('%s connected'), username);
             const title = this.env._t("This is their first connection. Wish them luck.");
             this.env.services['bus_service'].sendNotification({ message, title, type: 'info' });
             const chat = await this.async(() => this.messaging.getChat({ partnerId }));
@@ -685,7 +685,7 @@ registerModel({
                     });
                     const channelName = channel.displayName;
                     const channelNameWithIcon = channelIcon + channelName;
-                    notificationTitle = _.str.sprintf(
+                    notificationTitle = sprintf(
                         this.env._t("%s from %s"),
                         author.nameOrDisplayName,
                         channelNameWithIcon
@@ -704,11 +704,11 @@ registerModel({
             });
             messaging.update({ outOfFocusUnreadMessageCounter: increment() });
             const titlePattern = messaging.outOfFocusUnreadMessageCounter === 1
-                ? this.env._t("%d Message")
-                : this.env._t("%d Messages");
+                ? this.env._t("%s Message")
+                : this.env._t("%s Messages");
             this.env.bus.trigger('set_title_part', {
                 part: '_chat',
-                title: _.str.sprintf(titlePattern, messaging.outOfFocusUnreadMessageCounter),
+                title: sprintf(titlePattern, messaging.outOfFocusUnreadMessageCounter),
             });
         },
         /**
