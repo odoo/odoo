@@ -601,10 +601,10 @@ class AccountMove(models.Model):
     # Import Electronic Document
     ####################################################
 
-    def _get_create_invoice_from_attachment_decoders(self):
+    def _get_create_document_from_attachment_decoders(self):
         # OVERRIDE
-        res = super()._get_create_invoice_from_attachment_decoders()
-        res.append((10, self.env['account.edi.format'].search([])._create_invoice_from_attachment))
+        res = super()._get_create_document_from_attachment_decoders()
+        res.append((10, self.env['account.edi.format'].search([])._create_document_from_attachment))
         return res
 
     def _get_update_invoice_from_attachment_decoders(self, invoice):

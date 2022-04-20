@@ -3211,7 +3211,7 @@ class AccountMove(models.Model):
 
         return rslt
 
-    def _get_create_invoice_from_attachment_decoders(self):
+    def _get_create_document_from_attachment_decoders(self):
         """ Returns a list of method that are able to create an invoice from an attachment and a priority.
 
         :returns:   A list of tuples (priority, method) where method takes an attachment as parameter.
