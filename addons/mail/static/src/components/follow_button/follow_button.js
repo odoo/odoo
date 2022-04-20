@@ -30,13 +30,6 @@ export class FollowButton extends Component {
         return this.messaging && this.messaging.models['FollowButtonView'].get(this.props.localId);
     }
 
-    /**
-     * @return {Thread}
-     */
-    get thread() {
-        return this.messaging && this.messaging.models['Thread'].get(this.props.threadLocalId);
-    }
-
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -66,7 +59,6 @@ Object.assign(FollowButton, {
     },
     props: {
         isDisabled: { type: Boolean, optional: true },
-        threadLocalId: String,
         isChatterButton: { type: Boolean, optional: true },
         localId: String,
     },
