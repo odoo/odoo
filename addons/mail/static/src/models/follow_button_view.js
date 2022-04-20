@@ -8,6 +8,18 @@ registerModel({
     identifyingFields: [['chatterOwner']],
     recordMethods: {
         /**
+         * @param {MouseEvent} ev 
+         */
+        onClickFollow(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            if (!this.chatterOwner.thread) {
+                return;
+            }
+            this.chatterOwner.thread.onClickFollow(ev);
+        },
+        /**
          * @param {MouseEvent} ev
          */
         onClickUnfollow(ev) {
