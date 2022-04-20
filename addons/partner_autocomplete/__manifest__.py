@@ -9,7 +9,7 @@
     'description': """
        Auto-complete partner companies' data
     """,
-    'author': "Odoo SA",
+    'author': "Odoo S.A.",
     'category': 'Hidden/Tools',
     'depends': [
         'iap_mail',
