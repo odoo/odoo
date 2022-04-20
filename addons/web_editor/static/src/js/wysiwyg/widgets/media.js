@@ -1069,8 +1069,9 @@ var DocumentWidget = FileWidget.extend({
      */
     _getAttachmentsDomain: function (needle) {
         var domain = this._super.apply(this, arguments);
-        // the assets should not be part of the documents
-        return domain.concat('!', utils.assetsDomain());
+        // The assets should not be part of the documents.
+        // All assets begin with '/web/assets/', see _get_asset_template_url().
+        return ['&', '|', ['url', '=', null], '!', ['url', '=like', '/web/assets/%']].concat(domain);
     },
 });
 
