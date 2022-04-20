@@ -25,16 +25,19 @@ export class X2ManyField extends Component {
         this.viewService = useService("view");
 
         this.dialogClose = [];
-        this.fieldInfo = this.props.record.activeFields[this.props.name];
+
+        this.activeField = this.props.record.activeFields[this.props.name];
+        this.field = this.props.record.fields[this.props.name];
 
         this.isMany2Many =
-            this.props.record.fields[this.props.name].type === "many2many" ||
-            this.fieldInfo.widget === "many2many";
+            this.field.type === "many2many" || this.activeField.widget === "many2many";
 
-        // FIXME WOWL: is it normal to get here without fieldInfo.views?
-        if (this.fieldInfo.views && this.fieldInfo.viewMode in this.fieldInfo.views) {
-            this.Renderer = X2M_RENDERERS[this.fieldInfo.viewMode];
-            this.viewMode = this.fieldInfo.viewMode;
+        this.addButtonText = this.activeField.attrs["add-label"] || this.env._t("Add");
+
+        // FIXME WOWL: is it normal to get here without activeField.views?
+        if (this.activeField.views && this.activeField.viewMode in this.activeField.views) {
+            this.Renderer = X2M_RENDERERS[this.activeField.viewMode];
+            this.viewMode = this.activeField.viewMode;
         }
         onWillDestroy(() => {
             this.dialogClose.forEach((close) => close());
@@ -46,7 +49,7 @@ export class X2ManyField extends Component {
     }
 
     get rendererProps() {
-        const archInfo = this.fieldInfo.views[this.viewMode];
+        const archInfo = this.activeField.views[this.viewMode];
         let columns;
         if (this.viewMode === "list") {
             columns = archInfo.columns.filter((col) => {
@@ -90,8 +93,8 @@ export class X2ManyField extends Component {
         // We need to take care of tags "control" and "create" to set create stuff
 
         const { evalContext } = this.props.record;
-        const { options } = this.fieldInfo;
-        const subViewInfo = this.fieldInfo.views[this.viewMode];
+        const { options, views } = this.activeField;
+        const subViewInfo = views[this.viewMode];
 
         let canCreate = "create" in options ? evalDomain(options.create, evalContext) : true;
         canCreate = canCreate && subViewInfo.activeActions.create;
@@ -172,7 +175,7 @@ export class X2ManyField extends Component {
     }
 
     async onAdd(context) {
-        const archInfo = this.fieldInfo.views[this.viewMode];
+        const archInfo = this.activeField.views[this.viewMode];
         const editable = archInfo.editable;
         if (editable) {
             this.list.addNew({ context, mode: "edit", position: editable });
@@ -209,7 +212,7 @@ export class X2ManyField extends Component {
     }
 
     async _getFormViewInfo() {
-        let formViewInfo = this.fieldInfo.views.form;
+        let formViewInfo = this.activeField.views.form;
         if (formViewInfo) {
             return formViewInfo;
         }
@@ -222,7 +225,7 @@ export class X2ManyField extends Component {
         });
         const archInfo = new FormArchParser().parse(views.form.arch, comodelFields);
         return { ...archInfo, fields: comodelFields }; // should be good to memorize this on activeField
-        // fieldInfo.relatedFields = comodelFields;
+        // activeField.relatedFields = comodelFields;
     }
 }
 

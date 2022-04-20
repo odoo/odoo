@@ -2968,8 +2968,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("one2many kanban: edition", async function (assert) {
         assert.expect(23);
 
-        // wait for more kanban stuff
-
         serverData.models.partner.records[0].p = [2];
         await makeView({
             type: "form",
@@ -3011,7 +3009,7 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        // assert.containsNone(target, ".delete_icon");
+        assert.containsNone(target, ".delete_icon");
         assert.containsNone(target, ".o_field_one2many .o-kanban-button-new");
 
         await clickEdit(target);
@@ -3102,7 +3100,7 @@ QUnit.module("Fields", (hooks) => {
         // await clickSave(target);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many kanban (editable): properly handle add-label node attribute",
         async function (assert) {
             await makeView({

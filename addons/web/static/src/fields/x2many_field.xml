@@ -8,7 +8,7 @@
                     <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
                         <div>
                             <button type="button" class="btn btn-primary o-kanban-button-new" title="Create record" accesskey="c" t-on-click="() => this.onAdd()">
-                                Add
+                                <t t-esc="addButtonText"/>
                             </button>
                         </div>
                     </div>
