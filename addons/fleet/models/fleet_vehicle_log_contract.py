@@ -19,7 +19,7 @@ class FleetVehicleLogContract(models.Model):
 
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this log', check_company=True)
     cost_subtype_id = fields.Many2one('fleet.service.type', 'Type', help='Cost type purchased with this cost', domain=[('category', '=', 'contract')])
-    amount = fields.Monetary('Cost')
+    amount = fields.Monetary('Cost', tracking=True)
     date = fields.Date(help='Date when the cost has been executed')
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
@@ -47,7 +47,7 @@ class FleetVehicleLogContract(models.Model):
         tracking=True,
         copy=False)
     notes = fields.Html('Terms and Conditions', help='Write here all supplementary information relative to this contract', copy=False)
-    cost_generated = fields.Monetary('Recurring Cost')
+    cost_generated = fields.Monetary('Recurring Cost', tracking=True)
     cost_frequency = fields.Selection([
         ('no', 'No'),
         ('daily', 'Daily'),
