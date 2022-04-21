@@ -164,7 +164,10 @@ export class AutoComplete extends Component {
             arrowup: this.onArrowUpPress.bind(this),
         };
         for (const [hotkey, callback] of Object.entries(hotkeys)) {
-            const remove = this.hotkey.add(hotkey, callback, { allowRepeat: true });
+            const remove = this.hotkey.add(hotkey, callback, {
+                allowRepeat: true,
+                bypassEditableProtection: true,
+            });
             this.hotkeysToRemove.push(remove);
         }
     }
