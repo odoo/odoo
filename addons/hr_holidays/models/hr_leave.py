@@ -320,7 +320,9 @@ class HolidaysRequest(models.Model):
     @api.constrains('holiday_status_id', 'number_of_days')
     def _check_allocation_duration(self):
         for holiday in self:
-            if holiday.holiday_status_id.requires_allocation == 'yes' and holiday.holiday_allocation_id and holiday.number_of_days > holiday.holiday_allocation_id.number_of_days:
+            # TODO adapt for future leaves / accrual
+            if holiday.holiday_status_id.requires_allocation == 'yes' and holiday.holiday_allocation_id.allocation_type != 'accrual' and\
+                holiday.holiday_allocation_id and holiday.number_of_days > holiday.holiday_allocation_id.number_of_days:
                 raise ValidationError(_("You have several allocations for those type and period.\nPlease split your request to fit in their number of days."))
 
     @api.depends_context('uid')
@@ -376,7 +378,7 @@ class HolidaysRequest(models.Model):
                 '&',
                 ('date_to', '=', False),
                 ('date_from', '<=', max(self.mapped('date_from'))),
-            ], ['id', 'date_from', 'date_to', 'holiday_status_id', 'employee_id', 'max_leaves', 'taken_leave_ids'], order="date_to, id"
+            ], ['id', 'allocation_type', 'date_from', 'date_to', 'holiday_status_id', 'employee_id', 'max_leaves', 'taken_leave_ids'], order="date_to, id"
         )
         allocations_dict = defaultdict(lambda: [])
         for allocation in allocations:
@@ -397,7 +399,7 @@ class HolidaysRequest(models.Model):
                         allocation_taken_leaves = allocation['taken_leaves'] - leave
                         allocation_taken_number_of_units = sum(allocation_taken_leaves.mapped(leave_unit))
                         leave_number_of_units = leave[leave_unit]
-                        if allocation['max_leaves'] >= allocation_taken_number_of_units + leave_number_of_units:
+                        if allocation['max_leaves'] >= allocation_taken_number_of_units + leave_number_of_units or allocation['allocation_type'] == 'accrual': # TODO shitty not working
                             found_allocation = allocation['id']
                             break
                 leave.holiday_allocation_id = self.env['hr.leave.allocation'].browse(found_allocation) if found_allocation else False
@@ -795,6 +797,7 @@ class HolidaysRequest(models.Model):
             mapped_days = holiday.holiday_status_id.get_employees_days([holiday.employee_id.id], holiday.date_from)
             leave_days = mapped_days[holiday.employee_id.id][holiday.holiday_status_id.id]
 
+            # TODO
             additional_leaves = 0
             if holiday.holiday_status_id.employee_accrual:
                 additional_leaves = holiday.with_context(future_accrual_date=holiday.date_from, employee_id=holiday.employee_id.id).holiday_status_id.additional_leaves

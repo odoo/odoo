@@ -345,7 +345,7 @@ class HolidaysType(models.Model):
         with_accrual = self.filtered('employee_accrual')
         (self - with_accrual).additional_leaves = 0
 
-        accrual_allocations = self.env['hr.leave.allocation'].search([
+        accrual_allocations = self.env['hr.leave.allocation'].with_context(future_accrual_date=accrual_date).search([
             ('allocation_type', '=', 'accrual'),
             ('state', '=', 'validate'),
             ('accrual_plan_id', '!=', False),
@@ -357,13 +357,8 @@ class HolidaysType(models.Model):
                 ('nextcall', '=', False), ('nextcall', '<=', accrual_date)
         ])
 
-        fake_allocations = self.env['hr.leave.allocation']
-        for allocation in accrual_allocations:
-            fake_allocations |= self.env['hr.leave.allocation'].new(origin=allocation)
-        fake_allocations.sudo()._process_accrual_plans(accrual_date)
-
         for lt in with_accrual:
-            lt.additional_leaves = float_round(sum(fake_allocations.filtered(lambda a: a.holiday_status_id.id == lt.id).mapped('number_of_days')), precision_digits=2)
+            lt.additional_leaves = float_round(sum(accrual_allocations.filtered(lambda a: a.holiday_status_id.id == lt.id).mapped('future_leaves')), precision_digits=2)
 
     def _get_days_request(self):
         self.ensure_one()
@@ -423,8 +418,7 @@ class HolidaysType(models.Model):
                 ('holiday_status_id', 'in', self.ids),
                 ('accrual_plan_id', '!=', False),
                 ('state', '=', 'validate'),
-            ],
-            ['holiday_status_id'], ['holiday_status_id'],
+            ], ['holiday_status_id'], ['holiday_status_id'],
         )
         accrual_allocations = tuple(map(lambda a: a['holiday_status_id'][0], allocations))
 

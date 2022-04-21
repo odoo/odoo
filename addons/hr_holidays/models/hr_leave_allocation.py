@@ -137,6 +137,8 @@ class HolidaysAllocation(models.Model):
     leaves_taken = fields.Float(compute='_compute_leaves')
     taken_leave_ids = fields.One2many('hr.leave', 'holiday_allocation_id', domain="[('state', 'in', ['confirm', 'validate1', 'validate'])]")
 
+    future_leaves = fields.Float(compute='_compute_future_leaves')
+
     _sql_constraints = [
         ('type_value',
          "CHECK( (holiday_type='employee' AND (employee_id IS NOT NULL OR multi_employee IS TRUE)) or "
@@ -326,6 +328,37 @@ class HolidaysAllocation(models.Model):
             if allocation.allocation_type == 'accrual' and not allocation.accrual_plan_id:
                 if allocation.holiday_status_id:
                     allocation.accrual_plan_id = accruals_dict.get(allocation.holiday_status_id.id, [False])[0]
+
+    @api.depends_context('future_accrual_date')
+    @api.depends('state', 'allocation_type', 'date_to', 'nextcall')
+    def _compute_future_leaves(self):
+        accrual_date = fields.Date.to_date(self.env.context.get('future_accrual_date'))
+        if not accrual_date or accrual_date <= fields.Date.today():
+            self.future_leaves = 0
+            return
+
+        with_accrual = self.filtered(lambda a: a.accrual_plan_id
+            and a.state == 'validate'
+            and a.allocation_type == 'accrual'
+            and (not a.date_to or a.date_to > accrual_date)
+            and (not a.nextcall or a.nextcall <= accrual_date)
+        )
+        (self - with_accrual).future_leaves = 0
+
+        fake_allocations = self.env['hr.leave.allocation']
+        for allocation in with_accrual:
+            fake_allocations |= self.env['hr.leave.allocation'].new(origin=allocation)
+        fake_allocations.sudo()._process_accrual_plans(accrual_date)
+
+        for allocation in with_accrual:
+            allocation.future_leaves = fake_allocations.filtered(lambda a: a._origin.id == allocation.id).number_of_days
+
+    def _get_remaining_leaves_on_date(self, date_from, date_to):
+        self.ensure_one()
+        leave_field = 'number_of_%s_display' % ('hours' if self.leave_type_request_unit == 'hour' else 'days')
+        taken_leaves = self.taken_leave_ids.filtered([('state', 'in', ['confirm', 'validate1', 'validate'])]).mapped(leave_field)
+        print(taken_leaves)
+        return
 
     def _end_of_year_accrual(self):
         # to override in payroll

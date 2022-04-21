@@ -6,7 +6,7 @@ const { Component } = owl;
 
 export class TimeOffCardPopover extends Component {
     get left() {
-        return Number(this.props.future) + Number(this.props.left);
+        return (Number(this.props.future) + Number(this.props.left)).toFixed(2);
     }
 }
 
@@ -23,9 +23,9 @@ export class TimeOffCard extends Component {
         const duration = Number(this.props.data.additional_leaves);
 
         if (this.show_remaining()) {
-            return duration + Number(this.props.data.virtual_remaining_leaves);
+            return (duration + Number(this.props.data.virtual_remaining_leaves)).toFixed(2);
         }
-        return duration + Number(this.props.data.virtual_leaves_taken);
+        return (duration + Number(this.props.data.virtual_leaves_taken)).toFixed(2);
     }
 }
 
