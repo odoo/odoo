@@ -352,11 +352,12 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         tax10: 10%, included in product price
         tax21: 21%, included in product price
         """
-        def create_tag(name):
+        def create_tag(name, negate=False):
             return cls.env['account.account.tag'].create({
                 'name': name,
                 'applicability': 'taxes',
                 'country_id': cls.env.company.country_id.id,
+                'tax_negate': negate,
                 'tax_report_line_ids': [
                     (0, 0, {
                         'name': name,
@@ -373,8 +374,8 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
 
         cls.tax_tag_invoice_base = create_tag('Invoice Base tag')
         cls.tax_tag_invoice_tax = create_tag('Invoice Tax tag')
-        cls.tax_tag_refund_base = create_tag('Refund Base tag')
-        cls.tax_tag_refund_tax = create_tag('Refund Tax tag')
+        cls.tax_tag_refund_base = create_tag('Refund Base tag', True)
+        cls.tax_tag_refund_tax = create_tag('Refund Tax tag', True)
 
         def create_tax(percentage, price_include=False):
             return cls.env['account.tax'].create({
