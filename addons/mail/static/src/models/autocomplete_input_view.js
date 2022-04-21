@@ -24,6 +24,19 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeIsHtml() {
+            if (this.discussViewOwnerAsMobileAddItemHeader) {
+                return this.discussViewOwnerAsMobileAddItemHeader.discuss.isAddingChannel;
+            }
+            if (this.discussSidebarCategoryOwnerAsAddingItem) {
+                return this.discussSidebarCategoryOwnerAsAddingItem === this.messaging.discuss.categoryChannel;
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {string}
          */
         _computePlaceholder() {
@@ -58,6 +71,10 @@ registerModel({
         discussViewOwnerAsMobileAddItemHeader: one('DiscussView', {
             inverse: 'mobileAddItemHeaderAutocompleteInputView',
             readonly: true,
+        }),
+        isHtml: attr({
+            compute: '_computeIsHtml',
+            default: false,
         }),
         messagingMenuOwnerAsMobileNewMessageInput: one('MessagingMenu', {
             inverse: 'mobileNewMessageAutocompleteInputView',

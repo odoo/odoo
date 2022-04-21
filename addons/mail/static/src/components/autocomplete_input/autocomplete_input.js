@@ -34,7 +34,7 @@ export class AutocompleteInput extends Component {
             select: (ev, ui) => this._onAutocompleteSelect(ev, ui),
             source: (req, res) => this._onAutocompleteSource(req, res),
             focus: ev => this._onAutocompleteFocus(ev),
-            html: this.props.isHtml || false,
+            html: this.autocompleteInputView.isHtml,
         };
 
         if (this.props.customClass) {
@@ -160,7 +160,6 @@ export class AutocompleteInput extends Component {
 Object.assign(AutocompleteInput, {
     defaultProps: {
         isFocusOnMount: false,
-        isHtml: false,
     },
     props: {
         customClass: {
@@ -172,10 +171,6 @@ Object.assign(AutocompleteInput, {
             optional: true,
         },
         isFocusOnMount: {
-            type: Boolean,
-            optional: true,
-        },
-        isHtml: {
             type: Boolean,
             optional: true,
         },
