@@ -34,6 +34,7 @@ export class ChatWindow extends Component {
         // the following are passed as props to children
         this._onAutocompleteSelect = this._onAutocompleteSelect.bind(this);
         this._onAutocompleteSource = this._onAutocompleteSource.bind(this);
+        this._saveThreadScrollTop = this._saveThreadScrollTop.bind(this);
         this._constructor(...args);
     }
 

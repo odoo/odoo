@@ -114,6 +114,9 @@ export class ChatWindowHeader extends Component {
      */
     _onClickShiftPrev(ev) {
         markEventHandled(ev, 'ChatWindowHeader.ClickShiftPrev');
+        if (this.props.saveThreadScrollTop) {
+            this.props.saveThreadScrollTop();
+        }
         this.chatWindow.shiftPrev();
     }
 
@@ -123,6 +126,9 @@ export class ChatWindowHeader extends Component {
      */
     _onClickShiftNext(ev) {
         markEventHandled(ev, 'ChatWindowHeader.ClickShiftNext');
+        if (this.props.saveThreadScrollTop) {
+            this.props.saveThreadScrollTop();
+        }
         this.chatWindow.shiftNext();
     }
 
@@ -137,6 +143,10 @@ Object.assign(ChatWindowHeader, {
         chatWindowLocalId: String,
         hasCloseAsBackButton: Boolean,
         isExpandable: Boolean,
+        saveThreadScrollTop: {
+            type: Function,
+            optional: true,
+        },
     },
     template: 'mail.ChatWindowHeader',
 });
