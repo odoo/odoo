@@ -6,15 +6,21 @@ const Registries = require('point_of_sale.Registries');
 
 
 const PosSaleOrder = (Order) => class PosSaleOrder extends Order {
+    //@override
     select_orderline(orderline) {
         super.select_orderline(...arguments);
         if (orderline && orderline.product.id === this.pos.config.down_payment_product_id[0]) {
             this.pos.numpadMode = 'price';
         }
     }
+    //@override
+    _get_ignored_product_ids_total_discount() {
+        const productIds = super._get_ignored_product_ids_total_discount(...arguments);
+        productIds.push(this.pos.config.down_payment_product_id[0]);
+        return productIds;
+    }
 }
 Registries.Model.extend(Order, PosSaleOrder);
-
 
 const PosSaleOrderline = (Orderline) => class PosSaleOrderline extends Orderline {
   constructor(obj, options) {

@@ -9,7 +9,7 @@
                     <t t-esc="props.line.get_sale_order().name" />
                 </li>
                 <table t-if="props.line.get_sale_order().details" class="sale-order-info">
-                    <t t-foreach='props.line.get_sale_order().details' t-as='line' t-key='line.id'>
+                    <t t-foreach='props.line.get_sale_order().details' t-as='line' t-key='line_index'>
                         <tr>
                             <td><t t-esc="line['product_uom_qty']"/>x</td>
                             <td style="max-width: 275px;">
