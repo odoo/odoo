@@ -122,7 +122,7 @@ class SaleOrder(models.Model):
             for order in self:
                 to_log = {}
                 for order_line in order.order_line:
-                    if float_compare(order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0), order_line.product_uom.rounding) < 0:
+                    if float_compare(order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0), precision_rounding=order_line.product_uom.rounding) < 0:
                         to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0))
                 if to_log:
                     documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
