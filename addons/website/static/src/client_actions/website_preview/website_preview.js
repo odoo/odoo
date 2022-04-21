@@ -5,6 +5,7 @@ import { useService } from '@web/core/utils/hooks';
 import core from 'web.core';
 import { WebsiteEditorComponent } from '../../components/editor/editor';
 import { WebsiteTranslator } from '../../components/translator/translator';
+import {OptimizeSEODialog} from '@website/components/dialog/seo';
 
 const { Component, onWillStart, useRef, useEffect, useState } = owl;
 
@@ -46,6 +47,7 @@ BlockIframe.template = 'website.BlockIframe';
 export class WebsitePreview extends Component {
     setup() {
         this.websiteService = useService('website');
+        this.dialogService = useService('dialog');
         this.title = useService('title');
 
         this.iframeFallbackUrl = '/website/iframefallback';
@@ -65,6 +67,12 @@ export class WebsitePreview extends Component {
             this.websiteService.context.showNewContentModal = this.props.action.context.params && this.props.action.context.params.display_new_content;
             this.websiteService.context.edition = this.props.action.context.params && !!this.props.action.context.params.enable_editor;
             this.websiteService.context.translation = this.props.action.context.params && !!this.props.action.context.params.edit_translations;
+            if (this.props.action.context.params && this.props.action.context.params.enable_seo) {
+                this.iframe.el.addEventListener('load', () => {
+                    this.websiteService.pageDocument = this.iframe.el.contentDocument;
+                    this.dialogService.add(OptimizeSEODialog);
+                }, {once: true});
+            }
             return () => {
                 this.websiteService.currentWebsiteId = null;
                 this.websiteService.websiteRootInstance = undefined;
