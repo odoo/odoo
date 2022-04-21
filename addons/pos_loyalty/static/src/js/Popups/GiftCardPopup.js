@@ -6,7 +6,7 @@ import { useBarcodeReader } from 'point_of_sale.custom_hooks';
 import Core from 'web.core';
 
 const _t = Core._t;
-const { useState } = owl;
+const { useState, onPatched, useComponent } = owl;
 
 export class GiftCardPopup extends AbstractAwaitablePopup {
     setup() {
@@ -40,6 +40,26 @@ export class GiftCardPopup extends AbstractAwaitablePopup {
 
     get code() {
         return this.state.code.trim();
+    }
+
+    useAutoFocus(state) {
+        const component = useComponent();
+        let hasFocused = false;
+        function autofocus() {
+            if (!state.showMenu) {
+                // Should autofocus here but only if it hasn't autofocus yet.
+                if (!hasFocused) {
+                    const elem = component.el.querySelector(`.gift-card-input-code`);
+                    if (elem)
+                        elem.focus();
+                        hasFocused = true;
+                }
+            } else {
+                // When changing showBarcodeGeneration to false, we reset hasFocused.
+                hasFocused = false;
+            }
+        }
+        onPatched(autofocus);
     }
 
     switchToMenu() {
