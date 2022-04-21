@@ -120,9 +120,6 @@ class AccountEdiFormat(models.Model):
             if not tax_line.tax_line_id.l10n_it_kind_exoneration and tax_line.tax_line_id.amount == 0:
                 errors.append(_("%s has an amount of 0.0, you must indicate the kind of exoneration.", tax_line.name))
 
-        if not invoice.partner_bank_id:
-            errors.append(_("The seller must have a bank account."))
-
         return errors
 
     # -------------------------------------------------------------------------
