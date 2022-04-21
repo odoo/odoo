@@ -290,7 +290,16 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         }
         super.finalize(...arguments);
     }
-
+    //@override
+    _get_ignored_product_ids_total_discount() {
+        const productIds = super._get_ignored_product_ids_total_discount(...arguments);
+        if (this.pos.config.gift_card_program_id) {
+            const program = this.pos.program_by_id[this.pos.config.gift_card_program_id[0]];
+            const giftCardProductId = [...program.rules[0].valid_product_ids][0];
+            productIds.push(giftCardProductId);
+        }
+        return productIds;
+    }
     get_orderlines() {
         const orderlines = super.get_orderlines(this, arguments);
         const rewardLines = [];
