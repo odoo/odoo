@@ -171,22 +171,27 @@ class WebsiteSale(http.Controller):
             domains.append([('public_categ_ids', 'child_of', int(category))])
 
         if attrib_values:
-            attrib = None
-            ids = []
-            for value in attrib_values:
-                if not attrib:
-                    attrib = value[0]
-                    ids.append(value[1])
-                elif value[0] == attrib:
-                    ids.append(value[1])
-                else:
-                    domains.append([('attribute_line_ids.value_ids', 'in', ids)])
-                    attrib = value[0]
-                    ids = [value[1]]
-            if attrib:
-                domains.append([('attribute_line_ids.value_ids', 'in', ids)])
+            domains += self._get_search_domain_attrib(attrib_values)
 
         return expression.AND(domains)
+
+    def _get_search_domain_attrib(self, attrib_values, field='attribute_line_ids.value_ids'):
+        domains = []
+        attrib = None
+        ids = []
+        for value in attrib_values:
+            if not attrib:
+                attrib = value[0]
+                ids.append(value[1])
+            elif value[0] == attrib:
+                ids.append(value[1])
+            else:
+                domains.append([(field, 'in', ids)])
+                attrib = value[0]
+                ids = [value[1]]
+        if attrib:
+            domains.append([(field, 'in', ids)])
+        return domains
 
     def sitemap_shop(env, rule, qs):
         if not qs or qs.lower() in '/shop':
@@ -249,6 +254,14 @@ class WebsiteSale(http.Controller):
         Product = request.env['product.template'].with_context(bin_size=True)
 
         search_product = Product.search(domain, order=self._get_search_order(post))
+
+        attrib_domain = self._get_search_domain_attrib(attrib_values, field='product_template_attribute_value_ids')
+        if len(attrib_domain) > 1:
+            # exclude non-existent variants
+            search_product = search_product.product_variant_ids.filtered_domain([
+                d[0] for d in attrib_domain
+            ]).product_tmpl_id
+
         website_domain = request.website.website_domain()
         categs_domain = [('parent_id', '=', False)] + website_domain
         if search:
