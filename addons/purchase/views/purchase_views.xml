@@ -391,7 +391,7 @@
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
                     <field name="name" string="Order"
-                        filter_domain="['|', '|', ('name', 'ilike', self), ('partner_ref', 'ilike', self), ('partner_id', 'child_of', self)]"/>
+                        filter_domain="['|', '|', ('name', 'ilike', self), ('partner_ref', 'ilike', self), ('partner_id.display_name', 'ilike', self)]"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="user_id"/>
                     <field name="product_id"/>
@@ -433,7 +433,7 @@
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
                     <field name="name" string="Order"
-                        filter_domain="['|', '|', ('name', 'ilike', self), ('partner_ref', 'ilike', self), ('partner_id', 'child_of', self)]"/>
+                        filter_domain="['|', '|', ('name', 'ilike', self), ('partner_ref', 'ilike', self), ('partner_id.display_name', 'ilike', self)]"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="user_id"/>
                     <field name="product_id"/>

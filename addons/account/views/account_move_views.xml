@@ -319,7 +319,7 @@
                 <search string="Search Journal Items">
                     <field name="name" string="Journal Item" filter_domain="[
                         '|', '|', '|',
-                        ('name', 'ilike', self), ('ref', 'ilike', self), ('account_id', 'ilike', self), ('partner_id', 'ilike', self)]"/>
+                        ('name', 'ilike', self), ('ref', 'ilike', self), ('account_id', 'ilike', self), ('partner_id.display_name', 'ilike', self)]"/>
                     <field name="date"/>
                     <field name="account_id"/>
                     <field name="account_root_id"/>
@@ -327,7 +327,7 @@
                     <field name="partner_id"/>
                     <field name="journal_id"/>
                     <field name="move_id" string="Journal Entry" filter_domain="[
-                        '|', '|', ('move_id.name', 'ilike', self), ('move_id.ref', 'ilike', self), ('move_id.partner_id', 'ilike', self)]"/>
+                        '|', '|', ('move_id.name', 'ilike', self), ('move_id.ref', 'ilike', self), ('move_id.partner_id.display_name', 'ilike', self)]"/>
                     <field name="tax_ids" />
                     <field name="tax_line_id" string="Originator Tax"/>
                     <field name="reconcile_model_id"/>
@@ -1133,7 +1133,7 @@
             <field name="model">account.move</field>
             <field name="arch" type="xml">
                 <search string="Search Move">
-                    <field name="name" string="Journal Entry" filter_domain="['|', '|', ('name', 'ilike', self), ('ref', 'ilike', self), ('partner_id', 'ilike', self)]"/>
+                    <field name="name" string="Journal Entry" filter_domain="['|', '|', ('name', 'ilike', self), ('ref', 'ilike', self), ('partner_id.display_name', 'ilike', self)]"/>
                     <field name="date"/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
@@ -1173,7 +1173,7 @@
                                 '|', '|' , '|', '|',
                                 ('name', 'ilike', self), ('invoice_origin', 'ilike', self),
                                 ('ref', 'ilike', self), ('payment_reference', 'ilike', self),
-                                ('partner_id', 'child_of', self)]"/>
+                                ('partner_id.display_name', 'ilike', self)]"/>
                     <field name="journal_id"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="invoice_user_id" string="Salesperson" domain="[('share', '=', False)]"/>

@@ -183,7 +183,7 @@ class AccountMove(models.Model):
     partner_id = fields.Many2one('res.partner', readonly=True, tracking=True,
         states={'draft': [('readonly', False)]},
         check_company=True,
-        string='Partner', change_default=True)
+        string='Partner', change_default=True, auto_join=True)
     commercial_partner_id = fields.Many2one('res.partner', string='Commercial Entity', store=True, readonly=True,
         compute='_compute_commercial_partner_id')
     country_code = fields.Char(related='company_id.country_id.code', readonly=True)
@@ -3174,7 +3174,7 @@ class AccountMoveLine(models.Model):
     date_maturity = fields.Date(string='Due Date', index=True, tracking=True,
         help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line.")
     currency_id = fields.Many2one('res.currency', string='Currency', required=True)
-    partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict')
+    partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict', index=True, auto_join=True)
     product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
     product_id = fields.Many2one('product.product', string='Product', ondelete='restrict')
     product_uom_category_id = fields.Many2one('uom.category', related='product_id.uom_id.category_id')
