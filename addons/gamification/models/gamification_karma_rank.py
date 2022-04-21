@@ -42,8 +42,8 @@ class KarmaRank(models.Model):
     def write(self, vals):
         if 'karma_min' in vals:
             previous_ranks = self.env['gamification.karma.rank'].search([], order="karma_min DESC").ids
-            low = min(vals['karma_min'], self.karma_min)
-            high = max(vals['karma_min'], self.karma_min)
+            low = min(vals['karma_min'], min(self.mapped('karma_min')))
+            high = max(vals['karma_min'], max(self.mapped('karma_min')))
 
         res = super(KarmaRank, self).write(vals)
 
