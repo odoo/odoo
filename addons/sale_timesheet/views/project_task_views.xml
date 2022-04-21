@@ -10,7 +10,7 @@
                 <attribute name="attrs">{'invisible': ['|', ('allow_billable', '=', False), ('sale_order_id', '=', False)]}</attribute>
             </xpath>
             <xpath expr="//button[@name='%(project.action_project_task_burndown_chart_report)d']" position="after">
-                <button string="Costs / Revenues" class="oe_stat_button" type="object" name="action_view_timesheet" icon="fa-puzzle-piece" attrs="{'invisible': [('allow_billable', '=', False)]}" groups="project.group_project_manager"/>
+                <button string="Costs / Revenues" class="oe_stat_button d-none" type="object" name="action_view_timesheet" icon="fa-puzzle-piece" attrs="{'invisible': [('allow_billable', '=', False)]}" groups="project.group_project_manager"/>
             </xpath>
             <xpath expr="//button[@name='action_view_sos']" position="attributes">
                 <attribute name="attrs">{'invisible': ['|', ('allow_billable', '=', False), ('sale_order_count', '=', 0)]}</attribute>
