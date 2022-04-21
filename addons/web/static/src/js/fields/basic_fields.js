@@ -934,7 +934,9 @@ var FieldDate = InputField.extend({
             let value = this.$input.val();
             try {
                 value = this._parseValue(value);
-                value.add(-this.getSession().getTZOffset(value), "minutes");
+                if (this.field.type === "datetime") {
+                    value.add(-this.getSession().getTZOffset(value), "minutes");
+                }
             } catch (err) {}
             await this._setValue(value);
             this._render();
