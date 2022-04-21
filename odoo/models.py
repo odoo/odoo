@@ -6372,7 +6372,8 @@ Fields:
         field_generators = self._populate_factories()
         if not field_generators:
             return self.browse() # maybe create an automatic generator?
-            
+
+        _logger.info('Populating database for model %s', self._name)
         records_batches = []
         generator = populate.chain_factories(field_generators, self._name)
         while record_count <= min_size or not complete:
