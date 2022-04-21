@@ -540,50 +540,6 @@ class Website(Home):
     # Edit
     # ------------------------------------------------------
 
-    @http.route(['/website/pages', '/website/pages/page/<int:page>'], type='http', auth="user", website=True)
-    def pages_management(self, page=1, sortby='url', search='', **kw):
-        # only website_designer should access the page Management
-        if not request.env.user.has_group('website.group_website_designer'):
-            raise werkzeug.exceptions.NotFound()
-
-        Page = request.env['website.page']
-        searchbar_sortings = {
-            'url': {'label': _('Sort by Url'), 'order': 'url'},
-            'name': {'label': _('Sort by Name'), 'order': 'name'},
-        }
-        # default sortby order
-        sort_order = searchbar_sortings.get(sortby, 'url')['order'] + ', website_id desc, id'
-
-        domain = request.website.website_domain()
-        if search:
-            domain += ['|', ('name', 'ilike', search), ('url', 'ilike', search)]
-
-        pages = Page.search(domain, order=sort_order)
-        if sortby != 'url' or not request.session.debug:
-            pages = pages._get_most_specific_pages()
-        pages_count = len(pages)
-
-        step = 50
-        pager = portal_pager(
-            url="/website/pages",
-            url_args={'sortby': sortby},
-            total=pages_count,
-            page=page,
-            step=step
-        )
-
-        pages = pages[(page - 1) * step:page * step]
-
-        values = {
-            'pager': pager,
-            'pages': pages,
-            'search': search,
-            'sortby': sortby,
-            'searchbar_sortings': searchbar_sortings,
-            'search_count': pages_count,
-        }
-        return request.render("website.list_website_pages", values)
-
     @http.route(['/website/add', '/website/add/<path:path>'], type='http', auth="user", website=True, methods=['POST'])
     def pagenew(self, path="", add_menu=False, template=False, **kwargs):
         # for supported mimetype, get correct default template

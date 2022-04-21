@@ -191,6 +191,7 @@
             'website/static/src/js/new_content_form.js',
             'website/static/src/js/utils.js',
             'website/static/src/components/translator/*',
+            'website/static/src/js/website_page_list.js',
         ],
         'web.qunit_suite_tests': [
             'website/static/tests/dashboard_tests.js',

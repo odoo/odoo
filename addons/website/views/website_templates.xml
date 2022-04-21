@@ -2385,72 +2385,6 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     <span t-foreach="enumerate(parts)" t-as="part" t-att-class="'text-primary' if part[0] % 2 else None" t-esc="part[1]"/>
 </template>
 
-<template id="list_website_pages" name="Website Pages Management">
-  <t t-call="website.layout">
-    <div id="wrap">
-      <div class="container" id="list_website_pages">
-          <t t-call="website.website_search_box_input">
-              <t t-set="_form_classes" t-valuef="mt8 float-right"/>
-              <t t-set="search_type" t-valuef="pages"/>
-              <t t-set="action" t-valuef="/website/pages"/>
-          </t>
-          <div t-if="searchbar_sortings" class="dropdown float-right mt8 mr8">
-              <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
-                  <span class="fa fa-sort fa-lg" role="img" aria-label="Sort" title="Sort"/>
-                  <span class="d-none d-xl-inline" t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
-              </button>
-              <div class="dropdown-menu" aria-labelledby="portal_searchbar_sortby" role="menu">
-                  <t t-foreach="searchbar_sortings" t-as="option">
-                      <a role="menuitem"
-                         t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)"
-                         t-attf-class="dropdown-item#{sortby == option and ' active' or ''}">
-                          <span t-esc="searchbar_sortings[option].get('label')"/>
-                      </a>
-                  </t>
-              </div>
-          </div>
-          <h3 class="mt16">Manage Your Pages</h3>
-          <t t-if="not pages">
-              <div t-if="search" class="alert alert-warning mt8" role="alert">
-                  Your search '<t t-esc="search" />' did not match any pages.
-              </div>
-              <div t-else="" class="alert alert-warning mt8" role="alert">
-                  There are currently no pages for your website.
-              </div>
-          </t>
-          <div t-if="pages" class="table-responsive">
-              <table class="table table-hover">
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Url</th>
-                      <th class="text-center"><i title="Is the page included in the main menu?" class="fa fa-thumb-tack"></i></th>
-                      <th class="text-center"><i title="Is the page published?" class="fa fa-eye"></i></th>
-                      <th class="text-center"><i title="Is the page indexed by search engines?" class="fa fa-globe"></i></th>
-                      <th class="text-center"><i title="Is the page SEO optimized?" class="fa fa-search"></i></th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <t t-set='prev_page' t-value='False' />
-                  <t t-set='page' t-value='pages[0]' />
-                  <t t-foreach="pages[1:]" t-as="next_page">
-                    <t t-call='website.one_page_line'/>
-                    <t t-set='prev_page' t-value='page' />
-                    <t t-set='page' t-value='next_page' />
-                  </t>
-
-                  <t t-set='next_page' t-value='False'/>
-                  <t t-call='website.one_page_line' />
-              </table>
-          </div>
-          <div t-if="pager" class="o_portal_pager text-center">
-              <t t-call="website.pager"/>
-          </div>
-      </div>
-    </div>
-  </t>
-</template>
-
 <template id="list_website_public_pages" name="Website Pages">
     <t t-call="website.layout">
         <div id="wrap">
@@ -2493,48 +2427,6 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
             </div>
         </div>
     </t>
-</template>
-
-<template id="one_page_line">
-    <t t-set='specific_page' t-value="page.website_id"/>
-    <t t-set='final_page' t-value="(next_page and page.url != next_page.url) or not next_page or specific_page"/>
-    <tr t-att-style='not final_page and "color:#999"'>
-        <td>
-            <t t-if="debug">
-                <i t-if='specific_page and prev_page and prev_page.url == page.url and not prev_page.website_id' class="fa fa-level-up fa-rotate-90 ml32 mr4"/>
-                <i t-else="1" class="fa fa-globe mr4" title="Websites-shared page" t-att-style="'visibility:hidden;' if specific_page else ''"/>
-            </t>
-            <i t-if="page.is_homepage" class="fa fa-home" title="Homepage"/> <span t-esc="page.name"/>
-        </td>
-        <td>
-            <a t-if='final_page' t-att-href="page.url"><t t-esc="page.url"/></a>
-        </td>
-        <td class="text-center">
-            <i t-if="page.menu_ids" class="fa fa-check" title="In main menu"/>
-            <i t-else="" class="fa fa-times text-muted" title="Not in main menu"/>
-        </td>
-        <td class="text-center">
-            <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="page.date_publish"/></t>
-            <i t-if="page.is_visible" class="fa fa-check" title="Published"/>
-            <i t-elif="page.website_published" class="fa fa-eye-slash" t-attf-title="This page will be published on {{ date_formatted }}"/>
-            <i t-else="" class="fa fa-times text-muted" title="Not published"/>
-        </td>
-        <td class="text-center">
-            <i t-if="page.website_indexed" class="fa fa-check" title="Indexed"/>
-            <i t-else="" class="fa fa-times text-muted" title="Not indexed"/>
-        </td>
-        <td class="text-center">
-            <i t-if="page.is_seo_optimized" class="fa fa-check" title="SEO optimized"/>
-            <i t-else="" class="fa fa-times text-muted" title="Not SEO optimized"/>
-        </td>
-        <td class="text-right" style="white-space:nowrap;">
-            <a class="mr4 fa fa-cog js_page_properties" href="#" t-att-data-id="page.id" title="Manage this page"/>
-            <a class="mr4 fa fa-search" t-attf-href="{{ page.url}}?enable_seo" title="Optimize SEO of this page"/>
-            <a groups="base.group_no_one" class="mr4 fa fa-bug" t-attf-href="/web#id=#{page.view_id.id}&amp;view_type=form&amp;model=ir.ui.view" title="Edit code in backend"/>
-            <a class="mr4 fa fa-clone js_clone_page" t-att-data-id="page.id" href="#" title="Clone this page"/>
-            <a class="fa fa-trash js_delete_page" t-att-data-id="page.id" href="#" title="Delete this page"/>
-        </td>
-    </tr>
 </template>
 
 <template id="list_hybrid" name="Any Search Results">

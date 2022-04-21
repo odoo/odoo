@@ -426,11 +426,7 @@ class View(models.Model):
             return super(View, self).get_default_lang_code()
 
     def redirect_to_page_manager(self):
-        return {
-            'type': 'ir.actions.act_url',
-            'url': '/website/pages',
-            'target': 'self',
-        }
+        return self.env["ir.actions.server"]._for_xml_id('website.action_website_pages_list')
 
     def _read_template_keys(self):
         return super(View, self)._read_template_keys() + ['website_id']
