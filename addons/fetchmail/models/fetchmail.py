@@ -177,13 +177,13 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                     for num in data[0].split():
                         res_id = None
                         result, data = imap_server.fetch(num, '(RFC822)')
-                        imap_server.store(num, '-FLAGS', '\\Seen')
+                        imap_server.store(num, '-FLAGS', ('\\Seen'))
                         try:
                             res_id = MailThread.with_context(**additionnal_context).message_process(server.object_id.model, data[0][1], save_original=server.original, strip_attachments=(not server.attach))
                         except Exception:
                             _logger.info('Failed to process mail from %s server %s.', server.server_type, server.name, exc_info=True)
                             failed += 1
-                        imap_server.store(num, '+FLAGS', '\\Seen')
+                        imap_server.store(num, '+FLAGS', ('\\Seen'))
                         self._cr.commit()
                         count += 1
                     _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", count, server.server_type, server.name, (count - failed), failed)
