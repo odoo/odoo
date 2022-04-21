@@ -319,6 +319,7 @@ class Project(models.Model):
             "When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n\n"
             "In any case, an internal user with no project access rights can still access a task, "
             "provided that they are given the corresponding URL (and that they are part of the followers if the project is private).")
+    privacy_visibility_warning = fields.Char('Privacy Visibility Warning', compute='_compute_privacy_visibility_warning')
     doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of documents attached")
     date_start = fields.Date(string='Start Date')
     date = fields.Date(string='Expiration Date', index=True, tracking=True)
@@ -489,6 +490,18 @@ class Project(models.Model):
         for project in self:
             project.collaborator_count = collaborator_count_by_project.get(project.id, 0)
 
+    @api.depends('privacy_visibility')
+    def _compute_privacy_visibility_warning(self):
+        for project in self:
+            if not project.ids:
+                project.privacy_visibility_warning = ''
+            elif project.privacy_visibility == 'portal' and project._origin.privacy_visibility != 'portal':
+                project.privacy_visibility_warning = _('Customers will be added to the followers of their project and tasks.')
+            elif project.privacy_visibility != 'portal' and project._origin.privacy_visibility == 'portal':
+                project.privacy_visibility_warning = _('Portal users will be removed from the followers of the project and its tasks.')
+            else:
+                project.privacy_visibility_warning = ''
+
     @api.model
     def _map_tasks_default_valeus(self, task, project):
         """ get the default value for the copied task on project duplication """
@@ -546,9 +559,6 @@ class Project(models.Model):
         # Prevent double project creation
         self = self.with_context(mail_create_nosubscribe=True)
         projects = super().create(vals_list)
-        for project in projects:
-            if project.privacy_visibility == 'portal' and project.partner_id:
-                project.message_subscribe(project.partner_id.ids)
         return projects
 
     def write(self, vals):
@@ -566,6 +576,9 @@ class Project(models.Model):
                     'status': vals.get('last_update_status'),
                 })
             vals.pop('last_update_status')
+        if vals.get('privacy_visibility'):
+            self._change_privacy_visibility(vals['privacy_visibility'])
+
         res = super(Project, self).write(vals) if vals else True
 
         if 'allow_recurring_tasks' in vals and not vals.get('allow_recurring_tasks'):
@@ -574,11 +587,6 @@ class Project(models.Model):
         if 'active' in vals:
             # archiving/unarchiving a project does it on its tasks, too
             self.with_context(active_test=False).mapped('tasks').write({'active': vals['active']})
-        if vals.get('partner_id') or vals.get('privacy_visibility'):
-            for project in self.filtered(lambda project: project.privacy_visibility == 'portal'):
-                project.message_subscribe(project.partner_id.ids)
-        if vals.get('privacy_visibility'):
-            self._change_privacy_visibility()
         if 'name' in vals and self.analytic_account_id:
             projects_read_group = self.env['project.project']._read_group(
                 [('analytic_account_id', 'in', self.analytic_account_id.ids)],
@@ -931,15 +939,23 @@ class Project(models.Model):
     # Privacy
     # ---------------------------------------------------
 
-    def _change_privacy_visibility(self):
+    def _change_privacy_visibility(self, new_visibility):
         """
         Unsubscribe non-internal users from the project and tasks if the project privacy visibility
-        goes to a value different than 'portal'
+        goes from 'portal' to a different value.
+        If the privacy visibility is set to 'portal', subscribe back project and tasks partners.
         """
-        for project in self.filtered(lambda p: p.privacy_visibility != 'portal'):
-            portal_users = project.message_partner_ids.user_ids.filtered('share')
-            project.message_unsubscribe(partner_ids=portal_users.partner_id.ids)
-            project.mapped('tasks')._change_project_privacy_visibility()
+        for project in self:
+            if project.privacy_visibility == new_visibility:
+                continue
+            if new_visibility == 'portal':
+                project.message_subscribe(partner_ids=project.partner_id.ids)
+                for task in project.task_ids.filtered('partner_id'):
+                    task.message_subscribe(partner_ids=task.partner_id.ids)
+            elif project.privacy_visibility == 'portal':
+                portal_users = project.message_partner_ids.user_ids.filtered('share')
+                project.message_unsubscribe(partner_ids=portal_users.partner_id.ids)
+                project.tasks._unsubscribe_portal_users()
 
     # ---------------------------------------------------
     # Project sharing
@@ -2514,10 +2530,8 @@ class Task(models.Model):
     # ---------------------------------------------------
     # Privacy
     # ---------------------------------------------------
-    def _change_project_privacy_visibility(self):
-        for task in self.filtered(lambda t: t.project_privacy_visibility != 'portal'):
-            portal_users = task.message_partner_ids.user_ids.filtered('share')
-            task.message_unsubscribe(partner_ids=portal_users.partner_id.ids)
+    def _unsubscribe_portal_users(self):
+        self.message_unsubscribe(partner_ids=self.message_partner_ids.filtered('user_ids.share').ids)
 
     # ---------------------------------------------------
     # Analytic accounting
