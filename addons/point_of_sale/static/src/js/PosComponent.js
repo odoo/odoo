@@ -8,11 +8,11 @@ odoo.define('point_of_sale.PosComponent', function (require) {
 
     class PosComponent extends LegacyComponent {
         setup() {
-            onRendered(() => {
-                if (this.env.isDebug()) {
-                    console.log('Rendered:', this.constructor.name);
-                }
-            });
+            // onRendered(() => {
+            //     if (this.env.isDebug()) {
+            //         console.log('Rendered:', this.constructor.name);
+            //     }
+            // });
         }
         /**
          * This function is available to all Components that inherit this class.
