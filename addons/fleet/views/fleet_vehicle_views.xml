@@ -73,8 +73,10 @@
                             <field name="plan_to_change_car" groups="fleet.fleet_group_manager" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
                             <field name="plan_to_change_bike" groups="fleet.fleet_group_manager"  attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}"/>
                             <field name="next_assignation_date"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group string="Vehicle">
+                            <field name="category_id"/>
                             <field name="acquisition_date" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
                             <field name="write_off_date" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
                             <field name="vin_sn"/>
@@ -85,7 +87,6 @@
                             </div>
                             <field name="manager_id" domain="[('share', '=', False)]"/>
                             <field name="location"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
                     <notebook>
@@ -159,6 +160,7 @@
                 <field name="active" invisible="1"/>
                 <field name="license_plate" readonly="1"/>
                 <field name="model_id" widget="many2one_avatar" readonly="1"/>
+                <field name="category_id"/>
                 <field name="manager_id" optional="hide"/>
                 <field name="driver_id" widget="many2one_avatar" readonly="1"/>
                 <field name="future_driver_id"  widget="many2one_avatar" readonly="1"/>
