@@ -34,6 +34,10 @@ function mapWowlValueToLegacy(value, type) {
             return value ? parseDateTime(serializeDateTime(value), null, { isUTC: true }) : false;
         case "many2one":
             return value ? { id: value[0], display_name: value[1] } : false;
+        case "reference":
+            return value
+                ? { id: value.resId, display_name: value.displayName, model: value.resModel }
+                : false;
         case "one2many":
         case "many2many":
             if (value.operation === "REPLACE_WITH") {
@@ -85,11 +89,12 @@ function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType) {
     fieldsInfo[viewType] = {};
     for (const [fieldName, fieldDescr] of Object.entries(activeFields)) {
         const views = mapViews(fieldDescr.views);
+        const field = fields[fieldName];
         let Widget;
         if (fieldDescr.widget) {
             Widget = fieldRegistry.getAny([`${viewType}.${fieldDescr.widget}`, fieldDescr.widget]);
         } else {
-            Widget = fieldRegistry.getAny([`${viewType}.${fieldDescr.type}`, fieldDescr.type]);
+            Widget = fieldRegistry.getAny([`${viewType}.${field.type}`, field.type]);
         }
         Widget = Widget || fieldRegistry.get("abstract");
         let domain;
@@ -471,6 +476,15 @@ export class Record extends DataPoint {
                 case "many2one":
                     data[fieldName] = data[fieldName]
                         ? [data[fieldName].data.id, data[fieldName].data.display_name]
+                        : false;
+                    break;
+                case "reference":
+                    data[fieldName] = data[fieldName]
+                        ? {
+                              resModel: data[fieldName].model,
+                              resId: data[fieldName].data.id,
+                              displayName: data[fieldName].data.display_name,
+                          }
                         : false;
                     break;
                 case "char":
@@ -962,6 +976,13 @@ export class RelationalModel extends Model {
                 // ajax service uses an extra 'target' argument for rpc
                 args = args.concat(ev.target);
                 return payload.callback(owl.Component.env.session.rpc(...args));
+            } else if (payload.service === "notification") {
+                return this.notificationService.add(payload.message, {
+                    className: payload.className,
+                    sticky: payload.sticky,
+                    title: payload.title,
+                    type: payload.type,
+                });
             }
             throw new Error(`call service ${payload.service} not handled in relational model`);
         } else if (evType === "warning") {

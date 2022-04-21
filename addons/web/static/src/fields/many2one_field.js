@@ -180,8 +180,8 @@ export class Many2OneField extends Component {
             })
         );
     }
-    onCreate() {
-        console.log("create");
+    onCreate({ inputValue }) {
+        this.props.update([false, inputValue]);
     }
     onCreateEdit() {
         this.onSearchMore();
@@ -201,9 +201,9 @@ export class Many2OneField extends Component {
     onInput({ inputValue }) {
         this.state.isFloating = !this.props.value || this.props.value[1] !== inputValue;
     }
-    onSelect(option) {
+    onSelect(option, params) {
         if (option.action) {
-            option.action();
+            option.action(params);
         } else {
             this.props.update([option.value, option.label]);
             this.state.isFloating = false;

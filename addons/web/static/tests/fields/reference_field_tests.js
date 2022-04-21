@@ -1,14 +1,20 @@
 /** @odoo-module **/
 
-import { setupViewRegistries } from "../views/helpers";
+import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { browser } from "@web/core/browser/browser";
+import { click, editInput, getFixture, patchWithCleanup, triggerEvent } from "../helpers/utils";
+import { makeView, setupViewRegistries } from "../views/helpers";
 
 // WOWL remove after adapting tests
-let testUtils, createView, FormView, ListView;
+let testUtils;
+
+let target;
+let serverData;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
-        // WOWL
-        // eslint-disable-next-line no-undef
+        target = getFixture();
+
         serverData = {
             models: {
                 partner: {
@@ -225,30 +231,45 @@ QUnit.module("Fields", (hooks) => {
         };
 
         setupViewRegistries();
+
+        patchWithCleanup(AutoComplete, {
+            delay: 0,
+        });
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
     });
 
     QUnit.module("ReferenceField");
 
-    QUnit.skipWOWL("ReferenceField can quick create models", async function (assert) {
-        assert.expect(8);
+    QUnit.test("ReferenceField can quick create models", async function (assert) {
+        assert.expect(9);
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: `<form><field name="reference"/></form>`,
-            mockRPC(route, args) {
-                assert.step(args.method || route);
-                return this._super(...arguments);
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="reference" />
+                </form>
+            `,
+            mockRPC(route, { method }) {
+                assert.step(method || route);
             },
         });
 
-        await testUtils.fields.editSelect(form.$("select"), "partner");
-        await testUtils.fields.many2one.searchAndClickItem("reference", { search: "new partner" });
-        await testUtils.form.clickSave(form);
+        await editInput(target, "select", "partner");
+
+        await click(target, ".o_field_widget[name='reference'] input");
+        await editInput(target, ".o_field_widget[name='reference'] input", "new partner");
+        await click(target, ".o_field_widget[name='reference'] .o_m2o_dropdown_option_create");
+
+        await click(target, ".o_form_button_save");
 
         assert.verifySteps(
             [
+                "get_views",
                 "onchange",
                 "name_search", // for the select
                 "name_search", // for the spawned many2one
@@ -259,145 +280,164 @@ QUnit.module("Fields", (hooks) => {
             ],
             "The name_create method should have been called"
         );
-
-        form.destroy();
     });
 
-    QUnit.skipWOWL("ReferenceField in modal readonly mode", async function (assert) {
+    QUnit.test("ReferenceField in modal readonly mode", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[0].p = [2];
-        this.data.partner.records[1].trululu = 1;
-        this.data.partner.records[1].reference = "product,41";
+        serverData.models.partner.records[0].p = [2];
+        serverData.models.partner.records[1].trululu = 1;
+        serverData.models.partner.records[1].reference = "product,41";
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<field name="reference"/>' +
-                '<field name="p"/>' +
-                "</form>",
-            archs: {
-                // make field reference readonly as the modal opens in edit mode
-                "partner,false,form":
-                    '<form><field name="reference" attrs="{\'readonly\': 1}"/></form>',
-                "partner,false,list": '<tree><field name="display_name"/></tree>',
-            },
-            res_id: 1,
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <field name="display_name" />
+                    <field name="reference" />
+                </form>
+            `,
+            "partner,false,list": `
+                <tree>
+                    <field name="display_name"/>
+                    <field name="reference" />
+                </tree>
+            `,
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="reference" />
+                    <field name="p" />
+                </form>
+            `,
         });
 
         // Current Form
-        assert.equal(
-            form.$(".o_form_uri.o_field_widget[name=reference]").text(),
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=reference] .o_form_uri").textContent,
             "xphone",
             "the field reference of the form should have the right value"
         );
 
-        var $cell_o2m = form.$(".o_data_cell");
-        assert.equal($cell_o2m.text(), "second record", "the list should have one record");
-
-        await testUtils.dom.click($cell_o2m);
+        const cell = target.querySelector(".o_data_cell");
+        assert.strictEqual(cell.textContent, "second record", "the list should have one record");
+        await click(cell);
 
         // In modal
-        var $modal = $(".modal-lg");
-        assert.equal($modal.length, 1, "there should be one modal opened");
-
-        assert.equal(
-            $modal.find(".o_form_uri.o_field_widget[name=reference]").text(),
+        assert.containsOnce(document.body, ".modal-lg");
+        assert.strictEqual(
+            document.body.querySelector(".modal-lg .o_field_widget[name=reference] .o_form_uri")
+                .textContent,
             "xpad",
             "The field reference in the modal should have the right value"
         );
 
-        await testUtils.dom.click($modal.find(".o_form_button_cancel"));
-
-        form.destroy();
+        await click(document.body, ".modal .o_form_button_cancel");
     });
 
-    QUnit.skipWOWL("ReferenceField in modal write mode", async function (assert) {
+    QUnit.test("ReferenceField in modal write mode", async function (assert) {
         assert.expect(5);
 
-        this.data.partner.records[0].p = [2];
-        this.data.partner.records[1].trululu = 1;
-        this.data.partner.records[1].reference = "product,41";
+        serverData.models.partner.records[0].p = [2];
+        serverData.models.partner.records[1].trululu = 1;
+        serverData.models.partner.records[1].reference = "product,41";
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<field name="reference"/>' +
-                '<field name="p"/>' +
-                "</form>",
-            archs: {
-                "partner,false,form": '<form><field name="reference"/></form>',
-                "partner,false,list": '<tree><field name="display_name"/></tree>',
-            },
-            res_id: 1,
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <field name="display_name" />
+                    <field name="reference" />
+                </form>
+            `,
+            "partner,false,list": `
+                <tree>
+                    <field name="display_name"/>
+                    <field name="reference" />
+                </tree>
+            `,
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="reference" />
+                    <field name="p" />
+                </form>
+            `,
         });
 
         // current form
-        await testUtils.form.clickEdit(form);
+        await click(target, ".o_form_button_edit");
 
-        var $fieldRef = form.$(".o_field_widget.o_field_many2one[name=reference]");
-        assert.equal(
-            $fieldRef.find("option:selected").text(),
+        let fieldRef = target.querySelector(".o_field_widget[name=reference]");
+        assert.strictEqual(
+            fieldRef.querySelector("option:checked").textContent,
             "Product",
             "The reference field's model should be Product"
         );
-        assert.equal(
-            $fieldRef.find(".o_input.ui-autocomplete-input").val(),
+        assert.strictEqual(
+            fieldRef.querySelector(".o-autocomplete--input").value,
             "xphone",
             "The reference field's record should be xphone"
         );
 
-        await testUtils.dom.click(form.$(".o_data_cell"));
+        await click(target.querySelector(".o_data_cell"));
 
         // In modal
-        var $modal = $(".modal-lg");
-        assert.equal($modal.length, 1, "there should be one modal opened");
+        assert.containsOnce(document.body, ".modal-lg", "there should be one modal opened");
 
-        var $fieldRefModal = $modal.find(".o_field_widget.o_field_many2one[name=reference]");
+        fieldRef = document.querySelector(".modal-lg .o_field_widget[name=reference]");
 
-        assert.equal(
-            $fieldRefModal.find("option:selected").text(),
+        assert.strictEqual(
+            fieldRef.querySelector("option:checked").textContent,
             "Product",
             "The reference field's model should be Product"
         );
-        assert.equal(
-            $fieldRefModal.find(".o_input.ui-autocomplete-input").val(),
+        assert.strictEqual(
+            fieldRef.querySelector(".o-autocomplete--input").value,
             "xpad",
             "The reference field's record should be xpad"
         );
-
-        form.destroy();
     });
 
     QUnit.skipWOWL("reference in form view", async function (assert) {
         assert.expect(15);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="reference" string="custom label"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
-            archs: {
-                "product,false,form": '<form string="Product"><field name="display_name"/></form>',
-            },
-            res_id: 1,
-            mockRPC: function (route, args) {
-                if (args.method === "get_formview_action") {
+        serverData.views = {
+            "product,false,form": `
+                <form>
+                    <field name="display_name" />
+                </form>
+            `,
+        };
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="reference" string="custom label" />
+                        </group>
+                    </sheet>
+                </form>
+            `,
+            mockRPC(route, { args, method, model }) {
+                if (method === "get_formview_action") {
                     assert.deepEqual(
-                        args.args[0],
+                        args[0],
                         [37],
                         "should call get_formview_action with correct id"
                     );
@@ -408,30 +448,25 @@ QUnit.module("Fields", (hooks) => {
                         res_model: "res.partner",
                     });
                 }
-                if (args.method === "get_formview_id") {
-                    assert.deepEqual(
-                        args.args[0],
-                        [37],
-                        "should call get_formview_id with correct id"
-                    );
+                if (method === "get_formview_id") {
+                    assert.deepEqual(args[0], [37], "should call get_formview_id with correct id");
                     return Promise.resolve(false);
                 }
-                if (args.method === "name_search") {
+                if (method === "name_search") {
                     assert.strictEqual(
-                        args.model,
+                        model,
                         "partner_type",
                         "the name_search should be done on the newly set model"
                     );
                 }
-                if (args.method === "write") {
-                    assert.strictEqual(args.model, "partner", "should write on the current model");
+                if (method === "write") {
+                    assert.strictEqual(model, "partner", "should write on the current model");
                     assert.deepEqual(
-                        args.args,
+                        args,
                         [[1], { reference: "partner_type,12" }],
                         "should write the correct value"
                     );
                 }
-                return this._super(route, args);
             },
         });
 
@@ -444,13 +479,13 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            form.$("a.o_form_uri:contains(xphone)").length,
-            1,
+            target.querySelector("a.o_form_uri").textContent,
+            "xphone",
             "should contain a link"
         );
-        await testUtils.dom.click(form.$("a.o_form_uri"));
+        await click(target, "a.o_form_uri");
 
-        await testUtils.form.clickEdit(form);
+        await click(target, ".o_form_button_edit");
 
         assert.containsN(
             form,
@@ -511,17 +546,17 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("interact with reference field changed by onchange", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             bar: function (obj) {
                 if (!obj.bar) {
                     obj.reference = "partner,1";
                 }
             },
         };
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch: `<form>
                     <field name="bar"/>
                     <field name="reference"/>
@@ -554,8 +589,8 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("default_get and onchange with a reference field", async function (assert) {
         assert.expect(8);
 
-        this.data.partner.fields.reference.default = "product,37";
-        this.data.partner.onchanges = {
+        serverData.models.partner.fields.reference.default = "product,37";
+        serverData.models.partner.onchanges = {
             int_field: function (obj) {
                 if (obj.int_field) {
                     obj.reference = "partner_type," + obj.int_field;
@@ -563,10 +598,10 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -619,12 +654,12 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("default_get a reference field in a x2m", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.fields.turtles.default = [[0, false, { turtle_ref: "product,37" }]];
+        serverData.models.partner.fields.turtles.default = [[0, false, { turtle_ref: "product,37" }]];
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -654,18 +689,18 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("ReferenceField on char field, reset by onchange", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[0].foo = "product,37";
-        this.data.partner.onchanges = {
+        serverData.models.partner.records[0].foo = "product,37";
+        serverData.models.partner.onchanges = {
             int_field: function (obj) {
                 obj.foo = "product," + obj.int_field;
             },
         };
 
         var nbNameGet = 0;
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -709,10 +744,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("reference and list navigation", async function (assert) {
         assert.expect(2);
 
-        var list = await createView({
-            View: ListView,
-            model: "partner",
-            data: this.data,
+        const list = await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
             arch: '<tree editable="bottom"><field name="reference"/></tree>',
         });
 
@@ -742,175 +777,166 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.skipWOWL("ReferenceField with model_field option", async function (assert) {
         assert.expect(5);
-        this.data.partner.records[0].reference = false;
-        this.data.partner.records[0].model_id = 20;
-        this.data.partner.records[1].display_name = "John Smith";
-        this.data.product.records[0].display_name = "Product 1";
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: `<form string="Partners">
-                        <field name="model_id"/>
-                        <field name="reference"  options='{"model_field": "model_id"}'/>
-                   </form>`,
-            res_id: 1,
+        serverData.models.partner.records[0].reference = false;
+        serverData.models.partner.records[0].model_id = 20;
+        serverData.models.partner.records[1].display_name = "John Smith";
+        serverData.models.product.records[0].display_name = "Product 1";
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="model_id" />
+                    <field name="reference" options="{'model_field': 'model_id'}" />
+                </form>
+            `,
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(target, ".o_form_button_edit");
+
         assert.containsNone(
-            form.$("select"),
+            target,
+            "select",
             "the selection list of the reference field should not exist."
         );
         assert.strictEqual(
-            form.$('.o_field_many2one[name="reference"] input').val(),
+            target.querySelector(".o_field_widget[name='reference'] input").value,
             "",
             "no record should be selected in the reference field"
         );
 
-        await testUtils.fields.editInput(
-            form.$('.o_field_many2one[name="reference"] input'),
-            "Product 1"
-        );
-        await testUtils.dom.click($(".ui-autocomplete .ui-menu-item:first-child"));
+        await editInput(target, ".o_field_widget[name='reference'] input", "Product 1");
+        await click(target, ".ui-autocomplete .ui-menu-item:first-child");
         assert.strictEqual(
-            form.$('.o_field_many2one[name="reference"] input').val(),
+            target.querySelector(".o_field_widget[name='reference'] input").value,
             "Product 1",
             "the Product 1 record should be selected in the reference field"
         );
 
-        await testUtils.fields.editInput(
-            form.$('.o_field_many2one[name="model_id"] input'),
-            "Partner"
-        );
-        await testUtils.dom.click($(".ui-autocomplete .ui-menu-item:first-child"));
+        await editInput(target, ".o_field_widget[name='model_id'] input", "Partner");
+        await click(target, ".ui-autocomplete .ui-menu-item:first-child");
         assert.strictEqual(
-            form.$('.o_field_many2one[name="reference"] input').val(),
+            target.querySelector(".o_field_widget[name='reference'] input").value,
             "",
             "no record should be selected in the reference field"
         );
 
-        await testUtils.fields.editInput(
-            form.$('.o_field_many2one[name="reference"] input'),
-            "John"
-        );
-        await testUtils.dom.click($(".ui-autocomplete .ui-menu-item:first-child"));
+        await editInput(target, ".o_field_widget[name='reference'] input", "John");
+        await click(target, ".ui-autocomplete .ui-menu-item:first-child");
         assert.strictEqual(
-            form.$('.o_field_many2one[name="reference"] input').val(),
+            target.querySelector(".o_field_widget[name='reference'] input").value,
             "John Smith",
             "the John Smith record should be selected in the reference field"
         );
-
-        form.destroy();
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "ReferenceField with model_field option (model_field not synchronized with reference)",
         async function (assert) {
             // Checks that the data is not modified even though it is not synchronized.
             // Not synchronized = model_id contains a different model than the one used in reference.
             assert.expect(5);
-            this.data.partner.records[0].reference = "partner,1";
-            this.data.partner.records[0].model_id = 20;
-            this.data.partner.records[0].display_name = "John Smith";
 
-            const form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch: `<form string="Partners">
-                        <field name="model_id"/>
-                        <field name="reference"  options='{"model_field": "model_id"}'/>
-                   </form>`,
-                res_id: 1,
+            serverData.models.partner.records[0].reference = "partner,1";
+            serverData.models.partner.records[0].model_id = 20;
+            serverData.models.partner.records[0].display_name = "John Smith";
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="model_id" />
+                        <field name="reference" options="{'model_field': 'model_id'}" />
+                   </form>
+                `,
             });
 
-            assert.containsNone(
-                form.$("select"),
-                "the selection list of the reference field should not exist."
-            );
             assert.strictEqual(
-                form.$('.o_field_widget[name="model_id"] span').text(),
+                target.querySelector(".o_field_widget[name='model_id'] span").textContent,
                 "Product",
                 "the value of model_id field should be Product"
             );
             assert.strictEqual(
-                form.$('.o_field_widget[name="reference"] span').text(),
+                target.querySelector(".o_field_widget[name='reference'] span").textContent,
                 "John Smith",
                 "the value of model_id field should be John Smith"
             );
 
-            await testUtils.form.clickEdit(form);
+            await click(target, ".o_form_button_edit");
+            assert.containsNone(
+                target,
+                "select",
+                "the selection list of the reference field should not exist."
+            );
             assert.strictEqual(
-                form.$('.o_field_many2one[name="model_id"] input').val(),
+                target.querySelector(".o_field_widget[name='model_id'] input").value,
                 "Product",
                 "the Product model should be selected in the model_id field"
             );
             assert.strictEqual(
-                form.$('.o_field_many2one[name="reference"] input').val(),
+                target.querySelector(".o_field_widget[name='reference'] input").value,
                 "John Smith",
                 "the John Smith record should be selected in the reference field"
             );
-
-            form.destroy();
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "ReferenceField with model_field option (tree list in form view)",
         async function (assert) {
             assert.expect(2);
 
-            this.data.turtle.records[0].partner_ids = [1];
-            this.data.partner.records[0].reference = "product,41";
-            this.data.partner.records[0].model_id = 20;
+            serverData.models.turtle.records[0].partner_ids = [1];
+            serverData.models.partner.records[0].reference = "product,41";
+            serverData.models.partner.records[0].model_id = 20;
 
-            const form = await createView({
-                View: FormView,
-                model: "turtle",
-                data: this.data,
-                arch: `<form string="Turtle">
+            await makeView({
+                type: "form",
+                resModel: "turtle",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
                         <field name="partner_ids">
-                            <tree string="Partner" editable="bottom">
-                                <field name="name"/>
-                                <field name="model_id"/>
-                                <field name="reference" options="{'model_field': 'model_id'}" class="reference_field"/>
+                            <tree editable="bottom">
+                                <field name="name" />
+                                <field name="model_id" />
+                                <field name="reference" options="{'model_field': 'model_id'}" class="reference_field" />
                             </tree>
                         </field>
-                   </form>`,
-                res_id: 1,
+                   </form>
+                `,
             });
 
-            await testUtils.form.clickEdit(form);
+            await click(target, ".o_form_button_edit");
 
             assert.strictEqual(
-                form.$(".reference_field").text(),
+                target.querySelector(".reference_field").textContent,
                 "xpad",
                 "should have the second product"
             );
 
             // Select the second product without changing the model
-            await testUtils.dom.click($(".o_list_table .reference_field"));
-            await testUtils.dom.click($(".o_list_table .reference_field input"));
+            await click(target, ".o_list_table .reference_field");
+            await click(target, ".o_list_table .reference_field input");
 
             // Enter to select it
-            $(".o_list_table .reference_field input").trigger(
-                $.Event("keydown", {
-                    keyCode: $.ui.keyCode.ENTER,
-                    which: $.ui.keyCode.ENTER,
-                })
-            );
-
-            await testUtils.nextTick();
+            await triggerEvent(target, ".o_list_table .reference_field input", "keydown", {
+                key: "Enter",
+            });
 
             assert.strictEqual(
-                form.$('.reference_field[name="reference"]').text(),
+                target.querySelector(".reference_field input").value,
                 "xphone",
                 "should have selected the first product"
             );
-
-            form.destroy();
         }
     );
 });

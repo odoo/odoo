@@ -436,6 +436,8 @@ export class Record extends DataPoint {
                 evalContext[fieldName] = value.toFormat("yyyy-LL-dd HH:mm:ss");
             } else if (value && this.fields[fieldName].type === "many2one") {
                 evalContext[fieldName] = value[0];
+            } else if (value && this.fields[fieldName].type === "reference") {
+                evalContext[fieldName] = `${value.resModel},${value.resId}`;
             } else {
                 evalContext[fieldName] = value;
             }
@@ -598,6 +600,9 @@ export class Record extends DataPoint {
                 changes[fieldName] = changes[fieldName]
                     ? serializeDateTime(changes[fieldName])
                     : false;
+            } else if (fieldType === "reference") {
+                const value = changes[fieldName];
+                changes[fieldName] = value ? `${value.resModel},${value.resId}` : false;
             }
         }
 
@@ -725,6 +730,13 @@ export class Record extends DataPoint {
             if (field.type === "many2one") {
                 proms.push(
                     this._loadMany2OneData(fieldName, this.data[fieldName]).then((value) => {
+                        this.data[fieldName] = value;
+                        this._values[fieldName] = value;
+                    })
+                );
+            } else if (field.type === "reference") {
+                proms.push(
+                    this._loadReference(fieldName, this.data[fieldName]).then((value) => {
                         this.data[fieldName] = value;
                         this._values[fieldName] = value;
                     })
@@ -886,6 +898,8 @@ export class Record extends DataPoint {
         } else {
             if (field && field.type === "many2one") {
                 value = await this._loadMany2OneData(fieldName, value);
+            } else if (field && field.type === "reference") {
+                value = await this._loadReference(fieldName, value);
             }
             this.data[fieldName] = value;
             this._changes[fieldName] = value;
@@ -1052,6 +1066,25 @@ export class Record extends DataPoint {
             return result[0];
         }
         return value;
+    }
+
+    async _loadReference(fieldName, value) {
+        if (value) {
+            if (typeof value === "string") {
+                const [resModel, resId] = value.split(",");
+                value = { resModel, resId: parseInt(resId, 10) };
+            }
+            const { resModel, resId } = value;
+            const context = this.getFieldContext(fieldName);
+            const nameGet = await this.model.orm.nameGet(resModel, [resId], context);
+            return {
+                resModel,
+                resId,
+                displayName: nameGet[0][1],
+            };
+        } else {
+            return false;
+        }
     }
 
     async _loadX2ManyData(fieldName) {
