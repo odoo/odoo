@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="website.WebsiteEditorComponent" owl="1">
+    <div t-if="state.reloading" class="o_loading_dummy">
+        <t t-out="this.loadingDummy"/>
+    </div>
+    <div t-if="state.showWysiwyg" t-att-class="{ o_w_wysiwyg_transition: !this.state.reloading, o_w_wysiwyg: this.websiteContext.snippetsLoaded }">
+        <WysiwygAdapterComponent Component="this.Wysiwyg"
+            snippetSelector="this.reloadSelector"
+            willReload.bind="this.willReload"
+            reloadCallback.bind="this.reload"
+            quitCallback.bind="this.quit"
+            wysiwygReady.bind="this.wysiwygReady"/>
+    </div>
+</t>
+</templates>

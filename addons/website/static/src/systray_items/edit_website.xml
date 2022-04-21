@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 <t t-name="website.EditWebsiteSystray" owl="1">
-    <div class="o_menu_systray_item o_edit_website_container">
-        <a href="#" accesskey="a"><span class="fa fa-pencil mr-2"/>Edit</a>
+    <div class="o_edit_website_container o_edit_website_container">
+        <a href="#" accesskey="a" t-on-click="startEdit">
+            <span class="fa mr-2" t-att-class="{ 'fa-refresh fa-spin': this.state.isLoading, 'fa-pencil': !this.state.isLoading }"/>
+            Edit
+        </a>
     </div>
 </t>
 </templates>

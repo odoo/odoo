@@ -1,0 +1,23 @@
+.o_w_wysiwyg, .o_loading_dummy {
+    #oe_snippets {
+        transform: none;
+        transition: none;
+    }
+}
+
+.o_loading_dummy {
+    position: absolute;
+    z-index: 100000;
+}
+
+.o_website_fullscreen {
+    #oe_snippets {
+        transform: translateX(100%);
+    }
+}
+
+.o_w_wysiwyg_transition {
+    #oe_snippets {
+        transition: transform ease 400ms;
+    }
+}

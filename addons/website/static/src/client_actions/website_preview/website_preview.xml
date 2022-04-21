@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 <t t-name="website.WebsitePreview" owl="1">
-    <div class="o_website_preview">
+    <div class="o_website_preview" t-att-class="{ 'editor_enable editor_has_snippets': this.websiteContext.snippetsLoaded }">
         <iframe t-att-src="iframeFallbackUrl"
+            t-att-class="{ 'd-none': this.websiteContext.edition }"
             t-ref="iframefallback"/>
         <iframe t-att-src="initialUrl"
             class="o_iframe"
             t-ref="iframe"
             t-on-load="_onPageLoaded"/>
     </div>
+    <WebsiteEditorComponent t-if="websiteContext.edition"
+        reloadIframe.bind="this.reloadIframe"/>
 </t>
 </templates>

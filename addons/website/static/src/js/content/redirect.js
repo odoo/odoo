@@ -75,5 +75,13 @@ document.addEventListener('DOMContentLoaded', () => {
             editInBackendUserDropdownLinkEl.classList.add('d-none');
             editInBackendUserDropdownLinkEl.classList.remove('d-flex');
         }
+
+        // Multiple reasons to do this:
+        // - It seems like DOMContentLoaded doesn't always trigger when
+        //   listened from the parent window
+        // - Having an event that's fire only when the page is from Odoo avoids
+        //   weird behaviours. (e.g. if we want to clear out the iframe, it might
+        //   fire an DOMContentLoaded on a non odoo page)
+        window.frameElement.dispatchEvent(new CustomEvent('OdooFrameContentLoaded'));
     }
 });
