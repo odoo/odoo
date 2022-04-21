@@ -202,6 +202,7 @@
             'website/static/src/client_actions/configurator/configurator.js',
             'website/static/src/client_actions/configurator/configurator.scss',
             'website/static/src/components/translator/*',
+            'website/static/src/js/website_page_list.js',
         ],
         'web.qunit_suite_tests': [
             'website/static/tests/dashboard_tests.js',

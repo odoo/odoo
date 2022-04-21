@@ -339,6 +339,15 @@ class Page(models.Model):
             results = results.filtered(lambda result: filter_page(search, result, results))
         return results, count
 
+    def action_manage_page(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'website.page',
+            'res_id': self.id,
+            'target': 'current',
+        }
 
 # this is just a dummy function to be used as ormcache key
 def _cached_response():

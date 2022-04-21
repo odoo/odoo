@@ -7,6 +7,7 @@ import core from 'web.core';
 
 import { WebsiteEditorComponent } from '../../components/editor/editor';
 import { WebsiteTranslator } from '../../components/translator/translator';
+import {OptimizeSEODialog} from '@website/components/dialog/seo';
 
 const { Component, onWillStart, useEffect, useRef, useState } = owl;
 
@@ -14,6 +15,7 @@ export class WebsiteEditorClientAction extends Component {
     setup() {
         super.setup(...arguments);
         this.websiteService = useService('website');
+        this.dialogService = useService('dialog');
         this.title = useService('title');
 
         this.iframeFallbackUrl = '/website/iframefallback';
@@ -32,6 +34,12 @@ export class WebsiteEditorClientAction extends Component {
             this.websiteService.context.showNewContentModal = this.props.action.context.params && this.props.action.context.params.display_new_content;
             this.websiteService.context.edition = this.props.action.context.params && !!this.props.action.context.params.enable_editor;
             this.websiteService.context.translation = this.props.action.context.params && !!this.props.action.context.params.edit_translations;
+            if (this.props.action.context.params && this.props.action.context.params.enable_seo) {
+                this.iframe.el.addEventListener('load', () => {
+                    this.websiteService.pageDocument = this.iframe.el.contentDocument;
+                    this.dialogService.add(OptimizeSEODialog);
+                }, {once: true});
+            }
             return () => {
                 this.websiteService.currentWebsiteId = null;
                 this.websiteService.websiteRootInstance = undefined;

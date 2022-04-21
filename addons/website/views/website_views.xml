@@ -190,16 +190,20 @@
             <field name="name">website.page.list</field>
             <field name="model">website.page</field>
             <field name="arch" type="xml">
-                <tree string="Website Pages" default_order="name" multi_edit="1">
-                    <field name="name"/>
+                <tree js_class="website_page_list" string="Website Pages" default_order="name" multi_edit="1">
+                    <field name="name" string="Page Title"/>
                     <field name="url"/>
-                    <field name="website_id" groups="website.group_multi_website"/>
-                    <field name="website_indexed"/>
-                    <field name="is_published" string="Is Published"/>
+                    <field name="website_id" groups="website.group_multi_website" optional="hidden"/>
+                    <field name="website_indexed" optional="hidden"/>
+                    <field name="is_published" string="Is Published" optional="hidden"/>
+                    <field name="track" optional="hidden"/>
                     <field name="create_uid" invisible="1"/>
-                    <field name="write_uid"/>
+                    <field name="write_uid" widget="many2one_avatar"/>
                     <field name="write_date"/>
-                    <field name="track"/>
+                    <button name="action_manage_page" title="Manage this page" icon="fa-cog" type="object"/>
+                    <button name="action_optimize_seo" title="Optimize SEO of this page" icon="fa-search"/>
+                    <button name="copy" title="Clone this page" icon="fa-clone" type="object"/>
+                    <button name="unlink" title="Delete this page" icon="fa-trash" type="object"/>
                 </tree>
             </field>
         </record>
