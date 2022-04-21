@@ -3,7 +3,7 @@ odoo.define('web_editor.loader', function (require) {
 
 var ajax = require('web.ajax');
 
-let wysiwygPromise;
+let wysiwygPromise = {};
 
 const exports = {};
 
@@ -19,9 +19,14 @@ exports.loadWysiwyg = loadWysiwyg;
  * @param {object} options The wysiwyg options
  */
 exports.createWysiwyg = async (parent, options, additionnalAssets = []) => {
+    const Wysiwyg = await getWysiwygClass(options, additionnalAssets);
+    return new Wysiwyg(parent, options);
+};
+
+async function getWysiwygClass(options, additionnalAssets = []) {
     const wysiwygAlias = options.wysiwygAlias || 'web_editor.wysiwyg';
-    if (!wysiwygPromise) {
-        wysiwygPromise = new Promise(async (resolve) => {
+    if (!wysiwygPromise[wysiwygAlias]) {
+        wysiwygPromise[wysiwygAlias] = new Promise(async (resolve) => {
             await loadWysiwyg(additionnalAssets);
             // Wait the loading of the service and his dependencies (use string to
             // avoid parsing of require function).
@@ -35,10 +40,10 @@ exports.createWysiwyg = async (parent, options, additionnalAssets = []) => {
             resolve();
         });
     }
-    await wysiwygPromise;
-    const Wysiwyg = odoo.__DEBUG__.services[wysiwygAlias];
-    return new Wysiwyg(parent, options);
-};
+    await wysiwygPromise[wysiwygAlias];
+    return odoo.__DEBUG__.services[wysiwygAlias];
+}
+exports.getWysiwygClass = getWysiwygClass;
 
 exports.loadFromTextarea = async (parent, textarea, options) => {
     var loading = textarea.nextElementSibling;
