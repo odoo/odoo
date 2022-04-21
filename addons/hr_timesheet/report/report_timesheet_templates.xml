@@ -1,15 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="hr_timesheet.timesheet_table">
-        <div class="row" style="margin-top:10px;">
-            <div class="col-lg-12">
+        <t t-set='is_uom_day' t-value='lines._is_timesheet_encode_uom_day()'/>
+        <div class="row mt8">
+            <div class="col-12">
                 <table class="table table-sm">
                     <thead>
                         <tr>
-                            <th class="align-middle"><span>Date</span></th>
-                            <th class="align-middle"><span>Employee</span></th>
-                            <th class="align-middle" t-if="show_project"><span>Project</span></th>
-                            <th class="align-middle" t-if="show_task"><span>Task</span></th>
-                            <th class="align-middle"><span>Description</span></th>
+                            <th class="text-start align-middle"><span>Date</span></th>
+                            <th class="text-start align-middle"><span>Employee</span></th>
+                            <th class="text-start align-middle" t-if="show_project"><span>Project</span></th>
+                            <th class="text-start align-middle" t-if="show_task"><span>Task</span></th>
+                            <th class="text-start align-middle"><span>Description</span></th>
                             <th class="text-end">
                                 <span t-if="is_uom_day">Days Spent</span>
                                 <span t-else="">Hours Spent</span>
@@ -17,24 +19,24 @@
                         </tr>
                    </thead>
                    <tbody>
-                        <tr t-foreach="lines" t-as="line">
-                            <td>
+                        <tr t-foreach="lines" t-as="line" t-att-style="'background-color: #F1F1F1;' if line_index % 2 == 0 else ''">
+                            <td class="align-middle">
                                <span t-field="line.date"/>
                             </td>
-                            <td>
+                            <td class="align-middle">
                                <span t-field="line.user_id.partner_id.name"/>
                                <span t-if="not line.user_id.partner_id.name" t-field="line.employee_id"/>
                             </td>
-                            <td t-if="show_project">
+                            <td t-if="show_project" class="align-middle">
                                 <span t-field="line.project_id.sudo().name"/>
                             </td>
-                            <td t-if="show_task">
-                                <t t-if="line.task_id"><span t-field="line.task_id.sudo().name"/></t>
+                            <td t-if="show_task" class="align-middle">
+                                <span t-if="line.task_id" t-field="line.task_id.sudo().name"/>
                             </td>
-                            <td >
+                            <td class="align-middle">
                                 <span t-field="line.name" t-options="{'widget': 'text'}"/>
                             </td>
-                            <td class="text-end">
+                            <td class="text-end align-middle">
                                 <span t-if="is_uom_day" t-esc="line._get_timesheet_time_day()" t-options="{'widget': 'timesheet_uom'}"/>
                                 <span t-else="" t-field="line.unit_amount" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}"/>
                             </td>
@@ -60,26 +62,62 @@
         </div>
     </template>
 
+    <template id="hr_timesheet.timesheet_project_task_page">
+        <t t-set="show_record" t-value="len(docs.ids) == 1"/>
+        <t t-set="title" t-value="docs._description"/>
+        <t t-set="company" t-value="docs.company_id if len(docs) == 1 else docs.env.company"/>
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <t t-foreach="docs" t-as="doc">
+                        <t t-if="from_project" t-set="show_task"
+                            t-value="bool(doc.timesheet_ids.task_id)"/>
+                        <div class="oe_structure"/>
+                        <div class="row mt8">
+                            <div class="col-12">
+                                <t t-if="doc.allow_timesheets and doc.timesheet_ids">
+                                    <h1 class="my-4">
+                                        <t t-if="not show_record">
+                                            <t t-out="title"/>: <span t-field="doc.name"/>
+                                        </t>
+                                    </h1>
+                                    <h2>
+                                        <span>Timesheets
+                                            <t t-if="show_record">
+                                                for the <t t-out="doc.name"/> <t t-out="title"/>
+                                            </t>
+                                        </span>
+                                    </h2>
+                                    <t t-set='lines' t-value='doc.timesheet_ids'/>
+                                    <t t-call="hr_timesheet.timesheet_table"/>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+
     <template id="report_timesheet">
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
-                <t t-set="company" t-value="docs.mapped('project_id')[0].company_id if len(docs.mapped('project_id')) == 1 else docs.env.company"/>
-                <t t-set="show_task" t-value="bool(docs.mapped('task_id'))"/>
-                <t t-set="show_project" t-value="len(docs.mapped('project_id')) > 1"/>
+                <t t-set="company" t-value="docs.project_id.company_id if len(docs.project_id) == 1 else docs.env.company"/>
+                <t t-set="show_task" t-value="bool(docs.task_id)"/>
+                <t t-set="show_project" t-value="len(docs.project_id) > 1"/>
                 <div class="page">
                     <div class="oe_structure"/>
-                    <div class="row" style="margin-top:10px;">
+                    <div class="row mt8">
                         <div class="col-lg-12">
                             <h2>
-                                <span>Timesheet Entries
-                                    <t t-if="len(docs.mapped('project_id')) == 1">
-                                        for the <t t-esc="docs.mapped('project_id')[0].name"/> Project
+                                <span>Timesheets
+                                    <t t-if="len(docs.project_id) == 1">
+                                        for the <t t-out="docs.project_id.name"/> Project
                                     </t>
                                 </span>
                             </h2>
                         </div>
                     </div>
-                    <t t-set='is_uom_day' t-value='docs._is_timesheet_encode_uom_day()'/>
                     <t t-set='lines' t-value='docs'/>
                     <t t-call="hr_timesheet.timesheet_table"/>
                     <div class="oe_structure"/>
@@ -92,24 +130,22 @@
     <template id="report_timesheet_task">
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
-                <t t-set="company" t-value="docs.mapped('project_id')[0].company_id if len(docs.mapped('project_id')) == 1 else docs.env.company"/>
-                <t t-set="show_task" t-value="len(docs.mapped('task_id')) > 1"/>
+                <t t-set="company" t-value="docs.project_id.company_id if len(docs.project_id) == 1 else docs.env.company"/>
+                <t t-set="show_task" t-value="len(docs.task_id) > 1"/>
                 <t t-set="show_project" t-value="False"/>
                 <div class="page">
                     <div class="oe_structure"/>
-                    <div class="row" style="margin-top:10px;">
-                        <div class="col-lg-12">
+                    <div class="row mt8">
+                        <div class="col-12">
                             <h2>
-                                <span>Timesheet Entries
-                                    <t t-if="len(docs.mapped('task_id')) == 1">
-                                        for <t t-esc="docs.mapped('task_id')[0].name"/>
+                                <span>Timesheets
+                                    <t t-if="len(docs.task_id) == 1">
+                                        for <t t-out="docs.task_id.name"/>
                                     </t>
                                 </span>
                             </h2>
                         </div>
                     </div>
-
-                    <t t-set='is_uom_day' t-value='docs._is_timesheet_encode_uom_day()'/>
                     <t t-set='lines' t-value='docs'/>
                     <t t-call="hr_timesheet.timesheet_table"/>
                     <div class="oe_structure"/>
@@ -119,7 +155,7 @@
     </template>
 
     <record id="timesheet_report" model="ir.actions.report">
-        <field name="name">Timesheet Entries</field>
+        <field name="name">Timesheets</field>
         <field name="model">account.analytic.line</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">hr_timesheet.report_timesheet</field>
@@ -130,41 +166,11 @@
 
     <!-- Project Task Timesheet Report -->
     <template id="report_project_task_timesheet">
-        <t t-call="web.html_container">
-            <t t-call="web.external_layout">
-                <t t-set="show_Task" t-value="len(docs.mapped('id')) == 1"/>
-                <div class="page">
-                    <t t-foreach="docs" t-as="doc">
-                        <div class="oe_structure"/>
-                        <div class="row" style="margin-top:10px;">
-                            <div class="col-lg-12">
-                                <t t-if="doc.allow_timesheets and doc.timesheet_ids">
-                                    <h1 class="mt-4 mb-4">
-                                        <t t-if="not show_Task">
-                                            Task: <span t-field="doc.name"/>
-                                        </t>
-                                    </h1>
-                                    <h2>
-                                        <span>Timesheet Entries
-                                            <t t-if="show_Task">
-                                                for the <t t-esc="doc.name"/> Task
-                                            </t>
-                                        </span>
-                                    </h2>
-                                    <t t-set='is_uom_day' t-value='doc.encode_uom_in_days'/>
-                                    <t t-set='lines' t-value='doc.timesheet_ids'/>
-                                    <t t-call="hr_timesheet.timesheet_table"/>
-                                </t>
-                            </div>
-                        </div>
-                    </t>
-                </div>
-            </t>
-        </t>
+        <t t-call="hr_timesheet.timesheet_project_task_page"/>
     </template>
 
     <record id="timesheet_report_task" model="ir.actions.report">
-        <field name="name">Timesheet Entries</field>
+        <field name="name">Timesheets</field>
         <field name="model">project.task</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">hr_timesheet.report_project_task_timesheet</field>
@@ -175,36 +181,12 @@
 
     <!-- Project Timesheet Report -->
     <template id="report_timesheet_project">
-        <t t-call="web.html_container">
-            <t t-call="web.external_layout">
-                <t t-set="company" t-value="docs.company_id[0] if len(docs) == 1 else docs.env.company"/>
-                <t t-set="show_task" t-value="bool(docs.task_ids)"/>
-                <t t-set="show_project" t-value="len(docs) > 1"/>
-
-                <div class="page">
-                    <div class="oe_structure"/>
-                    <div class="row" style="margin-top:10px;">
-                        <div class="col-lg-12">
-                            <h2>
-                                <span>Timesheet Entries
-                                    <t t-if="not show_project">
-                                        for the <t t-esc="docs.name"/> Project
-                                    </t>
-                                </span>
-                            </h2>
-                        </div>
-                    </div>
-                    <t t-set="is_uom_day" t-value="docs.timesheet_ids and docs.timesheet_ids[0]._is_timesheet_encode_uom_day()"/>
-                    <t t-set="lines" t-value="docs.timesheet_ids"/>
-                    <t t-call="hr_timesheet.timesheet_table"/>
-                    <div class="oe_structure"/>
-                </div>
-            </t>
-        </t>
+        <t t-set="from_project" t-value="True"/>
+        <t t-call="hr_timesheet.timesheet_project_task_page"/>
     </template>
 
     <record id="timesheet_report_project" model="ir.actions.report">
-        <field name="name">Timesheet Entries</field>
+        <field name="name">Timesheets</field>
         <field name="model">project.project</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">hr_timesheet.report_timesheet_project</field>
@@ -213,7 +195,7 @@
     </record>
 
     <record id="timesheet_report_task_timesheets" model="ir.actions.report">
-        <field name="name">Timesheet Entries</field>
+        <field name="name">Timesheets</field>
         <field name="model">account.analytic.line</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">hr_timesheet.report_timesheet_task</field>
