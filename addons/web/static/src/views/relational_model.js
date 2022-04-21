@@ -1234,7 +1234,6 @@ class DynamicList extends DataPoint {
     exportState() {
         return {
             limit: this.limit,
-            offset: this.offset,
             loadedCount: this.records.length,
             previousParams: this.currentParams,
         };
@@ -1544,6 +1543,10 @@ export class DynamicGroupList extends DynamicList {
         this.isGrouped = true;
         this.quickCreateInfo = null; // Lazy loaded;
         this.expand = params.expand;
+        this.limitByGroup = this.limit;
+        this.limit =
+            params.groupsLimit ||
+            (this.expand ? this.constructor.DEFAULT_LOAD_LIMIT : this.constructor.DEFAULT_LIMIT);
     }
 
     // -------------------------------------------------------------------------
@@ -1558,7 +1561,7 @@ export class DynamicGroupList extends DynamicList {
             domain: this.domain,
             groupBy: this.groupBy.slice(1),
             orderBy: this.orderBy,
-            limit: this.limit,
+            limit: this.limitByGroup,
             groupByInfo: this.groupByInfo,
             rawContext: this.rawContext,
             onRecordWillSwitchMode: this.onRecordWillSwitchMode,
@@ -1681,7 +1684,9 @@ export class DynamicGroupList extends DynamicList {
         return false;
     }
 
-    async load() {
+    async load(params = {}) {
+        this.limit = params.limit || this.limit;
+        this.offset = params.offset || this.offset;
         /** @type {[Group, number][]} */
         const previousGroups = this.groups.map((g, i) => [g, i]);
         this.groups = await this._loadGroups();
@@ -1740,7 +1745,13 @@ export class DynamicGroupList extends DynamicList {
             this.domain,
             this.fieldNames,
             this.groupBy,
-            { orderby, lazy: true, expand: this.expand }
+            {
+                orderby,
+                lazy: true,
+                expand: this.expand,
+                offset: this.offset,
+                limit: this.limit,
+            }
         );
         this.count = length;
 
@@ -2714,6 +2725,7 @@ export class RelationalModel extends Model {
             this.rootParams.openGroupsByDefault = params.openGroupsByDefault || false;
             this.rootParams.limit = params.limit;
             this.rootParams.expand = params.expand;
+            this.rootParams.groupsLimit = params.groupsLimit;
         }
 
         // this.db = Object.create(null);

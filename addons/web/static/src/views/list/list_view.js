@@ -83,7 +83,7 @@ export class ListArchParser extends XMLParser {
         const creates = [];
         const groupListArchParser = new GroupListArchParser();
         let buttonGroup;
-        let limit;
+        const treeAttr = {};
         let nextId = 0;
         this.visitXML(arch, (node) => {
             if (node.tagName !== "button") {
@@ -154,7 +154,9 @@ export class ListArchParser extends XMLParser {
                 });
             } else if (node.tagName === "tree") {
                 const limitAttr = node.getAttribute("limit");
-                limit = limitAttr && parseInt(limitAttr, 10);
+                treeAttr.limit = limitAttr && parseInt(limitAttr, 10);
+                const groupsLimitAttr = node.getAttribute("groups_limit");
+                treeAttr.groupsLimit = groupsLimitAttr && parseInt(groupsLimitAttr, 10);
             }
         });
 
@@ -163,7 +165,6 @@ export class ListArchParser extends XMLParser {
             creates,
             editable,
             expand,
-            limit,
             headerButtons,
             activeFields,
             columns,
@@ -171,6 +172,7 @@ export class ListArchParser extends XMLParser {
             defaultOrder,
             decorations,
             __rawArch: arch,
+            ...treeAttr,
         };
     }
 }
@@ -196,6 +198,7 @@ export class ListView extends Component {
             limit: this.archInfo.limit || this.props.limit,
             defaultOrder: this.archInfo.defaultOrder,
             expand: this.archInfo.expand,
+            groupsLimit: this.archInfo.groupsLimit,
         });
         useViewButtons(this.model);
 
@@ -216,14 +219,16 @@ export class ListView extends Component {
         });
 
         usePager(() => {
+            const list = this.model.root;
             return {
-                offset: this.model.root.offset,
-                limit: Math.max(this.model.root.limit, this.model.root.records.length),
-                total: this.model.root.count,
+                offset: list.offset,
+                limit: Math.max(
+                    list.limit,
+                    list.isGrouped ? list.groups.length : list.records.length
+                ),
+                total: list.count,
                 onUpdate: async ({ offset, limit }) => {
-                    this.model.root.offset = offset;
-                    this.model.root.limit = limit;
-                    await this.model.root.load();
+                    await list.load({ limit, offset });
                     this.render(true); // FIXME WOWL reactivity
                 },
             };

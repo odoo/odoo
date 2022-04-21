@@ -6591,26 +6591,38 @@ QUnit.module("Views", (hooks) => {
             });
             await clickEdit(target);
             assert.deepEqual(
-                [...target.querySelectorAll(".o_field_widget[name=o2m] .o_data_row .o_data_cell:first-child")].map(el => el.innerText),
-                [ "Value 1", "" ],
-            )
+                [
+                    ...target.querySelectorAll(
+                        ".o_field_widget[name=o2m] .o_data_row .o_data_cell:first-child"
+                    ),
+                ].map((el) => el.innerText),
+                ["Value 1", ""]
+            );
 
             // Make a change in the list to trigger the onchange
-            await click(target.querySelector(".o_field_widget[name=o2m] .o_data_row .o_data_cell:nth-child(2)"));
+            await click(
+                target.querySelector(
+                    ".o_field_widget[name=o2m] .o_data_row .o_data_cell:nth-child(2)"
+                )
+            );
             await editSelect(
-                target, '.o_field_widget[name=o2m] .o_data_row [name="stage"] select',
+                target,
+                '.o_field_widget[name=o2m] .o_data_row [name="stage"] select',
                 '"open"'
             );
             assert.deepEqual(
-                [...target.querySelectorAll(".o_field_widget[name=o2m] .o_data_row .o_data_cell:first-child")].map(el => el.innerText),
-                [ "", "Value 2" ],
-            )
+                [
+                    ...target.querySelectorAll(
+                        ".o_field_widget[name=o2m] .o_data_row .o_data_cell:first-child"
+                    ),
+                ].map((el) => el.innerText),
+                ["", "Value 2"]
+            );
             assert.strictEqual(
                 target.querySelector(".o_data_row:nth-child(2)").textContent,
                 "Value 2Draft",
                 "the onchange should have been applied"
             );
-
         }
     );
 
@@ -6629,7 +6641,7 @@ QUnit.module("Views", (hooks) => {
                 "</tree>",
         });
         patchWithCleanup(list.env.services.notification, {
-            add: (message, {type}) => {
+            add: (message, { type }) => {
                 if (type === "danger") {
                     warnings++;
                 }
@@ -6637,28 +6649,25 @@ QUnit.module("Views", (hooks) => {
         });
 
         // Start first line edition
-        const rows = target.querySelectorAll(".o_data_row")
-        const firstRowFoo = rows[0].querySelector(".o_data_cell [name=foo]")
+        const rows = target.querySelectorAll(".o_data_row");
+        const firstRowFoo = rows[0].querySelector(".o_data_cell [name=foo]");
         await click(firstRowFoo);
 
         // Remove required foo field value
         await editInput(firstRowFoo, "input", "");
 
         // Try starting other line edition
-        const secondRowFoo = rows[1].querySelector(".o_data_cell [name=foo]")
+        const secondRowFoo = rows[1].querySelector(".o_data_cell [name=foo]");
         await click(secondRowFoo);
         assert.hasClass(
             rows[0],
             "o_selected_row",
             "first line should still be in edition as invalid"
         );
+        assert.containsOnce(target, ".o_selected_row", "no other line should be in edition");
         assert.containsOnce(
-            target,
-            ".o_selected_row",
-            "no other line should be in edition"
-        );
-        assert.containsOnce(
-            rows[0], ".o_field_invalid input",
+            rows[0],
+            ".o_field_invalid input",
             "the required field should be marked as invalid"
         );
         assert.strictEqual(warnings, 1, "a warning should have been displayed");
@@ -6667,26 +6676,27 @@ QUnit.module("Views", (hooks) => {
     QUnit.skipWOWL("open a virtual id", async function (assert) {
         assert.expect(1);
 
-        await makeView({
+        const list = await makeView({
             type: "list",
-            model: "event",
+            resModel: "event",
             serverData,
             arch: '<tree><field name="name"/></tree>',
         });
-
-        testUtils.mock.intercept(target, "switch_view", function (event) {
-            assert.deepEqual(
-                _.pick(event.data, "mode", "model", "res_id", "view_type"),
-                {
-                    mode: "readonly",
-                    model: "event",
-                    res_id: "2-20170808020000",
-                    view_type: "form",
-                },
-                "should trigger a switch_view event to the form view for the record virtual id"
-            );
+        patchWithCleanup(list.env.services.action, {
+            switchView: async (event) => {
+                assert.deepEqual(
+                    _.pick(event.data, "mode", "model", "res_id", "view_type"),
+                    {
+                        mode: "readonly",
+                        model: "event",
+                        res_id: "2-20170808020000",
+                        view_type: "form",
+                    },
+                    "should trigger a switch_view event to the form view for the record virtual id"
+                );
+            },
         });
-        click($(target).find("td:contains(virtual)"));
+        await click(target.querySelector(".o_data_row .o_data_cell"));
     });
 
     QUnit.skipWOWL("pressing enter on last line of editable list view", async function (assert) {
@@ -7831,46 +7841,32 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("numbers in list are right-aligned", async function (assert) {
-        assert.expect(2);
-
-        var currencies = {};
-        _.each(serverData.models.res_currency.records, function (currency) {
+    QUnit.test("numbers in list are right-aligned", async function (assert) {
+        const currencies = {};
+        serverData.models.res_currency.records.forEach((currency) => {
             currencies[currency.id] = currency;
         });
         await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch:
-                '<tree editable="top">' +
-                '<field name="foo"/>' +
-                '<field name="qux"/>' +
-                '<field name="amount" widget="monetary"/>' +
-                '<field name="currency_id" invisible="1"/>' +
-                "</tree>",
-            session: {
-                currencies: currencies,
-            },
+            arch:`
+                <tree editable="top">
+                    <field name="foo"/>
+                    <field name="qux"/>
+                    <field name="amount" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                </tree>`,
         });
-
-        var nbCellRight = _.filter(
-            $(target).find(".o_data_row:first > .o_data_cell"),
-            function (el) {
-                var style = window.getComputedStyle(el);
-                return style.textAlign === "right";
-            }
+        patchWithCleanup(session, { currencies });
+        const nbCellRight = [...target.querySelectorAll(".o_data_row:first-child > .o_data_cell")].filter(
+            (el) => window.getComputedStyle(el).textAlign === "right"
         ).length;
         assert.strictEqual(nbCellRight, 2, "there should be two right-aligned cells");
 
-        await click($(target).find(".o_data_cell:first"));
-
-        var nbInputRight = _.filter(
-            $(target).find(".o_data_row:first > .o_data_cell input"),
-            function (el) {
-                var style = window.getComputedStyle(el);
-                return style.textAlign === "right";
-            }
+        await click(target.querySelector(".o_data_cell"));
+        const nbInputRight = [...target.querySelectorAll(".o_data_row:first-child > .o_data_cell input")].filter(
+            (el) => window.getComputedStyle(el).textAlign === "right"
         ).length;
         assert.strictEqual(nbInputRight, 2, "there should be two right-aligned input");
     });
@@ -7931,9 +7927,8 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("field values are escaped", async function (assert) {
-        assert.expect(1);
-        var value = "<script>throw Error();</script>";
+    QUnit.test("field values are escaped", async function (assert) {
+        const value = "<script>throw Error();</script>";
 
         serverData.models.foo.records[0].foo = value;
 
@@ -7945,7 +7940,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            $(target).find(".o_data_cell:first").text(),
+            target.querySelector(".o_data_cell").textContent,
             value,
             "value should have been escaped"
         );
@@ -8007,26 +8002,20 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("field with password attribute", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("field with password attribute", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
             serverData,
             arch: '<tree><field name="foo" password="True"/></tree>',
         });
-
-        assert.strictEqual(
-            $(target).find("td.o_data_cell:eq(0)").text(),
+        assert.deepEqual([...target.querySelectorAll(".o_data_row .o_data_cell")].map(el => el.textContent),[
             "***",
-            "should display string as password"
-        );
-        assert.strictEqual(
-            $(target).find("td.o_data_cell:eq(1)").text(),
             "****",
-            "should display string as password"
-        );
+            "****",
+            "****"
+          ])
+
     });
 
     QUnit.skipWOWL("list with handle widget", async function (assert) {
@@ -11206,9 +11195,7 @@ QUnit.module("Views", (hooks) => {
         delete widgetRegistry.map.asyncWidget;
     });
 
-    QUnit.skipWOWL("grouped lists with groups_limit attribute", async function (assert) {
-        assert.expect(8);
-
+    QUnit.test("grouped lists with groups_limit attribute", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
@@ -11217,7 +11204,6 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["int_field"],
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
-                return this._super.apply(this, arguments);
             },
         });
 
@@ -11225,20 +11211,18 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_data_row");
         assert.containsOnce(target, ".o_pager"); // has a pager
 
-        await testUtils.controlPanel.pagerNext(target); // switch to page 2
-
+        await pagerNext(target); // switch to page 2
         assert.containsN(target, ".o_group_header", 1); // page 2
         assert.containsNone(target, ".o_data_row");
 
         assert.verifySteps([
+            "get_views",
             "web_read_group", // read_group page 1
             "web_read_group", // read_group page 2
         ]);
     });
 
-    QUnit.skipWOWL("grouped list with expand attribute", async function (assert) {
-        assert.expect(5);
-
+    QUnit.test("grouped list with expand attribute", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
@@ -11247,23 +11231,20 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["bar"],
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
-                return this._super.apply(this, arguments);
             },
         });
 
         assert.containsN(target, ".o_group_header", 2);
         assert.containsN(target, ".o_data_row", 4);
-        assert.strictEqual($(target).find(".o_data_cell").text(), "yopblipgnapblip");
+        assert.deepEqual([...target.querySelectorAll(".o_data_cell")].map(el => el.textContent), ["blip", "yop", "blip", "gnap"]);
 
         assert.verifySteps([
-            "web_read_group", // records are fetched alongside groups
+            "get_views", "web_read_group", // records are fetched alongside groups
         ]);
     });
 
-    QUnit.skipWOWL("grouped list (two levels) with expand attribute", async function (assert) {
+    QUnit.test("grouped list (two levels) with expand attribute", async function (assert) {
         // the expand attribute only opens the first level groups
-        assert.expect(5);
-
         await makeView({
             type: "list",
             resModel: "foo",
@@ -11272,20 +11253,20 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["bar", "int_field"],
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
-                return this._super.apply(this, arguments);
             },
         });
 
         assert.containsN(target, ".o_group_header", 6);
 
         assert.verifySteps([
+            "get_views",
             "web_read_group", // global
             "web_read_group", // first group
             "web_read_group", // second group
         ]);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "grouped lists with expand attribute and a lot of groups",
         async function (assert) {
             assert.expect(10);
@@ -11304,20 +11285,16 @@ QUnit.module("Views", (hooks) => {
                     if (args.method === "web_read_group") {
                         assert.step(args.method);
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
 
             assert.containsN(target, ".o_group_header", 10); // page 1
-            assert.containsN(target, ".o_data_row", 12); // two groups contains two records
+            assert.containsN(target, ".o_data_row", 10); // two groups contains two records
             assert.containsOnce(target, ".o_pager"); // has a pager
 
             assert.deepEqual(
                 [...target.querySelectorAll(".o_group_name")].map((el) => el.innerText),
                 [
-                    "10 (2)",
-                    "9 (2)",
-                    "17 (1)",
                     "-4 (1)",
                     "0 (1)",
                     "1 (1)",
@@ -11325,17 +11302,28 @@ QUnit.module("Views", (hooks) => {
                     "3 (1)",
                     "4 (1)",
                     "5 (1)",
-                ]
+                    "6 (1)",
+                    "7 (1)",
+                    "8 (1)"
+                  ]
             );
-
-            await testUtils.controlPanel.pagerNext(target); // switch to page 2
+            await pagerNext(target); // switch to page 2
 
             assert.containsN(target, ".o_group_header", 7); // page 2
-            assert.containsN(target, ".o_data_row", 7);
+            assert.containsN(target, ".o_data_row", 9); // two groups contains two records
+
 
             assert.deepEqual(
                 [...target.querySelectorAll(".o_group_name")].map((el) => el.innerText),
-                ["6 (1)", "7 (1)", "8 (1)", "11 (1)", "12 (1)", "13 (1)", "14 (1)"]
+                [
+                    "9 (2)",
+                    "10 (2)",
+                    "11 (1)",
+                    "12 (1)",
+                    "13 (1)",
+                    "14 (1)",
+                    "17 (1)"
+                  ]
             );
 
             assert.verifySteps([
@@ -11345,9 +11333,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("add filter in a grouped list with a pager", async function (assert) {
-        assert.expect(11);
-
+    QUnit.test("add filter in a grouped list with a pager", async function (assert) {
         serverData.actions = {
             11: {
                 id: 11,
@@ -11356,9 +11342,7 @@ QUnit.module("Views", (hooks) => {
                 type: "ir.actions.act_window",
                 views: [[3, "list"]],
                 search_view_id: [9, "search"],
-                flags: {
-                    context: { group_by: ["int_field"] },
-                },
+                context: { group_by: ["int_field"] },
             },
         };
 
@@ -11378,25 +11362,22 @@ QUnit.module("Views", (hooks) => {
 
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 11);
-
         assert.containsOnce(target, ".o_list_view");
-        assert.strictEqual($(target).find(".o_pager_counter").text().trim(), "1-3 / 4");
+        assert.deepEqual(getPagerValue(target), [1 , 3]);
         assert.containsN(target, ".o_group_header", 3); // page 1
 
-        await click($(target).find(".o_pager_next")); // switch to page 2
+        await pagerNext(target);
         await legacyExtraNextTick();
-
-        assert.strictEqual($(target).find(".o_pager_counter").text().trim(), "4-4 / 4");
+        assert.deepEqual(getPagerValue(target), [4, 4]);
         assert.containsN(target, ".o_group_header", 1); // page 2
 
         // toggle a filter -> there should be only one group left (on page 1)
-        await cpHelpers.toggleFilterMenu(target);
-        await cpHelpers.toggleMenuItem(target, 0);
-
-        assert.strictEqual($(target).find(".o_pager_counter").text().trim(), "1-1 / 1");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, 0);
+        assert.deepEqual(getPagerValue(target), [1 , 1]);
         assert.containsN(target, ".o_group_header", 1); // page 1
 
-        assert.verifySteps(["[], undefined", "[], 3", '[["bar","=",false]], undefined']);
+        assert.verifySteps(["[], 0", "[], 3", '[["bar","=",false]], 0']);
     });
 
     QUnit.skipWOWL("editable grouped lists", async function (assert) {
