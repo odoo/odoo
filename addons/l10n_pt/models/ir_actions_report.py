@@ -10,6 +10,7 @@ class IrActionsReport(models.Model):
             return super()._render_qweb_pdf(res_ids=res_ids, data=data, run_script=run_script)
         run_script = """
             var rows = document.querySelectorAll('tr');
+            var amounts = document.querySelectorAll('span.oe_currency_value');
             
             //For each row, add the distance between beginning and the bottom of the row as an attribute
             for (var i = 1; i < rows.length; i++) {
@@ -34,7 +35,10 @@ class IrActionsReport(models.Model):
             for (var i = 1; i < rows.length; i++) {
                 var row = rows[i];
                 var bottom = row.getAttribute('data-bottom');
-                const amount = document.querySelectorAll('span.oe_currency_value')[i-1].innerText;
+                var amount = "0";
+                if (amounts[i-1] != undefined){ //i-1because we skip the header
+                    amount = amounts[i-1].innerText;
+                }
                 carrying += parseFloat(amount.split(",").join(""));
                 if ( (nb_pages == 0 && bottom > first_page_height + thead_bottom) ||
                      (nb_pages > 0  && bottom - nb_pages * page_height > page_height + first_page_height) ) { 
