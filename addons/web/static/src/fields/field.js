@@ -276,7 +276,7 @@ Field.parseFieldNode = function (node, fields, viewType) {
             fieldInfo.relatedFields = field.relatedFields;
         }
         fieldInfo.viewMode =
-            node.getAttribute("mode") ||
+            (node.getAttribute("mode") === "tree" ? "list" : node.getAttribute("mode")) ||
             Object.keys(views).find((v) => ["list", "kanban"].includes(v));
 
         const fieldsToFetch = { ...fieldInfo.FieldComponent.fieldsToFetch }; // should become an array?

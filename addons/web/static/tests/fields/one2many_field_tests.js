@@ -1,6 +1,9 @@
 /** @odoo-module **/
 
+import AbstractField from "web.AbstractField";
 import { browser } from "@web/core/browser/browser";
+import BasicModel from "web.BasicModel";
+import fieldRegistry from "web.field_registry";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import {
     addRow,
@@ -28,9 +31,6 @@ let target;
 // WOWL remove after adapting tests
 let testUtils,
     delay,
-    AbstractField,
-    BasicModel,
-    fieldRegistry,
     KanbanRecord,
     fieldUtils,
     relationalFields,
@@ -4744,14 +4744,15 @@ QUnit.module("Fields", (hooks) => {
         await addRow(target);
 
         // write in the many2one field, value = 37 (xphone)
-        await testUtils.fields.many2one.clickOpenDropdown("product_id");
-        await testUtils.fields.many2one.clickHighlightedItem("product_id");
+        await clickOpenM2ODropdown(target, "product_id");
+        await clickM2OHighlightedItem(target, "product_id");
 
         // write in the integer field
-        await editInput(target, ".modal .modal-body input.o_field_widget", "123");
+        await editInput(target, '.modal .modal-body div[name="int_field"] input', "123");
 
         // save and close
         await click(target.querySelector(".modal .modal-footer button"));
+
         assert.containsOnce(target, ".o_data_cell[title='xphone']");
 
         // reopen the record in form view
@@ -4773,8 +4774,8 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // write in the many2one field, value = 41 (xpad)
-        await testUtils.fields.many2one.clickOpenDropdown("product_id");
-        testUtils.fields.many2one.clickItem("product_id", "xpad");
+        await clickOpenM2ODropdown(target, "product_id");
+        await click(target.querySelectorAll('div[name="product_id"] .o_input_dropdown li')[1]);
 
         // save and close
         await click(target.querySelector(".modal .modal-footer button"));
@@ -5158,8 +5159,8 @@ QUnit.module("Fields", (hooks) => {
             "tototo"
         );
         await testUtils.fields.editInput($('.modal input.o_field_widget[name="turtle_int"]'), 50);
-        await testUtils.fields.many2one.clickOpenDropdown("product_id");
-        await testUtils.fields.many2one.clickHighlightedItem("product_id");
+        await clickOpenM2ODropdown(target, "product_id");
+        await clickM2OHighlightedItem(target, "product_id");
 
         await click($(".modal-footer button:contains(&):first"));
 
@@ -5251,8 +5252,8 @@ QUnit.module("Fields", (hooks) => {
 
         // edit the first one2many record
         await click(form.$(".o_data_row:first"));
-        await testUtils.fields.many2one.clickOpenDropdown("product_id");
-        await testUtils.fields.many2one.clickHighlightedItem("product_id");
+        await clickOpenM2ODropdown(target, "product_id");
+        await clickM2OHighlightedItem(target, "product_id");
         await click($(".modal-footer button:first"));
 
         await click($(".o_form_button_save"));
@@ -5265,8 +5266,8 @@ QUnit.module("Fields", (hooks) => {
 
         // edit the second one2many record
         await click(form.$(".o_data_row:eq(1)"));
-        await testUtils.fields.many2one.clickOpenDropdown("product_id");
-        await testUtils.fields.many2one.clickHighlightedItem("product_id");
+        await clickOpenM2ODropdown(target, "product_id");
+        await clickM2OHighlightedItem(target, "product_id");
         await click($(".modal-footer button:first"));
 
         await click($(".o_form_button_save"));
@@ -5592,7 +5593,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            testUtils.mock.patch(BasicModel, {
+            patchWithCleanup(BasicModel.prototype, {
                 _fetchSpecialDataForMyWidget() {
                     assert.step("_fetchSpecialDataForMyWidget");
                     return Promise.resolve();
@@ -5604,7 +5605,7 @@ QUnit.module("Fields", (hooks) => {
             });
             fieldRegistry.add("specialWidget", MyWidget);
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -5634,19 +5635,19 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
             });
 
-            await click(form.$(".oe_kanban_action:eq(0)"));
-            assert.containsOnce(document.body, ".modal .my_widget", "should add our custom widget");
+            await click(target.querySelector(".oe_kanban_action"));
+            assert.containsOnce(target, ".modal .my_widget");
             assert.verifySteps(["_fetchSpecialDataForMyWidget"]);
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many list with onchange and domain widget (widget using SpecialData)",
         async function (assert) {
             // TODO: rename this test: it no longer uses the DomainField
             assert.expect(4);
 
-            testUtils.mock.patch(BasicModel, {
+            patchWithCleanup(BasicModel.prototype, {
                 _fetchSpecialDataForMyWidget() {
                     assert.step("_fetchSpecialDataForMyWidget");
                     return Promise.resolve();
@@ -5680,7 +5681,7 @@ QUnit.module("Fields", (hooks) => {
                     ];
                 },
             };
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -5702,22 +5703,23 @@ QUnit.module("Fields", (hooks) => {
                         </group>
                     </form>`,
                 resId: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
             });
 
-            await click(form.$(".o_field_one2many .o_field_x2many_list_row_add a"));
-            assert.strictEqual($(".modal").length, 1, "form view dialog should be opened");
-            await click($(".modal-footer button:first"));
+            await clickEdit(target);
 
-            assert.strictEqual(
-                form.$(".o_field_one2many tbody tr:first").text(),
-                "coucouhas changed42",
+            await click(target.querySelector(".o_field_one2many .o_field_x2many_list_row_add a"));
+            assert.containsOnce(target, ".modal");
+            await click(target.querySelector(".modal-footer button"));
+
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_field_one2many tbody tr .o_data_cell")].map(
+                    (el) => el.innerText
+                ),
+                ["coucou", "has changed", "42"],
                 "the onchange should create one new record and remove the existing"
             );
 
-            await click(form.$(".o_field_one2many .o_legacy_list_view tbody tr:eq(0) td:first"));
+            await click(target.querySelector(".o_field_one2many .o_list_renderer tbody tr td"));
 
             await clickSave(target);
             assert.verifySteps(
@@ -5727,7 +5729,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("one2many without inline tree arch", async function (assert) {
+    QUnit.test("one2many without inline tree arch", async function (assert) {
         assert.expect(2);
 
         serverData.models.partner.records[0].turtles = [2, 3];
@@ -5758,20 +5760,20 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(
             target,
-            '.o_field_widget[name="turtles"] .o_list_view',
+            '.o_field_widget[name="turtles"] .o_list_renderer',
             "should display one2many list view in the modal"
         );
 
         assert.containsN(target, ".o_data_row", 2, "should display the 2 turtles");
     });
 
-    QUnit.skipWOWL("many2one and many2many in one2many", async function (assert) {
-        assert.expect(11);
+    QUnit.test("many2one and many2many in one2many", async function (assert) {
+        assert.expect(13);
 
         serverData.models.turtle.records[1].product_id = 37;
         serverData.models.partner.records[0].turtles = [2, 3];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -5796,7 +5798,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
             mockRPC(route, args) {
                 if (args.method === "write") {
-                    var commands = args.args[1].turtles;
+                    const commands = args.args[1].turtles;
                     assert.strictEqual(commands.length, 2, "should have generated 2 commands");
                     assert.deepEqual(
                         commands[0],
@@ -5816,58 +5818,80 @@ QUnit.module("Fields", (hooks) => {
                         "generated commands should be correct"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
-        assert.containsN(form, ".o_data_row", 2, "should display the 2 turtles");
+        assert.containsN(target, ".o_data_row", 2);
         assert.strictEqual(
-            form.$(".o_data_row:first td:nth(1)").text(),
+            target.querySelector('.o_data_row td div[name="product_id"]').innerText,
             "xphone",
             "should correctly display the m2o"
         );
-        assert.strictEqual(
-            form.$(".o_data_row:first td:nth(2) .badge").length,
+        assert.containsN(
+            target,
+            '.o_data_row td div[name="partner_ids"] .badge',
             2,
             "m2m should contain two tags"
         );
         assert.strictEqual(
-            form.$(".o_data_row:first td:nth(2) .badge:first span .o_tag_badge_text").text(),
+            target.querySelector('.o_data_row td div[name="partner_ids"] .badge .o_tag_badge_text')
+                .innerText,
             "second record",
             "m2m values should have been correctly fetched"
         );
 
-        await click(form.$(".o_data_row:first"));
+        await click(target.querySelector(".o_data_row td"));
+
+        assert.strictEqual(target.querySelector(".modal .o_field_widget").innerText, "xphone");
+
+        await click(target.querySelector(".modal-footer button"));
+
+        await clickEdit(target);
+
         assert.containsOnce(
-            form,
-            ".o_form_view.o_form_editable",
+            target,
+            ".o_form_view .o_form_editable",
             "should toggle form mode to edit"
         );
 
         // edit the m2m of first row
-        await click(form.$(".o_list_view tbody td:first()"));
+        await click(target.querySelector(".o_list_renderer tbody td"));
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_selected_row .o_field_many2many_tags .badge")].map(
+                (el) => el.innerText
+            ),
+            ["second record", "aaa"]
+        );
+
         // remove a tag
-        await click(form.$(".o_field_many2manytags .badge:contains(aaa) .o_delete"));
-        assert.strictEqual(
-            form.$(".o_selected_row .o_field_many2manytags .o_badge_text:contains(aaa)").length,
-            0,
-            "tag should have been correctly removed"
+        await click(
+            target.querySelectorAll(".o_selected_row .o_field_many2many_tags .badge .o_delete")[1]
+        );
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_selected_row .o_field_many2many_tags .badge")].map(
+                (el) => el.innerText
+            ),
+            ["second record"]
         );
         // add a tag
-        await testUtils.fields.many2one.clickOpenDropdown("partner_ids");
-        await testUtils.fields.many2one.clickHighlightedItem("partner_ids");
-        assert.strictEqual(
-            form.$(".o_selected_row .o_field_many2manytags .o_badge_text:contains(first record)")
-                .length,
-            1,
-            "tag should have been correctly added"
+        await click(target.querySelector('div[name="partner_ids"] input'));
+        await click(target.querySelector('div[name="partner_ids"] .o_input_dropdown li')); // xpad
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_selected_row .o_field_many2many_tags .badge")].map(
+                (el) => el.innerText
+            ),
+            ["second record", "first record"]
         );
 
         // edit the m2o of first row
-        await testUtils.fields.many2one.clickOpenDropdown("product_id");
-        await testUtils.fields.many2one.clickItem("product_id", "xpad");
+        await clickOpenM2ODropdown(target, "product_id");
+        await click(target.querySelectorAll('div[name="product_id"] .o_input_dropdown li')[1]); // xpad
+
         assert.strictEqual(
-            form.$(".o_selected_row .o_field_many2one:first input").val(),
+            target.querySelector(".o_selected_row .o_field_many2one input").value,
             "xpad",
             "m2o value should have been updated"
         );
@@ -6241,8 +6265,8 @@ QUnit.module("Fields", (hooks) => {
 
             await click(form.$(".o_data_row:first")); // edit first record
 
-            await testUtils.fields.many2one.clickOpenDropdown("partner_ids");
-            await testUtils.fields.many2one.clickHighlightedItem("partner_ids");
+            await clickOpenM2ODropdown(target, "partner_ids");
+            await clickM2OHighlightedItem(target, "partner_ids");
 
             // add a many2many tag and save
             await click($(".modal .o_field_many2manytags input"));
@@ -7169,8 +7193,8 @@ QUnit.module("Fields", (hooks) => {
             assert.verifySteps([], "no onchange should have been applied");
 
             // fill partner_ids field with a tag (all required fields will then be set)
-            await testUtils.fields.many2one.clickOpenDropdown("partner_ids");
-            await testUtils.fields.many2one.clickHighlightedItem("partner_ids");
+            await clickOpenM2ODropdown(target, "partner_ids");
+            await clickM2OHighlightedItem(target, "partner_ids");
             assert.strictEqual(
                 form.$('.o_field_widget[name="int_field"]').val(),
                 "1",
@@ -7319,8 +7343,8 @@ QUnit.module("Fields", (hooks) => {
                 ".o_data_row",
                 "should have created the first row immediately"
             );
-            await testUtils.fields.many2one.clickOpenDropdown("turtle_trululu");
-            await testUtils.fields.many2one.clickHighlightedItem("turtle_trululu");
+            await clickOpenM2ODropdown(target, "turtle_trululu");
+            await clickM2OHighlightedItem(target, "turtle_trululu");
 
             // try to add a second line and check that it is correctly waiting
             // for the onchange to return
@@ -8079,8 +8103,8 @@ QUnit.module("Fields", (hooks) => {
                 "qux field should have the focus"
             );
 
-            await testUtils.fields.many2one.clickOpenDropdown("trululu");
-            await testUtils.fields.many2one.clickHighlightedItem("trululu");
+            await clickOpenM2ODropdown(target, "trululu");
+            await clickM2OHighlightedItem(target, "trululu");
             assert.strictEqual(
                 form.$(".o_field_many2one input").val(),
                 "first record",
@@ -9834,7 +9858,6 @@ QUnit.module("Fields", (hooks) => {
         "column_invisible attrs on a button in a one2many list",
         async function (assert) {
             assert.expect(6);
-            patchWithCleanup(browser, { setTimeout: (fn) => fn() });
             serverData.models.partner.records[0].p = [2];
             await makeView({
                 type: "form",
@@ -9908,8 +9931,8 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(form, ".some_button3");
         assert.containsNone(form, ".some_button4");
 
-        await testUtils.fields.many2one.clickOpenDropdown("product_id");
-        await testUtils.fields.many2one.clickHighlightedItem("product_id");
+        await clickOpenM2ODropdown(target, "product_id");
+        await clickM2OHighlightedItem(target, "product_id");
 
         assert.strictEqual(form.$(".o_field_widget[name=product_id] input").val(), "xphone");
         assert.strictEqual(form.$(".o_field_widget[name=trululu] input").val(), "aaa");
@@ -11236,7 +11259,7 @@ QUnit.module("Fields", (hooks) => {
 
         await clickEdit(target);
 
-        await testUtils.fields.many2one.clickOpenDropdown("trululu");
+        await clickOpenM2ODropdown(target, "trululu");
         await testUtils.fields.many2one.clickItem("trululu", "Search");
         await click($(".modal .o_pager_next"));
 
@@ -11960,7 +11983,7 @@ QUnit.module("Fields", (hooks) => {
         );
         await clickEdit(target);
         await click(form.$('.o_field_many2one[name="product_id"] input'));
-        await testUtils.fields.many2one.clickHighlightedItem("product_id");
+        await clickM2OHighlightedItem(target, "product_id");
         await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(
             form,

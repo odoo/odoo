@@ -436,6 +436,10 @@ export class Record extends DataPoint {
         this.canBeAbandoned = bm.canBeAbandoned(this.__bm_handle__);
         const data = Object.assign({}, legDP.data);
         for (const fieldName of Object.keys(data)) {
+            if (!(fieldName in this.activeFields)) {
+                continue;
+            }
+
             const fieldType = legDP.fields[fieldName].type;
             switch (fieldType) {
                 case "date":
