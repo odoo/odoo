@@ -85,9 +85,6 @@ class ChatWindowHeader extends Component {
      */
     _onClickShiftLeft(ev) {
         ev.stopPropagation();
-        if (this.props.saveThreadScrollTop) {
-            this.props.saveThreadScrollTop();
-        }
         this.chatWindow.shiftLeft();
     }
 
@@ -97,9 +94,6 @@ class ChatWindowHeader extends Component {
      */
     _onClickShiftRight(ev) {
         ev.stopPropagation();
-        if (this.props.saveThreadScrollTop) {
-            this.props.saveThreadScrollTop();
-        }
         this.chatWindow.shiftRight();
     }
 
@@ -115,10 +109,6 @@ Object.assign(ChatWindowHeader, {
         chatWindowLocalId: String,
         hasCloseAsBackButton: Boolean,
         isExpandable: Boolean,
-        saveThreadScrollTop: {
-            type: Function,
-            optional: true,
-        },
     },
     template: 'mail.ChatWindowHeader',
 });

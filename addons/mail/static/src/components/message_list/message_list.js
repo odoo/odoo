@@ -525,6 +525,7 @@ class MessageList extends Component {
      */
     _onScrollThrottled(ev) {
         const {
+            componentHintList,
             order,
             orderedMessages,
             thread,
@@ -554,7 +555,19 @@ class MessageList extends Component {
                 : scrollTop <= margin;
             threadView.update({ hasAutoScrollOnMessageReceived });
         }
-        if (threadViewer && threadViewer.exists()) {
+        /**
+         * Determines whether the current scroll position is considered
+         * acceptable to be saved in the models.
+         * If the value is 0 (which would be the default value when first
+         * rendering), and there are pending hints to adapt it, this should
+         * prevent from overriding the soon to be restored value by 0.
+         * This case could happen in particular if there is a scroll event made
+         * by the user, followed by a render from another action (example chat
+         * window swap), which itself adds a hint to restore the previous scroll
+         * position.
+         */
+        const isScrollAcceptable = scrollTop !== 0 || componentHintList.length === 0;
+        if (isScrollAcceptable && threadViewer && threadViewer.exists()) {
             threadViewer.saveThreadCacheScrollHeightAsInitial(this._getScrollableElement().scrollHeight, threadCache);
             threadViewer.saveThreadCacheScrollPositionsAsInitial(scrollTop, threadCache);
         }

@@ -130,6 +130,12 @@ function factory(dependencies) {
             this.manager.swap(this, lastVisible);
         }
 
+        saveThreadScrollTop() {
+            if (this.component) {
+                this.component._saveThreadScrollTop();
+            }
+        }
+
         /**
          * Shift this chat window to the left on screen.
          */
@@ -347,6 +353,7 @@ function factory(dependencies) {
     }
 
     ChatWindow.fields = {
+        component: attr(),
         /**
          * Determines whether "new message form" should be displayed.
          */

@@ -156,6 +156,8 @@ function factory(dependencies) {
                 return;
             }
             const otherChatWindow = chatWindows[index + 1];
+            chatWindow.saveThreadScrollTop();
+            otherChatWindow.saveThreadScrollTop();
             const _newOrdered = [...this._ordered];
             _newOrdered[index] = otherChatWindow.localId;
             _newOrdered[index + 1] = chatWindow.localId;
@@ -181,6 +183,8 @@ function factory(dependencies) {
                 return;
             }
             const otherChatWindow = chatWindows[index - 1];
+            chatWindow.saveThreadScrollTop();
+            otherChatWindow.saveThreadScrollTop();
             const _newOrdered = [...this._ordered];
             _newOrdered[index] = otherChatWindow.localId;
             _newOrdered[index - 1] = chatWindow.localId;
@@ -204,6 +208,8 @@ function factory(dependencies) {
             if (index1 === -1 || index2 === -1) {
                 return;
             }
+            chatWindow1.saveThreadScrollTop();
+            chatWindow2.saveThreadScrollTop();
             const _newOrdered = [...this._ordered];
             _newOrdered[index1] = chatWindow2.localId;
             _newOrdered[index2] = chatWindow1.localId;

@@ -6,6 +6,7 @@ const components = {
     ChatWindowHeader: require('mail/static/src/components/chat_window_header/chat_window_header.js'),
     ThreadView: require('mail/static/src/components/thread_view/thread_view.js'),
 };
+const useComponentToModel = require('mail/static/src/component_hooks/use_component_to_model/use_component_to_model.js');
 const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
@@ -67,7 +68,6 @@ class ChatWindow extends Component {
         // the following are passed as props to children
         this._onAutocompleteSelect = this._onAutocompleteSelect.bind(this);
         this._onAutocompleteSource = this._onAutocompleteSource.bind(this);
-        this._saveThreadScrollTop = this._saveThreadScrollTop.bind(this);
         this._constructor(...args);
     }
 
@@ -75,6 +75,10 @@ class ChatWindow extends Component {
      * Allows patching constructor.
      */
     _constructor() {}
+
+    setup() {
+        useComponentToModel({ fieldName: 'component', modelName: 'mail.chat_window', propNameAsRecordLocalId: 'chatWindowLocalId' });
+    }
 
     mounted() {
         this.env.messagingBus.on('will_hide_home_menu', this, this._onWillHideHomeMenu);
