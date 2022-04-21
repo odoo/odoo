@@ -1183,6 +1183,10 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
         // Render elements and trigger the animation then pause it in state 0.
         this.$animatedElements = this.$target.find('.o_animate');
         _.each(this.$animatedElements, el => {
+            if (el.closest('.dropdown')) {
+                el.classList.add('o_animate_in_dropdown');
+                return;
+            }
             this._resetAnimation($(el));
         });
         // Then we render all the elements, the ones which are invisible
@@ -1196,14 +1200,9 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
         this.__onScrollWebsiteAnimate = _.throttle(this._onScrollWebsiteAnimate.bind(this), 200);
         this.$scrollingElement[0].addEventListener('scroll', this.__onScrollWebsiteAnimate, {capture: true});
 
-        $(window).on('resize.o_animate, shown.bs.modal.o_animate, slid.bs.carousel.o_animate, shown.bs.dropdown.o_animate', () => {
+        $(window).on('resize.o_animate, shown.bs.modal.o_animate, slid.bs.carousel.o_animate', () => {
             this.windowsHeight = $(window).height();
-            let $scrollingElement = this.$scrollingElement;
-            const $openDropdown = $('.dropdown-menu.show:has(.o_animate)');
-            if ($openDropdown.length) {
-                $scrollingElement = $openDropdown;
-            }
-            this._scrollWebsiteAnimate($scrollingElement[0]);
+            this._scrollWebsiteAnimate(this.$scrollingElement[0]);
         }).trigger("resize");
 
         return this._super(...arguments);
@@ -1214,7 +1213,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
     destroy() {
         this._super(...arguments);
         this.$target.find('.o_animate')
-            .removeClass('o_animating o_animated o_animate_preview')
+            .removeClass('o_animating o_animated o_animate_preview o_animate_in_dropdown')
             .css({
                 'animation-name': '',
                 'animation-play-state': '',
@@ -1301,7 +1300,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
         const direction = (scroll < this.lastScroll) ? -1 : 1;
         this.lastScroll = scroll;
 
-        _.each(this.$target.find('.o_animate'), el => {
+        _.each(this.$target.find('.o_animate:not(.o_animate_in_dropdown)'), el => {
             const $el = $(el);
             const elHeight = $el.height();
             const elOffset = direction * Math.max((elHeight * this.offsetRatio), this.offsetMin);
