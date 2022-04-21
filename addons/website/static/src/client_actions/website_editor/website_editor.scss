@@ -1,11 +1,22 @@
 .o_website_editor {
     position: relative;
     height: 100%;
+    transition: margin-right ease 400ms;
+
+    &.editor_enable.editor_has_snippets {
+        margin-right: $o-we-sidebar-width !important;
+    }
 
     > iframe {
         @include o-position-absolute(0, 0, 0, 0);
         width: 100%;
         height: 100%;
         border: none;
+    }
+}
+
+.o_website_fullscreen {
+    .o_website_editor.editor_enable.editor_has_snippets {
+        margin-right: 0 !important;
     }
 }

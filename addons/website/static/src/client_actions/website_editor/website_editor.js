@@ -3,7 +3,9 @@
 import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
 
-const { Component, onWillStart, useEffect, useRef } = owl;
+import { WebsiteEditorComponent } from '../../components/editor/editor';
+
+const { Component, onWillStart, useEffect, useRef, useState } = owl;
 
 export class WebsiteEditorClientAction extends Component {
     setup() {
@@ -15,6 +17,7 @@ export class WebsiteEditorClientAction extends Component {
 
         this.iframe = useRef('iframe');
         this.iframefallback = useRef('iframefallback');
+        this.websiteContext = useState(this.websiteService.context);
 
         onWillStart(async () => {
             await this.websiteService.fetchWebsites();
@@ -24,6 +27,7 @@ export class WebsiteEditorClientAction extends Component {
         useEffect(() => {
             this.websiteService.currentWebsiteId = this.websiteId;
             this.websiteService.context.showNewContentModal = this.props.action.context.params && this.props.action.context.params.display_new_content;
+            this.websiteService.context.edition = this.props.action.context.params && !!this.props.action.context.params.enable_editor;
             return () => this.websiteService.currentWebsiteId = null;
         }, () => [this.props.action.context.params]);
 
@@ -41,6 +45,9 @@ export class WebsiteEditorClientAction extends Component {
                     this.iframefallback.el.contentDocument.body.replaceWith(this.iframe.el.contentDocument.body.cloneNode(true));
                     $().getScrollingElement(this.iframefallback.el.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;
                 });
+
+                this.iframe.el.contentWindow.addEventListener('PUBLIC-ROOT-READY', (event) => {
+                    this.websiteService.websiteRootInstance = event.detail.rootInstance;
             };
 
             this.iframe.el.addEventListener('load', () => onPageLoaded());
@@ -69,7 +76,20 @@ export class WebsiteEditorClientAction extends Component {
         }
         return path;
     }
+
+    reloadIframe(url) {
+        return new Promise((resolve, reject) => {
+            this.iframe.el.addEventListener('load', resolve, { once: true });
+            this.websiteService.websiteRootInstance = undefined;
+            if (url) {
+                this.iframe.el.contentWindow.location = url;
+            } else {
+                this.iframe.el.contentWindow.location.reload();
+            }
+        });
+    }
 }
 WebsiteEditorClientAction.template = 'website.WebsiteEditorClientAction';
+WebsiteEditorClientAction.components = { WebsiteEditorComponent };
 
 registry.category('actions').add('website_editor', WebsiteEditorClientAction);

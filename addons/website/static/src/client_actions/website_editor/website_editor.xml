@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-
-    <t t-name="website.WebsiteEditorClientAction" owl="1">
-        <div class="o_website_editor">
-            <iframe t-att-src="iframeFallbackUrl" t-ref="iframefallback"/>
-            <iframe t-att-src="initialUrl" t-ref="iframe"/>
-        </div>
-    </t>
+<t t-name="website.WebsiteEditorClientAction" owl="1">
+    <div class="o_website_editor" t-att-class="{ 'editor_enable editor_has_snippets': this.websiteContext.snippetsLoaded }">
+        <iframe t-if="!this.websiteContext.edition" t-att-src="iframeFallbackUrl" t-ref="iframefallback"/>
+        <iframe id="main_iframe" t-att-src="initialUrl" t-ref="iframe"/>
+    </div>
+    <WebsiteEditorComponent t-if="websiteContext.edition"
+        reloadIframe.bind="this.reloadIframe"/>
+</t>
 
 </templates>
