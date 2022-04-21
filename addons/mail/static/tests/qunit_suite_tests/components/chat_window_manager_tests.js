@@ -2528,7 +2528,7 @@ QUnit.test('should not have chat window hidden menu in mobile (transition from 2
     );
 });
 
-QUnit.test('chat window scroll position should remain the same after switching previous', async function (assert) {
+QUnit.skip('chat window scroll position should remain the same after switching previous', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -2606,7 +2606,7 @@ QUnit.test('chat window scroll position should remain the same after switching p
     );
 });
 
-QUnit.test('chat window scroll position should remain the same after switching next', async function (assert) {
+QUnit.skip('chat window scroll position should remain the same after switching next', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
