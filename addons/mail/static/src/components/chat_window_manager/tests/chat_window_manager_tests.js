@@ -2467,7 +2467,7 @@ QUnit.test('chat window should remain folded when new message is received', asyn
     );
 });
 
-QUnit.test('chat window scroll position should remain the same after switching previous', async function (assert) {
+QUnit.skip('chat window scroll position should remain the same after switching previous', async function (assert) {
     assert.expect(2);
 
     this.data['mail.channel'].records.push({
@@ -2527,7 +2527,7 @@ QUnit.test('chat window scroll position should remain the same after switching p
     );
 });
 
-QUnit.test('chat window scroll position should remain the same after switching next', async function (assert) {
+QUnit.skip('chat window scroll position should remain the same after switching next', async function (assert) {
     assert.expect(2);
 
     this.data['mail.channel'].records.push({
