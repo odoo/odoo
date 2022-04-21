@@ -24,6 +24,22 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeIsFocusOnMount() {
+            if (this.discussViewOwnerAsMobileAddItemHeader) {
+                return true;
+            }
+            if (this.discussSidebarCategoryOwnerAsAddingItem) {
+                return true;
+            }
+            if (this.messagingMenuOwnerAsMobileNewMessageInput) {
+                return true;
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {string}
          */
         _computePlaceholder() {
@@ -58,6 +74,10 @@ registerModel({
         discussViewOwnerAsMobileAddItemHeader: one('DiscussView', {
             inverse: 'mobileAddItemHeaderAutocompleteInputView',
             readonly: true,
+        }),
+        isFocusOnMount: attr({
+            compute: '_computeIsFocusOnMount',
+            default: false,
         }),
         messagingMenuOwnerAsMobileNewMessageInput: one('MessagingMenu', {
             inverse: 'mobileNewMessageAutocompleteInputView',

@@ -25,7 +25,7 @@ export class AutocompleteInput extends Component {
         if (!this.root.el) {
             return;
         }
-        if (this.props.isFocusOnMount) {
+        if (this.autocompleteInputView.isFocusOnMount) {
             this.root.el.focus();
         }
 
@@ -159,7 +159,6 @@ export class AutocompleteInput extends Component {
 
 Object.assign(AutocompleteInput, {
     defaultProps: {
-        isFocusOnMount: false,
         isHtml: false,
     },
     props: {
@@ -169,10 +168,6 @@ Object.assign(AutocompleteInput, {
         },
         focus: {
             type: Function,
-            optional: true,
-        },
-        isFocusOnMount: {
-            type: Boolean,
             optional: true,
         },
         isHtml: {
