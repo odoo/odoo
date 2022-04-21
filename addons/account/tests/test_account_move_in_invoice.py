@@ -588,8 +588,18 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             line_form.debit = 800
         with move_form.line_ids.edit(4) as line_form:
             # Custom debit on the second tax line.
-            line_form.debit = 250
+            line_form.debit = 325
         move_form.save()
+        # The invoice contains now :
+        #   - Product A / Price 3000.0 / Tax 15 % / Tax amount 450.0 / Total 3450
+        #   - Product B / Price -500.0 / Tax 15 % + Tax 15% copy / Tax Amount 75.0 + Tax Amount 75.0 / Total -650.0
+        # But the accounting lines :
+        #   - First Tax : Balance 800.0
+        #   - Payable : Balance -3550
+        #   - Product A : Balance 3000.0
+        #   - Product B: Balance -500
+        #   - Second Tax : Balance 325.0
+        #   - First Tax (added line) : Balance -75.0
 
         self.assertInvoiceValues(self.invoice, [
             {
@@ -611,6 +621,14 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.tax_line_vals_1,
+                'price_unit': 325.0,
+                'price_subtotal': 325.0,
+                'price_total': 325.0,
+                'amount_currency': 325.0,
+                'debit': 325.0,
+            },
+            {
+                **self.tax_line_vals_1,
                 'price_unit': 800.0,
                 'price_subtotal': 800.0,
                 'price_total': 800.0,
@@ -619,11 +637,12 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.tax_line_vals_2,
-                'price_unit': 250.0,
-                'price_subtotal': 250.0,
-                'price_total': 250.0,
-                'amount_currency': 250.0,
-                'debit': 250.0,
+                'price_unit': -75.0,
+                'price_subtotal': -75.0,
+                'price_total': -75.0,
+                'amount_currency': -75.0,
+                'credit': 75.0,
+                'debit': 0.0,
             },
             {
                 **self.term_line_vals_1,

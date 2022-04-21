@@ -271,7 +271,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             line_form.credit = 800
         with move_form.line_ids.edit(4) as line_form:
             # Custom credit on the second tax line.
-            line_form.credit = 250
+            line_form.credit = 325
         move_form.save()
 
         self.assertInvoiceValues(self.invoice, [
@@ -301,12 +301,21 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
                 'credit': 800.0,
             },
             {
+                **self.tax_line_vals_1,
+                'price_unit': 325.0,
+                'price_subtotal': 325.0,
+                'price_total': 325.0,
+                'amount_currency': -325.0,
+                'credit': 325.0,
+            },
+            {
                 **self.tax_line_vals_2,
-                'price_unit': 250.0,
-                'price_subtotal': 250.0,
-                'price_total': 250.0,
-                'amount_currency': -250.0,
-                'credit': 250.0,
+                'price_unit': -75.0,
+                'price_subtotal': -75.0,
+                'price_total': -75.0,
+                'amount_currency': 75.0,
+                'credit': 0.0,
+                'debit': 75.0,
             },
             {
                 **self.term_line_vals_1,
@@ -810,11 +819,20 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             {
                 **self.tax_line_vals_1,
                 'price_unit': 24.0,
-                'price_subtotal': 24.001,
-                'price_total': 24.001,
+                'price_total': 24.0,
+                'price_subtotal': 24.0,
                 'currency_id': self.currency_data['currency'].id,
-                'amount_currency': -24.001,
+                'amount_currency': -24.0,
                 'credit': 8.0,
+            },
+            {
+                **self.tax_line_vals_1,
+                'price_unit': 0.001,
+                'price_subtotal': 0.001,
+                'price_total': 0.001,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -0.001,
+                'credit': 0.0,
             },
             {
                 **self.tax_line_vals_2,
@@ -863,6 +881,14 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
                 'price_total': 24.0,
                 'amount_currency': -24.0,
                 'credit': 24.0,
+            },
+            {
+                **self.tax_line_vals_1,
+                'price_unit': 0.001,
+                'price_subtotal': 0.001,
+                'price_total': 0.001,
+                'amount_currency': -0.001,
+                'credit': 0.0,
             },
             self.tax_line_vals_2,
             {

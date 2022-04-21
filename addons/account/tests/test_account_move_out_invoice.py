@@ -573,7 +573,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             line_form.credit = 800
         with move_form.line_ids.edit(4) as line_form:
             # Custom credit on the second tax line.
-            line_form.credit = 250
+            line_form.credit = 325
         move_form.save()
 
         self.assertInvoiceValues(self.invoice, [
@@ -603,12 +603,21 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'credit': 800.0,
             },
             {
+                **self.tax_line_vals_1,
+                'price_unit': 325.0,
+                'price_subtotal': 325.0,
+                'price_total': 325.0,
+                'amount_currency': -325.0,
+                'credit': 325.0,
+            },
+            {
                 **self.tax_line_vals_2,
-                'price_unit': 250.0,
-                'price_subtotal': 250.0,
-                'price_total': 250.0,
-                'amount_currency': -250.0,
-                'credit': 250.0,
+                'price_unit': -75.0,
+                'price_subtotal': -75.0,
+                'price_total': -75.0,
+                'amount_currency': 75.0,
+                'credit': 0.0,
+                'debit': 75.0,
             },
             {
                 **self.term_line_vals_1,
