@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Favio Náquira fnaquiravargas@gmail.com https://github.com/fnaquira
+Favio Náquira Vargas fnaquiravargas@gmail.com https://github.com/fnaquira
