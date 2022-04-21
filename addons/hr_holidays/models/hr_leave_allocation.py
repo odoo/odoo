@@ -327,6 +327,10 @@ class HolidaysAllocation(models.Model):
                 if allocation.holiday_status_id:
                     allocation.accrual_plan_id = accruals_dict.get(allocation.holiday_status_id.id, [False])[0]
 
+    def _get_available_leaves_on(self, date):
+        self.ensure_one()
+        return self.max_leaves - self.leaves_taken
+
     def _end_of_year_accrual(self):
         # to override in payroll
         today = fields.Date.today()
