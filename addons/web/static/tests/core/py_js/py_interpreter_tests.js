@@ -145,6 +145,11 @@ QUnit.module("py", {}, () => {
             }
         );
 
+        QUnit.test("true and false available in context", (assert) => {
+            assert.strictEqual(evaluateExpr("true"), true);
+            assert.strictEqual(evaluateExpr("false"), false);
+        });
+
         QUnit.test("throw error if name is not defined", (assert) => {
             assert.throws(() => evaluateExpr("a"));
         });
