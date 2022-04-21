@@ -1569,3 +1569,21 @@ class PrefetchTranslateField(models.Model):
     html_description = fields.Html('Styled description', translate=True, prefetch=True)
     rare_description = fields.Char('Rare Description', translate=True)
     rare_html_description = fields.Html('Rare Styled description', translate=True)
+
+
+class Team(models.Model):
+    _name = 'test_new_api.team'
+    _description = 'Odoo Team'
+
+    name = fields.Char()
+    parent_id = fields.Many2one('test_new_api.team')
+    member_ids = fields.One2many('test_new_api.team.member', 'team_id')
+
+
+class TeamMember(models.Model):
+    _name = 'test_new_api.team.member'
+    _description = 'Odoo Developer'
+
+    name = fields.Char('Name')
+    team_id = fields.Many2one('test_new_api.team')
+    parent_id = fields.Many2one('test_new_api.team', related='team_id.parent_id')
