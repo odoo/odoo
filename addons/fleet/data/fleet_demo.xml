@@ -411,24 +411,20 @@
         <field name="color" eval="4"/>
       </record>
 
-      <record id="vehicle_tag_compact" model="fleet.vehicle.tag" >
-        <field name="name">Compact</field>
-        <field name="color" eval="5"/>
-      </record>
-
-      <record id="vehicle_tag_sedan" model="fleet.vehicle.tag" >
-        <field name="name">Sedan</field>
-        <field name="color" eval="6"/>
-      </record>
-
-      <record id="vehicle_tag_convertible" model="fleet.vehicle.tag" >
-        <field name="name">Convertible</field>
-        <field name="color" eval="7"/>
-      </record>
-
-      <record id="vehicle_tag_break" model="fleet.vehicle.tag" >
+      <record id="model_category_1" model="fleet.vehicle.model.category">
         <field name="name">Break</field>
-        <field name="color" eval="8"/>
+      </record>
+
+      <record id="model_category_2" model="fleet.vehicle.model.category">
+        <field name="name">SUV</field>
+      </record>
+
+      <record id="model_category_3" model="fleet.vehicle.model.category">
+        <field name="name">Sport Car</field>
+      </record>
+
+      <record id="model_category_4" model="fleet.vehicle.model.category">
+        <field name="name">Compact</field>
       </record>
 
       <record id="vehicle_1" model="fleet.vehicle">
@@ -443,7 +439,7 @@
           <field name="state_id" ref="fleet_vehicle_state_registered"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">20000</field>
-          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_break'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
       </record>
 
       <record id="vehicle_2" model="fleet.vehicle">
@@ -458,7 +454,7 @@
           <field name="state_id" ref="fleet_vehicle_state_downgraded"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">16000</field>
-          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_junior')])]" name="tag_ids"/>
+          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased'),ref('fleet.vehicle_tag_junior')])]" name="tag_ids"/>
       </record>
 
       <record id="vehicle_3" model="fleet.vehicle">
@@ -473,7 +469,7 @@
           <field name="state_id" ref="fleet_vehicle_state_registered"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">20000</field>
-          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
       </record>
 
        <record id="vehicle_4" model="fleet.vehicle">
@@ -488,7 +484,7 @@
           <field name="state_id" ref="fleet_vehicle_state_registered"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">20000</field>
-          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
       </record>
 
       <record id="vehicle_5" model="fleet.vehicle">
@@ -503,7 +499,7 @@
           <field name="state_id" ref="fleet_vehicle_state_registered"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">18000</field>
-          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
       </record>
 
       <record id="log_odometer_1" model="fleet.vehicle.odometer">
