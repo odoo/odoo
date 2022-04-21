@@ -854,7 +854,9 @@ export class StaticList extends DataPoint {
             return;
         }
         const changes = { [this.__fieldName__]: operation };
-        await basicModel.notifyChanges(basicModel.localData[this.__bm_handle__].parentID, changes);
+        await basicModel.notifyChanges(basicModel.localData[this.__bm_handle__].parentID, changes, {
+            viewType: this.__parentViewType,
+        });
         this.__syncData();
         this.model.notify();
     }

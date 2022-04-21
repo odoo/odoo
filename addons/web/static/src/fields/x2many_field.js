@@ -10,7 +10,7 @@ import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { evalDomain } from "@web/views/relational_model";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
-import { FormArchParser } from "@web/views/form/form_view";
+import { FormArchParser, loadSubViews } from "@web/views/form/form_view";
 
 const { Component, onWillDestroy } = owl;
 
@@ -22,6 +22,7 @@ const X2M_RENDERERS = {
 export class X2ManyField extends Component {
     setup() {
         this.dialogService = useService("dialog");
+        this.user = useService("user");
         this.viewService = useService("view");
 
         this.dialogClose = [];
@@ -213,19 +214,27 @@ export class X2ManyField extends Component {
 
     async _getFormViewInfo() {
         let formViewInfo = this.activeField.views.form;
-        if (formViewInfo) {
-            return formViewInfo;
+        const comodel = this.list.resModel;
+        if (!formViewInfo) {
+            const { fields: comodelFields, views } = await this.viewService.loadViews({
+                context: {},
+                resModel: comodel,
+                views: [[false, "form"]],
+            });
+            const archInfo = new FormArchParser().parse(views.form.arch, comodelFields);
+            formViewInfo = { ...archInfo, fields: comodelFields }; // should be good to memorize this on activeField
         }
 
-        const comodel = this.list.resModel;
-        const { fields: comodelFields, views } = await this.viewService.loadViews({
-            context: {},
-            resModel: comodel,
-            views: [[false, "form"]],
-        });
-        const archInfo = new FormArchParser().parse(views.form.arch, comodelFields);
-        return { ...archInfo, fields: comodelFields }; // should be good to memorize this on activeField
-        // activeField.relatedFields = comodelFields;
+        await loadSubViews(
+            formViewInfo.activeFields,
+            formViewInfo.fields,
+            {}, // context
+            comodel,
+            this.viewService,
+            this.user
+        );
+
+        return formViewInfo;
     }
 }
 

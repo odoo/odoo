@@ -6115,14 +6115,21 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("load view for x2many in one2many", async function (assert) {
+    QUnit.test("load view for x2many in one2many", async function (assert) {
         assert.expect(2);
 
         serverData.models.turtle.records[1].product_id = 37;
         serverData.models.partner.records[0].turtles = [2, 3];
         serverData.models.partner.records[2].turtles = [1, 3];
+        serverData.views = {
+            "partner,false,list": `
+                <tree>
+                    <field name="display_name"/>
+                </tree>
+            `,
+        };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -6144,31 +6151,22 @@ QUnit.module("Fields", (hooks) => {
                     </group>
                 </form>`,
             resId: 1,
-            archs: {
-                "partner,false,list": '<tree><field name="display_name"/></tree>',
-            },
         });
 
-        assert.containsN(form, ".o_data_row", 2, "should display the 2 turtles");
+        assert.containsN(target, ".o_data_row", 2);
 
-        await click(form.$(".o_data_row:first"));
-        await testUtils.nextTick(); // wait for quick edit
+        await click(target.querySelector(".o_data_row td"));
 
-        assert.strictEqual(
-            $('.modal .o_field_widget[name="partner_ids"] .o_list_view').length,
-            1,
-            "should display many2many list view in the modal"
-        );
+        assert.containsOnce(target, '.modal div[name="partner_ids"] .o_list_renderer');
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many (who contains a one2many) with tree view and without form view",
         async function (assert) {
             assert.expect(1);
 
             // avoid error in _postprocess
-
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -6179,21 +6177,20 @@ QUnit.module("Fields", (hooks) => {
                                 <tree>
                                     <field name="partner_ids"/>
                                 </tree>
+                                <form>
+                                    <field name="turtle_foo"/>
+                                </form>
                             </field>
                         </group>
                     </form>`,
                 resId: 1,
-                archs: {
-                    "turtle,false,form": '<form><field name="turtle_foo"/></form>',
-                },
             });
 
-            await click(form.$(".o_data_row:first"));
+            await click(target.querySelector(".o_data_row td"));
 
             assert.strictEqual(
-                $('.modal .o_field_widget[name="turtle_foo"]').val(),
-                "blip",
-                "should open the modal and display the form field"
+                target.querySelector('.modal div[name="turtle_foo"]').innerText,
+                "blip"
             );
         }
     );
@@ -6207,13 +6204,7 @@ QUnit.module("Fields", (hooks) => {
             // related x2m field is unknown in the inline list view)
             // also ensure that the changes are correctly saved
 
-            serverData.models.turtle.fields.o2m = {
-                string: "o2m",
-                type: "one2many",
-                relation: "user",
-            };
-
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -6224,19 +6215,13 @@ QUnit.module("Fields", (hooks) => {
                                 <tree>
                                     <field name="turtle_foo"/>
                                 </tree>
+                                <form>
+                                    <field name="partner_ids" widget="many2many_tags"/>
+                                </form>
                             </field>
                         </group>
                     </form>`,
                 resId: 1,
-                archs: {
-                    "turtle,false,form": `
-                        <form>
-                            <field name="partner_ids" widget="many2many_tags"/>
-                        </form>`,
-                },
-                viewOptions: {
-                    mode: "edit",
-                },
                 mockRPC(route, args) {
                     if (args.method === "write") {
                         assert.deepEqual(args.args[1].turtles, [
@@ -6249,19 +6234,22 @@ QUnit.module("Fields", (hooks) => {
                             ],
                         ]);
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
 
-            await click(form.$(".o_data_row:first")); // edit first record
+            await clickEdit(target);
 
-            await clickOpenM2ODropdown(target, "partner_ids");
-            await clickM2OHighlightedItem(target, "partner_ids");
+            await click(target.querySelector(".o_data_row td")); // edit first record
+
+            await click(target.querySelector('div[name="partner_ids"] input'));
+            await click(target.querySelector('div[name="partner_ids"] .o_input_dropdown li'));
 
             // add a many2many tag and save
-            await click($(".modal .o_field_many2manytags input"));
-            await testUtils.fields.editInput($(".modal .o_field_many2manytags input"), "test");
-            await click($(".modal .modal-footer .btn-primary")); // save
+            await editInput(target, ".modal .o_field_many2many_tags input", "test");
+
+            await click(target, ".modal .modal-footer .btn-primary"); // save
+
+            // no write why?
 
             await clickSave(target);
         }
@@ -6516,14 +6504,18 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many (who contains display_name) with tree view and without form view",
         async function (assert) {
             assert.expect(1);
 
             // avoid error in _fetchX2Manys
 
-            const form = await makeView({
+            serverData.views = {
+                "turtle,false,form": '<form><field name="turtle_foo"/></form>',
+            };
+
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -6538,15 +6530,12 @@ QUnit.module("Fields", (hooks) => {
                         </group>
                     </form>`,
                 resId: 1,
-                archs: {
-                    "turtle,false,form": '<form><field name="turtle_foo"/></form>',
-                },
             });
 
-            await click(form.$(".o_data_row:first"));
+            await click(target.querySelector(".o_data_row td"));
 
             assert.strictEqual(
-                $('.modal .o_field_widget[name="turtle_foo"]').val(),
+                target.querySelector('.modal div[name="turtle_foo"]').innerText,
                 "blip",
                 "should open the modal and display the form field"
             );
