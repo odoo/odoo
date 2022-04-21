@@ -204,6 +204,7 @@ export class OdooEditor extends EventTarget {
                         return closestElement(selection.anchorNode, 'P, DIV');
                     }
                 },
+                onChange: () => {},
                 isHintBlacklisted: () => false,
                 filterMutationRecords: (records) => records,
                 _t: string => string,
@@ -719,6 +720,7 @@ export class OdooEditor extends EventTarget {
         this._checkStepUnbreakable = true;
         this._recordHistorySelection();
         this.dispatchEvent(new Event('historyStep'));
+        this.options.onChange();
         this.multiselectionRefresh();
     }
     // apply changes according to some records
