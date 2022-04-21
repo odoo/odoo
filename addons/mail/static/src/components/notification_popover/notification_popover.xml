@@ -3,7 +3,7 @@
 
     <t t-name="mail.NotificationPopover" owl="1">
         <t t-if="messageView">
-            <div class="o_NotificationPopover" t-attf-class="{{ className }}" t-ref="root">
+            <div class="o_NotificationPopover" t-attf-class="{{ className() }}" t-ref="root">
                 <t t-if="messageView.message">
                     <t t-foreach="messageView.message.notifications" t-as="notification" t-key="notification.localId">
                         <div class="o_NotificationPopover_notification">

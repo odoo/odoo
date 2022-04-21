@@ -3,7 +3,7 @@
 
     <t t-name="mail.ThreadIcon" owl="1">
         <t t-if="thread">
-            <div class="o_ThreadIcon" t-attf-class="{{ className }}" t-ref="root" name="root">
+            <div class="o_ThreadIcon" t-attf-class="{{ className() }}" t-ref="root" name="root">
                 <t t-if="thread.channel_type === 'channel'">
                     <t t-if="thread.public === 'private'">
                         <div class="o_ThreadIcon_channelPrivate fa fa-lock" title="Private channel"/>

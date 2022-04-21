@@ -3,26 +3,28 @@
 
     <t t-name="mail.Activity" owl="1">
         <t t-if="activityView">
-            <div class="o_Activity d-flex p-2" t-attf-class="{{ className }}" t-on-click="activityView.onClickActivity" t-ref="root">
-                <div class="o_Activity_sidebar mr-3">
-                    <div class="o_Activity_user position-relative h-100 w-100">
+            <div class="d-flex p-2" t-attf-class="{{ className() }}" t-on-click="activityView.onClickActivity" t-ref="root">
+                <div class="mr-3" t-attf-class="{{ className('sidebar') }}">
+                    <div class="position-relative h-100 w-100" t-attf-class="{{ className('user') }}">
                         <t t-if="activityView.activity.assignee">
-                            <img class="o_Activity_userAvatar rounded-circle h-100 w-100 o_object_fit_cover" t-attf-src="/web/image/res.users/{{ activityView.activity.assignee.id }}/avatar_128" t-att-alt="activityView.activity.assignee.nameOrDisplayName"/>
+                            <img class="rounded-circle h-100 w-100 o_object_fit_cover" t-attf-class="{{ className('userAvatar') }}" t-attf-src="/web/image/res.users/{{ activityView.activity.assignee.id }}/avatar_128" t-att-alt="activityView.activity.assignee.nameOrDisplayName"/>
                         </t>
-                        <div class="o_Activity_iconContainer d-flex align-items-center justify-content-center rounded-circle w-50 h-50 text-white"
+                        <div class="d-flex align-items-center justify-content-center rounded-circle w-50 h-50 text-white"
+                            t-attf-class="{{ className('iconContainer') }}"
                             t-att-class="{
                                 'bg-success': activityView.activity.state === 'planned',
                                 'bg-warning': activityView.activity.state === 'today',
                                 'bg-danger': activityView.activity.state === 'overdue',
                             }"
                         >
-                            <i class="o_Activity_icon fa small" t-attf-class="{{ activityView.activity.icon }}"/>
+                            <i class="fa small" t-attf-class="{{ className('icon') activityView.activity.icon }}"/>
                         </div>
                     </div>
                 </div>
-                <div class="o_Activity_core">
-                    <div class="o_Activity_info d-flex align-items-baseline">
-                        <div class="o_Activity_dueDateText me-2"
+                <div t-attf-class="{{ className('core') }}">
+                    <div class="d-flex align-items-baseline" t-attf-class="{{ className('info') }}">
+                        <div class="me-2"
+                            t-attf-class="{{ className('dueDateText') }}"
                             t-att-class="{
                                 'text-danger': activityView.activity.state === 'overdue',
                                 'text-success': activityView.activity.state === 'planned',
@@ -32,22 +34,23 @@
                             <b t-esc="activityView.delayLabel"/>
                         </div>
                         <t t-if="activityView.activity.summary">
-                            <b class="o_Activity_summary text-900 me-2">
+                            <b class="text-900 me-2" t-attf-class="{{ className('summary') }}">
                                 <t t-esc="activityView.summary"/>
                             </b>
                         </t>
                         <t t-elif="activityView.activity.type">
-                            <b class="o_Activity_summary o_Activity_type text-900 me-2">
+                            <b class="text-900 me-2" t-attf-class="{{ className('summary', 'type') }}">
                                 <t t-esc="activityView.activity.type.displayName"/>
                             </b>
                         </t>
                         <t t-if="activityView.activity.assignee">
-                            <div class="o_Activity_userName">
+                            <div t-attf-class="{{ className('userName') }}">
                                 <t t-esc="activityView.assignedUserText"/>
                             </div>
                         </t>
                         <a
-                            class="o_Activity_detailsButton btn py-0"
+                            class="btn py-0"
+                            t-attf-class="{{ className('detailsButton') }}"
                             t-att-class="activityView.areDetailsVisible ? 'text-primary' : 'btn-link btn-primary'"
                             t-on-click="activityView.onClickDetailsButton"
                             role="button"
@@ -57,35 +60,36 @@
                     </div>
 
                     <t t-if="activityView.areDetailsVisible">
-                        <div class="o_Activity_details">
+                        <div t-attf-class="{{ className('details') }}">
                             <div class="d-md-table table table-sm mt-2 mb-3">
                                 <div t-if="activityView.activity.type" class="d-md-table-row mb-3">
                                     <div class="d-md-table-cell font-weight-bold text-md-right m-0 py-md-1 px-md-4">Activity type</div>
-                                    <div class="o_Activity_type d-md-table-cell py-md-1 pr-4">
+                                    <div class="d-md-table-cell py-md-1 pr-4" t-attf-class="{{ className('type') }}">
                                         <t t-esc="activityView.activity.type.displayName"/>
                                     </div>
                                 </div>
                                 <div t-if="activityView.activity.creator" class="d-md-table-row mb-3">
                                     <div class="d-md-table-cell font-weight-bold text-md-right m-0 py-md-1 px-md-4">Created</div>
-                                    <div class="o_Activity_detailsCreation d-md-table-cell py-md-1 pr-4">
+                                    <div class="d-md-table-cell py-md-1 pr-4" t-attf-class="{{ className('detailsCreation') }}">
                                         <t t-esc="activityView.formattedCreateDatetime"/>, <br t-if="messaging.device.isMobile"/>by
-                                        <img class="o_Activity_detailsUserAvatar o_Activity_detailsCreatorAvatar ms-1 me-1 rounded-circle align-text-bottom" t-attf-src="/web/image/res.users/{{ activityView.activity.creator.id }}/avatar_128" t-att-title="activityView.activity.creator.nameOrDisplayName" t-att-alt="activityView.activity.creator.nameOrDisplayName"/>
-                                        <b class="o_Activity_detailsCreator">
+                                        <img class="ms-1 me-1 rounded-circle align-text-bottom" t-attf-class="{{ className('detailsUserAvatar', 'detailsCreatorAvatar') }}" t-attf-src="/web/image/res.users/{{ activityView.activity.creator.id }}/avatar_128" t-att-title="activityView.activity.creator.nameOrDisplayName" t-att-alt="activityView.activity.creator.nameOrDisplayName"/>
+                                        <b t-attf-class="{{ className('detailsCreator') }}">
                                             <t t-esc="activityView.activity.creator.nameOrDisplayName"/>
                                         </b>
                                     </div>
                                 </div>
                                 <div t-if="activityView.activity.assignee" class="d-md-table-row mb-3">
                                     <div class="d-md-table-cell font-weight-bold text-md-right m-0 py-md-1 px-md-4">Assigned to</div>
-                                    <div class="o_Activity_detailsAssignation d-md-table-cell py-md-1 pr-4">
-                                        <img class="o_Activity_detailsUserAvatar o_Activity_detailsAssignationUserAvatar me-1 rounded-circle align-text-bottom" t-attf-src="/web/image/res.users/{{ activityView.activity.assignee.id }}/avatar_128" t-att-title="activityView.activity.assignee.nameOrDisplayName" t-att-alt="activityView.activity.assignee.nameOrDisplayName"/>
+                                    <div class="d-md-table-cell py-md-1 pr-4" t-attf-class="{{ className('detailsAssignation') }}">
+                                        <img class="me-1 rounded-circle align-text-bottom" t-attf-class="{{ className('detailsUserAvatar', 'detailsAssignationUserAvatar') }}" t-attf-src="/web/image/res.users/{{ activityView.activity.assignee.id }}/avatar_128" t-att-title="activityView.activity.assignee.nameOrDisplayName" t-att-alt="activityView.activity.assignee.nameOrDisplayName"/>
                                         <b t-esc="activityView.activity.assignee.nameOrDisplayName"/>
                                     </div>
                                 </div>
                                 <div class="d-md-table-row">
                                     <div class="d-md-table-cell font-weight-bold text-md-right m-0 py-md-1 px-md-4">Due on</div>
-                                    <div class="o_Activity_detailsDueDate d-md-table-cell py-md-1 pr-4">
-                                        <span class="o_Activity_deadlineDateText"
+                                    <div class="d-md-table-cell py-md-1 pr-4" t-attf-class="{{ className('detailsDueDate') }}">
+                                        <span
+                                            t-attf-class="{{ className('deadlineDateText') }}"
                                             t-att-class="{
                                                 'text-danger': activityView.activity.state === 'overdue',
                                                 'text-success': activityView.activity.state === 'planned',
@@ -101,16 +105,16 @@
                     </t>
 
                     <t t-if="activityView.activity.note">
-                        <div class="o_Activity_note">
+                        <div t-attf-class="{{ className('note') }}">
                             <t t-out="activityView.activity.noteAsMarkup"/>
                         </div>
                     </t>
 
                     <t t-if="activityView.mailTemplateViews.length > 0">
-                        <div class="o_Activity_mailTemplates">
+                        <div t-attf-class="{{ className('mailTemplates') }}">
                             <t t-foreach="activityView.mailTemplateViews" t-as="mailTemplateView" t-key="mailTemplateView.localId">
                                 <MailTemplate
-                                    className="'o_Activity_mailTemplate'"
+                                    className="className('mailTemplate')"
                                     localId="mailTemplateView.localId"
                                 />
                             </t>
@@ -118,10 +122,10 @@
                     </t>
 
                     <t t-if="activityView.activity.canWrite">
-                        <div name="tools" class="o_Activity_tools d-flex">
+                        <div name="tools" class="d-flex" t-attf-class="{{ className('tools') }}">
                             <t t-if="!activityView.fileUploader">
                                 <Popover position="'right'" title="activityView.markDoneText">
-                                    <button class="o_Activity_toolButton o_Activity_markDoneButton btn btn-link btn-primary pt-0 pl-0" t-att-title="activityView.markDoneText">
+                                    <button class="btn btn-link btn-primary pt-0 pl-0" t-attf-class="{{ className('toolButton', 'markDoneButton') }}" t-att-title="activityView.markDoneText">
                                         <i class="fa fa-check"/> Mark Done
                                     </button>
                                     <t t-set-slot="opened">
@@ -130,14 +134,14 @@
                                 </Popover>
                             </t>
                             <t t-if="activityView.fileUploader">
-                                <button class="o_Activity_toolButton o_Activity_uploadButton btn btn-link btn-primary pt-0 pl-0" t-on-click="activityView.onClickUploadDocument">
+                                <button class="btn btn-link btn-primary pt-0 pl-0" t-attf-class="{{ className('toolButton', 'uploadButton') }}" t-on-click="activityView.onClickUploadDocument">
                                     <i class="fa fa-upload"/> Upload Document
                                 </button>
                             </t>
-                            <button class="o_Activity_toolButton o_Activity_editButton btn btn-link btn-primary pt-0" t-on-click="activityView.onClickEdit">
+                            <button class="btn btn-link btn-primary pt-0" t-attf-class="{{ className('toolButton', 'editButton') }}" t-on-click="activityView.onClickEdit">
                                 <i class="fa fa-pencil"/> Edit
                             </button>
-                            <button class="o_Activity_toolButton o_Activity_cancelButton btn btn-link btn-primary pt-0" t-on-click="activityView.onClickCancel" >
+                            <button class="btn btn-link btn-primary pt-0" t-attf-class="{{ className('toolButton', 'cancelButton') }}" t-on-click="activityView.onClickCancel" >
                                 <i class="fa fa-times"/> Cancel
                             </button>
                         </div>

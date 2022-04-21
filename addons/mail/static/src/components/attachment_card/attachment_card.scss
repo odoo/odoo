@@ -2,44 +2,52 @@
 // Layout
 // ------------------------------------------------------------------
 
-.o_AttachmentCard:hover .o_AttachmentCard_asideItemUnlink.o-pretty {
-    transform: translateX(0);
-}
-
-.o_AttachmentCard_action {
-    min-width: 20px;
-}
-
-.o_AttachmentCard_aside {
-    &:not(.o-has-multiple-action) {
-        min-width: 50px;
+.o_AttachmentCard {
+    &:hover &_asideItemUnlink.o-pretty {
+        transform: translateX(0);
     }
-
-    &.o-has-multiple-action {
-        min-width: 30px;
+    
+    &_action {
+        min-width: 20px;
+    }
+    
+    &_aside {
+        &:not(.o-has-multiple-action) {
+            min-width: 50px;
+        }
+    
+        &.o-has-multiple-action {
+            min-width: 30px;
+        }
+    }
+    
+    &_asideItemUnlink.o-pretty {
+        transform: translateX(100%);
+    }
+    
+    &_details {
+        min-width: 0; /* This allows the text ellipsis in the flex element */
     }
 }
 
-.o_AttachmentCard_asideItemUnlink.o-pretty {
-    transform: translateX(100%);
-}
-
-.o_AttachmentCard_details {
-    min-width: 0; /* This allows the text ellipsis in the flex element */
-}
 
 // ------------------------------------------------------------------
 // Style
 // ------------------------------------------------------------------
 
-.o_AttachmentCard_image.o-attachment-viewable {
-    cursor: zoom-in;
+.o_AttachmentCard {
+    &_image.o-attachment-viewable {
+        cursor: zoom-in;
+    }
 }
+
 
 // ------------------------------------------------------------------
 // Animation
 // ------------------------------------------------------------------
 
-.o_AttachmentCard_asideItemUnlink.o-pretty {
-    transition: transform 0.3s ease 0s;
+.o_AttachmentCard {
+    &_asideItemUnlink.o-pretty {
+        transition: transform 0.3s ease 0s;
+    }
 }

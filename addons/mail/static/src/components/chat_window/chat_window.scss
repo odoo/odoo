@@ -31,35 +31,37 @@
         height: 100%;
         width: 100%;
     }
+
+    &_channelInvitationForm {
+        min-height: 450px; // allow flex shrink smaller than content (but not too small)
+    }
+    
+    &_header {
+        flex: 0 0 auto;
+    }
+    
+    &_newMessageForm {
+        padding: map-get($spacers, 1);
+        margin-top: map-get($spacers, 1);
+        display: flex;
+        align-items: center;
+    }
+    
+    &_newMessageFormInput {
+        flex: 1 1 auto;
+    }
+    
+    &_newMessageFormLabel {
+        margin-right: map-get($spacers, 2);
+        flex: 0 0 auto;
+    }
+    
+    &_thread {
+        flex: 1 1 auto;
+    }
+
 }
 
-.o_ChatWindow_channelInvitationForm {
-    min-height: 450px; // allow flex shrink smaller than content (but not too small)
-}
-
-.o_ChatWindow_header {
-    flex: 0 0 auto;
-}
-
-.o_ChatWindow_newMessageForm {
-    padding: map-get($spacers, 1);
-    margin-top: map-get($spacers, 1);
-    display: flex;
-    align-items: center;
-}
-
-.o_ChatWindow_newMessageFormInput {
-    flex: 1 1 auto;
-}
-
-.o_ChatWindow_newMessageFormLabel {
-    margin-right: map-get($spacers, 2);
-    flex: 0 0 auto;
-}
-
-.o_ChatWindow_thread {
-    flex: 1 1 auto;
-}
 
 // ------------------------------------------------------------------
 // Style
@@ -81,17 +83,19 @@
     .o_Composer {
         border: 0;
     }
+
+    &_header {
+        border-radius: 3px 3px 0 0;
+    }
+    
+    &_newMessageFormInput {
+        outline: none;
+        border: $border-width solid gray('300'); // cancel firefox border on input focus
+    }
+    
+    &_thread .o_ThreadView_messageList {
+        font-size: 1rem;
+    }
+
 }
 
-.o_ChatWindow_header {
-    border-radius: 3px 3px 0 0;
-}
-
-.o_ChatWindow_newMessageFormInput {
-    outline: none;
-    border: $border-width solid gray('300'); // cancel firefox border on input focus
-}
-
-.o_ChatWindow_thread .o_ThreadView_messageList {
-    font-size: 1rem;
-}

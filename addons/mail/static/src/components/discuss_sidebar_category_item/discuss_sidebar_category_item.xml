@@ -6,7 +6,7 @@
                 t-att-class="{
                     'o-active': categoryItem.isActive,
                     'o-unread': categoryItem.isUnread,
-                }" t-attf-class="{{ className }}" t-on-click="categoryItem.onClick" t-att-data-thread-local-id="categoryItem.channel.localId" t-att-data-thread-name="categoryItem.channel.displayName"
+                }" t-attf-class="{{ className() }}" t-on-click="categoryItem.onClick" t-att-data-thread-local-id="categoryItem.channel.localId" t-att-data-thread-name="categoryItem.channel.displayName"
                 t-ref="root"
             >
                 <div class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_avatar">

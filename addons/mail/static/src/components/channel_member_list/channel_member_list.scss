@@ -1,12 +1,15 @@
-.o_ChannelMemberList_avatar {
-    object-fit: cover;
+.o_ChannelMemberList {
+    &_avatar {
+        object-fit: cover;
+    }
+    
+    &_avatarContainer {
+        width: 32px;
+        height: 32px;
+    }
+    
+    &_name {
+        min-width: 0;
+    }
 }
 
-.o_ChannelMemberList_avatarContainer {
-    width: 32px;
-    height: 32px;
-}
-
-.o_ChannelMemberList_name {
-    min-width: 0;
-}

@@ -3,7 +3,7 @@
 
     <t t-name="mail.ChatWindow" owl="1">
         <t t-if="chatWindow">
-            <div class="o_ChatWindow bg-white" t-attf-class="{{ className }}" tabindex="0" t-att-data-visible-index="chatWindow.visibleIndex"
+            <div class="bg-white" t-attf-class="{{ className() }}" tabindex="0" t-att-data-visible-index="chatWindow.visibleIndex"
                 t-att-class="{
                     'o-focused': chatWindow.isFocused,
                     'o-folded': chatWindow.isFolded,
@@ -13,7 +13,7 @@
                 }" t-att-style="chatWindow.componentStyle" t-on-keydown="chatWindow.onKeydown" t-on-focusout="chatWindow.onFocusout" t-att-data-chat-window-local-id="chatWindow.localId" t-att-data-thread-local-id="chatWindow.thread ? chatWindow.thread.localId : ''" t-ref="root"
             >
                 <ChatWindowHeader
-                    className="'o_ChatWindow_header'"
+                    className="className('header')"
                     chatWindowLocalId="chatWindow.localId"
                     hasCloseAsBackButton="props.hasCloseAsBackButton"
                     isExpandable="props.isExpandable"
@@ -23,11 +23,11 @@
                     <ChannelMemberList channelLocalId="chatWindow.thread.localId" className="'bg-white'"/>
                 </t>
                 <t t-if="chatWindow.channelInvitationForm">
-                    <ChannelInvitationForm className="'o_ChatWindow_channelInvitationForm'" localId="chatWindow.channelInvitationForm.localId"/>
+                    <ChannelInvitationForm className="className('channelInvitationForm')" localId="chatWindow.channelInvitationForm.localId"/>
                 </t>
                 <t t-if="chatWindow.threadView">
                     <ThreadView
-                        className="'o_ChatWindow_thread'"
+                        className="className('thread')"
                         hasComposerCurrentPartnerAvatar="false"
                         hasComposerSendButton="messaging.device.isMobile"
                         localId="chatWindow.threadView.localId"
@@ -35,12 +35,12 @@
                     />
                 </t>
                 <t t-if="chatWindow.newMessageAutocompleteInputView">
-                    <div class="o_ChatWindow_newMessageForm">
-                        <span class="o_ChatWindow_newMessageFormLabel">
+                    <div t-attf-class="{{ className('newMessageForm') }}">
+                        <span t-attf-class="{{ className('newMessageFormLabel') }}">
                             To:
                         </span>
                         <AutocompleteInput
-                            className="'o_ChatWindow_newMessageFormInput'"
+                            className="className('newMessageFormInput')"
                             placeholder="chatWindow.newMessageFormInputPlaceholder"
                             select="_onAutocompleteSelect"
                             source="_onAutocompleteSource"

@@ -2,18 +2,18 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ChatWindowHiddenMenu" owl="1">
-        <div class="o_ChatWindowHiddenMenu dropup position-fixed bottom-0 align-items-stretch d-flex px-2 py-1 rounded-lg-top bg-900 o_cursor_pointer" t-attf-class="{{ className }}" t-ref="root">
-            <div class="o_ChatWindowHiddenMenu_dropdownToggle dropdown-toggle justify-content-center align-items-center flex-grow-1 d-flex mw-100" t-att-class="{ 'show opacity-50': messaging.chatWindowManager.isHiddenMenuOpen }" t-on-click="messaging.chatWindowManager.onClickHiddenMenuToggler">
-                <div class="o_ChatWindowHiddenMenu_dropdownToggleIcon o_ChatWindowHiddenMenu_dropdownToggleItem me-1 fa fa-comments-o"/>
-                <div class="o_ChatWindowHiddenMenu_dropdownToggleItem o_ChatWindowHiddenMenu_windowCounter mx-1 text-truncate">
+        <div class="dropup position-fixed bottom-0 align-items-stretch d-flex px-2 py-1 rounded-lg-top bg-900 o_cursor_pointer" t-attf-class="{{ className() }}" t-ref="root">
+            <div class="dropdown-toggle justify-content-center align-items-center flex-grow-1 d-flex mw-100" t-attf-class="{{ className('dropdownToggle') }}" t-att-class="{ 'show opacity-50': messaging.chatWindowManager.isHiddenMenuOpen }" t-on-click="messaging.chatWindowManager.onClickHiddenMenuToggler">
+                <div class="me-1 fa fa-comments-o" t-attf-class="{{ className('dropdownToggleIcon', 'dropdownToggleItem') }}"/>
+                <div class="mx-1 text-truncate" t-attf-class="{{ className('dropdownToggleItem', 'windowCounter') }}">
                     <t t-esc="messaging.chatWindowManager.allOrderedHidden.length"/>
                 </div>
             </div>
-            <ul class="o_ChatWindowHiddenMenu_list dropdown-menu dropdown-menu-right m-0 p-0 overflow-auto" t-att-class="{ show: messaging.chatWindowManager.isHiddenMenuOpen }" role="menu" t-ref="list">
+            <ul class="dropdown-menu dropdown-menu-right m-0 p-0 overflow-auto" t-attf-class="{{ className('list') }}" t-att-class="{ show: messaging.chatWindowManager.isHiddenMenuOpen }" role="menu" t-ref="list">
                 <t t-foreach="messaging.chatWindowManager.allOrderedHidden" t-as="chatWindow" t-key="chatWindow.localId">
-                    <li class="o_ChatWindowHiddenMenu_listItem" t-att-class="{ 'border-bottom' : !chatWindow_last }" role="menuitem">
+                    <li t-attf-class="{{ className('listItem') }}" t-att-class="{ 'border-bottom' : !chatWindow_last }" role="menuitem">
                         <ChatWindowHeader
-                            className="'o_ChatWindowHiddenMenu_chatWindowHeader opacity-100-hover'"
+                            className="className('chatWindowHeader') + ' opacity-100-hover'"
                             chatWindowLocalId="chatWindow.localId"
                             onClicked="chatWindow.onClickFromChatWindowHiddenMenu"
                         />
@@ -21,7 +21,7 @@
                 </t>
             </ul>
             <t t-if="messaging.chatWindowManager.unreadHiddenConversationAmount > 0">
-                <div class="o_ChatWindowHiddenMenu_unreadCounter position-absolute end-0 top-0 badge badge-pill badge-primary">
+                <div class="position-absolute end-0 top-0 badge badge-pill badge-primary" t-attf-class="{{ className('unreadCounter') }}">
                     <t t-esc="messaging.chatWindowManager.unreadHiddenConversationAmount"/>
                 </div>
             </t>

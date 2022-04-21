@@ -11,7 +11,7 @@
                     'o-offline': partner.im_status === 'offline',
                     'o-online': partner.im_status === 'online',
                 }"
-                t-attf-class="{{ className }}"
+                t-attf-class="{{ className() }}"
                 t-on-click="_onClick"
                 t-att-data-partner-local-id="partner.localId"
                 t-ref="root"

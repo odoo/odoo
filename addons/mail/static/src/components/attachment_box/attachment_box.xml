@@ -3,28 +3,28 @@
 
     <t t-name="mail.AttachmentBox" owl="1">
         <t t-if="attachmentBoxView">
-            <div class="o_AttachmentBox position-relative" t-attf-class="{{ className }}" t-ref="root">
-                <div class="o_AttachmentBox_title d-flex align-items-center">
-                    <hr class="o_AttachmentBox_dashedLine flex-grow-1"/>
-                    <span class="o_AttachmentBox_titleText p-3 font-weight-bold">
+            <div class="position-relative" t-attf-class="{{ className() }}" t-ref="root">
+                <div class="d-flex align-items-center" t-attf-class="{{ className('title') }}">
+                    <hr class="flex-grow-1" t-attf-class="{{ className('dashedLine') }}"/>
+                    <span class="p-3 font-weight-bold" t-attf-class="{{ className('titleText') }}">
                         Attachments
                     </span>
-                    <hr class="o_AttachmentBox_dashedLine flex-grow-1"/>
+                    <hr class="flex-grow-1" t-attf-class="{{ className('dashedLine') }}"/>
                 </div>
-                <div class="o_AttachmentBox_content d-flex flex-column">
+                <div class="d-flex flex-column" t-attf-class="{{ className('content') }}">
                     <t t-if="isDropZoneVisible.value">
                         <DropZone
-                            className="'o_AttachmentBox_dropZone'"
+                            className="className('dropZone')"
                             onDropzoneFilesDropped="_onDropZoneFilesDropped"
                         />
                     </t>
                     <t t-if="attachmentBoxView.attachmentList">
                         <AttachmentList
-                            className="'o_attachmentBox_attachmentList'"
+                            className="className('attachmentList')"
                             localId="attachmentBoxView.attachmentList.localId"
                         />
                     </t>
-                    <button class="o_AttachmentBox_buttonAdd btn btn-link" type="button" t-on-click="attachmentBoxView.onClickAddAttachment">
+                    <button class="btn btn-link" t-attf-class="{{ className('buttonAdd') }}" type="button" t-on-click="attachmentBoxView.onClickAddAttachment">
                         <i class="fa fa-plus-square"/>
                         Add attachments
                     </button>

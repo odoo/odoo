@@ -3,7 +3,7 @@
 
     <t t-name="mail.RtcOptionList" owl="1">
         <t t-if="rtcOptionList">
-            <div class="o_RtcOptionList" t-attf-class="{{ className }}" t-ref="root">
+            <div class="o_RtcOptionList" t-attf-class="{{ className() }}" t-ref="root">
                 <button class="o_RtcOptionList_button" t-on-click="rtcOptionList.onClickLayout">
                     <i class="o_RtcOptionList_buttonIcon fa fa-lg fa-th-large"/>
                     <span class="o_RtcOptionList_buttonText">Change layout</span>

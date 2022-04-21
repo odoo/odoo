@@ -6,7 +6,7 @@
                 t-att-class="{
                     'o-active': mailbox === messaging.discuss.thread,
                     'o-starred-box': mailbox === messaging.starred,
-                }" t-attf-class="{{ className }}" t-on-click="mailbox.onClick" t-att-data-thread-local-id="mailbox.localId" t-att-data-thread-name="mailbox.displayName"
+                }" t-attf-class="{{ className() }}" t-on-click="mailbox.onClick" t-att-data-thread-local-id="mailbox.localId" t-att-data-thread-name="mailbox.displayName"
                 t-ref="root"
             >
                 <ThreadIcon className="'o_DiscussSidebarMailbox_item'" threadLocalId="mailbox.localId"/>

@@ -3,77 +3,83 @@
 
     <t t-name="mail.ChatWindowHeader" owl="1">
         <t t-if="chatWindow">
+<<<<<<< HEAD
             <div class="o_ChatWindowHeader" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-attf-class="{{ className }}" t-on-click="_onClick" t-ref="root">
                 <t t-if="props.hasCloseAsBackButton">
                     <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandBack o_ChatWindowHeader_commandClose" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-on-click="chatWindow.onClickClose" title="Close conversation">
+=======
+            <div t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-attf-class="{{ className() }}" t-on-click="_onClick" t-ref="root">
+                <t t-if="chatWindow.hasCloseAsBackButton">
+                    <div t-attf-class="{{ className('command', 'commandBack', 'commandClose') }}" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-on-click="chatWindow.onClickClose" title="Close conversation">
+>>>>>>> fbb8789ff9f ([WIP])
                         <i class="fa fa-arrow-left"/>
                     </div>
                 </t>
                 <t t-if="chatWindow.thread and chatWindow.thread.model === 'mail.channel'">
                     <ThreadIcon
-                        className="'o_ChatWindowHeader_icon o_ChatWindowHeader_item'"
+                        className="className('icon', 'item')"
                         threadLocalId="chatWindow.thread.localId"
                     />
                 </t>
-                <div class="o_ChatWindowHeader_item o_ChatWindowHeader_name text-truncate" t-att-title="chatWindow.name">
+                <div class="text-truncate" t-attf-class="{{ className('item', 'name') }}" t-att-title="chatWindow.name">
                     <t t-esc="chatWindow.name"/>
                 </div>
                 <t t-if="chatWindow.thread and chatWindow.thread.localMessageUnreadCounter > 0">
-                    <div class="o_ChatWindowHeader_counter o_ChatWindowHeader_item">
+                    <div t-attf-class="{{ className('counter', 'item') }}">
                         (<t t-esc="chatWindow.thread.localMessageUnreadCounter"/>)
                     </div>
                 </t>
                 <div class="o-autogrow"/>
-                <div class="o_ChatWindowHeader_item o_ChatWindowHeader_rightArea">
+                <div t-attf-class="{{ className('item', 'rightArea') }}">
                     <t t-if="chatWindow.hasCallButtons">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandCamera" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-att-disabled="chatWindow.thread.hasPendingRtcRequest" t-on-click="chatWindow.onClickCamera" title="Start a Video Call">
+                        <div t-attf-class="{{ className('command', 'commandCamera') }}" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-att-disabled="chatWindow.thread.hasPendingRtcRequest" t-on-click="chatWindow.onClickCamera" title="Start a Video Call">
                             <i class="fa fa-video-camera"/>
                         </div>
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandPhone" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-att-disabled="chatWindow.thread.hasPendingRtcRequest" t-on-click="chatWindow.onClickPhone" title="Start a Call">
+                        <div t-attf-class="{{ className('command', 'commandPhone') }}" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-att-disabled="chatWindow.thread.hasPendingRtcRequest" t-on-click="chatWindow.onClickPhone" title="Start a Call">
                             <i class="fa fa-phone"/>
                         </div>
                     </t>
                     <t t-if="chatWindow.hasInviteFeature">
                         <t t-if="!chatWindow.channelInvitationForm">
-                            <div class="o_ChatWindowHeader_command" title="Add users" t-on-click="chatWindow.onClickShowInviteForm">
+                            <div t-attf-class="{{ className('command') }}" title="Add users" t-on-click="chatWindow.onClickShowInviteForm">
                                 <i class="fa fa-lg fa-user-plus"/>
                             </div>
                         </t>
                         <t t-if="chatWindow.channelInvitationForm">
-                            <div class="o_ChatWindowHeader_command" title="Stop adding users" t-on-click="chatWindow.onClickHideInviteForm">
+                            <div t-attf-class="{{ className('command') }}" title="Stop adding users" t-on-click="chatWindow.onClickHideInviteForm">
                                 <i class="fa fa-lg fa-user-plus"/>
                             </div>
                         </t>
                     </t>
                     <t t-if="chatWindow.thread and chatWindow.thread.hasMemberListFeature and !chatWindow.isMemberListOpened">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShowMemberList" t-att-class="{ 'o-mobile': messaging.device.isMobile }"  title="Show Member List" t-on-click="chatWindow.onClickShowMemberList">
+                        <div t-attf-class="{{ className('command', 'commandShowMemberList') }}" t-att-class="{ 'o-mobile': messaging.device.isMobile }"  title="Show Member List" t-on-click="chatWindow.onClickShowMemberList">
                             <i class="fa fa-users"/>
                         </div>
                     </t>
                     <t t-if="chatWindow.thread and chatWindow.thread.hasMemberListFeature and chatWindow.isMemberListOpened">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandHideMemberList" t-att-class="{ 'o-mobile': messaging.device.isMobile }" title="Hide Member List" t-on-click="chatWindow.onClickHideMemberList">
+                        <div t-attf-class="{{ className('command', 'commandHideMemberList') }}" t-att-class="{ 'o-mobile': messaging.device.isMobile }" title="Hide Member List" t-on-click="chatWindow.onClickHideMemberList">
                             <i class="fa fa-users"/>
                         </div>
                     </t>
                     <t t-if="chatWindow.hasShiftPrev">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftPrev" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-on-click="chatWindow.onClickShiftPrev" t-att-title="chatWindow.shiftPrevText">
+                        <div t-attf-class="{{ className('command', 'commandShiftPrev') }}" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-on-click="chatWindow.onClickShiftPrev" t-att-title="chatWindow.shiftPrevText">
                             <!-- this is reversed automatically when language is rtl -->
                             <i class="fa fa-angle-left"/>
                         </div>
                     </t>
                     <t t-if="chatWindow.hasShiftNext">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftNext" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-on-click="chatWindow.onClickShiftNext" t-att-title="chatWindow.shiftNextText">
+                        <div t-attf-class="{{ className('command', 'commandShiftNext') }}" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-on-click="chatWindow.onClickShiftNext" t-att-title="chatWindow.shiftNextText">
                             <!-- this is reversed automatically when language is rtl -->
                             <i class="fa fa-angle-right"/>
                         </div>
                     </t>
                     <t t-if="props.isExpandable">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandExpand" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-on-click="chatWindow.onClickExpand" title="Open in Discuss">
+                        <div t-attf-class="{{ className('command', 'commandExpand') }}" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-on-click="chatWindow.onClickExpand" title="Open in Discuss">
                             <i class="fa fa-expand"/>
                         </div>
                     </t>
                     <t t-if="!props.hasCloseAsBackButton">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandClose" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-on-click="chatWindow.onClickClose" title="Close chat window">
+                        <div t-attf-class="{{ className('command', 'commandClose') }}" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-on-click="chatWindow.onClickClose" title="Close chat window">
                             <i class="fa fa-close"/>
                         </div>
                     </t>

@@ -30,8 +30,19 @@ export function registerMessagingComponent(ComponentClass) {
             useModels();
             super.setup();
         }
-        get className() {
-            let res = '';
+        /**
+         * @param {...string} [partName]
+         * @returns {string}
+         */
+        className(...partNames) {
+            if (partNames.length > 0) {
+                let res = '';
+                for (const partName of partNames) {
+                    res += ` o_${name}_${partName}`;
+                }
+                return res;
+            }
+            let res = `o_${name} `;
             if (this.props.className) {
                 res += this.props.className;
             }

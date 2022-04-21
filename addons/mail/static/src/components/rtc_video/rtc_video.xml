@@ -4,7 +4,7 @@
     <t t-name="mail.RtcVideo" owl="1">
         <t t-if="rtcSession">
             <video class="o_RtcVideo"
-                t-attf-class="{{ className }}"
+                t-attf-class="{{ className() }}"
                 playsinline="true"
                 autoplay="true"
                 muted="true"

@@ -3,15 +3,15 @@
 
     <t t-name="mail.Chatter" owl="1">
         <t t-if="chatter">
-            <div class="o_Chatter position-relative flex-grow-1 flex-column d-flex w-100 bg-white" t-attf-class="{{ className }}" t-ref="root">
-                <div class="o_Chatter_fixedPanel">
+            <div class="position-relative flex-grow-1 flex-column d-flex w-100 bg-white" t-attf-class="{{ className() }}" t-ref="root">
+                <div t-attf-class="{{ className('fixedPanel') }}">
                     <ChatterTopbar
-                        className="'o_Chatter_topbar'"
+                        className="className('topbar')"
                         chatterLocalId="chatter.localId"
                     />
                     <t t-if="chatter.composerView">
                         <Composer
-                            className="'o_Chatter_composer border-bottom'"
+                            className="className('composer') + ' border-bottom'"
                             classNameObj="{ 'o-bordered border-left border-right': chatter.hasExternalBorder }"
                             localId="chatter.composerView.localId"
                             hasMentionSuggestionsBelowPosition="true"
@@ -19,22 +19,22 @@
                         />
                     </t>
                 </div>
-                <div class="o_Chatter_scrollPanel overflow-auto" t-on-scroll="chatter.onScrollScrollPanel" t-ref="scrollPanel">
+                <div class="overflow-auto" t-attf-class="{{ className('scrollPanel') }}" t-on-scroll="chatter.onScrollScrollPanel" t-ref="scrollPanel">
                     <t t-if="chatter.attachmentBoxView">
                         <AttachmentBox
-                            className="'o_Chatter_attachmentBox'"
+                            className="className('attachmentBox')"
                             localId="chatter.attachmentBoxView.localId"
                         />
                     </t>
                     <t t-if="chatter.activityBoxView">
                         <ActivityBox
-                            className="'o_Chatter_activityBox'"
+                            className="className('activityBox')"
                             localId="chatter.activityBoxView.localId"
                         />
                     </t>
                     <t t-if="chatter.threadView">
                         <ThreadView
-                            className="'o_Chatter_thread'"
+                            className="className('thread')"
                             hasScrollAdjust="chatter.hasMessageListScrollAdjust"
                             localId="chatter.threadView.localId"
                         />

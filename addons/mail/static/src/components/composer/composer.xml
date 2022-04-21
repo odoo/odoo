@@ -13,7 +13,7 @@
                     'o-is-compact': composerView.isCompact,
                     'o-messaging-in-editing': composerView.messageViewInEditing,
                 }"
-                t-attf-class="{{ className }}"
+                t-attf-class="{{ className() }}"
                 t-on-keydown="composerView.onKeydown"
                 t-ref="root"
             >
