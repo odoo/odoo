@@ -5945,8 +5945,8 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("onchange many2many in one2many list editable", async function (assert) {
-        assert.expect(14);
+    QUnit.test("onchange many2many in one2many list editable", async function (assert) {
+        assert.expect(13);
 
         serverData.models.product.records.push({
             id: 1,
@@ -5960,7 +5960,7 @@ QUnit.module("Fields", (hooks) => {
                 }
             },
         };
-        var partnerOnchange = function (rec) {
+        const partnerOnchange = function (rec) {
             if (!rec.int_field || !rec.turtles.length) {
                 return;
             }
@@ -5992,7 +5992,7 @@ QUnit.module("Fields", (hooks) => {
             turtles: partnerOnchange,
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -6013,115 +6013,105 @@ QUnit.module("Fields", (hooks) => {
 
         // add new line (first, xpad)
         await addRow(target);
-        await testUtils.fields.editInput(form.$('input[name="display_name"]'), "first");
-        await click(form.$('div[name="product_id"] input'));
-        // the onchange won't be generated
-        await click($("li.ui-menu-item a:contains(xpad)").trigger("mouseenter"));
+        await editInput(target, 'div[name="display_name"] input', "first");
+        await clickOpenM2ODropdown(target, "product_id");
+        await click(target.querySelectorAll('div[name="product_id"] .o_input_dropdown li')[1]); // xpad
 
         assert.containsOnce(
-            form,
-            ".o_field_many2manytags.o_input",
+            target,
+            ".o_field_many2many_tags .o_input",
             "should display the line in editable mode"
         );
         assert.strictEqual(
-            form.$(".o_field_many2one input").val(),
+            target.querySelector(".o_field_many2one input").value,
             "xpad",
             "should display the product xpad"
         );
         assert.strictEqual(
-            form.$(".o_field_many2manytags.o_input .o_badge_text").text(),
+            target.querySelector(".o_field_many2many_tags .o_tag_badge_text").innerText,
             "first record",
             "should display the tag from the onchange"
         );
 
-        await click(form.$('input.o_field_integer[name="int_field"]'));
+        await click(target, 'div[name="int_field"] input');
 
         assert.strictEqual(
-            form.$(".o_data_cell.o_required_modifier").text(),
+            target.querySelector(".o_data_cell .o_required_modifier").innerText,
             "xpad",
             "should display the product xpad"
         );
-        assert.strictEqual(
-            form.$(".o_field_many2manytags:not(.o_input) .o_badge_text").text(),
-            "first record",
+        assert.containsNone(
+            target,
+            ".o_field_many2many_tags input.o_input",
             "should display the tag in readonly"
         );
 
         // enable the many2many onchange and generate it
-        await testUtils.fields.editInput(form.$('input.o_field_integer[name="int_field"]'), "10");
+        await editInput(target, 'div[name="int_field"] input', "10");
 
-        assert.strictEqual(
-            form.$(".o_data_cell.o_required_modifier").text(),
-            "xenomorphexphone",
-            "should display the product xphone and xenomorphe"
-        );
-        assert.strictEqual(
-            form.$(".o_data_row").text().replace(/\s+/g, " "),
-            "firstxenomorphe second record new linexphone first record ",
-            "should display the name, one2many and many2many value"
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.innerText),
+            ["first", "xenomorphe", "second record", "new line", "xphone", "first record"]
         );
 
         // disable the many2many onchange
-        await testUtils.fields.editInput(form.$('input.o_field_integer[name="int_field"]'), "0");
+        await editInput(target, 'div[name="int_field"] input', "0");
 
         // remove and start over
-        await click(form.$(".o_list_record_remove:first button"));
-        await click(form.$(".o_list_record_remove:first button"));
+        await click(target.querySelector(".o_list_record_remove button"));
+        await click(target.querySelector(".o_list_record_remove button"));
 
         // enable the many2many onchange
-        await testUtils.fields.editInput(form.$('input.o_field_integer[name="int_field"]'), "10");
+        await editInput(target, 'div[name="int_field"] input', "10");
 
         // add new line (first, xenomorphe)
         await addRow(target);
-        await testUtils.fields.editInput(form.$('input[name="display_name"]'), "first");
-        await click(form.$('div[name="product_id"] input'));
-        // generate the onchange
-        await click($("li.ui-menu-item a:contains(xenomorphe)").trigger("mouseenter"));
+        await editInput(target, 'div[name="display_name"] input', "first");
+        await clickOpenM2ODropdown(target, "product_id");
+        await click(target.querySelectorAll('div[name="product_id"] .o_input_dropdown li')[2]); // xenomorphe
 
         assert.containsOnce(
-            form,
-            ".o_field_many2manytags.o_input",
+            target,
+            ".o_field_many2many_tags .o_input",
             "should display the line in editable mode"
         );
         assert.strictEqual(
-            form.$(".o_field_many2one input").val(),
+            target.querySelector('div[name="product_id"] input').value,
             "xenomorphe",
             "should display the product xenomorphe"
         );
         assert.strictEqual(
-            form.$(".o_field_many2manytags.o_input .o_badge_text").text(),
+            target.querySelector(".o_field_many2many_tags .o_tag_badge_text").innerText,
             "second record",
             "should display the tag from the onchange"
         );
 
         // put list in readonly mode
-        await click(form.$('input.o_field_integer[name="int_field"]'));
+        await click(target, 'div[name="int_field"] input');
 
-        assert.strictEqual(
-            form.$(".o_data_cell.o_required_modifier").text(),
-            "xenomorphexphone",
-            "should display the product xphone and xenomorphe"
-        );
-        assert.strictEqual(
-            form.$(".o_field_many2manytags:not(.o_input) .o_badge_text").text(),
-            "second recordfirst record",
-            "should display the tag in readonly (first record and second record)"
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.innerText),
+            ["first", "xenomorphe", "second record", "new line", "xphone", "first record"]
         );
 
-        await testUtils.fields.editInput(form.$('input.o_field_integer[name="int_field"]'), "10");
+        assert.containsNone(
+            target,
+            ".o_field_many2many_tags input.o_input",
+            "should display the tag in readonly"
+        );
 
-        assert.strictEqual(
-            form.$(".o_data_row").text().replace(/\s+/g, " "),
-            "firstxenomorphe second record new linexphone first record ",
-            "should display the name, one2many and many2many value"
+        await editInput(target, 'div[name="int_field"] input', "10");
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.innerText),
+            ["first", "xenomorphe", "second record", "new line", "xphone", "first record"]
         );
 
         await clickSave(target);
 
-        assert.strictEqual(
-            form.$(".o_data_row").text().replace(/\s+/g, " "),
-            "firstxenomorphe second record new linexphone first record ",
-            "should display the name, one2many and many2many value after save"
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.innerText),
+            ["first", "xenomorphe", "second record", "new line", "xphone", "first record"]
         );
     });
 
