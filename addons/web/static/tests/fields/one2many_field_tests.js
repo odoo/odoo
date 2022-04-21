@@ -6410,7 +6410,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("nested x2many (non inline form view) and onchanges", async function (assert) {
+    QUnit.test("nested x2many (non inline form view) and onchanges", async function (assert) {
         assert.expect(6);
 
         serverData.models.partner.onchanges.bar = function (obj) {
@@ -6436,7 +6436,18 @@ QUnit.module("Fields", (hooks) => {
             }
         };
 
-        const form = await makeView({
+        serverData.views = {
+            "partner,false,form": `
+            <form>
+                <field name="turtles">
+                    <tree>
+                        <field name="turtle_foo"/>
+                    </tree>
+                </field>
+            </form>`,
+        };
+
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -6448,30 +6459,24 @@ QUnit.module("Fields", (hooks) => {
                             <field name="turtles"/>
                         </tree>
                     </field>
-                </form>`,
-            archs: {
-                "partner,false,form": `
-                    <form>
-                        <field name="turtles">
-                            <tree>
-                                <field name="turtle_foo"/>
-                            </tree>
-                        </field>
-                    </form>`,
-            },
+                </form>
+            `,
         });
 
-        assert.containsNone(form, ".o_data_row");
+        assert.containsNone(target, ".o_data_row");
 
-        await click(form.$(".o_field_widget[name=bar] input"));
-        assert.containsOnce(form, ".o_data_row");
-        assert.strictEqual(form.$(".o_data_row").text(), "1 record");
+        await click(target, 'div[name="bar"] input');
+        assert.containsOnce(target, ".o_data_row");
+        assert.strictEqual(target.querySelector(".o_data_row").innerText.trim(), "1 record");
 
-        await click(form.$(".o_data_row:first"));
+        await click(target.querySelector(".o_data_row td"));
 
-        assert.containsOnce(document.body, ".modal .o_form_view");
-        assert.containsOnce(document.body, ".modal .o_form_view .o_data_row");
-        assert.strictEqual($(".modal .o_form_view .o_data_row").text(), "new turtle");
+        assert.containsOnce(target, ".modal .o_form_view");
+        assert.containsOnce(target, ".modal .o_form_view .o_data_row");
+        assert.strictEqual(
+            target.querySelector(".modal .o_form_view .o_data_row").innerText.trim(),
+            "new turtle"
+        );
     });
 
     QUnit.skipWOWL(
@@ -6480,27 +6485,37 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(5);
 
             serverData.models.partner.records[0].p = [1];
-            const form = await makeView({
+            serverData.views = {
+                "partner,false,list": `
+                    <tree>
+                        <field name="turtles"/>
+                    </tree>
+                `,
+                "partner,false,form": `
+                    <form>
+                        <field name="turtles" widget="many2many_tags"/>
+                    </form>
+                `,
+            };
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
                 arch: '<form><field name="p"/></form>',
-                archs: {
-                    "partner,false,list": '<tree><field name="turtles"/></tree>',
-                    "partner,false,form":
-                        '<form><field name="turtles" widget="many2many_tags"/></form>',
-                },
                 resId: 1,
             });
 
-            assert.containsOnce(form, ".o_data_row");
-            assert.strictEqual(form.$(".o_data_row").text(), "1 record");
+            assert.containsOnce(target, ".o_data_row");
+            assert.strictEqual(target.querySelector(".o_data_row").innerText.trim(), "1 record");
 
-            await click(form.$(".o_data_row"));
+            await click(target.querySelector(".o_data_row td"));
 
-            assert.containsOnce(document.body, ".modal .o_form_view");
-            assert.containsOnce(document.body, ".modal .o_form_view .o_field_many2manytags .badge");
-            assert.strictEqual($(".modal .o_field_many2manytags").text().trim(), "donatello");
+            assert.containsOnce(target, ".modal .o_form_view");
+            assert.containsOnce(target, ".modal .o_form_view .o_field_many2many_tags .badge");
+            assert.strictEqual(
+                target.querySelector(".modal .o_field_many2many_tags").innerText.trim(),
+                "donatello"
+            );
         }
     );
 
