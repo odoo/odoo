@@ -891,6 +891,46 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test(
+        "widget many2many_tags: toggle colorpicker with multiple tags",
+        async function (assert) {
+            serverData.models.partner.records[0].timmy = [12, 14];
+            serverData.models.partner_type.records[0].color = 0;
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `<form>
+                        <field name="timmy" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    </form>`,
+                resId: 1,
+            });
+
+            assert.containsNone(target, ".o_colorpicker", "colorpicker should be closed");
+
+            // click on the badge to open colorpicker
+            await click(target.querySelector(".o_field_many2many_tags .badge"));
+            assert.containsOnce(target, ".o_colorlist", "colorpicker should be open");
+
+            await click(target.querySelector(".o_field_many2many_tags [title=silver]"));
+            assert.containsOnce(target, ".o_colorlist", "only one colorpicker should be open");
+
+            await click(target.querySelector(".o_field_many2many_tags [title=silver]"));
+            assert.containsNone(target, ".o_colorpicker", "colorpicker should be closed");
+
+            await click(target.querySelector(".o_field_many2many_tags [title=silver]"));
+            assert.containsOnce(target, ".o_colorlist", "colorpicker should be open");
+
+            await click(target);
+            assert.containsNone(
+                target,
+                ".o_colorpicker",
+                "click outside should close the colorpicker"
+            );
+        }
+    );
+
     QUnit.test("widget many2many_tags: toggle colorpicker multiple times", async function (assert) {
         assert.expect(11);
 

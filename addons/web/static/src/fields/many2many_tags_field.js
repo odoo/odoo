@@ -176,9 +176,15 @@ export class Many2ManyTagsField extends Component {
 
     onBadgeClick(ev, tag) {
         if (!this.canOpenColorDropdown) return;
+        const isClosed = !document.querySelector(".o_tag_popover");
+        if (isClosed) {
+            this.currentPopoverEl = null;
+        }
         if (this.popoverCloseFn) {
             this.closePopover();
-        } else {
+        }
+        if (isClosed || this.currentPopoverEl !== ev.currentTarget) {
+            this.currentPopoverEl = ev.currentTarget;
             this.popoverCloseFn = this.popover.add(
                 ev.currentTarget,
                 this.constructor.components.Popover,
