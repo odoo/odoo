@@ -302,3 +302,28 @@ class One2manyCase(TransactionCase):
             order.write({
                 'line_ids': [Command.link(line0.id), Command.link(line1.id)],
             })
+
+    def test_parent_id(self):
+        Team = self.env['test_new_api.team']
+        Member = self.env['test_new_api.team.member']
+
+        team1 = Team.create({'name': 'ORM'})
+        team2 = Team.create({'name': 'Bugfix', 'parent_id': team1.id})
+        team3 = Team.create({'name': 'Support', 'parent_id': team2.id})
+
+        Member.create({'name': 'Raphael', 'team_id': team1.id})
+        member2 = Member.create({'name': 'Noura', 'team_id': team3.id})
+        Member.create({'name': 'Ivan', 'team_id': team2.id})
+
+        # In this specific case...
+        self.assertEqual(member2.id, member2.team_id.parent_id.id)
+
+        # ...we had an infinite recursion on making the following search.
+        with self.assertRaises(ValueError):
+            Team.search([('member_ids', 'child_of', member2.id)])
+
+        # Also, test a simple infinite loop if record is marked as a parent of itself
+        team1.parent_id = team1.id
+        # Check that the search is not stuck in the loop
+        Team.search([('id', 'parent_of', team1.id)])
+        Team.search([('id', 'child_of', team1.id)])
