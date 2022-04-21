@@ -382,12 +382,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await click(autocompleteDropdown.querySelector("li a"));
-        assert.containsN(
-            target,
-            ".o_field_many2many_tags .dropdown-toggle .badge",
-            3,
-            "should contain 3 tags"
-        );
+        assert.containsN(target, ".o_field_many2many_tags .badge", 3, "should contain 3 tags");
         assert.strictEqual(
             target.querySelectorAll(".o_field_many2many_tags .badge .o_tag_badge_text")[2]
                 .textContent,
@@ -402,12 +397,7 @@ QUnit.module("Fields", (hooks) => {
 
         // remove tag silver
         await click(target.querySelectorAll(".o_field_many2many_tags .o_delete")[1]);
-        assert.containsN(
-            target,
-            ".o_field_many2many_tags .dropdown-toggle .badge",
-            2,
-            "should contain 2 tags"
-        );
+        assert.containsN(target, ".o_field_many2many_tags .badge", 2, "should contain 2 tags");
         const textContent = getNodesTextContent(
             target.querySelectorAll(".o_field_many2many_tags  .dropdown-toggle .badge")
         );
@@ -420,43 +410,47 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".o_form_button_save"));
 
         // checkbox 'Hide in Kanban'
-        const badgeElement = target.querySelectorAll(
-            ".o_field_many2many_tags .dropdown-toggle .badge"
-        )[1]; // selects 'red' tag
+        const badgeElement = target.querySelectorAll(".o_field_many2many_tags .badge")[1]; // selects 'red' tag
         await click(badgeElement);
         assert.containsOnce(
             target,
-            ".custom-checkbox input",
-            "should have a checkbox in the colorpicker dropdown menu"
-        );
-        const checkBox = target.querySelector(".o_field_many2many_tags .custom-checkbox input");
-        assert.notOk(
-            checkBox.checked,
-            "should have unticked checkbox in colorpicker dropdown menu"
+            ".o_tag_popover .custom-checkbox input",
+            "should have a checkbox in the colorpicker popover"
         );
 
-        await click(target, ".o_tag_dropdown input[type='checkbox']");
+        let checkBox = target.querySelector(".o_tag_popover .custom-checkbox input");
+        assert.notOk(checkBox.checked, "should have unticked checkbox in colorpicker popover");
+
+        await click(target, ".o_tag_popover input[type='checkbox']");
 
         assert.strictEqual(
             badgeElement.dataset.color,
             "0",
             "should become white/transparent when toggling on checkbox"
         );
+
+        await click(badgeElement);
+        checkBox = target.querySelector(".o_tag_popover .custom-checkbox input"); // refresh
+
         assert.ok(
             checkBox.checked,
-            "should have a ticked checkbox in colorpicker dropdown menu after mousedown"
+            "should have a ticked checkbox in colorpicker popover after mousedown"
         );
 
-        await click(target, ".o_tag_dropdown input[type='checkbox']");
+        await click(target, ".o_tag_popover input[type='checkbox']");
 
         assert.strictEqual(
             badgeElement.dataset.color,
             "8",
             "should revert to old color when toggling off checkbox"
         );
+
+        await click(badgeElement);
+        checkBox = target.querySelector(".o_tag_popover .custom-checkbox input"); // refresh
+
         assert.notOk(
             checkBox.checked,
-            "should have an unticked checkbox in colorpicker dropdown menu after 2nd click"
+            "should have an unticked checkbox in colorpicker popover after 2nd click"
         );
     });
 
@@ -897,83 +891,75 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
-        "widget many2many_tags: toggle colorpicker multiple times",
-        async function (assert) {
-            assert.expect(11);
+    QUnit.test("widget many2many_tags: toggle colorpicker multiple times", async function (assert) {
+        assert.expect(11);
 
-            serverData.models.partner.records[0].timmy = [12];
-            serverData.models.partner_type.records[0].color = 0;
+        serverData.models.partner.records[0].timmy = [12];
+        serverData.models.partner_type.records[0].color = 0;
 
-            var form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch:
-                    "<form>" +
-                    '<field name="timmy" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
-                    "</form>",
-                resId: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
-            });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form>
+                        <field name="timmy" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    </form>`,
+            resId: 1,
+        });
 
-            assert.strictEqual(
-                target.querySelectorAll(".o_field_many2many_tags .badge").length,
-                1,
-                "should have one tag"
-            );
-            assert.strictEqual(
-                target.querySelector(".o_field_many2many_tags .badge").data("color"),
-                0,
-                "tag should have color 0"
-            );
-            assert.containsNone(form, ".o_colorpicker", "colorpicker should be closed");
+        await clickEdit(target);
 
-            // click on the badge to open colorpicker
-            await click(target.querySelector(".o_field_many2many_tags .badge .dropdown-toggle"));
+        assert.strictEqual(
+            target.querySelectorAll(".o_field_many2many_tags .badge").length,
+            1,
+            "should have one tag"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_many2many_tags .badge").dataset.color,
+            "0",
+            "tag should have color 0"
+        );
+        assert.containsNone(target, ".o_colorpicker", "colorpicker should be closed");
 
-            assert.containsOnce(form, ".o_colorpicker", "colorpicker should be open");
+        // click on the badge to open colorpicker
+        await click(target.querySelector(".o_field_many2many_tags .badge"));
 
-            // click on the badge again to close colorpicker
-            await click(target.querySelector(".o_field_many2many_tags .badge .dropdown-toggle"));
+        assert.containsOnce(target, ".o_colorlist", "colorpicker should be open");
 
-            assert.strictEqual(
-                target.querySelector(".o_field_many2many_tags .badge").data("color"),
-                0,
-                "tag should still have color 0"
-            );
-            assert.containsNone(form, ".o_colorpicker", "colorpicker should be closed");
+        // click on the badge again to close colorpicker
+        await click(target.querySelector(".o_field_many2many_tags .badge"));
 
-            // click on the badge to open colorpicker
-            await click(target.querySelector(".o_field_many2many_tags .badge .dropdown-toggle"));
+        assert.strictEqual(
+            target.querySelector(".o_field_many2many_tags .badge").dataset.color,
+            "0",
+            "tag should still have color 0"
+        );
+        assert.containsNone(target, ".o_colorlist", "colorpicker should be closed");
 
-            assert.containsOnce(form, ".o_colorpicker", "colorpicker should be open");
+        // click on the badge to open colorpicker
+        await click(target.querySelector(".o_field_many2many_tags .badge"));
 
-            // click on the colorpicker, but not on a color
-            await click(target.querySelector(".o_colorpicker"));
+        assert.containsOnce(target, ".o_colorlist", "colorpicker should be open");
 
-            assert.strictEqual(
-                target.querySelector(".o_field_many2many_tags .badge").data("color"),
-                0,
-                "tag should still have color 0"
-            );
-            assert.containsNone(form, ".o_colorpicker", "colorpicker should be closed");
+        // click on the colorpicker, but not on a color
+        await click(target.querySelector(".o_colorlist"));
 
-            // click on the badge to open colorpicker
-            await click(target.querySelector(".o_field_many2many_tags .badge .dropdown-toggle"));
+        assert.strictEqual(
+            target.querySelector(".o_field_many2many_tags .badge").dataset.color,
+            "0",
+            "tag should still have color 0"
+        );
+        assert.containsOnce(target, ".o_colorlist", "colorpicker should not be closed");
 
-            await click(target, '.o_colorpicker button[data-color="2"]');
+        await click(target, '.o_colorlist button[data-color="2"]');
 
-            assert.strictEqual(
-                target.querySelector(".o_field_many2many_tags .badge").data("color"),
-                2,
-                "tag should have color 2"
-            );
-            assert.containsNone(form, ".o_colorpicker", "colorpicker should be closed");
-        }
-    );
+        assert.strictEqual(
+            target.querySelector(".o_field_many2many_tags .badge").dataset.color,
+            "2",
+            "tag should have color 2"
+        );
+        assert.containsNone(target, ".o_colorlist", "colorpicker should be closed");
+    });
 
     QUnit.skipWOWL("fieldmany2many tags: quick create a new record", async function (assert) {
         assert.expect(3);

@@ -6,14 +6,20 @@ import { standardFieldProps } from "./standard_field_props";
 
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { ColorList } from "@web/core/colorlist/colorlist";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { Domain } from "@web/core/domain";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
+import { usePopover } from "@web/core/popover/popover_hook";
 
 const { Component, useState } = owl;
+
+class Many2ManyTagsFieldColorListPopover extends Component {}
+Many2ManyTagsFieldColorListPopover.template = "web.Many2ManyTagsFieldColorListPopover";
+Many2ManyTagsFieldColorListPopover.components = {
+    CheckBox,
+    ColorList,
+};
 
 export class Many2ManyTagsField extends Component {
     setup() {
@@ -22,6 +28,7 @@ export class Many2ManyTagsField extends Component {
         });
         this.orm = useService("orm");
         this.previousColorsMap = {};
+        this.popover = usePopover();
     }
     get tags() {
         return this.props.value.records.map((record) => ({
@@ -48,6 +55,7 @@ export class Many2ManyTagsField extends Component {
         const tagRecord = this.props.value.records.find((record) => record.id === tag.id);
         tagRecord.update(this.props.colorField, colorIndex);
         tagRecord.save();
+        this.closePopover();
     }
     onTagVisibilityChange(isHidden, tag) {
         const tagRecord = this.props.value.records.find((record) => record.id === tag.id);
@@ -59,6 +67,12 @@ export class Many2ManyTagsField extends Component {
             isHidden ? 0 : this.previousColorsMap[tagRecord.resId] || 1
         );
         tagRecord.save();
+        this.closePopover();
+    }
+
+    closePopover() {
+        this.popoverCloseFn();
+        this.popoverCloseFn = null;
     }
 
     get sources() {
@@ -159,14 +173,29 @@ export class Many2ManyTagsField extends Component {
         const ids = this.props.value.currentIds.filter((id) => id !== tag.resId);
         this.props.value.replaceWith(ids);
     }
+
+    onBadgeClick(ev, tag) {
+        if (!this.canOpenColorDropdown) return;
+        if (this.popoverCloseFn) {
+            this.closePopover();
+        } else {
+            this.popoverCloseFn = this.popover.add(
+                ev.currentTarget,
+                this.constructor.components.Popover,
+                {
+                    colors: this.constructor.RECORD_COLORS,
+                    tag: tag,
+                    switchTagColor: this.switchTagColor.bind(this),
+                    onTagVisibilityChange: this.onTagVisibilityChange.bind(this),
+                }
+            );
+        }
+    }
 }
 
 Many2ManyTagsField.components = {
-    CheckBox,
-    ColorList,
-    Dropdown,
-    DropdownItem,
     AutoComplete,
+    Popover: Many2ManyTagsFieldColorListPopover,
 };
 Many2ManyTagsField.template = "web.Many2ManyTagsField";
 Many2ManyTagsField.defaultProps = {

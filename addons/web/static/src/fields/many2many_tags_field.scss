@@ -16,17 +16,20 @@
         color: inherit;
         line-height: 1.1;
     }
-    .o_tag_dropdown label {
-        line-height: $o-line-height-base;
-    }
-    .custom-checkbox {
-        padding-top: 5px ;
-    }
+   
+}
 
-    .o_tag_dropdown {
-        margin: 5px;
-        max-width: 150px;
-    }
+.o_tag_popover {
+    margin: 5px;
+    max-width: 150px;
+}
+
+.o_tag_popover label {
+    line-height: $o-line-height-base;
+}
+
+.o_tag_popover .custom-checkbox {
+    padding-top: 5px ;
 }
 
 @for $size from 1 through length($o-colors) {
@@ -47,8 +50,4 @@
             }
         }
     }
-}
-
-.unset-button-style {
-    all: unset;
 }
