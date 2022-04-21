@@ -961,27 +961,32 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".o_colorlist", "colorpicker should be closed");
     });
 
-    QUnit.skipWOWL("fieldmany2many tags: quick create a new record", async function (assert) {
+    QUnit.test("fieldmany2many tags: quick create a new record", async function (assert) {
         assert.expect(3);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
             arch: `<form><field name="timmy" widget="many2many_tags"/></form>`,
         });
 
-        assert.containsNone(form, ".o_field_many2many_tags .badge");
+        assert.containsNone(target, ".o_field_many2many_tags .badge");
 
-        //await testUtils.fields.many2one.searchAndClickItem("timmy", { search: "new value" });
+        await editInput(
+            target.querySelector(".o_field_many2many_selection .o_input_dropdown input"),
+            null,
+            "new"
+        );
+        await selectDropdownItem(target, "timmy", `Create "new"`);
 
-        assert.containsOnce(form, ".o_field_many2many_tags .badge");
+        assert.containsOnce(target, ".o_field_many2many_tags .badge");
 
         await click(target.querySelector(".o_form_button_save"));
 
         assert.strictEqual(
             target.querySelector(".o_field_many2many_tags").textContent.trim(),
-            "new value"
+            "new"
         );
     });
 
