@@ -4,6 +4,7 @@ odoo.define('mail.model.Message', function (require) {
 var emojis = require('mail.emojis');
 var AbstractMessage = require('mail.model.AbstractMessage');
 var mailUtils = require('mail.utils');
+var field_utils = require('web.field_utils');
 
 var core = require('web.core');
 var Mixins = require('web.mixins');
@@ -725,6 +726,23 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
                             moment(trackingValue.new_value)
                                 .local()
                                 .format('LL');
+                    }
+                } else if (trackingValue.field_type === 'monetary') {
+                    if (trackingValue.old_value) {
+                        trackingValue.old_value = field_utils.format.monetary(trackingValue.old_value, {}, {
+                            currency_id: trackingValue.currency_id
+                                ? session.currencies[value.currency_id]
+                                : undefined,
+                            forceString: true,
+                        });
+                    }
+                    if (trackingValue.new_value) {
+                        trackingValue.new_value = field_utils.format.monetary(trackingValue.new_value, {}, {
+                            currency_id: trackingValue.currency_id
+                                ? session.currencies[value.currency_id]
+                                : undefined,
+                            forceString: true,
+                        });
                     }
                 }
             });
