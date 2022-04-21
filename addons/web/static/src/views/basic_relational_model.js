@@ -20,7 +20,6 @@ import { escape } from "@web/core/utils/strings";
 
 const { date: parseDate, datetime: parseDateTime } = parse;
 const { markup, xml } = owl;
-// const preloadedDataRegistry = registry.category("preloadedData");
 
 const warningDialogBodyTemplate = xml`<t t-esc="props.message"/>`;
 
@@ -192,6 +191,7 @@ class DataPoint {
         this.fields = info.fields;
         this.activeFields = {};
 
+        this.__syncParent = params.__syncParent || (() => {});
         this.__viewType = params.viewType || info.viewType;
         const fieldsInfo = (info.fieldsInfo && info.fieldsInfo[this.__viewType]) || {};
         for (const [name, descr] of Object.entries(fieldsInfo)) {
@@ -469,6 +469,7 @@ export class Record extends DataPoint {
                             handle: data[fieldName].id,
                             viewType: this.activeFields[fieldName].viewMode,
                             parentViewType: this.__viewType,
+                            __syncParent: () => this.__syncData(),
                         });
                         data[fieldName].__fieldName__ = fieldName;
                     }
@@ -513,32 +514,10 @@ export class Record extends DataPoint {
         ]);
     }
 
-    // loadPreloadedData() {
-    //     const fetchPreloadedData = async (fetchFn, fieldName) => {
-    //         const domain = this.getFieldDomain(fieldName).toList(this.evalContext).toString();
-    //         if (domain.toString() !== this.preloadedDataCaches[fieldName]) {
-    //             this.preloadedDataCaches[fieldName] = domain.toString();
-    //             this.preloadedData[fieldName] = await fetchFn(this.model.orm, this, fieldName);
-    //         }
-    //     };
-
-    //     const proms = [];
-    //     for (const fieldName in this.activeFields) {
-    //         const activeField = this.activeFields[fieldName];
-    //         // @FIXME type should not be get like this
-    //         const type = activeField.widget || this.fields[fieldName].type;
-    //         if (!activeField.invisible && preloadedDataRegistry.contains(type)) {
-    //             proms.push(fetchPreloadedData(preloadedDataRegistry.get(type), fieldName));
-    //         }
-    //     }
-    //     return Promise.all(proms);
-    // }
-
     async update(fieldName, value) {
         const fieldType = this.fields[fieldName].type;
         const parentID = this.model.__bm__.localData[this.__bm_handle__].parentID;
-        if (parentID) {
-            //  && fieldType === "one2many"
+        if (parentID && this.__viewType === "list") {
             // inside an x2many (parentID is the id of the static list datapoint)
             const mainRecordId = this.model.__bm__.localData[parentID].parentID;
             const mainRecordDP = this.model.__bm__.localData[mainRecordId];
@@ -554,7 +533,7 @@ export class Record extends DataPoint {
             data[fieldName] = mapWowlValueToLegacy(value, fieldType);
             changes[x2manyFieldName] = { operation: "UPDATE", id: this.__bm_handle__, data };
             await this.model.__bm__.notifyChanges(mainRecordId, changes);
-            this.model.root.__syncData();
+            this.__syncParent();
         } else {
             const changes = {};
             changes[fieldName] = mapWowlValueToLegacy(value, fieldType);
@@ -706,6 +685,7 @@ export class StaticList extends DataPoint {
                     onRecordWillSwitchMode: this.onRecordWillSwitchMode,
                     mode: "readonly",
                     viewType: this.__viewType,
+                    __syncParent: this.__syncParent,
                 });
                 if (record.mode === "edit" && this.editedRecord) {
                     this.editedRecord.mode = "readonly";
@@ -933,6 +913,22 @@ export class RelationalModel extends Model {
         await newRecord.load();
         return newRecord;
     }
+    async addNewRecord(list, params) {
+        params.__syncParent = list.__syncParent;
+        const newRecord = this.createDataPoint("record", params);
+        newRecord.__bm_load_params__.parentID = list.__bm_handle__;
+        await newRecord.load();
+        return newRecord;
+    }
+    async updateRecord(list, record) {
+        const mainRecordId = this.__bm__.localData[list.__bm_handle__].parentID;
+        const changes = {
+            [list.__fieldName__]: { operation: "UPDATE", id: record.__bm_handle__ },
+        };
+        await this.__bm__.notifyChanges(mainRecordId, changes);
+        list.__syncParent();
+        this.notify();
+    }
 
     /**
      * @param {Object} [params={}]
@@ -1018,7 +1014,6 @@ export class RelationalModel extends Model {
             params.fields,
             params.viewType
         );
-        fieldsInfo.context = params.context;
         params = Object.assign({}, params, {
             __bm_load_params__: {
                 type: "record",

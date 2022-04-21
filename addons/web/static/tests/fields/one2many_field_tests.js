@@ -13,6 +13,7 @@ import {
     editInput,
     editSelect,
     getFixture,
+    getNodesTextContent,
     makeDeferred,
     nextTick,
     patchWithCleanup,
@@ -12138,9 +12139,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("x2many list sorted by many2one", async function (assert) {
-        assert.expect(3);
-
+    QUnit.test("x2many list sorted by many2one", async function (assert) {
         serverData.models.partner.records[0].p = [1, 2, 4];
         serverData.models.partner.fields.trululu.sortable = true;
 
@@ -12153,8 +12152,8 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <field name="p">
                         <tree>
-                            <field name="id" />
-                            <field name="trululu" />
+                            <field name="id"/>
+                            <field name="trululu"/>
                         </tree>
                     </field>
                 </form>
@@ -12162,33 +12161,31 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelectorAll(".o_data_row .o_list_number").textContent,
+            getNodesTextContent(target.querySelectorAll(".o_data_row .o_list_number")),
             "124",
             "should have correct order initially"
         );
 
-        await click(target, ".o_list_view thead th:nth(1)");
+        await click(target.querySelectorAll(".o_list_renderer thead th")[1]);
 
         assert.strictEqual(
-            target.querySelectorAll(".o_data_row .o_list_number").textContent,
+            getNodesTextContent(target.querySelectorAll(".o_data_row .o_list_number")),
             "412",
             "should have correct order (ASC)"
         );
 
-        await click(target, ".o_list_view thead th:nth(1)");
+        await click(target.querySelectorAll(".o_list_renderer thead th")[1]);
 
         assert.strictEqual(
-            target.querySelectorAll(".o_data_row .o_list_number").textContent,
+            getNodesTextContent(target.querySelectorAll(".o_data_row .o_list_number")),
             "214",
             "should have correct order (DESC)"
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many with extra field from server not in (inline) form",
         async function (assert) {
-            assert.expect(1);
-
             await makeView({
                 type: "form",
                 resModel: "partner",
@@ -12198,45 +12195,32 @@ QUnit.module("Fields", (hooks) => {
                     <form>
                         <field name="p">
                             <tree>
-                                <field name="datetime" />
-                                <field name="display_name" />
+                                <field name="datetime"/>
+                                <field name="display_name"/>
                             </tree>
                             <form>
-                                <field name="display_name" />
+                                <field name="display_name"/>
                             </form>
                         </field>
                     </form>
                 `,
             });
 
-            await click(target, ".o_form_button_edit");
-
-            var x2mList = target.querySelectorAll(".o_field_x2many_list[name=p]");
+            await clickEdit(target);
 
             // Add a record in the list
-            await click(x2mList.find(".o_field_x2many_list_row_add a"));
-
-            var modal = document.body.querySelector(".modal-lg");
-
-            var nameInput = modal.find("input.o_input[name=display_name]");
-            await testUtils.fields.editInput(nameInput, "michelangelo");
+            await addRow(target);
+            await editInput(target, ".o_field_widget[name=display_name] input", "michelangelo");
 
             // Save the record in the modal (though it is still virtual)
-            await click(modal.find(".btn-primary").first());
-
-            assert.equal(
-                x2mList.find(".o_data_row").length,
-                1,
-                "There should be 1 records in the x2m list"
-            );
+            await click(target.querySelector(".modal .modal-footer .btn-primary"));
+            assert.containsOnce(target, ".o_data_row");
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many with extra X2many field from server not in inline form",
         async function (assert) {
-            assert.expect(1);
-
             await makeView({
                 type: "form",
                 resModel: "partner",
@@ -12246,34 +12230,34 @@ QUnit.module("Fields", (hooks) => {
                     <form>
                         <field name="p">
                             <tree>
-                                <field name="turtles" />
-                                <field name="display_name" />
+                                <field name="turtles"/>
+                                <field name="display_name"/>
                             </tree>
                             <form>
-                                <field name="display_name" />
+                                <field name="display_name"/>
                             </form>
                         </field>
                     </form>
                 `,
             });
 
-            await click(target, ".o_form_button_edit");
-
-            var x2mList = target.querySelectorAll(".o_field_x2many_list[name=p]");
+            await clickEdit(target);
 
             // Add a first record in the list
-            await click(x2mList.find(".o_field_x2many_list_row_add a"));
+            await addRow(target);
+            await editInput(target, ".modal .o_field_widget[name=display_name] input", "first");
 
             // Save & New
-            await click(document.body.querySelector(".modal-lg").find(".btn-primary").eq(1));
+            await click(target.querySelectorAll(".modal .btn-primary")[1]);
+            await editInput(target, ".modal .o_field_widget[name=display_name] input", "second");
 
             // Save & Close
-            await click(document.body.querySelector(".modal-lg").find(".btn-primary").eq(0));
+            await click(target.querySelector(".modal .btn-primary"));
 
-            assert.equal(
-                x2mList.find(".o_data_row").length,
-                2,
-                "There should be 2 records in the x2m list"
+            assert.containsN(target, ".o_data_row", 2);
+            assert.strictEqual(
+                getNodesTextContent(target.querySelectorAll(".o_field_widget[name=display_name]")),
+                "firstsecond"
             );
         }
     );

@@ -25,7 +25,7 @@ function useOwnedDialogs() {
     const cbs = [];
     owl.onWillUnmount(() => cbs.forEach((cb) => cb()));
 
-    const add = (...args)  => {
+    const add = (...args) => {
         const close = addDialog(...args);
         cbs.push(close);
         return close;
@@ -171,7 +171,7 @@ export class X2ManyField extends Component {
         this.addDialog(FormViewDialog, {
             archInfo: form, // FIXME: might not be there
             record: newRecord,
-            save: this.saveRecord.bind(this, newRecord),
+            save: () => this.list.model.updateRecord(this.list, record),
             title: sprintf(
                 this.env._t("Open: %s"),
                 this.props.record.activeFields[this.props.name].string
@@ -186,23 +186,28 @@ export class X2ManyField extends Component {
             this.list.addNew({ context, mode: "edit", position: editable });
         } else {
             const form = await this._getFormViewInfo();
-            const record = this.list.model.createDataPoint("record", {
+            const recordParams = {
                 context: makeContext([this.list.context, context]),
                 resModel: this.list.resModel,
                 fields: {
                     ...form.fields,
                     id: { name: "id", type: "integer", readonly: true },
                 },
-                activeFields: form.activeFields || {},
+                activeFields: form.activeFields,
                 views: { form },
                 mode: "edit",
                 viewType: "form",
-            });
-            await record.load(); //AAB TO DISCUSS
+            };
+            const record = await this.list.model.addNewRecord(this.list, recordParams);
             this.addDialog(FormViewDialog, {
                 archInfo: form, // FIXME: might not be there
                 record,
-                save: this.saveRecordToList.bind(this, record),
+                save: async (record, { saveAndNew }) => {
+                    await this.saveRecordToList(record);
+                    if (saveAndNew) {
+                        return this.list.model.addNewRecord(this.list, recordParams);
+                    }
+                },
                 title: sprintf(
                     this.env._t("Open: %s"),
                     this.props.record.activeFields[this.props.name].string
@@ -211,12 +216,7 @@ export class X2ManyField extends Component {
         }
     }
 
-    saveRecord(record) {
-        record.save({ savePoint: true, stayInEdition: true });
-    }
-
     async saveRecordToList(record) {
-        record.switchMode("readonly");
         await this.list.add(record);
     }
 
@@ -224,13 +224,13 @@ export class X2ManyField extends Component {
         let formViewInfo = this.activeField.views.form;
         const comodel = this.list.resModel;
         if (!formViewInfo) {
-            const { fields: comodelFields, views } = await this.viewService.loadViews({
+            const { fields, views } = await this.viewService.loadViews({
                 context: {},
                 resModel: comodel,
                 views: [[false, "form"]],
             });
-            const archInfo = new FormArchParser().parse(views.form.arch, comodelFields);
-            formViewInfo = { ...archInfo, fields: comodelFields }; // should be good to memorize this on activeField
+            const archInfo = new FormArchParser().parse(views.form.arch, fields);
+            formViewInfo = { ...archInfo, fields }; // should be good to memorize this on activeField
         }
 
         await loadSubViews(
@@ -253,7 +253,6 @@ X2ManyField.useSubView = true;
 
 registry.category("fields").add("one2many", X2ManyField);
 
-
 export class Many2ManyField extends X2ManyField {
     onAdd(context) {
         const list = this.list;
@@ -269,15 +268,14 @@ export class Many2ManyField extends X2ManyField {
             context,
             domain: domain,
             onSelected: (resIds) => {
-                list.add(resIds, {isM2M: true});
+                list.add(resIds, { isM2M: true });
             },
             onCreateEdit: super.onAdd.bind(this, context),
         });
     }
 
     async saveRecordToList(record) {
-        record.switchMode("readonly");
-        await this.list.add(record, {isM2M: true});
+        await this.list.add(record, { isM2M: true });
     }
 }
 

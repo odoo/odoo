@@ -88,24 +88,36 @@ export class FormViewDialog extends Dialog {
         this.close();
     }
 
-    async save() {
+    async save({ saveAndNew }) {
         if (this.props.save) {
             if (this.record.checkValidity()) {
-                await this.props.save(this.record);
+                this.record = await this.props.save(this.record, { saveAndNew });
             } else {
-                return;
+                return false;
             }
         }
-        this.close();
+        if (!saveAndNew) {
+            this.close();
+        }
+        return true;
     }
 
-    async saveNew() {
+    async saveAndNew() {
         const disabledButtons = this.disableButtons();
-        await this.model.root.save();
-        await this.model.load({ resId: null });
-        this.enableButtons(disabledButtons);
-        if (this.title) {
-            this.title.replace(this.env._t("Open:"), this.env._t("New:"));
+        const saved = await this.save({ saveAndNew: true });
+        if (saved) {
+            if (!this.props.record) {
+                await this.model.load({ resId: null });
+                this.record = this.model.root;
+            }
+            this.readonly = !this.record.isInEdition;
+            this.multiSelect = this.record.resId === false && !this.props.disableMultipleSelection;
+
+            this.enableButtons(disabledButtons);
+            if (this.title) {
+                this.title.replace(this.env._t("Open:"), this.env._t("New:"));
+            }
+            this.render(true);
         }
     }
 

@@ -134,7 +134,7 @@ export class FormView extends Component {
             resId = this.props.state ? this.props.state.resId : false;
         }
         this.beforeLoadResolver = null;
-        this.beforeLoadProm = new Promise((r) => {
+        const beforeLoadProm = new Promise((r) => {
             this.beforeLoadResolver = r;
         });
         this.model = useModel(RelationalModel, {
@@ -145,7 +145,7 @@ export class FormView extends Component {
             activeFields,
             viewMode: "form",
             rootType: "record",
-            beforeLoadProm: this.beforeLoadProm,
+            beforeLoadProm,
         });
         const { create, edit } = this.archInfo.activeActions;
 
