@@ -6,6 +6,14 @@ odoo.define("pos_gift_card.gift_card", function (require) {
 
 
   const PosGiftCardOrder = (Order) => class PosGiftCardOrder extends Order {
+    //@override
+    _reduce_total_discount_callback(sum, orderLine) {
+        if (this.pos.config.gift_card_product_id[0] === orderLine.product.id) {
+            return sum;
+        }
+        return super._reduce_total_discount_callback(...arguments);
+    }
+    //@override
     set_orderline_options(orderline, options) {
       super.set_orderline_options(...arguments);
       if (options && options.generated_gift_card_ids) {
@@ -15,6 +23,7 @@ odoo.define("pos_gift_card.gift_card", function (require) {
         orderline.gift_card_id = options.gift_card_id;
       }
     }
+    //override
     wait_for_push_order() {
         if(this.pos.config.use_gift_card) {
             let giftProduct = this.pos.db.product_by_id[this.pos.config.gift_card_product_id[0]];
