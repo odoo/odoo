@@ -7,7 +7,7 @@ import logging
 
 from collections import namedtuple, defaultdict
 
-from datetime import datetime, timedelta, time
+from datetime import date, datetime, timedelta, time
 from pytz import timezone, UTC
 
 from odoo import api, Command, fields, models, tools, SUPERUSER_ID
@@ -133,7 +133,7 @@ class HolidaysRequest(models.Model):
         states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]},
         domain=['|', ('requires_allocation', '=', 'no'), ('has_valid_allocation', '=', True)])
     holiday_allocation_id = fields.Many2one(
-        'hr.leave.allocation', compute='_compute_from_holiday_status_id', string="Allocation", store=True, readonly=False)
+        'hr.leave.allocation', compute='_compute_allocation_id', string="Allocation", store=True, readonly=False)
     color = fields.Integer("Color", related='holiday_status_id.color')
     validation_type = fields.Selection(string='Validation Type', related='holiday_status_id.leave_validation_type', readonly=False)
     # HR data
@@ -360,51 +360,38 @@ class HolidaysRequest(models.Model):
         for leave in self:
             leave.state = 'confirm' if leave.validation_type != 'no_validation' else 'draft'
 
-    @api.depends('holiday_status_id.requires_allocation', 'validation_type', 'employee_id', 'date_from', 'date_to')
-    def _compute_from_holiday_status_id(self):
-        invalid_self = self.filtered(lambda leave: not leave.date_to or not leave.date_from)
-        if invalid_self:
-            invalid_self.update({'holiday_allocation_id': False})
-            self = self - invalid_self
+    @api.depends('holiday_status_id.requires_allocation', 'employee_id', 'date_from', 'date_to')
+    def _compute_allocation_id(self):
+        no_allocations = self.filtered(lambda l: not l.date_to or not l.date_from or l.holiday_status_id.requires_allocation == 'no')
+        no_allocations.holiday_allocation_id = False
+
+        self = self - no_allocations
         if not self:
             return
-        allocations = self.env['hr.leave.allocation'].search_read(
-            [
-                ('holiday_status_id', 'in', self.holiday_status_id.ids),
-                ('employee_id', 'in', self.employee_id.ids),
-                ('state', '=', 'validate'),
-                '|',
-                ('date_to', '>=', min(self.mapped('date_to'))),
-                '&',
+
+        all_allocations = self.env['hr.leave.allocation'].search([
+            ('holiday_status_id', 'in', self.holiday_status_id.ids),
+            ('employee_id', 'in', self.employee_id.ids),
+            ('state', '=', 'validate'),
+            ('date_from', '<=', max(self.mapped('date_from'))),
+            '|',
                 ('date_to', '=', False),
-                ('date_from', '<=', max(self.mapped('date_from'))),
-            ], ['id', 'allocation_type', 'date_from', 'date_to', 'holiday_status_id', 'employee_id', 'max_leaves', 'taken_leave_ids'], order="date_to, id"
-        )
-        allocations_dict = defaultdict(lambda: [])
-        for allocation in allocations:
-            allocation['taken_leaves'] = self.env['hr.leave'].browse(allocation.pop('taken_leave_ids'))\
-                .filtered(lambda leave: leave.state in ['confirm', 'validate', 'validate1'])
-            allocations_dict[(allocation['holiday_status_id'][0], allocation['employee_id'][0])].append(allocation)
+                ('date_to', '>=', min(self.mapped('date_to'))),
+        ])
+        grouped_allocations = defaultdict(self.env['hr.leave.allocation'].browse)
+        for allocation in all_allocations:
+            grouped_allocations[allocation.employee_id.id] |= allocation
 
         for leave in self:
-            if leave.holiday_status_id.requires_allocation == 'yes' and leave.date_from and leave.date_to:
-                found_allocation = False
-                date_to = leave.date_to.replace(tzinfo=UTC).astimezone(timezone(leave.tz)).date()
-                date_from = leave.date_from.replace(tzinfo=UTC).astimezone(timezone(leave.tz)).date()
-                leave_unit = 'number_of_%s_display' % ('hours' if leave.leave_type_request_unit == 'hour' else 'days')
-                for allocation in allocations_dict[(leave.holiday_status_id.id, leave.employee_id.id)]:
-                    date_to_check = allocation['date_to'] >= date_to if allocation['date_to'] else True
-                    date_from_check = allocation['date_from'] <= date_from
-                    if (date_to_check and date_from_check):
-                        allocation_taken_leaves = allocation['taken_leaves'] - leave
-                        allocation_taken_number_of_units = sum(allocation_taken_leaves.mapped(leave_unit))
-                        leave_number_of_units = leave[leave_unit]
-                        if allocation['max_leaves'] >= allocation_taken_number_of_units + leave_number_of_units or allocation['allocation_type'] == 'accrual': # TODO shitty not working
-                            found_allocation = allocation['id']
-                            break
-                leave.holiday_allocation_id = self.env['hr.leave.allocation'].browse(found_allocation) if found_allocation else False
-            else:
-                leave.holiday_allocation_id = False
+            allocations = grouped_allocations[leave.employee_id.id].filtered(lambda a: a.holiday_status_id == leave.holiday_status_id)
+            found_allocation = False
+            duration_field = 'number_of_hours_display' if leave.leave_type_request_unit == 'hour' else 'number_of_days_display'
+            for allocation in allocations.sorted(lambda a: (a.date_to or date.max, a.max_leaves - a.leaves_taken)):
+                if leave.date_from.date() >= allocation.date_from and not allocation.date_to or allocation.date_to >= leave.date_to.date():
+                    if allocation._get_available_leaves_on(leave.date_from) >= leave[duration_field]:
+                        found_allocation = allocation
+                        break
+            leave.holiday_allocation_id = found_allocation
 
     @api.depends('request_date_from_period', 'request_hour_from', 'request_hour_to', 'request_date_from', 'request_date_to',
                 'request_unit_half', 'request_unit_hours', 'request_unit_custom', 'employee_id')
@@ -1024,8 +1011,6 @@ class HolidaysRequest(models.Model):
                     self._check_double_validation_rules(employee_id, values.get('state', False))
 
         holidays = super(HolidaysRequest, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
-
-        holidays.filtered(lambda holiday: not holiday.holiday_allocation_id).with_user(SUPERUSER_ID)._compute_from_holiday_status_id()
 
         for holiday in holidays:
             if not self._context.get('leave_fast_create'):

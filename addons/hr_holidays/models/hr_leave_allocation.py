@@ -360,6 +360,10 @@ class HolidaysAllocation(models.Model):
         print(taken_leaves)
         return
 
+    def _get_available_leaves_on(self, date):
+        self.ensure_one()
+        return self.max_leaves - self.leaves_taken
+
     def _end_of_year_accrual(self):
         # to override in payroll
         today = fields.Date.today()
