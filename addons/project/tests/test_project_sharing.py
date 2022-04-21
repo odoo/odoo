@@ -39,6 +39,7 @@ class TestProjectSharingCommon(TestProjectCommon):
             'partner_id': cls.user_portal.partner_id.id,
             'type_ids': project_sharing_stages_vals_list,
         })
+        cls.project_portal.message_subscribe(partner_ids=[cls.partner_portal.id])
 
         cls.task_cow = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
             'name': 'Cow UserTask',

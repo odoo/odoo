@@ -544,6 +544,10 @@
                                     <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" context="{'default_partner_id': partner_id}" groups="analytic.group_analytic_accounting"/>
                                     <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                     <field name="privacy_visibility" widget="radio"/>
+                                    <span colspan="2" class="text-muted" attrs="{'invisible':[('privacy_visibility_warning', '=', '')]}">
+                                        <i class="fa fa-warning">&amp;nbsp;</i>
+                                        <field name="privacy_visibility_warning" nolabel="1"/>  
+                                    </span>
                                 </group>
                                 <group>
                                     <div name="alias_def" colspan="2" class="pb-2" attrs="{'invisible': [('alias_domain', '=', False)]}">
