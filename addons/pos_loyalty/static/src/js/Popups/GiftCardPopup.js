@@ -46,12 +46,20 @@ export class GiftCardPopup extends AbstractAwaitablePopup {
 
     useAutoFocus(state) {
         const component = useComponent();
+        let hasFocused = false;
         function autofocus() {
-          if (!state.showMenu) {
-              const elem = component.el.querySelector(`.gift-card-input-code`);
-              if (elem)
-                  elem.focus();
-          }
+            if (!state.showMenu) {
+                // Should autofocus here but only if it hasn't autofocus yet.
+                if (!hasFocused) {
+                    const elem = component.el.querySelector(`.gift-card-input-code`);
+                    if (elem)
+                        elem.focus();
+                        hasFocused = true;
+                }
+            } else {
+                // When changing showBarcodeGeneration to false, we reset hasFocused.
+                hasFocused = false;
+            }
         }
         onPatched(autofocus);
     }
