@@ -3104,10 +3104,11 @@ Fields:
                 if field.deprecated:
                     _logger.warning('Field %s is deprecated: %s', field, field.deprecated)
 
-        # possibly raise exception for the records that could not be read
-        missing = self - fetched
+        # possibly raise exception for the records that could not be read and flatten
+        records = self.env[self._name].browse(self.ids)
+        missing = records - fetched
         if missing:
-            extras = fetched - self
+            extras = fetched - records
             if extras:
                 raise AccessError(
                     _("Database fetch misses ids ({}) and has extra ids ({}), may be caused by a type incoherence in a previous request").format(
