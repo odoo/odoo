@@ -970,7 +970,7 @@ class expression(object):
                         push_result(expr, params)
 
                 # FP TODO: to improve for efficiency and use of index
-                elif field.translate is True and right:
+                elif field.translate and right:
                     need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
                     sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
                     if need_wildcard:

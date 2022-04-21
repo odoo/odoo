@@ -2723,7 +2723,7 @@ class BaseModel(metaclass=MetaModel):
             )
             return '"%s"."%s"' % (rel_alias, field.column2)
 
-        elif (field.translate is True) and not self.env.context.get('field_json', False):
+        elif (field.translate) and not self.env.context.get('field_json', False):
             if self.env.lang and self.env.lang != 'en_US':
                 return 'COALESCE("%s"."%s"->>\'%s\', "%s"."%s"->>\'en_US\')' % (alias, fname, self.env.lang, alias, fname)
             else:
@@ -3359,7 +3359,6 @@ Fields:
             for field in (self._fields[name] for name in field_names + inherited_field_names)
             if field.name != 'id'
             if field.base_field.store and field.base_field.column_type
-            if not (field.inherited and callable(field.base_field.translate))
         ]
 
         if fields_pre:
@@ -3979,10 +3978,19 @@ Fields:
             assert field.store
             assert field.column_type
             if field.translate:
-                if (self.env.lang == 'en_US') and (field.translate=='xml'):
-                    sync_lang.append(name)
-                columns.append(f'"{name}" = "{name}" || %s')
-                params.append(Json({(self.env.lang or 'en_US'): val}))
+                if callable(field.translate):
+                    for sub_ids in cr.split_for_in_conditions(self._ids):
+                        cr.execute(f'SELECT id, "{name}" FROM "{self._table}" WHERE id IN %s', (sub_ids,))
+                        for tid, tfield in cr.fetchall():
+                            src = tfield['en_US']
+                            toupdate = (self.env.lang=='en_US') and tfield.keys() or [self.env.lang]
+                            for lang in toupdate:
+                                tfield[lang] = field.translate(src, tfield.get(lang), val)
+                    columns.append(f'"{name}" = %s')
+                    params.append(Json(tfield))
+                else:
+                    columns.append(f'"{name}" = "{name}" || %s')
+                    params.append(Json({(self.env.lang or 'en_US'): val}))
             else:
                 columns.append(f'"{name}" = %s')
                 params.append(val)
@@ -3993,10 +4001,6 @@ Fields:
             query = f'UPDATE "{self._table}" SET {template} WHERE id IN %s'
             for sub_ids in cr.split_for_in_conditions(self._ids):
                 cr.execute(query, params + [sub_ids])
-
-        if sync_lang:
-            # FP TODO: implement syncing terms from Original to 
-            pass
 
         # update parent_path
         if parent_records:

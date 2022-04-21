@@ -285,35 +285,44 @@ def serialize_html(node):
     return etree.tostring(node, method='html', encoding='unicode')
 
 
-def xml_translate(callback, value):
+def xml_translate(src, dest, newval):
     """ Translate an XML value (string), using `callback` for translating text
         appearing in `value`.
     """
-    if not value:
-        return value
-
+    if not newval:
+        return newval
     try:
-        root = parse_xml(value)
-        result = translate_xml_node(root, callback, parse_xml, serialize_xml)
+        src_terms = []
+        translate_xml_node(parse_xml(src), src_terms.append, parse_xml, serialize_xml)
+
+        dest_terms = []
+        if dest:
+            translate_xml_node(parse_xml(dest), dest_terms.append, parse_xml, serialize_xml)
+
+        terms = dict(zip(src_terms, dest_terms))
+        result = translate_xml_node(parse_xml(newval), lambda x: terms.get(x), parse_xml, serialize_xml)
         return serialize_xml(result)
     except etree.ParseError:
-        # fallback for translated terms: use an HTML parser and wrap the term
-        root = parse_html(u"<div>%s</div>" % value)
-        result = translate_xml_node(root, callback, parse_xml, serialize_xml)
-        # remove tags <div> and </div> from result
-        return serialize_xml(result)[5:-6]
+        return html_translate(src, dest, newval)
 
-def html_translate(callback, value):
+def html_translate(src, dest, newval):
     """ Translate an HTML value (string), using `callback` for translating text
         appearing in `value`.
     """
-    if not value:
-        return value
-
+    if not newval:
+        return newval
     try:
-        # value may be some HTML fragment, wrap it into a div
-        root = parse_html("<div>%s</div>" % value)
-        result = translate_xml_node(root, callback, parse_html, serialize_html)
+        r = lambda x: parse_html("<div>%s</div>" % value)
+        src_terms = []
+        translate_xml_node(parse_html("<div>%s</div>" % src), src_terms.append, parse_html, serialize_html)
+
+        dest_terms = []
+        if dest:
+            translate_xml_node(parse_html("<div>%s</div>" % dest), dest_terms.append, parse_html, serialize_html)
+
+        terms = dict(zip(src_terms, dest_terms))
+        result = translate_xml_node(parse_html("<div>%s</div>" % newval), lambda x: terms.get(x), parse_html, serialize_html)
+
         # remove tags <div> and </div> from result
         value = serialize_html(result)[5:-6]
     except ValueError:
