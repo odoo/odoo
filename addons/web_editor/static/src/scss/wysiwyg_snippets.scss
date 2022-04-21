@@ -1409,13 +1409,16 @@ body.editor_enable.editor_has_snippets {
                 width: 100%;
                 max-height: 200px;
                 overflow-y: auto;
-                margin-bottom: $o-we-sidebar-content-field-spacing / 2;
 
                 table {
                     @include o-input-number-no-arrows();
                     table-layout: auto;
                     width: 100%;
+                    margin-bottom: $o-we-sidebar-content-field-spacing / 2;
 
+                    &:empty {
+                        margin-bottom: 0;
+                    }
                     input {
                         width: 100%;
                         border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
@@ -1514,6 +1517,9 @@ body.editor_enable.editor_has_snippets {
             we-list, we-list > div, we-list we-select {
                 margin-top: 0;
                 max-width: 100%;
+            }
+            we-title {
+                align-self: flex-start;
             }
         }
 
