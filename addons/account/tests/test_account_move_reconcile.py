@@ -879,6 +879,63 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'amount_residual': 0.0, 'amount_residual_currency': 0.0, 'reconciled': True},
         ])
 
+    def test_reverse_with_multiple_lines(self):
+        """
+        Test if all lines from a reversed entry are fully reconciled
+        """
+        move = self.env['account.move'].create({
+            'move_type': 'entry',
+            'line_ids': [
+                (0, 0, {
+                    'debit': 1200.0,
+                    'credit': 0.0,
+                    'amount_currency': 3600.0,
+                    'account_id': self.company_data['default_account_receivable'].id,
+                }),
+                (0, 0, {
+                    'debit': 0.0,
+                    'credit': 200.0,
+                    'account_id': self.company_data['default_account_payable'].id,
+                }),
+                (0, 0, {
+                    'debit': 0.0,
+                    'credit': 400.0,
+                    'account_id': self.company_data['default_account_payable'].id,
+                }),
+                (0, 0, {
+                    'debit': 0.0,
+                    'credit': 600.0,
+                    'account_id': self.company_data['default_account_payable'].id,
+                }),
+            ],
+        })
+
+        move.action_post()
+
+        lines_to_reconcile = move.line_ids.filtered(lambda x: (x.account_id.reconcile or x.account_id.internal_type == 'liquidity') and not x.reconciled)
+
+        self.assertRecordValues(lines_to_reconcile, [
+            {'debit': 1200.0, 'credit': 0.0, 'reconciled': False},
+            {'debit': 0.0, 'credit': 200.0, 'reconciled': False},
+            {'debit': 0.0, 'credit': 400.0, 'reconciled': False},
+            {'debit': 0.0, 'credit': 600.0, 'reconciled': False},
+        ])
+
+        reversed_move = move._reverse_moves(cancel=True)
+
+        reversed_lines = reversed_move.line_ids.filtered(lambda x: (
+                x.account_id.reconcile or x.account_id.internal_type == 'liquidity'
+        ))
+
+        self.assertRecordValues(reversed_lines, [
+            {'debit': 0.0, 'credit': 1200.0, 'reconciled': True},
+            {'debit': 200.0, 'credit': 0.0, 'reconciled': True},
+            {'debit': 400.0, 'credit': 0.0, 'reconciled': True},
+            {'debit': 600.0, 'credit': 0.0, 'reconciled': True},
+        ])
+
+        self.assertTrue(all([line.full_reconcile_id for line in reversed_lines]))
+
     def test_reverse_exchange_difference_same_foreign_currency(self):
         move_2016 = self.env['account.move'].create({
             'move_type': 'entry',
