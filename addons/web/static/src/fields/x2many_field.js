@@ -11,6 +11,7 @@ import { ListRenderer } from "@web/views/list/list_renderer";
 import { evalDomain } from "@web/views/relational_model";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { FormArchParser, loadSubViews } from "@web/views/form/form_view";
+import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
 const { Component, onWillDestroy } = owl;
 
@@ -162,11 +163,7 @@ export class X2ManyField extends Component {
             this.dialogService.add(FormViewDialog, {
                 archInfo: form, // FIXME: might not be there
                 record: newRecord,
-                save: () => {
-                    newRecord.save({ savePoint: true, stayInEdition: true });
-                    record.__syncData();
-                    record.model.notify();
-                },
+                save: this.saveRecord.bind(this, newRecord),
                 title: sprintf(
                     this.env._t("Open: %s"),
                     this.props.record.activeFields[this.props.name].string
@@ -199,10 +196,7 @@ export class X2ManyField extends Component {
                 this.dialogService.add(FormViewDialog, {
                     archInfo: form, // FIXME: might not be there
                     record,
-                    save: async () => {
-                        record.switchMode("readonly");
-                        await this.list.add(record);
-                    },
+                    save: this.saveRecordToList.bind(this, record),
                     title: sprintf(
                         this.env._t("Open: %s"),
                         this.props.record.activeFields[this.props.name].string
@@ -210,6 +204,15 @@ export class X2ManyField extends Component {
                 })
             );
         }
+    }
+
+    saveRecord(record) {
+        record.save({ savePoint: true, stayInEdition: true });
+    }
+
+    async saveRecordToList(record) {
+        record.switchMode("readonly");
+        await this.list.add(record);
     }
 
     async _getFormViewInfo() {
@@ -244,4 +247,34 @@ X2ManyField.template = "web.X2ManyField";
 X2ManyField.useSubView = true;
 
 registry.category("fields").add("one2many", X2ManyField);
-registry.category("fields").add("many2many", X2ManyField);
+
+
+export class Many2ManyField extends X2ManyField {
+    onAdd(context) {
+        const list = this.list;
+        const { record, name } = this.props;
+        let domain = record.getFieldDomain(name).toList();
+        domain = [...domain, "!", ["id", "in", list.resIds]];
+        context = makeContext([record.getFieldContext(name), context]);
+        const close = this.dialogService.add(SelectCreateDialog, {
+            title: this.env._t("Select records"),
+            noCreate: !this.activeActions.canCreate,
+            multiSelect: this.activeActions.canLink, // LPE Fixme
+            resModel: list.resModel,
+            context,
+            domain: domain,
+            onSelected: (resIds) => {
+                list.add(resIds, {isM2M: true});
+            },
+            onCreateEdit: super.onAdd.bind(this, context),
+        });
+        this.dialogClose.push(close);
+    }
+
+    async saveRecordToList(record) {
+        record.switchMode("readonly");
+        await this.list.add(record, {isM2M: true});
+    }
+}
+
+registry.category("fields").add("many2many", Many2ManyField);

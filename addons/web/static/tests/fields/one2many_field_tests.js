@@ -5073,10 +5073,26 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("one2many with many2many widget: create", async function (assert) {
+    QUnit.test("one2many with many2many widget: create", async function (assert) {
         assert.expect(10);
 
-        const form = await makeView({
+        serverData.views = {
+            "turtle,false,list": `
+                <tree>
+                    <field name="display_name"/>
+                    <field name="turtle_foo"/>
+                    <field name="turtle_bar"/>
+                    <field name="product_id"/>
+                </tree>`,
+            "turtle,false,search": `
+                <search>
+                    <field name="turtle_foo"/>
+                    <field name="turtle_bar"/>
+                    <field name="product_id"/>
+                </search>`,
+        };
+
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -5099,22 +5115,6 @@ QUnit.module("Fields", (hooks) => {
                         </form>
                     </field>
                 </form>`,
-            archs: {
-                "turtle,false,list": `
-                    <tree>
-                        <field name="display_name"/>
-                        <field name="turtle_foo"/>
-                        <field name="turtle_bar"/>
-                        <field name="product_id"/>
-                    </tree>`,
-                "turtle,false,search": `
-                    <search>
-                        <field name="turtle_foo"/>
-                        <field name="turtle_bar"/>
-                        <field name="product_id"/>
-                    </search>`,
-            },
-            session: {},
             resId: 1,
             mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/turtle/create") {
@@ -5128,7 +5128,6 @@ QUnit.module("Fields", (hooks) => {
                         "should send only a 'replace with' command"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
@@ -5141,9 +5140,10 @@ QUnit.module("Fields", (hooks) => {
             "should have 2 records in the select view (the last one is not displayed because it is already selected)"
         );
 
-        await click($(".modal .o_data_row:first .o_list_record_selector input"));
-        await click($(".modal .o_select_button"));
-        await click($(".o_form_button_save"));
+        await click($(".modal .o_data_row:first .o_list_record_selector input")[0]);
+        await nextTick(); // additional render due to the change of selection (done in owl, not pure js)
+        await click($(".modal .o_select_button")[0]);
+        await click($(".o_form_button_save")[0]);
         await clickEdit(target);
         await addRow(target);
 
@@ -5153,27 +5153,28 @@ QUnit.module("Fields", (hooks) => {
             "should have 1 record in the select view"
         );
 
-        await click($(".modal-footer button:eq(1)"));
-        await testUtils.fields.editInput(
-            $('.modal input.o_field_widget[name="turtle_foo"]'),
+        await click($(".modal-footer button:eq(1)")[0]);
+        await editInput(
+            target,
+            '.modal .o_field_widget[name="turtle_foo"] input',
             "tototo"
         );
-        await testUtils.fields.editInput($('.modal input.o_field_widget[name="turtle_int"]'), 50);
+        await editInput(target, '.modal .o_field_widget[name="turtle_int"] input', 50);
         await clickOpenM2ODropdown(target, "product_id");
         await clickM2OHighlightedItem(target, "product_id");
 
-        await click($(".modal-footer button:contains(&):first"));
+        await click($(".modal-footer button:contains(&):first")[0]);
 
         assert.strictEqual($(".modal").length, 0, "should close the modals");
 
-        assert.containsN(form, ".o_data_row", 3, "should have 3 records in one2many list");
+        assert.containsN(target, ".o_data_row", 3, "should have 3 records in one2many list");
         assert.strictEqual(
-            form.$(".o_data_row").text(),
+            $(target.querySelectorAll(".o_data_row")).text(),
             "blip1.59yop1.50tototo1.550xphone",
             "should display the record values in one2many list"
         );
 
-        await click($(".o_form_button_save"));
+        await click($(".o_form_button_save")[0]);
     });
 
     QUnit.skipWOWL("one2many with many2many widget: edition", async function (assert) {

@@ -383,7 +383,7 @@ export class Record extends DataPoint {
         const toAbandon = [];
         let isValid = true;
         for (const record of value.records) {
-            if (!record.checkValidity()) {
+            if (record.isNew && !record.checkValidity()) { // LPE: redo that condition
                 if (record.canBeAbandoned) {
                     toAbandon.push(record);
                 } else {
@@ -752,25 +752,28 @@ export class StaticList extends DataPoint {
         this.model.notify();
     }
 
-    async add(res) {
-        if (!(res instanceof Record)) {
-            throw new Error("LPE CRASH => the RelationalModel.add API is unclear");
-        }
-        const legDP = this.model.__bm__.localData[this.__bm_handle__];
-        const parentLegDP = this.model.__bm__.localData[legDP.parentID];
-        const parentValues = { ...parentLegDP.data, ...parentLegDP._changes };
-        // can use this.__fieldName
-        const fieldName = Object.keys(parentValues).find(
-            (name) => parentValues[name] === this.__bm_handle__
-        );
-
-        const record = res;
-
-        const recHandle = record.__bm_handle__;
-        await this.model.__bm__.save(recHandle, { savePoint: true });
+    async add(object, params = {isM2M: false}) {
         const changes = {};
-        changes[fieldName] = { operation: "ADD", id: recHandle };
-        await this.model.__bm__.notifyChanges(parentLegDP.id, changes);
+        const bm = this.model.__bm__;
+        if (object instanceof Record) {
+            const recHandle = object.__bm_handle__;
+            await bm.save(recHandle, { savePoint: !params.isM2M });
+            if (params.isM2M) {
+                const id = bm.localData[recHandle].res_id;
+                changes[this.__fieldName__] = { operation: "ADD_M2M", ids: [{id}] };
+            } else {
+                changes[this.__fieldName__] = { operation: "ADD", id: recHandle };
+            }
+        } else if (Array.isArray(object) && params.isM2M) {
+            const oldIds = this.resIds;
+            const newIds = object.filter(id => !oldIds.includes(id)).map(id => ({ id }));
+            changes[this.__fieldName__] = { operation: "ADD_M2M", ids: newIds };
+        }
+
+        const legDP = bm.localData[this.__bm_handle__];
+        const parentLegDP = bm.localData[legDP.parentID];
+
+        await bm.notifyChanges(parentLegDP.id, changes);
         this.__syncData();
         this.model.notify();
     }
@@ -906,6 +909,13 @@ export class RelationalModel extends Model {
             mode: params.mode,
         });
         newRecord.canBeAbandoned = record.canBeAbandoned;
+        const save = newRecord.save;
+        newRecord.save = async (...args) => {
+            const res = await save.call(newRecord, ...args);
+            record.__syncData(true);
+            this.notify();
+            return res;
+        };
         await newRecord.load();
         return newRecord;
     }

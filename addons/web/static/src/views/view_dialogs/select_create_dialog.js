@@ -30,9 +30,9 @@ export class SelectCreateDialog extends Dialog {
             editable: false, // readonly
             showButtons: false,
             hasSelectors: this.props.multiSelect,
-            selectRecord: (resId) => {
+            selectRecord: async (resId) => {
                 if (this.props.onSelected) {
-                    this.props.onSelected([resId]);
+                    await this.props.onSelected([resId]);
                     this.close();
                 }
             },
@@ -57,13 +57,18 @@ export class SelectCreateDialog extends Dialog {
         });
     }
 
-    select() {
+    async select() {
         if (this.props.onSelected) {
-            this.props.onSelected(this.state.resIds);
+            await this.props.onSelected(this.state.resIds);
             this.close();
         }
     }
-    createEditRecord() {}
+    async createEditRecord() {
+        if (this.props.onCreateEdit) {
+            await this.props.onCreateEdit();
+            this.close();
+        }
+    }
 }
 SelectCreateDialog.components = { View };
 SelectCreateDialog.bodyTemplate = "web.SelectCreateDialogBody";
