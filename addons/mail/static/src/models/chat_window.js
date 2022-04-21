@@ -302,12 +302,14 @@ registerModel({
          * Swap this chat window with the previous one.
          */
         shiftPrev() {
+            this.saveThreadScrollTop();
             this.manager.shiftPrev(this);
         },
         /**
          * Swap this chat window with the next one.
          */
         shiftNext() {
+            this.saveThreadScrollTop();
             this.manager.shiftNext(this);
         },
         /**
