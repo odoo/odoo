@@ -70,10 +70,6 @@ CREATE TABLE ir_module_module (
 
 CREATE TABLE ir_module_module_dependency (
     id serial NOT NULL,
-    create_uid integer, -- references res_users on delete set null,
-    create_date timestamp without time zone,
-    write_date timestamp without time zone,
-    write_uid integer, -- references res_users on delete set null,
     name character varying,
     module_id integer REFERENCES ir_module_module ON DELETE cascade,
     auto_install_required boolean DEFAULT true,
