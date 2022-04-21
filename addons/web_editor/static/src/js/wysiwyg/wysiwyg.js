@@ -3,6 +3,7 @@ odoo.define('web_editor.wysiwyg', function (require) {
 
 const dom = require('web.dom');
 const core = require('web.core');
+const session = require('web.session');
 const Widget = require('web.Widget');
 const Dialog = require('web.Dialog');
 const customColors = require('web_editor.custom_colors');
@@ -98,6 +99,7 @@ const Wysiwyg = Widget.extend({
 
         var options = this._editorOptions();
         this._value = options.value;
+        this.options.isInternalUser = await session.user_has_group('base.group_user');
 
         this.$editable = this.$editable || this.$el;
         this.$editable.html(this._value);
@@ -1793,7 +1795,9 @@ const Wysiwyg = Widget.extend({
                     }, 150);
                 },
             },
-            {
+        ];
+        if (options.isInternalUser) {
+            commands.push({
                 groupName: 'Medias',
                 title: 'Image',
                 description: 'Insert an image.',
@@ -1801,8 +1805,8 @@ const Wysiwyg = Widget.extend({
                 callback: () => {
                     this.openMediaDialog();
                 },
-            },
-        ];
+            });
+        }
         if (options.allowCommandVideo) {
             commands.push({
                 groupName: 'Medias',
