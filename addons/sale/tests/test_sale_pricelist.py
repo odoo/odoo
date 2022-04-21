@@ -3,6 +3,7 @@
 
 from .common import TestSaleCommon
 from odoo.tests import tagged
+from odoo.tests.common import Form
 
 
 @tagged('post_install', '-at_install')
@@ -299,3 +300,44 @@ class TestSaleOrder(TestSaleCommon):
             sale_order.order_line.tax_id.id, tax_b.id,
             "Wrong tax applied for specified product & pricelist"
         )
+
+    def test_sale_with_pricelist_discount_excluded_2(self):
+        """ Test SO with the pricelist 'discount displayed' and check discount and unit price appeared on its lines
+        When product are added after pricelist and the onchange should be trigger automatically.
+        """
+        # Add group 'Discount on Lines' to the user
+        self.env.user.write({'groups_id': [(4, self.env.ref('product.group_discount_per_so_line').id)]})
+
+        product_order = self.company_data['product_order_no']
+        service_order = self.company_data['product_service_order']
+
+        # Set product category on consumable products (for the pricelist item applying on this category)
+        product_order.write({'categ_id': self.product_category_1.id})
+
+        # Remove current SO lines
+        self.sale_order.write({'order_line': [(5,)]})
+
+        # Change the pricelist
+        self.sale_order.write({'pricelist_id': self.pricelist_discount_excl.id})
+        self.env['sale.order.line'].create({
+            'order_id': self.sale_order.id,
+            'name': 'Dummy1',
+            'product_id': 1,
+        })
+
+        with Form(self.sale_order) as so_form:
+            sol_form = so_form.order_line.edit(0)
+            sol_form.product_id = service_order
+
+            self.assertEqual(sol_form.product_id, service_order)
+            self.assertEqual(sol_form.price_unit, service_order.list_price,
+                             "Unit price of order line should be a sale price as the pricelist not applied on the other category\'s product")
+            self.assertEqual(sol_form.discount, 20,
+                             "Discount should be displayed on order line since the product get some discount")
+
+            sol_form.product_id = product_order
+            self.assertEqual(sol_form.product_id, product_order)
+            self.assertEqual(sol_form.price_unit, product_order.standard_price,
+                             "Price unit should be the cost price for product")
+            self.assertEqual(sol_form.discount, 10,
+                             "Discount should be displayed on order line since its category get some discount")
