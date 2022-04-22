@@ -1,10 +1,11 @@
 /** @odoo-module **/
 
 import { Dialog } from "@web/core/dialog/dialog";
-import { View } from "../view";
+import { sprintf } from "@web/core/utils/strings";
+import { View } from "@web/views/view";
 import { useService } from "@web/core/utils/hooks";
 
-const { Component, onWillStart, useState } = owl;
+const { Component, markup, useState } = owl;
 
 export class SelectCreateDialog extends Component {
     setup() {
@@ -24,7 +25,7 @@ export class SelectCreateDialog extends Component {
             resModel: this.props.resModel,
             domain: this.props.domain,
             context: this.props.context,
-            type: "list",
+            type: "list", // could be kanban
             editable: false, // readonly
             showButtons: false,
             hasSelectors: this.props.multiSelect,
@@ -39,20 +40,10 @@ export class SelectCreateDialog extends Component {
                 this.state.resIds = resIds;
             },
             noBreadcrumbs: true,
-            searchViewId: this.props.searchViewId,
+            searchViewId: this.props.searchViewId || false,
             display: { searchPanel: false },
+            noContentHelp: markup(sprintf("<p>%s</p>", this.env._t("No records found!"))),
         };
-
-        onWillStart(async () => {
-            if (!("searchViewId" in this.props)) {
-                const { views } = await this.viewService.loadViews({
-                    resModel: this.props.resModel,
-                    context: this.props.context || {},
-                    views: [[false, "search"]],
-                });
-                this.propsView.searchViewId = views.search.id;
-            }
-        });
     }
 
     async select() {
@@ -74,3 +65,13 @@ SelectCreateDialog.template = "web.SelectCreateDialog";
 SelectCreateDialog.defaultProps = {
     multiSelect: true,
 };
+
+/**
+ * Props: (to complete)
+ *
+ * resModel
+ * domain
+ * context
+ * title
+ * onSelected
+ */

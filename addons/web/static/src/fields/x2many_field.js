@@ -1,17 +1,17 @@
 /** @odoo-module **/
 
+import { evalDomain } from "@web/views/relational_model";
+import { FormArchParser, loadSubViews } from "@web/views/form/form_view";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
+import { ListRenderer } from "@web/views/list/list_renderer";
 import { makeContext } from "@web/core/context";
 import { Pager } from "@web/core/pager/pager";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { sprintf } from "@web/core/utils/strings";
 import { standardFieldProps } from "@web/fields/standard_field_props";
-import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
-import { ListRenderer } from "@web/views/list/list_renderer";
-import { evalDomain } from "@web/views/relational_model";
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
-import { FormArchParser, loadSubViews } from "@web/views/form/form_view";
-import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
+import { useService } from "@web/core/utils/hooks";
 
 const { Component } = owl;
 
@@ -261,7 +261,7 @@ export class Many2ManyField extends X2ManyField {
         const list = this.list;
         const { record, name } = this.props;
         let domain = record.getFieldDomain(name).toList();
-        domain = [...domain, "!", ["id", "in", list.resIds]];
+        domain = [...domain, "!", ["id", "in", list.currentIds]];
         context = makeContext([record.getFieldContext(name), context]);
         this.addDialog(SelectCreateDialog, {
             title: this.env._t("Select records"),

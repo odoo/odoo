@@ -6252,11 +6252,17 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("many2many list in a one2many opened by a many2one", async function (assert) {
+    QUnit.test("many2many list in a one2many opened by a many2one", async function (assert) {
         assert.expect(1);
 
         serverData.models.turtle.records[1].turtle_trululu = 2;
-        const form = await makeView({
+        serverData.views = {
+            "partner,false,form": '<form><field name="timmy"/></form>',
+            "partner_type,false,list":
+                '<tree editable="bottom"><field name="display_name"/></tree>',
+            "partner_type,false,search": "<search></search>",
+        };
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -6269,15 +6275,6 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
             resId: 1,
-            archs: {
-                "partner,false,form": '<form> <field name="timmy"/> </form>',
-                "partner_type,false,list":
-                    '<tree editable="bottom"><field name="display_name"/></tree>',
-                "partner_type,false,search": "<search></search>",
-            },
-            viewOptions: {
-                mode: "edit",
-            },
             mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/partner/get_formview_id") {
                     return Promise.resolve(false);
@@ -6289,23 +6286,24 @@ QUnit.module("Fields", (hooks) => {
                         "should properly write ids"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
+        await clickEdit(target);
+
         // edit the first partner in the one2many partner form view
-        await click(form.$(".o_data_row:first td.o_data_cell"));
+        await click(target.querySelector(".o_data_row td.o_data_cell"));
         // open form view for many2one
-        await click(form.$(".o_external_button"));
+        await click(target.querySelector(".o_external_button"));
 
         // click on add, to add a new partner in the m2m
-        await click($(".modal .o_field_x2many_list_row_add a"));
+        await click(target.querySelector(".modal .o_field_x2many_list_row_add a"));
 
         // select the partner_type 'gold' (this closes the 2nd modal)
-        await click($(".modal td:contains(gold)"));
+        await click(target.querySelector("div:not(o_inactive_modal) .modal td.o_data_cell span")); // select gold
 
         // confirm the changes in the modal
-        await click($(".modal .modal-footer .btn-primary"));
+        await click(target, ".modal .modal-footer .btn-primary");
 
         await clickSave(target);
     });
