@@ -717,6 +717,11 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                 const qtyPerProduct = {};
                 let orderedProductPaid = 0;
                 for (const line of orderLines) {
+                    if (line.is_reward_line) {
+                        // TODO-JCB: Really?
+                        // skip reward lines.
+                        continue;
+                    }
 
                     if ((!line.reward_product_id && (rule.any_product || rule.valid_product_ids.has(line.get_product().id))) ||
                         (line.reward_product_id && (rule.any_product || rule.valid_product_ids.has(line.reward_product_id)))) {
