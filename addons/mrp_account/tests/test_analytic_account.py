@@ -121,6 +121,7 @@ class TestAnalyticAccount(TransactionCase):
         self.assertEqual(len(mo.workorder_ids.wc_analytic_account_line_id), 0)
 
         # change duration to 60
+        mo_form = Form(mo)
         with mo_form.workorder_ids.edit(0) as line_edit:
             line_edit.duration = 60.0
         mo_form.save()
@@ -161,6 +162,7 @@ class TestAnalyticAccount(TransactionCase):
         self.assertEqual(len(mo.workorder_ids.wc_analytic_account_line_id), 0)
 
         # change duration to 60
+        mo_form = Form(mo)
         with mo_form.workorder_ids.edit(0) as line_edit:
             line_edit.duration = 60.0
         mo_form.save()

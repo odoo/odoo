@@ -506,7 +506,6 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             move.product_uom_qty = 1
         picking_receipt = picking_form.save()
         picking_receipt.action_confirm()
-
         self.assertEqual(picking_receipt.display_action_record_components, 'facultative')
         action = picking_receipt.action_record_components()
         mo = self.env['mrp.production'].browse(action['res_id'])

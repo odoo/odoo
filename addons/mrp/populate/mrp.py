@@ -271,17 +271,6 @@ class MrpProduction(models.Model):
     def _populate(self, size):
         productions = super()._populate(size)
 
-        def fill_mo_with_bom_info():
-            productions_with_bom = productions.filtered('bom_id')
-            _logger.info("Create Raw moves of MO(s) with bom (%d)" % len(productions_with_bom))
-            self.env['stock.move'].create(productions_with_bom._get_moves_raw_values())
-            _logger.info("Create Finished moves of MO(s) with bom (%d)" % len(productions_with_bom))
-            self.env['stock.move'].create(productions_with_bom._get_moves_finished_values())
-            _logger.info("Create Workorder moves of MO(s) with bom (%d)" % len(productions_with_bom))
-            productions_with_bom._create_workorder()
-
-        fill_mo_with_bom_info()
-
         def confirm_bom_mo(sample_ratio):
             # Confirm X % of prototype MO
             random = populate.Random('confirm_bom_mo')
