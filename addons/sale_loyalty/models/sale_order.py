@@ -139,7 +139,7 @@ class SaleOrder(models.Model):
         return [{
             'name': _("Free Product - %(product)s", product=product.name),
             'product_id': product.id,
-            'price_unit': 0,
+            'discount': 100,
             'product_uom_qty': reward.reward_product_qty * claimable_count,
             'reward_id': reward.id,
             'coupon_id': coupon.id,
