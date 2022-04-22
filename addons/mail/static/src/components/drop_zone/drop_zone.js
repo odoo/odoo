@@ -2,7 +2,7 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, useState } = owl;
+const { Component } = owl;
 
 export class DropZone extends Component {
 
@@ -11,13 +11,6 @@ export class DropZone extends Component {
      */
     setup() {
         super.setup();
-        this.state = useState({
-            /**
-             * Determine whether the user is dragging files over the dropzone.
-             * Useful to provide visual feedback in that case.
-             */
-            isDraggingInside: false,
-        });
         /**
          * Counts how many drag enter/leave happened on self and children. This
          * ensures the drop effect stays active when dragging over a child.
@@ -80,9 +73,12 @@ export class DropZone extends Component {
      * @param {DragEvent} ev
      */
     _onDragenter(ev) {
+        if (!this.dropZoneView) {
+            return;
+        }
         ev.preventDefault();
         if (this._dragCount === 0) {
-            this.state.isDraggingInside = true;
+            this.dropZoneView.update({ isDraggingInside: true });
         }
         this._dragCount++;
     }
@@ -94,9 +90,12 @@ export class DropZone extends Component {
      * @param {DragEvent} ev
      */
     _onDragleave(ev) {
+        if (!this.dropZoneView) {
+            return;
+        }
         this._dragCount--;
         if (this._dragCount === 0) {
-            this.state.isDraggingInside = false;
+            this.dropZoneView.update({ isDraggingInside: false });
         }
     }
 
@@ -123,6 +122,9 @@ export class DropZone extends Component {
      * @param {DragEvent} ev
      */
     _onDrop(ev) {
+        if (!this.dropZoneView) {
+            return;
+        }
         ev.preventDefault();
         if (this._isDragSourceExternalFile(ev.dataTransfer)) {
             if (this.props.onDropzoneFilesDropped) {
@@ -131,7 +133,7 @@ export class DropZone extends Component {
                 });
             }
         }
-        this.state.isDraggingInside = false;
+        this.dropZoneView.update({ isDraggingInside: false });
     }
 
 }
