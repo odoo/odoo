@@ -525,8 +525,10 @@ class StockWarehouseOrderpoint(models.Model):
                     )
 
             if use_new_cursor:
-                cr.commit()
-                cr.close()
+                try:
+                    cr.commit()
+                finally:
+                    cr.close()
 
         return {}
 
