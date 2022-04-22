@@ -16,6 +16,15 @@ registerModel({
             }
             this.update({ hasShowMoreButton: false });
         },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickShowMore(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            this.update({ hasShowMoreButton: true });
+        },
     },
     fields: {
         composerViewOwner: one('ComposerView', {

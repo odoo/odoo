@@ -24,20 +24,6 @@ export class ComposerSuggestedRecipientList extends Component {
         return this.messaging && this.messaging.models['Thread'].get(this.props.threadLocalId);
     }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onClickShowMore(ev) {
-        if (!this.composerSuggestedRecipientListView) {
-            return;
-        }
-        this.composerSuggestedRecipientListView.update({ hasShowMoreButton: true });
-    }
-
 }
 
 Object.assign(ComposerSuggestedRecipientList, {

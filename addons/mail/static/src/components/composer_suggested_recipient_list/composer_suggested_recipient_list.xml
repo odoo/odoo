@@ -10,7 +10,7 @@
                 </t>
                 <t t-if="thread.suggestedRecipientInfoList.length > 3">
                     <t t-if="!composerSuggestedRecipientListView.hasShowMoreButton" >
-                        <button class="o_ComposerSuggestedRecipientList_showMore btn btn-sm btn-link" t-on-click="_onClickShowMore">
+                        <button class="o_ComposerSuggestedRecipientList_showMore btn btn-sm btn-link" t-on-click="composerSuggestedRecipientListView.onClickShowMore">
                             Show more
                         </button>
                     </t>
