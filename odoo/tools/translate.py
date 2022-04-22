@@ -283,6 +283,8 @@ def serialize_html(node):
     return etree.tostring(node, method='html', encoding='unicode')
 
 
+# FP TODO 4: remove xml_translate & html_translate and implement at field level
+#            we should only keep translate=True
 def xml_translate(src, dest, newval):
     """ Translate an XML value (string), using `callback` for translating text
         appearing in `value`.
@@ -1188,6 +1190,9 @@ def trans_load_data(cr, fileobj, fileformat, lang,
             if (fname not in obj._fields) or not obj._fields[fname].store:
                 continue
             if (term['type']=='model_terms') or not overwrite:
+                # FP TODO 2: to improve, build a dictionary of all terms {en_US: fr_FR} then using it
+                #            outside of the loop. Use translate_xml_node, rather than simple replaces:
+                # translate_xml_node(parse_xml(obj[fname]), lambda x: terms.get(x), parse_xml, serialize_xml)
                 value = obj[fname].replace(term['src'], value)
             if res_id and value:
                 obj._write({fname: value})
