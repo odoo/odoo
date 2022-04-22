@@ -40,7 +40,7 @@ class SaleOrderLine(models.Model):
     def _get_display_price(self):
         # A product created from a promotion does not have a list_price.
         # The price_unit of a reward order line is computed by the promotion, so it can be used directly
-        if self.is_reward_line:
+        if self.is_reward_line and self.reward_id.reward_type != 'product':
             return self.price_unit
         return super()._get_display_price()
 
