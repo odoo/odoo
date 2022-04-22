@@ -721,10 +721,10 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 })
 
             with_future_accrual = allocation.with_context(employee_id=self.employee_emp.id, future_accrual_date=datetime.date(2021, 9, 13))
-            self.assertAlmostEqual(with_future_accrual.holiday_status_id.additional_leaves, 1.29, 2, 'Should return 1.29 future leaves')
+            self.assertAlmostEqual(with_future_accrual.future_leaves, 1.29, 2, 'Should return 1.29 future leaves')
 
             # The Time Off can be requested / validated using future accrued leave
-            leave = self.env['hr.leave'].with_user(self.user_employee).create({
+            leave = self.env['hr.leave'].with_user(self.user_employee).with_context(future_accrual_date='2021-09-14').create({
                 'name': 'future leave',
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,

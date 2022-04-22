@@ -362,7 +362,7 @@ class HolidaysAllocation(models.Model):
 
     def _get_available_leaves_on(self, date):
         self.ensure_one()
-        return self.max_leaves - self.leaves_taken
+        return (self.max_leaves - self.leaves_taken) + self.future_leaves
 
     def _end_of_year_accrual(self):
         # to override in payroll
@@ -543,7 +543,11 @@ class HolidaysAllocation(models.Model):
         if not self:
             return
 
-        max_date = max(self.mapped('nextcall') or [fields.Date.today()])
+        max_date = max([
+            nextcall
+            for nextcall in self.mapped('nextcall')
+            if nextcall
+        ] or [fields.Date.today()])
         all_leaves = self.env['hr.leave'].search([
             ('future_accrual', '=', True),
             ('date_from', '>=', fields.Date.today()),

@@ -352,6 +352,7 @@
                                 </div>
                             </div>
                             <field name="future_accrual"/>
+                            <field name="holiday_allocation_id" readonly="1" /> <!-- todo remove -->
                             <field name="accrual_message" attrs="{'invisible': [('accrual_message', '=', False)]}"/>
                             <!-- When the user is leave manager, he should always see `number_of_days` to allow
                             him to edit the value. `number_of_hours_display` is only an informative field -->
