@@ -62,6 +62,12 @@ registerModel({
             this.showSubtypes();
         },
         /**
+         * @param {MouseEvent} ev
+         */
+        onClickRemove(ev) {
+            this.remove();
+        },
+        /**
          * Opens the most appropriate view that is a profile for this follower.
          */
         async openProfile() {
