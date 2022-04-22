@@ -101,18 +101,6 @@ export class DropZone extends Component {
     }
 
     /**
-     * Prevents default (from the template) in order to receive the drop event.
-     * The drop effect cursor works only when set on dragover.
-     *
-     * @private
-     * @param {DragEvent} ev
-     */
-    _onDragover(ev) {
-        ev.preventDefault();
-        ev.dataTransfer.dropEffect = 'copy';
-    }
-
-    /**
      * Trigger callback 'props.onDropzoneFilesDropped' with event when new files are dropped
      * on the dropzone, and then removes the visual drop effect.
      *
