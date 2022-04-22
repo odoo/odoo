@@ -201,6 +201,12 @@ const PosLoyaltyOrderline = (Orderline) => class PosLoyaltyOrderline extends Ord
             return this.is_reward_line == otherLine.is_reward_line && super.can_be_merged_with(otherLine);
         }
     }
+    merge(orderline){
+        super.merge(orderline);
+        if (this.points_cost) {
+            this.points_cost += orderline.points_cost || 0;
+        }
+    }
 }
 Registries.Model.extend(Orderline, PosLoyaltyOrderline);
 
