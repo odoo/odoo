@@ -31,16 +31,6 @@ export class ComposerSuggestedRecipientList extends Component {
     /**
      * @private
      */
-    _onClickShowLess(ev) {
-        if (!this.composerSuggestedRecipientListView) {
-            return;
-        }
-        this.composerSuggestedRecipientListView.update({ hasShowMoreButton: false });
-    }
-
-    /**
-     * @private
-     */
     _onClickShowMore(ev) {
         if (!this.composerSuggestedRecipientListView) {
             return;
