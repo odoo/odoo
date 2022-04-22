@@ -1215,6 +1215,11 @@ function makeActionManager(env) {
      * @returns {Promise<Number>}
      */
     async function switchView(viewType, props = {}) {
+        if (dialog) {
+            // we don't want to switch view when there's a dialog open, as we would
+            // not switch in the correct action (action in background != dialog action)
+            return;
+        }
         const controller = controllerStack[controllerStack.length - 1];
         const view = _getView(viewType);
         if (!view) {
