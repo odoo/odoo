@@ -23,13 +23,19 @@ odoo.define('sale.SaleOrderFormController', function (require) {
          *  (3) value is the same in all other sale order line
          */
         _onOpenUpdateAllWizard(ev) {
-            const orderLines = this._DialogReady(ev, 'normal')
+            const orderLines = this._DialogReady(ev, 'normal');
+            const customValuesCommands = [];
             const confirmCallback = () => {
                 orderLines.slice(1).forEach((line) => {
-                    this.trigger_up('field_changed', {
-                        dataPointID: this.renderer.state.id,
-                        changes: {order_line: {operation: "UPDATE", id: line.id, data: {[ev.data.fieldName]: ev.data.value}}},
+                    customValuesCommands.push({
+                        operation: "UPDATE",
+                        id: line.id,
+                        data: {[ev.data.fieldName]: ev.data.value},
                     });
+                });
+                this.trigger_up('field_changed', {
+                            dataPointID: this.renderer.state.id,
+                            changes: {order_line: {operation: "MULTI", commands: customValuesCommands}},
                 });
             };
             if (orderLines) {
