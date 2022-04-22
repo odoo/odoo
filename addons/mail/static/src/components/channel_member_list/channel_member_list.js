@@ -13,10 +13,20 @@ export class ChannelMemberList extends Component {
         return this.messaging.models['Thread'].get(this.props.channelLocalId);
     }
 
+    /**
+     * @returns {ChannelMemberListView}
+     */
+     get channelMemberListView() {
+        return this.messaging && this.messaging.models['ChannelMemberListView'].get(this.props.localId);
+    }
+
 }
 
 Object.assign(ChannelMemberList, {
-    props: { channelLocalId: String },
+    props: {
+        channelLocalId: String,
+        localId: String,
+    },
     template: 'mail.ChannelMemberList',
 });
 
