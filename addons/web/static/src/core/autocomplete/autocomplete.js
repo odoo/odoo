@@ -20,8 +20,7 @@ export class AutoComplete extends Component {
 
         this.inputRef = useRef("input");
         this.root = useRef("root");
-
-        this.debouncedOnInput = debounce(this.onInput.bind(this), 250);
+        this.debouncedOnInput = debounce(this.onInput.bind(this), this.constructor.timeout);
         useExternalListener(window, "scroll", this.onWindowScroll, true);
 
         this.hotkey = useService("hotkey");
@@ -184,7 +183,8 @@ export class AutoComplete extends Component {
     onInputBlur() {
         this.unregisterHotkeys();
         const value = this.inputRef.el.value;
-        if (this.props.autoSelect && this.state.activeSourceOption && this.props.value !== value) {
+
+        if (this.props.autoSelect && this.state.activeSourceOption && value.length > 0) {
             this.selectOption(this.state.activeSourceOption);
         } else {
             this.props.onBlur({
@@ -278,4 +278,5 @@ Object.assign(AutoComplete, {
         onChange: () => {},
         onBlur: () => {},
     },
+    timeout: 250,
 });

@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { Many2ManyTagsField } from "@web/fields/many2many_tags_field";
 import {
     click,
@@ -13,6 +14,7 @@ import {
     nextTick,
     patchWithCleanup,
     selectDropdownItem,
+    triggerEvent,
 } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
@@ -1030,33 +1032,46 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("select a many2many value by focusing out", async function (assert) {
-        assert.expect(4);
+    QUnit.test("select a many2many value by focusing out", async function (assert) {
+        assert.expect(5);
 
-        const form = await makeView({
+        serverData.models.partner_type.records.push({ id: 13, display_name: "red", color: 8 });
+
+        patchWithCleanup(AutoComplete, {
+            timeout: 0,
+        });
+
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
             arch: `<form><field name="timmy" widget="many2many_tags"/></form>`,
         });
 
-        assert.containsNone(form, ".o_field_many2many_tags .badge");
-
-        target
-            .querySelector(".o_field_many2many_tags input")
-            .focus()
-            .val("go")
-            .trigger("input")
-            .trigger("keyup");
-        await nextTick();
-        target.querySelector(".o_field_many2many_tags input").trigger("blur");
-        await nextTick();
+        assert.containsNone(target, ".o_field_many2many_tags .badge");
+        let input = target.querySelector(".o_field_many2many_tags input");
+        await triggerEvent(input, null, "focus");
+        await click(input);
+        await editInput(input, null, "go");
+        await triggerEvent(input, null, "blur");
 
         assert.containsNone(document.body, ".modal");
-        assert.containsOnce(form, ".o_field_many2many_tags .badge");
+        assert.containsOnce(target, ".o_field_many2many_tags .badge");
         assert.strictEqual(
-            target.querySelector(".o_field_many2many_tags .badge").textContent.trim(),
+            target.querySelector(".o_field_many2many_tags .badge").textContent,
             "gold"
+        );
+
+        input = target.querySelector(".o_field_many2many_tags input");
+        await triggerEvent(input, null, "focus");
+        await click(input);
+        await editInput(input, null, "r");
+        await triggerEvent(input, null, "keydown", { key: "ArrowDown" });
+        await triggerEvent(input, null, "blur");
+        assert.strictEqual(
+            target.querySelectorAll(".o_field_many2many_tags .badge")[1].textContent,
+            "red",
+            "the second element in the list has been selected"
         );
     });
 
