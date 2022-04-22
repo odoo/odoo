@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
 import math
 import logging
+from datetime import timedelta
+from itertools import repeat
+
 import pytz
 
 from odoo import api, fields, models, Command
@@ -416,56 +418,34 @@ class Meeting(models.Model):
 
         return events
 
-    def read(self, fields=None, load='_classic_read'):
-        def hide(field, value):
-            """
-            :param field: field name
-            :param value: field value
-            :return: obfuscated field value
-            """
-            if field in {'name', 'display_name'}:
-                return _('Busy')
-            return [] if isinstance(value, list) else False
+    def _read(self, fields):
+        if self.env.is_system():
+            super()._read(fields)
+            return
 
-        def split_privacy(events):
-            """
-            :param events: list of event values (dict)
-            :return: tuple(private events, public events)
-            """
-            private = [event for event in events if event.get('privacy') == 'private']
-            public = [event for event in events if event.get('privacy') != 'private']
-            return private, public
+        fields = set(fields)
+        private_fields = fields - self._get_public_fields()
+        if not private_fields:
+            super()._read(fields)
+            return
 
-        def split_visibility(events):
-            """
-            :param events: list of event values (dict)
-            :return: tuple(my events, other events)
-            """
-            current_partner_id = self.env.user.partner_id.id
-            visible_events = []
-            other_events = []
-            for event in events:
-                if (event.get('user_id') and event.get('user_id')[0] == self.env.uid) or current_partner_id in event.get('partner_ids'):
-                    visible_events.append(event)
-                else:
-                    other_events.append(event)
-            return visible_events, other_events
+        private_fields.add('partner_ids')
+        super()._read(fields | {'privacy', 'user_id', 'partner_ids'})
+        current_partner_id = self.env.user.partner_id
+        others_private_events = self.filtered(
+            lambda e: e.privacy == 'private' \
+                  and e.user_id != self.env.user \
+                  and current_partner_id not in e.partner_ids
+        )
+        if not others_private_events:
+            return
 
-        def obfuscated(events):
-            """
-            :param events: list of event values (dict)
-            :return: events with private field values obfuscated
-            """
-            public_fields = self._get_public_fields()
-            return [{
-                field: hide(field, value) if field not in public_fields else value
-                for field, value in event.items()
-            } for event in events]
-
-        events = super().read(fields=fields + ['privacy', 'user_id', 'partner_ids'], load=load)
-        private_events, public_events = split_privacy(events)
-        my_private_events, others_private_events = split_visibility(private_events)
-        return public_events + my_private_events + obfuscated(others_private_events)
+        for field_name in private_fields:
+            field = self._fields[field_name]
+            replacement = field.convert_to_cache(
+                _('Busy') if field_name == 'name' else False,
+                others_private_events)
+            self.env.cache.update(others_private_events, field, repeat(replacement))
 
     def write(self, values):
         detached_events = self.env['calendar.event']
