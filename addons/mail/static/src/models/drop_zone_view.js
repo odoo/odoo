@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'DropZoneView',
@@ -14,6 +14,13 @@ registerModel({
         composerViewOwner: one('ComposerView', {
             inverse: 'dropZoneView',
             readonly: true,
+        }),
+        /**
+         * Determines whether the user is dragging files over the dropzone.
+         * Useful to provide visual feedback in that case.
+         */
+        isDraggingInside: attr({
+            default: false,
         }),
     },
 });
