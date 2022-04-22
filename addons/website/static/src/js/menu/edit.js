@@ -171,26 +171,6 @@
 //             }
 //         });
 //     },
-//     /**
-//      * Returns the editable areas on the page.
-//      *
-//      * @param {DOM} $wrapwrap
-//      * @returns {jQuery}
-//      */
-//     editableFromEditorMenu: function ($wrapwrap) {
-//         return $wrapwrap.find('[data-oe-model]')
-//             .not('.o_not_editable')
-//             .filter(function () {
-//                 var $parent = $(this).closest('.o_editable, .o_not_editable');
-//                 return !$parent.length || $parent.hasClass('o_editable');
-//             })
-//             .not('link, script')
-//             .not('[data-oe-readonly]')
-//             .not('img[data-oe-field="arch"], br[data-oe-field="arch"], input[data-oe-field="arch"]')
-//             .not('.oe_snippet_editor')
-//             .not('hr, br, input, textarea')
-//             .add('.o_editable');
-//     },
 
 //     //--------------------------------------------------------------------------
 //     // Actions
@@ -271,87 +251,9 @@
 //         this.trigger_up('edit_mode');
 //         this.$el.css({width: ''});
 
-//         // Only make the odoo structure and fields editable.
-//         this.wysiwyg.odooEditor.observerUnactive();
-//         $('#wrapwrap').on('click.odoo-website-editor', '*', this, this._preventDefault);
-//         this._addEditorMessages(); // Insert editor messages in the DOM without observing.
-//         if (this.options.beforeEditorActive) {
-//             this.options.beforeEditorActive();
-//         }
-//         this.wysiwyg.odooEditor.observerActive();
-
-//         // 1. Make sure every .o_not_editable is not editable.
-//         // 2. Observe changes to mark dirty structures and fields.
-//         const processRecords = (records) => {
-//             records = this.wysiwyg.odooEditor.filterMutationRecords(records);
-//             // Skip the step for this stack because if the editor undo the first
-//             // step that has a dirty element, the following code would have
-//             // generated a new stack and break the "redo" of the editor.
-//             this.wysiwyg.odooEditor.automaticStepSkipStack();
-
-//             for (const record of records) {
-//                 const $savable = $(record.target).closest(this.savableSelector);
-
-//                 if (record.attributeName === 'contenteditable') {
-//                     continue;
-//                 }
-//                 $savable.not('.o_dirty').each(function () {
-//                     if (!this.hasAttribute('data-oe-readonly')) {
-//                         this.classList.add('o_dirty');
-//                     }
-//                 });
-//             }
-//         };
-//         this.observer = new MutationObserver(processRecords);
-//         const observe = () => {
-//             if (this.observer) {
-//                 this.observer.observe(document.body, {
-//                     childList: true,
-//                     subtree: true,
-//                     attributes: true,
-//                     attributeOldValue: true,
-//                     characterData: true,
-//                 });
-//             }
-//         }
-//         observe();
-
-//         this.wysiwyg.odooEditor.addEventListener('observerUnactive', () => {
-//             if (this.observer) {
-//                 processRecords(this.observer.takeRecords());
-//                 this.observer.disconnect();
-//             }
-//         })
-//         this.wysiwyg.odooEditor.addEventListener('observerActive', observe)
-
 //         $('body').addClass('editor_started');
 //     },
 
-//     _getContentEditableAreas () {
-//         return $(this.savableSelector).not('input, [data-oe-readonly],[data-oe-type="monetary"],[data-oe-many2one-id], [data-oe-field="arch"]:empty').filter((_, el) => {
-//             return !$(el).closest('.o_not_editable').length;
-//         }).toArray();
-//     },
-//     /**
-//      * Call preventDefault of an event.
-//      *
-//      * @private
-//      */
-//     _preventDefault(e) {
-//         e.preventDefault();
-//     },
-//     /**
-//      * Adds automatic editor messages on drag&drop zone elements.
-//      *
-//      * @private
-//      */
-//     _addEditorMessages: function () {
-//         const $editable = this._targetForEdition().find('.oe_structure.oe_empty, [data-oe-type="html"]');
-//         this.$editorMessageElements = $editable
-//             .not('[data-editor-message]')
-//             .attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
-//         $editable.filter(':empty').attr('contenteditable', false);
-//     },
 //     /**
 //      * Returns the target for edition.
 //      *
@@ -399,133 +301,11 @@
 //                 context = ctx;
 //             },
 //         });
-//         const params = Object.assign({
-//             snippets: 'website.snippets',
-//             recordInfo: {
-//                 context: context,
-//                 data_res_model: 'website',
-//                 data_res_id: context.website_id,
-//             },
-//             enableWebsite: true,
-//             discardButton: true,
-//             saveButton: true,
-//             devicePreview: true,
-//             savableSelector: this.savableSelector,
-//             isRootEditable: false,
-//             controlHistoryFromDocument: true,
-//             getContentEditableAreas: this._getContentEditableAreas.bind(this),
-//             powerboxCommands: this._getSnippetsCommands(),
-//         }, collaborationConfig);
 //         return wysiwygLoader.createWysiwyg(this,
 //             Object.assign(params, this.wysiwygOptions),
 //             ['website.compiled_assets_wysiwyg']
 //         );
 //     },
-//     _getSnippetsCommands: function () {
-//         const snippetCommandCallback = (selector) => {
-//             const $separatorBody = $(selector);
-//             const $clonedBody = $separatorBody.clone().removeClass('oe_snippet_body');
-//             const range = this.wysiwyg.getDeepRange();
-//             const block = this.wysiwyg.closestElement(range.endContainer, 'p, div, ol, ul, cl, h1, h2, h3, h4, h5, h6');
-//             if (block) {
-//                 block.after($clonedBody[0]);
-//                 this.wysiwyg.snippetsMenu.callPostSnippetDrop($clonedBody);
-//             }
-//         };
-//         return [
-//             {
-//                 groupName: 'Website',
-//                 title: 'Alert',
-//                 description: 'Insert an alert snippet.',
-//                 fontawesome: 'fa-info',
-//                 callback: () => {
-//                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_alert"]');
-//                 },
-//             },
-//             {
-//                 groupName: 'Website',
-//                 title: 'Rating',
-//                 description: 'Insert a rating snippet.',
-//                 fontawesome: 'fa-star-half-o',
-//                 callback: () => {
-//                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_rating"]');
-//                 },
-//             },
-//             {
-//                 groupName: 'Website',
-//                 title: 'Card',
-//                 description: 'Insert a card snippet.',
-//                 fontawesome: 'fa-sticky-note',
-//                 callback: () => {
-//                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_card"]');
-//                 },
-//             },
-//             {
-//                 groupName: 'Website',
-//                 title: 'Share',
-//                 description: 'Insert a share snippet.',
-//                 fontawesome: 'fa-share-square-o',
-//                 callback: () => {
-//                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_share"]');
-//                 },
-//             },
-//             {
-//                 groupName: 'Website',
-//                 title: 'Text Highlight',
-//                 description: 'Insert a text Highlight snippet.',
-//                 fontawesome: 'fa-sticky-note',
-//                 callback: () => {
-//                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_text_highlight"]');
-//                 },
-//             },
-//             {
-//                 groupName: 'Website',
-//                 title: 'Chart',
-//                 description: 'Insert a chart snippet.',
-//                 fontawesome: 'fa-bar-chart',
-//                 callback: () => {
-//                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_chart"]');
-//                 },
-//             },
-//             {
-//                 groupName: 'Website',
-//                 title: 'Progress Bar',
-//                 description: 'Insert a progress bar snippet.',
-//                 fontawesome: 'fa-spinner',
-//                 callback: () => {
-//                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_progress_bar"]');
-//                 },
-//             },
-//             {
-//                 groupName: 'Website',
-//                 title: 'Badge',
-//                 description: 'Insert a badge snippet.',
-//                 fontawesome: 'fa-tags',
-//                 callback: () => {
-//                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_badge"]');
-//                 },
-//             },
-//             {
-//                 groupName: 'Website',
-//                 title: 'Blockquote',
-//                 description: 'Insert a blockquote snippet.',
-//                 fontawesome: 'fa-quote-left',
-//                 callback: () => {
-//                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_blockquote"]');
-//                 },
-//             },
-//             {
-//                 groupName: 'Website',
-//                 title: 'Separator',
-//                 description: 'Insert an horizontal separator sippet.',
-//                 fontawesome: 'fa-minus',
-//                 callback: () => {
-//                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_hr"]');
-//                 },
-//             },
-//         ];
-//     },
-
 
 //     //--------------------------------------------------------------------------
 //     // Handlers

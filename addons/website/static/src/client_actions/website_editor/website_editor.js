@@ -2,6 +2,7 @@
 
 import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
+import core from 'web.core';
 
 import { WebsiteEditorComponent } from '../../components/editor/editor';
 
@@ -47,12 +48,26 @@ export class WebsiteEditorClientAction extends Component {
                 });
 
                 this.iframe.el.contentWindow.addEventListener('PUBLIC-ROOT-READY', (event) => {
+                    if (!this.websiteContext.edition) {
+                        this.addWelcomeMessage();
+                    }
                     this.websiteService.websiteRootInstance = event.detail.rootInstance;
+                });
             };
 
             this.iframe.el.addEventListener('load', () => onPageLoaded());
             return this.iframe.el.removeEventListener('load', () => onPageLoaded());
         }, () => []);
+
+        useEffect(() => {
+            if (this.websiteContext.edition) {
+                if (this.$welcomeMessage) {
+                    this.$welcomeMessage.detach();
+                }
+            } else {
+                this.addWelcomeMessage();
+            }
+        }, () => [this.websiteContext.edition]);
     }
 
     get websiteId() {
@@ -87,6 +102,16 @@ export class WebsiteEditorClientAction extends Component {
                 this.iframe.el.contentWindow.location.reload();
             }
         });
+    }
+
+    addWelcomeMessage() {
+        const $wrap = $(this.iframe.el.contentDocument.getElementById('wrap'));
+        if ($wrap.length && $wrap.html().trim() === '') {
+            this.$welcomeMessage = $(core.qweb.render('website.homepage_editor_welcome_message'));
+            this.$welcomeMessage.addClass('o_homepage_editor_welcome_message');
+            this.$welcomeMessage.css('min-height', $wrap.parent('main').height() - ($wrap.outerHeight(true) - $wrap.height()));
+            $wrap.empty().append(this.$welcomeMessage);
+        }
     }
 }
 WebsiteEditorClientAction.template = 'website.WebsiteEditorClientAction';

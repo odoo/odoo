@@ -858,6 +858,36 @@ section, .oe_img_bg, [data-oe-shape-data] {
     @extend .o_half_screen_height;
 }
 
+// Background Images
+.oe_img_bg {
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    &.o_bg_img_opt_repeat {
+        background-size: auto;
+        background-repeat: repeat;
+    }
+    &.o_bg_img_center {
+        background-position: center;
+    }
+
+    // Compatibility <= 13.0, TODO remove?
+    // -----------------------------------
+    &.o_bg_img_opt_contain {
+        background-size: contain;
+        background-position: center center;
+    }
+    &.o_bg_img_opt_custom {
+        background-size: auto;
+    }
+    &.o_bg_img_opt_repeat_x {
+        background-repeat: repeat-x;
+    }
+    &.o_bg_img_opt_repeat_y {
+        background-repeat: repeat-y;
+    }
+}
+
 // Smaller container
 .o_container_small {
     @extend .container;
@@ -938,4 +968,74 @@ section, .oe_img_bg, [data-oe-shape-data] {
     position: absolute;
     z-index: 1051;
     background-color: white;
+}
+
+// Background shapes
+@function compute-shape-url-params($colors, $color-to-cc-bg-map) {
+    $url-params: '';
+    @each $i in $colors {
+        $mapped-color: map-get($color-to-cc-bg-map, $i);
+        // %23 is the url-encoded form of '#'
+        $color: str-replace("#{o-color($mapped-color)}", '#', '%23');
+        $url-params: '#{$url-params}&c#{$i}=#{$color}';
+    }
+    @return $url-params;
+}
+
+.o_we_shape {
+    @extend %o-we-background-layer;
+
+    // Default map to use to map shape file colors to color combination
+    // background colors.
+    $default-color-to-cc-bg-map: (
+        1: 4,
+        2: 3,
+        3: 2,
+        4: 1,
+        5: 5,
+    );
+    @each $module, $shapes in $o-bg-shapes {
+        @each $shape, $style in $shapes {
+            $colors: map-get($style, 'colors');
+            $color-to-cc-bg-map: map-merge($default-color-to-cc-bg-map, map-get($style, 'color-to-cc-bg-map') or ());
+            $url-params: compute-shape-url-params($colors, $color-to-cc-bg-map);
+            $extra-mappings: map-get($style, 'extra-mappings') or ();
+
+            // eg: o_website_shape_bg_1
+            &.o_#{$module}_#{str-replace($shape, '/', '_')} {
+                // When the shape is not customized, this URL, built in SCSS,
+                // allows for the shape to respond to palette changes.
+                // Mainly useful for default pages built by the configurator.
+                background-image: url("/web_editor/shape/#{$module}/#{$shape}.svg?#{str-slice($url-params, 2)}");
+                background-position: map-get($style, 'position');
+                background-size: map-get($style, 'size');
+                background-repeat:
+                    if(map-get($style, 'repeat-x'), repeat, no-repeat)
+                    if(map-get($style, 'repeat-y'), repeat, no-repeat);
+
+                @each $mapping-name, $mapping in $extra-mappings {
+                    $color-to-cc-bg-map: map-merge($default-color-to-cc-bg-map, $mapping or ());
+                    $url-params: compute-shape-url-params($colors, $color-to-cc-bg-map);
+
+                    &.o_#{$mapping-name}_extra_shape_mapping {
+                        background-image: url("/web_editor/shape/#{$module}/#{$shape}.svg?#{str-slice($url-params, 2)}");
+                    }
+                }
+            }
+        }
+    }
+}
+@include media-breakpoint-down(sm) {
+    .o_we_shape {
+        display: none;
+    }
+}
+.o_we_flip_x {
+    transform: scaleX(-1);
+}
+.o_we_flip_y {
+    transform: scaleY(-1);
+}
+.o_we_flip_x.o_we_flip_y {
+    transform: scale(-1);
 }

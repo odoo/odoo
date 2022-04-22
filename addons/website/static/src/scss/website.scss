@@ -378,36 +378,6 @@ font[class*='bg-'] {
     }
 }
 
-// Background Images
-.oe_img_bg {
-    background-size: cover;
-    background-repeat: no-repeat;
-
-    &.o_bg_img_opt_repeat {
-        background-size: auto;
-        background-repeat: repeat;
-    }
-    &.o_bg_img_center {
-        background-position: center;
-    }
-
-    // Compatibility <= 13.0, TODO remove?
-    // -----------------------------------
-    &.o_bg_img_opt_contain {
-        background-size: contain;
-        background-position: center center;
-    }
-    &.o_bg_img_opt_custom {
-        background-size: auto;
-    }
-    &.o_bg_img_opt_repeat_x {
-        background-repeat: repeat-x;
-    }
-    &.o_bg_img_opt_repeat_y {
-        background-repeat: repeat-y;
-    }
-}
-
 // Background videos
 .o_bg_video_container {
     @extend %o-we-background-layer;
