@@ -50,5 +50,12 @@ registerModel({
             readonly: true,
             required: true,
         }),
+        useDragVisibleDropZone: one('UseDragVisibleDropZone', {
+            default: insertAndReplace(),
+            inverse: 'attachmentBoxViewOwner',
+            isCausal: true,
+            readonly: true,
+            required: true,
+        }),
     },
 });

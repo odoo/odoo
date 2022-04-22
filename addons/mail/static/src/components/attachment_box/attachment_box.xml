@@ -12,7 +12,7 @@
                     <hr class="o_AttachmentBox_dashedLine flex-grow-1"/>
                 </div>
                 <div class="o_AttachmentBox_content d-flex flex-column">
-                    <t t-if="isDropZoneVisible.value">
+                    <t t-if="attachmentBoxView.useDragVisibleDropZone.isVisible">
                         <DropZone
                             className="'o_AttachmentBox_dropZone'"
                             onDropzoneFilesDropped="_onDropZoneFilesDropped"

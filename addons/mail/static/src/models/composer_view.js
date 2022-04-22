@@ -1600,6 +1600,13 @@ registerModel({
             inverse: 'composerView',
             readonly: true,
         }),
+        useDragVisibleDropZone: one('UseDragVisibleDropZone', {
+            default: insertAndReplace(),
+            inverse: 'composerViewOwner',
+            isCausal: true,
+            readonly: true,
+            required: true,
+        }),
     },
     onChanges: [
         new OnChange({
