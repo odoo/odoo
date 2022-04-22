@@ -25,29 +25,33 @@ export class RewardButton extends PosComponent {
      * @param {Integer} coupon_id 
      */
     async _applyReward(reward, coupon_id) {
-        const args = {};
-        if (reward.reward_type === 'product' && reward.multi_product) {
-            const productsList = reward.reward_product_ids.map((product_id) => ({
-                id: product_id,
-                label: this.env.pos.db.get_product_by_id(product_id).display_name,
-                item: product_id,
-            }));
-            const { confirmed, payload: selectedProduct } = await this.showPopup('SelectionPopup', {
-                title: this.env._t('Please select a product for this reward'),
-                list: productsList,
-            });
-            if (!confirmed) {
-                return false;
+        if (reward.reward_type === 'product') {
+            let selectedProduct;
+
+            if (reward.multi_product) {
+                const productsList = reward.reward_product_ids.map((product_id) => {
+                    const product = this.env.pos.db.get_product_by_id(product_id);
+                    return {
+                        id: product_id,
+                        label: product.display_name,
+                        item: product,
+                    }
+                });
+                const { confirmed, payload } = await this.showPopup('SelectionPopup', {
+                    title: this.env._t('Please select a product for this reward'),
+                    list: productsList,
+                });
+                if (!confirmed) {
+                    return false;
+                }
+                selectedProduct = payload;
+            } else {
+                selectedProduct = this.env.pos.db.get_product_by_id(reward.reward_product_ids[0]);
             }
-            args['product'] = selectedProduct;
+            this.env.pos.get_order().add_product(selectedProduct, { quantity: 1 });
+        } else {
+            this.env.pos.get_order()._updateRewards();
         }
-        const result = this.env.pos.get_order()._applyReward(reward, coupon_id, args);
-        if (result !== true) {
-            // Returned an error
-            Gui.showNotification(result);
-        }
-        this.env.pos.get_order()._updateRewards();
-        return result;
     }
 
     async onClick() {

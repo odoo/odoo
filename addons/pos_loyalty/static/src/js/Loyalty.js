@@ -190,6 +190,17 @@ const PosLoyaltyOrderline = (Orderline) => class PosLoyaltyOrderline extends Ord
         }
         return super.set_quantity(...arguments);
     }
+    /**
+     * TODO-JCB: Not final. I think this will only be done for rewards with free product.
+     * @override
+     */
+    can_be_merged_with(otherLine) {
+        if (this.is_reward_line && otherLine.is_reward_line) {
+            return otherLine.product.id === this.product.id && otherLine.reward_id === this.reward_id;
+        } else {
+            return this.is_reward_line == otherLine.is_reward_line && super.can_be_merged_with(otherLine);
+        }
+    }
 }
 Registries.Model.extend(Orderline, PosLoyaltyOrderline);
 
@@ -345,8 +356,31 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         line.giftBarcode = options.giftBarcode;
     }
     add_product(product, options) {
+        const [reward, coupon_id, points_cost] = this._getPotentialReward(product);
+        if (reward) {
+            this._updateOptionsToBeFreeProduct(options, reward, coupon_id, points_cost);
+        }
         super.add_product(...arguments);
         this._updateRewards();
+    }
+
+    _getPotentialReward(product) {
+        const claimable = this.getClaimableRewards().find(item => item.reward.reward_product_ids.includes(product.id));
+        if (claimable) {
+            return [claimable.reward, claimable.coupon_id, claimable.reward.required_points]
+        } else {
+            return [false];
+        }
+    }
+
+    _updateOptionsToBeFreeProduct(options, reward, coupon_id, points_cost) {
+        Object.assign(options, {
+            price: 0,
+            is_reward_line: true,
+            reward_id: reward.id,
+            coupon_id,
+            points_cost,
+        });
     }
 
     async _initializePrograms() {
@@ -387,8 +421,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             const claimableRewards = this.getClaimableRewards(false, false, true);
             let changed = false;
             for (const {coupon_id, reward} of claimableRewards) {
-                if (reward.program_id.rewards.length === 1 && !reward.program_id.is_nominative &&
-                    (reward.reward_type !== 'product' || !reward.multi_product)) {
+                if (reward.reward_type !== 'product') {
                     this._applyReward(reward, coupon_id);
                     changed = true;
                 }
@@ -454,7 +487,10 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             if (claimedReward.reward.program_id.program_type === 'gift_card' || claimedReward.reward.program_id.program_type === 'ewallet') {
                 paymentRewards.push(claimedReward);
             } else if (claimedReward.reward.reward_type === 'product') {
-                claimedRewards.unshift(claimedReward);
+                // claimedRewards.unshift(claimedReward);
+                // Do nothing, do not automatically update reward product at the moment.
+                // TODO-JCB: We might do something later if the reward becomes negative.
+                continue
             } else {
                 claimedRewards.push(claimedReward);
             }
@@ -788,8 +824,8 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                     continue;
                 }
                 if (reward.reward_type === 'product' && !reward.multi_product) {
-                    const product = this.pos.db.get_product_by_id(reward.reward_product_ids[0]);
-                    const availableQty = this._computeAvailableFreeProduct(reward, couponProgram.coupon_id, product);
+                    // const product = this.pos.db.get_product_by_id(reward.reward_product_ids[0]);
+                    const availableQty = this._computeAvailableFreeProduct(reward, points);
                     if (availableQty <= 0) {
                         continue;
                     }
@@ -845,7 +881,6 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         return true;
     }
     _createLineFromVals(vals) {
-        vals['lst_price'] = vals['price'];
         const line = Orderline.create({}, {pos: this.pos, order: this, product: vals['product']});
         this.fix_tax_included_price(line);
         this.set_orderline_options(line, vals);
@@ -1091,139 +1126,8 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         }
         return result;
     }
-    /**
-     * Tries to compute how many free product can be given out for the given product.
-     * Contrary to sale_loyalty, the product must be in the order lines in order to give it out
-     *  (resulting in discount lines for the product's value).
-     * As such we need to approximate the effect of removing 1 quantity on the counting of points in order
-     *  to avoid feedback loops between giving a product and it removing the required points for it.
-     *
-     * @param {loyalty.reward} reward
-     * @param {Integer} coupon_id
-     * @param {Product} product
-     * @returns {Integer} Available quantity to be given as reward for the given product
-     */
-    _computeAvailableFreeProduct(reward, coupon_id, product) {
-        // Might not be perfect but good enough
-        let productPriceWithTax = null;
-        const orderlines = this.get_orderlines();
-        const program = reward.program_id;
-        let freeClaimed = 0;
-        let available = 0;
-        for (const line of orderlines) {
-            if (line.get_product().id === product.id) {
-                if (productPriceWithTax === null) {
-                    productPriceWithTax = line.get_price_with_tax() / line.get_quantity();
-                }
-                available += line.get_quantity();
-            } else if (line.reward_product_id === product.id) {
-                freeClaimed += line.get_quantity();
-            }
-        }
-        // This only applies to programs that apply on current and both orders and only if points are being counted for that coupon.
-        const pointChangeEntry = this.couponPointChanges[coupon_id];
-        if (available && (pointChangeEntry && program.applies_on === 'current' || program.applies_on === 'both')) {
-            /**
-             * We have to count the points again in this case because we have to know how much points will be lost
-             *  after we apply the free product, take for example a 2+1 free program, you could have 1 points per unit paid
-             *  with the reward being the free product that takes 1 point. At the time of counting the points
-             *  if you have 2 units in your list you would technically be eligible for the reward since you have enough points.
-             * However because claiming the unit would result in a loss of 2 points, you would lose our eligibility.
-             * This seams like a small problem but we have to take note that we may also get points from other products and as such they
-             *  a free product might not impact the points at all.
-             * Example program:
-             *  2 rules:
-             *    1: 1 point per unit paid on product A.
-             *    2 10 points per unit paid on product B.
-             *  1 reward:
-             *    1: for 2 point, 1 free product A.
-             * This means that if we have a product B we are eligible for 5 free product A.
-             * But also that we need at least 6 product A before rule 1 starts counting points again.
-             * Since reward lines at this point may or may not be present we have to remove the points we compute in this function.
-             */
-            let points = this._getRealCouponPoints(coupon_id);
-            let totalTaxed = this.get_total_with_tax();
-            let totalUntaxed = this.get_total_without_tax();
-            orderlines.forEach((line) => {
-                if (!line.reward_id) {
-                    return;
-                }
-                const lineReward = this.pos.reward_by_id[line.reward_id];
-                if (lineReward.reward_type !== 'discount') {
-                    return;
-                }
-                const rewardProgram = lineReward.program_id;
-                if (rewardProgram.id === program.id || rewardProgram.trigger === 'auto') {
-                    totalTaxed -= line.get_price_with_tax();
-                    totalUntaxed -= line.get_price_without_tax();
-                }
-            });
-            // Compute how much one unit costs in terms of points
-            const ruleData = [];
-            for (const rule of program.rules) {
-                if (!rule.any_product && !rule.valid_product_ids.has(product.id)) {
-                    continue;
-                }
-                const amountToCheck = (rule.minimum_amount_tax_mode === 'incl' ? totalTaxed : totalUntaxed);
-                if (rule.minimum_amount > amountToCheck) {
-                    continue;
-                }
-                let totalProductQty = 0;
-                let orderedProductPaid = 0;
-                orderlines.forEach((line) => {
-                    if ((!line.reward_product_id && (rule.any_product || rule.valid_product_ids.has(line.get_product().id))) ||
-                        (line.reward_product_id && (rule.any_product || rule.valid_product_ids.has(line.reward_product_id)))) {
-                        // We only count reward products from the same program to avoid unwanted feedback loops
-                        if (line.reward_product_id) {
-                            const reward = this.pos.reward_by_id[line.reward_id];
-                            if (program.id !== reward.program_id.id) {
-                                return;
-                            }
-                        }
-                        const lineQty = (line.reward_product_id ? -line.get_quantity() : line.get_quantity());
-                        totalProductQty += lineQty;
-                        orderedProductPaid += line.get_price_with_tax();
-                    }
-                });
-                const thisRuleChanges = {};
-                thisRuleChanges.maxUnits = product.price ? Math.floor((amountToCheck - rule.minimum_amount) / product.price) : Infinity;
-                thisRuleChanges.maxUnits = Math.min(available - rule.minimum_qty, thisRuleChanges.maxUnits);
-                if (rule.reward_point_mode === 'unit') {
-                    thisRuleChanges.pointsPerUnit = rule.reward_point_amount;
-                    thisRuleChanges.pointsAdded = rule.reward_point_amount * totalProductQty;
-                } else if (rule.reward_point_mode === 'money') {
-                    thisRuleChanges.pointsPerUnit = rule.reward_point_amount * productPriceWithTax;
-                    thisRuleChanges.pointsAdded = round_precision(rule.reward_point_amount * orderedProductPaid, 0.01);
-                } else if (rule.reward_point_mode === 'order') {
-                    thisRuleChanges.pointsPerUnit = 0;
-                    thisRuleChanges.pointsAdded = rule.reward_point_amount;
-                }
-                ruleData.push(thisRuleChanges);
-            }
-            // We actually have to try out all possible amounts
-            const maximumQty = Math.min(available, Math.floor(points / reward.required_points) * reward.reward_product_qty);
-            let totalLostPerUnit = ruleData.reduce((sum, data) => sum + data.pointsPerUnit, 0);
-            let lostPoints = 0;
-            let units;
-            for (units = 1; units <= maximumQty; units++) {
-                let localLostPoints = lostPoints + totalLostPerUnit;
-                for (const data of ruleData) {
-                    if (units === (data.maxUnits + 1)) {
-                        localLostPoints -= data.pointsPerUnit * units;
-                        totalLostPerUnit -= data.pointsPerUnit;
-                        localLostPoints += data.pointsAdded;
-                    }
-                }
-                const consumedPoints = Math.ceil(units / reward.reward_product_qty) * reward.required_points;
-                if (points - consumedPoints - localLostPoints < 0) {
-                    units -= 1;
-                    break;
-                }
-                lostPoints = localLostPoints;
-            }
-            available = Math.max(0, Math.min(units, available) - freeClaimed);
-        }
-        return available;
+    _computeAvailableFreeProduct(reward, remaining_points) {
+        return Math.floor(remaining_points / (reward.reward_product_qty * reward.required_points))
     }
     /**
      * @param {Object} args See `_applyReward`
@@ -1232,26 +1136,24 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
     _getRewardLineValuesProduct(args) {
         const reward = args['reward'];
         const product = this.pos.db.get_product_by_id(args['product'] || reward.reward_product_ids[0]);
-        const availableQty = this._computeAvailableFreeProduct(reward, args['coupon_id'], product);
+        const points = this._getRealCouponPoints(args['coupon_id']);
+        const availableQty = this._computeAvailableFreeProduct(reward, points);
         if (availableQty <= 0) {
             return _t("There are not enough products in the basket to claim this reward.");
         }
-        const points = this._getRealCouponPoints(args['coupon_id']);
         const claimable_count = reward.clear_wallet ? 1 : Math.min(Math.ceil(availableQty / reward.reward_product_qty), Math.floor(points / reward.required_points));
         const cost = reward.clear_wallet ? points : claimable_count * reward.required_points;
         return [{
-            product: reward.discount_line_product_id,
-            price: -product.lst_price,
-            tax_ids: product.taxes_id,
+            product,
+            price: 0,
             // In case the reward is the product multiple times, give it as many times as possible
             quantity: Math.min(availableQty, reward.reward_product_qty * claimable_count),
             reward_id: reward.id,
             is_reward_line: true,
-            reward_product_id: product.id,
             coupon_id: args['coupon_id'],
             points_cost: cost,
-            reward_identifier_code: _newRandomRewardCode(),
-            merge: false,
+            // reward_identifier_code: _newRandomRewardCode(),
+            // merge: false,
         }]
     }
     /**
