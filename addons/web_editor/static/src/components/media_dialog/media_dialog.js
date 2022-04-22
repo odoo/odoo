@@ -79,6 +79,7 @@ export class MediaDialog extends Dialog {
                 resModel: this.props.resModel,
                 resId: this.props.resId,
                 media: this.props.media,
+                multiImages: this.props.multiImages,
                 selectedMedia: this.selectedMedia,
                 selectMedia: (...args) => this.selectMedia(...args, tab.id, additionalProps.multiSelect),
                 save: this.save.bind(this),
