@@ -171,12 +171,16 @@ export class X2ManyField extends Component {
         this.addDialog(FormViewDialog, {
             archInfo: form, // FIXME: might not be there
             record: newRecord,
-            save: () => this.list.model.updateRecord(this.list, record),
+            save: () => this.updateRecord(record),
             title: sprintf(
                 this.env._t("Open: %s"),
                 this.props.record.activeFields[this.props.name].string
             ),
         });
+    }
+
+    updateRecord(record) {
+        this.list.model.updateRecord(this.list, record);
     }
 
     async onAdd(context) {
@@ -276,6 +280,10 @@ export class Many2ManyField extends X2ManyField {
 
     async saveRecordToList(record) {
         await this.list.add(record, { isM2M: true });
+    }
+
+    updateRecord(record) {
+        this.list.model.updateRecord(this.list, record, { isM2M: true });
     }
 }
 

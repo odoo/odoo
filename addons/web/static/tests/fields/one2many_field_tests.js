@@ -5172,10 +5172,26 @@ QUnit.module("Fields", (hooks) => {
         await click($(".o_form_button_save")[0]);
     });
 
-    QUnit.skipWOWL("one2many with many2many widget: edition", async function (assert) {
+    QUnit.test("one2many with many2many widget: edition", async function (assert) {
         assert.expect(7);
 
-        const form = await makeView({
+        serverData.views = {
+            "turtle,false,list": `
+                <tree>
+                    <field name="display_name"/>
+                    <field name="turtle_foo"/>
+                    <field name="turtle_bar"/>
+                    <field name="product_id"/>
+                </tree>`,
+            "turtle,false,search": `
+                <search>
+                    <field name="turtle_foo"/>
+                    <field name="turtle_bar"/>
+                    <field name="product_id"/>
+                </search>`,
+        };
+
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -5199,22 +5215,6 @@ QUnit.module("Fields", (hooks) => {
                         </form>
                     </field>
                 </form>`,
-            archs: {
-                "turtle,false,list": `
-                    <tree>
-                        <field name="display_name"/>
-                        <field name="turtle_foo"/>
-                        <field name="turtle_bar"/>
-                        <field name="product_id"/>
-                    </tree>`,
-                "turtle,false,search": `
-                    <search>
-                        <field name="turtle_foo"/>
-                        <field name="turtle_bar"/>
-                        <field name="product_id"/>
-                    </search>`,
-            },
-            session: {},
             resId: 1,
             mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/turtle/write") {
@@ -5233,12 +5233,11 @@ QUnit.module("Fields", (hooks) => {
                         "should send only a 'replace with' command"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
-
-        await click(form.$(".o_data_row:first"));
-        await testUtils.nextTick(); // wait for quick edit
+        //await new Promise(() => {})
+        await clickEdit(target);
+        await click($(target).find(".o_data_cell:first")[0]);
         assert.strictEqual(
             $(".modal .modal-title").first().text().trim(),
             "Open: one2many turtle field",
@@ -5247,26 +5246,27 @@ QUnit.module("Fields", (hooks) => {
         await clickDiscard(target.querySelector(".modal"));
 
         // edit the first one2many record
-        await click(form.$(".o_data_row:first"));
+        await click($(target).find(".o_data_cell:first")[0]);
         await clickOpenM2ODropdown(target, "product_id");
         await clickM2OHighlightedItem(target, "product_id");
-        await click($(".modal-footer button:first"));
+        await click($(".modal-footer button:first")[0]);
 
-        await click($(".o_form_button_save"));
+        await click($(".o_form_button_save")[0]);
 
         // add a one2many record
         await clickEdit(target);
         await addRow(target);
-        await click($(".modal .o_data_row:first .o_list_record_selector input"));
-        await click($(".modal .o_select_button"));
+        await click($(".modal .o_data_row:first .o_list_record_selector input")[0]);
+        await nextTick(); // wait for re-rendering because of the change of selection
+        await click($(".modal .o_select_button")[0]);
 
         // edit the second one2many record
-        await click(form.$(".o_data_row:eq(1)"));
+        await click($(target).find(".o_data_row:eq(1) .o_data_cell")[0]);
         await clickOpenM2ODropdown(target, "product_id");
         await clickM2OHighlightedItem(target, "product_id");
-        await click($(".modal-footer button:first"));
+        await click($(".modal .modal-footer button:first")[0]);
 
-        await click($(".o_form_button_save"));
+        await click($(".o_form_button_save")[0]);
     });
 
     QUnit.test("new record, the context is properly evaluated and sent", async function (assert) {

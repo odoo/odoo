@@ -895,17 +895,30 @@ export class RelationalModel extends Model {
     }
 
     async duplicateDatapoint(record, params) {
+        const bm = this.__bm__;
         const fieldsInfo = mapViews(params.views);
-        await this.__bm__.addFieldsInfo(record.__bm_handle__, {
+        const handle = record.__bm_handle__;
+
+        await bm.addFieldsInfo(handle, {
             fields: params.fields,
             viewType: params.viewMode,
             fieldInfo: fieldsInfo[params.viewMode].fieldsInfo[params.viewMode],
         });
         const newRecord = new Record(this, {
-            handle: record.__bm_handle__,
+            handle: handle,
             viewType: params.viewMode,
             mode: params.mode,
         });
+        if (record.save === newRecord.save) {
+            const save = record.save;
+            record.save = async (...args) => {
+                record.__syncData();
+                const res = await save.call(record, ...args);
+                record.save = save;
+                return res;
+            };
+        }
+
         newRecord.canBeAbandoned = record.canBeAbandoned;
 
         // determine fieldNames to load (comes from basic_view.js)
@@ -993,11 +1006,21 @@ export class RelationalModel extends Model {
         await newRecord.load();
         return newRecord;
     }
-    async updateRecord(list, record) {
+    async updateRecord(list, record, params = { isM2M: false }) {
         const mainRecordId = this.__bm__.localData[list.__bm_handle__].parentID;
-        const changes = {
-            [list.__fieldName__]: { operation: "UPDATE", id: record.__bm_handle__ },
-        };
+        const fieldName = list.__fieldName__;
+        let changes;
+        if (!params.isM2M) {
+            changes = {
+                [fieldName]: { operation: "UPDATE", id: record.__bm_handle__ },
+            };
+        } else {
+            await record.save();
+            changes = {
+                [fieldName]: { operation: "TRIGGER_ONCHANGE" },
+            };
+        }
+
         await this.__bm__.notifyChanges(mainRecordId, changes);
         list.__syncParent();
         this.notify();
