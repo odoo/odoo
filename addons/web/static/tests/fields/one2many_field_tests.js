@@ -11859,37 +11859,6 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(form.$(".o_field_widget[name=turtles] .o_data_cell").text(), "raphael");
     });
 
-    QUnit.skipWOWL("many2many read, field context is properly sent", async function (assert) {
-        assert.expect(4);
-
-        serverData.models.partner.fields.timmy.context = { hello: "world" };
-        serverData.models.partner.records[0].timmy = [12];
-
-        const form = await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `<form><field name="timmy" widget="many2many_tags"/></form>`,
-            resId: 1,
-            mockRPC(route, args) {
-                if (args.method === "read" && args.model === "partner_type") {
-                    assert.step(args.kwargs.context.hello);
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
-
-        assert.verifySteps(["world"]);
-
-        await clickEdit(target);
-        var $m2mInput = form.$(".o_field_many2manytags input");
-        $m2mInput.click();
-        await testUtils.nextTick();
-        $m2mInput.autocomplete("widget").find("li:first()").click();
-        await testUtils.nextTick();
-        assert.verifySteps(["world"]);
-    });
-
     QUnit.test(
         "one2many column visiblity depends on onchange of parent field",
         async function (assert) {
@@ -11938,11 +11907,17 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("one2many column_invisible on view not inline", async function (assert) {
-        assert.expect(4);
-
+    QUnit.test("one2many column_invisible on view not inline", async function (assert) {
         serverData.models.partner.records[0].p = [2];
-        const form = await makeView({
+        serverData.views = {
+            "partner,false,list": `
+                <tree>
+                    <field name="foo" attrs="{'column_invisible': [('parent.product_id', '!=', False)]}"/>
+                    <field name="bar" attrs="{'column_invisible': [('parent.bar', '=', False)]}"/>
+                </tree>`,
+        };
+
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -11961,45 +11936,31 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             resId: 1,
-            archs: {
-                "partner,false,list": `
-                    <tree>
-                        <field name="foo" attrs="{'column_invisible': [('parent.product_id', '!=', False)]}"/>
-                        <field name="bar" attrs="{'column_invisible': [('parent.bar', '=', False)]}"/>
-                    </tree>`,
-            },
         });
+
         assert.containsN(
-            form,
+            target,
             "th:not(.o_list_record_remove_header)",
             2,
             "should be 2 columns in the one2many"
         );
         await clickEdit(target);
-        await click(form.$('.o_field_many2one[name="product_id"] input'));
-        await clickM2OHighlightedItem(target, "product_id");
-        await testUtils.owlCompatibilityExtraNextTick();
+        await selectDropdownItem(target, "product_id", "xphone");
         assert.containsOnce(
-            form,
+            target,
             "th:not(.o_list_record_remove_header)",
             "should be 1 column when the product_id is set"
         );
-        await testUtils.fields.editAndTrigger(
-            form.$('.o_field_many2one[name="product_id"] input'),
-            "",
-            "keyup"
-        );
-        await testUtils.owlCompatibilityExtraNextTick();
+        await editInput(target, ".o_field_many2one[name=product_id] input", "");
         assert.containsN(
-            form,
+            target,
             "th:not(.o_list_record_remove_header)",
             2,
             "should be 2 columns in the one2many when product_id is not set"
         );
-        await click(form.$('.o_field_boolean[name="bar"] input'));
-        await testUtils.owlCompatibilityExtraNextTick();
+        await click(target.querySelector(".o_field_boolean[name=bar] input"));
         assert.containsOnce(
-            form,
+            target,
             "th:not(.o_list_record_remove_header)",
             "should be 1 column after the value change"
         );

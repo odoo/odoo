@@ -1135,4 +1135,29 @@ QUnit.module("Fields", (hooks) => {
             "the tags should still be correctly rendered"
         );
     });
+
+    QUnit.test("many2many read, field context is properly sent", async function (assert) {
+        assert.expect(4);
+
+        serverData.models.partner.fields.timmy.context = { hello: "world" };
+        serverData.models.partner.records[0].timmy = [12];
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="timmy" widget="many2many_tags"/></form>`,
+            resId: 1,
+            mockRPC(route, args) {
+                if (args.method === "read" && args.model === "partner_type") {
+                    assert.step(args.kwargs.context.hello);
+                }
+            },
+        });
+
+        assert.verifySteps(["world"]);
+        await clickEdit(target);
+        await selectDropdownItem(target, "timmy", "silver");
+        assert.verifySteps(["world"]);
+    });
 });
