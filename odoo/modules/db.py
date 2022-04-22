@@ -55,6 +55,7 @@ def initialize(cr):
                     category_id, auto_install, state, web, license, application, icon, sequence, summary) \
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
             info['author'],
+            # TODO VSC : do we need the json wrapper or is a simple dictionary going to work ?
             info['website'], i, Json({'en_US': info['name']}),
             Json({'en_US': info['description']}), category_id,
             info['auto_install'] is not False, state,
