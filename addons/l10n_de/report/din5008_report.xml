@@ -54,24 +54,26 @@
                         <tr>
                             <td>
                                 <div class="address">
-                                    <t t-if="company.name">
-                                        <span t-field="company.name"/>
-                                    </t>
-                                    <t t-if="company.street">
-                                        <span>|</span> <span t-field="company.street"/>
-                                    </t>
-                                    <t t-if="company.street2">
-                                        <span>|</span> <span t-field="company.street2"/>
-                                    </t>
-                                    <t t-if="company.zip">
-                                        <span>|</span> <span t-field="company.zip"/>
-                                    </t>
-                                    <t t-if="company.city">
-                                        <span t-if="not company.zip">|</span> <span t-field="company.city"/>
-                                    </t>
-                                    <t t-if="company.country_id">
-                                        <span>|</span> <span t-field="company.country_id.name"/>
-                                    </t>
+                                    <div id="company_address">
+                                        <t t-if="company.name">
+                                            <span t-field="company.name"/>
+                                        </t>
+                                        <t t-if="company.street">
+                                            <span>|</span> <span t-field="company.street"/>
+                                        </t>
+                                        <t t-if="company.street2">
+                                            <span>|</span> <span t-field="company.street2"/>
+                                        </t>
+                                        <t t-if="company.zip">
+                                            <span>|</span> <span t-field="company.zip"/>
+                                        </t>
+                                        <t t-if="company.city">
+                                            <span t-if="not company.zip">|</span> <span t-field="company.city"/>
+                                        </t>
+                                        <t t-if="company.country_id">
+                                            <span>|</span> <span t-field="company.country_id.name"/>
+                                        </t>
+                                    </div>
                                     <hr class="company_invoice_line" />
                                     <div t-if="address">
                                         <t t-raw="address"/>
@@ -196,6 +198,22 @@
                         }
                     }
                 </t>
+            </xpath>
+        </template>
+
+        <template id="minimal_layout" inherit_id="web.minimal_layout">
+            <xpath expr="//meta" position="after">
+                <script t-if="env.company.external_report_layout_id.xml_id == 'l10n_de.external_layout_din5008'">
+                    window.addEventListener('onload', function (evt) {
+                        var companyAddress = document.getElementById('company_address');
+                        if (companyAddress) {
+                            var initialFont = 9;
+                            for (var fontSize = initialFont; companyAddress.scrollWidth > companyAddress.offsetWidth; fontSize-=0.1) {
+                                companyAddress.style.fontSize = fontSize + "pt";
+                            }
+                        }
+                    });
+                </script>
             </xpath>
         </template>
     </data>
