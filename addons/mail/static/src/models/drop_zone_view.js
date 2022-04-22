@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'DropZoneView',
@@ -14,6 +14,13 @@ registerModel({
         composerViewOwner: one('ComposerView', {
             inverse: 'dropZoneView',
             readonly: true,
+        }),
+        /**
+         * Counts how many drag enter/leave happened on self and children. This
+         * ensures the drop effect stays active when dragging over a child.
+         */
+        dragCount: attr({
+            default: 0,
         }),
     },
 });

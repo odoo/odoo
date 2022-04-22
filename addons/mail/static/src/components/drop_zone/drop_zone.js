@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { decrement, increment } from '@mail/model/model_field_command';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component, useState } = owl;
@@ -18,11 +19,6 @@ export class DropZone extends Component {
              */
             isDraggingInside: false,
         });
-        /**
-         * Counts how many drag enter/leave happened on self and children. This
-         * ensures the drop effect stays active when dragging over a child.
-         */
-        this._dragCount = 0;
     }
 
     //--------------------------------------------------------------------------
@@ -80,11 +76,14 @@ export class DropZone extends Component {
      * @param {DragEvent} ev
      */
     _onDragenter(ev) {
+        if (!this.dropZoneView) {
+            return;
+        }
         ev.preventDefault();
-        if (this._dragCount === 0) {
+        if (this.dropZoneView.dragCount === 0) {
             this.state.isDraggingInside = true;
         }
-        this._dragCount++;
+        this.dropZoneView.update({ dragCount: increment() });
     }
 
     /**
@@ -94,8 +93,11 @@ export class DropZone extends Component {
      * @param {DragEvent} ev
      */
     _onDragleave(ev) {
-        this._dragCount--;
-        if (this._dragCount === 0) {
+        if (!this.dropZoneView) {
+            return;
+        }
+        this.dropZoneView.update({ dragCount: decrement() });
+        if (this.dropZoneView.dragCount === 0) {
             this.state.isDraggingInside = false;
         }
     }
