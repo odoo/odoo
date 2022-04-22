@@ -18,7 +18,7 @@
                     onClicked="chatWindow.onClickHeader"
                 />
                 <t t-if="chatWindow.channelMemberListView">
-                    <ChannelMemberList channelLocalId="chatWindow.thread.localId" localId="chatWindow.channelMemberListView.localId" className="'bg-white'"/>
+                    <ChannelMemberList localId="chatWindow.channelMemberListView.localId" className="'bg-white'"/>
                 </t>
                 <t t-if="chatWindow.channelInvitationForm">
                     <ChannelInvitationForm className="'o_ChatWindow_channelInvitationForm'" localId="chatWindow.channelInvitationForm.localId"/>
