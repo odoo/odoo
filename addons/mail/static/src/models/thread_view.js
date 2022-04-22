@@ -97,6 +97,16 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
+        _computeChannelMemberListView() {
+            if (this.thread && this.thread.hasMemberListFeature && this.hasMemberList && this.isMemberListOpened) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
         _computeComposerView() {
             if (!this.thread || this.thread.model === 'mail.box') {
                 return clear();
@@ -339,6 +349,11 @@ registerModel({
         },
     },
     fields: {
+        channelMemberListView: one('ChannelMemberListView', {
+            compute: '_computeChannelMemberListView',
+            inverse: 'threadViewOwner',
+            isCausal: true,
+        }),
         compact: attr({
             related: 'threadViewer.compact',
         }),
