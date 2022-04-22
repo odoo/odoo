@@ -337,6 +337,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(production.workorder_ids.duration_expected, 165)
 
     def test_update_quantity_4(self):
+        """ Workcenter 1 has 10' start time and 5' stop time """
         bom = self.env['mrp.bom'].create({
             'product_id': self.product_6.id,
             'product_tmpl_id': self.product_6.product_tmpl_id.id,
@@ -364,6 +365,14 @@ class TestMrpOrder(TestMrpCommon):
         mo_form = Form(production)
         mo_form.product_qty = 3
         production = mo_form.save()
+        self.assertEqual(production.workorder_ids.duration_expected, 40)
+
+        production.action_confirm()
+        update_quantity_wizard = self.env['change.production.qty'].create({
+            'mo_id': production.id,
+            'product_qty': 9,
+        })
+        update_quantity_wizard.change_prod_qty()
         self.assertEqual(production.workorder_ids.duration_expected, 90)
 
     def test_update_quantity_5(self):
@@ -549,8 +558,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.move_finished_ids[0].date, datetime(2023, 5, 15, 10, 0))
         mo.action_confirm()
         mo.button_plan()
-        with Form(mo) as frm:
-            frm.date_planned_start = datetime(2024, 5, 15, 9, 0)
+        mo.date_planned_start = datetime(2024, 5, 15, 9, 0)
         self.assertEqual(mo.move_finished_ids[0].date, datetime(2024, 5, 15, 10, 0))
 
     def test_rounding(self):
