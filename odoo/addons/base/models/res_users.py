@@ -713,8 +713,9 @@ class Users(models.Model):
     @classmethod
     def authenticate(cls, db, login, password, user_agent_env):
         """Verifies and returns the user ID corresponding to the given
-          ``login`` and ``password`` combination, or bubbles up AccessDenied if there was
-          no matching user.
+           ``login`` and ``password`` combination, or raises ``AccessDenied`` in
+           case of failure.
+
            :param str db: the database on which user is trying to authenticate
            :param str login: username
            :param str password: user password
