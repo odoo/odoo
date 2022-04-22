@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import common
@@ -18,7 +17,6 @@ from . import test_avatar_mixin
 from . import test_ir_actions
 from . import test_ir_attachment
 from . import test_ir_cron
-from . import test_ir_http
 from . import test_ir_filters
 from . import test_ir_mail_server
 from . import test_ir_model

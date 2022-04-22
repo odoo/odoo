@@ -20,10 +20,9 @@ class LivechatController(http.Controller):
         mock_attachment = getattr(asset, ext)()
         if isinstance(mock_attachment, list):  # suppose that CSS asset will not required to be split in pages
             mock_attachment = mock_attachment[0]
-        # can't use /web/content directly because we don't have attachment ids (attachments must be created)
-        _, headers, content = request.env['ir.http'].binary_content(id=mock_attachment.id, unique=asset.checksum)
-        headers.append(('Content-Length', len(content)))
-        return request.make_response(content, headers)
+
+        stream = request.env['ir.binary']._get_stream_from(mock_attachment)
+        return stream.get_response()
 
     @http.route('/im_livechat/load_templates', type='json', auth='none', cors="*")
     def load_templates(self, **kwargs):
@@ -100,21 +99,11 @@ class LivechatController(http.Controller):
                 ('operator_partner_id', 'in', operator.ids)
             ]))
 
-        status = 200
-        headers = []
-        # custom placeholer (a smiley face instead of the infamous camera)
-        image_placeholder = 'mail/static/src/img/smiley/avatar.jpg'
-
-        if is_livechat_member:
-            status, headers, image_base64 = request.env['ir.http'].sudo().binary_content(
-                model='res.partner', id=operator_id, field='avatar_128', default_mimetype='image/png')
-
-            if status in [301, 304]:
-                image_base64 = request.env['ir.http']._placeholder(image_placeholder)
-        else:
-            image_base64 = request.env['ir.http']._placeholder(image_placeholder)
-
-        return request.env['ir.http']._content_image_get_response(status, headers, image_base64)
+        return request.env['ir.binary']._get_image_stream_from(
+            operator if is_livechat_member else None,
+            field_name='avatar_128',
+            placeholder='mail/static/src/img/smiley/avatar.jpg',
+        ).get_response()
 
     @http.route('/im_livechat/get_session', type="json", auth='public', cors="*")
     def get_session(self, channel_id, anonymous_name, previous_operator_id=None, chatbot_script_id=None, **kwargs):

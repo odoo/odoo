@@ -108,6 +108,7 @@ endpoint
   The @route(...) decorated controller method.
 """
 
+import base64
 import cgi
 import collections
 import collections.abc
@@ -129,7 +130,11 @@ import warnings
 import zlib
 from abc import ABC, abstractmethod
 from datetime import datetime
+from io import BytesIO
 from os.path import join as opj
+from pathlib import Path
+from urllib.parse import urlparse
+from zlib import adler32
 
 import babel.core
 import psycopg2
@@ -149,13 +154,18 @@ try:
 except ImportError:
     from werkzeug.contrib.fixers import ProxyFix
 
+try:
+    from werkzeug.utils import send_file as _send_file
+except ImportError:
+    from .tools._vendor.send_file import send_file as _send_file
+
 import odoo
 from .exceptions import UserError, AccessError, AccessDenied
 from .modules.module import get_manifest
 from .modules.registry import Registry
 from .service import security, model as service_model
-from .tools import (config, consteq, date_utils, profiler, resolve_attr,
-                    submap, unique, ustr,)
+from .tools import (config, consteq, date_utils, file_path, profiler,
+                    resolve_attr, submap, unique, ustr,)
 from .tools.geoipresolver import GeoIPResolver
 from .tools.func import filter_kwargs, lazy_property
 from .tools.mimetypes import guess_mimetype
@@ -247,9 +257,6 @@ ROUTING_KEYS = {
     'alias', 'host', 'methods',
 }
 
-# The mimetypes of safe image types
-SAFE_IMAGE_MIMETYPES = {'image/jpeg', 'image/png', 'image/gif', 'image/x-icon'}
-
 # The duration of a user session before it is considered expired,
 # three months.
 SESSION_LIFETIME = 60 * 60 * 24 * 90
@@ -260,6 +267,7 @@ STATIC_CACHE = 60 * 60 * 24 * 7
 # The cache duration for content where the url uniquely identifies the
 # content (usually using a hash), one year.
 STATIC_CACHE_LONG = 60 * 60 * 24 * 365
+
 
 # =========================================================
 # Helpers
@@ -331,84 +339,6 @@ def db_filter(dbs, host=None):
 def is_cors_preflight(request, endpoint):
     return request.httprequest.method == 'OPTIONS' and endpoint.routing.get('cors', False)
 
-def send_file(filepath_or_fp, filename=None, mimetype=None, mtime=None,
-              as_attachment=False, cache_timeout=STATIC_CACHE):
-    """
-    Fle streaming utility with mime and cache handling, it takes a
-    file-object or immediately the content as bytes/str.
-
-    Sends the content of a file to the client. This will use the most
-    efficient method available and configured. By default it will try to
-    use the WSGI server's file_wrapper support.
-
-    If filename of file.name is provided it will try to guess the
-    mimetype for you, but you can also explicitly provide one.
-
-    For extra security you probably want to send certain files as
-    attachment (e.g. HTML).
-
-    :param Union[os.PathLike,io.FileIO] filepath_or_fp: the filename of
-        the file to send.  Alternatively a file object might be provided
-        in which case `X-Sendfile` might not work and fall back to the
-        traditional method. Make sure that the file pointer is position-
-        ed at the start of data to send before calling :func:`send_file`
-    :param str filename: optional if file has a 'name' attribute, used
-        for attachment name and mimetype guess.
-    :param str mimetype: the mimetype of the file if provided, otherwise
-        auto detection happens based on the name.
-    :param datetime mtime: optional if file has a 'name' attribute, last
-        modification time used for conditional response.
-    :param bool as_attachment: set to `True` if you want to send this
-        file with a ``Content-Disposition: attachment`` header.
-    :param int cache_timeout: set to `False` to disable etags and
-        conditional response handling (last modified and etags)
-    :returns: the HTTP response that streams the file.
-    """
-    if isinstance(filepath_or_fp, str):
-        if not filename:
-            filename = os.path.basename(filepath_or_fp)
-        file = open(filepath_or_fp, 'rb')
-    else:
-        file = filepath_or_fp
-        if not filename:
-            filename = getattr(file, 'name', None)
-
-    # Only used when filename or mtime argument is not provided
-    path = getattr(file, 'name', 'file.bin')
-
-    if not filename:
-        filename = os.path.basename(path)
-
-    if not mimetype:
-        mimetype = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
-
-    file.seek(0, 2)
-    size = file.tell()
-    file.seek(0)
-
-    data = werkzeug.wsgi.wrap_file(request.httprequest.environ, file)
-
-    res = werkzeug.wrappers.Response(data, mimetype=mimetype, direct_passthrough=True)
-    res.content_length = size
-
-    if as_attachment:
-        res.headers.add('Content-Disposition', 'attachment', filename=filename)
-
-    if cache_timeout:
-        if not mtime:
-            with contextlib.suppress(FileNotFoundError):
-                mtime = datetime.fromtimestamp(os.path.getmtime(path))
-        if mtime:
-            res.last_modified = mtime
-        crc = zlib.adler32(filename.encode('utf-8') if isinstance(filename, str) else filename) & 0xffffffff
-        etag = f'odoo-{mtime}-{size}-{crc}'
-        if not werkzeug.http.is_resource_modified(request.httprequest.environ, etag, last_modified=mtime):
-            res = werkzeug.wrappers.Response(status=304)
-        else:
-            res.cache_control.public = True
-            res.cache_control.max_age = cache_timeout
-            res.set_etag(etag)
-    return res
 
 def serialize_exception(exception):
     name = type(exception).__name__
@@ -422,20 +352,201 @@ def serialize_exception(exception):
         'context': getattr(exception, 'context', {}),
     }
 
-def set_safe_image_headers(headers, content):
-    """Return new headers based on `headers` but with `Content-Length` and
-    `Content-Type` set appropriately depending on the given `content` only if it
-    is safe to do, as well as `X-Content-Type-Options: nosniff` so that if the
-    file is of an unsafe type, it is not interpreted as that type if the
-    `Content-type` header was already set to a different mimetype
+
+# =========================================================
+# File Streaming
+# =========================================================
+
+def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None, mtime=None,
+              add_etags=True, cache_timeout=STATIC_CACHE, conditional=True):
+    warnings.warn('odoo.http.send_file is deprecated, please use odoo.http.Stream instead.', DeprecationWarning, stacklevel=2)
+    return _send_file(
+        filepath_or_fp,
+        request.httprequest.environ,
+        mimetype=mimetype,
+        as_attachment=as_attachment,
+        download_name=filename,
+        last_modified=mtime,
+        etag=add_etags,
+        max_age=cache_timeout,
+        conditional=conditional
+    )
+
+
+class Stream:
     """
-    headers = werkzeug.datastructures.Headers(headers)
-    content_type = guess_mimetype(content)
-    if content_type in SAFE_IMAGE_MIMETYPES:
-        headers['Content-Type'] = content_type
-    headers['X-Content-Type-Options'] = 'nosniff'
-    headers['Content-Length'] = len(content)
-    return list(headers)
+    Send the content of a file, an attachment or a binary field via HTTP
+
+    This utility is safe, cache-aware and uses the best available
+    streaming strategy. Works best with the --x-sendfile cli option.
+
+    Create a Stream via one of the constructors: :meth:`~from_path`:,
+    :meth:`~from_attachment`: or :meth:`~from_binary_field`:, generate
+    the corresponding HTTP response object via :meth:`~get_response`:.
+
+    Instantiating a Stream object manually without using one of the
+    dedicated constructors is discouraged.
+    """
+
+    type: str = ''  # 'data' or 'path' or 'url'
+    data = None
+    path = None
+    url = None
+
+    mimetype = None
+    as_attachment = False
+    download_name = None
+    conditional = True
+    etag = True
+    last_modified = None
+    max_age = None
+    size = None
+
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+
+    @classmethod
+    def from_path(cls, path, filter_ext=('',)):
+        """ Create a :class:`~Stream`: from an addon resource. """
+        path = file_path(path, filter_ext)
+        check = adler32(path.encode())
+        stat = os.stat(path)
+        return cls(
+            type='path',
+            path=path,
+            download_name=os.path.basename(path),
+            etag=f'{int(stat.st_mtime)}-{stat.st_size}-{check}',
+            last_modified=stat.st_mtime,
+            size=stat.st_size,
+        )
+
+    @classmethod
+    def from_attachment(cls, attachment):
+        """ Create a :class:`~Stream`: from an ir.attachment record. """
+        attachment.ensure_one()
+
+        self = cls(
+            mimetype=attachment.mimetype,
+            download_name=attachment.name,
+            conditional=True,
+            etag=attachment.checksum,
+        )
+
+        if attachment.store_fname:
+            self.type = 'path'
+            self.path = werkzeug.security.safe_join(
+                os.path.abspath(config.filestore(request.db)),
+                attachment.store_fname
+            )
+            stat = os.stat(self.path)
+            self.last_modified = stat.st_mtime
+            self.size = stat.st_size
+
+        elif attachment.db_datas:
+            self.type = 'data'
+            self.data = attachment.raw
+            self.last_modified = attachment['__last_update']
+            self.size = len(self.data)
+
+        elif attachment.url:
+            # When the URL targets a file located in an addon, assume it
+            # is a path to the resource. It saves an indirection and
+            # stream the file right away.
+            static_path = root.get_static_file(
+                attachment.url,
+                host=request.httprequest.environ.get('HTTP_HOST', '')
+            )
+            if static_path:
+                self = cls.from_path(static_path)
+            else:
+                self.type = 'url'
+                self.url = attachment.url
+
+        else:
+            self.type = 'data'
+            self.data = b''
+            self.size = 0
+
+        return self
+
+    @classmethod
+    def from_binary_field(cls, record, field_name):
+        """ Create a :class:`~Stream`: from a binary field. """
+        data_b64 = record[field_name]
+        data = base64.b64decode(data_b64) if data_b64 else b''
+        return cls(
+            type='data',
+            data=data,
+            etag=request.env['ir.attachment']._compute_checksum(data),
+            last_modified=record['__last_update'] if record._log_access else None,
+            size=len(data),
+        )
+
+    def read(self):
+        """ Get the stream content as bytes. """
+        if self.type == 'url':
+            raise ValueError("Cannot read an URL")
+
+        if self.type == 'data':
+            return self.data
+
+        with open(self.path, 'rb') as file:
+            return file.read()
+
+    def get_response(self, as_attachment=None, **send_file_kwargs):
+        """
+        Create the corresponding :class:`~Response` for the current stream.
+
+        :param bool as_attachment: Indicate to the browser that it
+            should offer to save the file instead of displaying it.
+        :param send_file_kwargs: Other keyword arguments to send to
+            :func:`odoo.tools._vendor.send_file.send_file` instead of
+            the stream sensitive values. Discouraged.
+        """
+        assert self.type in ('url', 'data', 'path'), "Invalid type: {self.type!r}, should be 'url', 'data' or 'path'."
+        assert getattr(self, self.type) is not None, "There is nothing to stream, missing {self.type!r} attribute."
+
+        if self.type == 'url':
+            return request.redirect(self.url, code=301, local=False)
+
+        if as_attachment is None:
+            as_attachment = self.as_attachment
+
+        send_file_kwargs = {
+            'mimetype': self.mimetype,
+            'as_attachment': as_attachment,
+            'download_name': self.download_name,
+            'conditional': self.conditional,
+            'etag': self.etag,
+            'last_modified': self.last_modified,
+            'max_age': self.max_age,
+            'environ': request.httprequest.environ,
+            'response_class': Response,
+            **send_file_kwargs,
+        }
+
+        if self.type == 'data':
+            return _send_file(BytesIO(self.data), **send_file_kwargs)
+
+        # self.type == 'path'
+        send_file_kwargs['use_x_sendfile'] = False
+        if config['x_sendfile']:
+            with contextlib.suppress(ValueError):  # outside of the filestore
+                fspath = Path(self.path).relative_to(opj(config['data_dir'], 'filestore'))
+                x_accel_redirect = f'/web/filestore/{fspath}'
+                send_file_kwargs['use_x_sendfile'] = True
+
+        res = _send_file(self.path, **send_file_kwargs)
+
+        if 'X-Sendfile' in res.headers:
+            res.headers['X-Accel-Redirect'] = x_accel_redirect
+
+            # In case of X-Sendfile/X-Accel-Redirect, the body is empty,
+            # yet werkzeug gives the length of the file. This makes
+            # NGINX wait for content that'll never arrive.
+            res.headers['Content-Length'] = '0'
+
+        return res
 
 
 # =========================================================
@@ -1339,7 +1450,9 @@ class Request:
         try:
             directory = root.statics[module]
             filepath = werkzeug.security.safe_join(directory, path)
-            return send_file(filepath)
+            return Stream.from_path(filepath).get_response(
+                max_age=0 if 'assets' in self.session.debug else STATIC_CACHE,
+            )
         except KeyError:
             raise NotFound(f'Module "{module}" not found.\n')
         except OSError:  # cover both missing file and invalid permissions
@@ -1680,6 +1793,36 @@ class Application:
                     mod2path[module] = static_path
         return mod2path
 
+    def get_static_file(self, url, host=''):
+        """
+        Get the full-path of the file if the url resolves to a local
+        static file, otherwise return None.
+
+        Without the second host parameters, ``url`` must be an absolute
+        path, others URLs are considered faulty.
+
+        With the second host parameters, ``url`` can also be a full URI
+        and the authority found in the URL (if any) is validated against
+        the given ``host``.
+        """
+
+        netloc, path = urlparse(url)[1:3]
+        try:
+            path_netloc, module, static, resource = path.split('/', 3)
+        except ValueError:
+            return None
+
+        if ((netloc and netloc != host) or (path_netloc and path_netloc != host)):
+            return None
+
+        if (module not in self.statics or static != 'static' or not resource):
+            return None
+
+        try:
+            return file_path(f'{module}/static/{resource}')
+        except FileNotFoundError:
+            return None
+
     @lazy_property
     def nodb_routing_map(self):
         nodb_routing_map = werkzeug.routing.Map(strict_slashes=False, converters=None)
@@ -1721,6 +1864,7 @@ class Application:
             return
 
         headers['Content-Security-Policy'] = "default-src 'none'"
+        headers['X-Content-Type-Options'] = 'nosniff'
 
     def __call__(self, environ, start_response):
         """
@@ -1764,13 +1908,9 @@ class Application:
         current_thread.url = httprequest.url
 
         try:
-            segments = httprequest.path.split('/')
-            if len(segments) >= 4 and segments[2] == 'static':
-                with contextlib.suppress(NotFound):
-                    response = request._serve_static()
-                    return response(environ, start_response)
-
-            if request.db:
+            if self.get_static_file(httprequest.path):
+                response = request._serve_static()
+            elif request.db:
                 with request._get_profiler_context_manager():
                     response = request._serve_db()
             else:

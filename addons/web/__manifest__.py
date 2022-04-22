@@ -20,6 +20,7 @@ This module provides the core of the Odoo Web Client.
         'views/base_document_layout_views.xml',
         'views/speedscope_template.xml',
         'views/lazy_assets.xml',
+        'data/ir_attachment.xml',
         'data/report_layout.xml',
     ],
     'assets': {

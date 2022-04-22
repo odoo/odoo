@@ -5,7 +5,7 @@ import werkzeug
 from odoo import http
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request
-from odoo.tools import reraise_x_as
+from odoo.tools import replace_exceptions
 
 from odoo.addons.web.controllers.utils import ensure_db
 
@@ -151,16 +151,16 @@ class TestHttp(http.Controller):
         raise ValueError('Unknown destination')
 
     @http.route('/test_http/hide_errors/decorator', type='http', auth='none')
-    @reraise_x_as(AccessError, as_=werkzeug.exceptions.NotFound())
-    def hide_errors_deco(self, error):
+    @replace_exceptions(AccessError, by=werkzeug.exceptions.NotFound())
+    def hide_errors_decorator(self, error):
         if error == 'AccessError':
             raise AccessError("Wrong iris code")
         if error == 'UserError':
             raise UserError("Walter is AFK")
 
     @http.route('/test_http/hide_errors/context-manager', type='http', auth='none')
-    def hide_errors_cm(self, error):
-        with reraise_x_as(AccessError, as_=werkzeug.exceptions.NotFound()):
+    def hide_errors_context_manager(self, error):
+        with replace_exceptions(AccessError, by=werkzeug.exceptions.NotFound()):
             if error == 'AccessError':
                 raise AccessError("Wrong iris code")
             if error == 'UserError':

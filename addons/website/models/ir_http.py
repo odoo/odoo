@@ -398,41 +398,6 @@ class Http(models.AbstractModel):
             return code.split('_')[1], env['ir.ui.view']._render_template('website.%s' % code, values)
         return super()._get_error_html(env, code, values)
 
-    def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas',
-                       unique=False, filename=None, filename_field='name', download=False,
-                       mimetype=None, default_mimetype='application/octet-stream',
-                       access_token=None):
-        obj = None
-        if xmlid:
-            obj = self._xmlid_to_obj(self.env, xmlid)
-        elif id and model in self.env:
-            obj = self.env[model].browse(int(id))
-        if obj and 'website_published' in obj._fields:
-            try:
-                if obj.sudo().website_published:
-                    self = self.sudo()
-            except MissingError:
-                pass
-        return super(Http, self).binary_content(
-            xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
-            filename_field=filename_field, download=download, mimetype=mimetype,
-            default_mimetype=default_mimetype, access_token=access_token)
-
-    @classmethod
-    def _xmlid_to_obj(cls, env, xmlid):
-        website_id = env['website'].get_current_website()
-        if website_id and website_id.theme_id:
-            domain = [('key', '=', xmlid), ('website_id', '=', website_id.id)]
-            Attachment = env['ir.attachment']
-            if request.env.user.share:
-                domain.append(('public', '=', True))
-                Attachment = Attachment.sudo()
-            obj = Attachment.search(domain)
-            if obj:
-                return obj[0]
-
-        return super()._xmlid_to_obj(env, xmlid)
-
     @api.model
     def get_frontend_session_info(self):
         session_info = super(Http, self).get_frontend_session_info()

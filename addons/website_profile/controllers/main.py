@@ -35,10 +35,6 @@ class WebsiteProfile(http.Controller):
             return user.website_published and user.karma > 0
         return False
 
-    def _get_default_avatar(self):
-        with tools.file_open("web/static/img/placeholder.png", 'rb') as f:
-            return f.read()
-
     def _check_user_profile_access(self, user_id):
         user_sudo = request.env['res.users'].sudo().browse(user_id)
         # User can access - no matter what - his own profile
@@ -79,30 +75,14 @@ class WebsiteProfile(http.Controller):
         if field not in ('image_128', 'image_256', 'avatar_128', 'avatar_256'):
             return werkzeug.exceptions.Forbidden()
 
-        can_sudo = self._check_avatar_access(user_id, **post)
-        if can_sudo:
-            status, headers, image = request.env['ir.http'].sudo().binary_content(
-                model='res.users', id=user_id, field=field,
-                default_mimetype='image/png')
-        else:
-            status, headers, image = request.env['ir.http'].binary_content(
-                model='res.users', id=user_id, field=field,
-                default_mimetype='image/png')
-        if status == 301:
-            return request.env['ir.http']._response_by_status(status, headers, image)
-        if status == 304:
-            return werkzeug.wrappers.Response(status=304)
+        if (int(width), int(height)) == (0, 0):
+            width, height = tools.image_guess_size_from_field_name(field)
 
-        if not image:
-            image = self._get_default_avatar()
-            if not (width or height):
-                width, height = tools.image_guess_size_from_field_name(field)
-
-        content = tools.image_process(image, size=(int(width), int(height)), crop=crop)
-        headers = http.set_safe_image_headers(headers, content)
-        response = request.make_response(content, headers)
-        response.status_code = status
-        return response
+        can_sudo = self._check_avatar_access(int(user_id), **post)
+        return request.env['ir.binary']._get_image_stream_from(
+            request.env['res.users'].sudo(can_sudo).browse(int(user_id)),
+            field_name=field, width=int(width), height=int(height), crop=crop
+        ).get_response()
 
     @http.route(['/profile/user/<int:user_id>'], type='http', auth="public", website=True)
     def view_user_profile(self, user_id, **post):

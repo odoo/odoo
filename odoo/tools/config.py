@@ -139,6 +139,10 @@ class configmanager(object):
         group.add_option("--proxy-mode", dest="proxy_mode", action="store_true", my_default=False,
                          help="Activate reverse proxy WSGI wrappers (headers rewriting) "
                               "Only enable this when running behind a trusted web proxy!")
+        group.add_option("--x-sendfile", dest="x_sendfile", action="store_true", my_default=False,
+                         help="Activate X-Sendfile (apache) and X-Accel-Redirect (nginx) "
+                              "HTTP response header to delegate the delivery of large "
+                              "files (assets/attachments) to the web server.")
         # HTTP: hidden backwards-compatibility for "*xmlrpc*" options
         hidden = optparse.SUPPRESS_HELP
         group.add_option("--xmlrpc-interface", dest="http_interface", help=hidden)
@@ -438,7 +442,7 @@ class configmanager(object):
             self.options['server_wide_modules'] = 'base,web'
 
         # if defined do not take the configfile value even if the defined value is None
-        keys = ['http_interface', 'http_port', 'longpolling_port', 'http_enable',
+        keys = ['http_interface', 'http_port', 'longpolling_port', 'http_enable', 'x_sendfile',
                 'db_name', 'db_user', 'db_password', 'db_host', 'db_sslmode',
                 'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'from_filter',

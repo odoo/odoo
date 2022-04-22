@@ -27,9 +27,8 @@ class Attachment(models.Model):
     def get_serving_groups(self):
         return super(Attachment, self).get_serving_groups() + ['website.group_website_designer']
 
-    @api.model
-    def get_serve_attachment(self, url, extra_domain=None, extra_fields=None, order=None):
+    def _get_serve_attachment(self, url, extra_domain=None, order=None):
         website = self.env['website'].get_current_website()
         extra_domain = (extra_domain or []) + website.website_domain()
         order = ('website_id, %s' % order) if order else 'website_id'
-        return super(Attachment, self).get_serve_attachment(url, extra_domain, extra_fields, order)
+        return super()._get_serve_attachment(url, extra_domain, order)
