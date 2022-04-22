@@ -819,25 +819,9 @@ class WebsiteSlides(WebsiteProfile):
         if not slide:
             raise werkzeug.exceptions.NotFound()
 
-        status, headers, image = request.env['ir.http'].sudo().binary_content(
-            model='slide.slide', id=slide.id, field=field,
-            default_mimetype='image/png')
-        if status == 301:
-            return request.env['ir.http']._response_by_status(status, headers, image)
-        if status == 304:
-            return werkzeug.wrappers.Response(status=304)
-
-        if not image:
-            image = self._get_default_avatar()
-            if not (width or height):
-                width, height = tools.image_guess_size_from_field_name(field)
-
-        content = tools.image_process(image, size=(int(width), int(height)), crop=crop)
-
-        headers = http.set_safe_image_headers(headers, content)
-        response = request.make_response(content, headers)
-        response.status_code = status
-        return response
+        return request.env['ir.binary']._get_image_stream_from(
+            slide, field, width=width, height=int(height), crop=int(crop)
+        ).get_response()
 
     # SLIDE.SLIDE UTILS
     # --------------------------------------------------

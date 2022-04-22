@@ -401,7 +401,9 @@ class Survey(http.Controller):
                 type='http', auth="public", website=True, sitemap=False)
     def survey_get_background(self, survey_token):
         survey_sudo, dummy = self._fetch_from_access_token(survey_token, False)
-        return self._get_background_image(survey_sudo._name, survey_sudo.id)
+        return request.env['ir.binary']._get_image_stream_from(
+            survey_sudo, 'background_image'
+        ).get_response()
 
     @http.route('/survey/<string:survey_token>/<int:section_id>/get_background_image',
                 type='http', auth="public", website=True, sitemap=False)
@@ -413,13 +415,9 @@ class Survey(http.Controller):
             # trying to access a question that is not in this survey
             raise werkzeug.exceptions.Forbidden()
 
-        return self._get_background_image(section._name, section.id)
-
-    def _get_background_image(self, model_name, res_id):
-        status, headers, image_base64 = request.env['ir.http'].sudo().binary_content(
-            model=model_name, id=res_id, field='background_image',
-            default_mimetype='image/png')
-        return request.env['ir.http']._content_image_get_response(status, headers, image_base64)
+        return request.env['ir.binary']._get_image_stream_from(
+            section, 'background_image'
+        ).get_response()
 
     @http.route('/survey/get_question_image/<string:survey_token>/<string:answer_token>/<int:question_id>/<int:suggested_answer_id>', type='http', auth="public", website=True, sitemap=False)
     def survey_get_question_image(self, survey_token, answer_token, question_id, suggested_answer_id):
@@ -429,15 +427,20 @@ class Survey(http.Controller):
 
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
 
-        if not survey_sudo.question_ids.filtered(lambda q: q.id == question_id)\
-                          .suggested_answer_ids.filtered(lambda a: a.id == suggested_answer_id):
+        suggested_answer = False
+        if int(question_id) in survey_sudo.question_ids.ids:
+            suggested_answer = request.env['survey.question.answer'].sudo().search([
+                ('id', '=', int(suggested_answer_id)),
+                ('question_id', '=', int(question_id)),
+                ('question_id.survey_id', '=', survey_sudo.id),
+            ])
+
+        if not suggested_answer:
             return werkzeug.exceptions.NotFound()
 
-        status, headers, image_base64 = request.env['ir.http'].sudo().binary_content(
-            model='survey.question.answer', id=suggested_answer_id, field='value_image',
-            default_mimetype='image/png')
-
-        return request.env['ir.http']._content_image_get_response(status, headers, image_base64)
+        return request.env['ir.binary']._get_image_stream_from(
+            suggested_answer, 'value_image'
+        ).get_response()
 
     # ----------------------------------------------------------------
     # JSON ROUTES to begin / continue survey (ajax navigation) + Tools

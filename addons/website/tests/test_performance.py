@@ -43,16 +43,16 @@ class TestStandardPerformance(UtilPerf):
         self.authenticate('demo', 'demo')
         self.env['res.users'].sudo().browse(2).website_published = True
         url = '/web/image/res.users/2/image_256'
-        self.assertEqual(self._get_url_hot_query(url), 5)
-        self.assertEqual(self._get_url_hot_query(url, cache=False), 5)
+        self.assertEqual(self._get_url_hot_query(url), 6)
+        self.assertEqual(self._get_url_hot_query(url, cache=False), 6)
 
     def test_20_perf_sql_img_controller_bis(self):
         url = '/web/image/website/1/favicon'
-        self.assertEqual(self._get_url_hot_query(url), 4)
-        self.assertEqual(self._get_url_hot_query(url, cache=False), 4)
+        self.assertEqual(self._get_url_hot_query(url), 5)
+        self.assertEqual(self._get_url_hot_query(url, cache=False), 5)
         self.authenticate('portal', 'portal')
-        self.assertEqual(self._get_url_hot_query(url), 4)
-        self.assertEqual(self._get_url_hot_query(url, cache=False), 4)
+        self.assertEqual(self._get_url_hot_query(url), 5)
+        self.assertEqual(self._get_url_hot_query(url, cache=False), 5)
 
 
 class TestWebsitePerformance(UtilPerf):
@@ -138,5 +138,5 @@ class TestWebsitePerformance(UtilPerf):
         # assets route /web/assets/..
         self.url_open('/')  # create assets attachments
         assets_url = self.env['ir.attachment'].search([('url', '=like', '/web/assets/%/web.assets_common%.js')], limit=1).url
-        self.assertEqual(self._get_url_hot_query(assets_url), 2)
-        self.assertEqual(self._get_url_hot_query(assets_url, cache=False), 2)
+        self.assertEqual(self._get_url_hot_query(assets_url), 4)
+        self.assertEqual(self._get_url_hot_query(assets_url, cache=False), 4)

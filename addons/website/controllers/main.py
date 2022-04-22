@@ -764,33 +764,7 @@ class Website(Home):
         return request.redirect('/')
 
 
-# ------------------------------------------------------
-# Retrocompatibility routes
-# ------------------------------------------------------
 class WebsiteBinary(http.Controller):
-
-    @http.route([
-        '/website/image',
-        '/website/image/<xmlid>',
-        '/website/image/<xmlid>/<int:width>x<int:height>',
-        '/website/image/<xmlid>/<field>',
-        '/website/image/<xmlid>/<field>/<int:width>x<int:height>',
-        '/website/image/<model>/<id>/<field>',
-        '/website/image/<model>/<id>/<field>/<int:width>x<int:height>'
-    ], type='http', auth="public", website=False, multilang=False)
-    def content_image(self, id=None, max_width=0, max_height=0, **kw):
-        if max_width:
-            kw['width'] = max_width
-        if max_height:
-            kw['height'] = max_height
-        if id:
-            id, _, unique = id.partition('_')
-            kw['id'] = int(id)
-            if unique:
-                kw['unique'] = unique
-        kw['res_id'] = kw.pop('id', None)
-        return request.env['ir.http']._content_image(**kw)
-
     # if not icon provided in DOM, browser tries to access /favicon.ico, eg when opening an order pdf
     @http.route(['/favicon.ico'], type='http', auth='public', website=True, multilang=False, sitemap=False)
     def favicon(self, **kw):

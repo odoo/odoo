@@ -581,7 +581,7 @@ class PosGlobalState extends PosModel {
         if (order) {
             order.get_orderlines().forEach(function (orderline) {
                 var product = orderline.product;
-                var image_url = `/web/image?model=product.product&field=image_128&id=${product.id}&write_date=${product.write_date}&unique=1`;
+                var image_url = `/web/image?model=product.product&field=image_128&id=${product.id}&unique=${product.write_date}`;
 
                 // only download and convert image if we haven't done it before
                 if (!(product.id in PRODUCT_ID_TO_IMAGE_CACHE)) {

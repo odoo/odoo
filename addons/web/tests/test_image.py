@@ -18,26 +18,31 @@ class TestImage(HttpCase):
 
         # CASE: resize placeholder, given size but original ratio is always kept
         response = self.url_open('/web/image/0/200x150')
+        response.raise_for_status()
         image = Image.open(io.BytesIO(response.content))
         self.assertEqual(image.size, (150, 150))
 
         # CASE: resize placeholder to 128
         response = self.url_open('/web/image/fake/0/image_128')
+        response.raise_for_status()
         image = Image.open(io.BytesIO(response.content))
         self.assertEqual(image.size, (128, 128))
 
         # CASE: resize placeholder to 256
         response = self.url_open('/web/image/fake/0/image_256')
+        response.raise_for_status()
         image = Image.open(io.BytesIO(response.content))
         self.assertEqual(image.size, (256, 256))
 
         # CASE: resize placeholder to 1024 (but placeholder image is too small)
         response = self.url_open('/web/image/fake/0/image_1024')
+        response.raise_for_status()
         image = Image.open(io.BytesIO(response.content))
         self.assertEqual(image.size, (256, 256))
 
         # CASE: no size found, use placeholder original size
         response = self.url_open('/web/image/fake/0/image_no_size')
+        response.raise_for_status()
         image = Image.open(io.BytesIO(response.content))
         self.assertEqual(image.size, (256, 256))
 
@@ -51,12 +56,14 @@ class TestImage(HttpCase):
             'mimetype': 'image/gif',
         })
         response = self.url_open('/web/image/%s' % attachment.id, timeout=None)
+        response.raise_for_status()
         self.assertEqual(response.status_code, 200)
         self.assertEqual(base64.b64encode(response.content), attachment.datas)
 
         etag = response.headers.get('ETag')
 
         response2 = self.url_open('/web/image/%s' % attachment.id, headers={"If-None-Match": etag})
+        response2.raise_for_status()
         self.assertEqual(response2.status_code, 304)
         self.assertEqual(len(response2.content), 0)
 
@@ -72,12 +79,15 @@ class TestImage(HttpCase):
 
         # CASE: no filename given
         res = self.url_open('/web/image/%s/0x0/?download=true' % att.id)
-        self.assertEqual(res.headers['Content-Disposition'], content_disposition('testFilename.gif'))
+        res.raise_for_status()
+        self.assertEqual(res.headers['Content-Disposition'], 'attachment; filename=testFilename.gif')
 
         # CASE: given filename without extension
         res = self.url_open('/web/image/%s/0x0/custom?download=true' % att.id)
-        self.assertEqual(res.headers['Content-Disposition'], content_disposition('custom.gif'))
+        res.raise_for_status()
+        self.assertEqual(res.headers['Content-Disposition'], 'attachment; filename=custom.gif')
 
         # CASE: given filename and extention
         res = self.url_open('/web/image/%s/0x0/custom.png?download=true' % att.id)
-        self.assertEqual(res.headers['Content-Disposition'], content_disposition('custom.png'))
+        res.raise_for_status()
+        self.assertEqual(res.headers['Content-Disposition'], 'attachment; filename=custom.png')

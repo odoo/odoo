@@ -16,6 +16,8 @@ class Stargate(models.Model):
     sgc_designation = fields.Char(store=True, compute='_compute_sgc_designation', help="The SGC designation name of this stargate.")
     galaxy_id = fields.Many2one('test_http.galaxy', required=True, help="The galaxy where this stargate is.")
     has_galaxy_crystal = fields.Boolean(store=True, compute='_compute_has_galaxy_crystal', readonly=False, help="Whether this stargate can dial other galaxies.")
+    glyph_attach = fields.Image(attachment=True)
+    glyph_inline = fields.Image(attachment=False)
 
     _sql_constraints = [
         ('address_length', 'CHECK(LENGTH(address) = 6)', "Local addresses have 6 glyphs"),
