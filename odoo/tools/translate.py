@@ -957,6 +957,8 @@ class TranslationModuleReader:
     def _export_translatable_records(self):
         """ Export translations of all translated records having an external id """
 
+        # TODO VSC : REDO export translations into PO files
+
         query = """SELECT min(name), model, res_id, module
                      FROM ir_model_data
                     WHERE module = ANY(%s)

@@ -130,6 +130,7 @@ def convert_column(cr, tablename, columnname, columntype, fromtype=None):
             _schema.debug("Table %r: column %r altered to type %s", tablename, columnname, columntype)
             return
         except psycopg2.errors.DatatypeMismatch:
+            # simple convert failed so we have to do it the hard way
             pass
 
     temp_name = columnname + '_old'

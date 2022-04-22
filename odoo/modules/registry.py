@@ -488,12 +488,17 @@ class Registry(Mapping):
                 elif index == 'trigram' and self.has_trigram:
                     method = 'gin'
                     operator = 'gin_trgm_ops'
+                # TODO VSC : rewrite and simplify the chain of conditions
+                if field.translate and field.index:
+                    if method != 'gin':
+                        raise Exception("FUCK OFF WITH YOUR SHITTY INDEX, dev, fix it, it has to be trigram for translated fields!")
+                    method = 'gin'
+                    # TODO VSC : see if we can simplify the index so it doesn't contain the [ and " and spaces, only values
+                    expression = f'(jsonb_path_query_array("{columnname}", \'$.*\'::jsonpath)::text) {operator}'
+                else:
+                    expression = f'"{columnname}" {operator}'
                 try:
                     with cr.savepoint(flush=False):
-                        if field.translate and field.index:
-                            expression = f'(jsonb_path_query_array("{columnname}", \'$.*\'::jsonpath)::text) {operator}'
-                        else:
-                            expression = f'"{columnname}" {operator}'
                         sql.create_index(cr, indexname, tablename, [expression], method, where)
                 except psycopg2.OperationalError:
                     _schema.error("Unable to add index for %s", self)

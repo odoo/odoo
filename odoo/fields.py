@@ -241,6 +241,8 @@ class Field(MetaField('DummyField', (object,), {})):
     translate = False                   # whether the field is translated
 
     column_type = None                  # database column type (ident, spec)
+    # TODO VSC removing this isn't part of this PR (or should be a separate commit)
+    #column_cast_from = ()               # column types that may be cast to this
     write_sequence = 0                  # field ordering for write()
 
     args = None                         # the parameters given to __init__()
@@ -1591,6 +1593,11 @@ class _String(Field):
     prefetch = True
     unaccent = True
 
+    # TODO VSC: replace old stuff with new stuff that is now in models.py
+        # here we should ensure pending changes have {language: value} in pending changes
+    def write(self, records, value):
+        pass
+
     def _description_translate(self, env):
         return bool(self.translate)
 
@@ -1622,6 +1629,7 @@ class Char(_String):
 
     @property
     def column_type(self):
+        # TODO VSC : modernize ifs
         return (self.translate and 'jsonb' or 'varchar', self.translate and 'jsonb' or pg_varchar(self.size))
 
     def update_db_column(self, model, column):
@@ -1667,6 +1675,7 @@ class Text(_String):
 
     @property
     def column_type(self):
+        # TODO VSC: modernize ifs
         ctype = self.translate and 'jsonb' or 'text'
         return (ctype, ctype)
 
@@ -1725,6 +1734,7 @@ class Html(_String):
 
     @property
     def column_type(self):
+        # TODO VSC: modernize ifs
         ctype = self.translate and 'jsonb' or 'text'
         return (ctype, ctype)
 

@@ -907,6 +907,13 @@ class IrModelFields(models.Model):
 
         if vals and self:
             for item in self:
+                # TODO VSC : keep this check so people do not modify normal models
+                    # and allow to write on translated fields
+                if item.state != 'manual' and all(self._fields[fname].translate for fname in vals):
+                    raise UserError(_('Properties of base fields cannot be altered in this manner! '
+                                      'Please modify them through Python code, '
+                                      'preferably through a custom addon!'))
+
                 if vals.get('model_id', item.model_id.id) != item.model_id.id:
                     raise UserError(_("Changing the model of a field is forbidden!"))
 
@@ -930,8 +937,8 @@ class IrModelFields(models.Model):
 
                 # We don't check the 'state', because it might come from the context
                 # (thus be set for multiple fields) and will be ignored anyway.
-                # if obj is not None and field is not None:
-                #     patched_models.add(obj._name)
+                if obj is not None and field is not None:
+                    patched_models.add(obj._name)
 
         # These shall never be written (modified)
         for column_name in ('model_id', 'model', 'state'):

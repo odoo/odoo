@@ -981,6 +981,8 @@ class expression(object):
 
                     unaccent = self._unaccent(field) if sql_operator.endswith('like') else lambda x: x
                     instr = unaccent('%s')
+                    # TODO VSC: returns something like 'instr' = dog
+                    # 1: '["dog","chien","..."]' --> This doesn't look like the most optimal index
                     left = unaccent('jsonb_path_query_array("%s"."%s", \'$.*\')::text' % (alias, left))
                     push_result(f"{left} {sql_operator} {instr}", [right])
                 else:

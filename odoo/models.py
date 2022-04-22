@@ -3982,6 +3982,7 @@ Fields:
                     for sub_ids in cr.split_for_in_conditions(self._ids):
                         cr.execute(f'SELECT id, "{name}" FROM "{self._table}" WHERE id IN %s', (sub_ids,))
                         for tid, tfield in cr.fetchall():
+                            # TODO VSC: the base language isn't always en_US, it might be specified in website
                             src = tfield['en_US']
                             toupdate = (self.env.lang=='en_US') and tfield.keys() or [self.env.lang]
                             for lang in toupdate:
@@ -3991,7 +3992,16 @@ Fields:
                     columns.append(f'"{name}" = %s')
                     params.append(Json(tfield))
                 else:
+                    # TODO VSC: how to you append null (to nullify a value of a language)
+                    # TODO VSC : this could be moved inside the fields in field.py:_write of the String fields
+                    assert isinstance(val, str) or val is None
                     columns.append(f'"{name}" = "{name}" || %s')
+                    # TODO VSC RCO : at this point self.env.lang might not be the one the user wrote:
+                        #record.with_context(lang='fr_FR').name = "Tralala"
+                        # -> put "Tralala" in record.env.all.towrite
+                        #record.with_context(lang='en_US').flush()
+                        # -> put {"en_US": "Tralala"} in the table
+
                     params.append(Json({(self.env.lang or 'en_US'): val}))
             else:
                 columns.append(f'"{name}" = %s')
@@ -4249,6 +4259,7 @@ Fields:
                     for stored, row in zip(stored_list, rows):
                         if fname in stored:
                             colval = field.convert_to_column(stored[fname], self, stored)
+                            # TODO VSC : move this inside convert_to_column of _String
                             if field.translate:
                                 d = {'en_US': colval}
                                 if self.env.lang:
@@ -4592,6 +4603,8 @@ Fields:
         :return: the qualified field name (or expression) to use for ``field``
         """
         if self.env.lang:
+            # TODO VSC check the quoting, check also 'en' vs 'en_US'
+            # TODO VSC there is a big discution about the fallback language, for now we use en_US
             return 'COALESCE("%s"."%s"->>"%s", "%s"."%s"->>"en")' % (alias, 'value', self.env.lang, table_alias, field)
         return '"%s"."%s"' % (table_alias, field)
 
