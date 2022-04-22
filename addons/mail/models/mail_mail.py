@@ -9,8 +9,10 @@ import psycopg2
 import smtplib
 import threading
 import re
+import pytz
 
 from collections import defaultdict
+from dateutil.parser import parse
 
 from odoo import _, api, fields, models
 from odoo import tools
@@ -87,7 +89,13 @@ class MailMail(models.Model):
         for values in values_list:
             if 'is_notification' not in values and values.get('mail_message_id'):
                 values['is_notification'] = True
-
+            if 'scheduled_date' in values:
+                try:
+                    scheduled_date = parse(values.get('scheduled_date'))
+                    scheduled_date_formatted = scheduled_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+                    values['scheduled_date'] = scheduled_date_formatted
+                except Exception:
+                    values['scheduled_date'] = False
         new_mails = super(MailMail, self).create(values_list)
 
         new_mails_w_attach = self
@@ -100,6 +108,13 @@ class MailMail(models.Model):
         return new_mails
 
     def write(self, vals):
+        if 'scheduled_date' in vals:
+            try:
+                scheduled_date = parse(vals.get('scheduled_date'))
+                scheduled_date_formatted = scheduled_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+                vals['scheduled_date'] = scheduled_date_formatted
+            except Exception:
+                vals['scheduled_date'] = False
         res = super(MailMail, self).write(vals)
         if vals.get('attachment_ids'):
             for mail in self:
@@ -123,6 +138,7 @@ class MailMail(models.Model):
     def cancel(self):
         return self.write({'state': 'cancel'})
 
+
     @api.model
     def process_email_queue(self, ids=None):
         """Send immediately queued messages, committing after each
@@ -138,10 +154,11 @@ class MailMail(models.Model):
                                 messages to send (by default all 'outgoing'
                                 messages are sent).
         """
+        utc_now = datetime.datetime.utcnow()
         filters = ['&',
                    ('state', '=', 'outgoing'),
                    '|',
-                   ('scheduled_date', '<', datetime.datetime.now()),
+                   ('scheduled_date', '<=', utc_now.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)),
                    ('scheduled_date', '=', False)]
         if 'filters' in self._context:
             filters.extend(self._context['filters'])

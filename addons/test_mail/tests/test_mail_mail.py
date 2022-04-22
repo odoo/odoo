@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import datetime, timedelta
 
 import psycopg2
 from unittest.mock import call
@@ -8,7 +9,7 @@ from odoo import api
 from odoo.addons.base.tests.common import MockSmtplibCase
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tests import common, tagged
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, DEFAULT_SERVER_DATETIME_FORMAT
 
 
 @tagged('mail_mail')
@@ -132,6 +133,26 @@ class TestMailMail(TestMailCommon, MockSmtplibCase):
         self.assert_email_sent_smtp(message_from='user_2@test_2.com', emails_count=5, from_filter=self.server_domain_2.from_filter)
         self.assert_email_sent_smtp(message_from='user_1@test_2.com', emails_count=5, from_filter=self.server_domain.from_filter)
 
+    def test_mail_mail_schedule(self):
+        """Test that a mail scheduled in the past/future are sent or not"""
+        scheduled_dates = [False,
+                           '',
+                           'This is not a date format',
+                           (datetime.now() - timedelta(days=1)).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                           (datetime.now() + timedelta(days=1)).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                           (datetime.now() + timedelta(days=1)).strftime("%H:%M:%S %d-%m-%Y"),
+                           (datetime.now() + timedelta(hours=3)).strftime("%H:%M:%S %d-%m-%Y") + " -0400"]
+
+        expected_states = ['sent', 'sent', 'sent', 'sent', 'outgoing', 'outgoing', 'outgoing']
+        for scheduled_date, expectected_state in zip(scheduled_dates, expected_states):
+            mail = self.env['mail.mail'].create({
+                'body_html': '<p>Test</p>',
+                'email_to': 'test@example.com',
+                'scheduled_date': scheduled_date
+            })
+            # launch scheduler
+            self.env['mail.mail'].process_email_queue()
+            self.assertEqual(mail.state, expectected_state)
 
 class TestMailMailRace(common.TransactionCase):
 
