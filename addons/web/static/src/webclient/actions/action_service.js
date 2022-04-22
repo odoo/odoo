@@ -523,15 +523,19 @@ function makeActionManager(env) {
             reject = _rej;
         });
         const action = controller.action;
-
-        // Compute breadcrumbs
         const index = _computeStackIndex(options);
         const controllerArray = [controller];
         if (options.lazyController) {
             controllerArray.unshift(options.lazyController);
         }
         const nextStack = controllerStack.slice(0, index).concat(controllerArray);
-        controller.config.breadcrumbs = _getBreadcrumbs(nextStack.slice(0, -1));
+
+        // Compute breadcrumbs
+        if (action.target === "new") {
+            controller.config.breadcrumbs = [];
+        } else {
+            controller.config.breadcrumbs = _getBreadcrumbs(nextStack.slice(0, -1));
+        }
         if (controller.Component.isLegacy) {
             controller.props.breadcrumbs = controller.config.breadcrumbs;
         }
