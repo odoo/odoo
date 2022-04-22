@@ -41,6 +41,7 @@ var ColorpickerWidget = Widget.extend({
 
         // Needs to be bound on document to work in all possible cases.
         const $document = $(
+            parent.options.ownerDocument ||
             (parent.el && parent.el.parentElement && parent.el.ownerDocument)
             || (parent.options && parent.options.$editable && parent.options.$editable[0] && parent.options.$editable[0].ownerDocument)
             || document);

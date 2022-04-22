@@ -77,8 +77,9 @@ patch(NavBar.prototype, 'website_navbar', {
      * @overrid
      */
     onNavBarDropdownItemSelection(menu) {
-        if (this.websiteDialogMenus[menu.xmlid]) {
-            return this.dialogService.add(this.websiteDialogMenus[menu.xmlid].component);
+        const dialogMenu = this.websiteDialogMenus[menu.xmlid];
+        if (dialogMenu) {
+            return this.dialogService.add(dialogMenu.component, dialogMenu.props, dialogMenu.options);
         }
         return this._super(menu);
     }

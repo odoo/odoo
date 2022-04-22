@@ -5,7 +5,7 @@ import { WebsiteDialog } from './dialog';
 
 const { Component, useState, useEffect, onWillStart, useRef } = owl;
 
-class MenuDialog extends WebsiteDialog {
+export class MenuDialog extends WebsiteDialog {
     setup() {
         super.setup();
 
@@ -179,7 +179,11 @@ export class EditMenuDialog extends WebsiteDialog {
             }
         ]);
         this.close();
-        this.website.goToWebsite();
+        if (this.props.save) {
+            this.props.save();
+        } else {
+            this.website.goToWebsite();
+        }
     }
 }
 EditMenuDialog.bodyTemplate = 'website.EditMenuDialog';

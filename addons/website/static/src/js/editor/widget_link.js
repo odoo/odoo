@@ -38,7 +38,8 @@ weWidgets.LinkTools.include({
             classes: {
                 "ui-autocomplete": 'o_website_ui_autocomplete'
             },
-        }
+            body: this.$editable[0].ownerDocument.body,
+        };
         wUtils.autocompleteWithPages(this, this.$('input[name="url"]'), options);
         this._adaptPageAnchor();
         return def;
@@ -61,7 +62,7 @@ weWidgets.LinkTools.include({
             $pageAnchor.toggleClass('d-none', !isFromWebsite);
             $selectMenu.empty();
             const always = () => $pageAnchor.find('we-toggler').text('\u00A0');
-            wUtils.loadAnchors(urlInputValue).then(anchors => {
+            wUtils.loadAnchors(urlInputValue, this.$editable[0].ownerDocument.body).then(anchors => {
                 for (const anchor of anchors) {
                     const $option = $('<we-button class="dropdown-item">');
                     $option.text(anchor);

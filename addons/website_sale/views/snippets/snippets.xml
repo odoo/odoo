@@ -109,7 +109,7 @@
                            data-no-preview="true"
                            data-reload="/"/>
             </we-row>
-            <we-select string="Default Sort" class="o_wsale_sort_submenu" data-no-preview="true">
+            <we-select string="Default Sort" class="o_wsale_sort_submenu" data-no-preview="true" data-reload="/">
                 <t t-foreach="request.env['website']._get_product_sort_mapping()" t-as="query_and_label">
                     <we-button t-att-data-set-default-sort="query_and_label[0]"><t t-esc="query_and_label[1]"/></we-button>
                 </t>
