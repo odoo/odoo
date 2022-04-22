@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ChatWindowHeader" owl="1">
-        <t t-if="chatWindow">
+        <t t-if="chatWindowHeaderView and chatWindow">
             <div class="o_ChatWindowHeader" t-att-class="{ 'o-mobile': messaging.device.isSmall }" t-attf-class="{{ className }}" t-on-click="_onClick" t-ref="root">
                 <t t-if="chatWindow.hasCloseAsBackButton">
                     <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandBack o_ChatWindowHeader_commandClose" t-att-class="{ 'o-mobile': messaging.device.isSmall }" t-on-click="chatWindow.onClickClose" title="Close conversation">
