@@ -79,7 +79,7 @@
         <field name="inherit_id" ref="mrp.mrp_production_tree_view" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
-                <field name="incoming_picking"/>
+                <field name="incoming_picking" invisible="1"/>
             </xpath>
         </field>
     </record>
