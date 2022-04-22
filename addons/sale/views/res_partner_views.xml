@@ -51,7 +51,7 @@
                         <separator string="Warning on the Sales Order" colspan="4" />
                             <field name="sale_warn" nolabel="1" />
                             <field name="sale_warn_msg" colspan="3" nolabel="1"
-                                    attrs="{'required':[('sale_warn', '!=', False), ('sale_warn','!=','no-message')],'readonly':[('sale_warn','=','no-message')]}"/>
+                                    attrs="{'required':[('sale_warn', '!=', False), ('sale_warn','!=','no-message')], 'invisible':[('sale_warn','in',(False,'no-message'))]}"/>
                     </group>
                 </page>
             </field>
