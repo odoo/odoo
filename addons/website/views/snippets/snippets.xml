@@ -102,14 +102,18 @@
             <div id="snippet_effect" class="o_panel">
                 <div class="o_panel_header">Dynamic Content</div>
                 <div class="o_panel_body">
-                    <t t-snippet="website.s_website_form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg"/>
+                    <!-- This snippet cannot be used in sanitized fields -->
+                    <!-- because it contains inputs that would be removed -->
+                    <t t-snippet="website.s_website_form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg" t-forbid-sanitize="form"/>
                     <t t-set="google_maps_api_key" t-value="request.env['website'].get_current_website().google_maps_api_key"/>
                     <t t-if="debug or not google_maps_api_key" t-snippet="website.s_map" t-thumbnail="/website/static/src/img/snippets_thumbs/s_map.svg"/>
                     <t t-if="debug or google_maps_api_key" t-snippet="website.s_google_map" t-thumbnail="/website/static/src/img/snippets_thumbs/s_google_map.svg"/>
                     <t t-if="debug" t-snippet="website.s_dynamic_snippet" t-thumbnail="/website/static/src/img/snippets_thumbs/s_dynamic_snippet.svg"/>
                     <t t-if="debug" t-snippet="website.s_dynamic_snippet_carousel" t-thumbnail="/website/static/src/img/snippets_thumbs/s_dynamic_carousel.svg"/>
                     <t id="sale_products_hook"/>
-                    <t t-snippet="website.s_searchbar" t-thumbnail="/website/static/src/img/snippets_thumbs/s_searchbar.svg"/>
+                    <!-- This snippet cannot be used in sanitized fields -->
+                    <!-- because it contains an input that would be removed -->
+                    <t t-snippet="website.s_searchbar" t-thumbnail="/website/static/src/img/snippets_thumbs/s_searchbar.svg" t-forbid-sanitize="form"/>
                     <t id="blog_posts_hook"/>
                     <t id="event_local_events_hook"/>
                     <t id="snippet_google_map_hook"/>
@@ -122,7 +126,9 @@
                     </t>
                     <t id="mail_group_hook"/>
                     <t id="twitter_favorite_tweets_hook"/>
-                    <t t-snippet="website.s_embed_code" t-thumbnail="/website/static/src/img/snippets_thumbs/s_embed_code.svg"/>
+                    <!-- This snippet cannot be used in sanitized fields -->
+                    <!-- because it might have content that would be removed -->
+                    <t t-snippet="website.s_embed_code" t-thumbnail="/website/static/src/img/snippets_thumbs/s_embed_code.svg" t-forbid-sanitize="true"/>
                     <t id="snippet_donation_hook"/>
                 </div>
             </div>
@@ -139,7 +145,9 @@
                     </t>
                     <t t-snippet="website.s_card" t-thumbnail="/website/static/src/img/snippets_thumbs/s_card.svg"/>
                     <t t-snippet="website.s_share" t-thumbnail="/website/static/src/img/snippets_thumbs/s_share.svg"/>
-                    <t t-snippet="website.s_searchbar_input" t-thumbnail="/website/static/src/img/snippets_thumbs/s_searchbar_inline.svg"/>
+                    <!-- This snippet cannot be used in sanitized fields -->
+                    <!-- because it contains an input that would be removed -->
+                    <t t-snippet="website.s_searchbar_input" t-thumbnail="/website/static/src/img/snippets_thumbs/s_searchbar_inline.svg" t-forbid-sanitize="form"/>
                     <t id="mass_mailing_newsletter_hook"/>
                     <t t-snippet="website.s_text_highlight" t-thumbnail="/website/static/src/img/snippets_thumbs/s_text_highlight.svg"/>
                     <t t-snippet="website.s_chart" t-thumbnail="/website/static/src/img/snippets_thumbs/s_chart.svg">
