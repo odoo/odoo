@@ -65,7 +65,7 @@ Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
     setSelection(parentNode, firstSplitOffset);
 };
 
-HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
+HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, offsetLimit) {
     const contentIsZWS = this.textContent === '\u200B';
     let moveDest;
     if (offset) {
@@ -163,12 +163,23 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
     }
 
     let node = this.childNodes[offset];
-    let firstBlockIndex = offset;
-    while (node && !isBlock(node)) {
-        node = node.nextSibling;
-        firstBlockIndex++;
+    const nextSibling = this.nextSibling;
+    let currentNodeIndex = offset;
+
+    // `offsetLimit` will ensure we never move nodes that were not initialy in the element
+    //  => when Deleting and merging an element the containing node will temporary be hosted
+    //  in the common parent beside possible other nodes. We don't want to touch those others node when merging
+    //  two html elements
+    //  ex : <div>12<p>ab[]</p><p>cd</p>34</div> should never touch the 12 and 34 text node.
+    if (offsetLimit === undefined) {
+        while (node && !isBlock(node)) {
+            node = node.nextSibling;
+            currentNodeIndex++;
+        }
+    } else {
+        currentNodeIndex = offsetLimit;
     }
-    let [cursorNode, cursorOffset] = moveNodes(...moveDest, this, offset, firstBlockIndex);
+    let [cursorNode, cursorOffset] = moveNodes(...moveDest, this, offset, currentNodeIndex);
     setSelection(cursorNode, cursorOffset);
 
     // Propagate if this is still a block on the left of where the nodes were
@@ -183,7 +194,21 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
     if (cursorNode.nodeType !== Node.TEXT_NODE) {
         const { cType } = getState(cursorNode, cursorOffset, DIRECTIONS.LEFT);
         if (cType & CTGROUPS.BLOCK && (!alreadyMoved || cType === CTYPES.BLOCK_OUTSIDE)) {
-            cursorNode.oDeleteBackward(cursorOffset, alreadyMoved);
+            cursorNode.oDeleteBackward(cursorOffset, alreadyMoved, cursorOffset + currentNodeIndex - offset);
+        } else if (!alreadyMoved) {
+            // When removing a block node adjacent to a inline node,
+            // we need to ensure the block node induced line break are kept with a <br>.
+            // ex : <div>a<span>b</span><p>[]c</p>d</div> => deleteBakward
+            // =>   <div>a<span>b</span>[]c<br>d</div>
+            // In this case we cannot simply merge the <p> content into the div parent
+            // or we would loose the line break located after the <p>.
+            const cursorNodeNode = cursorNode.childNodes[cursorOffset];
+            const cursorNodeRightNode = cursorNodeNode ? cursorNodeNode.nextSibling : undefined;
+            if (cursorNodeRightNode &&
+                cursorNodeRightNode.nodeType === Node.TEXT_NODE &&
+                nextSibling === cursorNodeRightNode) {
+                moveDest[0].insertBefore(document.createElement('br'), cursorNodeRightNode);
+            }
         }
     }
 };
