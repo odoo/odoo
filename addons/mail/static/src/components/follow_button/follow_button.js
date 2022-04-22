@@ -32,17 +32,6 @@ export class FollowButton extends Component {
         this.followButtonView.update({ isUnfollowButtonHighlighted: false });
     }
 
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onMouseEnterUnfollow(ev) {
-        if (!this.followButtonView) {
-            return;
-        }
-        this.followButtonView.update({ isUnfollowButtonHighlighted: true });
-    }
-
 }
 
 Object.assign(FollowButton, {
