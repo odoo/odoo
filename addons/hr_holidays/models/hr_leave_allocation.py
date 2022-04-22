@@ -11,6 +11,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.addons.resource.models.resource import HOURS_PER_DAY
+from odoo.addons.hr_holidays.models.hr_leave import get_employee_from_context
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.translate import _
 from odoo.tools.float_utils import float_round
@@ -275,7 +276,8 @@ class HolidaysAllocation(models.Model):
                 allocation.employee_ids = False
                 allocation.mode_company_id = False
             else:
-                allocation.employee_ids = default_employee_ids
+                employee_ids = self.env.context.get('default_employee_id', self.env.user.employee_id)
+                allocation.employee_ids = [employee_ids] if isinstance(employee_ids, int) else employee_ids
 
     @api.depends('holiday_type', 'employee_id')
     def _compute_department_id(self):
@@ -475,8 +477,9 @@ class HolidaysAllocation(models.Model):
         # Try to force the leave_type name_get when creating new records
         # This is called right after pressing create and returns the name_get for
         # most fields in the view.
-        if 'employee_id' in field_onchange:
-            self = self.with_context(employee_id=int(field_onchange['employee_id']))
+        if field_onchange.get('employee_id') and 'employee_id' not in self._context and values:
+            employee_id = get_employee_from_context(values, self._context, self.env.user.employee_id.id)
+            self = self.with_context(employee_id=employee_id)
         return super().onchange(values, field_name, field_onchange)
 
     def name_get(self):

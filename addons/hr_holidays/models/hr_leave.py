@@ -10,7 +10,7 @@ from collections import namedtuple, defaultdict
 from datetime import datetime, timedelta, time
 from pytz import timezone, UTC
 
-from odoo import api, fields, models, tools, SUPERUSER_ID
+from odoo import api, Command, fields, models, tools, SUPERUSER_ID
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.resource.models.resource import float_to_time, HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -25,6 +25,12 @@ _logger = logging.getLogger(__name__)
 # Used to agglomerate the attendances in order to find the hour_from and hour_to
 # See _compute_date_from_to
 DummyAttendance = namedtuple('DummyAttendance', 'hour_from, hour_to, dayofweek, day_period, week_type')
+
+def get_employee_from_context(values, context, user_employee_id):
+    employee_ids_list = [value[2] for value in values.get('employee_ids', []) if len(value) == 3 and value[0] == Command.SET]
+    employee_ids = employee_ids_list[-1] if employee_ids_list else []
+    employee_id_value = employee_ids[0] if employee_ids else False
+    return employee_id_value or context.get('default_employee_id', context.get('employee_id', user_employee_id))
 
 class HolidaysRequest(models.Model):
     """ Leave Requests Access specifications
@@ -794,8 +800,9 @@ class HolidaysRequest(models.Model):
         # Try to force the leave_type name_get when creating new records
         # This is called right after pressing create and returns the name_get for
         # most fields in the view.
-        if 'employee_id' in field_onchange:
-            self = self.with_context(employee_id=int(field_onchange['employee_id']))
+        if field_onchange.get('employee_id') and 'employee_id' not in self._context and values:
+            employee_id = get_employee_from_context(values, self._context, self.env.user.employee_id.id)
+            self = self.with_context(employee_id=employee_id)
         return super().onchange(values, field_name, field_onchange)
 
     def name_get(self):
