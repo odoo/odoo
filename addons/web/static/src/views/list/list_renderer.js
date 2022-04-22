@@ -529,7 +529,7 @@ export class ListRenderer extends Component {
         const editedRecord = this.props.list.editedRecord;
         if (editedRecord) {
             const canBeAbandoned = editedRecord.canBeAbandoned;
-            if (editedRecord.isDirty && !canBeAbandoned && editedRecord.checkValidity()) {
+            if (!canBeAbandoned && editedRecord.checkValidity()) {
                 return editedRecord.switchMode("readonly");
             } else if (canBeAbandoned) {
                 return this.props.list.abandonRecord(editedRecord.id);

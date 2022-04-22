@@ -411,7 +411,7 @@ export class Record extends DataPoint {
 
         this._onWillSwitchMode = params.onRecordWillSwitchMode || (() => {});
 
-        this.canBeAbandoned = !this.isVirtual;
+        this.canBeAbandoned = this.isVirtual;
     }
 
     // -------------------------------------------------------------------------

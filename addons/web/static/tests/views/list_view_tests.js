@@ -11014,97 +11014,84 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["scroll"], "this is still working after a limit change");
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "list with handle field, override default_get, bottom when inline",
         async function (assert) {
-            assert.expect(2);
-
             serverData.models.foo.fields.int_field.default = 10;
 
             await makeView({
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch:
-                    '<tree editable="bottom" default_order="int_field">' +
-                    '<field name="int_field" widget="handle"/>' +
-                    '<field name="foo"/>' +
-                    "</tree>",
+                arch:`
+                    <tree editable="bottom" default_order="int_field">
+                        <field name="int_field" widget="handle"/>
+                        <field name="foo"/>
+                    </tree>`,
             });
 
             // starting condition
-            assert.strictEqual($(".o_data_cell").text(), "blipblipyopgnap");
+            assert.deepEqual([...target.querySelectorAll(".o_data_cell [name=foo]")].map(el => el.textContent), ["blip", "blip", "yop", "gnap"]);
 
             // click add a new line
             // save the record
             // check line is at the correct place
 
-            var inputText = "ninja";
-            await click($(".o_list_button_add"));
-            await editInput($(target).find('.o_input[name="foo"]'), inputText);
-            await click($(".o_list_button_save"));
-            await click($(".o_list_button_add"));
+            const inputText = "ninja";
+            await click(target, ".o_list_button_add");
+            await editInput(target, '[name="foo"] input', inputText);
+            await clickSave(target);
+            await click(target, ".o_list_button_add");
 
-            assert.strictEqual($(".o_data_cell").text(), "blipblipyopgnap" + inputText);
+            assert.deepEqual([...target.querySelectorAll(".o_data_cell [name=foo]")].map(el => el.textContent), ["blip", "blip", "yop", "gnap", inputText, ""]);
         }
     );
 
-    QUnit.skipWOWL("create record on list with modifiers depending on id", async function (assert) {
-        assert.expect(8);
-
+    QUnit.test("create record on list with modifiers depending on id", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch:
-                '<tree editable="top">' +
-                '<field name="id" invisible="1"/>' +
-                "<field name=\"foo\" attrs=\"{'readonly': [['id','!=',False]]}\"/>" +
-                "<field name=\"int_field\" attrs=\"{'invisible': [['id','!=',False]]}\"/>" +
-                "</tree>",
+            arch:`
+                <tree editable="top">
+                    <field name="id" invisible="1"/>
+                    <field name=\"foo\" attrs=\"{'readonly': [['id','!=',False]]}\"/>
+                    <field name=\"int_field\" attrs=\"{'invisible': [['id','!=',False]]}\"/>
+                </tree>`,
         });
 
         // add a new record
-        await click(target.querySelector(".o_list_button_add"));
+        await click(target, ".o_list_button_add");
 
         // modifiers should be evaluted to false
         assert.containsOnce(target, ".o_selected_row");
         assert.doesNotHaveClass(
-            $(target).find(".o_selected_row .o_data_cell:first"),
+            target.querySelector(".o_selected_row [name=foo].o_field_widget"),
             "o_readonly_modifier"
         );
-        assert.doesNotHaveClass(
-            $(target).find(".o_selected_row .o_data_cell:nth(1)"),
-            "o_invisible_modifier"
-        );
+        assert.containsOnce(target, ".o_selected_row [name=int_field]");
 
         // set a value and save
-        await editInput($(target).find(".o_selected_row input[name=foo]"), "some value");
-        await click(target.querySelector(".o_list_button_save"));
+        await editInput(target, ".o_selected_row [name=foo] input", "some value");
+        await clickSave(target);
 
         // modifiers should be evaluted to true
         assert.hasClass(
-            $(target).find(".o_data_row:first .o_data_cell:first"),
+            target.querySelector(".o_data_row [name=foo].o_field_widget"),
             "o_readonly_modifier"
         );
-        assert.hasClass(
-            $(target).find(".o_data_row:first .o_data_cell:nth(1)"),
-            "o_invisible_modifier"
-        );
+        assert.containsNone(target, ".o_data_row:first-child [name=int_field]");
 
         // edit again the just created record
-        await click($(target).find(".o_data_row:first .o_data_cell:first"));
+        await click(target.querySelector(".o_data_row .o_data_cell"));
 
         // modifiers should be evaluted to true
         assert.containsOnce(target, ".o_selected_row");
         assert.hasClass(
-            $(target).find(".o_selected_row .o_data_cell:first"),
+            target.querySelector(".o_selected_row [name=foo].o_field_widget"),
             "o_readonly_modifier"
         );
-        assert.hasClass(
-            $(target).find(".o_selected_row .o_data_cell:nth(1)"),
-            "o_invisible_modifier"
-        );
+        assert.containsNone(target, ".o_selected_row [name=int_field]");
     });
 
     QUnit.skipWOWL("readonly boolean in editable list is readonly", async function (assert) {
@@ -11122,25 +11109,24 @@ QUnit.module("Views", (hooks) => {
         });
 
         // clicking on disabled checkbox with active row does not work
-        var $disabledCell = $(target).find(".o_data_row:eq(1) .o_data_cell:last-child");
-        await click($disabledCell.prev());
-        assert.containsOnce($disabledCell, ":disabled:checked");
-        var $disabledLabel = $disabledCell.find(".custom-control-label");
-        await click($disabledLabel);
-        assert.containsOnce($disabledCell, ":checked", "clicking disabled checkbox did not work");
+        const rows = target.querySelectorAll(".o_data_row")
+        const disabledCell = rows[1].querySelector("[name=bar]");
+        await click(rows[1].querySelector(".o_data_cell"));
+        assert.containsOnce(disabledCell, ":disabled:checked");
+        await click(rows[1].querySelector("[name=bar] label"));
+        assert.containsOnce(disabledCell, ":checked", "clicking disabled checkbox did not work");
         assert.ok(
             $(document.activeElement).is('input[type="text"]'),
             "disabled checkbox is not focused after click"
         );
 
         // clicking on enabled checkbox with active row toggles check mark
-        var $enabledCell = $(target).find(".o_data_row:eq(0) .o_data_cell:last-child");
-        await click($enabledCell.prev());
-        assert.containsOnce($enabledCell, ":checked:not(:disabled)");
-        var $enabledLabel = $enabledCell.find(".custom-control-label");
-        await click($enabledLabel);
+        await click(rows[0].querySelector(".o_data_cell"));
+        const enabledCell = rows[0].querySelector("[name=bar]");
+        assert.containsOnce(enabledCell, ":checked:not(:disabled)");
+        await click(rows[0].querySelector("[name=bar] label"));
         assert.containsNone(
-            $enabledCell,
+            enabledCell,
             ":checked",
             "clicking enabled checkbox worked and unchecked it"
         );
@@ -11380,62 +11366,70 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["[], 0", "[], 3", '[["bar","=",false]], 0']);
     });
 
-    QUnit.skipWOWL("editable grouped lists", async function (assert) {
+    QUnit.test("editable grouped lists", async function (assert) {
         assert.expect(4);
 
-        const list = await makeView({
+        await makeView({
             type: "list",
             resModel: "foo",
             serverData,
             arch: '<tree editable="top"><field name="foo"/><field name="bar"/></tree>',
-            groupBy: ["bar"],
+            searchViewArch: `
+            <search>
+                <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
+            </search>`,
         });
-
-        await click($(target).find(".o_group_header:first")); // open first group
+        await toggleGroupByMenu(target);
+        await toggleMenuItem(target, "bar");
+        await click(target.querySelector(".o_group_header"));
 
         // enter edition (grouped case)
-        await click($(target).find(".o_data_cell:first"));
-        assert.containsOnce(target, ".o_selected_row .o_data_cell:first");
+        await click(target.querySelector(".o_data_cell"));
+        assert.containsOnce(target, ".o_selected_row");
 
         // click on the body should leave the edition
-        await click($("body"));
+        await click(target, ".o_list_view");
         assert.containsNone(target, ".o_selected_row");
 
         // reload without groupBy
-        await list.reload({ groupBy: [] });
+        await toggleGroupByMenu(target);
+        await toggleMenuItem(target, "bar");
 
         // enter edition (ungrouped case)
-        await click($(target).find(".o_data_cell:first"));
-        assert.containsOnce(target, ".o_selected_row .o_data_cell:first");
+        await click(target.querySelector(".o_data_cell"));
+        assert.containsOnce(target, ".o_selected_row");
 
         // click on the body should leave the edition
-        await click($("body"));
+        await click(target, ".o_list_view");
         assert.containsNone(target, ".o_selected_row");
     });
 
-    QUnit.skipWOWL("grouped lists are editable (ungrouped first)", async function (assert) {
-        assert.expect(2);
-
-        const list = await makeView({
+    QUnit.test("grouped lists are editable (ungrouped first)", async function (assert) {
+        await makeView({
             type: "list",
             resModel: "foo",
             serverData,
             arch: '<tree editable="top"><field name="foo"/><field name="bar"/></tree>',
+            searchViewArch: `
+            <search>
+                <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
+            </search>`,
         });
 
         // enter edition (ungrouped case)
-        await click($(target).find(".o_data_cell:first"));
-        assert.containsOnce(target, ".o_selected_row .o_data_cell:first");
+        await click(target.querySelector(".o_data_cell"));
+        assert.containsOnce(target, ".o_selected_row");
 
-        // reload with groupBy
-        await list.reload({ groupBy: ["bar"] });
+        // reload with a groupby
+        await toggleGroupByMenu(target);
+        await toggleMenuItem(target, "bar");
 
         // open first group
-        await click($(target).find(".o_group_header:first"));
+        await click(target.querySelector(".o_group_header"));
 
         // enter edition (grouped case)
-        await click($(target).find(".o_data_cell:first"));
-        assert.containsOnce(target, ".o_selected_row .o_data_cell:first");
+        await click(target.querySelector(".o_data_cell"));
+        assert.containsOnce(target, ".o_selected_row");
     });
 
     QUnit.skipWOWL("char field edition in editable grouped list", async function (assert) {
