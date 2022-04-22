@@ -17,13 +17,6 @@ export class ComposerSuggestedRecipientList extends Component {
         return this.messaging && this.messaging.models['ComposerSuggestedRecipientListView'].get(this.props.localId);
     }
 
-    /**
-     * @returns {Thread}
-     */
-    get thread() {
-        return this.messaging && this.messaging.models['Thread'].get(this.props.threadLocalId);
-    }
-
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -41,10 +34,7 @@ export class ComposerSuggestedRecipientList extends Component {
 }
 
 Object.assign(ComposerSuggestedRecipientList, {
-    props: {
-        localId: String,
-        threadLocalId: String,
-    },
+    props: { localId: String },
     template: 'mail.ComposerSuggestedRecipientList',
 });
 

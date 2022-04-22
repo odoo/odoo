@@ -2,6 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
+import { replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ComposerSuggestedRecipientListView',
@@ -16,6 +17,13 @@ registerModel({
             }
             this.update({ hasShowMoreButton: false });
         },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeThread() {
+            return replace(this.composerViewOwner.composer.activeThread);
+        },
     },
     fields: {
         composerViewOwner: one('ComposerView', {
@@ -25,6 +33,10 @@ registerModel({
         }),
         hasShowMoreButton: attr({
             default: false,
+        }),
+        thread: one('Thread', {
+            compute: '_computeThread',
+            required: true,
         }),
     },
 });
