@@ -59,7 +59,8 @@
             needle="state.needle"
             search="(needle) => this.search(needle)"
             useMediaLibrary="props.useMediaLibrary"
-            validateUrl="validateUrl"/>
+            validateUrl="validateUrl"
+            multiImages="props.multiImages"/>
         <t t-call="{{ constructor.attachmentsListTemplate }}"/>
         <div name="load_more_attachments" class="mt-4 text-center mx-auto o_we_load_more">
             <button t-if="canLoadMore" class="btn btn-primary o_load_more" type="button" t-on-click="loadMore">Load more...</button>

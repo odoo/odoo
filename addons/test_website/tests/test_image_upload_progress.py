@@ -13,7 +13,7 @@ from odoo import http
 class TestImageUploadProgress(odoo.tests.HttpCase):
 
     def test_01_image_upload_progress(self):
-        self.start_tour("/test_image_progress", 'test_image_upload_progress', login="admin")
+        self.start_tour("/web", 'test_image_upload_progress', login="admin")
 
     def test_02_image_upload_progress_unsplash(self):
         BASE_URL = self.base_url()
@@ -53,4 +53,4 @@ class TestImageUploadProgress(odoo.tests.HttpCase):
         media_library_search.routing_type = 'json'
         Web_Editor.media_library_search = http.route(['/web_editor/media_library_search'], type='json', auth="user", website=True)(media_library_search)
 
-        self.start_tour("/", 'test_image_upload_progress_unsplash', login="admin")
+        self.start_tour("/web", 'test_image_upload_progress_unsplash', login="admin")

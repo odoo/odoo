@@ -115,6 +115,7 @@ export class MediaDialog extends Dialog {
                 resModel: this.props.resModel,
                 resId: this.props.resId,
                 media: this.props.media,
+                multiImages: this.props.multiImages,
                 selectedMedia: this.selectedMedia,
                 selectMedia: async (media, { multiSelect = false, save = true } = {}) => {
                     if (multiSelect) {
