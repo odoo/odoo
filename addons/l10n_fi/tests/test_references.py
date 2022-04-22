@@ -4,7 +4,11 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
 
 
+<<<<<<< HEAD
 @tagged('post_install_l10n', 'post_install', '-at_install')
+=======
+@tagged('post_install', '-at_install')
+>>>>>>> af82e021f2a... temp
 class PaymentReferenceTest(AccountTestInvoicingCommon):
     """
     All references validated with the reference calculator by Nordea Bank
