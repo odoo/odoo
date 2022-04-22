@@ -7,8 +7,7 @@ from odoo import _, api, fields, models
 FUEL_TYPES = [
     ('diesel', 'Diesel'),
     ('gasoline', 'Gasoline'),
-    ('hybrid', 'Hybrid Diesel'),
-    ('full_hybrid_gasoline', 'Hybrid Gasoline'),
+    ('full_hybrid', 'Full Hybrid'),
     ('plug_in_hybrid_diesel', 'Plug-in Hybrid Diesel'),
     ('plug_in_hybrid_gasoline', 'Plug-in Hybrid Gasoline'),
     ('cng', 'CNG'),
