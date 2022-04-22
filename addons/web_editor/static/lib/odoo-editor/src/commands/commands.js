@@ -48,75 +48,130 @@ const BG_CLASSES_REGEX = /\bbg-[^\s]*\b/g;
 function insert(editor, data, isText = true) {
     const selection = editor.document.getSelection();
     const range = selection.getRangeAt(0);
-    let startNode;
+    let currentNode;
     let insertBefore = false;
     if (selection.isCollapsed) {
         if (range.startContainer.nodeType === Node.TEXT_NODE) {
             insertBefore = !range.startOffset;
             splitTextNode(range.startContainer, range.startOffset, DIRECTIONS.LEFT);
-            startNode = range.startContainer;
+            currentNode = range.startContainer;
         }
     } else {
         editor.deleteRange(selection);
     }
-    startNode = startNode || editor.document.getSelection().anchorNode;
-    if (startNode.nodeType === Node.ELEMENT_NODE) {
+    currentNode = currentNode || editor.document.getSelection().anchorNode;
+    if (currentNode.nodeType === Node.ELEMENT_NODE) {
         if (selection.anchorOffset === 0) {
-            startNode.prepend(editor.document.createTextNode(''));
-            startNode = startNode.firstChild;
+            currentNode.prepend(editor.document.createTextNode(''));
+            currentNode = currentNode.firstChild;
         } else {
-            startNode = startNode.childNodes[selection.anchorOffset - 1];
+            currentNode = currentNode.childNodes[selection.anchorOffset - 1];
         }
     }
 
     const fakeEl = document.createElement('fake-element');
+    const fakeElFirstChild = document.createElement('fake-element-fc');
+    const fakeElLastChild = document.createElement('fake-element-lc');
     if (isText) {
         fakeEl.innerText = data;
     } else {
         fakeEl.innerHTML = data;
     }
+
+    // In case the html inserted is all contained in a single root <P> tag,
+    // we take the all content of the <p> and avoid inserting the <p>.
+    if (fakeEl.firstChild === fakeEl.lastChild && fakeEl.firstChild.nodeName === 'P') {
+        const p = fakeEl.firstElementChild;
+        fakeEl.replaceChildren(...p.childNodes);
+    } else if (fakeEl.childElementCount > 1) {
+        // Grab the content of the first child block and isolate it.
+        if (isBlock(fakeEl.firstChild)) {
+            fakeElFirstChild.replaceChildren(...fakeEl.firstElementChild.childNodes);
+            fakeEl.firstElementChild.remove();
+        }
+        // Grab the content of the last child block and isolate it.
+        if (isBlock(fakeEl.lastChild)) {
+            fakeElLastChild.replaceChildren(...fakeEl.lastElementChild.childNodes);
+            fakeEl.lastElementChild.remove();
+        }
+    }
+
+    // if we have isolated block content,
+    // first we split the current focus element if it's a block
+    // then we insert the content in the right places
+    let lastChildNode = false;
+    if (fakeElLastChild.hasChildNodes()) {
+        let tempCurrentNode = currentNode;
+        for (const n of [...fakeElLastChild.childNodes]) {
+            tempCurrentNode.after(n);
+            tempCurrentNode = n;
+        }
+        lastChildNode = tempCurrentNode;
+    }
+
+    if (fakeElFirstChild.hasChildNodes()) {
+        for (const n of [...fakeElFirstChild.childNodes]) {
+            currentNode.after(n);
+            currentNode = n;
+        }
+    }
+
+    // If all the Html have been isolated, We force a split of the parent element
+    // to have the need new line in the final result
+    if (!fakeEl.hasChildNodes()) {
+        if (isUnbreakable(closestBlock(currentNode.nextSibling))) {
+            currentNode.nextSibling.oShiftEnter(0);
+        } else {
+            // If we arrive here, the o_enter index should always be 0.
+            const parent = currentNode.nextSibling.parentElement;
+            const index = [...parent.childNodes].indexOf(currentNode.nextSibling);
+            currentNode.nextSibling.parentElement.oEnter(index);
+        }
+    }
+
     let nodeToInsert;
     const insertedNodes = [...fakeEl.childNodes];
     while ((nodeToInsert = fakeEl.childNodes[0])) {
-        if (isBlock(nodeToInsert) && !allowsParagraphRelatedElements(startNode)) {
+        if (isBlock(nodeToInsert) && !allowsParagraphRelatedElements(currentNode)) {
             // Split blocks at the edges if inserting new blocks (preventing
             // <p><p>text</p></p> scenarios).
             while (
-                startNode.parentElement !== editor.editable &&
-                !allowsParagraphRelatedElements(startNode.parentElement)
+                currentNode.parentElement !== editor.editable &&
+                !allowsParagraphRelatedElements(currentNode.parentElement)
             ) {
-                if (isUnbreakable(startNode.parentElement)) {
+                if (isUnbreakable(currentNode.parentElement)) {
                     makeContentsInline(fakeEl);
                     nodeToInsert = fakeEl.childNodes[0];
                     break;
                 }
-                let offset = childNodeIndex(startNode);
+                let offset = childNodeIndex(currentNode);
                 if (!insertBefore) {
                     offset += 1;
                 }
                 if (offset) {
-                    const [left, right] = splitElement(startNode.parentElement, offset);
-                    startNode = insertBefore ? right : left;
+                    const [left, right] = splitElement(currentNode.parentElement, offset);
+                    currentNode = insertBefore ? right : left;
                 } else {
-                    startNode = startNode.parentElement;
+                    currentNode = currentNode.parentElement;
                 }
             }
         }
         if (insertBefore) {
-            startNode.before(nodeToInsert);
+            currentNode.before(nodeToInsert);
             insertBefore = false;
         } else {
-            startNode.after(nodeToInsert);
+            currentNode.after(nodeToInsert);
         }
-        if (startNode.tagName !== 'BR' && isShrunkBlock(startNode)) {
-            startNode.remove();
+        if (currentNode.tagName !== 'BR' && isShrunkBlock(currentNode)) {
+            currentNode.remove();
         }
-        startNode = nodeToInsert;
+        currentNode = nodeToInsert;
     }
 
+    currentNode = lastChildNode || currentNode;
     selection.removeAllRanges();
     const newRange = new Range();
-    const lastPosition = rightPos(startNode);
+    const lastPosition = rightPos(currentNode);
     newRange.setStart(lastPosition[0], lastPosition[1]);
     newRange.setEnd(lastPosition[0], lastPosition[1]);
     selection.addRange(newRange);
