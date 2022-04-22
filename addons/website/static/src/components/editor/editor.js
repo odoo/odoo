@@ -7,6 +7,9 @@ import { WysiwygAdapterComponent } from '../wysiwyg_adapter/wysiwyg_adapter';
 const { markup, Component, useState, useChildSubEnv, useEffect, onWillStart } = owl;
 
 export class WebsiteEditorComponent extends Component {
+    /**
+     * @override
+     */
     setup() {
         this.websiteService = useService('website');
         this.notificationService = useService('notification');
@@ -16,6 +19,7 @@ export class WebsiteEditorComponent extends Component {
             reloading: false,
             showWysiwyg: this.websiteContext.isPublicRootReady,
         });
+        this.wysiwygOptions = {};
 
         useChildSubEnv(legacyEnv);
 
@@ -33,8 +37,15 @@ export class WebsiteEditorComponent extends Component {
     wysiwygReady() {
         this.websiteContext.snippetsLoaded = true;
         this.state.reloading = false;
+        this.wysiwygOptions.invalidateSnippetCache = false;
     }
-
+    /**
+     * Prepares the editor for reload. Copies the widget element tree
+     * to display it as a skeleton so that it doesn't flash when the editor
+     * is destroyed and re-started.
+     *
+     * @param widgetEl {HTMLElement} Widget element of the editor to copy.
+     */
     willReload(widgetEl) {
         if (widgetEl) {
             widgetEl.querySelectorAll('#oe_manipulators').forEach(el => el.remove());
@@ -45,17 +56,31 @@ export class WebsiteEditorComponent extends Component {
         }
         this.state.reloading = true;
     }
-
-    async reload(snippetOptionSelector, url) {
+    /**
+     * Dismount the editor and reload the iframe.
+     *
+     * @param snippetOptionSelector {string} Selector to refocus the editor once reloaded.
+     * @param [url] {string} URL to reload the iframe tp
+     * @param invalidateSnippetCache {boolean} If the SnippetMenu needs to reload the Snippets from server.
+     * @returns {Promise<void>}
+     */
+    async reload({ snippetOptionSelector, url, invalidateSnippetCache } = {}) {
         this.notificationService.add(this.env._t("Your modifications were saved to apply this option."), {
             title: this.env._t("Content saved."),
             type: 'success'
         });
+        if (invalidateSnippetCache) {
+            this.wysiwygOptions.invalidateSnippetCache = true;
+        }
         this.state.showWysiwyg = false;
         await this.props.reloadIframe(url);
         this.reloadSelector = snippetOptionSelector;
     }
-
+    /**
+     * Blocks the iframe and stops the editor.
+     *
+     * @returns {Promise<void>}
+     */
     async quit() {
         document.body.classList.remove('editor_has_snippets');
         this.websiteContext.snippetsLoaded = false;

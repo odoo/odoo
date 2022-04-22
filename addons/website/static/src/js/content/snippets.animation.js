@@ -513,7 +513,7 @@ registry.Parallax = Animation.extend({
      */
     start: function () {
         this._rebuild();
-        $(window).on('resize.animation_parallax', _.debounce(this._rebuild.bind(this), 500));
+        $(this.$target[0].ownerDocument.defaultView).on('resize.animation_parallax', _.debounce(this._rebuild.bind(this), 500));
         return this._super.apply(this, arguments);
     },
     /**
@@ -521,7 +521,7 @@ registry.Parallax = Animation.extend({
      */
     destroy: function () {
         this._super.apply(this, arguments);
-        $(window).off('.animation_parallax');
+        $(this.$target[0].ownerDocument.defaultView).off('.animation_parallax');
     },
 
     //--------------------------------------------------------------------------
@@ -553,7 +553,7 @@ registry.Parallax = Animation.extend({
         }
 
         // Initialize parallax data according to snippet and viewport dimensions
-        this.viewport = document.body.clientHeight - $('#wrapwrap').position().top;
+        this.viewport = this.$target[0].ownerDocument.body.clientHeight - $(this.$target[0].ownerDocument).find('#wrapwrap').position().top;
         this.visibleArea = [this.$target.offset().top];
         this.visibleArea.push(this.visibleArea[0] + this.$target.innerHeight() + this.viewport);
         this.ratio = this.speed * (this.viewport / 10);

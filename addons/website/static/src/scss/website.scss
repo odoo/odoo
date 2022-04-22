@@ -185,23 +185,6 @@ $-seen-urls: ();
     }
 }
 
-body:not(.o_fullscreen) {
-    #oe_main_menu_navbar:not(.o_hidden) + #wrapwrap {
-        .o_header_affixed, .modal {
-            // For these elements, in #wrapwrap, position top should be size of
-            // the navbar.
-            top: $o-navbar-height;
-        }
-        .modal {
-            // As the default bootstrap style no longer uses 'bottom: 0' and
-            // added 'height: 100%' since the V4.2 because of a bug on Android.
-            // We have to adapt the height of the modal by removing the height
-            // of the navbar.
-            height: calc(100vh - #{$o-navbar-height});
-        }
-    }
-}
-
 .navbar {
 
     .navbar-collapse {
@@ -1021,27 +1004,6 @@ header {
                     padding-right: .5em;
                 }
             }
-
-            .o_connected_user:not(.editor_has_snippets):not(.o_fullscreen) header & {
-                // TODO this has to be reviewed
-                $-header-template: o-website-value('header-template');
-                @if not index(('Contact', 'boxed', 'magazine'), $-header-template) {
-                    top: -$o-navbar-height;
-                    padding-top: $o-navbar-height;
-                } @else if $-header-template == 'magazine' {
-                    @include media-breakpoint-up(lg) {
-                        padding-top: $o-navbar-height;
-                    }
-                }
-            }
-
-            .editor_has_snippets:not(.o_fullscreen) header & {
-                @if (o-website-value('header-template') == 'magazine') {
-                    @include media-breakpoint-up(lg) {
-                        right: $o-we-sidebar-width;
-                    }
-                }
-            }
         }
         &.collapsing #top_menu {
             @if $-hamburger-center {
@@ -1132,16 +1094,6 @@ header {
                 }
             }
         }
-        body.o_connected_user:not(.o_fullscreen) {
-            &:not(.editor_has_snippets) #wrapwrap > header {
-                top: $o-navbar-height;
-            }
-            &.editor_has_snippets #wrapwrap > header {
-                @if $-hamburger-right {
-                    right: $o-we-sidebar-width;
-                }
-            }
-        }
     }
 } @else if o-website-value('header-template') == 'boxed' {
     #wrapwrap:not(.o_header_overlay) .o_header_boxed_background {
@@ -1162,8 +1114,10 @@ header {
                 $o-hamburger-full-navbar-height: $o-theme-navbar-logo-height + ($navbar-padding-y * 2);
                 > header {
                     .navbar-collapse {
+                        max-height: unset;
+
                         > .container {
-                            height: calc(100vh - #{$o-navbar-height} - #{$o-hamburger-full-navbar-height});
+                            height: calc(100vh - #{$o-hamburger-full-navbar-height});
                             transition: height .3s ease;
                         }
                         .nav-link {

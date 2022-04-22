@@ -726,9 +726,10 @@ class Website(Home):
         Reloads asset bundles and returns their unique URLs.
         """
         return {
-            'web.assets_common': request.env['ir.qweb']._get_asset_link_urls('web.assets_common'),
-            'web.assets_frontend': request.env['ir.qweb']._get_asset_link_urls('web.assets_frontend'),
-            'website.assets_editor': request.env['ir.qweb']._get_asset_link_urls('website.assets_editor'),
+            'web.assets_common': request.env['ir.qweb']._get_asset_link_urls('web.assets_common', request.session.debug),
+            'web.assets_frontend': request.env['ir.qweb']._get_asset_link_urls('web.assets_frontend', request.session.debug),
+            'website.assets_editor_frontend': request.env['ir.qweb']._get_asset_link_urls('website.assets_editor_frontend', request.session.debug),
+            'web.assets_backend': request.env['ir.qweb']._get_asset_link_urls('web.assets_backend', request.session.debug),
         }
 
     # ------------------------------------------------------
