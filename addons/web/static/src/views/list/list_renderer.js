@@ -484,7 +484,7 @@ export class ListRenderer extends Component {
     }
 
     showGroupPager(group) {
-        return !group.isFolded && (group.list.limit < group.list.count)
+        return !group.isFolded && group.list.limit < group.list.count;
     }
 
     get showTable() {
@@ -515,7 +515,8 @@ export class ListRenderer extends Component {
         this.props.list.selectDomain(false);
     }
 
-    toggleOptionalField(fieldName) {
+    async toggleOptionalField(fieldName) {
+        await this.unselectRow();
         this.optionalActiveFields[fieldName] = !this.optionalActiveFields[fieldName];
         this.state.columns = this.allColumns.filter(
             (col) => !col.optional || this.optionalActiveFields[col.name]

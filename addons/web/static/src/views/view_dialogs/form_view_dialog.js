@@ -107,12 +107,13 @@ export class FormViewDialog extends Dialog {
         const saved = await this.save({ saveAndNew: true });
         if (saved) {
             if (!this.props.record) {
+                await this.model.root.save();
                 await this.model.load({ resId: null });
-                this.record = this.model.root;
+                // FIXME: this is wrong, the datapoint changes when reloading the model
+                // But the model hasn't been instantiated with the view info, so it can't work
+                // Also, we only save the record in the SaveAndNew case, not save and close
+                // this.record = this.model.root;
             }
-            this.readonly = !this.record.isInEdition;
-            this.multiSelect = this.record.resId === false && !this.props.disableMultipleSelection;
-
             this.enableButtons(disabledButtons);
             if (this.title) {
                 this.title.replace(this.env._t("Open:"), this.env._t("New:"));

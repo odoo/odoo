@@ -42,8 +42,6 @@ let testUtils,
     unpatch,
     ControlPanel,
     FieldOne2Many,
-    AbstractFieldOwl,
-    fieldRegistryOwl,
     cpHelpers;
 
 async function clickDiscard(target) {
@@ -12007,131 +12005,112 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many field in edit mode with optional fields and trash icon",
         async function (assert) {
-            assert.expect(13);
-
-            var RamStorageService = AbstractStorageService.extend({
-                storage: new RamStorage(),
-            });
-
             serverData.models.partner.records[0].p = [2];
-            const form = await makeView({
+            serverData.views = {
+                "partner,false,list": `
+                    <tree editable="top">
+                        <field name="foo" optional="show"/>
+                        <field name="bar" optional="hide"/>
+                    </tree>`,
+            };
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
                 arch: `<form><field name="p"/></form>`,
                 resId: 1,
-                archs: {
-                    "partner,false,list": `
-                        <tree editable="top">
-                            <field name="foo" optional="show"/>
-                            <field name="bar" optional="hide"/>
-                        </tree>`,
-                },
-                services: {
-                    local_storage: RamStorageService,
-                },
             });
 
             // should have 2 columns 1 for foo and 1 for advanced dropdown
-            assert.containsN(
-                form.$(".o_field_one2many"),
+            assert.containsOnce(
+                target.querySelector(".o_field_one2many"),
                 "th:not(.o_list_record_remove_header)",
-                1,
                 "should be 1 th in the one2many in readonly mode"
             );
             assert.containsOnce(
-                form.$(".o_field_one2many table"),
-                ".o_optional_columns_dropdown_toggle",
+                target.querySelector(".o_field_one2many table"),
+                ".o_optional_columns_dropdown .dropdown-toggle",
                 "should have the optional columns dropdown toggle inside the table"
             );
+
             await clickEdit(target);
             // should have 2 columns 1 for foo and 1 for trash icon, dropdown is displayed
             // on trash icon cell, no separate cell created for trash icon and advanced field dropdown
             assert.containsN(
-                form.$(".o_field_one2many"),
+                target.querySelector(".o_field_one2many"),
                 "th",
                 2,
                 "should be 2 th in the one2many edit mode"
             );
             assert.containsN(
-                form.$(".o_field_one2many"),
+                target.querySelector(".o_field_one2many"),
                 ".o_data_row:first > td",
                 2,
                 "should be 2 cells in the one2many in edit mode"
             );
 
-            await click(form.$(".o_field_one2many table .o_optional_columns_dropdown_toggle"));
+            await click(target.querySelector(".o_optional_columns_dropdown .dropdown-toggle"));
             assert.containsN(
-                form.$(".o_field_one2many"),
-                "div.o_optional_columns div.dropdown-item:visible",
+                target.querySelector(".o_field_one2many"),
+                ".o_optional_columns_dropdown .dropdown-item",
                 2,
                 "dropdown have 2 advanced field foo with checked and bar with unchecked"
             );
-            await click(form.$("div.o_optional_columns div.dropdown-item:eq(1) input"));
+            await click(target.querySelectorAll(".o_optional_columns_dropdown .dropdown-item")[1]);
             assert.containsN(
-                form.$(".o_field_one2many"),
+                target.querySelector(".o_field_one2many"),
                 "th",
                 3,
                 "should be 3 th in the one2many after enabling bar column from advanced dropdown"
             );
 
-            await click(form.$("div.o_optional_columns div.dropdown-item:first input"));
+            await click(target.querySelector(".o_optional_columns_dropdown .dropdown-item"));
             assert.containsN(
-                form.$(".o_field_one2many"),
+                target.querySelector(".o_field_one2many"),
                 "th",
                 2,
                 "should be 2 th in the one2many after disabling foo column from advanced dropdown"
             );
-
             assert.containsN(
-                form.$(".o_field_one2many"),
-                "div.o_optional_columns div.dropdown-item:visible",
+                target.querySelector(".o_field_one2many"),
+                ".o_optional_columns_dropdown .dropdown-item",
                 2,
                 "dropdown is still open"
             );
+
             await addRow(target);
-            // use of owlCompatibilityExtraNextTick because the x2many field is reset, meaning that
-            // 1) its list renderer is updated (updateState is called): this is async and as it
-            // contains a FieldBoolean, which is written in Owl, it completes in the nextAnimationFrame
-            // 2) when this is done, the control panel is updated: as it is written in owl, this is
-            // done in the nextAnimationFrame
-            // -> we need to wait for 2 nextAnimationFrame to ensure that everything is fine
-            await testUtils.owlCompatibilityExtraNextTick();
-            assert.containsN(
-                form.$(".o_field_one2many"),
-                "div.o_optional_columns div.dropdown-item:visible",
-                0,
+            assert.containsNone(
+                target.querySelector(".o_field_one2many"),
+                ".o_optional_columns_dropdown .dropdown-menu",
                 "dropdown is closed"
             );
-            var $selectedRow = form.$(".o_field_one2many tr.o_selected_row");
-            assert.strictEqual(
-                $selectedRow.length,
-                1,
+            assert.containsOnce(
+                target.querySelector(".o_field_one2many"),
+                "tr.o_selected_row",
                 "should have selected row i.e. edition mode"
             );
 
-            await click(form.$(".o_field_one2many table .o_optional_columns_dropdown_toggle"));
-            await click(form.$("div.o_optional_columns div.dropdown-item:first input"));
-            $selectedRow = form.$(".o_field_one2many tr.o_selected_row");
-            assert.strictEqual(
-                $selectedRow.length,
-                0,
+            await click(target.querySelector(".o_optional_columns_dropdown .dropdown-toggle"));
+            await click(target.querySelector(".o_optional_columns_dropdown .dropdown-item"));
+            assert.containsNone(
+                target.querySelector(".o_field_one2many"),
+                "tr.o_selected_row",
                 "current edition mode discarded when selecting advanced field"
             );
             assert.containsN(
-                form.$(".o_field_one2many"),
+                target.querySelector(".o_field_one2many"),
                 "th",
                 3,
                 "should be 3 th in the one2many after re-enabling foo column from advanced dropdown"
             );
 
-            // check after form reload advanced column hidden or shown are still preserved
-            await form.reload();
+            // optional columns must be preserved after save
+            await clickSave(target);
             assert.containsN(
-                form.$(".o_field_one2many .o_list_view"),
+                target.querySelector(".o_field_one2many"),
                 "th",
                 3,
                 "should still have 3 th in the one2many after reloading whole form view"
@@ -12632,73 +12611,6 @@ QUnit.module("Fields", (hooks) => {
                 form.$('.o_field_widget[name="int_field"]')[0],
                 "last input should now be focused"
             );
-        }
-    );
-
-    QUnit.skipWOWL(
-        "add_record in an o2m with an OWL field: wait mounted before success",
-        async function (assert) {
-            assert.expect(7);
-
-            let testInst = 0;
-            class TestField extends AbstractFieldOwl {
-                setup() {
-                    super.setup();
-                    const ID = testInst++;
-                    owl.onMounted(() => {
-                        assert.step(`mounted ${ID}`);
-                    });
-
-                    owl.onWillUnmount(() => {
-                        assert.step(`willUnmount ${ID}`);
-                    });
-                }
-                activate() {
-                    return true;
-                }
-            }
-
-            TestField.template = owl.xml`<span>test</span>`;
-            fieldRegistryOwl.add("test_field", TestField);
-
-            const def = testUtils.makeTestPromise();
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
-                    <form>
-                        <field name="p">
-                            <tree editable="bottom">
-                                <field name="name" widget="test_field"/>
-                            </tree>
-                        </field>
-                    </form>`,
-                viewOptions: {
-                    mode: "edit",
-                },
-            });
-
-            const list = form.renderer.allFieldWidgets[form.handle][0];
-
-            list.trigger_up("add_record", {
-                context: [
-                    {
-                        default_name: "this is a test",
-                    },
-                ],
-                allowWarning: true,
-                forceEditable: "bottom",
-                onSuccess: function () {
-                    assert.step("onSuccess");
-                    def.resolve();
-                },
-            });
-
-            await testUtils.nextTick();
-            await def;
-            assert.verifySteps(["mounted 0", "willUnmount 0", "mounted 1", "onSuccess"]);
-            assert.verifySteps(["willUnmount 1"]);
         }
     );
 });
