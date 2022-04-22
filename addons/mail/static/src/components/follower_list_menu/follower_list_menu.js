@@ -36,13 +36,6 @@ export class FollowerListMenu extends Component {
         return this.messaging && this.messaging.models['FollowerListMenuView'].get(this.props.localId);
     }
 
-    /**
-     * @return {Thread}
-     */
-    get thread() {
-        return this.messaging && this.messaging.models['Thread'].get(this.props.threadLocalId);
-    }
-
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -54,7 +47,7 @@ export class FollowerListMenu extends Component {
     _onClickAddFollowers(ev) {
         ev.preventDefault();
         this.followerListMenuView.hide();
-        this.thread.promptAddPartnerFollower();
+        this.followerListMenuView.thread.promptAddPartnerFollower();
     }
 
     /**
@@ -79,7 +72,6 @@ Object.assign(FollowerListMenu, {
     },
     props: {
         isDisabled: { type: Boolean, optional: true },
-        threadLocalId: String,
         isChatterButton: { type: Boolean, optional: true },
         localId: String,
     },
