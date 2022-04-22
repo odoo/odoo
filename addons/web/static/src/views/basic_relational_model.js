@@ -388,7 +388,8 @@ export class Record extends DataPoint {
         const toAbandon = [];
         let isValid = true;
         for (const record of value.records) {
-            if (record.isNew && !record.checkValidity()) { // LPE: redo that condition
+            if (record.isNew && !record.checkValidity()) {
+                // LPE: redo that condition
                 if (record.canBeAbandoned) {
                     toAbandon.push(record);
                 } else {
@@ -746,7 +747,7 @@ export class StaticList extends DataPoint {
         this.model.notify();
     }
 
-    async add(object, params = {isM2M: false}) {
+    async add(object, params = { isM2M: false }) {
         const changes = {};
         const bm = this.model.__bm__;
         if (object instanceof Record) {
@@ -754,13 +755,13 @@ export class StaticList extends DataPoint {
             await bm.save(recHandle, { savePoint: !params.isM2M });
             if (params.isM2M) {
                 const id = bm.localData[recHandle].res_id;
-                changes[this.__fieldName__] = { operation: "ADD_M2M", ids: [{id}] };
+                changes[this.__fieldName__] = { operation: "ADD_M2M", ids: [{ id }] };
             } else {
                 changes[this.__fieldName__] = { operation: "ADD", id: recHandle };
             }
         } else if (Array.isArray(object) && params.isM2M) {
             const oldIds = this.resIds;
-            const newIds = object.filter(id => !oldIds.includes(id)).map(id => ({ id }));
+            const newIds = object.filter((id) => !oldIds.includes(id)).map((id) => ({ id }));
             changes[this.__fieldName__] = { operation: "ADD_M2M", ids: newIds };
         }
 
@@ -903,13 +904,6 @@ export class RelationalModel extends Model {
             mode: params.mode,
         });
         newRecord.canBeAbandoned = record.canBeAbandoned;
-        const save = newRecord.save;
-        newRecord.save = async (...args) => {
-            const res = await save.call(newRecord, ...args);
-            record.__syncData(true);
-            this.notify();
-            return res;
-        };
         await newRecord.load();
         return newRecord;
     }
