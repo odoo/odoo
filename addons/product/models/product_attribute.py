@@ -43,7 +43,7 @@ class ProductAttribute(models.Model):
     @api.depends('attribute_line_ids.active', 'attribute_line_ids.product_tmpl_id')
     def _compute_products(self):
         for pa in self:
-            pa.product_tmpl_ids = pa.attribute_line_ids.product_tmpl_id
+            pa.with_context(active_test=False).product_tmpl_ids = pa.attribute_line_ids.product_tmpl_id
 
     def _without_no_variant_attributes(self):
         return self.filtered(lambda pa: pa.create_variant != 'no_variant')
