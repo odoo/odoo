@@ -23,6 +23,16 @@ registerModel({
                 ? insertAndReplace()
                 : clear();
         },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeDropZoneView() {
+            if (this.useDragVisibleDropZone.isVisible) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
     },
     fields: {
         /**
@@ -43,9 +53,21 @@ registerModel({
          * States the OWL component displaying this attachment box.
          */
         component: attr(),
+        dropZoneView: one('DropZoneView', {
+            compute: '_computeDropZoneView',
+            inverse: 'attachmentBoxViewOwner',
+            isCausal: true,
+        }),
         fileUploader: one('FileUploader', {
             default: insertAndReplace(),
             inverse: 'attachmentBoxView',
+            isCausal: true,
+            readonly: true,
+            required: true,
+        }),
+        useDragVisibleDropZone: one('UseDragVisibleDropZone', {
+            default: insertAndReplace(),
+            inverse: 'attachmentBoxViewOwner',
             isCausal: true,
             readonly: true,
             required: true,

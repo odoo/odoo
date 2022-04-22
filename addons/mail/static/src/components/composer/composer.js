@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { useDragVisibleDropZone } from '@mail/component_hooks/use_drag_visible_dropzone';
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
@@ -14,7 +13,6 @@ export class Composer extends Component {
      */
     setup() {
         super.setup();
-        this.isDropZoneVisible = useDragVisibleDropZone();
         useComponentToModel({ fieldName: 'component', modelName: 'ComposerView' });
         useRefToModel({ fieldName: 'buttonEmojisRef', modelName: 'ComposerView', refName: 'buttonEmojis' });
         this._onDropZoneFilesDropped = this._onDropZoneFilesDropped.bind(this);
@@ -44,7 +42,7 @@ export class Composer extends Component {
      */
     async _onDropZoneFilesDropped(detail) {
         await this.composerView.fileUploader.uploadFiles(detail.files);
-        this.isDropZoneVisible.value = false;
+        this.composerView.useDragVisibleDropZone.update({ isVisible: false });
     }
 
 }

@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { useDragVisibleDropZone } from '@mail/component_hooks/use_drag_visible_dropzone';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
@@ -13,7 +12,6 @@ export class AttachmentBox extends Component {
      */
     setup() {
         super.setup();
-        this.isDropZoneVisible = useDragVisibleDropZone();
         useComponentToModel({ fieldName: 'component', modelName: 'AttachmentBoxView' });
         this._onDropZoneFilesDropped = this._onDropZoneFilesDropped.bind(this);
     }
@@ -40,7 +38,7 @@ export class AttachmentBox extends Component {
      */
     async _onDropZoneFilesDropped(detail) {
         await this.attachmentBoxView.fileUploader.uploadFiles(detail.files);
-        this.isDropZoneVisible.value = false;
+        this.attachmentBoxView.useDragVisibleDropZone.update({ isVisible: false });
     }
 
 }

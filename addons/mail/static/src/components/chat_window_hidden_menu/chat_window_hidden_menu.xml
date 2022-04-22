@@ -10,12 +10,13 @@
                 </div>
             </div>
             <ul class="o_ChatWindowHiddenMenu_list dropdown-menu dropdown-menu-right m-0 p-0 overflow-auto" t-att-class="{ show: messaging.chatWindowManager.isHiddenMenuOpen }" role="menu" t-ref="list">
-                <t t-foreach="messaging.chatWindowManager.allOrderedHidden" t-as="chatWindow" t-key="chatWindow.localId">
-                    <li class="o_ChatWindowHiddenMenu_listItem" t-att-class="{ 'border-bottom' : !chatWindow_last }" role="menuitem">
+                <t t-foreach="messaging.chatWindowManager.hiddenChatWindowHeaderViews" t-as="chatWindowHeaderView" t-key="chatWindowHeaderView.localId">
+                    <li class="o_ChatWindowHiddenMenu_listItem" t-att-class="{ 'border-bottom' : !chatWindowHeaderView_last }" role="menuitem">
                         <ChatWindowHeader
                             className="'o_ChatWindowHiddenMenu_chatWindowHeader opacity-100-hover'"
-                            chatWindowLocalId="chatWindow.localId"
-                            onClicked="chatWindow.onClickFromChatWindowHiddenMenu"
+                            chatWindowLocalId="chatWindowHeaderView.chatWindowOwner.localId"
+                            localId="chatWindowHeaderView.localId"
+                            onClicked="chatWindowHeaderView.chatWindowOwner.onClickFromChatWindowHiddenMenu"
                         />
                     </li>
                 </t>

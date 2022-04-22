@@ -17,18 +17,6 @@ export class Follower extends Component {
         return this.messaging && this.messaging.models['Follower'].get(this.props.followerLocalId);
     }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickRemove(ev) {
-        this.follower.remove();
-    }
-
 }
 
 Object.assign(Follower, {

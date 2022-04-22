@@ -42,6 +42,24 @@ registerModel({
             }
             this.chatterOwner.thread.unfollow();
         },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onMouseEnterUnfollow(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            this.update({ isUnfollowButtonHighlighted: true });
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onMouseleaveUnfollow(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            this.update({ isUnfollowButtonHighlighted: false });
+        },
     },
     fields: {
         chatterOwner: one('Chatter', {

@@ -17,9 +17,10 @@
                 t-on-keydown="composerView.onKeydown"
                 t-ref="root"
             >
-                <t t-if="isDropZoneVisible.value">
+                <t t-if="composerView.dropZoneView">
                     <DropZone
                         className="'o_Composer_dropZone'"
+                        localId="composerView.dropZoneView.localId"
                         onDropzoneFilesDropped="_onDropZoneFilesDropped"
                     />
                 </t>
@@ -48,7 +49,7 @@
                                     </t>
                                 </b>
                             </small>
-                            <ComposerSuggestedRecipientList localId="composerView.composerSuggestedRecipientListView.localId" threadLocalId="composerView.composer.activeThread.localId"/>
+                            <ComposerSuggestedRecipientList localId="composerView.composerSuggestedRecipientListView.localId"/>
                         </t>
                     </div>
                 </t>

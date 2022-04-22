@@ -20,12 +20,8 @@ export class ComposerSuggestionList extends Component {
 }
 
 Object.assign(ComposerSuggestionList, {
-    defaultProps: {
-        isBelow: false,
-    },
     props: {
         composerViewLocalId: String,
-        isBelow: { type: Boolean, optional: true },
     },
     template: 'mail.ComposerSuggestionList',
 });

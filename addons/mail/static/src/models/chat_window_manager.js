@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
 
 const BASE_VISUAL = {
     /**
@@ -247,6 +247,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeHiddenChatWindowHeaderViews() {
+            if (this.allOrderedHidden.length > 0) {
+                return insertAndReplace(this.allOrderedHidden.map(chatWindow => ({ chatWindowOwner: replace(chatWindow) })));
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {ChatWindow|undefined}
          */
         _computeLastVisible() {
@@ -359,6 +369,9 @@ registerModel({
         }),
         hasVisibleChatWindows: attr({
             compute: '_computeHasVisibleChatWindows',
+        }),
+        hiddenChatWindowHeaderViews: many('ChatWindowHeaderView', {
+            compute: '_computeHiddenChatWindowHeaderViews',
         }),
         isHiddenMenuOpen: attr({
             default: false,

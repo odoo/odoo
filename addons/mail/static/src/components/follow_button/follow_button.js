@@ -17,32 +17,6 @@ export class FollowButton extends Component {
         return this.messaging && this.messaging.models['FollowButtonView'].get(this.props.localId);
     }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onMouseLeaveUnfollow(ev) {
-        if (!this.followButtonView) {
-            return;
-        }
-        this.followButtonView.update({ isUnfollowButtonHighlighted: false });
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onMouseEnterUnfollow(ev) {
-        if (!this.followButtonView) {
-            return;
-        }
-        this.followButtonView.update({ isUnfollowButtonHighlighted: true });
-    }
-
 }
 
 Object.assign(FollowButton, {

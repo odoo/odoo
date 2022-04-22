@@ -17,34 +17,10 @@ export class ComposerSuggestedRecipientList extends Component {
         return this.messaging && this.messaging.models['ComposerSuggestedRecipientListView'].get(this.props.localId);
     }
 
-    /**
-     * @returns {Thread}
-     */
-    get thread() {
-        return this.messaging && this.messaging.models['Thread'].get(this.props.threadLocalId);
-    }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onClickShowMore(ev) {
-        if (!this.composerSuggestedRecipientListView) {
-            return;
-        }
-        this.composerSuggestedRecipientListView.update({ hasShowMoreButton: true });
-    }
-
 }
 
 Object.assign(ComposerSuggestedRecipientList, {
-    props: {
-        localId: String,
-        threadLocalId: String,
-    },
+    props: { localId: String },
     template: 'mail.ComposerSuggestedRecipientList',
 });
 
