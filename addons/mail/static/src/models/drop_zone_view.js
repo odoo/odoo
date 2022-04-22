@@ -2,10 +2,27 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
+import { decrement } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'DropZoneView',
     identifyingFields: [['attachmentBoxViewOwner', 'composerViewOwner']],
+    recordMethods: {
+        /**
+         * Hides the visual drop effect when dragging outside the dropzone.
+         *
+         * @param {DragEvent} ev
+         */
+        onDragleave(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            this.update({ dragCount: decrement() });
+            if (this.dragCount === 0) {
+                this.update({ isDraggingInside: false });
+            }
+        },
+    },
     fields: {
         attachmentBoxViewOwner: one('AttachmentBoxView', {
             inverse: 'dropZoneView',
