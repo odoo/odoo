@@ -344,8 +344,9 @@ class IrAttachment(models.Model):
                 'xml' in mimetype and    # other xml (svg, text/xml, etc)
                 not 'openxmlformats' in mimetype)  # exception for Office formats
         user = self.env.context.get('binary_field_real_user', self.env.user)
-        force_text = (xml_like and (not user._is_system() or
-            self.env.context.get('attachments_mime_plainxml')))
+        force_text = xml_like and (
+            self.env.context.get('attachments_mime_plainxml') or
+            not self.env['ir.ui.view'].with_user(user).check_access_rights('write', False))
         if force_text:
             values['mimetype'] = 'text/plain'
         if not self.env.context.get('image_no_postprocess'):

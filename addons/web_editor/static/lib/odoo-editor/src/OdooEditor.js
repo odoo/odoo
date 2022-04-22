@@ -79,7 +79,7 @@ const CLIPBOARD_BLACKLISTS = {
     unwrap: ['.Apple-interchange-newline', 'DIV'], // These elements' children will be unwrapped.
     remove: ['META', 'STYLE', 'SCRIPT'], // These elements will be removed along with their children.
 };
-const CLIPBOARD_WHITELISTS = {
+export const CLIPBOARD_WHITELISTS = {
     nodes: [
         // Style
         'P',
@@ -103,6 +103,7 @@ const CLIPBOARD_WHITELISTS = {
         'STRONG',
         // Table
         'TABLE',
+        'THEAD',
         'TH',
         'TBODY',
         'TR',
@@ -137,6 +138,15 @@ const CLIPBOARD_WHITELISTS = {
         /^fa/,
     ],
     attributes: ['class', 'href', 'src'],
+    spanStyle: {
+        'text-decoration': { defaultValues: ['', 'none'] },
+        'font-weight': { defaultValues: ['', '400'] },
+        'background-color': { defaultValues: ['', '#fff', '#ffffff', 'rgb(255, 255, 255)', 'rgba(255, 255, 255, 1)'] },
+        'color': { defaultValues: ['', '#000', '#000000', 'rgb(0, 0, 0)', 'rgba(0, 0, 0, 1)'] },
+        'font-style': { defaultValues: ['', 'none', 'normal'] },
+        'text-decoration-line': { defaultValues: ['', 'none'] },
+        'font-size': { defaultValues: ['', '16px'] },
+    }
 };
 
 function defaultOptions(defaultObject, object) {
@@ -169,7 +179,7 @@ function getImageUrl (file) {
                 return reject(reader.error);
             }
             resolve(e.target.result);
-        }
+        };
     });
 }
 export class OdooEditor extends EventTarget {
@@ -194,6 +204,7 @@ export class OdooEditor extends EventTarget {
                         return closestElement(selection.anchorNode, 'P, DIV');
                     }
                 },
+                onChange: () => {},
                 isHintBlacklisted: () => false,
                 filterMutationRecords: (records) => records,
                 _t: string => string,
@@ -709,6 +720,7 @@ export class OdooEditor extends EventTarget {
         this._checkStepUnbreakable = true;
         this._recordHistorySelection();
         this.dispatchEvent(new Event('historyStep'));
+        this.options.onChange();
         this.multiselectionRefresh();
     }
     // apply changes according to some records
@@ -1309,7 +1321,9 @@ export class OdooEditor extends EventTarget {
         let start = range.startContainer;
         let end = range.endContainer;
         // Let the DOM split and delete the range.
-        const doJoin = closestBlock(start) !== closestBlock(range.commonAncestorContainer);
+        const doJoin =
+            closestBlock(start) !== closestBlock(range.commonAncestorContainer) ||
+            closestBlock(end) !== closestBlock(range.commonAncestorContainer) ;
         let next = nextLeaf(end, this.editable);
         const splitEndTd = closestElement(end, 'td') && end.nextSibling;
         const contents = range.extractContents();
@@ -2100,7 +2114,7 @@ export class OdooEditor extends EventTarget {
 
         for (const tableElement of container.querySelectorAll('table')) {
             tableElement.classList.add('table', 'table-bordered');
-        };
+        }
 
         for (const child of [...container.childNodes]) {
             this._cleanForPaste(child);
@@ -2128,9 +2142,26 @@ export class OdooEditor extends EventTarget {
             // Remove all illegal attributes and classes from the node, then
             // clean its children.
             for (const attribute of [...node.attributes]) {
-                if (!this._isWhitelisted(attribute)) {
+                // we kee some style on span to be able to paste text styled in the editor
+                if (node.nodeName === 'SPAN' && attribute.name === 'style') {
+                    const spanInlineStyles = attribute.value.split(';');
+                    const allowedSpanInlineStyles = spanInlineStyles.filter(rawStyle => {
+                        const [styleName, styleValue] = rawStyle.split(':');
+                        const style = CLIPBOARD_WHITELISTS.spanStyle[styleName.trim()];
+                        return style && !style.defaultValues.includes(styleValue.trim());
+                    });
+                    node.removeAttribute(attribute.name);
+                    if (allowedSpanInlineStyles.length > 0) {
+                        node.setAttribute(attribute.name, allowedSpanInlineStyles.join(';'));
+                    } else {
+                        for (const unwrappedNode of unwrapContents(node)) {
+                            this._cleanForPaste(unwrappedNode);
+                        }
+                    }
+                } else if (!this._isWhitelisted(attribute)) {
                     node.removeAttribute(attribute.name);
                 }
+
             }
             for (const klass of [...node.classList]) {
                 if (!this._isWhitelisted(klass)) {
@@ -2158,9 +2189,13 @@ export class OdooEditor extends EventTarget {
                 okClass instanceof RegExp ? okClass.test(item) : okClass === item,
             );
         } else {
+            const allowedSpanStyles = Object.keys(CLIPBOARD_WHITELISTS.spanStyle).map(s => `span[style*="${s}"]`);
             return (
                 item.nodeType === Node.TEXT_NODE ||
-                (item.matches && item.matches(CLIPBOARD_WHITELISTS.nodes.join(',')))
+                (
+                    item.matches &&
+                    item.matches([...CLIPBOARD_WHITELISTS.nodes, ...allowedSpanStyles].join(','))
+                )
             );
         }
     }
@@ -2737,14 +2772,13 @@ export class OdooEditor extends EventTarget {
         // editable zones.
         const link = closestElement(ev.target, 'a');
         this.resetContenteditableLink();
+        this._activateContenteditable();
         if (
             link && link.isContentEditable &&
             !link.querySelector('div') &&
             !closestElement(ev.target, '.o_not_editable')
         ) {
             this.setContenteditableLink(link);
-        } else {
-            this._activateContenteditable();
         }
         // Ignore any changes that might have happened before this point.
         this.observer.takeRecords();
@@ -2896,6 +2930,7 @@ export class OdooEditor extends EventTarget {
      */
     _onPaste(ev) {
         ev.preventDefault();
+        const sel = this.document.getSelection();
         const files = getImageFiles(ev.clipboardData);
         const clipboardHtml = ev.clipboardData.getData('text/html');
         if (files.length) {
@@ -2906,15 +2941,18 @@ export class OdooEditor extends EventTarget {
             const text = ev.clipboardData.getData('text/plain');
             const splitAroundUrl = text.split(URL_REGEX);
             const linkAttributes = this.options.defaultLinkAttributes || {};
+            const selectionIsInsideALink = !!closestElement(sel.anchorNode, 'a');
 
             for (let i = 0; i < splitAroundUrl.length; i++) {
+                const url = /^https?:\/\//gi.test(splitAroundUrl[i])
+                    ? splitAroundUrl[i]
+                    : 'https://' + splitAroundUrl[i];
+                const youtubeUrl = YOUTUBE_URL_GET_VIDEO_ID.exec(url);
+                const urlFileExtention = url.split('.').pop();
+                const isImageUrl = ['jpg', 'jpeg', 'png', 'gif'].includes(urlFileExtention.toLowerCase());
                 // Even indexes will always be plain text, and odd indexes will always be URL.
-                if (i % 2) {
-                    const url = /^https?:\/\//gi.test(splitAroundUrl[i])
-                        ? splitAroundUrl[i]
-                        : 'https://' + splitAroundUrl[i];
-                    const youtubeUrl = YOUTUBE_URL_GET_VIDEO_ID.exec(url);
-                    const urlFileExtention = url.split('.').pop();
+                // only allow images emebed inside an existing link. No other url or video embed.
+                if (i % 2 && (isImageUrl || !selectionIsInsideALink)) {
                     const baseEmbedCommand = [
                         {
                             groupName: 'paste',
@@ -2930,6 +2968,9 @@ export class OdooEditor extends EventTarget {
                                 }
                                 link.innerText = splitAroundUrl[i];
                                 const sel = this.document.getSelection();
+                                if (!sel.isCollapsed) {
+                                    this.deleteRange(sel);
+                                }
                                 if (sel.rangeCount) {
                                     sel.getRangeAt(0).insertNode(link);
                                     sel.collapseToEnd();
@@ -2953,9 +2994,9 @@ export class OdooEditor extends EventTarget {
                         callback();
 
                         this.historyStep(true);
-                    }
+                    };
 
-                    if (['jpg', 'jpeg', 'png', 'gif'].includes(urlFileExtention)) {
+                    if (isImageUrl) {
                         const stepIndexBeforeInsert = this._historySteps.length - 1;
                         this.execCommand('insertText', splitAroundUrl[i]);
                         this.commandBar.open({
@@ -2971,6 +3012,9 @@ export class OdooEditor extends EventTarget {
                                             const img = document.createElement('IMG');
                                             img.setAttribute('src', url);
                                             const sel = this.document.getSelection();
+                                            if (!sel.isCollapsed) {
+                                                this.deleteRange(sel);
+                                            }
                                             if (sel.rangeCount) {
                                                 sel.getRangeAt(0).insertNode(img);
                                                 sel.collapseToEnd();
@@ -3013,6 +3057,9 @@ export class OdooEditor extends EventTarget {
                                                 videoElement.setAttribute('allowfullscreen', '1');
                                             }
                                             const sel = this.document.getSelection();
+                                            if (!sel.isCollapsed) {
+                                                this.deleteRange(sel);
+                                            }
                                             if (sel.rangeCount) {
                                                 sel.getRangeAt(0).insertNode(videoElement);
                                                 sel.collapseToEnd();
@@ -3030,6 +3077,9 @@ export class OdooEditor extends EventTarget {
                         }
                         link.innerText = splitAroundUrl[i];
                         const sel = this.document.getSelection();
+                        if (!sel.isCollapsed) {
+                            this.deleteRange(sel);
+                        }
                         if (sel.rangeCount) {
                             sel.getRangeAt(0).insertNode(link);
                             sel.collapseToEnd();

@@ -158,6 +158,7 @@ const Wysiwyg = Widget.extend({
                 });
             },
             commands: commands,
+            onChange: options.onChange,
             plugins: options.editorPlugins,
         }, editorCollaborationOptions));
 
@@ -1674,8 +1675,8 @@ const Wysiwyg = Widget.extend({
     _editorOptions: function () {
         var self = this;
         var options = Object.assign({}, this.defaultOptions, this.options);
-        options.onChange = function (html, $editable) {
-            $editable.trigger('content_changed');
+        options.onChange = function () {
+            self.$editable.trigger('content_changed');
             self.trigger_up('wysiwyg_change');
         };
         options.onUpload = function (attachments) {

@@ -41,12 +41,14 @@ msgid ""
 "%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 msgstr ""
+"%(base)s con un %(discount)s %% de descuento y %(surcharge)s tarifa extra\n"
+"Ejemplo: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "%(percentage)s %% discount and %(price)s surcharge"
-msgstr ""
+msgstr "%(percentage)s %% de descuento y %(price)s de recargo"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -65,6 +67,8 @@ msgstr "%s (copia)"
 #, python-format
 msgid "%s : end date (%s) should be greater than start date (%s)"
 msgstr ""
+"%s : la fecha de finalización (%s) debe ser mayor que la fecha de inicio "
+"(%s)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_template_label
@@ -153,6 +157,12 @@ msgid ""
 "                                        Extra Price\n"
 "                                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('pricelist_item_count', '=', 1)]}\">\n"
+"                                        Precios extra\n"
+"                                    </span>\n"
+"                                    <span attrs=\"{'invisible': [('pricelist_item_count', '!=', 1)]}\">\n"
+"                                        Precio extra\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -382,6 +392,8 @@ msgid ""
 "At most %d quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
 msgstr ""
+"A lo mucho se pueden mostrar %d cantidades simultáneamente. Quite una de las"
+" cantidades seleccionadas para agregar otras."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
@@ -1026,6 +1038,8 @@ msgid ""
 "Ending datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
+"Fecha y hora límite para la validación de la lista de precios \n"
+"El valor que se muestra depende del uso horario que está indicado en sus preferencias."
 
 #. module: product
 #: model_terms:product.product,website_description:product.product_product_4
@@ -1346,6 +1360,10 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"En Standard Price & AVCO: valor del producto (calculado automáticamente en AVCO).\n"
+"En FIFO: valor de la última unidad que salió del inventario (calculado automáticamente).\n"
+"Se utiliza para valorar el producto cuando se desconoce el coste de compra (por ejemplo, ajuste de inventario).\n"
+"Se utiliza para calcular los márgenes de las órdenes de venta."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
@@ -1856,6 +1874,8 @@ msgid ""
 "Press a button and watch your desk glide effortlessly from sitting to "
 "standing height in seconds."
 msgstr ""
+"Con este escritorio puede trabajar tanto sentado como de pie, se ajusta "
+"rápidamente con solo presionar un botón."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
@@ -2305,6 +2325,8 @@ msgid ""
 "Register the prices requested by your vendors for each product, based on the"
 " quantity and the period."
 msgstr ""
+"Registre los precios que pidieron sus proveedores para cada producto de "
+"acuerdo con la cantidad y el periodo."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2504,6 +2526,9 @@ msgid ""
 "Starting datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
+"Fecha y hora de inicio de la validación de la lista de precios\n"
+"\n"
+"El valor que se muestra depende del uso horario que está indicando en sus preferencias."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__activity_state
@@ -2665,6 +2690,13 @@ msgstr ""
 "combinación."
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "The product variant must be a variant of the product template."
+msgstr ""
+"La variante del producto debe ser una variante del modelo de producto."
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
 msgid ""
 "The quantity to purchase from this vendor to benefit from the price, "
@@ -2722,6 +2754,9 @@ msgid ""
 "to no possible variant. Please archive or delete your product directly if "
 "intended."
 msgstr ""
+"Esta configuración de atributos, valores y exclusiones del producto no "
+"resultará en una variante posible. Bórrela o borre su producto directamente "
+"si así lo desea."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
@@ -2756,6 +2791,9 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please set a precision between %s and 1."
 msgstr ""
+"La precisión de redondeo es más alta que la precisión decimal (%s dígitos).\n"
+"Esto puede hacer que los cálculos no sean consistentes.\n"
+"Indique una precisión entre %s y 1."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -3286,6 +3324,10 @@ msgid ""
 ", they are used in other pricelist(s):\n"
 "%s"
 msgstr ""
+"No puede borrar esa lista de precios:\n"
+" (%s)\n"
+"ya que se usa en otra(s) lista(s) de precio(s):\n"
+"%s"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -3301,6 +3343,7 @@ msgid ""
 "You cannot disable a pricelist rule, please delete it or archive its "
 "pricelist instead."
 msgstr ""
+"No puede desactivar la regla de lista de precios, bórrela o archívela."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -3353,7 +3396,7 @@ msgstr ""
 #: code:addons/product/wizard/product_label_layout.py:0
 #, python-format
 msgid "You need to set a positive quantity."
-msgstr ""
+msgstr "Necesita ingresar una cantidad positiva"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -3364,7 +3407,7 @@ msgstr "días"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "e.g. Cheese Burger"
-msgstr ""
+msgstr "p. ej. Hamburguesa de queso"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view

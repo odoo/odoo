@@ -6516,7 +6516,7 @@ msgstr "如果為空，用預留分錄的日記帳核銷."
 msgid ""
 "If set, taxes with a higher sequence than this one will be affected by it, "
 "provided they accept it."
-msgstr "如果設定，比這個順序更高的稅將受到它的影響，只要他們接受它."
+msgstr "如果設定，比這個序號更高的稅將受到它的影響，只要他們接受它."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__is_base_affected
@@ -6524,7 +6524,7 @@ msgstr "如果設定，比這個順序更高的稅將受到它的影響，只要
 msgid ""
 "If set, taxes with a lower sequence might affect this one, provided they try"
 " to do it."
-msgstr "如果設定，如果嘗試這樣做，那麼順序較低的稅金可能會影響這一點."
+msgstr "如果設定，如果嘗試這樣做，那麼序號較低的稅金可能會影響這一點."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__analytic
@@ -13242,6 +13242,18 @@ msgstr ""
 "- 新的: 完全可編輯與草稿日記帳分錄.\n"
 "- 處理: 不再可編輯已過帳的日記帳分錄，準備對帳.\n"
 "- 驗證: 所有行都已對帳. 沒有什麼需要處理的了."
+
+#. module: account
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid "The date of some related entries is protected by a lock date"
+msgstr ""
+
+#. module: account
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid "The date selected is protected by a lock date"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
