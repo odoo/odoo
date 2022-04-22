@@ -805,6 +805,16 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
+        _computeComposerSuggestedRecipientListView() {
+            if (this.hasHeader && this.hasFollowers && !this.composer.isLog) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
         _computeComposer() {
             if (this.threadView) {
                 // When replying to a message, always use the composer from that message's thread
@@ -1414,6 +1424,11 @@ registerModel({
             compute: '_computeComposer',
             inverse: 'composerViews',
             required: true,
+        }),
+        composerSuggestedRecipientListView: one('ComposerSuggestedRecipientListView', {
+            compute: '_computeComposerSuggestedRecipientListView',
+            inverse: 'composerViewOwner',
+            isCausal: true,
         }),
         /**
          * Current partner image URL.

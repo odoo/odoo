@@ -326,6 +326,16 @@ registerModel({
             }
         },
         /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeChannelMemberListView() {
+            if (this.thread && this.thread.hasMemberListFeature && this.isMemberListOpened) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
+        /**
           * @private
           * @returns {string}
           */
@@ -584,6 +594,11 @@ registerModel({
          */
         channelInvitationForm: one('ChannelInvitationForm', {
             inverse: 'chatWindow',
+            isCausal: true,
+        }),
+        channelMemberListView: one('ChannelMemberListView', {
+            compute: '_computeChannelMemberListView',
+            inverse: 'chatWindowOwner',
             isCausal: true,
         }),
         componentStyle: attr({
