@@ -9,7 +9,7 @@ RELEASE_LEVELS_DISPLAY = {ALPHA: ALPHA,
 
 # version_info format: (MAJOR, MINOR, MICRO, RELEASE_LEVEL, SERIAL)
 # inspired by Python's own sys.version_info, in order to be
-# properly comparable using normal operarors, for example:
+# properly comparable using normal operators, for example:
 #  (6,1,0,'beta',0) < (6,1,0,'candidate',1) < (6,1,0,'candidate',2)
 #  (6,1,0,'candidate',2) < (6,1,0,'final',0) < (6,1,2,'final',0)
 version_info = (15, 4, 0, ALPHA, 1, '')
