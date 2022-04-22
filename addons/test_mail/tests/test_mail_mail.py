@@ -2,17 +2,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import psycopg2
+import pytz
 import smtplib
 
+from datetime import datetime, timedelta
+from freezegun import freeze_time
 from OpenSSL.SSL import Error as SSLError
 from socket import gaierror, timeout
 from unittest.mock import call
 
-from odoo import api
+from odoo import api, tools
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tests import common, tagged
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, DEFAULT_SERVER_DATETIME_FORMAT
 
 
 @tagged('mail_mail')
@@ -106,6 +109,57 @@ class TestMailMail(TestMailCommon):
         with self.mock_mail_gateway():
             mail.send()
         self.assertEqual(self._mails[0]['headers']['Return-Path'], '%s@%s' % (self.alias_bounce, self.alias_domain))
+
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
+    def test_mail_mail_schedule(self):
+        """Test that a mail scheduled in the past/future are sent or not"""
+        now = datetime(2022, 6, 28, 14, 0, 0)
+        scheduled_datetimes = [
+            # falsy values
+            False, '', 'This is not a date format',
+            # datetimes (UTC/GMT +10 hours for Australia/Brisbane)
+            now, pytz.timezone('Australia/Brisbane').localize(now),
+            # string
+            (now - timedelta(days=1)).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            (now + timedelta(days=1)).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            (now + timedelta(days=1)).strftime("%H:%M:%S %d-%m-%Y"),
+            # tz: is actually 1 hour before now in UTC
+            (now + timedelta(hours=3)).strftime("%H:%M:%S %d-%m-%Y") + " +0400",
+            # tz: is actually 1 hour after now in UTC
+            (now + timedelta(hours=-3)).strftime("%H:%M:%S %d-%m-%Y") + " -0400",
+        ]
+        expected_datetimes = [
+            False, '', False,
+            now, now - pytz.timezone('Australia/Brisbane').utcoffset(now),
+            now - timedelta(days=1), now + timedelta(days=1), now + timedelta(days=1),
+            now + timedelta(hours=-1),
+            now + timedelta(hours=1),
+        ]
+        expected_states = [
+            # falsy values = send now
+            'sent', 'sent', 'sent',
+            'sent', 'sent',
+            'sent', 'outgoing', 'outgoing',
+            'sent', 'outgoing'
+        ]
+
+        mails = self.env['mail.mail'].create([
+            {'body_html': '<p>Test</p>',
+             'email_to': 'test@example.com',
+             'scheduled_date': scheduled_datetime,
+            } for scheduled_datetime in scheduled_datetimes
+        ])
+
+        for mail, expected_datetime, scheduled_datetime in zip(mails, expected_datetimes, scheduled_datetimes):
+            expected = expected_datetime.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT) if expected_datetime else expected_datetime
+            self.assertEqual(mail.scheduled_date, expected,
+                             'Scheduled date: %s should be stored as %s, received %s' % (scheduled_datetime, expected, mail.scheduled_date))
+            self.assertEqual(mail.state, 'outgoing')
+
+        with freeze_time(now):
+            self.env['mail.mail'].process_email_queue()
+            for mail, expected_state in zip(mails, expected_states):
+                self.assertEqual(mail.state, expected_state)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_mail_send_exceptions_origin(self):
