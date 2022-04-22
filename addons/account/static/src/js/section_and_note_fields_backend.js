@@ -25,6 +25,10 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
         var isSection = record.data.display_type === 'line_section';
         var isNote = record.data.display_type === 'line_note';
 
+        if (node.attrs.name === "name") {
+            $cell.attr("title", record.data.name);
+        }
+
         if (isSection || isNote) {
             if (node.attrs.widget === "handle") {
                 return $cell;
