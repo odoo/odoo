@@ -5153,11 +5153,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await click($(".modal-footer button:eq(1)")[0]);
-        await editInput(
-            target,
-            '.modal .o_field_widget[name="turtle_foo"] input',
-            "tototo"
-        );
+        await editInput(target, '.modal .o_field_widget[name="turtle_foo"] input', "tototo");
         await editInput(target, '.modal .o_field_widget[name="turtle_int"] input', 50);
         await clickOpenM2ODropdown(target, "product_id");
         await clickM2OHighlightedItem(target, "product_id");
@@ -11689,138 +11685,109 @@ QUnit.module("Fields", (hooks) => {
         ]);
     });
 
-    QUnit.skipWOWL(
-        "onchange on unloaded record clearing posterious change",
-        async function (assert) {
-            // when we got onchange result for fields of record that were not
-            // already available because they were in a inline view not already
-            // opened, in a given configuration the change were applied ignoring
-            // posteriously changed data, thus an added/removed/modified line could
-            // be reset to the original onchange data
-            assert.expect(5);
+    QUnit.test("onchange on unloaded record clearing posterious change", async function (assert) {
+        // when we got onchange result for fields of record that were not
+        // already available because they were in a inline view not already
+        // opened, in a given configuration the change were applied ignoring
+        // posteriously changed data, thus an added/removed/modified line could
+        // be reset to the original onchange data
+        assert.expect(5);
 
-            var numUserOnchange = 0;
+        let numUserOnchange = 0;
 
-            serverData.models.user.onchanges = {
-                partner_ids: function (obj) {
-                    // simulate actual server onchange after save of modal with new record
-                    if (numUserOnchange === 0) {
-                        obj.partner_ids = _.clone(obj.partner_ids);
-                        obj.partner_ids.unshift([5]);
-                        obj.partner_ids[1][2].turtles.unshift([5]);
-                        obj.partner_ids[2] = [
-                            1,
-                            2,
-                            {
-                                display_name: "second record",
-                                trululu: 1,
-                                turtles: [[5]],
-                            },
-                        ];
-                    } else if (numUserOnchange === 1) {
-                        obj.partner_ids = _.clone(obj.partner_ids);
-                        obj.partner_ids.unshift([5]);
-                        obj.partner_ids[1][2].turtles.unshift([5]);
-                        obj.partner_ids[2][2].turtles.unshift([5]);
-                    }
-                    numUserOnchange++;
-                },
-            };
+        serverData.models.user.onchanges = {
+            partner_ids: function (obj) {
+                // simulate actual server onchange after save of modal with new record
+                if (numUserOnchange === 0) {
+                    obj.partner_ids = _.clone(obj.partner_ids);
+                    obj.partner_ids.unshift([5]);
+                    obj.partner_ids[1][2].turtles.unshift([5]);
+                    obj.partner_ids[2] = [
+                        1,
+                        2,
+                        {
+                            display_name: "second record",
+                            trululu: 1,
+                            turtles: [[5]],
+                        },
+                    ];
+                } else if (numUserOnchange === 1) {
+                    obj.partner_ids = _.clone(obj.partner_ids);
+                    obj.partner_ids.unshift([5]);
+                    obj.partner_ids[1][2].turtles.unshift([5]);
+                    obj.partner_ids[2][2].turtles.unshift([5]);
+                }
+                numUserOnchange++;
+            },
+        };
 
-            const form = await makeView({
-                type: "form",
-                model: "user",
-                serverData,
-                arch: `
-                    <form>
-                        <sheet>
-                            <group>
-                                <field name="partner_ids">
-                                    <form>
-                                        <field name="trululu"/>
-                                        <field name="turtles">
-                                            <tree editable="bottom">
-                                                <field name="display_name"/>
-                                            </tree>
-                                        </field>
-                                    </form>
-                                    <tree>
-                                        <field name="display_name"/>
-                                    </tree>
-                                </field>
-                            </group>
-                        </sheet>
-                    </form>`,
-                resId: 17,
-            });
+        await makeView({
+            type: "form",
+            resModel: "user",
+            serverData,
+            arch: `
+                <form>
+                    <field name="partner_ids">
+                        <form>
+                            <field name="trululu"/>
+                            <field name="turtles">
+                                <tree editable="bottom">
+                                    <field name="display_name"/>
+                                </tree>
+                            </field>
+                        </form>
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 17,
+        });
 
-            // open first partner and change turtle name
-            await clickEdit(target);
-            await click(form.$(".o_data_row:eq(0)"));
-            await click($(".modal .o_data_cell:eq(0)"));
-            await testUtils.fields.editAndTrigger(
-                $('.modal input[name="display_name"]'),
-                "Donatello",
-                "change"
-            );
-            await click($(".modal .btn-primary"));
+        // open first partner and change turtle name
+        await clickEdit(target);
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        await click(target.querySelector(".modal .o_data_row .o_data_cell"));
+        await editInput(target, ".modal .o_field_widget[name=display_name] input", "Donatello");
+        await click(target.querySelector(".modal .btn-primary"));
 
-            await click(form.$(".o_data_row:eq(1)"));
-            await click($(".modal .o_field_x2many_list_row_add a"));
-            await testUtils.fields.editAndTrigger(
-                $('.modal input[name="display_name"]'),
-                "Michelangelo",
-                "change"
-            );
-            await click($(".modal .btn-primary"));
+        await click(target.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell"));
+        await addRow(target.querySelector(".modal"));
+        await editInput(target, ".modal .o_field_widget[name=display_name] input", "Michelangelo");
+        await click(target.querySelector(".modal .btn-primary"));
 
-            assert.strictEqual(
-                numUserOnchange,
-                2,
-                "there should 2 and only 2 onchange from closing the partner modal"
-            );
+        assert.strictEqual(
+            numUserOnchange,
+            2,
+            "there should 2 and only 2 onchange from closing the partner modal"
+        );
 
-            // check first record still has change
-            await click(form.$(".o_data_row:eq(0)"));
-            assert.strictEqual(
-                $(".modal .o_data_row").length,
-                1,
-                "only 1 turtle for first partner"
-            );
-            assert.strictEqual(
-                $(".modal .o_data_row").text(),
-                "Donatello",
-                "first partner turtle is Donatello"
-            );
-            await clickDiscard(target.querySelector(".modal"));
+        // check first record still has change
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.containsOnce(target, ".modal .o_data_row", "only 1 turtle for first partner");
+        assert.strictEqual(
+            target.querySelector(".modal .o_data_cell").innerText,
+            "Donatello",
+            "first partner turtle is Donatello"
+        );
+        await clickDiscard(target.querySelector(".modal"));
 
-            // check second record still has changes
-            await click(form.$(".o_data_row:eq(1)"));
-            assert.strictEqual(
-                $(".modal .o_data_row").length,
-                1,
-                "only 1 turtle for second partner"
-            );
-            assert.strictEqual(
-                $(".modal .o_data_row").text(),
-                "Michelangelo",
-                "second partner turtle is Michelangelo"
-            );
-            await clickDiscard(target.querySelector(".modal"));
-        }
-    );
+        // check second record still has changes
+        await click(target.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell"));
+        assert.containsOnce(target, ".modal .o_data_row", "only 1 turtle for second partner");
+        assert.strictEqual(
+            target.querySelector(".modal .o_data_cell").innerText,
+            "Michelangelo",
+            "second partner turtle is Michelangelo"
+        );
+        await clickDiscard(target.querySelector(".modal"));
+    });
 
-    QUnit.skipWOWL("quickly switch between pages in one2many list", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("quickly switch between pages in one2many list", async function (assert) {
         serverData.models.partner.records[0].turtles = [1, 2, 3];
 
-        var readDefs = [
-            Promise.resolve(),
-            testUtils.makeTestPromise(),
-            testUtils.makeTestPromise(),
-        ];
-        const form = await makeView({
+        const readDefs = [Promise.resolve(), makeDeferred(), Promise.resolve()];
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -11832,31 +11799,27 @@ QUnit.module("Fields", (hooks) => {
                         </tree>
                     </field>
                 </form>`,
-            mockRPC(route, args) {
-                var result = this._super.apply(this, arguments);
+            async mockRPC(route, args) {
                 if (args.method === "read") {
-                    var recordID = args.args[0][0];
-                    return Promise.resolve(readDefs[recordID - 1]).then(_.constant(result));
+                    const recordID = args.args[0][0];
+                    await Promise.resolve(readDefs[recordID - 1]);
                 }
-                return result;
             },
             resId: 1,
         });
 
-        await click(form.$(".o_field_widget[name=turtles] .o_pager_next"));
-        await click(form.$(".o_field_widget[name=turtles] .o_pager_next"));
+        assert.strictEqual(target.querySelector(".o_data_cell").innerText, "leonardo");
+
+        await click(target.querySelector(".o_field_widget[name=turtles] .o_pager_next"));
+        await click(target.querySelector(".o_field_widget[name=turtles] .o_pager_next"));
+        assert.ok(target.querySelector(".o_field_widget[name=turtles] .o_pager_next").disabled);
 
         readDefs[1].resolve();
-        await testUtils.nextTick();
-        assert.strictEqual(
-            form.$(".o_field_widget[name=turtles] .o_data_cell").text(),
-            "donatello"
-        );
+        await nextTick();
+        assert.strictEqual(target.querySelector(".o_data_cell").innerText, "donatello");
 
-        readDefs[2].resolve();
-        await testUtils.nextTick();
-
-        assert.strictEqual(form.$(".o_field_widget[name=turtles] .o_data_cell").text(), "raphael");
+        await click(target.querySelector(".o_field_widget[name=turtles] .o_pager_next"));
+        assert.strictEqual(target.querySelector(" .o_data_cell").innerText, "raphael");
     });
 
     QUnit.test(

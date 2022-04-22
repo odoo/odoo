@@ -193,6 +193,7 @@ class DataPoint {
 
         this.__syncParent = params.__syncParent || (() => {});
         this.__viewType = params.viewType || info.viewType;
+        this.__parentViewType = params.parentViewType || null;
         const fieldsInfo = (info.fieldsInfo && info.fieldsInfo[this.__viewType]) || {};
         for (const [name, descr] of Object.entries(fieldsInfo)) {
             this.activeFields[name] = descr.__WOWL_FIELD_DESCR__ || {};
@@ -414,11 +415,19 @@ export class Record extends DataPoint {
         return this._invalidFields.has(fieldName);
     }
 
-    async load() {
+    async load(params = {}) {
         if (!this.__bm_handle__) {
-            this.__bm_handle__ = await this.model.__bm__.load({ ...this.__bm_load_params__ });
+            this.__bm_handle__ = await this.model.__bm__.load({
+                ...this.__bm_load_params__,
+                fieldNames: params.fieldNames,
+                viewType: this.__viewType,
+            });
         } else if (!this.isVirtual) {
-            await this.model.__bm__.reload(this.__bm_handle__, { viewType: this.__viewType });
+            await this.model.__bm__.reload(this.__bm_handle__, {
+                fieldNames: params.fieldNames,
+                keepChanges: params.keepChanges,
+                viewType: this.__viewType,
+            });
         } else {
             this.model.__bm__.generateDefaultValues(this.__bm_handle__, {
                 viewType: this.__viewType,
@@ -533,7 +542,9 @@ export class Record extends DataPoint {
             const data = {};
             data[fieldName] = mapWowlValueToLegacy(value, fieldType);
             changes[x2manyFieldName] = { operation: "UPDATE", id: this.__bm_handle__, data };
-            await this.model.__bm__.notifyChanges(mainRecordId, changes);
+            await this.model.__bm__.notifyChanges(mainRecordId, changes, {
+                viewType: this.__parentViewType,
+            });
             this.__syncParent();
         } else {
             const changes = {};
@@ -644,8 +655,6 @@ export class StaticList extends DataPoint {
         /** @type {Record[]} */
         this.records = [];
 
-        this.__parentViewType = params.parentViewType;
-
         // this.views = legDP.fieldsInfo;
         // this.viewMode = legDP.viewType;
 
@@ -686,6 +695,7 @@ export class StaticList extends DataPoint {
                     onRecordWillSwitchMode: this.onRecordWillSwitchMode,
                     mode: "readonly",
                     viewType: this.__viewType,
+                    parentViewType: this.__parentViewType,
                     __syncParent: this.__syncParent,
                 });
                 if (record.mode === "edit" && this.editedRecord) {
@@ -777,20 +787,15 @@ export class StaticList extends DataPoint {
     async addNew(params) {
         const legDP = this.model.__bm__.localData[this.__bm_handle__];
         const parentLegDP = this.model.__bm__.localData[legDP.parentID];
-        const parentValues = { ...parentLegDP.data, ...parentLegDP._changes };
-        // can use this.__fieldName
-        const fieldName = Object.keys(parentValues).find(
-            (name) => parentValues[name] === this.__bm_handle__
-        );
         const position = params.position;
         const changes = {};
-        changes[fieldName] = { context: [params.context], operation: "CREATE", position };
+        changes[this.__fieldName__] = { context: [params.context], operation: "CREATE", position };
         await this.model.__bm__.save(this.__bm_handle__, { savePoint: true });
         this.model.__bm__.freezeOrder(this.__bm_handle__);
         await this.model.__bm__.notifyChanges(parentLegDP.id, changes, {
             viewType: this.__parentViewType,
         });
-        this.__syncData();
+        this.__syncParent();
         if (params.mode === "edit") {
             const newRecord = this.records[position === "bottom" ? this.records.length - 1 : 0];
             await newRecord.switchMode("edit");
@@ -904,7 +909,83 @@ export class RelationalModel extends Model {
             mode: params.mode,
         });
         newRecord.canBeAbandoned = record.canBeAbandoned;
-        await newRecord.load();
+
+        // determine fieldNames to load (comes from basic_view.js)
+        const legRec = this.__bm__.get(record.__bm_handle__);
+        const viewType = params.viewMode;
+        const viewFields = Object.keys(legRec.fieldsInfo[viewType]);
+        const fieldNames = _.difference(viewFields, Object.keys(legRec.data));
+        const legFieldsInfo = legRec.fieldsInfo[viewType];
+
+        // Suppose that in a form view, there is an x2many list view with
+        // a field F, and that F is also displayed in the x2many form view.
+        // In this case, F is represented in legRec.data (as it is known by
+        // the x2many list view), but the loaded information may not suffice
+        // in the form view (e.g. if field is a many2many list in the form
+        // view, or if it is displayed by a widget requiring specialData).
+        // So when this happens, F is added to the list of fieldNames to fetch.
+        for (const name of viewFields) {
+            if (!fieldNames.includes(name)) {
+                const fieldType = legRec.fields[name].type;
+                const fieldInfo = legFieldsInfo[name];
+
+                // SpecialData case: field requires specialData that haven't
+                // been fetched yet.
+                if (fieldInfo.Widget) {
+                    const requiresSpecialData = fieldInfo.Widget.prototype.specialData;
+                    if (requiresSpecialData && !(name in legRec.specialData)) {
+                        fieldNames.push(name);
+                        continue;
+                    }
+                }
+
+                // X2Many case: field is an x2many displayed as a list or
+                // kanban view, but the related fields haven't been loaded yet.
+                if (fieldType === "one2many" || fieldType === "many2many") {
+                    if (!("fieldsInfo" in legRec.data[name])) {
+                        fieldNames.push(name);
+                    } else {
+                        const x2mFieldInfo = legRec.fieldsInfo[params.viewMode][name];
+                        const viewType = x2mFieldInfo.viewType || x2mFieldInfo.mode;
+                        const knownFields = Object.keys(
+                            legRec.data[name].fieldsInfo[legRec.data[name].viewType] || {}
+                        );
+                        const newFields = Object.keys(legRec.data[name].fieldsInfo[viewType] || {});
+                        if (newFields.filter((f) => !knownFields.includes(f)).length) {
+                            fieldNames.push(name);
+                        }
+
+                        if (legRec.data[name].viewType === "default") {
+                            // Use case: x2many (tags) in x2many list views
+                            // When opening the x2many legRec form view, the
+                            // x2many will be reloaded but it may not have
+                            // the same fields (ex: tags in list and list in
+                            // form) so we need to merge the fieldsInfo to
+                            // avoid losing the initial fields (display_name)
+                            const fieldViews = fieldInfo.views || fieldInfo.fieldsInfo || {};
+                            const defaultFieldInfo = legRec.data[name].fieldsInfo.default;
+                            _.each(fieldViews, function (fieldView) {
+                                _.each(fieldView.fieldsInfo, function (x2mFieldInfo) {
+                                    _.defaults(x2mFieldInfo, defaultFieldInfo);
+                                });
+                            });
+                        }
+                    }
+                }
+                // Many2one: context is not the same between the different views
+                // this means the result of a name_get could differ
+                if (fieldType === "many2one") {
+                    if (
+                        JSON.stringify(legRec.data[name].context) !==
+                        JSON.stringify(fieldInfo.context)
+                    ) {
+                        fieldNames.push(name);
+                    }
+                }
+            }
+        }
+
+        await newRecord.load({ fieldNames, keepChanges: true });
         return newRecord;
     }
     async addNewRecord(list, params) {
