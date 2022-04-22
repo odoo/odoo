@@ -561,8 +561,10 @@ class StockWarehouseOrderpoint(models.Model):
                     )
 
             if use_new_cursor:
-                cr.commit()
-                cr.close()
+                try:
+                    cr.commit()
+                finally:
+                    cr.close()
                 _logger.info("A batch of %d orderpoints is processed and committed", len(orderpoints_batch_ids))
 
         return {}
