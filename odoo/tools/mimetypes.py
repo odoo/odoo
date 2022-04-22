@@ -8,6 +8,7 @@ import collections
 import functools
 import io
 import logging
+import mimetypes
 import re
 import zipfile
 
@@ -197,11 +198,25 @@ def neuter_mimetype(mimetype, user):
     return mimetype
 
 def get_extension(filename):
-    """ Return the extension the current filename based on the heuristic that
-    ext is less than or equal to 10 chars and is alphanumeric.
+    # A file has no extension if it has no dot (ignoring the leading one
+    # of hidden files) or that what follow the last dot is not a single
+    # word, e.g. "Mr. Doe"
+    _stem, dot, ext = filename.lstrip('.').rpartition('.')
+    if not dot or not ext.isalnum():
+        return ''
 
-    :param str filename: filename to try and guess a extension for
-    :returns: detected extension or ``
-    """
-    ext = '.' in filename and filename.split('.')[-1]
-    return ext and len(ext) <= 10 and ext.isalnum() and '.' + ext.lower() or ''
+    # Assume all 4-chars extensions to be valid extensions even if it is
+    # not known from the mimetypes database. In /etc/mime.types, only 7%
+    # known extensions are longer.
+    if len(ext) <= 4:
+        return f'.{ext}'.lower()
+
+    # Use the mimetype database to determine the extension of the file.
+    guessed_mimetype, guessed_ext = mimetypes.guess_type(filename)
+    if guessed_ext:
+        return guessed_ext
+    if guessed_mimetype:
+        return f'.{ext}'.lower()
+
+    # Unknown extension.
+    return ''

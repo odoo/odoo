@@ -33,7 +33,7 @@ odoo.define('point_of_sale.PartnerDetailsEdit', function(require) {
             if (this.changes.image_1920) {
                 return this.changes.image_1920;
             } else if (partner.id) {
-                return `/web/image?model=res.partner&id=${partner.id}&field=avatar_128&write_date=${partner.write_date}&unique=1`;
+                return `/web/image?model=res.partner&id=${partner.id}&field=avatar_128&unique=${partner.write_date}`;
             } else {
                 return false;
             }

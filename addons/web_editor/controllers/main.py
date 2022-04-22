@@ -1,11 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import contextlib
 import io
 import json
 import logging
 import re
 import time
 import requests
+import werkzeug.exceptions
 import werkzeug.urls
 import werkzeug.wrappers
 from PIL import Image, ImageFont, ImageDraw
@@ -16,7 +17,7 @@ from odoo.http import request
 from odoo import http, tools, _, SUPERUSER_ID
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.web_editor.tools import get_video_url_data
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, MissingError
 from odoo.modules.module import get_resource_path
 from odoo.tools import file_open
 from odoo.tools.mimetypes import guess_mimetype
@@ -262,15 +263,17 @@ class Web_Editor(http.Controller):
         it can be used as a base to modify it again (crop/optimization/filters).
         """
         attachment = None
-        id_match = re.search('^/web/image/([^/?]+)', src)
-        if id_match:
-            url_segment = id_match.group(1)
-            number_match = re.match('^(\d+)', url_segment)
-            if '.' in url_segment: # xml-id
-                attachment = request.env['ir.http']._xmlid_to_obj(request.env, url_segment)
-            elif number_match: # numeric id
-                attachment = request.env['ir.attachment'].browse(int(number_match.group(1)))
-        else:
+        if src.startswith('/web/image'):
+            with contextlib.suppress(werkzeug.exceptions.NotFound, MissingError):
+                _, args = request.env['ir.http']._match(src)
+                record = request.env['ir.binary']._find_record(
+                    xmlid=args.get('xmlid'),
+                    res_model=args.get('model'),
+                    res_id=args.get('id'),
+                )
+                if record._name == 'ir.attachment':
+                    attachment = record
+        if not attachment:
             # Find attachment by url. There can be multiple matches because of default
             # snippet images referencing the same image in /static/, so we limit to 1
             attachment = request.env['ir.attachment'].search([
@@ -617,10 +620,18 @@ class Web_Editor(http.Controller):
     @http.route(['/web_editor/image_shape/<string:img_key>/<module>/<path:filename>'], type='http', auth="public", website=True)
     def image_shape(self, module, filename, img_key, **kwargs):
         svg = self._get_shape_svg(module, 'image_shapes', filename)
-        _, _, image = request.env['ir.http'].binary_content(
-            xmlid=img_key, model='ir.attachment', field='datas', default_mimetype='image/png')
-        if not image:
-            image = request.env['ir.http']._placeholder()
+
+        record = request.env['ir.binary']._find_record(img_key)
+        stream = request.env['ir.binary']._get_image_stream_from(record)
+        if stream.type == 'url':
+            return stream.get_response()
+
+        if stream.type == 'path':
+            with file_open(stream.path, 'rb') as file:
+                image = file.read()
+        else:
+            image = stream.data
+
         img = binary_to_image(image)
         width, height = tuple(str(size) for size in img.size)
         root = etree.fromstring(svg)

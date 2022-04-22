@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import assetsbundle
@@ -11,6 +10,7 @@ from . import ir_asset
 from . import ir_actions
 from . import ir_actions_report
 from . import ir_attachment
+from . import ir_binary
 from . import ir_cron
 from . import ir_filters
 from . import ir_default

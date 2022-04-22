@@ -93,7 +93,7 @@ class CustomerPortal(portal.CustomerPortal):
         #
         def resize_to_48(source):
             if not source:
-                source = request.env['ir.http']._placeholder()
+                source = request.env['ir.binary']._placeholder()
             else:
                 source = base64.b64decode(source)
             return base64.b64encode(image_process(source, size=(48, 48)))

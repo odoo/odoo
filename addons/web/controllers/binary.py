@@ -8,19 +8,40 @@ import logging
 import os
 import unicodedata
 
+try:
+    from werkzeug.utils import send_file
+except ImportError:
+    from odoo.tools._vendor.send_file import send_file
+
 import odoo
 import odoo.modules.registry
-from odoo import http
-from odoo.exceptions import AccessError
+from odoo import http, _
+from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.modules import get_resource_path
-from odoo.tools import pycompat
+from odoo.tools import file_open, file_path, replace_exceptions
 from odoo.tools.mimetypes import guess_mimetype
-from odoo.tools.misc import file_open, file_path
-from odoo.tools.translate import _
+from odoo.tools.image import image_guess_size_from_field_name
 
 
 _logger = logging.getLogger(__name__)
+
+BAD_X_SENDFILE_ERROR = """\
+Odoo is running with --x-sendfile but is receiving /web/filestore requests.
+
+With --x-sendfile enabled, NGINX should be serving the
+/web/filestore route, however Odoo is receiving the
+request.
+
+This usually indicates that NGINX is badly configured,
+please make sure the /web/filestore location block exists
+in your configuration file and that it is similar to:
+
+    location /web/filestore {{
+        internal;
+        alias {data_dir}/filestore;
+    }}
+"""
 
 
 def clean(name):
@@ -29,6 +50,15 @@ def clean(name):
 
 class Binary(http.Controller):
 
+    @http.route('/web/filestore/<path:_path>', type='http', auth='none')
+    def content_filestore(self, _path):
+        if odoo.tools.config['x_sendfile']:
+            # pylint: disable=logging-format-interpolation
+            _logger.error(BAD_X_SENDFILE_ERROR.format(
+                data_dir=odoo.tools.config['data_dir']
+            ))
+        raise http.request.not_found()
+
     @http.route(['/web/content',
         '/web/content/<string:xmlid>',
         '/web/content/<string:xmlid>/<string:filename>',
@@ -36,25 +66,45 @@ class Binary(http.Controller):
         '/web/content/<int:id>/<string:filename>',
         '/web/content/<string:model>/<int:id>/<string:field>',
         '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>'], type='http', auth="public")
-    def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas',
-                       filename=None, filename_field='name', unique=None, mimetype=None,
-                       download=None, data=None, token=None, access_token=None, **kw):
+    # pylint: disable=redefined-builtin,invalid-name
+    def content_common(self, xmlid=None, model='ir.attachment', id=None, field='raw',
+                       filename=None, filename_field='name', mimetype=None, unique=False,
+                       download=False, access_token=None, nocache=False):
+        with replace_exceptions(UserError, by=request.not_found()):
+            record = request.env['ir.binary']._find_record(xmlid, model, id and int(id), access_token)
+            stream = request.env['ir.binary']._get_stream_from(record, field, filename, filename_field, mimetype)
+        send_file_kwargs = {'as_attachment': download}
+        if unique:
+            send_file_kwargs['max_age'] = http.STATIC_CACHE_LONG
+        if nocache:
+            send_file_kwargs['max_age'] = None
 
-        return request.env['ir.http']._get_content_common(xmlid=xmlid, model=model, res_id=id, field=field, unique=unique, filename=filename,
-            filename_field=filename_field, download=download, mimetype=mimetype, access_token=access_token, token=token)
+        return stream.get_response(**send_file_kwargs)
 
     @http.route(['/web/assets/debug/<string:filename>',
         '/web/assets/debug/<path:extra>/<string:filename>',
         '/web/assets/<int:id>/<string:filename>',
         '/web/assets/<int:id>-<string:unique>/<string:filename>',
         '/web/assets/<int:id>-<string:unique>/<path:extra>/<string:filename>'], type='http', auth="public")
-    def content_assets(self, id=None, filename=None, unique=None, extra=None, **kw):
-        id = id or request.env['ir.attachment'].sudo().search_read(
-            [('url', '=like', f'/web/assets/%/{extra}/{filename}' if extra else f'/web/assets/%/{filename}')],
-             fields=['id'], limit=1)[0]['id']
+    # pylint: disable=redefined-builtin,invalid-name
+    def content_assets(self, id=None, filename=None, unique=False, extra=None, nocache=False):
+        if not id:
+            domain = [('url', '=like', '/web/assets/%/' + (f'{extra}/{filename}' if extra else filename))]
+            attachments = request.env['ir.attachment'].sudo().search_read(domain, fields=['id'], limit=1)
+            if not attachments:
+                raise request.not_found()
+            id = attachments[0]['id']
+        with replace_exceptions(UserError, by=request.not_found()):
+            record = request.env['ir.binary']._find_record(res_id=int(id))
+            stream = request.env['ir.binary']._get_stream_from(record, 'raw', filename)
 
-        return request.env['ir.http']._get_content_common(xmlid=None, model='ir.attachment', res_id=id, field='datas', unique=unique, filename=filename,
-            filename_field='name', download=None, mimetype=None, access_token=None, token=None)
+        send_file_kwargs = {'as_attachment': False}
+        if unique:
+            send_file_kwargs['max_age'] = http.STATIC_CACHE_LONG
+        if nocache:
+            send_file_kwargs['max_age'] = None
+
+        return stream.get_response(as_attachment=False)
 
     @http.route(['/web/image',
         '/web/image/<string:xmlid>',
@@ -73,39 +123,35 @@ class Binary(http.Controller):
         '/web/image/<int:id>-<string:unique>/<string:filename>',
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>',
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>'], type='http', auth="public")
+    # pylint: disable=redefined-builtin,invalid-name
     def content_image(self, xmlid=None, model='ir.attachment', id=None, field='raw',
-                      filename_field='name', unique=None, filename=None, mimetype=None,
-                      download=None, width=0, height=0, crop=False, access_token=None,
-                      **kwargs):
-        # other kwargs are ignored on purpose
-        return request.env['ir.http']._content_image(xmlid=xmlid, model=model, res_id=id, field=field,
-            filename_field=filename_field, unique=unique, filename=filename, mimetype=mimetype,
-            download=download, width=width, height=height, crop=crop,
-            quality=int(kwargs.get('quality', 0)), access_token=access_token)
-
-    # backward compatibility
-    @http.route(['/web/binary/image'], type='http', auth="public")
-    def content_image_backward_compatibility(self, model, id, field, resize=None, **kw):
-        width = None
-        height = None
-        if resize:
-            width, height = resize.split(",")
-        return request.env['ir.http']._content_image(model=model, res_id=id, field=field, width=width, height=height)
-
-    @http.route('/web/binary/upload', type='http', auth="user")
-    def upload(self, ufile, callback=None):
-        # TODO: might be useful to have a configuration flag for max-length file uploads
-        out = """<script language="javascript" type="text/javascript">
-                    var win = window.top.window;
-                    win.jQuery(win).trigger(%s, %s);
-                </script>"""
+                      filename_field='name', filename=None, mimetype=None, unique=False,
+                      download=False, width=0, height=0, crop=False, access_token=None,
+                      nocache=False):
         try:
-            data = ufile.read()
-            args = [len(data), ufile.filename,
-                    ufile.content_type, pycompat.to_text(base64.b64encode(data))]
-        except Exception as e:
-            args = [False, str(e)]
-        return out % (json.dumps(clean(callback)), json.dumps(args)) if callback else json.dumps(args)
+            record = request.env['ir.binary']._find_record(xmlid, model, id and int(id), access_token)
+            stream = request.env['ir.binary']._get_image_stream_from(
+                record, field, filename=filename, filename_field=filename_field,
+                mimetype=mimetype, width=int(width), height=int(height), crop=crop,
+            )
+        except UserError as exc:
+            if download:
+                raise request.not_found() from exc
+            # Use the ratio of the requested field_name instead of "raw"
+            if (int(width), int(height)) == (0, 0):
+                width, height = image_guess_size_from_field_name(field)
+            record = request.env.ref('web.image_placeholder').sudo()
+            stream = request.env['ir.binary']._get_image_stream_from(
+                record, 'raw', width=width, height=height, crop=crop,
+            )
+
+        send_file_kwargs = {'as_attachment': download}
+        if unique:
+            send_file_kwargs['max_age'] = http.STATIC_CACHE_LONG
+        if nocache:
+            send_file_kwargs['max_age'] = None
+
+        return stream.get_response(**send_file_kwargs)
 
     @http.route('/web/binary/upload_attachment', type='http', auth="user")
     def upload_attachment(self, model, id, ufile, callback=None):
@@ -161,7 +207,7 @@ class Binary(http.Controller):
         uid = (request.session.uid if dbname else None) or odoo.SUPERUSER_ID
 
         if not dbname:
-            response = http.send_file(placeholder(imgname + imgext))
+            response = http.Stream.from_path(placeholder(imgname + imgext)).get_response()
         else:
             try:
                 # create an empty registry
@@ -188,11 +234,11 @@ class Binary(http.Controller):
                         imgext = '.' + mimetype.split('/')[1]
                         if imgext == '.svg+xml':
                             imgext = '.svg'
-                        response = http.send_file(image_data, filename=imgname + imgext, mimetype=mimetype, mtime=row[1])
+                        response = send_file(image_data, filename=imgname + imgext, mimetype=mimetype, mtime=row[1])
                     else:
-                        response = http.send_file(placeholder('nologo.png'))
+                        response = http.Stream.from_path(placeholder('nologo.png')).get_response()
             except Exception:
-                response = http.send_file(placeholder(imgname + imgext))
+                response = http.Stream.from_path(placeholder(imgname + imgext)).get_response()
 
         return response
 

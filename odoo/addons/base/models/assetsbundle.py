@@ -757,9 +757,9 @@ class WebAsset(object):
                 return
             try:
                 # Test url against ir.attachments
-                attach = self.bundle.env['ir.attachment'].sudo().get_serve_attachment(self.url)
-                self._ir_attach = attach[0]
-            except Exception:
+                self._ir_attach = self.bundle.env['ir.attachment'].sudo()._get_serve_attachment(self.url)
+                self._ir_attach.ensure_one()
+            except ValueError:
                 raise AssetNotFound("Could not find %s" % self.name)
 
     def to_node(self):
@@ -791,7 +791,7 @@ class WebAsset(object):
                 with closing(file_open(self._filename, 'rb', filter_ext=EXTENSIONS)) as fp:
                     return fp.read().decode('utf-8')
             else:
-                return base64.b64decode(self._ir_attach['datas']).decode('utf-8')
+                return self._ir_attach.raw.decode()
         except UnicodeDecodeError:
             raise AssetError('%s is not utf-8 encoded.' % self.name)
         except IOError:

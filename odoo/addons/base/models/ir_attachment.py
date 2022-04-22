@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import base64
 import hashlib
 import io
@@ -15,7 +15,7 @@ from PIL import Image
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, ValidationError, UserError
-from odoo.tools import config, human_size, ImageProcess, str2bool
+from odoo.tools import config, human_size, ImageProcess, str2bool, consteq
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.osv import expression
 
@@ -673,12 +673,33 @@ class IrAttachment(models.Model):
     def _generate_access_token(self):
         return str(uuid.uuid4())
 
+    def validate_access(self, access_token):
+        self.ensure_one()
+        record_sudo = self.sudo()
+
+        if access_token:
+            tok = record_sudo.with_context(prefetch_fields=False).access_token
+            valid_token = consteq(tok or '', access_token)
+            if not valid_token:
+                raise AccessError("Invalid access token")
+            return record_sudo
+
+        if record_sudo.with_context(prefetch_fields=False).public:
+            return record_sudo
+
+        if self.env.user.has_group('base.group_portal'):
+            # Check the read access on the record linked to the attachment
+            # eg: Allow to download an attachment on a task from /my/tasks/task_id
+            self.check('read')
+            return record_sudo
+
+        return self
+
     @api.model
     def action_get(self):
         return self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
 
     @api.model
-    def get_serve_attachment(self, url, extra_domain=None, extra_fields=None, order=None):
+    def _get_serve_attachment(self, url, extra_domain=None, order=None):
         domain = [('type', '=', 'binary'), ('url', '=', url)] + (extra_domain or [])
-        fieldNames = ['__last_update', 'datas', 'mimetype'] + (extra_fields or [])
-        return self.search_read(domain, fieldNames, order=order, limit=1)
+        return self.search(domain, order=order, limit=1)
