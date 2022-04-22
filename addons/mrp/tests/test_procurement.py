@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from odoo import fields
 from odoo.tests import Form
@@ -250,9 +250,7 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(move_orig.product_qty, 10, 'the quantity to produce is not good relative to the move')
 
         new_sheduled_date = fields.Datetime.to_datetime(mo.date_planned_start) + timedelta(days=5)
-        mo_form = Form(mo)
-        mo_form.date_planned_start = new_sheduled_date
-        mo = mo_form.save()
+        mo.date_planned_start = new_sheduled_date
 
         self.assertAlmostEqual(mo.move_raw_ids.date, mo.date_planned_start, delta=timedelta(seconds=1))
         self.assertAlmostEqual(mo.move_finished_ids.date, mo.date_planned_finished, delta=timedelta(seconds=1))

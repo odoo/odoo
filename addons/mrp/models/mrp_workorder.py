@@ -91,9 +91,9 @@ class MrpWorkorder(models.Model):
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
 
     duration_expected = fields.Float(
-        'Expected Duration', digits=(16, 2), default=60.0,
+        'Expected Duration', digits=(16, 2), default=60.0, compute='_compute_duration_expected',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        help="Expected duration (in minutes)")
+        readonly=False, store=True, help="Expected duration (in minutes)")
     duration = fields.Float(
         'Real Duration', compute='_compute_duration', inverse='_set_duration',
         readonly=False, store=True, copy=False)
@@ -299,6 +299,11 @@ class MrpWorkorder(models.Model):
             rounding = order.production_id.product_uom_id.rounding
             order.is_produced = float_compare(order.qty_produced, order.production_id.product_qty, precision_rounding=rounding) >= 0
 
+    @api.depends('operation_id', 'workcenter_id', 'qty_production')
+    def _compute_duration_expected(self):
+        for workorder in self:
+            workorder.duration_expected = workorder._get_duration_expected()
+
     @api.depends('time_ids.duration', 'qty_produced')
     def _compute_duration(self):
         for order in self:
@@ -408,12 +413,8 @@ class MrpWorkorder(models.Model):
                 compute_leaves=True, domain=[('time_type', 'in', ['leave', 'other'])]
             )
 
-    @api.onchange('operation_id', 'workcenter_id', 'qty_production')
-    def _onchange_expected_duration(self):
-        self.duration_expected = self._get_duration_expected()
-
     def write(self, values):
-        if 'production_id' in values:
+        if 'production_id' in values and any(values['production_id'] != w.production_id.id for w in self):
             raise UserError(_('You cannot link this work order to another manufacturing order.'))
         if 'workcenter_id' in values:
             for workorder in self:

@@ -316,13 +316,11 @@ class TestMrpProductionBackorder(TestMrpCommon):
             backorder.save().action_backorder()
             return mo.procurement_group_id.mrp_production_ids[-1]
 
-        default_picking_type_id = self.env['mrp.production']._get_default_picking_type()
+        default_picking_type_id = self.env['mrp.production']._get_default_picking_type_id(self.env.company.id)
         default_picking_type = self.env['stock.picking.type'].browse(default_picking_type_id)
         mo_sequence = default_picking_type.sequence_id
-
         mo_sequence.prefix = "WH-MO-"
         initial_mo_name = mo_sequence.prefix + str(mo_sequence.number_next_actual).zfill(mo_sequence.padding)
-
         production = self.generate_mo(qty_final=5)[0]
         self.assertEqual(production.name, initial_mo_name)
 
@@ -331,7 +329,6 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(backorder.name, initial_mo_name + "-002")
 
         backorder.backorder_sequence = 998
-
         for seq in [998, 999, 1000]:
             new_backorder = produce_one(backorder)
             self.assertEqual(backorder.name, initial_mo_name + "-" + str(seq))
@@ -425,7 +422,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
                 'location_id': self.stock_location.id,
             })._apply_inventory()
 
-        default_picking_type_id = self.env['mrp.production']._get_default_picking_type()
+        default_picking_type_id = self.env['mrp.production']._get_default_picking_type_id(self.env.company.id)
         default_picking_type = self.env['stock.picking.type'].browse(default_picking_type_id)
 
         # make sure generated MO will auto-assign

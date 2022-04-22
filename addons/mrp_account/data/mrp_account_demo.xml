@@ -23,14 +23,6 @@
         <field name="date_planned_start" eval="(datetime.now() - relativedelta(weeks=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
     </record>
 
-    <function model="stock.move" name="create">
-        <value model="stock.move" eval="
-            obj().env.ref('mrp_account.mrp_production_drawer_2')._get_moves_raw_values() +
-            obj().env.ref('mrp_account.mrp_production_drawer_2')._get_moves_finished_values() +
-            obj().env.ref('mrp_account.mrp_production_drawer_3')._get_moves_raw_values() +
-            obj().env.ref('mrp_account.mrp_production_drawer_3')._get_moves_finished_values()"/>
-    </function>
-
     <function model="mrp.production" name="action_confirm" eval="[[
         ref('mrp_account.mrp_production_drawer_2'),
         ref('mrp_account.mrp_production_drawer_3'),
