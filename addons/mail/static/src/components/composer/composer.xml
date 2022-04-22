@@ -17,7 +17,7 @@
                 t-on-keydown="composerView.onKeydown"
                 t-ref="root"
             >
-                <t t-if="isDropZoneVisible.value">
+                <t t-if="composerView.useDragVisibleDropZone.isVisible">
                     <DropZone
                         className="'o_Composer_dropZone'"
                         onDropzoneFilesDropped="_onDropZoneFilesDropped"
