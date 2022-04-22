@@ -1040,7 +1040,7 @@ class Task(models.Model):
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True, related_sudo=False)
     is_closed = fields.Boolean(related="stage_id.fold", string="Closing Stage", store=True, index=True, related_sudo=False, help="Folded in Kanban stages are closing stages.")
     parent_id = fields.Many2one('project.task', string='Parent Task', index=True)
-    ancestor_id = fields.Many2one('project.task', compute='_compute_ancestor_id', index='btree_not_null', recursive=True, store=True)
+    ancestor_id = fields.Many2one('project.task', string='Ancestor Task', compute='_compute_ancestor_id', index='btree_not_null', recursive=True, store=True)
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks")
     child_text = fields.Char(compute="_compute_child_text")
     allow_subtasks = fields.Boolean(string="Allow Sub-tasks", related="project_id.allow_subtasks", readonly=True)
