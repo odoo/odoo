@@ -276,7 +276,8 @@ class HolidaysAllocation(models.Model):
                 allocation.employee_ids = False
                 allocation.mode_company_id = False
             else:
-                allocation.employee_ids = default_employee_ids
+                employee_ids = self.env.context.get('default_employee_id', self.env.user.employee_id)
+                allocation.employee_ids = [employee_ids] if isinstance(employee_ids, int) else employee_ids
 
     @api.depends('holiday_type', 'employee_id')
     def _compute_department_id(self):
