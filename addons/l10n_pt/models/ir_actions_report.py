@@ -56,9 +56,7 @@ class IrActionsReport(models.Model):
                                 '</tr>' +
                             '</tbody>' + 
                         '</table>' +
-                        '<div>BREAK p1</div>' +
-                        '<p style="page-break-after: always; height: 1px;">--BREAK--</p>' +
-                        '<div>BREAK p2</div>' +
+                        '<div style="page-break-before: always; display: block; background-color:red;">--BREAK--</div>' +
                         '<table>' +
                             '<thead>' +
                                 '<tr>' +
