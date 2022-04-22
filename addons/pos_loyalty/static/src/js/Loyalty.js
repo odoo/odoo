@@ -681,7 +681,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                         // We only count reward products from the same program to avoid unwanted feedback loops
                         if (line.reward_product_id) {
                             const reward = this.pos.reward_by_id[line.reward_id];
-                            if (program.id !== reward.program_id) {
+                            if (program.id !== reward.program_id.id) {
                                 continue;
                             }
                         }
