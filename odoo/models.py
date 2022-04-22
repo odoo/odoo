@@ -3985,6 +3985,8 @@ Fields:
                             src = tfield['en_US']
                             toupdate = (self.env.lang=='en_US') and tfield.keys() or [self.env.lang]
                             for lang in toupdate:
+                                # FP TODO 7: speed optimization: don't parse en_US for each lang
+                                #            first, replace transalte=_xml_translate -> translate=True
                                 tfield[lang] = field.translate(src, tfield.get(lang), val)
                     columns.append(f'"{name}" = %s')
                     params.append(Json(tfield))
@@ -4870,7 +4872,8 @@ Fields:
 
         """
         self.ensure_one()
-        # FP TODO: implement field_json at read and write that reads the full field instead of one value
+        # FP TODO 5: implement field_json at create that write the full field instead of one value
+        #            when having context['field_json']
         vals = self.with_context(active_test=False, field_json=True).copy_data(default)[0]
         return self.with_context(lang=None, field_json=True).create(vals)
 

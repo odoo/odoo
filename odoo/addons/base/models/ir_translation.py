@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+
+# FP TODO 5: remove this file completely, and fix everywhere its is used
+
 import hashlib
 import itertools
 import json

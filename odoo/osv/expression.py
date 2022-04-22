@@ -969,7 +969,8 @@ class expression(object):
                         expr, params = self.__leaf_to_sql(leaf, model, alias)
                         push_result(expr, params)
 
-                # FP TODO: to improve for efficiency and use of index
+                # FP TODO 1: this is correct for "%like%", but implement other operators
+                #            using "field->>lang operator right" without jsonb_path
                 elif field.translate and right:
                     need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
                     sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)

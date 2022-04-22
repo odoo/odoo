@@ -64,6 +64,7 @@ class WebClient(http.Controller):
                 ('Cache-Control', f'public, max-age={http.STATIC_CACHE_LONG}')
             ])
 
+    # FP TODO 4: Cache the method, load all .mo (gettext), or .po (babel) if no .mo
     @http.route('/web/webclient/bootstrap_translations', type='json', auth="none")
     def bootstrap_translations(self, mods=None):
         """ Load local translations from *.po files, as a temporary solution
@@ -92,6 +93,7 @@ class WebClient(http.Controller):
         return {"modules": translations_per_module,
                 "lang_parameters": None}
 
+    # FP TODO 3: Use code of bootstrap_translations (above) instead
     @http.route('/web/webclient/translations/<string:unique>', type='http', auth="public", cors="*")
     def translations(self, unique, mods=None, lang=None):
         """
