@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import heapq
 import logging
+from collections import namedtuple
 
 from ast import literal_eval
 from collections import defaultdict
@@ -564,20 +565,126 @@ class StockQuant(models.Model):
             loc = loc.location_id
         return 'fifo'
 
+    def _run_least_packages_removal_strategy_astar(self, domain, qty):
+        # Fetch the available packages and contents
+        query = self._where_calc(domain)
+        query_str, params = query.select('package_id', 'SUM(quantity - reserved_quantity) AS available_qty')
+        query_str += ' GROUP BY package_id ORDER BY available_qty DESC'
+        self._cr.execute(query_str, params)
+        qty_by_package = self._cr.fetchall()
+
+        pkg_found = False
+        # Items that do not belong to a package are added individually to the list, any empty packages get removed.
+        for idx, elem in enumerate(qty_by_package):
+            if elem[0] is None:
+                del qty_by_package[idx]
+                qty_by_package.extend([(None, 1) for _ in range(int(elem[1]))])
+            elif elem[1] == 0:
+                del qty_by_package[idx]
+            else:
+                pkg_found = True
+
+        if not pkg_found:
+            return domain
+        size = len(qty_by_package)
+
+        class PriorityQueue:
+            def __init__(self):
+                self.elements = []
+
+            def empty(self) -> bool:
+                return not self.elements
+
+            def put(self, item, priority):
+                heapq.heappush(self.elements, (priority, item))
+
+            def get(self):
+                return heapq.heappop(self.elements)[1]
+
+        def heuristic(node):
+            if node.next_index < size:
+                return len(node.taken_packages) + node.count_remaining / qty_by_package[node.next_index][1]
+            return len(node.taken_packages)
+
+        def generate_domain(node):
+            selected_single_items = []
+            single_item_ids = False
+            for pkg in node.taken_packages:
+                if pkg[0] is None:
+                    # Lazily retrieve ids for single items
+                    if not single_item_ids:
+                        single_item_ids = self.search(expression.AND([[('package_id', '=', None)], domain])).mapped('id')
+                    selected_single_items.append(single_item_ids.pop())
+
+            expr = [('package_id', 'in', [elem[0] for elem in node.taken_packages if elem[0] is not None])]
+            if selected_single_items:
+                expr = expression.OR([expr, [('id', 'in', selected_single_items)]])
+            return expression.AND([expr, domain])
+
+        Node = namedtuple("Node", "count_remaining taken_packages next_index")
+
+        frontier = PriorityQueue()
+        frontier.put(Node(qty, (), 0), 0)
+
+        best_leaf = Node(qty, (), 0)
+
+        try:
+            while not frontier.empty():
+                current = frontier.get()
+
+                if current.count_remaining <= 0:
+                    return generate_domain(current)
+
+                # Keep track of processed package amounts to only generate one branch for the same amount
+                last_count = None
+                i = current.next_index
+                while i < size:
+                    pkg = qty_by_package[i]
+                    i += 1
+                    if pkg[1] == last_count:
+                        continue
+                    last_count = pkg[1]
+
+                    count = current.count_remaining - pkg[1]
+                    taken = current.taken_packages + (pkg,)
+                    node = Node(count, taken, i)
+
+                    if count < 0:
+                        # Overselect case
+                        if best_leaf.count_remaining > 0 or len(node.taken_packages) < len(best_leaf.taken_packages) or (len(node.taken_packages) == len(best_leaf.taken_packages) and node.count_remaining > best_leaf.count_remaining):
+                            best_leaf = node
+                        continue
+
+                    if i >= size and count != 0:
+                        # Not enough packages case
+                        if node.count_remaining < best_leaf.count_remaining:
+                            best_leaf = node
+                        continue
+
+                    frontier.put(node, heuristic(node))
+        except MemoryError:
+            _logger.info('Ran out of memory while trying to use the least_packages strategy to get quants. Domain: %s', domain)
+            return domain
+
+        # no exact matching possible, use best leaf
+        return generate_domain(best_leaf)
+
     @api.model
-    def _get_removal_strategy_order(self, removal_strategy):
+    def _get_removal_strategy_domain_order(self, domain, removal_strategy, qty):
         if removal_strategy == 'fifo':
-            return 'in_date ASC, id'
+            return domain, 'in_date ASC, id'
         elif removal_strategy == 'lifo':
-            return 'in_date DESC, id DESC'
+            return domain, 'in_date DESC, id DESC'
         elif removal_strategy == 'closest':
-            return 'location_id ASC, id DESC'
+            return domain, 'location_id ASC, id DESC'
+        elif removal_strategy == 'least_packages':
+            if qty > 0:
+                return self._run_least_packages_removal_strategy_astar(domain, qty), 'in_date ASC, id'
+            return domain, 'in_date ASC, id'
         raise UserError(_('Removal strategy %s not implemented.') % (removal_strategy,))
 
-    def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
+    def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, qty=0):
         removal_strategy = self._get_removal_strategy(product_id, location_id)
-        removal_strategy_order = self._get_removal_strategy_order(removal_strategy)
-
         domain = [('product_id', '=', product_id.id)]
         if not strict:
             if lot_id:
@@ -593,7 +700,8 @@ class StockQuant(models.Model):
             domain = expression.AND([[('owner_id', '=', owner_id and owner_id.id or False)], domain])
             domain = expression.AND([[('location_id', '=', location_id.id)], domain])
 
-        return self.search(domain, order=removal_strategy_order).sorted(lambda q: not q.lot_id)
+        domain, order = self._get_removal_strategy_domain_order(domain, removal_strategy, qty)
+        return self.search(domain, order=order).sorted(lambda q: not q.lot_id)
 
     @api.model
     def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
@@ -647,7 +755,7 @@ class StockQuant(models.Model):
         """
         self = self.sudo()
         rounding = product_id.uom_id.rounding
-        quants = self or self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+        quants = self or self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict, qty=quantity)
         reserved_quants = []
 
         if float_compare(quantity, 0, precision_rounding=rounding) > 0:

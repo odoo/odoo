@@ -28,7 +28,7 @@ class StockQuant(models.Model):
         return res
 
     @api.model
-    def _get_removal_strategy_order(self, removal_strategy):
+    def _get_removal_strategy_domain_order(self, domain, removal_strategy, qty):
         if removal_strategy == 'fefo':
-            return 'removal_date, in_date, id'
-        return super(StockQuant, self)._get_removal_strategy_order(removal_strategy)
+            return domain, 'removal_date, in_date, id'
+        return super(StockQuant, self)._get_removal_strategy_domain_order(domain, removal_strategy, qty)
