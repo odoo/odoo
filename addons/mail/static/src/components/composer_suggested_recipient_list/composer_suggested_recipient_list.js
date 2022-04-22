@@ -2,19 +2,9 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, useState } = owl;
+const { Component } = owl;
 
 export class ComposerSuggestedRecipientList extends Component {
-
-    /**
-     * @override
-     */
-    setup() {
-        super.setup();
-        this.state = useState({
-            hasShowMoreButton: false,
-        });
-    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -42,14 +32,20 @@ export class ComposerSuggestedRecipientList extends Component {
      * @private
      */
     _onClickShowLess(ev) {
-        this.state.hasShowMoreButton = false;
+        if (!this.composerSuggestedRecipientListView) {
+            return;
+        }
+        this.composerSuggestedRecipientListView.update({ hasShowMoreButton: false });
     }
 
     /**
      * @private
      */
     _onClickShowMore(ev) {
-        this.state.hasShowMoreButton = true;
+        if (!this.composerSuggestedRecipientListView) {
+            return;
+        }
+        this.composerSuggestedRecipientListView.update({ hasShowMoreButton: true });
     }
 
 }
