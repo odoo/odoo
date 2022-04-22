@@ -2916,7 +2916,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # make a query object for selecting ids, and apply security rules to it
         param_ids = object()
         query = Query(['"%s"' % self._table], ['"%s".id IN %%s' % self._table], [param_ids])
-        self._apply_ir_rules(query, 'read')
+
+        # Multidados: Adiciona para controlar as regras via contexto
+        if not context.get('compute_sudo', False):
+            self._apply_ir_rules(query, 'read')
 
         # determine the fields that are stored as columns in tables; ignore 'id'
         fields_pre = [

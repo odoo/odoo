@@ -456,6 +456,7 @@ class Field(MetaField('DummyField', (object,), {})):
             attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
             attrs['context_dependent'] = attrs.get('context_dependent', True)
+            attrs['compute_sudo'] = attrs.get('compute_sudo', False)
         if attrs.get('related'):
             # by default, related fields are not stored and not copied
             attrs['store'] = attrs.get('store', False)
