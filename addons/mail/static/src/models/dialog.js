@@ -13,6 +13,14 @@ registerModel({
         'followerOwnerAsSubtypeList',
         'messageActionListOwnerAsDeleteConfirm',
     ]],
+    lifecycleHooks: {
+        _created() {
+            document.addEventListener('keydown', this._onKeydownGlobal);
+        },
+        _willDelete() {
+            document.removeEventListener('keydown', this._onKeydownGlobal);
+        },
+    },
     recordMethods: {
         /**
          * @param {Element} element
@@ -149,6 +157,15 @@ registerModel({
          */
         _computeStyle() {
             return `background-color: rgba(0, 0, 0, ${this.backgroundOpacity});`;
+        },
+        /**
+         * @private
+         * @param {KeyboardEvent} ev
+         */
+        _onKeydownGlobal(ev) {
+            if (ev.key === 'Escape') {
+                this.delete();
+            }
         },
     },
     fields: {

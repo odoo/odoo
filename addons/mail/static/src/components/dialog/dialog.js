@@ -12,19 +12,16 @@ export class Dialog extends Component {
     setup() {
         super.setup();
         this._onClickGlobal = this._onClickGlobal.bind(this);
-        this._onKeydownDocument = this._onKeydownDocument.bind(this);
         onMounted(() => this._mounted());
         onWillUnmount(() => this._willUnmount());
     }
 
     _mounted() {
         document.addEventListener('click', this._onClickGlobal, true);
-        document.addEventListener('keydown', this._onKeydownDocument);
     }
 
     _willUnmount() {
         document.removeEventListener('click', this._onClickGlobal, true);
-        document.removeEventListener('keydown', this._onKeydownDocument);
     }
 
     //--------------------------------------------------------------------------
@@ -67,16 +64,6 @@ export class Dialog extends Component {
             return;
         }
         this.dialog.delete();
-    }
-
-    /**
-     * @private
-     * @param {KeyboardEvent} ev
-     */
-    _onKeydownDocument(ev) {
-        if (ev.key === 'Escape') {
-            this.dialog.delete();
-        }
     }
 
 }
