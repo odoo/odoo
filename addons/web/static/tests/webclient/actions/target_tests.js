@@ -408,6 +408,31 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([]);
     });
 
+    QUnit.test('breadcrumbs of actions in target="new"', async function (assert) {
+        const webClient = await createWebClient({ serverData });
+
+        // execute an action in target="current"
+        await doAction(webClient, 1);
+        assert.deepEqual(
+            [...webClient.el.querySelectorAll(".breadcrumb-item")].map((i) => i.innerText),
+            ["Partners Action 1"]
+        );
+
+        // execute an action in target="new" and a list view (s.t. there is a control panel)
+        await doAction(webClient, {
+            xml_id: "action_5",
+            name: "Create a Partner",
+            res_model: "partner",
+            target: "new",
+            type: "ir.actions.act_window",
+            views: [[false, "list"]],
+        });
+        assert.deepEqual(
+            [...webClient.el.querySelectorAll(".modal .breadcrumb-item")].map((i) => i.innerText),
+            ["Create a Partner"]
+        );
+    });
+
     QUnit.module('Actions in target="inline"');
 
     QUnit.test(
