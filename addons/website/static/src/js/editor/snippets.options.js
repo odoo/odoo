@@ -3,7 +3,6 @@ odoo.define('website.editor.snippets.options', function (require) {
 'use strict';
 
 const {ColorpickerWidget} = require('web.Colorpicker');
-const config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 const {Markup, sprintf} = require('web.utils');
@@ -69,7 +68,8 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
             classes: {
                 "ui-autocomplete": 'o_website_ui_autocomplete'
             },
-        }
+            body: this.getParent().$target[0].ownerDocument.body,
+        };
         wUtils.autocompleteWithPages(this, $(this.inputEl), options);
     },
 
@@ -112,7 +112,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
      * @override
      */
     start: async function () {
-        const style = window.getComputedStyle(document.documentElement);
+        const style = window.getComputedStyle(this.$target[0].ownerDocument.documentElement);
         const nbFonts = parseInt(weUtils.getCSSVariableValue('number-of-fonts', style));
         const googleFontsProperty = weUtils.getCSSVariableValue('google-fonts', style);
         this.googleFonts = googleFontsProperty ? googleFontsProperty.split(/\s*,\s*/g) : [];
@@ -451,26 +451,28 @@ options.Class.include({
         for (const widget of widgets) {
             const methodsNames = widget.getMethodsNames();
             const specialMethodsNames = [];
-            for (const methodName of methodsNames) {
-                if (this.specialCheckAndReloadMethodsNames.includes(methodName)) {
-                    specialMethodsNames.push(methodName);
+            // If it's a pageOption, it's most likely to need to reload, so check the widgets.
+            if (this.data.pageOptions) {
+                specialMethodsNames.push(methodsNames);
+            } else {
+                for (const methodName of methodsNames) {
+                    if (this.specialCheckAndReloadMethodsNames.includes(methodName)) {
+                        specialMethodsNames.push(methodName);
+                    }
                 }
             }
             if (!specialMethodsNames.length) {
                 continue;
             }
-            const isDebugAssets = config.isDebug('assets');
-            let paramsReload = isDebugAssets;
-            if (!isDebugAssets) {
-                for (const methodName of specialMethodsNames) {
-                    if (widget.getMethodsParams(methodName).reload) {
-                        paramsReload = true;
-                        break;
-                    }
+            let paramsReload = false;
+            for (const methodName of specialMethodsNames) {
+                if (widget.getMethodsParams(methodName).reload) {
+                    paramsReload = true;
+                    break;
                 }
             }
             if (paramsReload) {
-                return (isDebugAssets ? _t("It appears you are in debug=assets mode, all theme customization options require a page reload in this mode.") : true);
+                return true;
             }
         }
         return false;
@@ -479,15 +481,16 @@ options.Class.include({
      * @override
      */
     _computeWidgetState: async function (methodName, params) {
+        const style = window.getComputedStyle(this.$target[0].ownerDocument.documentElement);
         switch (methodName) {
             case 'customizeWebsiteViews': {
                 return this._getEnabledCustomizeValues(params.possibleValues, true);
             }
             case 'customizeWebsiteVariable': {
-                return weUtils.getCSSVariableValue(params.variable);
+                return weUtils.getCSSVariableValue(params.variable, style);
             }
             case 'customizeWebsiteColor': {
-                return weUtils.getCSSVariableValue(params.color);
+                return weUtils.getCSSVariableValue(params.color, style);
             }
             case 'customizeWebsiteAssets': {
                 return this._getEnabledCustomizeValues(params.possibleValues, false);
@@ -523,13 +526,18 @@ options.Class.include({
                 }
         }
 
-        if (params.reload || config.isDebug('assets') || params.noBundleReload) {
+        if (params.reload || params.noBundleReload) {
             // Caller will reload the page, nothing needs to be done anymore.
             return;
         }
 
         // Finally, only update the bundles as no reload is required
-        await this._reloadBundles();
+        await new Promise((resolve, reject) => {
+            this.trigger_up('reload_bundles', {
+                onSuccess: () => resolve(),
+                onFailure: () => reject(),
+            });
+        });
 
         // Some public widgets may depend on the variables that were
         // customized, so we have to restart them *all*.
@@ -667,7 +675,7 @@ options.Class.include({
     _select: async function (previewMode, widget) {
         await this._super(...arguments);
 
-        if (!widget.$el.closest('[data-no-widget-refresh="true"]').length) {
+        if (this.options.isWebsite && !widget.$el.closest('[data-no-widget-refresh="true"]').length) {
             // TODO the flag should be retrieved through widget params somehow
             await this._refreshPublicWidgets();
         }
@@ -824,7 +832,12 @@ options.registry.ReplaceMedia.include({
      * @override
      */
     async _renderCustomXML(uiFragment) {
+        if (!this.options.isWebsite) {
+            return this._super(...arguments);
+        }
         await this._super(...arguments);
+
+
 
         const oldURLWidgetEl = uiFragment.querySelector('[data-name="media_url_opt"]');
 
@@ -1369,7 +1382,8 @@ options.registry.menu_data = options.Class.extend({
      * @override
      */
     start: function () {
-        wLinkPopoverWidget.createFor(this, this.$target[0], { wysiwyg: $('#wrapwrap').data('wysiwyg') });
+        const wysiwyg = $(this.ownerDocument.getElementById('wrapwrap')).data('wysiwyg');
+        wLinkPopoverWidget.createFor(this, this.$target[0], { wysiwyg });
         return this._super(...arguments);
     },
     /**
@@ -3141,6 +3155,41 @@ options.registry.MegaMenuNoDelete = options.Class.extend({
             });
         });
     },
+});
+
+options.registry.sizing.include({
+    /**
+     * @override
+     */
+    start() {
+        const defs = this._super(...arguments);
+        const self = this;
+        this.$handles.on('mousedown', function (ev) {
+            // Since website is edited in an iframe, a div that goes over the
+            // iframe is necessary to catch mousemove and mouseup events,
+            // otherwise the iframe absorbs them.
+            const $body = $(this.ownerDocument.body);
+            if (!self.divEl) {
+                self.divEl = document.createElement('div');
+                self.divEl.style.position = 'absolute';
+                self.divEl.style.height = '100%';
+                self.divEl.style.width = '100%';
+                self.divEl.setAttribute('id', 'iframeEventOverlay');
+                $body.append(self.divEl);
+            }
+            const documentMouseUp = () => {
+                // Multiple mouseup can occur if mouse goes out of the window
+                // while moving.
+                if (self.divEl) {
+                    self.divEl.remove();
+                    self.divEl = undefined;
+                }
+                $body.off('mouseup', documentMouseUp);
+            };
+            $body.on('mouseup', documentMouseUp);
+        });
+        return defs;
+    }
 });
 
 return {

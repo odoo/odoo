@@ -2,7 +2,7 @@ odoo.define('website_blog.wysiwyg', function (require) {
 'use strict';
 
 
-const Wysiwyg = require('web_editor.wysiwyg');
+const Wysiwyg = require('website.wysiwyg');
 require('website.editor.snippets.options');
 
 Wysiwyg.include({

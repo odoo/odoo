@@ -1535,6 +1535,9 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         if (this.options.dataAttributes.selectedTab) {
             options.selectedTab = this.options.dataAttributes.selectedTab;
         }
+        if (this.getParent().options.wysiwyg) {
+            options.ownerDocument = this.getParent().options.wysiwyg.el.ownerDocument;
+        }
         const oldColorPalette = this.colorPalette;
         this.colorPalette = new ColorPaletteWidget(this, options);
         if (oldColorPalette) {
@@ -4027,26 +4030,6 @@ const SnippetOptionWidget = Widget.extend({
 
             const reloadMessage = await this._checkIfWidgetsUpdateNeedReload(widgets);
             requiresReload = !!reloadMessage;
-            if (requiresReload) {
-                const save = await new Promise(resolve => {
-                    Dialog.confirm(this, _t("To apply this change, we need to save all your previous modifications and reload the page.") + ' '
-                            + (typeof reloadMessage === 'string' ? reloadMessage : ''), {
-                        buttons: [{
-                            text: _t('Save and Reload'),
-                            classes: 'btn-primary',
-                            close: true,
-                            click: () => resolve(true),
-                        }, {
-                            text: _t("Cancel"),
-                            close: true,
-                            click: () => resolve(false)
-                        }],
-                    });
-                });
-                if (!save) {
-                    return;
-                }
-            }
         }
 
         // Queue action so that we can later skip useless actions.
@@ -4159,6 +4142,8 @@ const SnippetOptionWidget = Widget.extend({
         if (requiresReload) {
             this.trigger_up('request_save', {
                 reloadEditor: true,
+                optionSelector: this.data.selector,
+                url: this.data.reload,
             });
         }
     },
@@ -5295,7 +5280,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         this.trigger_up('hide_overlay');
         this.trigger_up('disable_loading_effect');
         const img = this._getImg();
-        new weWidgets.ImageCropWidget(this, img, {mimetype: this._getImageMimetype(img)}).appendTo(this.options.wysiwyg.odooEditor.document.body);
+        new weWidgets.ImageCropWidget(this, img, {mimetype: this._getImageMimetype(img)}).appendTo(this.$el[0].ownerDocument.body);
 
         await new Promise(resolve => {
             this.$target.one('image_cropper_destroyed', async () => {
@@ -5340,7 +5325,7 @@ registry.ImageTools = ImageHandlerOption.extend({
     async resetCrop() {
         const img = this._getImg();
         const cropper = new weWidgets.ImageCropWidget(this, img, {mimetype: this._getImageMimetype(img)});
-        await cropper.appendTo(this.options.wysiwyg.odooEditor.document.body);
+        await cropper.appendTo(this.$el[0].ownerDocument.body);
         await cropper.reset();
         await this._reapplyCurrentShape();
     },
@@ -6464,7 +6449,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             .clone()
             .addClass('d-none')
             // Needs to be in document for bg-image class to take effect
-            .appendTo(document.body);
+            .appendTo(this.$target[0].ownerDocument.body);
         const shapeContainer = $shapeContainer[0];
         $shapeContainer.css('background-image', '');
         const shapeSrc = shapeContainer && getBgImageURL(shapeContainer);
@@ -6690,7 +6675,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
             return;
         }
         // TODO: change #wrapwrap after web_editor rework.
-        const $wrapwrap = $('#wrapwrap');
+        const $wrapwrap = $(this.ownerDocument.body).find("#wrapwrap");
         const targetOffset = this.$target.offset();
 
         this.$backgroundOverlay.css({
@@ -6809,7 +6794,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
     _onDragBackgroundStart: function (ev) {
         ev.preventDefault();
         this.$bgDragger.addClass('o_we_grabbing');
-        const $document = $(this.ownerDocument);
+        const $document = $(document);
         $document.on('mousemove.bgposition', this._onDragBackgroundMove.bind(this));
         $document.one('mouseup', () => {
             this.$bgDragger.removeClass('o_we_grabbing');
@@ -7116,6 +7101,7 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                             });
                             this.trigger_up('request_save', {
                                 reloadEditor: true,
+                                invalidateSnippetCache: true,
                                 onSuccess: async () => {
                                     const defaultSnippetName = _.str.sprintf(_t("Custom %s"), this.data.snippetName);
                                     const targetCopyEl = this.$target[0].cloneNode(true);

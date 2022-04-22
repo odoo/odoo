@@ -18,7 +18,7 @@ options.registry.WebsiteEvent.include({
             args: [[this.eventId], {
                 meeting_room_allow_creation: widgetValue
             }],
-        }).then(() => this.trigger_up('reload_editable', {option_selector: this.data.selector}));
+        }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
     },
 
     //--------------------------------------------------------------------------

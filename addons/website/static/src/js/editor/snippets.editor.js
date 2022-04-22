@@ -11,7 +11,7 @@ const getTraversedNodes = OdooEditorLib.getTraversedNodes;
 
 const FontFamilyPickerUserValueWidget = wSnippetOptions.FontFamilyPickerUserValueWidget;
 
-weSnippetEditor.SnippetsMenu.include({
+const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
     xmlDependencies: (weSnippetEditor.SnippetsMenu.prototype.xmlDependencies || [])
         .concat(['/website/static/src/xml/website.editor.xml']),
     events: _.extend({}, weSnippetEditor.SnippetsMenu.prototype.events, {
@@ -50,7 +50,7 @@ weSnippetEditor.SnippetsMenu.include({
     destroy() {
         this._super(...arguments);
         this.ownerDocument.removeEventListener('selectionchange', this.__onSelectionChange);
-        document.body.classList.remove('o_animated_text_highlighted');
+        this.$body[0].classList.remove('o_animated_text_highlighted');
     },
 
     //--------------------------------------------------------------------------
@@ -195,6 +195,7 @@ weSnippetEditor.SnippetsMenu.include({
                 finalOptions.offsetElements.$top = $header;
             }
         }
+        finalOptions.jQueryDraggableOptions.iframeFix = true;
         return finalOptions;
     },
     /**
@@ -239,7 +240,7 @@ weSnippetEditor.SnippetsMenu.include({
         this._super(...arguments);
         this.$('#o_we_editor_toolbar_container > we-title > span').after($(`
             <div class="btn fa fa-fw fa-2x o_we_highlight_animated_text d-none
-                ${$('body').hasClass('o_animated_text_highlighted') ? 'fa-eye text-success' : 'fa-eye-slash'}"
+                ${this.$body.hasClass('o_animated_text_highlighted') ? 'fa-eye text-success' : 'fa-eye-slash'}"
                 title="${_t('Highlight Animated Text')}"
                 aria-label="Highlight Animated Text"/>
         `));
@@ -253,7 +254,8 @@ weSnippetEditor.SnippetsMenu.include({
      * @private
      */
     _toggleAnimatedTextButton() {
-        if (!this._isValidSelection(window.getSelection())) {
+        const sel = this.options.wysiwyg.odooEditor.document.getSelection();
+        if (!this._isValidSelection(sel)) {
             return;
         }
         const animatedText = this._getAnimatedTextElement();
@@ -324,7 +326,7 @@ weSnippetEditor.SnippetsMenu.include({
                     el = newEl;
                 }
                 this.bottomFakeOptionEl = el;
-                this.el.appendChild(this.topFakeOptionEl);
+                this.$body[0].appendChild(this.topFakeOptionEl);
             }
 
             // Need all of this in that order so that:
@@ -357,7 +359,7 @@ weSnippetEditor.SnippetsMenu.include({
      * @private
      */
     _onAnimateTextClick(ev) {
-        const sel = window.getSelection();
+        const sel = this.options.wysiwyg.odooEditor.document.getSelection();
         if (!this._isValidSelection(sel)) {
             return;
         }
@@ -408,7 +410,7 @@ weSnippetEditor.SnippetsMenu.include({
      * @private
      */
     _onHighlightAnimatedTextClick(ev) {
-        $('body').toggleClass('o_animated_text_highlighted');
+        this.$body.toggleClass('o_animated_text_highlighted');
         $(ev.target).toggleClass('fa-eye fa-eye-slash').toggleClass('text-success');
     },
 });
@@ -430,4 +432,7 @@ weSnippetEditor.SnippetEditor.include({
         return this._super(...arguments);
     },
 });
+return {
+    SnippetsMenu: wSnippetMenu,
+};
 });

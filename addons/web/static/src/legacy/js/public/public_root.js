@@ -185,7 +185,6 @@ export const PublicRoot = publicWidget.RootWidget.extend({
                 $from = this.$el;
             }
         }
-
         options = Object.assign({}, options, {
             wysiwyg: $('#wrapwrap').data('wysiwyg'),
         });

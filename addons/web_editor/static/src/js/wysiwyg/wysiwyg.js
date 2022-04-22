@@ -11,7 +11,6 @@ const {ColorPaletteWidget} = require('web_editor.ColorPalette');
 const {ColorpickerWidget} = require('web.Colorpicker');
 const concurrency = require('web.concurrency');
 const { device } = require('web.config');
-const weContext = require('web_editor.context');
 const { localization } = require('@web/core/l10n/localization');
 const OdooEditorLib = require('@web_editor/../lib/odoo-editor/src/OdooEditor');
 const snippetsEditor = require('web_editor.snippet.editor');
@@ -738,7 +737,11 @@ const Wysiwyg = Widget.extend({
             };
             this.$resizer.on('mousedown', resizerMousedown);
         } else {
-            this._replaceElement(this.$editable);
+            if (this.options.sideAttach) {
+                return this._super(...arguments);
+            } else {
+                this._replaceElement(this.$editable);
+            }
         }
     },
     //--------------------------------------------------------------------------
@@ -1901,7 +1904,9 @@ const Wysiwyg = Widget.extend({
      * @return {Promise} rejected if the save cannot be done
      */
     _saveViewBlocks: function (context) {
-
+        // TODO should be review to probably not search in the whole body,
+        // iframe or not.
+        const $ = (this.$editable[0].ownerDocument.defaultView.$ || window.$);
         const $allBlocks = $((this.options || {}).savableSelector).filter('.o_dirty');
 
         const $dirty = $('.o_dirty');
@@ -1927,7 +1932,7 @@ const Wysiwyg = Widget.extend({
                 if (this.options.enableTranslation) {
                     saveElement = '_saveTranslationElement';
                 }
-                return this[saveElement]($el, context || weContext.get())
+                return this[saveElement]($el, context || this.options.context)
                 .then(function () {
                     $el.removeClass('o_dirty');
                 }).guardedCatch(function (response) {

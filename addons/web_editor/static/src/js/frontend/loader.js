@@ -3,7 +3,7 @@ odoo.define('web_editor.loader', function (require) {
 
 var ajax = require('web.ajax');
 
-let wysiwygPromise = {};
+let wysiwygPromises = {};
 
 const exports = {};
 
@@ -25,8 +25,11 @@ exports.createWysiwyg = async (parent, options, additionnalAssets = []) => {
 
 async function getWysiwygClass(options, additionnalAssets = []) {
     const wysiwygAlias = options.wysiwygAlias || 'web_editor.wysiwyg';
-    if (!wysiwygPromise[wysiwygAlias]) {
-        wysiwygPromise[wysiwygAlias] = new Promise(async (resolve) => {
+    if (!wysiwygPromises[wysiwygAlias]) {
+        wysiwygPromises[wysiwygAlias] = new Promise(async (resolve) => {
+            if (odoo.__DEBUG__.services[wysiwygAlias]) {
+                return resolve();
+            }
             await loadWysiwyg(additionnalAssets);
             // Wait the loading of the service and his dependencies (use string to
             // avoid parsing of require function).
@@ -40,7 +43,7 @@ async function getWysiwygClass(options, additionnalAssets = []) {
             resolve();
         });
     }
-    await wysiwygPromise[wysiwygAlias];
+    await wysiwygPromises[wysiwygAlias];
     return odoo.__DEBUG__.services[wysiwygAlias];
 }
 exports.getWysiwygClass = getWysiwygClass;

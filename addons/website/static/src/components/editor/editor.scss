@@ -1,17 +1,9 @@
-// FIXME: Duplicate code from web_editor/wysiwyg_snippets.scss
 .editor_has_snippets {
-    overflow: hidden;
-    > .oe_overlay.ui-draggable {
-        .o_handles {
-            display: none;
-        }
-    }
     .o_notification_manager {
         @include o-position-absolute($top: map-get($spacers, 2), $right: calc(#{$o-we-sidebar-width} + 0.5rem));
     }
 }
 
-// SCSS ported over from website.ui.scss
 .ui-autocomplete.o_website_ui_autocomplete {
     max-width: 400px;
     font-size: $o-we-sidebar-font-size;

@@ -21,7 +21,7 @@ options.registry.facebookPage = options.Class.extend({
             hide_cover: true,
             show_facepile: false,
         };
-        this.fbData = _.defaults(_.pick(this.$target.data(), _.keys(defaults)), defaults);
+        this.fbData = _.defaults(_.pick(this.$target[0].dataset, _.keys(defaults)), defaults);
 
         if (!this.fbData.href) {
             // Fetches the default url for facebook page from website config
@@ -106,8 +106,7 @@ options.registry.facebookPage = options.Class.extend({
                 this.fbData.height = this.fbData.show_facepile ? 225 : 150;
             }
             _.each(this.fbData, (value, key) => {
-                this.$target.attr('data-' + key, value);
-                this.$target.data(key, value);
+                this.$target[0].dataset[key] = value;
             });
         });
     },

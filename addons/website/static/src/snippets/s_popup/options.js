@@ -8,14 +8,19 @@ options.registry.SnippetPopup = options.Class.extend({
      * @override
      */
     start: function () {
+        // Editor jQuery and iFrame jQuery isn't the same instance. This means
+        // that events within the iframe (so popup events) aren't handled by
+        // the editor's jQuery. To apply and listen to events on the modal,
+        // we need to get it from the iframe's jQuery instance.
+        this.$iframeTarget = this.$target[0].ownerDocument.defaultView.$(this.$target[0]);
         // Note: the link are excluded here so that internal modal buttons do
         // not close the popup as we want to allow edition of those buttons.
-        this.$target.on('click.SnippetPopup', '.js_close_popup:not(a, .btn)', ev => {
+        this.$iframeTarget.on('click.SnippetPopup', '.js_close_popup:not(a, .btn)', ev => {
             ev.stopPropagation();
             this.onTargetHide();
             this.trigger_up('snippet_option_visibility_update', {show: false});
         });
-        this.$target.on('shown.bs.modal.SnippetPopup', () => {
+        this.$iframeTarget.on('shown.bs.modal.SnippetPopup', () => {
             this.trigger_up('snippet_option_visibility_update', {show: true});
             // TODO duplicated code from the popup public widget, this should
             // be moved to a *video* public widget and be reviewed in master
@@ -24,7 +29,7 @@ options.registry.SnippetPopup = options.Class.extend({
                 iframe.src = media.dataset.oeExpression || media.dataset.src; // TODO still oeExpression to remove someday
             });
         });
-        this.$target.on('hidden.bs.modal.SnippetPopup', () => {
+        this.$iframeTarget.on('hidden.bs.modal.SnippetPopup', () => {
             this.trigger_up('snippet_option_visibility_update', {show: false});
             this._removeIframeSrc();
         });
@@ -42,7 +47,7 @@ options.registry.SnippetPopup = options.Class.extend({
         // The video should not start before the modal opens, remove it from the
         // DOM. It will be added back on modal open to start the video.
         this._removeIframeSrc();
-        this.$target.off('.SnippetPopup');
+        this.$iframeTarget.off('.SnippetPopup');
     },
     /**
      * @override
@@ -60,8 +65,8 @@ options.registry.SnippetPopup = options.Class.extend({
      * @override
      */
     onTargetShow: async function () {
-        this.$target.modal('show');
-        $(document.body).children('.modal-backdrop:last').addClass('d-none');
+        this.$iframeTarget.modal('show');
+        $(this.$target[0].ownerDocument.body).children('.modal-backdrop:last').addClass('d-none');
     },
     /**
      * @override
@@ -69,14 +74,14 @@ options.registry.SnippetPopup = options.Class.extend({
     onTargetHide: async function () {
         return new Promise(resolve => {
             const timeoutID = setTimeout(() => {
-                this.$target.off('hidden.bs.modal.popup_on_target_hide');
+                this.$iframeTarget.off('hidden.bs.modal.popup_on_target_hide');
                 resolve();
             }, 500);
-            this.$target.one('hidden.bs.modal.popup_on_target_hide', () => {
+            this.$iframeTarget.one('hidden.bs.modal.popup_on_target_hide', () => {
                 clearTimeout(timeoutID);
                 resolve();
             });
-            this.$target.modal('hide');
+            this.$iframeTarget.modal('hide');
         });
     },
     /**

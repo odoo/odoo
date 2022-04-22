@@ -2,7 +2,7 @@ odoo.define('website.wysiwyg', function (require) {
 'use strict';
 
 var Wysiwyg = require('web_editor.wysiwyg');
-var snippetsEditor = require('web_editor.snippet.editor');
+var snippetsEditor = require('website.snippet.editor');
 
 /**
  * Show/hide the dropdowns associated to the given toggles and allows to wait
@@ -43,7 +43,7 @@ function toggleDropdown($toggles, show) {
  * class non editable: o_not_editable
  *
  */
-Wysiwyg.include({
+const WebsiteWysiwyg = Wysiwyg.extend({
     /**
      * @override
      */
@@ -160,6 +160,37 @@ Wysiwyg.include({
     /**
      * @override
      */
+    _rpc(options) {
+        // Historically, every RPC had their website_id in their context.
+        // Now it's something defined by the wysiwyg_adapter.
+        // So in order to have a full context, we request it from the wysiwyg_adapter.
+        let context;
+        this.trigger_up('context_get', {
+            callback: cxt => context = cxt,
+        });
+        context = Object.assign(context, options.context);
+        options.context = context;
+        return this._super(options);
+    },
+    /**
+     *
+     * @override
+     */
+    _createSnippetsMenuInstance(options = {}) {
+        return new snippetsEditor.SnippetsMenu(this, Object.assign({
+            wysiwyg: this,
+            selectorEditableArea: '.o_editable',
+        }, options));
+    },
+    /**
+     * @override
+     */
+    _insertSnippetMenu() {
+        return this.snippetsMenu.appendTo(this.$el);
+    },
+    /**
+     * @override
+     */
     _saveElement: async function ($el, context, withLang) {
         var promises = [];
 
@@ -248,4 +279,6 @@ snippetsEditor.SnippetsMenu.include({
         return $dropzone;
     },
 });
+
+return WebsiteWysiwyg;
 });

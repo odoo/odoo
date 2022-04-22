@@ -1,16 +1,19 @@
 /** @odoo-module */
 
 import { ComponentAdapter } from 'web.OwlCompatibility';
+import { _t } from '@web/core/l10n/translation';
 
 import { useWowlService } from '@web/legacy/utils';
+import { useHotkey } from '@web/core/hotkeys/hotkey_hook';
 
+import { EditMenuDialog, MenuDialog } from "../dialog/edit_menu";
+import { PageOption } from "./page_options";
 
 const { onWillStart, useEffect } = owl;
 
 /**
  * This component adapts the Wysiwyg widget from @web_editor/wysiwyg.js.
- * In reality it encapsulate it so that this legacy widget can work in an OWL
- * framework.
+ * It encapsulate it so that this legacy widget can work in an OWL framework.
  */
 export class WysiwygAdapterComponent extends ComponentAdapter {
     /**
@@ -21,6 +24,11 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         const options = this.props.options || {};
 
         this.websiteService = useWowlService('website');
+        this.userService = useWowlService('user');
+        this.rpc = useWowlService('rpc');
+        this.orm = useWowlService('orm');
+        this.dialogs = useWowlService('dialog');
+
         this.oeStructureSelector = '#wrapwrap .oe_structure[data-oe-xpath][data-oe-id]';
         this.oeFieldSelector = '#wrapwrap [data-oe-field]';
         this.oeCoverSelector = '#wrapwrap .s_cover[data-res-model], #wrapwrap .o_record_cover_container[data-res-model]';
@@ -29,20 +37,36 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         } else {
             this.savableSelector = `${this.oeStructureSelector}, ${this.oeFieldSelector}, ${this.oeCoverSelector}`;
         }
+        this.pageOptions = {};
+        // Disable command palette since LinkTools take over that shortcut
+        useHotkey('control+k', () => {});
+
+        onWillStart(() => {
+            const pageOptionEls = this.websiteService.pageDocument.querySelectorAll('.o_page_option_data');
+            for (const pageOptionEl of pageOptionEls) {
+                const optionName = pageOptionEl.name;
+                this.pageOptions[optionName] = new PageOption(pageOptionEl, this.websiteService.pageDocument, optionName);
+            }
+            this.editableElements(this.$editable).addClass('o_editable');
+        });
+
         useEffect(() => {
             const initWysiwyg = async () => {
                 this.$editable.on('click.odoo-website-editor', '*', this, this._preventDefault);
                 // Disable OdooEditor observer's while setting up classes
                 this.widget.odooEditor.observerUnactive();
                 this._addEditorMessages();
-                this.widget.odooEditor.observerActive();
                 this._setObserver();
 
                 if (this.props.snippetSelector) {
                     const snippetEl = $(this.websiteService.pageDocument).find(this.props.snippetSelector);
                     await this.widget.snippetsMenu.activateSnippet($(snippetEl));
                 }
-
+                // The jquery instance inside the iframe needs to be aware of the wysiwyg.
+                this.websiteService.contentWindow.$('#wrapwrap').data('wysiwyg', this.widget);
+                this._websiteRootEvent('widgets_start_request', {editableMode: true, onSuccess: () => {
+                    this.widget.odooEditor.observerActive();
+                }});
                 this.props.wysiwygReady();
             };
 
@@ -52,6 +76,23 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 this.$editable.off('click.odoo-website-editor', '*');
             };
         }, () => []);
+    }
+    /**
+     * Stop the widgets and save the content.
+     *
+     * @returns {Promise} the save promise from the Wysiwyg widget.
+     */
+    async save() {
+        const mainObject = this.websiteService.currentWebsite.metadata.mainObject;
+        if (this.observer) {
+            this.observer.disconnect();
+            delete this.observer;
+        }
+        const dirtyPageOptions = Object.entries(this.pageOptions).filter(([name, option]) => option.isDirty);
+        await Promise.all(dirtyPageOptions.map(async ([name, option]) => {
+            await this.orm.write(mainObject.model, [mainObject.id], {[name]: option.value});
+        }));
+        return this.widget.saveContent(false);
     }
     /**
      * Returns the elements on the page which are editable.
@@ -79,6 +120,31 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
     get widgetArgs() {
         return [this._wysiwygParams];
     }
+    /**
+     * Return the editable parent element. This includes content inside it which isn't editable.
+     *
+     * @returns {HTMLElement}
+     */
+    get editable() {
+        return this.websiteService.pageDocument.getElementById('wrapwrap');
+    }
+    /**
+     * @see {editable} jQuery wrapped editable.
+     *
+     * @returns {jQuery}
+     */
+    get $editable() {
+        return $(this.editable);
+    }
+    get _context() {
+        return Object.assign({},
+            this.userService.context,
+            {
+                website_id: this.websiteService.currentWebsite.id,
+                lang: (this.websiteService.pageDocument.documentElement.getAttribute('lang') || 'en_US').replace('-', '_'),
+            },
+        );
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -89,14 +155,14 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
      * @return {Object} Params to pass to the wysiwyg widget.
      */
     get _wysiwygParams() {
-        const context = this.userService.context;
         return {
             snippets: 'website.snippets',
             recordInfo: {
-                context: context,
+                context: this._context,
                 data_res_model: 'website',
-                data_res_id: context.website_id,
+                data_res_id: this._context.website_id,
             },
+            context: this._context,
             editable: this.$editable,
             discardButton: true,
             saveButton: true,
@@ -190,41 +256,122 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
     _getReadOnlyAreas() {
         return [];
     }
+    /**
+     * This method provides support for the legacy event system.
+     * The supported events are defined in the prototype.
+     * @see WysiwygAdapterComponent.events
+     * If the event is not supported it uses the super class method's.
+     * See {@link ComponentAdapter._trigger_up}.
+     *
+     * @override
+     * @param {Event} event
+     */
+    _trigger_up(event) {
+        if (this.events[event.name]) {
+            let method = this.events[event.name];
+            return this[method](event);
+        }
+        return super._trigger_up(...arguments);
+    }
+    /***
+     * Handles action request from inner widgets
+     *
+     * @param {Event} event the event that triggerd the action.
+     * @returns {*}
+     * @private
+     */
+    async _handleAction(event) {
+        const actionName = event.data.actionName;
+        const params = event.data.params;
+        switch (actionName) {
+            case 'get_page_option':
+                 return event.data.onSuccess(this.pageOptions[params[0]].value);
+            case 'toggle_page_option':
+                return this._togglePageOption(...params);
+            case 'edit_menu':
+                return this.dialogs.add(EditMenuDialog, {
+                    save: () => {
+                        const snippetsMenu = this.widget.snippetsMenu;
+                        snippetsMenu.trigger_up('request_save', {reload: true, _toMutex: true});
+                    },
+                });
+        }
+    }
+    /**
+     * Toggles or force an option linked to the page.
+     *
+     * @see {PageOption}
+     * @param {Object} params
+     * @param {string} params.name the name of the page option,
+     * @param {*} params.value the value if needed to be forced
+     * @private
+     */
+    _togglePageOption(params) {
+        const pageOption = this.pageOptions[params.name];
+        pageOption.value = params.value === undefined ? !pageOption.value : params.value;
+    }
+    /**
+     * Triggers an event on the iframe's public root.
+     *
+     * @private
+     * @param type {string}
+     * @param eventData {*}
+     * @returns {void|OdooEvent|*}
+     */
+    _websiteRootEvent(type, eventData = {}) {
+        const websiteRootInstance = this.websiteService.websiteRootInstance;
+        return websiteRootInstance.trigger_up(type, {...eventData});
+    }
     _preventDefault(e) {
         e.preventDefault();
     }
     /**
      * @private
      */
-     async _reloadBundles() {
-        const bundles = await this._rpc({
-            route: '/website/theme_customize_bundle_reload',
-        });
-        let $allLinks = $();
-        const proms = _.map(bundles, (bundleURLs, bundleName) => {
-            var $links = $('link[href*="' + bundleName + '"]');
-            $allLinks = $allLinks.add($links);
-            var $newLinks = $();
-            _.each(bundleURLs, url => {
-                $newLinks = $newLinks.add($('<link/>', {
+     async _reloadBundles(event) {
+        const bundles = await this.rpc('/website/theme_customize_bundle_reload');
+        let $allLinksIframe = $();
+        let $allLinksEditor = $();
+        const proms = [];
+        const createLinksProms = (bundleURLs, $insertionEl) => {
+            let $newLinks = $();
+            for (const url of bundleURLs) {
+                $newLinks = $newLinks.add('<link/>', {
                     type: 'text/css',
                     rel: 'stylesheet',
-                    href: url,
-                }));
-            });
-
-            const linksLoaded = new Promise(resolve => {
+                    href: url + `?${new Date().getTime()}`, // Insures that the css will be reloaded.
+                });
+            }
+            proms.push(new Promise((resolve, reject) => {
                 let nbLoaded = 0;
-                $newLinks.on('load error', () => { // If we have an error, just ignore it
+                $newLinks.on('load error', () => {
                     if (++nbLoaded >= $newLinks.length) {
                         resolve();
                     }
                 });
-            });
-            $links.last().after($newLinks);
-            return linksLoaded;
+            }));
+            $insertionEl.after($newLinks);
+        };
+        _.map(bundles, (bundleURLs, bundleName) => {
+            const selector = `link[href*="${bundleName}"]`;
+            const $linksIframe = this.websiteService.contentWindow.$(selector);
+            const $linksEditor = $(selector);
+            if ($linksEditor.length) {
+                $allLinksEditor.add($linksEditor);
+                createLinksProms(bundleURLs, $linksEditor.last());
+            }
+            if ($linksIframe.length) {
+                $allLinksIframe = $allLinksIframe.add($linksIframe);
+                createLinksProms(bundleURLs, $linksIframe.last());
+            }
         });
-        await Promise.all(proms).then(() => $allLinks.remove());
+        await Promise.all(proms).then(() => {
+            $allLinksIframe.remove();
+            $allLinksEditor.remove();
+        });
+        if (event.data.onSuccess) {
+            return event.data.onSuccess();
+        }
     }
     /**
      * Returns the snippets commands for the powerbox
@@ -334,6 +481,142 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 },
             },
         ];
-        return {};
     }
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Creates a new event and dispatch it in the iframe's public widget
+     *
+     * @param {OdooEvent} event
+     * @private
+     */
+    _onRootEventRequest(event) {
+        return this._websiteRootEvent(event.name, event.data);
+    }
+
+    /**
+     * Saves the editables to the server if it's dirty. If no
+     * callbacks are given, leaves the editor, otherwise, perform
+     * the callback.
+     *
+     * @param event
+     * @param [event.data.onSuccess] {Function} Async callback
+     * @param [event.data.reload] {boolean}
+     * @param [event.data.reloadEditor] {boolean} reloads the editor.
+     * @param [event.data.reloadWebClient] reloads the Webclient.
+     * @returns {Promise<unknown>}
+     * @private
+     */
+    async _onSaveRequest(event) {
+        const isDirty = this.widget.isDirty();
+        let callback = () => this.props.quitCallback();
+        if (event.data.reload || event.data.reloadEditor) {
+            this.widget.trigger_up('disable_loading_effects');
+            this.props.willReload(this.widget.el);
+            callback = async () => {
+                if (event.data.onSuccess) {
+                    await event.data.onSuccess();
+                }
+                return this.props.reloadCallback({
+                    snippetOptionSelector: event.data.optionSelector,
+                    url: event.data.url,
+                    invalidateSnippetCache: event.data.invalidateSnippetCache
+                });
+            }
+        } else {
+            if (event.data.onSuccess) {
+                callback = event.data.onSuccess;
+            }
+        }
+        if (isDirty) {
+            return this.save().then(callback)
+        } else {
+            return callback();
+        }
+    }
+    /**
+     * Returns the user context.
+     * @link {@web/core/user_service.js}
+     *
+     * @param event
+     * @returns {*}
+     * @private
+     */
+    _onContextGet(event) {
+        return event.data.callback(this._context);
+    }
+    /**
+     * Discards changes and reload the iframe.
+     *
+     * @param event
+     * @returns {*}
+     * @private
+     */
+    _onCancelRequest(event) {
+        return this.props.quitCallback();
+    }
+    /***
+     * Starts the widgets inside the dropped snippet.
+     *
+     * @param event {Object}
+     * @param event.data.addPostDropAsync {Function} Function used to push a promise in the stack.
+     * @see web_editor/SnippetsMenu.callPostSnippetDrop
+     * @private
+     */
+    _onSnippetDropped(event) {
+        event.data.addPostDropAsync(new Promise(resolve => {
+            this._websiteRootEvent('widgets_start_request', {
+                editableMode: true,
+                $target: event.data.$target,
+                onSuccess: () => resolve(),
+            });
+        }));
+    }
+    /***
+     * Re-add the editor message if no content is left on the page.
+     *
+     * @param event
+     * @private
+     */
+    _onSnippetRemoved(event) {
+        const $empty = this.$editable.find('.oe_empty');
+        if (!$empty.children().length) {
+            $empty.empty(); // Remove any superfluous whitespace
+            this._addEditorMessages();
+        }
+    }
+    /**
+     * Adds / Edit an entry in the website menu.
+     *
+     * @param event
+     * @private
+     */
+    _onMenuDialogRequest(event) {
+        this.dialogs.add(MenuDialog, {
+            name: event.data.name,
+            url: event.data.url,
+            isMegaMenu: event.data.isMegaMenu,
+            save: async (...args) => {
+                await event.data.save(...args);
+            },
+        });
+    }
+}
+WysiwygAdapterComponent.prototype.events = {
+    'widgets_start_request': '_onRootEventRequest',
+    'widgets_stop_request': '_onRootEventRequest',
+    'ready_to_clean_for_save': '_onRootEventRequest',
+    'gmap_api_request': '_onRootEventRequest',
+    'gmap_api_key_request': '_onRootEventRequest',
+    'request_save': '_onSaveRequest',
+    'context_get': '_onContextGet',
+    'action_demand': '_handleAction',
+    'request_cancel': '_onCancelRequest',
+    'snippet_dropped': '_onSnippetDropped',
+    'snippet_removed': '_onSnippetRemoved',
+    'reload_bundles': '_reloadBundles',
+    'menu_dialog': '_onMenuDialogRequest',
 }
