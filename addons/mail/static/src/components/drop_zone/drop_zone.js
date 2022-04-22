@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { decrement, increment } from '@mail/model/model_field_command';
+import { decrement } from '@mail/model/model_field_command';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
@@ -54,23 +54,6 @@ export class DropZone extends Component {
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-
-    /**
-     * Shows a visual drop effect when dragging inside the dropzone.
-     *
-     * @private
-     * @param {DragEvent} ev
-     */
-    _onDragenter(ev) {
-        if (!this.dropZoneView) {
-            return;
-        }
-        ev.preventDefault();
-        if (this.dropZoneView.dragCount === 0) {
-            this.dropZoneView.update({ isDraggingInside: true });
-        }
-        this.dropZoneView.update({ dragCount: increment() });
-    }
 
     /**
      * Hides the visual drop effect when dragging outside the dropzone.
