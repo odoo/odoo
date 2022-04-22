@@ -13,20 +13,32 @@ import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { FormArchParser, loadSubViews } from "@web/views/form/form_view";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
-const { Component, onWillDestroy } = owl;
+const { Component } = owl;
 
 const X2M_RENDERERS = {
     list: ListRenderer,
     kanban: KanbanRenderer,
 };
 
+function useOwnedDialogs() {
+    const addDialog = useService("dialog").add;
+    const cbs = [];
+    owl.onWillUnmount(() => cbs.forEach((cb) => cb()));
+
+    const add = (...args)  => {
+        const close = addDialog(...args);
+        cbs.push(close);
+        return close;
+    };
+    return add;
+}
+
 export class X2ManyField extends Component {
     setup() {
-        this.dialogService = useService("dialog");
         this.user = useService("user");
         this.viewService = useService("view");
 
-        this.dialogClose = [];
+        this.addDialog = useOwnedDialogs();
 
         this.activeField = this.props.record.activeFields[this.props.name];
         this.field = this.props.record.fields[this.props.name];
@@ -41,9 +53,6 @@ export class X2ManyField extends Component {
             this.Renderer = X2M_RENDERERS[this.activeField.viewMode];
             this.viewMode = this.activeField.viewMode;
         }
-        onWillDestroy(() => {
-            this.dialogClose.forEach((close) => close());
-        });
     }
 
     get list() {
@@ -159,17 +168,15 @@ export class X2ManyField extends Component {
             fields: { ...form.fields, id: { name: "id", type: "integer", readonly: true } },
             views: { form },
         });
-        this.dialogClose.push(
-            this.dialogService.add(FormViewDialog, {
-                archInfo: form, // FIXME: might not be there
-                record: newRecord,
-                save: this.saveRecord.bind(this, newRecord),
-                title: sprintf(
-                    this.env._t("Open: %s"),
-                    this.props.record.activeFields[this.props.name].string
-                ),
-            })
-        );
+        this.addDialog(FormViewDialog, {
+            archInfo: form, // FIXME: might not be there
+            record: newRecord,
+            save: this.saveRecord.bind(this, newRecord),
+            title: sprintf(
+                this.env._t("Open: %s"),
+                this.props.record.activeFields[this.props.name].string
+            ),
+        });
     }
 
     async onAdd(context) {
@@ -192,17 +199,15 @@ export class X2ManyField extends Component {
                 viewType: "form",
             });
             await record.load(); //AAB TO DISCUSS
-            this.dialogClose.push(
-                this.dialogService.add(FormViewDialog, {
-                    archInfo: form, // FIXME: might not be there
-                    record,
-                    save: this.saveRecordToList.bind(this, record),
-                    title: sprintf(
-                        this.env._t("Open: %s"),
-                        this.props.record.activeFields[this.props.name].string
-                    ),
-                })
-            );
+            this.addDialog(FormViewDialog, {
+                archInfo: form, // FIXME: might not be there
+                record,
+                save: this.saveRecordToList.bind(this, record),
+                title: sprintf(
+                    this.env._t("Open: %s"),
+                    this.props.record.activeFields[this.props.name].string
+                ),
+            });
         }
     }
 
@@ -256,7 +261,7 @@ export class Many2ManyField extends X2ManyField {
         let domain = record.getFieldDomain(name).toList();
         domain = [...domain, "!", ["id", "in", list.resIds]];
         context = makeContext([record.getFieldContext(name), context]);
-        const close = this.dialogService.add(SelectCreateDialog, {
+        this.addDialog(SelectCreateDialog, {
             title: this.env._t("Select records"),
             noCreate: !this.activeActions.canCreate,
             multiSelect: this.activeActions.canLink, // LPE Fixme
@@ -268,7 +273,6 @@ export class Many2ManyField extends X2ManyField {
             },
             onCreateEdit: super.onAdd.bind(this, context),
         });
-        this.dialogClose.push(close);
     }
 
     async saveRecordToList(record) {
