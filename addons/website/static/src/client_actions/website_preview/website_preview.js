@@ -2,6 +2,7 @@
 
 import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
+import core from 'web.core';
 import { WebsiteEditorComponent } from '../../components/editor/editor';
 
 const { Component, onWillStart, useRef, useEffect, useState } = owl;
@@ -33,6 +34,16 @@ export class WebsitePreview extends Component {
                 this.websiteService.contentWindow = null;
             };
         }, () => [this.props.action.context.params]);
+
+        useEffect(() => {
+            if (this.websiteContext.edition) {
+                if (this.$welcomeMessage) {
+                    this.$welcomeMessage.detach();
+                }
+            } else {
+                this.addWelcomeMessage();
+            }
+        }, () => [this.websiteContext.edition]);
     }
 
     get websiteId() {
@@ -88,6 +99,16 @@ export class WebsitePreview extends Component {
         });
     }
 
+    addWelcomeMessage() {
+        const $wrap = $(this.iframe.el.contentDocument.querySelector('#wrapwrap.homepage')).find('#wrap');
+        if ($wrap.length && $wrap.html().trim() === '') {
+            this.$welcomeMessage = $(core.qweb.render('website.homepage_editor_welcome_message'));
+            this.$welcomeMessage.addClass('o_homepage_editor_welcome_message');
+            this.$welcomeMessage.css('min-height', $wrap.parent('main').height() - ($wrap.outerHeight(true) - $wrap.height()));
+            $wrap.empty().append(this.$welcomeMessage);
+        }
+    }
+
     /**
      * Returns true if the url should be opened in the top
      * window.
@@ -112,6 +133,9 @@ export class WebsitePreview extends Component {
         this.websiteService.pageDocument = this.iframe.el.contentDocument;
         this.websiteService.contentWindow = this.iframe.el.contentWindow;
         this.iframe.el.contentWindow.addEventListener('PUBLIC-ROOT-READY', (event) => {
+            if (!this.websiteContext.edition) {
+                this.addWelcomeMessage();
+            }
             this.websiteService.websiteRootInstance = event.detail.rootInstance;
         });
 

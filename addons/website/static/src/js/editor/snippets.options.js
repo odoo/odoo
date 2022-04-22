@@ -662,39 +662,6 @@ options.Class.include({
         });
     },
     /**
-     * @private
-     */
-    _reloadBundles: async function () {
-        const bundles = await this._rpc({
-            route: '/website/theme_customize_bundle_reload',
-        });
-        let $allLinks = $();
-        const proms = _.map(bundles, (bundleURLs, bundleName) => {
-            var $links = $('link[href*="' + bundleName + '"]');
-            $allLinks = $allLinks.add($links);
-            var $newLinks = $();
-            _.each(bundleURLs, url => {
-                $newLinks = $newLinks.add($('<link/>', {
-                    type: 'text/css',
-                    rel: 'stylesheet',
-                    href: url,
-                }));
-            });
-
-            const linksLoaded = new Promise(resolve => {
-                let nbLoaded = 0;
-                $newLinks.on('load error', () => { // If we have an error, just ignore it
-                    if (++nbLoaded >= $newLinks.length) {
-                        resolve();
-                    }
-                });
-            });
-            $links.last().after($newLinks);
-            return linksLoaded;
-        });
-        await Promise.all(proms).then(() => $allLinks.remove());
-    },
-    /**
      * @override
      */
     _select: async function (previewMode, widget) {
