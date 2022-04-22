@@ -43,16 +43,6 @@ export class Dialog extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Called when clicking on this dialog.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClick(ev) {
-        ev.stopPropagation();
-    }
-
-    /**
      * Closes the dialog when clicking outside.
      * Does not work with attachment viewer because it takes the whole space.
      *
