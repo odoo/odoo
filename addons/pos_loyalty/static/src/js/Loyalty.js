@@ -366,7 +366,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
 
     _getPotentialReward(product) {
         const claimable = this.getClaimableRewards().find(item => item.reward.reward_product_ids.includes(product.id));
-        if (claimable) {
+        if (claimable && !this.disabledRewards.includes(claimable.reward.id)) {
             return [claimable.reward, claimable.coupon_id, claimable.reward.required_points]
         } else {
             return [false];
