@@ -30,6 +30,13 @@ export class DropZone extends Component {
     //--------------------------------------------------------------------------
 
     /**
+     * @returns {DropZoneView}
+     */
+    get dropZoneView() {
+        return this.messaging && this.messaging.models['DropZoneView'].get(this.props.localId);
+    }
+
+    /**
      * Returns whether the given node is self or a children of self.
      *
      * @param {Node} node
@@ -131,6 +138,7 @@ export class DropZone extends Component {
 
 Object.assign(DropZone, {
     props: {
+        localId: String,
         onDropzoneFilesDropped: {
             type: Function,
             optional: true,

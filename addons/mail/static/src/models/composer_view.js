@@ -839,6 +839,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeDropZoneView() {
+            if (this.useDragVisibleDropZone.isVisible) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {boolean|FieldCommand}
          */
         _computeHasDiscardButton() {
@@ -1425,6 +1435,11 @@ registerModel({
          * Determines whether this composer should be focused at next render.
          */
         doFocus: attr(),
+        dropZoneView: one('DropZoneView', {
+            compute: '_computeDropZoneView',
+            inverse: 'composerViewOwner',
+            isCausal: true,
+        }),
         /**
          * Determines the emojis popover that is active on this composer view.
          */
