@@ -148,3 +148,44 @@ class TestTimesheetHolidays(TestCommonTimesheet):
             .action_cancel_leave()
         self.assertFalse(holiday.active, 'The time off should be archived')
         self.assertEqual(len(holiday.timesheet_ids), 0, 'The timesheets generated should be unlink.')
+
+    def test_timesheet_time_off_including_public_holiday(self):
+        """ Generate one timesheet for the public holiday and 4 timesheets for the time off.
+            Test Case:
+            =========
+            1) Create a public time off on Wednesday
+            2) In the same week, create a time off during one week for an employee
+            3) Check if there are five timesheets generated for time off and public
+               holiday.4 timesheets should be linked to the time off and 1 for
+               the public one.
+        """
+
+        leave_start_datetime = datetime(2022, 1, 24, 7, 0, 0, 0) # Monday
+        leave_end_datetime = datetime(2022, 1, 28, 18, 0, 0, 0)
+
+        # Create a public holiday
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Test',
+            'calendar_id': self.employee_working_calendar.id,
+            'date_from': datetime(2022, 1, 26, 7, 0, 0, 0),  # This is Wednesday and India Independence
+            'date_to': datetime(2022, 1, 26, 18, 0, 0, 0),
+        })
+
+        holiday = self.Requests.with_user(self.user_employee).create({
+            'name': 'Leave 1',
+            'employee_id': self.empl_employee.id,
+            'holiday_status_id': self.hr_leave_type_with_ts.id,
+            'date_from': leave_start_datetime,
+            'date_to': leave_end_datetime,
+        })
+        holiday.with_user(SUPERUSER_ID).action_validate()
+        self.assertEqual(len(holiday.timesheet_ids), 4, '4 timesheets should be generated for this time off.')
+
+        timesheets = self.env['account.analytic.line'].search([
+            ('date', '>=', leave_start_datetime),
+            ('date', '<=', leave_end_datetime),
+            ('employee_id', '=', self.empl_employee.id),
+        ])
+
+        self.assertEqual(len(timesheets.filtered('holiday_id')), 4, "4 timesheet should be linked to employee's timeoff")
+        self.assertEqual(len(timesheets.filtered('global_leave_id')), 1, '1 timesheet should be linked to global leave')
