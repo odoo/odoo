@@ -18,6 +18,13 @@ export class ChatWindowHeader extends Component {
         return this.messaging && this.messaging.models['ChatWindow'].get(this.props.chatWindowLocalId);
     }
 
+    /**
+     * @returns {ChatWindowHeaderView}
+     */
+     get chatWindowHeaderView() {
+        return this.messaging && this.messaging.models['ChatWindowHeaderView'].get(this.props.localId);
+    }
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -47,6 +54,7 @@ export class ChatWindowHeader extends Component {
 Object.assign(ChatWindowHeader, {
     props: {
         chatWindowLocalId: String,
+        localId: String,
         onClicked: {
             type: Function,
             optional: true,

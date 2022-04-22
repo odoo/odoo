@@ -5,7 +5,7 @@
         <t t-if="followButtonView">
             <div class="o_FollowButton d-flex" t-attf-class="{{ className }}" t-ref="root">
                 <t t-if="followButtonView.chatterOwner.thread and followButtonView.chatterOwner.thread.isCurrentPartnerFollowing">
-                    <button class="o_FollowButton_unfollow btn" t-att-class="{ 'o_ChatterTopbar_button': followButtonView.chatterOwner, 'o-following text-success': !followButtonView.isUnfollowButtonHighlighted, 'o-unfollow text-warning': followButtonView.isUnfollowButtonHighlighted }" t-att-disabled="followButtonView.isDisabled" t-on-click="followButtonView.onClickUnfollow" t-on-mouseenter="_onMouseEnterUnfollow" t-on-mouseleave="_onMouseLeaveUnfollow">
+                    <button class="o_FollowButton_unfollow btn" t-att-class="{ 'o_ChatterTopbar_button': followButtonView.chatterOwner, 'o-following text-success': !followButtonView.isUnfollowButtonHighlighted, 'o-unfollow text-warning': followButtonView.isUnfollowButtonHighlighted }" t-att-disabled="followButtonView.isDisabled" t-on-click="followButtonView.onClickUnfollow" t-on-mouseenter="followButtonView.onMouseEnterUnfollow" t-on-mouseleave="followButtonView.onMouseleaveUnfollow">
                         <t t-if="followButtonView.isUnfollowButtonHighlighted">
                             <i class="fa fa-times"/> Unfollow
                         </t>

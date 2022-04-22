@@ -601,6 +601,11 @@ registerModel({
             inverse: 'chatWindowOwner',
             isCausal: true,
         }),
+        chatWindowHeaderView: one('ChatWindowHeaderView', {
+            default: insertAndReplace(),
+            inverse: 'chatWindowOwner',
+            isCausal: true,
+        }),
         componentStyle: attr({
             compute: '_computeComponentStyle',
         }),
