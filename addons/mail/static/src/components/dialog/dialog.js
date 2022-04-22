@@ -11,19 +11,16 @@ export class Dialog extends Component {
      */
     setup() {
         super.setup();
-        this._onClickGlobal = this._onClickGlobal.bind(this);
         this._onKeydownDocument = this._onKeydownDocument.bind(this);
         onMounted(() => this._mounted());
         onWillUnmount(() => this._willUnmount());
     }
 
     _mounted() {
-        document.addEventListener('click', this._onClickGlobal, true);
         document.addEventListener('keydown', this._onKeydownDocument);
     }
 
     _willUnmount() {
-        document.removeEventListener('click', this._onClickGlobal, true);
         document.removeEventListener('keydown', this._onKeydownDocument);
     }
 
@@ -50,23 +47,6 @@ export class Dialog extends Component {
      */
     _onClick(ev) {
         ev.stopPropagation();
-    }
-
-    /**
-     * Closes the dialog when clicking outside.
-     * Does not work with attachment viewer because it takes the whole space.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickGlobal(ev) {
-        if (this.dialog.hasElementInContent(ev.target)) {
-            return;
-        }
-        if (!this.dialog.isCloseable) {
-            return;
-        }
-        this.dialog.delete();
     }
 
     /**

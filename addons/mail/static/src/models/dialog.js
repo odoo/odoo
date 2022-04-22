@@ -13,6 +13,14 @@ registerModel({
         'followerOwnerAsSubtypeList',
         'messageActionListOwnerAsDeleteConfirm',
     ]],
+    lifecycleHooks: {
+        _created() {
+            document.addEventListener('click', this._onClickGlobal, true);
+        },
+        _willDelete() {
+            document.removeEventListener('click', this._onClickGlobal, true);
+        },
+    },
     recordMethods: {
         /**
          * @param {Element} element
@@ -149,6 +157,22 @@ registerModel({
          */
         _computeStyle() {
             return `background-color: rgba(0, 0, 0, ${this.backgroundOpacity});`;
+        },
+        /**
+         * Closes the dialog when clicking outside.
+         * Does not work with attachment viewer because it takes the whole space.
+         *
+         * @private
+         * @param {MouseEvent} ev
+         */
+        _onClickGlobal(ev) {
+            if (this.hasElementInContent(ev.target)) {
+                return;
+            }
+            if (!this.isCloseable) {
+                return;
+            }
+            this.delete();
         },
     },
     fields: {
