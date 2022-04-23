@@ -28,6 +28,7 @@
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
 # Emanuel Bergsten, 2022
 # Simon S, 2022
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -35,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Simon S, 2022\n"
+"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -587,7 +588,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        - Låter supportteamet ange ett projekt\n"
+"        - Låter kundtjänstteamet ange ett projekt\n"
 "        - Spåra tidrapport för en uppgift från ett ärende\n"
 "    "
 
@@ -796,6 +797,8 @@ msgid ""
 "        Bridge between Helpdesk and Industry FSM Sale\n"
 "    "
 msgstr ""
+"\n"
+"        Brygga mellan Kundtjänst och Industri FSM Försäljning"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports_base_address_extended
@@ -921,7 +924,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Konvertera supportärenden till uppgifter för fältservice.\n"
+"        Konvertera Kundtjänstärenden till uppgifter för fältservice.\n"
 "    "
 
 #. module: base
@@ -1599,7 +1602,7 @@ msgid ""
 "    Adds workcenters to Quality Control\n"
 msgstr ""
 "\n"
-"    Tillägger arbetscentra till kvalitetskontrollen\n"
+"   Lägger till Produktionsgrupper till Kvalitetskontroll\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_invoice
@@ -2932,7 +2935,7 @@ msgstr ""
 "\n"
 "* Rapport om kostnadsstrukturen\n"
 "\n"
-"Gör det också möjligt att beräkna kostnaden för produkten utifrån dess BoM, med hjälp av kostnaderna för dess komponenter och arbetscenterverksamhet.\n"
+"Gör det också möjligt att beräkna kostnaden för produkten utifrån dess BoM, med hjälp av kostnaderna för dess komponenter och produktionsgrupp.\n"
 "En knapp läggs till på själva produkten, men också en åtgärd i listvyn över produkterna.\n"
 "Om den automatiska lagervärderingen är aktiv skapas de nödvändiga bokföringsposterna.\n"
 "\n"
@@ -3733,6 +3736,9 @@ msgid ""
 "or generate a ticket from a business inquiry\n"
 "        "
 msgstr ""
+"\n"
+"Konvertera affärsförfrågningar som har hamnat i Kundtjänst-kanalen av misstag,\n"
+"eller generera ett ärende från en affärsförfrågning"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays_attendance
@@ -3750,7 +3756,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Skapa kreditnotor från supportärenden\n"
+"Skapa kreditnotor från Kundtjänstärenden\n"
 "    "
 
 #. module: base
@@ -4665,7 +4671,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Generera kuponger från supportärenden\n"
+"Generera kuponger från Kundtjänstärenden\n"
 "    "
 
 #. module: base
@@ -4710,6 +4716,8 @@ msgid ""
 "Generate tickets in Helpdesk app from a form published on your website. This form can be customized thanks to the *Website Builder*.\n"
 "    "
 msgstr ""
+"\n"
+"Skapa ärenden i Kundtjänst-appen från ett formulär som publiceras på din webbplats. Detta formulär kan anpassas tack vare *Website Builder*"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_intrastat
@@ -4819,7 +4827,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Supportapp för ärendehantering\n"
+"Kundtjänstapp för ärendehantering\n"
 "================================\n"
 "\n"
 "Funktioner:\n"
@@ -5186,6 +5194,14 @@ msgid ""
 "* Equipments related to workcenters\n"
 "* MTBF, MTTR, ...\n"
 msgstr ""
+"\n"
+"Underhåll i MRP\n"
+"===================\n"
+"* Förebyggande kontra korrigerande underhåll\n"
+"* Definiera olika steg för dina underhållsförfrågningar\n"
+"* Planera underhållsförfrågningar (även återkommande förebyggande)\n"
+"* Utrustning relaterad till produktionsgrupper\n"
+"* MTBF, MTTR, ...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_twitter_wall
@@ -5264,7 +5280,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Hantera produktreturer från supportärenden\n"
+"Hantera produktreturer från kundtjänstärenden\n"
 "    "
 
 #. module: base
@@ -5453,7 +5469,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Hantera after sales på produkterna från supportärenden.\n"
+"Hantera after sales på produkterna från Kundtjänstärenden.\n"
 "    "
 
 #. module: base
@@ -5630,6 +5646,13 @@ msgid ""
 "associated to every resource. It also manages the leaves of every resource.\n"
 "    "
 msgstr ""
+"\n"
+"Modul för resurshantering.\n"
+"=================================\n"
+"\n"
+"En resurs representerar något som kan schemaläggas (en utveckling på en uppgift eller en\n"
+"produktionsgrupp för tillverkningsorder). Den här modulen hanterar en resurskalender\n"
+"kopplat till varje resurs. Den hanterar också bladen på varje resurs."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mail
@@ -6319,7 +6342,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Reparera produkter från helpdesk-tickets\n"
+"Reparera produkter från kundtjänstärenden\n"
 "    "
 
 #. module: base
@@ -8640,7 +8663,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Integrering av forum för supportmodulen\n"
+"Integrering av forum för kundtjänstmodulen\n"
 "=================================================\n"
 "\n"
 "    Låt dina team ha ett relaterat forum för att besvara kundfrågor.\n"
@@ -8663,7 +8686,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Webbplats IM Livechat-integration för supportmodulen\n"
+"Webbplats IM Livechat-integration för kundtjänstmodulen\n"
 "=======================================================\n"
 "\n"
 "Funktioner:\n"
@@ -8685,7 +8708,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Integration av eLearning i supportmodulen\n"
+"Integration av eLearning i Kundtjänstmodulen\n"
 "==================================================\n"
 "\n"
 "    Lägg till eLearning-presentationer till ditt team så att kunder som söker hjälp kan se dem innan de skickar in nya ärenden.\n"
@@ -10429,6 +10452,7 @@ msgstr "Lägg till språk"
 #: model:ir.module.module,summary:base.module_data_merge_helpdesk
 msgid "Add Merge action in contextual menu of helpdesk ticket model."
 msgstr ""
+"Lägg till sammanslagningsåtgärd i kontextmenyn för kundtjänstärendemodell."
 
 #. module: base
 #: model:ir.module.module,description:base.module_data_merge_project
@@ -12368,7 +12392,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_website_helpdesk
 #: model:ir.module.module,summary:base.module_website_helpdesk
 msgid "Bridge module for helpdesk modules using the website."
-msgstr "Bryggmodul för supportmoduler som använder webbplatsen."
+msgstr "Bryggmodul för Kundtjänstmoduler som använder webbplatsen."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_enterprise
@@ -13657,7 +13681,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_mail_plugin
 msgid "Convert emails to Helpdesk Tickets."
-msgstr ""
+msgstr "Konvertera e-postmeddelanden till Kundtjänstärenden."
 
 #. module: base
 #: model:res.country,name:base.ck
@@ -15707,6 +15731,10 @@ msgid ""
 "* Traceability report\n"
 "* Cost Structure report (mrp_account)"
 msgstr ""
+"Företragspåbyggnad för MRP\n"
+"* Arbetsorderplanering. Kontrollera planering efter Gantt-vyer grupperade efter produktionsorder/produktionsgrupp\n"
+"* Spårbarhetsrapport\n"
+"* Kostnadsstrukturrapport (mrp_account)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_contacts_enterprise
@@ -17591,67 +17619,67 @@ msgstr "Kundtjänst"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_helpdesk
 msgid "Helpdesk - CRM"
-msgstr ""
+msgstr "Kundtjänst - CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_account
 msgid "Helpdesk Account"
-msgstr "Supportkonto"
+msgstr "Kundtjänstkonto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_sale
 msgid "Helpdesk After Sales"
-msgstr "Support After Sales"
+msgstr "Kundtjänst Efter Sälj"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_fsm
 msgid "Helpdesk FSM"
-msgstr "Support FSM"
+msgstr "Kundtjänst FSM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_fsm_sale
 msgid "Helpdesk FSM - Sale"
-msgstr ""
+msgstr "Kundtjänst FSM - Sälj"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_fsm_report
 msgid "Helpdesk FSM Reports"
-msgstr ""
+msgstr "Kundtjänst FSM Rapporter"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_mail_plugin
 msgid "Helpdesk Mail Plugin"
-msgstr ""
+msgstr "Kundtjänst epost plugin"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge_helpdesk
 msgid "Helpdesk Merge action"
-msgstr ""
+msgstr "Kundtjänst Sammanfoga "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_repair
 msgid "Helpdesk Repair"
-msgstr "Support reparationer"
+msgstr "Kundtjänst reparationer"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_sale_coupon
 msgid "Helpdesk Sale Coupon"
-msgstr "Support för rabattkupong"
+msgstr "Kundtjänst för rabattkupong"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_stock
 msgid "Helpdesk Stock"
-msgstr ""
+msgstr "Kundtjänst Lager"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_timesheet
 msgid "Helpdesk Timesheet"
-msgstr "Support tidrapport"
+msgstr "Kundtjänst tidrapport"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_forum
 msgid "Helpdesk: Knowledge Base"
-msgstr "Support: Kunskapsbas"
+msgstr "Kundtjänst: Kunskapsbas"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_sales_point_of_sale
@@ -18761,6 +18789,8 @@ msgid ""
 "Integrate helpdesk with your mailbox.\n"
 "                   Turn emails received in your mailbox into Tickets and log their content as internal notes."
 msgstr ""
+"Integrera kundtjänst med din brevlåda.\n"
+"                    Förvandla e-postmeddelanden som tas emot i din brevlåda till Ärenden och logga deras innehåll som interna anteckningar."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_six
@@ -19303,7 +19333,7 @@ msgstr "Kiribati"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_forum
 msgid "Knowledge base for helpdesk based on Odoo Forum"
-msgstr "Kunskapsbas för support baserad på Odoo Forum"
+msgstr "Kunskapsbas för kundtjänst baserad på Odoo Forum"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_si
@@ -24797,12 +24827,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_fsm_sale
 msgid "Project, Helpdesk, FSM, Timesheet and Sale Orders"
-msgstr ""
+msgstr "Projekt, Kundtjänst, FSM, Tidrapporter och Säljorder"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_sale_timesheet
 msgid "Project, Helpdesk, Timesheet and Sale Orders"
-msgstr "Projekt, support, tidrapporter och order"
+msgstr "Projekt, Kundtjänst, Tidrapporter och Säljorder"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_account
@@ -26489,7 +26519,7 @@ msgstr "Sälj kurser"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_sale_timesheet
 msgid "Sell Helpdesk Timesheet"
-msgstr "Sälj support-tidrapport"
+msgstr "Sälj Kundtjänst-tidrapport"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet
@@ -30474,12 +30504,12 @@ msgstr "Webbplats event-CRM"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk
 msgid "Website Helpdesk"
-msgstr "Webbplats support"
+msgstr "Webbplats Kundtjänst"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_livechat
 msgid "Website IM Livechat Helpdesk"
-msgstr "Webbplats livechat-support"
+msgstr "Webbplats livechat-Kundtjänst"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_jitsi
