@@ -1,23 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* delivery
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
-#
+# Martin Trigaux, 2022
+# Stefano Consolaro <stefano.consolaro@mymage.it>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
-"PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Stefano Consolaro <stefano.consolaro@mymage.it>, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: delivery
@@ -175,14 +177,18 @@ msgstr "Importo"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__amount
-msgid "Amount of the order to benefit from a free shipping, expressed in the company currency"
-msgstr "Importo dell'ordine per beneficiare della spedizione gratuita, espresso nella valuta dell'azienda"
+msgid ""
+"Amount of the order to benefit from a free shipping, expressed in the "
+"company currency"
+msgstr ""
+"Importo dell'ordine per beneficiare della spedizione gratuita, espresso "
+"nella valuta dell'azienda"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
-msgstr "Archiviato"
+msgstr "In archivio"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__available_carrier_ids
@@ -228,7 +234,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_choose_delivery_carrier__carrier_id
 msgid "Choose the method to deliver your goods"
-msgstr "Scegliere il metodo di consegna della merce"
+msgstr "Scegliere il metodo di consegna delle merci"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
@@ -271,7 +277,7 @@ msgstr "Creato da"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__create_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__currency_id
@@ -430,7 +436,8 @@ msgstr "Ambiente"
 #: code:addons/delivery/models/delivery_grid.py:0
 #, python-format
 msgid "Error: this delivery method is not available for this address."
-msgstr "Errore: questo metodo di consegna non è disponibile per questo indirizzo."
+msgstr ""
+"Errore: questo metodo di consegna non è disponibile per questo indirizzo."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
@@ -449,12 +456,17 @@ msgstr "Costo stimato"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
-msgstr "Compilare questo campo se la spedizione verrà fatturata in base al prelievo."
+msgstr ""
+"Compilare questo campo se la spedizione verrà fatturata in base al prelievo."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid "Filling this form allows you to filter delivery carriers according to the delivery address of your customer."
-msgstr "La compilazione del modulo permette di filtrare i vettori in base all'indirizzo di consegna del cliente."
+msgid ""
+"Filling this form allows you to filter delivery carriers according to the "
+"delivery address of your customer."
+msgstr ""
+"La compilazione del modulo permette di filtrare i vettori in base "
+"all'indirizzo di consegna del cliente."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_price
@@ -516,8 +528,12 @@ msgstr "ID"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__free_over
-msgid "If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping"
-msgstr "Se l'importo totale dell'ordine (spedizione esclusa) è maggiore o uguale a questo valore, il cliente beneficia della spedizione gratuita"
+msgid ""
+"If the order total amount (shipping excluded) is above or equal to this "
+"value, the customer benefits from a free shipping"
+msgstr ""
+"Se l'importo totale dell'ordine (spedizione esclusa) è maggiore o uguale a "
+"questo valore, il cliente beneficia della spedizione gratuita"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -617,7 +633,9 @@ msgstr "Nessuna integrazione con il vettore"
 #: code:addons/delivery/models/delivery_grid.py:0
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
-msgstr "Impossibile calcolare le spese di consegna ordine, nessuna regola tariffaria corrisponde."
+msgstr ""
+"Impossibile calcolare le spese di consegna ordine, nessuna regola tariffaria"
+" corrisponde."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
@@ -632,7 +650,7 @@ msgstr "Operatore"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__order_id
 msgid "Order"
-msgstr "Ordine"
+msgstr "Ordina"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_product__country_of_origin
@@ -683,7 +701,7 @@ msgstr "Regole tariffarie"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Pricing"
-msgstr "Definizione prezzi"
+msgstr "Tariffazione"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__price_rule_ids
@@ -798,13 +816,18 @@ msgstr "Prodotto servizio"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
 msgid "Set to True if your credentials are certified for production."
-msgstr "Impostare a «True» se le credenziali sono certificate per la produzione."
+msgstr ""
+"Impostare a «True» se le credenziali sono certificate per la produzione."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:0
 #, python-format
-msgid "Shipment sent to carrier %(carrier_name)s for shipping with tracking number %(ref)s<br/>Cost: %(price).2f %(currency)s"
-msgstr "Spedizione inviata al vettore %(carrier_name)s con numero di tracciabilità %(ref)s<br/>Costo: %(price).2f %(currency)s"
+msgid ""
+"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
+"%(ref)s<br/>Cost: %(price).2f %(currency)s"
+msgstr ""
+"Spedizione inviata al vettore %(carrier_name)s con numero di tracciabilità "
+"%(ref)s<br/>Costo: %(price).2f %(currency)s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price
@@ -844,14 +867,20 @@ msgstr "Peso spedizione:"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__shipping_insurance
-msgid "Shipping insurance is a service which may reimburse senders whose parcels are lost, stolen, and/or damaged in transit."
+msgid ""
+"Shipping insurance is a service which may reimburse senders whose parcels "
+"are lost, stolen, and/or damaged in transit."
 msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_product__hs_code
 #: model:ir.model.fields,help:delivery.field_product_template__hs_code
-msgid "Standardized code for international shipping and goods declaration. At the moment, only used for the FedEx shipping provider."
-msgstr "Codice standardizzato per spedizioni internazionali e dichiarazione merci. Al momento è utilizzato solo per spedizioni del corriere FedEx."
+msgid ""
+"Standardized code for international shipping and goods declaration. At the "
+"moment, only used for the FedEx shipping provider."
+msgstr ""
+"Codice standardizzato per spedizioni internazionali e dichiarazione merci. "
+"Al momento è utilizzato solo per spedizioni del corriere FedEx."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -895,7 +924,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
-msgid "The return label can be downloaded by the customer from the customer portal."
+msgid ""
+"The return label can be downloaded by the customer from the customer portal."
 msgstr "Il cliente può scaricare l'etichetta di reso dal portale clienti."
 
 #. module: delivery
@@ -923,8 +953,12 @@ msgstr "Il prezzo di spedizione viene impostato al termine della consegna."
 #. module: delivery
 #: code:addons/delivery/wizard/choose_delivery_package.py:0
 #, python-format
-msgid "The weight of your package is higher than the maximum weight authorized for this package type. Please choose another package type."
-msgstr "Il peso del collo è maggiore del massimo consentito per questo tipo di imballaggio. Selezionare un altro tipo di imballaggio."
+msgid ""
+"The weight of your package is higher than the maximum weight authorized for "
+"this package type. Please choose another package type."
+msgstr ""
+"Il peso del collo è maggiore del massimo consentito per questo tipo di "
+"imballaggio. Selezionare un altro tipo di imballaggio."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:0
@@ -955,7 +989,10 @@ msgstr "Peso totale di tutti i prodotti contenuti nel collo."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__shipping_weight
-msgid "Total weight of packages and products not in a package. Packages with no shipping weight specified will default to their products' total weight. This is the weight used to compute the cost of the shipping."
+msgid ""
+"Total weight of packages and products not in a package. Packages with no "
+"shipping weight specified will default to their products' total weight. This"
+" is the weight used to compute the cost of the shipping."
 msgstr ""
 
 #. module: delivery
@@ -981,7 +1018,7 @@ msgstr "Indirizzi codici tracciabilità"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Tracking"
-msgstr "Tracciare"
+msgstr "Tracciabilità"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_tracking_ref
@@ -1001,7 +1038,7 @@ msgstr "Tracking:"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Transfer"
-msgstr "Trasferisci"
+msgstr "Trasferimento"
 
 #. module: delivery
 #: model:product.product,uom_name:delivery.product_product_delivery
@@ -1097,8 +1134,12 @@ msgstr "Ci sono link di tracciatura multipli, sono disponibili nelle voci."
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:0
 #, python-format
-msgid "Your delivery method has no redirect on courier provider's website to track this order."
-msgstr "Impossibile tracciare l'ordine, nel metodo di consegna manca il collegamento al sito web del corriere."
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
+msgstr ""
+"Impossibile tracciare l'ordine, nel metodo di consegna manca il collegamento"
+" al sito web del corriere."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_from

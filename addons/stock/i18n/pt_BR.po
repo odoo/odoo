@@ -31,9 +31,9 @@
 # Luis Felipe Miléo <mileo@kmee.com.br>, 2021
 # grazziano <gra.negocia@gmail.com>, 2021
 # Luciano Giacomazzi <lucianogiacomazzi@gmail.com>, 2021
-# Vanderlei P. Romera <vanderleiromera@gmail.com>, 2021
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2021
 # Éder Brito <britoederr@gmail.com>, 2021
+# Vanderlei P. Romera <vanderleiromera@gmail.com>, 2022
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2022
 # Martin Trigaux, 2022
 # 
@@ -3389,6 +3389,12 @@ msgid "Immediate transfer?"
 msgstr "Transferir imediatamente ?"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Import"
+msgstr "Importar"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
 msgstr "No Tipo"
@@ -3783,7 +3789,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
 msgid "LN/SN:"
-msgstr ""
+msgstr "LN/SN:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_picking_label_type__label_type
@@ -4726,6 +4732,12 @@ msgid "No stock move found"
 msgstr "Nenhum movimento de estoque encontrado."
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "No Stock On Hand"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_all
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_backorder
@@ -5238,7 +5250,7 @@ msgstr "Tipo de embalagem"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Package Type:"
-msgstr ""
+msgstr "Tipo de plano:"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_type_view
@@ -5474,6 +5486,14 @@ msgstr "Rota Preferencial"
 #: model:ir.model.fields,help:stock.field_stock_move__route_ids
 msgid "Preferred route"
 msgstr "Rota preferida"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Press the CREATE button to define quantity for each product in your stock or"
+" import them from a spreadsheet throughout Favorites"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -7907,8 +7927,13 @@ msgid "There's no product move yet"
 msgstr "Ainda não há nenhum movimento do produto"
 
 #. module: stock
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
-msgid "This SN is already in another location."
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"This analysis gives you an overview of the current stock level of your "
+"products."
 msgstr ""
 
 #. module: stock
@@ -9375,6 +9400,15 @@ msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "Você precisa fornecer um Número de Série/Lote para os produtos %s."
 
 #. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You should not use a planned internal transfer to move some products between"
+" two warehouses. Instead, use an immediate internal transfer or the resupply"
+" route."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "You still have ongoing operations for picking types %s in warehouse %s"
@@ -9418,6 +9452,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zplxprice
 msgid "ZPL Labels with price"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Your stock is currently empty"
 msgstr ""
 
 #. module: stock

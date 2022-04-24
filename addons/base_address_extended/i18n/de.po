@@ -1,22 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_address_extended
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
-#
+# Tina Rittmüller <tr@ife.de>, 2017
+# Renzo Meister, 2017
+# AppleMentalist <felix.schnatbaum@gmail.com>, 2017
+# Chris Egal <sodaswed@web.de>, 2019
+# Martin Trigaux, 2022
+# Friederike Fasterling-Nesselbosch, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
-"PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"PO-Revision-Date: 2017-02-15 10:48+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_address_extended
@@ -28,8 +33,13 @@ msgstr "<span> - </span>"
 #: model:ir.model.fields,help:base_address_extended.field_res_country__enforce_cities
 #: model:ir.model.fields,help:base_address_extended.field_res_partner__country_enforce_cities
 #: model:ir.model.fields,help:base_address_extended.field_res_users__country_enforce_cities
-msgid "Check this box to ensure every address created in that country has a 'City' chosen in the list of the country's cities."
-msgstr "Aktivieren Sie dieses Kontrollkästchen, um sicherzustellen, dass jede Adresse, die in diesem Land erstellt wurde, eine Stadt hat, die in der Liste der Städte des Landes ausgewählt wurde."
+msgid ""
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
+msgstr ""
+"Aktivieren Sie dieses Kontrollkästchen, um sicherzustellen, dass für jede in"
+" diesem Land erstellte Adresse eine \"Stadt\" aus der Liste der Städte des "
+"Landes ausgewählt wird."
 
 #. module: base_address_extended
 #: model:ir.actions.act_window,name:base_address_extended.action_res_city_tree
@@ -67,12 +77,12 @@ msgstr "Land"
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__create_uid
 msgid "Created by"
-msgstr "Erstellt von"
+msgstr "Angelegt von"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__create_date
 msgid "Created on"
-msgstr "Erstellt am"
+msgstr "Angelegt am"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__display_name
@@ -86,9 +96,9 @@ msgid ""
 "                your partner records. Note that an option can be set on each country separately\n"
 "                to enforce any address of it to have a city in this list."
 msgstr ""
-"Anzeige und Verwaltung der Liste aller Städte, die zu Ihren Partnerdaten zugeordnet werden können.\n"
-"Beachten Sie, dass für jedes Land eine seperate Option eingestellt werden kann.\n"
-"um eine beliebige Adresse davon zu auszuwählen, eine Stadt in dieser Liste zu haben."
+"Anzeigen und Verwalten der Liste aller Städte, die Sie Ihren Partnerdatensätzen\n"
+"zuordnen können. Beachten Sie, dass eine Option für jedes Land separat eingestellt werden kann\n"
+"um zu erzwingen, dass jede Adresse des Landes eine Stadt in dieser Liste hat."
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
@@ -106,7 +116,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__country_enforce_cities
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__country_enforce_cities
 msgid "Enforce Cities"
-msgstr "Auswahl Stadt"
+msgstr "Städteauswahl erzwingen"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
@@ -132,7 +142,7 @@ msgstr "Zuletzt geändert am"
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__write_date
@@ -142,7 +152,7 @@ msgstr "Zuletzt aktualisiert am"
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__name
 msgid "Name"
-msgstr "Name"
+msgstr "Namen"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_city_filter

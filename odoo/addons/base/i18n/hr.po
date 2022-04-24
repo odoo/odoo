@@ -24,14 +24,15 @@
 # Tina Milas, 2022
 # Bole <bole@dajmi5.com>, 2022
 # Hrvoje Sić <hrvoje.sic@gmail.com>, 2022
+# Vladimir Vrgoč, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-11 15:21+0000\n"
+"POT-Creation-Date: 2022-04-19 09:36+0000\n"
 "PO-Revision-Date: 2016-08-05 12:54+0000\n"
-"Last-Translator: Hrvoje Sić <hrvoje.sic@gmail.com>, 2022\n"
+"Last-Translator: Vladimir Vrgoč, 2022\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -737,6 +738,14 @@ msgid ""
 "            - COA\n"
 "            - Trial Balance\n"
 "        DIOT Report\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_be_reports_post_wizard
+msgid ""
+"\n"
+"        Enable the VAT wizard when posting a tax return journal entry\n"
 "    "
 msgstr ""
 
@@ -1662,6 +1671,17 @@ msgstr ""
 "Računovodstveni izvještaji\n"
 "=======================\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_reports_tax_reminder
+msgid ""
+"\n"
+"Accounting Reports Tax Reminder\n"
+"===============================\n"
+"This module adds a notification when the tax report is ready to be sent\n"
+"to the administration.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_co_reports
@@ -3698,6 +3718,24 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_in_edi
+msgid ""
+"\n"
+"Indian - E-invoicing\n"
+"====================\n"
+"To submit invoicing through API to the government.\n"
+"We use \"Tera Software Limited\" as GSP\n"
+"\n"
+"Step 1: First you need to create an API username and password in the E-invoice portal.\n"
+"Step 2: Switch to company related to that GST number\n"
+"Step 3: Set that username and password in Odoo (Goto: Invoicing/Accounting -> Configration -> Settings -> Customer Invoices or find \"E-invoice\" in search bar)\n"
+"Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-company with the same GST number then perform step 1 for the first company only.\n"
+"\n"
+"For the creation of API username and password please ref this document: <https://service.odoo.co.in/einvoice_create_api_user>\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_in
 msgid ""
 "\n"
@@ -5070,6 +5108,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr
+#: model:ir.module.module,description:base.module_test_appointment_full
 msgid ""
 "\n"
 "Take into account the working schedule (sick leaves, part time, ...) of employees when scheduling appointments\n"
@@ -5327,6 +5366,15 @@ msgid ""
 "\n"
 "        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Annual Listing Of VAT-Subjected Customers\n"
 "\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_eg
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Egypt in Odoo.\n"
+"==============================================================================\n"
 "    "
 msgstr ""
 
@@ -6553,6 +6601,11 @@ msgstr ""
 #: model:ir.module.module,description:base.module_website_crm_livechat
 msgid ""
 " Adds a stat button on lead form view to access their livechat sessions."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_hu_reports
+msgid " Base module for Hungary reports "
 msgstr ""
 
 #. module: base
@@ -7793,6 +7846,11 @@ msgid "Account Automatic Transfers Demo Data"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_account_avatax
+msgid "Account Avatax - Ecommerce"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import
 msgid "Account Bank Statement Import"
 msgstr "Uvoz bankovnog izvoda"
@@ -7937,6 +7995,11 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_account_reports
 msgid "Accounting Reports"
 msgstr "Računovodstvena izvješća"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_reports_tax_reminder
+msgid "Accounting Reports Tax Reminder"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_account_budget
@@ -8168,6 +8231,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_transifex
 msgid "Add a link to edit a translation in Transifex"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_account_reports_tax_reminder
+msgid "Add a notification when the tax report has been generated"
 msgstr ""
 
 #. module: base
@@ -8901,6 +8969,12 @@ msgid "Appointment Lead Generation"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_test_appointment_full
+#: model:ir.module.module,summary:base.module_test_appointment_full
+msgid "Appointment Testing Module"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment
 msgid "Appointments"
 msgstr ""
@@ -9364,6 +9438,21 @@ msgid "Avatar Mixin"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_avatax
+msgid "Avatax"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_avatax_sale
+msgid "Avatax for SO"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_avatax_sale_subscription
+msgid "Avatax for Subscriptions"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.az
 msgid "Azerbaijan"
 msgstr "Azerbajdžan"
@@ -9751,6 +9840,11 @@ msgstr "Belgija - Računovodstvo"
 #: model:ir.module.module,shortdesc:base.module_l10n_be_reports
 msgid "Belgium - Accounting Reports"
 msgstr "Belgija - Računovodstvena izvješća"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_reports_post_wizard
+msgid "Belgium - Accounting Reports (post wizard)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_reports_sms
@@ -11529,7 +11623,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.res_partner_industry_action
 msgid "Create an Industry"
-msgstr ""
+msgstr "Kreiraj industriju"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_studio
@@ -11766,6 +11860,12 @@ msgstr "Kreirao"
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__create_date
 msgid "Created on"
 msgstr "Datum kreiranja"
+
+#. module: base
+#: code:addons/base/models/ir_translation.py:0
+#, python-format
+msgid "Creating translation on non existing records"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
@@ -13113,6 +13213,11 @@ msgid "Egypt"
 msgstr "Egipat"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_eg
+msgid "Egypt - Accounting"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_partner__partner_share
 #: model:ir.model.fields,help:base.field_res_users__partner_share
 msgid ""
@@ -13897,6 +14002,11 @@ msgstr "Fedex isporuka"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fetchmail_gmail
 msgid "Fetchmail Gmail"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_fetchmail_outlook
+msgid "Fetchmail Outlook"
 msgstr ""
 
 #. module: base
@@ -15580,6 +15690,11 @@ msgid "Hungary"
 msgstr "Mađarska"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_hu_reports
+msgid "Hungary - Accounting Reports"
+msgstr ""
+
+#. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_I
 msgid "I ACCOMMODATION AND FOOD SERVICE ACTIVITIES"
 msgstr ""
@@ -16183,6 +16298,11 @@ msgid "Indian - Accounting Reports"
 msgstr "Indijski - Računovodstvena izvješća"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_in_edi
+msgid "Indian - E-invoicing"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_pos
 msgid "Indian - Point of Sale"
 msgstr ""
@@ -16244,7 +16364,7 @@ msgstr "Industrije"
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_form
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_tree
 msgid "Industry"
-msgstr ""
+msgstr "Industrija"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__info
@@ -18490,6 +18610,11 @@ msgid "Micronesia"
 msgstr "Mikronezija"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_microsoft_outlook
+msgid "Microsoft Outlook"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_microsoft_account
 msgid "Microsoft Users"
 msgstr ""
@@ -19523,6 +19648,11 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_O
 msgid "O PUBLIC ADMINISTRATION AND DEFENCE;COMPULSORY SOCIAL SECURITY"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_fetchmail_outlook
+msgid "OAuth authentication for incoming Outlook mail server"
 msgstr ""
 
 #. module: base
@@ -21234,6 +21364,11 @@ msgid "Outlook Calendar"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_microsoft_outlook
+msgid "Outlook support for outgoing mail servers"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__dpi
 msgid "Output DPI"
 msgstr "DPI izlaz"
@@ -21857,13 +21992,9 @@ msgid ""
 msgstr "Koristite čarobnjaka za promjenu zaporke."
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_sales_point_of_sale
-msgid "Point Of Sale"
-msgstr "Prodajno mjesto"
-
-#. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_point_of_sale
 #: model:ir.module.category,name:base.module_category_point_of_sale
+#: model:ir.module.category,name:base.module_category_sales_point_of_sale
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
 msgid "Point of Sale"
 msgstr "POS blagajna"
@@ -22711,7 +22842,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_quotation_builder
 msgid "Quotation Builder"
-msgstr ""
+msgstr "Izrađivač ponuda"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_expense

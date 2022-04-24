@@ -1,25 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sales_team
-#
+# 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
-# Martin Trigaux, 2021
-# Iacopo Simonelli <lsi@odoo.com>, 2021
+# Iacopo Simonelli <lsi@odoo.com>, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-15 12:07+0000\n"
-"PO-Revision-Date: 2021-09-14 12:26+0000\n"
+"PO-Revision-Date: 2016-08-05 13:10+0000\n"
 "Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sales_team
@@ -41,7 +41,7 @@ msgstr "<span class=\"bg-error\">Archiviato</span>"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "<span>New</span>"
-msgstr "<span>Nuova</span>"
+msgstr "<span>Nuovo</span>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
@@ -72,26 +72,41 @@ msgstr "Tipi di attività"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__crm_team_member_ids
-msgid "Add members to automatically assign their documents to this sales team."
-msgstr "Aggiungi membri per assegnare automaticamente i loro documenti a questo team di vendita."
+msgid ""
+"Add members to automatically assign their documents to this sales team."
+msgstr ""
+"Aggiungi membri per assegnare automaticamente i loro documenti a questo team"
+" di vendita."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
-msgid "Adding %(user_name)s in this team would remove him/her from its current team %(team_name)s."
-msgstr "L'aggiunta di %(user_name)s in questa squadra lo rimuoverà dalla sua attuale squadra %(team_name)s."
+msgid ""
+"Adding %(user_name)s in this team would remove him/her from its current team"
+" %(team_name)s."
+msgstr ""
+"L'aggiunta di %(user_name)s in questa squadra lo rimuoverà dalla sua attuale"
+" squadra %(team_name)s."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team_member.py:0
 #, python-format
-msgid "Adding %(user_name)s in this team would remove him/her from its current teams %(team_names)s."
-msgstr "L'aggiunta di %(user_name)s in questa squadra lo rimuoverà dalla sua attuale squadra %(team_names)s."
+msgid ""
+"Adding %(user_name)s in this team would remove him/her from its current "
+"teams %(team_names)s."
+msgstr ""
+"L'aggiunta di %(user_name)s in questa squadra lo rimuoverà dalla sua attuale"
+" squadra %(team_names)s."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
-msgid "Adding %(user_names)s in this team would remove them from their current teams (%(team_names)s)."
-msgstr "L'aggiunta di %(user_names)s in questa squadra lo rimuoverà dalla sua attuale squadra (%(team_names)s)."
+msgid ""
+"Adding %(user_names)s in this team would remove them from their current "
+"teams (%(team_names)s)."
+msgstr ""
+"L'aggiunta di %(user_names)s in questa squadra lo rimuoverà dalla sua "
+"attuale squadra (%(team_names)s)."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
@@ -236,13 +251,18 @@ msgstr "Iscritti preferiti"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
-msgid "Favorite teams to display them in the dashboard and access them easily."
+msgid ""
+"Favorite teams to display them in the dashboard and access them easily."
 msgstr "Team preferiti per visualizzazione in bacheca e accesso facilitato."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "Follow this salesteam to automatically track the events associated to users of this team."
-msgstr "Seguire questo team di vendita per tenere traccia in modo automatico degli eventi associati agli utenti del team."
+msgid ""
+"Follow this salesteam to automatically track the events associated to users "
+"of this team."
+msgstr ""
+"Seguire questo team di vendita per tenere traccia in modo automatico degli "
+"eventi associati agli utenti del team."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
@@ -282,8 +302,12 @@ msgstr "ID"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_membership_multi
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__is_membership_multi
-msgid "If True, users may belong to several sales teams. Otherwise membership is limited to a single sales team."
-msgstr "Se Vero, gli utenti possono appartenere a diversi team di vendita. Altrimenti l'appartenenza è limitata ad una sola squadra di vendita."
+msgid ""
+"If True, users may belong to several sales teams. Otherwise membership is "
+"limited to a single sales team."
+msgstr ""
+"Se Vero, gli utenti possono appartenere a diversi team di vendita. "
+"Altrimenti l'appartenenza è limitata ad una sola squadra di vendita."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
@@ -302,13 +326,21 @@ msgstr "Se selezionata, alcuni messaggi presentano un errore di consegna."
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_partner__team_id
 #: model:ir.model.fields,help:sales_team.field_res_users__team_id
-msgid "If set, this Sales Team will be used for sales and assignments related to this partner"
-msgstr "Se impostato, il team di vendita viene utilizzato per vendite e assegnazioni correlate al partner"
+msgid ""
+"If set, this Sales Team will be used for sales and assignments related to "
+"this partner"
+msgstr ""
+"Se impostato, il team di vendita viene utilizzato per vendite e assegnazioni"
+" correlate al partner"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
-msgid "If the active field is set to false, it will allow you to hide the Sales Team without removing it."
-msgstr "Se il campo Attivo è impostato a falso, consente di nascondere il team di vendita senza rimuoverlo."
+msgid ""
+"If the active field is set to false, it will allow you to hide the Sales "
+"Team without removing it."
+msgstr ""
+"Se il campo Attivo è impostato a falso, consente di nascondere il team di "
+"vendita senza rimuoverlo."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_1920
@@ -364,8 +396,13 @@ msgstr "Allegato principale"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_users__sale_team_id
-msgid "Main user sales team. Used notably for pipeline, or to set sales team in invoicing or subscription."
-msgstr "Squadra di vendita dell'utente principale. Usato in particolare per la pipeline, o per impostare la squadra di vendita nella fatturazione o nell'abbonamento."
+msgid ""
+"Main user sales team. Used notably for pipeline, or to set sales team in "
+"invoicing or subscription."
+msgstr ""
+"Squadra di vendita dell'utente principale. Usato in particolare per la "
+"pipeline, o per impostare la squadra di vendita nella fatturazione o "
+"nell'abbonamento."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
@@ -587,18 +624,27 @@ msgstr "L'azienda predefinita per questo utente."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
-msgid "Those represent the different categories of things you have to do (e.g. \"Call\" or \"Prepare meeting\")."
-msgstr "Questi rappresentano le diverse categorie di cose che devi fare (ad esempio \"Chiamata\" o \" Preparazione Meeting\")."
+msgid ""
+"Those represent the different categories of things you have to do (e.g. "
+"\"Call\" or \"Prepare meeting\")."
+msgstr ""
+"Questi rappresentano le diverse categorie di cose che devi fare (ad esempio "
+"\"Chiamata\" o \" Preparazione Meeting\")."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
-msgid "To add a Salesperson into multiple Teams, activate the Multi-Team option in settings."
-msgstr "Per aggiungere un rappresentante in più squadre, attiva l'opzione Multi-Team nelle impostazioni."
+msgid ""
+"To add a Salesperson into multiple Teams, activate the Multi-Team option in "
+"settings."
+msgstr ""
+"Per aggiungere un rappresentante in più squadre, attiva l'opzione Multi-Team"
+" nelle impostazioni."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_in_teams_ids
-msgid "UX: Give users not to add in the currently chosen team to avoid duplicates"
+msgid ""
+"UX: Give users not to add in the currently chosen team to avoid duplicates"
 msgstr ""
 
 #. module: sales_team
@@ -608,6 +654,7 @@ msgid "UX: Limit to team company or all if no company"
 msgstr ""
 
 #. module: sales_team
+#: code:addons/sales_team/models/crm_team.py:0
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Undefined graph model for Sales Team: %s"
@@ -627,8 +674,11 @@ msgstr "Numero messaggi non letti"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
-msgid "Use Sales Teams to organize your sales departments and draw up reports."
-msgstr "Utilizza Sales Teams per organizzare i tuoi dipartimenti di vendita e redigere rapporti."
+msgid ""
+"Use Sales Teams to organize your sales departments and draw up reports."
+msgstr ""
+"Utilizza Sales Teams per organizzare i tuoi dipartimenti di vendita e "
+"redigere rapporti."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
@@ -642,7 +692,9 @@ msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
-msgid "Use Tags to manage and track your Opportunities (product structure, sales type, ...)"
+msgid ""
+"Use Tags to manage and track your Opportunities (product structure, sales "
+"type, ...)"
 msgstr ""
 
 #. module: sales_team
@@ -688,8 +740,12 @@ msgstr "Sito web"
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team_member.py:0
 #, python-format
-msgid "You are trying to create duplicate membership(s). We found that %(duplicates)s already exist(s)."
-msgstr "Stai cercando di creare un'iscrizione duplicata. Abbiamo trovato che %(duplicates)s esistono già."
+msgid ""
+"You are trying to create duplicate membership(s). We found that "
+"%(duplicates)s already exist(s)."
+msgstr ""
+"Stai cercando di creare un'iscrizione duplicata. Abbiamo trovato che "
+"%(duplicates)s esistono già."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -708,15 +764,21 @@ msgstr "eBay"
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
-msgid "the user will have access to all records of everyone in the sales application."
+msgid ""
+"the user will have access to all records of everyone in the sales "
+"application."
 msgstr "Utente con accesso a tutti i record dell'applicazione vendite."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman
 msgid "the user will have access to his own data in the sales application."
-msgstr "Utente con accesso ai propri dati personali nell'applicazione vendite."
+msgstr ""
+"Utente con accesso ai propri dati personali nell'applicazione vendite."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager
-msgid "the user will have an access to the sales configuration as well as statistic reports."
-msgstr "Utente con accesso alla configurazione delle vendite e alle statistiche."
+msgid ""
+"the user will have an access to the sales configuration as well as statistic"
+" reports."
+msgstr ""
+"Utente con accesso alla configurazione delle vendite e alle statistiche."

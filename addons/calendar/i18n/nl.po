@@ -1,24 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* calendar
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
+# Cas Vissers <casvissers@brahoo.nl>, 2017
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
+# Eric Geens <ericgeens@yahoo.com>, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
+# Martin Trigaux, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
-#
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-15 12:06+0000\n"
-"PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Gunther Clauwaert <gclauwae@hotmail.com>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: calendar
@@ -26,7 +30,7 @@ msgstr ""
 #: code:addons/calendar/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "!activityView.activity.calendar_event_id"
-msgstr ""
+msgstr "!activityView.activity.calendar_event_id"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_count
@@ -294,7 +298,7 @@ msgid ""
 "    <t t-set=\"target_responsible\" t-value=\"object.partner_id == object.partner_id\"/>\n"
 "    <t t-set=\"target_customer\" t-value=\"object.partner_id == customer\"/>\n"
 "    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"/>\n"
-"    <t t-set=\"mail_tz\" t-value=\"ctx.get('mail_tz')\"/>\n"
+"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or ctx.get('mail_tz')\"/>\n"
 "    <div>\n"
 "        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n"
 "            <tr>\n"
@@ -389,7 +393,7 @@ msgid ""
 "        Hello <t t-out=\"object.common_name or ''\">Wood Corner</t>,<br/><br/>\n"
 "\n"
 "        <t t-if=\"is_online and target_customer\">\n"
-"            Your appointment <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</strong> with <t t-out=\"object.event_id.user_id.name or ''\">Ready Mat</t> has been booked.\n"
+"            Your appointment <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</strong> <t t-if=\"object.event_id.appointment_type_id.category != 'custom'\"> with <t t-out=\"object.event_id.user_id.name or ''\">Ready Mat</t></t> has been booked.\n"
 "        </t>\n"
 "        <t t-elif=\"is_online and target_responsible\">\n"
 "            <t t-if=\"customer\">\n"
@@ -501,28 +505,28 @@ msgstr ""
 "        Hallo <t t-out=\"object.common_name or ''\">Wood Corner</t>,<br/><br/>\n"
 "\n"
 "        <t t-if=\"is_online and target_customer\">\n"
-"            Je afspraak <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</strong> met <t t-out=\"object.event_id.user_id.name or ''\">Ready Mat</t> is geboekt.\n"
+"            je afspraak <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</strong> <t t-if=\"object.event_id.appointment_type_id.category != 'custom'\"> met <t t-out=\"object.event_id.user_id.name or ''\">Ready Mat</t></t> is gemaakt.\n"
 "        </t>\n"
 "        <t t-elif=\"is_online and target_responsible\">\n"
 "            <t t-if=\"customer\">\n"
-"                <t t-out=\"customer.name or ''\"/> heeft de volgende afspraak <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</strong> met je gepland.\n"
+"                <t t-out=\"customer.name or ''\"/> heeft de volgende afspaar <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</strong> met jouw  gemaakt.\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                Je afspraak <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</strong> is geboekt.\n"
+"                Je afspraak <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</strong> is gemaakt.\n"
 "            </t>\n"
 "        </t>\n"
 "        <t t-elif=\"not target_responsible\">\n"
 "            <t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t> heeft je uitgenodigd voor de <strong t-out=\"object.event_id.name or ''\">Follow-up for Project proposal</strong> afspraak.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            Je afspraak <strong t-out=\"object.event_id.name or ''\">Follow-up for Project proposal</strong> is geboekt.\n"
+"            Je afspraak <strong t-out=\"object.event_id.name or ''\">Follow-up for Project proposal</strong> is gemaakt.\n"
 "        </t>\n"
 "\n"
 "    </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
 "        <t t-if=\"not is_online or object.state != 'accepted'\">\n"
 "            <a t-attf-href=\"/calendar/meeting/accept?token={{object.access_token}}&amp;id={{object.event_id.id}}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
-"                Accepteer</a>\n"
+"                Accepteren</a>\n"
 "            <a t-attf-href=\"/calendar/meeting/decline?token={{object.access_token}}&amp;id={{object.event_id.id}}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "                Afwijzen</a>\n"
 "        </t>\n"
@@ -578,12 +582,12 @@ msgstr ""
 "                            <span style=\"margin-left:5px\" t-out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
-"                            <span style=\"margin-left:5px\">Jij</span>\n"
+"                            <span style=\"margin-left:5px\">You</span>\n"
 "                        </t>\n"
 "                    </li>\n"
 "                </ul></li>\n"
 "                <t t-if=\"object.event_id.videocall_location\">\n"
-"                    <li>Afspraak link: <a t-att-href=\"object.event_id.videocall_location\" target=\"_blank\" t-out=\"object.event_id.videocall_location or ''\">https://meet.jit.si/odoo-xyz</a></li>\n"
+"                    <li>Afspraak URL: <a t-att-href=\"object.event_id.videocall_location\" target=\"_blank\" t-out=\"object.event_id.videocall_location or ''\">https://meet.jit.si/odoo-xyz</a></li>\n"
 "                </t>\n"
 "                <t t-if=\"not is_html_empty(object.event_id.description)\">\n"
 "                    <li>Beschrijving van de afspraak:\n"
@@ -778,8 +782,12 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_partner_kanban_view
-msgid "<i class=\"fa fa-fw fa-calendar\" aria-label=\"Meetings\" role=\"img\" title=\"Meetings\"/>"
-msgstr "<i class=\"fa fa-fw fa-calendar\" aria-label=\"Afspraken\" role=\"img\" title=\"Afspraken\"/>"
+msgid ""
+"<i class=\"fa fa-fw fa-calendar\" aria-label=\"Meetings\" role=\"img\" "
+"title=\"Meetings\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-calendar\" aria-label=\"Afspraken\" role=\"img\" "
+"title=\"Afspraken\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -788,8 +796,12 @@ msgstr "<span> uren</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-msgid "<strong>The following attendees have invalid email addresses and won't receive any email notifications:</strong>"
+msgid ""
+"<strong>The following attendees have invalid email addresses and won't "
+"receive any email notifications:</strong>"
 msgstr ""
+"<strong>De volgende deelnemers hebben ongeldige e-mailadressen en ontvangen "
+"geen e-mailmeldingen:</strong>"
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_filters_user_id_partner_id_unique
@@ -822,8 +834,12 @@ msgstr "Actie gevraagd"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_mail_activity_type__category
-msgid "Actions may trigger specific behavior like opening calendar view or automatically mark as done when a document is uploaded"
-msgstr "Acties kunnen specifiek gedrag doen afgaan zoals het openen van de kalender weergave of automatisch als gereed markeren wanneer een bestand geüpload is"
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
+"Acties kunnen specifiek gedrag doen afgaan zoals het openen van de kalender "
+"weergave of automatisch als gereed markeren wanneer een bestand geüpload is"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__active
@@ -854,6 +870,8 @@ msgstr "Soort activiteit"
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: code:addons/calendar/static/src/xml/base_calendar.xml:0
 #, python-format
 msgid "Add"
 msgstr "Toevoegen"
@@ -865,8 +883,11 @@ msgstr "Aanvullend bericht"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__body
-msgid "Additional message that would be sent with the notification for the reminder"
-msgstr "Aanvullend bericht dat zou worden verzonden met de melding voor de herinnering"
+msgid ""
+"Additional message that would be sent with the notification for the reminder"
+msgstr ""
+"Aanvullend bericht dat zou worden verzonden met de melding voor de "
+"herinnering"
 
 #. module: calendar
 #. openerp-web
@@ -934,6 +955,7 @@ msgid "Base Event"
 msgstr "Basisafspraak"
 
 #. module: calendar
+#: code:addons/calendar/models/calendar_event.py:0
 #: code:addons/calendar/models/calendar_event.py:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__busy
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__busy
@@ -1036,8 +1058,13 @@ msgstr "Aangevinkt"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__recurrence_update
-msgid "Choose what to do with other events in the recurrence. Updating All Events is not allowed when dates or time is modified"
-msgstr "Kies wat je wilt doen met de andere afspraken in de herhaling. Het bijwerken van alle afspraken is niet toegestaan wanneer datums of tijden worden gewijzigd"
+msgid ""
+"Choose what to do with other events in the recurrence. Updating All Events "
+"is not allowed when dates or time is modified"
+msgstr ""
+"Kies wat je wilt doen met de andere afspraken in de herhaling. Het bijwerken"
+" van alle afspraken is niet toegestaan wanneer datums of tijden worden "
+"gewijzigd"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__color
@@ -1429,8 +1456,12 @@ msgstr "indien aangevinkt hebben sommige leveringen een fout."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__active
-msgid "If the active field is set to false, it will allow you to hide the event alarm information without removing it."
-msgstr "Als het actief veld niet is aangevinkt, heb je de mogelijkheid om het afspraakalarm te verbergen zonder deze te verwijderen."
+msgid ""
+"If the active field is set to false, it will allow you to hide the event "
+"alarm information without removing it."
+msgstr ""
+"Als het actief veld niet is aangevinkt, heb je de mogelijkheid om het "
+"afspraakalarm te verbergen zonder deze te verwijderen."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__show_as
@@ -1449,7 +1480,7 @@ msgstr "Interval"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__invalid_email_partner_ids
 msgid "Invalid Email Partner"
-msgstr ""
+msgstr "Foutief e-mailadres klant"
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
@@ -1582,9 +1613,12 @@ msgstr "Afspraak"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
+#: code:addons/calendar/models/calendar_event.py:0
 #, python-format
-msgid "Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'"
-msgstr "Afspraak '%(name)s' start '%(start_datetime)s' en eindigt '%(end_datetime)s'"
+msgid ""
+"Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'"
+msgstr ""
+"Afspraak '%(name)s' start '%(start_datetime)s' en eindigt '%(end_datetime)s'"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1736,7 +1770,9 @@ msgstr "Notificatie - 30 minuten"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__alarm_ids
 msgid "Notifications sent to all attendees to remind of the meeting."
-msgstr "Meldingen die naar alle deelnemers worden gestuurd om aan de afspraak te herinneren."
+msgstr ""
+"Meldingen die naar alle deelnemers worden gestuurd om aan de afspraak te "
+"herinneren."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
@@ -2019,7 +2055,9 @@ msgstr "Startdatum"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__start
 msgid "Start date of an event, without time for full days events"
-msgstr "Startdatum van de afspraak, zonder tijdsaanduiding voor afspraken die een hele dag duren"
+msgstr ""
+"Startdatum van de afspraak, zonder tijdsaanduiding voor afspraken die een "
+"hele dag duren"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2049,7 +2087,9 @@ msgstr "Stoppen"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__stop
 msgid "Stop date of an event, without time for full days events"
-msgstr "Einddatum van de afspraak, zonder tijdsaanduiding voor afspraken die een hele dag duren"
+msgstr ""
+"Einddatum van de afspraak, zonder tijdsaanduiding voor afspraken die een "
+"hele dag duren"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -2081,7 +2121,9 @@ msgstr "Labels"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__mail_template_id
 msgid "Template used to render mail reminder content."
-msgstr "Sjabloon die wordt gebruikt om de inhoud van e-mailherinneringen weer te geven."
+msgstr ""
+"Sjabloon die wordt gebruikt om de inhoud van e-mailherinneringen weer te "
+"geven."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -2097,8 +2139,12 @@ msgstr "De"
 #. openerp-web
 #: code:addons/calendar/static/src/models/activity_view/activity_view.js:0
 #, python-format
-msgid "The activity is linked to a meeting. Deleting it will remove the meeting as well. Do you want to proceed?"
+msgid ""
+"The activity is linked to a meeting. Deleting it will remove the meeting as "
+"well. Do you want to proceed?"
 msgstr ""
+"De activiteit is gelinkt aan een afspraak. Bij verwijderen wordt ook de "
+"afspraak verwijderd. Wil je doorgaan?"
 
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
@@ -2118,7 +2164,8 @@ msgstr "De dag moet tussen 1 en 31 liggen"
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
-msgid "The ending date and time cannot be earlier than the starting date and time."
+msgid ""
+"The ending date and time cannot be earlier than the starting date and time."
 msgstr "De einddatum en tijd kunnen niet voor de begindatum en tijd vallen."
 
 #. module: calendar
@@ -2169,8 +2216,12 @@ msgstr "Deze afspraak"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_filters__partner_checked
-msgid "This field is used to know if the partner is checked in the filter of the calendar view for the user_id."
-msgstr "Dit veld wordt gebruikt om te weten of de partner is aangevinkt in het filter van de kalenderweergave voor de user_id."
+msgid ""
+"This field is used to know if the partner is checked in the filter of the "
+"calendar view for the user_id."
+msgstr ""
+"Dit veld wordt gebruikt om te weten of de partner is aangevinkt in het "
+"filter van de kalenderweergave voor de user_id."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__thu
@@ -2193,7 +2244,8 @@ msgstr "Tijdzone"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__mail_tz
 msgid "Timezone used for displaying time in the mail template"
-msgstr "Tijdzone die wordt gebruikt voor het weergeven van tijd in de e-mailsjabloon"
+msgstr ""
+"Tijdzone die wordt gebruikt voor het weergeven van tijd in de e-mailsjabloon"
 
 #. module: calendar
 #: code:addons/calendar/models/res_users.py:0

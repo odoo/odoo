@@ -5,7 +5,6 @@
 # Translators:
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
 # picibucor <picibucor@gmail.com>, 2019
-# Gergő Kertész <gergo.kertesz@maxflow.hu>, 2019
 # Kovács Tibor <kovika@gmail.com>, 2019
 # Istvan <leki69@gmail.com>, 2019
 # Ákos Nagy <akos.nagy@oregional.hu>, 2021
@@ -16,14 +15,15 @@
 # krnkris, 2022
 # gezza <geza.nagy@oregional.hu>, 2022
 # Tamás Németh <ntomasz81@gmail.com>, 2022
+# Gergő Kertész <gergo.kertesz@maxflow.hu>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-11 15:21+0000\n"
+"POT-Creation-Date: 2022-04-19 09:36+0000\n"
 "PO-Revision-Date: 2016-08-05 12:54+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2022\n"
+"Last-Translator: Gergő Kertész <gergo.kertesz@maxflow.hu>, 2022\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -728,6 +728,14 @@ msgid ""
 "            - COA\n"
 "            - Trial Balance\n"
 "        DIOT Report\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_be_reports_post_wizard
+msgid ""
+"\n"
+"        Enable the VAT wizard when posting a tax return journal entry\n"
 "    "
 msgstr ""
 
@@ -1647,6 +1655,17 @@ msgid ""
 "\n"
 "Accounting Reports\n"
 "==================\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_reports_tax_reminder
+msgid ""
+"\n"
+"Accounting Reports Tax Reminder\n"
+"===============================\n"
+"This module adds a notification when the tax report is ready to be sent\n"
+"to the administration.\n"
 "    "
 msgstr ""
 
@@ -3803,6 +3822,24 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_in_edi
+msgid ""
+"\n"
+"Indian - E-invoicing\n"
+"====================\n"
+"To submit invoicing through API to the government.\n"
+"We use \"Tera Software Limited\" as GSP\n"
+"\n"
+"Step 1: First you need to create an API username and password in the E-invoice portal.\n"
+"Step 2: Switch to company related to that GST number\n"
+"Step 3: Set that username and password in Odoo (Goto: Invoicing/Accounting -> Configration -> Settings -> Customer Invoices or find \"E-invoice\" in search bar)\n"
+"Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-company with the same GST number then perform step 1 for the first company only.\n"
+"\n"
+"For the creation of API username and password please ref this document: <https://service.odoo.co.in/einvoice_create_api_user>\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_in
 msgid ""
 "\n"
@@ -5388,6 +5425,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr
+#: model:ir.module.module,description:base.module_test_appointment_full
 msgid ""
 "\n"
 "Take into account the working schedule (sick leaves, part time, ...) of employees when scheduling appointments\n"
@@ -5707,6 +5745,15 @@ msgid ""
 "\n"
 "        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Annual Listing Of VAT-Subjected Customers\n"
 "\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_eg
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Egypt in Odoo.\n"
+"==============================================================================\n"
 "    "
 msgstr ""
 
@@ -7176,6 +7223,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_hu_reports
+msgid " Base module for Hungary reports "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_sale_delivery_mondialrelay
 msgid " Let's choose Point Relais® on your ecommerce "
 msgstr ""
@@ -7746,7 +7798,7 @@ msgstr "<i class=\"fa fa-times\" title=\"Close the onboarding panel\"/>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
-msgstr ""
+msgstr "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
@@ -8435,6 +8487,11 @@ msgid "Account Automatic Transfers Demo Data"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_account_avatax
+msgid "Account Avatax - Ecommerce"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import
 msgid "Account Bank Statement Import"
 msgstr "Számlához tartozó bankszámlakivonat Import"
@@ -8579,6 +8636,11 @@ msgstr "Könyvelés egyezőség teszt"
 #: model:ir.module.module,shortdesc:base.module_account_reports
 msgid "Accounting Reports"
 msgstr "Főkönyvi kimutatások"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_reports_tax_reminder
+msgid "Accounting Reports Tax Reminder"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_account_budget
@@ -8810,6 +8872,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_transifex
 msgid "Add a link to edit a translation in Transifex"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_account_reports_tax_reminder
+msgid "Add a notification when the tax report has been generated"
 msgstr ""
 
 #. module: base
@@ -9551,6 +9618,12 @@ msgid "Appointment Lead Generation"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_test_appointment_full
+#: model:ir.module.module,summary:base.module_test_appointment_full
+msgid "Appointment Testing Module"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment
 msgid "Appointments"
 msgstr "Időpont foglalások"
@@ -10018,6 +10091,21 @@ msgid "Avatar Mixin"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_avatax
+msgid "Avatax"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_avatax_sale
+msgid "Avatax for SO"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_avatax_sale_subscription
+msgid "Avatax for Subscriptions"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.az
 msgid "Azerbaijan"
 msgstr "Azerbajdzsán"
@@ -10406,6 +10494,11 @@ msgstr "Belga - Könyvelés"
 #: model:ir.module.module,shortdesc:base.module_l10n_be_reports
 msgid "Belgium - Accounting Reports"
 msgstr "Belga - Főkönyvi kimutatások"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_reports_post_wizard
+msgid "Belgium - Accounting Reports (post wizard)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_reports_sms
@@ -12451,6 +12544,12 @@ msgid "Created on"
 msgstr "Létrehozás dátuma"
 
 #. module: base
+#: code:addons/base/models/ir_translation.py:0
+#, python-format
+msgid "Creating translation on non existing records"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
 msgid "Creation"
 msgstr "Létrehozás"
@@ -13807,6 +13906,11 @@ msgid "Egypt"
 msgstr "Egyiptom"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_eg
+msgid "Egypt - Accounting"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_partner__partner_share
 #: model:ir.model.fields,help:base.field_res_users__partner_share
 msgid ""
@@ -14023,7 +14127,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
 msgid "Enter a description of and purpose for the key."
-msgstr ""
+msgstr "Adjon meg egy célt és egy leírást a kulcsnak."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_gantt
@@ -14594,6 +14698,11 @@ msgstr "Fedex szállítás"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fetchmail_gmail
 msgid "Fetchmail Gmail"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_fetchmail_outlook
+msgid "Fetchmail Outlook"
 msgstr ""
 
 #. module: base
@@ -16329,6 +16438,11 @@ msgid "Hungary"
 msgstr "Magyarország"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_hu_reports
+msgid "Hungary - Accounting Reports"
+msgstr ""
+
+#. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_I
 msgid "I ACCOMMODATION AND FOOD SERVICE ACTIVITIES"
 msgstr "I SZÁLLÁSHELY SZOLGÁLTATÁS ÉS VENDÉGLÁTÁS"
@@ -16948,6 +17062,11 @@ msgstr "Indiai - könyvelés"
 #: model:ir.module.module,shortdesc:base.module_l10n_in_reports
 msgid "Indian - Accounting Reports"
 msgstr "India - Könyvelés riportok"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_in_edi
+msgid "Indian - E-invoicing"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_pos
@@ -19285,6 +19404,11 @@ msgid "Micronesia"
 msgstr "Mikronézia"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_microsoft_outlook
+msgid "Microsoft Outlook"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_microsoft_account
 msgid "Microsoft Users"
 msgstr "Microsoft felhasználók"
@@ -19899,7 +20023,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
 msgid "Name your key"
-msgstr ""
+msgstr "Nevezze el a kulcsot"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -20319,6 +20443,11 @@ msgstr ""
 #: model:res.partner.industry,full_name:base.res_partner_industry_O
 msgid "O PUBLIC ADMINISTRATION AND DEFENCE;COMPULSORY SOCIAL SECURITY"
 msgstr "O KÖZIGAZGATÁS ÉS VÉDELEM; TÁRSADALOMBIZTOSÍTÁS"
+
+#. module: base
+#: model:ir.module.module,description:base.module_fetchmail_outlook
+msgid "OAuth authentication for incoming Outlook mail server"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_oauth
@@ -22047,6 +22176,11 @@ msgid "Outlook Calendar"
 msgstr "Outlook naptár"
 
 #. module: base
+#: model:ir.module.module,description:base.module_microsoft_outlook
+msgid "Outlook support for outgoing mail servers"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__dpi
 msgid "Output DPI"
 msgstr "Kimenő DPI"
@@ -22675,13 +22809,9 @@ msgstr ""
 "vagy a felhasználói menüben), hogy megváltoztassa a jelszavát."
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_sales_point_of_sale
-msgid "Point Of Sale"
-msgstr "Értékesítési pont"
-
-#. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_point_of_sale
 #: model:ir.module.category,name:base.module_category_point_of_sale
+#: model:ir.module.category,name:base.module_category_sales_point_of_sale
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
 msgid "Point of Sale"
 msgstr "Értékesítési pont"
@@ -29040,7 +29170,7 @@ msgstr "Nyugat-Szahara"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
 msgid "What's this key for?"
-msgstr ""
+msgstr "Mire való ez a kulcs?"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__sequence
@@ -29241,7 +29371,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_show
 msgid "Write down your key"
-msgstr ""
+msgstr "Mentse el a kulcsot"
 
 #. module: base
 #: model:res.country,name:base.ye

@@ -1,23 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_event_track_quiz
-#
+# 
 # Translators:
+# Melanie Bernard <mbe@odoo.com>, 2020
+# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
+# Gilles Mangin <gilles.mangin@phidias.fr>, 2020
+# Priscilla (prs) Odoo <prs@odoo.com>, 2020
+# Jonathan Quique <jqu@odoo.com>, 2020
+# Vallen Delobel <edv@odoo.com>, 2020
 # Martin Trigaux, 2021
-# Cécile Collart <cco@odoo.com>, 2021
-#
+# Cécile Collart <cco@odoo.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-15 12:07+0000\n"
-"PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2021\n"
+"PO-Revision-Date: 2020-08-21 13:39+0000\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_event_track_quiz
@@ -33,17 +39,17 @@ msgstr ". Essayez une autre recherche."
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.all_visitor_card
 msgid "<span class=\"text-muted small font-weight-bold\">Points</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small font-weight-bold\">Points</span>"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.top3_visitor_card
 msgid "<span class=\"text-muted\">Points</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Points</span>"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_track_view_form
 msgid "Add Quiz"
-msgstr ""
+msgstr "Ajouter un Quizz"
 
 #. module: website_event_track_quiz
 #. openerp-web
@@ -55,7 +61,7 @@ msgstr "Il faut répondre à toutes les questions!"
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_form
 msgid "Allow multiple tries"
-msgstr ""
+msgstr "Autoriser plusieurs essais"
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__text_value
@@ -65,6 +71,7 @@ msgstr "Réponse"
 
 #. module: website_event_track_quiz
 #. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #, python-format
 msgid "Check answers"
@@ -162,12 +169,16 @@ msgstr ""
 
 #. module: website_event_track_quiz
 #: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_question_action
-msgid "From here you will be able to examine all quiz questions you have linked to Tracks."
+msgid ""
+"From here you will be able to examine all quiz questions you have linked to "
+"Tracks."
 msgstr ""
 
 #. module: website_event_track_quiz
 #: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_action
-msgid "From here you will be able to overview all quizzes you have linked to Tracks."
+msgid ""
+"From here you will be able to overview all quizzes you have linked to "
+"Tracks."
 msgstr ""
 
 #. module: website_event_track_quiz
@@ -193,7 +204,7 @@ msgstr "ID"
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #, python-format
 msgid "Incorrect."
-msgstr ""
+msgstr "Incorrect."
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track__is_quiz_completed
@@ -224,7 +235,7 @@ msgstr "Dernière mise à jour le"
 #. module: website_event_track_quiz
 #: model:ir.model.fields,help:website_event_track_quiz.field_event_quiz__repeatable
 msgid "Let attendees reset the quiz and try again."
-msgstr ""
+msgstr "Laissez les participants réinitialiser le quiz et réessayer."
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.leaderboard_search_bar
@@ -244,7 +255,7 @@ msgstr ""
 #. module: website_event_track_quiz
 #: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_action
 msgid "No Quiz added yet!"
-msgstr ""
+msgstr "Aucun quiz n'a encore été ajouté !"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_leaderboard
@@ -254,21 +265,21 @@ msgstr "Pas d'utilisateur trouvé"
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_question__awarded_points
 msgid "Number of Points"
-msgstr ""
+msgstr "Nombre de points"
 
 #. module: website_event_track_quiz
 #. openerp-web
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #, python-format
 msgid "Oopsie, you did not score any point on this quiz."
-msgstr ""
+msgstr "Oopsie, vous n'avez marqué aucun point à ce quiz."
 
 #. module: website_event_track_quiz
 #. openerp-web
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #, python-format
 msgid "Point"
-msgstr ""
+msgstr "Point"
 
 #. module: website_event_track_quiz
 #. openerp-web
@@ -287,19 +298,23 @@ msgstr "Question"
 #. module: website_event_track_quiz
 #: code:addons/website_event_track_quiz/models/event_quiz.py:0
 #, python-format
-msgid "Question \"%s\" must have 1 correct answer and at least 1 incorrect answer to be valid."
+msgid ""
+"Question \"%s\" must have 1 correct answer and at least 1 incorrect answer "
+"to be valid."
 msgstr ""
+"La question \"%s\" doit avoir 1 réponse correcte et au moins 1 réponse "
+"incorrecte pour être valide."
 
 #. module: website_event_track_quiz
 #: code:addons/website_event_track_quiz/models/event_quiz.py:0
 #, python-format
 msgid "Question \"%s\" must have 1 correct answer to be valid."
-msgstr ""
+msgstr "La question \"%s\" doit avoir 1 réponse correcte pour être valide."
 
 #. module: website_event_track_quiz
 #: model:ir.model,name:website_event_track_quiz.model_event_quiz_answer
 msgid "Question's Answer"
-msgstr ""
+msgstr "Réponse à la questio"
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__question_ids
@@ -320,19 +335,19 @@ msgstr "Quiz"
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track__quiz_points
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track_visitor__quiz_points
 msgid "Quiz Points"
-msgstr ""
+msgstr "Points du Quiz"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_question_view_form
 msgid "Quiz Question"
-msgstr ""
+msgstr "Ruban adhésif"
 
 #. module: website_event_track_quiz
 #: model:ir.ui.menu,name:website_event_track_quiz.event_quiz_question_menu
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_question_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_question_view_tree
 msgid "Quiz Questions"
-msgstr ""
+msgstr "Questions du Quiz"
 
 #. module: website_event_track_quiz
 #. openerp-web
@@ -380,19 +395,19 @@ msgstr "Séquence"
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_track_content
 msgid "Take the Quiz"
-msgstr ""
+msgstr "Faire le Quiz"
 
 #. module: website_event_track_quiz
 #. openerp-web
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #, python-format
 msgid "The correct answer was:"
-msgstr ""
+msgstr "La réponse correcte était : "
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_leaderboard
 msgid "There is currently no leaderboard available"
-msgstr ""
+msgstr "Il n'y a actuellement aucun classement disponible"
 
 #. module: website_event_track_quiz
 #. openerp-web
@@ -428,7 +443,7 @@ msgstr ""
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__repeatable
 msgid "Unlimited Tries"
-msgstr ""
+msgstr "Tentatives illimitées"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.top3_visitor_card
@@ -439,28 +454,28 @@ msgstr "Rang utilisateur"
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.all_visitor_card
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.top3_visitor_card
 msgid "You"
-msgstr ""
+msgstr "Vous "
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_form
 msgid "e.g. Test your Knowledge"
-msgstr ""
+msgstr "par ex. Testez vos connaissances"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_question_view_form
 msgid "e.g. What is Joe's favorite motto?"
-msgstr ""
+msgstr "par ex. Quel est le motto préféré de Joe ?"
 
 #. module: website_event_track_quiz
 #. openerp-web
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #, python-format
 msgid "point!"
-msgstr ""
+msgstr "point !"
 
 #. module: website_event_track_quiz
 #. openerp-web
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #, python-format
 msgid "points!"
-msgstr ""
+msgstr "points !"

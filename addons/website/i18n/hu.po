@@ -7,7 +7,6 @@
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
 # Kornél Kiss <kornel83@gmail.com>, 2019
 # Istvan <leki69@gmail.com>, 2020
-# Tamás Dombos, 2021
 # Martin Trigaux, 2021
 # krnkris, 2021
 # gezza <geza.nagy@oregional.hu>, 2021
@@ -16,13 +15,15 @@
 # Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2021
 # A . <tiboreu@protonmail.com>, 2021
 # Tamás Németh <ntomasz81@gmail.com>, 2022
+# Tamás Dombos, 2022
+# Gergő Kertész <gergo.kertesz@maxflow.hu>, 2022
 # sixsix six, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-11 14:33+0000\n"
+"POT-Creation-Date: 2022-03-15 12:05+0000\n"
 "PO-Revision-Date: 2016-08-05 13:11+0000\n"
 "Last-Translator: sixsix six, 2022\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
@@ -782,6 +783,9 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/> Edit the content below this line to adapt "
 "the default <strong>Page not found</strong> page."
 msgstr ""
+"<i class=\"fa fa-info-circle\"/> A vonal alatti szöveg szerkesztésével "
+"testreszabható az alapértelmezett az <strong>Az oldal nem található</strong>"
+" oldal."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.protected_403
@@ -803,8 +807,8 @@ msgstr ""
 #: model_terms:website.page,arch_db:website.contactus_page
 #: model_terms:website.page,arch_db:website.contactus_thanks
 msgid ""
-"<i class=\"fa fa-map-marker fa-fw mr-2\"/><span "
-"class=\"o_force_ltr\">Chaussée de Namur 40</span>"
+"<i class=\"fa fa-map-marker fa-fw mr-2\"/><span class=\"o_force_ltr\">3575 "
+"Fake Buena Vista Avenue</span>"
 msgstr ""
 
 #. module: website
@@ -813,8 +817,8 @@ msgstr ""
 #: model_terms:website.page,arch_db:website.contactus_page
 #: model_terms:website.page,arch_db:website.contactus_thanks
 msgid ""
-"<i class=\"fa fa-phone fa-fw mr-2\"/><span class=\"o_force_ltr\">+ 32 81 81 "
-"37 00</span>"
+"<i class=\"fa fa-phone fa-fw mr-2\"/><span class=\"o_force_ltr\">+1 (650) "
+"555-0111</span>"
 msgstr ""
 
 #. module: website
@@ -1236,6 +1240,8 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Subject</span>\n"
 "                                                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Tárgy</span>\n"
+"                                                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -1490,6 +1496,13 @@ msgstr ""
 #, python-format
 msgid "Add Menu Item"
 msgstr "Új menüelem hozzáadása"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_social_media/options.js:0
+#, python-format
+msgid "Add New Social Network"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog_add_product_widget
@@ -2571,6 +2584,13 @@ msgstr ""
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "Click here to go back to block tab."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_social_media/options.js:0
+#, python-format
+msgid "Click here to setup your social networks"
 msgstr ""
 
 #. module: website
@@ -4975,7 +4995,7 @@ msgstr "Hibrid"
 #: model_terms:ir.ui.view,arch_db:website.cookies_bar
 #, python-format
 msgid "I agree"
-msgstr ""
+msgstr "Elfogadom"
 
 #. module: website
 #. openerp-web
@@ -5978,7 +5998,7 @@ msgstr "Oldalak kezelése"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
 msgid "Manage Your Pages"
-msgstr ""
+msgstr "Oldalak szerkesztése"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -8595,7 +8615,7 @@ msgstr "Technikai név:"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Telephone"
-msgstr ""
+msgstr "Telefonszáma"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -9031,7 +9051,7 @@ msgstr ""
 msgid ""
 "This page does not exist, but you can create it as you are editor of this "
 "site."
-msgstr ""
+msgstr "Ez az oldal nem létezik, de a honlap szerkesztőjeként létrehozhatja."
 
 #. module: website
 #: code:addons/website/models/website.py:0
@@ -10922,7 +10942,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_view_form_preview
 msgid "phone"
-msgstr ""
+msgstr "telefon"
 
 #. module: website
 #. openerp-web
@@ -10995,7 +11015,7 @@ msgstr ""
 #: code:addons/website/static/src/snippets/s_countdown/000.xml:0
 #, python-format
 msgid "this page"
-msgstr ""
+msgstr "ez az oldal"
 
 #. module: website
 #. openerp-web
