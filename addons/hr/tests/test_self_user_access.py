@@ -5,9 +5,11 @@ from collections import OrderedDict
 from itertools import chain
 from lxml import etree
 
-from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tests import new_test_user, tagged, Form
 from odoo.exceptions import AccessError
+
+from .common import TestHrCommon
+
 
 @tagged('post_install', '-at_install')
 class TestSelfAccessProfile(TestHrCommon):
@@ -49,33 +51,26 @@ class TestSelfAccessProfile(TestHrCommon):
             with self.assertRaises(AssertionError, msg="Field '%s' should be readonly in the employee profile when self editing is not allowed." % field):
                 form.__setattr__(field, 'some value')
 
-
     def test_profile_view_fields(self):
-        """ A simple user should see all fields in profile view, even if they are protected by groups """
+        """ Simple users should see all hr fields in their profile view """
         view = self.env.ref('hr.res_users_view_form_profile')
-
-        # For reference, check the view with user with every groups protecting user fields
-        all_groups_xml_ids = chain(*[
-            field.groups.split(',')
-            for field in self.env['res.users']._fields.values()
-            if field.groups
-            if field.groups != '.' # "no-access" group on purpose
-        ])
-        all_groups = self.env['res.groups']
-        for xml_id in all_groups_xml_ids:
-            all_groups |= self.env.ref(xml_id.strip())
-        user_all_groups = new_test_user(self.env, groups='base.group_user', login='hel', name='God')
-        user_all_groups.write({'groups_id': [(4, group.id, False) for group in all_groups]})
-        view_infos = self.env['res.users'].with_user(user_all_groups).get_view(view.id)
-        full_fields = [el.get('name') for el in etree.fromstring(view_infos['arch']).xpath('//field[not(ancestor::field)]')]
-
-        # Now check the view for a simple user
+        manager = new_test_user(self.env, groups='hr.group_hr_manager', login='hel', name='God')
+        manager_fields = [
+            el.get('name') for el in etree.fromstring(
+                self.env['res.users'].with_user(manager).get_view(view_id=view.id)['arch']
+            ).xpath('//field[not(ancestor::field)]')
+        ]
         user = new_test_user(self.env, login='gro', name='Grouillot')
-        view_infos = self.env['res.users'].with_user(user).get_view(view.id)
-        fields = [el.get('name') for el in etree.fromstring(view_infos['arch']).xpath('//field[not(ancestor::field)]')]
+        user_fields = [
+            el.get('name') for el in etree.fromstring(
+                self.env['res.users'].with_user(user).get_view(view_id=view.id)['arch']
+            ).xpath('//field[not(ancestor::field)]')
+        ]
 
-        # Compare both
-        self.assertEqual(full_fields, fields, "View fields should not depend on user's groups")
+        self.assertTrue(
+            all(field in user_fields for field in manager_fields),
+            "Users should see the same fields as HR Managers"
+        )
 
     def test_access_my_profile_toolbar(self):
         """ A simple user shouldn't have the possibilities to see the 'Change Password' action"""
