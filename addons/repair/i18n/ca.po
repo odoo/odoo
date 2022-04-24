@@ -50,6 +50,9 @@ msgid ""
 "                object.state == 'draft' and 'Repair Quotation - %s' % (object.name) or\n"
 "                'Repair Order - %s' % (object.name))"
 msgstr ""
+"(\n"
+"                object.state == 'esborrany\" i \"Pressupost de reparació - %s' % (object.name) or\n"
+"                'Repair Order - %s' % (object.name))"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -82,7 +85,7 @@ msgstr ""
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ": Insufficient Quantity To Repair"
-msgstr ""
+msgstr ": Quantitat insuficient per reparar"
 
 #. module: repair
 #: model:mail.template,body_html:repair.mail_template_repair_quotation
@@ -1309,6 +1312,8 @@ msgid ""
 "You can not delete a repair order once it has been confirmed. You must first"
 " cancel it."
 msgstr ""
+"No podeu suprimir una comanda de reparació una vegada que s'hagi confirmat. "
+"Primer l'has de cancel·lar."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1317,6 +1322,8 @@ msgid ""
 "You can not delete a repair order which is linked to an invoice which has "
 "been posted once."
 msgstr ""
+"No podeu suprimir una ordre de reparació que està enllaçada a una factura "
+"que s'ha enviat una vegada."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0

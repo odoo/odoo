@@ -41,7 +41,7 @@ msgstr " Cost de producte actualitzat des de %(previous)s to %(new_cost)s."
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s"
-msgstr ""
+msgstr "%(user)scanvi de cost de %(previous)s a %(new_price)s - %(product)s"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
@@ -51,6 +51,8 @@ msgid ""
 "%(user)s changed stock valuation from  %(previous)s to %(new_value)s - "
 "%(product)s"
 msgstr ""
+"%(user)s ha canviat la valoració de l'estoc des de  %(previous)s a "
+"%(new_value)s - %(product)s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -58,6 +60,8 @@ msgid ""
 ")\n"
 "                            <small class=\"mx-2 font-italic\">Use a negative added value to record a decrease in the product value</small>"
 msgstr ""
+")\n"
+"                            <small class=\"mx-2 font-italic\">Utilice un valor añadido negativo para registrar una disminución del valor del producto</small>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -99,23 +103,25 @@ msgstr "Informació comptable"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Add Manual Valuation"
-msgstr ""
+msgstr "Afegir valoració manual"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid ""
 "Add additional cost (transport, customs, ...) in the value of the product."
 msgstr ""
+"Afegeix un cost addicional (transport, duanes, ...) en el valor del "
+"producte."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Added Value"
-msgstr ""
+msgstr "Valor afegit"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__added_value
 msgid "Added value"
-msgstr ""
+msgstr "Valor afegit"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -208,6 +214,7 @@ msgstr "Mètode cost"
 #, python-format
 msgid "Costing method change for product category %s: from %s to %s."
 msgstr ""
+"Canvi del mètode de cost per a la categoria de producte %s: de %s a %s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
@@ -220,6 +227,8 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
+"Els articles de la revista Counterpart per a tots els moviments d'estoc entrants es publicaran en aquest compte, llevat que hi hagi un compte de valoració específic\n"
+"                estableix a la ubicació de la font. Aquest és el valor per defecte per a tots els productes d'aquesta categoria. També es pot establir directament en cada producte."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_uid
@@ -263,6 +272,8 @@ msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
 msgstr ""
+"Data en què es crearan les entrades comptables en cas de valoració "
+"automàtica de l'inventari. Si està buit, s'utilitzarà la data d'inventari."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
@@ -378,7 +389,7 @@ msgstr "Valoració del inventari"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__is_anglo_saxon_line
 msgid "Is Anglo Saxon Line"
-msgstr ""
+msgstr "És una línia anglosaxona"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_journal_id
@@ -456,7 +467,7 @@ msgstr "Manual Stock Valuation: %s."
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: No Reason Given."
-msgstr ""
+msgstr "Valoració manual d'estoc: No s'ha donat cap raó."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
@@ -685,7 +696,7 @@ msgstr "Compte de valoració de valors (sortint)"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__stock_valuation_layer_ids
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_ids
 msgid "Stock Valuation Layer"
-msgstr ""
+msgstr "Capa de valoració d'estoc"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_move_line__is_anglo_saxon_line
@@ -699,6 +710,8 @@ msgid ""
 "The Stock Input and/or Output accounts cannot be the same as the Stock "
 "Valuation account."
 msgstr ""
+"Els comptes d'entrada i/o sortida d'estoc no poden ser els mateixos que el "
+"compte de Valuació d'estoc."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -708,12 +721,14 @@ msgid ""
 "The action leads to the creation of a journal entry, for which you don't "
 "have the access rights."
 msgstr ""
+"L'acció Iniciatives condueix a la creació d'una entrada de diari, per a la "
+"qual no tens els drets d'accés."
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "The added value doesn't have any impact on the stock valuation"
-msgstr ""
+msgstr "El valor afegit no té cap impacte en la valoració de l'estoc"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -753,6 +768,8 @@ msgid ""
 "There is no valuation layers. Valuation layers are created when some product"
 " moves should impact the valuation of the stock."
 msgstr ""
+"No hi ha capes de valoració. Les capes de valució es creen quan alguns "
+"moviments de producte haurien d'impactear la valoració de l'estoc."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__value
@@ -859,6 +876,8 @@ msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
+"Quan la valoració automàtica de l'inventari està activada en un producte, "
+"aquest compte tindrà el valor actual dels productes."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -890,7 +909,7 @@ msgstr "No es pot revaloritzar un producte amb un mètode de cost estàndard."
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with an empty or negative stock."
-msgstr ""
+msgstr "No es pot revaloritzar un producte amb un estoc buit o negatiu."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -900,6 +919,9 @@ msgid ""
 "to the creation of a journal entry, for which you don't have the access "
 "rights."
 msgstr ""
+"No es pot actualitzar el cost d'un producte en la valoració automatitzada, "
+"ja que condueix a la creació d'una entrada de diari, per a la qual no es "
+"tenen els drets d'accés."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -908,6 +930,8 @@ msgid ""
 "You don't have any input valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"No teniu cap compte de valoració d'entrada definit a la categoria del "
+"producte. Heu de definir-ne una abans de processar aquesta operació."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0

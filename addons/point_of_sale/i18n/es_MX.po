@@ -5,7 +5,8 @@
 # Translators:
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
 # Cécile Collart <cco@odoo.com>, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-09 16:49+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -126,7 +127,7 @@ msgid ""
 "<p>Ready to have a look at the <b>POS Interface</b>? Let's start our first "
 "session.</p>"
 msgstr ""
-"<p>¿Está listo para echar un vistazo a la <b>interfaz del PDV </b>? "
+"<p>¿Está listo para echar un vistazo a la <b>interfaz del PdV </b>? "
 "Iniciemos nuestra primera sesión.</p>"
 
 #. module: point_of_sale
@@ -274,7 +275,7 @@ msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data."
 msgstr ""
-"Un identificador único global para esta configuración del PDV, usado para "
+"Un identificador único global para esta configuración de PdV, usado para "
 "prevenir conflictos en datos generados por el cliente."
 
 #. module: point_of_sale
@@ -284,7 +285,7 @@ msgid ""
 "session"
 msgstr ""
 "Un número de secuencia que se incrementa cada vez que un usuario reanuda la "
-"sesión de PDV"
+"sesión de PdV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__sequence_number
@@ -369,7 +370,7 @@ msgid ""
 "representing the pos sales."
 msgstr ""
 "Cuenta utilizada como contrapartida de la cuenta de ingresos en el asiento "
-"contable representando las ventas del PDV."
+"contable representando las ventas del PdV."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -578,7 +579,7 @@ msgid ""
 "available in the POS."
 msgstr ""
 "Un error ocurrió cargando los precios de los productos. Asegúrese de que "
-"todas las listas de precios están isponibles en el Punto de venta."
+"todas las listas de precios están disponibles en el PdV."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
@@ -668,7 +669,7 @@ msgstr "Listas de precio disponibles"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__available_in_pos
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_search_view_pos
 msgid "Available in POS"
-msgstr "Disponible en PDV"
+msgstr "Disponible en PdV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__average_price
@@ -1172,7 +1173,7 @@ msgstr "Configuración"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Configuration for journal entries of PoS orders"
-msgstr "Configuración de los asientos de diario para las órdenes del PDV"
+msgstr "Configuración de los asientos de diario para las órdenes del PdV"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
@@ -1279,8 +1280,7 @@ msgstr "Tasa de conversión"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__currency_rate
 msgid "Conversion rate from company currency to order currency."
-msgstr ""
-"Tasa de conversión de la divisa de la empresa a la divisa de la orden."
+msgstr "Tasa de cambio de la divisa de la empresa a la divisa de la orden."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1301,7 +1301,7 @@ msgstr "Crear"
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all_filtered
 msgid "Create a new POS order"
-msgstr "Crear una orden de PDV"
+msgstr "Crear una orden de PdV"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
@@ -1360,7 +1360,7 @@ msgstr "Divisa"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__currency_rate
 msgid "Currency Rate"
-msgstr "Tasa de divisa"
+msgstr "Tasa de cambio"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__current_session_id
@@ -2077,7 +2077,7 @@ msgstr "Agrupar por"
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_category__is_pos_groupable
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_uom__is_pos_groupable
 msgid "Group Products in POS"
-msgstr "Productos grupales en punto de venta"
+msgstr "Productos grupales en PdV"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2422,8 +2422,8 @@ msgid ""
 "It is forbidden to modify a tax used in a POS order not posted. You must "
 "close the POS sessions before modifying the tax."
 msgstr ""
-"Está prohibido modificar un impuesto utilizado en una orden de PDV no "
-"publicada. Debe cerrar las sesiones de PDV antes de modificar el impuesto."
+"Está prohibido modificar un impuesto utilizado en una orden de PdV no "
+"publicada. Debe cerrar las sesiones de PdV antes de modificar el impuesto."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2459,7 +2459,7 @@ msgstr "Apuntes de diario "
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total_value
 msgid "Kpi Pos Total Value"
-msgstr "Valor Total de KPI de TPV"
+msgstr "Valor Total de KPI de PdV"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.led_lamp
@@ -2811,6 +2811,13 @@ msgid "Next Order List"
 msgstr "Siguiente lista de órdenes"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid "No"
+msgstr "No"
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "No Taxes"
@@ -2972,8 +2979,8 @@ msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
 "prices on orders."
 msgstr ""
-"Solo los usuarios con derechos de acceso de administrador pueden modificar "
-"los precios de los productos en las órdenes."
+"Solo los usuarios con derechos de acceso de gerente de la aplicación de PdV "
+"pueden modificar los precios de los productos en las órdenes."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3000,12 +3007,12 @@ msgstr "Abrir caja de efectivo"
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_pos_menu
 msgid "Open POS Menu"
-msgstr "Abrir menú PDV"
+msgstr "Abrir menú PdV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Open PoS sessions that are using this payment method."
-msgstr "Sesiones de PDV abiertas que están utilizando este método de pago."
+msgstr "Sesiones de PdV abiertas que están utilizando este método de pago."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3198,43 +3205,43 @@ msgstr "Otros"
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "POS Order %s"
-msgstr "Orden de PDV %s"
+msgstr "Orden de PdV %s"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line_form
 msgid "POS Order line"
-msgstr "Línea de orden de PDV"
+msgstr "Línea de orden de PdV"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
 msgid "POS Order lines"
-msgstr "Líneas de órdenes de PDV"
+msgstr "Líneas de órdenes de PdV"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
 msgid "POS Orders"
-msgstr "Órdenes de PDV"
+msgstr "Órdenes de PdV"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree_all_sales_lines
 msgid "POS Orders lines"
-msgstr "Líneas de orden de PDV"
+msgstr "Líneas de orden de PdV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total
 msgid "POS Sales"
-msgstr "Ventas de PDV"
+msgstr "Ventas de PdV"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "POS order line %s"
-msgstr "Línea de órdenes de PDV %s"
+msgstr "Línea de órdenes de PdV %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_statement_id
 msgid "POS statement"
-msgstr "Estado de cuenta de PDV"
+msgstr "Estado de cuenta de PdV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_paid
@@ -3429,7 +3436,7 @@ msgstr "Número de recolecciones"
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 #, python-format
 msgid "Picking POS"
-msgstr "Recolecciones del PDV"
+msgstr "Recolecciones del PdV"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -3488,7 +3495,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Please configure a payment method in your POS."
-msgstr "Configure un método de pago en su PDV."
+msgstr "Configure un método de pago en su PdV."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -3526,12 +3533,12 @@ msgstr "Por favor, seleccione el cliente"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__pos_categ_id
 msgid "PoS Category"
-msgstr "Categoría PDV"
+msgstr "Categoría PdV"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "PoS Interface"
-msgstr "Interfaz PDV"
+msgstr "Interfaz de PdV"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
@@ -3539,19 +3546,19 @@ msgstr "Interfaz PDV"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_pivot
 #, python-format
 msgid "PoS Orders"
-msgstr "Órdenes PDV"
+msgstr "Órdenes PdV"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_pos_category_action
 #: model:ir.ui.menu,name:point_of_sale.menu_products_pos_category
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "PoS Product Categories"
-msgstr "Categorías de producto de PDV"
+msgstr "Categorías de producto de PdV"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
 msgid "PoS Product Category"
-msgstr "Categoría de producto de PDV "
+msgstr "Categoría de producto de PdV "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
@@ -3688,7 +3695,7 @@ msgstr "Grupo de usuario de punto de venta"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_cashbox__pos_config_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__pos_config_ids
 msgid "Pos Config"
-msgstr "Configuración del PDV"
+msgstr "Configuración del PdV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_order_ids
@@ -3698,55 +3705,55 @@ msgstr "Configuración del PDV"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__pos_order_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking__pos_order_id
 msgid "Pos Order"
-msgstr "Orden de PDV"
+msgstr "Orden de PdV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__pos_order_count
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__pos_order_count
 msgid "Pos Order Count"
-msgstr "Número de órdenes de PDV"
+msgstr "Número de órdenes de PdV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
-msgstr "Línea de orden de PDV"
+msgstr "Línea de orden de PdV"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "Pos Product Categories"
-msgstr "Categorías de producto de PDV"
+msgstr "Categorías de producto de PdV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking__pos_session_id
 msgid "Pos Session"
-msgstr "Sesión de PDV"
+msgstr "Sesión de PdV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_duration
 msgid "Pos Session Duration"
-msgstr "Duración de la Sesión de PDV"
+msgstr "Duración de la sesión de PdV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_state
 msgid "Pos Session State"
-msgstr "Estado de la sesión del PDV"
+msgstr "Estado de la sesión del PdV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_username
 msgid "Pos Session Username"
-msgstr "Nombre de usuario de la sesión de PDV"
+msgstr "Nombre de usuario de la sesión de PdV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Pos Sessions"
-msgstr "Sesiones de PDV"
+msgstr "Sesiones de PdV"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/CashBoxOpening.xml:0
 #, python-format
 msgid "Pos closed."
-msgstr "PDV cerrado."
+msgstr "PdV cerrado."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_posbox
@@ -4649,6 +4656,13 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid "Some Serial/Lot Numbers are missing"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
 #, python-format
 msgid ""
@@ -4677,7 +4691,7 @@ msgstr ""
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
 msgid "Specify product lot/serial number in pos order line"
 msgstr ""
-"Especifique el número de lote / de serie en la línea de la orden de PDV"
+"Especifique el número de lote / de serie en la línea de la orden de PdV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__split_transactions
@@ -4981,7 +4995,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
 msgid "The name of this POS Session must be unique !"
-msgstr "¡El nombre de esta sesión de PDV debe ser único!"
+msgstr "¡El nombre de esta sesión de PdV debe ser único!"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_partner__pos_order_count
@@ -5080,8 +5094,8 @@ msgid ""
 "The rate of the currency to the currency of rate applicable at the date of "
 "the order"
 msgstr ""
-"El tipo de cambio de la divisa a la divisa del tipo de cambio aplicable en "
-"la fecha de la orden"
+"El tipo de cambio de divisa a la divisa del tipo de cambio aplicable en la "
+"fecha de la orden"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_skip_screen
@@ -5224,7 +5238,7 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_box.py:0
 #, python-format
 msgid "There is no cash register for this PoS Session"
-msgstr "No hay caja registradora para esta sesión de PDV"
+msgstr "No hay caja registradora para esta sesión de PdV"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5250,7 +5264,7 @@ msgid ""
 msgstr ""
 "Este campo representa la diferencia máxima permitida entre el balance final "
 "y el efectivo teórico al cerrar una sesión, para usuarios no administradores"
-" del PDV . Si se alcanza este máximo, el usuario tendrá un mensaje de error "
+" del PdV. Si se alcanza este máximo, el usuario tendrá un mensaje de error "
 "en el cierre de su sesión diciendo que tiene que ponerse en contacto con su "
 "gerente."
 
@@ -5261,7 +5275,7 @@ msgid ""
 "sale client."
 msgstr ""
 "Este campo se encuentra aquí para pasar el identificador del grupo de "
-"gerentes del punto de venta al cliente del punto de venta."
+"gerentes del PdV al cliente del punto de venta."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_user_id
@@ -5270,7 +5284,7 @@ msgid ""
 "sale client."
 msgstr ""
 "Este campo se encuentra aquí para pasar el identificador del grupo de "
-"usuarios del punto de venta al cliente del punto de venta."
+"usuarios del pdv al cliente del punto de venta."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -5434,7 +5448,7 @@ msgstr "Inicie una nueva sesión para registrar nuevas órdenes."
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "To return product(s), you need to open a session in the POS %s"
-msgstr "Para devolver productos, debe abrir una sesión en el PDV %s"
+msgstr "Para devolver productos, debe abrir una sesión en el PdV %s"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5714,7 +5728,7 @@ msgid ""
 "Use employee credentials to log in to the PoS session and switch cashier"
 msgstr ""
 "Utilice las credenciales de los empleados para iniciar sesión en la sesión "
-"de PDV y cambiar de cajero"
+"de PdV y cambiar de cajero"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__user_id
@@ -5846,6 +5860,13 @@ msgid "Would you like to load demo data?"
 msgstr "¿Le gustaría cargar datos demo?"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid "Yes"
+msgstr "Sí"
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid ""
@@ -5863,7 +5884,7 @@ msgid ""
 "session using it is already opened."
 msgstr ""
 "No tiene permitido cambiar la configuración de redondeo de efectivo mientras"
-" una sesión de PDV que la usa esté abierta."
+" una sesión de PdV que la usa esté abierta."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5871,6 +5892,15 @@ msgstr ""
 #, python-format
 msgid "You are not allowed to change this quantity"
 msgstr "No tiene permitido cambiar esta cantidad"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid ""
+"You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
+"Would you like to proceed anyway?"
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
@@ -5889,14 +5919,14 @@ msgid ""
 "You cannot close the POS when invoices are not posted.\n"
 "Invoices: %s"
 msgstr ""
-"No puede cerrar el PDV cuando no se han publicado las facturas.\n"
+"No puede cerrar el PdV cuando no se han publicado las facturas.\n"
 "Facturas: %s"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot close the POS when orders are still in draft"
-msgstr "No puede cerrar el PDV cuando las órdenes aún están en borrador."
+msgstr "No puede cerrar el PdV cuando las órdenes aún están en borrador."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -5940,7 +5970,7 @@ msgid ""
 "You cannot delete contacts while there are active PoS sessions. Close the "
 "session(s) %s first."
 msgstr ""
-"No puede eliminar contactos mientras haya sesiones de PDV activas. Cierre "
+"No puede eliminar contactos mientras haya sesiones de PdV activas. Cierre "
 "las sesiones %s primero."
 
 #. module: point_of_sale
@@ -5961,12 +5991,12 @@ msgid ""
 "methods directly from menu \"PoS Backend / Configuration / Payment "
 "Methods\"."
 msgstr ""
-"Tiene que definir qué método de pago debe estar disponible en el PDV "
-"reutilizando los bancos y cajas existentes a través de \"Contabilidad / "
-"Configuración / Diarios / Diarios\". Seleccione un diario y marque la "
-"casilla \"Método de pago de PDV\" desde la pestaña \"Punto de venta\". Puede"
-" crear también métodos de pago directamente desde el menú \"Backend PDV / "
-"Configuración / Métodos de pago\"."
+"Tiene que definir qué método de pago debe estar disponible en el punto de "
+"venta reutilizando los bancos y cajas existentes a través de \"Contabilidad "
+"/ Configuración / Diarios / Diarios\". Seleccione un diario y marque la "
+"casilla \"Método de pago de PdV\" desde la pestaña \"Punto de venta\". Puede"
+" crear también métodos de pago directamente desde el menú \"Backend de PdV /"
+" Configuración / Métodos de pago\"."
 
 #. module: point_of_sale
 #. openerp-web
