@@ -8,7 +8,7 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1187,13 +1187,13 @@ msgstr "Importsjabloon voor leveranciersprijslijst"
 #: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "In Standard Price & AVCO: value of the product (automatically computed in AVCO).\n"
-"        In FIFO: value of the last unit that left the stock (automatically computed).\n"
+"        In FIFO: value of the next unit that will leave the stock (automatically computed).\n"
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
-"In standaardprijs & AVCO: waarde van het product (automatisch berekend in AVCO).\n"
-"In FIFO: waarde van de laatste eenheid die de voorraad verliet (automatisch berekend).\n"
-"Wordt gebruikt om het product te waarderen wanneer de inkoopkosten niet bekend zijn (bijvoorbeeld voorraadaanpassing).\n"
+"Bij vaste prijs & AVCO: de waarde van het product (automatisch berekend in AVCO).\n"
+"Bij FIFO: de waarde van de volgende eenheid die de voorraad verlaat (automatisch berekend).\n"
+"Wordt gebruikt om het product te waarderen wanneer de inkoopkosten niet bekend zijn (bijv. voorraadaanpassing).\n"
 "Wordt gebruikt om marges op verkooporders te berekenen."
 
 #. module: product
@@ -2392,6 +2392,12 @@ msgstr ""
 "Het  productsjabloon is gearchiveerd, dus er is geen combinatie mogelijk."
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "The product variant must be a variant of the product template."
+msgstr "De productvariant moet een variant zijn van de productsjabloon."
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
 msgid ""
 "The quantity to purchase from this vendor to benefit from the price, "
@@ -2440,6 +2446,18 @@ msgstr "Er is geen resterende combinatie mogelijk."
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_uom
 msgid "This comes from the product form."
 msgstr "Dit komt van het productenbestand"
+
+#. module: product
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
+msgstr ""
+"Deze configuratie van productkenmerken, waarden en uitsluitingen zou niet "
+"leiden tot een mogelijke variant. Archiveer of verwijder je product indien "
+"gewenst rechtstreeks."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
