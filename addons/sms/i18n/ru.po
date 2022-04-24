@@ -5,13 +5,14 @@
 # Translators:
 # Martin Trigaux, 2020
 # Андрей Гусев <gaussgss@gmail.com>, 2020
-# Ivan Yelizariev // IEL (ellui) <yelizariev@itpp.dev>, 2020
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2020
 # Vasiliy Korobatov <korobatov@gmail.com>, 2020
 # Irina Fedulova <istartlin@gmail.com>, 2020
 # Ekaterina <nawsikaya@bk.ru>, 2020
 # Сергей Шебанин <sergey@shebanin.ru>, 2020
 # ILMIR <karamov@it-projects.info>, 2021
 # Evgeniia Kotova, 2022
+# Валерий Хохлов, 2022
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Evgeniia Kotova, 2022\n"
+"Last-Translator: Валерий Хохлов, 2022\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,12 +31,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
 msgid "# Invalid recipients"
-msgstr ""
+msgstr "Недействительные получатели"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_valid_count
 msgid "# Valid recipients"
-msgstr ""
+msgstr "Действительные получатели"
 
 #. module: sms
 #: code:addons/sms/models/sms_template.py:0
@@ -49,7 +50,7 @@ msgstr "%s (копия)"
 #: code:addons/sms/static/src/js/fields_sms_widget.js:0
 #, python-format
 msgid "%s characters, fits in %s SMS (%s) "
-msgstr ""
+msgstr "%s символы, помещающиеся в %s SMS (%s)"
 
 #. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
@@ -143,17 +144,17 @@ msgstr "Количество вложений"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_blacklist
 msgid "Blacklisted"
-msgstr ""
+msgstr "В черном списке"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__mobile_blacklisted
 msgid "Blacklisted Phone Is Mobile"
-msgstr ""
+msgstr "Номер в черном списке - мобильный"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr ""
+msgstr "Номер в черном списке "
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__body
@@ -544,7 +545,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_credit
 msgid "Insufficient Credit"
-msgstr ""
+msgstr "Недостаточно кредитов"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -679,7 +680,7 @@ msgstr "Сообщения"
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_missing
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_number_missing
 msgid "Missing Number"
-msgstr ""
+msgstr "Недостающий номер"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__model
@@ -781,7 +782,7 @@ msgstr "Необязательное значение, используемое 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
 msgid "Outgoing SMS"
-msgstr ""
+msgstr "Исходящие СМС"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__partner_id
@@ -796,7 +797,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr ""
+msgstr "Номер в черном списке"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__copyvalue
@@ -821,7 +822,7 @@ msgstr "Просмотр"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Put in queue"
-msgstr ""
+msgstr "Поставить в очередь"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -1291,7 +1292,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_format
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_number_format
 msgid "Wrong Number Format"
-msgstr ""
+msgstr "Неверный формат номера"
 
 #. module: sms
 #: code:addons/sms/wizard/sms_resend.py:0
@@ -1310,7 +1311,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "are invalid."
-msgstr ""
+msgstr "недействительны."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1337,14 +1338,14 @@ msgstr "запись:"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "records instead. <br/>"
-msgstr ""
+msgstr "вместо этих"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "records selected."
-msgstr ""
+msgstr "Выбранные записи"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "to send to all"
-msgstr ""
+msgstr "Отправить всем"

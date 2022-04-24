@@ -3,9 +3,9 @@
 # 	* fetchmail_outlook
 # 
 # Translators:
-# Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2022
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-30 08:55+0000\n"
 "PO-Revision-Date: 2022-03-31 06:18+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,6 +46,9 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('use_microsoft_outlook_service', '=', False), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge badge-success\">\n"
+"                        Outlook Token Valido\n"
+"                    </span>"
 
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_uri
@@ -90,7 +93,7 @@ msgstr "Token di accesso Outlook"
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_access_token_expiration
 msgid "Outlook Access Token Expiration Timestamp"
-msgstr ""
+msgstr "Timestamp di scadenza del token di accesso di Outlook"
 
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__use_microsoft_outlook_service
@@ -115,6 +118,8 @@ msgid ""
 "Please leave the password field empty for Outlook mail server %r. The OAuth "
 "process does not require it"
 msgstr ""
+"Lascia il campo della password vuoto per il mail server di Outlook %r. Il "
+"processo OAuth non la richiede"
 
 #. module: fetchmail_outlook
 #: code:addons/fetchmail_outlook/models/fetchmail_server.py:0

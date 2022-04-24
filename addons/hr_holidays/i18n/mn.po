@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2020
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2020
+# hish, 2020
 # Onii Onii <onii0223@yahoo.com>, 2020
 # nurbakhit nurka <nurbakhit@bumanit.mn>, 2020
 # Khoschuluu Khuderchuluu <khoschuluu@gmail.com>, 2020
@@ -17,8 +17,8 @@
 # tumenjargal hadbaatar <tumenjargal7903@gmail.com>, 2021
 # Munkhbaatar g <muuguu17@gmail.com>, 2021
 # Nasanochir L, 2021
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2021
-# Bayarkhuu Bataa, 2021
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022
+# Bayarkhuu Bataa, 2022
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:27+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Bayarkhuu Bataa, 2021\n"
+"Last-Translator: Bayarkhuu Bataa, 2022\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -579,6 +579,9 @@ msgid ""
 "                                    From\n"
 "                                </span>"
 msgstr ""
+"<span class=\"oe_inline\" attrs=\"{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}\">\n"
+"                                    Эхлэх\n"
+"                                </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -588,7 +591,7 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span class=\"oe_inline\" attrs=\"{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}\">\n"
-"                                    Хүртэл\n"
+"                                    Дуусах\n"
 "                                </span>"
 
 #. module: hr_holidays
@@ -2570,7 +2573,7 @@ msgstr ""
 #: model:mail.message.subtype,description:hr_holidays.mt_leave_sick
 #: model:mail.message.subtype,name:hr_holidays.mt_leave_sick
 msgid "Sick Time Off"
-msgstr "Өвчтэй чөлөө"
+msgstr "Өвчний чөлөө"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__date_from
@@ -2827,7 +2830,7 @@ msgstr "Чөлөөний хувиарлалт"
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_action_department
 #, python-format
 msgid "Time Off Analysis"
-msgstr "Чөлөөнийй шинжилгээ"
+msgstr "Чөлөөний шинжилгээ"
 
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_approval
@@ -3257,7 +3260,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You can not have 2 time off that overlaps on the same day."
-msgstr ""
+msgstr "Нэг өдөр 2 чөлөө давхардаж болохгүй."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3265,7 +3268,7 @@ msgstr ""
 msgid ""
 "You can not set 2 time off that overlaps on the same day for the same "
 "employee."
-msgstr ""
+msgstr "Тухайн ажилтны хувьд нэг өдөр 2 чөлөө давхардаж болохгүй."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3311,6 +3314,8 @@ msgstr ""
 "эрхтэй байх ёстой"
 
 #. module: hr_holidays
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid ""
