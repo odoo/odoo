@@ -39,7 +39,7 @@ class IrActionsReport(models.Model):
                         })
                         writer.add_file_metadata(metadata_content)
 
-                writer.addAttachment('factur-x.xml', xml_content, '/application#2Fxml')
+                writer.addAttachment('factur-x.xml', xml_content, '/text#2Fxml')
 
                 buffer = BytesIO()
                 writer.write(buffer)
