@@ -23,6 +23,7 @@
 # Martin Trigaux, 2021
 # Evgeniia Kotova, 2022
 # Сергей Шебанин <sergey@shebanin.ru>, 2022
+# Валерий Хохлов, 2022
 # 
 msgid ""
 msgstr ""
@@ -30,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2022\n"
+"Last-Translator: Валерий Хохлов, 2022\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -845,7 +846,7 @@ msgstr "Добавить получателей..."
 #: code:addons/mail/static/src/models/messaging_initializer/messaging_initializer.js:0
 #, python-format
 msgid "Add or join a channel"
-msgstr ""
+msgstr "Создать или присоединиться к каналу"
 
 #. module: mail
 #. openerp-web
@@ -1486,6 +1487,14 @@ msgstr "изменено"
 #, python-format
 msgid "Channel"
 msgstr "Канал"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid ""
+"Channel \"%(channel_name)s\" only accepts members of group "
+"\"%(group_name)s\". Forbidden for: %(guest_names)s"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -4215,14 +4224,14 @@ msgstr "Сообщение"
 #: code:addons/mail/static/src/components/composer_text_input/composer_text_input.js:0
 #, python-format
 msgid "Message #%s..."
-msgstr ""
+msgstr "Сообщение для #%s..."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/composer_text_input/composer_text_input.js:0
 #, python-format
 msgid "Message %s..."
-msgstr ""
+msgstr "Сообщение для %s..."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_has_error
@@ -5071,7 +5080,7 @@ msgstr "Открыть в обсуждении"
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Open profile"
-msgstr ""
+msgstr "Открыть профиль"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_optout
@@ -7547,7 +7556,7 @@ msgstr "Тип представления"
 #: code:addons/mail/static/src/components/discuss_sidebar_category/discuss_sidebar_category.xml:0
 #, python-format
 msgid "View or join channels"
-msgstr ""
+msgstr "Просмотр и настройка каналов"
 
 #. module: mail
 #. openerp-web
@@ -7704,6 +7713,12 @@ msgstr "У вас приватная беседа с <b>@%s </b>."
 #, python-format
 msgid "You are in channel <b>#%s</b>."
 msgstr "Вы находитесь в канале <b># %s </b>."
+
+#. module: mail
+#: code:addons/mail/controllers/discuss.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr ""
 
 #. module: mail
 #. openerp-web

@@ -406,6 +406,57 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([]);
     });
 
+    QUnit.test('breadcrumbs of actions in target="new"', async function (assert) {
+        const webClient = await createWebClient({ serverData });
+
+        // execute an action in target="current"
+        await doAction(webClient, 1);
+        assert.deepEqual(
+            [...webClient.el.querySelectorAll(".breadcrumb-item")].map((i) => i.innerText),
+            ["Partners Action 1"]
+        );
+
+        // execute an action in target="new" and a list view (s.t. there is a control panel)
+        await doAction(webClient, {
+            xml_id: "action_5",
+            name: "Create a Partner",
+            res_model: "partner",
+            target: "new",
+            type: "ir.actions.act_window",
+            views: [[false, "list"]],
+        });
+        assert.deepEqual(
+            [...webClient.el.querySelectorAll(".modal .breadcrumb-item")].map((i) => i.innerText),
+            ["Create a Partner"]
+        );
+    });
+
+    QUnit.test('call switchView in an action in target="new"', async function (assert) {
+        const webClient = await createWebClient({ serverData });
+
+        // execute an action in target="current"
+        await doAction(webClient, 4);
+        assert.containsOnce(webClient, ".o_kanban_view");
+
+        // execute an action in target="new" and a list view (s.t. we can call switchView)
+        await doAction(webClient, {
+            xml_id: "action_5",
+            name: "Create a Partner",
+            res_model: "partner",
+            target: "new",
+            type: "ir.actions.act_window",
+            views: [[false, "list"]],
+        });
+        assert.containsOnce(webClient, ".modal .o_list_view");
+        assert.containsOnce(webClient, ".o_kanban_view");
+
+        // click on a record in the dialog -> should do nothing as we can't switch view
+        // in the dialog, and we don't want to switch view behind the dialog
+        await click(webClient.el.querySelector(".modal .o_data_row .o_data_cell"));
+        assert.containsOnce(webClient, ".modal .o_list_view");
+        assert.containsOnce(webClient, ".o_kanban_view");
+    });
+
     QUnit.module('Actions in target="inline"');
 
     QUnit.test(

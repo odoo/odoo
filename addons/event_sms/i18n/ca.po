@@ -36,12 +36,12 @@ msgstr "Registre esdeveniment"
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_registration
 msgid "Event: Registration"
-msgstr ""
+msgstr "Esdeveniment: Registre"
 
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_reminder
 msgid "Event: Reminder"
-msgstr ""
+msgstr "Esdeveniment: Recordatori"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_type_mail
@@ -78,6 +78,11 @@ msgid ""
 "object.event_id.name }} event is starting {{ object.get_date_range_str() }}."
 " We confirm your registration and hope to meet you there."
 msgstr ""
+"{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name }}: Estem emocionats de recordar-los que {{ "
+"object.event_id.name }} l'esdeveniment està començant {{ "
+"object.get_date_range_str() }}. Confirmem el seu registre i esperem "
+"conèixer-lo allà."
 
 #. module: event_sms
 #: model:sms.template,body:event_sms.sms_template_data_event_registration
@@ -86,3 +91,6 @@ msgid ""
 "user.env.company.name }}: We are happy to confirm your registration for the "
 "{{ object.event_id.name }} event."
 msgstr ""
+"{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name }}: Ens complau confirmar el vostre registre per al {{"
+" object.event_id.name }} event."

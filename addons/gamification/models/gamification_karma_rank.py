@@ -35,23 +35,25 @@ class KarmaRank(models.Model):
     @api.model_create_multi
     def create(self, values_list):
         res = super(KarmaRank, self).create(values_list)
-        users = self.env['res.users'].sudo().search([('karma', '>', 0)])
-        users._recompute_rank()
+        if any(res.mapped('karma_min')) > 0:
+            users = self.env['res.users'].sudo().search([('karma', '>=', max(min(res.mapped('karma_min')), 1))])
+            if users:
+                users._recompute_rank()
         return res
 
     def write(self, vals):
         if 'karma_min' in vals:
             previous_ranks = self.env['gamification.karma.rank'].search([], order="karma_min DESC").ids
-            low = min(vals['karma_min'], self.karma_min)
-            high = max(vals['karma_min'], self.karma_min)
+            low = min(vals['karma_min'], min(self.mapped('karma_min')))
+            high = max(vals['karma_min'], max(self.mapped('karma_min')))
 
         res = super(KarmaRank, self).write(vals)
 
         if 'karma_min' in vals:
             after_ranks = self.env['gamification.karma.rank'].search([], order="karma_min DESC").ids
             if previous_ranks != after_ranks:
-                users = self.env['res.users'].sudo().search([('karma', '>', 0)])
+                users = self.env['res.users'].sudo().search([('karma', '>=', max(low, 1))])
             else:
-                users = self.env['res.users'].sudo().search([('karma', '>=', low), ('karma', '<=', high)])
+                users = self.env['res.users'].sudo().search([('karma', '>=', max(low, 1)), ('karma', '<=', high)])
             users._recompute_rank()
         return res
