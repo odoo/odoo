@@ -40,6 +40,9 @@ msgid ""
 "                object.state == 'draft' and 'Repair Quotation - %s' % (object.name) or\n"
 "                'Repair Order - %s' % (object.name))"
 msgstr ""
+"(\n"
+"                object.state == 'esborrany\" i \"Pressupost de reparació - %s' % (object.name) or\n"
+"                'Repair Order - %s' % (object.name))"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -62,12 +65,19 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* L'estat de «Esborrany» s'utilitza quan un usuari codifica una nova ordre de reparació sense confirmar.\n"
+"* L'estat «Confirmat» s'utilitza quan un usuari confirma l'ordre de reparació.\n"
+"* L'estat de \"Ready to Repair\" s'utilitza per començar a reparar, l'usuari només pot començar a reparar després que es confirmi l'ordre de reparació.\n"
+"* L'estat de 'Reparació d'Under' s'utilitza quan la reparació està en curs.\n"
+"* L'estat de 'Per facturar' s'utilitza per generar la factura abans o després de la reparació.\n"
+"* L'estat 'Fet' s'estableix quan es completa la reparació.\n"
+"* L'estat 'Cancel·lat' s'utilitza quan l'usuari cancel·la l'ordre de reparació."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ": Insufficient Quantity To Repair"
-msgstr ""
+msgstr ": Quantitat insuficient per reparar"
 
 #. module: repair
 #: model:mail.template,body_html:repair.mail_template_repair_quotation
@@ -92,6 +102,25 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
+"        Hola <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/>\n"
+"        Aquí està la seva ordre de reparació <strong t-out=\"object.name or ''\">RO/00004</strong>\n"
+"        <t t-if=\"object.invoice_method != 'none'\">\n"
+"           que ascendeix a<strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 100.00</t>.</strong><br/>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            .<br/>\n"
+"        </t>\n"
+"        Podeu respondre a aquest correu electrònic si teniu cap pregunta.\n"
+"        <br/><br/>\n"
+"        Gràcies,\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br/>\n"
+"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -1036,13 +1065,13 @@ msgstr "La reparació ha d'estar sota reparació per poder finalitzar-la."
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_production_lot__repair_order_count
 msgid "Repair order count"
-msgstr ""
+msgstr "Reparar el recompte d'ordres "
 
 #. module: repair
 #: code:addons/repair/models/stock_production_lot.py:0
 #, python-format
 msgid "Repair orders of %s"
-msgstr ""
+msgstr "Reparar ordres de %s"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repaired
@@ -1090,7 +1119,7 @@ msgstr "Comanda de venda"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_id
 msgid "Sale Order from which the product to be repaired comes from."
-msgstr ""
+msgstr "Ordre de venda del qual procedeix el producte a reparar."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__schedule_date
@@ -1124,6 +1153,7 @@ msgstr "Enviar Pressupost"
 #, python-format
 msgid "Serial number is required for operation lines with products: %s"
 msgstr ""
+"El número de sèrie és necessari per a les línies d'operació amb productes:%s"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1363,6 +1393,8 @@ msgid ""
 "You can not delete a repair order once it has been confirmed. You must first"
 " cancel it."
 msgstr ""
+"No podeu suprimir una comanda de reparació una vegada que s'hagi confirmat. "
+"Primer l'has de cancel·lar."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1371,6 +1403,8 @@ msgid ""
 "You can not delete a repair order which is linked to an invoice which has "
 "been posted once."
 msgstr ""
+"No podeu suprimir una ordre de reparació que està enllaçada a una factura "
+"que s'ha enviat una vegada."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1410,3 +1444,5 @@ msgstr "{{ (objecte. name o').replace(' /', '_')}"
 msgid ""
 "{{ object.partner_id.name }} Repair Orders (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.partner_id.name }} Reparar comandes (Ref {{ object.name or 'n/a' "
+"}})"

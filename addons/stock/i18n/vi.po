@@ -16,7 +16,7 @@
 # Vo Thanh Thuy, 2022
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
 # Duy BQ <duybq86@gmail.com>, 2022
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
@@ -173,7 +173,7 @@ msgstr "'Địa điểm - %s' % object.name"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_lot_label
 msgid "'Lot-Serial - %s' % object.name"
-msgstr "'Lô/Sơ-ri - %s' % object.name"
+msgstr "'Lô/Sê-ri - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_type_label
@@ -192,7 +192,7 @@ msgstr ""
 #: code:addons/stock/models/stock_production_lot.py:0
 #, python-format
 msgid "(copy of) %s"
-msgstr ""
+msgstr "(bản sao của) %s"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
@@ -1434,7 +1434,7 @@ msgstr "Làm sạch"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Clear Lines"
-msgstr ""
+msgstr "Xóa dòng"
 
 #. module: stock
 #. openerp-web
@@ -2069,9 +2069,9 @@ msgid ""
 "Define a minimum stock rule so that Odoo creates automatically requests for "
 "quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
-"Định nghĩa một quy tắc tồn kho tối thiểu cho phép Odoo tự động tạo các yêu "
-"cầu báo giá động hoặc các lệnh sản xuất dự thảo để tái cung ứng cho kho của "
-"bạn."
+"Định nghĩa một quy tắc tồn kho tối thiểu để Odoo tự động tạo các yêu "
+"cầu báo giá hoặc các lệnh sản xuất được xác nhận để tái cung ứng cho "
+"kho của bạn."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -2175,12 +2175,12 @@ msgstr "Giao hàng"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__delivery_route_id
 msgid "Delivery Route"
-msgstr "Tuyến Bàn giao"
+msgstr "Tuyến giao hàng"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_delivery
 msgid "Delivery Slip"
-msgstr "Phiếu Giao hàng"
+msgstr "Phiếu giao hàng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__move_type
@@ -7683,6 +7683,9 @@ msgid ""
 "precision defined on the unit of measure \"%s\". Please change the quantity "
 "done or the rounding precision of your unit of measure."
 msgstr ""
+"Số lượng hoàn tất cho sản phẩm \"%s\" không chính xác khi có làm tròn theo "
+"đơn vị tính \"%s\". Xin hãy thay đổi số lượng hoàn thành hoặc số lượng làm "
+"tròn của đơn vị tính trước."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7921,6 +7924,9 @@ msgid ""
 "better solution could be to archive the product and create a new one "
 "instead."
 msgstr ""
+"Sản phẩm này đã được sử dụng trong ít nhất một đợt hàng tồn kho. Không nên "
+"thay đổi Loại Sản phẩm vì nó có thể dẫn đến sự mâu thuẫn. Giải pháp tốt hơn "
+"có thể là lưu trữ sản phẩm và tạo một sản phẩm mới thay thế."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -8965,6 +8971,8 @@ msgid ""
 "You can't desactivate the multi-location if you have more than once "
 "warehouse by company"
 msgstr ""
+"Bạn không thể hủy kích hoạt nhiều địa điểm kho nếu bạn có nhiều hơn một Kho "
+"hàng theo Công ty"
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -9235,6 +9243,9 @@ msgid ""
 " two warehouses. Instead, use an immediate internal transfer or the resupply"
 " route."
 msgstr ""
+"Bạn không nên dùng một kế hoạch dịch chuyển nội bộ để dịch chuyển một vài "
+"sản phẩm giữa hai Kho hàng. Thay vào đó, hãy sử dụng phương thức chuyển giao"
+" nội bộ ngay lập tức hoặc Loan báo cung ứng."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0

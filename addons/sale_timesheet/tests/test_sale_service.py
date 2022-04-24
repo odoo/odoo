@@ -723,3 +723,48 @@ class TestSaleService(TestCommonSaleTimesheet):
             else:
                 self.assertEqual(qty, planned_hours_for_uom[uom_in])
                 self.assertEqual(uom_out, company_time_uom.display_name)
+
+    def test_add_product_analytic_account(self):
+        """ When we have a project with an analytic account and we add a product to the task,
+            the consequent invoice line should have the same analytic account as the project.
+        """
+        # Ensure the SO has no analytic account to give to its SOLs
+        self.assertFalse(self.sale_order.analytic_account_id)
+        Product = self.env['product.product']
+        SaleOrderLine = self.env['sale.order.line']
+
+        # Create a SO with a service that creates a task
+        product_create = Product.create({
+            'name': 'Product that creates the task',
+            'type': 'service',
+            'service_type': 'timesheet',
+            'project_id': self.project_global.id,
+            'service_tracking': 'task_global_project',
+        })
+        sale_order_line_create = SaleOrderLine.create({
+            'order_id': self.sale_order.id,
+            'name': product_create.name,
+            'product_id': product_create.id,
+            'product_uom_qty': 5,
+            'product_uom': product_create.uom_id.id,
+            'price_unit': product_create.list_price,
+        })
+        self.sale_order.action_confirm()
+
+        # Add a SOL with a task_id to mimmic the "Add a product" flow on the task
+        product_add = Product.create({'name': 'Product added on task'})
+        SaleOrderLine.create({
+            'order_id': self.sale_order.id,
+            'name': product_add.name,
+            'product_id': product_add.id,
+            'product_uom_qty': 5,
+            'product_uom': product_add.uom_id.id,
+            'price_unit': product_add.list_price,
+            'task_id': sale_order_line_create.task_id.id,
+        })
+        self.sale_order._create_invoices()
+
+        # Check that the resulting invoice line and the project have the same analytic account
+        invoice_line = self.sale_order.invoice_ids.line_ids.filtered(lambda line: line.product_id == product_add)
+        self.assertEqual(invoice_line.analytic_account_id, self.project_global.analytic_account_id,
+             "SOL's analytic account should be the same as the project's")
