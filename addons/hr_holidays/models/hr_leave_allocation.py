@@ -475,9 +475,9 @@ class HolidaysAllocation(models.Model):
                     force_period = False
 
             if days_added_per_level:
-                number_of_days_to_add = sum(days_added_per_level.values())
+                number_of_days_to_add = allocation.number_of_days + sum(days_added_per_level.values())
                 # Let's assume the limit of the last level is the correct one
-                allocation.write({'number_of_days': min(allocation.number_of_days + number_of_days_to_add, current_level.maximum_leave)})
+                allocation.number_of_days = min(number_of_days_to_add, current_level.maximum_leave + allocation.leaves_taken) if current_level.maximum_leave > 0 else number_of_days_to_add
 
     @api.model
     def _update_accrual(self):
