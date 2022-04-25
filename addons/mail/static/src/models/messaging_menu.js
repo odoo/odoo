@@ -7,6 +7,14 @@ import { clear, insertAndReplace } from '@mail/model/model_field_command';
 registerModel({
     name: 'MessagingMenu',
     identifyingFields: ['messaging'],
+    lifecycleHooks: {
+        _created() {
+            document.addEventListener('click', this._onClickCaptureGlobal, true);
+        },
+        _willDelete() {
+            document.removeEventListener('click', this._onClickCaptureGlobal, true);
+        },
+    },
     recordMethods: {
         /**
          * Close the messaging menu. Should reset its internal state.
@@ -112,6 +120,26 @@ registerModel({
          */
         _computeNotificationListView() {
             return this.isOpen ? insertAndReplace() : clear();
+        },
+        /**
+         * Closes the menu when clicking outside, if appropriate.
+         *
+         * @private
+         * @param {MouseEvent} ev
+         */
+        _onClickCaptureGlobal(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            if (!this.component) {
+                return;
+            }
+            // ignore click inside the menu
+            if (!this.component.root.el || this.component.root.el.contains(ev.target)) {
+                return;
+            }
+            // in all other cases: close the messaging menu when clicking outside
+            this.close();
         },
     },
     fields: {

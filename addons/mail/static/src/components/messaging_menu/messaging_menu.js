@@ -3,7 +3,7 @@
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, onMounted, onWillUnmount } = owl;
+const { Component } = owl;
 
 export class MessagingMenu extends Component {
 
@@ -22,17 +22,6 @@ export class MessagingMenu extends Component {
         // bind since passed as props
         this._onMobileNewMessageInputSelect = this._onMobileNewMessageInputSelect.bind(this);
         this._onMobileNewMessageInputSource = this._onMobileNewMessageInputSource.bind(this);
-        this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
-        onMounted(() => this._mounted());
-        onWillUnmount(() => this._willUnmount());
-    }
-
-    _mounted() {
-        document.addEventListener('click', this._onClickCaptureGlobal, true);
-    }
-
-    _willUnmount() {
-        document.removeEventListener('click', this._onClickCaptureGlobal, true);
     }
 
     //--------------------------------------------------------------------------
@@ -49,24 +38,6 @@ export class MessagingMenu extends Component {
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-
-    /**
-     * Closes the menu when clicking outside, if appropriate.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickCaptureGlobal(ev) {
-        if (!this.messagingMenu) {
-            return;
-        }
-        // ignore click inside the menu
-        if (!this.root.el || this.root.el.contains(ev.target)) {
-            return;
-        }
-        // in all other cases: close the messaging menu when clicking outside
-        this.messagingMenu.close();
-    }
 
     /**
      * @private
