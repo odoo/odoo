@@ -3,26 +3,7 @@
 
   <t t-name="web.FormViewDialog" owl="1">
     <Dialog title="props.title" contentClass="'o_form_view_dialog'" modalRef="modalRef">
-      <FormRenderer class="'o_form_view'" record="record" fields="archInfo.fields" archInfo="archInfo"/>
-      <t t-set-slot="footer">
-        <t t-if="footerArchInfo">
-          <FormRenderer record="record" archInfo="footerArchInfo"/>
-        </t>
-        <t t-else="">
-          <t t-if="!readonly and multiSelect">
-            <button class="btn btn-primary o_form_button_save" t-on-click="save" data-hotkey="c">Save &amp; Close</button>
-            <button class="btn btn-primary o_form_button_save_new" t-on-click="saveAndNew" data-hotkey="n">Save &amp; New</button>
-            <button class="btn btn-secondary o_form_button_cancel" t-on-click="discard" data-hotkey="j">Discard</button>
-          </t>
-          <t t-elif="!readonly">
-            <button class="btn btn-primary o_form_button_save" t-on-click="save" data-hotkey="c">Save</button>
-            <button class="btn btn-secondary o_form_button_cancel" t-on-click="discard" data-hotkey="j">Discard</button>
-          </t>
-          <t t-else="">
-            <button class="btn btn-primary o_form_button_cancel" t-on-click="discard" data-hotkey="j">Close</button>
-          </t>
-        </t>
-      </t>
+      <View t-props="viewProps"/>
     </Dialog>
   </t>
 

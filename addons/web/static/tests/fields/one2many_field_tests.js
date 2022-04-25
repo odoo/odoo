@@ -6303,7 +6303,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector("div:not(o_inactive_modal) .modal td.o_data_cell span")); // select gold
 
         // confirm the changes in the modal
-        await click(target, ".modal .modal-footer .btn-primary");
+        await clickSave(target.querySelector(".modal"));
 
         await clickSave(target);
     });

@@ -890,6 +890,7 @@ export class RelationalModel extends Model {
             fields: params.fields || {},
             viewType: "form",
         };
+        this.initialMode = params.mode;
 
         window.basicmodel = this;
     }
@@ -1053,7 +1054,14 @@ export class RelationalModel extends Model {
             loadParams.context = params.context;
         }
         const state = this.root ? this.root.exportState() : {};
-        const nextRoot = new Record(this, { __bm_load_params__: loadParams }, state);
+        const nextRoot = new Record(
+            this,
+            {
+                __bm_load_params__: loadParams,
+                mode: this.initialMode,
+            },
+            state
+        );
         await this.keepLast.add(nextRoot.load());
         this.root = nextRoot;
         this.__bm_load_params__ = loadParams;

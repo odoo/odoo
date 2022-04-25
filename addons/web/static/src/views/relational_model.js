@@ -2167,27 +2167,24 @@ export class StaticList extends DataPoint {
 
     /**
      * Add a true record in relation
-     * @param {Object} params
-     * @param {number} param.resId
+     * see final API of StaticList in basic_relational_model.js
      */
     async add(params) {
-        if (!params.resId) {
-            throw new Error("you rascal");
-        }
-
-        const { resId } = params;
-        this.limit++;
-        this.applyCommand(x2ManyCommands.linkTo(resId));
-
-        if (!this._mapping[resId]) {
-            const record = this._createRecord(params);
-            await record.load();
-        }
-
-        this.isOrder = false;
-        this.records = this._getRecords();
-        this.onChanges();
-        this.model.notify(); // should be in onChanges?
+        //
+        // if (!params.resId) {
+        //     throw new Error("you rascal");
+        // }
+        // const { resId } = params;
+        // this.limit++;
+        // this.applyCommand(x2ManyCommands.linkTo(resId));
+        // if (!this._mapping[resId]) {
+        //     const record = this._createRecord(params);
+        //     await record.load();
+        // }
+        // this.isOrder = false;
+        // this.records = this._getRecords();
+        // this.onChanges();
+        // this.model.notify(); // should be in onChanges?
     }
 
     /**
@@ -2794,8 +2791,7 @@ export class RelationalModel extends Model {
         };
         const state = this.root ? this.root.exportState() : {};
         const newRoot = this.createDataPoint(this.rootType, rootParams, state);
-        this.isLoaded = this.keepLast.add(newRoot.load());
-        await this.isLoaded;
+        await this.keepLast.add(newRoot.load());
         this.root = newRoot;
         this.rootParams = rootParams;
         this.notify();

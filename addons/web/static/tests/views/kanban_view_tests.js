@@ -4665,7 +4665,7 @@ QUnit.module("Views", (hooks) => {
         await clickColumnAction("Edit");
         await editInput(target, ".modal .o_form_editable input", "ged"); // change the value
         nbRPCs = 0;
-        await click(target, ".modal .btn-secondary");
+        await click(target, ".modal button.o_form_button_cancel");
 
         assert.containsNone(target, ".modal");
         assert.strictEqual(
@@ -4680,7 +4680,7 @@ QUnit.module("Views", (hooks) => {
         await clickColumnAction("Edit");
         await editInput(target, ".modal .o_form_editable input", "ged"); // change the value
         nbRPCs = 0;
-        await click(target, ".modal .btn-primary"); // click on save
+        await click(target, ".modal .o_form_button_save"); // click on save
 
         assert.containsNone(target, ".modal", "the modal should be closed");
         assert.strictEqual(

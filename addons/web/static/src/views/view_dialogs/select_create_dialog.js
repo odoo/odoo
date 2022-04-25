@@ -35,7 +35,6 @@ export class SelectCreateDialog extends Component {
                     this.props.close();
                 }
             },
-            createRecord: () => {},
             onSelectionChanged: (resIds) => {
                 this.state.resIds = resIds;
             },

@@ -380,6 +380,10 @@ KanbanView.multiRecord = true;
 KanbanView.template = `web.KanbanView`;
 KanbanView.components = { Layout, KanbanRenderer };
 KanbanView.props = { ...standardViewProps };
+KanbanView.defaultProps = {
+    createRecord: () => {},
+    selectRecord: () => {},
+};
 KanbanView.buttonTemplate = "web.KanbanView.Buttons";
 
 KanbanView.ArchParser = KanbanArchParser;

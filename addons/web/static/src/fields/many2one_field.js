@@ -142,17 +142,17 @@ export class Many2OneField extends Component {
 
         this.dialogClose.push(
             this.dialog.add(FormViewDialog, {
-                resId,
-                mode: this.props.canWrite ? "edit" : "readonly",
                 context: this.props.record.getFieldContext(this.props.name),
+                mode: this.props.canWrite ? "edit" : "readonly",
+                resId,
                 resModel: this.props.relation,
                 viewId,
                 title: sprintf(
                     this.env._t("Open: %s"),
                     this.props.record.activeFields[this.props.name].string
                 ),
-                save: async (record) => {
-                    await record.save({ stayInEdition: true, noReload: true });
+
+                onRecordSaved: async () => {
                     await this.props.record.load();
                     await this.props.update(this.props.value);
                 },

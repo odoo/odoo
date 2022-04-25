@@ -145,6 +145,7 @@ export class FormView extends Component {
             activeFields,
             viewMode: "form",
             rootType: "record",
+            mode: this.props.mode,
             beforeLoadProm,
         });
         const { create, edit } = this.archInfo.activeActions;
@@ -159,9 +160,12 @@ export class FormView extends Component {
         });
 
         // enable the archive feature in Actions menu only if the active field is in the view
-        this.archiveEnabled = 'active' in activeFields ? !activeFields.active.readonly
-                            : 'x_active' in activeFields ? !activeFields.x_active.readonly
-                            : false;
+        this.archiveEnabled =
+            "active" in activeFields
+                ? !activeFields.active.readonly
+                : "x_active" in activeFields
+                ? !activeFields.x_active.readonly
+                : false;
         if (this.archInfo.xmlDoc.querySelector("footer")) {
             this.footerArchInfo = Object.assign({}, this.archInfo);
             this.footerArchInfo.xmlDoc = createElement("t");
@@ -297,16 +301,27 @@ export class FormView extends Component {
     edit() {
         this.model.root.switchMode("edit");
     }
+
     async create() {
         this.disableButtons();
         await this.model.load({ resId: null });
     }
+
     async save() {
         const disabledButtons = this.disableButtons();
-        await this.model.root.save();
+        if (this.props.saveRecord) {
+            await this.props.saveRecord(this.model.root);
+        } else {
+            await this.model.root.save();
+        }
         this.enableButtons(disabledButtons);
     }
+
     discard() {
+        if (this.props.discardRecord) {
+            this.props.discardRecord(this.model.root);
+            return;
+        }
         this.model.root.discard();
         if (this.model.root.isVirtual) {
             this.env.config.historyBack();
@@ -321,7 +336,16 @@ FormView.template = `web.FormView`;
 FormView.buttonTemplate = "web.FormView.Buttons";
 FormView.display = { controlPanel: { ["top-right"]: false } };
 FormView.components = { ActionMenus, FormRenderer, Layout };
-FormView.props = { ...standardViewProps };
+FormView.props = {
+    ...standardViewProps,
+    discardRecord: { type: Function, optional: true },
+    mode: {
+        optional: true,
+        validate: (m) => ["edit", "readonly"].includes(m),
+    },
+    saveRecord: { type: Function, optional: true },
+};
 FormView.ArchParser = FormArchParser;
+FormView.searchMenuTypes = [];
 
 registry.category("views").add("form", FormView);

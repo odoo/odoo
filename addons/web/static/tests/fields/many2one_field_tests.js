@@ -7,6 +7,7 @@ import {
     click,
     clickDropdown,
     clickEdit,
+    clickSave,
     editInput,
     getFixture,
     makeDeferred,
@@ -351,14 +352,14 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await click(target, ".o_form_button_edit");
+        await clickEdit(target);
 
         // click on the external button (should do an RPC)
         await click(target, ".o_external_button");
         // save and close modal
-        await click(document.body, ".modal .modal-footer .btn-primary");
+        await clickSave(target.querySelector(".modal"));
         // save form
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
         // click next on pager
         await click(target, ".o_pager .o_pager_next");
 
@@ -442,7 +443,7 @@ QUnit.module("Fields", (hooks) => {
             await triggerEvent(input, null, "change");
 
             // save and close modal
-            await click(document.body, ".modal .modal-footer .btn-primary");
+            await clickSave(target.querySelector(".modal"));
             // save form
             await click(target, ".o_form_button_save");
             // click next on pager
@@ -801,7 +802,7 @@ QUnit.module("Fields", (hooks) => {
             );
 
             // save the modal and make sure an onchange is triggered
-            await click(document.body, ".modal .modal-footer .btn-primary");
+            await clickSave(target.querySelector(".modal"));
             assert.verifySteps([
                 "get_views",
                 "read",

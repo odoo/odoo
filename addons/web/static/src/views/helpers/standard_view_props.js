@@ -36,7 +36,7 @@ export const standardViewProps = {
     bannerRoute: { type: String, optional: 1 },
     className: { type: String, optional: 1 },
     searchMenuTypes: { type: Array, elements: String },
-    selectRecord: { type: Function },
-    createRecord: { type: Function },
+    selectRecord: { type: Function, optional: 1 },
+    createRecord: { type: Function, optional: 1 },
     noBreadcrumbs: { type: Boolean, optional: 1 },
 };

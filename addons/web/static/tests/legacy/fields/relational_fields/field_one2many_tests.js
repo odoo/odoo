@@ -10057,7 +10057,6 @@ QUnit.module('Legacy fields', {}, function () {
             const form = await createView({
                 View: FormView,
                 model: 'partner',
-                debug: 1,
                 data: this.data,
                 arch: `<form>
                         <field name="p">

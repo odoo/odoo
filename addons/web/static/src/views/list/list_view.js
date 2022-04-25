@@ -210,9 +210,12 @@ export class ListView extends Component {
             this.isExportEnable = await this.userService.hasGroup("base.group_allow_export");
         });
 
-        this.archiveEnabled = 'active' in fields ? !fields.active.readonly
-                            : 'x_active' in fields ? !fields.x_active.readonly
-                            : false;
+        this.archiveEnabled =
+            "active" in fields
+                ? !fields.active.readonly
+                : "x_active" in fields
+                ? !fields.x_active.readonly
+                : false;
         useSubEnv({ model: this.model }); // do this in useModel?
 
         useSetupView({
@@ -451,8 +454,10 @@ ListView.props = {
     onSelectionChanged: { type: Function, optional: 1 },
 };
 ListView.defaultProps = {
+    createRecord: () => {},
     hasSelectors: true,
     editable: true,
+    selectRecord: () => {},
     showButtons: true,
 };
 

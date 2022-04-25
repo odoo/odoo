@@ -59,8 +59,6 @@ export const makeView = async (params) => {
         serverData.views[`${props.resModel},${props.searchViewId},search`] = searchViewArch;
         delete props.searchViewArch;
     }
-    props.selectRecord = props.selectRecord || (() => {});
-    props.createRecord = props.createRecord || (() => {});
 
     const env = await makeTestEnv({ serverData, mockRPC, config });
 
