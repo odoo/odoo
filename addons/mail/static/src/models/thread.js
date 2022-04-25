@@ -5,6 +5,7 @@ import { attr, many, one } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, insertAndUnlink, link, replace, unlink } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 import throttle from '@mail/utils/throttle';
+
 import { cleanSearchTerm } from '@mail/utils/utils';
 import * as mailUtils from '@mail/js/utils';
 
@@ -1060,6 +1061,13 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
+        _computeChannelOwner() {
+            return this.model === 'mail.channel' ? insertAndReplace({ id: this.id }) : clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
         _computeComposer() {
             if (this.model === 'mail.box') {
                 return clear();
@@ -1719,7 +1727,7 @@ registerModel({
                     on_close: async () => {
                         if (!this.exists()) {
                             return;
-                        } 
+                        }
                         await this.fetchData(['followers']);
                         this.env.bus.trigger('Thread:promptAddFollower-closed');
                     },
@@ -1825,6 +1833,12 @@ registerModel({
             isCausal: true,
             readonly: true,
             required: true,
+        }),
+        channelOwner: one('Channel', {
+            compute: '_computeChannelOwner',
+            inverse: 'thread',
+            isCausal: true,
+            readonly: true,
         }),
         channel_type: attr(),
         /**
