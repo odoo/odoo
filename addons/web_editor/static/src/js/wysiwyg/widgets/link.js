@@ -271,7 +271,7 @@ const Link = Widget.extend({
             url = url.replace(/^tel:([0-9]+)$/, 'tel://$1');
         } else if (url.indexOf('@') !== -1 && url.indexOf(':') === -1) {
             url = 'mailto:' + url;
-        } else if (url.indexOf('://') === -1 && url[0] !== '/'
+        } else if (url && url.indexOf('://') === -1 && url[0] !== '/'
                     && url[0] !== '#' && url.slice(0, 2) !== '${') {
             url = 'http://' + url;
         }
