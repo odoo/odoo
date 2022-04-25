@@ -3,11 +3,8 @@
 // ------------------------------------------------------------------
 
 .o_PartnerImStatusIcon {
-    display: flex;
-    flex-flow: column;
-
-    width: 1.2em;
-    height: 1.2em;
+    width: $o-mail-partner-status-icon-size;
+    height: $o-mail-partner-status-icon-size;
     line-height: 1.3em;
 }
 
@@ -19,28 +16,10 @@
 // Style
 // ------------------------------------------------------------------
 
-.o_PartnerImStatusIcon {
-    &.o-has-open-chat {
-        cursor: pointer;
-    }
-}
-
-.o_PartnerImStatusIcon_innerBackground {
-    color: $white;
-}
-
 .o_PartnerImStatusIcon_icon {
-
-    &.o-away {
-        color: theme-color('warning');
-    }
 
     &.o-bot {
         color: $o-enterprise-primary-color;
-    }
-
-    &.o-offline {
-        color: gray('700');
     }
 
     &.o-online {
