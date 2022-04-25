@@ -2,8 +2,9 @@
 
 import { useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
+import { usePosition } from "@web/core/position_hook";
 
-const { Component, onWillUnmount, useExternalListener, useRef, useState } = owl;
+const { Component, onWillUnmount, useExternalListener, useRef, useState, useEffect } = owl;
 
 export class AutoComplete extends Component {
     setup() {
@@ -27,6 +28,21 @@ export class AutoComplete extends Component {
         this.hotkeysToRemove = [];
 
         onWillUnmount(() => this.debouncedOnInput.cancel());
+
+        // position and size
+        const sourcesListRef = useRef("sourcesList");
+        useEffect(
+            () => {
+                if (sourcesListRef.el) {
+                    sourcesListRef.el.style.width =
+                        this.inputRef.el.getBoundingClientRect().width + "px";
+                }
+            },
+            () => [sourcesListRef.el]
+        );
+        usePosition(() => this.inputRef.el, {
+            popper: "sourcesList",
+        });
     }
 
     get isOpened() {

@@ -191,7 +191,6 @@ class DataPoint {
 
         this.__syncParent = params.__syncParent || (() => {});
         this.__viewType = params.viewType || info.viewType;
-        this.__parentViewType = params.parentViewType || null;
         const fieldsInfo = (info.fieldsInfo && info.fieldsInfo[this.__viewType]) || {};
         for (const [name, descr] of Object.entries(fieldsInfo)) {
             this.activeFields[name] = descr.__WOWL_FIELD_DESCR__ || {};
@@ -476,8 +475,9 @@ export class Record extends DataPoint {
                         data[fieldName] = new StaticList(this.model, {
                             handle: data[fieldName].id,
                             viewType: this.activeFields[fieldName].viewMode,
-                            parentViewType: this.__viewType,
-                            __syncParent: () => this.__syncData(),
+                            __syncParent: async (value) => {
+                                await this.update(fieldName, value);
+                            },
                         });
                         data[fieldName].__fieldName__ = fieldName;
                     }
@@ -536,14 +536,10 @@ export class Record extends DataPoint {
             if (!x2manyFieldName) {
                 throw new Error("couldn't find x2many field name");
             }
-            const changes = {};
             const data = {};
             data[fieldName] = mapWowlValueToLegacy(value, fieldType);
-            changes[x2manyFieldName] = { operation: "UPDATE", id: this.__bm_handle__, data };
-            await this.model.__bm__.notifyChanges(mainRecordId, changes, {
-                viewType: this.__parentViewType,
-            });
-            this.__syncParent();
+            const operation = { operation: "UPDATE", id: this.__bm_handle__, data };
+            await this.__syncParent(operation);
         } else {
             const changes = {};
             changes[fieldName] = mapWowlValueToLegacy(value, fieldType);
@@ -693,8 +689,9 @@ export class StaticList extends DataPoint {
                     onRecordWillSwitchMode: this.onRecordWillSwitchMode,
                     mode: "readonly",
                     viewType: this.__viewType,
-                    parentViewType: this.__parentViewType,
-                    __syncParent: this.__syncParent,
+                    __syncParent: async (value) => {
+                        await this.__syncParent(value);
+                    },
                 });
                 if (record.mode === "edit" && this.editedRecord) {
                     this.editedRecord.mode = "readonly";
@@ -783,22 +780,15 @@ export class StaticList extends DataPoint {
 
     /** Creates a Draft record from nothing and edits it. Relevant in editable x2m's */
     async addNew(params) {
-        const legDP = this.model.__bm__.localData[this.__bm_handle__];
-        const parentLegDP = this.model.__bm__.localData[legDP.parentID];
         const position = params.position;
-        const changes = {};
-        changes[this.__fieldName__] = { context: [params.context], operation: "CREATE", position };
+        const operation = { context: [params.context], operation: "CREATE", position };
         await this.model.__bm__.save(this.__bm_handle__, { savePoint: true });
         this.model.__bm__.freezeOrder(this.__bm_handle__);
-        await this.model.__bm__.notifyChanges(parentLegDP.id, changes, {
-            viewType: this.__parentViewType,
-        });
-        this.__syncParent();
+        await this.__syncParent(operation);
         if (params.mode === "edit") {
             const newRecord = this.records[position === "bottom" ? this.records.length - 1 : 0];
             await newRecord.switchMode("edit");
         }
-        this.model.notify();
     }
 
     // x2many dialog edition
@@ -831,7 +821,6 @@ export class StaticList extends DataPoint {
     }
 
     async replaceWith(resIds) {
-        const basicModel = this.model.__bm__;
         const addedIds = resIds.filter((id) => !this.currentIds.includes(id));
         const deletedIds = this.currentIds.filter((id) => !resIds.includes(id));
         let operation;
@@ -854,12 +843,7 @@ export class StaticList extends DataPoint {
             // no change?
             return;
         }
-        const changes = { [this.__fieldName__]: operation };
-        await basicModel.notifyChanges(basicModel.localData[this.__bm_handle__].parentID, changes, {
-            viewType: this.__parentViewType,
-        });
-        this.__syncData();
-        this.model.notify();
+        await this.__syncParent(operation);
     }
 }
 
@@ -1001,30 +985,22 @@ export class RelationalModel extends Model {
         return newRecord;
     }
     async addNewRecord(list, params) {
-        params.__syncParent = list.__syncParent;
+        params.__syncParent = () => list.__syncData();
         const newRecord = this.createDataPoint("record", params);
         newRecord.__bm_load_params__.parentID = list.__bm_handle__;
         await newRecord.load();
         return newRecord;
     }
     async updateRecord(list, record, params = { isM2M: false }) {
-        const mainRecordId = this.__bm__.localData[list.__bm_handle__].parentID;
-        const fieldName = list.__fieldName__;
-        let changes;
+        let operation;
         if (!params.isM2M) {
-            changes = {
-                [fieldName]: { operation: "UPDATE", id: record.__bm_handle__ },
-            };
+            operation = { operation: "UPDATE", id: record.__bm_handle__ };
         } else {
             await record.save();
-            changes = {
-                [fieldName]: { operation: "TRIGGER_ONCHANGE" },
-            };
+            operation = { operation: "TRIGGER_ONCHANGE" };
         }
 
-        await this.__bm__.notifyChanges(mainRecordId, changes);
-        list.__syncParent();
-        this.notify();
+        await list.__syncParent(operation);
     }
 
     /**

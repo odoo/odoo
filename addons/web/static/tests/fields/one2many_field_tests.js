@@ -6192,20 +6192,18 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
-        "one2many with x2many in form view (but not in list view)",
-        async function (assert) {
-            assert.expect(1);
+    QUnit.test("one2many with x2many in form view (but not in list view)", async function (assert) {
+        assert.expect(1);
 
-            // avoid error when saving the edited related record (because the
-            // related x2m field is unknown in the inline list view)
-            // also ensure that the changes are correctly saved
+        // avoid error when saving the edited related record (because the
+        // related x2m field is unknown in the inline list view)
+        // also ensure that the changes are correctly saved
 
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
                     <form>
                         <group>
                             <field name="turtles">
@@ -6218,39 +6216,36 @@ QUnit.module("Fields", (hooks) => {
                             </field>
                         </group>
                     </form>`,
-                resId: 1,
-                mockRPC(route, args) {
-                    if (args.method === "write") {
-                        assert.deepEqual(args.args[1].turtles, [
-                            [
-                                1,
-                                2,
-                                {
-                                    partner_ids: [[6, false, [2, 4, 1]]],
-                                },
-                            ],
-                        ]);
-                    }
-                },
-            });
+            resId: 1,
+            mockRPC(route, args) {
+                if (args.method === "write") {
+                    assert.deepEqual(args.args[1].turtles, [
+                        [
+                            1,
+                            2,
+                            {
+                                partner_ids: [[6, false, [2, 4, 1]]],
+                            },
+                        ],
+                    ]);
+                }
+            },
+        });
 
-            await clickEdit(target);
+        await clickEdit(target);
 
-            await click(target.querySelector(".o_data_row td")); // edit first record
+        await click(target.querySelector(".o_data_row td")); // edit first record
 
-            await click(target.querySelector('div[name="partner_ids"] input'));
-            await click(target.querySelector('div[name="partner_ids"] .o_input_dropdown li'));
+        await click(target.querySelector('div[name="partner_ids"] input'));
+        await click(target.querySelector('div[name="partner_ids"] .o_input_dropdown li'));
 
-            // add a many2many tag and save
-            await editInput(target, ".modal .o_field_many2many_tags input", "test");
+        // add a many2many tag and save
+        await editInput(target, ".modal .o_field_many2many_tags input", "test");
 
-            await click(target, ".modal .modal-footer .btn-primary"); // save
+        await click(target, ".modal .modal-footer .btn-primary"); // save
 
-            // no write why?
-
-            await clickSave(target);
-        }
-    );
+        await clickSave(target);
+    });
 
     QUnit.test("many2many list in a one2many opened by a many2one", async function (assert) {
         assert.expect(1);
@@ -7103,7 +7098,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many list editable: trigger onchange when row is valid",
         async function (assert) {
             // should omit require fields that aren't in the view as they (obviously)
@@ -7126,7 +7121,18 @@ QUnit.module("Fields", (hooks) => {
             serverData.models.partner.records[0].int_field = 0;
             serverData.models.partner.records[0].turtles = [];
 
-            const form = await makeView({
+            serverData.views = {
+                "turtle,false,list": `
+                    <tree editable="top">
+                        <field name="turtle_qux"/>
+                        <field name="turtle_bar"/>
+                        <field name="turtle_int"/>
+                        <field name="turtle_foo"/>
+                        <field name="partner_ids" widget="many2many_tags"/>
+                    </tree>`,
+            };
+
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -7137,55 +7143,40 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
                 mockRPC(route, args) {
                     assert.step(args.method);
-                    return this._super.apply(this, arguments);
-                },
-                archs: {
-                    "turtle,false,list": `
-                        <tree editable="top">
-                            <field name="turtle_qux"/>
-                            <field name="turtle_bar"/>
-                            <field name="turtle_int"/>
-                            <field name="turtle_foo"/>
-                            <field name="partner_ids" widget="many2many_tags"/>
-                        </tree>`,
                 },
                 resId: 1,
             });
             await clickEdit(target);
 
             assert.strictEqual(
-                form.$('.o_field_widget[name="int_field"]').val(),
+                $(target).find('.o_field_widget[name="int_field"] input').val(),
                 "0",
                 "int_field should start with value 0"
             );
 
             // add a new row (which is invalid at first)
             await addRow(target);
-            await testUtils.owlCompatibilityExtraNextTick();
             assert.strictEqual(
-                form.$('.o_field_widget[name="int_field"]').val(),
+                $(target).find('.o_field_widget[name="int_field"] input').val(),
                 "0",
                 "int_field should still be 0 (no onchange should have been done yet)"
             );
-            assert.verifySteps(["load_views", "read", "onchange"]);
+            assert.verifySteps(["get_views", "read", "onchange"]);
 
             // fill turtle_foo field
-            await testUtils.fields.editInput(
-                form.$('.o_field_widget[name="turtle_foo"]'),
-                "some text"
-            );
+            await editInput(target, '.o_field_widget[name="turtle_foo"] input', "some text");
             assert.strictEqual(
-                form.$('.o_field_widget[name="int_field"]').val(),
+                $(target).find('.o_field_widget[name="int_field"] input').val(),
                 "0",
                 "int_field should still be 0 (no onchange should have been done yet)"
             );
             assert.verifySteps([], "no onchange should have been applied");
 
             // fill partner_ids field with a tag (all required fields will then be set)
-            await clickOpenM2ODropdown(target, "partner_ids");
-            await clickM2OHighlightedItem(target, "partner_ids");
+            await selectDropdownItem(target, "partner_ids", "first record");
+
             assert.strictEqual(
-                form.$('.o_field_widget[name="int_field"]').val(),
+                $(target).find('.o_field_widget[name="int_field"] input').val(),
                 "1",
                 "int_field should now be 1 (the onchange should have been done"
             );

@@ -17,7 +17,7 @@
                 t-key="state.value"
             />
             <t t-if="isOpened">
-                <ul class="o-autocomplete--dropdown-menu dropdown-menu ui-widget ui-autocomplete show" t-on-mousedown.prevent="">
+                <ul class="o-autocomplete--dropdown-menu dropdown-menu ui-widget ui-autocomplete show" t-on-mousedown.prevent="" t-ref="sourcesList">
                     <t t-foreach="sources" t-as="source" t-key="source.id">
                         <t t-if="source.isLoading">
                             <li class="o-autocomplete--dropdown-item ui-menu-item">

@@ -632,13 +632,13 @@ export const dragAndDrop = async (fromSelector, toSelector) => {
 };
 
 export async function clickDropdown(target, fieldName) {
-    const dropdownInput = target.querySelector(`[name='${fieldName}'] .o_input_dropdown input`);
+    const dropdownInput = target.querySelector(`[name='${fieldName}'] .dropdown input`);
     dropdownInput.focus();
     await click(dropdownInput);
 }
 
 export async function clickOpenedDropdownItem(target, fieldName, itemContent) {
-    const dropdownItems = target.querySelectorAll(`[name='${fieldName}'] .o_input_dropdown ul li`);
+    const dropdownItems = target.querySelectorAll(`[name='${fieldName}'] .dropdown ul li`);
     const indexToClick = Array.from(dropdownItems)
         .map((html) => html.textContent)
         .indexOf(itemContent);
