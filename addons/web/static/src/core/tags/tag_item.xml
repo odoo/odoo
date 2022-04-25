@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.TagItem" owl="1">
+        <span t-attf-class="{{props.className}} {{`o_tag_color_${props.colorIndex}`}} o_tag badge badge-pill" t-att-data-color="props.colorIndex" t-att-title="props.text" t-on-click="props.onClick">
+            <img t-if="props.img" t-att-src="props.img" class="o_m2m_avatar rounded-circle"/>
+            <span class="o_tag_badge_text" t-esc="props.text"/>
+            <a t-if="props.onDelete" style="z-index: 10;" t-on-click.stop="props.onDelete" href="#" class="fa fa-times mx-2 o_delete" title="Delete" aria-label="Delete"></a>
+        </span>
+    </t>
+
+</templates>

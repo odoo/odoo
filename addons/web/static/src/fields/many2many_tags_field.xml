@@ -3,12 +3,17 @@
 
     <t t-name="web.Many2ManyTagsField" owl="1">
         <t t-foreach="tags" t-as="tag" t-key="tag.id or tag_index">
-            <t t-call="badge_text" />
+            <TagItem
+                colorIndex="tag.colorIndex"
+                text="tag.name or 'tag' + tag_index"
+                handlesColor="handlesColor()"
+                onClick="(ev) => this.onBadgeClick(ev, tag)"
+                onDelete="!props.readonly ? () => this.onDelete(tag) : () => {}"
+            />
         </t>
         <div t-if="showM2OSelectionField" class="o_field_many2many_selection">
             <div class="o_input_dropdown">
                 <AutoComplete
-                    t-if="!props.readonly"
                     value="state.autocompleteValue"
                     placeholder="props.placeholder"
                     sources="sources"
@@ -19,13 +24,6 @@
                 <a role="button" class="o_dropdown_button" draggable="false" />
             </div>    
         </div>
-    </t>
-
-    <t t-name="badge_text" owl="1">
-        <span class="o_tag badge badge-pill" t-attf-class="{{tagColorClass(tag)}}" t-att-data-color="tag.colorIndex" t-att-title="tag.name or 'tag' + tag_index" t-on-click="(ev) => this.onBadgeClick(ev, tag)">
-            <span class="o_tag_badge_text" t-esc="tag.name or 'tag' + tag_index"/>
-            <a t-if="!props.readonly" style="z-index: 10;" t-on-click.stop="() => this.onDelete(tag)" href="#" class="fa fa-times ml-2 o_delete" title="Delete" aria-label="Delete"></a>
-        </span>
     </t>
 
     <t t-name="web.Many2ManyTagsFieldColorListPopover" owl="1">

@@ -6,6 +6,7 @@ import { standardFieldProps } from "./standard_field_props";
 
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { ColorList } from "@web/core/colorlist/colorlist";
+import { TagItem } from "@web/core/tags/tag_item";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { Domain } from "@web/core/domain";
 import { useService } from "@web/core/utils/hooks";
@@ -46,10 +47,6 @@ export class Many2ManyTagsField extends Component {
     }
     handlesColor() {
         return !(this.props.colorField === undefined || this.props.colorField === null);
-    }
-    tagColorClass(tag) {
-        if (!this.handlesColor()) return;
-        return `o_tag_color_${tag.colorIndex}`;
     }
     switchTagColor(colorIndex, tag) {
         const tagRecord = this.props.value.records.find((record) => record.id === tag.id);
@@ -202,6 +199,7 @@ export class Many2ManyTagsField extends Component {
 Many2ManyTagsField.components = {
     AutoComplete,
     Popover: Many2ManyTagsFieldColorListPopover,
+    TagItem,
 };
 Many2ManyTagsField.template = "web.Many2ManyTagsField";
 Many2ManyTagsField.defaultProps = {
@@ -229,7 +227,8 @@ Many2ManyTagsField.extractProps = (fieldName, record, attrs) => {
     const colorField = attrs.options.color_field;
     return {
         colorField: colorField,
-        canEditColor: !attrs.options.no_edit_color,
+        canEditColor:
+            !attrs.options.no_edit_color && record.activeFields[fieldName].viewType !== "list",
         relation: record.activeFields[fieldName].relation,
         domain: record.getFieldDomain(fieldName),
         context: record.getFieldContext(fieldName),
@@ -238,4 +237,5 @@ Many2ManyTagsField.extractProps = (fieldName, record, attrs) => {
 };
 
 registry.category("fields").add("many2many_tags", Many2ManyTagsField);
-registry.category("fields").add("form.many2many_tags", Many2ManyTagsField); // WOWL: because it exists in legacy
+registry.category("fields").add("form.many2many_tags", Many2ManyTagsField);
+registry.category("fields").add("list.many2many_tags", Many2ManyTagsField);

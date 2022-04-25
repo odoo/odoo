@@ -1,0 +1,22 @@
+.o_tag {
+    user-select: none;
+    display: inline-flex;
+    gap: 2px;
+    align-items: center;
+
+    .badge {
+        margin: 1px 2px 1px 0;
+        border: 0;
+        font-size: 12px;
+    }
+    .o_badge_text, a {
+        @include o-text-overflow(inline-block);
+        color: inherit;
+        line-height: 1.1;
+    }
+    img {
+        height: 1.4em;
+        width: 1.4em;
+        object-fit: cover;
+    }
+}
