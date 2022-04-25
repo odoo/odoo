@@ -25,7 +25,7 @@
                 }" t-attf-class="{{ messageView.extraClass }} {{ className }}" t-on-click="messageView.onClick" t-on-mouseenter="messageView.onMouseenter" t-on-mouseleave="messageView.onMouseleave" t-att-data-message-local-id="messageView.message.localId"
                 t-ref="root"
             >
-                <MessageInReplyToView t-if="messageView.messageInReplyToView" messageInReplyToViewLocalId="messageView.messageInReplyToView.localId"/>
+                <MessageInReplyToView t-if="messageView.messageInReplyToView" localId="messageView.messageInReplyToView.localId"/>
                 <div t-if="messageView.isActive and messageView.messageActionList" class="o_Message_actionListContainer position-absolute pl-5 pr-3" t-att-class="{ 'o-squashed': messageView.isSquashed }">
                     <MessageActionList localId="messageView.messageActionList.localId"/>
                 </div>

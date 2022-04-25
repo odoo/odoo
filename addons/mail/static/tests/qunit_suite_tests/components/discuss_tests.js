@@ -4018,5 +4018,37 @@ QUnit.test('send message only once when enter is pressed twice quickly', async f
     );
 });
 
+QUnit.test('message being a replied to another message should show message being replied in the message view', async function (assert) {
+    assert.expect(1);
+
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailMessageId1 = pyEnv['mail.message'].create({
+        body: "1st message",
+        model: 'mail.channel',
+        res_id: mailChannelId1,
+    });
+    const mailMessageId2 = pyEnv['mail.message'].create({
+        body: "2nd message",
+        model: 'mail.channel',
+        parent_id: mailMessageId1,
+        res_id: mailChannelId1,
+    });
+    const { messaging } = await this.start({
+        discuss: {
+            context: {
+                active_id: `mail.channel_${mailChannelId1}`,
+            },
+        },
+    });
+    assert.containsOnce(
+        document.querySelector(`.o_Message[data-message-local-id="${
+            messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId2 }).localId
+        }"]`),
+        '.o_MessageInReplyToView',
+        "message being a replied to another message should show message being replied in the message view",
+    );
+});
+
 });
 });

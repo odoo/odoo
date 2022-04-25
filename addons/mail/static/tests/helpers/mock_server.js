@@ -1492,6 +1492,7 @@ MockServer.include({
                 history_partner_ids: historyPartnerIds,
                 needaction_partner_ids: needactionPartnerIds,
                 notifications,
+                parentMessage: message.parent_id ? this._mockMailMessageMessageFormat([message.parent_id])[0] : false,
                 recipients: partners.map(p => ({ id: p.id, name: p.name })),
                 record_name: thread && (thread.name !== undefined ? thread.name : thread.display_name),
                 tracking_value_ids: formattedTrackingValues,
