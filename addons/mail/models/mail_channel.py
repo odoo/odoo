@@ -33,16 +33,9 @@ class Channel(models.Model):
     _name = 'mail.channel'
     _mail_flat_thread = False
     _mail_post_access = 'read'
-    _inherit = ['mail.thread', 'mail.alias.mixin']
+    _inherit = ['mail.thread']
 
     MAX_BOUNCE_LIMIT = 10
-
-    @api.model
-    def default_get(self, fields):
-        res = super(Channel, self).default_get(fields)
-        if not res.get('alias_contact') and (not fields or 'alias_contact' in fields):
-            res['alias_contact'] = 'everyone' if res.get('public', 'private') == 'public' else 'followers'
-        return res
 
     @api.model
     def _generate_random_token(self):
@@ -217,13 +210,6 @@ class Channel(models.Model):
         for channel in self:
             channel.invitation_url = f"/chat/{channel.id}/{channel.uuid}"
 
-    # ONCHANGE
-
-    @api.onchange('public')
-    def _onchange_public(self):
-        if self.public != 'public' and self.alias_contact == 'everyone':
-            self.alias_contact = 'followers'
-
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
@@ -260,8 +246,6 @@ class Channel(models.Model):
             access_type = vals.pop('public', defaults['public'])
             access_types.append(access_type)
             vals['public'] = 'public'
-            if not vals.get('alias_contact') and access_type != 'public':
-                vals['alias_contact'] = 'followers'
 
             # clean vals
             vals.pop('channel_partner_ids', False)
@@ -517,21 +501,6 @@ class Channel(models.Model):
     # ------------------------------------------------------------
     # MAILING
     # ------------------------------------------------------------
-
-    def _alias_get_creation_values(self):
-        values = super(Channel, self)._alias_get_creation_values()
-        values['alias_model_id'] = self.env['ir.model']._get('mail.channel').id
-        if self.id:
-            values['alias_force_thread_id'] = self.id
-        return values
-
-    def _alias_get_error_message(self, message, message_dict, alias):
-        if alias.alias_contact == 'followers' and self.ids:
-            author = self.env['res.partner'].browse(message_dict.get('author_id', False))
-            if not author or author not in self.channel_partner_ids:
-                return _('restricted to channel members')
-            return False
-        return super(Channel, self)._alias_get_error_message(message, message_dict, alias)
 
     def _notify_get_recipients(self, message, msg_vals):
         """ Override recipients computation as channel is not a standard
