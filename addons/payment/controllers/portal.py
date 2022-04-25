@@ -4,7 +4,7 @@ import urllib.parse
 import werkzeug
 
 from odoo import _, http
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
 from odoo.http import request
 
@@ -248,16 +248,22 @@ class PaymentPortal(portal.CustomerPortal):
                 provider=acquirer_sudo.provider, **kwargs
             ) or tokenization_requested
             tokenize = bool(
-                # Public users are not allowed to save tokens as their partner is unknown
-                not request.env.user._is_public()
                 # Don't tokenize if the user tried to force it through the browser's developer tools
-                and acquirer_sudo.allow_tokenization
+                acquirer_sudo.allow_tokenization
                 # Token is only created if required by the flow or requested by the user
                 and tokenization_required_or_requested
             )
         elif flow == 'token':  # Payment by token
-            token = request.env['payment.token'].browse(payment_option_id)
-            acquirer_sudo = token.acquirer_id.sudo()
+            token_sudo = request.env['payment.token'].sudo().browse(payment_option_id)
+
+            # Prevent from paying with a token that doesn't belong to the current partner (either
+            # the current user's partner if logged in, or the partner on behalf of whom the payment
+            # is being made).
+            partner_sudo = request.env['res.partner'].sudo().browse(partner_id)
+            if partner_sudo.commercial_partner_id != token_sudo.partner_id.commercial_partner_id:
+                raise AccessError(_("You do not have access to this payment token."))
+
+            acquirer_sudo = token_sudo.acquirer_id
             token_id = payment_option_id
             tokenize = False
         else:
