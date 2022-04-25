@@ -192,9 +192,10 @@ export class ListView extends Component {
         this.archInfo = new ListArchParser().parse(this.props.arch, this.props.fields);
         this.editable = this.props.editable ? this.archInfo.editable : false;
         this.activeActions = this.archInfo.activeActions;
+        const fields = this.props.fields;
         this.model = useModel(RelationalModel, {
             resModel: this.props.resModel,
-            fields: this.props.fields,
+            fields,
             activeFields: this.archInfo.activeFields,
             viewMode: "list",
             groupByInfo: this.archInfo.groupBy.fields,
@@ -209,28 +210,34 @@ export class ListView extends Component {
             this.isExportEnable = await this.userService.hasGroup("base.group_allow_export");
         });
 
-        this.archiveEnabled = "active" in this.props.fields || "x_active" in this.props.fields;
-
-        onWillStart(async () => {
-            this.isExportEnable = await this.userService.hasGroup("base.group_allow_export");
-        });
-
+        this.archiveEnabled = 'active' in fields ? !fields.active.readonly
+                            : 'x_active' in fields ? !fields.x_active.readonly
+                            : false;
         useSubEnv({ model: this.model }); // do this in useModel?
 
         useSetupView({
             /** TODO **/
+            beforeLeave: async () => {
+                if (this.model.root.editedRecord) {
+                    if (!(await this.model.root.editedRecord.save())) {
+                        throw new Error("View can't be saved");
+                    }
+                }
+            },
         });
 
         usePager(() => {
             const list = this.model.root;
             return {
                 offset: list.offset,
-                limit: Math.max(
-                    list.limit,
-                    list.isGrouped ? list.groups.length : list.records.length
-                ),
+                limit: list.limit,
                 total: list.count,
                 onUpdate: async ({ offset, limit }) => {
+                    if (this.model.root.editedRecord) {
+                        if (!(await this.model.root.editedRecord.save())) {
+                            return;
+                        }
+                    }
                     await list.load({ limit, offset });
                     this.render(true); // FIXME WOWL reactivity
                 },

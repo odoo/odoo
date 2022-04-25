@@ -159,8 +159,9 @@ export class FormView extends Component {
         });
 
         // enable the archive feature in Actions menu only if the active field is in the view
-        this.archiveEnabled = "active" in activeFields || "x_active" in activeFields;
-
+        this.archiveEnabled = 'active' in activeFields ? !activeFields.active.readonly
+                            : 'x_active' in activeFields ? !activeFields.x_active.readonly
+                            : false;
         if (this.archInfo.xmlDoc.querySelector("footer")) {
             this.footerArchInfo = Object.assign({}, this.archInfo);
             this.footerArchInfo.xmlDoc = createElement("t");
