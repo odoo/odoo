@@ -122,9 +122,7 @@
                                                 <i name="notificationIcon" class="o_Message_notificationIcon fa fa-envelope-o"/>
                                             </span>
                                             <t t-set-slot="opened">
-                                                <NotificationPopover
-                                                    messageViewLocalId="messageView.localId"
-                                                />
+                                                <MessageNotificationPopoverContent localId="messageView.localId"/>
                                             </t>
                                         </Popover>
                                     </t>
