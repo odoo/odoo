@@ -10,15 +10,14 @@ import { useModel } from "../helpers/model";
 import { RelationalModel } from "../relational_model";
 import { useViewButtons } from "@web/views/view_button/hook";
 
-const { onWillStart } = owl;
+const { Component, onWillStart } = owl;
 
-export class FormViewDialog extends Dialog {
+export class FormViewDialog extends Component {
     setup() {
         super.setup();
         this.viewService = useService("view");
         this.user = useService("user");
         this.archInfo = this.props.archInfo;
-        this.title = this.props.title;
         this.record = this.props.record;
 
         if (!this.record) {
@@ -85,7 +84,7 @@ export class FormViewDialog extends Dialog {
         if (this.record.isInEdition) {
             this.record.discard();
         }
-        this.close();
+        this.props.close();
     }
 
     async save({ saveAndNew }) {
@@ -97,7 +96,7 @@ export class FormViewDialog extends Dialog {
             }
         }
         if (!saveAndNew) {
-            this.close();
+            this.props.close();
         }
         return true;
     }
@@ -135,12 +134,10 @@ export class FormViewDialog extends Dialog {
         }
     }
 }
-FormViewDialog.bodyTemplate = "web.FormViewDialogBody";
-FormViewDialog.footerTemplate = "web.FormViewDialogFooter";
-FormViewDialog.components = { FormRenderer, ViewButton };
-FormViewDialog.contentClass = "o_form_view_dialog";
+FormViewDialog.template = "web.FormViewDialog";
+FormViewDialog.components = { Dialog, FormRenderer, ViewButton };
 FormViewDialog.props = {
-    ...Dialog.props,
+    close: Function,
     archInfo: { type: Object, optional: true },
     title: { type: String, optional: true },
     record: { type: Object, optional: true },
