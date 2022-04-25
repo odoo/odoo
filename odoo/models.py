@@ -3984,8 +3984,9 @@ Fields:
                         for tid, tfield in cr.fetchall():
                             # TODO VSC: the base language isn't always en_US, it might be specified in website
                             src = tfield['en_US']
-                            toupdate = (self.env.lang=='en_US') and tfield.keys() or [self.env.lang]
-                            for lang in toupdate:
+                            if self.env.lang != 'en_US':
+                                val = field.translate(tfield.get(lang), src, val)
+                            for lang in tfield.keys():
                                 # FP TODO 7: speed optimization: don't parse en_US for each lang
                                 #            first, replace transalte=_xml_translate -> translate=True
                                 tfield[lang] = field.translate(src, tfield.get(lang), val)
