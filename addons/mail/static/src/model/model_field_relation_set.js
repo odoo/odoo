@@ -3,6 +3,7 @@
 import { decrement, increment } from '@mail/model/model_field_command';
 import { Listener } from '@mail/model/model_listener';
 import { followRelations } from '@mail/model/model_utils';
+import { cleanSearchTerm } from '@mail/utils/utils';
 
 /**
  * Defines a set containing the relation records of the given field on the given
@@ -79,11 +80,14 @@ export class RelationSet {
                                     }
                                     break;
                                 }
-                                case 'case-insensitive-asc':
-                                    if (valA.toLowerCase() === valB.toLowerCase()) {
+                                case 'case-insensitive-asc': {
+                                    const cleanedValA = cleanSearchTerm(valA);
+                                    const cleanedValB = cleanSearchTerm(valB);
+                                    if (cleanedValA === cleanedValB) {
                                         break;
                                     }
-                                    return valA.toLowerCase() < valB.toLowerCase() ? -1 : 1;
+                                    return cleanedValA < cleanedValB ? -1 : 1;
+                                }
                                 case 'smaller-first':
                                     if (valA === valB) {
                                         break;

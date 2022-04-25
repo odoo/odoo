@@ -9,7 +9,7 @@ export class ChannelMemberList extends Component {
     /**
      * @returns {ChannelMemberListView}
      */
-     get channelMemberListView() {
+    get channelMemberListView() {
         return this.props.record;
     }
 
