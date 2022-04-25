@@ -2273,3 +2273,23 @@ class TestMrpOrder(TestMrpCommon):
         mo_2.action_confirm()
         mo_2.button_plan()
         self.assertEqual(mo_2.workorder_ids[0].workcenter_id.id, workcenter_2.id, 'workcenter_2 is faster than workcenter_1 to manufacture 4 units')
+
+    def test_starting_wo_twice(self):
+        """
+            Check that the work order is started only once when clicking the start button several times.
+        """
+        production_form = Form(self.env['mrp.production'])
+        production_form.bom_id = self.bom_2
+        production_form.product_qty = 1
+        production = production_form.save()
+        production_form = Form(production)
+        with production_form.workorder_ids.new() as wo:
+            wo.name = 'OP1'
+            wo.workcenter_id = self.workcenter_1
+            wo.duration_expected = 40
+        production = production_form.save()
+        production.action_confirm()
+        production.button_plan()
+        production.workorder_ids[0].button_start()
+        production.workorder_ids[0].button_start()
+        self.assertEqual(len(production.workorder_ids[0].time_ids.filtered(lambda t: t.date_start and not t.date_end)), 1)
