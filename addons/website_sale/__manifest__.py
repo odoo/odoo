@@ -29,7 +29,8 @@
         'views/res_config_settings_views.xml',
         'views/digest_views.xml',
         'views/website_sale_visitor_views.xml',
-        'views/base_unit_view.xml'
+        'views/base_unit_view.xml',
+        'views/product_product_add.xml',
     ],
     'demo': [
         'data/demo.xml',
@@ -66,7 +67,7 @@
             'website_sale/static/src/scss/website_sale_dashboard.scss',
             'website_sale/static/src/scss/website_sale_backend.scss',
             'website_sale/static/src/js/tours/website_sale_shop_backend.js',
-            'website_sale/static/src/js/systray_items/new_content.js',
+            'website_sale/static/src/js/systray_items/*.js',
         ],
         'website.assets_wysiwyg': [
             'website_sale/static/src/scss/website_sale.editor.scss',

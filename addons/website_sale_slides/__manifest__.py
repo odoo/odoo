@@ -26,9 +26,6 @@
         'web.assets_frontend': [
             'website_sale_slides/static/src/js/**/*',
         ],
-        'web.assets_qweb': [
-            'website_sale_slides/static/src/xml/website_slides_channel.xml',
-        ]
     },
     'license': 'LGPL-3',
 }
