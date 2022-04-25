@@ -118,6 +118,9 @@
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
     'assets': {
+        'web.assets_common': [
+            'website/static/src/js/tours/tour_service.js',
+        ],
         'web.assets_frontend': [
             ('replace', 'web/static/src/legacy/js/public/public_root_instance.js', 'website/static/src/js/content/website_root_instance.js'),
             'website/static/src/scss/website.scss',

@@ -13,10 +13,20 @@ const { device } = require('web.config');
  */
 const TourService = Class.extend({
     init() {
+        this.iframeContainers = [];
         this.untrackedClassnames = ["o_tooltip", "o_tooltip_content", "o_tooltip_overlay"];
+
+        this.observerOptions = {
+            attributes: true,
+            childList: true,
+            subtree: true,
+            attributeOldValue: true,
+            characterData: true,
+        };
     },
 
     async start() {
+        const tourService = this;
         var defs = [];
         // Load the list of consumed tours and the tip template only if we are admin, in the frontend,
         // tours being only available for the admin. For the backend, the list of consumed is directly
@@ -33,9 +43,15 @@ const TourService = Class.extend({
             const disabled = session.tour_disable || device.isMobile;
             var tour_manager = new TourManager(rootWidget, consumed_tours, disabled);
 
+            const iframeContainersSelector = tourService.iframeContainers.map(selector => `.${selector}`).join(',');
+            const isInIframe = window.frameElement && window.frameElement.closest(iframeContainersSelector);
+            if (isInIframe) {
+                return tour_manager;
+            }
+
             function _isTrackedNode(node) {
                 if (node.classList) {
-                    return !untrackedClassnames
+                    return !tourService.untrackedClassnames
                         .some(className => node.classList.contains(className));
                 }
                 return true;
@@ -137,18 +153,30 @@ const TourService = Class.extend({
             });
 
             // Now that the observer is configured, we have to start it when needed.
+            // Now that the observer is configured, we have to start it when needed.
             var start_service = (function () {
                 return function (observe) {
                     return new Promise(function (resolve, reject) {
                         tour_manager._register_all(observe).then(function () {
                             if (observe) {
-                                observer.observe(document.body, {
-                                    attributes: true,
-                                    childList: true,
-                                    subtree: true,
-                                    attributeOldValue: true,
-                                    characterData: true,
+                                observer.observe(document.body, tourService.observerOptions);
+
+                                // If an iframe is added during the tour, its DOM
+                                // mutations should also be observed to update the
+                                // tour manager.
+                                const iframeObserver = new MutationObserver(mutations => {
+                                    const iframeMutation = mutations.filter(mutation => Array.from(mutation.addedNodes).some(node => {
+                                        const isElement = node.nodeType === 1;
+                                        return tourService.iframeContainers.some(selector => isElement && node.classList.contains(selector));
+                                    }))[0];
+                                    if (iframeMutation) {
+                                        const iframeEl = iframeMutation.target.querySelector('iframe:not(.o_technical_iframe)');
+                                        iframeEl.addEventListener('load', () => {
+                                            observer.observe(iframeEl.contentDocument.body, tourService.observerOptions);
+                                        });
+                                    }
                                 });
+                                iframeObserver.observe(document.body, { childList: true, subtree: true });
                             }
                             resolve();
                         });

@@ -342,6 +342,9 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                     this._log.push("- extra_trigger '" + tip.extra_trigger + "': " + $extra_trigger.length);
                     this._log.push("- visible extra_trigger '" + tip.extra_trigger + "': " + extra_trigger);
                 }
+                if ($trigger.iframeContainer) {
+                    this._log.push("- iframe container: " + $trigger.iframeContainer.contentDocument.body.parentElement.outerHTML);
+                }
             }
         }
         return !!triggered;
