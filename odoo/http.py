@@ -889,7 +889,7 @@ class Response(werkzeug.wrappers.Response):
             _logger.warning("%s returns an HTTPException instead of raising it.", fname)
             raise result
 
-        if isinstance(result, werkzeug.wrappers.BaseResponse):
+        if isinstance(result, werkzeug.wrappers.Response):
             response = cls.force_type(result)
             response.set_default()
             return response
