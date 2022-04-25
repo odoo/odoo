@@ -75,14 +75,6 @@ class LegacyAdaptedActionDialog extends ActionDialog {
         );
     }
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
 LegacyAdaptedActionDialog.template = "web.LegacyAdaptedActionDialog";
-=======
-LegacyAdaptedActionDialog.dialogTemplate = "web.LegacyAdaptedActionDialogTemplate";
->>>>>>> form_view: move buttons to the cp
-=======
-LegacyAdaptedActionDialog.footerTemplate = "web.LegacyAdaptedActionDialogFooter";
->>>>>>> new actionDialog
 
 export { LegacyAdaptedActionDialog as ActionDialog };
