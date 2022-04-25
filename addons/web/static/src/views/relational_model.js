@@ -8,7 +8,7 @@ import {
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
-import { Dialog } from "@web/core/dialog/dialog";
+import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { Domain } from "@web/core/domain";
 import { isNumeric, isRelational, isX2Many } from "@web/views/helpers/view_utils";
 import { isTruthy } from "@web/core/utils/xml";
@@ -47,14 +47,6 @@ const DEFAULT_QUICK_CREATE_VIEW = {
  *  make: () => Context;
  * }} RawContext
  */
-
-class WarningDialog extends Dialog {
-    setup() {
-        super.setup();
-        this.title = this.props.title;
-    }
-}
-WarningDialog.bodyTemplate = xml`<t t-esc="props.message"/>`;
 
 /**
  * @param {Object} groupByField
@@ -2309,8 +2301,8 @@ export class StaticList extends DataPoint {
             // for the sorted field for all records and sort the resIds w.r.t. to those values
             // before fetching the activeFields for the resIds of the current page.
             // 1) populate values for already fetched records
-            let recordValues = {};
-            let resIds = [];
+            const recordValues = {};
+            const resIds = [];
             for (const id of this.currentIds) {
                 const recordId = this._mapping[id];
                 if (recordId) {

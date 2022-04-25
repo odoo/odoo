@@ -12,16 +12,14 @@ import {
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
-import { Dialog } from "@web/core/dialog/dialog";
+import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { Domain } from "@web/core/domain";
 import { Model } from "@web/views/helpers/model";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { escape } from "@web/core/utils/strings";
 
 const { date: parseDate, datetime: parseDateTime } = parse;
-const { markup, xml } = owl;
-
-const warningDialogBodyTemplate = xml`<t t-esc="props.message"/>`;
+const { markup } = owl;
 
 function mapWowlValueToLegacy(value, type) {
     switch (type) {
@@ -1058,13 +1056,6 @@ export class RelationalModel extends Model {
             throw new Error(`call service ${payload.service} not handled in relational model`);
         } else if (evType === "warning") {
             if (payload.type === "dialog") {
-                class WarningDialog extends Dialog {
-                    setup() {
-                        super.setup();
-                        this.title = this.props.title;
-                    }
-                }
-                WarningDialog.bodyTemplate = warningDialogBodyTemplate;
                 return this.dialogService.add(WarningDialog, {
                     title: payload.title,
                     message: payload.message,
