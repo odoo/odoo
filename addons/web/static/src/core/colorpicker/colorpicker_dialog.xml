@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-  <t t-name="web.ColorPickerDialogBody" owl="1">
-    <ColorPicker color="props.color" onColorSelected.bind="onColorSelected" />
-  </t>
-
-  <t t-name="web.ColorPickerDialogFooter" owl="1">
-    <button class="btn btn-primary" t-on-click="choose">
-      Choose
-    </button>
-    <button class="btn btn-secondary" t-on-click="discard">
-      Discard
-    </button>
+  <t t-name="web.ColorPickerDialog" owl="1">
+    <Dialog size="'sm'" title="this.constructor.title">
+      <ColorPicker color="props.color" onColorSelected.bind="onColorSelected" />
+      <t t-set-slot="footer">
+        <button class="btn btn-primary" t-on-click="choose">
+          Choose
+        </button>
+        <button class="btn btn-secondary" t-on-click="props.close">
+          Discard
+        </button>
+      </t>
+    </Dialog>
   </t>
 
 </templates>
