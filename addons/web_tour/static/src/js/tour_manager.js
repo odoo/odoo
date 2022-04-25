@@ -460,7 +460,17 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 _.each(this._log, function (log) {
                     console.log(log);
                 });
-                console.log(document.body.parentElement.outerHTML);
+                let documentHTML = document.documentElement.outerHTML;
+                // Replace empty iframe tags with their content
+                const iframeEls = Array.from(document.body.querySelectorAll('iframe.o_iframe'));
+                if (iframeEls.length) {
+                    const matches = documentHTML.match(/<iframe[^>]+class=["'][^"']*\bo_iframe\b[^>]+><\/iframe>/g);
+                    for (let i = 0; i < matches.length; i++) {
+                        const iframeWithContent = matches[i].replace(/></, `>${iframeEls[i].contentDocument.documentElement.outerHTML}<`);
+                        documentHTML = documentHTML.replace(matches[i], `\n${iframeWithContent}\n`);
+                    }
+                }
+                console.log(documentHTML);
                 console.error(error); // will be displayed as error info
             } else {
                 console.log(_.str.sprintf("Tour %s succeeded", tour_name));
