@@ -40,7 +40,8 @@ class SaleCouponApplyCode(models.TransientModel):
                         }
                 else:  # The program is applied on this order
                     order._create_reward_line(program)
-                    order.code_promo_program_id = program
+                    if order._get_reward_lines():
+                        order.code_promo_program_id = program
         else:
             coupon = self.env['sale.coupon'].search([('code', '=', coupon_code)], limit=1)
             if coupon:
