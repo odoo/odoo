@@ -219,6 +219,11 @@ patch(MockServer.prototype, 'mail', {
             const ids = args.args[0];
             return this._mockMailChannelWriteImage128(ids[0]);
         }
+        if (args.model === 'mail.channel' && args.method === 'load_more_members') {
+            const [channel_ids] = args.args;
+            const { known_member_ids } = args.kwargs;
+            return this._mockMailChannelLoadMoreMembers(channel_ids, known_member_ids);
+        }
         // mail.message methods
         if (args.model === 'mail.message' && args.method === 'mark_all_as_read') {
             const domain = args.args[0] || args.kwargs.domain;
@@ -1285,6 +1290,35 @@ patch(MockServer.prototype, 'mail', {
             );
         }
         return messageData;
+    },
+    /**
+     * Simulates `load_more_members` on `mail.channel`.
+     *
+     * @private
+     * @param {integer[]} channel_ids
+     * @param {integer[]} known_member_ids
+     */
+    _mockMailChannelLoadMoreMembers(channel_ids, known_member_ids) {
+        const channelPartners = this.pyEnv['mail.channel.partner'].searchRead([
+            ['id', 'not in', known_member_ids],
+            ['channel_id', 'in', channel_ids],
+        ], { limit: 100 });
+        const memberCount = this.pyEnv['mail.channel.partner'].searchCount([
+            ['channel_id', 'in', channel_ids],
+        ]);
+        return {
+            channelMembers: [['insert', channelPartners.map(channelPartner => {
+                const [partner] = this.pyEnv['res.partner'].searchRead(
+                    [['id', '=', channelPartner.partner_id[0]]],
+                    { fields: ['id', 'name', 'im_status'] }
+                );
+                return {
+                    id: channelPartner.id,
+                    partner: [['insert', partner]],
+                };
+            })]],
+            memberCount,
+        };
     },
     /**
      * Simulates `notify_typing` on `mail.channel`.

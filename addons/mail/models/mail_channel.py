@@ -1169,12 +1169,24 @@ class Channel(models.Model):
 
     def load_more_members(self, known_member_ids):
         self.ensure_one()
-        partners = self.env['res.partner'].with_context(active_test=False).search_read(
-            domain=[('id', 'not in', known_member_ids), ('channel_ids', 'in', self.id)],
-            fields=['id', 'name', 'im_status'],
-            limit=30
+        channel_partners = self.env['mail.channel.partner'].search(
+            domain=[('id', 'not in', known_member_ids), ('channel_id', '=', self.id)],
+            limit=100
         )
-        return [('insert', partners)]
+        count = self.env['mail.channel.partner'].search_count(
+            domain=[('channel_id', '=', self.id)],
+        )
+        return {
+            'channelMembers': [('insert', [{
+                'id': member.id,
+                'partner': [('insert', {
+                    'id': member.partner_id.id,
+                    'name': member.partner_id.name,
+                    'im_status': member.partner_id.im_status,
+                })]
+            } for member in channel_partners])],
+            'memberCount': count,
+        }
 
     def _get_avatar_cache_key(self):
         if not self.avatar_128:

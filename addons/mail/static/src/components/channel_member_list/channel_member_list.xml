@@ -16,9 +16,9 @@
                 <t t-if="channelMemberListView.channel.unknownMemberCount > 1">
                     <span class="mx-2 mt-2">And <t t-esc="channelMemberListView.channel.unknownMemberCount"/> other members.</span>
                 </t>
-                <t t-if="channelMemberListView.channel.unknownMemberCount > 0">
+                <t t-if="!channelMemberListView.channel.areAllMembersLoaded">
                     <div class="mx-2 my-1">
-                        <button class="btn btn-secondary" t-on-click="channelMemberListView.channel.onClickLoadMoreMembers">Load more</button>
+                        <button class="o_ChannelMemberList_loadMoreButton btn btn-secondary" t-on-click="channelMemberListView.onClickLoadMoreMembers">Load more</button>
                     </div>
                 </t>
             </div>

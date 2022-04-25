@@ -798,24 +798,6 @@ registerModel({
             });
         },
         /**
-         * Handles click on the avatar of the given member in the member list of
-         * this channel.
-         *
-         * @param {Partner} member
-         */
-        onClickMemberAvatar(member) {
-            member.openChat();
-        },
-        /**
-         * Handles click on the name of the given member in the member list of
-         * this channel.
-         *
-         * @param {Partner} member
-         */
-        onClickMemberName(member) {
-            member.openProfile();
-        },
-        /**
          * Opens this thread either as form view, in discuss app, or as a chat
          * window. The thread will be opened in an "active" matter, which will
          * interrupt current user flow.
@@ -1052,6 +1034,13 @@ registerModel({
                     return Math.abs(a2.id) - Math.abs(a1.id);
                 });
             return replace(allAttachments);
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeChannel() {
+            return this.model === 'mail.channel' ? insertAndReplace({ id: this.id }) : clear();
         },
         /**
          * @private
@@ -1470,20 +1459,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {Partner[]}
-         */
-        _computeOrderedOfflineMembers() {
-            return replace(this._sortMembers(this.members.filter(member => !member.isOnline)));
-        },
-        /**
-         * @private
-         * @returns {Partner[]}
-         */
-        _computeOrderedOnlineMembers() {
-            return replace(this._sortMembers(this.members.filter(member => member.isOnline)));
-        },
-        /**
-         * @private
          * @returns {Message[]}
          */
         _computeOrderedMessages() {
@@ -1564,13 +1539,6 @@ registerModel({
                 this.getMemberName(this.orderedOtherTypingMembers[0]),
                 this.getMemberName(this.orderedOtherTypingMembers[1])
             );
-        },
-        /**
-         * @private
-         * @returns {integer}
-         */
-        _computeUnknownMemberCount() {
-            return this.memberCount - this.members.length;
         },
         /**
          * Compute an url string that can be used inside a href attribute
@@ -1702,42 +1670,10 @@ registerModel({
             ];
         },
         /**
-         * @private
-         * @param {Partner[]} members
-         * @returns {Partner[]}
-         */
-        _sortMembers(members) {
-            return [...members].sort((a, b) => {
-                const cleanedAName = cleanSearchTerm(a.nameOrDisplayName || '');
-                const cleanedBName = cleanSearchTerm(b.nameOrDisplayName || '');
-                if (cleanedAName < cleanedBName) {
-                    return -1;
-                }
-                if (cleanedAName > cleanedBName) {
-                    return 1;
-                }
-                return a.id - b.id;
-            });
-        },
-        /**
          * Event handler for clicking thread in discuss app.
          */
         async onClick() {
             await this.open();
-        },
-        /**
-         * Handles click on the "load more members" button.
-         */
-        async onClickLoadMoreMembers() {
-            const members = await this.messaging.rpc({
-                model: 'mail.channel',
-                method: 'load_more_members',
-                args: [[this.id]],
-                kwargs: {
-                    'known_member_ids': this.members.map(partner => partner.id),
-                },
-            });
-            this.update({ members });
         },
         onCurrentPartnerInactiveTypingTimeout() {
             this.unregisterCurrentPartnerIsTyping();
@@ -1784,6 +1720,12 @@ registerModel({
             isCausal: true,
             readonly: true,
             required: true,
+        }),
+        channel: one('Channel', {
+            compute: '_computeChannel',
+            inverse: 'thread',
+            isCausal: true,
+            readonly: true,
         }),
         channel_type: attr(),
         /**
@@ -2175,18 +2117,6 @@ registerModel({
             compute: '_computeNeedactionMessagesAsOriginThread',
         }),
         /**
-         * All offline members ordered like they are displayed.
-         */
-        orderedOfflineMembers: many('Partner', {
-            compute: '_computeOrderedOfflineMembers',
-        }),
-        /**
-         * All online members ordered like they are displayed.
-         */
-        orderedOnlineMembers: many('Partner', {
-            compute: '_computeOrderedOnlineMembers',
-        }),
-        /**
          * All messages ordered like they are displayed.
          */
         orderedMessages: many('Message', {
@@ -2384,14 +2314,6 @@ registerModel({
         typingStatusText: attr({
             compute: '_computeTypingStatusText',
             default: '',
-        }),
-        /**
-         * States how many members are currently unknown on the client side.
-         * This is the difference between the total number of members of the
-         * channel as reported in memberCount and those actually in members.
-         */
-        unknownMemberCount: attr({
-            compute: '_computeUnknownMemberCount',
         }),
         /**
          * URL to access to the conversation.
