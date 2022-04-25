@@ -17,6 +17,7 @@ tour.register("website_snippets_menu_tabs", {
     wTourUtils.goToTheme(),
     {
         content: "Verify that the customize panel is not empty.",
+        extra_trigger: '.o_we_customize_theme_btn.active',
         trigger: '.o_we_customize_panel > we-customizeblock-options',
         run: () => null, // it's a check
     },
@@ -27,6 +28,7 @@ tour.register("website_snippets_menu_tabs", {
     wTourUtils.goToTheme(),
     {
         content: "Verify that the customize panel is not empty.",
+        extra_trigger: '.o_we_customize_theme_btn.active',
         trigger: '.o_we_customize_panel > we-customizeblock-options',
         run: () => null, // it's a check
     },

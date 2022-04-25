@@ -32,6 +32,7 @@ tour.register('mass_mailing_snippets_menu_tabs', {
     },
     {
         content: "Verify that the customize panel is not empty.",
+        extra_trigger: 'iframe .o_we_customize_design_btn.active',
         trigger: 'iframe .o_we_customize_panel .snippet-option-DesignTab',
         run: () => null, // it's a check
     },
@@ -45,6 +46,7 @@ tour.register('mass_mailing_snippets_menu_tabs', {
     },
     {
         content: "Verify that the customize panel is not empty.",
+        extra_trigger: 'iframe .o_we_customize_design_btn.active',
         trigger: 'iframe .o_we_customize_panel .snippet-option-DesignTab',
         run: () => null, // it's a check
     },
