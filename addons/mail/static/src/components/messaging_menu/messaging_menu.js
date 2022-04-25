@@ -18,7 +18,6 @@ export class MessagingMenu extends Component {
          */
         this.id = _.uniqueId('o_messagingMenu_');
         // bind since passed as props
-        this._onMobileNewMessageInputSelect = this._onMobileNewMessageInputSelect.bind(this);
         this._onMobileNewMessageInputSource = this._onMobileNewMessageInputSource.bind(this);
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
         onMounted(() => this._mounted());
@@ -64,17 +63,6 @@ export class MessagingMenu extends Component {
         }
         // in all other cases: close the messaging menu when clicking outside
         this.messagingMenu.close();
-    }
-
-    /**
-     * @private
-     * @param {Event} ev
-     * @param {Object} ui
-     * @param {Object} ui.item
-     * @param {integer} ui.item.id
-     */
-    _onMobileNewMessageInputSelect(ev, ui) {
-        this.messaging.openChat({ partnerId: ui.item.id });
     }
 
     /**

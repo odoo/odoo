@@ -46,6 +46,16 @@ registerModel({
             this.update({ isMobileNewMessageToggled: false });
         },
         /**
+         * @private
+         * @param {Event} ev
+         * @param {Object} ui
+         * @param {Object} ui.item
+         * @param {integer} ui.item.id
+         */
+        onMobileNewMessageInputSelect(ev, ui) {
+            this.messaging.openChat({ partnerId: ui.item.id });
+        },
+        /**
          * Toggle the visibility of the messaging menu "new message" input in
          * mobile.
          */
