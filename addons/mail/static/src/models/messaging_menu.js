@@ -46,6 +46,28 @@ registerModel({
             this.update({ isMobileNewMessageToggled: false });
         },
         /**
+         * @param {Object} req
+         * @param {string} req.term
+         * @param {function} res
+         */
+        onMobileNewMessageInputSource(req, res) {
+            const value = _.escape(req.term);
+            this.messaging.models['Partner'].imSearch({
+                callback: partners => {
+                    const suggestions = partners.map(partner => {
+                        return {
+                            id: partner.id,
+                            value: partner.nameOrDisplayName,
+                            label: partner.nameOrDisplayName,
+                        };
+                    });
+                    res(_.sortBy(suggestions, 'label'));
+                },
+                keyword: value,
+                limit: 10,
+            });
+        },
+        /**
          * Toggle the visibility of the messaging menu "new message" input in
          * mobile.
          */

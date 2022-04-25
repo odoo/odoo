@@ -19,7 +19,6 @@ export class MessagingMenu extends Component {
         this.id = _.uniqueId('o_messagingMenu_');
         // bind since passed as props
         this._onMobileNewMessageInputSelect = this._onMobileNewMessageInputSelect.bind(this);
-        this._onMobileNewMessageInputSource = this._onMobileNewMessageInputSource.bind(this);
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
         onMounted(() => this._mounted());
         onWillUnmount(() => this._willUnmount());
@@ -75,30 +74,6 @@ export class MessagingMenu extends Component {
      */
     _onMobileNewMessageInputSelect(ev, ui) {
         this.messaging.openChat({ partnerId: ui.item.id });
-    }
-
-    /**
-     * @private
-     * @param {Object} req
-     * @param {string} req.term
-     * @param {function} res
-     */
-    _onMobileNewMessageInputSource(req, res) {
-        const value = _.escape(req.term);
-        this.messaging.models['Partner'].imSearch({
-            callback: partners => {
-                const suggestions = partners.map(partner => {
-                    return {
-                        id: partner.id,
-                        value: partner.nameOrDisplayName,
-                        label: partner.nameOrDisplayName,
-                    };
-                });
-                res(_.sortBy(suggestions, 'label'));
-            },
-            keyword: value,
-            limit: 10,
-        });
     }
 
 }
