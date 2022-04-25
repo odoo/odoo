@@ -21,6 +21,7 @@ const { PeerToPeer } = require('@web_editor/js/wysiwyg/PeerToPeer');
 const { Mutex } = require('web.concurrency');
 
 var _t = core._t;
+const QWeb = core.qweb;
 
 const OdooEditor = OdooEditorLib.OdooEditor;
 const getDeepRange = OdooEditorLib.getDeepRange;
@@ -526,7 +527,7 @@ const Wysiwyg = Widget.extend({
         }, CHECK_OFFLINE_TIME);
 
         this._peerToPeerLoading = new Promise(async (resolve) => {
-            this._currentRecordWriteDate = this._getRecordWriteDate(await this._getCurrentRecord());
+            this._currentRecord = await this._getCurrentRecord();
             let iceServers = await this._rpc({route: '/web_editor/get_ice_servers'});
             if (!iceServers.length) {
                 iceServers = [
@@ -2018,10 +2019,24 @@ const Wysiwyg = Widget.extend({
             this.preSavePromiseReject = undefined;
         }
         try {
-            const record = await this._getCurrentRecord();
-            const newDate = this._getRecordWriteDate(record);
-            if (newDate !== this._currentRecordWriteDate) {
-                this._resetEditor(record.body);
+            const fieldName = this.options.collaborationChannel.collaborationFieldName;
+            const currentContent = this._currentRecord[fieldName];
+            const currentRecordDate = this._getRecordWriteDate(this._currentRecord);
+            const dbRecord = await this._getCurrentRecord();
+            const dbContent = dbRecord[fieldName];
+            const dbRecordDate = this._getRecordWriteDate(dbRecord);
+
+            if (currentContent !== dbContent && dbRecordDate !== currentRecordDate) {
+                const $dialogContent = $(QWeb.render('web_editor.collaboration-reset-dialog'));
+                $dialogContent.append($(this.odooEditor.editable).clone());
+                const dialog = new Dialog(this, {
+                    title: _t("Content conflict"),
+                    $content: $dialogContent,
+                    size: 'medium',
+                });
+                dialog.open({shouldFocusButtons:true});
+
+                this._resetEditor(dbRecord.body);
             }
             this.preSavePromiseResolve();
             resetPreSavePromise();
