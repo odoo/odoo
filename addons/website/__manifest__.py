@@ -281,7 +281,7 @@
             'website/static/src/js/menu/edit.js',
             'website/static/src/js/menu/mobile_view.js',
             'website/static/src/js/menu/seo.js',
-            'website/static/src/js/set_view_track.js',
+            # 'website/static/src/js/set_view_track.js',
             'website/static/src/js/tours/homepage.js',
             'website/static/src/js/tours/tour_utils.js',
         ],
