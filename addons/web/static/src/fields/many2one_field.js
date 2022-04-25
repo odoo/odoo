@@ -156,9 +156,6 @@ export class Many2OneField extends Component {
                     await this.props.record.load();
                     await this.props.update(this.props.value);
                 },
-                discard: (record) => {
-                    record.discard();
-                },
             })
         );
     }

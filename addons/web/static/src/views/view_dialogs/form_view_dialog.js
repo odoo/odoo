@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Dialog } from "@web/core/dialog/dialog";
-import { useService } from "@web/core/utils/hooks";
+import { useChildRef, useService } from "@web/core/utils/hooks";
 import { createElement } from "@web/core/utils/xml";
 import { FormRenderer } from "@web/views/form/form_renderer";
 import { FormArchParser, loadSubViews } from "@web/views/form/form_view";
@@ -19,6 +19,7 @@ export class FormViewDialog extends Component {
         this.user = useService("user");
         this.archInfo = this.props.archInfo;
         this.record = this.props.record;
+        this.modalRef = useChildRef();
 
         if (!this.record) {
             this.model = useModel(RelationalModel, {

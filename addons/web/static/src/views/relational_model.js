@@ -19,7 +19,7 @@ import { escape } from "@web/core/utils/strings";
 import { session } from "@web/session";
 
 const { DateTime } = luxon;
-const { markRaw, markup, toRaw, xml } = owl;
+const { markRaw, markup, toRaw } = owl;
 
 const preloadedDataRegistry = registry.category("preloadedData");
 

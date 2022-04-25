@@ -31,7 +31,7 @@ const { status, useComponent, useEffect, useRef } = owl;
  */
 export function useAutofocus() {
     const comp = useComponent();
-    let ref = useRef("autofocus");
+    const ref = useRef("autofocus");
     // Prevent autofocus in mobile
     if (comp.env.isSmall) {
         return ref;
@@ -190,11 +190,30 @@ export function useService(serviceName) {
         } else {
             const methods = SERVICES_METADATA[serviceName];
             const result = Object.create(service);
-            for (let method of methods) {
+            for (const method of methods) {
                 result[method] = _protectMethod(component, service, service[method]);
             }
             return result;
         }
     }
     return service;
+}
+
+export function useChildRef() {
+    return function ref(value) {
+        Object.defineProperty(ref, "el", {
+            get() {
+                return value.el;
+            },
+        });
+    };
+}
+
+export function useForwardRefToParent(refname) {
+    const component = useComponent();
+    const ref = useRef(refname);
+    if (component.props[refname]) {
+        component.props[refname](ref);
+    }
+    return ref;
 }
