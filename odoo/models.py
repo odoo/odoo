@@ -5653,7 +5653,7 @@ Fields:
             if not (isinstance(arg, BaseModel) and arg._name == self._name):
                 raise TypeError("Mixing apples and oranges: %s.concat(%s)" % (self, arg))
             ids.extend(arg._ids)
-        return self.browse(ids)
+        return self.browse(list(set(ids)))
 
     def __sub__(self, other):
         """ Return the recordset of all the records in ``self`` that are not in
