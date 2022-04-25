@@ -20,6 +20,7 @@
         'views/website_blog_templates.xml',
         'views/snippets/snippets.xml',
         'views/snippets/s_blog_posts.xml',
+        'views/blog_post_add.xml',
         'security/ir.model.access.csv',
         'security/website_blog_security.xml',
     ],
@@ -35,7 +36,6 @@
             'website_blog/static/src/snippets/s_blog_posts/options.js',
         ],
         'website.assets_editor': [
-            'website_blog/static/src/js/systray_items/new_content.js',
             'website_blog/static/src/js/tours/website_blog.js',
         ],
         'web.assets_frontend': [

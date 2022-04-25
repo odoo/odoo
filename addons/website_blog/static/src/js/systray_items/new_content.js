@@ -12,5 +12,13 @@ patch(NewContentModal.prototype, 'website_blog_new_content', {
         newBlogElement.status = MODULE_STATUS.INSTALLED;
     },
 
-    createNewBlogPost() {}
+    async createNewBlogPost() {
+        this.action.doAction('website_blog.blog_post_action_add', {
+            onClose: (data) => {
+                if (data) {
+                    this.website.goToWebsite({path: data.path, edition: true});
+                }
+            },
+        });
+    }
 });

@@ -182,6 +182,7 @@
             'website/static/src/components/fullscreen_indication/fullscreen_indication.scss',
             'website/static/src/systray_items/*.js',
             'website/static/src/systray_items/*.scss',
+            'website/static/src/js/new_content_form.js',
         ],
         'web.qunit_suite_tests': [
             'website/static/tests/dashboard_tests.js',

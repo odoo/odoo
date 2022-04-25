@@ -49,4 +49,19 @@
             </xpath>
         </field>
     </record>
+
+    <record id="slide_channel_view_form_add_inherit_sale_slides" model="ir.ui.view">
+        <field name="name">slide.channel.view.form.add.inherit.sale.slides</field>
+        <field name="model">slide.channel</field>
+        <field name="inherit_id" ref="website_slides.slide_channel_view_form_add"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[last()]" position="after">
+                <group string="Enroll">
+                    <field name="enroll" widget="radio" options="{'horizontal': true}" string="Enroll Policy"/>
+                    <field name="product_id" attrs="{'invisible': [('enroll', '!=', 'payment')], 'required': [('enroll', '=', 'payment')]}"
+                    context="{'default_detailed_type': 'course', 'default_invoice_policy': 'order', 'default_purchase_ok': False, 'default_sale_ok': True, 'default_website_published': True}"/>
+                </group>
+    		</xpath>
+        </field>
+    </record>
 </data></odoo>

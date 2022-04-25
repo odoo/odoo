@@ -44,6 +44,7 @@ export class NewContentModal extends Component {
         this.rpc = useService('rpc');
         this.dialogs = useService('dialog');
         this.website = useService('website');
+        this.action = useService('action');
         this.isSystem = this.user.isSystem;
 
         this.newContentText = {

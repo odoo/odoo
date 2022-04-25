@@ -25,10 +25,5 @@
         'data/slide_channel_demo.xml',
     ],
     'auto_install': True,
-    'assets': {
-        'web.assets_frontend': [
-            'website_slides_forum/static/src/js/**/*',
-        ],
-    },
     'license': 'LGPL-3',
 }

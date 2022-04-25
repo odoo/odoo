@@ -12,5 +12,13 @@ patch(NewContentModal.prototype, 'website_event_new_content', {
         newEventElement.status = MODULE_STATUS.INSTALLED;
     },
 
-    createNewEvent() {}
+    createNewEvent() {
+        this.action.doAction('website_event.event_event_action_add', {
+            onClose: (data) => {
+                if (data) {
+                    this.website.goToWebsite({path: data.path, edition: true});
+                }
+            },
+        });
+    }
 });
