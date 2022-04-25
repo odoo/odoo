@@ -980,6 +980,16 @@ class PosGlobalState extends PosModel {
         });
         this._loadProductProduct(product);
     }
+    async refreshTotalDueOfPartner(partner) {
+        const partnerWithUpdatedTotalDue = await this.env.services.rpc({
+            model: 'res.partner',
+            method: 'search_read',
+            fields: ['total_due'],
+            domain: [['id', '=', partner.id]],
+        });
+        this.db.update_partners(partnerWithUpdatedTotalDue);
+        return partnerWithUpdatedTotalDue;
+    }
 }
 PosGlobalState.prototype.electronic_payment_interfaces = {};
 Registries.Model.add(PosGlobalState);
