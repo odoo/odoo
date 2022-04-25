@@ -26,14 +26,14 @@ export class RewardButton extends PosComponent {
      */
     async _applyReward(reward, coupon_id) {
         const order = this.env.pos.get_order();
+
+        // Enable reward if disabled.
+        const indexDisabled = order.disabledRewards.findIndex(rewardId => rewardId === reward.id);
+        if (indexDisabled > -1) {
+            order.disabledRewards.splice(indexDisabled, 1);
+        }
+
         if (reward.reward_type === 'product') {
-
-            // Enable reward if disabled.
-            const indexDisabled = order.disabledRewards.findIndex(rewardId => rewardId === reward.id);
-            if (indexDisabled > -1) {
-                order.disabledRewards.splice(indexDisabled, 1);
-            }
-
             let selectedProduct;
             if (reward.multi_product) {
                 const productsList = reward.reward_product_ids.map((product_id) => {
