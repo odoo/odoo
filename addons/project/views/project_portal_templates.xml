@@ -310,7 +310,9 @@
 
                     <div class="mt32" id="task_chat" data-anchor="true">
                         <h4><strong>Message and communication history</strong></h4>
-                        <t t-call="portal.message_thread"/>
+                        <t t-call="portal.message_thread">
+                            <t t-set="token" t-value="task.access_token"/>
+                        </t>
                     </div>
                 </div>
             </div>
