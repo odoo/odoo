@@ -449,7 +449,6 @@ class ProductTemplate(models.Model):
 
         Product = self.env['product.product']
         templates = self.browse([])
-        domain_no_variant = [('product_variant_ids', '=', False)]
         while True:
             domain = templates and [('product_tmpl_id', 'not in', templates.ids)] or []
             args = args if args is not None else []
@@ -461,13 +460,7 @@ class ProductTemplate(models.Model):
                    If this happens, an infinite loop will occur."""
                 break
             templates |= new_templates
-            current_round_templates = self.browse([])
-            if not products:
-                domain_template = args + domain_no_variant + (templates and [('id', 'not in', templates.ids)] or [])
-                template_ns = super(ProductTemplate, self)._name_search(name=name, args=domain_template, operator=operator, limit=limit, name_get_uid=name_get_uid)
-                current_round_templates |= self.browse([ns[0] for ns in template_ns])
-                templates |= current_round_templates
-            if (not products and not current_round_templates) or (limit and (len(templates) > limit)):
+            if (not products) or (limit and (len(templates) > limit)):
                 break
 
         searched_ids = set(templates.ids)
@@ -475,11 +468,21 @@ class ProductTemplate(models.Model):
         # we need to add the base _name_search to the results
         # FIXME awa: this is really not performant at all but after discussing with the team
         # we don't see another way to do it
+        tmpl_without_variant_ids = []
         if not limit or len(searched_ids) < limit:
+            self._cr.execute("""
+                SELECT t.id 
+                FROM product_template t         
+                LEFT JOIN product_product p ON t.id = p.product_tmpl_id AND p.active = TRUE
+                WHERE t.active = TRUE AND p.id is NULL
+            """)
+            tmpl_without_variant_ids = [row[0] for row in self._cr.fetchall()]
+        if tmpl_without_variant_ids:
+            domain = expression.AND([args or [], [('id', 'in', tmpl_without_variant_ids)]])
             searched_ids |= set([template_id[0] for template_id in
                 super(ProductTemplate, self)._name_search(
                     name,
-                    args=args,
+                    args=domain,
                     operator=operator,
                     limit=limit,
                     name_get_uid=name_get_uid)])
