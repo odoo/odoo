@@ -343,3 +343,39 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
             }).process_coupon()
         self.assertEqual(len(order.order_line), 2, "You should get a discount line")
 
+    def test_apply_program_no_reward_link(self):
+        # Tests that applying a promo code that does not generate reward lines
+        #  does not link on the order
+        self.env['coupon.program'].create({
+            'name': 'Code for 10% on orders',
+            'promo_code_usage': 'code_needed',
+            'promo_code': 'test_10pc',
+            'discount_type': 'percentage',
+            'discount_percentage': 10.0,
+            'program_type': 'promotion_program',
+        })
+        self.empty_order.write({'order_line': [
+            (0, False, {
+                'product_id': self.product_C.id,
+                'name': '1 Product C',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+                'price_unit': 0,
+            })
+        ]})
+        self.env['sale.coupon.apply.code'].with_context(active_id=self.empty_order.id).create({
+            'coupon_code': 'test_10pc',
+        }).process_coupon()
+        self.assertFalse(self.empty_order.code_promo_program_id, 'The program should not be linked to the order')
+
+        # Same for a coupon's code
+        self.env['coupon.generate.wizard'].with_context(active_id=self.code_promotion_program_with_discount.id).create({
+            'generation_type': 'nbr_coupon',
+            'nbr_coupons': 1,
+        }).generate_coupon()
+        coupon = self.code_promotion_program_with_discount.coupon_ids
+        self.env['sale.coupon.apply.code'].with_context(active_id=self.empty_order.id).create({
+            'coupon_code': coupon.code,
+        }).process_coupon()
+        self.assertFalse(self.empty_order.applied_coupon_ids, 'No coupon should be linked to the order')
+        self.assertEqual(coupon.state, 'new', 'Coupon should be in a new state')

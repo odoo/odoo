@@ -39,16 +39,22 @@ class SaleCouponApplyCode(models.TransientModel):
                             }
                         }
                 else:  # The program is applied on this order
+                    # Only link the promo program if reward lines were created
+                    order_line_count = len(order.order_line)
                     order._create_reward_line(program)
-                    order.code_promo_program_id = program
+                    if order_line_count < len(order.order_line):
+                        order.code_promo_program_id = program
         else:
             coupon = self.env['coupon.coupon'].search([('code', '=', coupon_code)], limit=1)
             if coupon:
                 error_status = coupon._check_coupon_code(order)
                 if not error_status:
+                    # Consume coupon only if reward lines were created
+                    order_line_count = len(order.order_line)
                     order._create_reward_line(coupon.program_id)
-                    order.applied_coupon_ids += coupon
-                    coupon.write({'state': 'used'})
+                    if order_line_count < len(order.order_line):
+                        order.applied_coupon_ids += coupon
+                        coupon.write({'state': 'used'})
             else:
                 error_status = {'not_found': _('This coupon is invalid (%s).') % (coupon_code)}
         return error_status
