@@ -15,5 +15,13 @@ patch(NewContentModal.prototype, 'website_livechat_new_content', {
         });
     },
 
-    createNewChannel() {}
+    createNewChannel() {
+        this.action.doAction('website_livechat.im_livechat_channel_action_add', {
+            onClose: (data) => {
+                if (data) {
+                    this.website.goToWebsite({ path: data.path });
+                }
+            },
+        });
+    }
 });

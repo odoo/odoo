@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_product_view_form_add" model="ir.ui.view">
+        <field name="name">product.product.view.form.add</field>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <form js_class="product_product_add_form">
+                <group>
+                    <field name="website_url" invisible="1"/>
+                    <field name="name" placeholder="e.g. Cheese Burger" string="Product Name"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_product_action_add" model="ir.actions.act_window">
+        <field name="name">New Product</field>
+        <field name="res_model">product.product</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="product_product_view_form_add"/>
+    </record>
+
+</odoo>

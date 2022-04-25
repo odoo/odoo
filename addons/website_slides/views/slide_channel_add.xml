@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="slide_channel_view_form_add" model="ir.ui.view">
+        <field name="name">slide.channel.view.form.add</field>
+        <field name="model">slide.channel</field>
+        <field name="arch" type="xml">
+            <form js_class="website_slides_add_form">
+                <group>
+                    <field name="website_url" invisible="1"/>
+                    <field name="name" placeholder="e.g. Computer Science for kids" string="Course Title"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags"/>
+                </group>
+                <group>
+                    <field name="channel_type" widget="radio" options="{'horizontal': true}" string="Choose a layout"/>
+                    <field name="description" widget="html" placeholder="Common tasks for a computer scientist is asking the right questions andanswering questions. In this course, you'll study those topics with activities about mathematics, science and logic." string="Description"/>
+                </group>
+                <group name="review">
+                    <field name="allow_comment"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="slide_channel_action_add" model="ir.actions.act_window">
+        <field name="name">New Course</field>
+        <field name="res_model">slide.channel</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="slide_channel_view_form_add"/>
+    </record>
+
+</odoo>

@@ -27,6 +27,7 @@ Ask questions, get answers, no distractions
         'views/website_forum_profile.xml',
         'views/ir_qweb.xml',
         'views/snippets/snippets.xml',
+        'views/forum_forum_add.xml',
         'security/ir.model.access.csv',
         'security/website_forum_security.xml',
         'data/badges_question.xml',
@@ -42,7 +43,6 @@ Ask questions, get answers, no distractions
     'assets': {
         'website.assets_editor': [
             'website_forum/static/src/js/tours/website_forum.js',
-            'website_forum/static/src/js/website_forum.editor.js',
         ],
         'web.assets_tests': [
             'website_forum/static/tests/**/*',
@@ -53,7 +53,7 @@ Ask questions, get answers, no distractions
             'website_forum/static/src/js/website_forum.share.js',
         ],
         'web.assets_backend': [
-            'website_forum/static/src/js/systray_items/new_content.js',
+            'website_forum/static/src/js/systray_items/*.js',
         ],
         'web.assets_qweb': [
             'website_forum/static/src/xml/*.xml',

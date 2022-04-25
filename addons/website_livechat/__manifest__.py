@@ -17,6 +17,7 @@ Allow website visitors to chat with the collaborators. This module also brings a
         'views/im_livechat_chatbot_script_view.xml',
         'views/website_livechat_view.xml',
         'views/website_visitor_views.xml',
+        'views/im_livechat_channel_add.xml',
         'security/ir.model.access.csv',
         'security/website_livechat.xml',
         'data/website_livechat_data.xml',
@@ -51,6 +52,7 @@ Allow website visitors to chat with the collaborators. This module also brings a
             'website_livechat/static/src/components/*/*.scss',
             'website_livechat/static/src/models/*.js',
             'website_livechat/static/src/js/systray_items/new_content.js',
+            'website_livechat/static/src/js/systray_items/*.js',
         ],
         'web.assets_tests': [
             'website_livechat/static/tests/tours/**/*',

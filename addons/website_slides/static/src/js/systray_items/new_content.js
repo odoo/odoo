@@ -15,5 +15,13 @@ patch(NewContentModal.prototype, 'website_slides_new_content', {
         });
     },
 
-    createNewSlidesChannel() {}
+    createNewSlidesChannel() {
+        this.action.doAction('website_slides.slide_channel_action_add', {
+            onClose: (data) => {
+                if (data) {
+                    this.website.goToWebsite({ path: data.path });
+                }
+            },
+        });
+    }
 });

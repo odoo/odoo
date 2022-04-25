@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="forum_forum_view_form_add" model="ir.ui.view">
+        <field name="name">forum.forum.view.form.add</field>
+        <field name="model">forum.forum</field>
+        <field name="arch" type="xml">
+            <form js_class="website_forum_add_form">
+                <group>
+                    <field name="name" placeholder="e.g. Technical Assistance" string="Forum Name"/>
+                    <field name="mode" widget="radio" required="True" string="Forum Mode"/>
+                    <field name="privacy" widget="radio" attrs="{'required': True}"/>
+                    <field name="authorized_group_id" options="{'no_create': True}" attrs="{'invisible': [('privacy', '!=', 'private')], 'required': [('privacy', '=', 'private')]}"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="forum_forum_action_add" model="ir.actions.act_window">
+        <field name="name">New Forum</field>
+        <field name="res_model">forum.forum</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="forum_forum_view_form_add"/>
+    </record>
+
+</odoo>

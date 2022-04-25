@@ -19,4 +19,18 @@
     		</xpath>
         </field>
     </record>
+
+    <record id="slide_channel_view_form_add_inherit_slides_forum" model="ir.ui.view">
+        <field name="name">slide.channel.view.form.add.inherit.slides.forum</field>
+        <field name="model">slide.channel</field>
+        <field name="inherit_id" ref="website_slides.slide_channel_view_form_add"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='review']" position="attributes">
+                <attribute name="string">Communication</attribute>
+            </xpath>
+            <xpath expr="//field[@name='allow_comment']" position="after">
+                <field name="forum_id" string="Forum"/>
+    		</xpath>
+        </field>
+    </record>
 </odoo>

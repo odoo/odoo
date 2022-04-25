@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="im_livechat_channel_view_form_add" model="ir.ui.view">
+        <field name="name">im_livechat.channel.view.form.add</field>
+        <field name="model">im_livechat.channel</field>
+        <field name="arch" type="xml">
+            <form js_class="website_livechat_add_form">
+                <group>
+                    <field name="website_url" invisible="1"/>
+                    <field name="name" string="Channel Name"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="im_livechat_channel_action_add" model="ir.actions.act_window">
+        <field name="name">New Channel</field>
+        <field name="res_model">im_livechat.channel</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="im_livechat_channel_view_form_add"/>
+    </record>
+
+</odoo>

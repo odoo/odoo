@@ -15,5 +15,13 @@ patch(NewContentModal.prototype, 'website_forum_new_content', {
         });
     },
 
-    createNewForum() {}
+    createNewForum() {
+        this.action.doAction('website_forum.forum_forum_action_add', {
+            onClose: (data) => {
+                if (data) {
+                    this.website.goToWebsite({ path: data.path });
+                }
+            },
+        });
+    }
 });

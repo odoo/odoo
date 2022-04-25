@@ -35,6 +35,7 @@
         'views/website_event_menu_views.xml',
         'views/website_visitor_views.xml',
         'views/event_menus.xml',
+        'views/event_event_add.xml',
         'security/ir.model.access.csv',
         'security/event_security.xml',
     ],
@@ -61,14 +62,11 @@
             'website_event/static/src/js/website_event_ticket_details.js',
             'website_event/static/src/js/website_event_set_customize_options.js',
         ],
-        'website.assets_editor': [
-            'website_event/static/src/js/website_event.editor.js',
-        ],
         'website.assets_wysiwyg': [
             '/website_event/static/src/snippets/s_events/options.js',
         ],
         'web.assets_backend': [
-            'website_event/static/src/js/systray_items/new_content.js',
+            'website_event/static/src/js/systray_items/*.js',
         ],
     },
     'license': 'LGPL-3',
