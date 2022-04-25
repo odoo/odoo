@@ -69,26 +69,26 @@ QUnit.test('Notification Sent', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        '.o_NotificationPopover',
+        '.o_MessageNotificationPopoverContent',
         "notification popover should be open"
     );
     assert.containsOnce(
         document.body,
-        '.o_NotificationPopover_notificationIcon',
+        '.o_MessageNotificationPopoverContent_notificationIcon',
         "popover should have one icon"
     );
     assert.hasClass(
-        document.querySelector('.o_NotificationPopover_notificationIcon'),
+        document.querySelector('.o_MessageNotificationPopoverContent_notificationIcon'),
         'fa-check',
         "popover should have the sent icon"
     );
     assert.containsOnce(
         document.body,
-        '.o_NotificationPopover_notificationPartnerName',
+        '.o_MessageNotificationPopoverContent_notificationPartnerName',
         "popover should have the partner name"
     );
     assert.strictEqual(
-        document.querySelector('.o_NotificationPopover_notificationPartnerName').textContent.trim(),
+        document.querySelector('.o_MessageNotificationPopoverContent_notificationPartnerName').textContent.trim(),
         "Someone",
         "partner name should be correct"
     );

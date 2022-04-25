@@ -25,7 +25,7 @@
                 }" t-attf-class="{{ messageView.extraClass }} {{ className }}" t-on-click="messageView.onClick" t-on-mouseenter="messageView.onMouseenter" t-on-mouseleave="messageView.onMouseleave" t-att-data-message-local-id="messageView.message.localId"
                 t-ref="root"
             >
-                <MessageInReplyToView t-if="messageView.messageInReplyToView" messageInReplyToViewLocalId="messageView.messageInReplyToView.localId"/>
+                <MessageInReplyToView t-if="messageView.messageInReplyToView" localId="messageView.messageInReplyToView.localId"/>
                 <div t-if="messageView.isActive and messageView.messageActionList" class="o_Message_actionListContainer position-absolute pl-5 pr-3" t-att-class="{ 'o-squashed': messageView.isSquashed }">
                     <MessageActionList localId="messageView.messageActionList.localId"/>
                 </div>
@@ -122,9 +122,7 @@
                                                 <i name="notificationIcon" class="o_Message_notificationIcon fa fa-envelope-o"/>
                                             </span>
                                             <t t-set-slot="opened">
-                                                <NotificationPopover
-                                                    messageViewLocalId="messageView.localId"
-                                                />
+                                                <MessageNotificationPopoverContent localId="messageView.localId"/>
                                             </t>
                                         </Popover>
                                     </t>
@@ -150,20 +148,7 @@
                             <t t-if="messageView.message.trackingValues.length > 0">
                                 <ul class="o_Message_trackingValues mt-2">
                                     <t t-foreach="messageView.message.trackingValues" t-as="value" t-key="value.id">
-                                        <li>
-                                            <div class="o_Message_trackingValue d-flex align-items-center flex-wrap">
-                                                <div class="o_Message_trackingValueFieldName o_Message_trackingValueItem" t-esc="value.changed_field"/>
-                                                <t t-if="value.old_value">
-                                                    <div class="o_Message_trackingValueOldValue o_Message_trackingValueItem" t-esc="value.old_value"/>
-                                                </t>
-                                                <i t-else="" class="mr-2">None</i>
-                                                <div class="o_Message_trackingValueSeparator o_Message_trackingValueItem fa fa-long-arrow-right" title="Changed" role="img"/>
-                                                <t t-if="value.new_value">
-                                                    <div class="o_Message_trackingValueNewValue o_Message_trackingValueItem" t-esc="value.new_value"/>
-                                                </t>
-                                                <i t-else="">None</i>
-                                            </div>
-                                        </li>
+                                        <TrackingValue value="value"/>
                                     </t>
                                 </ul>
                             </t>

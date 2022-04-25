@@ -20,7 +20,7 @@
             It was decided that the information displayed for snailmail messages
             has to be different than for standard messages, see task-1907998.
         -->
-        <xpath expr="//NotificationPopover" position="replace">
+        <xpath expr="//MessageNotificationPopoverContent" position="replace">
             <t t-if="messageView.message.message_type === 'snailmail'">
                 <SnailmailNotificationPopover messageLocalId="messageView.message.localId"/>
             </t>

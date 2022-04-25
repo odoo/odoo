@@ -7,6 +7,14 @@ import { clear, insertAndReplace } from '@mail/model/model_field_command';
 registerModel({
     name: 'MessagingMenu',
     identifyingFields: ['messaging'],
+    lifecycleHooks: {
+        _created() {
+            document.addEventListener('click', this._onClickCaptureGlobal, true);
+        },
+        _willDelete() {
+            document.removeEventListener('click', this._onClickCaptureGlobal, true);
+        },
+    },
     recordMethods: {
         /**
          * Close the messaging menu. Should reset its internal state.
@@ -44,6 +52,38 @@ registerModel({
         },
         onHideMobileNewMessage() {
             this.update({ isMobileNewMessageToggled: false });
+        },
+        /**
+         * @private
+         * @param {Event} ev
+         * @param {Object} ui
+         * @param {Object} ui.item
+         * @param {integer} ui.item.id
+         */
+        onMobileNewMessageInputSelect(ev, ui) {
+            this.messaging.openChat({ partnerId: ui.item.id });
+        },
+        /**
+         * @param {Object} req
+         * @param {string} req.term
+         * @param {function} res
+         */
+        onMobileNewMessageInputSource(req, res) {
+            const value = _.escape(req.term);
+            this.messaging.models['Partner'].imSearch({
+                callback: partners => {
+                    const suggestions = partners.map(partner => {
+                        return {
+                            id: partner.id,
+                            value: partner.nameOrDisplayName,
+                            label: partner.nameOrDisplayName,
+                        };
+                    });
+                    res(_.sortBy(suggestions, 'label'));
+                },
+                keyword: value,
+                limit: 10,
+            });
         },
         /**
          * Toggle the visibility of the messaging menu "new message" input in
@@ -112,6 +152,26 @@ registerModel({
          */
         _computeNotificationListView() {
             return this.isOpen ? insertAndReplace() : clear();
+        },
+        /**
+         * Closes the menu when clicking outside, if appropriate.
+         *
+         * @private
+         * @param {MouseEvent} ev
+         */
+        _onClickCaptureGlobal(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            if (!this.component) {
+                return;
+            }
+            // ignore click inside the menu
+            if (!this.component.root.el || this.component.root.el.contains(ev.target)) {
+                return;
+            }
+            // in all other cases: close the messaging menu when clicking outside
+            this.close();
         },
     },
     fields: {

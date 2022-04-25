@@ -7,6 +7,11 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 registerModel({
     name: 'NotificationListView',
     identifyingFields: [['discussOwner', 'messagingMenuOwner']],
+    lifecycleHooks: {
+        _created() {
+            this._loadPreviews();
+        },
+    },
     recordMethods: {
         /**
          * @private
@@ -182,6 +187,17 @@ registerModel({
                         };
                     })
             );
+        },
+        /**
+         * Load previews of given thread. Basically consists of fetching all missing
+         * last messages of each thread.
+         *
+         * @private
+         */
+        async _loadPreviews() {
+            const threads = this.threadPreviewViews
+                .map(threadPreviewView => threadPreviewView.thread);
+            this.messaging.models['Thread'].loadPreviews(threads);
         },
     },
     fields: {
