@@ -20,6 +20,8 @@ $(function () {
             this.pdf_viewer = new PDFSlidesViewer(this.slide_url, this.canvas, true);
             this.pdf_viewer.loadDocument().then(function () {
                 self.on_loaded_file();
+            }).catch(function (exception) {
+                document.dispatchEvent(new CustomEvent('embedexception', {detail: exception}));
             });
         };
         EmbeddedViewer.prototype.__proto__ = {

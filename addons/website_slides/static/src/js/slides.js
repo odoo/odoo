@@ -41,8 +41,11 @@ return publicWidget.registry.websiteSlides;
 odoo.define('website_slides.slides_embed', function (require) {
 'use strict';
 
+const core = require('web.core');
 var publicWidget = require('web.public.widget');
 require('website_slides.slides');
+
+const _t = core._t;
 
 var SlideSocialEmbed = publicWidget.Widget.extend({
     events: {
@@ -101,6 +104,9 @@ publicWidget.registry.websiteSlidesEmbed = publicWidget.Widget.extend({
     start: function (parent) {
         var defs = [this._super.apply(this, arguments)];
         $('iframe.o_wslides_iframe_viewer').on('ready', this._onIframeViewerReady.bind(this));
+        document.querySelectorAll('iframe.o_wslides_iframe_viewer').forEach(iframe => {
+            iframe.contentDocument.addEventListener('embedexception', this._onEmbedExcpetion.bind(this));
+        });
         return Promise.all(defs);
     },
 
@@ -118,6 +124,18 @@ publicWidget.registry.websiteSlidesEmbed = publicWidget.Widget.extend({
         var $iframe = $(ev.currentTarget);
         var maxPage = $iframe.contents().find('#page_count').val();
         new SlideSocialEmbed(this, maxPage).attachTo($('.oe_slide_js_embed_code_widget'));
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onEmbedExcpetion: function (ev) {
+        this.displayNotification({
+            type: 'danger',
+            title: _t('The document could not be loaded'),
+            message: _t(ev.detail.message),
+            sticky: true,
+        });
     },
 });
 

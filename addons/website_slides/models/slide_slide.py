@@ -13,9 +13,10 @@ from werkzeug import urls
 
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import url_for
+from odoo.tools.mimetypes import guess_mimetype
 
 
 class SlidePartnerRelation(models.Model):
@@ -381,16 +382,22 @@ class Slide(models.Model):
 
     @api.onchange('datas')
     def _on_change_datas(self):
-        """ For PDFs, we assume that it takes 5 minutes to read a page. """
         if self.datas:
             data = base64.b64decode(self.datas)
-            if data.startswith(b'%PDF-'):
+            mimetype = guess_mimetype(data)
+            if mimetype.startswith('image/'):
+                self.slide_type = 'infographic'
+            elif mimetype == 'application/pdf':
                 pdf = PyPDF2.PdfFileReader(io.BytesIO(data), overwriteWarnings=False, strict=False)
                 try:
                     pdf.getNumPages()
                 except PyPDF2.utils.PdfReadError:
                     return
+
+                # For PDFs, we assume that it takes 5 minutes to read a page.
                 self.completion_time = (5 * len(pdf.pages)) / 60
+            elif self.slide_type in ['document', 'presentation']:
+                raise ValidationError(_('Only PDF files can be loaded as %s slides') % self.slide_type)
 
     @api.depends('name', 'channel_id.website_id.domain')
     def _compute_website_url(self):
