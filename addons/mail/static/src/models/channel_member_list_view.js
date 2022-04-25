@@ -7,17 +7,28 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 registerModel({
     name: 'ChannelMemberListView',
     identifyingFields: [['chatWindowOwner', 'threadViewOwner']],
+    lifecycleHooks: {
+        _created() {
+            this.channel.fetchChannelMembers();
+        },
+    },
     recordMethods: {
+        /**
+         * Handles click on the "load more members" button.
+         */
+        async onClickLoadMoreMembers() {
+            this.channel.fetchChannelMembers();
+        },
         /**
          * @private
          * @returns {FieldCommand}
          */
         _computeChannel() {
             if (this.chatWindowOwner) {
-                return replace(this.chatWindowOwner.thread);
+                return replace(this.chatWindowOwner.thread.channel);
             }
             if (this.threadViewOwner) {
-                return replace(this.threadViewOwner.thread);
+                return replace(this.threadViewOwner.thread.channel);
             }
             return clear();
         },
@@ -43,7 +54,7 @@ registerModel({
         },
     },
     fields: {
-        channel: one('Thread', {
+        channel: one('Channel', {
             compute: '_computeChannel',
             readonly: true,
         }),

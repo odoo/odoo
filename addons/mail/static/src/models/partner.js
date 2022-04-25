@@ -376,7 +376,7 @@ registerModel({
             inverse: 'partner',
             isCausal: true,
         }),
-        channelMemberViews: many('ChannelMemberView', {
+        channelMembers: many('ChannelMember', {
             inverse: 'partner',
             isCausal: true,
         }),

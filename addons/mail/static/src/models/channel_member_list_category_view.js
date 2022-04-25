@@ -26,12 +26,12 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
-         _computeChannelMemberViews() {
+        _computeChannelMemberViews() {
             if (this.members.length === 0) {
                 return clear();
             }
             return insertAndReplace(
-                this.members.map(member => ({ partner: replace(member) })),
+                this.members.map(member => ({ channelMember: replace(member) })),
             );
         },
         /**
@@ -72,7 +72,7 @@ registerModel({
         },
     },
     fields: {
-        channel: one('Thread', {
+        channel: one('Channel', {
             compute: '_computeChannel',
             required: true,
         }),
@@ -89,7 +89,7 @@ registerModel({
             inverse: 'channelMemberListCategoryViewOwner',
             isCausal: true,
         }),
-        members: many('Partner', {
+        members: many('ChannelMember', {
             compute: '_computeMembers',
         }),
         title: attr({
