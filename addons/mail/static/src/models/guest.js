@@ -38,6 +38,10 @@ registerModel({
         avatarUrl: attr({
             compute: '_computeAvatarUrl',
         }),
+        channelPartner: many('ChannelPartner', {
+            inverse: 'guest',
+            isCausal: true,
+        }),
         id: attr({
             required: true,
             readonly: true,

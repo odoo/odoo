@@ -410,6 +410,10 @@ registerModel({
             inverse: 'partner',
             isCausal: true,
         }),
+        channelPartner: many('ChannelPartner', {
+            inverse: 'partner',
+            isCausal: true,
+        }),
         country: one('Country'),
         /**
          * Deprecated.

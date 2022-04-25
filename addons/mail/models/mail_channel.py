@@ -1194,6 +1194,35 @@ class Channel(models.Model):
             channel['last_message'] = message
         return list(channels_preview.values())
 
+    def _channel_get_member_list(self, max_id=None, limit=None):
+        domain = [('channel_id', '=', self.id)]
+        if max_id:
+            domain = expression.AND([domain, [('id', '>', max_id)]])
+        channel_partners = self.env['mail.channel.partner'].search(
+            domain,
+            limit=limit,
+        )
+        count = self.env['mail.channel.partner'].search_count([('channel_id', '=', self.id)])
+        res = []
+        for channel_partner in channel_partners:
+            data = {'id': channel_partner.id}
+            if channel_partner.partner_id:
+                data['partner'] = {
+                    'id': channel_partner.partner_id.id,
+                    'display_name': channel_partner.partner_id.display_name,
+                    'im_status': channel_partner.partner_id.im_status,
+                }
+            else:
+                data['guest'] = {
+                    'id': channel_partner.guest_id.id,
+                    'name': channel_partner.guest_id.name
+                }
+            res.append(data)
+        return {
+            'count': count,
+            'members': res,
+        }
+
     def _channel_last_message_ids(self):
         """ Return the last message of the given channels."""
         if not self:
@@ -1206,15 +1235,6 @@ class Channel(models.Model):
             GROUP BY res_id
             """, (tuple(self.ids),))
         return self.env.cr.dictfetchall()
-
-    def load_more_members(self, known_member_ids):
-        self.ensure_one()
-        partners = self.env['res.partner'].with_context(active_test=False).search_read(
-            domain=[('id', 'not in', known_member_ids), ('channel_ids', 'in', self.id)],
-            fields=['id', 'name', 'im_status'],
-            limit=30
-        )
-        return [('insert', partners)]
 
     def _get_avatar_cache_key(self):
         if not self.avatar_128:

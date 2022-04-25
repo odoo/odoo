@@ -7,26 +7,16 @@ const { Component } = owl;
 export class ChannelMember extends Component {
 
     /**
-     * @returns {Thread}
+     * @returns {ChannelPartner}
      */
-    get channel() {
-        return this.props.channel;
-    }
-
-    /**
-     * @returns {Partner}
-     */
-    get member() {
-        return this.props.member;
+    get channelPartner() {
+        return this.props.record;
     }
 
 }
 
 Object.assign(ChannelMember, {
-    props: {
-        channel: Object,
-        member: Object,
-    },
+    props: { record: Object },
     template: 'mail.ChannelMember',
 });
 

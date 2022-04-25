@@ -3,23 +3,12 @@
 
     <t t-name="mail.ChannelMemberList" owl="1">
         <t t-if="channelMemberListView">
-            <div class="o_ChannelMemberList d-flex flex-column overflow-auto bg-light" t-attf-class="{{ className }}" t-ref="root">
-                <t t-if="channelMemberListView.channel.orderedOnlineMembers.length > 0">
-                    <ChannelMemberListCategory category="'online'" channelMemberListView="channelMemberListView"/>
-                </t>
-                <t t-if="channelMemberListView.channel.orderedOfflineMembers.length > 0">
-                    <ChannelMemberListCategory category="'offline'" channelMemberListView="channelMemberListView"/>
-                </t>
-                <t t-if="channelMemberListView.channel.unknownMemberCount === 1">
-                    <span class="mx-2 mt-2">And 1 other member.</span>
-                </t>
-                <t t-if="channelMemberListView.channel.unknownMemberCount > 1">
-                    <span class="mx-2 mt-2">And <t t-esc="channelMemberListView.channel.unknownMemberCount"/> other members.</span>
-                </t>
-                <t t-if="channelMemberListView.channel.unknownMemberCount > 0">
-                    <div class="mx-2 my-1">
-                        <button class="btn btn-secondary" t-on-click="channelMemberListView.channel.onClickLoadMoreMembers">Load more</button>
-                    </div>
+            <div class="o_ChannelMemberList d-flex flex-column overflow-auto bg-light" t-attf-class="{{ className }}" t-on-scroll="channelMemberListView.onScroll" t-ref="root">
+                <t t-if="channelMemberListView.channel.channelPartners.length > 0">
+                    <h6 class="m-2">Members - <t t-esc="channelMemberListView.channel.memberCount"/></h6>
+                    <t t-foreach="channelMemberListView.channel.channelPartners" t-as="channelPartner" t-key="channelPartner.localId">
+                        <ChannelMember record="channelPartner"></ChannelMember>
+                    </t>
                 </t>
             </div>
         </t>

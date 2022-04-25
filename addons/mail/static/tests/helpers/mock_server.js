@@ -146,6 +146,10 @@ MockServer.include({
             const { min_id, max_id, limit, thread_model, thread_id } = args;
             return this._mockRouteMailThreadFetchMessages(thread_model, thread_id, max_id, min_id, limit);
         }
+        if (route === '/mail/thread/members') {
+            const { limit, max_id, channel_id } = args;
+            return this._mockRouteMailChannelFetchMembers(channel_id, limit, max_id);
+        }
         if (route === '/mail/channel/messages') {
             const { channel_id, min_id, max_id, limit } = args;
             return this._mockRouteMailChannelMessages(channel_id, max_id, min_id, limit);
@@ -395,7 +399,57 @@ MockServer.include({
         ];
         return this._mockMailMessage_MessageFetch(domain, max_id, min_id, limit);
     },
-
+    /**
+     * Simulates the `/mail/channel/members` route.
+     *
+     * @private
+     * @param {integer} channel_id
+     * @param {integer} max_id
+     * @returns {Object} list of messages
+     */
+    _mockRouteMailChannelFetchMembers(channel_id, limit, max_id) {
+        const domain = [['channel_id', '=', channel_id]];
+        if (max_id) {
+            domain.push(['id', '>', max_id]);
+        }
+        const channelPartners = this._mockSearchRead(
+            'mail.channel.partner',
+            [domain, []],
+            { limit }
+        );
+        const count = this._mockSearchCount('mail.channel.partner', [[['channel_id', '=', channel_id]]]);
+        const res = [];
+        for (const channelPartner of channelPartners) {
+            const data = {
+                id: channelPartner.id,
+            };
+            if (channelPartner.partner_id) {
+                channelPartner.partner_id = this.getRecords(
+                    'res.partner',
+                    [['id', '=', channelPartner.partner_id[0]]]
+                )[0];
+                data.partner = {
+                    id: channelPartner.partner_id.id,
+                    display_name: channelPartner.partner_id.display_name,
+                    im_status: channelPartner.partner_id.im_status,
+                };
+            } else {
+                channelPartner.guest_id = this.getRecords(
+                    'mail.guest',
+                    [['id', '=', channelPartner.guest_id[0]]]
+                )[0];
+                data.guest = {
+                    id: channelPartner.guest_id.id,
+                    name: channelPartner.guest_id.name
+                };
+            }
+            res.push(data);
+        }
+        return {
+            count,
+            members: res,
+        };
+    },
     /**
      * Simulates the `/mail/chat_post` route.
      *

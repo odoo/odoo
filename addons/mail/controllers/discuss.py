@@ -441,6 +441,11 @@ class DiscussController(http.Controller):
             res['suggestedRecipients'] = thread._message_get_suggested_recipients()[thread.id]
         return res
 
+    @http.route('/mail/thread/members', methods=['POST'], type='json', auth='user')
+    def mail_channel_members(self, channel_id, max_id=None, limit=30, **kwargs):
+        channel = request.env['mail.channel'].browse(int(channel_id)).exists()
+        return channel._channel_get_member_list(max_id=max_id, limit=limit)
+
     @http.route('/mail/thread/messages', methods=['POST'], type='json', auth='user')
     def mail_thread_messages(self, thread_model, thread_id, max_id=None, min_id=None, limit=30, **kwargs):
         return request.env['mail.message']._message_fetch(domain=[
