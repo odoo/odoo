@@ -1007,7 +1007,7 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
         });
 
         QUnit.test("lifecycle mount in fragment", async function (assert) {
-            assert.expect(17);
+            assert.expect(18);
 
             class MyChildComponent extends LegacyComponent {
                 setup() {
@@ -1024,8 +1024,8 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
             MyComponent.components = { MyChildComponent };
             const MyWidget = WidgetAdapter.extend({
                 start() {
-                    let component = new ComponentWrapper(this, MyComponent, {});
-                    return component.mount(this.el);
+                    this.component = new ComponentWrapper(this, MyComponent, {});
+                    return this.component.mount(this.el);
                 }
             });
 
@@ -1043,6 +1043,9 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
                 "onWillRender MyChildComponent",
                 "onRendered MyChildComponent",
             ]);
+
+            await widget.component.update({});
+            assert.verifySteps([]); // Out of DOM: shouldn't do anything.
 
             widget.$el.appendTo(target);
             widget.on_attach_callback();
