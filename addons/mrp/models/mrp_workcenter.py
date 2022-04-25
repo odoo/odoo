@@ -363,6 +363,12 @@ class MrpWorkcenterProductivity(models.Model):
             else:
                 blocktime.duration = 0.0
 
+    @api.constrains('workorder_id')
+    def _check_open_time_ids(self):
+        for workorder in self.workorder_id:
+            if len(workorder.time_ids.filtered(lambda t: t.date_start and not t.date_end)) > 1:
+                raise ValidationError(_('The Workoder (%s) cannot be started twice!', workorder.display_name))
+
     def button_block(self):
         self.ensure_one()
         self.workcenter_id.order_ids.end_all()

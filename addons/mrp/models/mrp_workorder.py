@@ -526,6 +526,8 @@ class MrpWorkorder(models.Model):
 
     def button_start(self):
         self.ensure_one()
+        if any(time.date_start and not time.date_end for time in self.time_ids):
+            return True
         # As button_start is automatically called in the new view
         if self.state in ('done', 'cancel'):
             return True
