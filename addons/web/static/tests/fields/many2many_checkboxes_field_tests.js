@@ -16,12 +16,20 @@ QUnit.module("Fields", (hooks) => {
                         display_name: { string: "Displayed name", type: "char" },
                         int_field: { string: "int_field", type: "integer", sortable: true },
                         timmy: { string: "pokemon", type: "many2many", relation: "partner_type" },
+                        p: {
+                            string: "one2many field",
+                            type: "one2many",
+                            relation: "partner",
+                            relation_field: "trululu",
+                        },
+                        trululu: { string: "Trululu", type: "many2one", relation: "partner" },
                     },
                     records: [
                         {
                             id: 1,
                             display_name: "first record",
                             int_field: 10,
+                            p: [1],
                         },
                     ],
                     onchanges: {},
@@ -364,5 +372,49 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_field_widget[name='timmy'] input[type='checkbox']").checked
         );
         assert.verifySteps(["name_search", "write"]);
+    });
+
+    QUnit.test("Many2ManyCheckBoxesField in a one2many", async function (assert) {
+        assert.expect(3);
+
+        serverData.models.partner_type.records.push({ id: 15, display_name: "bronze" });
+        serverData.models.partner.records[0].timmy = [14, 15];
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree><field name="id"/></tree>
+                        <form>
+                            <field name="timmy" widget="many2many_checkboxes"/>
+                        </form>
+                    </field>
+                </form>`,
+            mockRPC(route, args) {
+                if (args.method === "write") {
+                    assert.deepEqual(args.args[1], {
+                        p: [[1, 1, { timmy: [[6, false, [15, 12]]] }]],
+                    });
+                }
+            },
+            resId: 1,
+        });
+
+        await click(target, ".o_form_button_edit");
+        await click(target.querySelector(".o_data_cell"));
+
+        // edit the timmy field by (un)checking boxes on the widget
+        const firstCheckbox = target.querySelector(".modal .custom-control-input");
+        await click(firstCheckbox);
+        assert.ok(firstCheckbox.checked, "the checkbox should be ticked");
+        const secondCheckbox = target.querySelectorAll(".modal .custom-control-input")[1];
+        await click(secondCheckbox);
+        assert.notOk(secondCheckbox.checked, "the checkbox should be unticked");
+
+        await click(target.querySelector(".modal .o_form_button_save"));
+        await click(target.querySelector(".o_form_button_save"));
     });
 });

@@ -11467,47 +11467,6 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("widget many2many_checkboxes in a subview", async function (assert) {
-        assert.expect(2);
-
-        const form = await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
-                <form>
-                    <sheet>
-                        <notebook>
-                            <page string="Turtles">
-                                <field name="turtles" mode="tree">
-                                    <tree>
-                                        <field name="id"/>
-                                    </tree>
-                                </field>
-                            </page>
-                        </notebook>
-                    </sheet>
-                </form>`,
-            archs: {
-                "turtle,false,form": `
-                    <form>
-                        <field name="partner_ids" widget="many2many_checkboxes"/>
-                    </form>`,
-            },
-            resId: 1,
-        });
-
-        await clickEdit(target);
-        await click(form.$(".o_data_cell"));
-        // edit the partner_ids field by (un)checking boxes on the widget
-        var $firstCheckbox = $(".modal .custom-control-input").first();
-        await click($firstCheckbox);
-        assert.ok($firstCheckbox.prop("checked"), "the checkbox should be ticked");
-        var $secondCheckbox = $(".modal .custom-control-input").eq(1);
-        await click($secondCheckbox);
-        assert.notOk($secondCheckbox.prop("checked"), "the checkbox should be unticked");
-    });
-
     QUnit.test(
         "prevent the dialog in readonly x2many tree view with option no_open True",
         async function (assert) {
