@@ -22,3 +22,8 @@ class TestName(TransactionCase):
         display_name = self.product.with_context(display_default_code=False).display_name
         self.assertEqual(display_name, self.product_name,
                          "Code should not be preprended to the name as context should prevent it.")
+
+    def test_default_code_and_negative_operator(self):
+        res = self.env['product.template'].name_search(name='PTN', operator='not ilike')
+        res_ids = [r[0] for r in res]
+        self.assertNotIn(self.product.id, res_ids)
