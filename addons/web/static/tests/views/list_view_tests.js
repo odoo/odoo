@@ -11367,8 +11367,6 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("editable grouped lists", async function (assert) {
-        assert.expect(4);
-
         await makeView({
             type: "list",
             resModel: "foo",
@@ -11432,9 +11430,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_selected_row");
     });
 
-    QUnit.skipWOWL("char field edition in editable grouped list", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("char field edition in editable grouped list", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
@@ -11442,18 +11438,12 @@ QUnit.module("Views", (hooks) => {
             arch: '<tree editable="bottom"><field name="foo"/><field name="bar"/></tree>',
             groupBy: ["bar"],
         });
-
-        await click($(target).find(".o_group_header:first")); // open first group
-        await click($(target).find(".o_data_cell:first"));
-        await testUtils.fields.editAndTrigger(
-            $(target).find('tr.o_selected_row .o_data_cell:first input[name="foo"]'),
-            "pla",
-            "input"
-        );
-        await click(target.querySelector(".o_list_button_save"));
-
+        await click(target.querySelector(".o_group_header"));
+        await click(target.querySelector(".o_data_cell"));
+        await editInput(target, '.o_selected_row .o_data_cell [name="foo"] input', "pla");
+        await clickSave(target);
         assert.strictEqual(
-            serverData.models.foo.records[0].foo,
+            serverData.models.foo.records[3].foo,
             "pla",
             "the edition should have been properly saved"
         );
@@ -11508,14 +11498,14 @@ QUnit.module("Views", (hooks) => {
                 "should have a visible Create button"
             );
 
-            await click($(target).find(".o_group_header:first"));
-            assert.containsN(target, ".o_data_row", 1, "first group should be opened");
+            await click(target.querySelector(".o_group_header"));
+            assert.containsN(target, ".o_data_row", 2, "first group should be opened");
             assert.isVisible(
                 target.querySelector(".o_list_button_add"),
                 "should have a visible Create button"
             );
 
-            await click($(target).find(".o_data_row:eq(0) .o_list_record_selector input"));
+            await click(target.querySelector(".o_data_row .o_list_record_selector input"));
             assert.containsOnce(
                 target,
                 ".o_data_row:eq(0) .o_list_record_selector input:enabled",
@@ -11526,7 +11516,7 @@ QUnit.module("Views", (hooks) => {
                 "should have a visible Create button"
             );
 
-            await click($(target).find(".o_group_header:last"));
+            await click(target.querySelectorAll(".o_group_header").pop());
             assert.containsN(target, ".o_data_row", 2, "two groups should be opened");
             assert.isVisible(
                 target.querySelector(".o_list_button_add"),
@@ -11583,10 +11573,10 @@ QUnit.module("Views", (hooks) => {
             });
 
             // unfold first subgroup
-            await click($(target).find(".o_group_header:first"));
-            await click($(target).find(".o_group_header:eq(1)"));
-            assert.hasClass($(target).find(".o_group_header:first"), "o_group_open");
-            assert.hasClass($(target).find(".o_group_header:eq(1)"), "o_group_open");
+            await click(target.querySelector(".o_group_header"));
+            await click(target.querySelectorAll(".o_group_header")[1]);
+            assert.hasClass(target.querySelector(".o_group_header"), "o_group_open");
+            assert.hasClass(target.querySelectorAll(".o_group_header")[1], "o_group_open");
             assert.containsOnce(target, ".o_data_row");
 
             // add a record to first subgroup
@@ -12837,9 +12827,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL('editable grouped list with create="0"', async function (assert) {
-        assert.expect(1);
-
+    QUnit.test('editable grouped list with create="0"', async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
@@ -12848,7 +12836,7 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["bar"],
         });
 
-        await click($(target).find(".o_group_header:first")); // open group
+        await click(target.querySelector(".o_group_header")); // open group
         assert.containsNone(
             target,
             ".o_group_field_row_add a",
@@ -13223,7 +13211,7 @@ QUnit.module("Views", (hooks) => {
             serverData.models.bar.fields.foo = { string: "Foo", type: "char", sortable: true };
             serverData.models.foo.records[0].o2m = [1, 2];
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "foo",
                 serverData,
@@ -13245,17 +13233,14 @@ QUnit.module("Views", (hooks) => {
                 </form>`,
                 resId: 1,
             });
+            const listWidth = target.querySelector(".o_list_renderer").offsetWidth;
 
-            const listWidth = form.el.querySelector(".o_list_view").offsetWidth;
-
-            await click(form.el.querySelector(".o_optional_columns_dropdown"));
+            await click(target, ".o_optional_columns_dropdown .dropdown-toggle");
             assert.strictEqual(
-                form.el.querySelector(".o_optional_columns").offsetLeft,
+                target.querySelector(".o_optional_columns").offsetLeft,
                 listWidth,
                 "optional fields dropdown should opened at right place"
             );
-
-            form.destroy();
         }
     );
 
@@ -13518,9 +13503,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("float field render with digits attribute on listview", async function (assert) {
-        assert.expect(1);
-
+    QUnit.test("float field render with digits attribute on listview", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
@@ -13529,7 +13512,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            $(target).find("td.o_list_number:eq(0)").text(),
+            target.querySelector("td.o_list_number").textContent,
             "0.400000",
             "should contain 6 digits decimal precision"
         );
