@@ -66,7 +66,6 @@ var AbstractThreadWindow = Widget.extend({
         }
     },
     start: function () {
-        var self = this;
         this.$input = this.$('.o_composer_text_field');
         this.$header = this.$('.o_thread_window_header');
         var options = {
@@ -89,8 +88,8 @@ var AbstractThreadWindow = Widget.extend({
             var margin_dir = _t.database.parameters.direction === "rtl" ? "margin-left" : "margin-right";
             this.$el.css(margin_dir, $.position.scrollbarWidth());
         }
-        var def = this._threadWidget.replace(this.$('.o_thread_window_content')).then(function () {
-            self._threadWidget.$el.on('scroll', self, self._debouncedOnScroll);
+        var def = this._threadWidget.replace(this.$('.o_thread_window_content')).then(() => {
+            this._threadWidget.$el.on('scroll', this, this._debouncedOnScroll);
         });
         return Promise.all([this._super(), def]);
     },
@@ -366,13 +365,12 @@ var AbstractThreadWindow = Widget.extend({
      * @param {Object} messageData
      */
     _postMessage: function (messageData) {
-        var self = this;
         if (!this.hasThread()) {
             return;
         }
         this._thread.postMessage(messageData)
-            .then(function () {
-                self._threadWidget.scrollToBottom();
+            .then(() => {
+                this._threadWidget.scrollToBottom();
             });
     },
     /**

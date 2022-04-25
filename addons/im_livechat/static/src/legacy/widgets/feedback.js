@@ -48,21 +48,20 @@ var Feedback = Widget.extend({
      * @param {Object} options
      */
     _sendFeedback: function (reason) {
-        var self = this;
         var args = {
             uuid: this._livechat.getUUID(),
             rate: this.rating,
             reason: reason,
         };
-        this.dp.add(session.rpc('/im_livechat/feedback', args)).then(function (response) {
-            var emoji = RATING_TO_EMOJI[self.rating] || "??";
+        this.dp.add(session.rpc('/im_livechat/feedback', args)).then((response) => {
+            var emoji = RATING_TO_EMOJI[this.rating] || "??";
             if (!reason) {
                 var content = utils.sprintf(_t("Rating: %s"), emoji);
             }
             else {
                 var content = "Rating reason: \n" + reason;
             }
-            self.trigger('send_message', { content: content, isFeedback: true });
+            this.trigger('send_message', { content: content, isFeedback: true });
         });
     },
     /**
@@ -118,7 +117,6 @@ var Feedback = Widget.extend({
     * @private
     */
     _onEmailChat: function () {
-        var self = this;
         var $email = this.$('#o_email');
 
         if (utils.is_email($email.val())) {
@@ -130,11 +128,11 @@ var Feedback = Widget.extend({
                     uuid: this._livechat.getUUID(),
                     email: $email.val(),
                 }
-            }).then(function () {
-                self.$('.o_livechat_email').html($('<strong />', { text: _t('Conversation Sent') }));
-            }).guardedCatch(function () {
-                self.$('.o_livechat_email').hide();
-                self.$('.o_livechat_email_error').show();
+            }).then(() => {
+                this.$('.o_livechat_email').html($('<strong />', { text: _t('Conversation Sent') }));
+            }).guardedCatch(() => {
+                this.$('.o_livechat_email').hide();
+                this.$('.o_livechat_email_error').show();
             });
         } else {
             $email.addClass('is-invalid').prop('title', _t('Invalid email address'));

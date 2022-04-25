@@ -115,7 +115,6 @@ var ThreadWidget = Widget.extend({
      * @param {boolean} [options.squashCloseMessages]
      */
     render: function (thread, options) {
-        var self = this;
 
         var shouldScrollToBottomAfterRendering = false;
         if (this._currentThreadID === thread.getID() && this.isAtBottom()) {
@@ -189,11 +188,11 @@ var ThreadWidget = Widget.extend({
             dateFormat: time.getLangDatetimeFormat(),
         }));
 
-        _.each(messages, function (message) {
-            var $message = self.$('.o_thread_message[data-message-id="' + message.getID() + '"]');
+        _.each(messages, (message) => {
+            var $message = this.$('.o_thread_message[data-message-id="' + message.getID() + '"]');
             $message.find('.o_mail_timestamp').data('date', message.getDate());
 
-            self._insertReadMore($message);
+            this._insertReadMore($message);
         });
 
         if (shouldScrollToBottomAfterRendering) {
@@ -201,8 +200,8 @@ var ThreadWidget = Widget.extend({
         }
 
         if (!this._updateTimestampsInterval) {
-            this.updateTimestampsInterval = setInterval(function () {
-                self._updateTimestamps();
+            this.updateTimestampsInterval = setInterval(() => {
+                this._updateTimestamps();
             }, 1000 * 60);
         }
 
@@ -247,14 +246,13 @@ var ThreadWidget = Widget.extend({
      * @param {Object} [options] options for the thread rendering
      */
     removeMessageAndRender: function (messageID, thread, options) {
-        var self = this;
         this._currentThreadID = thread.getID();
-        return new Promise(function (resolve, reject) {
-            self.$('.o_thread_message[data-message-id="' + messageID + '"]')
+        return new Promise((resolve, reject) => {
+            this.$('.o_thread_message[data-message-id="' + messageID + '"]')
             .fadeOut({
-                done: function () {
-                    if (self._currentThreadID === thread.getID()) {
-                        self.render(thread, options);
+                done: () => {
+                    if (this._currentThreadID === thread.getID()) {
+                        this.render(thread, options);
                     }
                     resolve();
                 },
@@ -335,7 +333,6 @@ var ThreadWidget = Widget.extend({
      * @param {jQuery} $element
      */
     _insertReadMore: function ($element) {
-        var self = this;
 
         var groups = [];
         var readMoreNodes;
@@ -349,7 +346,7 @@ var ThreadWidget = Widget.extend({
                         this.nodeValue.trim();
             });
 
-        _.each($children, function (child) {
+        _.each($children, (child) => {
             var $child = $(child);
 
             // Hide Text nodes if "stopSpelling"
@@ -381,7 +378,7 @@ var ThreadWidget = Widget.extend({
                 readMoreNodes.push($child);
             } else {
                 readMoreNodes = undefined;
-                self._insertReadMore($child);
+                this._insertReadMore($child);
             }
         });
 
