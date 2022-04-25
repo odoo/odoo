@@ -711,3 +711,41 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         self.assertRecordValues(invoice.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable'), [{
             'balance': 686.54
         }])
+
+    def test_invoice_with_100_percent_division_tax_incl(self):
+        """
+        Check if the price unit remain the same after affecting a tax
+        100%, price_include and amount_type 'division'
+        """
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_date': '2018-01-01',
+            'date': '2018-01-01',
+            'invoice_line_ids': [(0, 0, {
+                'name': 'xxxx',
+                'quantity': 1,
+                'price_unit': 500,
+            })]
+        })
+
+        division_tax_4_incl = self.env['account.tax'].create({
+            'name': '100% incl',
+            'amount_type': 'division',
+            'amount': 100,
+            'price_include': True,
+            'include_base_amount': True,
+            'sequence': 50,
+        })
+
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {'price_unit': 500}
+        ])
+        with Form(invoice) as inv_form:
+            with inv_form.invoice_line_ids.edit(0) as line_form:
+                line_form.tax_ids.add(division_tax_4_incl)
+
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {'price_unit': 500}
+        ])
