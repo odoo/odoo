@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import models, Command
-from odoo.addons.account.models.chart_template import delegate_to_super_if_code_doesnt_match
+
 
 class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
-    _template_code = 'it'
 
-    @delegate_to_super_if_code_doesnt_match
-    def _get_template_data(self, template_code, company):
+    def _get_it_template_data(self, template_code, company):
         cid = (company or self.env.company).id
         return {
             'cash_account_code_prefix': '180',
@@ -22,8 +21,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_tax_receivable_account_id': f'account.{cid}_2605',
         }
 
-    @delegate_to_super_if_code_doesnt_match
-    def _get_account_tax(self, template_code, company):
+    def _get_it_account_tax(self, template_code, company):
         cid = (company or self.env.company).id
         return {
             f'{cid}_22v': {
@@ -485,8 +483,7 @@ class AccountChartTemplate(models.AbstractModel):
             }
         }
 
-    @delegate_to_super_if_code_doesnt_match
-    def _get_fiscal_position(self, template_code, company):
+    def _get_it_fiscal_position(self, template_code, company):
         cid = (company or self.env.company).id
         return {
             f'{cid}_account_fiscal_position_0': {
@@ -520,13 +517,11 @@ class AccountChartTemplate(models.AbstractModel):
             }
         }
 
-    @delegate_to_super_if_code_doesnt_match
-    def _get_res_company(self, template_code, company):
-        cid = (company or self.env.company).id
+    def _get_it_res_company(self, template_code, company):
+        company, cid = (company or self.env.company), company.id
         return {
-            f'base.company_{cid}': {
-                'currency_id': 'base.EUR',
-                'country_id': 'base.it',
+            company.get_external_id()[cid]: {
+                'account_fiscal_country_id': 'base.it',
                 'account_default_pos_receivable_account_id': f'account.{cid}_1508',
                 'income_currency_exchange_account_id': f'account.{cid}_3220',
                 'expense_currency_exchange_account_id': f'account.{cid}_4920',

@@ -329,7 +329,6 @@ def split_template_from_company(all_records):
     company_record = ResCompany({'model': 'res.company'}, 'Record')
     company_fields = (
         'currency_id',
-        'country_id',
         'account_fiscal_country_id',
         'default_pos_receivable_account_id',
         'account_default_pos_receivable_account_id',
@@ -372,17 +371,15 @@ def do_module(code, module, lang):
         "# -*- coding: utf-8 -*-\n"
         "# Part of Odoo. See LICENSE file for full copyright and licensing details.\n"
         "from odoo import models, Command\n"
-        "from odoo.addons.account.models.chart_template import delegate_to_super_if_code_doesnt_match\n"
         "\n"
         "class AccountChartTemplate(models.AbstractModel):\n"
-        "    _inherit = 'account.chart.template'\n"
-        "    _template_code = '" + code + "'\n\n"
+        "    _inherit = 'account.chart.template'\n\n"
     ) + "\n".join([convert_records_to_function(module, all_records, model, function_name)
                    for model, function_name in (
-                       ("account.chart.template", "_get_template_data"),
-                       ("account.tax.template", "_get_account_tax"),
-                       ("account.fiscal.position", "_get_fiscal_position"),
-                       ("res.company", "_get_res_company"),
+                       ("account.chart.template",  f"_get_{code}_template_data"),
+                       ("account.tax.template",    f"_get_{code}_account_tax"),
+                       ("account.fiscal.position", f"_get_{code}_fiscal_position"),
+                       ("res.company",             f"_get_{code}_res_company"),
                    )])
 
     path = Path.cwd() / f'addons/{module}/models/account_chart_template.py'
@@ -395,8 +392,7 @@ def convert_records_to_function(module, all_records, model, function_name, cid=T
     """
     records = all_records.get(model, {})
     stream = io.StringIO()
-    stream.write(indent(1, "@delegate_to_super_if_code_doesnt_match\n") +
-                 indent(1, f"def {function_name}(self, template_code, company):\n") +
+    stream.write(indent(1, f"def {function_name}(self, template_code, company):\n") +
                  (cid and indent(2, "cid = (company or self.env.company).id\n")) +
                  indent(2, "return "))
     if model == 'account.chart.template':

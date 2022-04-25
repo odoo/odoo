@@ -1,20 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+# pylint: disable=undefined-variable
+
 from odoo import models, Command, _
-from odoo.addons.account.models.chart_template import delegate_to_super_if_code_doesnt_match
 
 class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
-    _template_code = 'be'
 
-    @delegate_to_super_if_code_doesnt_match
-    def _get_template_data(self, template_code, company):
+    def _get_be_template_data(self, template_code, company):
         cid = (company or self.env.company).id
         return {
-            'bank_account_code_prefix': f'account.{cid}_550',
-            'cash_account_code_prefix': f'account.{cid}_570',
-            'transfer_account_code_prefix': f'account.{cid}_580',
+            'bank_account_code_prefix': '550',
+            'cash_account_code_prefix': '570',
+            'transfer_account_code_prefix': '580',
             'account_journal_suspense_account_id': f'account.{cid}_a499',
             'property_account_receivable_id': f'account.{cid}_a400',
             'property_account_payable_id': f'account.{cid}_a440',
@@ -24,19 +23,17 @@ class AccountChartTemplate(models.AbstractModel):
             'property_tax_receivable_account_id': f'account.{cid}_a4112',
         }
 
-    def _get_chart_template_data(self, template_code, company):
-        res = super()._get_chart_template_data(template_code, company)
+    def _get_be_chart_template_data(self, template_code, company):
+        res = self._get_chart_template_data(company)
         if template_code == 'be':
-            res['account.fiscal.position'] = self._get_fiscal_position(template_code, company)
+            res['account.fiscal.position'] = self._get_be_fiscal_position(template_code, company)
         return res
 
-    @delegate_to_super_if_code_doesnt_match
-    def _get_res_company(self, template_code, company):
+    def _get_be_res_company(self, template_code, company):
         cid = (company or self.env.company).id
         return {
             company.get_external_id()[cid]: {
                 'currency_id': "base.EUR",
-                'country_id': 'base.be',
                 'account_fiscal_country_id': "base.be",
                 'account_default_pos_receivable_account_id': f'account.{cid}_a4001',
                 'income_currency_exchange_account_id': f'account.{cid}_a754',
@@ -44,10 +41,9 @@ class AccountChartTemplate(models.AbstractModel):
             }
         }
 
-    @delegate_to_super_if_code_doesnt_match
-    def _get_account_journal(self, template_code, company):
+    def _get_be_account_journal(self, template_code, company):
         cid = company.id
-        data = super()._get_account_journal(template_code, company)
+        data = self._get_account_journal(template_code, company)
         data[f"{cid}_sale"].update({
             'default_account_id': f'account.{cid}_a7000',
             'refund_sequence':  True
@@ -60,8 +56,7 @@ class AccountChartTemplate(models.AbstractModel):
         data[f"{cid}_bank"]['suspense_account_id'] = f'account.{cid}_a499'
         return data
 
-    @delegate_to_super_if_code_doesnt_match
-    def _get_fiscal_position(self, template_code, company):
+    def _get_be_fiscal_position(self, template_code, company):
         cid = company.id
         return {
             f"{cid}_fiscal_position_template_1": {
@@ -385,8 +380,7 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
 
-    @delegate_to_super_if_code_doesnt_match
-    def _get_reconcile_model(self, template_code, company):
+    def _get_be_reconcile_model(self, template_code, company):
         cid = company.id
         return {
             f"{cid}_escompte_template": {
@@ -441,8 +435,7 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
 
-    @delegate_to_super_if_code_doesnt_match
-    def _get_account_tax(self, template_code, company):
+    def _get_be_account_tax(self, template_code, company):
         cid = company.id
         return {
             f'{cid}_attn_VAT-OUT-21-L': {

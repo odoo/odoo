@@ -18,8 +18,7 @@ class TestItEdi(AccountEdiTestCommon):
 
     @classmethod
     def setUpClass(cls):
-        super().setUpClass(chart_template_ref='l10n_it.l10n_it_chart_template_generic',
-                           edi_format_ref='l10n_it_edi.edi_fatturaPA')
+        super().setUpClass(chart_template_ref='it', edi_format_ref='l10n_it_edi.edi_fatturaPA')
 
         # Use the company_data_2 to test that the e-invoice is imported for the right company
         cls.company = cls.company_data_2['company']

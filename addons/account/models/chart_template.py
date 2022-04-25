@@ -44,27 +44,6 @@ def preserve_existing_tags_on_taxes(cr, registry, module):
     if xml_records:
         cr.execute("update ir_model_data set noupdate = 't' where id in %s", [tuple(xml_records.ids)])
 
-def delegate_to_super_if_code_doesnt_match(f):
-    """
-        This helper decorator helps build localized subclasses which methods
-        are only used if the template_code matches their _code, otherwise it delegates
-        to the next superclass in the chain.
-        If the company argument is empty, it is defaulted with self.env.company.
-    """
-    def wrapper(*args, **kwargs):
-        self_class, template_code, company, *rest = args
-        if template_code == self_class._template_code:
-            return f(*args, **kwargs)
-        for cls in self_class.__class__.__mro__:
-            if hasattr(cls, '_template_code') and cls._template_code == template_code:
-                if not company:
-                    company = cls.env.company
-                target_method = getattr(cls, f.__name__)
-                return target_method(self_class, template_code, company, *rest, **kwargs)
-        raise ValueError(f"Template code {template_code} is not found in any chart_template.")
-    return wrapper
-
-
 class AccountChartTemplate(models.AbstractModel):
     _name = "account.chart.template"
     _description = "Account Chart Template"
@@ -82,7 +61,7 @@ class AccountChartTemplate(models.AbstractModel):
         # TODO: one country can have multiple CoAs
         # TODO: also fix account/populate/res_company.py then
         company = company or self.env.company
-        default = AccountChartTemplate._template_code
+        default = 'generic_coa'
         if not company.country_id:
             return default
         country_code = company.country_id.get_metadata()[0]['xmlid']
@@ -98,8 +77,11 @@ class AccountChartTemplate(models.AbstractModel):
         :param install_demo (bool): whether or not we should load demo data right after loading the
             chart template.
         """
-        company = company or self.env.company
-        template_code = template_code or self._guess_chart_template(company)
+        if company and isinstance(company, int):
+            company = self.env['res.company'].browse([company])
+        else:
+            company = company or self.env.company
+        template_code = template_code or company and self._guess_chart_template(company)
 
         module_names = TEMPLATES[template_code].get('modules', [])
         module_ids = self.env['ir.module.module'].search([('name', 'in', module_names), ('state', '=', 'uninstalled')])
@@ -154,13 +136,17 @@ class AccountChartTemplate(models.AbstractModel):
                 created_models.add(model)
                 to_delay = defaultdict(dict)
                 for xml_id, vals in data.items():
+                    to_be_removed = []
                     for field_name in vals:
                         field = self.env[model]._fields.get(field_name, None)
                         if (field and
                             field.relational and
                             field.comodel_name not in created_models and
                             field.comodel_name in dict(all_data)):
-                            to_delay[xml_id][field_name] = vals.pop(field_name)
+                            to_be_removed.append(field_name)
+                            to_delay[xml_id][field_name] = vals.get(field_name)
+                    for field_name in to_be_removed:
+                        del vals[field_name]
                 if any(to_delay.values()):
                     all_data.append((model, to_delay))
                 yield model, data
@@ -321,11 +307,18 @@ class AccountChartTemplate(models.AbstractModel):
         # Uneffected earnings account on the company (if not present yet)
         company.get_unaffected_earnings_account()
 
+    def _get_data(self, template_code, model):
+        name = model.replace('.', '_')
+        func = getattr(self, f"_get_{template_code}_{name}", None)
+        if not func:
+            func = getattr(self, f"_get_{name}", None)
+        return func
+
     def _post_load_data(self, template_code, company):
         company = (company or self.env.company)
         cid = company.id
 
-        template_data = self._get_template_data(template_code, company)
+        template_data = self._get_data(template_code, 'template_data')(template_code, company)
         code_digits = template_data.get('code_digits', 6)
         bank_prefix = template_data.get('bank_account_code_prefix', '')
 
@@ -389,14 +382,14 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _get_chart_template_data(self, template_code, company):
         company = company or self.env.company
-        return {
-            'account.account': self._get_account_account(template_code, company),
-            'account.group': self._get_account_group(template_code, company),
-            'account.journal': self._get_account_journal(template_code, company),
-            'res.company': self._get_res_company(template_code, company),
-            'account.tax.group': self._get_tax_group(template_code, company),
-            'account.tax': self._get_account_tax(template_code, company),
-        }
+        data = {}
+        models = ('res.company', 'account.account', 'account.tax',
+                  'account.tax.group', 'account.journal', 'account.group')
+        for model in models:
+            func = self._get_data(template_code, model)
+            if func:
+                data[model] = func(template_code, company)
+        return data
 
     def _get_account_account(self, template_code, company):
         return self._load_csv(template_code, company, 'account.account.csv')
@@ -476,7 +469,7 @@ class AccountChartTemplate(models.AbstractModel):
             }
         }
 
-    def _get_tax_group(self, template_code, company):
+    def _get_account_tax_group(self, template_code, company):
         return self._load_csv(template_code, company, 'account.tax.group.csv')
 
     def _get_account_tax(self, template_code, company):
