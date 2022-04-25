@@ -31,6 +31,7 @@ const LinkTools = Link.extend({
      */
     init: function (parent, options, editable, data, $button, link) {
         this._link = link;
+        this._initialHref = this._link.getAttribute('href');
         this._observer = new MutationObserver(() =>{
             this._updateLabelInput();
         });
@@ -70,7 +71,7 @@ const LinkTools = Link.extend({
         this._removeHintClasses();
     },
     shouldUnlink: function () {
-        return !this.$link.attr('href') && !this.colorCombinationClass
+        return this.options.canUnwrapOnDestroy && !this.$link.attr('href') && !this.colorCombinationClass
     },
     applyLinkToDom() {
         this._observer.disconnect();
