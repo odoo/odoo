@@ -58,6 +58,13 @@ class PosSession(models.Model):
 
     def _get_pos_ui_res_partner(self, params):
         result = super()._get_pos_ui_res_partner(params)
+        return self._load_pos_ui_loyalty_points(result)
+
+    def get_pos_ui_res_partner_by_params(self, custom_search_params):
+        partners = super().get_pos_ui_res_partner_by_params(custom_search_params)
+        return self._load_pos_ui_loyalty_points(partners)
+
+    def _load_pos_ui_loyalty_points(self, result):
         # In order to make loyalty programs work offline we load the partner's point into
         # a non-existant field 'loyalty_points'.
         if self.config_id.loyalty_program_id:
