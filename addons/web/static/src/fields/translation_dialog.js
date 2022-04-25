@@ -4,11 +4,11 @@ import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "../core/dialog/dialog";
 import { sprintf } from "../core/utils/strings";
 
-const { onWillStart } = owl;
+const { Component, onWillStart } = owl;
 
 let installedLanguages = null;
 
-export class TranslationDialog extends Dialog {
+export class TranslationDialog extends Component {
     setup() {
         super.setup();
         this.title = sprintf(this.env._t("Translate: %s"), this.props.fieldName);
@@ -100,8 +100,8 @@ export class TranslationDialog extends Dialog {
             this.props.updateField(this.updatedTerms[currentTerm.id]);
         }
 
-        this.close();
+        this.props.close();
     }
 }
-TranslationDialog.bodyTemplate = "web.TranslationDialogBody";
-TranslationDialog.footerTemplate = "web.TranslationDialogFooter";
+TranslationDialog.template = "web.TranslationDialog";
+TranslationDialog.components = { Dialog };
