@@ -4,17 +4,15 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { View } from "../view";
 import { useService } from "@web/core/utils/hooks";
 
-const { onWillStart, useState } = owl;
+const { Component, onWillStart, useState } = owl;
 
-export class SelectCreateDialog extends Dialog {
+export class SelectCreateDialog extends Component {
     setup() {
         super.setup();
         this.viewService = useService("view");
         this.state = useState({
             resIds: [],
         });
-
-        this.title = this.props.title;
 
         let viewId = "false";
         if (this.props.context) {
@@ -33,7 +31,7 @@ export class SelectCreateDialog extends Dialog {
             selectRecord: async (resId) => {
                 if (this.props.onSelected) {
                     await this.props.onSelected([resId]);
-                    this.close();
+                    this.props.close();
                 }
             },
             createRecord: () => {},
@@ -60,19 +58,18 @@ export class SelectCreateDialog extends Dialog {
     async select() {
         if (this.props.onSelected) {
             await this.props.onSelected(this.state.resIds);
-            this.close();
+            this.props.close();
         }
     }
     async createEditRecord() {
         if (this.props.onCreateEdit) {
             await this.props.onCreateEdit();
-            this.close();
+            this.props.close();
         }
     }
 }
-SelectCreateDialog.components = { View };
-SelectCreateDialog.bodyTemplate = "web.SelectCreateDialogBody";
-SelectCreateDialog.footerTemplate = "web.SelectCreateDialogFooter";
+SelectCreateDialog.components = { Dialog, View };
+SelectCreateDialog.template = "web.SelectCreateDialog";
 
 SelectCreateDialog.defaultProps = {
     multiSelect: true,
