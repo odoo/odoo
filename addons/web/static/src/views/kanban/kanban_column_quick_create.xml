@@ -40,38 +40,40 @@
 
     <!-- Note: this dialog isn't responsive, but it is not accessible on mobile -->
     <t t-name="web.KanbanColumnExamplesDialog" owl="1">
-        <div class="o_kanban_examples_dialog_nav">
-            <ul class="nav nav-pills flex-column" t-ref="navList">
-                <li t-foreach="props.examples" t-as="example" t-key="example_index" class="nav-item">
-                    <a t-attf-aria-controls="example_{{example_index}}" data-toggle="tab" role="tab" t-att-data-example-index="example_index" t-attf-href="#example_{{example_index}}" t-attf-class="nav-link{{example_index == 0 and ' active' or ''}}" t-esc="example.name"/>
-                </li>
-            </ul>
-        </div>
-        <div class="o_kanban_examples_dialog_content">
-            <div class="tab-content">
-                <div t-foreach="props.examples" t-as="example" t-key="example_index" role="tabpanel" t-attf-id="example_{{example_index}}" t-attf-class="tab-pane {{example_index == 0 and 'active in' or ''}}">
-                    <div t-if="example.description" class="o_kanban_examples_description" t-out="example.description"/>
-                    <div class="o_kanban_examples">
-                        <t t-foreach="example.columns" t-as="column" t-key="column">
-                            <div class="o_kanban_examples_group">
-                                <h6><b t-esc="column"/></h6>
-                                <div t-foreach="random(1,4)" t-as="num" t-key="num_index" class="o_kanban_examples_ghost">
-                                    <div class="o_ghost_content"/>
-                                    <div class="o_ghost_content o_ghost_tag"/>
-                                    <!-- FIXME WOWL random(0, 5 and _.sample) -->
-                                    <t t-if="example.bullets and random(0, 5) > 3" t-out="_.sample(example.bullets)"/>
-                                    <img class="float-right o_ghost_avatar" src="/base/static/img/avatar.png" alt="Avatar"/>
+        <Dialog contentClass="'o_kanban_examples_dialog'" title="this.constructor.title">
+            <div class="o_kanban_examples_dialog_nav">
+                <ul class="nav nav-pills flex-column" t-ref="navList">
+                    <li t-foreach="props.examples" t-as="example" t-key="example_index" class="nav-item">
+                        <a t-attf-aria-controls="example_{{example_index}}" data-toggle="tab" role="tab" t-att-data-example-index="example_index" t-attf-href="#example_{{example_index}}" t-attf-class="nav-link{{example_index == 0 and ' active' or ''}}" t-esc="example.name"/>
+                    </li>
+                </ul>
+            </div>
+            <div class="o_kanban_examples_dialog_content">
+                <div class="tab-content">
+                    <div t-foreach="props.examples" t-as="example" t-key="example_index" role="tabpanel" t-attf-id="example_{{example_index}}" t-attf-class="tab-pane {{example_index == 0 and 'active in' or ''}}">
+                        <div t-if="example.description" class="o_kanban_examples_description" t-out="example.description"/>
+                        <div class="o_kanban_examples">
+                            <t t-foreach="example.columns" t-as="column" t-key="column">
+                                <div class="o_kanban_examples_group">
+                                    <h6><b t-esc="column"/></h6>
+                                    <div t-foreach="random(1,4)" t-as="num" t-key="num_index" class="o_kanban_examples_ghost">
+                                        <div class="o_ghost_content"/>
+                                        <div class="o_ghost_content o_ghost_tag"/>
+                                        <!-- FIXME WOWL random(0, 5 and _.sample) -->
+                                        <t t-if="example.bullets and random(0, 5) > 3" t-out="_.sample(example.bullets)"/>
+                                        <img class="float-right o_ghost_avatar" src="/base/static/img/avatar.png" alt="Avatar"/>
+                                    </div>
                                 </div>
-                            </div>
-                        </t>
+                            </t>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </t>
-    <t t-name="web.KanbanColumnExamplesDialogFooter" owl="1">
-        <button class="btn btn-primary" t-on-click="applyExamples" t-esc="props.applyExamplesText"/>
-        <button class="btn btn-secondary" t-on-click="close">Close</button>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="applyExamples" t-esc="props.applyExamplesText"/>
+                <button class="btn btn-secondary" t-on-click="props.close">Close</button>
+            </t>
+        </Dialog>
     </t>
 
 </templates>

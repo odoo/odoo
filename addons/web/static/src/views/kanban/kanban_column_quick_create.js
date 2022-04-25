@@ -71,7 +71,7 @@ export class KanbanColumnQuickCreate extends Component {
 }
 KanbanColumnQuickCreate.template = "web.KanbanColumnQuickCreate";
 
-class KanbanColumnExamplesDialog extends Dialog {
+class KanbanColumnExamplesDialog extends Component {
     setup() {
         super.setup(...arguments);
         this.navList = useRef("navList");
@@ -87,10 +87,9 @@ class KanbanColumnExamplesDialog extends Dialog {
         const activeNavItem = ul.querySelector(".nav-link.active").parentElement;
         const index = [...ul.children].indexOf(activeNavItem);
         this.props.applyExamples(index);
-        this.close();
+        this.props.close();
     }
 }
-KanbanColumnExamplesDialog.bodyTemplate = "web.KanbanColumnExamplesDialog";
-KanbanColumnExamplesDialog.footerTemplate = "web.KanbanColumnExamplesDialogFooter";
+KanbanColumnExamplesDialog.template = "web.KanbanColumnExamplesDialog";
+KanbanColumnExamplesDialog.components = { Dialog };
 KanbanColumnExamplesDialog.title = _lt("Kanban Examples");
-KanbanColumnExamplesDialog.contentClass = "o_kanban_examples_dialog";
