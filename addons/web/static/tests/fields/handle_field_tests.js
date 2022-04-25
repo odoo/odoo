@@ -50,8 +50,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.module("HandleField");
 
     QUnit.test("HandleField in x2m", async function (assert) {
-        assert.expect(6);
-
         serverData.models.partner.records[0].p = [2, 4];
         await makeView({
             type: "form",
@@ -130,6 +128,42 @@ QUnit.module("Fields", (hooks) => {
             visibleRowHandles,
             serverData.models.partner.records.length,
             "there should be a visible handle for each record"
+        );
+    });
+
+    QUnit.test("HandleField in a readonly one2many", async function (assert) {
+        serverData.models.partner.records[0].p = [1, 2, 4];
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p" readonly="1">
+                        <tree editable="top">
+                            <field name="sequence" widget="handle" />
+                            <field name="display_name" />
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.containsN(target, ".o_row_handle", 3, "there should be 3 handles, one for each row");
+        assert.strictEqual(
+            getComputedStyle(target.querySelector("td span.o_row_handle")).display,
+            "none",
+            "handle should be invisible in readonly mode"
+        );
+
+        await click(target, ".o_form_button_edit");
+
+        assert.containsN(target, ".o_row_handle", 3, "the handle fields should still be there");
+        assert.strictEqual(
+            getComputedStyle(target.querySelector("td span.o_row_handle")).display,
+            "none",
+            "the handle icons should still not be displayed (on readonly fields)"
         );
     });
 });

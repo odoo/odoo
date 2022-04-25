@@ -3517,8 +3517,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("one2many list (editable): edition, part 5", async function (assert) {
-        assert.expect(4);
-
         await makeView({
             type: "form",
             resModel: "partner",
@@ -3538,8 +3536,10 @@ QUnit.module("Fields", (hooks) => {
 
         // edit mode, then click on Add an item, enter value in turtle_foo and Add an item again
         assert.containsOnce(target, "tr.o_data_row");
+        assert.strictEqual(target.querySelector(".o_data_cell").innerText, "blip");
         await clickEdit(target);
         await addRow(target);
+        await editInput(target, ".o_field_widget[name=turtle_foo] input", "aaa");
         assert.containsN(target, "tr.o_data_row", 2);
         await removeRow(target, 1);
         assert.containsOnce(target, "tr.o_data_row");
@@ -3547,6 +3547,7 @@ QUnit.module("Fields", (hooks) => {
         // cancel the edition
         await clickDiscard(target);
         assert.containsOnce(target, "tr.o_data_row");
+        assert.strictEqual(target.querySelector(".o_data_cell").innerText, "blip");
     });
 
     QUnit.test("one2many list (editable): discarding required empty data", async function (assert) {
@@ -11509,55 +11510,10 @@ QUnit.module("Fields", (hooks) => {
         assert.notOk($secondCheckbox.prop("checked"), "the checkbox should be unticked");
     });
 
-    QUnit.skipWOWL("embedded readonly one2many with handle widget", async function (assert) {
-        assert.expect(4);
-
-        serverData.models.partner.records[0].turtles = [1, 2, 3];
-
-        const form = await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
-                <form>
-                    <sheet>
-                        <field name="turtles" readonly="1">
-                            <tree editable="top">
-                                <field name="turtle_int" widget="handle"/>
-                                <field name="turtle_foo"/>
-                            </tree>
-                        </field>
-                    </sheet>
-                </form>`,
-            resId: 1,
-        });
-
-        assert.strictEqual(
-            form.$(".o_row_handle").length,
-            3,
-            "there should be 3 handles (one for each row)"
-        );
-        assert.strictEqual(
-            form.$(".o_row_handle:visible").length,
-            0,
-            "the handles should be hidden in readonly mode"
-        );
-
-        await clickEdit(target);
-
-        assert.strictEqual(form.$(".o_row_handle").length, 3, "the handles should still be there");
-        assert.strictEqual(
-            form.$(".o_row_handle:visible").length,
-            0,
-            "the handles should still be hidden (on readonly fields)"
-        );
-    });
-
-    QUnit.skipWOWL(
+    QUnit.test(
         "prevent the dialog in readonly x2many tree view with option no_open True",
         async function (assert) {
-            assert.expect(2);
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -11574,37 +11530,33 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
             });
             assert.containsOnce(
-                form,
+                target,
                 '.o_data_row:contains("blip")',
                 "There should be one record in x2many list view"
             );
-            await click(form.$(".o_data_row:first"));
-            assert.strictEqual(
-                $(".modal-dialog").length,
-                0,
+            await click(target.querySelector(".o_data_row .o_data_cell"));
+            assert.containsNone(
+                target,
+                ".modal",
                 "There is should be no dialog open on click of readonly list row"
             );
         }
     );
 
-    QUnit.skipWOWL(
-        "delete a record while adding another one in a multipage",
-        async function (assert) {
-            // in a many2one with at least 2 pages, add a new line. Delete the line above it.
-            // (the onchange makes it so that the virtualID is inserted in the middle of the currentResIDs.)
-            // it should load the next line to display it on the page.
-            assert.expect(2);
+    QUnit.test("delete a record while adding another one in a multipage", async function (assert) {
+        // in a one2many with at least 2 pages, add a new line. Delete the line above it.
+        // (the onchange makes it so that the virtualID is inserted in the middle of the currentResIDs.)
+        // it should load the next line to display it on the page.
+        serverData.models.partner.records[0].turtles = [2, 3];
+        serverData.models.partner.onchanges.turtles = function (obj) {
+            obj.turtles = [[5]].concat(obj.turtles);
+        };
 
-            serverData.models.partner.records[0].turtles = [2, 3];
-            serverData.models.partner.onchanges.turtles = function (obj) {
-                obj.turtles = [[5]].concat(obj.turtles);
-            };
-
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
                     <form>
                         <sheet>
                             <group>
@@ -11617,30 +11569,25 @@ QUnit.module("Fields", (hooks) => {
                             </group>
                         </sheet>
                     </form>`,
-                resId: 1,
-            });
+            resId: 1,
+        });
 
-            await clickEdit(target);
-            // add a line (virtual record)
-            await addRow(target);
-            await testUtils.owlCompatibilityExtraNextTick();
-            await testUtils.fields.editInput(form.$(".o_input"), "pi");
-            // delete the line above it
-            await click(form.$(".o_list_record_remove").first());
-            await testUtils.owlCompatibilityExtraNextTick();
-            // the next line should be displayed below the newly added one
-            assert.strictEqual(form.$(".o_data_row").length, 2, "should have 2 records");
-            assert.strictEqual(
-                form.$(".o_data_row .o_data_cell:first-child").text(),
-                "pikawa",
-                "should display the correct records on page 1"
-            );
-        }
-    );
+        await clickEdit(target);
+        // add a line (virtual record)
+        await addRow(target);
+        await editInput(target, ".o_field_widget[name=turtle_foo] input", "pi");
+        // delete the line above it
+        await click(target.querySelector(".o_list_record_remove"));
+        // the next line should be displayed below the newly added one
+        assert.containsN(target, ".o_data_row", 2, "should have 2 records");
+        assert.strictEqual(
+            getNodesTextContent(target.querySelectorAll(".o_data_cell")),
+            "pikawa",
+            "should display the correct records on page 1"
+        );
+    });
 
-    QUnit.skipWOWL("one2many, onchange, edition and multipage...", async function (assert) {
-        assert.expect(8);
-
+    QUnit.test("one2many, onchange, edition and multipage...", async function (assert) {
         serverData.models.partner.onchanges = {
             turtles: function (obj) {
                 obj.turtles = [[5]].concat(obj.turtles);
@@ -11649,7 +11596,7 @@ QUnit.module("Fields", (hooks) => {
 
         serverData.models.partner.records[0].turtles = [1, 2, 3];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -11664,17 +11611,15 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
             mockRPC(route, args) {
                 assert.step(args.method + " " + args.model);
-                return this._super(route, args);
-            },
-            viewOptions: {
-                mode: "edit",
             },
         });
+        await clickEdit(target);
         await addRow(target);
-        await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), "nora");
+        await editInput(target, ".o_field_widget[name=turtle_foo] input", "nora");
         await addRow(target);
 
         assert.verifySteps([
+            "get_views partner",
             "read partner",
             "read turtle",
             "onchange turtle",

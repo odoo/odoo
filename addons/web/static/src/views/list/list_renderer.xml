@@ -160,8 +160,8 @@
                     </td>
                 </t>
             </t>
-            <td t-if="props.activeActions and props.activeActions.onDelete" class="o_list_record_remove" t-on-click="() => props.activeActions.onDelete(record)">
-                <button class="fa fa-trash-o" name="delete" aria-label="Delete row 1"/>
+            <td t-if="props.activeActions and props.activeActions.onDelete" class="o_list_record_remove" t-on-click.stop="() => this.onDeleteRecord(record)">
+                <button class="fa fa-trash-o" name="delete" aria-label="Delete row"/>
             </td>
         </tr>
     </t>

@@ -15,6 +15,7 @@ import { useSetupView } from "@web/views/helpers/view_hook";
 import { Layout } from "@web/search/layout";
 import { useViewButtons } from "@web/views/view_button/hook";
 import { ViewButton } from "@web/views/view_button/view_button";
+import { archParseBoolean } from "@web/views/helpers/utils";
 import { getActiveActions, getDecoration, processButton } from "../helpers/view_utils";
 import { RelationalModel, stringToOrderBy } from "../relational_model";
 import { ListRenderer } from "./list_renderer";
@@ -157,6 +158,8 @@ export class ListArchParser extends XMLParser {
                 treeAttr.limit = limitAttr && parseInt(limitAttr, 10);
                 const groupsLimitAttr = node.getAttribute("groups_limit");
                 treeAttr.groupsLimit = groupsLimitAttr && parseInt(groupsLimitAttr, 10);
+                const noOpenAttr = node.getAttribute("no_open");
+                treeAttr.noOpen = noOpenAttr && archParseBoolean(noOpenAttr);
             }
         });
 

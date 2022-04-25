@@ -467,9 +467,14 @@ export class ListRenderer extends Component {
                 await record.switchMode("edit");
                 this.cellToFocus = { column, record };
             }
-        } else {
+        } else if (!this.props.archInfo.noOpen) {
             this.props.openRecord(record);
         }
+    }
+
+    async onDeleteRecord(record) {
+        await this.unselectRow();
+        this.props.activeActions.onDelete(record);
     }
 
     saveOptionalActiveFields() {
