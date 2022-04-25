@@ -318,6 +318,9 @@
                             type="object" attrs="{'invisible': [('page_ids', '=', [])]}"/>
                     </header>
                 </sheet>
+                <field name="active" position="after">
+                    <field name="track" attrs="{'invisible': [('type', '!=', 'qweb')]}" widget="boolean_toggle"/>
+                </field>
             </field>
         </record>
 

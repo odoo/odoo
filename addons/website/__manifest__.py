@@ -270,7 +270,6 @@
             'website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js',
             'website/static/src/systray_items/mobile_preview.js',
             'website/static/src/components/dialog/seo.js',
-            'website/static/src/js/set_view_track.js',
             'website/static/src/js/tours/homepage.js',
             'website/static/src/js/tours/tour_utils.js',
         ],
