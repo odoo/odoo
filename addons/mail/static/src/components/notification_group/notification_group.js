@@ -26,15 +26,6 @@ export class NotificationGroup extends Component {
         return this.messaging && this.messaging.models['NotificationGroupView'].get(this.props.localId);
     }
 
-    /**
-     * @returns {string|undefined}
-     */
-    image() {
-        if (this.notificationGroupView.notificationGroup.notification_type === 'email') {
-            return '/mail/static/src/img/smiley/mailfailure.jpg';
-        }
-    }
-
 }
 
 Object.assign(NotificationGroup, {

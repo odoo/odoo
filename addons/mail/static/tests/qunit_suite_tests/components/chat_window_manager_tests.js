@@ -2113,11 +2113,11 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
     await click('.o_ChatWindowHiddenMenu_dropdownToggle');
     assert.containsOnce(
         document.body,
-        '.o_ChatWindowHiddenMenu_chatWindowHeader',
+        '.o_ChatWindowHiddenMenuItem',
         "1 hidden chat window should be listed in hidden menu"
     );
 
-    await click('.o_ChatWindowHiddenMenu_chatWindowHeader');
+    await click('.o_ChatWindowHiddenMenuItem_chatWindowHeader');
     assert.containsN(
         document.body,
         '.o_ChatWindow',
