@@ -1640,11 +1640,12 @@ def hmac(env, scope, message, hash_function=hashlib.sha256):
     ).hexdigest()
 
 
-ADDRESS_REGEX = re.compile(r'^(.*?)(\s[0-9][0-9\S]*)?( - (.+))?$')
+ADDRESS_REGEX = re.compile(r'^(.*?)(\s[0-9][0-9\S]*)?(?: - (.+))?$', flags=re.DOTALL)
 def street_split(street):
-    results = ADDRESS_REGEX.match(street or '').groups('')
+    match = ADDRESS_REGEX.match(street or '')
+    results = match.groups('') if match else ('', '', '')
     return {
         'street_name': results[0].strip(),
         'street_number': results[1].strip(),
-        'street_number2': results[3]
+        'street_number2': results[2],
     }

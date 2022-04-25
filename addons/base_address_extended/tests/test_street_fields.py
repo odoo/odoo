@@ -19,7 +19,9 @@ class TestStreetFields(TransactionCase):
             ['Chaussee de Namur 1', 'Chaussee de Namur', '1', ''],
             ['40 Chaussee de Namur', '40 Chaussee de Namur', '', ''],
             ['Chaussee de Namur, 40 - Apt 2b', 'Chaussee de Namur,', '40', 'Apt 2b'],
-            ['header Chaussee de Namur, 40 trailer', 'header Chaussee de Namur, 40 trailer', '', ''],
+            ['header Chaussee de Namur, 40 trailer ', 'header Chaussee de Namur, 40 trailer', '', ''],
+            ['\nCl 53\n # 43 - 81', 'Cl 53\n #', '43', '81'],
+            ['Street Line 1\nNumber Line 2 44 76', 'Street Line 1\nNumber Line 2 44', '76', ''],
         ]
 
         for street, name, number, number2 in values:
@@ -33,4 +35,4 @@ class TestStreetFields(TransactionCase):
             partner.street_number2 = number2
             partner.street_number = number
             partner.street_name = name
-            self.assertEqual(partner.street, street, 'Wrongly formatted street: expected %s, received %s' % (street, partner.street))
+            self.assertEqual(partner.street, street.strip(), 'Wrongly formatted street: expected %s, received %s' % (street, partner.street))
