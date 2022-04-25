@@ -5652,8 +5652,8 @@ Fields:
         for arg in args:
             if not (isinstance(arg, BaseModel) and arg._name == self._name):
                 raise TypeError("Mixing apples and oranges: %s.concat(%s)" % (self, arg))
-            ids.extend(arg._ids)
-        return self.browse(list(set(ids)))
+            ids.extend([id for id in arg._ids if id not in ids])
+        return self.browse(ids)
 
     def __sub__(self, other):
         """ Return the recordset of all the records in ``self`` that are not in
