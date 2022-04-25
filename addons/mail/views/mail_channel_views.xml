@@ -57,17 +57,6 @@
                             <field name="active" invisible="1"/>
                             <field name="description" placeholder="Topics discussed in this group..."/>
                         </group>
-                        <group name="group_alias" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                            <label for="alias_id" string=" " class="fa fa-envelope-o" style="min-width: 20px;" aria-label="Email" title="Email" role="img"/>
-                            <div name="alias_def">
-                                <field name="alias_id" class="oe_read_only oe_inline"
-                                        string="Email Alias" required="0"/>
-                                <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
-                                    <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
-                                </div>
-                            </div>
-                            <field name="alias_contact" class="oe_inline" invisible="1"/>
-                        </group>
                         <notebook>
                             <page string="Privacy" name="privacy">
                                 <group class="o_label_nowrap">

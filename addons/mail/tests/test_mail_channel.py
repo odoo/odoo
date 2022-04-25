@@ -158,7 +158,6 @@ class TestChannelInternals(MailCommon):
             'name': 'Test',
             'channel_type': 'channel',
             'description': 'Description',
-            'alias_name': 'test',
             'public': 'public',
         })
         cls.test_partner = cls.env['res.partner'].with_context(cls._test_context).create({
@@ -259,7 +258,6 @@ class TestChannelInternals(MailCommon):
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_channel_recipients_mention(self):
         """ Posting a message on a classic channel should support mentioning somebody """
-        self.test_channel.write({'alias_name': False})
         with self.mock_mail_gateway():
             self.test_channel.message_post(
                 body="Test", partner_ids=self.test_partner.ids,
