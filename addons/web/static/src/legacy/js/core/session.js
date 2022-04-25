@@ -133,7 +133,8 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         return this.rpc("/web/session/destroy", {});
     },
     user_has_group: function (group) {
-        if (!this.uid) {
+        // the frontend session info has no `uid` but an `user_id`
+        if (!this.uid && !this.user_id) {
             return Promise.resolve(false);
         }
         var def = this._groups_def[group];
