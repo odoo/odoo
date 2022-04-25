@@ -539,7 +539,7 @@ def route(route=None, **kw):
 
             if isinstance(response, werkzeug.exceptions.HTTPException):
                 response = response.get_response(request.httprequest.environ)
-            if isinstance(response, werkzeug.wrappers.BaseResponse):
+            if isinstance(response, werkzeug.wrappers.Response):
                 response = Response.force_type(response)
                 response.set_default()
                 return response
@@ -1453,7 +1453,7 @@ class Root(object):
 
     def set_csp(self, response):
         # ignore HTTP errors
-        if not isinstance(response, werkzeug.wrappers.BaseResponse):
+        if not isinstance(response, werkzeug.wrappers.Response):
             return
 
         headers = response.headers
