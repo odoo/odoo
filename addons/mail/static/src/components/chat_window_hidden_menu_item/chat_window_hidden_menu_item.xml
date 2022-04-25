@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ChatWindowHiddenMenuItem" owl="1">
+        <li class="o_ChatWindowHiddenMenuItem" t-att-class="{ 'border-bottom' : !props.isLast }" role="menuitem" t-attf-class="{{ className }}" t-ref="root">
+            <ChatWindowHeader
+                className="'o_ChatWindowHiddenMenuItem_chatWindowHeader opacity-100-hover'"
+                localId="chatWindowHeaderView.localId"
+                chatWindowLocalId="chatWindowHeaderView.chatWindowOwner.localId"
+                onClicked="chatWindowHeaderView.chatWindowOwner.onClickFromChatWindowHiddenMenu"
+            />
+        </li>
+    </t>
+
+</templates>

@@ -1619,7 +1619,7 @@ registerModel({
          */
         _computeTypingStatusText() {
             if (this.orderedOtherTypingMembers.length === 0) {
-                return this.constructor.fields.typingStatusText.default;
+                return clear();
             }
             if (this.orderedOtherTypingMembers.length === 1) {
                 return sprintf(

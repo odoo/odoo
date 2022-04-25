@@ -295,7 +295,7 @@ QUnit.test('reply: discard on click away', async function (assert) {
         "emoji list should be opened after clicking on emojis button"
     );
 
-    await click(`.o_EmojiList_emoji`);
+    await click(`.o_Emoji`);
     assert.containsNone(
         document.body,
         '.o_EmojiList',
