@@ -17,8 +17,13 @@ class CustomerPortal(CustomerPortal):
 
     def _prepare_home_portal_values(self):
         values = super(CustomerPortal, self)._prepare_home_portal_values()
-        values['project_count'] = request.env['project.project'].search_count([])
-        values['task_count'] = request.env['project.task'].search_count([])
+        values['project_count'] = request.env[
+            'project.project'].search_count([]) \
+            if request.env['project.project'].check_access_rights(
+            'read', raise_exception=False) else 0
+        values['task_count'] = request.env['project.task'].search_count([]) \
+            if request.env['project.task'].check_access_rights(
+            'read', raise_exception=False) else 0
         return values
 
     # ------------------------------------------------------------
