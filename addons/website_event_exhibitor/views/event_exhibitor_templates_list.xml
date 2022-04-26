@@ -141,7 +141,7 @@
     <div t-foreach="sponsor_categories" t-as="sponsor_category" class="row mb-3">
         <div class="col-12">
             <h2 class="m-0" t-out="sponsor_category['sponsorship'].name"/>
-            <hr class="mt-2 pb-1 mb-1"/>
+            <hr class="mt-2 mb-2"/>
         </div>
         <div t-foreach="sponsor_category['sponsors']" t-as="sponsor" class="col-md-6 col-lg-3 mb-4">
             <t t-call="website_event_exhibitor.exhibitor_card"/>
