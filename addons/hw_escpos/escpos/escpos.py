@@ -804,7 +804,7 @@ class Escpos:
                     else:
                         encoding = 'cp437'
                         encoded  = b'\xb1'    # could not encode, output error character
-                        break;
+                        break
 
             if encoding != self.encoding:
                 # if the encoding changed, remember it and prefix the character with

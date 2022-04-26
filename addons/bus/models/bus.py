@@ -170,7 +170,7 @@ class ImDispatch(object):
         with odoo.sql_db.db_connect('postgres').cursor() as cr:
             conn = cr._cnx
             cr.execute("listen imbus")
-            cr.commit();
+            cr.commit()
             while True:
                 if select.select([conn], [], [], TIMEOUT) == ([], [], []):
                     pass
