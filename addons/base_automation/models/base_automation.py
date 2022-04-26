@@ -199,7 +199,7 @@ class BaseAutomation(models.Model):
         return min(max(1, delay // 10), 4 * 60) if delay else 4 * 60
 
     def _compute_least_delay_msg(self):
-        msg = _("Note that this action can be trigged up to %d minutes after its schedule.")
+        msg = _("Note that this action can be triggered up to %d minutes after its schedule.")
         self.least_delay_msg = msg % self._get_cron_interval()
 
     def _filter_pre(self, records):

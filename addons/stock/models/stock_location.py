@@ -54,7 +54,7 @@ class Location(models.Model):
     child_ids = fields.One2many('stock.location', 'location_id', 'Contains')
     child_internal_location_ids = fields.Many2many(
         'stock.location',
-        string='Internal locations amoung descendants',
+        string='Internal locations among descendants',
         compute='_compute_child_internal_location_ids',
         recursive=True,
         help='This location (if it\'s internal) and all its descendants filtered by type=Internal.'

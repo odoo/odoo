@@ -47,7 +47,7 @@ class BarcodeRule(models.Model):
         * Measure: the barcode's value is related to a specific UoM;\
         * Numeric Identifier: fixed length barcode following a specific encoding;\
         * Alpha-Numeric Name: variable length barcode.")
-    gs1_decimal_usage = fields.Boolean('Decimal', help="If True, use the last digit of AI to dertermine where the first decimal is")
+    gs1_decimal_usage = fields.Boolean('Decimal', help="If True, use the last digit of AI to determine where the first decimal is")
     associated_uom_id = fields.Many2one('uom.uom')
 
     @api.constrains('pattern')

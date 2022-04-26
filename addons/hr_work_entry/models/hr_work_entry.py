@@ -233,7 +233,7 @@ class HrWorkEntryType(models.Model):
     _description = 'HR Work Entry Type'
 
     name = fields.Char(required=True, translate=True)
-    code = fields.Char(required=True, help="Carefull, the Code is used in many references, changing it could lead to unwanted changes.")
+    code = fields.Char(required=True, help="Careful, the Code is used in many references, changing it could lead to unwanted changes.")
     color = fields.Integer(default=0)
     sequence = fields.Integer(default=25)
     active = fields.Boolean(

@@ -54,7 +54,7 @@ class FleetVehicleLogContract(models.Model):
         ('weekly', 'Weekly'),
         ('monthly', 'Monthly'),
         ('yearly', 'Yearly')
-        ], 'Recurring Cost Frequency', default='monthly', help='Frequency of the recuring cost', required=True)
+        ], 'Recurring Cost Frequency', default='monthly', help='Frequency of the recurring cost', required=True)
     service_ids = fields.Many2many('fleet.service.type', string="Included Services")
 
     @api.depends('vehicle_id.name', 'cost_subtype_id')

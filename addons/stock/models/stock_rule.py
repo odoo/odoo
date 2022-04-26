@@ -87,7 +87,7 @@ class StockRule(models.Model):
         help="When ticked, if the move created by this rule is cancelled, the next move will be cancelled too.")
     propagate_carrier = fields.Boolean(
         'Propagation of carrier', default=False,
-        help="When ticked, carrier of shipment will be propgated.")
+        help="When ticked, carrier of shipment will be propagated.")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', check_company=True)
     propagate_warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse to Propagate',

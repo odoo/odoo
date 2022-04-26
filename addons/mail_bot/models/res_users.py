@@ -10,7 +10,7 @@ class Users(models.Model):
         [
             ('not_initialized', 'Not initialized'),
             ('onboarding_emoji', 'Onboarding emoji'),
-            ('onboarding_attachement', 'Onboarding attachement'),
+            ('onboarding_attachement', 'Onboarding attachment'),
             ('onboarding_command', 'Onboarding command'),
             ('onboarding_ping', 'Onboarding ping'),
             ('idle', 'Idle'),
