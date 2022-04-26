@@ -310,6 +310,7 @@ var SnippetEditor = Widget.extend({
         await this.toggleOptions(false);
         // If it is an invisible element, we must close it before deleting it (e.g. modal)
         await this.toggleTargetVisibility(!this.$target.hasClass('o_snippet_invisible'));
+        this.trigger_up('will_remove_snippet', {$target: this.$target});
 
         await new Promise(resolve => {
             this.trigger_up('call_for_each_child_snippet', {
