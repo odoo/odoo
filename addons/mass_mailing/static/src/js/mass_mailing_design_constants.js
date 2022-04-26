@@ -1,71 +1,15 @@
 /** @odoo-module alias=mass_mailing.design_constants**/
 
 export const CSS_PREFIX = '.o_mail_wrapper';
-export const DEFAULT_CSS_OBJECT = {
-    h1: {
-        'font-size': '35px',
-        color: '#212529',
-        'font-family': 'Arial,Helvetica Neue,Helvetica,sans-serif',
-    },
-    h2: {
-        'font-size': '28px',
-        color: '#212529',
-        'font-family': 'Arial,Helvetica Neue,Helvetica,sans-serif',
-    },
-    h3: {
-        'font-size': '24.5px',
-        color: '#212529',
-        'font-family': 'Arial,Helvetica Neue,Helvetica,sans-serif',
-    },
-    'p, p > *, li, li > *': {
-        'font-size': '14px',
-        color: '#212529',
-        'font-family': 'Arial,Helvetica Neue,Helvetica,sans-serif',
-    },
-    'a:not(.btn), a.btn-link': {
-        'text-decoration-line': 'none',
-        color: '#276e72',
-    },
-    'a.btn-primary, a.btn-outline-primary, a.btn-fill-primary': {
-        'font-size': '12.25px',
-        color: '#FFFFFF',
-        'background-color': '#35979c',
-        'border-color': '#35979c',
-        'border-style': 'solid',
-        'border-width': '1px',
-    },
-    'a.btn-secondary, a.btn-outline-secondary, a.btn-fill-secondary': {
-        'font-size': '12.25px',
-        color: '#FFFFFF',
-        'background-color': '#685563',
-        'border-color': '#685563',
-        'border-style': 'solid',
-        'border-width': '1px',
-    },
-    hr: {
-        'border-top-color': '#212529',
-        'border-top-style': 'solid',
-        'border-top-width': '1px',
-        width: '100%',
-    }
-};
-export const DEFAULT_CSS = Object.keys(DEFAULT_CSS_OBJECT).map( // selectors
-    key => key.split(',').map( // each individual comma separated selector
-        selector => `${CSS_PREFIX} ${selector.trim()} {\n    ${ // selector {
-            Object.keys(DEFAULT_CSS_OBJECT[key]).map( // css properties
-                prop => `${prop}: ${DEFAULT_CSS_OBJECT[key][prop]}`) // [prop: value]
-                    .join(';\n    ')}\n}` // prop: value;
-    ).join('\n')
-).join('\n'); // css text
 
 export const BTN_SIZE_STYLES = {
     'btn-sm': {
-        'padding': '0.25rem 0.5rem',
+        'padding': '3px 7.5px',
         'font-size': '0.875rem',
         'line-height': '1.5rem',
     },
     'btn-lg': {
-        'padding': '0.5rem 1rem',
+        'padding': '7px 14px',
         'font-size': '1.25rem',
         'line-height': '1.5rem',
     },
@@ -126,7 +70,6 @@ export const initializeDesignTabCss = $editable => {
             // The style element needs to be within the layout of the email in
             // order to be saved along with it.
             $editable.find('.o_layout').prepend(styleElement);
-            styleElement.textContent = splitCss(DEFAULT_CSS);
         }
 };
 
@@ -143,7 +86,7 @@ export const FONT_FAMILIES = [
 ].map(fontFamily => normalizeFontFamily(fontFamily));
 
 export default {
-    CSS_PREFIX, DEFAULT_CSS_OBJECT, DEFAULT_CSS, BTN_SIZE_STYLES,
-    DEFAULT_BUTTON_SIZE, PRIORITY_STYLES, RE_CSS_TEXT_MATCH, FONT_FAMILIES,
+    CSS_PREFIX, BTN_SIZE_STYLES, DEFAULT_BUTTON_SIZE, PRIORITY_STYLES,
+    RE_CSS_TEXT_MATCH, FONT_FAMILIES,
     splitCss, getFontName, normalizeFontFamily, initializeDesignTabCss,
 }

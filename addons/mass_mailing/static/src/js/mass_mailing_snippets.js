@@ -185,6 +185,7 @@ options.registry.DesignTab = options.Class.extend({
         const res = await this._super(...arguments);
         const $editable = this.options.wysiwyg.getEditable();
         this.document = $editable[0].ownerDocument;
+        this.$layout = $editable.find('.o_layout');
         initializeDesignTabCss($editable);
         this.styleElement = this.document.querySelector('#design-element');
         // When editing a stylesheet, its content is not updated so it won't be
@@ -319,18 +320,42 @@ options.registry.DesignTab = options.Class.extend({
         const res = await this._super(...arguments);
         if (res === undefined) {
             switch (methodName) {
+                case 'applyButtonSize':
                 case 'customizeCssProperty': {
                     if (!params.selectorText) {
                         return;
                     }
-                    const rule = this._getRule(this._getSelectors(params.selectorText)[0]);
-                    if (params.possibleValues && params.possibleValues[1] === FONT_FAMILIES[0]) {
-                        // For font-family, we need to normalize it so it
-                        // matches an option value.
-                        return rule && normalizeFontFamily(rule.style.getPropertyValue('font-family'));
-                    } else {
-                        return rule && rule.style.getPropertyValue(params.cssProperty);
+                    // Here we parse the selector in order to create a matching
+                    // element that we inject into the DOM so we can retrieve
+                    // its computed style. We then remove the element from the
+                    // DOM, no harm, no foul.
+                    const firstSelector = params.selectorText.split(',')[0].replace(CSS_PREFIX, '').trim();
+                    const classes = firstSelector.replace(/:not\([^\)]*\)/g, '').match(/\.([\w\d-_]+)/g) || [];
+                    const fakeElement = document.createElement(firstSelector.split(/[\.:, ]/)[0]);
+                    for (const className of classes) {
+                        fakeElement.classList.toggle(className.replace('.', ''), true);
                     }
+                    this.$layout.find(CSS_PREFIX).prepend(fakeElement);
+                    let res;
+                    if (methodName === 'applyButtonSize') {
+                        // Match a button size by its padding value.
+                        const padding = getComputedStyle(fakeElement).padding;
+                        const classIndex = Object.values(BTN_SIZE_STYLES).findIndex(style => style.padding === padding);
+                        res = classIndex >= 0 ? Object.keys(BTN_SIZE_STYLES)[classIndex] : DEFAULT_BUTTON_SIZE;
+                    } else {
+                        fakeElement.style.display = 'none'; // Needed to get width in %.
+                        res = getComputedStyle(fakeElement)[params.cssProperty || 'font-family'];
+                        if (params.possibleValues && params.possibleValues[1] === FONT_FAMILIES[0]) {
+                            // For font-family, we need to normalize it so it
+                            // matches an option value.
+                            res = normalizeFontFamily(res);
+                        }
+                        if (params.cssProperty === 'font-weight') {
+                            res = parseInt(res) >= 600 ? 'bolder' : '';
+                        }
+                    }
+                    fakeElement.remove();
+                    return res;
                 }
                 case 'applyButtonSize':
                     // Match a button size by its padding value.
