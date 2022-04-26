@@ -35,16 +35,19 @@
         <template id="external_layout_din5008">
             <div>
                 <div t-attf-class="header din_page o_company_#{company.id}_layout">
-                        <table class="company_header table-borderless" t-att-style="'height: %dmm;' % (din_header_spacing or 27)">
-                            <tr>
-                                <td><h3 class="mt0" t-field="company.report_header"/></td>
-                                <td><img t-if="company.logo" t-att-src="image_data_uri(company.logo)" t-att-style="'max-height: %dmm;' % (din_header_spacing or 27)"/></td>
-                            </tr>
-                        </table>
+                    <table class="company_header table-borderless" t-att-style="'height: %dmm;' % (din_header_spacing or 27)">
+                        <tr>
+                            <td><h3 class="mt0" t-field="company.report_header"/></td>
+                            <td><img t-if="company.logo" t-att-src="image_data_uri(company.logo)" t-att-style="'max-height: %dmm;' % (din_header_spacing or 27)"/></td>
+                        </tr>
+                    </table>
                 </div>
 
-                <div t-attf-class="din_page invoice_note article o_company_#{company.id}_layout" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
-                    <table class="table-borderless">
+                <div t-attf-class="din_page invoice_note article o_company_#{company.id}_layout {{  'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}"
+                     t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});"
+                     t-att-data-oe-model="o and o._name"
+                     t-att-data-oe-id="o and o.id">
+                    <table class="din_company_info table-borderless">
                         <tr>
                             <td>
                                 <div class="address">
@@ -63,17 +66,9 @@
                                     <t t-if="company.city">
                                         <span t-if="not company.zip">|</span> <span t-field="company.city"/>
                                     </t>
-                                    <t t-if="company.country_id">
-                                        <span>|</span> <span t-field="company.country_id.name"/>
-                                    </t>
                                     <hr class="company_invoice_line" />
-                                    <div t-if="address">
-                                        <t t-out="address"/>
-                                    </div>
-                                    <div t-else="fallback_address">
-                                        <t t-out="fallback_address"
-                                           t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}' />
-                                    </div>
+                                    <div t-field="company.partner_id"
+                                         t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                                 </div>
                             </td>
                             <td>
@@ -93,7 +88,7 @@
                                 <td>
                                     <div class="shipping_address">
                                         <strong><t t-out="doc_address[0]"/></strong>
-                                        <div t-out="doc_address[1]" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                                        <div t-out="doc_address[1]" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                                     </div>
                                 </td>
                             </t>
@@ -121,18 +116,12 @@
                             <tr>
                                 <td>
                                     <ul class="list-inline">
-                                        <li t-if="company.name"><span t-field="company.name"/></li>
-                                        <li t-if="company.street"><span t-field="company.street"/></li>
-                                        <li t-if="company.street2"><span t-field="company.street2"/></li>
-                                        <li><span t-if="company.zip" t-field="company.zip"/> <span t-if="company.city" t-field="company.city"/></li>
-                                        <li t-if="company.country_id"><span t-field="company.country_id.name"/></li>
+                                        <li t-if="company.company_details"><span t-field="company.company_details"/></li>
                                     </ul>
                                 </td>
                                 <td>
                                     <ul class="list-inline">
-                                        <li t-if="company.phone"><span t-field="company.phone"/></li>
-                                        <li t-if="company.email"><span t-field="company.email"/></li>
-                                        <li t-if="company.website"><span t-field="company.website"/></li>
+                                        <li t-if="company.report_footer"><span t-field="company.report_footer"/></li>
                                     </ul>
                                 </td>
                                 <td>
@@ -141,8 +130,8 @@
                                         <li>HRB Nr: <span t-field="company.company_registry"/></li>
                                     </ul>
                                 </td>
-                                <td>
-                                    <ul class="list-inline" t-if="company.partner_id.bank_ids">
+                                <td t-if="company.partner_id.bank_ids">
+                                    <ul class="list-inline">
                                         <t t-foreach="company.partner_id.bank_ids[:2]" t-as="bank">
                                             <li><span t-field="bank.bank_id.name"/></li>
                                             <li>IBAN: <span t-field="bank.acc_number"/></li>
