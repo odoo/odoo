@@ -439,7 +439,7 @@ QUnit.test('chat window: basic rendering', async function (assert) {
     await createMessagingMenuComponent();
 
     await click(`.o_MessagingMenu_toggler`);
-    await click(`.o_NotificationList_preview`);
+    await click(`.o_Notification_preview`);
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatWindow`).length,
         1,
@@ -532,7 +532,7 @@ QUnit.test('chat window: fold', async function (assert) {
     await createMessagingMenuComponent();
     // Open Thread
     await click(`.o_MessagingMenu_toggler`);
-    await click(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`);
+    await click(`.o_MessagingMenu_dropdownMenu .o_Notification_preview`);
     assert.containsOnce(
         document.body,
         '.o_ChatWindow_thread',
@@ -588,7 +588,7 @@ QUnit.test('chat window: open / close', async function (assert) {
         "should not have a chat window initially"
     );
     await click(`.o_MessagingMenu_toggler`);
-    await click(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`);
+    await click(`.o_MessagingMenu_dropdownMenu .o_Notification_preview`);
     assert.containsOnce(
         document.body,
         '.o_ChatWindow',
@@ -613,7 +613,7 @@ QUnit.test('chat window: open / close', async function (assert) {
 
     // Reopen chat window
     await click(`.o_MessagingMenu_toggler`);
-    await click(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`);
+    await click(`.o_MessagingMenu_dropdownMenu .o_Notification_preview`);
     assert.containsOnce(
         document.body,
         '.o_ChatWindow',
@@ -646,7 +646,7 @@ QUnit.test('Mobile: opening a chat window should not update channel state on the
     });
     await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
-    await click(`.o_NotificationList_preview`);
+    await click(`.o_Notification_preview`);
     assert.containsOnce(
         document.body,
         '.o_ChatWindow',
@@ -681,7 +681,7 @@ QUnit.test('Mobile: closing a chat window should not update channel state on the
     });
     await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
-    await click(`.o_NotificationList_preview`);
+    await click(`.o_Notification_preview`);
     assert.containsOnce(
         document.body,
         '.o_ChatWindow',
@@ -909,7 +909,7 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
     const { click, createMessagingMenuComponent, messaging } = await this.start();
     const messagingMenuComponent = await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
-    await click(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`);
+    await click(`.o_MessagingMenu_dropdownMenu .o_Notification_preview`);
     // Set content of the composer of the chat window
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
@@ -985,7 +985,7 @@ QUnit.test('chat window: scroll conservation on toggle discuss', async function 
     await click(`.o_MessagingMenu_toggler`);
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
-        func: () => document.querySelector('.o_NotificationList_preview').click(),
+        func: () => document.querySelector('.o_Notification_preview').click(),
         message: "should wait until channel 20 scrolled to its last message after opening it from the messaging menu",
         predicate: ({ scrollTop, thread }) => {
             const messageList = document.querySelector('.o_ThreadView_messageList');
@@ -1066,7 +1066,7 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
+        .o_Notification_preview[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
                 id: mailChannelId1,
                 model: 'mail.channel',
@@ -1105,7 +1105,7 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
+        .o_Notification_preview[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
                 id: mailChannelId2,
                 model: 'mail.channel',
@@ -1175,11 +1175,11 @@ QUnit.test('open 2 chat windows: check shift operations are available', async fu
 
     await click('.o_MessagingMenu_toggler');
     await afterNextRender(() => {
-        document.querySelectorAll('.o_MessagingMenu_dropdownMenu .o_NotificationList_preview')[0].click();
+        document.querySelectorAll('.o_MessagingMenu_dropdownMenu .o_Notification_preview')[0].click();
     });
     await click('.o_MessagingMenu_toggler');
     await afterNextRender(() => {
-        document.querySelectorAll('.o_MessagingMenu_dropdownMenu .o_NotificationList_preview')[1].click();
+        document.querySelectorAll('.o_MessagingMenu_dropdownMenu .o_Notification_preview')[1].click();
     });
     assert.containsN(
         document.body,
@@ -1410,7 +1410,7 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
+        .o_Notification_preview[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
                 id: mailChannelId1,
                 model: 'mail.channel',
@@ -1436,7 +1436,7 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
+        .o_Notification_preview[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
                 id: mailChannelId2,
                 model: 'mail.channel',
@@ -1462,7 +1462,7 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
+        .o_Notification_preview[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
                 id: mailChannelId3,
                 model: 'mail.channel',
@@ -1532,7 +1532,7 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
+        .o_Notification_preview[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
                 id: mailChannelId1,
                 model: 'mail.channel',
@@ -1569,7 +1569,7 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
+        .o_Notification_preview[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
                 id: mailChannelId2,
                 model: 'mail.channel',
@@ -1741,7 +1741,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
     await click(`.o_MessagingMenu_toggler`);
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
-        func: () => document.querySelector('.o_NotificationList_preview').click(),
+        func: () => document.querySelector('.o_Notification_preview').click(),
         message: "should wait until channel 20 scrolled to its last message after opening it from the messaging menu",
         predicate: ({ scrollTop, thread }) => {
             const messageList = document.querySelector('.o_ThreadView_messageList');
@@ -1869,7 +1869,7 @@ QUnit.test('chat window: post message on non-mailing channel with "CTRL-Enter" k
     await createMessagingMenuComponent();
 
     await click(`.o_MessagingMenu_toggler`);
-    await click(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`);
+    await click(`.o_MessagingMenu_dropdownMenu .o_Notification_preview`);
     // insert some HTML in editable
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
@@ -1903,7 +1903,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on t
     await click(`.o_MessagingMenu_toggler`);
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
-        func: () => document.querySelector('.o_NotificationList_preview').click(),
+        func: () => document.querySelector('.o_Notification_preview').click(),
         message: "should wait until channel 20 scrolled to its last message after opening it from the messaging menu",
         predicate: ({ scrollTop, thread }) => {
             const messageList = document.querySelector('.o_ThreadView_messageList');
@@ -1973,7 +1973,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on t
     await click(`.o_MessagingMenu_toggler`);
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
-        func: () => document.querySelector('.o_NotificationList_preview').click(),
+        func: () => document.querySelector('.o_Notification_preview').click(),
         message: "should wait until channel 20 scrolled to its last message after opening it from the messaging menu",
         predicate: ({ scrollTop, thread }) => {
             const messageList = document.querySelector('.o_ThreadView_messageList');
@@ -2495,7 +2495,7 @@ QUnit.test('should not have chat window hidden menu in mobile (transition from 2
     await click('.o_MessagingMenu_toggler');
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
+        .o_Notification_preview[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
                 id: mailChannelId1,
                 model: 'mail.channel',
@@ -2505,7 +2505,7 @@ QUnit.test('should not have chat window hidden menu in mobile (transition from 2
     await click('.o_MessagingMenu_toggler');
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
+        .o_Notification_preview[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
                 id: mailChannelId2,
                 model: 'mail.channel',

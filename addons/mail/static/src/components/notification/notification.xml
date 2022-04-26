@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.Notification" owl="1">
+        <t t-if="threadPreviewView">
+            <ThreadPreview
+                className="'o_Notification_preview'"
+                classNameObj="{ 'o-mobile': messaging.device.isSmall }"
+                localId="threadPreviewView.localId"
+            />
+        </t>
+        <t t-if="threadNeedactionPreviewView">
+            <ThreadNeedactionPreview
+                className="'o_Notification_preview'"
+                classNameObj="{ 'o-mobile': messaging.device.isSmall }"
+                localId="threadNeedactionPreviewView.localId"
+            />
+        </t>
+        <t t-if="notificationGroupView">
+            <NotificationGroup
+                className="'o_Notification_group'"
+                localId="notificationGroupView.localId"
+            />
+        </t>
+        <t t-if="notificationRequestView">
+            <NotificationRequest
+                className="'o_Notification_notificationRequest'"
+                classNameObj="{ 'o-mobile': messaging.device.isSmall }"
+                localId="notificationRequestView.localId"
+            />
+        </t>
+        <t t-if="!props.isLast">
+            <div class="o_Notification_separator border-bottom"/>
+        </t>
+    </t>
+
+</templates>

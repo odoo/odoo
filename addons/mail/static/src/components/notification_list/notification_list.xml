@@ -11,36 +11,7 @@
                 </t>
                 <t t-else="">
                     <t t-foreach="notificationListView.notificationViews" t-as="notificationView" t-key="notificationView.localId">
-                        <t t-if="notificationView.constructor.name === 'ThreadPreviewView'">
-                            <ThreadPreview
-                                className="'o_NotificationList_preview'"
-                                classNameObj="{ 'o-mobile': messaging.device.isSmall }"
-                                localId="notificationView.localId"
-                            />
-                        </t>
-                        <t t-if="notificationView.constructor.name === 'ThreadNeedactionPreviewView'">
-                            <ThreadNeedactionPreview
-                                className="'o_NotificationList_preview'"
-                                classNameObj="{ 'o-mobile': messaging.device.isSmall }"
-                                localId="notificationView.localId"
-                            />
-                        </t>
-                        <t t-if="notificationView.constructor.name === 'NotificationGroupView'">
-                            <NotificationGroup
-                                className="'o_NotificationList_group'"
-                                localId="notificationView.localId"
-                            />
-                        </t>
-                        <t t-if="notificationView.constructor.name === 'NotificationRequestView'">
-                            <NotificationRequest
-                                className="'o_NotificationList_notificationRequest'"
-                                classNameObj="{ 'o-mobile': messaging.device.isSmall }"
-                                localId="notificationView.localId"
-                            />
-                        </t>
-                        <t t-if="!notificationView_last">
-                            <div class="o_NotificationList_separator border-bottom"/>
-                        </t>
+                        <Notification isLast="notificationView_last" localId="notificationView.localId"/>
                     </t>
                 </t>
             </div>
