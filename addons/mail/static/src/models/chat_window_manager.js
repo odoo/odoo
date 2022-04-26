@@ -115,9 +115,7 @@ registerModel({
             if (notifyServer === undefined) {
                 notifyServer = !this.messaging.device.isSmall;
             }
-            let chatWindow = this.chatWindows.find(chatWindow =>
-                chatWindow.thread === thread
-            );
+            let chatWindow = thread.chatWindow;
             if (!chatWindow) {
                 chatWindow = this.messaging.models['ChatWindow'].create({
                     isFolded,

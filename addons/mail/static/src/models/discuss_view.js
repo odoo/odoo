@@ -41,6 +41,12 @@ registerModel({
             }
             this.discuss.threadView.topbar.openInvitePopoverView();
         },
+        onHideMobileAddItemHeader() {
+            if (!this.exists()) {
+                return;
+            }
+            this.discuss.clearIsAddingItem();
+        },
         /**
          * @param {KeyboardEvent} ev
          */
@@ -73,6 +79,21 @@ registerModel({
                 this.discuss.handleAddChannelAutocompleteSelect(ev, ui);
             } else {
                 this.discuss.handleAddChatAutocompleteSelect(ev, ui);
+            }
+        },
+        /**
+         * @param {Object} req
+         * @param {string} req.term
+         * @param {function} res
+         */
+        _onMobileAddItemHeaderInputSource(req, res) {
+            if (!this.exists()) {
+                return;
+            }
+            if (this.discuss.isAddingChannel) {
+                this.discuss.handleAddChannelAutocompleteSource(req, res);
+            } else {
+                this.discuss.handleAddChatAutocompleteSource(req, res);
             }
         },
         /**

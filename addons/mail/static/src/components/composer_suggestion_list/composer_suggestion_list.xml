@@ -2,17 +2,17 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ComposerSuggestionList" owl="1">
-        <t t-if="composerView">
-            <div class="o_ComposerSuggestionList position-absolute w-100" t-att-class="{ 'o-lowPosition bottom-0': composerView.hasMentionSuggestionsBelowPosition }" t-attf-class="{{ className }}" t-ref="root">
-                <div class="o_ComposerSuggestionList_drop w-100" t-att-class="{ 'dropdown': composerView.hasMentionSuggestionsBelowPosition, 'dropup': !composerView.hasMentionSuggestionsBelowPosition }">
+        <t t-if="composerSuggestionListView">
+            <div class="o_ComposerSuggestionList position-absolute w-100" t-att-class="{ 'o-lowPosition bottom-0': composerSuggestionListView.composerViewOwner.hasMentionSuggestionsBelowPosition }" t-attf-class="{{ className }}" t-ref="root">
+                <div class="o_ComposerSuggestionList_drop w-100" t-att-class="{ 'dropdown': composerSuggestionListView.composerViewOwner.hasMentionSuggestionsBelowPosition, 'dropup': !composerSuggestionListView.composerViewOwner.hasMentionSuggestionsBelowPosition }">
                     <div class="o_ComposerSuggestionList_list dropdown-menu show w-100 overflow-auto">
-                        <t t-foreach="composerView.mainSuggestions" t-as="suggestion" t-key="suggestion.localId">
+                        <t t-foreach="composerSuggestionListView.composerViewOwner.mainSuggestions" t-as="suggestion" t-key="suggestion.localId">
                             <ComposerSuggestion localId="suggestion.localId"/>
                         </t>
-                        <t t-if="composerView.mainSuggestions.length > 0 and composerView.extraSuggestions.length > 0">
+                        <t t-if="composerSuggestionListView.composerViewOwner.mainSuggestions.length > 0 and composerSuggestionListView.composerViewOwner.extraSuggestions.length > 0">
                             <div role="separator" class="dropdown-divider"/>
                         </t>
-                        <t t-foreach="composerView.extraSuggestions" t-as="suggestion" t-key="suggestion.localId">
+                        <t t-foreach="composerSuggestionListView.composerViewOwner.extraSuggestions" t-as="suggestion" t-key="suggestion.localId">
                             <ComposerSuggestion localId="suggestion.localId"/>
                         </t>
                     </div>

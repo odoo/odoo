@@ -20,11 +20,6 @@ export class ComposerTextInput extends Component {
          * as textarea content can't be changed from the DOM.
          */
         useUpdate({ func: () => this._update() });
-        /**
-         * Last content of textarea from input event. Useful to determine
-         * whether the current partner is typing something.
-         */
-        this._textareaLastInputValue = "";
     }
 
     //--------------------------------------------------------------------------
@@ -107,10 +102,10 @@ export class ComposerTextInput extends Component {
             return;
         }
         this.composerView.saveStateInStore();
-        if (this._textareaLastInputValue !== this.composerView.textareaRef.el.value) {
+        if (this.composerView.textareaLastInputValue !== this.composerView.textareaRef.el.value) {
             this.composerView.handleCurrentPartnerIsTyping();
         }
-        this._textareaLastInputValue = this.composerView.textareaRef.el.value;
+        this.composerView.update({ textareaLastInputValue: this.composerView.textareaRef.el.value });
         this._updateHeight();
     }
 
