@@ -1520,6 +1520,11 @@ class Root(object):
                     result = _dispatch_nodb()
 
                 response = self.get_response(httprequest, result, explicit_session)
+
+            if current_thread.query_count == 1 and \
+                current_thread.url == 'https://dev.localhost/web/dataset/call_kw/pos.payment.method/get_latest_adyen_status':
+                _logger.warning('dispatch Adyen error - %s - %s', response, response.data)
+
             return response(environ, start_response)
 
         except werkzeug.exceptions.HTTPException as e:
