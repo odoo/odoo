@@ -109,7 +109,7 @@ const applyInvisible = (invisible, compiled, params) => {
 };
 
 const tupleArrayToExpr = (tupleArray) => {
-    return `{${tupleArray.map(tuple => tuple.join(":")).join(",")}}`;
+    return `{${tupleArray.map((tuple) => tuple.join(":")).join(",")}}`;
 };
 
 /**
@@ -126,7 +126,7 @@ const copyAttributes = (el, compiled) => {
     if (classes) {
         compiled.classList.add(...classes.split(/\s+/).filter(Boolean));
         if (isComponent) {
-            compiled.setAttribute("class",`'${compiled.className}'`);
+            compiled.setAttribute("class", `'${compiled.className}'`);
         }
     }
 
@@ -158,7 +158,7 @@ const getModifier = (el, modifierName) => {
  * @param {any} node
  * @returns {string}
  */
-const getTagName = (node) => (node.tagName || "");
+const getTagName = (node) => node.tagName || "";
 
 /**
  * @param {any} node
@@ -237,7 +237,7 @@ export class ViewCompiler {
      * @param {Record<string, any>} params
      * @returns {Element | Text | void}
      */
-    compileNode(node, params = {}, evalInvisible=true, copy=true) {
+    compileNode(node, params = {}, evalInvisible = true, copy = true) {
         if (isComment(node)) {
             return;
         }
@@ -375,7 +375,8 @@ export class ViewCompiler {
             }
             const mainSlot = createElement("t", {
                 "t-set-slot": `slot_${slotId++}`,
-                isVisible: invisible !== false ? `!evalDomain(record,${JSON.stringify(invisible)})`: true,
+                isVisible:
+                    invisible !== false ? `!evalDomain(record,${JSON.stringify(invisible)})` : true,
             });
             append(mainSlot, this.compileNode(child, params, false, true));
             append(buttonBox, mainSlot);
@@ -424,9 +425,9 @@ export class ViewCompiler {
                 ["record", `record`],
             ];
             let labelText = label.textContent || fieldString;
-            labelText = labelText ? `"${labelText}"`: `record.fields.${fieldName}.string`;
+            labelText = labelText ? `"${labelText}"` : `record.fields.${fieldName}.string`;
             props.push(["string", labelText]);
-            const formLabel = createElement("FormLabel", {"t-props": tupleArrayToExpr(props)});
+            const formLabel = createElement("FormLabel", { "t-props": tupleArrayToExpr(props) });
             label.replaceWith(formLabel);
         }
         return field;
@@ -497,9 +498,9 @@ export class ViewCompiler {
         }
 
         if (el.hasAttribute("string")) {
-            const titleSlot = createElement("t",
-                { "t-set-slot": "title"},
-                [makeSeparator(el.getAttribute("string"))]);
+            const titleSlot = createElement("t", { "t-set-slot": "title" }, [
+                makeSeparator(el.getAttribute("string")),
+            ]);
             append(formGroup, titleSlot);
         }
 
@@ -521,9 +522,9 @@ export class ViewCompiler {
                 "t-set-slot": `item_${slotId++}`,
                 type: "'item'",
                 sequence: sequence++,
-                "t-slot-scope": "scope"
+                "t-slot-scope": "scope",
             });
-            let itemSpan = parseInt(child.getAttribute("colspan")|| "1", 10);
+            let itemSpan = parseInt(child.getAttribute("colspan") || "1", 10);
 
             if (forceNewline) {
                 mainSlot.setAttribute("newline", true);
@@ -532,7 +533,9 @@ export class ViewCompiler {
 
             let slotContent;
             if (tagName === "field") {
-                const addLabel = child.hasAttribute("nolabel") ? child.getAttribute("nolabel") !== "1" : true;
+                const addLabel = child.hasAttribute("nolabel")
+                    ? child.getAttribute("nolabel") !== "1"
+                    : true;
                 slotContent = this.compileNode(child, params, false, true);
                 if (addLabel && !isOuterGroup) {
                     itemSpan = itemSpan === 1 ? itemSpan + 1 : itemSpan;
@@ -541,9 +544,14 @@ export class ViewCompiler {
                         ["id", `${slotContent.getAttribute("id")}`],
                         ["fieldName", `"${fieldName}"`],
                         ["record", `record`],
-                        ["string", child.hasAttribute("string") ? `"${child.getAttribute("string")}"` : `record.fields.${fieldName}.string`]
+                        [
+                            "string",
+                            child.hasAttribute("string")
+                                ? `"${child.getAttribute("string")}"`
+                                : `record.fields.${fieldName}.string`,
+                        ],
                     ];
-                    mainSlot.setAttribute("props", tupleArrayToExpr(props) );
+                    mainSlot.setAttribute("props", tupleArrayToExpr(props));
                     mainSlot.setAttribute("Component", "constructor.components.FormLabel");
                     mainSlot.setAttribute("subType", "'item_component'");
                 }
@@ -557,7 +565,10 @@ export class ViewCompiler {
 
             if (slotContent) {
                 if (invisible !== false) {
-                    mainSlot.setAttribute("isVisible", `!evalDomain(record,${JSON.stringify(invisible)})`);
+                    mainSlot.setAttribute(
+                        "isVisible",
+                        `!evalDomain(record,${JSON.stringify(invisible)})`
+                    );
                 }
                 if (itemSpan > 0) {
                     mainSlot.setAttribute("itemSpan", `${itemSpan}`);
@@ -567,8 +578,18 @@ export class ViewCompiler {
                 if (isComponentNode(slotContent)) {
                     if (child.tagName !== "button") {
                         if (slotContent.hasAttribute("class")) {
-                            mainSlot.prepend(createElement("t", {"t-set": "addClass", "t-value": groupClassExpr}));
-                            combineAttributes(slotContent, "class", `(addClass ? " " + addClass : "")`, `+`);
+                            mainSlot.prepend(
+                                createElement("t", {
+                                    "t-set": "addClass",
+                                    "t-value": groupClassExpr,
+                                })
+                            );
+                            combineAttributes(
+                                slotContent,
+                                "class",
+                                `(addClass ? " " + addClass : "")`,
+                                `+`
+                            );
                         } else {
                             slotContent.setAttribute("class", groupClassExpr);
                         }
@@ -662,7 +683,7 @@ export class ViewCompiler {
 
             const pageId = `page_${this.id++}`;
             const pageTitle = transformStringForExpression(
-                child.getAttribute("string") || child.getAttribute("name")
+                child.getAttribute("string") || child.getAttribute("name") || ""
             );
             pageSlot.setAttribute("t-set-slot", pageId);
             pageSlot.setAttribute("title", pageTitle);

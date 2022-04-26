@@ -23,7 +23,9 @@ export class Notebook extends Component {
         this.state = useState({ currentPage: null });
         this.state.currentPage = this.computeActivePage(this.props);
 
-        onWillUpdateProps((nextProps) => this.state.currentPage = this.computeActivePage(nextProps));
+        onWillUpdateProps(
+            (nextProps) => (this.state.currentPage = this.computeActivePage(nextProps))
+        );
     }
 
     computeActivePage(props) {
@@ -41,4 +43,4 @@ export class Notebook extends Component {
 }
 
 Notebook.template = "web.Notebook";
-Notebook.props = ["slots?", "className?"];
+Notebook.props = ["slots?", "class?", "className?"];

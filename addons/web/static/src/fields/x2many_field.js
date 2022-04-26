@@ -166,7 +166,7 @@ export class X2ManyField extends Component {
         const newRecord = await this.list.model.duplicateDatapoint(record, {
             mode: this.props.readonly ? "readonly" : "edit",
             viewMode: "form",
-            fields: { ...form.fields, id: { name: "id", type: "integer", readonly: true } },
+            fields: { ...form.fields },
             views: { form },
         });
         this.addDialog(X2ManyFieldDialog, {
@@ -194,11 +194,8 @@ export class X2ManyField extends Component {
             const recordParams = {
                 context: makeContext([this.list.context, context]),
                 resModel: this.list.resModel,
-                fields: {
-                    ...form.fields,
-                    id: { name: "id", type: "integer", readonly: true },
-                },
                 activeFields: form.activeFields,
+                fields: { ...form.fields },
                 views: { form },
                 mode: "edit",
                 viewType: "form",

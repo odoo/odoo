@@ -6537,10 +6537,14 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("one2many field with virtual ids", async function (assert) {
+    QUnit.test("one2many field with virtual ids", async function (assert) {
         assert.expect(11);
 
-        const form = await makeView({
+        serverData.views = {
+            "partner,false,form": '<form><field name="foo"/></form>',
+        };
+
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -6571,60 +6575,53 @@ QUnit.module("Fields", (hooks) => {
                         </group>
                     </sheet>
                 </form>`,
-            archs: {
-                "partner,false,form": '<form><field name="foo"/></form>',
-            },
             resId: 4,
         });
 
         assert.containsOnce(
-            form,
-            ".o_field_widget .o_kanban_view",
+            target,
+            ".o_field_widget .o_kanban_renderer",
             "should have one inner kanban view for the one2many field"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget .o_kanban_view .o_kanban_record:not(.o_kanban_ghost)").length,
-            0,
+        assert.containsNone(
+            target,
+            ".o_field_widget .o_kanban_renderer .o_kanban_record:not(.o_kanban_ghost)",
             "should not have kanban records yet"
         );
 
         // // switch to edit mode and create a new kanban record
         await clickEdit(target);
-        await click(form.$(".o_field_widget .o-kanban-button-new"));
+        await click(target, ".o_field_widget .o-kanban-button-new");
 
         // save & close the modal
         assert.strictEqual(
-            $(".modal-content input.o_field_widget").val(),
+            target.querySelector(".modal-content .o_field_widget input").value,
             "My little Foo Value",
             "should already have the default value for field foo"
         );
-        await click($(".modal-content .btn-primary").first());
+        await clickSave(target.querySelector(".modal"));
 
         assert.containsOnce(
-            form,
-            ".o_field_widget .o_kanban_view",
+            target,
+            ".o_field_widget .o_kanban_renderer",
             "should have one inner kanban view for the one2many field"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget .o_kanban_view .o_kanban_record:not(.o_kanban_ghost)").length,
-            1,
+        assert.containsOnce(
+            target,
+            ".o_field_widget .o_kanban_renderer .o_kanban_record:not(.o_kanban_ghost)",
             "should now have one kanban record"
         );
         assert.strictEqual(
-            form
-                .$(
-                    ".o_field_widget .o_kanban_view .o_kanban_record:not(.o_kanban_ghost) .o_test_id"
-                )
-                .text(),
+            target.querySelector(
+                ".o_field_widget .o_kanban_renderer .o_kanban_record:not(.o_kanban_ghost) .o_test_id"
+            ).innerText,
             "",
             "should not have a value for the id field"
         );
         assert.strictEqual(
-            form
-                .$(
-                    ".o_field_widget .o_kanban_view .o_kanban_record:not(.o_kanban_ghost) .o_test_foo"
-                )
-                .text(),
+            target.querySelector(
+                ".o_field_widget .o_kanban_renderer .o_kanban_record:not(.o_kanban_ghost) .o_test_foo"
+            ).innerText,
             "My little Foo Value",
             "should have a value for the foo field"
         );
@@ -6632,30 +6629,26 @@ QUnit.module("Fields", (hooks) => {
         // save the view to force a create of the new record in the one2many
         await clickSave(target);
         assert.containsOnce(
-            form,
-            ".o_field_widget .o_kanban_view",
+            target,
+            ".o_field_widget .o_kanban_renderer",
             "should have one inner kanban view for the one2many field"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget .o_kanban_view .o_kanban_record:not(.o_kanban_ghost)").length,
-            1,
+        assert.containsOnce(
+            target,
+            ".o_field_widget .o_kanban_renderer .o_kanban_record:not(.o_kanban_ghost)",
             "should now have one kanban record"
         );
         assert.notEqual(
-            form
-                .$(
-                    ".o_field_widget .o_kanban_view .o_kanban_record:not(.o_kanban_ghost) .o_test_id"
-                )
-                .text(),
+            target.querySelector(
+                ".o_field_widget .o_kanban_renderer .o_kanban_record:not(.o_kanban_ghost) .o_test_id"
+            ).innerText,
             "",
             "should now have a value for the id field"
         );
         assert.strictEqual(
-            form
-                .$(
-                    ".o_field_widget .o_kanban_view .o_kanban_record:not(.o_kanban_ghost) .o_test_foo"
-                )
-                .text(),
+            target.querySelector(
+                ".o_field_widget .o_kanban_renderer .o_kanban_record:not(.o_kanban_ghost) .o_test_foo"
+            ).innerText,
             "My little Foo Value",
             "should still have a value for the foo field"
         );
