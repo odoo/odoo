@@ -20,7 +20,7 @@ class IrTranslation(models.Model):
                        (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type,
                         EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments)
                 WHERE EXCLUDED.value IS NOT NULL AND EXCLUDED.value != ''
-            """;
+            """
         else:
             conflict_clause = " ON CONFLICT DO NOTHING"
 
