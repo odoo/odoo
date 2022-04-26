@@ -45,7 +45,6 @@ const LinkTools = Link.extend({
      * @override
      */
     start: function () {
-        this.options.wysiwyg.odooEditor.observerUnactive();
         this.$link.addClass('oe_edited_link');
         this.$button.addClass('active');
         return this._super(...arguments);
@@ -60,7 +59,6 @@ const LinkTools = Link.extend({
             $contents.unwrap();
         }
         this.$button.removeClass('active');
-        this.options.wysiwyg.odooEditor.observerActive();
         this.applyLinkToDom(this._getData());
         if (!this.options.wysiwyg.odooEditor.isDestroyed) {
             this.options.wysiwyg.odooEditor.historyStep();
@@ -71,9 +69,7 @@ const LinkTools = Link.extend({
 
     applyLinkToDom() {
         this._observer.disconnect();
-        this.options.wysiwyg.odooEditor.observerActive();
         this._super(...arguments);
-        this.options.wysiwyg.odooEditor.observerUnactive();
         this._observer.observe(this._link, {subtree: true, childList: true, characterData: true});
     },
 
