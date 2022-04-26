@@ -123,7 +123,7 @@ class Cloc(object):
                 pass
         if not exclude:
             exclude = set()
-        for i in exclude_list:
+        for i in filter(None, exclude_list):
             exclude.update(str(p) for p in pathlib.Path(path).glob(i))
 
         module_name = os.path.basename(path)
