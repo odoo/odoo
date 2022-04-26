@@ -3988,11 +3988,22 @@ Fields:
                             # TODO VSC: the base language isn't always en_US, it might be specified in website --> no we want en_US as base
                             src = tfield['en_US']
                             if self.env.lang != 'en_US':
+                                # src: <form><h1>First</h1><h2>Second</h2></form>
+                                # tfield.get(lang): <form><h1>Premier</h1><h2>Deuxième</h2></form>
+                                # val: <form><h1>Première</h1><h3>Deuxième</h3></form>
                                 val = field.translate(tfield.get(lang), src, val)
+                                # val: <form><h1>Première</h1><h3>Second</h3></form>
                             for lang in tfield.keys():
                                 # FP TODO 7: speed optimization: don't parse en_US for each lang
                                 #            first, replace transalte=_xml_translate -> translate=True
                                 tfield[lang] = field.translate(src, tfield.get(lang), val)
+                            # tfield = {
+                            #     'en_US': <form><h1>Première</h1><h3>Second</h3></form>
+                            #     'fr_FR': <form><h1>Première</h1><h3>Deuxième</h3></form>
+                            #     'nl_NL': <form><h1>Première</h1><h3>Twede</h3></form>
+                            # }
+                            #
+                            # TODO RCO: this does not look correct; what do we actually expect?
                     columns.append(f'"{name}" = %s')
                     params.append(Json(tfield))
                 else:
