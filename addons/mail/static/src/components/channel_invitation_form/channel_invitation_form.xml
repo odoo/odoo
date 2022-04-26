@@ -45,9 +45,7 @@
                             <h4>Selected users:</h4>
                             <div class="o_ChannelInvitationForm_selectedPartners overflow-auto">
                                 <t t-foreach="channelInvitationForm.selectedPartners" t-as="selectedPartner" t-key="selectedPartner.localId">
-                                    <button class="btn btn-secondary" t-on-click="() => channelInvitationForm.onClickSelectedPartner(selectedPartner)">
-                                        <t t-esc="selectedPartner.nameOrDisplayName"/> <i class="fa fa-times"/>
-                                    </button>
+                                    <ChannelInvitationFormSelectedPartner channelInvitationFormLocalId="channelInvitationForm.localId" selectedPartnerLocalId="selectedPartner.localId"/>
                                 </t>
                             </div>
                         </div>
