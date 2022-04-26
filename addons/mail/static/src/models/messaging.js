@@ -87,7 +87,7 @@ registerModel({
                     res_id: id,
                 },
             });
-            if (this.messaging.device.isMobile) {
+            if (this.messaging.device.isSmall) {
                 // messaging menu has a higher z-index than views so it must
                 // be closed to ensure the visibility of the view
                 this.messaging.messagingMenu.close();

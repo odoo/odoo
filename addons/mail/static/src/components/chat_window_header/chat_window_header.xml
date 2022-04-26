@@ -3,9 +3,9 @@
 
     <t t-name="mail.ChatWindowHeader" owl="1">
         <t t-if="chatWindow">
-            <div class="o_ChatWindowHeader" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-attf-class="{{ className }}" t-on-click="_onClick" t-ref="root">
+            <div class="o_ChatWindowHeader" t-att-class="{ 'o-mobile': messaging.device.isSmall }" t-attf-class="{{ className }}" t-on-click="_onClick" t-ref="root">
                 <t t-if="chatWindow.hasCloseAsBackButton">
-                    <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandBack o_ChatWindowHeader_commandClose" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-on-click="chatWindow.onClickClose" title="Close conversation">
+                    <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandBack o_ChatWindowHeader_commandClose" t-att-class="{ 'o-mobile': messaging.device.isSmall }" t-on-click="chatWindow.onClickClose" title="Close conversation">
                         <i class="fa fa-arrow-left"/>
                     </div>
                 </t>
@@ -26,10 +26,10 @@
                 <div class="o-autogrow"/>
                 <div class="o_ChatWindowHeader_item o_ChatWindowHeader_rightArea">
                     <t t-if="chatWindow.hasCallButtons">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandCamera" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-att-disabled="chatWindow.thread.hasPendingRtcRequest" t-on-click="chatWindow.onClickCamera" title="Start a Video Call">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandCamera" t-att-class="{ 'o-mobile': messaging.device.isSmall }" t-att-disabled="chatWindow.thread.hasPendingRtcRequest" t-on-click="chatWindow.onClickCamera" title="Start a Video Call">
                             <i class="fa fa-video-camera"/>
                         </div>
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandPhone" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-att-disabled="chatWindow.thread.hasPendingRtcRequest" t-on-click="chatWindow.onClickPhone" title="Start a Call">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandPhone" t-att-class="{ 'o-mobile': messaging.device.isSmall }" t-att-disabled="chatWindow.thread.hasPendingRtcRequest" t-on-click="chatWindow.onClickPhone" title="Start a Call">
                             <i class="fa fa-phone"/>
                         </div>
                     </t>
@@ -46,34 +46,34 @@
                         </t>
                     </t>
                     <t t-if="chatWindow.thread and chatWindow.thread.hasMemberListFeature and !chatWindow.isMemberListOpened">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShowMemberList" t-att-class="{ 'o-mobile': messaging.device.isMobile }"  title="Show Member List" t-on-click="chatWindow.onClickShowMemberList">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShowMemberList" t-att-class="{ 'o-mobile': messaging.device.isSmall }"  title="Show Member List" t-on-click="chatWindow.onClickShowMemberList">
                             <i class="fa fa-users"/>
                         </div>
                     </t>
                     <t t-if="chatWindow.thread and chatWindow.thread.hasMemberListFeature and chatWindow.isMemberListOpened">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandHideMemberList" t-att-class="{ 'o-mobile': messaging.device.isMobile }" title="Hide Member List" t-on-click="chatWindow.onClickHideMemberList">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandHideMemberList" t-att-class="{ 'o-mobile': messaging.device.isSmall }" title="Hide Member List" t-on-click="chatWindow.onClickHideMemberList">
                             <i class="fa fa-users"/>
                         </div>
                     </t>
                     <t t-if="chatWindow.hasShiftPrev">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftPrev" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-on-click="chatWindow.onClickShiftPrev" t-att-title="chatWindow.shiftPrevText">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftPrev" t-att-class="{ 'o-mobile': messaging.device.isSmall }" t-on-click="chatWindow.onClickShiftPrev" t-att-title="chatWindow.shiftPrevText">
                             <!-- this is reversed automatically when language is rtl -->
                             <i class="fa fa-angle-left"/>
                         </div>
                     </t>
                     <t t-if="chatWindow.hasShiftNext">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftNext" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-on-click="chatWindow.onClickShiftNext" t-att-title="chatWindow.shiftNextText">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftNext" t-att-class="{ 'o-mobile': messaging.device.isSmall }" t-on-click="chatWindow.onClickShiftNext" t-att-title="chatWindow.shiftNextText">
                             <!-- this is reversed automatically when language is rtl -->
                             <i class="fa fa-angle-right"/>
                         </div>
                     </t>
                     <t t-if="chatWindow.isExpandable">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandExpand" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-on-click="chatWindow.onClickExpand" title="Open in Discuss">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandExpand" t-att-class="{ 'o-mobile': messaging.device.isSmall }" t-on-click="chatWindow.onClickExpand" title="Open in Discuss">
                             <i class="fa fa-expand"/>
                         </div>
                     </t>
                     <t t-if="!chatWindow.hasCloseAsBackButton">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandClose" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-on-click="chatWindow.onClickClose" title="Close chat window">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandClose" t-att-class="{ 'o-mobile': messaging.device.isSmall }" t-on-click="chatWindow.onClickClose" title="Close chat window">
                             <i class="fa fa-close"/>
                         </div>
                     </t>

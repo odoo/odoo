@@ -6,14 +6,14 @@
             <div class="o_Discuss" t-attf-class="{{ className }}"
                 t-att-class="{
                     'o-adding-item': discussView.discuss.isAddingChannel or discussView.discuss.isAddingChat,
-                    'o-mobile': messaging.device.isMobile,
+                    'o-mobile': messaging.device.isSmall,
                 }"
                 t-ref="root"
             >
-                <t t-if="!messaging.device.isMobile">
+                <t t-if="!messaging.device.isSmall">
                     <DiscussSidebar className="'o_Discuss_sidebar bg-light border-right'" localId="discussView.localId"/>
                 </t>
-                <t t-if="messaging.device.isMobile" t-call="mail.Discuss.content"/>
+                <t t-if="messaging.device.isSmall" t-call="mail.Discuss.content"/>
                 <t t-else="">
                     <div class="o_Discuss_content">
                         <t t-call="mail.Discuss.content"/>
@@ -24,7 +24,7 @@
     </t>
 
     <t t-name="mail.Discuss.content" owl="1">
-        <t t-if="messaging.device.isMobile and discussView.discuss.activeMobileNavbarTabId === 'mailbox'">
+        <t t-if="messaging.device.isSmall and discussView.discuss.activeMobileNavbarTabId === 'mailbox'">
             <DiscussMobileMailboxSelection className="'o_Discuss_mobileMailboxSelection border-bottom'" localId="discussView.localId"/>
         </t>
         <t t-if="discussView.mobileAddItemHeaderAutocompleteInputView">
@@ -44,16 +44,16 @@
             <t name="beforeThread"/>
             <ThreadView
                 className="'o_Discuss_thread'"
-                classNameObj="{ 'o-mobile': messaging.device.isMobile }"
+                classNameObj="{ 'o-mobile': messaging.device.isSmall }"
                 localId="discussView.discuss.threadView.localId"
             />
         </t>
-        <t t-if="!discussView.discuss.thread and (!messaging.device.isMobile or discussView.discuss.activeMobileNavbarTabId === 'mailbox')">
+        <t t-if="!discussView.discuss.thread and (!messaging.device.isSmall or discussView.discuss.activeMobileNavbarTabId === 'mailbox')">
             <div class="o_Discuss_noThread">
                 No conversation selected.
             </div>
         </t>
-        <t t-if="messaging.device.isMobile and discussView.discuss.activeMobileNavbarTabId !== 'mailbox'">
+        <t t-if="messaging.device.isSmall and discussView.discuss.activeMobileNavbarTabId !== 'mailbox'">
             <t t-if="discussView.discuss.activeMobileNavbarTabId === 'chat'">
                 <button class="o_Discuss_mobileNewChatButton btn btn-secondary" t-on-click="discussView.onClickMobileNewChatButton">
                     Start a conversation

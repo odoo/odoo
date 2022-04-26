@@ -8,7 +8,7 @@
                     'o-focused': chatWindow.isFocused,
                     'o-folded': chatWindow.isFolded,
                     'o-fullscreen': chatWindow.isFullscreen,
-                    'o-mobile': messaging.device.isMobile,
+                    'o-mobile': messaging.device.isSmall,
                     'o-new-message': !chatWindow.thread,
                 }" t-att-style="chatWindow.componentStyle" t-on-keydown="chatWindow.onKeydown" t-on-focusout="chatWindow.onFocusout" t-att-data-chat-window-local-id="chatWindow.localId" t-att-data-thread-local-id="chatWindow.thread ? chatWindow.thread.localId : ''" t-ref="root"
             >
