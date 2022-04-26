@@ -3978,11 +3978,14 @@ Fields:
             assert field.store
             assert field.column_type
             if field.translate:
+                # TODO VSC: we should accept to write strings and dict in translatable fields:
+                # string means either current language or en_us (if there is no current language)
+                # dict means replace the current json (replace all translations)
                 if callable(field.translate):
                     for sub_ids in cr.split_for_in_conditions(self._ids):
                         cr.execute(f'SELECT id, "{name}" FROM "{self._table}" WHERE id IN %s', (sub_ids,))
                         for tid, tfield in cr.fetchall():
-                            # TODO VSC: the base language isn't always en_US, it might be specified in website
+                            # TODO VSC: the base language isn't always en_US, it might be specified in website --> no we want en_US as base
                             src = tfield['en_US']
                             if self.env.lang != 'en_US':
                                 val = field.translate(tfield.get(lang), src, val)
@@ -4888,8 +4891,12 @@ Fields:
         self.ensure_one()
         # FP TODO 5: implement field_json at create that write the full field instead of one value
         #            when having context['field_json']
-        vals = self.with_context(active_test=False, field_json=True).copy_data(default)[0]
-        return self.with_context(lang=None, field_json=True).create(vals)
+        # TODO VSC: "field_json" it's to read the full translation dict, maybe we should store the entire json in the cache
+        #   to avoid modifying the context
+        # TODO VSC: copy_data MUST return the entire translation for each translated fields and create MUST accept it.
+        #   use lang="ALL" here or inside copy_data, also lang in the context is used by the cache to discriminate
+        vals = self.with_context(active_test=False, lang="ALL").copy_data(default)[0]
+        return self.create(vals)
 
     @api.returns('self')
     def exists(self):

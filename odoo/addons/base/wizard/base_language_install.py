@@ -37,6 +37,7 @@ class BaseLanguageInstall(models.TransientModel):
         self.ensure_one()
         lang_ids = self.lang_ids
         langs_to_activate = lang_ids.filtered(lambda l: not l.active)
+        # TODO VSC: this is a bugfix that should go in V14 (to be checked)
         langs_to_activate.toggle_active(self.overwrite)
 
         if len(lang_ids) == 1:

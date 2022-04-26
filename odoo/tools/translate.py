@@ -287,6 +287,7 @@ def serialize_html(node):
 
 # FP TODO 4: remove xml_translate & html_translate and implement at field level
 #            we should only keep translate=True
+# TODO VSC: create a new field type XML, move this code and adapt in write of both field.html and field.xml
 def xml_translate(src, dest, newval):
     """ Translate an XML value (string), using `callback` for translating text
         appearing in `value`.

@@ -120,6 +120,7 @@ def rename_column(cr, tablename, columnname1, columnname2):
 
 def convert_column(cr, tablename, columnname, columntype, fromtype=None):
     """ Convert the column to the given type. """
+    # TODO VSC: I don't understand why we drop the index.
     drop_index(cr, tablename+'_'+columnname+'_index', tablename)
 
     if (fromtype != 'jsonb') and (columntype != 'jsonb'):

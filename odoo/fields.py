@@ -1595,6 +1595,12 @@ class _String(Field):
 
     # TODO VSC: replace old stuff with new stuff that is now in models.py
         # here we should ensure pending changes have {language: value} in pending changes
+
+    # TODO VSC: add in _depends_context that a translated field depends on the context language
+    # either in a property or in a setup function
+
+
+
     def write(self, records, value):
         pass
 
