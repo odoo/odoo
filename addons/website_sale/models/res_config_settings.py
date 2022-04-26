@@ -48,12 +48,6 @@ class ResConfigSettings(models.TransientModel):
 
     account_on_checkout = fields.Selection(related='website_id.account_on_checkout', readonly=False)
 
-    @api.onchange('account_on_checkout')
-    def _onchange_auth_signup_uninvited(self):
-        for config in self:
-            if config.account_on_checkout == 'mandatory':
-                config.auth_signup_uninvited = 'b2c'
-
     @api.depends('website_id')
     def _compute_terms_url(self):
         for record in self:
