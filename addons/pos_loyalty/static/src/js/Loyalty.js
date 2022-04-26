@@ -895,6 +895,9 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
      * @returns {Array} List of {Object} containing the coupon_id and reward keys
      */
     getClaimableRewards(coupon_id=false, program_id=false, auto=false) {
+        // Loyalty programs can only have claimable rewards when the number of items
+        // of regular lines in the order is more than zero.
+        const numberOfItems = this._get_regular_order_lines().reduce((n, l) => n + l.get_quantity(), 0);
         const allCouponPrograms = Object.values(this.couponPointChanges).map((pe) => {
             return {
                 program_id: pe.program_id,
@@ -905,7 +908,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                 program_id: coupon.program_id,
                 coupon_id: coupon.id,
             };
-        }));
+        })).filter((p) => (this.pos.program_by_id[p.program_id].program_type == 'loyalty' ? numberOfItems > 0 : true));
         const result = [];
         const totalIsZero = this.get_total_with_tax() === 0;
         const globalDiscountLines = this._getGlobalDiscountLines();
