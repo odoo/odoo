@@ -1951,3 +1951,9 @@ class SaleOrderLine(models.Model):
             name += "\n" + pacv.with_context(lang=self.order_id.partner_id.lang).display_name
 
         return name
+
+    def _is_not_eligible_for_total(self):
+        """
+        Just a prototype, the goal is to override
+        """
+        return not bool(self.product_id)

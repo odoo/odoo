@@ -162,6 +162,16 @@ class SaleOrderLine(models.Model):
     product_qty = fields.Float(compute='_compute_product_qty', string='Product Qty', digits='Product Unit of Measure')
     recompute_delivery_price = fields.Boolean(related='order_id.recompute_delivery_price')
 
+    def _is_not_eligible_for_total(self):
+        """
+        Goal of this function, return True if the line amount should not be added on total
+        For example, i don't want to add service, voucher, ... in the total of my SO for specific use-case
+        Is_delivery = True or _is_not_eligible_for_total = False -> return True -> should not be added
+        Is_delivery = False or _is_not_eligible_for_total = False -> return False -> should be added
+        Is_delivery = False or _is_not_eligible_for_total = True -> return True -> should not be added
+        """
+        return self.is_delivery or super()._is_not_eligible_for_total()
+
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_product_qty(self):
         for line in self:

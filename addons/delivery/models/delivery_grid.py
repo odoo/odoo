@@ -93,15 +93,15 @@ class ProviderGrid(models.Model):
                 continue
             if line.is_delivery:
                 total_delivery += line.price_total
-            if not line.product_id or line.is_delivery:
+            if line._is_not_eligible_for_total():
                 continue
             if line.product_id.type == "service":
                 continue
+            total += line.price_total
             qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
             weight += (line.product_id.weight or 0.0) * qty
             volume += (line.product_id.volume or 0.0) * qty
             quantity += qty
-        total = (order.amount_total or 0.0) - total_delivery
 
         total = self._compute_currency(order, total, 'pricelist_to_company')
 
