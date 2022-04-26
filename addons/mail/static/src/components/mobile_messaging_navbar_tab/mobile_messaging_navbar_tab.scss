@@ -1,0 +1,32 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_MobileMessagingNavbarTab {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    flex: 1 1 0;
+    padding: map-get($spacers, 2);
+}
+
+.o_MobileMessagingNavbarTab_icon {
+    margin-bottom: 4%;
+    font-size: 1.3em;
+}
+
+.o_MobileMessagingNavbarTab_label {
+    font-size: 0.8em;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_MobileMessagingNavbarTab {
+    box-shadow: 1px 0 0 gray('400');
+
+    &.o-active {
+        color: $o-brand-primary;
+    }
+}

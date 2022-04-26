@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.MobileMessagingNavbarTab" owl="1">
+        <div class="o_MobileMessagingNavbarTab" t-att-class="{ 'o-active': mobileMessagingNavbarView.activeTabId === props.tab.id }" t-on-click="ev => mobileMessagingNavbarView.onClick(props.tab.id, ev)" t-att-data-tab-id="props.tab.id" t-attf-class="{{ className }}" t-ref="root">
+            <t t-if="props.tab.icon">
+                <span class="o_MobileMessagingNavbarTab_icon" t-att-class="props.tab.icon"/>
+            </t>
+            <span class="o_MobileMessagingNavbarTab_label"><t t-esc="props.tab.label"/></span>
+        </div>
+    </t>
+
+</templates>
