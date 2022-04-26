@@ -233,7 +233,7 @@ def json_float_round(value, precision_digits, rounding_method='HALF-UP'):
              is ready to be serialized in JSON with minimal chances of
              representation errors.
     """
-    rounded_value = float_round(f, precision_digits=precision_digits, rounding_method=rounding_method)
+    rounded_value = float_round(value, precision_digits=precision_digits, rounding_method=rounding_method)
     rounded_repr = float_repr(rounded_value, precision_digits=precision_digits)
     # As of Python 3.1, rounded_repr should be the shortest representation for our
     # rounded float, so we create a new float whose repr is expected
