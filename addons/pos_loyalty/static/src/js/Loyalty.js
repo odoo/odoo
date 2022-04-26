@@ -155,6 +155,7 @@ const PosLoyaltyOrderline = (Orderline) => class PosLoyaltyOrderline extends Ord
         result.coupon_id = this.coupon_id;
         result.reward_identifier_code = this.reward_identifier_code;
         result.points_cost = this.points_cost;
+        result.force_points_cost = this.force_points_cost;
         result.giftBarcode = this.giftBarcode;
         return result;
     }
@@ -167,7 +168,11 @@ const PosLoyaltyOrderline = (Orderline) => class PosLoyaltyOrderline extends Ord
             //  we make sure that they are kept the same between after a reload between the order and the lines.
             this.coupon_id = this.order.oldCouponMapping[json.coupon_id] || json.coupon_id;
             this.reward_identifier_code = json.reward_identifier_code;
-            this.points_cost = json.points_cost;
+            // IMPORTANT: We introduce this field to allow forcing the
+            // value for points_cost, instead of being computed based on
+            // the reward object. This is used for discount rewards where
+            // they needs multiple lines to claim them.
+            this.force_points_cost = json.force_points_cost;
             this.giftBarcode = json.giftBarcode;
         }
         super.init_from_JSON(...arguments);
@@ -201,10 +206,22 @@ const PosLoyaltyOrderline = (Orderline) => class PosLoyaltyOrderline extends Ord
             return this.is_reward_line == otherLine.is_reward_line && super.can_be_merged_with(otherLine);
         }
     }
-    merge(orderline){
-        super.merge(orderline);
-        if (this.points_cost) {
-            this.points_cost += orderline.points_cost || 0;
+    /**
+     * Returns the points consumed by this reward line.
+     * - If there is `force_points_cost`, we return that.
+     * - Otherwise, we compute based on the reward object
+     *   and quantity of this orderline.
+     */
+    get points_cost() {
+        if (!this.is_reward_line) {
+            return 0;
+        } else if (this.is_reward_line && typeof this.force_points_cost == 'number') {
+            // force_points_cost can be zero. As long as it's a number, we return it.
+            return this.force_points_cost;
+        } else {
+            const reward = this.order.pos.reward_by_id[this.reward_id];
+            const rewardUnitCost = reward.required_points / reward.reward_product_qty;
+            return rewardUnitCost * this.get_quantity();
         }
     }
 }
@@ -356,36 +373,55 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             line.reward_product_id = options.reward_product_id;
             line.coupon_id = options.coupon_id;
             line.reward_identifier_code = options.reward_identifier_code;
-            line.points_cost = options.points_cost;
+            line.force_points_cost = options.force_points_cost;
             line.price_manually_set = true;
         }
         line.giftBarcode = options.giftBarcode;
     }
+    /**
+     * We override the behavior of add_product such that if the product is claimable
+     * as reward, we update the options to add the product as a reward.
+     *
+     * @override
+     * @param {Product} product
+     * @param {*} options
+     */
     add_product(product, options) {
-        const [reward, coupon_id, points_cost] = this._getPotentialReward(product);
-        if (reward) {
-            this._updateOptionsToBeFreeProduct(options, reward, coupon_id, points_cost);
+        const claimable = this._isClaimable(product);
+        if (claimable) {
+            const { reward, coupon_id } = claimable;
+            this._updateOptionsToBeFreeProduct(options, reward, coupon_id);
         }
         super.add_product(...arguments);
         this._updateRewards();
     }
 
-    _getPotentialReward(product) {
+    /**
+     * Checks if the given product can be claimed as reward or not.
+     * - If so, we return the object containing the reward object and the coupon_id.
+     *
+     * @param {Product} product
+     * @returns {{ reward: Reward, coupon_id: number } | undefined}
+     */
+    _isClaimable(product) {
         const claimable = this.getClaimableRewards().find(item => item.reward.reward_product_ids.includes(product.id));
         if (claimable && !this.disabledRewards.includes(claimable.reward.id)) {
-            return [claimable.reward, claimable.coupon_id, claimable.reward.required_points]
-        } else {
-            return [false];
+            return claimable;
         }
     }
 
-    _updateOptionsToBeFreeProduct(options, reward, coupon_id, points_cost) {
+    /**
+     * TODO-JCB: Make this function, don't mutate. Maybe rename to `_getFreeProductOptions`.
+     * @param {*} options
+     * @param {Reward} reward
+     * @param {number} coupon_id
+     */
+    _updateOptionsToBeFreeProduct(options, reward, coupon_id) {
         Object.assign(options, {
             price: 0,
             is_reward_line: true,
             reward_id: reward.id,
             coupon_id,
-            points_cost,
         });
     }
 
@@ -616,7 +652,16 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         }
     }
     /**
-     * @returns {number} The points that are left for the given coupon for this order.
+     * Returns the number of points left for the given coupon for this order.
+     *
+     * During computation, when a reward line is encountered to be a `clear_wallet`,
+     * we immediately return 0, regardless of the value of the points before
+     * encountering the `clear_wallet` reward line. This means that if a coupon has
+     * a potential to generate multiple rewards, and the user applied first the one
+     * that is `clear_wallet`, then this results to consuming all the points, even
+     * if potentially, the order can still accomodate the other rewards.
+     *
+     * @returns {number}
      */
     _getRealCouponPoints(coupon_id) {
         let points = 0;
@@ -636,7 +681,14 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         });
         for (const line of this.get_orderlines()) {
             if (line.is_reward_line && line.coupon_id === coupon_id) {
-                points -= line.points_cost;
+                const reward = this.pos.reward_by_id[line.reward_id];
+                if (reward.clear_wallet) {
+                    // Immediately return 0 as remaining points for the coupon_id
+                    // once we see a reward orderline that is "clear_wallet".
+                    return 0;
+                } else {
+                    points -= line.points_cost;
+                }
             }
         }
         return points
@@ -1096,9 +1148,9 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             maxDiscount = Math.min(maxDiscount, discountable * (reward.discount / 100));
         }
         const rewardCode = _newRandomRewardCode();
-        let pointCost = reward.clear_wallet ? this._getRealCouponPoints(coupon_id) : reward.required_points;
+        let forcePointsCost = reward.clear_wallet ? this._getRealCouponPoints(coupon_id) : reward.required_points;
         if (reward.discount_mode === 'per_point' && !reward.clear_wallet) {
-            pointCost = Math.min(maxDiscount, discountable) / reward.discount;
+            forcePointsCost = Math.min(maxDiscount, discountable) / reward.discount;
         }
         // These are considered payments and do not require to be either taxed or split by tax
         const discountProduct = reward.discount_line_product_id;
@@ -1110,7 +1162,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                 reward_id: reward.id,
                 is_reward_line: true,
                 coupon_id: coupon_id,
-                points_cost: pointCost,
+                force_points_cost: forcePointsCost,
                 reward_identifier_code: rewardCode,
                 merge: false,
             }];
@@ -1125,7 +1177,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                 reward_id: reward.id,
                 is_reward_line: true,
                 coupon_id: coupon_id,
-                points_cost: 0,
+                force_points_cost: 0,
                 reward_identifier_code: rewardCode,
                 tax_ids: taxIds,
                 merge: false,
@@ -1133,7 +1185,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             return lst;
         }, []);
         if (result.length) {
-            result[0]['points_cost'] = pointCost;
+            result[0]['force_points_cost'] = forcePointsCost;
         }
         return result;
     }
@@ -1162,7 +1214,6 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             reward_id: reward.id,
             is_reward_line: true,
             coupon_id: args['coupon_id'],
-            points_cost: cost,
             // reward_identifier_code: _newRandomRewardCode(),
             // merge: false,
         }]
