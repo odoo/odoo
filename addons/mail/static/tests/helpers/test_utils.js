@@ -3,10 +3,7 @@
 import BusService from 'bus.BusService';
 
 import { MessagingMenuContainer } from '@mail/components/messaging_menu_container/messaging_menu_container';
-import {
-    addMessagingToEnv,
-    addTimeControlToEnv,
-} from '@mail/env/test_env';
+import { addMessagingToEnv } from '@mail/env/test_env';
 import { insertAndReplace, replace } from '@mail/model/model_field_command';
 import { ChatWindowService } from '@mail/services/chat_window_service/chat_window_service';
 import { MessagingService } from '@mail/services/messaging/messaging';
@@ -15,6 +12,7 @@ import { DialogService } from '@mail/services/dialog_service/dialog_service';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
 import { nextTick } from '@mail/utils/utils';
 import { DiscussWidget } from '@mail/widgets/discuss/discuss';
+import { addTimeControlToEnv } from '@mail/../tests/helpers/time_control';
 
 import core from 'web.core';
 import AbstractStorageService from 'web.AbstractStorageService';
