@@ -49,6 +49,7 @@ class AccountInvoiceReport(models.Model):
     account_id = fields.Many2one('account.account', string='Revenue/Expense Account', readonly=True, domain=[('deprecated', '=', False)])
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', groups="analytic.group_analytic_accounting")
     price_subtotal = fields.Float(string='Untaxed Total', readonly=True)
+    price_total = fields.Float(string='Total', readonly=True)
     price_average = fields.Float(string='Average Price', readonly=True, group_operator="avg")
 
     _depends = {
@@ -57,7 +58,7 @@ class AccountInvoiceReport(models.Model):
             'invoice_date', 'invoice_date_due', 'invoice_payment_term_id', 'partner_bank_id',
         ],
         'account.move.line': [
-            'quantity', 'price_subtotal', 'amount_residual', 'balance', 'amount_currency',
+            'quantity', 'price_subtotal', 'price_total', 'amount_residual', 'balance', 'amount_currency',
             'move_id', 'product_id', 'product_uom_id', 'account_id', 'analytic_account_id',
             'journal_id', 'company_id', 'currency_id', 'partner_id',
         ],
@@ -98,6 +99,7 @@ class AccountInvoiceReport(models.Model):
                 line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0) * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
                                                                             AS quantity,
                 -line.balance * currency_table.rate                         AS price_subtotal,
+                line.price_total,
                 -COALESCE(
                    -- Average line price
                    (line.balance / NULLIF(line.quantity, 0.0)) * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
