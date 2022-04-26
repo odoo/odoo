@@ -17,6 +17,12 @@
     @include text-emphasis-variant(".text-#{$color}", $value);
 }
 
+// Restore text-X from BS4 that use text-emphasis-variant
+@each $color, $value in $theme-colors {
+    @include text-emphasis-variant(".text-#{$color}", $value);
+}
+
+
 .card-body {
     // BS4 colored cards do not have a very popular design. This will reset them
     // to a BS3-like one: only the header and footer are colored and the body
