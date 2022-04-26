@@ -712,11 +712,13 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
             // Unsupported domain, don't inject iframe
             return;
         }
-        return this.$target.append($('<iframe/>', {
+        const iframeEl = $('<iframe/>', {
             src: src,
             frameborder: '0',
             allowfullscreen: 'allowfullscreen',
-        }))[0];
+        })[0];
+        this.$target.append(iframeEl);
+        return iframeEl;
     },
 });
 
