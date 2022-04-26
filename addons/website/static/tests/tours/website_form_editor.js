@@ -137,10 +137,6 @@ odoo.define('website.tour.form_editor', function (require) {
             content: "Form has a model name",
             trigger: 'section.s_website_form form[data-model_name="mail.mail"]',
         }, {
-            content: "Complete Recipient E-mail",
-            trigger: '[data-field-name="email_to"] input',
-            run: 'text_blur test@test.test',
-        }, {
             content: 'Edit the Phone Number field',
             trigger: 'input[name="phone"]',
         }, {
@@ -348,7 +344,34 @@ odoo.define('website.tour.form_editor', function (require) {
         {
             content: 'Verify that the value has not been deleted',
             trigger: '.s_website_form_field:eq(0) input[value="John Smith"]',
-        }
+        },
+        {
+            content: 'Enter in edit mode again',
+            trigger: 'a[data-action="edit"]',
+            run: 'click',
+        },
+        {
+            content: 'Click on the submit button',
+            trigger: '.s_website_form_send',
+            extra_trigger: 'button[data-action="save"]',
+            run: 'click',
+        },
+        {
+            content: 'Change the Recipient Email',
+            trigger: '[data-field-name="email_to"] input',
+            run: 'text test@test.test',
+        },
+        {
+            content: 'Save the page',
+            trigger: 'button[data-action=save]',
+            run: 'click',
+        },
+        {
+            content: 'Verify that the recipient email has been saved',
+            trigger: 'body:not(.editor_enable)',
+            // We have to this that way because the input type = hidden.
+            extra_trigger: 'form:has(input[name="email_to"][value="test@test.test"])',
+        },
     ]);
 
     tour.register("website_form_editor_tour_submit", {
