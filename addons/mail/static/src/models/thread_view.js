@@ -339,6 +339,11 @@ registerModel({
         },
     },
     fields: {
+        channelMemberListView: one('ChannelMemberListView', {
+            default: insertAndReplace(),
+            inverse: 'threadView',
+            isCausal: true,
+        }),
         compact: attr({
             related: 'threadViewer.compact',
         }),
