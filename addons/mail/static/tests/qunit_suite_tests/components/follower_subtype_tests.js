@@ -181,7 +181,7 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
     assert.expect(3);
 
     const pyEnv = await startServer();
-    pyEnv['mail.message.subtype'].create({
+    const followerSubtypeId = pyEnv['mail.message.subtype'].create({
         default: true,
         name: 'TestSubtype',
     });
@@ -224,7 +224,7 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
     });
     await click('.o_FollowerListMenu_buttonFollowers');
     await click('.o_Follower_editButton');
-    const followerSubtype = messaging.models['FollowerSubtype'].find(subtype => subtype.name === 'TestSubtype');
+    const followerSubtype = messaging.models['FollowerSubtype'].findFromIdentifyingData({ id: followerSubtypeId });
     const followerSubtypeView = followerSubtype.followerSubtypeViews[0];
     assert.notOk(
         document.querySelector(`.o_FollowerSubtype[data-local-id="${followerSubtypeView.localId}"] .o_FollowerSubtype_checkbox`).checked,

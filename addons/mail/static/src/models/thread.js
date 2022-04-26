@@ -26,60 +26,6 @@ registerModel({
     lifecycleHooks: {
         _created() {
             /**
-             * Timer of current partner that was currently typing something, but
-             * there is no change on the input for 5 seconds. This is used
-             * in order to automatically notify other members that current
-             * partner has stopped typing something, due to making no changes
-             * on the composer for some time.
-             */
-            this._currentPartnerInactiveTypingTimer = new Timer(
-                this.messaging,
-                () => {
-                    if (this.messaging.currentPartner) {
-                        return this._onCurrentPartnerInactiveTypingTimeout();
-                    }
-                },
-                5 * 1000
-            );
-            /**
-             * Last 'is_typing' status of current partner that has been notified
-             * to other members. Useful to prevent spamming typing notifications
-             * to other members if it hasn't changed. An exception is the
-             * current partner long typing scenario where current partner has
-             * to re-send the same typing notification from time to time, so
-             * that other members do not assume he/she is no longer typing
-             * something from not receiving any typing notifications for a
-             * very long time.
-             *
-             * Supported values: true/false/undefined.
-             * undefined makes only sense initially and during current partner
-             * long typing timeout flow.
-             */
-            this._currentPartnerLastNotifiedIsTyping = undefined;
-            /**
-             * Timer of current partner that is typing a very long text. When
-             * the other members do not receive any typing notification for a
-             * long time, they must assume that the related partner is no longer
-             * typing something (e.g. they have closed the browser tab).
-             * This is a timer to let other members know that current partner
-             * is still typing something, so that they should not assume he/she
-             * has stopped typing something.
-             */
-            this._currentPartnerLongTypingTimer = new Timer(
-                this.messaging,
-                () => this._onCurrentPartnerLongTypingTimeout(),
-                50 * 1000
-            );
-            /**
-             * Determines whether the next request to notify current partner
-             * typing status should always result to making RPC, regardless of
-             * whether last notified current partner typing status is the same.
-             * Most of the time we do not want to notify if value hasn't
-             * changed, exception being the long typing scenario of current
-             * partner.
-             */
-            this._forceNotifyNextCurrentPartnerTypingStatus = false;
-            /**
              * Registry of timers of partners currently typing in the thread,
              * excluding current partner. This is useful in order to
              * automatically unregister typing members when not receive any
@@ -91,29 +37,11 @@ registerModel({
              * @see unregisterOtherMemberTypingMember
              */
             this._otherMembersLongTypingTimers = new Map();
-
-            /**
-             * Clearable and cancellable throttled version of the
-             * `_notifyCurrentPartnerTypingStatus` method.
-             * This is useful when the current partner posts a message and
-             * types something else afterwards: it must notify immediately that
-             * he/she is typing something, instead of waiting for the throttle
-             * internal timer.
-             *
-             * @see _notifyCurrentPartnerTypingStatus
-             */
-            this._throttleNotifyCurrentPartnerTypingStatus = throttle(
-                this.messaging,
-                ({ isTyping }) => {
-                    this._notifyCurrentPartnerTypingStatus({ isTyping });
-                },
-                2.5 * 1000
-            );
         },
         _willDelete() {
-            this._currentPartnerInactiveTypingTimer.clear();
-            this._currentPartnerLongTypingTimer.clear();
-            this._throttleNotifyCurrentPartnerTypingStatus.clear();
+            this.currentPartnerInactiveTypingTimer.clear();
+            this.currentPartnerLongTypingTimer.clear();
+            this.throttleNotifyCurrentPartnerTypingStatus.clear();
             for (const timer of this._otherMembersLongTypingTimers.values()) {
                 timer.clear();
             }
@@ -972,7 +900,7 @@ registerModel({
          * Refresh the typing status of the current partner.
          */
         refreshCurrentPartnerIsTyping() {
-            this._currentPartnerInactiveTypingTimer.reset();
+            this.currentPartnerInactiveTypingTimer.reset();
         },
         /**
          * Called to refresh a registered other member partner that is typing
@@ -990,8 +918,8 @@ registerModel({
          */
         async registerCurrentPartnerIsTyping() {
             // Handling of typing timers.
-            this._currentPartnerInactiveTypingTimer.start();
-            this._currentPartnerLongTypingTimer.start();
+            this.currentPartnerInactiveTypingTimer.start();
+            this.currentPartnerLongTypingTimer.start();
             // Manage typing member relation.
             const currentPartner = this.messaging.currentPartner;
             const newOrderedTypingMemberLocalIds = this.orderedTypingMemberLocalIds
@@ -1002,7 +930,7 @@ registerModel({
                 typingMembers: link(currentPartner),
             });
             // Notify typing status to other members.
-            await this._throttleNotifyCurrentPartnerTypingStatus({ isTyping: true });
+            await this.throttleNotifyCurrentPartnerTypingStatus({ isTyping: true });
         },
         /**
          * Called to register a new other member partner that is typing
@@ -1088,8 +1016,8 @@ registerModel({
          */
         async unregisterCurrentPartnerIsTyping({ immediateNotify = false } = {}) {
             // Handling of typing timers.
-            this._currentPartnerInactiveTypingTimer.clear();
-            this._currentPartnerLongTypingTimer.clear();
+            this.currentPartnerInactiveTypingTimer.clear();
+            this.currentPartnerLongTypingTimer.clear();
             // Manage typing member relation.
             const currentPartner = this.messaging.currentPartner;
             const newOrderedTypingMemberLocalIds = this.orderedTypingMemberLocalIds
@@ -1100,9 +1028,9 @@ registerModel({
             });
             // Notify typing status to other members.
             if (immediateNotify) {
-                this._throttleNotifyCurrentPartnerTypingStatus.clear();
+                this.throttleNotifyCurrentPartnerTypingStatus.clear();
             }
-            await this._throttleNotifyCurrentPartnerTypingStatus({ isTyping: false });
+            await this.throttleNotifyCurrentPartnerTypingStatus({ isTyping: false });
         },
         /**
          * Called to unregister an other member partner that is no longer typing
@@ -1175,6 +1103,32 @@ registerModel({
             if (this.members.length === 1) {
                 // chat with oneself
                 return replace(this.members[0]);
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {Timer}
+         */
+        _computeCurrentPartnerLongTypingTimer() {
+            return new Timer(
+                this.messaging,
+                () => this._onCurrentPartnerLongTypingTimeout(),
+                50 * 1000
+            );
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeCorrespondentOfDmChat() {
+            if (
+                this.channel_type === 'chat' &&
+                this.correspondent &&
+                this.model === 'mail.channel' &&
+                this.public === 'private'
+            ) {
+                return replace(this.correspondent);
             }
             return clear();
         },
@@ -1333,6 +1287,21 @@ registerModel({
         _computeIsCurrentPartnerFollowing() {
             return this.followers.some(follower =>
                 follower.partner && follower.partner === this.messaging.currentPartner
+            );
+        },
+        /**
+         * @private
+         * @returns {Timer}
+         */
+        _computeCurrentPartnerInactiveTypingTimer() {
+            return new Timer(
+                this.messaging,
+                () => {
+                    if (this.messaging.currentPartner) {
+                        return this._onCurrentPartnerInactiveTypingTimeout();
+                    }
+                },
+                5 * 1000
             );
         },
         /**
@@ -1612,6 +1581,17 @@ registerModel({
         },
         /**
          * @private
+         * @returns {Throttle}
+         */
+        _computeThrottleNotifyCurrentPartnerTypingStatus() {
+            return throttle(
+                this.messaging,
+                ({ isTyping }) => this._notifyCurrentPartnerTypingStatus({ isTyping }),
+                2.5 * 1000
+            );
+        },
+        /**
+         * @private
          * @returns {Activity[]}
          */
         _computeTodayActivities() {
@@ -1694,8 +1674,8 @@ registerModel({
          */
         async _notifyCurrentPartnerTypingStatus({ isTyping }) {
             if (
-                this._forceNotifyNextCurrentPartnerTypingStatus ||
-                isTyping !== this._currentPartnerLastNotifiedIsTyping
+                this.forceNotifyNextCurrentPartnerTypingStatus ||
+                isTyping !== this.currentPartnerLastNotifiedIsTyping
             ) {
                 if (this.model === 'mail.channel') {
                     await this.messaging.rpc({
@@ -1708,12 +1688,14 @@ registerModel({
                         return;
                     }
                 }
-                if (isTyping && this._currentPartnerLongTypingTimer.isRunning) {
-                    this._currentPartnerLongTypingTimer.reset();
+                if (isTyping && this.currentPartnerLongTypingTimer.isRunning) {
+                    this.currentPartnerLongTypingTimer.reset();
                 }
             }
-            this._forceNotifyNextCurrentPartnerTypingStatus = false;
-            this._currentPartnerLastNotifiedIsTyping = isTyping;
+            this.update({
+                currentPartnerLastNotifiedIsTyping: isTyping,
+                forceNotifyNextCurrentPartnerTypingStatus: false,
+            });
         },
         /**
          * @private
@@ -1860,9 +1842,9 @@ registerModel({
          * @private
          */
         async _onCurrentPartnerLongTypingTimeout() {
-            this._forceNotifyNextCurrentPartnerTypingStatus = true;
-            this._throttleNotifyCurrentPartnerTypingStatus.clear();
-            await this._throttleNotifyCurrentPartnerTypingStatus({ isTyping: true });
+            this.update({ forceNotifyNextCurrentPartnerTypingStatus: true });
+            this.throttleNotifyCurrentPartnerTypingStatus.clear();
+            await this.throttleNotifyCurrentPartnerTypingStatus({ isTyping: true });
         },
         /**
          * @private
@@ -1925,10 +1907,51 @@ registerModel({
         correspondent: one('Partner', {
             compute: '_computeCorrespondent',
         }),
+        correspondentOfDmChat: one('Partner', {
+            compute: '_computeCorrespondentOfDmChat',
+            inverse: 'dmChatWithCurrentPartner',
+        }),
         counter: attr({
             default: 0,
         }),
         creator: one('User'),
+        /**
+         * Timer of current partner that was currently typing something, but
+         * there is no change on the input for 5 seconds. This is used
+         * in order to automatically notify other members that current
+         * partner has stopped typing something, due to making no changes
+         * on the composer for some time.
+         */
+        currentPartnerInactiveTypingTimer: attr({
+            compute: '_computeCurrentPartnerInactiveTypingTimer',
+        }),
+        /**
+         * Last 'is_typing' status of current partner that has been notified
+         * to other members. Useful to prevent spamming typing notifications
+         * to other members if it hasn't changed. An exception is the
+         * current partner long typing scenario where current partner has
+         * to re-send the same typing notification from time to time, so
+         * that other members do not assume he/she is no longer typing
+         * something from not receiving any typing notifications for a
+         * very long time.
+         *
+         * Supported values: true/false/undefined.
+         * undefined makes only sense initially and during current partner
+         * long typing timeout flow.
+         */
+        currentPartnerLastNotifiedIsTyping: attr(),
+        /**
+         * Timer of current partner that is typing a very long text. When
+         * the other members do not receive any typing notification for a
+         * long time, they must assume that the related partner is no longer
+         * typing something (e.g. they have closed the browser tab).
+         * This is a timer to let other members know that current partner
+         * is still typing something, so that they should not assume he/she
+         * has stopped typing something.
+         */
+        currentPartnerLongTypingTimer: attr({
+            compute: '_computeCurrentPartnerLongTypingTimer',
+        }),
         custom_channel_name: attr(),
         /**
          * Determines the default display mode of this channel. Should contain
@@ -1964,6 +1987,17 @@ registerModel({
         }),
         followers: many('Follower', {
             inverse: 'followedThread',
+        }),
+        /**
+         * Determines whether the next request to notify current partner
+         * typing status should always result to making RPC, regardless of
+         * whether last notified current partner typing status is the same.
+         * Most of the time we do not want to notify if value hasn't
+         * changed, exception being the long typing scenario of current
+         * partner.
+         */
+        forceNotifyNextCurrentPartnerTypingStatus: attr({
+            default: false,
         }),
         /**
          * States the `Activity` that belongs to `this` and that are
@@ -2397,6 +2431,19 @@ registerModel({
         }),
         threadViews: many('ThreadView', {
             inverse: 'thread',
+        }),
+        /**
+         * Clearable and cancellable throttled version of the
+         * `_notifyCurrentPartnerTypingStatus` method.
+         * This is useful when the current partner posts a message and
+         * types something else afterwards: it must notify immediately that
+         * he/she is typing something, instead of waiting for the throttle
+         * internal timer.
+         *
+         * @see _notifyCurrentPartnerTypingStatus
+         */
+        throttleNotifyCurrentPartnerTypingStatus: attr({
+            compute: '_computeThrottleNotifyCurrentPartnerTypingStatus',
         }),
         /**
          * States the `Activity` that belongs to `this` and that are due

@@ -418,6 +418,9 @@ registerModel({
             compute: '_computeDisplayName',
             default: "",
         }),
+        dmChatWithCurrentPartner: one('Thread', {
+            inverse: 'correspondentOfDmChat',
+        }),
         email: attr(),
         /**
          * Whether an attempt was already made to fetch the user corresponding

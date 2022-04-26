@@ -214,19 +214,6 @@ export class ModelManager {
     }
 
     /**
-     * Get the record of provided model that has provided
-     * criteria, if it exists.
-     *
-     * @param {Object} model
-     * @param {function} findFunc
-     * @returns {Record|undefined} the record of model matching criteria, if
-     *   exists.
-     */
-    find(model, findFunc) {
-        return this.all(model).find(findFunc);
-    }
-
-    /**
      * Gets the unique record of provided model that matches the given
      * identifying data, if it exists.
      *
