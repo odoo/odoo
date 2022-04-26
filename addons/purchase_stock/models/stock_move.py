@@ -26,6 +26,52 @@ class StockMove(models.Model):
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
         return super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_purchase_line_id']
 
+    def _get_in_svl_vals(self, forced_quantity):
+        svl_vals_list = []
+        # Before define the incoming SVL values, checks if some quantities has
+        # already been invoiced and still waiting to be receipt.
+        # In such case, gets back the price from these waiting invoice lines.
+        for move in self:
+            product = move.product_id
+            po_line = move.purchase_line_id
+            # Take invoice lines about the current product and who have waiting quantities.
+            invoice_lines = po_line.invoice_lines.filtered(lambda l: l.product_id == product and l.qty_waiting_for_receipt > 0)
+            if not invoice_lines:
+                continue
+            quantity_received = 0
+            waiting_invoiced_qty = sum(invoice_lines.mapped('qty_waiting_for_receipt'))
+            # Gets values for each of those invoice lines.
+            # TODO: checks what happens when receive less qty than already invoiced.
+            for line in invoice_lines:
+                qty_to_process = min(move.quantity_done, line.qty_waiting_for_receipt)
+                quantity_received += qty_to_process
+                line.qty_waiting_for_receipt -= qty_to_process
+                waiting_invoiced_qty -= qty_to_process
+                svl_vals = super(StockMove, move)._get_in_svl_vals(qty_to_process)
+                svl_vals[0]['unit_cost'] = line.price_unit
+                svl_vals[0]['value'] = (qty_to_process * line.price_unit)
+                svl_vals[0]['description'] = move.picking_id.name
+                svl_vals_list += svl_vals
+                # If product cost method is AVCO, updates the standard price.
+                # if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
+                if product.cost_method == 'average':
+                    # TODO: checks with differents UoM for the move line and the invoice line.
+                    unit_price_diff = line.price_unit - product.standard_price
+                    svl_qty = svl_vals[0]['quantity']
+                    qty_delta = 1
+                    if product.qty_available > 0:
+                        qty_delta = svl_qty / (svl_qty + product.quantity_svl)
+                    standard_price_diff = unit_price_diff * qty_delta
+                    product.with_company(self.company_id).sudo().with_context(disable_auto_svl=True).standard_price += standard_price_diff
+            # If it remains quantities to process after processed the waiting
+            # ones, gets SVL values for the remaining quantity.
+            if quantity_received < move.quantity_done:
+                qty_to_process = move.quantity_done - quantity_received
+                svl_vals = super(StockMove, move)._get_in_svl_vals(qty_to_process)
+                svl_vals[0]['description'] = move.picking_id.name
+                svl_vals_list += svl_vals
+        return svl_vals_list or super()._get_in_svl_vals(forced_quantity)
+
     def _get_price_unit(self):
         """ Returns the unit price for the move"""
         self.ensure_one()

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.tools.float_utils import float_compare
+from odoo import fields, models, _
+from odoo.tools.float_utils import float_compare, float_is_zero
 
 
 class AccountMove(models.Model):
@@ -47,23 +47,12 @@ class AccountMove(models.Model):
                 if line.product_id.type != 'product' or line.product_id.valuation != 'real_time':
                     continue
 
-                # Retrieve accounts needed to generate the price difference.
-                debit_pdiff_account = line.product_id.property_account_creditor_price_difference \
-                                or line.product_id.categ_id.property_account_creditor_price_difference_categ
-                debit_pdiff_account = move.fiscal_position_id.map_account(debit_pdiff_account)
-                if not debit_pdiff_account:
-                    continue
-
                 if line.product_id.cost_method != 'standard' and line.purchase_line_id:
                     po_currency = line.purchase_line_id.currency_id
                     po_company = line.purchase_line_id.company_id
 
                     # Retrieve stock valuation moves.
-                    valuation_stock_moves = self.env['stock.move'].search([
-                        ('purchase_line_id', '=', line.purchase_line_id.id),
-                        ('state', '=', 'done'),
-                        ('product_qty', '!=', 0.0),
-                    ])
+                    valuation_stock_moves = line.purchase_line_id._get_related_valuation_stock_move_lines()
                     if move.move_type == 'in_refund':
                         valuation_stock_moves = valuation_stock_moves.filtered(lambda stock_move: stock_move._is_out())
                     else:
@@ -96,7 +85,6 @@ class AccountMove(models.Model):
                         move.company_id, fields.Date.today(), round=False
                     )
 
-
                 price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
                 if line.tax_ids:
                     # We do not want to round the price unit since :
@@ -120,46 +108,80 @@ class AccountMove(models.Model):
                     not move.currency_id.is_zero(price_subtotal)
                     and float_compare(line["price_unit"], line.price_unit, precision_digits=price_unit_prec) == 0
                 ):
-
                     # Add price difference account line.
-                    vals = {
-                        'name': line.name[:64],
-                        'move_id': move.id,
-                        'partner_id': line.partner_id.id or move.commercial_partner_id.id,
-                        'currency_id': line.currency_id.id,
-                        'product_id': line.product_id.id,
-                        'product_uom_id': line.product_uom_id.id,
-                        'quantity': line.quantity,
-                        'price_unit': price_unit_val_dif,
-                        'price_subtotal': line.quantity * price_unit_val_dif,
-                        'account_id': debit_pdiff_account.id,
-                        'analytic_account_id': line.analytic_account_id.id,
-                        'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
-                        'exclude_from_invoice_tab': True,
-                        'is_anglo_saxon_line': True,
-                    }
-                    vals.update(line._get_fields_onchange_subtotal(price_subtotal=vals['price_subtotal']))
-                    lines_vals_list.append(vals)
+                    accounts = line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=move.fiscal_position_id)
+                    stock_valuation_account = accounts.get('stock_valuation')
+                    # Retrieves stock valuation moves.
+                    valuation_stock_moves = line.purchase_line_id._get_related_valuation_stock_move_lines()
+                    if move.move_type == 'in_refund':
+                        valuation_stock_moves = valuation_stock_moves.filtered(lambda stock_move: stock_move.state == 'done' and stock_move._is_out())
+                    else:
+                        valuation_stock_moves = valuation_stock_moves.filtered(lambda stock_move: stock_move.state == 'done' and stock_move._is_in())
 
-                    # Correct the amount of the current line.
-                    vals = {
-                        'name': line.name[:64],
-                        'move_id': move.id,
-                        'partner_id': line.partner_id.id or move.commercial_partner_id.id,
-                        'currency_id': line.currency_id.id,
-                        'product_id': line.product_id.id,
-                        'product_uom_id': line.product_uom_id.id,
-                        'quantity': line.quantity,
-                        'price_unit': -price_unit_val_dif,
-                        'price_subtotal': line.quantity * -price_unit_val_dif,
-                        'account_id': line.account_id.id,
-                        'analytic_account_id': line.analytic_account_id.id,
-                        'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
-                        'exclude_from_invoice_tab': True,
-                        'is_anglo_saxon_line': True,
-                    }
-                    vals.update(line._get_fields_onchange_subtotal(price_subtotal=vals['price_subtotal']))
-                    lines_vals_list.append(vals)
+                    if valuation_stock_moves.stock_valuation_layer_ids:
+                        qty_invoiced = line.purchase_line_id.qty_invoiced
+                        qty_received = line.purchase_line_id.qty_received
+                        qty_to_diff = qty_received - (qty_invoiced - line.quantity)
+                        if qty_to_diff <= 0:
+                            continue
+                        product = line.product_id
+                        linked_layer = valuation_stock_moves.stock_valuation_layer_ids[-1]
+                        price_unit_val_dif = line.price_unit - linked_layer.unit_cost
+                        price_subtotal = qty_to_diff * price_unit_val_dif
+                        if price_unit_val_dif == 0:
+                            continue
+                        # Creates a new stock valuation layer for the price difference.
+                        svl_description = _(
+                            'Price difference between %(purchase_name)s and %(invoice_name)s',
+                            purchase_name=line.purchase_line_id.order_id.name,
+                            invoice_name=move._get_next_sequence())
+                        svl_vals = [{
+                            'company_id': line.company_id.id,
+                            'product_id': product.id,
+                            'description': svl_description,
+                            'value': price_subtotal,
+                            'quantity': 0,
+                            'account_move_id': move.id,
+                            'stock_valuation_layer_id': linked_layer.id
+                        }]
+                        # If product cost method is AVCO, updates the standard price.
+                        if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
+                            # product.with_company(self.company_id).sudo().with_context(disable_auto_svl=True).standard_price += price_unit_val_dif / product.quantity_svl
+                            product.with_company(self.company_id).sudo().with_context(disable_auto_svl=True).standard_price += price_unit_val_dif
+
+                        # Creates the SVL.
+                        self.env['stock.valuation.layer'].sudo().create(svl_vals)
+
+                        # Add an account line for the price difference.
+                        common_vals = {
+                            'name': line.name[:64],
+                            'move_id': move.id,
+                            'currency_id': line.currency_id.id,
+                            'product_id': product.id,
+                            'product_uom_id': line.product_uom_id.id,
+                            'quantity': line.quantity,
+                            'analytic_account_id': line.analytic_account_id.id,
+                            'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
+                            'exclude_from_invoice_tab': True,
+                            'is_anglo_saxon_line': True,
+                        }
+                        vals = dict(common_vals, **{
+                            'price_unit': price_unit_val_dif,
+                            'price_subtotal': price_subtotal,
+                            'account_id': stock_valuation_account.id,
+                        })
+                        vals.update(line._get_fields_onchange_subtotal(price_subtotal=vals['price_subtotal']))
+                        lines_vals_list.append(vals)
+
+                        # Correct the amount of the current line.
+                        vals = dict(common_vals, **{
+                            'price_unit': -price_unit_val_dif,
+                            'price_subtotal': -price_subtotal,
+                            'account_id': line.account_id.id,
+                        })
+                        vals.update(line._get_fields_onchange_subtotal(price_subtotal=vals['price_subtotal']))
+                        lines_vals_list.append(vals)
+
         return lines_vals_list
 
     def _post(self, soft=True):
@@ -168,6 +190,7 @@ class AccountMove(models.Model):
         if self._context.get('move_reverse_cancel'):
             return super()._post(soft)
         self.env['account.move.line'].create(self._stock_account_prepare_anglo_saxon_in_lines_vals())
+        self.invoice_line_ids._update_qty_waiting_for_receipt()
         return super()._post(soft)
 
     def _stock_account_get_last_step_stock_moves(self):

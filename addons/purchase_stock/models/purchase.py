@@ -612,6 +612,14 @@ class PurchaseOrderLine(models.Model):
 
         return outgoing_moves, incoming_moves
 
+    def _get_related_valuation_stock_move_lines(self):
+        valuation_stock_moves = self.env['stock.move'].search([
+            ('purchase_line_id', '=', self.id),
+            ('state', '=', 'done'),
+            ('product_qty', '!=', 0.0),
+        ])
+        return valuation_stock_moves
+
     def _update_date_planned(self, updated_date):
         move_to_update = self.move_ids.filtered(lambda m: m.state not in ['done', 'cancel'])
         if not self.move_ids or move_to_update:  # Only change the date if there is no move done or none
