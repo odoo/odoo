@@ -4,6 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 
 import { format } from 'web.field_utils';
+import { session } from '@web/session';
 
 registerModel({
     name: 'TrackingValueItem',
@@ -53,7 +54,7 @@ registerModel({
                 case 'monetary':
                     return format.monetary(this.value, undefined, {
                         currency: this.currencyId
-                            ? this.env.session.currencies[this.currencyId]
+                            ? session.currencies[this.currencyId]
                             : undefined,
                         forceString: true,
                     });

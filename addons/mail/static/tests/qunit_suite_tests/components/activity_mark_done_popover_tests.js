@@ -2,7 +2,7 @@
 
 import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
-import Bus from 'web.Bus';
+import { patchWithCleanup } from '@web/../tests/helpers/utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -129,13 +129,13 @@ QUnit.test('activity mark done popover mark done without feedback', async functi
                 assert.strictEqual(args.args[0][0], mailActivityId1);
                 assert.strictEqual(args.kwargs.attachment_ids.length, 0);
                 assert.notOk(args.kwargs.feedback);
-                return;
+                // random value returned in order for the mock server to know that this route is implemented.
+                return true;
             }
             if (route === '/web/dataset/call_kw/mail.activity/unlink') {
                 // 'unlink' on non-existing record raises a server crash
                 throw new Error("'unlink' RPC on activity must not be called (already unlinked from mark as done)");
             }
-            return this._super(...arguments);
         },
     });
     await createChatterContainerComponent({
@@ -170,13 +170,13 @@ QUnit.test('activity mark done popover mark done with feedback', async function 
                 assert.strictEqual(args.args[0][0], mailActivityId1);
                 assert.strictEqual(args.kwargs.attachment_ids.length, 0);
                 assert.strictEqual(args.kwargs.feedback, 'This task is done');
-                return;
+                // random value returned in order for the mock server to know that this route is implemented.
+                return true;
             }
             if (route === '/web/dataset/call_kw/mail.activity/unlink') {
                 // 'unlink' on non-existing record raises a server crash
                 throw new Error("'unlink' RPC on activity must not be called (already unlinked from mark as done)");
             }
-            return this._super(...arguments);
         },
     });
     await createChatterContainerComponent({
@@ -198,11 +198,6 @@ QUnit.test('activity mark done popover mark done with feedback', async function 
 QUnit.test('activity mark done popover mark done and schedule next', async function (assert) {
     assert.expect(6);
 
-    const bus = new Bus();
-    bus.on('do-action', null, () => {
-            assert.step('activity_action');
-            throw new Error("The do-action event should not be triggered when the route doesn't return an action");
-    });
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
     const mailActivityId1 = pyEnv['mail.activity'].create({
@@ -211,7 +206,7 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await start({
+    const { click, env, createChatterContainerComponent } = await start({
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
                 assert.step('action_feedback_schedule_next');
@@ -225,9 +220,13 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
                 // 'unlink' on non-existing record raises a server crash
                 throw new Error("'unlink' RPC on activity must not be called (already unlinked from mark as done)");
             }
-            return this._super(...arguments);
         },
-        env: { bus },
+    });
+    patchWithCleanup(env.services.action, {
+        doAction() {
+            assert.step('activity_action');
+            throw new Error("The do-action event should not be triggered when the route doesn't return an action");
+        },
     });
     await createChatterContainerComponent({
         threadId: resPartnerId1,
@@ -248,15 +247,6 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
 QUnit.test('[technical] activity mark done & schedule next with new action', async function (assert) {
     assert.expect(3);
 
-    const bus = new Bus();
-    bus.on('do-action', null, ({ action }) => {
-            assert.step('activity_action');
-            assert.deepEqual(
-                action,
-                { type: 'ir.actions.act_window' },
-                "The content of the action should be correct"
-            );
-    });
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
     pyEnv['mail.activity'].create({
@@ -265,13 +255,21 @@ QUnit.test('[technical] activity mark done & schedule next with new action', asy
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await start({
-        env: { bus },
+    const { click, createChatterContainerComponent, env } = await start({
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
                 return { type: 'ir.actions.act_window' };
             }
-            return this._super(...arguments);
+        },
+    });
+    patchWithCleanup(env.services.action, {
+        doAction(action) {
+            assert.step('activity_action');
+            assert.deepEqual(
+                action,
+                { type: 'ir.actions.act_window' },
+                "The content of the action should be correct"
+            );
         },
     });
     await createChatterContainerComponent({

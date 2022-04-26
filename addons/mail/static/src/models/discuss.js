@@ -162,14 +162,14 @@ registerModel({
                 this.focus();
             }
             if (!this.discussView) {
-                this.env.bus.trigger('do-action', {
-                    action: 'mail.action_discuss',
-                    options: {
+                this.env.services.action.doAction(
+                    'mail.action_discuss',
+                    {
                         active_id: this.threadToActiveId(this),
                         clear_breadcrumbs: false,
                         on_reverse_breadcrumb: () => this.close(), // this is useless, close is called by destroy anyway
                     },
-                });
+                );
             }
         },
         /**

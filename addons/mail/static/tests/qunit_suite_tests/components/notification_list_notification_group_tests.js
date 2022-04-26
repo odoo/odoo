@@ -2,7 +2,7 @@
 
 import { afterNextRender, start, startServer } from '@mail/../tests/helpers/test_utils';
 
-import Bus from 'web.Bus';
+import { patchWithCleanup } from '@web/../tests/helpers/utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -225,8 +225,10 @@ QUnit.test('grouped notifications by document model', async function (assert) {
             notification_type: 'email', // expected failure type for email message
         },
     ]);
-    const bus = new Bus();
-    bus.on('do-action', null, ({ action }) => {
+
+    const { createNotificationListComponent, env } = await start();
+    patchWithCleanup(env.services.action, {
+        doAction(action) {
             assert.step('do_action');
             assert.strictEqual(
                 action.name,
@@ -263,9 +265,8 @@ QUnit.test('grouped notifications by document model', async function (assert) {
                 JSON.stringify([['message_has_error', '=', true]]),
                 "action should have 'message_has_error' as domain"
             );
+        },
     });
-
-    const { createNotificationListComponent } = await start({ env: { bus } });
     await createNotificationListComponent();
 
     assert.containsOnce(

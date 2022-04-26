@@ -45,9 +45,9 @@ registerModel({
          * Handles OWL update on the discuss component.
          */
         onComponentUpdate() {
-            if (this.discuss.thread && this.actionManager) {
+            if (this.discuss.thread) {
                 if (this.lastPushStateActiveThread !== this.discuss.thread) {
-                    this.actionManager.do_push_state({
+                    this.env.services.router.pushState({
                         action: this.actionId,
                         active_id: this.discuss.activeId,
                     });
@@ -63,7 +63,7 @@ registerModel({
                 this.lastThreadCache && this.lastThreadCache.localId === this.discuss.threadView.threadCache.localId &&
                 this.lastThreadCounter > 0 && this.discuss.thread.counter === 0
             ) {
-                this.env.bus.trigger('show-effect', {
+                this.env.services.effect.add({
                     message: this.env._t("Congratulations, your inbox is empty!"),
                     type: 'rainbow_man',
                 });
@@ -156,11 +156,6 @@ registerModel({
          * The id of the action which opened discuss.
          */
         actionId: attr(),
-        /**
-         * Used to push state when changing active thread.
-         * The actionManager passed to the discuss widget.
-         */
-        actionManager: attr(),
         discuss: one('Discuss', {
             inverse: 'discussView',
             readonly: true,

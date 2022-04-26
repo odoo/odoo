@@ -134,14 +134,12 @@ registerModel({
          */
         onClickCommandSettings(ev) {
             ev.stopPropagation();
-            return this.env.bus.trigger('do-action', {
-                action: {
-                    type: 'ir.actions.act_window',
-                    res_model: this.channel.model,
-                    res_id: this.channel.id,
-                    views: [[false, 'form']],
-                    target: 'current',
-                },
+            return this.env.services.action.doAction({
+                type: 'ir.actions.act_window',
+                res_model: this.channel.model,
+                res_id: this.channel.id,
+                views: [[false, 'form']],
+                target: 'current',
             });
         },
         /**

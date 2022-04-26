@@ -533,7 +533,7 @@ registerModel({
             };
             const composer = this.composer;
             const options = {
-                on_close: () => {
+                onClose: () => {
                     if (!composer.exists()) {
                         return;
                     }
@@ -543,7 +543,7 @@ registerModel({
                     }
                 },
             };
-            await this.env.bus.trigger('do-action', { action, options });
+            await this.env.services.action.doAction(action, options);
         },
         /**
          * Post a message in provided composer's thread based on current composer fields values.

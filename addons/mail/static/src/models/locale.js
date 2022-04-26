@@ -3,6 +3,8 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr } from '@mail/model/model_field';
 
+import { localization } from '@web/core/l10n/localization';
+
 registerModel({
     name: 'Locale',
     identifyingFields: ['messaging'],
@@ -12,14 +14,14 @@ registerModel({
          * @returns {string}
          */
         _computeLanguage() {
-            return this.env._t.database.parameters.code;
+            return this.env.services.user.lang;
         },
         /**
          * @private
          * @returns {string}
          */
         _computeTextDirection() {
-            return this.env._t.database.parameters.direction;
+            return localization.direction;
         },
     },
     fields: {

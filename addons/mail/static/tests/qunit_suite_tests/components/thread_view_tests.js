@@ -252,7 +252,6 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
                 );
                 assert.step('rpc:set_last_seen_message');
             }
-            return this._super(...arguments);
         }
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -307,7 +306,6 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
     });
     const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { afterEvent, createThreadViewComponent, messaging } = await start({
-        data: this.data,
         mockRPC(route, args) {
             if (args.method === 'channel_fetched' && args.args[0] === mailChannelId1) {
                 throw new Error("'channel_fetched' RPC must not be called for created channel as message is directly seen");
@@ -319,7 +317,6 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
                 );
                 assert.step('rpc:set_last_seen_message');
             }
-            return this._super(...arguments);
         }
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -774,25 +771,20 @@ QUnit.test('should scroll to bottom on receiving new message if the list is init
             res_id: mailChannelId1,
         });
     }
-    const { afterEvent, createThreadViewComponent, messaging } = await start();
+    const { afterEvent, click, createMessagingMenuComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel'
     });
-    const threadViewer = messaging.models['ThreadViewer'].create({
-        hasThreadView: true,
-        qunitTest: insertAndReplace(),
-        thread: replace(thread),
-    });
+    await createMessagingMenuComponent();
+    await click(`.o_MessagingMenu_toggler`);
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
-        func: () => createThreadViewComponent(
-            threadViewer.threadView,
-            undefined,
-            { isFixedSize: true },
-        ),
-        message: "should wait until channel 20 scrolled initially",
-        predicate: data => threadViewer === data.threadViewer,
+        async func() {
+            await click(`.o_NotificationList_preview`);
+        },
+        message: "should wait until channel scrolled initially",
+        predicate: data => thread === data.threadViewer.thread,
     });
     const initialMessageList = document.querySelector('.o_ThreadView_messageList');
     assert.ok(
@@ -814,8 +806,8 @@ QUnit.test('should scroll to bottom on receiving new message if the list is init
                     uuid: thread.uuid,
                 },
             }),
-        message: "should wait until channel 20 scrolled after receiving a message",
-        predicate: data => threadViewer === data.threadViewer,
+        message: "should wait until channel scrolled after receiving a message",
+        predicate: data => thread === data.threadViewer.thread,
     });
     const messageList = document.querySelector('.o_ThreadView_messageList');
     assert.ok(
@@ -844,25 +836,21 @@ QUnit.test('should not scroll on receiving new message if the list is initially 
             res_id: mailChannelId1,
         });
     }
-    const { afterEvent, createThreadViewComponent, messaging } = await start();
+    const { afterEvent, click, createMessagingMenuComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel'
     });
-    const threadViewer = messaging.models['ThreadViewer'].create({
-        hasThreadView: true,
-        qunitTest: insertAndReplace(),
-        thread: replace(thread),
-    });
+
+    await createMessagingMenuComponent();
+    await click(`.o_MessagingMenu_toggler`);
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
-        func: () => createThreadViewComponent(
-            threadViewer.threadView,
-            undefined,
-            { isFixedSize: true },
-        ),
-        message: "should wait until channel 1 scrolled initially",
-        predicate: data => threadViewer === data.threadViewer,
+        async func() {
+            await click(`.o_NotificationList_preview`);
+        },
+        message: "should wait until channel scrolled initially",
+        predicate: data => thread === data.threadViewer.thread,
     });
     const initialMessageList = document.querySelector('.o_ThreadView_messageList');
     assert.ok(
@@ -874,7 +862,7 @@ QUnit.test('should not scroll on receiving new message if the list is initially 
         eventName: 'o-component-message-list-scrolled',
         func: () => initialMessageList.scrollTop = 0,
         message: "should wait until channel 1 processed manual scroll",
-        predicate: data => threadViewer === data.threadViewer,
+        predicate: data => thread === data.threadViewer.thread,
     });
     assert.strictEqual(
         initialMessageList.scrollTop,
@@ -896,8 +884,8 @@ QUnit.test('should not scroll on receiving new message if the list is initially 
                     uuid: thread.uuid,
                 },
             }),
-        message: "should wait until channel 20 processed new message hint",
-        predicate: data => threadViewer === data.threadViewer && data.hint.type === 'message-received',
+        message: "should wait until channel processed new message hint",
+        predicate: data => thread === data.threadViewer.thread && data.hint.type === 'message-received',
     });
     assert.strictEqual(
         document.querySelector('.o_ThreadView_messageList').scrollTop,
@@ -1596,9 +1584,8 @@ QUnit.test('failure on loading messages should display error', async function (a
     const { createThreadViewComponent, messaging } = await start({
         async mockRPC(route, args) {
             if (route === '/mail/channel/messages') {
-                throw new Error();
+                return Promise.reject();
             }
-            return this._super(...arguments);
         },
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -1630,9 +1617,8 @@ QUnit.test('failure on loading messages should prompt retry button', async funct
     const { createThreadViewComponent, messaging } = await start({
         async mockRPC(route, args) {
             if (route === '/mail/channel/messages') {
-                throw new Error();
+                return Promise.reject();
             }
-            return this._super(...arguments);
         },
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -1679,7 +1665,6 @@ QUnit.test('failure on loading more messages should not alter message list displ
                     throw new Error();
                 }
             }
-            return this._super(...arguments);
         },
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -1729,7 +1714,6 @@ QUnit.test('failure on loading more messages should display error and prompt ret
                     throw new Error();
                 }
             }
-            return this._super(...arguments);
         },
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -1785,10 +1769,9 @@ QUnit.test('Retry loading more messages on failed load more messages should load
         async mockRPC(route, args) {
             if (route === '/mail/channel/messages') {
                 if (messageFetchShouldFail) {
-                    throw new Error();
+                    return Promise.reject();
                 }
             }
-            return this._super(...arguments);
         },
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({

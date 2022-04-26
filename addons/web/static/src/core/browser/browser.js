@@ -38,6 +38,8 @@ export const browser = {
     localStorage,
     sessionStorage,
     fetch: window.fetch.bind(window),
+    innerHeight: window.innerHeight,
+    innerWidth: window.innerWidth,
 };
 
 Object.defineProperty(browser, "location", {

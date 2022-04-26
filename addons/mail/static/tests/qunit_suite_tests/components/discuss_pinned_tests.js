@@ -78,7 +78,6 @@ QUnit.test('sidebar: pinned channel 3: open channel and leave it', async functio
                     "The right id is sent to the server to remove"
                 );
             }
-            return this._super(...arguments);
         },
     });
 

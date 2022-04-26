@@ -81,7 +81,6 @@ QUnit.test('simplest layout + editable', async function (assert) {
                     "should fetch image with 200x200 pixels ratio");
                 assert.step('fetch_image');
             }
-            return this._super(...arguments);
         },
     });
     const attachment = messaging.models['Attachment'].create({
@@ -248,9 +247,7 @@ QUnit.test('clicking on the delete attachment button multiple times should do th
         async mockRPC(route, args) {
             if (route === '/mail/attachment/delete') {
                 assert.step('attachment_unlink');
-                return;
             }
-            return this._super(...arguments);
         },
     });
     const attachment = messaging.models['Attachment'].create({

@@ -26,8 +26,9 @@ QUnit.test('grant course access', async function (assert) {
                 assert.strictEqual(args.args[0][0], slideChannelId1);
                 assert.strictEqual(args.kwargs.partner_id, resPartnerId1);
                 assert.step('access_grant');
+                // random value returned in order for the mock server to know that this route is implemented.
+                return true;
             }
-            return this._super(...arguments);
         },
     });
     await createChatterContainerComponent({
@@ -62,8 +63,9 @@ QUnit.test('refuse course access', async function (assert) {
                 assert.strictEqual(args.args[0][0], slideChannelId1);
                 assert.strictEqual(args.kwargs.partner_id, resPartnerId1);
                 assert.step('access_refuse');
+                // random value returned in order for the mock server to know that this route is implemented.
+                return true;
             }
-            return this._super(...arguments);
         },
     });
     await createChatterContainerComponent({

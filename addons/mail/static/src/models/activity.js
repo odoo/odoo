@@ -134,10 +134,10 @@ registerModel({
                 },
                 res_id: this.id,
             };
-            this.env.bus.trigger('do-action', {
+            this.env.services.action.doAction(
                 action,
-                options: { on_close: () => this.fetchAndUpdate() },
-            });
+                { onClose: () => this.fetchAndUpdate() },
+            );
         },
         async fetchAndUpdate() {
             const [data] = await this.messaging.rpc({
@@ -210,17 +210,17 @@ registerModel({
             if (!action) {
                 return;
             }
-            this.env.bus.trigger('do-action', {
+            this.env.services.action.doAction(
                 action,
-                options: {
-                    on_close: () => {
+                {
+                    onClose: () => {
                         if (!thread.exists()) {
                             return;
                         }
                         thread.fetchData(['activities']);
                     },
                 },
-            });
+            );
         },
         /**
          * @private

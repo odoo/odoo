@@ -7,7 +7,8 @@ import {
 } from '@mail/../tests/helpers/test_utils';
 
 import { browser } from '@web/core/browser/browser';
-import { patchWithCleanup } from '@web/../tests/helpers/utils';
+import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 import { makeTestPromise } from 'web.test_utils';
 
@@ -56,7 +57,6 @@ QUnit.test('messaging not initialized', async function (assert) {
                 // simulate messaging never initialized
                 return new Promise(resolve => {});
             }
-            return this._super(...arguments);
         },
         waitUntilMessagingCondition: 'created',
     });
@@ -82,11 +82,9 @@ QUnit.test('messaging becomes initialized', async function (assert) {
 
     const { click, createMessagingMenuComponent } = await start({
         async mockRPC(route) {
-            const _super = this._super.bind(this, ...arguments); // limitation of class.js
             if (route === '/mail/init_messaging') {
                 await messagingInitializedProm;
             }
-            return _super();
         },
         waitUntilMessagingCondition: 'created',
     });
@@ -403,7 +401,7 @@ QUnit.test('new message', async function (assert) {
 QUnit.test('no new message when discuss is open', async function (assert) {
     assert.expect(3);
 
-    const { click, discussWidget, createMessagingMenuComponent } = await start({
+    const { click, createMessagingMenuComponent, openDiscuss, openView } = await start({
         autoOpenDiscuss: true,
     });
     await createMessagingMenuComponent();
@@ -415,16 +413,18 @@ QUnit.test('no new message when discuss is open', async function (assert) {
         "should not have 'new message' when discuss is open"
     );
 
-    // simulate closing discuss app
-    await afterNextRender(() => discussWidget.on_detach_callback());
+    await openView({
+        res_model: 'res.partner',
+        views: [[false, 'form']],
+    });
+
     assert.strictEqual(
         document.querySelectorAll(`.o_MessagingMenu_newMessageButton`).length,
         1,
         "should have 'new message' when discuss is closed"
     );
 
-    // simulate opening discuss app
-    await afterNextRender(() => discussWidget.on_attach_callback());
+    await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`.o_MessagingMenu_newMessageButton`).length,
         0,
@@ -916,16 +916,12 @@ QUnit.test('respond to notification prompt (denied)', async function (assert) {
         },
     });
     const { click, createMessagingMenuComponent } = await start({
-        env: {
-            services: {
-                notification: {
-                    notify() {
-                        assert.step(
-                            "should display a toast notification with the deny confirmation"
-                        );
-                    }
-                }
-            }
+        services: {
+            notification: makeFakeNotificationService(() => {
+                assert.step(
+                    "should display a toast notification with the deny confirmation"
+                );
+            }),
         },
     });
     await createMessagingMenuComponent();

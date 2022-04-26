@@ -6,11 +6,10 @@ import {
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
-import FormView from 'web.FormView';
-import KanbanView from 'web.KanbanView';
-import ListView from 'web.ListView';
+import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
+
 import { Many2OneAvatarEmployee } from '@hr/js/m2x_avatar_employee';
-import { dom, mock } from 'web.test_utils';
+import { dom } from 'web.test_utils';
 
 QUnit.module('hr', {}, function () {
     QUnit.module('M2XAvatarEmployee', {
@@ -40,17 +39,20 @@ QUnit.module('hr', {}, function () {
             { employee_id: hrEmployeePublicId2 },
             { employee_id: hrEmployeePublicId1 },
         ]);
-        await start({
-            hasView: true,
-            View: ListView,
-            model: 'm2x.avatar.employee',
-            arch: '<tree><field name="employee_id" widget="many2one_avatar_employee"/></tree>',
+        const views = {
+            'm2x.avatar.employee,false,list': '<tree><field name="employee_id" widget="many2one_avatar_employee"/></tree>',
+        };
+        const { openView } = await start({
             mockRPC(route, args) {
                 if (args.method === 'read') {
                     assert.step(`read ${args.model} ${args.args[0]}`);
                 }
-                return this._super(...arguments);
             },
+            serverData: { views },
+        });
+        await openView({
+            res_model: 'm2x.avatar.employee',
+            views: [[false, 'list']],
         });
 
         assert.strictEqual(document.querySelector('.o_data_cell span').innerText, 'Mario');
@@ -120,13 +122,9 @@ QUnit.module('hr', {}, function () {
         const resUsersId1 = pyEnv['res.users'].create({ partner_id: resPartnerId1 });
         const hrEmployeePublicId1 = pyEnv['hr.employee.public'].create({ user_id: resUsersId1, user_partner_id: resPartnerId1 });
         pyEnv['m2x.avatar.employee'].create({ employee_id: hrEmployeePublicId1, employee_ids: [hrEmployeePublicId1] });
-        await start({
-            hasView: true,
-            View: KanbanView,
-            model: 'm2x.avatar.employee',
-            data: this.data,
-            arch: `
-                <kanban>
+        const views = {
+            'm2x.avatar.employee,false,kanban':
+                `<kanban>
                     <templates>
                         <t t-name="kanban-box">
                             <div>
@@ -135,6 +133,13 @@ QUnit.module('hr', {}, function () {
                         </t>
                     </templates>
                 </kanban>`,
+        };
+        const { openView } = await start({
+            serverData: { views },
+        });
+        await openView({
+            res_model: 'm2x.avatar.employee',
+            views: [[false, 'kanban']],
         });
 
         assert.strictEqual(document.querySelector('.o_kanban_record').innerText.trim(), '');
@@ -148,41 +153,36 @@ QUnit.module('hr', {}, function () {
         const pyEnv = await startServer();
         const hrEmployeePublicId1 = pyEnv['hr.employee.public'].create({ name: 'Mario' });
         const m2xHrAvatarUserId1 = pyEnv['m2x.avatar.employee'].create({ employee_id: hrEmployeePublicId1 });
-        const { widget } = await start({
-            hasView: true,
-            View: FormView,
-            model: 'm2x.avatar.employee',
-            data: this.data,
-            arch: '<form><field name="employee_id" widget="many2one_avatar_employee"/></form>',
+        const views = {
+            'm2x.avatar.employee,false,form': '<form><field name="employee_id" widget="many2one_avatar_employee"/></form>',
+        };
+        const { openView } = await start({
             mockRPC(route, args) {
                 if (args.method === 'read') {
                     assert.step(`read ${args.model} ${args.args[0]}`);
                 }
-                return this._super(...arguments);
             },
-            res_id: m2xHrAvatarUserId1,
+            serverData: { views },
             services: {
-                notification: {
-                    notify(notification) {
-                        assert.ok(
-                            true,
-                            "should display a toast notification after failing to open chat"
-                        );
-                        assert.strictEqual(
-                            notification.message,
-                            "You can only chat with employees that have a dedicated user.",
-                            "should display the correct information in the notification"
-                        );
-                    },
-                },
+                notification: makeFakeNotificationService(message => {
+                    assert.ok(
+                        true,
+                        "should display a toast notification after failing to open chat"
+                    );
+                    assert.strictEqual(
+                        message,
+                        "You can only chat with employees that have a dedicated user.",
+                        "should display the correct information in the notification"
+                    );
+                }),
             },
         });
-        mock.intercept(widget, 'call_service', (ev) => {
-            if (ev.data.service === 'notification') {
-                assert.step(`display notification "${ev.data.args[0].message}"`);
-            }
-        }, true);
 
+        await openView({
+            res_model: 'm2x.avatar.employee',
+            res_id: m2xHrAvatarUserId1,
+            views: [[false, 'form']],
+        });
         assert.strictEqual(document.querySelector('.o_field_widget[name=employee_id]').innerText.trim(), 'Mario');
 
         await dom.click(document.querySelector('.o_m2o_avatar > img'));
@@ -206,21 +206,23 @@ QUnit.module('hr', {}, function () {
         const m2xAvatarEmployeeId1 = pyEnv['m2x.avatar.employee'].create(
             { employee_ids: [hrEmployeePublicId1, hrEmployeePublicId2] },
         );
-        await start({
-            hasView: true,
-            View: FormView,
-            model: 'm2x.avatar.employee',
-            data: this.data,
-            arch: '<form><field name="employee_ids" widget="many2many_avatar_employee"/></form>',
+        const views = {
+            'm2x.avatar.employee,false,form': '<form><field name="employee_ids" widget="many2many_avatar_employee"/></form>',
+        };
+        const { openView } = await start({
             mockRPC(route, args) {
                 if (args.method === 'read') {
                     assert.step(`read ${args.model} ${args.args[0]}`);
                 }
-                return this._super(...arguments);
             },
-            res_id: m2xAvatarEmployeeId1,
+            serverData: { views },
         });
 
+        await openView({
+            res_model: 'm2x.avatar.employee',
+            res_id: m2xAvatarEmployeeId1,
+            views: [[false, 'form']],
+        });
         assert.containsN(document.body, '.o_field_many2manytags.avatar.o_field_widget .badge', 2,
             "should have 2 records");
         assert.strictEqual(document.querySelector('.o_field_many2manytags.avatar.o_field_widget .badge img').getAttribute('data-src'),
@@ -261,19 +263,22 @@ QUnit.module('hr', {}, function () {
         pyEnv['m2x.avatar.employee'].create(
             { employee_ids: [hrEmployeePublicId1, hrEmployeePublicId2] },
         );
-        await start({
-            hasView: true,
-            View: ListView,
-            model: 'm2x.avatar.employee',
-            arch: '<tree><field name="employee_ids" widget="many2many_avatar_employee"/></tree>',
+        const views = {
+            'm2x.avatar.employee,false,list': '<tree><field name="employee_ids" widget="many2many_avatar_employee"/></tree>',
+        };
+        const { openView } = await start({
             mockRPC(route, args) {
                 if (args.method === 'read') {
                     assert.step(`read ${args.model} ${args.args[0]}`);
                 }
-                return this._super(...arguments);
             },
+            serverData: { views },
         });
 
+        await openView({
+            res_model: 'm2x.avatar.employee',
+            views: [[false, 'list']],
+        });
         assert.containsN(document.body, '.o_data_cell:first .o_field_many2manytags > span', 2,
             "should have two avatar");
 
@@ -330,12 +335,9 @@ QUnit.module('hr', {}, function () {
         pyEnv['m2x.avatar.employee'].create(
             { employee_ids: [hrEmployeePublicId1, hrEmployeePublicId2] },
         );
-        await start({
-            hasView: true,
-            View: KanbanView,
-            model: 'm2x.avatar.employee',
-            arch: `
-                <kanban>
+        const views = {
+            'm2x.avatar.employee,false,kanban':
+                `<kanban>
                     <templates>
                         <t t-name="kanban-box">
                             <div>
@@ -350,14 +352,20 @@ QUnit.module('hr', {}, function () {
                         </t>
                     </templates>
                 </kanban>`,
+        };
+        const { openView } = await start({
             mockRPC(route, args) {
                 if (args.method === 'read') {
                     assert.step(`read ${args.model} ${args.args[0]}`);
                 }
-                return this._super(...arguments);
             },
+            serverData: { views },
         });
 
+        await openView({
+            res_model: 'm2x.avatar.employee',
+            views: [[false, 'kanban']],
+        });
         assert.containsN(document.body, '.o_kanban_record:first .o_field_many2manytags img.o_m2m_avatar', 2,
             "should have 2 avatar images");
         assert.strictEqual(document.querySelector('.o_kanban_record .o_field_many2manytags img.o_m2m_avatar').getAttribute('data-src'),
@@ -390,40 +398,35 @@ QUnit.module('hr', {}, function () {
         const m2xAvatarEmployeeId1 = pyEnv['m2x.avatar.employee'].create(
             { employee_ids: [hrEmployeePublicId1, hrEmployeePublicId2] },
         );
-        const { widget } = await start({
-            hasView: true,
-            View: FormView,
-            model: 'm2x.avatar.employee',
-            arch: '<form><field name="employee_ids" widget="many2many_avatar_employee"/></form>',
+        const views = {
+            'm2x.avatar.employee,false,form': '<form><field name="employee_ids" widget="many2many_avatar_employee"/></form>',
+        };
+        const { openView } = await start({
             mockRPC(route, args) {
                 if (args.method === 'read') {
                     assert.step(`read ${args.model} ${args.args[0]}`);
                 }
-                return this._super(...arguments);
             },
-            res_id: m2xAvatarEmployeeId1,
+            serverData: { views },
             services: {
-                notification: {
-                    notify(notification) {
-                        assert.ok(
-                            true,
-                            "should display a toast notification after failing to open chat"
-                        );
-                        assert.strictEqual(
-                            notification.message,
-                            "You can only chat with employees that have a dedicated user.",
-                            "should display the correct information in the notification"
-                        );
-                    },
-                },
+                notification: makeFakeNotificationService(message => {
+                    assert.ok(
+                        true,
+                        "should display a toast notification after failing to open chat"
+                    );
+                    assert.strictEqual(
+                        message,
+                        "You can only chat with employees that have a dedicated user.",
+                        "should display the correct information in the notification"
+                    );
+                }),
             },
         });
-
-        mock.intercept(widget, 'call_service', (ev) => {
-            if (ev.data.service === 'notification') {
-                assert.step(`display notification "${ev.data.args[0].message}"`);
-            }
-        }, true);
+        await openView({
+            res_model: 'm2x.avatar.employee',
+            res_id: m2xAvatarEmployeeId1,
+            views: [[false, 'form']],
+        });
 
         assert.containsN(document.body, '.o_field_many2manytags.avatar.o_field_widget .badge', 2,
             "should have 2 records");

@@ -32,6 +32,10 @@ function traverseElementTree(tree, cb) {
 
 export class MockServer {
     constructor(data, options = {}) {
+        this.init(data, options);
+    }
+
+    init(data, options) {
         this.models = data.models || {};
         this.actions = data.actions || {};
         this.menus = data.menus || null;
@@ -62,6 +66,15 @@ export class MockServer {
             model.onchanges = model.onchanges || {};
             model.methods = model.methods || {};
         });
+
+        // fill relational fields' inverse.
+        for (const modelName in this.models) {
+            const records = this.models[modelName].records
+            if (!Array.isArray(this.models[modelName].records)) {
+                continue;
+            }
+            records.forEach(record => this.updateComodelRelationalFields(modelName, record));
+        }
     }
 
     /**
@@ -478,6 +491,8 @@ export class MockServer {
                 return this.mockSearchPanelSelectMultiRange(args.model, args.args, args.kwargs);
             case "search_read":
                 return this.mockSearchRead(args.model, args.args, args.kwargs);
+            case "unlink":
+                return this.mockUnlink(args.model, args.args);
             case "web_search_read":
                 return this.mockWebSearchRead(args.model, args.args, args.kwargs);
             case "read_group":
@@ -505,6 +520,7 @@ export class MockServer {
         model.records.push(record);
         this.applyDefaults(model, values);
         this.writeRecord(modelName, values, id);
+        this.updateComodelRelationalFields(modelName, record);
         return id;
     }
 
@@ -996,6 +1012,32 @@ export class MockServer {
         }
 
         return readGroupResult;
+    }
+
+    mockUnlink(modelName, args) {
+        var ids = args[0];
+        if (!Array.isArray(ids)) {
+            ids = [ids];
+        }
+        this.models[modelName].records = this.models[modelName].records.filter(record => !ids.includes(record.id));
+
+        // update value of relationnal fields pointing to the deleted records
+        _.each(this.models, function (d) {
+            var relatedFields = _.pick(d.fields, function (field) {
+                return field.relation === modelName;
+            });
+            _.each(Object.keys(relatedFields), function (relatedField) {
+                _.each(d.records, function (record) {
+                    if (Array.isArray(record[relatedField])) {
+                        record[relatedField] = _.difference(record[relatedField], ids);
+                    } else if (ids.includes(record[relatedField])) {
+                        record[relatedField] = false;
+                    }
+                });
+            });
+        });
+
+         return { result: true };
     }
 
     mockWebReadGroup(modelName, kwargs) {
@@ -1637,13 +1679,82 @@ export class MockServer {
     }
 
     mockWrite(modelName, args) {
-        args[0].forEach((id) => this.writeRecord(modelName, args[1], id));
+        args[0].forEach((id) => {
+            const [originalRecord] = this.mockSearchRead(modelName, [[['id', '=', id]]], {});
+            this.writeRecord(modelName, args[1], id);
+            const updatedRecord = this.models[modelName].records.find(record => record.id === id);
+            this.updateComodelRelationalFields(modelName, updatedRecord, originalRecord);
+        });
         return true;
     }
 
     //////////////////////////////////////////////////////////////////////////////
     // Private
     //////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Fill all inverse fields of the relational fields present in the record
+     * to be created/updated.
+     *
+     * @param {string} modelName
+     * @param {Object} record record that have been created/updated.
+     * @param {Object|undefined} originalRecord record before update.
+     */
+    updateComodelRelationalFields(modelName, record, originalRecord) {
+        for (const fname in record) {
+            const field = this.models[modelName].fields[fname];
+            const comodelName = field.relation || record[field['model_name_ref_fname']];
+            const inverseFieldName = field['inverse_fname_by_model_name'] && field['inverse_fname_by_model_name'][comodelName];
+            if (!inverseFieldName) {
+                // field has no inverse, skip it.
+                continue;
+            }
+            const relatedRecordIds = Array.isArray(record[fname]) ? record[fname] : [record[fname]];
+            // we only want to set a value for comodel inverse field if the model field has a value.
+            if (record[fname]) {
+                for (const relatedRecordId of relatedRecordIds) {
+                    let inverseFieldNewValue = record.id;
+                    const relatedRecord = this.models[comodelName].records.find(record => record.id === relatedRecordId);
+                    const relatedFieldValue = relatedRecord && relatedRecord[inverseFieldName];
+                    if (
+                        relatedFieldValue === undefined ||
+                        relatedFieldValue === record.id ||
+                        field.type !== 'one2many' && relatedFieldValue.includes(record.id)
+                    ) {
+                        // related record does not exist or the related value is already up to date.
+                        continue;
+                    }
+                    if (Array.isArray(relatedFieldValue)) {
+                        inverseFieldNewValue = [...relatedFieldValue, record.id];
+                    }
+                    this.writeRecord(comodelName, { [inverseFieldName]: inverseFieldNewValue }, relatedRecordId);
+                }
+            } else if (field.type === 'many2one_reference') {
+                // we need to clean the many2one_field as well.
+                const comodel_inverse_field = this.models[comodelName].fields[inverseFieldName];
+                const model_many2one_field = comodel_inverse_field['inverse_fname_by_model_name'][modelName];
+                this.writeRecord(modelName, { [model_many2one_field]: false }, record.id);
+            }
+            // it's an update, get the records that were originally referenced but are not
+            // anymore and update their relational fields.
+            if (originalRecord) {
+                const originalRecordIds = Array.isArray(originalRecord[fname]) ? originalRecord[fname] : [originalRecord[fname]];
+                // search read returns [id, name], let's ensure the removedRecordIds are integers.
+                const removedRecordIds = originalRecordIds.filter(recordId => Number.isInteger(recordId) && !relatedRecordIds.includes(recordId));
+                for (const removedRecordId of removedRecordIds) {
+                    const removedRecord = this.models[comodelName].records.find(record => record.id === removedRecordId);
+                    if (!removedRecord) {
+                        continue;
+                    }
+                    let inverseFieldNewValue = false;
+                    if (Array.isArray(removedRecord[inverseFieldName])) {
+                        inverseFieldNewValue = removedRecord[inverseFieldName].filter(id => id !== record.id);
+                    }
+                    this.writeRecord(comodelName, { [inverseFieldName]: inverseFieldNewValue }, removedRecordId);
+                }
+            }
+        }
+    }
     evaluateDomain(domain, record) {
         return new Domain(domain).contains(record);
     }
@@ -1841,7 +1952,12 @@ export class MockServer {
                 for (const command of value || []) {
                     if (command[0] === 0) {
                         // CREATE
-                        const newId = this.mockCreate(field.relation, command[2]);
+                        const inverseData = command[2]; // write in place instead of copy, because some tests rely on the object given being updated
+                        const inverseFieldName = field.inverse_fname_by_model_name && field.inverse_fname_by_model_name[field.relation];
+                        if (inverseFieldName) {
+                            inverseData[inverseFieldName] = id;
+                        }
+                        const newId = this.mockCreate(field.relation, inverseData);
                         ids.push(newId);
                     } else if (command[0] === 1) {
                         // UPDATE

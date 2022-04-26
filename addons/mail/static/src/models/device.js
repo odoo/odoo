@@ -3,6 +3,8 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr } from '@mail/model/model_field';
 import { browser } from "@web/core/browser/browser";
+import { isMobileOS } from "@web/core/browser/feature_detection";
+import { SIZES } from '@web/core/ui/ui_service';
 
 registerModel({
     name: 'Device',
@@ -30,9 +32,9 @@ registerModel({
             this.update({
                 globalWindowInnerHeight: this.messaging.browser.innerHeight,
                 globalWindowInnerWidth: this.messaging.browser.innerWidth,
-                isMobileDevice: this.env.device.isMobileDevice,
-                isSmall: this.env.device.isMobile,
-                sizeClass: this.env.device.size_class,
+                isMobileDevice: isMobileOS(),
+                isSmall: this.env.isSmall,
+                sizeClass: this.env.services.ui.size,
             });
         },
     },
@@ -56,5 +58,8 @@ registerModel({
          * attribute.
          */
         sizeClass: attr(),
+        sizeClasses: attr({
+            default: SIZES,
+        }),
     },
 });

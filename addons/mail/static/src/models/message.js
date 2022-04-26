@@ -231,14 +231,14 @@ registerModel({
          * Opens the view that allows to resend the message in case of failure.
          */
         openResendAction() {
-            this.env.bus.trigger('do-action', {
-                action: 'mail.mail_resend_message_action',
-                options: {
+            this.env.services.action.doAction(
+                'mail.mail_resend_message_action',
+                {
                     additional_context: {
                         mail_message_to_resend: this.id,
                     },
-                },
-            });
+                }
+            );
         },
         /**
          * Removes the given reaction from this message.

@@ -16,9 +16,9 @@ registerModel({
     identifyingFields: ['messaging'],
     lifecycleHooks: {
         _willDelete() {
-            if (this.env.services['bus_service']) {
-                this.env.services['bus_service'].off('notification');
-                this.env.services['bus_service'].stopPolling();
+            if (this.env.services['legacy_bus_service']) {
+                this.env.services['legacy_bus_service'].off('notification');
+                this.env.services['legacy_bus_service'].stopPolling();
             }
         },
     },
@@ -28,8 +28,8 @@ registerModel({
          * the current users. This includes pinned channels for instance.
          */
         start() {
-            this.env.services.bus_service.onNotification(null, notifs => this._handleNotifications(notifs));
-            this.env.services.bus_service.startPolling();
+            this.env.services.legacy_bus_service.onNotification(null, notifs => this._handleNotifications(notifs));
+            this.env.services.legacy_bus_service.startPolling();
         },
         /**
          * @private
@@ -269,7 +269,7 @@ registerModel({
                 channel.correspondent === this.messaging.partnerRoot
             );
             if (!isChatWithOdooBot) {
-                const isOdooFocused = this.env.services['bus_service'].isOdooFocused();
+                const isOdooFocused = this.env.services['legacy_bus_service'].isOdooFocused();
                 // Notify if out of focus
                 if (!isOdooFocused && channel.isChatChannel) {
                     this._notifyNewChannelMessageWhileOutOfFocus({
@@ -657,7 +657,7 @@ registerModel({
             // then open a chat for the current user with the new user.
             const message = sprintf(this.env._t('%s connected'), username);
             const title = this.env._t("This is their first connection. Wish them luck.");
-            this.env.services['bus_service'].sendNotification({ message, title, type: 'info' });
+            this.env.services['legacy_bus_service'].sendNotification({ message, title, type: 'info' });
             const chat = await this.messaging.getChat({ partnerId });
             if (!this.exists() || !chat || this.messaging.device.isSmall) {
                 return;
@@ -699,7 +699,7 @@ registerModel({
             const notificationContent = escape(
                 htmlToTextContentInline(message.body).substr(0, PREVIEW_MSG_MAX_SIZE)
             );
-            this.env.services['bus_service'].sendNotification({
+            this.env.services['legacy_bus_service'].sendNotification({
                 message: notificationContent,
                 title: notificationTitle,
                 type: 'info',

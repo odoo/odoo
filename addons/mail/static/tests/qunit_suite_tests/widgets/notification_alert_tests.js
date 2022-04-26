@@ -3,36 +3,30 @@
 import { start } from '@mail/../tests/helpers/test_utils';
 
 import { browser } from '@web/core/browser/browser';
-import { patchWithCleanup } from '@web/../tests/helpers/utils';
-
-import FormView from 'web.FormView';
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module('mail', {}, function () {
 QUnit.module('widgets', {}, function () {
 QUnit.module('notification_alert_tests.js');
 
-QUnit.skip('notification_alert widget: display blocked notification alert', async function (assert) {
-    // FIXME: Test should work, but for some reasons OWL always flags the
-    // component as not mounted, even though it is in the DOM and it's state
-    // is good for rendering... task-227947
+QUnit.test('notification_alert widget: display blocked notification alert', async function (assert) {
     assert.expect(1);
 
+    const views = {
+        'mail.message,false,form': `<form><widget name="notification_alert"/></form>`,
+    };
     patchWithCleanup(browser, {
         Notification: {
             ...browser.Notification,
             permission: 'denied',
         },
     });
-    await start({
-        arch: `
-            <form>
-                <widget name="notification_alert"/>
-            </form>
-        `,
-        hasView: true,
-        model: 'mail.message',
-        // View params
-        View: FormView,
+    const { openView } = await start({
+        serverData: { views },
+    });
+    await openView({
+        res_model: 'mail.message',
+        views: [[false, 'form']],
     });
 
     assert.containsOnce(
@@ -45,21 +39,20 @@ QUnit.skip('notification_alert widget: display blocked notification alert', asyn
 QUnit.test('notification_alert widget: no notification alert when granted', async function (assert) {
     assert.expect(1);
 
+    const views = {
+        'mail.message,false,form': `<form><widget name="notification_alert"/></form>`,
+    };
     patchWithCleanup(browser, {
         Notification: {
             permission: 'granted',
         },
     });
-    await start({
-        arch: `
-            <form>
-                <widget name="notification_alert"/>
-            </form>
-        `,
-        hasView: true,
-        model: 'mail.message',
-        // View params
-        View: FormView,
+    const { openView } = await start({
+        serverData: { views },
+    });
+    await openView({
+        res_model: 'mail.message',
+        views: [[false, 'form']],
     });
 
     assert.containsNone(
@@ -72,21 +65,20 @@ QUnit.test('notification_alert widget: no notification alert when granted', asyn
 QUnit.test('notification_alert widget: no notification alert when default', async function (assert) {
     assert.expect(1);
 
+    const views = {
+        'mail.message,false,form': `<form><widget name="notification_alert"/></form>`,
+    };
     patchWithCleanup(browser, {
         Notification: {
             permission: 'default',
         },
     });
-    await start({
-        arch: `
-            <form>
-                <widget name="notification_alert"/>
-            </form>
-        `,
-        hasView: true,
-        model: 'mail.message',
-        // View params
-        View: FormView,
+    const { openView } = await start({
+        serverData: { views },
+    });
+    await openView({
+        res_model: 'mail.message',
+        views: [[false, 'form']],
     });
 
     assert.containsNone(

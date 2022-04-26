@@ -1,20 +1,16 @@
 /** @odoo-module **/
 
 import { data } from 'mail.discuss_public_channel_template';
+import { makeMessagingToLegacyEnv } from '@mail/utils/make_messaging_to_legacy_env';
 
 import { DialogManagerContainer } from '@mail/components/dialog_manager_container/dialog_manager_container';
 import { DiscussPublicViewContainer } from '@mail/components/discuss_public_view_container/discuss_public_view_container';
-import { MessagingService } from '@mail/services/messaging/messaging';
+import { messagingService } from '@mail/services/messaging_service';
 
 import { processTemplates } from '@web/core/assets';
 import { MainComponentsContainer } from '@web/core/main_components_container';
 import { registry } from '@web/core/registry';
 import { makeEnv, startServices } from '@web/env';
-import { session } from '@web/session';
-
-import * as AbstractService from 'web.AbstractService';
-import { serviceRegistry as legacyServiceRegistry } from 'web.core';
-import * as legacyEnv from 'web.env';
 import {
     makeLegacyCrashManagerService,
     makeLegacyDialogMappingService,
@@ -23,6 +19,10 @@ import {
     makeLegacySessionService,
     mapLegacyEnvToWowlEnv,
 } from '@web/legacy/utils';
+import { session } from '@web/session';
+
+import * as AbstractService from 'web.AbstractService';
+import * as legacyEnv from 'web.env';
 import * as legacySession from 'web.session';
 
 const { Component, mount, whenReady } = owl;
@@ -31,6 +31,15 @@ Component.env = legacyEnv;
 
 (async function boot() {
     await whenReady();
+
+    const messagingValuesService = {
+        start() {
+            return {
+                autofetchPartnerImStatus: false,
+            };
+        }
+    };
+
     AbstractService.prototype.deployServices(Component.env);
     const serviceRegistry = registry.category('services');
     serviceRegistry.add('legacy_rpc', makeLegacyRpcService(Component.env));
@@ -38,6 +47,10 @@ Component.env = legacyEnv;
     serviceRegistry.add('legacy_notification', makeLegacyNotificationService(Component.env));
     serviceRegistry.add('legacy_crash_manager', makeLegacyCrashManagerService(Component.env));
     serviceRegistry.add('legacy_dialog_mapping', makeLegacyDialogMappingService(Component.env));
+    serviceRegistry.add('messaging_service_to_legacy_env', makeMessagingToLegacyEnv(Component.env));
+
+    serviceRegistry.add('messaging', messagingService);
+    serviceRegistry.add('messagingValues', messagingValuesService);
 
     const mainComponentsRegistry = registry.category('main_components');
     mainComponentsRegistry.add('DiscussPublicViewContainer', { Component: DiscussPublicViewContainer });
@@ -61,11 +74,6 @@ Component.env = legacyEnv;
     ]);
     mapLegacyEnvToWowlEnv(Component.env, env);
     odoo.isReady = true;
-    legacyServiceRegistry.add('messaging', MessagingService.extend({
-        messagingValues: {
-            autofetchPartnerImStatus: false,
-        },
-    }));
     await mount(MainComponentsContainer, document.body, { env, templates, dev: env.debug });
     createDiscussPublicView();
 })();

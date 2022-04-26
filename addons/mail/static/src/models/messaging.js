@@ -15,8 +15,8 @@ registerModel({
     identifyingFields: [],
     lifecycleHooks: {
         _willDelete() {
-            if (this.env.services['bus_service']) {
-                this.env.services['bus_service'].off('window_focus', null, this._handleGlobalWindowFocus);
+            if (this.env.services['legacy_bus_service']) {
+                this.env.services['legacy_bus_service'].off('window_focus', null, this._handleGlobalWindowFocus);
             }
         },
     },
@@ -25,7 +25,7 @@ registerModel({
          * Starts messaging and related records.
          */
         async start() {
-            this.env.services['bus_service'].on('window_focus', null, this._handleGlobalWindowFocus);
+            this.env.services['legacy_bus_service'].on('window_focus', null, this._handleGlobalWindowFocus);
             await this.initializer.start();
             if (!this.exists()) {
                 return;
@@ -70,7 +70,8 @@ registerModel({
          * @return {number} the id of the notification.
          */
         notify(params) {
-            return this.env.services.notification.notify(params);
+            const { message, ...options } = params;
+            return this.env.services.notification.add(message, options);
         },
         /**
          * Opens a chat with the provided person and returns it.
@@ -100,13 +101,11 @@ registerModel({
          * @param {string} param0.model
          */
         async openDocument({ id, model }) {
-            this.env.bus.trigger('do-action', {
-                action: {
-                    type: 'ir.actions.act_window',
-                    res_model: model,
-                    views: [[false, 'form']],
-                    res_id: id,
-                },
+            this.env.services.action.doAction({
+                type: 'ir.actions.act_window',
+                res_model: model,
+                views: [[false, 'form']],
+                res_id: id,
             });
             if (this.messaging.device.isSmall) {
                 // messaging menu has a higher z-index than views so it must
@@ -157,8 +156,35 @@ registerModel({
          * @param {Object} params
          * @return {any}
          */
-        async rpc(params, options) {
-            return this.env.services.rpc(params, options);
+        async rpc(params, options = {}) {
+            if (params.route) {
+                const { route, params: rpcParameters } = params;
+                const { shadow: silent, ...rpcSettings } = options;
+                return this.env.services.rpc(route, rpcParameters, { silent, ...rpcSettings });
+            } else {
+                const { args, method, model, kwargs = {} } = params;
+                const { context, domain, fields, groupBy, ...ormOptions } = kwargs;
+
+                const ormService = 'shadow' in options ? this.env.services.orm.silent : this.env.services.orm;
+                switch (method) {
+                    case 'create':
+                        return ormService.create(model, args[0], context);
+                    case 'read':
+                        return ormService.read(model, args[0], args.length > 1 ? args[1] : undefined, context);
+                    case 'read_group':
+                        return ormService.readGroup(model, domain, fields, groupBy, ormOptions, context);
+                    case 'search':
+                        return ormService.search(model, args[0], ormOptions, context);
+                    case 'search_read':
+                        return ormService.searchRead(model, domain, fields, ormOptions, context);
+                    case 'unlink':
+                        return ormService.unlink(model, args[0], context);
+                    case 'write':
+                        return ormService.write(model, args[0], args[1], context);
+                    default:
+                        return ormService.call(model, method, args, kwargs);
+                }
+            }
         },
         /**
          * Refreshes the value of `isNotificationPermissionDefault`.

@@ -5,39 +5,54 @@ import {
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
-import FormView from 'web.FormView';
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
+
+import session from 'web.session';
 import testUtils from 'web.test_utils';
 
 QUnit.module('test_mail', {}, function () {
 QUnit.module('tracking_value_tests.js', {
     beforeEach() {
-        this.start = async params => {
-            return start({
-                arch: `<form>
-                            <sheet>
-                                <field name="boolean_field"/>
-                                <field name="char_field"/>
-                                <field name="date_field"/>
-                                <field name="datetime_field"/>
-                                <field name="float_field"/>
-                                <field name="integer_field"/>
-                                <field name="monetary_field"/>
-                                <field name="many2one_field_id"/>
-                                <field name="selection_field"/>
-                                <field name="text_field"/>
-                            </sheet>
-                            <div class="oe_chatter">
-                                <field name="message_ids"/>
-                            </div>
-                        </form>`,
-                archs: { 'mail.message,false,list': '<tree/>' },
-                hasView: true,
-                model: 'mail.test.track.all',
-                View: FormView,
-                viewOptions: { mode: 'edit' },
-                ...params,
-            });
+        const views = {
+            'mail.test.track.all,false,form':
+                `<form>
+                    <sheet>
+                        <field name="boolean_field"/>
+                        <field name="char_field"/>
+                        <field name="date_field"/>
+                        <field name="datetime_field"/>
+                        <field name="float_field"/>
+                        <field name="integer_field"/>
+                        <field name="monetary_field"/>
+                        <field name="many2one_field_id"/>
+                        <field name="selection_field"/>
+                        <field name="text_field"/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids"/>
+                    </div>
+                </form>`,
         };
+        this.start = async ({ res_id }) => {
+            const { openView, ...remainder } = await start({
+                serverData: { views },
+            });
+            await openView(
+                {
+                    res_model: 'mail.test.track.all',
+                    res_id,
+                    views: [[false, 'form']],
+                },
+                { mode: 'edit' }
+            );
+            return remainder;
+        };
+
+        patchWithCleanup(session, {
+            getTZOffset() {
+                return 0;
+            },
+        });
     },
 });
 

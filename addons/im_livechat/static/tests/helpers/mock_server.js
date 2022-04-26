@@ -2,9 +2,10 @@
 
 import '@mail/../tests/helpers/mock_server'; // ensure mail overrides are applied first
 
-import MockServer from 'web.MockServer';
+import { patch } from "@web/core/utils/patch";
+import { MockServer } from "@web/../tests/helpers/mock_server";
 
-MockServer.include({
+patch(MockServer.prototype, 'im_livechat', {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -12,7 +13,7 @@ MockServer.include({
     /**
      * @override
      */
-    async _performRpc(route, args) {
+    async _performRPC(route, args) {
         if (route === '/im_livechat/get_session') {
             const channel_id = args.channel_id;
             const anonymous_name = args.anonymous_name;
