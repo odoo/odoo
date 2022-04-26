@@ -49,6 +49,7 @@ CREATE TABLE ir_module_module (
     write_date timestamp without time zone,
     write_uid integer, -- references res_users on delete set null,
     website character varying,
+    -- TODO VSC: Why json instead of jsonb (same for all other fields)
     summary json,
     name character varying NOT NULL,
     author character varying,
