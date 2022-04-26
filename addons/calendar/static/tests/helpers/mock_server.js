@@ -19,7 +19,7 @@ MockServer.include({
         const startDate = new Date();
         const endDate = new Date();
         endDate.setUTCHours(23, 59, 59, 999);
-        const currentPartnerAttendeeIds = this._mockSearch('calendar.attendee', [[['partner_id', '=', this.currentPartnerId]]], {});
+        const currentPartnerAttendeeIds = this.mockSearch('calendar.attendee', [[['partner_id', '=', this.currentPartnerId]]], {});
         return [
             '&',
                 '|',
@@ -42,7 +42,7 @@ MockServer.include({
      */
     _mockResUsersSystrayGetActivities() {
         const activities = this._super(...arguments);
-        const meetingsLines = this._mockSearchRead(
+        const meetingsLines = this.mockSearchRead(
             'calendar.event',
             [
                 this._mockResUsers_SystrayGetCalendarEventDomain(),
