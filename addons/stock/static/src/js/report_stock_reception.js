@@ -4,6 +4,7 @@ import clientAction from 'report.client_action';
 import core from 'web.core';
 
 const qweb = core.qweb;
+const _t = core._t;
 
 const ReceptionReport = clientAction.extend({
     /**
@@ -70,7 +71,7 @@ const ReceptionReport = clientAction.extend({
 
 
     _switchButton: function (button) {
-        button.innerText = button.innerText.includes('Unassign') ? "Assign" : "Unassign";
+        button.innerText = button.innerText.includes(_t("Unassign")) ? _t("Assign") : _t("Unassign");
         button.name = button.name === 'assign_link' ? 'unassign_link' : 'assign_link';
         button.classList.toggle("o_report_reception_assign");
         button.classList.toggle("o_report_reception_unassign");
