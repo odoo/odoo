@@ -64,15 +64,6 @@ registerModel({
             return this.modelManager.create(this, data);
         },
         /**
-         * Get the record that has provided criteria, if it exists.
-         *
-         * @param {function} findFunc
-         * @returns {Record|undefined}
-         */
-        find(findFunc) {
-            return this.modelManager.find(this, findFunc);
-        },
-        /**
          * Gets the unique record that matches the given identifying data, if it
          * exists.
          *
