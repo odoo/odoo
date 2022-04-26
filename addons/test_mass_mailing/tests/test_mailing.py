@@ -82,9 +82,8 @@ class TestMassMailing(TestMassMailCommon):
             'mailing_model_id': self.env['ir.model']._get('mailing.test.optout'),
             'mailing_domain': [('id', 'in', recipients.ids)]
         })
-        mailing.action_put_in_queue()
         with self.mock_mail_gateway(mail_unlink_sent=False):
-            mailing._process_mass_mailing_queue()
+            mailing.action_send_mail()
 
         self.assertMailTraces(
             [{'email': record.email_normalized}
@@ -201,9 +200,8 @@ class TestMassMailing(TestMassMailCommon):
             'campaign_id': campaign.id
         })
 
-        mailing.action_put_in_queue()
         with self.mock_mail_gateway(mail_unlink_sent=False):
-            mailing._process_mass_mailing_queue()
+            mailing.action_send_mail()
 
         traces = self.env['mailing.trace'].search([('model', '=', self.mailing_list_1.contact_ids._name), ('res_id', 'in', self.mailing_list_1.contact_ids.ids)])
         self.assertEqual(len(traces), 3)
@@ -237,9 +235,8 @@ class TestMassMailing(TestMassMailCommon):
         self.env['mail.blacklist'].flush(['active'])
 
         mailing.write({'mailing_domain': [('id', 'in', recipients.ids)]})
-        mailing.action_put_in_queue()
         with self.mock_mail_gateway(mail_unlink_sent=False):
-            mailing._process_mass_mailing_queue()
+            mailing.action_send_mail()
 
         self.assertMailTraces(
             [{'email': 'test.record.00@test.example.com'},
@@ -266,9 +263,8 @@ class TestMassMailing(TestMassMailCommon):
             'mailing_model_id': self.env['ir.model']._get('mailing.test.optout'),
             'mailing_domain': [('id', 'in', recipients.ids)]
         })
-        mailing.action_put_in_queue()
         with self.mock_mail_gateway(mail_unlink_sent=False):
-            mailing._process_mass_mailing_queue()
+            mailing.action_send_mail()
 
         self.assertMailTraces(
             [{'email': 'test.record.00@test.example.com', 'trace_status': 'cancel', 'failure_type': 'mail_optout'},
@@ -326,9 +322,8 @@ class TestMassMailing(TestMassMailCommon):
             'mailing_model_id': self.env['ir.model']._get('mailing.list').id,
             'contact_list_ids': [(4, ml.id) for ml in mailing_list_1 | mailing_list_2],
         })
-        mailing.action_put_in_queue()
         with self.mock_mail_gateway(mail_unlink_sent=False):
-            mailing._process_mass_mailing_queue()
+            mailing.action_send_mail()
 
         self.assertMailTraces(
             [{'email': 'test@test.example.com', 'trace_status': 'sent'},
