@@ -86,7 +86,9 @@ class ResConfigSettings(models.TransientModel):
         readonly=False)
     auth_signup_uninvited = fields.Selection(
         compute="_compute_auth_signup_uninvited",
-        inverse="_inverse_auth_signup_uninvited")
+        inverse="_inverse_auth_signup_uninvited",
+        # Remove any default value and let the compute handle it
+        config_parameter=False, default=None)
 
     favicon = fields.Binary(
         'Favicon',
