@@ -130,11 +130,12 @@ var ThreadWidget = Widget.extend({
                                                     this._enabledOptions;
 
         // attachments ordered by messages order (increasing ID)
-        this.attachments = _.uniq(_.flatten(_.map(messages, function (message) {
+        // [ ...newSet() ]
+        this.attachments = [...new Set(_.flatten(messages.map(function (message) {
             return message.getAttachments();
-        })));
+        })))];
 
-        options = _.extend({}, modeOptions, options, {
+        options = Object.assign({}, modeOptions, options, {
             selectedMessageID: this._selectedMessageID,
         });
 
@@ -147,7 +148,7 @@ var ThreadWidget = Widget.extend({
         // and in the same document (users can now post message in documents
         // directly from a channel that follows it)
         var prevMessage;
-        _.each(messages, function (message) {
+        for (let message of messages) {
             if (
                 // is first message of thread
                 !prevMessage ||
@@ -175,7 +176,7 @@ var ThreadWidget = Widget.extend({
                 displayAuthorMessages[message.getID()] = !options.squashCloseMessages;
             }
             prevMessage = message;
-        });
+        }
 
         if (modeOptions.displayOrder === ORDER.DESC) {
             messages.reverse();
@@ -189,12 +190,12 @@ var ThreadWidget = Widget.extend({
             dateFormat: time.getLangDatetimeFormat(),
         }));
 
-        _.each(messages, function (message) {
+        for (let message of messages) {
             var $message = self.$('.o_thread_message[data-message-id="' + message.getID() + '"]');
             $message.find('.o_mail_timestamp').data('date', message.getDate());
 
             self._insertReadMore($message);
-        });
+        }
 
         if (shouldScrollToBottomAfterRendering) {
             this.scrollToBottom();
@@ -349,7 +350,7 @@ var ThreadWidget = Widget.extend({
                         this.nodeValue.trim();
             });
 
-        _.each($children, function (child) {
+        for (let child of $children) {
             var $child = $(child);
 
             // Hide Text nodes if "stopSpelling"
@@ -383,9 +384,9 @@ var ThreadWidget = Widget.extend({
                 readMoreNodes = undefined;
                 self._insertReadMore($child);
             }
-        });
+        }
 
-        _.each(groups, function (group) {
+        for (let group of groups) {
             // Insert link just before the first node
             var $readMore = $('<a>', {
                 class: 'o_mail_read_more',
@@ -398,13 +399,13 @@ var ThreadWidget = Widget.extend({
             $readMore.click(function (e) {
                 e.preventDefault();
                 isReadMore = !isReadMore;
-                _.each(group, function ($child) {
+                for (let $child of group) {
                     $child.hide();
                     $child.toggle(!isReadMore);
-                });
+                }
                 $readMore.text(isReadMore ? READ_MORE : READ_LESS);
             });
-        });
+        }
     },
     /**
     * @private
@@ -457,7 +458,7 @@ var ThreadWidget = Widget.extend({
             offset: '0, 1',
             content: function () {
                 var messageID = $(this).data('message-id');
-                var message = _.find(messages, function (message) {
+                var message = messages.find(function (message) {
                     return message.getID() === messageID;
                 });
                 return QWeb.render('im_livechat.legacy.mail.widget.Thread.Message.MailTooltip', {

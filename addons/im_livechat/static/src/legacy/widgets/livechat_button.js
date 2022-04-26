@@ -101,7 +101,7 @@ var LivechatButton = Widget.extend({
      * @param {Object} [options={}]
      */
     _addMessage: function (data, options) {
-        options = _.extend({}, this.options, options, {
+        options = Object.assign({}, this.options, options, {
             serverURL: this._serverURL,
         });
         var message = new WebsiteLivechatMessage(this, data, options);
@@ -203,9 +203,9 @@ var LivechatButton = Widget.extend({
      */
     _loadQWebTemplate: function () {
         return session.rpc('/im_livechat/load_templates').then(function (templates) {
-            _.each(templates, function (template) {
+            for (let template of templates) {
                 QWeb.add_template(template);
-            });
+            }
         });
     },
     /**
@@ -397,7 +397,7 @@ var LivechatButton = Widget.extend({
     _onCloseChatWindow: function (ev) {
         ev.stopPropagation();
         var isComposerDisabled = this._chatWindow.$('.o_thread_composer input').prop('disabled');
-        var shouldAskFeedback = !isComposerDisabled && _.find(this._messages, function (message) {
+        var shouldAskFeedback = !isComposerDisabled && this._messages.find(function (message) {
             return message.getID() !== '_welcome';
         });
         if (shouldAskFeedback) {
@@ -414,9 +414,9 @@ var LivechatButton = Widget.extend({
      */
     _onNotification: function (notifications) {
         var self = this;
-        _.each(notifications, function (notification) {
+        for (let notification of notifications) {
             self._handleNotification(notification);
-        });
+        }
     },
     /**
      * @private

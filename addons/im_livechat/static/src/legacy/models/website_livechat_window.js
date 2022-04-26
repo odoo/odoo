@@ -9,7 +9,7 @@ var AbstractThreadWindow = require('im_livechat.legacy.mail.AbstractThreadWindow
  * @see im_livechat.legacy.mail.AbstractThreadWindow for more information
  */
 var LivechatWindow = AbstractThreadWindow.extend({
-    events: _.extend(AbstractThreadWindow.prototype.events, {
+    events: Object.assign(AbstractThreadWindow.prototype.events, {
         'input .o_composer_text_field': '_onInput',
     }),
     /**

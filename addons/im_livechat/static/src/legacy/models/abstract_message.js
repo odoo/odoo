@@ -450,9 +450,9 @@ var AbstractMessage = Class.extend({
      * @private
      */
     _processAttachmentURL: function () {
-        _.each(this.getAttachments(), function (attachment) {
+        for (let attachment of this.getAttachments()) {
             attachment.url = '/web/content/' + attachment.id + '?download=true';
-        });
+        }
     },
 
 });

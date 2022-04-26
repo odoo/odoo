@@ -8,6 +8,7 @@ var utils = require('web.utils');
 var Widget = require('web.Widget');
 
 var { RATING_TO_EMOJI } = require('im_livechat.legacy.im_livechat.Constants');
+var { sprintf } = require('web.utils');
 
 var _t = core._t;
 /*
@@ -57,7 +58,7 @@ var Feedback = Widget.extend({
         this.dp.add(session.rpc('/im_livechat/feedback', args)).then(function (response) {
             var emoji = RATING_TO_EMOJI[self.rating] || "??";
             if (!reason) {
-                var content = utils.sprintf(_t("Rating: %s"), emoji);
+                var content = sprintf(_t("Rating: %s"), emoji);
             }
             else {
                 var content = "Rating reason: \n" + reason;
