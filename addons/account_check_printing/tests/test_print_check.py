@@ -2,6 +2,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.account_check_printing.models.account_payment import INV_LINES_PER_STUB
 from odoo.tests import tagged
+from odoo.tools.misc import NON_BREAKING_SPACE
 
 import math
 
@@ -124,8 +125,8 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         self.assertEqual(stub_pages, [[{
             'due_date': '01/01/2016',
             'number': invoice.name,
-            'amount_total': '$ 100.00',
-            'amount_residual': '$ 50.00',
-            'amount_paid': '150.000 ☺',
+            'amount_total': f'${NON_BREAKING_SPACE}100.00',
+            'amount_residual': f'${NON_BREAKING_SPACE}50.00',
+            'amount_paid': f'150.000{NON_BREAKING_SPACE}☺',
             'currency': invoice.currency_id,
         }]])
