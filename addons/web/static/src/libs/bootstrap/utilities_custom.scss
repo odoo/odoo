@@ -17,3 +17,26 @@ $utilities: map-merge(
         ),
     )
 );
+
+// Restore text-X from BS4 that use text-emphasis-variant
+// we don't merge $utilities-text-colors into $utilities
+// to avoid same utilises classes generated twice.
+// See bootstrap_review.scss
+$utilities: map-merge(
+    $utilities,
+    (
+        "color": (
+            property: color,
+            class: text,
+            local-vars: (
+                "text-opacity": 1
+            ),
+            values: (
+                "muted": $text-muted,
+                "black-50": rgba($black, .5), // deprecated
+                "white-50": rgba($white, .5), // deprecated
+                "reset": inherit,
+            ),
+        ),
+    )
+);
