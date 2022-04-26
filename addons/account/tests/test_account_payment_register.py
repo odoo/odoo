@@ -358,9 +358,18 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
     def test_register_payment_single_batch_not_grouped(self):
         ''' Choose to pay two customer invoices with separated payments (1000 + 2000). '''
         active_ids = (self.out_invoice_1 + self.out_invoice_2).ids
-        payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
-            'group_payment': False,
-        })._create_payments()
+        payment_register = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=active_ids)\
+            .create({
+                'group_payment': False,
+                'amount': 1200.0
+            })
+        payments = payment_register._create_payments()
+        self.assertRecordValues(payment_register, [
+            {
+                'payment_difference': 1800.0  # Test _compute_payment_difference
+            }
+        ])
 
         self.assertRecordValues(payments, [
             {
@@ -530,9 +539,18 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         and one with a vendor bill of 600, by grouping payments.
         '''
         active_ids = (self.in_invoice_1 + self.in_invoice_2 + self.in_invoice_3).ids
-        payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
-            'group_payment': True,
-        })._create_payments()
+        payment_register = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=active_ids)\
+            .create({
+                'group_payment': True,
+                'amount': 1000.0
+                # Test _compute_payment_difference. Since the partners_ids are not the same, this should be without effect.
+            })
+        payments = payment_register._create_payments()
+
+        self.assertRecordValues(payment_register, [{
+            'payment_difference': 0.0
+        }])
 
         self.assertRecordValues(payments, [
             {
