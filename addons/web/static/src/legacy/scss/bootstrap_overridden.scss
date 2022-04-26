@@ -7,6 +7,13 @@
 // Color system
 //
 
+//Restore BS4 Colors
+$blue: #007bff !default;
+$pink: #e83e8c !default;
+$green: #28a745 !default;
+$cyan: #17a2b8 !default;
+//End Restore BS4 Colors
+
 // All of those are BS default
 $white:    #fff !default;
 $gray-100: $o-gray-100 !default;
@@ -45,6 +52,16 @@ $min-contrast-ratio: 3 !default;
 // Options
 //
 // Quickly modify global styling by enabling or disabling optional features.
+$enable-smooth-scroll: false !default;
+
+// Prefix for :root CSS variables
+$variable-prefix: '' !default;
+
+// Restore negative margins disabled in BS5 by default
+$enable-negative-margins: true !default;
+
+// Spacing
+$spacer: 1rem !default;
 
 // Body
 //
@@ -109,10 +126,14 @@ $headings-color: $o-main-headings-color !default;
 //
 // Customizes the `.table` component with basic values, each used across all table variations.
 
-$table-accent-bg: rgba($black, .01) !default;
+$table-striped-bg-factor: .01 !default;
 $table-hover-bg: rgba($black, .04) !default;
 $table-border-color: $gray-200 !default;
 $table-group-separator-color: $gray-200 !default;
+$table-cell-padding-x: .75rem !default;
+$table-cell-padding-y: .75rem !default;
+$table-cell-padding-x-sm: .3rem !default;
+$table-cell-padding-y-sm: .3rem !default;
 
 // Buttons
 //
@@ -162,6 +183,9 @@ $custom-control-indicator-checked-disabled-bg: $gray-200 !default;
 // TODO the following code was disabled because it is saas-incompatible
 //
 // $zindex-modal-backdrop: $zindex-modal;
+
+// Navbar
+$navbar-padding-x: $spacer !default;
 
 // Navs
 
@@ -231,3 +255,7 @@ $form-switch-icon-checked-color: $form-switch-checked-color !default;
 $form-switch-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='#{$form-switch-circle-bg-color}'/><line x1='-1.5' y1='-1.5' x2='1.5' y2='1.5' stroke='#{$form-switch-icon-color}' stroke-width='0.75'/><line x1='1.5' y1='-1.5' x2='-1.5' y2='1.5' stroke='#{$form-switch-icon-color}' stroke-width='0.75'/></svg>") !default;
 $form-switch-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='#{$form-switch-circle-checked-bg-color}'/><path d='m-2.125,-0.5l1.75,1.75l2.5,-2.5' fill='none' stroke='#{$form-switch-icon-checked-color}' stroke-width='0.75'/></svg>") !default;
 
+// Badge
+$badge-color: inherit !default;
+$badge-padding-y: 0.25em !default;
+$badge-padding-x: 0.4em !default;
