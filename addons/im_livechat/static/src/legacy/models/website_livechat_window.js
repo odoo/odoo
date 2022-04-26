@@ -79,7 +79,7 @@ var LivechatWindow = AbstractThreadWindow.extend({
      * @param {Object} messageData
      */
     _postMessage: function (messageData) {
-        this.trigger_up('post_message_chat_window', { messageData: messageData });
+        this.trigger_up('post_message_chat_window', { messageData });
         this._super.apply(this, arguments);
     },
 

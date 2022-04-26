@@ -52,7 +52,7 @@ var Feedback = Widget.extend({
         var args = {
             uuid: this._livechat.getUUID(),
             rate: this.rating,
-            reason: reason,
+            reason,
         };
         this.dp.add(session.rpc('/im_livechat/feedback', args)).then(function (response) {
             var emoji = RATING_TO_EMOJI[self.rating] || "??";
@@ -62,7 +62,7 @@ var Feedback = Widget.extend({
             else {
                 var content = "Rating reason: \n" + reason;
             }
-            self.trigger('send_message', { content: content, isFeedback: true });
+            self.trigger('send_message', { content, isFeedback: true });
         });
     },
     /**

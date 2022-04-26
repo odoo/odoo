@@ -182,10 +182,10 @@ var ThreadWidget = Widget.extend({
         }
 
         this.$el.html(QWeb.render('im_livechat.legacy.mail.widget.Thread', {
-            thread: thread,
-            displayAuthorMessages: displayAuthorMessages,
-            options: options,
-            ORDER: ORDER,
+            thread,
+            displayAuthorMessages,
+            options,
+            ORDER,
             dateFormat: time.getLangDatetimeFormat(),
         }));
 
@@ -582,8 +582,8 @@ var ThreadWidget = Widget.extend({
         var messageID = $button.data('message-id');
         var decision = $button.data('decision');
         this.trigger_up('message_moderation', {
-            messageID: messageID,
-            decision: decision,
+            messageID,
+            decision,
         });
     },
     /**
@@ -602,8 +602,8 @@ var ThreadWidget = Widget.extend({
             var options;
             if (model && (model !== 'mail.channel')) {
                 options = {
-                    model: model,
-                    id: id
+                    model,
+                    id
                 };
             } else {
                 options = { channelID: id };

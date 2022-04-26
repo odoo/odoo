@@ -319,7 +319,7 @@ var ThreadTypingMixin = {
      *   longer typing something.
      */
     _onOthersTypingTimeout: function (partnerID) {
-        this.unregisterTyping({ partnerID: partnerID });
+        this.unregisterTyping({ partnerID });
     },
     /**
      * Called when a new message is added to the thread
@@ -333,7 +333,7 @@ var ThreadTypingMixin = {
         var partnerID = message.hasAuthor() ?
                         message.getAuthorID() :
                         this._DEFAULT_TYPING_PARTNER_ID;
-        this.unregisterTyping({ partnerID: partnerID });
+        this.unregisterTyping({ partnerID });
     },
     /**
      * Called when current user has posted a message on this thread.

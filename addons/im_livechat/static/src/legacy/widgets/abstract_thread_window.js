@@ -295,7 +295,7 @@ var AbstractThreadWindow = Widget.extend({
             }
         }
         var height = this.isFolded() ? this.HEIGHT_FOLDED : this.HEIGHT_OPEN;
-        this.$el.css({ height: height });
+        this.$el.css({ height });
     },
 
     //--------------------------------------------------------------------------
@@ -459,7 +459,7 @@ var AbstractThreadWindow = Widget.extend({
         if (ev.which === 13) {
             var content = _.str.trim(this.$input.val());
             var messageData = {
-                content: content,
+                content,
                 attachment_ids: [],
                 partner_ids: [],
             };

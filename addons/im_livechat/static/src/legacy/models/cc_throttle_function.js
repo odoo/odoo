@@ -36,8 +36,8 @@ var CCThrottleFunction = function (params) {
     var func = params.func;
 
     var throttleFunctionObject = new CCThrottleFunctionObject({
-        duration: duration,
-        func: func,
+        duration,
+        func,
     });
 
     var callable = function () {

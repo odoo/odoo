@@ -305,7 +305,7 @@ var DocumentViewer = Widget.extend({
         e.preventDefault();
         var src = this.$('.o_viewer_img').prop('src');
         var script = QWeb.render('im_livechat.legacy.mail.PrintImage', {
-            src: src
+            src
         });
         var printWindow = window.open('about:blank', "_new");
         printWindow.document.open();
