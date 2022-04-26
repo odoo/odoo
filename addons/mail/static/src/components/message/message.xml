@@ -150,20 +150,7 @@
                             <t t-if="messageView.message.trackingValues.length > 0">
                                 <ul class="o_Message_trackingValues mt-2">
                                     <t t-foreach="messageView.message.trackingValues" t-as="value" t-key="value.id">
-                                        <li>
-                                            <div class="o_Message_trackingValue d-flex align-items-center flex-wrap">
-                                                <div class="o_Message_trackingValueFieldName o_Message_trackingValueItem" t-esc="value.changed_field"/>
-                                                <t t-if="value.old_value">
-                                                    <div class="o_Message_trackingValueOldValue o_Message_trackingValueItem" t-esc="value.old_value"/>
-                                                </t>
-                                                <i t-else="" class="mr-2">None</i>
-                                                <div class="o_Message_trackingValueSeparator o_Message_trackingValueItem fa fa-long-arrow-right" title="Changed" role="img"/>
-                                                <t t-if="value.new_value">
-                                                    <div class="o_Message_trackingValueNewValue o_Message_trackingValueItem" t-esc="value.new_value"/>
-                                                </t>
-                                                <i t-else="">None</i>
-                                            </div>
-                                        </li>
+                                        <TrackingValue value="value"/>
                                     </t>
                                 </ul>
                             </t>

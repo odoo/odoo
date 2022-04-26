@@ -52,41 +52,41 @@ QUnit.test('basic rendering of tracking value (float type)', async function (ass
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.containsOnce(
         document.body,
-        '.o_Message_trackingValue',
+        '.o_TrackingValue',
         "should display a tracking value"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_trackingValueFieldName',
+        '.o_TrackingValue_fieldName',
         "should display the name of the tracked field"
     );
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValueFieldName').textContent,
+        document.querySelector('.o_TrackingValue_fieldName').textContent,
         "Float:",
         "should display the correct tracked field name (Float)",
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_trackingValueOldValue',
+        '.o_TrackingValue_oldValue',
         "should display the old value"
     );
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValueOldValue').textContent,
+        document.querySelector('.o_TrackingValue_oldValue').textContent,
         "12.30",
         "should display the correct old value (12.30)",
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_trackingValueSeparator',
+        '.o_TrackingValue_separator',
         "should display the separator"
     );
     assert.containsOnce(
         document.body,
-        '.o_Message_trackingValueNewValue',
+        '.o_TrackingValue_newValue',
         "should display the new value"
     );
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValueNewValue').textContent,
+        document.querySelector('.o_TrackingValue_newValue').textContent,
         "45.67",
         "should display the correct new value (45.67)",
     );
@@ -104,7 +104,7 @@ QUnit.test('rendering of tracked field of type float: from non-0 to 0', async fu
     await testUtils.fields.editInput(form.$('input[name=float_field]'), 0);
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValue').textContent,
+        document.querySelector('.o_TrackingValue').textContent,
         "Float:1.000.00",
         "should display the correct content of tracked field of type float: from non-0 to 0 (Float: 1.00 -> 0.00)"
     );
@@ -122,7 +122,7 @@ QUnit.test('rendering of tracked field of type float: from 0 to non-0', async fu
     await testUtils.fields.editInput(form.$('input[name=float_field]'), 1);
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValue').textContent,
+        document.querySelector('.o_TrackingValue').textContent,
         "Float:0.001.00",
         "should display the correct content of tracked field of type float: from 0 to non-0 (Float: 0.00 -> 1.00)"
     );
@@ -140,7 +140,7 @@ QUnit.test('rendering of tracked field of type integer: from non-0 to 0', async 
     await testUtils.fields.editInput(form.$('input[name=integer_field]'), 0);
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValue').textContent,
+        document.querySelector('.o_TrackingValue').textContent,
         "Integer:10",
         "should display the correct content of tracked field of type integer: from non-0 to 0 (Integer: 1 -> 0)"
     );
@@ -158,7 +158,7 @@ QUnit.test('rendering of tracked field of type integer: from 0 to non-0', async 
     await testUtils.fields.editInput(form.$('input[name=integer_field]'), 1);
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValue').textContent,
+        document.querySelector('.o_TrackingValue').textContent,
         "Integer:01",
         "should display the correct content of tracked field of type integer: from 0 to non-0 (Integer: 0 -> 1)"
     );
@@ -176,7 +176,7 @@ QUnit.test('rendering of tracked field of type monetary: from non-0 to 0', async
     await testUtils.fields.editSelect(form.$('div[name=monetary_field] > input'), 0);
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValue').textContent,
+        document.querySelector('.o_TrackingValue').textContent,
         "Monetary:1.000.00",
         "should display the correct content of tracked field of type monetary: from non-0 to 0 (Monetary: 1.00 -> 0.00)"
     );
@@ -194,7 +194,7 @@ QUnit.test('rendering of tracked field of type monetary: from 0 to non-0', async
     await testUtils.fields.editSelect(form.$('div[name=monetary_field] > input'), 1);
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValue').textContent,
+        document.querySelector('.o_TrackingValue').textContent,
         "Monetary:0.001.00",
         "should display the correct content of tracked field of type monetary: from 0 to non-0 (Monetary: 0.00 -> 1.00)"
     );
@@ -212,7 +212,7 @@ QUnit.test('rendering of tracked field of type boolean: from true to false', asy
     form.$('.custom-checkbox input').click();
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValue').textContent,
+        document.querySelector('.o_TrackingValue').textContent,
         "Boolean:YesNo",
         "should display the correct content of tracked field of type boolean: from true to false (Boolean: True -> False)"
     );
@@ -230,7 +230,7 @@ QUnit.test('rendering of tracked field of type boolean: from false to true', asy
     form.$('.custom-checkbox input').click();
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValue').textContent,
+        document.querySelector('.o_TrackingValue').textContent,
         "Boolean:NoYes",
         "should display the correct content of tracked field of type boolean: from false to true (Boolean: False -> True)"
     );
@@ -248,7 +248,7 @@ QUnit.test('rendering of tracked field of type char: from a string to empty stri
     await testUtils.fields.editInput(form.$('input[name=char_field]'), '');
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValue').textContent,
+        document.querySelector('.o_TrackingValue').textContent,
         "Char:MarcNone",
         "should display the correct content of tracked field of type char: from a string to empty string (Char: Marc -> None)"
     );
@@ -266,7 +266,7 @@ QUnit.test('rendering of tracked field of type char: from empty string to a stri
     await testUtils.fields.editInput(form.$('input[name=char_field]'), 'Marc');
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValue').textContent,
+        document.querySelector('.o_TrackingValue').textContent,
         "Char:NoneMarc",
         "should display the correct content of tracked field of type char: from empty string to a string (Char: None -> Marc)"
     );
@@ -284,7 +284,7 @@ QUnit.test('rendering of tracked field of type date: from no date to a set date'
     await testUtils.fields.editAndTrigger(form.$('.o_datepicker[name=date_field] .o_datepicker_input'), '12/14/2018', ['change']);
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValue').textContent,
+        document.querySelector('.o_TrackingValue').textContent,
         "Date:None12/14/2018",
         "should display the correct content of tracked field of type date: from no date to a set date (Date: None -> 12/14/2018)"
     );
@@ -302,7 +302,7 @@ QUnit.test('rendering of tracked field of type date: from a set date to no date'
     await testUtils.fields.editAndTrigger(form.$('.o_datepicker[name=date_field] .o_datepicker_input'), '', ['change']);
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValue').textContent,
+        document.querySelector('.o_TrackingValue').textContent,
         "Date:12/14/2018None",
         "should display the correct content of tracked field of type date: from a set date to no date (Date: 12/14/2018 -> None)"
     );
@@ -320,7 +320,7 @@ QUnit.test('rendering of tracked field of type datetime: from no date and time t
     await testUtils.fields.editAndTrigger(form.$('.o_datepicker[name=datetime_field] .o_datepicker_input'), '12/14/2018 13:42:28', ['change']);
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValue').textContent,
+        document.querySelector('.o_TrackingValue').textContent,
         "Datetime:None12/14/2018 13:42:28",
         "should display the correct content of tracked field of type datetime: from no date and time to a set date and time (Datetime: None -> 12/14/2018 13:42:28)"
     );
@@ -338,7 +338,7 @@ QUnit.test('rendering of tracked field of type datetime: from a set date and tim
     await testUtils.fields.editAndTrigger(form.$('.o_datepicker[name=datetime_field] .o_datepicker_input'), '', ['change']);
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValue').textContent,
+        document.querySelector('.o_TrackingValue').textContent,
         "Datetime:12/14/2018 13:42:28None",
         "should display the correct content of tracked field of type datetime: from a set date and time to no date and time (Datetime: 12/14/2018 13:42:28 -> None)"
     );
@@ -356,7 +356,7 @@ QUnit.test('rendering of tracked field of type text: from some text to empty', a
     await testUtils.fields.editInput(form.$('textarea[name=text_field]'), '');
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValue').textContent,
+        document.querySelector('.o_TrackingValue').textContent,
         "Text:MarcNone",
         "should display the correct content of tracked field of type text: from some text to empty (Text: Marc -> None)"
     );
@@ -374,7 +374,7 @@ QUnit.test('rendering of tracked field of type text: from empty to some text', a
     await testUtils.fields.editInput(form.$('textarea[name=text_field]'), 'Marc');
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValue').textContent,
+        document.querySelector('.o_TrackingValue').textContent,
         "Text:NoneMarc",
         "should display the correct content of tracked field of type text: from empty to some text (Text: None -> Marc)"
     );
@@ -392,7 +392,7 @@ QUnit.test('rendering of tracked field of type selection: from a selection to no
     await testUtils.fields.editSelect(form.$('select[name=selection_field]'), '');
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValue').textContent,
+        document.querySelector('.o_TrackingValue').textContent,
         "Selection:firstNone",
         "should display the correct content of tracked field of type selection: from a selection to no selection (Selection: first -> None)"
     );
@@ -410,7 +410,7 @@ QUnit.test('rendering of tracked field of type selection: from no selection to a
     await testUtils.fields.editSelect(form.$('select[name=selection_field]'), '"first"');
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValue').textContent,
+        document.querySelector('.o_TrackingValue').textContent,
         "Selection:Nonefirst",
         "should display the correct content of tracked field of type selection: from no selection to a selection (Selection: None -> first)"
     );
@@ -429,7 +429,7 @@ QUnit.test('rendering of tracked field of type many2one: from having a related r
     await testUtils.fields.editAndTrigger(form.$('.o_field_many2one_selection input'), '', ['keyup']);
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValue').textContent,
+        document.querySelector('.o_TrackingValue').textContent,
         "Many2one:MarcNone",
         "should display the correct content of tracked field of type many2one: from having a related record to no related record (Many2one: Marc -> None)"
     );
@@ -449,7 +449,7 @@ QUnit.test('rendering of tracked field of type many2one: from no related record 
     await testUtils.fields.many2one.clickItem('many2one_field_id', 'Marc');
     await afterNextRender(() => testUtils.form.clickSave(form));
     assert.strictEqual(
-        document.querySelector('.o_Message_trackingValue').textContent,
+        document.querySelector('.o_TrackingValue').textContent,
         "Many2one:NoneMarc",
         "should display the correct content of tracked field of type many2one: from no related record to having a related record (Many2one: None -> Marc)"
     );
