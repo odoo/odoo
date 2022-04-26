@@ -262,7 +262,7 @@ jQuery.extend = jQuery.fn.extend = function() {
 				copy = options[ name ];
 
 				// Prevent never-ending loop
-				if ( name === '__proto__' || target === copy ) {
+				if ( target === copy ) {
 					continue;
 				}
 
