@@ -51,7 +51,7 @@ MockServer.include({
             const fieldNamesToFields = data[modelName].fields;
             for (const fname in fieldNamesToFields) {
                 if (fieldNamesToFields[fname].tracking) {
-                    this._mockCreate('ir.model.fields', { model: modelName, name: fname });
+                    this.mockCreate('ir.model.fields', { model: modelName, name: fname });
                 }
             }
         }
@@ -70,14 +70,14 @@ MockServer.include({
             const is_pending = init.body.get('is_pending');
             const model = is_pending ? 'mail.compose.message' : init.body.get('thread_model');
             const id = is_pending ? 0 : parseInt(init.body.get('thread_id'));
-            const attachmentId = this._mockCreate('ir.attachment', {
+            const attachmentId = this.mockCreate('ir.attachment', {
                 // datas,
                 mimetype: ufile.type,
                 name: ufile.name,
                 res_id: id,
                 res_model: model,
             });
-            const attachment = this._getRecords('ir.attachment', [['id', '=', attachmentId]])[0];
+            const attachment = this.getRecords('ir.attachment', [['id', '=', attachmentId]])[0];
             return new window.Response(JSON.stringify({
                 'filename': attachment.name,
                 'id': attachment.id,
@@ -334,11 +334,11 @@ MockServer.include({
      * @returns {Object[]}
      */
     _mockMailActivityActivityFormat(ids) {
-        let res = this._mockRead('mail.activity', [ids]);
+        let res = this.mockRead('mail.activity', [ids]);
         res = res.map(record => {
             if (record.mail_template_ids) {
                 record.mail_template_ids = record.mail_template_ids.map(template_id => {
-                    const template = this._getRecords('mail.template', [['id', '=', template_id]])[0];
+                    const template = this.getRecords('mail.template', [['id', '=', template_id]])[0];
                     return {
                         id: template.id,
                         name: template.name,
@@ -389,7 +389,7 @@ MockServer.include({
      * @returns {Object} one key for list of followers and one for subtypes
      */
     async _mockRouteMailChatPost(uuid, message_content, context = {}) {
-        const mailChannel = this._getRecords('mail.channel', [['uuid', '=', uuid]])[0];
+        const mailChannel = this.getRecords('mail.channel', [['uuid', '=', uuid]])[0];
         if (!mailChannel) {
             return false;
         }
@@ -405,7 +405,7 @@ MockServer.include({
         let author_id;
         let email_from;
         if (user_id) {
-            const author = this._getRecords('res.users', [['id', '=', user_id]])[0];
+            const author = this.getRecords('res.users', [['id', '=', user_id]])[0];
             author_id = author.partner_id;
             email_from = `${author.display_name} <${author.email}>`;
         } else {
@@ -484,8 +484,8 @@ MockServer.include({
      * @returns {Object[]} list of followed subtypes
      */
     async _mockRouteMailReadSubscriptionData(follower_id) {
-        const follower = this._getRecords('mail.followers', [['id', '=', follower_id]])[0];
-        const subtypes = this._getRecords('mail.message.subtype', [
+        const follower = this.getRecords('mail.followers', [['id', '=', follower_id]])[0];
+        const subtypes = this.getRecords('mail.message.subtype', [
             '&',
             ['hidden', '=', false],
             '|',
@@ -493,7 +493,7 @@ MockServer.include({
             ['res_model', '=', false],
         ]);
         const subtypes_list = subtypes.map(subtype => {
-            const parent = this._getRecords('mail.message.subtype', [
+            const parent = this.getRecords('mail.message.subtype', [
                 ['id', '=', subtype.parent_id],
             ])[0];
             return {
@@ -520,23 +520,23 @@ MockServer.include({
      */
     async _mockRouteMailThreadData(thread_model, thread_id, request_list) {
         const res = {};
-        const thread = this._mockSearchRead(thread_model, [[['id', '=', thread_id]]], {})[0];
+        const thread = this.mockSearchRead(thread_model, [[['id', '=', thread_id]]], {})[0];
         if (!thread) {
             console.warn(`mock server: reading data "${request_list}" from invalid thread "${thread_model}_${thread_id}"`);
             return res;
         }
         if (request_list.includes('activities')) {
-            const activities = this._mockSearchRead('mail.activity', [[['id', 'in', thread.activity_ids || []]]], {});
+            const activities = this.mockSearchRead('mail.activity', [[['id', 'in', thread.activity_ids || []]]], {});
             res['activities'] = this._mockMailActivityActivityFormat(activities.map(activity => activity.id));
         }
         if (request_list.includes('attachments')) {
-            const attachments = this._mockSearchRead('ir.attachment', [
+            const attachments = this.mockSearchRead('ir.attachment', [
                 [['res_id', '=', thread.id], ['res_model', '=', thread_model]],
             ], {}); // order not done for simplicity
             res['attachments'] = this._mockIrAttachment_attachmentFormat(attachments.map(attachment => attachment.id), true);
         }
         if (request_list.includes('followers')) {
-            const followers = this._mockSearchRead('mail.followers', [[['id', 'in', thread.message_follower_ids || []]]], {});
+            const followers = this.mockSearchRead('mail.followers', [[['id', 'in', thread.message_follower_ids || []]]], {});
             // search read returns many2one relations as an array [id, display_name].
             // But the original route does not. Thus, we need to change it now.
             followers.forEach(follower => follower.partner_id = follower.partner_id[0]);
@@ -580,7 +580,7 @@ MockServer.include({
      * @returns {Object}
      */
     _mockIrAttachment_attachmentFormat(ids, commands = false) {
-        const attachments = this._mockRead('ir.attachment', [ids]);
+        const attachments = this.mockRead('ir.attachment', [ids]);
         return attachments.map(attachment => {
             const res = {
                 'checksum': attachment.checksum,
@@ -613,14 +613,14 @@ MockServer.include({
      */
     _mockMailActivityGetActivityData(res_model, domain) {
         const self = this;
-        const records = this._getRecords(res_model, domain);
+        const records = this.getRecords(res_model, domain);
 
-        const activityTypes = this._getRecords('mail.activity.type', []);
+        const activityTypes = this.getRecords('mail.activity.type', []);
         const activityIds = _.pluck(records, 'activity_ids').flat();
 
         const groupedActivities = {};
         const resIdToDeadline = {};
-        const groups = self._mockReadGroup('mail.activity', {
+        const groups = self.mockReadGroup('mail.activity', {
             domain: [['id', 'in', activityIds]],
             fields: ['res_id', 'activity_type_id', 'ids:array_agg(id)', 'date_deadline:min(date_deadline)'],
             groupby: ['res_id', 'activity_type_id'],
@@ -628,7 +628,7 @@ MockServer.include({
         });
         groups.forEach(function (group) {
             // mockReadGroup doesn't correctly return all asked fields
-            const activites = self._getRecords('mail.activity', group.__domain);
+            const activites = self.getRecords('mail.activity', group.__domain);
             group.activity_type_id = group.activity_type_id[0];
             let minDate;
             activites.forEach(function (activity) {
@@ -662,7 +662,7 @@ MockServer.include({
                 let mailTemplates = [];
                 if (type.mail_template_ids) {
                     mailTemplates = type.mail_template_ids.map((template_id) => {
-                        const template = this._getRecords('mail.template', [['id', '=', template_id]])[0];
+                        const template = this.getRecords('mail.template', [['id', '=', template_id]])[0];
                         return {
                             id: template.id,
                             name: template.name,
@@ -700,12 +700,12 @@ MockServer.include({
      * @param {integer[]} ids
      */
     _mockMailChannelActionUnfollow(ids) {
-        const channel = this._getRecords('mail.channel', [['id', 'in', ids]])[0];
-        const [channelMember] = this._getRecords('mail.channel.partner', [['channel_id', 'in', ids], ['partner_id', '=', this.currentPartnerId]]);
+        const channel = this.getRecords('mail.channel', [['id', 'in', ids]])[0];
+        const [channelMember] = this.getRecords('mail.channel.partner', [['channel_id', 'in', ids], ['partner_id', '=', this.currentPartnerId]]);
         if (!channelMember) {
             return true;
         }
-        this._mockWrite('mail.channel', [
+        this.mockWrite('mail.channel', [
             [channel.id],
             {
                 channel_last_seen_partner_ids: [[2, channelMember.id]],
@@ -739,10 +739,10 @@ MockServer.include({
      * @param {integer[]} partner_ids
      */
     _mockMailChannelAddMembers(ids, partner_ids) {
-        const [channel] = this._getRecords('mail.channel', [['id', 'in', ids]]);
-        const partners = this._getRecords('res.partner', [['id', 'in', partner_ids]]);
+        const [channel] = this.getRecords('mail.channel', [['id', 'in', ids]]);
+        const partners = this.getRecords('res.partner', [['id', 'in', partner_ids]]);
         for (const partner of partners) {
-            this._mockCreate('mail.channel.partner', {
+            this.mockCreate('mail.channel.partner', {
                 channel_id: channel.id,
                 partner_id: partner.id,
             });
@@ -785,7 +785,7 @@ MockServer.include({
     _mockMailChannel_channelChannelNotifications(ids, partner_ids) {
         const notifications = [];
         for (const partner_id of partner_ids) {
-            const user = this._getRecords('res.users', [['partner_id', 'in', partner_id]])[0];
+            const user = this.getRecords('res.users', [['partner_id', 'in', partner_id]])[0];
             if (!user) {
                 continue;
             }
@@ -809,9 +809,9 @@ MockServer.include({
      * @param {string} extra_info
      */
     _mockMailChannelChannelFetched(ids) {
-        const channels = this._getRecords('mail.channel', [['id', 'in', ids]]);
+        const channels = this.getRecords('mail.channel', [['id', 'in', ids]]);
         for (const channel of channels) {
-            const channelMessages = this._getRecords('mail.message', [
+            const channelMessages = this.getRecords('mail.message', [
                 ['model', '=', 'mail.channel'],
                 ['res_id', '=', channel.id],
             ]);
@@ -824,8 +824,8 @@ MockServer.include({
             if (!lastMessage) {
                 continue;
             }
-            const [memberOfCurrentUser] = this._getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
-            this._mockWrite('mail.channel.partner', [
+            const [memberOfCurrentUser] = this.getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
+            this.mockWrite('mail.channel.partner', [
                 [memberOfCurrentUser.id],
                 { fetched_message_id: lastMessage.id },
             ]);
@@ -848,9 +848,9 @@ MockServer.include({
      * @returns {Object[]} list of channels previews
      */
     _mockMailChannelChannelFetchPreview(ids) {
-        const channels = this._getRecords('mail.channel', [['id', 'in', ids]]);
+        const channels = this.getRecords('mail.channel', [['id', 'in', ids]]);
         return channels.map(channel => {
-            const channelMessages = this._getRecords('mail.message', [
+            const channelMessages = this.getRecords('mail.message', [
                 ['model', '=', 'mail.channel'],
                 ['res_id', '=', channel.id],
             ]);
@@ -875,15 +875,15 @@ MockServer.include({
      * @param {state} [state]
      */
     _mockMailChannelChannelFold(ids, state) {
-        const channels = this._getRecords('mail.channel', [['id', 'in', ids]]);
+        const channels = this.getRecords('mail.channel', [['id', 'in', ids]]);
         for (const channel of channels) {
-            const [memberOfCurrentUser] = this._getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
+            const [memberOfCurrentUser] = this.getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
             const foldState = state ? state : memberOfCurrentUser.fold_state === 'open' ? 'folded' : 'open';
             const vals = {
                 fold_state: foldState,
                 is_minimized: foldState !== 'closed',
             };
-            this._mockWrite('mail.channel.partner', [[memberOfCurrentUser.id], vals]);
+            this.mockWrite('mail.channel.partner', [[memberOfCurrentUser.id], vals]);
             this._widget.call('bus_service', 'trigger', 'notification', [{
                 type: 'mail.channel/insert',
                 payload: {
@@ -908,13 +908,13 @@ MockServer.include({
         if (!partners_to.includes(this.currentPartnerId)) {
             partners_to.push(this.currentPartnerId);
         }
-        const partners = this._getRecords('res.partner', [['id', 'in', partners_to]]);
+        const partners = this.getRecords('res.partner', [['id', 'in', partners_to]]);
         // NOTE: this mock is not complete, which is done for simplicity.
         // Indeed if a chat already exists for the given partners, the server
         // is supposed to return this existing chat. But the mock is currently
         // always creating a new chat, because no test is relying on receiving
         // an existing chat.
-        const id = this._mockCreate('mail.channel', {
+        const id = this.mockCreate('mail.channel', {
             channel_last_seen_partner_ids: partners.map(partner => [0, 0, {
                 partner_id: partner.id,
             }]),
@@ -932,11 +932,11 @@ MockServer.include({
      * @returns {Object[]}
      */
     _mockMailChannelChannelInfo(ids) {
-        const channels = this._getRecords('mail.channel', [['id', 'in', ids]]);
+        const channels = this.getRecords('mail.channel', [['id', 'in', ids]]);
         return channels.map(channel => {
-            const members = this._getRecords('mail.channel.partner', [['id', 'in', channel.channel_last_seen_partner_ids]]);
+            const members = this.getRecords('mail.channel.partner', [['id', 'in', channel.channel_last_seen_partner_ids]]);
             const partnerIds = members.filter(member => member.partner_id).map(member => member.partner_id);
-            const messages = this._getRecords('mail.message', [
+            const messages = this.getRecords('mail.message', [
                 ['model', '=', 'mail.channel'],
                 ['res_id', '=', channel.id],
             ]);
@@ -946,7 +946,7 @@ MockServer.include({
                 }
                 return lastMessageId;
             }, undefined);
-            const messageNeedactionCounter = this._getRecords('mail.notification', [
+            const messageNeedactionCounter = this.getRecords('mail.notification', [
                 ['res_partner_id', '=', this.currentPartnerId],
                 ['is_read', '=', false],
                 ['mail_message_id', 'in', messages.map(message => message.id)],
@@ -967,7 +967,7 @@ MockServer.include({
                     };
                 });
             }
-            const [memberOfCurrentUser] = this._getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
+            const [memberOfCurrentUser] = this.getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
             if (memberOfCurrentUser) {
                 Object.assign(res, {
                     custom_channel_name: memberOfCurrentUser.custom_channel_name,
@@ -992,10 +992,10 @@ MockServer.include({
      * @param {boolean} [pinned=false]
      */
     async _mockMailChannelChannelPin(ids, pinned = false) {
-        const [channel] = this._getRecords('mail.channel', [['id', 'in', ids]]);
-        const [memberOfCurrentUser] = this._getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId], ['is_pinned', '!=', pinned]]);
+        const [channel] = this.getRecords('mail.channel', [['id', 'in', ids]]);
+        const [memberOfCurrentUser] = this.getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId], ['is_pinned', '!=', pinned]]);
         if (memberOfCurrentUser) {
-            this._mockWrite('mail.channel.partner', [
+            this.mockWrite('mail.channel.partner', [
                 [memberOfCurrentUser.id],
                 { is_pinned: pinned },
             ]);
@@ -1025,8 +1025,8 @@ MockServer.include({
         if (!channel_id) {
             throw new Error('Should only be one channel in channel_seen mock params');
         }
-        const channel = this._getRecords('mail.channel', [['id', '=', channel_id]])[0];
-        const messagesBeforeGivenLastMessage = this._getRecords('mail.message', [
+        const channel = this.getRecords('mail.channel', [['id', '=', channel_id]])[0];
+        const messagesBeforeGivenLastMessage = this.getRecords('mail.message', [
             ['id', '<=', last_message_id],
             ['model', '=', 'mail.channel'],
             ['res_id', '=', channel.id],
@@ -1037,7 +1037,7 @@ MockServer.include({
         if (!channel) {
             return;
         }
-        const [memberOfCurrentUser] = this._getRecords('mail.channel.partner', [['channel_id', '=', channel_id], ['partner_id', '=', this.currentPartnerId]]);
+        const [memberOfCurrentUser] = this.getRecords('mail.channel.partner', [['channel_id', '=', channel_id], ['partner_id', '=', this.currentPartnerId]]);
         if (memberOfCurrentUser.seen_message_id && memberOfCurrentUser.seen_message_id >= last_message_id) {
             return;
         }
@@ -1058,8 +1058,8 @@ MockServer.include({
      * @param {integer[]} ids
      */
     _mockMailChannelChannelRename(ids, name) {
-        const channel = this._getRecords('mail.channel', [['id', 'in', ids]])[0];
-        this._mockWrite('mail.channel', [
+        const channel = this.getRecords('mail.channel', [['id', 'in', ids]])[0];
+        this.mockWrite('mail.channel', [
             [channel.id],
             { name },
         ]);
@@ -1078,8 +1078,8 @@ MockServer.include({
      * @param {integer[]} ids
      */
     _mockMailChannelChannelSetCustomName(ids, name) {
-        const channel = this._getRecords('mail.channel', [['id', 'in', ids]])[0];
-        this._mockWrite('mail.channel', [
+        const channel = this.getRecords('mail.channel', [['id', 'in', ids]])[0];
+        this.mockWrite('mail.channel', [
             [channel.id],
             { custom_channel_name: name },
         ]);
@@ -1099,8 +1099,8 @@ MockServer.include({
      * @returns {Object}
      */
     async _mockMailChannelCreateGroup(partners_to) {
-        const partners = this._getRecords('res.partner', [['id', 'in', partners_to]]);
-        const id = this._mockCreate('mail.channel', {
+        const partners = this.getRecords('res.partner', [['id', 'in', partners_to]]);
+        const id = this.mockCreate('mail.channel', {
             channel_type: 'group',
             channel_last_seen_partner_ids: partners.map(partner => [0, 0, { partner_id: partner.id }]),
             name: '',
@@ -1115,7 +1115,7 @@ MockServer.include({
      * @private
      */
     _mockMailChannelExecuteCommandLeave(args) {
-        const channel = this._getRecords('mail.channel', [['id', 'in', args.args[0]]])[0];
+        const channel = this.getRecords('mail.channel', [['id', 'in', args.args[0]]])[0];
         if (channel.channel_type === 'channel') {
             this._mockMailChannelActionUnfollow([channel.id]);
         } else {
@@ -1129,11 +1129,11 @@ MockServer.include({
      */
     _mockMailChannelExecuteCommandWho(args) {
         const ids = args.args[0];
-        const channels = this._getRecords('mail.channel', [['id', 'in', ids]]);
+        const channels = this.getRecords('mail.channel', [['id', 'in', ids]]);
         for (const channel of channels) {
-            const members = this._getRecords('mail.channel.partner', [['id', 'in', channel.channel_last_seen_partner_ids]]);
+            const members = this.getRecords('mail.channel.partner', [['id', 'in', channel.channel_last_seen_partner_ids]]);
             const otherPartnerIds = members.filter(member => member.partner_id && member.partner_id !== this.currentPartnerId).map(member => member.partner_id);
-            const otherPartners = this._getRecords('res.partner', [['id', 'in', otherPartnerIds]]);
+            const otherPartners = this.getRecords('res.partner', [['id', 'in', otherPartnerIds]]);
             let message = "You are alone in this channel.";
             if (otherPartners.length > 0) {
                 message = `Users in this channel: ${otherPartners.map(partner => partner.name).join(', ')} and you`;
@@ -1204,13 +1204,13 @@ MockServer.include({
      * @param {integer} id
      */
     _mockMailChannelWriteImage128(id) {
-        this._mockWrite('mail.channel', [
+        this.mockWrite('mail.channel', [
             [id],
             {
                 avatarCacheKey: moment.utc().format("YYYYMMDDHHmmss"),
             },
         ]);
-        const avatarCacheKey = this._getRecords('mail.channel', [['id', '=', id]])[0].avatarCacheKey;
+        const avatarCacheKey = this.getRecords('mail.channel', [['id', '=', id]])[0].avatarCacheKey;
         this._widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel/insert',
             payload: {
@@ -1230,10 +1230,10 @@ MockServer.include({
      */
     _mockMailChannelMessagePost(id, kwargs, context) {
         const message_type = kwargs.message_type || 'notification';
-        const channel = this._getRecords('mail.channel', [['id', '=', id]])[0];
+        const channel = this.getRecords('mail.channel', [['id', '=', id]])[0];
         if (channel.channel_type !== 'channel') {
-            const [memberOfCurrentUser] = this._getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
-            this._mockWrite('mail.channel.partner', [
+            const [memberOfCurrentUser] = this.getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
+            this.mockWrite('mail.channel.partner', [
                 [memberOfCurrentUser.id],
                 {
                     last_interest_dt: datetime_to_str(new Date()),
@@ -1253,9 +1253,9 @@ MockServer.include({
             this._mockMailChannel_SetLastSeenMessage([channel.id], messageData.id);
         }
         // simulate compute of message_unread_counter
-        const otherMembers = this._getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '!=', this.currentPartnerId]]);
+        const otherMembers = this.getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '!=', this.currentPartnerId]]);
         for (const member of otherMembers) {
-            this._mockWrite('mail.channel.partner', [
+            this.mockWrite('mail.channel.partner', [
                 [member.id],
                 { message_unread_counter: member.message_unread_counter + 1 },
             ]);
@@ -1271,14 +1271,14 @@ MockServer.include({
      * @param {Object} [context={}]
      */
     _mockMailChannelNotifyTyping(ids, is_typing, context = {}) {
-        const channels = this._getRecords('mail.channel', [['id', 'in', ids]]);
+        const channels = this.getRecords('mail.channel', [['id', 'in', ids]]);
         let partner_id;
         if ('mockedPartnerId' in context) {
             partner_id = context.mockedPartnerId;
         } else {
             partner_id = this.currentPartnerId;
         }
-        const partner = this._getRecords('res.partner', [['id', '=', partner_id]]);
+        const partner = this.getRecords('res.partner', [['id', '=', partner_id]]);
         const notifications = [];
         for (const channel of channels) {
             const data = {
@@ -1303,7 +1303,7 @@ MockServer.include({
      * @returns {Object[]}
      */
     _mockMailChannelPartnerInfo(all_partners, direct_partners) {
-        const partners = this._getRecords(
+        const partners = this.getRecords(
             'res.partner',
             [['id', 'in', all_partners]],
             { active_test: false },
@@ -1330,8 +1330,8 @@ MockServer.include({
      * @param {integer} message_id
      */
     _mockMailChannel_SetLastSeenMessage(ids, message_id) {
-        const [memberOfCurrentUser] = this._getRecords('mail.channel.partner', [['channel_id', 'in', ids], ['partner_id', '=', this.currentPartnerId]]);
-        this._mockWrite('mail.channel.partner', [[memberOfCurrentUser.id], {
+        const [memberOfCurrentUser] = this.getRecords('mail.channel.partner', [['channel_id', 'in', ids], ['partner_id', '=', this.currentPartnerId]]);
+        this.mockWrite('mail.channel.partner', [[memberOfCurrentUser.id], {
             fetched_message_id: message_id,
             seen_message_id: message_id,
         }]);
@@ -1349,13 +1349,13 @@ MockServer.include({
             ['is_read', '=', false],
         ];
         if (domain) {
-            const messages = this._getRecords('mail.message', domain);
+            const messages = this.getRecords('mail.message', domain);
             const ids = messages.map(messages => messages.id);
             this._mockMailMessageSetMessageDone(ids);
             return ids;
         }
-        const notifications = this._getRecords('mail.notification', notifDomain);
-        this._mockWrite('mail.notification', [
+        const notifications = this.getRecords('mail.notification', notifDomain);
+        this.mockWrite('mail.notification', [
             notifications.map(notification => notification.id),
             { is_read: true },
         ]);
@@ -1365,10 +1365,10 @@ MockServer.include({
                 messageIds.push(notification.mail_message_id);
             }
         }
-        const messages = this._getRecords('mail.message', [['id', 'in', messageIds]]);
+        const messages = this.getRecords('mail.message', [['id', 'in', messageIds]]);
         // simulate compute that should be done based on notifications
         for (const message of messages) {
-            this._mockWrite('mail.message', [
+            this.mockWrite('mail.message', [
                 [message.id],
                 {
                     needaction: false,
@@ -1405,7 +1405,7 @@ MockServer.include({
         if (min_id) {
             domain.push(['id', '>', min_id]);
         }
-        let messages = this._getRecords('mail.message', domain);
+        let messages = this.getRecords('mail.message', domain);
         // sorted from highest ID to lowest ID (i.e. from youngest to oldest)
         messages.sort(function (m1, m2) {
             return m1.id < m2.id ? 1 : -1;
@@ -1422,18 +1422,18 @@ MockServer.include({
      * @returns {Object[]}
      */
     _mockMailMessageMessageFormat(ids) {
-        const messages = this._getRecords('mail.message', [['id', 'in', ids]]);
+        const messages = this.getRecords('mail.message', [['id', 'in', ids]]);
         // sorted from highest ID to lowest ID (i.e. from most to least recent)
         messages.sort(function (m1, m2) {
             return m1.id < m2.id ? 1 : -1;
         });
         return messages.map(message => {
-            const thread = message.model && this._getRecords(message.model, [
+            const thread = message.model && this.getRecords(message.model, [
                 ['id', '=', message.res_id],
             ])[0];
             let formattedAuthor;
             if (message.author_id) {
-                const author = this._getRecords(
+                const author = this.getRecords(
                     'res.partner',
                     [['id', '=', message.author_id]],
                     { active_test: false }
@@ -1442,7 +1442,7 @@ MockServer.include({
             } else {
                 formattedAuthor = [0, message.email_from];
             }
-            const attachments = this._getRecords('ir.attachment', [
+            const attachments = this.getRecords('ir.attachment', [
                 ['id', 'in', message.attachment_ids],
             ]);
             const formattedAttachments = attachments.map(attachment => {
@@ -1457,7 +1457,7 @@ MockServer.include({
                     'res_model': attachment.res_model || message.model,
                 });
             });
-            const allNotifications = this._getRecords('mail.notification', [
+            const allNotifications = this.getRecords('mail.notification', [
                 ['mail_message_id', '=', message.id],
             ]);
             const historyPartnerIds = allNotifications
@@ -1472,7 +1472,7 @@ MockServer.include({
             notifications = this._mockMailNotification_NotificationFormat(
                 notifications.map(notification => notification.id)
             );
-            const trackingValueIds = this._getRecords('mail.tracking.value', [
+            const trackingValueIds = this.getRecords('mail.tracking.value', [
                 ['id', 'in', message.tracking_value_ids],
             ]);
             const formattedTrackingValues = trackingValueIds.map(tracking => ({
@@ -1482,7 +1482,7 @@ MockServer.include({
                 new_value: this._mockMailTrackingValue_GetDisplayValue(tracking, 'new'),
                 old_value: this._mockMailTrackingValue_GetDisplayValue(tracking, 'old'),
             }));
-            const partners = this._getRecords(
+            const partners = this.getRecords(
                 'res.partner',
                 [['id', 'in', message.partner_ids]],
             );
@@ -1497,7 +1497,7 @@ MockServer.include({
                 tracking_value_ids: formattedTrackingValues,
             });
             if (message.subtype_id) {
-                const subtype = this._getRecords('mail.message.subtype', [
+                const subtype = this.getRecords('mail.message.subtype', [
                     ['id', '=', message.subtype_id],
                 ])[0];
                 response.subtype_description = subtype.description;
@@ -1513,9 +1513,9 @@ MockServer.include({
      * @returns {Object[]}
      */
     _mockMailMessage_MessageNotificationFormat(ids) {
-        const messages = this._getRecords('mail.message', [['id', 'in', ids]]);
+        const messages = this.getRecords('mail.message', [['id', 'in', ids]]);
         return messages.map(message => {
-            let notifications = this._getRecords('mail.notification', [
+            let notifications = this.getRecords('mail.notification', [
                 ['mail_message_id', '=', message.id],
             ]);
             notifications = this._mockMailNotification_FilteredForWebClient(
@@ -1545,20 +1545,20 @@ MockServer.include({
      * @param {integer[]} ids
      */
     _mockMailMessageSetMessageDone(ids) {
-        const messages = this._getRecords('mail.message', [['id', 'in', ids]]);
+        const messages = this.getRecords('mail.message', [['id', 'in', ids]]);
 
-        const notifications = this._getRecords('mail.notification', [
+        const notifications = this.getRecords('mail.notification', [
             ['res_partner_id', '=', this.currentPartnerId],
             ['is_read', '=', false],
             ['mail_message_id', 'in', messages.map(messages => messages.id)]
         ]);
-        this._mockWrite('mail.notification', [
+        this.mockWrite('mail.notification', [
             notifications.map(notification => notification.id),
             { is_read: true },
         ]);
         // simulate compute that should be done based on notifications
         for (const message of messages) {
-            this._mockWrite('mail.message', [
+            this.mockWrite('mail.message', [
                 [message.id],
                 {
                     needaction: false,
@@ -1583,10 +1583,10 @@ MockServer.include({
      * @returns {integer[]} ids
      */
     _mockMailMessageToggleMessageStarred(ids) {
-        const messages = this._getRecords('mail.message', [['id', 'in', ids]]);
+        const messages = this.getRecords('mail.message', [['id', 'in', ids]]);
         for (const message of messages) {
             const wasStared = message.starred_partner_ids.includes(this.currentPartnerId);
-            this._mockWrite('mail.message', [
+            this.mockWrite('mail.message', [
                 [message.id],
                 { starred_partner_ids: [[wasStared ? 3 : 4, this.currentPartnerId]] }
             ]);
@@ -1605,10 +1605,10 @@ MockServer.include({
      * @private
      */
     _mockMailMessageUnstarAll() {
-        const messages = this._getRecords('mail.message', [
+        const messages = this.getRecords('mail.message', [
             ['starred_partner_ids', 'in', this.currentPartnerId],
         ]);
-        this._mockWrite('mail.message', [
+        this.mockWrite('mail.message', [
             messages.map(message => message.id),
             { starred_partner_ids: [[3, this.currentPartnerId]] }
         ]);
@@ -1628,12 +1628,12 @@ MockServer.include({
      * @returns {Object[]}
      */
     _mockMailNotification_FilteredForWebClient(ids) {
-        const notifications = this._getRecords('mail.notification', [
+        const notifications = this.getRecords('mail.notification', [
             ['id', 'in', ids],
             ['notification_type', '!=', 'inbox'],
         ]);
         return notifications.filter(notification => {
-            const partner = this._getRecords('res.partner', [['id', '=', notification.res_partner_id]])[0];
+            const partner = this.getRecords('res.partner', [['id', '=', notification.res_partner_id]])[0];
             return Boolean(
                 ['bounce', 'exception', 'canceled'].includes(notification.notification_status) ||
                 (partner && partner.partner_share)
@@ -1648,9 +1648,9 @@ MockServer.include({
      * @returns {Object[]}
      */
     _mockMailNotification_NotificationFormat(ids) {
-        const notifications = this._getRecords('mail.notification', [['id', 'in', ids]]);
+        const notifications = this.getRecords('mail.notification', [['id', 'in', ids]]);
         return notifications.map(notification => {
-            const partner = this._getRecords('res.partner', [['id', '=', notification.res_partner_id]])[0];
+            const partner = this.getRecords('res.partner', [['id', '=', notification.res_partner_id]])[0];
             return {
                 'id': notification.id,
                 'notification_type': notification.notification_type,
@@ -1682,12 +1682,12 @@ MockServer.include({
             } else {
                 user_id = this.currentUserId;
             }
-            const user = this._getRecords(
+            const user = this.getRecords(
                 'res.users',
                 [['id', '=', user_id]],
                 { active_test: false },
             )[0];
-            const author = this._getRecords(
+            const author = this.getRecords(
                 'res.partner',
                 [['id', '=', user.partner_id]],
                 { active_test: false },
@@ -1698,7 +1698,7 @@ MockServer.include({
 
         if (email_from === undefined) {
             if (author_id) {
-                const author = this._getRecords(
+                const author = this.getRecords(
                     'res.partner',
                     [['id', '=', author_id]],
                     { active_test: false },
@@ -1727,7 +1727,7 @@ MockServer.include({
      * @returns {Object}
      */
     _mockMailThread_MessageAddSuggestedRecipient(model, ids, result, { email, partner, reason = '' } = {}) {
-        const record = this._getRecords(model, [['id', 'in', 'ids']])[0];
+        const record = this.getRecords(model, [['id', 'in', 'ids']])[0];
         // for simplicity
         result[record.id].push([partner, email, reason]);
         return result;
@@ -1745,10 +1745,10 @@ MockServer.include({
             return this._mockResFake_MessageGetSuggestedRecipients(model, ids);
         }
         const result = ids.reduce((result, id) => result[id] = [], {});
-        const records = this._getRecords(model, [['id', 'in', ids]]);
+        const records = this.getRecords(model, [['id', 'in', ids]]);
         for (const record in records) {
             if (record.user_id) {
-                const user = this._getRecords('res.users', [['id', '=', record.user_id]]);
+                const user = this.getRecords('res.users', [['id', '=', record.user_id]]);
                 if (user.partner_id) {
                     const reason = this.data[model].fields['user_id'].string;
                     this._mockMailThread_MessageAddSuggestedRecipient(result, user.partner_id, reason);
@@ -1767,7 +1767,7 @@ MockServer.include({
      */
     _mockResFake_MessageGetSuggestedRecipients(model, ids) {
         const result = {};
-        const records = this._getRecords(model, [['id', 'in', ids]]);
+        const records = this.getRecords(model, [['id', 'in', ids]]);
 
         for (const record of records) {
             result[record.id] = [];
@@ -1779,7 +1779,7 @@ MockServer.include({
                     'CC email',
                 ]);
             }
-            const partners = this._getRecords(
+            const partners = this.getRecords(
                 'res.partner',
                 [['id', 'in', record.partner_ids]],
             );
@@ -1810,13 +1810,13 @@ MockServer.include({
     _mockMailThreadMessagePost(model, ids, kwargs, context) {
         const id = ids[0]; // ensure_one
         if (kwargs.attachment_ids) {
-            const attachments = this._getRecords('ir.attachment', [
+            const attachments = this.getRecords('ir.attachment', [
                 ['id', 'in', kwargs.attachment_ids],
                 ['res_model', '=', 'mail.compose.message'],
                 ['res_id', '=', 0],
             ]);
             const attachmentIds = attachments.map(attachment => attachment.id);
-            this._mockWrite('ir.attachment', [
+            this.mockWrite('ir.attachment', [
                 attachmentIds,
                 {
                     res_id: id,
@@ -1841,7 +1841,7 @@ MockServer.include({
             res_id: id,
         });
         delete values.subtype_xmlid;
-        const messageId = this._mockCreate('mail.message', values);
+        const messageId = this.mockCreate('mail.message', values);
         this._mockMailThread_NotifyThread(model, ids, messageId);
         return this._mockMailMessageMessageFormat([messageId])[0];
     },
@@ -1858,14 +1858,14 @@ MockServer.include({
     _mockMailThreadMessageSubscribe(model, ids, partner_ids, subtype_ids) {
         for (const id of ids) {
             for (const partner_id of partner_ids) {
-                const followerId = this._mockCreate('mail.followers', {
+                const followerId = this.mockCreate('mail.followers', {
                     is_active: true,
                     partner_id,
                     res_id: id,
                     res_model: model,
                     subtype_ids: subtype_ids,
                 });
-                this._mockWrite('res.partner', [[partner_id], {
+                this.mockWrite('res.partner', [[partner_id], {
                     message_follower_ids: [followerId],
                 }]);
             }
@@ -1882,7 +1882,7 @@ MockServer.include({
      * @returns {boolean}
      */
     _mockMailThread_NotifyThread(model, ids, messageId) {
-        const message = this._getRecords('mail.message', [['id', '=', messageId]])[0];
+        const message = this.getRecords('mail.message', [['id', '=', messageId]])[0];
         const messageFormat = this._mockMailMessageMessageFormat([messageId])[0];
         const notifications = [];
         // author
@@ -1897,7 +1897,7 @@ MockServer.include({
         }
         if (model === 'mail.channel') {
             // members
-            const channels = this._getRecords('mail.channel', [['id', '=', message.res_id]]);
+            const channels = this.getRecords('mail.channel', [['id', '=', message.res_id]]);
             for (const channel of channels) {
                 notifications.push({
                     type: 'mail.channel/new_message',
@@ -1908,8 +1908,8 @@ MockServer.include({
                 });
                 // notify update of last_interest_dt
                 const now = datetime_to_str(new Date());
-                const members = this._getRecords('mail.channel.partner', [['id', 'in', channel.channel_last_seen_partner_ids]]);
-                this._mockWrite('mail.channel.partner', [
+                const members = this.getRecords('mail.channel.partner', [['id', 'in', channel.channel_last_seen_partner_ids]]);
+                this.mockWrite('mail.channel.partner', [
                     members.map(member => member.id),
                     { last_interest_dt: now },
                 ]);
@@ -1940,7 +1940,7 @@ MockServer.include({
         if (!partner_ids) {
             return true;
         }
-        const followers = this._getRecords('mail.followers', [
+        const followers = this.getRecords('mail.followers', [
             ['res_model', '=', model],
             ['res_id', 'in', ids],
             ['partner_id', 'in', partner_ids || []],
@@ -2055,8 +2055,8 @@ MockServer.include({
                 values['new_value_char'] = newValue;
                 break;
             case 'many2one':
-                initialValue = initialValue ? this._mockSearchRead(field.relation, [[['id', '=', initialValue]]], {})[0] : initialValue;
-                newValue = newValue ? this._mockSearchRead(field.relation, [[['id', '=', newValue]]], {})[0] : newValue;
+                initialValue = initialValue ? this.mockSearchRead(field.relation, [[['id', '=', initialValue]]], {})[0] : initialValue;
+                newValue = newValue ? this.mockSearchRead(field.relation, [[['id', '=', newValue]]], {})[0] : newValue;
                 values['old_value_integer'] = initialValue ? initialValue.id : 0;
                 values['new_value_integer'] = newValue ? newValue.id : 0;
                 values['old_value_char'] = initialValue ? initialValue.display_name : '';
@@ -2066,7 +2066,7 @@ MockServer.include({
                 isTracked = false;
         }
         if (isTracked) {
-            return this._mockCreate('mail.tracking.value', values);
+            return this.mockCreate('mail.tracking.value', values);
         }
         return false;
     },
@@ -2107,14 +2107,14 @@ MockServer.include({
      * @returns {Object}
      */
     _mockResPartner_GetChannelsAsMember(ids) {
-        const partner = this._getRecords('res.partner', [['id', 'in', ids]])[0];
-        const channelMembers = this._getRecords('mail.channel.partner', [['partner_id', '=', partner.id]]);
-        const channels = this._getRecords('mail.channel', [
+        const partner = this.getRecords('res.partner', [['id', 'in', ids]])[0];
+        const channelMembers = this.getRecords('mail.channel.partner', [['partner_id', '=', partner.id]]);
+        const channels = this.getRecords('mail.channel', [
             ['channel_type', 'in', ['channel', 'group']],
             ['channel_last_seen_partner_ids', 'in', channelMembers.map(member => member.id)],
         ]);
-        const directMessagesMembers = this._getRecords('mail.channel.partner', [['partner_id', '=', partner.id], ['is_pinned', '=', true]]);
-        const directMessages = this._getRecords('mail.channel', [
+        const directMessagesMembers = this.getRecords('mail.channel.partner', [['partner_id', '=', partner.id], ['is_pinned', '=', true]]);
+        const directMessages = this.getRecords('mail.channel', [
             ['channel_type', '=', 'chat'],
             ['channel_last_seen_partner_ids', 'in', directMessagesMembers.map(member => member.id)],
         ]);
@@ -2129,7 +2129,7 @@ MockServer.include({
      * @private
      */
      _mockResUsersSystrayGetActivities() {
-        const activities = this._mockSearchRead('mail.activity', [[]], {});
+        const activities = this.mockSearchRead('mail.activity', [[]], {});
         const userActivitiesByModelName = {};
         for (const activity of activities) {
             const today = date_to_str(new Date());
@@ -2170,10 +2170,10 @@ MockServer.include({
      * @returns {Object}
      */
     _mockResUsersSettings_FindOrCreateForUser(user_id) {
-        let settings = this._getRecords('res.users.settings', [['user_id', '=', user_id]])[0];
+        let settings = this.getRecords('res.users.settings', [['user_id', '=', user_id]])[0];
         if (!settings) {
-            const settingsId = this._mockCreate('res.users.settings', { user_id: user_id });
-            settings = this._getRecords('res.users.settings', [['id', '=', settingsId]])[0];
+            const settingsId = this.mockCreate('res.users.settings', { user_id: user_id });
+            settings = this.getRecords('res.users.settings', [['id', '=', settingsId]])[0];
         }
         return settings;
     },
@@ -2185,14 +2185,14 @@ MockServer.include({
      * @param {Object} newSettings
      */
     _mockResUsersSettingsSetResUsersSettings(id, newSettings) {
-        const oldSettings = this._getRecords('res.users.settings', [['id', '=', id]])[0];
+        const oldSettings = this.getRecords('res.users.settings', [['id', '=', id]])[0];
         const changedSettings = {};
         for (const setting in newSettings) {
             if (setting in oldSettings && newSettings[setting] !== oldSettings[setting]) {
                 changedSettings[setting] = newSettings[setting];
             }
         }
-        this._mockWrite('res.users.settings', [
+        this.mockWrite('res.users.settings', [
             [id],
             changedSettings,
         ]);
@@ -2248,8 +2248,8 @@ MockServer.include({
         };
 
         // add main suggestions based on users
-        const partnersFromUsers = this._getRecords('res.users', [])
-            .map(user => this._getRecords('res.partner', [['id', '=', user.partner_id]])[0])
+        const partnersFromUsers = this.getRecords('res.users', [])
+            .map(user => this.getRecords('res.partner', [['id', '=', user.partner_id]])[0])
             .filter(partner => partner);
         const mainMatchingPartners = mentionSuggestionsFilter(partnersFromUsers, search, limit);
 
@@ -2257,7 +2257,7 @@ MockServer.include({
         // if not enough results add extra suggestions based on partners
         const remainingLimit = limit - mainMatchingPartners.length;
         if (mainMatchingPartners.length < limit) {
-            const partners = this._getRecords('res.partner', [['id', 'not in', mainMatchingPartners.map(partner => partner.id)]]);
+            const partners = this.getRecords('res.partner', [['id', 'not in', mainMatchingPartners.map(partner => partner.id)]]);
             extraMatchingPartners = mentionSuggestionsFilter(partners, search, remainingLimit);
         }
         return mainMatchingPartners.concat(extraMatchingPartners);
@@ -2270,8 +2270,8 @@ MockServer.include({
      * @returns {integer}
      */
     _mockResPartner_GetNeedactionCount(id) {
-        const partner = this._getRecords('res.partner', [['id', '=', id]])[0];
-        return this._getRecords('mail.notification', [
+        const partner = this.getRecords('res.partner', [['id', '=', id]])[0];
+        return this.getRecords('mail.notification', [
             ['res_partner_id', '=', partner.id],
             ['is_read', '=', false],
         ]).length;
@@ -2287,9 +2287,9 @@ MockServer.include({
     _mockResPartnerImSearch(name = '', limit = 20) {
         name = name.toLowerCase(); // simulates ILIKE
         // simulates domain with relational parts (not supported by mock server)
-        const matchingPartners = this._getRecords('res.users', [])
+        const matchingPartners = this.getRecords('res.users', [])
             .filter(user => {
-                const partner = this._getRecords('res.partner', [['id', '=', user.partner_id]])[0];
+                const partner = this.getRecords('res.partner', [['id', '=', user.partner_id]])[0];
                 // user must have a partner
                 if (!partner) {
                     return false;
@@ -2307,7 +2307,7 @@ MockServer.include({
                 }
                 return false;
             }).map(user => {
-                const partner = this._getRecords('res.partner', [['id', '=', user.partner_id]])[0];
+                const partner = this.getRecords('res.partner', [['id', '=', user.partner_id]])[0];
                 return {
                     id: partner.id,
                     im_status: user.im_status || 'offline',
@@ -2327,7 +2327,7 @@ MockServer.include({
      * @returns {Map}
      */
     _mockResPartnerMailPartnerFormat(ids) {
-        const partners = this._getRecords(
+        const partners = this.getRecords(
             'res.partner',
             [['id', 'in', ids]],
             { active_test: false }
@@ -2335,7 +2335,7 @@ MockServer.include({
         // Servers is also returning `is_internal_user` but not
         // done here for simplification.
         return new Map(partners.map(partner => {
-            const users = this._getRecords('res.users', [['id', 'in', partner.user_ids]]);
+            const users = this.getRecords('res.users', [['id', 'in', partner.user_ids]]);
             const internalUsers = users.filter(user => !user.share);
             let mainUser;
             if (internalUsers.length > 0) {
@@ -2369,9 +2369,9 @@ MockServer.include({
         search_term = search_term.toLowerCase(); // simulates ILIKE
         // simulates domain with relational parts (not supported by mock server)
         const matchingPartners = [...this._mockResPartnerMailPartnerFormat(
-            this._getRecords('res.users', [])
+            this.getRecords('res.users', [])
             .filter(user => {
-                const partner = this._getRecords('res.partner', [['id', '=', user.partner_id]])[0];
+                const partner = this.getRecords('res.partner', [['id', '=', user.partner_id]])[0];
                 // user must have a partner
                 if (!partner) {
                     return false;
@@ -2406,8 +2406,8 @@ MockServer.include({
      * @returns {Object[]}
      */
     _mockResPartner_MessageFetchFailed(id) {
-        const partner = this._getRecords('res.partner', [['id', '=', id]])[0];
-        const messages = this._getRecords('mail.message', [
+        const partner = this.getRecords('res.partner', [['id', '=', id]])[0];
+        const messages = this.getRecords('mail.message', [
             ['author_id', '=', partner.id],
             ['res_id', '!=', 0],
             ['model', '!=', false],
@@ -2415,8 +2415,8 @@ MockServer.include({
         ]).filter(message => {
             // Purpose is to simulate the following domain on mail.message:
             // ['notification_ids.notification_status', 'in', ['bounce', 'exception']],
-            // But it's not supported by _getRecords domain to follow a relation.
-            const notifications = this._getRecords('mail.notification', [
+            // But it's not supported by getRecords domain to follow a relation.
+            const notifications = this.getRecords('mail.notification', [
                 ['mail_message_id', '=', message.id],
                 ['notification_status', 'in', ['bounce', 'exception']],
             ]);
@@ -2432,7 +2432,7 @@ MockServer.include({
      * @returns {Object}
      */
     _mockResUsers_InitMessaging(ids) {
-        const user = this._getRecords('res.users', [['id', 'in', ids]])[0];
+        const user = this.getRecords('res.users', [['id', 'in', ids]])[0];
         return {
             channels: this._mockMailChannelChannelInfo(this._mockResPartner_GetChannelsAsMember(user.partner_id).map(channel => channel.id)),
             current_partner: this._mockResPartnerMailPartnerFormat(user.partner_id).get(user.partner_id),
@@ -2442,8 +2442,8 @@ MockServer.include({
             needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(user.partner_id),
             partner_root: this._mockResPartnerMailPartnerFormat(this.partnerRootId).get(this.partnerRootId),
             public_partners: [...this._mockResPartnerMailPartnerFormat(this.publicPartnerId).values()],
-            shortcodes: this._mockSearchRead('mail.shortcode', [[], ['source', 'substitution']], {}),
-            starred_counter: this._getRecords('mail.message', [['starred_partner_ids', 'in', user.partner_id]]).length,
+            shortcodes: this.mockSearchRead('mail.shortcode', [[], ['source', 'substitution']], {}),
+            starred_counter: this.getRecords('mail.message', [['starred_partner_ids', 'in', user.partner_id]]).length,
         };
     },
     /**
@@ -2452,15 +2452,15 @@ MockServer.include({
      */
     _mockMailThreadNotifyCancelByType(model, notificationType) {
         // Query matching notifications
-        const notifications = this._getRecords('mail.notification', [
+        const notifications = this.getRecords('mail.notification', [
             ['notification_type', '=', notificationType],
             ['notification_status', 'in', ['bounce', 'exception']],
         ]).filter(notification => {
-            const message = this._getRecords('mail.message', [['id', '=', notification.mail_message_id]])[0];
+            const message = this.getRecords('mail.message', [['id', '=', notification.mail_message_id]])[0];
             return message.model === model && message.author_id === this.currentPartnerId;
         });
         // Update notification status
-        this._mockWrite('mail.notification', [
+        this.mockWrite('mail.notification', [
             notifications.map(notification => notification.id),
             { notification_status: 'canceled' },
         ]);
@@ -2472,5 +2472,37 @@ MockServer.include({
             },
             type: 'mail.message/notification_update',
         }]);
+    },
+
+    //--------------------------------------------------------------------------
+    // New mock server compatibility
+    //--------------------------------------------------------------------------
+
+    getRecords() {
+        return this._getRecords(...arguments);
+    },
+    mockCreate() {
+        return this._mockCreate(...arguments);
+    },
+    mockRead() {
+        return this._mockRead(...arguments);
+    },
+    mockReadGroup() {
+        return this._mockReadGroup(...arguments);
+    },
+    mockSearch() {
+        return this._mockSearch(...arguments);
+    },
+    mockSearchCount() {
+        return this._mockSearchCount(...arguments);
+    },
+    mockSearchRead() {
+        return this._mockSearchRead(...arguments);
+    },
+    mockUnlink() {
+        return this._mockUnlink(...arguments);
+    },
+    mockWrite() {
+        return this._mockWrite(...arguments);
     },
 });

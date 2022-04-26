@@ -287,7 +287,7 @@ let pyEnv;
                         if (!Array.isArray(values)) {
                             values = [values];
                         }
-                        const recordIds = values.map(value => target.mockServer._mockCreate(name, value))
+                        const recordIds = values.map(value => target.mockServer.mockCreate(name, value));
                         return recordIds.length === 1 ? recordIds[0] : recordIds;
                     },
                     /**
@@ -298,7 +298,7 @@ let pyEnv;
                      * @returns {integer[]} array of ids corresponding to the given domain.
                      */
                     search(domain, context = {}) {
-                        return target.mockServer._mockSearch(name, [domain], context);
+                        return target.mockServer.mockSearch(name, [domain], context);
                     },
                     /**
                      * Simulate a 'search_read' operation on a model.
@@ -308,7 +308,7 @@ let pyEnv;
                      * @returns {Object[]} array of records corresponding to the given domain.
                      */
                     searchRead(domain, context = {}) {
-                        return target.mockServer._mockSearchRead(name, [], { domain, context });
+                        return target.mockServer.mockSearchRead(name, [], { domain, context });
                     },
                     /**
                      * Simulate an 'unlink' operation on a model.
@@ -317,7 +317,7 @@ let pyEnv;
                      * @returns {boolean} mockServer 'unlink' method always returns true.
                      */
                     unlink(ids) {
-                        return target.mockServer._mockUnlink(name, [ids]);
+                        return target.mockServer.mockUnlink(name, [ids]);
                     },
                     /**
                      * Simulate a 'write' operation on a model.
@@ -327,7 +327,7 @@ let pyEnv;
                      * @returns {boolean} mockServer 'write' method always returns true.
                      */
                     write(ids, values) {
-                        return target.mockServer._mockWrite(name, [ids, values]);
+                        return target.mockServer.mockWrite(name, [ids, values]);
                     },
                 };
             },
