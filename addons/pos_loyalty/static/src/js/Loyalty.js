@@ -506,6 +506,44 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         });
     }
     /**
+     * The idea is to update the quantity of the reward line when the coupon points decreased.
+     * We can identify that there is a decrease in coupon points when the remaining points for
+     * the coupon becomes negative. Out of the negative points, we recompute the quantity that
+     * will make the coupon points to become zero.
+     *
+     * E.g.
+     *
+     * Current order:
+     * > 10 product1 --(producing)-> 10 points
+     * > 4 product2 (reward line) (2 points consumed per item) --(consuming)-> 8 points
+     * > Remaining points: 2
+     *
+     * User action:
+     * > 10 product1 --(reduced to)-> 4 product1 --(producing only)-> 4 points
+     *
+     * Result of user action:
+     * > coupon's remaining points: 4 - 8 = -4
+     *
+     * Correct negative remaining points:
+     * > Automatically set quantity of reward line to 2 (4 points consumed)
+     * > Remaining points becomes: 0
+     *
+     * @param {Orderline} rewardLine
+     * @return {number} The maximum possible quantity for the given reward line when the remaining points of the coupon is negative.
+     */
+    _getNewRewardQuantity(rewardLine) {
+        const remainingPoints = rewardLine.order._getRealCouponPoints(rewardLine.coupon_id, true);
+        let correction = 0;
+        if (remainingPoints < 0) {
+            // We correct the quantity of this line if the remaining points is negative.
+            const reward = rewardLine.order.pos.reward_by_id[rewardLine.reward_id];
+            const rewardUnitCost = reward.required_points / reward.reward_product_qty;
+            // NOTE that value of correction is negative.
+            correction = Math.floor(remainingPoints / rewardUnitCost);
+        }
+        return rewardLine.get_quantity() + correction;
+    }
+    /**
      * Refreshes the currently applied rewards, if they are not applicable anymore they are removed.
      */
     _updateRewardLines() {
@@ -529,10 +567,13 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             if (claimedReward.reward.program_id.program_type === 'gift_card' || claimedReward.reward.program_id.program_type === 'ewallet') {
                 paymentRewards.push(claimedReward);
             } else if (claimedReward.reward.reward_type === 'product') {
-                // claimedRewards.unshift(claimedReward);
-                // Do nothing, do not automatically update reward product at the moment.
-                // TODO-JCB: We might do something later if the reward becomes negative.
-                continue
+                const newQuantity = this._getNewRewardQuantity(line);
+                if (newQuantity > 0) {
+                    if (line.get_quantity() !== newQuantity) {
+                        line.set_quantity(newQuantity);
+                    }
+                    continue;
+                }
             } else {
                 claimedRewards.push(claimedReward);
             }
@@ -661,9 +702,14 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
      * that is `clear_wallet`, then this results to consuming all the points, even
      * if potentially, the order can still accomodate the other rewards.
      *
+     * Except when dontClear is true. This is useful for automatically updating the number
+     * of free product rewards.
+     *
+     * @param {number} coupon_id
+     * @param {boolean} dontClear Do not clear points if true.
      * @returns {number}
      */
-    _getRealCouponPoints(coupon_id) {
+    _getRealCouponPoints(coupon_id, dontClear=false) {
         let points = 0;
         const dbCoupon = this.pos.couponCache[coupon_id];
         if (dbCoupon) {
@@ -682,7 +728,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         for (const line of this.get_orderlines()) {
             if (line.is_reward_line && line.coupon_id === coupon_id) {
                 const reward = this.pos.reward_by_id[line.reward_id];
-                if (reward.clear_wallet) {
+                if (reward.clear_wallet && !dontClear) {
                     // Immediately return 0 as remaining points for the coupon_id
                     // once we see a reward orderline that is "clear_wallet".
                     return 0;
