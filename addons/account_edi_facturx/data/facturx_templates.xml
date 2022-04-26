@@ -37,7 +37,7 @@
                                 <ram:ChargeIndicator>
                                     <udt:Indicator>false</udt:Indicator>
                                 </ram:ChargeIndicator>
-                                <ram:ActualAmount t-esc="format_monetary(line.price_unit - net_amount, currency)"/>
+                                <ram:ActualAmount t-esc="format_monetary(line_values['price_discount_unit'], currency)"/>
                             </ram:AppliedTradeAllowanceCharge>
                         </ram:GrossPriceProductTradePrice>
                         <!-- Line unit price, with discount applied -->

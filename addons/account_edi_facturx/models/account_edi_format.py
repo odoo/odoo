@@ -133,11 +133,16 @@ class AccountEdiFormat(models.Model):
                 is_refund=line.move_id.move_type in ('in_refund', 'out_refund'),
             )
 
+            if line.discount == 100.0:
+                gross_price_subtotal = line.currency_id.round(line.price_unit * line.quantity)
+            else:
+                gross_price_subtotal = line.currency_id.round(line.price_subtotal / (1 - (line.discount / 100.0)))
             line_template_values = {
                 'line': line,
                 'index': i + 1,
                 'tax_details': [],
                 'net_price_subtotal': taxes_res['total_excluded'],
+                'price_discount_unit': (gross_price_subtotal - line.price_subtotal) / line.quantity if line.quantity else 0.0,
                 'unece_uom_code': line.product_id.product_tmpl_id.uom_id._get_unece_code(),
             }
 
