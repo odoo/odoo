@@ -758,7 +758,7 @@ class ProductCategory(models.Model):
                 raise ValidationError(_('The Stock Input and/or Output accounts cannot be the same as the Stock Valuation account.'))
 
     @api.onchange('property_cost_method')
-    def onchange_property_valuation(self):
+    def onchange_property_cost(self):
         if not self._origin:
             # don't display the warning when creating a product category
             return
@@ -822,3 +822,16 @@ class ProductCategory(models.Model):
             account_moves = self.env['account.move'].sudo().create(move_vals_list)
             account_moves._post()
         return res
+
+    @api.onchange('property_valuation')
+    def onchange_property_valuation(self):
+        # Remove or set the account stock properties if necessary
+        if self.property_valuation == 'manual_periodic':
+            self.property_stock_account_input_categ_id = False
+            self.property_stock_account_output_categ_id = False
+            self.property_stock_valuation_account_id = False
+        if self.property_valuation == 'real_time':
+            company_id = self.env.company
+            self.property_stock_account_input_categ_id = company_id.property_stock_account_input_categ_id
+            self.property_stock_account_output_categ_id = company_id.property_stock_account_output_categ_id
+            self.property_stock_valuation_account_id = company_id.property_stock_valuation_account_id
