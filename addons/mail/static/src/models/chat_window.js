@@ -17,9 +17,9 @@ registerModel({
          */
         close({ notifyServer } = {}) {
             if (notifyServer === undefined) {
-                notifyServer = !this.messaging.device.isMobile;
+                notifyServer = !this.messaging.device.isSmall;
             }
-            if (this.messaging.device.isMobile && !this.messaging.discuss.discussView) {
+            if (this.messaging.device.isSmall && !this.messaging.discuss.discussView) {
                 // If we are in mobile and discuss is not open, it means the
                 // chat window was opened from the messaging menu. In that
                 // case it should be re-opened to simulate it was always
@@ -71,7 +71,7 @@ registerModel({
          */
         fold({ notifyServer } = {}) {
             if (notifyServer === undefined) {
-                notifyServer = !this.messaging.device.isMobile;
+                notifyServer = !this.messaging.device.isSmall;
             }
             this.update({ isFolded: true });
             // Flux specific: manually folding the chat window should save the
@@ -140,7 +140,7 @@ registerModel({
          * window.
          */
         onClickHeader(ev) {
-            if (!this.exists() || this.messaging.device.isMobile) {
+            if (!this.exists() || this.messaging.device.isSmall) {
                 return;
             }
             if (this.isFolded) {
@@ -316,7 +316,7 @@ registerModel({
          */
         unfold({ notifyServer } = {}) {
             if (notifyServer === undefined) {
-                notifyServer = !this.messaging.device.isMobile;
+                notifyServer = !this.messaging.device.isSmall;
             }
             this.update({ isFolded: false });
             // Flux specific: manually opening the chat window should save the
@@ -347,7 +347,7 @@ registerModel({
          * @returns {boolean|FieldCommand}
          */
         _computeHasCloseAsBackButton() {
-            if (this.isVisible && this.messaging.device.isMobile) {
+            if (this.isVisible && this.messaging.device.isSmall) {
                 return true;
             }
             return clear();
@@ -359,7 +359,7 @@ registerModel({
         _computeHasInviteFeature() {
             return Boolean(
                 this.thread && this.thread.hasInviteFeature &&
-                this.messaging && this.messaging.device && this.messaging.device.isMobile
+                this.messaging && this.messaging.device && this.messaging.device.isSmall
             );
         },
         /**
@@ -410,7 +410,7 @@ registerModel({
          * @returns {boolean|FieldCommand}
          */
         _computeIsExpandable() {
-            if (this.isVisible && !this.messaging.device.isMobile && this.thread) {
+            if (this.isVisible && !this.messaging.device.isSmall && this.thread) {
                 return true;
             }
             return clear();
@@ -431,7 +431,7 @@ registerModel({
          * @returns {boolean|FieldCommand}
          */
         _computeIsFullscreen() {
-            if (this.isVisible && this.messaging.device.isMobile) {
+            if (this.isVisible && this.messaging.device.isSmall) {
                 return true;
             }
             return clear();

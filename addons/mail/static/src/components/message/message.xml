@@ -10,7 +10,7 @@
                     'o-discussion': messageView.message.is_discussion or messageView.message.is_notification,
                     'o-has-message-selection': messageView.threadView and messageView.threadView.replyingToMessageView,
                     'o-highlighted': messageView.message.isHighlighted or messageView.isHighlighted,
-                    'o-mobile': messaging.device.isMobile,
+                    'o-mobile': messaging.device.isSmall,
                     'o-not-discussion': !(messageView.message.is_discussion or messageView.message.is_notification),
                     'o-notification': messageView.message.message_type === 'notification',
                     'o-selected': messageView.isSelected,
@@ -40,8 +40,8 @@
                                         className="'o_Message_partnerImStatusIcon d-flex align-items-center justify-content-center'"
                                         classNameObj="{
                                             'o-message-selected text-400': messageView.isSelected,
-                                            'o_Message_partnerImStatusIcon-mobile': messaging.device.isMobile,
-                                            'small': !messaging.device.isMobile,
+                                            'o_Message_partnerImStatusIcon-mobile': messaging.device.isSmall,
+                                            'small': !messaging.device.isSmall,
                                             'text-white': !messageView.isSelected and (messageView.message.is_discussion or messageView.message.is_notification),
                                             'text-100': !(messageView.message.is_discussion or messageView.message.is_notification) and !messageView.isSelected,
                                         }"

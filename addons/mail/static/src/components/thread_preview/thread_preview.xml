@@ -15,7 +15,7 @@
                             <PartnerImStatusIcon
                                 className="'o_ThreadPreview_partnerImStatusIcon'"
                                 classNameObj="{
-                                    'o-mobile': messaging.device.isMobile,
+                                    'o-mobile': messaging.device.isSmall,
                                     'o-muted': threadPreviewView.thread.localMessageUnreadCounter === 0,
                                 }"
                                 partnerLocalId="threadPreviewView.thread.correspondent.localId"
@@ -25,7 +25,7 @@
                 </div>
                 <div class="o_ThreadPreview_content">
                     <div class="o_ThreadPreview_header align-items-baseline">
-                        <span class="o_ThreadPreview_name text-truncate" t-att-class="{ 'o-mobile': messaging.device.isMobile, 'o-muted': threadPreviewView.thread.localMessageUnreadCounter === 0 }">
+                        <span class="o_ThreadPreview_name text-truncate" t-att-class="{ 'o-mobile': messaging.device.isSmall, 'o-muted': threadPreviewView.thread.localMessageUnreadCounter === 0 }">
                             <t t-esc="threadPreviewView.thread.displayName"/>
                         </span>
                         <t t-if="threadPreviewView.thread.localMessageUnreadCounter > 1">

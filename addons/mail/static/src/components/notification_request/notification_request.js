@@ -62,7 +62,7 @@ export class NotificationRequest extends Component {
         if (def) {
             def.then(this._handleResponseNotificationPermission.bind(this));
         }
-        if (!this.messaging.device.isMobile) {
+        if (!this.messaging.device.isSmall) {
             this.messaging.messagingMenu.close();
         }
     }

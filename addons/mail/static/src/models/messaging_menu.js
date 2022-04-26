@@ -24,7 +24,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickNewMessage(ev) {
-            if (!this.messaging.device.isMobile) {
+            if (!this.messaging.device.isSmall) {
                 this.messaging.chatWindowManager.openNewMessage();
                 this.close();
             } else {
@@ -85,7 +85,7 @@ registerModel({
          * @returns {FieldCommand}
          */
          _computeMobileMessagingNavbarView() {
-            if (this.messaging.device && this.messaging.device.isMobile) {
+            if (this.messaging.device && this.messaging.device.isSmall) {
                 return insertAndReplace();
             }
             return clear();
@@ -95,7 +95,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeMobileNewMessageAutocompleteInputView() {
-            if (this.isOpen && this.messaging.isInitialized && this.messaging.device.isMobile && this.isMobileNewMessageToggled) {
+            if (this.isOpen && this.messaging.isInitialized && this.messaging.device.isSmall && this.isMobileNewMessageToggled) {
                 return insertAndReplace();
             }
             return clear();

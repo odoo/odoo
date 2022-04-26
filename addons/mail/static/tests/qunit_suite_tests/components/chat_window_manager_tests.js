@@ -2516,8 +2516,8 @@ QUnit.test('should not have chat window hidden menu in mobile (transition from 2
     await afterNextRender(
         () => messaging.device.update({
             globalWindowInnerWidth: 300,
-            isMobile: true,
             isMobileDevice: true,
+            isSmall: true,
             sizeClass: 0, // XS
         }),
     );

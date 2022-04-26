@@ -14,14 +14,14 @@
                         <t t-if="notificationView.constructor.name === 'ThreadPreviewView'">
                             <ThreadPreview
                                 className="'o_NotificationList_preview'"
-                                classNameObj="{ 'o-mobile': messaging.device.isMobile }"
+                                classNameObj="{ 'o-mobile': messaging.device.isSmall }"
                                 localId="notificationView.localId"
                             />
                         </t>
                         <t t-if="notificationView.constructor.name === 'ThreadNeedactionPreviewView'">
                             <ThreadNeedactionPreview
                                 className="'o_NotificationList_preview'"
-                                classNameObj="{ 'o-mobile': messaging.device.isMobile }"
+                                classNameObj="{ 'o-mobile': messaging.device.isSmall }"
                                 localId="notificationView.localId"
                             />
                         </t>
@@ -34,7 +34,7 @@
                         <t t-if="notificationView.constructor.name === 'NotificationRequestView'">
                             <NotificationRequest
                                 className="'o_NotificationList_notificationRequest'"
-                                classNameObj="{ 'o-mobile': messaging.device.isMobile }"
+                                classNameObj="{ 'o-mobile': messaging.device.isSmall }"
                                 localId="notificationView.localId"
                             />
                         </t>

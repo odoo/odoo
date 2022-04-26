@@ -21,7 +21,7 @@ registerModel({
                 return;
             }
             this.thread.open();
-            if (!this.messaging.device.isMobile) {
+            if (!this.messaging.device.isSmall) {
                 this.messaging.messagingMenu.close();
             }
         },

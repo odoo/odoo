@@ -145,7 +145,7 @@ registerModel({
                 return;
             }
             thread.open();
-            if (this.messaging.device.isMobile && thread.channel_type) {
+            if (this.messaging.device.isSmall && thread.channel_type) {
                 this.update({ activeMobileNavbarTabId: thread.channel_type });
             }
         },
@@ -235,7 +235,7 @@ registerModel({
                 return false;
             }
             if (
-                this.messaging.device.isMobile &&
+                this.messaging.device.isSmall &&
                 (
                     this.activeMobileNavbarTabId !== 'mailbox' ||
                     this.thread.model !== 'mail.box'
@@ -272,7 +272,7 @@ registerModel({
         _computeMobileMessagingNavbarView() {
             if (
                 this.messaging.device &&
-                this.messaging.device.isMobile &&
+                this.messaging.device.isSmall &&
                 !(this.threadView && this.threadView.replyingToMessageView)
             ) {
                 return insertAndReplace();
@@ -284,7 +284,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeNotificationListView() {
-            return (this.messaging.device.isMobile && this.activeMobileNavbarTabId !== 'mailbox') ? insertAndReplace() : clear();
+            return (this.messaging.device.isSmall && this.activeMobileNavbarTabId !== 'mailbox') ? insertAndReplace() : clear();
         },
         /**
          * @private

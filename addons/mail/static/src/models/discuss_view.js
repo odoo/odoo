@@ -81,7 +81,7 @@ registerModel({
          */
         _computeMobileAddItemHeaderAutocompleteInputView() {
             if (
-                this.messaging.device.isMobile &&
+                this.messaging.device.isSmall &&
                 (this.discuss.isAddingChannel || this.discuss.isAddingChat)
             ) {
                 return insertAndReplace();

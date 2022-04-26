@@ -30,8 +30,8 @@ registerModel({
             this.update({
                 globalWindowInnerHeight: this.messaging.browser.innerHeight,
                 globalWindowInnerWidth: this.messaging.browser.innerWidth,
-                isMobile: this.env.device.isMobile,
                 isMobileDevice: this.env.device.isMobileDevice,
+                isSmall: this.env.device.isMobile,
                 sizeClass: this.env.device.size_class,
             });
         },
@@ -40,13 +40,13 @@ registerModel({
         globalWindowInnerHeight: attr(),
         globalWindowInnerWidth: attr(),
         /**
-         * States whether this device has a small size (note: this field name is not ideal).
-         */
-        isMobile: attr(),
-        /**
          * States whether this device is an actual mobile device.
          */
         isMobileDevice: attr(),
+        /**
+         * States whether this device has a small size.
+         */
+        isSmall: attr(),
         /**
          * Size class of the device.
          *

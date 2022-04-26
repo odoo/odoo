@@ -33,8 +33,7 @@ registerModel({
                     name: this.env._t("Starred"),
                 }),
             });
-            const device = this.messaging.device;
-            device.start();
+            this.messaging.device.start();
             const discuss = this.messaging.discuss;
             const data = await this.async(() => this.env.services.rpc({
                 route: '/mail/init_messaging',

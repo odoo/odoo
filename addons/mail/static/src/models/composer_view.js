@@ -280,7 +280,7 @@ registerModel({
             });
         },
         /**
-         * @param {ComposerSuggestion} suggestion 
+         * @param {ComposerSuggestion} suggestion
          */
         onClickSuggestion(suggestion) {
             this.update({ activeSuggestion: replace(suggestion) });
@@ -845,7 +845,7 @@ registerModel({
             if (this.messageViewInEditing) {
                 return false;
             }
-            if (this.messaging.device.isMobile) {
+            if (this.messaging.device.isSmall) {
                 return false;
             }
             if (!this.threadView) {
@@ -885,7 +885,7 @@ registerModel({
                 return false;
             }
             if (this.threadView.threadViewer.discuss) {
-                return !this.messaging.device.isMobile;
+                return !this.messaging.device.isSmall;
             }
             return clear();
         },
@@ -974,7 +974,7 @@ registerModel({
                 return false;
             }
             if (this.threadView && this.threadView.threadViewer.chatWindow) {
-                return this.messaging.device.isMobile;
+                return this.messaging.device.isSmall;
             }
             return clear();
         },
@@ -1044,7 +1044,7 @@ registerModel({
                 // small screen size with a non-mailing channel. Here send will be done on clicking
                 // the button or using the 'ctrl/meta enter' shortcut.
                 if (
-                    this.messaging.device.isMobile ||
+                    this.messaging.device.isSmall ||
                     (
                         this.messaging.discuss.threadView === this.threadView &&
                         this.messaging.discuss.thread === this.messaging.inbox

@@ -462,18 +462,10 @@ registerModel({
          * @returns {Thread} the created channel
          */
         async performRpcCreateChannel({ name, privacy }) {
-            const device = this.messaging.device;
             const data = await this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'channel_create',
                 args: [name, privacy],
-                kwargs: {
-                    context: Object.assign({}, this.env.session.user_content, {
-                        // optimize the return value by avoiding useless queries
-                        // in non-mobile devices
-                        isMobile: device.isMobile,
-                    }),
-                },
             });
             return this.messaging.models['Thread'].insert(
                 this.messaging.models['Thread'].convertData(data)
@@ -491,17 +483,11 @@ registerModel({
          * @returns {Thread|undefined} the created or existing chat
          */
         async performRpcCreateChat({ partnerIds, pinForCurrentPartner }) {
-            const device = this.messaging.device;
             // TODO FIX: potential duplicate chat task-2276490
             const data = await this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'channel_get',
                 kwargs: {
-                    context: Object.assign({}, this.env.session.user_content, {
-                        // optimize the return value by avoiding useless queries
-                        // in non-mobile devices
-                        isMobile: device.isMobile,
-                    }),
                     partners_to: partnerIds,
                     pin: pinForCurrentPartner,
                 },
@@ -938,9 +924,8 @@ registerModel({
                 }
             }
             // check if thread must be opened in discuss
-            const device = this.messaging.device;
             if (
-                (!device.isMobile && (discuss.discussView || expanded)) ||
+                (!this.messaging.device.isSmall && (discuss.discussView || expanded)) ||
                 this.model === 'mail.box'
             ) {
                 return discuss.openThread(this, {
@@ -1754,7 +1739,7 @@ registerModel({
                 // avoid crash during destroy
                 return;
             }
-            if (this.messaging.device.isMobile) {
+            if (this.messaging.device.isSmall) {
                 return;
             }
             if (this.serverFoldState === 'closed') {
