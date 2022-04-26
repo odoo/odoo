@@ -14,7 +14,7 @@ def _post_init_hook(cr, registry):
     companies = env['res.company'].search([])
     for company in companies:
         company.terms_type = 'html'
-
+    env['website'].search([]).auth_signup_uninvited = 'b2c'
 
 def uninstall_hook(cr, registry):
     ''' Need to reenable the `product` pricelist multi-company rule that were

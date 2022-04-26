@@ -1467,7 +1467,7 @@
                                 <t t-if="error" t-foreach="error.get('error_message', [])" t-as="err">
                                     <h5 class="text-danger" t-esc="err" />
                                 </t>
-                                <form t-if="account_on_checkout != 'mandatory'" action="/shop/address" method="post" class="checkout_autoformat">
+                                <form t-if="account_on_checkout != 'mandatory' or not is_public_user" action="/shop/address" method="post" class="checkout_autoformat">
                                     <div class="form-row">
                                         <div t-attf-class="form-group #{error.get('name') and 'o_has_error' or ''} col-lg-12 div_name">
                                             <label class="col-form-label" for="name">Name</label>
