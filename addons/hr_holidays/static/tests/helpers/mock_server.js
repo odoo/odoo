@@ -13,7 +13,7 @@ MockServer.include({
      */
     _mockResPartnerMailPartnerFormat(ids) {
         const partnerFormats = this._super(...arguments);
-        const partners = this._getRecords(
+        const partners = this.getRecords(
             'res.partner',
             [['id', 'in', ids]],
             { active_test: false },
