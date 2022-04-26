@@ -133,7 +133,7 @@ class Groups(models.Model):
     users = fields.Many2many('res.users', 'res_groups_users_rel', 'gid', 'uid')
     model_access = fields.One2many('ir.model.access', 'group_id', string='Access Controls', copy=True)
     rule_groups = fields.Many2many('ir.rule', 'rule_group_rel',
-        'group_id', 'rule_group_id', string='Rules', domain=[('global', '=', False)])
+        'group_id', 'rule_group_id', string='Rules', domain="[('global', '=', False)]")
     menu_access = fields.Many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', string='Access Menu')
     view_access = fields.Many2many('ir.ui.view', 'ir_ui_view_group_rel', 'group_id', 'view_id', string='Views')
     comment = fields.Text(translate=True)
