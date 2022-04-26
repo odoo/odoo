@@ -3,10 +3,12 @@
 
 import logging
 import poplib
-from ssl import SSLError
-from socket import gaierror, timeout
+import socket
+
 from imaplib import IMAP4, IMAP4_SSL
 from poplib import POP3, POP3_SSL
+from socket import gaierror, timeout
+from ssl import SSLError
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
@@ -18,6 +20,11 @@ MAIL_TIMEOUT = 60
 
 # Workaround for Python 2.7.8 bug https://bugs.python.org/issue23906
 poplib._MAXLINE = 65536
+
+# Add timeout to IMAP connections
+# HACK https://bugs.python.org/issue38615
+# TODO: clean in Python 3.9
+IMAP4._create_socket = lambda self, timeout=MAIL_TIMEOUT: socket.create_connection((self.host or None, self.port), timeout)
 
 
 class FetchmailServer(models.Model):
@@ -108,15 +115,13 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
             self._imap_login(connection)
         elif self.server_type == 'pop':
             if self.is_ssl:
-                connection = POP3_SSL(self.server, int(self.port))
+                connection = POP3_SSL(self.server, int(self.port), timeout=MAIL_TIMEOUT)
             else:
-                connection = POP3(self.server, int(self.port))
+                connection = POP3(self.server, int(self.port), timeout=MAIL_TIMEOUT)
             #TODO: use this to remove only unread messages
             #connection.user("recent:"+server.user)
             connection.user(self.user)
             connection.pass_(self.password)
-        # Add timeout on socket
-        connection.sock.settimeout(MAIL_TIMEOUT)
         return connection
 
     def _imap_login(self, connection):

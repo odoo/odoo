@@ -467,6 +467,12 @@ var MassMailingFieldHtml = FieldHtml.extend({
             $dropdown.find('.dropdown-item:eq(' + themesParams.indexOf(selectedTheme) + ')').addClass('selected');
         });
 
+        // Prevent expansion of drop-down while clicking on empty area during theme selection
+        $dropdown.on("click", ".dropdown-menu", function (ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+        });
+
         /**
          * If the user opens the theme selection screen, indicates which one is active and
          * saves the information...

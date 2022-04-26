@@ -16,8 +16,10 @@ class MailMessage(models.Model):
 
     def _portal_message_format(self, fields_list):
         vals_list = self._message_format(fields_list)
+        message_subtype_note_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
         IrAttachmentSudo = self.env['ir.attachment'].sudo()
         for vals in vals_list:
+            vals['is_message_subtype_note'] = message_subtype_note_id and vals.get('subtype_id', [False])[0] == message_subtype_note_id
             for attachment in vals.get('attachment_ids', []):
                 if not attachment.get('access_token'):
                     attachment['access_token'] = IrAttachmentSudo.browse(attachment['id']).generate_access_token()[0]
