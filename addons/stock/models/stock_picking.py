@@ -479,7 +479,7 @@ class Picking(models.Model):
         '''
         picking_moves_state_map = defaultdict(dict)
         picking_move_lines = defaultdict(set)
-        for move in self.env['stock.move'].search([('picking_id', 'in', self.ids)]):
+        for move in self.env['stock.move'].search([('picking_id', 'in', self.ids), ('scrapped', '=', False)]):
             picking_id = move.picking_id
             move_state = move.state
             picking_moves_state_map[picking_id.id].update({
