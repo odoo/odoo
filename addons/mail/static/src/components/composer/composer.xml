@@ -72,13 +72,13 @@
                         className="'o_Composer_textInput'"
                         classNameObj="{
                             'o-composer-is-compact': composerView.isCompact,
-                            'o_Composer_textInput-mobile': messaging.device.isMobile,
+                            'o_Composer_textInput-mobile': messaging.device.isSmall,
                             'o-has-current-partner-avatar': composerView.hasCurrentPartnerAvatar,
                         }"
                         localId="composerView.localId"
                         t-key="composerView.localId"
                     />
-                    <div class="o_Composer_buttons" t-att-class="{ 'o-composer-is-compact': composerView.isCompact, 'o-mobile': messaging.device.isMobile, 'o-messaging-in-editing': composerView and composerView.messageViewInEditing }">
+                    <div class="o_Composer_buttons" t-att-class="{ 'o-composer-is-compact': composerView.isCompact, 'o-mobile': messaging.device.isSmall, 'o-messaging-in-editing': composerView and composerView.messageViewInEditing }">
                         <div class="o_Composer_toolButtons"
                             t-att-class="{
                                 'o-composer-has-current-partner-avatar': composerView.hasCurrentPartnerAvatar,
@@ -91,7 +91,7 @@
                                 <button class="o_Composer_button o_Composer_buttonEmojis o_Composer_toolButton btn btn-light"
                                     t-att-class="{
                                         'o-open': composerView.emojisPopoverView,
-                                        'o-mobile': messaging.device.isMobile,
+                                        'o-mobile': messaging.device.isSmall,
                                     }"
                                     t-on-keydown="composerView.onKeydownButtonEmojis"
                                     t-on-click="composerView.onClickButtonEmojis"
@@ -100,11 +100,11 @@
                                     <i class="fa fa-smile-o"/>
                                 </button>
                                 <PopoverView t-if="composerView.emojisPopoverView" localId="composerView.emojisPopoverView.localId"/>
-                                <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-light fa fa-paperclip" t-att-class="{ 'o-mobile': messaging.device.isMobile }" title="Add attachment" type="button" t-on-click="composerView.onClickAddAttachment"/>
+                                <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-light fa fa-paperclip" t-att-class="{ 'o-mobile': messaging.device.isSmall }" title="Add attachment" type="button" t-on-click="composerView.onClickAddAttachment"/>
                             </div>
                             <t t-if="composerView.isExpandable">
                                 <div class="o_Composer_secondaryToolButtons">
-                                    <button class="btn btn-light fa fa-expand o_Composer_button o_Composer_buttonFullComposer o_Composer_toolButton" t-att-class="{ 'o-mobile': messaging.device.isMobile }" title="Full composer" type="button" t-on-click="composerView.onClickFullComposer"/>
+                                    <button class="btn btn-light fa fa-expand o_Composer_button o_Composer_buttonFullComposer o_Composer_toolButton" t-att-class="{ 'o-mobile': messaging.device.isSmall }" title="Full composer" type="button" t-on-click="composerView.onClickFullComposer"/>
                                 </div>
                             </t>
                         </div>
@@ -149,7 +149,7 @@
                     type="button"
                     t-on-click="composerView.onClickSend"
                 >
-                    <t t-if="!messaging.device.isMobile"><t t-esc="composerView.sendButtonText"/></t>
+                    <t t-if="!messaging.device.isSmall"><t t-esc="composerView.sendButtonText"/></t>
                     <t t-else=""><i class="fa fa-paper-plane-o"/></t>
                 </button>
             </t>

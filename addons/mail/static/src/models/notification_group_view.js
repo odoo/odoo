@@ -20,7 +20,7 @@ registerModel({
                 return;
             }
             this.notificationGroup.openDocuments();
-            if (!this.messaging.device.isMobile) {
+            if (!this.messaging.device.isSmall) {
                 this.messaging.messagingMenu.close();
             }
         },

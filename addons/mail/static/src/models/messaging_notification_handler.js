@@ -200,7 +200,7 @@ registerModel({
 
             if (openChatWindow) {
                 // open chat upon being invited (if it was not already opened or folded)
-                if (channel.channel_type !== 'channel' && !this.messaging.device.isMobile && !channel.chatWindow) {
+                if (channel.channel_type !== 'channel' && !this.messaging.device.isSmall && !channel.chatWindow) {
                     this.messaging.chatWindowManager.openThread(channel);
                 }
             }
@@ -281,7 +281,7 @@ registerModel({
                     channel.markAsFetched();
                 }
                 // open chat on receiving new message if it was not already opened or folded
-                if (channel.channel_type !== 'channel' && !this.messaging.device.isMobile && !channel.chatWindow) {
+                if (channel.channel_type !== 'channel' && !this.messaging.device.isSmall && !channel.chatWindow) {
                     this.messaging.chatWindowManager.openThread(channel);
                 }
             }
@@ -657,7 +657,7 @@ registerModel({
             const title = this.env._t("This is their first connection. Wish them luck.");
             this.env.services['bus_service'].sendNotification({ message, title, type: 'info' });
             const chat = await this.async(() => this.messaging.getChat({ partnerId }));
-            if (!chat || this.messaging.device.isMobile) {
+            if (!chat || this.messaging.device.isSmall) {
                 return;
             }
             this.messaging.chatWindowManager.openThread(chat);
