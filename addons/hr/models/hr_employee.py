@@ -414,7 +414,7 @@ class HrEmployeePrivate(models.Model):
         if self._origin:
             return {'warning': {
                 'title': _("Warning"),
-                'message': _("To avoid multi company issues (loosing the access to your previous contracts, leaves, ...), you should create another employee in the new company instead.")
+                'message': _("To avoid multi company issues (losing the access to your previous contracts, leaves, ...), you should create another employee in the new company instead.")
             }}
 
     def generate_random_barcode(self):

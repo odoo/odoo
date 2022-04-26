@@ -51,7 +51,7 @@ class GamificationBadge(models.Model):
 
     goal_definition_ids = fields.Many2many(
         'gamification.goal.definition', 'badge_unlocked_definition_rel',
-        string='Rewarded by', help="The users that have succeeded theses goals will receive automatically the badge.")
+        string='Rewarded by', help="The users that have succeeded these goals will receive automatically the badge.")
 
     owner_ids = fields.One2many(
         'gamification.badge.user', 'badge_id',
