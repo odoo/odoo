@@ -516,7 +516,7 @@ class TestCRMPLS(TransactionCase):
     @users('user_sales_manager')
     def test_team_unlink(self):
         """ Test that frequencies are sent to "no team" when unlinking a team
-        in order to avoid loosing too much informations. """
+        in order to avoid losing too much informations. """
         pls_team = self.env["crm.team"].browse(self.pls_team.ids)
 
         # clean existing data

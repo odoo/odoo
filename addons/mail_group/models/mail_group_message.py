@@ -39,7 +39,7 @@ class MailGroupMessage(models.Model):
     # Parent and children
     group_message_parent_id = fields.Many2one(
         'mail.group.message', string='Parent', store=True)
-    group_message_child_ids = fields.One2many('mail.group.message', 'group_message_parent_id', string='Childs')
+    group_message_child_ids = fields.One2many('mail.group.message', 'group_message_parent_id', string='Children')
     # Moderation
     author_moderation = fields.Selection([('ban', 'Banned'), ('allow', 'Whitelisted')], string='Author Moderation Status',
                                          compute='_compute_author_moderation')
