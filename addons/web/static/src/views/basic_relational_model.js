@@ -40,7 +40,7 @@ function mapWowlValueToLegacy(value, type) {
             if (value.operation === "REPLACE_WITH") {
                 return { operation: "REPLACE_WITH", ids: value.resIds };
             }
-            break;
+            return value;
         default:
             return value;
     }

@@ -25,6 +25,7 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { ListRenderer } from "@web/views/list/list_renderer";
+import { createWebClient, doAction } from "../webclient/helpers";
 
 let serverData;
 let target;
@@ -41,8 +42,7 @@ let testUtils,
     patch,
     unpatch,
     ControlPanel,
-    FieldOne2Many,
-    cpHelpers;
+    FieldOne2Many;
 
 async function clickDiscard(target) {
     await click(target.querySelector(".o_form_button_cancel"));
@@ -10926,7 +10926,7 @@ QUnit.module("Fields", (hooks) => {
         await click(form.$(".o_data_row .o_field_boolean input"));
     });
 
-    QUnit.skipWOWL("update a one2many from a custom field widget", async function (assert) {
+    QUnit.test("update a one2many from a custom field widget", async function (assert) {
         // In this test, we define a custom field widget to render/update a one2many
         // field. For the update part, we ensure that updating primitive fields of a sub
         // record works. There is no guarantee that updating a relational field on the sub
@@ -10935,8 +10935,6 @@ QUnit.module("Fields", (hooks) => {
         // hasn't been designed to support all this. This test simply encodes what can be
         // done, and this comment explains what can't (and won't be implemented in stable
         // versions).
-        assert.expect(3);
-
         serverData.models.partner.records[0].p = [1, 2];
         const MyRelationalField = AbstractField.extend({
             events: {
@@ -10946,8 +10944,8 @@ QUnit.module("Fields", (hooks) => {
             async _render() {
                 const records = await this._rpc({
                     method: "read",
-                    resModel: "partner",
-                    args: [this.valueIs],
+                    model: "partner",
+                    args: [this.value.res_ids],
                 });
                 this.$el.text(records.map((r) => `${r.display_name}/${r.int_field}`).join(", "));
                 this.$el.append($('<button class="update fa fa-edit">'));
@@ -10972,7 +10970,7 @@ QUnit.module("Fields", (hooks) => {
         });
         fieldRegistry.add("my_relational_field", MyRelationalField);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -10984,115 +10982,67 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            form.$(".o_field_widget[name=p]").text(),
+            target.querySelector(".o_field_widget[name=p]").innerText,
             "first record/10, second record/9"
         );
 
-        await click(form.$("button.update"));
+        await click(target.querySelector("button.update"));
 
         assert.strictEqual(
-            form.$(".o_field_widget[name=p]").text(),
+            target.querySelector(".o_field_widget[name=p]").innerText,
             "new name/44, second record/9"
         );
 
-        await click(form.$("button.delete"));
+        await click(target.querySelector("button.delete"));
 
-        assert.strictEqual(form.$(".o_field_widget[name=p]").text(), "second record/9");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=p]").innerText,
+            "second record/9"
+        );
 
         delete fieldRegistry.map.my_relational_field;
     });
 
-    QUnit.skipWOWL(
-        "Editable list's field widgets call on_attach_callback on row update",
-        async function (assert) {
-            // We use here a badge widget (owl component, does have a on_attach_callback method) and check its decoration
-            // is properly managed in this scenario.
-            assert.expect(3);
+    QUnit.test("edition in list containing widget with decoration", async function (assert) {
+        // We use here a badge widget and check its decoration is properly managed
+        // in this scenario (we need a widget with specific decoration handling)
+        serverData.models.partner.records[0].p = [1, 2];
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom">
+                            <field name="int_field"/>
+                            <field name="color" widget="badge" decoration-warning="int_field == 9"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
 
-            serverData.models.partner.records[0].p = [1, 2];
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
-                    <form>
-                        <field name="p">
-                            <tree editable="bottom">
-                                <field name="int_field"/>
-                                <field name="color" widget="badge" decoration-warning="int_field == 9"/>
-                            </tree>
-                        </field>
-                    </form>`,
-                resId: 1,
-            });
+        await clickEdit(target);
 
-            assert.containsN(form, ".o_data_row", 2);
-            assert.hasClass(form.$(".o_data_row:nth(1) .o_field_badge"), "bg-warning-light");
+        assert.containsN(target, ".o_data_row", 2);
+        assert.hasClass(
+            target.querySelectorAll(".o_data_row")[1].querySelector(".o_field_badge .badge"),
+            "bg-warning-light"
+        );
 
-            await click(form.$(".o_data_row .o_data_cell:first"));
-            await testUtils.owlCompatibilityExtraNextTick();
-            await testUtils.fields.editInput(form.$(".o_selected_row .o_field_integer"), "44");
-            await testUtils.owlCompatibilityExtraNextTick();
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        await editInput(target, ".o_selected_row .o_field_integer input", "44");
 
-            assert.hasClass(form.$(".o_data_row:nth(1) .o_field_badge"), "bg-warning-light");
-        }
-    );
-
-    QUnit.skipWOWL(
-        "Editable list renderer confirmUpdate method does not create a memory leak by no deleted currently modified row widgets but recreating them anyway.",
-        async function (assert) {
-            assert.expect(5);
-
-            let count = 0;
-            const MyField = AbstractField.extend({
-                init() {
-                    this._super(...arguments);
-                    count++;
-                },
-                destroy() {
-                    this._super(...arguments);
-                    count--;
-                },
-            });
-            fieldRegistry.add("myfield", MyField);
-
-            serverData.models.partner.records[0].p = [1, 2];
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
-                    <form>
-                        <field name="p">
-                            <tree editable="bottom">
-                                <field name="int_field"/>
-                                <field name="foo" widget="myfield"/>
-                            </tree>
-                        </field>
-                    </form>`,
-                resId: 1,
-            });
-
-            assert.containsN(form, ".o_data_row", 2);
-            assert.strictEqual(count, 2);
-
-            await click(form.$(".o_data_row .o_data_cell:first"));
-            assert.strictEqual(count, 2);
-
-            await testUtils.fields.editInput(form.$(".o_selected_row .o_field_integer"), "44");
-            assert.strictEqual(count, 2);
-
-            delete fieldRegistry.map.my_field;
-
-            assert.strictEqual(count, 0);
-        }
-    );
+        assert.hasClass(
+            target.querySelectorAll(".o_data_row")[1].querySelector(".o_field_badge .badge"),
+            "bg-warning-light"
+        );
+    });
 
     QUnit.skipWOWL(
         "reordering embedded one2many with handle widget starting with same sequence",
         async function (assert) {
-            assert.expect(3);
-
             serverData.models.turtle = {
                 fields: { turtle_int: { string: "int", type: "integer", sortable: true } },
                 records: [
@@ -11112,18 +11062,12 @@ QUnit.module("Fields", (hooks) => {
                 serverData,
                 arch: `
                     <form>
-                        <sheet>
-                            <notebook>
-                                <page string="P page">
-                                    <field name="turtles">
-                                        <tree default_order="turtle_int">
-                                            <field name="turtle_int" widget="handle"/>
-                                            <field name="id"/>
-                                        </tree>
-                                    </field>
-                                </page>
-                            </notebook>
-                        </sheet>
+                        <field name="turtles">
+                            <tree default_order="turtle_int">
+                                <field name="turtle_int" widget="handle"/>
+                                <field name="id"/>
+                            </tree>
+                        </field>
                     </form>`,
                 resId: 1,
             });
@@ -11208,61 +11152,6 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await addRow(target);
-    });
-
-    // The following tests come from relational_fields_tests.js (so there might be issues with serverData)
-
-    QUnit.skipWOWL("search more pager is reset when doing a new search", async function (assert) {
-        assert.expect(6);
-        serverData.models.partner.fields.datetime.searchable = true;
-        serverData.models.partner.records.push(
-            ...new Array(170).fill().map((_, i) => ({ id: i + 10, name: "Partner " + i }))
-        );
-        serverData.views = {
-            "partner,false,list": `
-                <tree>
-                    <field name="display_name"/>
-                </tree>
-            `,
-            "partner,false,search": `
-                <search>
-                    <field name="datetime"/>
-                    <field name="display_name"/>
-                </search>
-            `,
-        };
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
-                <form>
-                    <sheet>
-                        <group>
-                            <field name="trululu"/>
-                        </group>
-                    </sheet>
-                </form>`,
-            resId: 1,
-        });
-
-        await clickEdit(target);
-
-        await clickOpenM2ODropdown(target, "trululu");
-        await testUtils.fields.many2one.clickItem("trululu", "Search");
-        await click($(".modal .o_pager_next"));
-
-        assert.strictEqual($(".o_pager_limit").text(), "1173", "there should be 173 records");
-        assert.strictEqual($(".o_pager_value").text(), "181-160", "should display the second page");
-        assert.strictEqual($("tr.o_data_row").length, 80, "should display 80 record");
-
-        const modal = document.body.querySelector(".modal");
-        await cpHelpers.editSearch(modal, "first");
-        await cpHelpers.validateSearch(modal);
-
-        assert.strictEqual($(".o_pager_limit").text(), "11", "there should be 1 record");
-        assert.strictEqual($(".o_pager_value").text(), "11-1", "should display the first page");
-        assert.strictEqual($("tr.o_data_row").length, 1, "should display 1 record");
     });
 
     QUnit.test("do not call name_get if display_name already known", async function (assert) {
@@ -11370,98 +11259,44 @@ QUnit.module("Fields", (hooks) => {
         assert.deepEqual(recordIdList, expectedOrderId);
     });
 
-    QUnit.skipWOWL("focus when closing many2one modal in many2one modal", async function (assert) {
-        assert.expect(12);
-
-        const form = await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `<form><field name="trululu"/></form>`,
-            resId: 2,
-            archs: {
-                "partner,false,form": '<form><field name="trululu"/></form>',
-            },
-            mockRPC(route, args) {
-                if (args.method === "get_formview_id") {
-                    return Promise.resolve(false);
-                }
-                return this._super(route, args);
-            },
-        });
-
-        // Open many2one modal
-        await clickEdit(target);
-        await click(form.$(".o_external_button"));
-
-        var $originalModal = $(".modal");
-        var $focusedModal = $(document.activeElement).closest(".modal");
-
-        assert.equal($originalModal.length, 1, "There should be one modal");
-        assert.equal($originalModal[0], $focusedModal[0], "Modal is focused");
-        assert.ok($("body").hasClass("modal-open"), "Modal is said opened");
-
-        // Open many2one modal of field in many2one modal
-        await click($originalModal.find(".o_external_button"));
-        var $modals = $(".modal");
-        $focusedModal = $(document.activeElement).closest(".modal");
-
-        assert.equal($modals.length, 2, "There should be two modals");
-        assert.equal($modals[1], $focusedModal[0], "Last modal is focused");
-        assert.ok($("body").hasClass("modal-open"), "Modal is said opened");
-
-        // Close second modal
-        await click($modals.last().find('button[class="close"]'));
-        var $modal = $(".modal");
-        $focusedModal = $(document.activeElement).closest(".modal");
-
-        assert.equal($modal.length, 1, "There should be one modal");
-        assert.equal($modal[0], $originalModal[0], "First modal is still opened");
-        assert.equal($modal[0], $focusedModal[0], "Modal is focused");
-        assert.ok($("body").hasClass("modal-open"), "Modal is said opened");
-
-        // Close first modal
-        await click($modal.find('button[class="close"]'));
-        $modal = $(".modal-dialog.modal-lg");
-
-        assert.equal($modal.length, 0, "There should be no modal");
-        assert.notOk($("body").hasClass("modal-open"), "Modal is not said opened");
-    });
-
-    QUnit.skipWOWL("one2many from a model that has been sorted", async function (assert) {
-        assert.expect(1);
-
-        /* On a standard list view, sort your records by a field
-         * Click on a record which contains a x2m with multiple records in it
-         * The x2m shouldn't take the orderedBy of the parent record (the one on the form)
-         */
-
-        serverData.models.partner.records[0].turtles = [3, 2];
-        const form = await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
-                <form>
-                    <field name="turtles">
-                        <tree>
-                            <field name="turtle_foo"/>
-                        </tree>
-                    </field>
-                </form>`,
-            resId: 1,
-            context: {
-                orderedBy: [
-                    {
-                        name: "foo",
-                        asc: false,
-                    },
+    QUnit.test("one2many from a model that has been sorted", async function (assert) {
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "test",
+                res_id: 1,
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "list"],
+                    [false, "form"],
                 ],
             },
-        });
+        };
+        serverData.views = {
+            "partner,false,list": `<tree><field name="int_field"/></tree>`,
+            "partner,false,search": `<search/>`,
+            "partner,false,form": `
+                <form>
+                    <field name="turtles">
+                        <tree><field name="turtle_foo"/></tree>
+                    </field>
+                </form>`,
+        };
+        serverData.models.partner.records[0].turtles = [3, 2];
 
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 1);
+        assert.containsOnce(target, ".o_list_view");
+        assert.strictEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), "1090");
+
+        await click(target.querySelector("th.o_column_sortable"));
+        assert.strictEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), "0910");
+
+        await click(target.querySelector(".o_data_cell"));
+        assert.containsOnce(target, ".o_form_view");
         assert.strictEqual(
-            form.$(".o_field_one2many[name=turtles] .o_data_row").text().trim(),
+            getNodesTextContent(target.querySelectorAll(".o_data_cell")),
             "kawablip",
             "The o2m should not have been sorted."
         );

@@ -7,6 +7,7 @@ import {
     click,
     clickDropdown,
     clickEdit,
+    clickOpenM2ODropdown,
     clickSave,
     editInput,
     getFixture,
@@ -32,7 +33,7 @@ let serverData;
 let target;
 
 // WOWL remove after adapting tests
-let testUtils, Widget, BasicModel, StandaloneFieldManagerMixin, relationalFields;
+let testUtils, Widget, BasicModel, StandaloneFieldManagerMixin, relationalFields, cpHelpers;
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -4264,5 +4265,116 @@ QUnit.module("Fields", (hooks) => {
             1,
             "should display 1 record in the second page"
         );
+    });
+
+    QUnit.skipWOWL("focus when closing many2one modal in many2one modal", async function (assert) {
+        assert.expect(12);
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="trululu"/></form>`,
+            resId: 2,
+            archs: {
+                "partner,false,form": '<form><field name="trululu"/></form>',
+            },
+            mockRPC(route, args) {
+                if (args.method === "get_formview_id") {
+                    return Promise.resolve(false);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        // Open many2one modal
+        await clickEdit(target);
+        await click(form.$(".o_external_button"));
+
+        var $originalModal = $(".modal");
+        var $focusedModal = $(document.activeElement).closest(".modal");
+
+        assert.equal($originalModal.length, 1, "There should be one modal");
+        assert.equal($originalModal[0], $focusedModal[0], "Modal is focused");
+        assert.ok($("body").hasClass("modal-open"), "Modal is said opened");
+
+        // Open many2one modal of field in many2one modal
+        await click($originalModal.find(".o_external_button"));
+        var $modals = $(".modal");
+        $focusedModal = $(document.activeElement).closest(".modal");
+
+        assert.equal($modals.length, 2, "There should be two modals");
+        assert.equal($modals[1], $focusedModal[0], "Last modal is focused");
+        assert.ok($("body").hasClass("modal-open"), "Modal is said opened");
+
+        // Close second modal
+        await click($modals.last().find('button[class="close"]'));
+        var $modal = $(".modal");
+        $focusedModal = $(document.activeElement).closest(".modal");
+
+        assert.equal($modal.length, 1, "There should be one modal");
+        assert.equal($modal[0], $originalModal[0], "First modal is still opened");
+        assert.equal($modal[0], $focusedModal[0], "Modal is focused");
+        assert.ok($("body").hasClass("modal-open"), "Modal is said opened");
+
+        // Close first modal
+        await click($modal.find('button[class="close"]'));
+        $modal = $(".modal-dialog.modal-lg");
+
+        assert.equal($modal.length, 0, "There should be no modal");
+        assert.notOk($("body").hasClass("modal-open"), "Modal is not said opened");
+    });
+
+    QUnit.skipWOWL("search more pager is reset when doing a new search", async function (assert) {
+        assert.expect(6);
+        serverData.models.partner.fields.datetime.searchable = true;
+        serverData.models.partner.records.push(
+            ...new Array(170).fill().map((_, i) => ({ id: i + 10, name: "Partner " + i }))
+        );
+        serverData.views = {
+            "partner,false,list": `
+                <tree>
+                    <field name="display_name"/>
+                </tree>
+            `,
+            "partner,false,search": `
+                <search>
+                    <field name="datetime"/>
+                    <field name="display_name"/>
+                </search>
+            `,
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="trululu"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            resId: 1,
+        });
+
+        await clickEdit(target);
+
+        await clickOpenM2ODropdown(target, "trululu");
+        await testUtils.fields.many2one.clickItem("trululu", "Search");
+        await click($(".modal .o_pager_next"));
+
+        assert.strictEqual($(".o_pager_limit").text(), "1173", "there should be 173 records");
+        assert.strictEqual($(".o_pager_value").text(), "181-160", "should display the second page");
+        assert.strictEqual($("tr.o_data_row").length, 80, "should display 80 record");
+
+        const modal = document.body.querySelector(".modal");
+        await cpHelpers.editSearch(modal, "first");
+        await cpHelpers.validateSearch(modal);
+
+        assert.strictEqual($(".o_pager_limit").text(), "11", "there should be 1 record");
+        assert.strictEqual($(".o_pager_value").text(), "11-1", "should display the first page");
+        assert.strictEqual($("tr.o_data_row").length, 1, "should display 1 record");
     });
 });
