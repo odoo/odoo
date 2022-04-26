@@ -537,9 +537,8 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         if (remainingPoints < 0) {
             // We correct the quantity of this line if the remaining points is negative.
             const reward = rewardLine.order.pos.reward_by_id[rewardLine.reward_id];
-            const rewardUnitCost = reward.required_points / reward.reward_product_qty;
             // NOTE that value of correction is negative.
-            correction = Math.floor(remainingPoints / rewardUnitCost);
+            correction = this._getClaimableQty(reward, remainingPoints);
         }
         return rewardLine.get_quantity() + correction;
     }
@@ -937,7 +936,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                 }
                 if (reward.reward_type === 'product' && !reward.multi_product) {
                     // const product = this.pos.db.get_product_by_id(reward.reward_product_ids[0]);
-                    const availableQty = this._computeAvailableFreeProduct(reward, points);
+                    const availableQty = this._getClaimableQty(reward, points);
                     if (availableQty <= 0) {
                         continue;
                     }
@@ -1238,8 +1237,9 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         }
         return result;
     }
-    _computeAvailableFreeProduct(reward, remaining_points) {
-        return Math.floor(remaining_points / (reward.reward_product_qty * reward.required_points))
+    _getClaimableQty(reward, remaining_points) {
+        const claimableCount = Math.floor(remaining_points / reward.required_points);
+        return claimableCount * reward.reward_product_qty;
     }
     /**
      * @param {Object} args See `_applyReward`
@@ -1249,7 +1249,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         const reward = args['reward'];
         const product = this.pos.db.get_product_by_id(args['product'] || reward.reward_product_ids[0]);
         const points = this._getRealCouponPoints(args['coupon_id']);
-        const availableQty = this._computeAvailableFreeProduct(reward, points);
+        const availableQty = this._getClaimableQty(reward, points);
         if (availableQty <= 0) {
             return _t("There are not enough products in the basket to claim this reward.");
         }

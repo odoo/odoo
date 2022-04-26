@@ -55,7 +55,7 @@ export class RewardButton extends PosComponent {
             } else {
                 selectedProduct = this.env.pos.db.get_product_by_id(reward.reward_product_ids[0]);
             }
-            this.env.pos.get_order().add_product(selectedProduct, { quantity: 1 });
+            this.env.pos.get_order().add_product(selectedProduct, { quantity: reward.reward_product_qty });
         } else {
             this.env.pos.get_order()._updateRewards();
         }
