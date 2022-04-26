@@ -88,7 +88,7 @@ registerModel({
          * @returns {boolean}
          */
         _computeHasConnectionInfo() {
-            return Boolean(this.rtcSession && this.env.isDebug() && this.channel.rtc);
+            return Boolean(this.rtcSession && this.env.debug && this.channel.rtc);
         },
         /**
          * @private

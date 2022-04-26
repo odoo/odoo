@@ -1,54 +1,21 @@
 /** @odoo-module **/
 
-import { makeDeferred } from '@mail/utils/deferred';
 import {
     afterNextRender,
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
-import FormView from 'web.FormView';
-
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('follow_button_tests.js', {
-    beforeEach() {
-        // FIXME archs could be removed once task-2248306 is done
-        // The mockServer will try to get the list view
-        // of every relational fields present in the main view.
-        // In the case of mail fields, we don't really need them,
-        // but they still need to be defined.
-        this.createView = async (viewParams, ...args) => {
-            const startResult = makeDeferred();
-            await afterNextRender(async () => {
-                const viewArgs = Object.assign(
-                    {
-                        archs: {
-                            'mail.activity,false,list': '<tree/>',
-                            'mail.followers,false,list': '<tree/>',
-                            'mail.message,false,list': '<tree/>',
-                        },
-                    },
-                    viewParams,
-                );
-                startResult.resolve(await start(viewArgs, ...args));
-            });
-            return startResult;
-        };
-    },
-});
+QUnit.module('follow_button_tests.js');
 
 QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(2);
 
-    const pyEnv = await startServer();
-    await this.createView({
-        hasView: true,
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        arch: `
-            <form string="Partners">
+    const views = {
+        'res.partner,false,form':
+            `<form string="Partners">
                 <sheet>
                     <field name="name"/>
                 </sheet>
@@ -56,9 +23,15 @@ QUnit.test('base rendering not editable', async function (assert) {
                     <field name="message_follower_ids"/>
                     <field name="activity_ids"/>
                 </div>
-            </form>
-        `,
+            </form>`,
+    };
+    const { openView, pyEnv } = await start({
+        serverData: { views },
+    });
+    await openView({
         res_id: pyEnv.currentPartnerId,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.containsOnce(
         document.body,
@@ -86,13 +59,9 @@ QUnit.test('hover following button', async function (assert) {
     pyEnv['res.partner'].write([pyEnv.currentPartnerId], {
         message_follower_ids: [followerId],
     });
-    await this.createView({
-        hasView: true,
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        arch: `
-            <form string="Partners">
+    const views = {
+        'res.partner,false,form':
+            `<form string="Partners">
                 <sheet>
                     <field name="name"/>
                 </sheet>
@@ -100,9 +69,15 @@ QUnit.test('hover following button', async function (assert) {
                     <field name="message_follower_ids"/>
                     <field name="activity_ids"/>
                 </div>
-            </form>
-        `,
+            </form>`,
+    };
+    const { openView } = await start({
+        serverData: { views },
+    });
+    await openView({
         res_id: pyEnv.currentPartnerId,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.containsOnce(
         document.body,
@@ -156,14 +131,9 @@ QUnit.test('hover following button', async function (assert) {
 QUnit.test('click on "follow" button', async function (assert) {
     assert.expect(6);
 
-    const pyEnv = await startServer();
-    const { click } = await this.createView({
-        hasView: true,
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        arch: `
-            <form string="Partners">
+    const views = {
+        'res.partner,false,form':
+            `<form string="Partners">
                 <sheet>
                     <field name="name"/>
                 </sheet>
@@ -171,15 +141,20 @@ QUnit.test('click on "follow" button', async function (assert) {
                     <field name="message_follower_ids"/>
                     <field name="activity_ids"/>
                 </div>
-            </form>
-        `,
-        res_id: pyEnv.currentPartnerId,
+            </form>`,
+    };
+    const { click, openView, pyEnv } = await start({
         async mockRPC(route, args) {
             if (route.includes('message_subscribe')) {
                 assert.step('rpc:message_subscribe');
             }
-            return this._super(...arguments);
         },
+        serverData: { views },
+    });
+    await openView({
+        res_id: pyEnv.currentPartnerId,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.containsOnce(
         document.body,
@@ -222,13 +197,9 @@ QUnit.test('click on "unfollow" button', async function (assert) {
     pyEnv['res.partner'].write([pyEnv.currentPartnerId], {
         message_follower_ids: [followerId],
     });
-    const { click } = await this.createView({
-        hasView: true,
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        arch: `
-            <form string="Partners">
+    const views = {
+        'res.partner,false,form':
+            `<form string="Partners">
                 <sheet>
                     <field name="name"/>
                 </sheet>
@@ -236,15 +207,20 @@ QUnit.test('click on "unfollow" button', async function (assert) {
                     <field name="message_follower_ids"/>
                     <field name="activity_ids"/>
                 </div>
-            </form>
-        `,
-        res_id: pyEnv.currentPartnerId,
+            </form>`,
+    };
+    const { click, openView } = await start({
         async mockRPC(route, args) {
             if (route.includes('message_unsubscribe')) {
                 assert.step('rpc:message_unsubscribe');
             }
-            return this._super(...arguments);
         },
+        serverData: { views },
+    });
+    await openView({
+        res_id: pyEnv.currentPartnerId,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
     });
     assert.containsOnce(
         document.body,

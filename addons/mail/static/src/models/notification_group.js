@@ -88,17 +88,15 @@ registerModel({
             if (this.notification_type !== 'email') {
                 return;
             }
-            this.env.bus.trigger('do-action', {
-                action: {
-                    name: this.env._t("Mail Failures"),
-                    type: 'ir.actions.act_window',
-                    view_mode: 'kanban,list,form',
-                    views: [[false, 'kanban'], [false, 'list'], [false, 'form']],
-                    target: 'current',
-                    res_model: this.res_model,
-                    domain: [['message_has_error', '=', true]],
-                    context: { create: false },
-                },
+            this.env.services.action.doAction({
+                name: this.env._t("Mail Failures"),
+                type: 'ir.actions.act_window',
+                view_mode: 'kanban,list,form',
+                views: [[false, 'kanban'], [false, 'list'], [false, 'form']],
+                target: 'current',
+                res_model: this.res_model,
+                domain: [['message_has_error', '=', true]],
+                context: { create: false },
             });
             if (this.messaging.device.isSmall) {
                 // messaging menu has a higher z-index than views so it must

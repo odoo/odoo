@@ -26,8 +26,8 @@
                     </div>
                     <div class="o-autogrow"/>
                     <div class="o_AttachmentViewer_buttonDownload o_AttachmentViewer_headerItem o_AttachmentViewer_headerItemButton d-flex align-items-center px-3 o_cursor_pointer" t-on-click="attachmentViewer.onClickDownload" role="button" title="Download">
-                        <i class="o_AttachmentViewer_headerItemButtonIcon fa fa-download fa-fw" t-att-class="{ 'o-hasLabel me-2': messaging.device.sizeClass > env.device.SIZES.MD }" role="img"/>
-                        <t t-if="messaging.device.sizeClass > env.device.SIZES.MD">
+                        <i class="o_AttachmentViewer_headerItemButtonIcon fa fa-download fa-fw" t-att-class="{ 'o-hasLabel me-2': messaging.device.sizeClass > messaging.device.sizeClasses.MD }" role="img"/>
+                        <t t-if="messaging.device.sizeClass > messaging.device.sizeClasses.MD">
                             <span>Download</span>
                         </t>
                     </div>

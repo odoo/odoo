@@ -8,7 +8,7 @@ import {
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
-import Bus from 'web.Bus';
+import { patchWithCleanup } from '@web/../tests/helpers/utils';
 
 QUnit.module('sms', {}, function () {
 QUnit.module('components', {}, function () {
@@ -113,8 +113,9 @@ QUnit.test('Notification Error', async function (assert) {
         notification_type: 'sms',
         res_partner_id: resPartnerId1,
     });
-    const bus = new Bus();
-    bus.on('do-action', null, ({ action, options }) => {
+    const { createThreadViewComponent, env, messaging } = await start();
+    patchWithCleanup(env.services.action, {
+        doAction(action, options) {
             assert.step('do_action');
             assert.strictEqual(
                 action,
@@ -127,8 +128,8 @@ QUnit.test('Notification Error', async function (assert) {
                 "action should have correct message id"
             );
             openResendActionDef.resolve();
+        },
     });
-    const { createThreadViewComponent, messaging } = await start({ env: { bus } });
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),

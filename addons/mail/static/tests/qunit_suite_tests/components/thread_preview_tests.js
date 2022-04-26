@@ -34,7 +34,6 @@ QUnit.test('mark as read', async function (assert) {
             if (route.includes('set_last_seen_message')) {
                 assert.step('set_last_seen_message');
             }
-            return this._super(...arguments);
         },
     });
     await createMessagingMenuComponent();

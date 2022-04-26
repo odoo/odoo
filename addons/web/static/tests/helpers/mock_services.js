@@ -120,9 +120,8 @@ export function makeMockXHR(response, sendCb, def) {
 
 export function makeMockFetch(mockRPC) {
     const _rpc = buildMockRPC(mockRPC);
-    return async (input) => {
+    return async (input, params) => {
         let route = typeof input === "string" ? input : input.url;
-        let params;
         if (route.includes("load_menus")) {
             const routeArray = route.split("/");
             params = {

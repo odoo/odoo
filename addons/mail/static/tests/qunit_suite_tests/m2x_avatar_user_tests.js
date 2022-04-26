@@ -3,13 +3,9 @@
 import { Many2OneAvatarUser } from '@mail/js/m2x_avatar_user';
 import { start, startServer } from '@mail/../tests/helpers/test_utils';
 import { click, getFixture, legacyExtraNextTick, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
-import { doAction } from '@web/../tests/webclient/helpers';
 import { registry } from "@web/core/registry";
 import { makeLegacyCommandService } from "@web/legacy/utils";
 import core from 'web.core';
-import FormView from 'web.FormView';
-import KanbanView from 'web.KanbanView';
-import ListView from 'web.ListView';
 import session from 'web.session';
 import makeTestEnvironment from "web.test_env";
 import { dom, nextTick } from 'web.test_utils';
@@ -32,14 +28,18 @@ QUnit.module('mail', {}, function () {
         const resPartnerId1 = pyEnv['res.partner'].create({ display_name: 'Partner 1' });
         const resUsersId1 = pyEnv['res.users'].create({ name: "Mario", partner_id: resPartnerId1 });
         pyEnv['m2x.avatar.user'].create({ user_id: resUsersId1 });
-        const { widget: list } = await start({
-            hasView: true,
-            View: ListView,
-            model: 'm2x.avatar.user',
-            arch: '<tree><field name="user_id" widget="many2one_avatar_user"/></tree>',
+        const views = {
+            'm2x.avatar.user,false,list': '<tree><field name="user_id" widget="many2one_avatar_user"/></tree>',
+        };
+        const { openView } = await start({
+            serverData: { views },
+        });
+        await openView({
+            res_model: 'm2x.avatar.user',
+            views: [[false, "list"]],
         });
 
-        await dom.click(list.$('.o_data_cell:nth(0) .o_m2o_avatar > img'));
+        await dom.click(document.querySelector('.o_data_cell .o_m2o_avatar > img'));
         assert.containsOnce(document.body, '.o_ChatWindow', 'Chat window should be opened');
         assert.strictEqual(
             document.querySelector('.o_ChatWindowHeader_name').textContent,
@@ -55,12 +55,16 @@ QUnit.module('mail', {}, function () {
         const resPartnerId1 = pyEnv['res.partner'].create({ display_name: 'Partner 1' });
         const resUsersId1 = pyEnv['res.users'].create({ name: "Mario", partner_id: resPartnerId1 });
         const m2xAvatarUserId1 = pyEnv['m2x.avatar.user'].create({ user_ids: [resUsersId1] });
-        await start({
-            hasView: true,
-            View: FormView,
-            model: 'm2x.avatar.user',
-            arch: '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
+        const views = {
+            'm2x.avatar.user,false,form': '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
+        };
+        const { openView } = await start({
+            serverData: { views },
+        });
+        await openView({
+            res_model: 'm2x.avatar.user',
             res_id: m2xAvatarUserId1,
+            views: [[false, 'form']],
         });
 
         await dom.click(document.querySelector('.o_field_many2manytags.avatar .badge .o_m2m_avatar'));
@@ -80,13 +84,9 @@ QUnit.module('mail', {}, function () {
             [{ name: "Mario" }, { name: "Yoshi" }, { name: "Luigi" }, { name: "Tapu" }],
         );
         pyEnv['m2x.avatar.user'].create({ user_ids: resUsersIds });
-
-        await start({
-            hasView: true,
-            View: KanbanView,
-            model: 'm2x.avatar.user',
-            arch: `
-                <kanban>
+        const views = {
+            'm2x.avatar.user,false,kanban':
+                `<kanban>
                     <templates>
                         <t t-name="kanban-box">
                             <div>
@@ -102,6 +102,13 @@ QUnit.module('mail', {}, function () {
                         </t>
                     </templates>
                 </kanban>`,
+        };
+        const { openView } = await start({
+            serverData: { views },
+        });
+        await openView({
+            res_model: 'm2x.avatar.user',
+            views: [[false, 'kanban']],
         });
 
         assert.containsOnce(document.body, '.o_kanban_record .o_field_many2manytags .o_m2m_avatar_empty',
@@ -131,10 +138,9 @@ QUnit.module('mail', {}, function () {
 
         const views = {
             'm2x.avatar.user,false,form': '<form><field name="user_id" widget="many2one_avatar_user"/></form>',
-            'm2x.avatar.user,false,search': '<search></search>',
         };
-        const { widget: webClient } = await start({ hasWebClient: true, serverData: { views } });
-        await doAction(webClient, {
+        const { openView } = await start({ serverData: { views } });
+        await openView({
             res_id: m2xAvatarUserId1,
             type: 'ir.actions.act_window',
             target: 'current',
@@ -176,10 +182,9 @@ QUnit.module('mail', {}, function () {
 
         const views = {
             'm2x.avatar.user,false,form': '<form><field name="user_id" widget="many2one_avatar_user"/></form>',
-            'm2x.avatar.user,false,search': '<search></search>',
         };
-        const { widget: webClient } = await start({ hasWebClient: true, serverData: { views } });
-        await doAction(webClient, {
+        const { openView } = await start({ serverData: { views } });
+        await openView({
             res_id: m2xAvatarUserId1,
             type: 'ir.actions.act_window',
             target: 'current',
@@ -220,10 +225,9 @@ QUnit.module('mail', {}, function () {
 
         const views = {
             'm2x.avatar.user,false,form': '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
-            'm2x.avatar.user,false,search': '<search></search>',
         };
-        const { widget: webClient } = await start({ hasWebClient: true, serverData: { views } });
-        await doAction(webClient, {
+        const { openView } = await start({ serverData: { views } });
+        await openView({
             res_id: m2xAvatarUserId1,
             type: 'ir.actions.act_window',
             target: 'current',
@@ -268,10 +272,9 @@ QUnit.module('mail', {}, function () {
 
         const views = {
             'm2x.avatar.user,false,form': '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
-            'm2x.avatar.user,false,search': '<search></search>',
         };
-        const { widget: webClient } = await start({ hasWebClient: true, serverData: { views } });
-        await doAction(webClient, {
+        const { openView } = await start({ serverData: { views } });
+        await openView({
             res_id: m2xAvatarUserId1,
             type: 'ir.actions.act_window',
             target: 'current',
@@ -308,12 +311,16 @@ QUnit.module('mail', {}, function () {
         const pyEnv = await startServer();
         const resUsersId1 = pyEnv['res.users'].create({ name: "Mario" });
         const m2xAvatarUserId1 = pyEnv['m2x.avatar.user'].create({ user_id: resUsersId1 });
-        await start({
-            hasView: true,
-            View: ListView,
-            model: 'm2x.avatar.user',
-            arch: '<tree><field name="user_id" widget="many2one_avatar_user"/></tree>',
+        const views = {
+            'm2x.avatar.user,false,list': '<tree><field name="user_id" widget="many2one_avatar_user"/></tree>',
+        };
+        const { openView } = await start({
+            serverData: { views },
+        });
+        await openView({
+            res_model: 'm2x.avatar.user',
             res_id: m2xAvatarUserId1,
+            views: [[false, 'list']],
         });
         assert.strictEqual(
             document.querySelector('.o_m2o_avatar > img').getAttribute('data-src'),
@@ -328,20 +335,25 @@ QUnit.module('mail', {}, function () {
         const pyEnv = await startServer();
         const resUsersId1 = pyEnv['res.users'].create({ name: "Mario" });
         const m2xAvatarUserId1 = pyEnv['m2x.avatar.user'].create({ user_id: resUsersId1 });
-        await start({
-            hasView: true,
-            View: KanbanView,
-            model: 'm2x.avatar.user',
-            arch: `<kanban>
-                        <templates>
-                            <t t-name="kanban-box">
-                                <div>
-                                    <field name="user_id" widget="many2one_avatar_user"/>
-                                </div>
-                            </t>
-                        </templates>
-                    </kanban>`,
+        const views = {
+            'm2x.avatar.user,false,kanban':
+                `<kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="user_id" widget="many2one_avatar_user"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        };
+        const { openView } = await start({
+            serverData: { views },
+        });
+        await openView({
+            res_model: 'm2x.avatar.user',
             res_id: m2xAvatarUserId1,
+            views: [[false, 'kanban']],
         });
         assert.strictEqual(
             document.querySelector('.o_m2o_avatar > img').getAttribute('data-src'),
@@ -356,12 +368,16 @@ QUnit.module('mail', {}, function () {
         const pyEnv = await startServer();
         const resUsersId1 = pyEnv['res.users'].create({ name: "Mario" });
         const m2xAvatarUserId1 = pyEnv['m2x.avatar.user'].create({ user_ids: [resUsersId1] });
-        await start({
-            hasView: true,
-            View: FormView,
-            model: 'm2x.avatar.user',
-            arch: '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
+        const views = {
+            'm2x.avatar.user,false,form': '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
+        };
+        const { openView } = await start({
+            serverData: { views },
+        });
+        await openView({
+            res_model: 'm2x.avatar.user',
             res_id: m2xAvatarUserId1,
+            views: [[false, 'form']],
         });
         assert.strictEqual(
             document.querySelector('.o_field_many2manytags.avatar.o_field_widget .badge img').getAttribute('data-src'),

@@ -3,17 +3,9 @@
 import { nextTick } from '@mail/utils/utils';
 
 import { browser } from '@web/core/browser/browser';
-import { patchWithCleanup } from '@web/../tests/helpers/utils';
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
-/**
- * @param {Object} [providedEnv={}]
- * @returns {Object}
- */
- export function addTimeControlToEnv(providedEnv = {}) {
-    const env = { ...providedEnv };
-    if (!env.browser) {
-        env.browser = {};
-    }
+export function getAdvanceTime() {
     // list of timeout ids that have timed out.
     let timedOutIds = [];
     // key: timeoutId, value: func + remaining duration
@@ -39,31 +31,24 @@ import { patchWithCleanup } from '@web/../tests/helpers/utils';
             return timeoutId;
         },
     });
-    if (!env.testUtils) {
-        env.testUtils = {};
-    }
-    Object.assign(env.testUtils, {
-        advanceTime: async duration => {
-            await nextTick();
-            for (const id of timeouts.keys()) {
-                const timeout = timeouts.get(id);
-                if (timeout.isTimedOut) {
-                    continue;
-                }
-                timeout.duration = Math.max(timeout.duration - duration, 0);
-                if (timeout.duration === 0) {
-                    timedOutIds.push(id);
-                }
+    return async function (duration) {
+        await nextTick();
+        for (const id of timeouts.keys()) {
+            const timeout = timeouts.get(id);
+            if (timeout.isTimedOut) {
+                continue;
             }
-            while (timedOutIds.length > 0) {
-                const id = timedOutIds.shift();
-                const timeout = timeouts.get(id);
-                timeouts.delete(id);
-                timeout.func();
-                await nextTick();
+            timeout.duration = Math.max(timeout.duration - duration, 0);
+            if (timeout.duration === 0) {
+                timedOutIds.push(id);
             }
+        }
+        while (timedOutIds.length > 0) {
+            const id = timedOutIds.shift();
+            const timeout = timeouts.get(id);
+            timeouts.delete(id);
+            timeout.func();
             await nextTick();
-        },
-    });
-    return env;
+        }
+    };
 }

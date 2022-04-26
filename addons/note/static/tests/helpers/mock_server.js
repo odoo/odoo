@@ -2,10 +2,13 @@
 
 // ensure mail override is applied first.
 import '@mail/../tests/helpers/mock_server';
-import MockServer from 'web.MockServer';
+
+import { patch } from '@web/core/utils/patch';
+import { MockServer } from '@web/../tests/helpers/mock_server';
+
 import { date_to_str } from 'web.time';
 
-MockServer.include({
+patch(MockServer.prototype, 'note', {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -13,7 +16,7 @@ MockServer.include({
     /**
      * @override
      */
-    async _performRpc(route, args) {
+    async _performRPC(route, args) {
         if (route === '/note/new') {
             return this._mockRouteNoteNew(args);
         }

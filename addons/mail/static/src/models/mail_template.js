@@ -25,14 +25,10 @@ registerModel({
                     force_email: true,
                 },
             };
-            this.env.bus.trigger('do-action', {
+            this.env.services.action.doAction(
                 action,
-                options: {
-                    on_close: () => {
-                        activity.thread.fetchData(['attachments', 'messages']);
-                    },
-                },
-            });
+                { onClose: () => activity.thread.fetchData(['attachments', 'messages']) }
+            );
         },
         /**
          * @param {Activity} activity

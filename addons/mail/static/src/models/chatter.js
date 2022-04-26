@@ -82,12 +82,12 @@ registerModel({
                 },
                 res_id: false,
             };
-            return this.env.bus.trigger('do-action', {
+            return this.env.services.action.doAction(
                 action,
-                options: {
-                    on_close: () => this.reloadParentView(),
-                },
-            });
+                {
+                    onClose: () => this.reloadParentView(),
+                }
+            );
         },
         /**
          * Handles click on "send message" button.

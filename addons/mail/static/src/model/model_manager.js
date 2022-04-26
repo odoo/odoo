@@ -134,11 +134,6 @@ export class ModelManager {
          * "Promise time".
          */
         await new Promise(resolve => setTimeout(resolve));
-        /**
-         * Some models require session data, like locale text direction (depends on
-         * fully loaded translation).
-         */
-        await this.env.session.is_bound;
         this._generateModels();
         /**
          * Create the messaging singleton record.

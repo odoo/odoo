@@ -5,7 +5,7 @@ import { Markup } from 'web.utils';
 import tour from 'web_tour.tour';
 
 tour.register('mail_tour', {
-    url: "/web#action=mail.widgets.discuss",
+    url: "/web#action=mail.action_discuss",
     sequence: 80,
 }, [{
     trigger: '.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_commandAdd',

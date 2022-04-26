@@ -118,7 +118,6 @@ QUnit.test('attachment loading is delayed', async function (assert) {
             if (route.includes('/mail/thread/data')) {
                 await makeTestPromise(); // simulate long loading
             }
-            return this._super(...arguments);
         }
     });
     await createChatterContainerComponent({
@@ -160,7 +159,6 @@ QUnit.test('attachment counter while loading attachments', async function (asser
             if (route.includes('/mail/thread/data')) {
                 await makeTestPromise(); // simulate long loading
             }
-            return this._super(...arguments);
         }
     });
     await createChatterContainerComponent({
@@ -198,11 +196,9 @@ QUnit.test('attachment counter transition when attachments become loaded)', asyn
     const attachmentPromise = makeTestPromise();
     const { createChatterContainerComponent } = await start({
         async mockRPC(route) {
-            const _super = this._super.bind(this, ...arguments); // limitation of class.js
             if (route.includes('/mail/thread/data')) {
                 await attachmentPromise;
             }
-            return _super();
         },
     });
     await createChatterContainerComponent({
