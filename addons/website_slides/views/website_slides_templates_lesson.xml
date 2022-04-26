@@ -186,12 +186,12 @@
                                 <t t-call="website_slides.join_course_link"/>
                             </li>
                         </div>
-                        <li class="pl-4">
-                            <a t-if="can_access and aside_slide.question_ids and aside_slide.slide_type != 'quiz'" t-att-href="'/slides/slide/%s#lessonQuiz' % (slug(aside_slide))" class="o_wslides_lesson_aside_list_link text-decoration-none small text-600">
+                        <li t-if="aside_slide.question_ids and aside_slide.slide_type != 'quiz'" class="pl-4">
+                            <a t-if="can_access" t-att-href="'/slides/slide/%s#lessonQuiz' % (slug(aside_slide))"
+                                class="o_wslides_lesson_aside_list_link text-decoration-none small text-600">
                                 <i class="fa fa-flag text-warning"/> Quiz
                             </a>
-                            <span t-elif="not can_access and aside_slide.question_ids and aside_slide.slide_type != 'quiz'"
-                                class="o_wslides_lesson_aside_list_link text-decoration-none small text-600 text-muted">
+                            <span t-else="" class="o_wslides_lesson_aside_list_link text-decoration-none small text-600 text-muted">
                                 <i class="fa fa-flag text-warning"/> Quiz
                             </span>
                         </li>
