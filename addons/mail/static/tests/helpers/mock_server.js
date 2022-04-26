@@ -1,57 +1,25 @@
 /** @odoo-module **/
 
-import { getPyEnv, nextAnimationFrame } from '@mail/../tests/helpers/test_utils';
+import { getPyEnv, TEST_USER_IDS } from '@mail/../tests/helpers/test_utils';
 
-import MockServer from 'web.MockServer';
+import { patch } from "@web/core/utils/patch";
+import { MockServer } from "@web/../tests/helpers/mock_server";
+
 import { date_to_str, datetime_to_str } from 'web.time';
 
-MockServer.include({
-    /**
-     * Param 'data' may have keys for the different magic partners/users.
-     *
-     * Note: we must delete these keys, so that this is not
-     * handled as a model definition.
-     *
-     * @override
-     * @param {Object} [data.currentPartnerId]
-     * @param {Object} [data.currentUserId]
-     * @param {Object} [data.partnerRootId]
-     * @param {Object} [data.publicPartnerId]
-     * @param {Object} [data.publicUserId]
-     * @param {Widget} [options.widget] mocked widget (use to call services)
-     */
-    init(data, options) {
-        if (data && data.currentPartnerId) {
-            this.currentPartnerId = data.currentPartnerId;
-            delete data.currentPartnerId;
-        }
-        if (data && data.currentUserId) {
-            this.currentUserId = data.currentUserId;
-            delete data.currentUserId;
-        }
-        if (data && data.partnerRootId) {
-            this.partnerRootId = data.partnerRootId;
-            delete data.partnerRootId;
-        }
-        if (data && data.publicPartnerId) {
-            this.publicPartnerId = data.publicPartnerId;
-            delete data.publicPartnerId;
-        }
-        if (data && data.publicUserId) {
-            this.publicUserId = data.publicUserId;
-            delete data.publicUserId;
-        }
-        this._widget = options.widget;
 
+patch(MockServer.prototype, 'mail', {
+    init({ models }) {
         this._super(...arguments);
+        Object.assign(this, TEST_USER_IDS);
 
-        if (this.currentPartnerId) {
+        if (this.currentPartnerId && models && 'res.partner' in models) {
             this.currentPartner = this.getRecords('res.partner', [['id', '=', this.currentPartnerId]])[0];
         }
         MockServer.currentMockServer = this;
         // creation of the ir.model.fields records, required for tracked fields
-        for (const modelName in data) {
-            const fieldNamesToFields = data[modelName].fields;
+        for (const modelName in models) {
+            const fieldNamesToFields = models[modelName].fields;
             for (const fname in fieldNamesToFields) {
                 if (fieldNamesToFields[fname].tracking) {
                     this.mockCreate('ir.model.fields', { model: modelName, name: fname });
@@ -65,6 +33,32 @@ MockServer.include({
     async setup() {
         this.pyEnv = await getPyEnv();
     },
+    /**
+     * @override
+     */
+    async performRPC(route, args) {
+        if (route === '/mail/attachment/upload') {
+            const ufile = args.body.get('ufile');
+            const is_pending = args.body.get('is_pending') === 'true';
+            const model = is_pending ? 'mail.compose.message' : args.body.get('thread_model');
+            const id = is_pending ? 0 : parseInt(args.body.get('thread_id'));
+            const attachmentId = this.mockCreate('ir.attachment', {
+                // datas,
+                mimetype: ufile.type,
+                name: ufile.name,
+                res_id: id,
+                res_model: model,
+            });
+            const attachment = this.getRecords('ir.attachment', [['id', '=', attachmentId]])[0];
+            return {
+                'filename': attachment.name,
+                'id': attachment.id,
+                'mimetype': attachment.mimetype,
+                'size': attachment.file_size
+            };
+        }
+        return this._super(...arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -73,34 +67,11 @@ MockServer.include({
     /**
      * @override
      */
-    async _performFetch(resource, init) {
-        if (resource === '/mail/attachment/upload') {
-            const ufile = init.body.get('ufile');
-            const is_pending = init.body.get('is_pending') === 'true';
-            const model = is_pending ? 'mail.compose.message' : init.body.get('thread_model');
-            const id = is_pending ? 0 : parseInt(init.body.get('thread_id'));
-            const attachmentId = this.pyEnv['ir.attachment'].create({
-                // datas,
-                mimetype: ufile.type,
-                name: ufile.name,
-                res_id: id,
-                res_model: model,
-            });
-            const attachment = this.getRecords('ir.attachment', [['id', '=', attachmentId]])[0];
-            return new window.Response(JSON.stringify({
-                'filename': attachment.name,
-                'id': attachment.id,
-                'mimetype': attachment.mimetype,
-                'size': attachment.file_size
-            }));
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    async _performRpc(route, args) {
+    async _performRPC(route, args) {
         // routes
+        if (route === '/longpolling/im_status') {
+            return [];
+        }
         if (route === '/mail/message/post') {
             if (args.thread_model === 'mail.channel') {
                 return this._mockMailChannelMessagePost(args.thread_id, args.post_data, args.context);
@@ -327,7 +298,7 @@ MockServer.include({
     /**
      * @override
      */
-    _mockWrite(model) {
+    mockWrite(model) {
         const initialTrackedFieldValuesByRecordId = this._mockMailThread_TrackPrepare(model);
         const mockWriteResult = this._super(...arguments);
         if (initialTrackedFieldValuesByRecordId) {
@@ -652,7 +623,7 @@ MockServer.include({
      */
     _mockMailActivityActionDone(ids) {
         const activities = this.getRecords('mail.activity', [['id', 'in', ids]]);
-        this._mockUnlink('mail.activity', [activities.map(activity => activity.id)]);
+        this.mockUnlink('mail.activity', [activities.map(activity => activity.id)]);
     },
     /**
      * Simulates `action_feedback` on `mail.activity`.
@@ -1249,7 +1220,7 @@ MockServer.include({
             return matchingChannels;
         };
 
-        const mentionSuggestions = mentionSuggestionsFilter(this.data['mail.channel'].records, search, limit);
+        const mentionSuggestions = mentionSuggestionsFilter(this.models['mail.channel'].records, search, limit);
 
         return mentionSuggestions;
     },
@@ -1442,9 +1413,6 @@ MockServer.include({
      * @returns {Object[]}
      */
     async _mockMailMessage_MessageFetch(domain, max_id, min_id, limit = 30) {
-        // TODO FIXME delay RPC until next potential render as a workaround
-        // to OWL issue (possibly https://github.com/odoo/owl/issues/904)
-        await nextAnimationFrame();
         if (max_id) {
             domain.push(['id', '<', max_id]);
         }
@@ -1782,7 +1750,7 @@ MockServer.include({
             if (record.user_id) {
                 const user = this.getRecords('res.users', [['id', '=', record.user_id]]);
                 if (user.partner_id) {
-                    const reason = this.data[model].fields['user_id'].string;
+                    const reason = this.models[model].fields['user_id'].string;
                     this._mockMailThread_MessageAddSuggestedRecipient(result, user.partner_id, reason);
                 }
             }
@@ -1967,9 +1935,9 @@ MockServer.include({
      * Simulates `_message_track` on `mail.thread`
      */
     _mockMailThread_MessageTrack(modelName, trackedFieldNames, initialTrackedFieldValuesByRecordId) {
-        const trackFieldNamesToField = this._mockFieldsGet(modelName, [trackedFieldNames]);
+        const trackFieldNamesToField = this.mockFieldsGet(modelName, [trackedFieldNames]);
         const tracking = {};
-        const records = this.data[modelName].records;
+        const records = this.models[modelName].records;
         for (const record of records) {
             tracking[record.id] = this._mockMailBaseModel_MailTrack(modelName, trackFieldNamesToField, initialTrackedFieldValuesByRecordId[record.id], record);
         }
@@ -2005,7 +1973,7 @@ MockServer.include({
      * Simulates `_track_get_fields` on `mail.thread`
      */
     _mockMailThread_TrackGetFields(model) {
-        return Object.entries(this.data[model].fields).reduce((prev, next) => {
+        return Object.entries(this.models[model].fields).reduce((prev, next) => {
             if (next[1].tracking) {
                 prev.push(next[0]);
             }
@@ -2021,7 +1989,7 @@ MockServer.include({
             return;
         }
         const initialTrackedFieldValuesByRecordId = {};
-        for (const record of this.data[model].records) {
+        for (const record of this.models[model].records) {
             const values = {};
             initialTrackedFieldValuesByRecordId[record.id] = values;
             for (const fname of trackedFieldNames) {
@@ -2041,7 +2009,7 @@ MockServer.include({
      */
      _mockMailTrackingValue_CreateTrackingValues(initialValue, newValue, fieldName, field, modelName) {
         let isTracked = true;
-        const irField = this.data['ir.model.fields'].records.find(field => field.model === modelName && field.name === fieldName);
+        const irField = this.models['ir.model.fields'].records.find(field => field.model === modelName && field.name === fieldName);
 
         if (!irField) {
             return;
@@ -2503,37 +2471,5 @@ MockServer.include({
                 notifications.map(notification => notification.mail_message_id)
             ),
         });
-    },
-
-    //--------------------------------------------------------------------------
-    // New mock server compatibility
-    //--------------------------------------------------------------------------
-
-    getRecords() {
-        return this._getRecords(...arguments);
-    },
-    mockCreate() {
-        return this._mockCreate(...arguments);
-    },
-    mockRead() {
-        return this._mockRead(...arguments);
-    },
-    mockReadGroup() {
-        return this._mockReadGroup(...arguments);
-    },
-    mockSearch() {
-        return this._mockSearch(...arguments);
-    },
-    mockSearchCount() {
-        return this._mockSearchCount(...arguments);
-    },
-    mockSearchRead() {
-        return this._mockSearchRead(...arguments);
-    },
-    mockUnlink() {
-        return this._mockUnlink(...arguments);
-    },
-    mockWrite() {
-        return this._mockWrite(...arguments);
     },
 });

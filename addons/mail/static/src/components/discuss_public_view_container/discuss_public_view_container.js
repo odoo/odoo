@@ -5,7 +5,7 @@ import { useModels } from '@mail/component_hooks/use_models';
 import '@mail/components/discuss_public_view/discuss_public_view';
 import { getMessagingComponent } from "@mail/utils/messaging_component";
 
-const { Component, useSubEnv } = owl;
+const { Component } = owl;
 
 export class DiscussPublicViewContainer extends Component {
 
@@ -13,9 +13,6 @@ export class DiscussPublicViewContainer extends Component {
      * @override
      */
     setup() {
-        // for now, the legacy env is needed for internal functions such as
-        // `useModels` to work
-        useSubEnv(Component.env);
         useModels();
         super.setup();
     }

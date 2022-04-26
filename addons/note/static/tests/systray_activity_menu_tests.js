@@ -16,7 +16,7 @@ QUnit.test('note activity menu widget: create note from activity menu', async fu
     legacySystrayItems.push(ActivityMenu);
     registerCleanup(() => legacySystrayItems.pop());
 
-    await start({ hasWebClient: true });
+    await start();
     assert.containsOnce(document.body, '.o_mail_systray_item',
         'should contain an instance of widget');
     await testUtils.nextTick();

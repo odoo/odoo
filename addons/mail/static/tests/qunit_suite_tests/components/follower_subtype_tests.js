@@ -1,42 +1,13 @@
 /** @odoo-module **/
 
-import { makeDeferred } from '@mail/utils/deferred';
 import {
-    afterNextRender,
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
-import FormView from 'web.FormView';
-
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('follower_subtype_tests.js', {
-    beforeEach() {
-        // FIXME archs could be removed once task-2248306 is done
-        // The mockServer will try to get the list view
-        // of every relational fields present in the main view.
-        // In the case of mail fields, we don't really need them,
-        // but they still need to be defined.
-        this.createView = async (viewParams, ...args) => {
-            const startResult = makeDeferred();
-            await afterNextRender(async () => {
-                const viewArgs = Object.assign(
-                    {
-                        archs: {
-                            'mail.activity,false,list': '<tree/>',
-                            'mail.followers,false,list': '<tree/>',
-                            'mail.message,false,list': '<tree/>',
-                        },
-                    },
-                    viewParams,
-                );
-                startResult.resolve(await start(viewArgs, ...args));
-            });
-            return startResult;
-        };
-    },
-});
+QUnit.module('follower_subtype_tests.js');
 
 QUnit.test('simplest layout of a followed subtype', async function (assert) {
     assert.expect(5);
@@ -56,13 +27,9 @@ QUnit.test('simplest layout of a followed subtype', async function (assert) {
     pyEnv['res.partner'].write([pyEnv.currentPartnerId], {
         message_follower_ids: [followerId],
     });
-    const { click } = await this.createView({
-        hasView: true,
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        arch: `
-            <form string="Partners">
+    const views = {
+        'res.partner,false,form':
+            `<form string="Partners">
                 <sheet>
                     <field name="name"/>
                 </sheet>
@@ -70,19 +37,24 @@ QUnit.test('simplest layout of a followed subtype', async function (assert) {
                     <field name="message_follower_ids"/>
                     <field name="activity_ids"/>
                 </div>
-            </form>
-        `,
-        res_id: pyEnv.currentPartnerId,
+            </form>`,
+    };
+    const { click, openView } = await start({
         // FIXME: should adapt mock server code to provide `hasWriteAccess`
-        async mockRPC(route, args) {
+        async mockRPC(route, args, performRPC) {
             if (route === '/mail/thread/data') {
                 // mimic user with write access
-                const res = await this._super(...arguments);
+                const res = await performRPC(...arguments);
                 res['hasWriteAccess'] = true;
                 return res;
             }
-            return this._super(...arguments);
         },
+        serverData: { views },
+    });
+    await openView({
+        res_model: 'res.partner',
+        res_id: pyEnv.currentPartnerId,
+        views: [[false, 'form']],
     });
     await click('.o_FollowerListMenu_buttonFollowers');
     await click('.o_Follower_editButton');
@@ -129,13 +101,9 @@ QUnit.test('simplest layout of a not followed subtype', async function (assert) 
     pyEnv['res.partner'].write([pyEnv.currentPartnerId], {
         message_follower_ids: [followerId],
     });
-    const { click } = await this.createView({
-        hasView: true,
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        arch: `
-            <form string="Partners">
+    const views = {
+        'res.partner,false,form':
+            `<form string="Partners">
                 <sheet>
                     <field name="name"/>
                 </sheet>
@@ -143,19 +111,24 @@ QUnit.test('simplest layout of a not followed subtype', async function (assert) 
                     <field name="message_follower_ids"/>
                     <field name="activity_ids"/>
                 </div>
-            </form>
-        `,
-        res_id: pyEnv.currentPartnerId,
+            </form>`,
+    };
+    const { click, openView } = await start({
         // FIXME: should adapt mock server code to provide `hasWriteAccess`
-        async mockRPC(route, args) {
+        async mockRPC(route, args, performRPC) {
             if (route === '/mail/thread/data') {
                 // mimic user with write access
-                const res = await this._super(...arguments);
+                const res = await performRPC(...arguments);
                 res['hasWriteAccess'] = true;
                 return res;
             }
-            return this._super(...arguments);
         },
+        serverData: { views },
+    });
+    await openView({
+        res_model: 'res.partner',
+        res_id: pyEnv.currentPartnerId,
+        views: [[false, 'form']],
     });
     await click('.o_FollowerListMenu_buttonFollowers');
     await click('.o_Follower_editButton');
@@ -182,13 +155,9 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
     pyEnv['res.partner'].write([pyEnv.currentPartnerId], {
         message_follower_ids: [followerId],
     });
-    const { click, messaging } = await this.createView({
-        hasView: true,
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        arch: `
-            <form string="Partners">
+    const views = {
+        'res.partner,false,form':
+            `<form string="Partners">
                 <sheet>
                     <field name="name"/>
                 </sheet>
@@ -196,19 +165,24 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
                     <field name="message_follower_ids"/>
                     <field name="activity_ids"/>
                 </div>
-            </form>
-        `,
-        res_id: pyEnv.currentPartnerId,
+            </form>`,
+    };
+    const { click, messaging, openView } = await start({
         // FIXME: should adapt mock server code to provide `hasWriteAccess`
-        async mockRPC(route, args) {
+        async mockRPC(route, args, performRPC) {
             if (route === '/mail/thread/data') {
                 // mimic user with write access
-                const res = await this._super(...arguments);
+                const res = await performRPC(...arguments);
                 res['hasWriteAccess'] = true;
                 return res;
             }
-            return this._super(...arguments);
         },
+        serverData: { views },
+    });
+    await openView({
+        res_model: 'res.partner',
+        res_id: pyEnv.currentPartnerId,
+        views: [[false, 'form']],
     });
     await click('.o_FollowerListMenu_buttonFollowers');
     await click('.o_Follower_editButton');

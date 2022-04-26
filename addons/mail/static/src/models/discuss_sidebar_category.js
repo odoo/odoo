@@ -176,14 +176,12 @@ registerModel({
          */
         onClickCommandView(ev) {
             ev.stopPropagation();
-            return this.env.bus.trigger('do-action', {
-                action: {
-                    name: this.env._t("Public Channels"),
-                    type: 'ir.actions.act_window',
-                    res_model: 'mail.channel',
-                    views: [[false, 'kanban'], [false, 'form']],
-                    domain: [['public', '!=', 'private']],
-                },
+            return this.env.services.action.doAction({
+                name: this.env._t("Public Channels"),
+                type: 'ir.actions.act_window',
+                res_model: 'mail.channel',
+                views: [[false, 'kanban'], [false, 'form']],
+                domain: [['public', '!=', 'private']],
             });
         },
         /**

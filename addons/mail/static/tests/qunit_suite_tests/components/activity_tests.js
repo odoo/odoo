@@ -2,8 +2,8 @@
 
 import { afterNextRender, start, startServer } from '@mail/../tests/helpers/test_utils';
 
-import Bus from 'web.Bus';
 import { date_to_str } from 'web.time';
+import { patchWithCleanup } from '@web/../tests/helpers/utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -602,8 +602,9 @@ QUnit.test('activity with mail template: preview mail', async function (assert) 
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const bus = new Bus();
-    bus.on('do-action', null, ({ action }) => {
+    const { createChatterContainerComponent, env } = await start();
+    patchWithCleanup(env.services.action, {
+        doAction(action) {
             assert.step('do_action');
             assert.strictEqual(
                 action.context.default_res_id,
@@ -634,8 +635,8 @@ QUnit.test('activity with mail template: preview mail', async function (assert) 
                 "mail.compose.message",
                 'Action should have "mail.compose.message" as res_model'
             );
+        },
     });
-    const { createChatterContainerComponent } = await start({ env: { bus } });
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',
@@ -678,9 +679,8 @@ QUnit.test('activity with mail template: send mail', async function (assert) {
                 assert.strictEqual(args.args[0].length, 1);
                 assert.strictEqual(args.args[0][0], resPartnerId1);
                 assert.strictEqual(args.args[1], mailTemplateId1);
-                return;
-            } else {
-                return this._super(...arguments);
+                // random value returned in order for the mock server to know that this route is implemented.
+                return true;
             }
         },
     });
@@ -835,8 +835,9 @@ QUnit.test('activity click on edit', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const bus = new Bus();
-    bus.on('do-action', null, ({ action }) => {
+    const { click, createChatterContainerComponent, env } = await start();
+    patchWithCleanup(env.services.action, {
+        doAction(action) {
             assert.step('do_action');
             assert.strictEqual(
                 action.context.default_res_id,
@@ -863,8 +864,9 @@ QUnit.test('activity click on edit', async function (assert) {
                 mailActivityId1,
                 'Action should have activity id as res_id'
             );
+            return this._super(...arguments);
+        },
     });
-    const { createChatterContainerComponent } = await start({ env: { bus } });
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',
@@ -880,7 +882,7 @@ QUnit.test('activity click on edit', async function (assert) {
         "should have activity edit button"
     );
 
-    document.querySelector('.o_Activity_editButton').click();
+    await click('.o_Activity_editButton');
     assert.verifySteps(
         ['do_action'],
         "should have called 'schedule activity' action correctly"
@@ -898,8 +900,9 @@ QUnit.test('activity edition', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const bus = new Bus();
-    bus.on('do-action', null, ({ action, options }) => {
+    const { click, createChatterContainerComponent, env } = await start();
+    patchWithCleanup(env.services.action, {
+        doAction(action, options) {
             assert.step('do_action');
             assert.strictEqual(
                 action.context.default_res_id,
@@ -927,9 +930,9 @@ QUnit.test('activity edition', async function (assert) {
                 'Action should have activity id as res_id'
             );
             pyEnv['mail.activity'].write([mailActivityId1], { icon: 'fa-check' });
-            options.on_close();
+            options.onClose();
+        },
     });
-    const { click, createChatterContainerComponent } = await start({ env: { bus } });
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',
@@ -995,9 +998,6 @@ QUnit.test('activity click on cancel', async function (assert) {
                 assert.step('unlink');
                 assert.strictEqual(args.args[0].length, 1);
                 assert.strictEqual(args.args[0][0], mailActivityId1);
-                return;
-            } else {
-                return this._super(...arguments);
             }
         },
     });
@@ -1109,8 +1109,20 @@ QUnit.test('activity mark done popover click on discard', async function (assert
 QUnit.test('data-oe-id & data-oe-model link redirection on click', async function (assert) {
     assert.expect(7);
 
-    const bus = new Bus();
-    bus.on('do-action', null, ({ action }) => {
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const emailActivityTypeId = pyEnv['mail.activity.type'].search([['name', '=', 'Email']])[0];
+    pyEnv['mail.activity'].create({
+        activity_category: 'default',
+        activity_type_id: emailActivityTypeId,
+        can_write: true,
+        note: `<p><a href="#" data-oe-id="250" data-oe-model="some.model">some.model_250</a></p>`,
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+    });
+    const { createChatterContainerComponent, env } = await start();
+    patchWithCleanup(env.services.action, {
+        doAction(action) {
             assert.strictEqual(
                 action.type,
                 'ir.actions.act_window',
@@ -1127,19 +1139,8 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
                 "action should open view on 250"
             );
             assert.step('do-action:openFormView_some.model_250');
+        },
     });
-    const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
-    const emailActivityTypeId = pyEnv['mail.activity.type'].search([['name', '=', 'Email']])[0];
-    pyEnv['mail.activity'].create({
-        activity_category: 'default',
-        activity_type_id: emailActivityTypeId,
-        can_write: true,
-        note: `<p><a href="#" data-oe-id="250" data-oe-model="some.model">some.model_250</a></p>`,
-        res_id: resPartnerId1,
-        res_model: 'res.partner',
-    });
-    const { createChatterContainerComponent } = await start({ data: this.data, env: { bus } });
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',

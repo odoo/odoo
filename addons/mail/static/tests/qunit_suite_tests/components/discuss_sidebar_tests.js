@@ -25,11 +25,9 @@ QUnit.test('sidebar find shows channels matching search term', async function (a
     const { click } = await start({
         autoOpenDiscuss: true,
         async mockRPC(route, args) {
-            const res = await this._super(...arguments);
             if (args.method === 'search_read') {
                 searchReadDef.resolve();
             }
-            return res;
         },
     });
     await click(`.o_DiscussSidebarCategory_commandAdd`);
@@ -78,11 +76,9 @@ QUnit.test('sidebar find shows channels matching search term even when user is m
     const { click } = await start({
         autoOpenDiscuss: true,
         async mockRPC(route, args) {
-            const res = await this._super(...arguments);
             if (args.method === 'search_read') {
                 searchReadDef.resolve();
             }
-            return res;
         },
     });
     await click(`.o_DiscussSidebarCategory_commandAdd`);

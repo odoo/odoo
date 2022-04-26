@@ -7,8 +7,6 @@ import {
 
 import tour from 'web_tour.tour';
 
-const { Component } = owl;
-
 /**
  * This tour depends on data created by python test in charge of launching it.
  * It is not intended to work when launched from interface. It is needed to test
@@ -33,7 +31,7 @@ tour.register('mail/static/tests/tours/mail_full_composer_test_tour.js', {
             contentType: 'text/plain',
             name: 'text.txt',
         });
-        const messaging = await Component.env.services.messaging.get();
+        const messaging = await odoo.__DEBUG__.messaging;
         const uploaders = messaging.models['FileUploader'].all();
         inputFiles(
             uploaders[0].fileInput,

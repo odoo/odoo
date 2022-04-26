@@ -1,39 +1,22 @@
 /** @odoo-module **/
 
-import BusService from 'bus.BusService';
-
-import { DialogManagerContainer } from '@mail/components/dialog_manager_container/dialog_manager_container';
-import { ChatWindowManagerContainer } from '@mail/components/chat_window_manager_container/chat_window_manager_container';
 import { MessagingMenuContainer } from '@mail/components/messaging_menu_container/messaging_menu_container';
 import { insertAndReplace, replace } from '@mail/model/model_field_command';
-import { MessagingService } from '@mail/services/messaging/messaging';
-import { makeDeferred } from '@mail/utils/deferred';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
 import { nextTick } from '@mail/utils/utils';
-import { DiscussWidget } from '@mail/widgets/discuss/discuss';
-import { addTimeControlToEnv } from '@mail/../tests/helpers/time_control';
+import { getAdvanceTime } from '@mail/../tests/helpers/time_control';
+import { getWebClientReady } from '@mail/../tests/helpers/webclient_setup';
 
-import core from 'web.core';
-import AbstractStorageService from 'web.AbstractStorageService';
-import RamStorage from 'web.RamStorage';
-import {
-    createView,
-    mock,
-} from 'web.test_utils';
-import Widget from 'web.Widget';
-import { browser } from '@web/core/browser/browser';
 import { registry } from '@web/core/registry';
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
-import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { createWebClient, getActionManagerServerData } from "@web/../tests/webclient/helpers";
+import { MockServer } from "@web/../tests/helpers/mock_server";
+import { getFixture, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 
-import LegacyRegistry from "web.Registry";
-import MockServer from 'web.MockServer';
+import core from 'web.core';
 
-const { App, Component, EventBus } = owl;
+const { App, EventBus } = owl;
 const { afterNextRender } = App;
-const { addMockEnvironment } = mock;
-
 const modelDefinitionsPromise = new Promise(resolve => {
     QUnit.begin(() => resolve(getModelDefinitions()));
 });
@@ -57,44 +40,6 @@ function _createFakeDataTransfer(files) {
         items: [],
         types: ['Files'],
     };
-}
-
-/**
- * @private
- * @param {HTMLElement} target
- */
-async function mountChatWindowManagerContainer(target) {
-    const app = new App(ChatWindowManagerContainer, {
-        templates: window.__OWL_TEMPLATES__,
-        env: owl.Component.env,
-        dev: owl.Component.env.isDebug(),
-        translateFn: owl.Component.env._t,
-        translatableAttributes: ["data-tooltip"],
-    });
-    await app.mount(target);
-
-    registerCleanup(() => {
-        app.destroy();
-    });
-}
-
-/**
- * @private
- * @param {HTMLElement} target
- */
-async function mountDialogManagerContainer(target) {
-    const app = new App(DialogManagerContainer, {
-        templates: window.__OWL_TEMPLATES__,
-        env: owl.Component.env,
-        dev: owl.Component.env.isDebug(),
-        translateFn: owl.Component.env._t,
-        translatableAttributes: ["data-tooltip"],
-    });
-    await app.mount(target);
-
-    registerCleanup(() => {
-        app.destroy();
-    });
 }
 
 //------------------------------------------------------------------------------
@@ -198,7 +143,7 @@ const VIEW_TYPE_TO_ARCH = {
  * server (creation, deletion, update of records...)
  */
  export async function startServer() {
-    const data = { ...TEST_USER_IDS };
+    const models = {};
     const views = {};
     const modelDefinitions = await modelDefinitionsPromise;
     const recordsToInsertRegistry = registry.category('mail.model.definitions').category('recordsToInsert');
@@ -208,7 +153,7 @@ const VIEW_TYPE_TO_ARCH = {
             // prevent tests from mutating the records.
             records.push(...JSON.parse(JSON.stringify(recordsToInsertRegistry.get(modelName))));
         }
-        data[modelName] = { fields: { ...fields }, records };
+        models[modelName] = { fields: { ...fields }, records };
 
         // generate default views for this model.
         for (const [viewType, viewArch] of Object.entries(VIEW_TYPE_TO_ARCH)) {
@@ -217,13 +162,16 @@ const VIEW_TYPE_TO_ARCH = {
     }
     pyEnv = new Proxy(
         {
+            getData() {
+                return this.mockServer.models;
+            },
+            getViews() {
+                return views;
+            },
             ...TEST_USER_IDS,
             get currentPartner() {
                 return this.mockServer.currentPartner;
             },
-            getViews() {
-                return views;
-            }
         },
         {
             get(target, name) {
@@ -305,7 +253,7 @@ const VIEW_TYPE_TO_ARCH = {
             },
          },
     );
-    pyEnv['mockServer'] = new MockServer(data, {});
+    pyEnv['mockServer'] = new MockServer({ models }, {});
     await pyEnv['mockServer'].setup();
     registerCleanup(() => pyEnv = undefined);
     return pyEnv;
@@ -366,7 +314,7 @@ function getAfterEvent({ messagingBus }) {
         clearTimeout(timeoutNoEvent);
         // If the event is triggered before the end of the async function,
         // ensure the function finishes its job before returning.
-        await funcRes;
+        return await funcRes;
     };
 }
 
@@ -499,7 +447,7 @@ function getCreateMessageComponent({ env, modelManager, target }) {
 
 function getCreateMessagingMenuComponent({ env, target }) {
     return async function createMessagingMenuComponent() {
-        return await createRootComponent({ env }, MessagingMenuContainer, { target });
+        return await createRootComponent(env, MessagingMenuContainer, { target });
     };
 }
 
@@ -527,7 +475,7 @@ function getCreateThreadViewComponent({ afterEvent, env, target }) {
                 'flex-flow': 'column',
                 height: '300px',
             });
-            target.append(div);
+            target.appendChild(div);
             actualTarget = div;
         } else {
             actualTarget = target;
@@ -553,67 +501,41 @@ function getCreateThreadViewComponent({ afterEvent, env, target }) {
     };
 }
 
-function getOpenDiscuss({ afterNextRender, discuss, selector, widget }) {
+function getOpenDiscuss(webClient, { context, params, ...props } = {}) {
     return async function openDiscuss() {
-        widget.do_push_state = () => {};
-        const discussWidget = new DiscussWidget(widget, discuss);
-        await discussWidget.appendTo($(selector));
-        await afterNextRender(() => discussWidget.on_attach_callback());
-        // Some changes in the models are made on mount, but these changes don't
-        // cause a rerender directly, they cause the model to fetch more data
-        // but we cannot wait for that data to come back as the model manager
-        // doesn't expose it. This means that in the following microticks, the
-        // data will come back from the server and cause a render. The following
-        // is a way for us to catch the render cascade caused by the data coming
-        // back and wait for it.
-        await afterNextRender(() => {
-            discussWidget.app.root.render();
-        });
-        return discussWidget;
+        const actionOpenDiscuss = {
+            // hardcoded actionId, required for discuss_container props validation.
+            id: 104,
+            context,
+            params,
+            tag: 'mail.action_discuss',
+            type: 'ir.actions.client',
+        };
+        await afterNextRender(() => doAction(webClient, actionOpenDiscuss, { props }));
     };
 }
+
+//------------------------------------------------------------------------------
+// Public: start function helpers
+//------------------------------------------------------------------------------
 
 /**
  * Main function used to make a mocked environment with mocked messaging env.
  *
  * @param {Object} [param0={}]
- * @param {string} [param0.arch] makes only sense when `param0.hasView` is set:
- *   the arch to use in createView.
- * @param {Object} [param0.archs]
- * @param {boolean} [param0.autoOpenDiscuss=false] determine whether mounted discuss should be
+ * @param {boolean} [param0.autoOpenDiscuss=false] determine if discuss should be
  *   open initially. Deprecated, call openDiscuss() instead.
- * @param {boolean} [param0.debug=false]
- * @param {Object} [param0.data] makes only sense when `param0.hasView` is set:
- *   the data to use in createView.
- * @param {Object} [param0.discuss={}] provide data that is passed to discuss widget
- * (= client action) as 2nd positional argument.
- * @param {Object} [param0.env={}]
- * @param {function} [param0.mockFetch]
+ * @param {Object} [param0.serverData] The data to pass to the webClient
+ * @param {Object} [param0.discuss={}] provide data that is passed to the discuss action.
+ * @param {Object} [param0.legacyServices]
+ * @param {Object} [param0.services]
  * @param {function} [param0.mockRPC]
- * @param {boolean} [param0.hasWebClient=false] if set, use
- *   createWebClient
  * @param {boolean} [param0.hasTimeControl=false] if set, all flow of time
- *   with `env.browser.setTimeout` are fully controlled by test itself.
- *     @see addTimeControlToEnv that adds `advanceTime` function in
- *     `env.testUtils`.
- * @param {boolean} [param0.hasView=false] if set, use createView to create a
- *   view instead of a generic widget.
+ *   with `messaging.browser.setTimeout` are fully controlled by test itself.
  * @param {integer} [param0.loadingBaseDelayDuration=0]
  * @param {Deferred|Promise} [param0.messagingBeforeCreationDeferred=Promise.resolve()]
  *   Deferred that let tests block messaging creation and simulate resolution.
  *   Useful for testing working components when messaging is not yet created.
- * @param {string} [param0.model] makes only sense when `param0.hasView` is set:
- *   the model to use in createView.
- * @param {integer} [param0.res_id] makes only sense when `param0.hasView` is set:
- *   the res_id to use in createView.
- * @param {Object} [param0.services]
- * @param {Object} [param0.session]
- * @param {Element} [param0.target] if provided, the component will be mounted inside
- *   that element (only used if `params0.hasWebClient` is true)
- * @param {Object} [param0.View] makes only sense when `param0.hasView` is set:
- *   the View class to use in createView.
- * @param {Object} [param0.viewOptions] makes only sense when `param0.hasView`
- *   is set: the view options to use in createView.
  * @param {Object} [param0.waitUntilEvent]
  * @param {String} [param0.waitUntilEvent.eventName]
  * @param {String} [param0.waitUntilEvent.message]
@@ -631,7 +553,6 @@ function getOpenDiscuss({ afterNextRender, discuss, selector, widget }) {
  *   as param of `messagingBeforeCreationDeferred`. To make sure messaging is
  *   not initialized, test should mock RPC `mail/init_messaging` and block its
  *   resolution.
- * @param {...Object} [param0.kwargs]
  * @throws {Error} in case some provided parameters are wrong, such as
  *   `waitUntilMessagingCondition`.
  * @returns {Object}
@@ -643,189 +564,19 @@ async function start(param0 = {}) {
         throttle: func => func,
     });
     const {
-        autoOpenDiscuss = false,
+        autoOpenDiscuss,
         discuss = {},
-        env: providedEnv = {},
-        hasWebClient = false,
-        hasTimeControl = false,
-        hasView = false,
-        loadingBaseDelayDuration = 0,
-        messagingBeforeCreationDeferred = Promise.resolve(),
-        target: webclientTarget = getFixture(),
+        hasTimeControl,
         waitUntilEvent,
         waitUntilMessagingCondition = 'initialized',
     } = param0;
+    const target = param0['target'] || getFixture();
+    param0['target'] = target;
     if (!['none', 'created', 'initialized'].includes(waitUntilMessagingCondition)) {
         throw Error(`Unknown parameter value ${waitUntilMessagingCondition} for 'waitUntilMessaging'.`);
     }
-    delete param0.autoOpenDiscuss;
-    delete param0.env;
-    delete param0.hasWebClient;
-    delete param0.hasTimeControl;
-    delete param0.hasView;
-    delete param0.target;
     const messagingBus = new EventBus();
-    const { debug = false } = param0;
     const testSetupDoneDeferred = makeDeferred();
-    let env = {
-        ...providedEnv,
-        browser: {
-            ...providedEnv.browser,
-            innerWidth: browser.innerWidth,
-            innerHeight: browser.innerHeight,
-        },
-        device: {
-            ...providedEnv.device,
-            isMobile: owl.Component.env.device.isMobile,
-        },
-    };
-    env.session = Object.assign(
-        {
-            is_bound: Promise.resolve(),
-            url: s => s,
-        },
-        env.session
-    );
-    env.isDebug = env.isDebug || (() => true);
-    if (hasTimeControl) {
-        env = addTimeControlToEnv(env);
-    }
-
-    const services = Object.assign({}, {
-        bus_service: BusService.extend({
-            _beep() {}, // Do nothing
-            _poll() {}, // Do nothing
-            _registerWindowUnload() {}, // Do nothing
-            isOdooFocused() {
-                return true;
-            },
-            updateOption() {},
-        }),
-        local_storage: AbstractStorageService.extend({ storage: new RamStorage() }),
-        messaging: MessagingService.extend({
-            // test specific values
-            messagingValues: {
-                autofetchPartnerImStatus: false,
-                disableAnimation: true,
-                loadingBaseDelayDuration,
-                messagingBus,
-            },
-            /**
-             * Override to ensure tests run in debug mode to catch all potential
-             * programming errors and provide better message when they happen.
-             */
-            init(...args) {
-                this._super(...args);
-                this.modelManager.isDebug = true;
-            },
-            /**
-             * Override:
-             * - to ensure the test setup is complete before starting otherwise
-             *   for example the mock server might not be ready yet at init
-             *   messaging,
-             * - to add control on when messaging is created, useful to test
-             *   spinners and race conditions.
-             *
-             * @override
-             */
-            async start() {
-                const _super = this._super.bind(this);
-                await testSetupDoneDeferred;
-                await messagingBeforeCreationDeferred;
-                _super();
-            },
-        }),
-    }, param0.services);
-
-    if (!param0.data && (!param0.serverData || !param0.serverData.models)) {
-        pyEnv = pyEnv || await startServer();
-        const data = pyEnv.mockServer.data;
-        Object.assign(data, TEST_USER_IDS);
-        if (hasWebClient) {
-            param0.serverData = param0.serverData || getActionManagerServerData();
-            param0.serverData.models = data;
-            param0.serverData.views = { ...pyEnv.getViews(), ...param0.serverData.views };
-        } else {
-            param0.data = data;
-        }
-    }
-
-    const kwargs = Object.assign({}, param0, {
-        archs: Object.assign({}, {
-            'mail.message,false,search': '<search/>'
-        }, param0.archs),
-        debug: param0.debug || false,
-        services: Object.assign({}, services, param0.services),
-    }, { env });
-    let widget;
-    let mockServer;
-    let testEnv;
-    const selector = debug ? 'body' : '#qunit-fixture';
-    if (hasView) {
-        widget = await createView(kwargs);
-    } else if (hasWebClient) {
-        let serverData;
-        if (!kwargs.serverData) {
-            serverData = getActionManagerServerData();
-        } else {
-            serverData = kwargs.serverData;
-            delete kwargs.serverData;
-        }
-
-        if (kwargs.actions) {
-            const actions = {};
-            kwargs.actions.forEach((act) => {
-                actions[act.xml_id || act.id] = act;
-            });
-            Object.assign(serverData.actions, actions);
-            delete kwargs.actions;
-        }
-
-        Object.assign(serverData.views, kwargs.archs);
-        delete kwargs.archs;
-
-        Object.assign(serverData.models, kwargs.data);
-        delete kwargs.data;
-
-        const mockRPC = kwargs.mockRPC;
-        delete kwargs.mockRPC;
-
-        if (kwargs.services) {
-            const serviceRegistry = kwargs.serviceRegistry = new LegacyRegistry();
-            for (const sname in kwargs.services) {
-                serviceRegistry.add(sname, kwargs.services[sname]);
-            }
-            delete kwargs.services;
-        }
-
-        const legacyParams = kwargs;
-        legacyParams.withLegacyMockServer = true;
-        legacyParams.env = env;
-
-        widget = await createWebClient({ target: webclientTarget, serverData, mockRPC, legacyParams });
-    } else {
-        const Parent = Widget.extend({ do_push_state() {} });
-        const parent = new Parent();
-        mockServer = await addMockEnvironment(parent, kwargs);
-        widget = new Widget(parent);
-        await widget.appendTo($(selector));
-        Object.assign(widget, {
-            destroy() {
-                delete widget.destroy;
-                parent.destroy();
-            },
-        });
-    }
-    // get the final test env after execution of createView/createWebClient/addMockEnvironment
-    testEnv = Component.env;
-    patchWithCleanup(browser, {
-        fetch: testEnv.browser.fetch,
-    });
-    // link the pyEnv to the actual mockServer after execution of createView/createWebClient/addMockEnvironment
-    if (pyEnv) {
-        pyEnv.mockServer = MockServer.currentMockServer;
-        mockServer = pyEnv.mockServer;
-    }
     const afterEvent = getAfterEvent({ messagingBus });
     let waitUntilEventPromise;
     if (waitUntilEvent) {
@@ -834,22 +585,15 @@ async function start(param0 = {}) {
         testSetupDoneDeferred.resolve();
         waitUntilEventPromise = Promise.resolve();
     }
-    const result = {
-        afterEvent,
-        env: testEnv,
-        mockServer,
-        pyEnv,
-        widget,
-        wowlEnv: hasWebClient ? widget.env : undefined,
-    };
-    if (hasTimeControl) {
-        result['advanceTime'] = env.testUtils.advanceTime;
-    }
-    const { modelManager } = testEnv.services.messaging;
-    registerCleanup(async() => {
-        if (!hasWebClient) {
-            widget.destroy();
-        }
+
+    pyEnv = await getPyEnv();
+    param0.serverData = param0.serverData || getActionManagerServerData();
+    param0.serverData.models = { ...pyEnv.getData(), ...param0.serverData.models };
+    param0.serverData.views = { ...pyEnv.getViews(), ...param0.serverData.views };
+    const webClient = await getWebClientReady({ ...param0, messagingBus, testSetupDoneDeferred });
+
+    const { modelManager } = webClient.env.services.messaging;
+    registerCleanup(async () => {
         await modelManager.messagingInitializedPromise;
         modelManager.messaging.delete();
     });
@@ -860,30 +604,37 @@ async function start(param0 = {}) {
         await modelManager.messagingCreatedPromise;
         await modelManager.messagingInitializedPromise;
     }
-    const openDiscuss = getOpenDiscuss({ afterNextRender, discuss, selector, widget });
+    const openDiscuss = getOpenDiscuss(webClient, discuss);
     if (autoOpenDiscuss) {
-        const discussWidget = await openDiscuss();
-        result['discussWidget'] = discussWidget;
+        await openDiscuss();
     }
-    const target = hasWebClient ? webclientTarget : widget.el;
-    await mountChatWindowManagerContainer(target);
-    await mountDialogManagerContainer(target);
+    // link the pyEnv to the actual mockServer after execution of createWebClient.
+    pyEnv.mockServer = MockServer.currentMockServer;
+    const openView = async (action, options) => {
+        action['type'] = action['type'] || 'ir.actions.act_window';
+        return doAction(webClient, action, { props: options });
+    };
     await waitUntilEventPromise;
     return {
-        ...result,
+        advanceTime: hasTimeControl ? getAdvanceTime() : undefined,
+        afterEvent,
         afterNextRender,
         click: getClick({ afterNextRender }),
-        createChatterContainerComponent: getCreateChatterContainerComponent({ afterEvent, env: testEnv, target }),
-        createComposerComponent: getCreateComposerComponent({ env: testEnv, modelManager, target }),
-        createComposerSuggestionComponent: getCreateComposerSuggestionComponent({ env: testEnv, modelManager, target }),
-        createMessageComponent: getCreateMessageComponent({ env: testEnv, modelManager, target }),
-        createMessagingMenuComponent: getCreateMessagingMenuComponent({ env: testEnv, target }),
-        createNotificationListComponent: getCreateNotificationListComponent({ env: testEnv, modelManager, target }),
-        createRootMessagingComponent: (componentName, props) => createRootMessagingComponent(testEnv, componentName, { props, target }),
-        createThreadViewComponent: getCreateThreadViewComponent({ afterEvent, env: testEnv, target }),
+        createChatterContainerComponent: getCreateChatterContainerComponent({ afterEvent, env: webClient.env, target }),
+        createComposerComponent: getCreateComposerComponent({ env: webClient.env, modelManager, target }),
+        createComposerSuggestionComponent: getCreateComposerSuggestionComponent({ env: webClient.env, modelManager, target }),
+        createMessageComponent: getCreateMessageComponent({ env: webClient.env, modelManager, target }),
+        createMessagingMenuComponent: getCreateMessagingMenuComponent({ env: webClient.env, target }),
+        createNotificationListComponent: getCreateNotificationListComponent({ env: webClient.env, modelManager, target }),
+        createRootMessagingComponent: (componentName, props) => createRootMessagingComponent(webClient.env, componentName, { props, target }),
+        createThreadViewComponent: getCreateThreadViewComponent({ afterEvent, env: webClient.env, target }),
+        env: webClient.env,
         insertText,
         messaging: modelManager.messaging,
         openDiscuss,
+        openView,
+        pyEnv,
+        webClient,
     };
 }
 

@@ -28,7 +28,6 @@ QUnit.module('mail', {}, function () {
 
         const target = getFixture();
         await start({
-            hasWebClient: true,
             target,
         });
         triggerHotkey("control+k");
@@ -53,7 +52,6 @@ QUnit.module('mail', {}, function () {
         });
         const target = getFixture();
         await start({
-            hasWebClient: true,
             target,
         });
         triggerHotkey("control+k");

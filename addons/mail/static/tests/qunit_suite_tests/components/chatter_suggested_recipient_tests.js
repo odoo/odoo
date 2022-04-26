@@ -235,7 +235,6 @@ QUnit.test("suggested recipients should not be notified when posting an internal
                     "post data should not contain suggested recipients when posting an internal note"
                 );
             }
-            return this._super(...arguments);
         },
     });
     await createChatterContainerComponent({

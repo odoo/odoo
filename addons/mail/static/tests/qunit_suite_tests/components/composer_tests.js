@@ -11,7 +11,6 @@ import {
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
-import FormView from 'web.FormView';
 import {
     file,
     makeTestPromise,
@@ -21,32 +20,7 @@ const { createFile, inputFiles } = file;
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('composer_tests.js', {
-    beforeEach() {
-        // FIXME archs could be removed once task-2248306 is done
-        // The mockServer will try to get the list view
-        // of every relational fields present in the main view.
-        // In the case of mail fields, we don't really need them,
-        // but they still need to be defined.
-        this.createView = async (viewParams, ...args) => {
-            const startResult = makeTestPromise();
-            await afterNextRender(async () => {
-                const viewArgs = Object.assign(
-                    {
-                        archs: {
-                            'mail.activity,false,list': '<tree/>',
-                            'mail.followers,false,list': '<tree/>',
-                            'mail.message,false,list': '<tree/>',
-                        },
-                    },
-                    viewParams,
-                );
-                startResult.resolve(await start(viewArgs, ...args));
-            });
-            return startResult;
-        };
-    },
-});
+QUnit.module('composer_tests.js');
 
 QUnit.test('composer text input: basic rendering when posting a message', async function (assert) {
     assert.expect(5);
@@ -613,7 +587,6 @@ QUnit.test('do not send typing notification on typing "/" command', async functi
             if (args.method === 'notify_typing') {
                 assert.step(`notify_typing:${args.kwargs.is_typing}`);
             }
-            return this._super(...arguments);
         },
     });
 
@@ -637,7 +610,6 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
             if (args.method === 'notify_typing') {
                 assert.step(`notify_typing:${args.kwargs.is_typing}`);
             }
-            return this._super(...arguments);
         },
     });
 
@@ -1050,7 +1022,6 @@ QUnit.test('composer text input cleared on message post', async function (assert
             if (route === '/mail/message/post') {
                 assert.step('message_post');
             }
-            return this._super(...arguments);
         },
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -1122,7 +1093,6 @@ QUnit.test('current partner notify is typing to other thread members', async fun
             if (args.method === 'notify_typing') {
                 assert.step(`notify_typing:${args.kwargs.is_typing}`);
             }
-            return this._super(...arguments);
         },
     });
 
@@ -1152,7 +1122,6 @@ QUnit.test('current partner is typing should not translate on textual typing sta
             if (args.method === 'notify_typing') {
                 assert.step(`notify_typing:${args.kwargs.is_typing}`);
             }
-            return this._super(...arguments);
         },
     });
 
@@ -1190,7 +1159,6 @@ QUnit.test('current partner notify no longer is typing to thread members after 5
             if (args.method === 'notify_typing') {
                 assert.step(`notify_typing:${args.kwargs.is_typing}`);
             }
-            return this._super(...arguments);
         },
     });
 
@@ -1227,7 +1195,6 @@ QUnit.test('current partner notify is typing again to other members every 50s of
             if (args.method === 'notify_typing') {
                 assert.step(`notify_typing:${args.kwargs.is_typing}`);
             }
-            return this._super(...arguments);
         },
     });
 
@@ -1259,12 +1226,10 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
     const attachmentUploadedPromise = makeTestPromise();
     const mailChannelId1 = pyEnv['mail.channel'].create();
     const { createComposerComponent, messaging } = await start({
-        async mockFetch(resource, init) {
-            const res = this._super(...arguments);
-            if (resource === '/mail/attachment/upload') {
+        async mockRPC(route) {
+            if (route === '/mail/attachment/upload') {
                 await attachmentUploadedPromise;
             }
-            return res;
         }
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -1373,13 +1338,11 @@ QUnit.test('remove an uploading attachment', async function (assert) {
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
     const { click, createComposerComponent, messaging } = await start({
-        async mockFetch(resource, init) {
-            const res = this._super(...arguments);
-            if (resource === '/mail/attachment/upload') {
+        async mockRPC(route) {
+            if (route === '/mail/attachment/upload') {
                 // simulates uploading indefinitely
                 await new Promise(() => {});
             }
-            return res;
         }
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -1428,13 +1391,11 @@ QUnit.test('remove an uploading attachment aborts upload', async function (asser
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
     const { afterEvent, createComposerComponent, messaging } = await start({
-        async mockFetch(resource, init) {
-            const res = this._super(...arguments);
-            if (resource === '/mail/attachment/upload') {
+        async mockRPC(route) {
+            if (route === '/mail/attachment/upload') {
                 // simulates uploading indefinitely
                 await new Promise(() => {});
             }
-            return res;
         }
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -1477,13 +1438,9 @@ QUnit.test("Show a default status in the recipient status text when the thread d
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    const { click } = await this.createView({
-        hasView: true,
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        arch: `
-            <form string="Partners">
+    const views = {
+        'res.partner,false,form':
+            `<form string="Partners">
                 <sheet>
                     <field name="name"/>
                 </sheet>
@@ -1491,9 +1448,15 @@ QUnit.test("Show a default status in the recipient status text when the thread d
                     <field name="message_follower_ids"/>
                     <field name="message_ids"/>
                 </div>
-            </form>
-        `,
+            </form>`,
+    };
+    const { click, openView } = await start({
+        serverData: { views },
+    });
+    await openView({
+        res_model: 'res.partner',
         res_id: resPartnerId1,
+        views: [[false, 'form']],
     });
     await click('.o_ChatterTopbar_buttonSendMessage');
     assert.strictEqual(
@@ -1508,13 +1471,9 @@ QUnit.test("Show a thread name in the recipient status text.", async function (a
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "test name" });
-    const { click, messaging } = await this.createView({
-        hasView: true,
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        arch: `
-            <form string="Partners">
+    const views = {
+        'res.partner,false,form':
+            `<form string="Partners">
                 <sheet>
                     <field name="name"/>
                 </sheet>
@@ -1522,9 +1481,15 @@ QUnit.test("Show a thread name in the recipient status text.", async function (a
                     <field name="message_follower_ids"/>
                     <field name="message_ids"/>
                 </div>
-            </form>
-        `,
+            </form>`,
+    };
+    const { click, messaging, openView } = await start({
+        serverData: { views },
+    });
+    await openView({
+        res_model: 'res.partner',
         res_id: resPartnerId1,
+        views: [[false, 'form']],
     });
     // hack: provide awareness of name (not received in usual chatter flow)
     messaging.models['Thread'].insert({ id: resPartnerId1, model: 'res.partner', name: "test name" });
@@ -1546,7 +1511,6 @@ QUnit.test('send message only once when button send is clicked twice quickly', a
             if (route === '/mail/message/post') {
                 assert.step('message_post');
             }
-            return this._super(...arguments);
         },
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -1578,12 +1542,10 @@ QUnit.test('[technical] does not crash when an attachment is removed before its 
     const uploadPromise = makeTestPromise();
     const mailChannelId1 = pyEnv['mail.channel'].create();
     const { createComposerComponent, messaging } = await start({
-        async mockFetch(resource) {
-            const _super = this._super.bind(this, ...arguments);
-            if (resource === '/mail/attachment/upload') {
+        async mockRPC(route) {
+            if (route === '/mail/attachment/upload') {
                 await uploadPromise;
             }
-            return _super();
         },
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({

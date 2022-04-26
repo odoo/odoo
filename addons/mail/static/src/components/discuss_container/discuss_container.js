@@ -14,9 +14,6 @@ export class DiscussContainer extends Component {
      * @override
      */
     setup() {
-        // for now, the legacy env is needed for internal functions such as
-        // `useModels` to work
-        this.env = Component.env;
         useModels();
         super.setup();
         onWillDestroy(() => this._willDestroy());
@@ -30,7 +27,6 @@ export class DiscussContainer extends Component {
             this.discuss.update({
                 discussView: insertAndReplace({
                     actionId: action.id,
-                    actionManager: this.props.actionManager,
                 }),
                 initActiveId,
             });
@@ -48,7 +44,7 @@ export class DiscussContainer extends Component {
          * When executing the discuss action while it's already opened, the
          * action manager first mounts the newest DiscussContainer, then
          * unmounts the oldest one. The issue is that messaging.discussView is
-         * updated on setup but is cleared during the unmount. This leads to
+         * updated on setup but is cleared on destroy. This leads to
          * errors because there is no discussView anymore. In order to handle
          * this situation, let's keep a reference to the currentInstance so that
          * we can check we're deleting the discussView only when there is no
@@ -68,7 +64,9 @@ export class DiscussContainer extends Component {
 Object.assign(DiscussContainer, {
     props: {
         action: Object,
-        actionManager: Object,
+        actionId: { type: Number, optional: 1 },
+        className: String,
+        globalState: { type: Object, optional: 1 },
     },
     components: { Discuss: getMessagingComponent('Discuss') },
     template: 'mail.DiscussContainer',

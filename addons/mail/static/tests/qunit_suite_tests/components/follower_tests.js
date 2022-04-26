@@ -3,7 +3,7 @@
 import { makeDeferred } from '@mail/utils/deferred';
 import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
-import Bus from 'web.Bus';
+import { patchWithCleanup } from '@web/../tests/helpers/utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -21,14 +21,13 @@ QUnit.test('base rendering not editable', async function (assert) {
         res_model: 'res.partner',
     });
     const { click, createChatterContainerComponent } = await start({
-        async mockRPC(route, args) {
+        async mockRPC(route, args, performRpc) {
             if (route === '/mail/thread/data') {
                 // mimic user without write access
-                const res = await this._super(...arguments);
+                const res = await performRpc(...arguments);
                 res['hasWriteAccess'] = false;
                 return res;
             }
-            return this._super(...arguments);
         },
     });
     await createChatterContainerComponent({
@@ -124,8 +123,13 @@ QUnit.test('click on partner follower details', async function (assert) {
         res_model: 'res.partner',
     });
     const openFormDef = makeDeferred();
-    const bus = new Bus();
-    bus.on('do-action', null, ({ action }) => {
+    const { click, createChatterContainerComponent, env } = await start();
+    await createChatterContainerComponent({
+        threadId,
+        threadModel: 'res.partner',
+    });
+    patchWithCleanup(env.services.action, {
+        doAction(action) {
             assert.step('do_action');
             assert.strictEqual(
                 action.res_id,
@@ -143,11 +147,7 @@ QUnit.test('click on partner follower details', async function (assert) {
                 "The redirect action should be of type 'ir.actions.act_window'"
             );
             openFormDef.resolve();
-    });
-    const { click, createChatterContainerComponent } = await start({ env: { bus } });
-    await createChatterContainerComponent({
-        threadId,
-        threadModel: 'res.partner',
+        },
     });
     await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
@@ -185,7 +185,6 @@ QUnit.test('click on edit follower', async function (assert) {
             if (route.includes('/mail/read_subscription_data')) {
                 assert.step('fetch_subtypes');
             }
-            return this._super(...arguments);
         },
     });
     const thread = messaging.models['Thread'].create({
@@ -245,7 +244,6 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
                     res_model: 'res.partner'
                 }];
             }
-            return this._super(...arguments);
         },
     });
     await createChatterContainerComponent({

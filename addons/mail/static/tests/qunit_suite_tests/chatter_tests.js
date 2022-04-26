@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
 import { start, startServer } from '@mail/../tests/helpers/test_utils';
+import { WEBCLIENT_LOAD_ROUTES } from '@mail/../tests/helpers/webclient_setup';
 
-import FormView from 'web.FormView';
-import ListView from 'web.ListView';
 import testUtils from 'web.test_utils';
+import { patchWithCleanup } from '@web/../tests/helpers/utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('Chatter');
@@ -13,18 +13,24 @@ QUnit.test('list activity widget with no activity', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
-    await start({
-        hasView: true,
-        View: ListView,
-        model: 'res.users',
-        arch: '<list><field name="activity_ids" widget="list_activity"/></list>',
-        mockRPC: function (route) {
-            if (!['/mail/init_messaging', '/mail/load_message_failures'].includes(route)) {
+    const views = {
+        'res.users,false,list': '<list><field name="activity_ids" widget="list_activity"/></list>',
+    };
+    const { openView } = await start({
+        mockRPC: function (route, args) {
+            if (
+                args.method !== 'get_views' &&
+                !['/mail/init_messaging', '/mail/load_message_failures', ...WEBCLIENT_LOAD_ROUTES].includes(route)
+            ) {
                 assert.step(route);
             }
-            return this._super(...arguments);
         },
+        serverData: { views },
         session: { uid: pyEnv.currentUserId },
+    });
+    await openView({
+        res_model: 'res.users',
+        views: [[false, 'list']],
     });
 
     assert.containsOnce(document.body, '.o_mail_activity .o_activity_color_default');
@@ -55,18 +61,24 @@ QUnit.test('list activity widget with activities', async function (assert) {
         activity_summary: false,
         activity_type_id: mailActivityTypeId2,
     });
+    const views = {
+        'res.users,false,list': '<list><field name="activity_ids" widget="list_activity"/></list>',
+    };
 
-    await start({
-        hasView: true,
-        View: ListView,
-        model: 'res.users',
-        arch: '<list><field name="activity_ids" widget="list_activity"/></list>',
-        mockRPC: function (route) {
-            if (!['/mail/init_messaging', '/mail/load_message_failures'].includes(route)) {
+    const { openView } = await start({
+        mockRPC: function (route, args) {
+            if (
+                args.method !== 'get_views' &&
+                !['/mail/init_messaging', '/mail/load_message_failures', ...WEBCLIENT_LOAD_ROUTES].includes(route)
+            ) {
                 assert.step(route);
             }
-            return this._super(...arguments);
         },
+        serverData: { views },
+    });
+    await openView({
+        res_model: 'res.users',
+        views: [[false, 'list']],
     });
 
     const firstRow = document.querySelector('.o_data_row');
@@ -95,17 +107,23 @@ QUnit.test('list activity widget with exception', async function (assert) {
         activity_exception_icon: 'fa-warning',
     });
 
-    await start({
-        hasView: true,
-        View: ListView,
-        model: 'res.users',
-        arch: '<list><field name="activity_ids" widget="list_activity"/></list>',
-        mockRPC: function (route) {
-            if (!['/mail/init_messaging', '/mail/load_message_failures'].includes(route)) {
+    const views = {
+        'res.users,false,list': '<list><field name="activity_ids" widget="list_activity"/></list>',
+    };
+    const { openView } = await start({
+        mockRPC: function (route, args) {
+            if (
+                args.method !== 'get_views' &&
+                !['/mail/init_messaging', '/mail/load_message_failures', ...WEBCLIENT_LOAD_ROUTES].includes(route)
+            ) {
                 assert.step(route);
             }
-            return this._super(...arguments);
         },
+        serverData: { views },
+    });
+    await openView({
+        res_model: 'res.users',
+        views: [[false, 'list']],
     });
 
     assert.containsOnce(document.body, '.o_activity_color_today.text-warning.fa-warning');
@@ -146,16 +164,15 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
         activity_type_id: mailActivityTypeId2,
     });
 
-    await start({
-        hasView: true,
-        View: ListView,
-        model: 'res.users',
-        arch: `
-            <list>
-                <field name="activity_ids" widget="list_activity"/>
-            </list>`,
+    const views = {
+        'res.users,false,list': '<list><field name="activity_ids" widget="list_activity"/></list>',
+    };
+    const { env, openView } = await start({
         mockRPC: function (route, args) {
-            if (!['/mail/init_messaging', '/mail/load_message_failures'].includes(route)) {
+            if (
+                args.method !== 'get_views' &&
+                !['/mail/init_messaging', '/mail/load_message_failures', ...WEBCLIENT_LOAD_ROUTES].includes(route)
+            ) {
                 assert.step(args.method || route);
             }
             if (args.method === 'action_feedback') {
@@ -165,13 +182,20 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
                     activity_summary: 'Meet FP',
                     activity_type_id: mailActivityTypeId1,
                 });
-                return Promise.resolve();
+                // random value returned in order for the mock server to know that this route is implemented.
+                return true;
             }
-            return this._super(route, args);
         },
-        intercepts: {
-            switch_view: () => assert.step('switch_view'),
+        serverData: { views },
+    });
+    patchWithCleanup(env.services.action, {
+        switchView() {
+            assert.step('switch_view');
         },
+    });
+    await openView({
+        res_model: 'res.users',
+        views: [[false, 'list']],
     });
 
     assert.strictEqual(document.querySelector('.o_activity_summary').innerText, 'Call with Al');
@@ -236,13 +260,18 @@ QUnit.test('list activity exception widget with activity', async function (asser
         activity_exception_decoration: 'warning',
         activity_exception_icon: 'fa-warning',
     });
-    await start({
-        hasView: true,
-        View: ListView,
-        model: 'res.users',
-        arch: '<tree>' +
-                '<field name="activity_exception_decoration" widget="activity_exception"/> ' +
-            '</tree>',
+    const views = {
+        'res.users,false,list':
+            `<tree>
+                <field name="activity_exception_decoration" widget="activity_exception"/>
+            </tree>`,
+    };
+    const { openView } = await start({
+        serverData: { views },
+    });
+    await openView({
+        res_model: 'res.users',
+        views: [[false, 'list']],
     });
 
     assert.containsN(document.body, '.o_data_row', 2, "should have two records");
@@ -274,15 +303,18 @@ QUnit.test('list activity widget: done the activity with "ENTER" keyboard shortc
         activity_summary: 'Call with Al',
         activity_type_id: mailActivityTypeId1,
     });
-
-    await start({
-        hasView: true,
-        View: ListView,
-        model: 'res.users',
-        arch: `
-            <list>
+    const views = {
+        'res.users,false,list':
+            `<list>
                 <field name="activity_ids" widget="list_activity"/>
             </list>`,
+    };
+    const { openView } = await start({
+        serverData: { views },
+    });
+    await openView({
+        res_model: 'res.users',
+        views: [[false, 'list']],
     });
 
     await testUtils.dom.click(document.querySelector('.o_activity_btn span'));
@@ -322,19 +354,24 @@ QUnit.test('list activity widget: done and schedule the next activity with "ENTE
         activity_type_id: mailActivityTypeId1,
     });
 
-    await start({
-        hasView: true,
-        View: ListView,
-        model: 'res.users',
-        arch: `
-            <list>
+    const views = {
+        'res.users,false,list':
+            `<list>
                 <field name="activity_ids" widget="list_activity"/>
             </list>`,
-        intercepts: {
-            do_action: function (ev) {
-                assert.strictEqual(ev.data.action.name, "Schedule an Activity", 'should do a do_action with correct parameters');
-            },
-        },
+    };
+    const { env, openView } = await start({
+        serverData: { views },
+    });
+    await openView({
+        res_model: 'res.users',
+        views: [[false, 'list']],
+    });
+    patchWithCleanup(env.services.action, {
+        doAction(action) {
+            assert.strictEqual(action.name, "Schedule an Activity", 'should do a do_action with correct parameters');
+            return this._super(...arguments);
+        }
     });
 
     await testUtils.dom.click(document.querySelector('.o_activity_btn span'));
@@ -359,32 +396,35 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
     const mailMessageId1 = pyEnv['mail.message'].create({
         partner_ids: [resPartnerId1],
     });
-
-    await start({
-        hasView: true,
-        View: FormView,
-        model: 'mail.message',
-        res_id: mailMessageId1,
-        arch: '<form string="Partners">' +
+    const views = {
+        'mail.message,false,form':
+            '<form string="Partners">' +
                 '<sheet>' +
                     '<field name="body"/>' +
                     '<field name="partner_ids" widget="many2many_tags_email"/>' +
                 '</sheet>' +
             '</form>',
-        viewOptions: {
-            mode: 'edit',
-        },
+        'res.partner,false,form': '<form string="Types"><field name="name"/><field name="email"/></form>',
+    };
+    var { openView } = await start({
+        serverData: { views },
         mockRPC: function (route, args) {
             if (args.method === 'read' && args.model === 'res.partner') {
                 assert.step(JSON.stringify(args.args[0]));
                 assert.ok(args.args[1].includes('email'), "should read the email");
             }
-            return this._super.apply(this, arguments);
-        },
-        archs: {
-            'res.partner,false,form': '<form string="Types"><field name="name"/><field name="email"/></form>',
         },
     });
+    await openView(
+        {
+            res_id: mailMessageId1,
+            res_model: 'mail.message',
+            views: [[false, 'form']],
+        },
+        {
+            mode: 'edit',
+        },
+    );
 
     assert.verifySteps([`[${resPartnerId1}]`]);
     assert.containsOnce(document.body, '.o_field_many2manytags[name="partner_ids"] .badge.o_tag_color_0',
@@ -428,13 +468,16 @@ QUnit.test('many2many_tags_email widget can load more than 40 records', async fu
     const mailMessageId1 = pyEnv['mail.message'].create({
         partner_ids: messagePartnerIds,
     });
-
-    const { click } = await start({
-        hasView: true,
-        View: FormView,
-        model: 'mail.message',
-        arch: '<form><field name="partner_ids" widget="many2many_tags"/></form>',
+    const views = {
+        'mail.message,false,form': '<form><field name="partner_ids" widget="many2many_tags"/></form>',
+    };
+    var { click, openView } = await start({
+        serverData: { views },
+    });
+    await openView({
         res_id: mailMessageId1,
+        res_model: 'mail.message',
+        views: [[false, 'form']],
     });
 
     assert.strictEqual(document.querySelectorAll('.o_field_widget[name="partner_ids"] .badge').length, 100);

@@ -194,6 +194,11 @@ export async function addLegacyMockEnvironment(env, legacyParams = {}) {
     const legacyActionManagerService = makeLegacyActionManagerService(legacyEnv);
     serviceRegistry.add("legacy_action_manager", legacyActionManagerService);
     serviceRegistry.add("legacy_notification", makeLegacyNotificationService(legacyEnv));
+    // deploy the legacyServices given in parameter in WowlEnv
+    const { legacyServicesToDeployInWowlEnv } = legacyParams;
+    for (const legacyServiceName in legacyServicesToDeployInWowlEnv) {
+        serviceRegistry.add(legacyServiceName, legacyServicesToDeployInWowlEnv[legacyServiceName]);
+    }
     // patch DebouncedField delay
     const debouncedField = basicFields.DebouncedField;
     const initialDebouncedVal = debouncedField.prototype.DEBOUNCE;

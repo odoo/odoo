@@ -9,7 +9,7 @@ import {
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
-import Bus from 'web.Bus';
+import { patchWithCleanup } from '@web/../tests/helpers/utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -188,8 +188,9 @@ QUnit.test('Notification Error', async function (assert) {
         res_partner_id: resPartnerId1,
     });
     const openResendActionDef = makeDeferred();
-    const bus = new Bus();
-    bus.on('do-action', null, ({ action, options }) => {
+    const { createThreadViewComponent, env, messaging } = await start();
+    patchWithCleanup(env.services.action, {
+        doAction(action, options) {
             assert.step('do_action');
             assert.strictEqual(
                 action,
@@ -202,8 +203,8 @@ QUnit.test('Notification Error', async function (assert) {
                 "action should have correct message id"
             );
             openResendActionDef.resolve();
+        },
     });
-    const { createThreadViewComponent, messaging } = await start({ env: { bus } });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -744,8 +745,9 @@ QUnit.test('subtype description should not be displayed if it is similar to body
 QUnit.test('data-oe-id & data-oe-model link redirection on click', async function (assert) {
     assert.expect(7);
 
-    const bus = new Bus();
-    bus.on('do-action', null, ({ action }) => {
+    const { createMessageComponent, env, messaging } = await start();
+    patchWithCleanup(env.services.action, {
+        doAction(action) {
             assert.strictEqual(
                 action.type,
                 'ir.actions.act_window',
@@ -762,8 +764,8 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
                 "action should open view on 250"
             );
             assert.step('do-action:openFormView_some.model_250');
+        },
     });
-    const { createMessageComponent, messaging } = await start({ env: { bus } });
     const message = messaging.models['Message'].create({
         body: `<p><a href="#" data-oe-id="250" data-oe-model="some.model">some.model_250</a></p>`,
         id: 100,
@@ -961,7 +963,11 @@ QUnit.test('message should not be considered as "clicked" after clicking on noti
         notification_status: 'exception',
         notification_type: 'email',
     });
-    const { createThreadViewComponent, messaging } = await start();
+    const { createThreadViewComponent, env, messaging } = await start();
+    patchWithCleanup(env.services.action, {
+        // intercept the action: this action is not relevant in the context of this test.
+        doAction() {},
+    });
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),

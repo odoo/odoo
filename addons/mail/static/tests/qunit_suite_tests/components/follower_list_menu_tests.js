@@ -1,55 +1,23 @@
 /** @odoo-module **/
 
-import { makeDeferred } from '@mail/utils/deferred';
 import {
-    afterNextRender,
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 import { nextTick } from 'web.test_utils';
-import FormView from 'web.FormView';
-import Bus from 'web.Bus';
+import { patchWithCleanup } from '@web/../tests/helpers/utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('follower_list_menu_tests.js', {
-    async beforeEach() {
-        // FIXME archs could be removed once task-2248306 is done
-        // The mockServer will try to get the list view
-        // of every relational fields present in the main view.
-        // In the case of mail fields, we don't really need them,
-        // but they still need to be defined.
-        this.createView = async (viewParams, ...args) => {
-            const startResult = makeDeferred();
-            await afterNextRender(async () => {
-                const viewArgs = Object.assign(
-                    {
-                        archs: {
-                            'mail.activity,false,list': '<tree/>',
-                            'mail.followers,false,list': '<tree/>',
-                            'mail.message,false,list': '<tree/>',
-                        },
-                    },
-                    viewParams,
-                );
-                startResult.resolve(await start(viewArgs, ...args));
-            });
-            return startResult;
-        };
-    },
-});
+QUnit.module('follower_list_menu_tests.js');
 
 QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(5);
 
-    await this.createView({
-        hasView: true,
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        arch: `
-            <form string="Partners">
+    const views = {
+        'res.partner,false,form':
+            `<form string="Partners">
                 <sheet>
                     <field name="name"/>
                 </sheet>
@@ -57,12 +25,18 @@ QUnit.test('base rendering not editable', async function (assert) {
                     <field name="message_follower_ids"/>
                     <field name="message_ids"/>
                 </div>
-            </form>
-        `,
-        viewOptions: {
-            mode: 'edit',
-        },
+            </form>`,
+    };
+    const { openView } = await start({
+        serverData: { views },
     });
+    await openView(
+        {
+            res_model: 'res.partner',
+            views: [[false, 'form']],
+        },
+        { mode: 'edit' },
+    );
     assert.containsOnce(
         document.body,
         '.o_FollowerListMenu',
@@ -99,14 +73,13 @@ QUnit.test('base rendering editable', async function (assert) {
     const resPartnerId1 = pyEnv['res.partner'].create();
 
     const { click, createChatterContainerComponent } = await start({
-        async mockRPC(route, args) {
+        async mockRPC(route, args, performRPC) {
             if (route === '/mail/thread/data') {
                 // mimic user with write access
-                const res = await this._super(...arguments);
+                const res = await performRPC(route, args);
                 res['hasWriteAccess'] = true;
                 return res;
             }
-            return this._super(...arguments);
         },
     });
     await createChatterContainerComponent({
@@ -159,8 +132,19 @@ QUnit.test('click on "add followers" button', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const bus = new Bus();
-    bus.on('do-action', null, ({ action, options }) => {
+
+    const { click, createChatterContainerComponent, env } = await start({
+        async mockRPC(route, args, performRPC) {
+            if (route === '/mail/thread/data') {
+                // mimic user with write access
+                const res = await performRPC(route, args);
+                res['hasWriteAccess'] = true;
+                return res;
+            }
+        },
+    });
+    patchWithCleanup(env.services.action, {
+        doAction(action, options) {
             assert.step('action:open_view');
             assert.strictEqual(
                 action.context.default_res_model,
@@ -190,19 +174,7 @@ QUnit.test('click on "add followers" button', async function (assert) {
                 res_id: resPartnerId1,
                 res_model: 'res.partner',
             });
-            options.on_close();
-    });
-
-    const { click, createChatterContainerComponent } = await start({
-        env: { bus },
-        async mockRPC(route, args) {
-            if (route === '/mail/thread/data') {
-                // mimic user with write access
-                const res = await this._super(...arguments);
-                res['hasWriteAccess'] = true;
-                return res;
-            }
-            return this._super(...arguments);
+            options.onClose();
         },
     });
     await createChatterContainerComponent({
@@ -284,10 +256,10 @@ QUnit.test('click on remove follower', async function (assert) {
         res_model: 'res.partner',
     });
     const { click, createChatterContainerComponent } = await start({
-        async mockRPC(route, args) {
+        async mockRPC(route, args, performRPC) {
             if (route === '/mail/thread/data') {
                 // mimic user with write access
-                const res = await this._super(...arguments);
+                const res = await performRPC(route, args);
                 res['hasWriteAccess'] = true;
                 return res;
             }
@@ -299,7 +271,6 @@ QUnit.test('click on remove follower', async function (assert) {
                     "message_unsubscribe should be called with right argument"
                 );
             }
-            return this._super(...arguments);
         },
     });
     await createChatterContainerComponent({
@@ -353,14 +324,13 @@ QUnit.test('Hide "Add follower" and subtypes edition/removal buttons except own 
         },
     ]);
     const { click, createChatterContainerComponent } = await start({
-        async mockRPC(route, args) {
+        async mockRPC(route, args, performRPC) {
             if (route === '/mail/thread/data') {
                 // mimic user with no write access
-                const res = await this._super(...arguments);
+                const res = await performRPC(route, args);
                 res['hasWriteAccess'] = false;
                 return res;
             }
-            return this._super(...arguments);
         },
     });
     await createChatterContainerComponent({
@@ -419,14 +389,13 @@ QUnit.test('Show "Add follower" and subtypes edition/removal buttons on all foll
         },
     ]);
     const { click, createChatterContainerComponent } = await start({
-        async mockRPC(route, args) {
+        async mockRPC(route, args, performRPC) {
             if (route === '/mail/thread/data') {
                 // mimic user with write access
-                const res = await this._super(...arguments);
+                const res = await performRPC(...arguments);
                 res['hasWriteAccess'] = true;
                 return res;
             }
-            return this._super(...arguments);
         },
     });
     await createChatterContainerComponent({
@@ -470,14 +439,13 @@ QUnit.test('Show "No Followers" dropdown-item if there are no followers and user
 
     const resPartnerId1 = pyEnv['res.partner'].create();
     const { click, createChatterContainerComponent } = await start({
-        async mockRPC(route, args) {
+        async mockRPC(route, args, performRPC) {
             if (route === '/mail/thread/data') {
                 // mimic user without write access
-                const res = await this._super(...arguments);
+                const res = await performRPC(route, args);
                 res['hasWriteAccess'] = false;
                 return res;
             }
-            return this._super(...arguments);
         },
     });
     await createChatterContainerComponent({

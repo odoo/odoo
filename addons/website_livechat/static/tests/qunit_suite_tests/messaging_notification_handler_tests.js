@@ -5,9 +5,10 @@ import {
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
+import { ViewAdapter } from '@web/legacy/action_adapters';
+import { patchWithCleanup } from '@web/../tests/helpers/utils';
 
 import FormView from 'web.FormView';
-import { mock } from 'web.test_utils';
 
 QUnit.module('website_livechat', {}, function () {
 QUnit.module('messaging_notification_handler_tests.js');
@@ -19,31 +20,38 @@ QUnit.test('should open chat window on send chat request to website visitor', as
     const websiteVisitorId1 = pyEnv['website.visitor'].create({
         display_name: "Visitor #11",
     });
-    const { env, widget } = await start({
-        hasView: true,
-        // View params
-        View: FormView,
-        model: 'website.visitor',
-        arch: `
-            <form>
+    const views = {
+        'website.visitor,false,form':
+            `<form>
                 <header>
                     <button name="action_send_chat_request" string="Send chat request" class="btn btn-primary" type="button"/>
                 </header>
                 <field name="name"/>
-            </form>
-        `,
-        res_id: websiteVisitorId1,
+            </form>`,
+    };
+    const { openView } = await start({
+        serverData: { views },
+        View: FormView,
     });
-    mock.intercept(widget, 'execute_action', payload => {
-        env.services.rpc({
-            route: '/web/dataset/call_button',
-            params: {
-                args: [payload.data.env.resIDs],
-                kwargs: { context: payload.data.env.context },
-                method: payload.data.action_data.name,
-                model: payload.data.env.model,
+    await openView({
+        res_model: 'website.visitor',
+        res_id: websiteVisitorId1,
+        views: [[false, 'form']],
+    });
+    patchWithCleanup(ViewAdapter.prototype, {
+        _trigger_up: async function({ name, data }) {
+            if (name === 'execute_action') {
+                this.env.services.rpc({
+                    route: '/web/dataset/call_button',
+                    params: {
+                        args: [data.env.resIDs],
+                        kwargs: { context: data.env.context },
+                        method: data.action_data.name,
+                        model: data.env.model,
+                    }
+                });
             }
-        });
+        },
     });
 
     await afterNextRender(() =>

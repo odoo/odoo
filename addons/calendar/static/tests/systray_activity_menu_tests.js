@@ -33,9 +33,7 @@ QUnit.test('activity menu widget:today meetings', async function (assert) {
     ]);
     legacySystrayItems.push(ActivityMenu);
     registerCleanup(() => legacySystrayItems.pop());
-    const { wowlEnv: env } = await start({
-        hasWebClient: true,
-    });
+    const { env } = await start();
     assert.containsOnce(document.body, '.o_mail_systray_item', 'should contain an instance of widget');
 
     await testUtils.dom.click(document.querySelector('.dropdown-toggle[title="Activities"]'));

@@ -2,9 +2,19 @@
 
 import '@im_livechat/../tests/helpers/mock_server'; // ensure mail overrides are applied first
 
-import MockServer from 'web.MockServer';
+import { patch } from "@web/core/utils/patch";
+import { MockServer } from "@web/../tests/helpers/mock_server";
 
-MockServer.include({
+patch(MockServer.prototype, 'website_livechat', {
+    /**
+     * @override
+     */
+     async _performRPC(route, args) {
+        if (route === '/web/dataset/call_button') {
+            return this._mockCallButton(args);
+        }
+        return this._super(route, args);
+    },
     /**
      * Simulate a 'call_button' operation from a view.
      *

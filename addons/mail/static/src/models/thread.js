@@ -1716,18 +1716,18 @@ registerModel({
                     default_res_id: this.id,
                 },
             };
-            this.env.bus.trigger('do-action', {
+            this.env.services.action.doAction(
                 action,
-                options: {
-                    on_close: async () => {
+                {
+                    onClose: async () => {
                         if (!this.exists()) {
                             return;
-                        } 
+                        }
                         await this.fetchData(['followers']);
                         this.env.bus.trigger('Thread:promptAddFollower-closed');
                     },
-                },
-            });
+                }
+            );
         },
         /**
          * @private

@@ -7,7 +7,7 @@ import {
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
-import Bus from 'web.Bus';
+import { patchWithCleanup } from '@web/../tests/helpers/utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -348,7 +348,6 @@ QUnit.test('"reply to" composer should log note if message replied to is a note'
                     "should set subtype_xmlid as 'note'"
                 );
             }
-            return this._super(...arguments);
         },
         waitUntilEvent: {
             eventName: 'o-thread-view-hint-processed',
@@ -415,7 +414,6 @@ QUnit.test('"reply to" composer should send message if message replied to is not
                     "should set subtype_xmlid as 'comment'"
                 );
             }
-            return this._super(...arguments);
         },
         waitUntilEvent: {
             eventName: 'o-thread-view-hint-processed',
@@ -601,8 +599,21 @@ QUnit.test('click on (non-channel/non-partner) origin thread link should redirec
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const bus = new Bus();
-    bus.on('do-action', null, ({ action }) => {
+    const { env } = await this.start({
+        waitUntilEvent: {
+            eventName: 'o-thread-view-hint-processed',
+            message: "should wait until inbox displayed its messages",
+            predicate: ({ hint, threadViewer }) => {
+                return (
+                    hint.type === 'messages-loaded' &&
+                    threadViewer.thread.model === 'mail.box' &&
+                    threadViewer.thread.id === 'inbox'
+                );
+            },
+        },
+    });
+    patchWithCleanup(env.services.action, {
+        doAction(action) {
             // Callback of doing an action (action manager).
             // Expected to be called on click on origin thread link,
             // which redirects to form view of record related to origin thread
@@ -627,21 +638,7 @@ QUnit.test('click on (non-channel/non-partner) origin thread link should redirec
                 resFakeId1,
                 "action should open view with id of resFake1 (id of message origin thread)"
             );
-    });
-    await this.start({
-        env: {
-            bus,
-        },
-        waitUntilEvent: {
-            eventName: 'o-thread-view-hint-processed',
-            message: "should wait until inbox displayed its messages",
-            predicate: ({ hint, threadViewer }) => {
-                return (
-                    hint.type === 'messages-loaded' &&
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox'
-                );
-            },
+            return Promise.resolve();
         },
     });
     assert.containsOnce(

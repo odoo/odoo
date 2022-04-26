@@ -10,14 +10,14 @@ patchRecordMethods('Message', {
      */
     openResendAction() {
         if (this.message_type === 'sms') {
-            this.env.bus.trigger('do-action', {
-                action: 'sms.sms_resend_action',
-                options: {
+            this.env.services.action.doAction(
+                'sms.sms_resend_action',
+                {
                     additional_context: {
                         default_mail_message_id: this.id,
                     },
                 },
-            });
+            );
         } else {
             this._super(...arguments);
         }

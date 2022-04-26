@@ -10,7 +10,9 @@ import {
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
-import Bus from 'web.Bus';
+import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
+import { destroy } from '@web/../tests/helpers/utils';
+
 import { makeTestPromise, file } from 'web.test_utils';
 
 const { createFile, inputFiles } = file;
@@ -59,9 +61,9 @@ QUnit.test('discuss should be marked as opened if the component is already rende
 QUnit.test('discuss should be marked as closed when the component is unmounted', async function (assert) {
     assert.expect(1);
 
-    const { messaging, widget } = await this.start();
+    const { messaging, webClient } = await this.start();
 
-    await afterNextRender(() => widget.destroy());
+    await afterNextRender(() => destroy(webClient));
     assert.notOk(
         messaging.discuss.discussView,
         "discuss should be marked as closed when the component is unmounted"
@@ -73,11 +75,9 @@ QUnit.test('messaging not initialized', async function (assert) {
 
     await this.start({
         async mockRPC(route) {
-            const _super = this._super.bind(this, ...arguments); // limitation of class.js
             if (route === '/mail/init_messaging') {
                 await makeTestPromise(); // simulate messaging never initialized
             }
-            return _super();
         },
         waitUntilMessagingCondition: 'created',
     });
@@ -95,11 +95,9 @@ QUnit.test('messaging becomes initialized', async function (assert) {
 
     await this.start({
         async mockRPC(route) {
-            const _super = this._super.bind(this, ...arguments); // limitation of class.js
             if (route === '/mail/init_messaging') {
                 await messagingInitializedProm;
             }
-            return _super();
         },
         waitUntilMessagingCondition: 'created',
     });
@@ -1022,7 +1020,6 @@ QUnit.test('initially load messages from inbox', async function (assert) {
                     "should fetch up to 30 messages"
                 );
             }
-            return this._super(...arguments);
         },
     });
     assert.verifySteps(['/mail/channel/messages']);
@@ -1093,7 +1090,6 @@ QUnit.test('load single message from channel initially', async function (assert)
                     "should fetch up to 30 messages"
                 );
             }
-            return this._super(...arguments);
         },
     });
     assert.strictEqual(
@@ -1506,7 +1502,6 @@ QUnit.test('load all messages from channel initially, less than fetch limit (29 
             if (route === '/mail/channel/messages') {
                 assert.strictEqual(args.limit, 30, "should fetch up to 30 messages");
             }
-            return this._super(...arguments);
         },
     });
     assert.strictEqual(
@@ -2442,7 +2437,6 @@ QUnit.test('toggle_star message', async function (assert) {
                     "should have message Id in args"
                 );
             }
-            return this._super(...arguments);
         },
     });
     assert.strictEqual(
@@ -2654,7 +2648,6 @@ QUnit.test('post a simple message', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    let postedMessageId;
     const { click, insertText, messaging } = await this.start({
         discuss: {
             params: {
@@ -2662,7 +2655,6 @@ QUnit.test('post a simple message', async function (assert) {
             },
         },
         async mockRPC(route, args) {
-            const res = await this._super(...arguments);
             if (route === '/mail/message/post') {
                 assert.step('message_post');
                 assert.strictEqual(
@@ -2690,9 +2682,7 @@ QUnit.test('post a simple message', async function (assert) {
                     "mail.mt_comment",
                     "should set subtype_xmlid as 'comment'"
                 );
-                postedMessageId = res.id;
             }
-            return res;
         },
     });
     assert.strictEqual(
@@ -2731,6 +2721,7 @@ QUnit.test('post a simple message', async function (assert) {
         1,
         "should display a message after posting message"
     );
+    const [postedMessageId] = pyEnv['mail.message'].search([], { order: 'id DESC' });
     const message = document.querySelector(`.o_Message`);
     assert.strictEqual(
         message.dataset.messageLocalId,
@@ -3127,22 +3118,19 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
                     "should set message type as 'comment'"
                 );
             }
-            return this._super(...arguments);
         },
         services: {
-            notification: {
-                notify(notification) {
-                    assert.ok(
-                        true,
-                        "should display a notification after posting reply"
-                    );
-                    assert.strictEqual(
-                        notification.message,
-                        "Message posted on \"Refactoring\"",
-                        "notification should tell that message has been posted to the record 'Refactoring'"
-                    );
-                }
-            }
+            notification: makeFakeNotificationService(notification => {
+                assert.ok(
+                    true,
+                    "should display a notification after posting reply"
+                );
+                assert.strictEqual(
+                    notification,
+                    "Message posted on \"Refactoring\"",
+                    "notification should tell that message has been posted to the record 'Refactoring'"
+                );
+            }),
         },
     });
     assert.strictEqual(
@@ -3531,15 +3519,8 @@ QUnit.test('receive new chat message: out of odoo focus (notification, channel)'
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({ channel_type: 'chat' });
-    const bus = new Bus();
-    bus.on('set_title_part', null, payload => {
-        assert.step('set_title_part');
-        assert.strictEqual(payload.part, '_chat');
-        assert.strictEqual(payload.title, "1 Message");
-    });
-    await this.start({
-        env: { bus },
-        services: {
+    const { env } = await this.start({
+        legacyServices: {
             bus_service: BusService.extend({
                 _beep() {}, // Do nothing
                 _poll() {}, // Do nothing
@@ -3548,6 +3529,11 @@ QUnit.test('receive new chat message: out of odoo focus (notification, channel)'
                 updateOption() {},
             }),
         },
+    });
+    env.bus.on('set_title_part', null, payload => {
+        assert.step('set_title_part');
+        assert.strictEqual(payload.part, '_chat');
+        assert.strictEqual(payload.title, "1 Message");
     });
 
     const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
@@ -3570,15 +3556,8 @@ QUnit.test('receive new chat message: out of odoo focus (notification, chat)', a
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({ channel_type: "chat" });
-    const bus = new Bus();
-    bus.on('set_title_part', null, payload => {
-        assert.step('set_title_part');
-        assert.strictEqual(payload.part, '_chat');
-        assert.strictEqual(payload.title, "1 Message");
-    });
-    await this.start({
-        env: { bus },
-        services: {
+    const { env } = await this.start({
+        legacyServices: {
             bus_service: BusService.extend({
                 _beep() {}, // Do nothing
                 _poll() {}, // Do nothing
@@ -3587,6 +3566,11 @@ QUnit.test('receive new chat message: out of odoo focus (notification, chat)', a
                 updateOption() {},
             }),
         },
+    });
+    env.bus.on('set_title_part', null, payload => {
+        assert.step('set_title_part');
+        assert.strictEqual(payload.part, '_chat');
+        assert.strictEqual(payload.title, "1 Message");
     });
 
     const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
@@ -3613,8 +3597,18 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
         { channel_type: 'chat', public: 'private' },
         { channel_type: 'chat', public: 'private' },
     ]);
-    const bus = new Bus();
-    bus.on('set_title_part', null, payload => {
+    const { env } = await this.start({
+        legacyServices: {
+            bus_service: BusService.extend({
+                _beep() {}, // Do nothing
+                _poll() {}, // Do nothing
+                _registerWindowUnload() {}, // Do nothing
+                isOdooFocused: () => false,
+                updateOption() {},
+            }),
+        },
+    });
+    env.bus.on('set_title_part', null, payload => {
         step++;
         assert.step('set_title_part');
         assert.strictEqual(payload.part, '_chat');
@@ -3627,18 +3621,6 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
         if (step === 3) {
             assert.strictEqual(payload.title, "3 Messages");
         }
-    });
-    await this.start({
-        env: { bus },
-        services: {
-            bus_service: BusService.extend({
-                _beep() {}, // Do nothing
-                _poll() {}, // Do nothing
-                _registerWindowUnload() {}, // Do nothing
-                isOdooFocused: () => false,
-                updateOption() {},
-            }),
-        },
     });
 
     const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
@@ -3885,30 +3867,26 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
                 active_id: `mail.channel_${mailChannelId1}`,
             },
         },
-        async mockFetch(resource, init) {
-            const res = this._super(...arguments);
-            if (resource === '/mail/attachment/upload') {
+        async mockRPC(route) {
+            if (route === '/mail/attachment/upload') {
                 // simulates attachment is never finished uploading
                 await new Promise(() => {});
             }
-            return res;
         },
         services: {
-            notification: {
-                notify(params) {
-                    assert.strictEqual(
-                        params.message,
-                        "Please wait while the file is uploading.",
-                        "notification content should be about the uploading file"
-                    );
-                    assert.strictEqual(
-                        params.type,
-                        'warning',
-                        "notification should be a warning"
-                    );
-                    assert.step('notification');
-                }
-            }
+            notification: makeFakeNotificationService((message, options) => {
+                assert.strictEqual(
+                    message,
+                    "Please wait while the file is uploading.",
+                    "notification content should be about the uploading file"
+                );
+                assert.strictEqual(
+                    options.type,
+                    'warning',
+                    "notification should be a warning"
+                );
+                assert.step('notification');
+            }),
         },
     });
     const file = await createFile({
@@ -3963,7 +3941,6 @@ QUnit.test('send message only once when enter is pressed twice quickly', async f
             if (route === '/mail/message/post') {
                 assert.step('message_post');
             }
-            return this._super(...arguments);
         },
     });
     // Type message

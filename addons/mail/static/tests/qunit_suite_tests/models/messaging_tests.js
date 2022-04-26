@@ -2,6 +2,8 @@
 
 import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
+import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
+
 QUnit.module('mail', {}, function () {
 QUnit.module('models', {}, function () {
 QUnit.module('messaging_tests.js', {}, function () {
@@ -13,19 +15,17 @@ QUnit.test('openChat: display notification for partner without user', async func
     const resPartnerId1 = pyEnv['res.partner'].create();
     const { messaging } = await start({
         services: {
-            notification: {
-                notify(notification) {
-                    assert.ok(
-                        true,
-                        "should display a toast notification after failing to open chat"
-                    );
-                    assert.strictEqual(
-                        notification.message,
-                        "You can only chat with partners that have a dedicated user.",
-                        "should display the correct information in the notification"
-                    );
-                },
-            },
+            notification: makeFakeNotificationService(message => {
+                assert.ok(
+                    true,
+                    "should display a toast notification after failing to open chat"
+                );
+                assert.strictEqual(
+                    message,
+                    "You can only chat with partners that have a dedicated user.",
+                    "should display the correct information in the notification"
+                );
+            }),
         },
     });
 
@@ -39,19 +39,17 @@ QUnit.test('openChat: display notification for wrong user', async function (asse
     pyEnv['res.users'].create();
     const { messaging } = await start({
         services: {
-            notification: {
-                notify(notification) {
-                    assert.ok(
-                        true,
-                        "should display a toast notification after failing to open chat"
-                    );
-                    assert.strictEqual(
-                        notification.message,
-                        "You can only chat with existing users.",
-                        "should display the correct information in the notification"
-                    );
-                },
-            },
+            notification: makeFakeNotificationService(message => {
+                assert.ok(
+                    true,
+                    "should display a toast notification after failing to open chat"
+                );
+                assert.strictEqual(
+                    message,
+                    "You can only chat with existing users.",
+                    "should display the correct information in the notification"
+                );
+            }),
         },
     });
 

@@ -40,7 +40,6 @@ QUnit.test('activity menu widget: menu with no records', async function (assert)
     legacySystrayItems.push(ActivityMenu);
     registerCleanup(() => legacySystrayItems.pop());
     await start({
-        hasWebClient: true,
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {
                 return Promise.resolve([]);
@@ -56,9 +55,7 @@ QUnit.test('activity menu widget: activity menu with 2 models', async function (
 
     legacySystrayItems.push(ActivityMenu);
     registerCleanup(() => legacySystrayItems.pop());
-    const { wowlEnv: env } = await start({
-        hasWebClient: true,
-    });
+    const { env } = await start();
 
     await testUtils.nextTick();
     assert.containsOnce(document.body, '.o_mail_systray_item', 'should contain an instance of widget');
@@ -113,9 +110,7 @@ QUnit.test('activity menu widget: activity view icon', async function (assert) {
     patchWithCleanup(session, { uid: 10 });
     legacySystrayItems.push(ActivityMenu);
     registerCleanup(() => legacySystrayItems.pop());
-    const { wowlEnv: env } = await start({
-        hasWebClient: true,
-    });
+    const { env } = await start();
     await testUtils.nextTick();
     assert.containsN(document.body, '.o_mail_activity_action', 2,
                        "widget should have 2 activity view icons");
@@ -167,9 +162,7 @@ QUnit.test('activity menu widget: close on messaging menu click', async function
 
     legacySystrayItems.push(ActivityMenu);
     registerCleanup(() => legacySystrayItems.pop());
-    const { click, createMessagingMenuComponent } = await start({
-        hasWebClient: true,
-    });
+    const { click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
     await testUtils.nextTick();
 
