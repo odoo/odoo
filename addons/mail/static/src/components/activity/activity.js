@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import Popover from "web.Popover";
@@ -14,6 +15,7 @@ export class Activity extends LegacyComponent {
      setup() {
         super.setup();
         useComponentToModel({ fieldName: 'component', modelName: 'ActivityView' });
+        useRefToModel({ fieldName: 'markDoneButtonRef', modelName: 'ActivityView', refName: 'markDoneButton', });
     }
 
     /**

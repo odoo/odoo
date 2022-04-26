@@ -2,6 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 import { sprintf } from '@web/core/utils/strings';
@@ -158,6 +159,16 @@ registerModel({
                 },
             );
         },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeRtcVideoView() {
+            if (this.rtcSession && this.rtcSession.videoStream) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
     },
     fields: {
         /**
@@ -249,6 +260,11 @@ registerModel({
          * If set, this card represents a rtcSession.
          */
         rtcSession: one('RtcSession'),
+        rtcVideoView: one('RtcVideoView', {
+            compute: '_computeRtcVideoView',
+            inverse: 'rtcCallParticipantCardOwner',
+            isCausal: true,
+        }),
         volumeMenuAnchorRef: attr(),
     },
 });
