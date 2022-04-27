@@ -111,7 +111,7 @@ QUnit.test('attachment loading is delayed', async function (assert) {
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    const { createChatterContainerComponent, env } = await start({
+    const { advanceTime, createChatterContainerComponent } = await start({
         hasTimeControl: true,
         loadingBaseDelayDuration: 100,
         async mockRPC(route) {
@@ -142,7 +142,7 @@ QUnit.test('attachment loading is delayed', async function (assert) {
         "attachments button should not have a loader yet"
     );
 
-    await afterNextRender(async () => env.testUtils.advanceTime(100));
+    await afterNextRender(async () => advanceTime(100));
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatterTopbar_buttonAttachmentsCountLoader`).length,
         1,
