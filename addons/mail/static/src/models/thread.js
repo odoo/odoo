@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { clear, insert, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 import throttle from '@mail/utils/throttle';
 import Timer from '@mail/utils/timer';
@@ -217,7 +217,7 @@ registerModel({
             if ('members' in data) {
                 // The list syntax is kept here because it is used in livechat override
                 if (!data.members) {
-                    data2.members = [unlinkAll()];
+                    data2.members = [clear()];
                 } else {
                     data2.members = [insertAndReplace(data.members.map(memberData =>
                         this.messaging.models['Partner'].convertData(memberData)
@@ -232,14 +232,14 @@ registerModel({
             }
             if ('seen_partners_info' in data) {
                 if (!data.seen_partners_info) {
-                    data2.partnerSeenInfos = unlinkAll();
+                    data2.partnerSeenInfos = clear();
                 } else {
                     data2.partnerSeenInfos = insertAndReplace(
                         data.seen_partners_info.map(
                             ({ fetched_message_id, partner_id, seen_message_id }) => {
                                 return {
-                                    lastFetchedMessage: fetched_message_id ? insert({ id: fetched_message_id }) : unlinkAll(),
-                                    lastSeenMessage: seen_message_id ? insert({ id: seen_message_id }) : unlinkAll(),
+                                    lastFetchedMessage: fetched_message_id ? insert({ id: fetched_message_id }) : clear(),
+                                    lastSeenMessage: seen_message_id ? insert({ id: seen_message_id }) : clear(),
                                     partner: insertAndReplace({ id: partner_id }),
                             };
                         })
@@ -584,8 +584,8 @@ registerModel({
                 this.messaging.soundEffects.channelLeave.play();
             }
             this.update({
-                rtc: unlink(),
-                rtcInvitingSession: unlink(),
+                rtc: clear(),
+                rtcInvitingSession: clear(),
             });
         },
         /**
@@ -655,7 +655,7 @@ registerModel({
                         id: getSuggestedRecipientInfoNextTemporaryId(),
                         name,
                         lang,
-                        partner: partner_id ? insert({ id: partner_id }) : unlink(),
+                        partner: partner_id ? insert({ id: partner_id }) : clear(),
                         reason,
                     };
                 });
@@ -734,8 +734,8 @@ registerModel({
                 return;
             }
             this.update({
-                rtc: link(this.messaging.rtc),
-                rtcInvitingSession: unlink(),
+                rtc: replace(this.messaging.rtc),
+                rtcInvitingSession: clear(),
                 rtcSessions,
                 invitedGuests,
                 invitedPartners,
@@ -1159,20 +1159,20 @@ registerModel({
          */
         _computeCorrespondent() {
             if (this.channel_type === 'channel') {
-                return unlink();
+                return clear();
             }
             const correspondents = this.members.filter(partner =>
                 partner !== this.messaging.currentPartner
             );
             if (correspondents.length === 1) {
                 // 2 members chat
-                return link(correspondents[0]);
+                return replace(correspondents[0]);
             }
             if (this.members.length === 1) {
                 // chat with oneself
-                return link(this.members[0]);
+                return replace(this.members[0]);
             }
-            return unlink();
+            return clear();
         },
         /**
          * @private
@@ -1347,7 +1347,7 @@ registerModel({
                 this.partnerSeenInfos.filter(partnerSeenInfo =>
                     partnerSeenInfo.partner !== this.messaging.currentPartner);
             if (otherPartnerSeenInfos.length === 0) {
-                return unlinkAll();
+                return clear();
             }
 
             const otherPartnersLastSeenMessageIds =
@@ -1355,7 +1355,7 @@ registerModel({
                     partnerSeenInfo.lastSeenMessage ? partnerSeenInfo.lastSeenMessage.id : 0
                 );
             if (otherPartnersLastSeenMessageIds.length === 0) {
-                return unlinkAll();
+                return clear();
             }
             const lastMessageSeenByAllId = Math.min(
                 ...otherPartnersLastSeenMessageIds
@@ -1369,9 +1369,9 @@ registerModel({
                 !currentPartnerOrderedSeenMessages ||
                 currentPartnerOrderedSeenMessages.length === 0
             ) {
-                return unlinkAll();
+                return clear();
             }
-            return link(currentPartnerOrderedSeenMessages.slice().pop());
+            return replace(currentPartnerOrderedSeenMessages.slice().pop());
         },
         /**
          * @private
@@ -1383,9 +1383,9 @@ registerModel({
                 [l - 1]: lastMessage,
             } = this.orderedMessages;
             if (lastMessage) {
-                return link(lastMessage);
+                return replace(lastMessage);
             }
-            return unlink();
+            return clear();
         },
         /**
          * @private
@@ -1397,9 +1397,9 @@ registerModel({
                 [l - 1]: lastMessage,
             } = this.orderedNonTransientMessages;
             if (lastMessage) {
-                return link(lastMessage);
+                return replace(lastMessage);
             }
-            return unlink();
+            return clear();
         },
         /**
          * Adjusts the last seen message received from the server to consider
@@ -1449,9 +1449,9 @@ registerModel({
                 [l - 1]: lastNeedactionMessageAsOriginThread,
             } = orderedNeedactionMessagesAsOriginThread;
             if (lastNeedactionMessageAsOriginThread) {
-                return link(lastNeedactionMessageAsOriginThread);
+                return replace(lastNeedactionMessageAsOriginThread);
             }
-            return unlink();
+            return clear();
         },
         /**
          * @private
@@ -1523,22 +1523,22 @@ registerModel({
          */
         _computeMessageAfterNewMessageSeparator() {
             if (this.model !== 'mail.channel') {
-                return unlink();
+                return clear();
             }
             if (this.localMessageUnreadCounter === 0) {
-                return unlink();
+                return clear();
             }
             const index = this.orderedMessages.findIndex(message =>
                 message.id === this.lastSeenByCurrentPartnerMessageId
             );
             if (index === -1) {
-                return unlink();
+                return clear();
             }
             const message = this.orderedMessages[index + 1];
             if (!message) {
-                return unlink();
+                return clear();
             }
-            return link(message);
+            return replace(message);
         },
         /**
          * @private

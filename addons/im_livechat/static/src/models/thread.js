@@ -65,7 +65,7 @@ patchModelMethods('Thread', {
                     )
                 );
                 data2.members.push(link(partner));
-                data2.correspondent = link(partner);
+                data2.correspondent = replace(partner);
             } else {
                 const partnerData = this.messaging.models['Partner'].convertData(data.livechat_visitor);
                 data2.members.push(insert(partnerData));

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { insert, insertAndReplace, link, replace } from '@mail/model/model_field_command';
+import { insert, insertAndReplace, replace } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred';
 import {
     afterNextRender,
@@ -117,7 +117,7 @@ QUnit.test('Notification Sent', async function (assert) {
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
-        thread: link(thread),
+        thread: replace(thread),
     });
     await createThreadViewComponent(threadViewer.threadView);
 
@@ -212,7 +212,7 @@ QUnit.test('Notification Error', async function (assert) {
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
-        thread: link(thread),
+        thread: replace(thread),
     });
     await createThreadViewComponent(threadViewer.threadView);
 
@@ -268,13 +268,13 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
-        thread: link(thread),
+        thread: replace(thread),
     });
     messaging.models['Message'].create({
-        author: link(currentPartner),
+        author: replace(currentPartner),
         body: "<p>Test</p>",
         id: 100,
-        originThread: link(thread),
+        originThread: replace(thread),
     });
 
     await createThreadViewComponent(threadViewer.threadView);
@@ -333,13 +333,13 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
-        thread: link(thread),
+        thread: replace(thread),
     });
     messaging.models['Message'].create({
-        author: link(currentPartner),
+        author: replace(currentPartner),
         body: "<p>Test</p>",
         id: 100,
-        originThread: link(thread),
+        originThread: replace(thread),
     });
     await createThreadViewComponent(threadViewer.threadView);
 
@@ -397,13 +397,13 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
-        thread: link(thread),
+        thread: replace(thread),
     });
     messaging.models['Message'].create({
-        author: link(currentPartner),
+        author: replace(currentPartner),
         body: "<p>Test</p>",
         id: 100,
-        originThread: link(thread),
+        originThread: replace(thread),
     });
     await createThreadViewComponent(threadViewer.threadView);
 
@@ -480,13 +480,13 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
-        thread: link(thread),
+        thread: replace(thread),
     });
     messaging.models['Message'].insert({
-        author: link(author),
+        author: replace(author),
         body: "<p>Test</p>",
         id: 100,
-        originThread: link(thread),
+        originThread: replace(thread),
     });
     await createThreadViewComponent(threadViewer.threadView);
 
@@ -521,28 +521,28 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
-        thread: link(thread),
+        thread: replace(thread),
     });
     const lastSeenMessage = messaging.models['Message'].create({
-        author: link(currentPartner),
+        author: replace(currentPartner),
         body: "<p>You already saw me</p>",
         id: 100,
-        originThread: link(thread),
+        originThread: replace(thread),
     });
     messaging.models['Message'].insert({
-        author: link(currentPartner),
+        author: replace(currentPartner),
         body: "<p>Test</p>",
         id: 99,
-        originThread: link(thread),
+        originThread: replace(thread),
     });
     messaging.models['ThreadPartnerSeenInfo'].insert([
         {
-            lastSeenMessage: link(lastSeenMessage),
+            lastSeenMessage: replace(lastSeenMessage),
             partner: replace(messaging.currentPartner),
             thread: replace(thread),
         },
         {
-            lastSeenMessage: link(lastSeenMessage),
+            lastSeenMessage: replace(lastSeenMessage),
             partner: insertAndReplace({ id: 100 }),
             thread: replace(thread),
         },
@@ -599,13 +599,13 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
-        thread: link(thread),
+        thread: replace(thread),
     });
     messaging.models['Message'].insert({
-        author: link(currentPartner),
+        author: replace(currentPartner),
         body: "<p>Test</p>",
         id: 100,
-        originThread: link(thread),
+        originThread: replace(thread),
     });
     await createThreadViewComponent(threadViewer.threadView);
 
@@ -638,7 +638,7 @@ QUnit.test('allow attachment delete on authored message', async function (assert
             name: "BLAH",
             mimetype: 'image/jpeg',
         }),
-        author: link(messaging.currentPartner),
+        author: replace(messaging.currentPartner),
         body: "<p>Test</p>",
         id: 100,
     });
@@ -896,7 +896,7 @@ QUnit.test('open chat with author on avatar click should be disabled when curren
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
-        thread: link(thread),
+        thread: replace(thread),
     });
     await createThreadViewComponent(threadViewer.threadView);
     assert.containsOnce(

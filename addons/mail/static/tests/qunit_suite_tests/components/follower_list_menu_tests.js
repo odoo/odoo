@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { insert, link } from '@mail/model/model_field_command';
+import { insert, replace } from '@mail/model/model_field_command';
 import {
     start,
     startServer,
@@ -217,7 +217,7 @@ QUnit.test('click on remove follower', async function (assert) {
         model: 'res.partner',
     });
     await messaging.models['Follower'].create({
-        followedThread: link(thread),
+        followedThread: replace(thread),
         id: 2,
         isActive: true,
         partner: insert({

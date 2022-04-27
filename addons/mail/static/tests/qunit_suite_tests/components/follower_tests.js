@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { insert, link } from '@mail/model/model_field_command';
+import { insert, replace } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred';
 import {
     createRootMessagingComponent,
@@ -38,7 +38,7 @@ QUnit.test('base rendering not editable', async function (assert) {
             id: 1,
             name: "François Perusse",
         }),
-        followedThread: link(thread),
+        followedThread: replace(thread),
         id: 2,
         isActive: true,
     });
@@ -84,7 +84,7 @@ QUnit.test('base rendering editable', async function (assert) {
             id: 1,
             name: "François Perusse",
         }),
-        followedThread: link(thread),
+        followedThread: replace(thread),
         id: 2,
         isActive: true,
     });
@@ -153,7 +153,7 @@ QUnit.test('click on partner follower details', async function (assert) {
         model: 'res.partner',
     });
     const follower = await messaging.models['Follower'].create({
-        followedThread: link(thread),
+        followedThread: replace(thread),
         id: 2,
         isActive: true,
         partner: insert({
@@ -258,7 +258,7 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
         model: 'res.partner',
     });
     const follower = await messaging.models['Follower'].create({
-        followedThread: link(thread),
+        followedThread: replace(thread),
         id: 2,
         isActive: true,
         partner: insert({

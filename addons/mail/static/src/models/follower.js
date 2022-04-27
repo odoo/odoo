@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace, link, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { clear, insert, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Follower',
@@ -22,7 +22,7 @@ registerModel({
             }
             if ('partner_id' in data) {
                 if (!data.partner_id) {
-                    data2.partner = unlinkAll();
+                    data2.partner = clear();
                 } else {
                     const partnerData = {
                         display_name: data.display_name,
@@ -104,7 +104,7 @@ registerModel({
                 route: '/mail/read_subscription_data',
                 params: { follower_id: this.id },
             }));
-            this.update({ subtypes: unlinkAll() });
+            this.update({ subtypes: clear() });
             for (const data of subtypesData) {
                 const subtype = this.messaging.models['FollowerSubtype'].insert(
                     this.messaging.models['FollowerSubtype'].convertData(data)

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { insert, insertAndReplace, link } from '@mail/model/model_field_command';
+import { insert, insertAndReplace, replace } from '@mail/model/model_field_command';
 import { start } from '@mail/../tests/helpers/test_utils';
 
 import { str_to_datetime } from 'web.time';
@@ -39,7 +39,7 @@ QUnit.test('create', async function (assert) {
         id: 4000,
         isNeedaction: true,
         isStarred: true,
-        originThread: link(thread),
+        originThread: replace(thread),
     });
 
     assert.ok(messaging.models['Partner'].findFromIdentifyingData({ id: 5 }));

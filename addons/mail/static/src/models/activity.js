@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { clear, insert } from '@mail/model/model_field_command';
 
 const { markup } = owl;
 
@@ -50,7 +50,7 @@ registerModel({
             // relation
             if ('activity_type_id' in data) {
                 if (!data.activity_type_id) {
-                    data2.type = unlinkAll();
+                    data2.type = clear();
                 } else {
                     data2.type = insert({
                         displayName: data.activity_type_id[1],
@@ -60,7 +60,7 @@ registerModel({
             }
             if ('create_uid' in data) {
                 if (!data.create_uid) {
-                    data2.creator = unlinkAll();
+                    data2.creator = clear();
                 } else {
                     data2.creator = insert({
                         id: data.create_uid[0],
@@ -79,7 +79,7 @@ registerModel({
             }
             if ('user_id' in data) {
                 if (!data.user_id) {
-                    data2.assignee = unlinkAll();
+                    data2.assignee = clear();
                 } else {
                     data2.assignee = insert({
                         id: data.user_id[0],
@@ -89,7 +89,7 @@ registerModel({
             }
             if ('request_partner_id' in data) {
                 if (!data.request_partner_id) {
-                    data2.requestingPartner = unlink();
+                    data2.requestingPartner = clear();
                 } else {
                     data2.requestingPartner = insert({
                         id: data.request_partner_id[0],
