@@ -3,7 +3,7 @@
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { GraphArchParser } from "@web/views/graph/graph_arch_parser";
-import { GraphView } from "@web/views/graph/graph_view";
+import { graphView } from "@web/views/graph/graph_view";
 
 const viewRegistry = registry.category("views");
 
@@ -27,8 +27,9 @@ class ProjectRatingArchParser extends GraphArchParser {
 }
 
 // Would it be not better achiedved by using a proper arch directly?
+const projectRatingGraphView = {
+    ...graphView,
+    ArchParser: ProjectRatingArchParser,
+};
 
-class ProjectRatingGraphView extends GraphView {}
-ProjectRatingGraphView.ArchParser = ProjectRatingArchParser;
-
-viewRegistry.add("project_rating_graph", ProjectRatingGraphView);
+viewRegistry.add("project_rating_graph", projectRatingGraphView);

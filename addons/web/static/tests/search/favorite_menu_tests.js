@@ -130,7 +130,7 @@ QUnit.module("Search", (hooks) => {
     QUnit.test("delete an active favorite", async function (assert) {
         assert.expect(11);
 
-        class ToyView extends Component {
+        class ToyController extends Component {
             setup() {
                 assert.deepEqual(this.props.domain, [["foo", "=", "qsdf"]]);
                 onWillUpdateProps((nextProps) => {
@@ -138,17 +138,19 @@ QUnit.module("Search", (hooks) => {
                 });
             }
         }
-        ToyView.components = { FavoriteMenu, SearchBar };
-        ToyView.template = xml`
+        ToyController.components = { FavoriteMenu, SearchBar };
+        ToyController.template = xml`
                 <div>
                     <SearchBar/>
                     <FavoriteMenu/>
                 </div>
             `;
-        ToyView.type = "toy";
-        ToyView.display_name = "Toy";
 
-        viewRegistry.add("toy", ToyView);
+        viewRegistry.add("toy", {
+            type: "toy",
+            display_name: "Toy",
+            Controller: ToyController,
+        });
 
         serverData.views["foo,false,toy"] = `<toy />`;
         serverData.models.foo.filters = [

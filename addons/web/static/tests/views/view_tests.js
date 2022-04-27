@@ -71,25 +71,29 @@ QUnit.module("Views", (hooks) => {
             },
         };
 
-        class ToyView extends Component {
+        class ToyController extends Component {
             setup() {
                 this.class = "toy";
                 this.template = xml`${this.props.arch}`;
             }
         }
-        ToyView.template = xml`<div t-attf-class="{{class}} {{props.className}}"><t t-call="{{ template }}"/></div>`;
-        ToyView.type = "toy";
-        ToyView.components = { Banner: OnboardingBanner };
+        ToyController.template = xml`<div t-attf-class="{{class}} {{props.className}}"><t t-call="{{ template }}"/></div>`;
+        ToyController.components = { Banner: OnboardingBanner };
 
-        class ToyViewImp extends ToyView {
+        const toyView = {
+            type: "toy",
+            Controller: ToyController,
+        };
+
+        class ToyControllerImp extends ToyController {
             setup() {
                 super.setup();
                 this.class = "toy_imp";
             }
         }
 
-        viewRegistry.add("toy", ToyView);
-        viewRegistry.add("toy_imp", ToyViewImp);
+        viewRegistry.add("toy", toyView);
+        viewRegistry.add("toy_imp", { ...toyView, Controller: ToyControllerImp });
 
         setupControlPanelServiceRegistry();
 
@@ -115,8 +119,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("simple rendering", async function (assert) {
         assert.expect(10);
 
-        const ToyView = viewRegistry.get("toy");
-        patchWithCleanup(ToyView.prototype, {
+        const ToyController = viewRegistry.get("toy").Controller;
+        patchWithCleanup(ToyController.prototype, {
             setup() {
                 this._super();
                 const { arch, fields, info } = this.props;
@@ -153,8 +157,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("rendering with given viewId", async function (assert) {
         assert.expect(8);
 
-        const ToyView = viewRegistry.get("toy");
-        patchWithCleanup(ToyView.prototype, {
+        const ToyController = viewRegistry.get("toy").Controller;
+        patchWithCleanup(ToyController.prototype, {
             setup() {
                 this._super();
                 const { arch, fields, info } = this.props;
@@ -190,8 +194,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("rendering with given 'views' param", async function (assert) {
         assert.expect(8);
 
-        const ToyView = viewRegistry.get("toy");
-        patchWithCleanup(ToyView.prototype, {
+        const ToyController = viewRegistry.get("toy").Controller;
+        patchWithCleanup(ToyController.prototype, {
             setup() {
                 this._super();
                 const { arch, fields, info } = this.props;
@@ -231,8 +235,8 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(8);
 
-            const ToyView = viewRegistry.get("toy");
-            patchWithCleanup(ToyView.prototype, {
+            const ToyController = viewRegistry.get("toy").Controller;
+            patchWithCleanup(ToyController.prototype, {
                 setup() {
                     this._super();
                     const { arch, fields, info } = this.props;
@@ -274,8 +278,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("viewId defined as prop and in 'views' prop", async function (assert) {
         assert.expect(8);
 
-        const ToyView = viewRegistry.get("toy");
-        patchWithCleanup(ToyView.prototype, {
+        const ToyController = viewRegistry.get("toy").Controller;
+        patchWithCleanup(ToyController.prototype, {
             setup() {
                 this._super();
                 const { arch, fields, info } = this.props;
@@ -320,8 +324,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("rendering with given arch and fields", async function (assert) {
         assert.expect(6);
 
-        const ToyView = viewRegistry.get("toy");
-        patchWithCleanup(ToyView.prototype, {
+        const ToyController = viewRegistry.get("toy").Controller;
+        patchWithCleanup(ToyController.prototype, {
             setup() {
                 this._super();
                 const { arch, fields, info } = this.props;
@@ -353,8 +357,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("rendering with loadActionMenus='true'", async function (assert) {
         assert.expect(8);
 
-        const ToyView = viewRegistry.get("toy");
-        patchWithCleanup(ToyView.prototype, {
+        const ToyController = viewRegistry.get("toy").Controller;
+        patchWithCleanup(ToyController.prototype, {
             setup() {
                 this._super();
                 const { arch, fields, info } = this.props;
@@ -393,8 +397,8 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(8);
 
-            const ToyView = viewRegistry.get("toy");
-            patchWithCleanup(ToyView.prototype, {
+            const ToyController = viewRegistry.get("toy").Controller;
+            patchWithCleanup(ToyController.prototype, {
                 setup() {
                     this._super();
                     const { arch, fields, info } = this.props;
@@ -436,8 +440,8 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            const ToyView = viewRegistry.get("toy");
-            patchWithCleanup(ToyView.prototype, {
+            const ToyController = viewRegistry.get("toy").Controller;
+            patchWithCleanup(ToyController.prototype, {
                 setup() {
                     this._super();
                     const { arch, fields, info } = this.props;
@@ -474,8 +478,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("rendering with given searchViewId", async function (assert) {
         assert.expect(8);
 
-        const ToyView = viewRegistry.get("toy");
-        patchWithCleanup(ToyView.prototype, {
+        const ToyController = viewRegistry.get("toy").Controller;
+        patchWithCleanup(ToyController.prototype, {
             setup() {
                 this._super();
                 const {
@@ -522,8 +526,8 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            const ToyView = viewRegistry.get("toy");
-            patchWithCleanup(ToyView.prototype, {
+            const ToyController = viewRegistry.get("toy").Controller;
+            patchWithCleanup(ToyController.prototype, {
                 setup() {
                     this._super();
                     const {
@@ -566,8 +570,8 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            const ToyView = viewRegistry.get("toy");
-            patchWithCleanup(ToyView.prototype, {
+            const ToyController = viewRegistry.get("toy").Controller;
+            patchWithCleanup(ToyController.prototype, {
                 setup() {
                     this._super();
                     const {
@@ -609,8 +613,8 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(8);
 
-            const ToyView = viewRegistry.get("toy");
-            patchWithCleanup(ToyView.prototype, {
+            const ToyController = viewRegistry.get("toy").Controller;
+            patchWithCleanup(ToyController.prototype, {
                 setup() {
                     this._super();
                     const {
@@ -674,8 +678,8 @@ QUnit.module("Views", (hooks) => {
                 },
             ];
 
-            const ToyView = viewRegistry.get("toy");
-            patchWithCleanup(ToyView.prototype, {
+            const ToyController = viewRegistry.get("toy").Controller;
+            patchWithCleanup(ToyController.prototype, {
                 setup() {
                     this._super();
                     const {
@@ -1018,14 +1022,18 @@ QUnit.module("Views", (hooks) => {
             </div>`;
 
         let toy;
-        const ToyView = viewRegistry.get("toy");
-        class ToyViewExtended extends ToyView {
+        const toyView = viewRegistry.get("toy");
+        class ToyViewExtendedController extends toyView.Controller {
             setup() {
                 super.setup();
                 toy = this;
             }
         }
-        viewRegistry.add("toy", ToyViewExtended, { force: true });
+        viewRegistry.add(
+            "toy",
+            { ...toyView, Controller: ToyViewExtendedController },
+            { force: true }
+        );
 
         const mockRPC = (route) => {
             if (route === "/mybody/isacage") {
@@ -1407,7 +1415,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            class ToyView extends Component {
+            class ToyController extends Component {
                 setup() {
                     const { context, domain, groupBy, orderBy } = this.props;
                     assert.deepEqual(context, {
@@ -1421,10 +1429,9 @@ QUnit.module("Views", (hooks) => {
                     assert.deepEqual(orderBy, ["bar"]);
                 }
             }
-            ToyView.template = xml`<div/>`;
-            ToyView.type = "toy";
+            ToyController.template = xml`<div/>`;
 
-            viewRegistry.add("toy", ToyView, { force: true });
+            viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
 
             const env = await makeTestEnv({ serverData });
             const props = {
@@ -1442,14 +1449,13 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("non empty prop 'noContentHelp'", async function (assert) {
         assert.expect(1);
 
-        class ToyView extends Component {
+        class ToyController extends Component {
             setup() {
                 assert.strictEqual(this.props.info.noContentHelp, "<div>Help</div>");
             }
         }
-        ToyView.template = xml`<div/>`;
-        ToyView.type = "toy";
-        viewRegistry.add("toy", ToyView, { force: true });
+        ToyController.template = xml`<div/>`;
+        viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
 
         const env = await makeTestEnv({ serverData });
         const props = {
@@ -1463,14 +1469,13 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("useSampleModel false by default", async function (assert) {
         assert.expect(1);
 
-        class ToyView extends Component {
+        class ToyController extends Component {
             setup() {
                 assert.strictEqual(this.props.useSampleModel, false);
             }
         }
-        ToyView.template = xml`<div/>`;
-        ToyView.type = "toy";
-        viewRegistry.add("toy", ToyView, { force: true });
+        ToyController.template = xml`<div/>`;
+        viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
 
         const env = await makeTestEnv({ serverData });
         const props = { resModel: "animal", type: "toy" };
@@ -1480,14 +1485,13 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("sample='1' on arch", async function (assert) {
         assert.expect(1);
 
-        class ToyView extends Component {
+        class ToyController extends Component {
             setup() {
                 assert.strictEqual(this.props.useSampleModel, true);
             }
         }
-        ToyView.template = xml`<div/>`;
-        ToyView.type = "toy";
-        viewRegistry.add("toy", ToyView, { force: true });
+        ToyController.template = xml`<div/>`;
+        viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
 
         const env = await makeTestEnv({ serverData });
         const props = {
@@ -1502,14 +1506,13 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("sample='0' on arch and useSampleModel=true", async function (assert) {
         assert.expect(1);
 
-        class ToyView extends Component {
+        class ToyController extends Component {
             setup() {
                 assert.strictEqual(this.props.useSampleModel, true);
             }
         }
-        ToyView.template = xml`<div/>`;
-        ToyView.type = "toy";
-        viewRegistry.add("toy", ToyView, { force: true });
+        ToyController.template = xml`<div/>`;
+        viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
 
         const env = await makeTestEnv({ serverData });
         const props = {
@@ -1525,14 +1528,13 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("sample='1' on arch and useSampleModel=false", async function (assert) {
         assert.expect(1);
 
-        class ToyView extends Component {
+        class ToyController extends Component {
             setup() {
                 assert.strictEqual(this.props.useSampleModel, false);
             }
         }
-        ToyView.template = xml`<div/>`;
-        ToyView.type = "toy";
-        viewRegistry.add("toy", ToyView, { force: true });
+        ToyController.template = xml`<div/>`;
+        viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
 
         const env = await makeTestEnv({ serverData });
         const props = {
@@ -1548,14 +1550,13 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("useSampleModel=true", async function (assert) {
         assert.expect(1);
 
-        class ToyView extends Component {
+        class ToyController extends Component {
             setup() {
                 assert.strictEqual(this.props.useSampleModel, true);
             }
         }
-        ToyView.template = xml`<div/>`;
-        ToyView.type = "toy";
-        viewRegistry.add("toy", ToyView, { force: true });
+        ToyController.template = xml`<div/>`;
+        viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
 
         const env = await makeTestEnv({ serverData });
         const props = { resModel: "animal", type: "toy", useSampleModel: true };
@@ -1565,14 +1566,13 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("rendering with given prop", async function (assert) {
         assert.expect(1);
 
-        class ToyView extends Component {
+        class ToyController extends Component {
             setup() {
                 assert.strictEqual(this.props.specificProp, "specificProp");
             }
         }
-        ToyView.template = xml`<div/>`;
-        ToyView.type = "toy";
-        viewRegistry.add("toy", ToyView, { force: true });
+        ToyController.template = xml`<div/>`;
+        viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
 
         const env = await makeTestEnv({ serverData });
         const props = { resModel: "animal", type: "toy", specificProp: "specificProp" };
@@ -1584,7 +1584,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            class ToyView extends Component {
+            class ToyController extends Component {
                 setup() {
                     const { context, domain, groupBy, orderBy } = this.props;
                     assert.deepEqual(context, {
@@ -1597,9 +1597,8 @@ QUnit.module("Views", (hooks) => {
                     assert.deepEqual(orderBy, ["bar"]);
                 }
             }
-            ToyView.template = xml`<div/>`;
-            ToyView.type = "toy";
-            viewRegistry.add("toy", ToyView, { force: true });
+            ToyController.template = xml`<div/>`;
+            viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
 
             const env = await makeTestEnv({ serverData });
             const props = {
@@ -1622,7 +1621,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("react to prop 'domain' changes", async function (assert) {
         assert.expect(2);
 
-        class ToyView extends Component {
+        class ToyController extends Component {
             setup() {
                 onWillStart(() => {
                     assert.deepEqual(this.props.domain, [["type", "=", "carnivorous"]]);
@@ -1632,9 +1631,8 @@ QUnit.module("Views", (hooks) => {
                 });
             }
         }
-        ToyView.template = xml`<div/>`;
-        ToyView.type = "toy";
-        viewRegistry.add("toy", ToyView, { force: true });
+        ToyController.template = xml`<div/>`;
+        viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
 
         const env = await makeTestEnv({ serverData });
 

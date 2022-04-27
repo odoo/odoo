@@ -422,15 +422,18 @@ QUnit.module("DebugMenu", (hooks) => {
         // removing the toy view and using the kanban view directly
         prepareRegistriesWithCleanup();
 
-        class ToyView extends Component {
+        class ToyController extends Component {
             setup() {
                 useSetupView();
             }
         }
-        ToyView.template = xml`<div class="o-toy-view"/>`;
-        ToyView.type = "toy";
-        ToyView.display_name = "toy view";
-        registry.category("views").add("toy", ToyView);
+        ToyController.template = xml`<div class="o-toy-view"/>`;
+
+        registry.category("views").add("toy", {
+            type: "toy",
+            display_name: "toy view",
+            Controller: ToyController,
+        });
 
         const mockRPC = async (route, args) => {
             if (args.method === "check_access_rights") {

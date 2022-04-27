@@ -17,7 +17,7 @@ export class WithSearch extends Component {
             useSubEnv({ __getContext__: new CallbackRecorder() });
         }
 
-        const SearchModelClass = this.Component.SearchModel || SearchModel;
+        const SearchModelClass = this.props.SearchModel || SearchModel;
         this.searchModel = new SearchModelClass(this.env, {
             user: useService("user"),
             orm: useService("orm"),
@@ -77,6 +77,7 @@ WithSearch.defaultProps = {
 };
 WithSearch.props = {
     Component: Function,
+    SearchModel: { type: Function, optional: true },
     componentProps: { type: Object, optional: true },
 
     resModel: String,
