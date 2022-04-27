@@ -2997,6 +2997,7 @@ export class OdooEditor extends EventTarget {
             const linkAttributes = this.options.defaultLinkAttributes || {};
             const selectionIsInsideALink = !!closestElement(sel.anchorNode, 'a');
 
+            this.historyPauseSteps("_onPaste");
             for (let i = 0; i < splitAroundUrl.length; i++) {
                 const url = /^https?:\/\//gi.test(splitAroundUrl[i])
                     ? splitAroundUrl[i]
@@ -3153,6 +3154,7 @@ export class OdooEditor extends EventTarget {
                     }
                 }
             }
+            this.historyUnpauseSteps("_onPaste");
             this.historyStep();
         }
     }
