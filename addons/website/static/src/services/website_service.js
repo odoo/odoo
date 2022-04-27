@@ -128,8 +128,8 @@ export const websiteService = {
                     clearBreadcrumbs: true,
                     additionalContext: {
                         params: {
-                            website_id: websiteId,
-                            path,
+                            website_id: websiteId || currentWebsiteId,
+                            path: path || (contentWindow && contentWindow.location.href) || '/',
                             enable_editor: edition,
                             edit_translations: translation,
                         },
