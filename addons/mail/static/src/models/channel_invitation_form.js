@@ -16,7 +16,7 @@ registerModel({
          */
         async onClickCopy(ev) {
             await navigator.clipboard.writeText(this.thread.invitationLink);
-            this.env.services.notification.notify({
+            this.messaging.notify({
                 message: this.env._t('Link copied!'),
                 type: 'success',
             });

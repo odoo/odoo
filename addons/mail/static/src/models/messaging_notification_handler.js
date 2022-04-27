@@ -189,7 +189,7 @@ registerModel({
             const channel = this.messaging.models['Thread'].insert(this.messaging.models['Thread'].convertData(channelData));
             if (this.messaging.currentUser && invitedByUserId !== this.messaging.currentUser.id) {
                 // Current user was invited by someone else.
-                this.env.services['notification'].notify({
+                this.messaging.notify({
                     message: sprintf(
                         this.env._t("You have been invited to #%s"),
                         channel.displayName
@@ -440,7 +440,7 @@ registerModel({
          * @param {boolean} param1.warning
          */
         _handleNotificationSimpleNotification({ message, message_is_html, sticky, title, warning }) {
-            this.env.services['notification'].notify({
+            this.messaging.notify({
                 message: message_is_html ? Markup(message) : message,
                 sticky,
                 title,
@@ -466,7 +466,7 @@ registerModel({
             const currentSession = this.messaging.rtc.currentRtcSession;
             if (currentSession && currentSession.id === sessionId) {
                 this.messaging.rtc.channel.endCall();
-                this.env.services['notification'].notify({
+                this.messaging.notify({
                     message: this.env._t("Disconnected from the RTC call by the server"),
                     type: 'warning',
                 });
@@ -613,7 +613,7 @@ registerModel({
                 return;
             }
             const message = sprintf(this.env._t("You unsubscribed from %s."), channel.displayName);
-            this.env.services['notification'].notify({ message, type: 'info' });
+            this.messaging.notify({ message, type: 'info' });
             // We assume that arriving here the server has effectively
             // unpinned the channel
             channel.update({
@@ -635,7 +635,7 @@ registerModel({
                 return;
             }
             const message = sprintf(this.env._t("You unpinned your conversation with %s."), channel.displayName);
-            this.env.services['notification'].notify({ message, type: 'info' });
+            this.messaging.notify({ message, type: 'info' });
             // We assume that arriving here the server has effectively
             // unpinned the channel
             channel.update({
