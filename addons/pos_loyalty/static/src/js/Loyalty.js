@@ -976,14 +976,18 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                 }
             } else {
                 const nonCommonLines = discountedLines.filter((line) => !linesToDiscount.includes(line));
-                let discountedAmount = Math.abs(lines.reduce((sum, line) => sum + line.get_price_with_tax(), 0));
+                const discountedAmounts = lines.reduce((map, line) => {
+                    map[line.get_taxes().map((t) => t.id)];
+                    return map;
+                }, {});
                 const process = (line) => {
-                    if (!discountedAmount || line.reward_id) {
+                    const key = line.get_taxes().map((t) => t.id);
+                    if (!discountedAmounts[key] || line.reward_id) {
                         return;
                     }
                     const remaining = remainingAmountPerLine[line.cid];
-                    const consumed = Math.min(remaining, discountedAmount);
-                    discountedAmount -= consumed;
+                    const consumed = Math.min(remaining, discountedAmounts[key]);
+                    discountedAmounts[key] -= consumed;
                     remainingAmountPerLine[line.cid] -= consumed;
                 }
                 nonCommonLines.forEach(process);
@@ -1071,6 +1075,10 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         const discountFactor = discountable ? Math.min(1, (maxDiscount / discountable)) : 1;
         const discountProduct = reward.discount_line_product_id;
         const result = Object.entries(discountablePerTax).reduce((lst, entry) => {
+            // Ignore 0 price lines
+            if (!entry[1]) {
+                return;
+            }
             const taxIds = entry[0] === '' ? [] : entry[0].split(',').map((str) => parseInt(str));
             lst.push({
                 product: discountProduct,
