@@ -10596,7 +10596,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many with many2many_tags in list and list in form, and onchange (2)",
         async function (assert) {
             serverData.models.partner.onchanges = {

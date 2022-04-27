@@ -382,23 +382,17 @@ export class Record extends DataPoint {
     }
 
     checkX2ManyValidity(fieldName) {
-        const value = this.data[fieldName];
-        const toAbandon = [];
-        let isValid = true;
-        for (const record of value.records) {
-            if (record.isNew && !record.checkValidity()) {
-                // LPE: redo that condition
-                if (record.canBeAbandoned) {
-                    toAbandon.push(record);
-                } else {
-                    isValid = false;
-                }
+        const list = this.data[fieldName];
+        const record = list.editedRecord;
+        if (record && record.isNew && !record.checkValidity()) {
+            // LPE: redo that condition
+            if (record.canBeAbandoned) {
+                list.abandonRecord(record.id);
+            } else {
+                return false;
             }
         }
-        for (const record of toAbandon) {
-            value.abandonRecord(record.id);
-        }
-        return isValid;
+        return true;
     }
 
     setInvalidField(fieldName) {

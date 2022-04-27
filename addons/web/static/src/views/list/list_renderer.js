@@ -48,7 +48,7 @@ export class ListRenderer extends Component {
             ),
         });
         this.withHandleColumn = this.state.columns.some((col) => col.widget === "handle");
-        useExternalListener(document, "click", this.onGlobalClick.bind(this)); // capture ?
+        useExternalListener(document, "click", this.onGlobalClick.bind(this));
         this.tableRef = useRef("table");
 
         this.creates = this.props.archInfo.creates.length
