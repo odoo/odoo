@@ -21,6 +21,7 @@ import {
     removeRow,
     selectDropdownItem,
     triggerEvent,
+    triggerEvents,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
@@ -9970,14 +9971,12 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.skipWOWL("one2many editable list: edit and click on add a line", async function (assert) {
-        assert.expect(9);
-
+    QUnit.test("one2many editable list: edit and click on add a line", async function (assert) {
         serverData.models.turtle.onchanges = {
             turtle_int: function () {},
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -9993,44 +9992,46 @@ QUnit.module("Fields", (hooks) => {
                     assert.step("onchange");
                 }
             },
-            // in this test, we want to to accurately mock what really happens, that is, input
-            // fields only trigger their changes on 'change' event, not on 'input'
-            fieldDebounce: 100000,
-            viewOptions: {
-                mode: "edit",
-            },
         });
 
-        assert.containsOnce(form, ".o_data_row");
+        assert.containsOnce(target, ".o_data_row");
 
         // edit first row
-        await click(form.$(".o_data_row:first .o_data_cell:first"));
-        assert.hasClass(form.$(".o_data_row:first"), "o_selected_row");
-        await testUtils.fields.editInput(form.$(".o_selected_row input[name=turtle_int]"), "44");
-
+        await clickEdit(target);
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
+        target.querySelector(".o_selected_row .o_field_widget[name=turtle_int] input").value = "44";
+        await triggerEvent(
+            target,
+            ".o_selected_row .o_field_widget[name=turtle_int] input",
+            "input"
+        );
         assert.verifySteps([]);
+
         // simulate a long click on 'Add a line' (mousedown [delay] mouseup and click events)
-        var $addLine = form.$(".o_field_x2many_list_row_add a");
-        testUtils.dom.triggerEvents($addLine, "mousedown");
+        triggerEvent(target, ".o_field_x2many_list_row_add a", "mousedown");
         // mousedown is supposed to trigger the change event on the edited input, but it doesn't
         // in the test environment, for an unknown reason, so we trigger it manually to reproduce
         // what really happens
-        testUtils.dom.triggerEvents(form.$(".o_selected_row input[name=turtle_int]"), "change");
-        await testUtils.nextTick();
+        await triggerEvent(
+            target,
+            ".o_selected_row .o_field_widget[name=turtle_int] input",
+            "change"
+        );
 
         // release the click
-        await testUtils.dom.triggerEvents($addLine, ["mouseup", "click"]);
+        await triggerEvents(target, ".o_field_x2many_list_row_add a", ["mouseup", "click"]);
         assert.verifySteps(["onchange", "onchange"]);
 
-        assert.containsN(form, ".o_data_row", 2);
-        assert.strictEqual(form.$(".o_data_row:first").text(), "44");
-        assert.hasClass(form.$(".o_data_row:nth(1)"), "o_selected_row");
+        assert.containsN(target, ".o_data_row", 2);
+        assert.strictEqual(target.querySelector(".o_data_cell").innerText, "44");
+        assert.hasClass(target.querySelectorAll(".o_data_row")[1], "o_selected_row");
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "many2manys inside a one2many are fetched in batch after onchange",
         async function (assert) {
-            assert.expect(6);
+            assert.expect(7);
 
             serverData.models.partner.onchanges = {
                 turtles: function (obj) {
@@ -10072,7 +10073,6 @@ QUnit.module("Fields", (hooks) => {
                             </tree>
                         </field>
                     </form>`,
-                enableBasicModelBachedRPCs: true,
                 mockRPC(route, args) {
                     assert.step(args.method || route);
                     if (args.method === "read") {
@@ -10087,21 +10087,17 @@ QUnit.module("Fields", (hooks) => {
 
             assert.containsN(target, ".o_data_row", 2);
             assert.deepEqual(
-                [...target.querySelectorAll('.o_field_widget[name="partner_ids"]')].map(
-                    (el) => el.textContent
-                ),
-                ["second record", "second record", "aaa"]
+                getNodesTextContent(target.querySelectorAll('.o_field_widget[name="partner_ids"]')),
+                "second recordsecond recordaaa"
             );
 
-            assert.verifySteps(["onchange", "read"]);
+            assert.verifySteps(["get_views", "onchange", "read"]);
         }
     );
 
-    QUnit.skipWOWL("two one2many fields with same relation and onchanges", async function (assert) {
+    QUnit.test("two one2many fields with same relation and onchanges", async function (assert) {
         // this test simulates the presence of two one2many fields with onchanges, such that
         // changes to the first o2m are repercuted on the second one
-        assert.expect(6);
-
         serverData.models.partner.fields.turtles2 = {
             string: "Turtles 2",
             type: "one2many",
@@ -10186,10 +10182,10 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
 
         assert.deepEqual(
-            [...target.querySelectorAll('.o_field_widget[name="turtles2"] .o_data_row')].map(
-                (el) => el.textContent
+            getNodesTextContent(
+                target.querySelectorAll('.o_field_widget[name="turtles2"] .o_data_row')
             ),
-            ["ABCDEF"]
+            "ABCDEF"
         );
     });
 
@@ -10343,8 +10339,6 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.skipWOWL("editable one2many list with oe_read_only button", async function (assert) {
-        assert.expect(9);
-
         await makeView({
             type: "form",
             resModel: "partner",
