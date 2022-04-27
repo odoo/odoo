@@ -7609,20 +7609,18 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
-        "multi level of nested x2manys, onchange and rawChanges",
-        async function (assert) {
-            assert.expect(8);
-            serverData.models.partner.records[0].p = [1];
-            serverData.models.partner.onchanges = {
-                name: function () {},
-            };
+    QUnit.test("multi level of nested x2manys, onchange and rawChanges", async function (assert) {
+        assert.expect(8);
+        serverData.models.partner.records[0].p = [1];
+        serverData.models.partner.onchanges = {
+            name: function () {},
+        };
 
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
                     <form>
                         <field name="name"/>
                         <field name="p" attrs="{'readonly': [['name', '=', 'readonly']]}">
@@ -7636,54 +7634,50 @@ QUnit.module("Fields", (hooks) => {
                             </form>
                         </field>
                     </form>`,
-                mockRPC(route, args) {
-                    if (args.method === "write") {
-                        assert.deepEqual(args.args[1].p[0][2], {
-                            p: [[1, 1, { display_name: "new name" }]],
-                        });
-                    }
-                },
-                resId: 1,
-            });
-            await click(target, '.o_field_widget[name="name"]');
-            await editInput(target, '.o_field_widget[name="name"] input', "readonly");
+            mockRPC(route, args) {
+                if (args.method === "write") {
+                    assert.deepEqual(args.args[1].p[0][2], {
+                        p: [[1, 1, { display_name: "new name" }]],
+                    });
+                }
+            },
+            resId: 1,
+        });
 
-            assert.containsOnce(target, ".o_data_row");
+        assert.containsOnce(target, ".o_data_row");
 
-            // open the o2m record in readonly first
-            await click(target.querySelector(".o_data_row td"));
-            assert.containsOnce(target, ".modal .o_form_readonly");
+        // open the o2m record in readonly first
+        await click(target.querySelector(".o_data_row td"));
+        assert.containsOnce(target, ".modal .o_form_readonly");
 
-            await clickDiscard(target.querySelector(".modal"));
-            await clickDiscard(target);
+        await clickDiscard(target.querySelector(".modal"));
 
-            // switch to edit mode and open it again
-            await click(target.querySelector(".o_data_row td"));
-            await nextTick(); // wait for quick edit
-            assert.containsOnce(target, ".modal .o_form_editable");
-            assert.containsOnce(target, ".modal .o_data_row");
+        // switch to edit mode and open it again
+        await clickEdit(target);
+        await click(target.querySelector(".o_data_row td"));
+        assert.containsOnce(target, ".modal .o_form_editable");
+        assert.containsOnce(target, ".modal .o_data_row");
 
-            // open the o2m again, in the dialog
-            await click(target.querySelector(".modal .o_data_row td"));
+        // open the o2m again, in the dialog
+        await click(target.querySelector(".modal .o_data_row td"));
 
-            assert.containsN(target, ".modal .o_form_editable", 2);
+        assert.containsN(target, ".modal .o_form_editable", 2);
 
-            // edit the name and click save modal that is on top
-            const dialogs = target.querySelectorAll(".modal");
-            await editInput(dialogs[1], ".o_field_widget[name=display_name] input", "new name");
-            await click(dialogs[1], ".modal-footer .btn-primary");
+        // edit the name and click save modal that is on top
+        const dialogs = target.querySelectorAll(".modal");
+        await editInput(dialogs[1], ".o_field_widget[name=display_name] input", "new name");
+        await click(dialogs[1], ".modal-footer .btn-primary");
 
-            assert.containsOnce(target, ".modal .o_form_editable");
+        assert.containsOnce(target, ".modal .o_form_editable");
 
-            // click save on the other modal
-            await click(target, ".modal .modal-footer .btn-primary");
+        // click save on the other modal
+        await click(target, ".modal .modal-footer .btn-primary");
 
-            assert.containsNone(target, ".modal");
+        assert.containsNone(target, ".modal");
 
-            // save the main record
-            await clickSave(target);
-        }
-    );
+        // save the main record
+        await clickSave(target);
+    });
 
     QUnit.test("onchange and required fields with override in arch", async function (assert) {
         serverData.models.partner.onchanges = {
