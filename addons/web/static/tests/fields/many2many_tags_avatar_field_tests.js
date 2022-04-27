@@ -236,12 +236,12 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "turtle",
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                '<field name="partner_ids" widget="many2many_tags_avatar"/>' +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="partner_ids" widget="many2many_tags_avatar"/>
+                    </sheet>
+                </form>`,
             resId: 2,
         });
 
@@ -436,6 +436,9 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.turtle.records[0].partner_ids = [1];
         serverData.models.turtle.records[1].partner_ids = [1, 2, 4];
         serverData.models.turtle.records[2].partner_ids = [1, 2, 4, 5];
+        serverData.views = {
+            "turtle,false,form": '<form><field name="display_name"/></form>',
+        };
 
         await makeView({
             type: "kanban",
@@ -458,9 +461,6 @@ QUnit.module("Fields", (hooks) => {
                         </t>
                     </templates>
                 </kanban>`,
-            // archs: {
-            //     "turtle,false,form": '<form><field name="display_name"/></form>',
-            // },
             // intercepts: {
             //     switch_view: function (event) {
             //         const { mode, model, resId, view_type } = event.data;

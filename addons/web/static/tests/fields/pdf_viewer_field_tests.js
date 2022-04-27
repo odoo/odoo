@@ -36,7 +36,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch: "<form>" + '<field name="document" widget="pdf_viewer"/>' + "</form>",
+            arch: '<form><field name="document" widget="pdf_viewer"/></form>',
         });
 
         assert.hasClass(target.querySelector(".o_field_widget"), "o_field_pdf_viewer");
@@ -57,7 +57,7 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             serverData,
             resId: 1,
-            arch: "<form>" + '<field name="document" widget="pdf_viewer"/>' + "</form>",
+            arch: '<form><field name="document" widget="pdf_viewer"/></form>',
             mockRPC: function (route) {
                 if (route.indexOf("/web/static/lib/pdfjs/web/viewer.html") !== -1) {
                     return Promise.resolve();
@@ -88,7 +88,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch: "<form>" + '<field name="document" widget="pdf_viewer"/>' + "</form>",
+            arch: '<form><field name="document" widget="pdf_viewer"/></form>',
         });
 
         assert.containsNone(target, ".o_pdfview_iframe", "there is no PDF Viewer");

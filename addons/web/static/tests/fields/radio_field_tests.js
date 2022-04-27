@@ -273,7 +273,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch: "<form>" + '<field name="product_id" widget="radio" required="1"/>' + "</form>",
+            arch: '<form><field name="product_id" widget="radio" required="1"/></form>',
         });
 
         assert.containsNone(

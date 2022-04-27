@@ -38,7 +38,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch: "<form>" + '<field name="fonts" widget="font"/>' + "</form>",
+            arch: '<form><field name="fonts" widget="font"/></form>',
         });
         const options = target.querySelectorAll('.o_field_widget[name="fonts"] option');
 

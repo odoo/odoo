@@ -654,7 +654,13 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("default_get a reference field in a x2m", async function (assert) {
         assert.expect(1);
 
-        serverData.models.partner.fields.turtles.default = [[0, false, { turtle_ref: "product,37" }]];
+        serverData.models.partner.fields.turtles.default = [
+            [0, false, { turtle_ref: "product,37" }],
+        ];
+        serverData.views = {
+            "turtle,false,form":
+                '<form><field name="display_name"/><field name="turtle_ref"/></form>',
+        };
 
         const form = await makeView({
             type: "form",
@@ -672,10 +678,6 @@ QUnit.module("Fields", (hooks) => {
                 "</form>",
             viewOptions: {
                 mode: "edit",
-            },
-            archs: {
-                "turtle,false,form":
-                    '<form><field name="display_name"/><field name="turtle_ref"/></form>',
             },
         });
         assert.strictEqual(

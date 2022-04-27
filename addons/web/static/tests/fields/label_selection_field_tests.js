@@ -61,15 +61,16 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="selection" widget="label_selection" ' +
-                " options=\"{'classes': {'normal': 'secondary', 'blocked': 'warning','done': 'success'}}\"/>" +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form string="Partners">
+                    <sheet>
+                        <group>
+                            <field name="selection" widget="label_selection"
+                            options=\"{'classes': {'normal': 'secondary', 'blocked': 'warning','done': 'success'}}\"/>
+                        </group>
+                    </sheet>
+                </form>
+                `,
             resId: 1,
         });
 
@@ -148,12 +149,13 @@ QUnit.module("Fields", (hooks) => {
             type: "list",
             resModel: "partner",
             serverData,
-            arch:
-                '<tree editable="bottom">' +
-                '<field name="foo"/>' +
-                '<field name="selection" widget="label_selection"' +
-                " options=\"{'classes': {'normal': 'secondary', 'blocked': 'warning','done': 'success'}}\"/>" +
-                "</tree>",
+            arch: `
+                <tree editable="bottom">
+                    <field name="foo"/>
+                    <field name="selection" widget="label_selection"
+                    options=\"{'classes': {'normal': 'secondary', 'blocked': 'warning','done': 'success'}}\"/>
+                </tree>
+                `,
         });
 
         assert.strictEqual(

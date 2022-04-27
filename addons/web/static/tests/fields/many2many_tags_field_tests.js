@@ -557,7 +557,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch: `<form><field name="timmy" widget="many2many_tags"/></form>`,
+            arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
             mockRPC: (route, { args }) => {
                 if (route === "/web/dataset/call_kw/partner/create") {
                     var commands = args[0].timmy;
@@ -771,7 +771,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch: "<form>" + '<field name="partner_ids" widget="many2many_tags"/>' + "</form>",
+            arch: '<form><field name="partner_ids" widget="many2many_tags"/></form>',
             resId: 1,
         });
         assert.containsN(
@@ -1010,7 +1010,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch: `<form><field name="timmy" widget="many2many_tags"/></form>`,
+            arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
         });
 
         assert.containsNone(target, ".o_field_many2many_tags .badge");
@@ -1045,7 +1045,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch: `<form><field name="timmy" widget="many2many_tags"/></form>`,
+            arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
         });
 
         assert.containsNone(target, ".o_field_many2many_tags .badge");
@@ -1078,62 +1078,61 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL("widget many2many_tags in one2many with display_name", async function (assert) {
         assert.expect(4);
         serverData.models.turtle.records[0].partner_ids = [2];
+        serverData.views = {
+            "partner,false,list": '<tree><field name="foo"/></tree>',
+        };
 
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                '<field name="turtles">' +
-                "<tree>" +
-                '<field name="partner_ids" widget="many2many_tags"/>' + // will use display_name
-                "</tree>" +
-                "<form>" +
-                "<sheet>" +
-                '<field name="partner_ids"/>' +
-                "</sheet>" +
-                "</form>" +
-                "</field>" +
-                "</sheet>" +
-                "</form>",
-            archs: {
-                "partner,false,list": '<tree><field name="foo"/></tree>',
-            },
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="turtles">
+                            <tree>
+                                <field name="partner_ids" widget="many2many_tags"/>
+                            </tree>
+                            <form>
+                                <sheet>
+                                <field name="partner_ids"/>
+                                </sheet>
+                            </form>
+                        </field>
+                    </sheet>
+                </form>
+            `,
             resId: 1,
         });
-
         assert.strictEqual(
             target
                 .querySelector(
-                    '.o_field_one2many[name="turtles"] .o_list_view .o_field_many2many_tags[name="partner_ids"]'
+                    '.o_field_one2many[name="turtles"] .o_field_x2many_list .o_field_many2many_tags[name="partner_ids"]'
                 )
                 .textContent.replace(/\s/g, ""),
             "secondrecordaaa",
             "the tags should be correctly rendered"
         );
-
         // open the x2m form view
         await click(
             target.querySelector(
-                '.o_field_one2many[name="turtles"] .o_list_view td.o_data_cell:first'
+                '.o_field_one2many[name="turtles"] .o_field_x2many_list td.o_data_cell'
             )
         );
         await nextTick(); // wait for quick edit
         assert.strictEqual(
-            $(
-                '.modal .o_form_view .o_field_many2many[name="partner_ids"] .o_list_view .o_data_cell'
+            target.querySelector(
+                '.modal .o_form_view .o_field_many2many[name="partner_ids"] .o_field_x2many_list .o_data_cell'
             ).textContent,
             "blipMy little Foo Value",
             "the list view should be correctly rendered with foo"
         );
 
-        await click($(".modal button.o_form_button_cancel"));
+        await click(target.querySelector(".modal button.o_form_button_cancel"));
         assert.strictEqual(
             target
                 .querySelector(
-                    '.o_field_one2many[name="turtles"] .o_list_view .o_field_many2many_tags[name="partner_ids"]'
+                    '.o_field_one2many[name="turtles"] .o_field_x2many_list .o_field_many2many_tags[name="partner_ids"]'
                 )
                 .textContent.replace(/\s/g, ""),
             "secondrecordaaa",
@@ -1143,7 +1142,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             target
                 .querySelector(
-                    '.o_field_one2many[name="turtles"] .o_list_view .o_field_many2many_tags[name="partner_ids"]'
+                    '.o_field_one2many[name="turtles"] .o_field_x2many_list .o_field_many2many_tags[name="partner_ids"]'
                 )
                 .textContent.replace(/\s/g, ""),
             "secondrecordaaa",
@@ -1161,7 +1160,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch: `<form><field name="timmy" widget="many2many_tags"/></form>`,
+            arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
             resId: 1,
             mockRPC(route, args) {
                 if (args.method === "read" && args.model === "partner_type") {

@@ -208,14 +208,14 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="int_field" widget="percentpie"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form string="Partners">
+                    <sheet>
+                        <group>
+                            <field name="int_field" widget="percentpie"/>
+                        </group>
+                    </sheet>
+                </form>`,
             resId: 1,
         });
 
@@ -307,14 +307,14 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="int_field" widget="percentpie"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form string="Partners">
+                    <sheet>
+                        <group>
+                            <field name="int_field" widget="percentpie"/>
+                        </group>
+                    </sheet>
+                </form>`,
             resId: 3,
         });
 

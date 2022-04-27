@@ -4231,10 +4231,9 @@ QUnit.module("Fields", (hooks) => {
 
         serverData.views = {
             "partner,false,list": '<tree limit="7"><field name="display_name"/></tree>',
-            "partner,false,search":
-                "<search><group>" +
-                '    <filter name="bar" string="Bar" context="{\'group_by\': \'bar\'}"/>' +
-                "</group></search>",
+            "partner,false,search": `<search><group>
+                    <filter name="bar" string="Bar" context="{\'group_by\': \'bar\'}"/>
+                </group></search>`,
         };
 
         await makeView({
@@ -4269,6 +4268,9 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.skipWOWL("focus when closing many2one modal in many2one modal", async function (assert) {
         assert.expect(12);
+        serverData.views = {
+            "partner,false,form": '<form><field name="trululu"/></form>',
+        };
 
         const form = await makeView({
             type: "form",
@@ -4276,9 +4278,6 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `<form><field name="trululu"/></form>`,
             resId: 2,
-            archs: {
-                "partner,false,form": '<form><field name="trululu"/></form>',
-            },
             mockRPC(route, args) {
                 if (args.method === "get_formview_id") {
                     return Promise.resolve(false);

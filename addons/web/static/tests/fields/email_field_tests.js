@@ -58,14 +58,15 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="foo" widget="email"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form string="Partners">
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="email"/>
+                        </group>
+                    </sheet>
+                </form>
+                `,
             resId: 1,
         });
         let mailtoLink = target.querySelector(".o_field_email a.o_form_uri.o_text_overflow");
@@ -173,14 +174,15 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch:
-                "<form>" +
-                "<sheet>" +
-                "<group>" +
-                '<field name="empty_string" widget="email"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="empty_string" widget="email"/>
+                        </group>
+                    </sheet>
+                </form>
+                `,
         });
 
         await click(target.querySelector(".o_form_button_save"));
@@ -219,14 +221,10 @@ QUnit.module("Fields", (hooks) => {
                 type: "form",
                 resModel: "partner",
                 arch:
-                    '<form string="Partners">' +
-                    "<sheet>" +
-                    "<group>" +
+                    `<form string="Partners"><sheet><group>` +
                     '<field name="int_field" on_change="1"/>' + // onchange to update mobile in readonly mode directly
                     '<field name="foo" widget="email" readonly="1"/>' + // readonly only, we don't want to go through write mode
-                    "</group>" +
-                    "</sheet>" +
-                    "</form>",
+                    `</group></sheet></form>`,
                 resId: 1,
                 mockRPC(route, { method }) {
                     if (method === "onchange") {
@@ -271,14 +269,15 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="foo" widget="email"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form string="Partners">
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="email"/>
+                        </group>
+                    </sheet>
+                </form>
+                `,
             resId: 1,
         });
         await click(target.querySelector(".o_field_email a"));

@@ -69,12 +69,12 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch:
-                "<form>" +
-                '<field name="display_name" />' +
-                '<field name="float_field" invisible="1" />' +
-                "<field name=\"int_field\" widget=\"progressbar\" options=\"{'current_value': 'int_field', 'max_value': 'float_field'}\" />" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="display_name" />
+                    <field name="float_field" invisible="1" />
+                    <field name=\"int_field\" widget=\"progressbar\" options=\"{'current_value': 'int_field', 'max_value': 'float_field'}\" />
+                </form>`,
             resId: 1,
             mockRPC(route, { method, args }) {
                 if (method === "write") {
@@ -115,10 +115,7 @@ QUnit.module("Fields", (hooks) => {
                 serverData,
                 type: "form",
                 resModel: "partner",
-                arch:
-                    "<form>" +
-                    '<field name="int_field" widget="progressbar" options="{\'editable\': true}" />' +
-                    "</form>",
+                arch: `<form><field name="int_field" widget="progressbar" options="{\'editable\': true}"/></form>`,
                 resId: 1,
                 mockRPC(route, { method, args }) {
                     if (method === "write") {
@@ -167,11 +164,11 @@ QUnit.module("Fields", (hooks) => {
                 serverData,
                 type: "form",
                 resModel: "partner",
-                arch:
-                    "<form>" +
-                    '<field name="float_field" invisible="1" />' +
-                    "<field name=\"int_field\" widget=\"progressbar\" options=\"{'editable': true, 'max_value': 'float_field'}\" />" +
-                    "</form>",
+                arch: `
+                    <form>
+                        <field name="float_field" invisible="1" />
+                        <field name=\"int_field\" widget=\"progressbar\" options=\"{'editable': true, 'max_value': 'float_field'}\" />
+                    </form>`,
                 resId: 1,
                 mockRPC(route, { method, args }) {
                     if (method === "write") {
@@ -220,11 +217,11 @@ QUnit.module("Fields", (hooks) => {
                 serverData,
                 type: "form",
                 resModel: "partner",
-                arch:
-                    "<form>" +
-                    '<field name="float_field" invisible="1" />' +
-                    "<field name=\"int_field\" widget=\"progressbar\" options=\"{'editable': true, 'max_value': 'float_field', 'edit_max_value': true}\" />" +
-                    "</form>",
+                arch: `
+                    <form>
+                        <field name="float_field" invisible="1" />
+                        <field name=\"int_field\" widget=\"progressbar\" options=\"{'editable': true, 'max_value': 'float_field', 'edit_max_value': true}\" />
+                    </form>`,
                 resId: 1,
                 mockRPC(route, { method, args }) {
                     if (method === "write") {
@@ -274,11 +271,11 @@ QUnit.module("Fields", (hooks) => {
                 serverData,
                 type: "form",
                 resModel: "partner",
-                arch:
-                    "<form>" +
-                    '<field name="float_field" invisible="1" />' +
-                    "<field name=\"int_field\" widget=\"progressbar\" options=\"{'editable': true, 'max_value': 'float_field', 'edit_max_value': true, 'edit_current_value': true}\" />" +
-                    "</form>",
+                arch: `
+                    <form>
+                        <field name="float_field" invisible="1" />
+                        <field name=\"int_field\" widget=\"progressbar\" options=\"{'editable': true, 'max_value': 'float_field', 'edit_max_value': true, 'edit_current_value': true}\" />
+                    </form>`,
                 resId: 1,
                 mockRPC(route, { method, args }) {
                     if (method === "write") {
@@ -368,10 +365,7 @@ QUnit.module("Fields", (hooks) => {
                 serverData,
                 type: "form",
                 resModel: "partner",
-                arch:
-                    "<form>" +
-                    '<field name="int_field" widget="progressbar" options="{\'editable\': true}" />' +
-                    "</form>",
+                arch: `<form><field name="int_field" widget="progressbar" options="{\'editable\': true}"/></form>`,
                 resId: 1,
                 mockRPC: function (route, { method, args }) {
                     if (method === "write") {
@@ -436,10 +430,7 @@ QUnit.module("Fields", (hooks) => {
                 serverData,
                 type: "form",
                 resModel: "partner",
-                arch:
-                    "<form>" +
-                    '<field name="int_field" widget="progressbar" options="{\'editable\': true}" />' +
-                    "</form>",
+                arch: `<form><field name="int_field" widget="progressbar" options="{\'editable\': true}"/></form>`,
                 resId: 1,
             });
             // The view should be in edit mode by default

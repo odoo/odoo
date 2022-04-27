@@ -45,15 +45,16 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<div>" +
-                '<field name="text_field" widget="CopyClipboardText"/>' +
-                '<field name="char_field" widget="CopyClipboardChar"/>' +
-                "</div>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form string="Partners">
+                    <sheet>
+                        <div>
+                            <field name="text_field" widget="CopyClipboardText"/>
+                            <field name="char_field" widget="CopyClipboardChar"/>
+                        </div>
+                    </sheet>
+                </form>
+                `,
             resId: 1,
         });
 
@@ -76,14 +77,15 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch:
-                "<form>" +
-                "<sheet>" +
-                "<group>" +
-                '<field name="char_field" widget="CopyClipboardChar" />' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="char_field" widget="CopyClipboardChar" />
+                        </group>
+                    </sheet>
+                </form>
+                `,
             resId: 1,
         });
 
@@ -103,14 +105,15 @@ QUnit.module("Fields", (hooks) => {
                 serverData,
                 type: "form",
                 resModel: "partner",
-                arch:
-                    "<form>" +
-                    "<sheet>" +
-                    "<group>" +
-                    '<field name="display_name" widget="CopyClipboardChar" />' +
-                    "</group>" +
-                    "</sheet>" +
-                    "</form>",
+                arch: `
+                    <form>
+                        <sheet>
+                            <group>
+                                <field name="display_name" widget="CopyClipboardChar" />
+                            </group>
+                        </sheet>
+                    </form>
+                    `,
             });
 
             assert.containsNone(

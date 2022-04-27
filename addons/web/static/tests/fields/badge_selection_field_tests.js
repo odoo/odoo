@@ -71,7 +71,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch: "<form>" + '<field name="product_id" widget="selection_badge"/>' + "</form>",
+            arch: '<form><field name="product_id" widget="selection_badge"/></form>',
         });
 
         assert.containsOnce(
@@ -106,7 +106,7 @@ QUnit.module("Fields", (hooks) => {
                 serverData,
                 type: "form",
                 resModel: "partner",
-                arch: "<form>" + '<field name="color" widget="selection_badge"/>' + "</form>",
+                arch: '<form><field name="color" widget="selection_badge"/></form>',
             });
 
             assert.containsOnce(
@@ -144,10 +144,7 @@ QUnit.module("Fields", (hooks) => {
                 serverData,
                 type: "form",
                 resModel: "partner",
-                arch:
-                    "<form>" +
-                    '<field name="color" widget="selection_badge" readonly="1"/>' +
-                    "</form>",
+                arch: '<form><field name="color" widget="selection_badge" readonly="1"/></form>',
             });
 
             assert.containsOnce(

@@ -268,6 +268,9 @@ QUnit.module("Fields", (hooks) => {
             relation: "ir.attachment",
         };
         serverData.models.turtle.records[0].picture_ids = [17];
+        serverData.views = {
+            "ir.attachment,false,list": '<tree string="Pictures"><field name="name"/></tree>',
+        };
 
         await makeView({
             serverData,
@@ -277,9 +280,6 @@ QUnit.module("Fields", (hooks) => {
                 '<form string="Turtles">' +
                 '<group><field name="picture_ids" widget="many2many_binary" options="{\'accepted_file_extensions\': \'image/*\'}"/></group>' +
                 "</form>",
-            /*archs: {
-                "ir.attachment,false,list": '<tree string="Pictures"><field name="name"/></tree>',
-            },*/
             resId: 1,
             mockRPC(route, args) {
                 assert.step(route);
@@ -386,19 +386,20 @@ QUnit.module("Fields", (hooks) => {
             View: FormView,
             model: "partner",
             data: serverData.models,
-            arch:
-                "<form>" +
-                "<group>" +
-                '<field name="p">' +
-                "<tree>" +
-                '<field name="bar"/>' +
-                "</tree>" +
-                "<form>" +
-                '<field name="product_id"/>' +
-                "</form>" +
-                "</field>" +
-                "</group>" +
-                "</form>",
+            arch: `
+                <form>
+                    <group>
+                        <field name="p">
+                            <tree>
+                                <field name="bar"/>
+                            </tree>
+                            <form>
+                            <field name="product_id"/>
+                            </form>
+                        </field>
+                    </group>
+                </form>
+                `,
             mockRPC: function (route, args) {
                 if (args.method === "name_create") {
                     assert.step("name_create");

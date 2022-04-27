@@ -44,20 +44,15 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="foo" widget="phone"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form string="Partners">
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="phone"/>
+                        </group>
+                    </sheet>
+                </form>`,
             resId: 1,
-            // config: {
-            //     device: {
-            //         size_class: config.device.SIZES.LG,
-            //     },
-            // },
         });
 
         const phone = target.querySelector(".o_field_phone a");
@@ -162,15 +157,15 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="display_name"/>' +
-                '<field name="foo" widget="phone"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form string="Partners">
+                    <sheet>
+                        <group>
+                            <field name="display_name"/>
+                            <field name="foo" widget="phone"/>
+                        </group>
+                    </sheet>
+                </form>`,
         });
         await click(target.querySelector(".o_field_widget[name=display_name]"));
         assert.strictEqual(

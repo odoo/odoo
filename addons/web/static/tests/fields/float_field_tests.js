@@ -42,7 +42,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             resModel: "partner",
             resId: 4,
-            arch: `<form><field name="float_field"/></form>`,
+            arch: '<form><field name="float_field"/></form>',
         });
 
         assert.doesNotHaveClass(
@@ -68,7 +68,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             resModel: "partner",
             resId: 1,
-            arch: `<form><field name="float_field"/></form>`,
+            arch: '<form><field name="float_field"/></form>',
         });
 
         assert.strictEqual(
@@ -104,7 +104,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             resModel: "partner",
             resId: 1,
-            arch: `<form><field name="float_field" digits="[0, 1]" /></form>`,
+            arch: '<form><field name="float_field" digits="[0, 1]" /></form>',
         });
 
         assert.strictEqual(
@@ -311,13 +311,14 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<field name="float_field" widget="float" digits="[5,3]"/>' +
-                '<field name="int_field"/>' +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form string="Partners">
+                    <sheet>
+                        <field name="float_field" widget="float" digits="[5,3]"/>
+                        <field name="int_field"/>
+                    </sheet>
+                </form>
+                `,
             mockRPC(route, { method }) {
                 assert.step(method);
             },
@@ -341,13 +342,14 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<field name="monetary" widget="float"/>' +
-                '<field name="currency_id" invisible="1"/>' +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form string="Partners">
+                    <sheet>
+                        <field name="monetary" widget="float"/>
+                        <field name="currency_id" invisible="1"/>
+                    </sheet>
+                </form>
+                `,
             resId: 1,
             /*
             session: {
@@ -369,10 +371,11 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch:
-                '<form string="Partners">' +
-                "<field name=\"float_field\" options=\"{'type': 'number'}\"/>" +
-                "</form>",
+            arch: `
+                <form string="Partners">
+                    <field name=\"float_field\" options=\"{'type': 'number'}\"/>
+                </form>
+                `,
             resId: 4,
         });
         registry.category("services").remove("localization");
@@ -419,10 +422,11 @@ QUnit.module("Fields", (hooks) => {
                 serverData,
                 type: "form",
                 resModel: "partner",
-                arch:
-                    '<form string="Partners">' +
-                    "<field name=\"float_field\" options=\"{'type': 'number'}\"/>" +
-                    "</form>",
+                arch: `
+                    <form string="Partners">
+                        <field name=\"float_field\" options=\"{'type': 'number'}\"/>
+                    </form>
+                    `,
                 resId: 4,
             });
             registry.category("services").remove("localization");

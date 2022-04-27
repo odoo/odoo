@@ -14,7 +14,7 @@ import { session } from "@web/session";
 let serverData, target;
 
 // WOWL remove after adapting tests
-let createView, FormView, testUtils, ListView;
+let testUtils;
 
 function getFieldArch(fieldName, widget) {
     return `<field name="${fieldName}" ` + (widget ? `widget="${widget}"` : "") + `/>`;
@@ -537,13 +537,13 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<field name=\"float_field\" options=\"{'currency_field': 'company_currency_id'}\"/>" +
-                '<field name="company_currency_id"/>' +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form string="Partners">
+                    <sheet>
+                        <field name=\"float_field\" options=\"{'currency_field': 'company_currency_id'}\"/>
+                        <field name="company_currency_id"/>
+                    </sheet>
+                </form>`,
             resId: 5,
         });
 
@@ -559,33 +559,34 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            this.data.partner.fields.currency_id.default = 1;
-            this.data.partner.fields.m2m = {
+            serverData.models.partner.fields.currency_id.default = 1;
+            serverData.models.partner.fields.m2m = {
                 string: "m2m",
                 type: "many2many",
                 relation: "partner",
                 default: [[6, false, [2]]],
             };
-            const form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    '<form string="Partners">' +
-                    "<sheet>" +
-                    '<field name="p"/>' +
-                    '<field name="m2m"/>' +
-                    "</sheet>" +
-                    "</form>",
-                archs: {
-                    "partner,false,list":
-                        '<tree editable="bottom">' +
-                        '<field name="float_field" widget="monetary"/>' +
-                        '<field name="currency_id" invisible="1"/>' +
-                        "</tree>",
-                },
+            serverData.views = {
+                "partner,false,list":
+                    '<tree editable="bottom">' +
+                    '<field name="float_field" widget="monetary"/>' +
+                    '<field name="currency_id" invisible="1"/>' +
+                    "</tree>",
+            };
+
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form string="Partners">
+                        <sheet>
+                            <field name="p"/>
+                            <field name="m2m"/>
+                        </sheet>
+                    </form>`,
                 session: {
-                    currencies: _.indexBy(this.data.currency.records, "id"),
+                    currencies: _.indexBy(serverData.models.currency.records, "id"),
                 },
             });
 
@@ -647,16 +648,16 @@ QUnit.module("Fields", (hooks) => {
         // onchange)
         assert.expect(8);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             int_field: function (obj) {
                 obj.currency_id = obj.int_field ? 2 : null;
             },
         };
 
-        var list = await createView({
-            View: ListView,
-            model: "partner",
-            data: this.data,
+        var list = await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
             arch:
                 '<tree editable="top">' +
                 '<field name="int_field"/>' +
@@ -664,7 +665,7 @@ QUnit.module("Fields", (hooks) => {
                 '<field name="currency_id" invisible="1"/>' +
                 "</tree>",
             session: {
-                currencies: _.indexBy(this.data.currency.records, "id"),
+                currencies: _.indexBy(serverData.models.currency.records, "id"),
             },
         });
 
@@ -751,13 +752,13 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<field name="float_field" widget="monetary" options="{\'field_digits\': True}"/>' +
-                '<field name="currency_id" invisible="1"/>' +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form string="Partners">
+                    <sheet>
+                        <field name="float_field" widget="monetary" options="{\'field_digits\': True}"/>
+                        <field name="currency_id" invisible="1"/>
+                    </sheet>
+                </form>`,
             resId: 1,
         });
 

@@ -196,7 +196,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             resModel: "partner",
             resId: 1,
-            arch: `<form><field name="int_field"/></form>`,
+            arch: '<form><field name="int_field"/></form>',
         });
 
         await click(target, ".o_form_button_edit");
@@ -255,7 +255,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             resModel: "partner",
             resId: 3,
-            arch: `<form><field name="int_field"/></form>`,
+            arch: '<form><field name="int_field"/></form>',
         });
 
         assert.strictEqual(

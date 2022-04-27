@@ -43,14 +43,14 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="foo" widget="url"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form string="Partners">
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="url"/>
+                        </group>
+                    </sheet>
+                </form>`,
             resId: 1,
         });
         const matchingEl = target.querySelector("a.o_url_field.o_field_widget.o_form_uri");

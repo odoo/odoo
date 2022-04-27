@@ -77,7 +77,7 @@ QUnit.module("Fields", (hooks) => {
             type: "list",
             serverData,
             resModel: "partner",
-            arch: `<list><field name="display_name" widget="badge"/></list>`,
+            arch: '<list><field name="display_name" widget="badge"/></list>',
         });
 
         assert.containsOnce(target, '.o_field_badge[name="display_name"]:contains(first record)');
@@ -92,7 +92,7 @@ QUnit.module("Fields", (hooks) => {
             type: "list",
             serverData,
             resModel: "partner",
-            arch: `<list><field name="selection_field" widget="badge"/></list>`,
+            arch: '<list><field name="selection_field" widget="badge"/></list>',
         });
 
         assert.containsOnce(target, '.o_field_badge[name="selection_field"]:contains(Blocked)');
@@ -107,7 +107,7 @@ QUnit.module("Fields", (hooks) => {
             type: "list",
             serverData,
             resModel: "partner",
-            arch: `<list><field name="many2one_field" widget="badge"/></list>`,
+            arch: '<list><field name="many2one_field" widget="badge"/></list>',
         });
 
         assert.containsOnce(target, '.o_field_badge[name="many2one_field"]:contains(first record)');

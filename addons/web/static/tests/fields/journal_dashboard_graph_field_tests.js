@@ -72,15 +72,17 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "kanban",
             resModel: "partner",
-            arch:
-                '<kanban class="o_kanban_test">' +
-                '<field name="graph_type"/>' +
-                '<templates><t t-name="kanban-box">' +
-                "<div>" +
-                '<field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>' +
-                "</div>" +
-                "</t>" +
-                "</templates></kanban>",
+            arch: `
+                <kanban class="o_kanban_test">
+                    <field name="graph_type"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             domain: [["id", "in", [1, 2]]],
         });
         assert.containsOnce(
@@ -133,15 +135,17 @@ QUnit.module("Fields", (hooks) => {
                 serverData,
                 type: "kanban",
                 resModel: "partner",
-                arch:
-                    '<kanban class="o_kanban_test">' +
-                    '<field name="graph_type"/>' +
-                    '<templates><t t-name="kanban-box">' +
-                    "<div>" +
-                    '<field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>' +
-                    "</div>" +
-                    "</t>" +
-                    "</templates></kanban>",
+                arch: `
+                    <kanban class="o_kanban_test">
+                        <field name="graph_type"/>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div>
+                                    <field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>`,
                 domain: [["id", "in", [1, 2]]],
             });
             assert.containsN(
@@ -188,15 +192,17 @@ QUnit.module("Fields", (hooks) => {
                 serverData,
                 type: "kanban",
                 resModel: "partner",
-                arch:
-                    '<kanban class="o_kanban_test">' +
-                    '<field name="graph_type"/>' +
-                    '<templates><t t-name="kanban-box">' +
-                    "<div>" +
-                    '<field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>' +
-                    "</div>" +
-                    "</t>" +
-                    "</templates></kanban>",
+                arch: `
+                    <kanban class="o_kanban_test">
+                        <field name="graph_type"/>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div>
+                                    <field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>`,
                 domain: [["id", "in", [1, 2]]],
             });
             assert.containsN(

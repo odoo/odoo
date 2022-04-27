@@ -32,12 +32,13 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<field name="qux" widget="float_time"/>' +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form string="Partners">
+                    <sheet>
+                        <field name="qux" widget="float_time"/>
+                    </sheet>
+                </form>
+                `,
             mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     // 48 / 60 = 0.8

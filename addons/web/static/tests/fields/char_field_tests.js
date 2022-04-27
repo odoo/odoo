@@ -146,24 +146,6 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("CharField");
 
-    QUnit.skipWOWL("char widget isValid method works", async function (assert) {
-        // assert.expect(1);
-        // serverData.models.partner.fields.foo.required = true;
-        // const form = await makeView({
-        //     type: "form",
-        //     resModel: "partner",
-        //     resId: 1,
-        //     serverData,
-        //     arch: `
-        //         <form>
-        //             <field name="foo" />
-        //         </form>
-        //     `,
-        // });
-        // const charField = _.find(form.renderer.allFieldWidgets)[0];
-        // assert.strictEqual(charField.isValid(), true);
-    });
-
     QUnit.test("char field in form view", async function (assert) {
         assert.expect(4);
 

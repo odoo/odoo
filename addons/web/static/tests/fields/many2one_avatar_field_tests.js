@@ -188,7 +188,7 @@ QUnit.module("Fields", (hooks) => {
             type: "list",
             serverData,
             resModel: "partner",
-            arch: `<tree><field name="user_id" widget="many2one_avatar"/></tree>`,
+            arch: '<tree><field name="user_id" widget="many2one_avatar"/></tree>',
         });
 
         assert.strictEqual(
@@ -213,7 +213,7 @@ QUnit.module("Fields", (hooks) => {
             type: "list",
             serverData,
             resModel: "partner",
-            arch: `<tree editable="top"><field name="user_id" widget="many2one_avatar"/></tree>`,
+            arch: '<tree editable="top"><field name="user_id" widget="many2one_avatar"/></tree>',
         });
 
         assert.strictEqual(

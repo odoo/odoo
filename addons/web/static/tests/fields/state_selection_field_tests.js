@@ -67,14 +67,14 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="selection" widget="state_selection"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form string="Partners">
+                    <sheet>
+                        <group>
+                            <field name="selection" widget="state_selection"/>
+                        </group>
+                    </sheet>
+                </form>`,
             resId: 1,
             /*
             viewOptions: {
