@@ -7,7 +7,7 @@ import '@mail/models/messaging';
 
 addRecordMethods('Messaging', {
     async fetchSnailmailCreditsUrl() {
-        const snailmail_credits_url = await this.async(() => this.env.services.rpc({
+        const snailmail_credits_url = await this.async(() => this.messaging.rpc({
             model: 'iap.account',
             method: 'get_credits_url',
             args: ['snailmail'],
@@ -17,7 +17,7 @@ addRecordMethods('Messaging', {
         });
     },
     async fetchSnailmailCreditsUrlTrial() {
-        const snailmail_credits_url_trial = await this.async(() => this.env.services.rpc({
+        const snailmail_credits_url_trial = await this.async(() => this.messaging.rpc({
             model: 'iap.account',
             method: 'get_credits_url',
             args: ['snailmail', '', 0, true],

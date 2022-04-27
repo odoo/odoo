@@ -202,7 +202,7 @@ registerModel({
                 return;
             }
             this.update({ globalSettingsTimeout: clear() });
-            await this.env.services.rpc(
+            await this.messaging.rpc(
                 {
                     model: 'res.users.settings',
                     method: 'set_res_users_settings',
@@ -228,7 +228,7 @@ registerModel({
             const newVolumeSettingsTimeouts = { ...this.volumeSettingsTimeouts };
             delete newVolumeSettingsTimeouts[partnerId];
             this.update({ volumeSettingsTimeouts: newVolumeSettingsTimeouts });
-            await this.env.services.rpc(
+            await this.messaging.rpc(
                 {
                     model: 'res.users.settings',
                     method: 'set_volume_setting',

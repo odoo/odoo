@@ -233,9 +233,9 @@ QUnit.test('livechat - states: close should update the value on the server', asy
         is_discuss_sidebar_category_livechat_open: true,
     });
     const currentUserId = pyEnv.currentUserId;
-    const { env, messaging } = await this.start();
+    const { messaging } = await this.start();
 
-    const initalSettings = await env.services.rpc({
+    const initalSettings = await messaging.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[currentUserId]],
@@ -252,7 +252,7 @@ QUnit.test('livechat - states: close should update the value on the server', asy
             .o_DiscussSidebarCategory_title
         `).click()
     );
-    const newSettings = await env.services.rpc({
+    const newSettings = await messaging.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[currentUserId]],
@@ -282,9 +282,9 @@ QUnit.test('livechat - states: open should update the value on the server', asyn
         is_discuss_sidebar_category_livechat_open: false,
     });
     const currentUserId = pyEnv.currentUserId;
-    const { env, messaging } = await this.start();
+    const { messaging } = await this.start();
 
-    const initalSettings = await env.services.rpc({
+    const initalSettings = await messaging.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[currentUserId]],
@@ -301,7 +301,7 @@ QUnit.test('livechat - states: open should update the value on the server', asyn
             .o_DiscussSidebarCategory_title
         `).click()
     );
-    const newSettings = await env.services.rpc({
+    const newSettings = await messaging.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[currentUserId]],

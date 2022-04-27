@@ -129,6 +129,15 @@ registerModel({
             return this.messaging.openDocument({ id, model });
         },
         /**
+         * Perform a rpc call and return a promise resolving to the result.
+         *
+         * @param {Object} params
+         * @return {any}
+         */
+        async rpc(params, options) {
+            return this.env.services.rpc(params, options);
+        },
+        /**
          * Refreshes the value of `isNotificationPermissionDefault`.
          *
          * Must be called in flux-specific way because the browser does not
