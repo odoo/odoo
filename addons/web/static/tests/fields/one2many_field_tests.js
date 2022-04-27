@@ -5604,7 +5604,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".oe_kanban_action_button");
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many kanban with edit type action and widget with specialData",
         async function (assert) {
             assert.expect(3);
@@ -5634,10 +5634,12 @@ QUnit.module("Fields", (hooks) => {
                                 <kanban>
                                     <templates>
                                         <t t-name="kanban-box">
-                                            <div><field name="display_name"/></div>
-                                            <div><field name="turtle_foo"/></div>
-                                            <div><field name="turtle_int"/></div>
-                                            <div> <a type="edit"> Edit </a> </div>
+                                            <div>
+                                                <field name="display_name"/>
+                                                <field name="turtle_foo"/>
+                                                <field name="turtle_int"/>
+                                                <a type="edit"> Edit </a>
+                                            </div>
                                         </t>
                                     </templates>
                                 </kanban>
