@@ -468,7 +468,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @param {OdooEvent} ev
      */
     _onChange: function (ev) {
-        this._doAction();
+        this._doDebouncedAction.apply(this, arguments);
 
         var $lis = this.$content.find('.note-editable ul.o_checklist > li:not(:has(> ul.o_checklist))');
         if (!$lis.length) {
