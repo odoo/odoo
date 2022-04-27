@@ -9,7 +9,7 @@ addRecordMethods('MessagingInitializer', {
      * @private
      */
     async _initializeOdooBot() {
-        const data = await this.async(() => this.env.services.rpc({
+        const data = await this.async(() => this.messaging.rpc({
             model: 'mail.channel',
             method: 'init_odoobot',
         }));

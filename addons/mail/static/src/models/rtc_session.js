@@ -283,7 +283,7 @@ registerModel({
                 return;
             }
             this.update({ broadcastTimeout: clear() });
-            this.env.services.rpc(
+            this.messaging.rpc(
                 {
                     route: '/mail/rtc/session/update_and_broadcast',
                     params: {

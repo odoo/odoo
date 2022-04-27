@@ -60,7 +60,7 @@ registerModel({
          * welcome view.
          */
         async performRpcAddGuestAsMember() {
-            await this.env.services.rpc({
+            await this.messaging.rpc({
                 route: '/mail/channel/add_guest_as_member',
                 params: {
                     channel_id: this.channel.id,

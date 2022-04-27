@@ -1753,7 +1753,7 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
     }
     const [mailChannelPartnerId] = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId1], ['partner_id', '=', pyEnv.currentPartnerId]]);
     pyEnv['mail.channel.partner'].write([mailChannelPartnerId], { seen_message_id: lastMessage.id });
-    const { afterEvent, env } = await this.start({
+    const { afterEvent, messaging } = await this.start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -1803,7 +1803,7 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
     // composer is focused by default, we remove that focus
     document.querySelector('.o_ComposerTextInput_textarea').blur();
     // simulate receiving a message
-    await afterNextRender(async () => env.services.rpc({
+    await afterNextRender(async () => messaging.rpc({
         route: '/mail/chat_post',
         params: {
             context: {

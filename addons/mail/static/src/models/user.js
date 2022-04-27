@@ -40,7 +40,7 @@ registerModel({
          * @param {integer[]} param0.ids
          */
         async performRpcRead({ context, fields, ids }) {
-            const usersData = await this.env.services.rpc({
+            const usersData = await this.messaging.rpc({
                 model: 'res.users',
                 method: 'read',
                 args: [ids],

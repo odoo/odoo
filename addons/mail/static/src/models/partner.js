@@ -82,7 +82,7 @@ registerModel({
             if (isNonPublicChannel) {
                 kwargs.channel_id = thread.id;
             }
-            const suggestedPartners = await this.env.services.rpc(
+            const suggestedPartners = await this.messaging.rpc(
                 {
                     model: 'res.partner',
                     method: 'get_mention_suggestions',
@@ -195,7 +195,7 @@ registerModel({
                 }
             }
             if (!partners.length) {
-                const partnersData = await this.env.services.rpc(
+                const partnersData = await this.messaging.rpc(
                     {
                         model: 'res.partner',
                         method: 'im_search',
@@ -275,7 +275,7 @@ registerModel({
             if (partnerIds.length === 0) {
                 return;
             }
-            const dataList = await this.env.services.rpc({
+            const dataList = await this.messaging.rpc({
                 route: '/longpolling/im_status',
                 params: {
                     partner_ids: partnerIds,
@@ -299,7 +299,7 @@ registerModel({
          * applicable.
          */
         async checkIsUser() {
-            const userIds = await this.async(() => this.env.services.rpc({
+            const userIds = await this.async(() => this.messaging.rpc({
                 model: 'res.users',
                 method: 'search',
                 args: [[['partner_id', '=', this.id]]],

@@ -608,7 +608,7 @@ registerModel({
                 const { threadView = {} } = this;
                 const { thread: chatterThread } = this.chatter || {};
                 const { thread: threadViewThread } = threadView;
-                const messageData = await this.env.services.rpc({ route: `/mail/message/post`, params });
+                const messageData = await this.messaging.rpc({ route: `/mail/message/post`, params });
                 if (!this.messaging) {
                     return;
                 }

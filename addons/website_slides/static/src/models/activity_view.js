@@ -10,7 +10,7 @@ addRecordMethods('ActivityView', {
      */
     async onGrantAccess(ev) {
         const { chatter } = this.activityBoxView; // save value before deleting activity
-        await this.env.services.rpc({
+        await this.messaging.rpc({
             model: 'slide.channel',
             method: 'action_grant_access',
             args: [[this.activity.thread.id]],
@@ -26,7 +26,7 @@ addRecordMethods('ActivityView', {
      */
     async onRefuseAccess(ev) {
         const { chatter } = this.activityBoxView; // save value before deleting activity
-        await this.env.services.rpc({
+        await this.messaging.rpc({
             model: 'slide.channel',
             method: 'action_refuse_access',
             args: [[this.activity.thread.id]],

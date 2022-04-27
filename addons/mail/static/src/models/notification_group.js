@@ -13,7 +13,7 @@ registerModel({
          * Cancel notifications of the group.
          */
         notifyCancel() {
-            this.env.services.rpc({
+            this.messaging.rpc({
                 model: this.res_model,
                 method: 'notify_cancel_by_type',
                 kwargs: { notification_type: this.notification_type },

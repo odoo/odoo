@@ -719,7 +719,7 @@ QUnit.test("Mobile: chat window shouldn't open automatically after receiving a n
             uuid: 'channel-10-uuid',
         },
     ];
-    const { env } = await this.start({
+    const { messaging } = await this.start({
         env: {
             device: {
                 isMobile: true,
@@ -728,7 +728,7 @@ QUnit.test("Mobile: chat window shouldn't open automatically after receiving a n
     });
 
     // simulate receiving a message
-    env.services.rpc({
+    messaging.rpc({
         route: '/mail/chat_post',
         params: {
             context: {
@@ -2172,10 +2172,10 @@ QUnit.test('new message separator is shown in a chat window of a chat on receivi
         model: 'mail.channel',
         res_id: mailChannelId1,
     });
-    const { env } = await this.start();
+    const { messaging } = await this.start();
 
     // simulate receiving a message
-    await afterNextRender(async () => env.services.rpc({
+    await afterNextRender(async () => messaging.rpc({
         route: '/mail/chat_post',
         params: {
             context: {
@@ -2217,10 +2217,10 @@ QUnit.test('new message separator is not shown in a chat window of a chat on rec
         channel_type: "chat",
         uuid: 'channel-10-uuid',
     });
-    const { env } = await this.start();
+    const { messaging } = await this.start();
 
     // simulate receiving a message
-    await afterNextRender(async () => env.services.rpc({
+    await afterNextRender(async () => messaging.rpc({
         route: '/mail/chat_post',
         params: {
             context: {
@@ -2260,10 +2260,10 @@ QUnit.test('focusing a chat window of a chat should make new message separator d
         model: 'mail.channel',
         res_id: mailChannelId1,
     });
-    const { afterEvent, env } = await this.start();
+    const { afterEvent, messaging } = await this.start();
 
     // simulate receiving a message
-    await afterNextRender(() => env.services.rpc({
+    await afterNextRender(() => messaging.rpc({
         route: '/mail/chat_post',
         params: {
             context: {
@@ -2402,10 +2402,10 @@ QUnit.test('chat window should open when receiving a new DM', async function (as
         channel_type: 'chat',
         uuid: 'channel11uuid',
     });
-    const { env } = await this.start();
+    const { messaging } = await this.start();
 
     // simulate receiving the first message on channel 11
-    await afterNextRender(() => env.services.rpc({
+    await afterNextRender(() => messaging.rpc({
         route: '/mail/chat_post',
         params: {
             context: {
@@ -2444,9 +2444,9 @@ QUnit.test('chat window should remain folded when new message is received', asyn
         uuid: 'channel-10-uuid',
     });
 
-    const { env } = await this.start();
+    const { messaging } = await this.start();
     // simulate receiving a new message
-    await afterNextRender(async () => env.services.rpc({
+    await afterNextRender(async () => messaging.rpc({
         route: '/mail/chat_post',
         params: {
             context: {

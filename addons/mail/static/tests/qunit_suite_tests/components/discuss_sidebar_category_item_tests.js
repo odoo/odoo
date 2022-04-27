@@ -50,7 +50,7 @@ QUnit.test('channel - avatar: should update avatar url from bus', async function
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({ avatarCacheKey: '101010' });
 
-    const { env, messaging } = await start({
+    const { messaging } = await start({
         autoOpenDiscuss: true,
         hasDiscuss: true,
     });
@@ -70,7 +70,7 @@ QUnit.test('channel - avatar: should update avatar url from bus', async function
     );
 
     await afterNextRender(() => {
-        env.services.rpc({
+        messaging.rpc({
             model: 'mail.channel',
             method: 'write',
             args: [[mailChannelId1], { image_128: 'This field does not matter' }],

@@ -47,7 +47,7 @@ registerModel({
          * @param {integer[]} param0.ids
          */
         async performRpcRead({ context, fields, ids }) {
-            const employeesData = await this.env.services.rpc({
+            const employeesData = await this.messaging.rpc({
                 model: 'hr.employee.public',
                 method: 'read',
                 args: [ids],
@@ -69,7 +69,7 @@ registerModel({
          * @param {string[]} param0.fields
          */
         async performRpcSearchRead({ context, domain, fields }) {
-            const employeesData = await this.env.services.rpc({
+            const employeesData = await this.messaging.rpc({
                 model: 'hr.employee.public',
                 method: 'search_read',
                 kwargs: {

@@ -77,7 +77,7 @@ registerModel({
             if (!this.isUploading) {
                 this.update({ isUnlinkPending: true });
                 try {
-                    await this.async(() => this.env.services.rpc({
+                    await this.async(() => this.messaging.rpc({
                         route: `/mail/attachment/delete`,
                         params: {
                             access_token: this.accessToken,

@@ -30,7 +30,7 @@ registerModel({
                 return;
             }
             const channel = this.channel;
-            const channelData = await this.env.services.rpc(({
+            const channelData = await this.messaging.rpc(({
                 route: '/mail/rtc/channel/cancel_call_invitation',
                 params: {
                     channel_id: this.channel.id,

@@ -35,7 +35,7 @@ registerModel({
             });
             this.messaging.device.start();
             const discuss = this.messaging.discuss;
-            const data = await this.async(() => this.env.services.rpc({
+            const data = await this.async(() => this.messaging.rpc({
                 route: '/mail/init_messaging',
             }, { shadow: true }));
             await this.async(() => this._init(data));
@@ -300,7 +300,7 @@ registerModel({
          * @private
          */
         async _loadMessageFailures() {
-            const data = await this.env.services.rpc({
+            const data = await this.messaging.rpc({
                 route: '/mail/load_message_failures',
             }, { shadow: true });
             this._initMailFailures(data);

@@ -13,7 +13,7 @@ registerModel({
          * @param {string} param0.name The new name to use to rename the guest.
          */
         async performRpcGuestUpdateName({ id, name }) {
-            await this.env.services.rpc({
+            await this.messaging.rpc({
                 route: '/mail/guest/update_name',
                 params: {
                     guest_id: id,

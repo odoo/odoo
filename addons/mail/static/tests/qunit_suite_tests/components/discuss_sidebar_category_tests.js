@@ -248,9 +248,9 @@ QUnit.test('channel - states: close should update the value on the server', asyn
         is_discuss_sidebar_category_channel_open: true,
     });
     const currentUserId = pyEnv.currentUserId;
-    const { click, env } = await this.start();
+    const { click, messaging } = await this.start();
 
-    const initalSettings = await env.services.rpc({
+    const initalSettings = await messaging.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[currentUserId]],
@@ -262,7 +262,7 @@ QUnit.test('channel - states: close should update the value on the server', asyn
     );
 
     await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
-    const newSettings = await env.services.rpc({
+    const newSettings = await messaging.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[currentUserId]],
@@ -284,9 +284,9 @@ QUnit.test('channel - states: open should update the value on the server', async
         is_discuss_sidebar_category_channel_open: false,
     });
     const currentUserId = pyEnv.currentUserId;
-    const { click, env } = await this.start();
+    const { click, messaging } = await this.start();
 
-    const initalSettings = await env.services.rpc({
+    const initalSettings = await messaging.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[currentUserId]],
@@ -298,7 +298,7 @@ QUnit.test('channel - states: open should update the value on the server', async
     );
 
     await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
-    const newSettings = await env.services.rpc({
+    const newSettings = await messaging.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[currentUserId]],
@@ -620,9 +620,9 @@ QUnit.test('chat - states: close should call update server data', async function
         is_discuss_sidebar_category_chat_open: true,
     });
     const currentUserId = pyEnv.currentUserId;
-    const { click, env } = await this.start();
+    const { click, messaging } = await this.start();
 
-    const initalSettings = await env.services.rpc({
+    const initalSettings = await messaging.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[currentUserId]],
@@ -634,7 +634,7 @@ QUnit.test('chat - states: close should call update server data', async function
     );
 
     await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
-    const newSettings = await env.services.rpc({
+    const newSettings = await messaging.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[currentUserId]],
@@ -655,9 +655,9 @@ QUnit.test('chat - states: open should call update server data', async function 
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: false,
     });
-    const { click, env } = await this.start();
+    const { click, messaging } = await this.start();
 
-    const initalSettings = await env.services.rpc({
+    const initalSettings = await messaging.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[pyEnv.currentUserId]],
@@ -669,7 +669,7 @@ QUnit.test('chat - states: open should call update server data', async function 
     );
 
     await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
-    const newSettings = await env.services.rpc({
+    const newSettings = await messaging.rpc({
         model: 'res.users.settings',
         method: '_find_or_create_for_user',
         args: [[pyEnv.currentUserId]],

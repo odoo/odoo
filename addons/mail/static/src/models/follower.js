@@ -79,7 +79,7 @@ registerModel({
         async remove() {
             const partner_ids = [];
             partner_ids.push(this.partner.id);
-            await this.async(() => this.env.services.rpc({
+            await this.async(() => this.messaging.rpc({
                 model: this.followedThread.model,
                 method: 'message_unsubscribe',
                 args: [[this.followedThread.id], partner_ids]
@@ -100,7 +100,7 @@ registerModel({
          * Show (editable) list of subtypes of this follower.
          */
         async showSubtypes() {
-            const subtypesData = await this.async(() => this.env.services.rpc({
+            const subtypesData = await this.async(() => this.messaging.rpc({
                 route: '/mail/read_subscription_data',
                 params: { follower_id: this.id },
             }));
@@ -139,7 +139,7 @@ registerModel({
                 if (this.partner) {
                     kwargs.partner_ids = [this.partner.id];
                 }
-                await this.async(() => this.env.services.rpc({
+                await this.async(() => this.messaging.rpc({
                     model: this.followedThread.model,
                     method: 'message_subscribe',
                     args: [[this.followedThread.id]],

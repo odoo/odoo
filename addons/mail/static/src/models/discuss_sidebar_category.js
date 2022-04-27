@@ -17,7 +17,7 @@ registerModel({
          * @param {boolean} [resUsersSettings.is_category_chat_open]
          */
         async performRpcSetResUsersSettings(resUsersSettings) {
-            return this.env.services.rpc(
+            return this.messaging.rpc(
                 {
                     model: 'res.users.settings',
                     method: 'set_res_users_settings',

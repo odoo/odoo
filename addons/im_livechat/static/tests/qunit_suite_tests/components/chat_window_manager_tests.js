@@ -30,13 +30,13 @@ QUnit.test('closing a chat window with no message from admin side unpins it', as
             uuid: 'channel-10-uuid',
         },
     );
-    const { createMessagingMenuComponent, env } = await start({ hasChatWindow: true });
+    const { createMessagingMenuComponent, messaging } = await start({ hasChatWindow: true });
     await createMessagingMenuComponent();
 
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
     await afterNextRender(() => document.querySelector(`.o_NotificationList_preview`).click());
     await afterNextRender(() => document.querySelector(`.o_ChatWindowHeader_commandClose`).click());
-    const channels = await env.services.rpc({
+    const channels = await messaging.rpc({
         model: 'mail.channel',
         method: 'channel_info',
         args: [mailChannelId1],

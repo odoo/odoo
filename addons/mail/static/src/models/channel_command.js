@@ -94,7 +94,7 @@ registerModel({
          * @param {Object} [param0.body='']
          */
         async execute({ channel, body = '' }) {
-            return this.env.services.rpc({
+            return this.messaging.rpc({
                 model: 'mail.channel',
                 method: this.methodName,
                 args: [[channel.id]],
