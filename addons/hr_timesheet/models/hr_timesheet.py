@@ -260,7 +260,7 @@ class AccountAnalyticLine(models.Model):
                 cost = timesheet._employee_timesheet_cost()
                 amount = -timesheet.unit_amount * cost
                 amount_converted = timesheet.employee_id.currency_id._convert(
-                    amount, timesheet.account_id.currency_id, self.env.company, timesheet.date)
+                    amount, timesheet.account_id.currency_id or timesheet.currency_id, self.env.company, timesheet.date)
                 result[timesheet.id].update({
                     'amount': amount_converted,
                 })
