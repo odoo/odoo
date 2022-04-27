@@ -10,6 +10,10 @@ class AccountMoveLine(models.Model):
     qty_waiting_for_receipt = fields.Float(
         default=0, help="Quantity invoiced but not received yet.")
 
+    def _is_not_eligible_for_price_difference(self):
+        self.ensure_one()
+        return self.product_id.type != 'product' or self.product_id.valuation != 'real_time'
+
     def _update_qty_waiting_for_receipt(self):
         # TODO: Could be set directly in `_stock_account_prepare_anglo_saxon_in_lines_vals` ?
         for line in self:
