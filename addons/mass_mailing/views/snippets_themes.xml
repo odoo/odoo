@@ -241,21 +241,21 @@
 </template>
 
 <template id="s_mail_block_footer_social" name="Footer Center">
-    <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-200">
-        <div class="container o_mail_table_styles">
+    <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general">
+        <div class="container">
             <div class="row">
-                <div class="col-lg o_mail_footer_social">
+                <div class="col-lg-12 o_mail_footer_social">
                     <t t-call="mass_mailing.social_links"/>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg o_mail_footer_links">
+                <div class="col-lg-12 o_mail_footer_links">
                     <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg">
-                    <p class="o_mail_no_margin o_mail_footer_copy">
+                <div class="col-lg-12">
+                    <p class="o_mail_footer_copy">
                         © <t t-esc="datetime.datetime.now().year"/> All Rights Reserved
                     </p>
                 </div>
@@ -268,17 +268,17 @@
     <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_left o_mail_snippet_general">
         <div class="container o_mail_table_styles">
             <div class="row">
-                <div class="col-lg o_mail_footer_description">
-                    <p t-if="res_company" class="o_mail_no_margin">
+                <div class="col-lg-6 o_mail_footer_description">
+                    <p t-if="res_company">
                         <strong><t t-esc="res_company.partner_id.name"/></strong>
                     </p>
                     <div class="o_mail_footer_links">
                         <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
                     </div>
                 </div>
-                <div class="col-lg" align="right">
-                    <div class="o_mail_footer_social pb16"><t t-call="mass_mailing.social_links"/></div>
-                    <p class="o_mail_footer_copy">© <t t-esc="datetime.datetime.now().year"/> All Rights Reserved</p>
+                <div class="col-lg-6">
+                    <div class="o_mail_footer_social pb16" style="text-align: right"><t t-call="mass_mailing.social_links"/></div>
+                    <p class="o_mail_footer_copy" style="text-align: right">© <t t-esc="datetime.datetime.now().year"/> All Rights Reserved</p>
                 </div>
             </div>
         </div>
