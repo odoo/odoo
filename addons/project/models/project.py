@@ -465,6 +465,8 @@ class Project(models.Model):
         new_subtasks = self.env['project.task']
         # We want to copy archived task, but do not propagate an active_test context key
         task_ids = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', self.id), ('parent_id', '=', False)]).ids
+        if self.allow_task_dependencies and 'task_mapping' not in self.env.context:
+            self = self.with_context(task_mapping=dict())
         for task in self.env['project.task'].browse(task_ids):
             # preserve task name and stage, normally altered during copy
             defaults = self._map_tasks_default_valeus(task, project)
@@ -1030,10 +1032,10 @@ class Task(models.Model):
     allow_task_dependencies = fields.Boolean(related='project_id.allow_task_dependencies')
     # Tracking of this field is done in the write function
     depend_on_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="task_id",
-                                     column2="depends_on_id", string="Blocked By", tracking=True,
+                                     column2="depends_on_id", string="Blocked By", tracking=True, copy=False,
                                      domain="[('allow_task_dependencies', '=', True), ('id', '!=', id)]")
     dependent_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="depends_on_id",
-                                     column2="task_id", string="Block",
+                                     column2="task_id", string="Block", copy=False,
                                      domain="[('allow_task_dependencies', '=', True), ('id', '!=', id)]")
     dependent_tasks_count = fields.Integer(string="Dependent Tasks", compute='_compute_dependent_tasks_count')
 
@@ -1473,6 +1475,8 @@ class Task(models.Model):
     def copy(self, default=None):
         if default is None:
             default = {}
+        if self.allow_task_dependencies and 'task_mapping' not in self.env.context:
+            self = self.with_context(task_mapping=dict())
         has_default_name = bool(default.get('name', ''))
         if not has_default_name:
             default['name'] = _("%s (copy)", self.name)
@@ -1480,7 +1484,16 @@ class Task(models.Model):
             default['recurrence_id'] = self.recurrence_id.copy().id
         if self.allow_subtasks:
             default['child_ids'] = [child.copy({'name': child.name} if has_default_name else None).id for child in self.child_ids]
-        return super(Task, self).copy(default)
+        task_copy = super(Task, self).copy(default)
+        if self.allow_task_dependencies:
+            task_mapping = self.env.context.get('task_mapping')
+            task_mapping[self.id] = task_copy.id
+            new_tasks = task_mapping.values()
+            self.write({'depend_on_ids': [Command.unlink(t.id) for t in self.depend_on_ids if t.id in new_tasks]})
+            self.write({'dependent_ids': [Command.unlink(t.id) for t in self.dependent_ids if t.id in new_tasks]})
+            task_copy.write({'depend_on_ids': [Command.link(task_mapping.get(t.id, t.id)) for t in self.depend_on_ids]})
+            task_copy.write({'dependent_ids': [Command.link(task_mapping.get(t.id, t.id)) for t in self.dependent_ids]})
+        return task_copy
 
     @api.model
     def get_empty_list_help(self, help):
