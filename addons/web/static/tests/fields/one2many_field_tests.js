@@ -9382,8 +9382,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.skipWOWL("click on URL should not open the record", async function (assert) {
-        assert.expect(2);
-
         serverData.models.partner.records[0].turtles = [1];
 
         await makeView({
@@ -9755,15 +9753,13 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
-        "column_invisible attrs on a button in a one2many list",
-        async function (assert) {
-            serverData.models.partner.records[0].p = [2];
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
+    QUnit.test("column_invisible attrs on a button in a one2many list", async function (assert) {
+        serverData.models.partner.records[0].p = [2];
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
                 <form>
                     <field name="product_id"/>
                     <field name="p">
@@ -9773,28 +9769,27 @@ QUnit.module("Fields", (hooks) => {
                         </tree>
                     </field>
                 </form>`,
-                resId: 1,
-            });
-            await clickEdit(target);
+            resId: 1,
+        });
+        await clickEdit(target);
 
-            assert.strictEqual(
-                target.querySelector(".o_field_widget[name=product_id] input").value,
-                ""
-            );
-            assert.containsN(target, ".o_list_table th", 2); // foo + trash bin
-            assert.containsNone(target, ".some_button");
-            await selectDropdownItem(target, "product_id", "xphone");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=product_id] input").value,
+            ""
+        );
+        assert.containsN(target, ".o_list_table th", 2); // foo + trash bin
+        assert.containsNone(target, ".some_button");
+        await selectDropdownItem(target, "product_id", "xphone");
 
-            assert.strictEqual(
-                target.querySelector(".o_field_widget[name=product_id] input").value,
-                "xphone"
-            );
-            assert.containsN(target, ".o_list_table th", 3); // foo + button + trash bin
-            assert.containsOnce(target, ".some_button");
-        }
-    );
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=product_id] input").value,
+            "xphone"
+        );
+        assert.containsN(target, ".o_list_table th", 3); // foo + button + trash bin
+        assert.containsOnce(target, ".some_button");
+    });
 
-    QUnit.skipWOWL("column_invisible attrs on adjacent buttons", async function (assert) {
+    QUnit.test("column_invisible attrs on adjacent buttons", async function (assert) {
         serverData.models.partner.records[0].p = [2];
         await makeView({
             type: "form",

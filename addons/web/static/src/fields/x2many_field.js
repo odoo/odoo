@@ -64,13 +64,23 @@ export class X2ManyField extends Component {
         const archInfo = this.activeField.views[this.viewMode];
         let columns;
         if (this.viewMode === "list") {
-            columns = archInfo.columns.filter((col) => {
-                if (col.type === "field" && "column_invisible" in col.modifiers) {
-                    const invisible = evalDomain(
-                        col.modifiers.column_invisible,
-                        this.list.evalContext
-                    );
-                    return !invisible;
+            // handle column_invisible modifiers
+            // first remove (column_)invisible buttons in button_groups
+            columns = archInfo.columns.map((col) => {
+                if (col.type === "button_group") {
+                    const buttons = col.buttons.filter((button) => {
+                        return !this.evalColumnInvisibleModifier(button.modifiers);
+                    });
+                    return { ...col, buttons };
+                }
+                return col;
+            });
+            // then filter out (column_)invisible fields and empty button_groups
+            columns = columns.filter((col) => {
+                if (col.type === "field") {
+                    return !this.evalColumnInvisibleModifier(col.modifiers);
+                } else if (col.type === "button_group") {
+                    return col.buttons.length > 0;
                 }
                 return true;
             });
@@ -159,6 +169,13 @@ export class X2ManyField extends Component {
             },
             withAccessKey: false,
         };
+    }
+
+    evalColumnInvisibleModifier(modifiers) {
+        if ("column_invisible" in modifiers) {
+            return evalDomain(modifiers.column_invisible, this.list.evalContext);
+        }
+        return false;
     }
 
     async openRecord(record) {
