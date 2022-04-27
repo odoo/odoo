@@ -9,15 +9,29 @@ class IrActionsReport(models.Model):
         if account_move.company_id.country_id.code != 'PT':
             return super()._render_qweb_pdf(res_ids=res_ids, data=data, run_script=run_script)
         run_script = """
+            // Page elements
+            const addressHeight = document.querySelector('.address').parentNode.getBoundingClientRect().height;
+            const titleHeight = document.querySelector('h2').getBoundingClientRect().height;
+            const informationsHeight = document.querySelector('#informations').getBoundingClientRect().height;
+            
             // Table elements
             const tableElement = document.querySelector("table");
+            const tableBottom = tableElement.getBoundingClientRect().bottom;
             const theadElement = document.querySelector("thead")
-            const theadBottom = theadElement.getBoundingClientRect().bottom;
+            const theadHeight = theadElement.getBoundingClientRect().height;
             const totalElement = document.getElementById("total").parentNode;
             
             // Constants
-            const firstPageHeight = 1000;
-            const pageHeight = 2000;
+            const pageHeight = 1500;
+            const firstPageHeight = pageHeight + addressHeight + titleHeight + informationsHeight - theadHeight;
+            
+            // Prints
+            console.log("addressHeight: " + addressHeight);
+            console.log("titleHeight: " + titleHeight);
+            console.log("informationsHeight: " + informationsHeight);
+            console.log("pageHeight: " + pageHeight);
+            console.log("theadHeight: " + theadHeight);
+            console.log("firstPageHeight: " + firstPageHeight);
             
             // Rows and amounts
             const rows = document.querySelectorAll("tr");
@@ -28,6 +42,10 @@ class IrActionsReport(models.Model):
                 var row = rows[i];
                 var bottom = row.getBoundingClientRect().bottom;
                 row.setAttribute("data-bottom", bottom);
+                var first_child = row.querySelector("td");
+                if (first_child != undefined){  
+                    first_child.innerText += " (b: " + bottom + ")";
+                }
             }
             
             //Split main table in multiple smaller tables
@@ -45,8 +63,8 @@ class IrActionsReport(models.Model):
                 tables[tables.length-1].to_carry += parseFloat(amounts[i - 1].innerText.split(",").join(""));
                 tables[tables.length-1].rows.push(i);
                 tables[tables.length-1].bottoms.push(bottom);
-                if ((tables.length == 1 && bottom > firstPageHeight + theadBottom) || //First page
-                    (tables.length > 1 && bottom - (tables.length-1) * pageHeight > pageHeight + firstPageHeight)) { //Other pages
+                if ((tables.length == 1 && bottom > firstPageHeight) || //First page
+                    (tables.length > 1  && bottom > (tables.length-1) * pageHeight + firstPageHeight)) { //Other pages
                     tables.push({
                         page: tables.length,
                         rows: [],
