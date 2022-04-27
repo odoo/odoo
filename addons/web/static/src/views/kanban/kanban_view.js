@@ -20,7 +20,7 @@ import { KanbanModel } from "@web/views/kanban/kanban_model";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { useViewButtons } from "@web/views/view_button/hook";
 
-const { Component } = owl;
+const { Component, useRef } = owl;
 
 const KANBAN_BOX_ATTRIBUTE = "kanban-box";
 const ACTION_TYPES = ["action", "object"];
@@ -327,7 +327,7 @@ export class KanbanView extends Component {
             openGroupsByDefault: true,
             tooltipInfo: this.archInfo.tooltipInfo,
         });
-        useViewButtons(this.model);
+        useViewButtons(this.model, useRef("root"));
         useSetupView({
             /** TODO **/
         });

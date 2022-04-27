@@ -449,8 +449,12 @@ export class Record extends DataPoint {
                     }
                     break;
                 case "one2many":
-                case "many2many":
-                    if (this.data[fieldName] && !force) {
+                case "many2many": {
+                    const currentVal = this.data[fieldName];
+                    if (
+                        !data[fieldName] ||
+                        (currentVal && currentVal.__bm_handle__ === data[fieldName].id && !force)
+                    ) {
                         data[fieldName] = this.data[fieldName];
                         data[fieldName].__syncData();
                     } else {
@@ -467,6 +471,7 @@ export class Record extends DataPoint {
                         data[fieldName].__fieldName__ = fieldName;
                     }
                     break;
+                }
                 case "many2one":
                     data[fieldName] = data[fieldName]
                         ? [data[fieldName].data.id, data[fieldName].data.display_name]

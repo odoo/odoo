@@ -9234,12 +9234,26 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(tds[1].textContent, "Add a line");
     });
 
-    QUnit.skipWOWL("one2many form view with action button", async function (assert) {
+    QUnit.test("one2many form view with action button", async function (assert) {
         // once the action button is clicked, the record is reloaded (via the
-        // on_close handler, executed because the python method does not return
+        // onClose handler, executed because the python method does not return
         // any action, or an ir.action.act_window_close) ; this test ensures that
         // it reloads the fields of the opened view (i.e. the form in this case).
         // See https://github.com/odoo/odoo/issues/24189
+
+        const actionService = {
+            start() {
+                return {
+                    doActionButton(params) {
+                        serverData.models.partner.records[1].display_name = "new name";
+                        serverData.models.partner.records[1].timmy = [12];
+                        params.onClose();
+                    },
+                };
+            },
+        };
+        registry.category("services").add("action", actionService, { force: true });
+
         serverData.models.partner.records[0].p = [2];
         serverData.views = {
             "partner_type,false,list": `
@@ -9249,7 +9263,7 @@ QUnit.module("Fields", (hooks) => {
             `,
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -9266,21 +9280,8 @@ QUnit.module("Fields", (hooks) => {
                         </form>
                     </field>
                 </form>`,
-            // intercepts: {
-            //     execute_action: function (ev) {
-            //         data.partner.records[1].display_name = "new name";
-            //         data.partner.records[1].timmy = [12];
-            //         ev.data.on_closed();
-            //     },
-            // },
         });
-        patchWithCleanup(form.env.services.action, {
-            doActionButton: (params) => {
-                // data.partner.records[1].display_name = "new name";
-                // data.partner.records[1].timmy = [12];
-                // ev.data.on_closed();
-            },
-        });
+
         await clickEdit(target);
 
         assert.containsOnce(target, ".o_data_row");
@@ -9299,19 +9300,17 @@ QUnit.module("Fields", (hooks) => {
         // save the dialog
         await click(target.querySelector(".modal .modal-footer .btn-primary"));
 
-        assert.strictEqual(target.querySelector(".o_data_cell").text(), "new name");
+        assert.strictEqual(target.querySelector(".o_data_cell").innerText, "new name");
     });
 
-    QUnit.skipWOWL("onchange affecting inline unopened list view", async function (assert) {
+    QUnit.test("onchange affecting inline unopened list view", async function (assert) {
         // when we got onchange result for fields of record that were not
         // already available because they were in a inline view not already
         // opened, in a given configuration the change were applied ignoring
         // existing data, thus a line of a one2many field inside a one2many
         // field could be duplicated unexplectedly
-        assert.expect(5);
 
-        var numUserOnchange = 0;
-
+        let numUserOnchange = 0;
         serverData.models.user.onchanges = {
             partner_ids: function (obj) {
                 if (numUserOnchange === 0) {
@@ -9340,9 +9339,9 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
-            model: "user",
+            resModel: "user",
             serverData,
             arch: `
                 <form>
@@ -9368,13 +9367,13 @@ QUnit.module("Fields", (hooks) => {
 
         // add a turtle on second partner
         await clickEdit(target);
-        await click(form.$(".o_data_row:eq(1)"));
-        await click($(".modal .o_field_x2many_list_row_add a"));
-        $('.modal input[name="display_name"]').val("michelangelo").change();
-        await click($(".modal .btn-primary"));
+        await click(target.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell"));
+        await addRow(target.querySelector(".modal"));
+        await editInput(target, ".modal .o_field_widget[name=display_name] input", "michelangelo");
+        await click(target.querySelector(".modal .btn-primary"));
         // open first partner so changes from previous action are applied
-        await click(form.$(".o_data_row:eq(0)"));
-        await click($(".modal .btn-primary"));
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        await click(target.querySelector(".modal .btn-primary"));
         await clickSave(target);
 
         assert.strictEqual(
@@ -9383,20 +9382,19 @@ QUnit.module("Fields", (hooks) => {
             "there should 2 and only 2 onchange from closing the partner modal"
         );
 
-        await click(form.$(".o_data_row:eq(0)"));
-        await testUtils.nextTick(); // wait for quick edit
-        assert.strictEqual($(".modal .o_data_row").length, 1, "only 1 turtle for first partner");
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.containsOnce(target, ".modal .o_data_row", "only 1 turtle for first partner");
         assert.strictEqual(
-            $(".modal .o_data_row").text(),
+            target.querySelector(".modal .o_data_cell").innerText,
             "donatello",
             "first partner turtle is donatello"
         );
-        await clickDiscard(target.querySelector(".modal"));
+        await click(target.querySelector(".modal .modal-footer .btn-primary")); // Close
 
-        await click(form.$(".o_data_row:eq(1)"));
-        assert.strictEqual($(".modal .o_data_row").length, 1, "only 1 turtle for second partner");
+        await click(target.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell"));
+        assert.containsOnce(target, ".modal .o_data_row", "only 1 turtle for second partner");
         assert.strictEqual(
-            $(".modal .o_data_row").text(),
+            target.querySelector(".modal .o_data_cell").innerText,
             "michelangelo",
             "second partner turtle is michelangelo"
         );
@@ -11275,8 +11273,6 @@ QUnit.module("Fields", (hooks) => {
         // opened, in a given configuration the change were applied ignoring
         // posteriously changed data, thus an added/removed/modified line could
         // be reset to the original onchange data
-        assert.expect(5);
-
         let numUserOnchange = 0;
 
         serverData.models.user.onchanges = {

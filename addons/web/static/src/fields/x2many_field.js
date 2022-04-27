@@ -329,7 +329,7 @@ class X2ManyFieldDialog extends Component {
 
         this.modalRef = useChildRef();
 
-        useViewButtons(this.props.record.model); // record can change (in save). Problem?
+        useViewButtons(this.props.record.model, this.modalRef); // maybe pass the model directly in props
 
         if (this.archInfo.xmlDoc.querySelector("footer")) {
             this.footerArchInfo = Object.assign({}, this.archInfo);

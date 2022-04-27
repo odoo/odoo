@@ -20,7 +20,7 @@ import { getActiveActions, getDecoration, processButton } from "../helpers/view_
 import { RelationalModel, stringToOrderBy } from "../relational_model";
 import { ListRenderer } from "./list_renderer";
 
-const { Component, onWillStart, useSubEnv, useEffect } = owl;
+const { Component, onWillStart, useSubEnv, useEffect, useRef } = owl;
 
 export class ListViewHeaderButton extends ViewButton {
     async onClick() {
@@ -204,7 +204,7 @@ export class ListView extends Component {
             expand: this.archInfo.expand,
             groupsLimit: this.archInfo.groupsLimit,
         });
-        useViewButtons(this.model);
+        useViewButtons(this.model, useRef("root"));
 
         onWillStart(async () => {
             this.isExportEnable = await this.userService.hasGroup("base.group_allow_export");

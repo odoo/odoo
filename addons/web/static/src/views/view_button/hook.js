@@ -4,7 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-const { useEnv, useRef, useSubEnv } = owl;
+const { useEnv, useSubEnv } = owl;
 
 function disableButtons(el) {
     // WOWL: can we do this non-imperatively?
@@ -15,11 +15,10 @@ function disableButtons(el) {
     return btns;
 }
 
-export function useViewButtons(model, beforeExecuteAction = () => {}, refName = "root") {
+export function useViewButtons(model, ref, beforeExecuteAction = () => {}) {
     const action = useService("action");
     const dialog = useService("dialog");
     const comp = owl.useComponent();
-    const ref = useRef(refName);
     const env = useEnv();
     useSubEnv({
         async onClickViewButton({ clickParams, record }) {
@@ -52,7 +51,7 @@ export function useViewButtons(model, beforeExecuteAction = () => {}, refName = 
                 context: envContext,
                 buttonContext,
                 onClose: async () => {
-                    await model.root.load();
+                    await record.load();
                     comp.render(true); // FIXME WOWL reactivity
                 },
             });
