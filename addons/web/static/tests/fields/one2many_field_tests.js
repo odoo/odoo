@@ -36,7 +36,6 @@ let target;
 // WOWL remove after adapting tests
 let testUtils,
     delay,
-    fieldUtils,
     relationalFields,
     makeLegacyDialogMappingTestEnv,
     AbstractStorageService,
@@ -7358,7 +7357,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("editable list: value reset by an onchange", async function (assert) {
+    QUnit.test("editable list: value reset by an onchange", async function (assert) {
         // this test reproduces a subtle behavior that may occur in a form view:
         // the user adds a record in a one2many field, and directly clicks on a
         // datetime field of the form view which has an onchange, which totally
@@ -7374,8 +7373,8 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        var prom;
-        const form = await makeView({
+        let def;
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -7388,33 +7387,26 @@ QUnit.module("Fields", (hooks) => {
                         </tree>
                     </field>
                 </form>`,
-            mockRPC(route, args) {
-                var result = this._super.apply(this, arguments);
+            async mockRPC(route, args) {
                 if (args.method === "onchange") {
-                    return Promise.resolve(prom).then(_.constant(result));
+                    await Promise.resolve(def);
                 }
-                return result;
             },
         });
 
         // trigger the two onchanges
         await addRow(target);
-        await testUtils.fields.editInput(form.$(".o_data_row .o_field_widget"), "a name");
-        prom = testUtils.makeTestPromise();
-        await click(form.$(".o_datepicker_input"));
-        var dateTimeVal = fieldUtils.format.datetime(moment(), { timezone: false });
-        await testUtils.fields.editSelect(form.$(".o_datepicker_input"), dateTimeVal);
+        await editInput(target, ".o_data_row .o_field_widget input", "a name");
+        def = makeDeferred();
+        await click(target, ".o_datepicker_input");
+        await editSelect(target, ".o_datepicker_input", "04/27/2022 14:08:52");
 
         // resolve the onchange promise
-        prom.resolve();
-        await testUtils.nextTick();
+        def.resolve();
+        await nextTick();
 
-        assert.containsOnce(form, ".o_data_row", "should have one record in the o2m");
-        assert.strictEqual(
-            form.$(".o_data_row .o_data_cell").text(),
-            "new",
-            "should be the record created by the onchange"
-        );
+        assert.containsOnce(target, ".o_data_row");
+        assert.strictEqual(target.querySelector(".o_data_row .o_data_cell").innerText, "new");
     });
 
     QUnit.test("editable list: onchange that returns a warning", async function (assert) {
