@@ -443,13 +443,19 @@ class AccountAccount(models.Model):
         return super(AccountAccount, contextual_self).default_get(default_fields)
 
     @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        args = args or []
+    def _get_name_search_domain(self, name, operator='ilike', prefix=''):
         domain = []
         if name:
-            domain = ['|', ('code', '=ilike', name.split(' ')[0] + '%'), ('name', operator, name)]
+            prefix = prefix + '.' if len(prefix) > 0 else ''
+            domain = ['|', (prefix + 'code', '=ilike', name.split(' ')[0] + '%'), (prefix + 'name', operator, name)]
             if operator in expression.NEGATIVE_TERM_OPERATORS:
                 domain = ['&', '!'] + domain[1:]
+        return domain
+
+    @api.model
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+        args = args or []
+        domain = self._get_name_search_domain(name, operator)
         account_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         return models.lazy_name_get(self.browse(account_ids).with_user(name_get_uid))
 
