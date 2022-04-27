@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import { click, editInput, getFixture } from "../helpers/utils";
-import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -257,13 +257,13 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test("click on email field link don't switch to edit mode", async function (assert) {
+        // WOWL: this is a quick edit test, remove it?
         // We must avoid the browser to open an email app
         const linkOnClick = (ev) => {
             assert.step(ev.target.nodeName + " clicked");
             ev.preventDefault();
         };
-        document.addEventListener("click", linkOnClick);
-        registerCleanup(() => document.removeEventListener("click", linkOnClick));
+        browser.addEventListener("click", linkOnClick, { capture: true });
 
         await makeView({
             serverData,

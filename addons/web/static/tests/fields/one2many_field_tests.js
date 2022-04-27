@@ -9401,8 +9401,15 @@ QUnit.module("Fields", (hooks) => {
         await clickDiscard(target.querySelector(".modal"));
     });
 
-    QUnit.skipWOWL("click on URL should not open the record", async function (assert) {
+    QUnit.test("click on URL should not open the record", async function (assert) {
         serverData.models.partner.records[0].turtles = [1];
+
+        // avoid to open a new tab or the mail app
+        const onClick = (ev) => {
+            assert.step("link clicked");
+            ev.preventDefault();
+        };
+        browser.addEventListener("click", onClick, { capture: true });
 
         await makeView({
             type: "form",
@@ -9423,9 +9430,11 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target.querySelector(".o_email_cell a"));
         assert.containsNone(target, ".modal");
+        assert.verifySteps(["link clicked"]);
 
         await click(target.querySelector(".o_url_cell a"));
         assert.containsNone(target, ".modal");
+        assert.verifySteps(["link clicked"]);
     });
 
     QUnit.skipWOWL("create and edit on m2o in o2m, and press ESCAPE", async function (assert) {
