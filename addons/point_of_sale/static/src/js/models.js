@@ -221,11 +221,47 @@ class PosGlobalState extends PosModel {
     _loadResPartner() {
         this.db.add_partners(this.partners);
     }
+    _assignApplicableItems(pricelist, correspondingProduct, pricelistItem) {
+        if (!(pricelist.id in correspondingProduct.applicablePricelistItems)) {
+            correspondingProduct.applicablePricelistItems[pricelist.id] = [];
+        }
+        correspondingProduct.applicablePricelistItems[pricelist.id].push(pricelistItem);
+    }
     _loadProductProduct(products) {
+        const productMap = {};
+        const productTemplateMap = {};
+
         const modelProducts = products.map(product => {
             product.pos = this;
+            product.applicablePricelistItems = {};
+            productMap[product.id] = product;
+            productTemplateMap[product.product_tmpl_id[0]] = (productTemplateMap[product.product_tmpl_id[0]] || []).concat(product);
             return Product.create(product);
         });
+
+        for (let pricelist of this.pricelists) {
+            for (const pricelistItem of pricelist.items) {
+                if (pricelistItem.product_id) {
+                    let product_id = pricelistItem.product_id[0];
+                    let correspondingProduct = productMap[product_id];
+                    if (correspondingProduct) {
+                        this._assignApplicableItems(pricelist, correspondingProduct, pricelistItem);
+                    }
+                }
+                else if (pricelistItem.product_tmpl_id) {
+                    let product_tmpl_id = pricelistItem.product_tmpl_id[0];
+                    let correspondingProducts = productTemplateMap[product_tmpl_id];
+                    for (let correspondingProduct of (correspondingProducts || [])) {
+                        this._assignApplicableItems(pricelist, correspondingProduct, pricelistItem);
+                    }
+                }
+                else {
+                    for (const correspondingProduct of products) {
+                        this._assignApplicableItems(pricelist, correspondingProduct, pricelistItem);
+                    }
+                }
+            }
+        }
         this.db.add_products(modelProducts)
     }
     _loadPosPaymentMethod() {
@@ -1075,10 +1111,8 @@ class Product extends PosModel {
             category = category.parent;
         }
 
-        var pricelist_items = _.filter(pricelist.items, function (item) {
-            return (! item.product_tmpl_id || item.product_tmpl_id[0] === self.product_tmpl_id) &&
-                   (! item.product_id || item.product_id[0] === self.id) &&
-                   (! item.categ_id || _.contains(category_ids, item.categ_id[0])) &&
+        var pricelist_items = _.filter(self.applicablePricelistItems[pricelist.id], function (item) {
+            return (! item.categ_id || _.contains(category_ids, item.categ_id[0])) &&
                    (! item.date_start || moment.utc(item.date_start).isSameOrBefore(date)) &&
                    (! item.date_end || moment.utc(item.date_end).isSameOrAfter(date));
         });
