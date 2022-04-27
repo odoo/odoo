@@ -89,9 +89,9 @@ class AccountMove(models.Model):
             )
 
             if line.discount == 100.0:
-                gross_price_subtotal = line.currency_id.round(line.price_unit * line.quantity)
+                gross_price_subtotal = line.always_set_currency_id.round(line.price_unit * line.quantity)
             else:
-                gross_price_subtotal = line.currency_id.round(line.price_subtotal / (1 - (line.discount / 100.0)))
+                gross_price_subtotal = line.always_set_currency_id.round(line.price_subtotal / (1 - (line.discount / 100.0)))
             line_template_values = {
                 'line': line,
                 'index': i + 1,
