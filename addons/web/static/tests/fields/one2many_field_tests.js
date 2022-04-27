@@ -4696,7 +4696,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_data_cell[title='xpad']");
     });
 
-    QUnit.skipWOWL("one2many list with inline form view", async function (assert) {
+    QUnit.test("one2many list with inline form view", async function (assert) {
         assert.expect(5);
 
         serverData.models.partner.records[0].p = [];
@@ -4748,7 +4748,7 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, '.modal .modal-body div[name="int_field"] input', "123");
 
         // save and close
-        await click(target.querySelector(".modal .modal-footer button"));
+        await clickSave(target.querySelector(".modal"));
 
         assert.containsOnce(target, ".o_data_cell[title='xphone']");
 
@@ -4756,16 +4756,16 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_data_cell[title='xphone']");
         assert.strictEqual(target.querySelector(".modal .modal-body input").value, "xphone");
 
-        await editInput(target, ".modal .modal-body input.o_field_widget", "456");
+        await editInput(target, '.modal .modal-body div[name="int_field"] input', "456");
 
         // discard
-        await click(target.querySelector(".modal .modal-footer span:contains(Discard)"));
+        await clickDiscard(target.querySelector(".modal"));
 
         // reopen the record in form view
         await click(target, ".o_data_cell[title='xphone']");
 
         assert.strictEqual(
-            target.querySelector(".modal .modal-body input.o_field_widget").value,
+            target.querySelector('.modal .modal-body div[name="int_field"] input').value,
             "123",
             "should display 123 (previous change has been discarded)"
         );
@@ -4775,7 +4775,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelectorAll('div[name="product_id"] .o_input_dropdown li')[1]);
 
         // save and close
-        await click(target.querySelector(".modal .modal-footer button"));
+        await clickSave(target.querySelector(".modal"));
 
         assert.containsOnce(target, ".o_data_cell[title='xpad']");
 
