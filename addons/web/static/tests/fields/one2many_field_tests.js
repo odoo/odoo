@@ -9453,15 +9453,26 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(form, ".o_selected_row", "new row should still be present");
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many add a line should not crash if orderedResIDs is not set",
         async function (assert) {
             // There is no assertion, the code will just crash before the bugfix.
             assert.expect(0);
 
+            const actionService = {
+                start() {
+                    return {
+                        doActionButton(args) {
+                            return Promise.reject();
+                        },
+                    };
+                },
+            };
+            registry.category("services").add("action", actionService, { force: true });
+
             serverData.models.partner.records[0].turtles = [];
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -9476,16 +9487,6 @@ QUnit.module("Fields", (hooks) => {
                             </tree>
                         </field>
                     </form>`,
-                // intercepts: {
-                //     execute_action: function (event) {
-                //         event.data.on_fail();
-                //     },
-                // },
-            });
-            patchWithCleanup(form.env.services.action, {
-                doActionButton: (params) => {
-                    // event.data.on_fail();
-                },
             });
 
             await click(target, 'button[name="post"]');
@@ -9646,17 +9647,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("one2many with extra field from server not in form", async function (assert) {
-        assert.expect(6);
-
-        serverData.views = {
-            "partner,false,form": `
-                <form>
-                    <field name="display_name"/>
-                </form>
-            `,
-        };
-
+    QUnit.test("one2many with extra field from server not in form", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -9668,6 +9659,9 @@ QUnit.module("Fields", (hooks) => {
                             <field name="datetime"/>
                             <field name="display_name"/>
                         </tree>
+                        <form>
+                            <field name="display_name"/>
+                        </form>
                     </field>
                 </form>`,
             resId: 1,
@@ -9682,36 +9676,24 @@ QUnit.module("Fields", (hooks) => {
 
         // Add a record in the list
         await addRow(target);
-
         await editInput(target, ".modal div[name=display_name] input", "michelangelo");
 
         // Save the record in the modal (though it is still virtual)
         await click(target.querySelector(".modal .btn-primary"));
 
         assert.containsOnce(target, ".o_data_row");
-
         let cells = target.querySelectorAll(".o_data_cell");
-
-        assert.equal(cells[0].textContent, "");
-        assert.equal(cells[1].textContent, "michelangelo");
+        assert.strictEqual(cells[0].textContent, "");
+        assert.strictEqual(cells[1].textContent, "michelangelo");
 
         // Save the whole thing
         await clickSave(target);
 
-        // x2mList = target.querySelectorAll(".o_field_x2many_list[name=p]");
-
-        // // Redo asserts in RO mode after saving
-        // assert.equal(
-        //     x2mList.find(".o_data_row").length,
-        //     1,
-        //     "There should be 1 records in the x2m list"
-        // );
-
-        // newlyAdded = x2mList.find(".o_data_row").eq(0);
-
-        // cells = newlyAdded.querySelectorAll(".o_data_cell");
-        // assert.equal(cells[0].textContent,"04/05/2018 12:00:00");
-        // assert.equal(cells[1].textContent,"michelangelo");
+        // Redo asserts in RO mode after saving
+        assert.containsOnce(target, ".o_data_row");
+        cells = target.querySelectorAll(".o_data_cell");
+        assert.strictEqual(cells[0].textContent, "04/05/2018 14:00:00");
+        assert.strictEqual(cells[1].textContent, "michelangelo");
     });
 
     QUnit.test("one2many invisible depends on parent field", async function (assert) {
@@ -9776,7 +9758,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL(
         "column_invisible attrs on a button in a one2many list",
         async function (assert) {
-            assert.expect(6);
             serverData.models.partner.records[0].p = [2];
             await makeView({
                 type: "form",
@@ -9802,8 +9783,7 @@ QUnit.module("Fields", (hooks) => {
             );
             assert.containsN(target, ".o_list_table th", 2); // foo + trash bin
             assert.containsNone(target, ".some_button");
-            await clickOpenM2ODropdown(target, "product_id");
-            await clickM2OHighlightedItem(target, "product_id");
+            await selectDropdownItem(target, "product_id", "xphone");
 
             assert.strictEqual(
                 target.querySelector(".o_field_widget[name=product_id] input").value,
@@ -9815,10 +9795,8 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.skipWOWL("column_invisible attrs on adjacent buttons", async function (assert) {
-        assert.expect(14);
-
         serverData.models.partner.records[0].p = [2];
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -9837,29 +9815,38 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
             resId: 1,
-            viewOptions: {
-                mode: "edit",
-            },
         });
 
-        assert.strictEqual(form.$(".o_field_widget[name=product_id] input").val(), "");
-        assert.strictEqual(form.$(".o_field_widget[name=trululu] input").val(), "aaa");
-        assert.containsN(form, ".o_list_table th", 4); // button group 1 + foo + button group 2 + trash bin
-        assert.containsOnce(form, ".some_button1");
-        assert.containsOnce(form, ".some_button2");
-        assert.containsOnce(form, ".some_button3");
-        assert.containsNone(form, ".some_button4");
+        await clickEdit(target);
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=product_id] input").value,
+            ""
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=trululu] input").value,
+            "aaa"
+        );
+        assert.containsN(target, ".o_list_table th", 4); // button group 1 + foo + button group 2 + trash bin
+        assert.containsOnce(target, ".some_button1");
+        assert.containsOnce(target, ".some_button2");
+        assert.containsOnce(target, ".some_button3");
+        assert.containsNone(target, ".some_button4");
 
-        await clickOpenM2ODropdown(target, "product_id");
-        await clickM2OHighlightedItem(target, "product_id");
+        await selectDropdownItem(target, "product_id", "xphone");
 
-        assert.strictEqual(form.$(".o_field_widget[name=product_id] input").val(), "xphone");
-        assert.strictEqual(form.$(".o_field_widget[name=trululu] input").val(), "aaa");
-        assert.containsN(form, ".o_list_table th", 3); // button group 1 + foo + trash bin
-        assert.containsOnce(form, ".some_button1");
-        assert.containsNone(form, ".some_button2");
-        assert.containsNone(form, ".some_button3");
-        assert.containsNone(form, ".some_button4");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=product_id] input").value,
+            "xphone"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=trululu] input").value,
+            "aaa"
+        );
+        assert.containsN(target, ".o_list_table th", 3); // button group 1 + foo + trash bin
+        assert.containsOnce(target, ".some_button1");
+        assert.containsNone(target, ".some_button2");
+        assert.containsNone(target, ".some_button3");
+        assert.containsNone(target, ".some_button4");
     });
 
     QUnit.test("field context is correctly passed to x2m subviews", async function (assert) {
@@ -11473,7 +11460,7 @@ QUnit.module("Fields", (hooks) => {
                         <notebook>
                             <page string="Partner page">
                                 <field name="bar"/>
-                                <field name="p"/>
+                                <field name="p" widget="one2many"/>
                             </page>
                         </notebook>
                     </sheet>
