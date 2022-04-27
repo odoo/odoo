@@ -621,7 +621,11 @@ class AccountPaymentRegister(models.TransientModel):
                                             to which a payment will be created (see '_get_batches').
         :param edit_mode:   Is the wizard in edition mode.
         """
-        domain = [('account_internal_type', 'in', ('receivable', 'payable')), ('reconciled', '=', False)]
+        domain = [
+            ('parent_state', '=', 'posted'),
+            ('account_internal_type', 'in', ('receivable', 'payable')),
+            ('reconciled', '=', False),
+        ]
         for vals in to_process:
             payment_lines = vals['payment'].line_ids.filtered_domain(domain)
             lines = vals['to_reconcile']
