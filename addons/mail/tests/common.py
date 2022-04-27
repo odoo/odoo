@@ -418,11 +418,32 @@ class MockEmail(common.BaseCase):
         else:
             raise AssertionError('mail.mail exists for message %s / recipients %s but should not exist' % (mail_message, recipients.ids))
         finally:
-            self.assertNotSentEmail()
+            self.assertNotSentEmail(recipients)
 
-    def assertNotSentEmail(self):
-        """ Check no email was generated during gateway mock. """
-        self.assertEqual(len(self._mails), 0)
+    def assertNotSentEmail(self, recipients=None):
+        """Check no email was generated during gateway mock.
+
+        :param recipients:
+            List of partner for which we will check that no email have been sent
+            Or list of email address
+            If None, we will check that no email at all have been sent
+        """
+        if recipients is None:
+            mails = self._mails
+        else:
+            all_emails = [
+                email_to.email if isinstance(email_to, self.env['res.partner'].__class__)
+                else email_to
+                for email_to in recipients
+            ]
+
+            mails = [
+                mail
+                for mail in self._mails
+                if any(email in all_emails for email in mail['email_to'])
+            ]
+
+        self.assertEqual(len(mails), 0)
 
     def assertSentEmail(self, author, recipients, **values):
         """ Tool method to ease the check of send emails.
