@@ -937,7 +937,7 @@ registerModel({
          * @returns {boolean|FieldCommand}
          */
         _computeHasMentionSuggestionsBelowPosition() {
-            if (this.threadView && this.threadView.threadViewer.chatter) {
+            if (this.chatter) {
                 return true;
             }
             if (this.messageViewInEditing) {
