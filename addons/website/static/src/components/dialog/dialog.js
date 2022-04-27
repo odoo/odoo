@@ -2,65 +2,66 @@
 
 import { Dialog } from '@web/core/dialog/dialog';
 import { Switch } from '@website/components/switch/switch';
+import { _t } from 'web.core';
 
-const { xml, useState } = owl;
+const { xml, useState, Component } = owl;
 
-export class WebsiteDialog extends Dialog {
-    setup() {
-        super.setup();
-        this.title = this.props.title || this.env._t("Confirmation");
-        this.primaryTitle = this.props.primaryTitle || this.env._t("Ok");
-        this.secondaryTitle = this.props.secondaryTitle || this.env._t("Cancel");
-        this.closeOnClick = this.props.closeOnClick === false ? false : true;
-    }
-
-    get showSecondaryButton() {
-        return this.props.showSecondaryButton;
-    }
-
-    primaryClick() {
+export class WebsiteDialog extends Component {
+    async primaryClick() {
         if (this.props.primaryClick) {
-            this.props.primaryClick();
+            await this.props.primaryClick();
         }
-        if (this.closeOnClick) {
-            this.close();
+        if (this.props.closeOnClick) {
+            this.props.close();
         }
     }
 
-    secondaryClick() {
+    async secondaryClick() {
         if (this.props.secondaryClick) {
-            this.props.secondaryClick();
+            await this.props.secondaryClick();
         }
-        if (this.closeOnClick) {
-            this.close();
+        if (this.props.closeOnClick) {
+            this.props.close();
         }
+    }
+
+    get contentClasses() {
+        const websiteDialogClass = 'o_website_dialog';
+        if (this.props.contentClass) {
+            return `${websiteDialogClass} ${this.props.contentClass}`;
+        }
+        return websiteDialogClass;
     }
 }
+WebsiteDialog.components = { Dialog };
 WebsiteDialog.props = {
     ...Dialog.props,
-    title: { type: String, optional: true },
-    body: { type: String, optional: true },
     primaryTitle: { type: String, optional: true },
     primaryClick: { type: Function, optional: true },
     secondaryTitle: { type: String, optional: true },
     secondaryClick: { type: Function, optional: true },
+    showSecondaryButton: { type: Boolean, optional: true },
+    close: Function,
     closeOnClick: { type: Boolean, optional: true },
-    close: { type: Function, optional: true },
 };
 WebsiteDialog.defaultProps = {
+    ...Dialog.defaultProps,
+    title: _t("Confirmation"),
+    primaryTitle: _t("Ok"),
+    secondaryTitle: _t("Cancel"),
     showSecondaryButton: true,
+    size: "md",
+    closeOnClick: true,
 };
-WebsiteDialog.bodyTemplate = "website.DialogBody";
-WebsiteDialog.footerTemplate = "website.DialogFooter";
-WebsiteDialog.size = "modal-md";
-WebsiteDialog.contentClass = "o_website_dialog";
+WebsiteDialog.template = "website.WebsiteDialog";
 
-export class AddPageDialog extends WebsiteDialog {
+export class AddPageDialog extends Component {
     setup() {
         super.setup();
 
         this.title = this.env._t("New Page");
         this.primaryTitle = this.env._t("Create");
+        this.switchLabel = this.env._t("Add to menu");
 
         this.state = useState({
             addMenu: true,
@@ -72,20 +73,20 @@ export class AddPageDialog extends WebsiteDialog {
         this.state.addMenu = value;
     }
 
-    async primaryClick() {
+    async addPage() {
         await this.props.addPage(this.state.name, this.state.addMenu);
-        this.close();
     }
 }
-AddPageDialog.props = {
-    ...WebsiteDialog.props,
-    addPage: Function,
-};
 AddPageDialog.components = {
     Switch,
+    WebsiteDialog,
 };
-AddPageDialog.bodyTemplate = xml`
-<div>
+AddPageDialog.template = xml`
+<WebsiteDialog
+    title="title"
+    primaryTitle="primaryTitle"
+    primaryClick="() => this.addPage()"
+    close="props.close">
     <div class="form-group row">
         <label class="col-form-label col-md-3">
             Page Title
@@ -94,6 +95,6 @@ AddPageDialog.bodyTemplate = xml`
             <input type="text" t-model="state.name" class="form-control" required="required"/>
         </div>
     </div>
-    <Switch extraClasses="'offset-md-3 col-md-9 text-left'" label="'Add to menu'" value="state.addMenu" onChange="(value) => this.onChangeAddMenu(value)"/>
-</div>
+    <Switch extraClasses="'offset-md-3 col-md-9 text-left'" label="switchLabel" value="state.addMenu" onChange="(value) => this.onChangeAddMenu(value)"/>
+</WebsiteDialog>
 `;

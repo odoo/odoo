@@ -37,6 +37,19 @@ NewContentElement.defaultProps = {
     status: MODULE_STATUS.INSTALLED,
 };
 
+class InstallModuleDialog extends Component {
+    setup() {
+        this.installButton = this.env._t("Install");
+    }
+
+    onClickInstall() {
+        this.props.close();
+        this.props.installModule();
+    }
+}
+InstallModuleDialog.components = { WebsiteDialog };
+InstallModuleDialog.template = "website.InstallModuleDialog";
+
 export class NewContentModal extends Component {
     setup() {
         this.user = useService('user');
@@ -158,9 +171,8 @@ export class NewContentModal extends Component {
         const {id, name} = this.modulesInfo[element.moduleXmlId];
         const dialogProps = {
             title: element.title,
-            body: _.str.sprintf(this.newContentText.installNeeded, name),
-            primaryTitle: this.env._t("Install"),
-            primaryClick: async () => {
+            installationText: _.str.sprintf(this.newContentText.installNeeded, name),
+            installModule: async () => {
                 // Update the NewContentElement with installing icon and text.
                 this.state.newContentElements = this.state.newContentElements.map(el => {
                     if (el.moduleXmlId === element.moduleXmlId) {
@@ -186,7 +198,7 @@ export class NewContentModal extends Component {
                 }
             },
         };
-        this.dialogs.add(WebsiteDialog, dialogProps);
+        this.dialogs.add(InstallModuleDialog, dialogProps);
     }
 }
 NewContentModal.template = "website.NewContentModal";

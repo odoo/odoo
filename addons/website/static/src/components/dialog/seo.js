@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useService, useListener } from '@web/core/utils/hooks';
+import { useService } from '@web/core/utils/hooks';
 import { MediaDialog } from '@web_editor/components/media_dialog/media_dialog';
 import { WebsiteDialog } from './dialog';
 
@@ -327,18 +327,17 @@ TitleDescription.components = {
     SEOPreview,
 };
 
-export class OptimizeSEODialog extends WebsiteDialog {
+export class OptimizeSEODialog extends Component {
     setup() {
-        super.setup();
         this.rpc = useService('rpc');
         this.website = useService('website');
         this.dialogs = useService('dialog');
         this.orm = useService('orm');
 
         this.title = this.env._t("Optimize SEO");
-        this.primaryTitle = this.env._t("Save");
-        this.size = 'modal-lg';
-        this.contentClass = `${this.contentClass} oe_seo_configuration`;
+        this.saveButton = this.env._t("Save");
+        this.size = 'lg';
+        this.contentClass = "oe_seo_configuration";
 
         onWillStart(async () => {
             const { metadata: { mainObject, seoObject, path } } = this.website.currentWebsite;
@@ -405,7 +404,7 @@ export class OptimizeSEODialog extends WebsiteDialog {
         return el && el.content;
     }
 
-    async primaryClick() {
+    async save() {
         const data = {};
         if (this.canEditTitle) {
             data.website_meta_title = seoContext.title;
@@ -423,12 +422,12 @@ export class OptimizeSEODialog extends WebsiteDialog {
         }
         data.website_meta_og_img = seoContext.metaImage;
         await this.orm.write(this.object.model, [this.object.id], data);
-        this.close();
         this.website.goToWebsite({path: this.url.replace(this.previousSeoName || this.seoNameDefault, seoContext.seoName)});
     }
 }
-OptimizeSEODialog.bodyTemplate = 'website.OptimizeSEODialog';
+OptimizeSEODialog.template = 'website.OptimizeSEODialog';
 OptimizeSEODialog.components = {
+    WebsiteDialog,
     TitleDescription,
     ImageSelector,
     MetaKeywords,

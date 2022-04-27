@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 <div t-name="website.TranslatorInfoDialog" owl="1">
-    <p>You are about to enter the translation mode.</p>
-    <p>Here are the visuals used to help you translate efficiently:</p>
-    <ul class="oe_translate_examples">
-        <li data-oe-translation-state="to_translate">Content to translate</li>
-        <li data-oe-translation-state="translated">Translated content</li>
-    </ul>
-    <p>
-        In this mode, you can only translate texts. To change the structure of the page, you must edit the master page.
-        Each modification on the master page is automatically applied to all translated versions.
-    </p>
+    <WebsiteDialog close="props.close"
+        title="title"
+        primaryTitle="strongOkButton"
+        secondaryTitle="okButton"
+        primaryClick="() => this.onStrongOkClick()">
+        <p>You are about to enter the translation mode.</p>
+        <p>Here are the visuals used to help you translate efficiently:</p>
+        <ul class="oe_translate_examples">
+            <li data-oe-translation-state="to_translate">Content to translate</li>
+            <li data-oe-translation-state="translated">Translated content</li>
+        </ul>
+        <p>
+            In this mode, you can only translate texts. To change the structure of the page, you must edit the master page.
+            Each modification on the master page is automatically applied to all translated versions.
+        </p>
+    </WebsiteDialog>
 </div>
 
-<div t-name="website.AttributeTranslateDialog" owl="1">
-    <div t-ref="form-container"/>
-</div>
+<t t-name="website.AttributeTranslateDialog" owl="1">
+    <WebsiteDialog close="props.close"
+        title="title"
+        showSecondaryButton="false">
+        <div t-ref="form-container"/>
+    </WebsiteDialog>
+</t>
 </templates>

@@ -41,4 +41,13 @@
         <NewContentModal t-if="websiteContext.showNewContentModal"/>
     </div>
 </t>
+
+<t t-name="website.InstallModuleDialog" owl="1">
+    <WebsiteDialog close="props.close"
+        title="props.title"
+        primaryTitle="installButton"
+        primaryClick="() => this.onClickInstall()">
+        <t t-esc="props.installationText"/>
+    </WebsiteDialog>
+</t>
 </templates>

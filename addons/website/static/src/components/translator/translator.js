@@ -4,13 +4,12 @@ import { WebsiteEditorComponent } from '../editor/editor';
 import { WebsiteDialog } from '../dialog/dialog';
 import localStorage from 'web.local_storage';
 
-const { useEffect, useRef } = owl;
+const { useEffect, useRef, Component } = owl;
 
 const localStorageNoDialogKey = 'website_translator_nodialog';
 
-class AttributeTranslateDialog extends WebsiteDialog {
+class AttributeTranslateDialog extends Component {
     setup() {
-        super.setup();
         this.title = this.env._t("Translate Attribute");
 
         this.formEl = useRef('form-container');
@@ -38,10 +37,21 @@ class AttributeTranslateDialog extends WebsiteDialog {
         }, () => [this.props.node]);
     }
 }
-AttributeTranslateDialog.bodyTemplate = 'website.AttributeTranslateDialog';
+AttributeTranslateDialog.components = { WebsiteDialog };
+AttributeTranslateDialog.template = 'website.AttributeTranslateDialog';
 
-class TranslatorInfoDialog extends WebsiteDialog {}
-TranslatorInfoDialog.bodyTemplate = 'website.TranslatorInfoDialog';
+class TranslatorInfoDialog extends Component {
+    setup() {
+        this.strongOkButton = this.env._t("Ok, never show me this again");
+        this.okButton = this.env._t("Ok");
+    }
+
+    onStrongOkClick() {
+        localStorage.setItem(localStorageNoDialogKey, true);
+    }
+}
+TranslatorInfoDialog.components = { WebsiteDialog };
+TranslatorInfoDialog.template = 'website.TranslatorInfoDialog';
 
 const savableSelector = '[data-oe-translation-id], ' +
     '[data-oe-model][data-oe-id][data-oe-field], ' +
@@ -183,11 +193,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         });
 
         if (!localStorage.getItem(localStorageNoDialogKey)) {
-            this.dialogService.add(TranslatorInfoDialog, {
-                primaryClick: () => localStorage.setItem(localStorageNoDialogKey, true),
-                primaryTitle: this.env._t("Ok, never show me this again"),
-                secondaryTitle: this.env._t("Ok"),
-            });
+            this.dialogService.add(TranslatorInfoDialog);
         }
 
         // Apply data-oe-readonly on nested data.
@@ -228,7 +234,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         });
 
         this.$translations.prependEvent('click.translator', (ev) => {
-            this.dialogService.add(AttributeTranslateDialog, { node: ev.target, showSecondaryButton: false });
+            this.dialogService.add(AttributeTranslateDialog, { node: ev.target });
         });
     }
 

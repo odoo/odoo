@@ -5,10 +5,8 @@ import { WebsiteDialog } from './dialog';
 
 const { Component, useState, useEffect, onWillStart, useRef, onMounted } = owl;
 
-export class MenuDialog extends WebsiteDialog {
+export class MenuDialog extends Component {
     setup() {
-        super.setup();
-
         this.title = this.env._t("Add a menu item");
 
         this.state = useState({
@@ -17,23 +15,23 @@ export class MenuDialog extends WebsiteDialog {
         });
     }
 
-    primaryClick() {
+    onClickOk() {
         this.props.save(this.state.name, this.state.url);
-        this.close();
     }
 }
-MenuDialog.bodyTemplate = 'website.MenuDialog';
+MenuDialog.template = 'website.MenuDialog';
 MenuDialog.props = {
-    ...WebsiteDialog.props,
     name: { type: String, optional: true },
     url: { type: String, optional: true },
     isMegaMenu: { type: Boolean, optional: true },
     save: Function,
+    close: Function,
 };
 MenuDialog.defaultProps = {
     name: '',
     url: '/',
 };
+MenuDialog.components = { WebsiteDialog };
 
 class MenuRow extends Component {
     edit() {
@@ -54,15 +52,14 @@ MenuRow.components = {
     MenuRow,
 };
 
-export class EditMenuDialog extends WebsiteDialog {
+export class EditMenuDialog extends Component {
     setup() {
-        super.setup();
         this.orm = useService('orm');
         this.website = useService('website');
         this.dialogs = useService('dialog');
 
         this.title = this.env._t("Edit Menu");
-        this.primaryTitle = this.env._t("Save");
+        this.saveButton = this.env._t("Save");
 
         this.menuEditor = useRef('menu-editor');
 
@@ -152,7 +149,7 @@ export class EditMenuDialog extends WebsiteDialog {
         this.toDelete.push(id);
     }
 
-    async primaryClick() {
+    async onClickSave() {
         const newMenus = this.$sortables.nestedSortable('toArray', {startDepthCount: 0});
         const levels = [];
         const data = [];
@@ -178,7 +175,6 @@ export class EditMenuDialog extends WebsiteDialog {
                 'to_delete': this.toDelete,
             }
         ]);
-        this.close();
         if (this.props.save) {
             this.props.save();
         } else {
@@ -186,7 +182,8 @@ export class EditMenuDialog extends WebsiteDialog {
         }
     }
 }
-EditMenuDialog.bodyTemplate = 'website.EditMenuDialog';
+EditMenuDialog.template = 'website.EditMenuDialog';
 EditMenuDialog.components = {
     MenuRow,
+    WebsiteDialog,
 };

@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 <t t-name="website.MenuDialog" owl="1">
-    <div class="form-group row">
-        <label class="col-form-label col-md-3">
-            Name
-        </label>
-        <div class="col-md-9">
-            <input type="text" t-model="state.name" class="form-control" required="required"/>
+    <WebsiteDialog close="props.close" title="title" primaryClick="() => this.onClickOk()">
+        <div class="form-group row">
+            <label class="col-form-label col-md-3">
+                Name
+            </label>
+            <div class="col-md-9">
+                <input type="text" t-model="state.name" class="form-control" required="required"/>
+            </div>
         </div>
-    </div>
-    <div t-if="!props.isMegaMenu" class="form-group row">
-        <label class="col-form-label col-md-3">
-            Url or Email
-        </label>
-        <div class="col-md-9">
-            <input type="text" t-model="state.url" class="form-control" required="required"/>
+        <div t-if="!props.isMegaMenu" class="form-group row">
+            <label class="col-form-label col-md-3">
+                Url or Email
+            </label>
+            <div class="col-md-9">
+                <input type="text" t-model="state.url" class="form-control" required="required"/>
+            </div>
         </div>
-    </div>
+    </WebsiteDialog>
 </t>
 
 <t t-name="website.MenuRow" owl="1">
@@ -46,21 +48,23 @@
 </t>
 
 <t t-name="website.EditMenuDialog" owl="1">
-    <ul t-ref="menu-editor" class="oe_menu_editor list-unstyled">
-        <t t-foreach="state.rootMenu.children" t-as="menu" t-key="menu.fields['id']">
-            <MenuRow menu="menu" edit="(id) => this.editMenu(id)" delete="(id) => this.deleteMenu(id)"/>
-        </t>
-    </ul>
-    <div class="mt32">
-        <small class="float-right text-muted">
-            Drag to the right to get a submenu
-        </small>
-        <a href="#" t-on-click="() => this.addMenu(false)">
-            <i class="fa fa-plus-circle"/> Add Menu Item
-        </a><br/>
-        <a href="#" t-on-click="() => this.addMenu(true)">
-            <i class="fa fa-plus-circle"/> Add Mega Menu Item
-        </a>
-    </div>
+    <WebsiteDialog close="props.close" title="title" primaryTitle="saveButton" primaryClick="() => this.onClickSave()">
+        <ul t-ref="menu-editor" class="oe_menu_editor list-unstyled">
+            <t t-foreach="state.rootMenu.children" t-as="menu" t-key="menu.fields['id']">
+                <MenuRow menu="menu" edit="(id) => this.editMenu(id)" delete="(id) => this.deleteMenu(id)"/>
+            </t>
+        </ul>
+        <div class="mt32">
+            <small class="float-right text-muted">
+                Drag to the right to get a submenu
+            </small>
+            <a href="#" t-on-click="() => this.addMenu(false)">
+                <i class="fa fa-plus-circle"/> Add Menu Item
+            </a><br/>
+            <a href="#" t-on-click="() => this.addMenu(true)">
+                <i class="fa fa-plus-circle"/> Add Mega Menu Item
+            </a>
+        </div>
+    </WebsiteDialog>
 </t>
 </templates>

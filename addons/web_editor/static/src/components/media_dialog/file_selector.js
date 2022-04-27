@@ -25,28 +25,31 @@ class RemoveButton extends Component {
 }
 RemoveButton.template = xml`<i class="fa fa-trash o_existing_attachment_remove p-2" t-att-title="removeTitle" role="img" t-att-aria-label="removeTitle" t-on-click="this.remove"/>`;
 
-export class AttachmentError extends Dialog {
+export class AttachmentError extends Component {
     setup() {
-        super.setup();
         this.title = this.env._t("Alert");
     }
 }
-AttachmentError.bodyTemplate = xml `
-<div class="form-text">
-    <p>The image could not be deleted because it is used in the
-        following pages or views:</p>
-    <ul t-foreach="props.views"  t-as="view" t-key="view.id">
-        <li>
-            <a t-att-href="'/web#model=ir.ui.view&amp;id=' + view.id">
-                <t t-esc="view.name"/>
-            </a>
-        </li>
-    </ul>
-</div>`;
-AttachmentError.footerTemplate = xml`
-<button class="btn btn-primary" t-on-click="() => this.close()">
-    Ok
-</button>`;
+AttachmentError.components = { Dialog };
+AttachmentError.template = xml `
+<Dialog title="title">
+    <div class="form-text">
+        <p>The image could not be deleted because it is used in the
+            following pages or views:</p>
+        <ul t-foreach="props.views"  t-as="view" t-key="view.id">
+            <li>
+                <a t-att-href="'/web#model=ir.ui.view&amp;id=' + view.id">
+                    <t t-esc="view.name"/>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <t t-set-slot="footer">
+        <button class="btn btn-primary" t-on-click="() => this.props.close()">
+            Ok
+        </button>
+    </t>
+</Dialog>`;
 
 export class Attachment extends Component {
     setup() {
@@ -69,7 +72,6 @@ export class Attachment extends Component {
                     });
                 }
             },
-            cancel: () => {},
         });
     }
 }

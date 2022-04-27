@@ -55,19 +55,24 @@
     </t>
 </t>
 
-<t t-name="website.DeletePageContent" owl="1">
-    <p>Are you sure you want to delete this page ?</p>
-    <p class="text-warning">Don't forget to update all links referring to this page.</p>
-    <PageDependencies pageId="props.pageId" mode="'collapse'"/>
-    <CheckBox onChange.bind="onConfirmCheckboxChange">
-        <p class="text-warning">I am sure about this.</p>
-    </CheckBox>
-</t>
+<t t-name="website.DeletePageDialog" owl="1">
+    <WebsiteDialog title="title" close="props.close">
+        <p>Are you sure you want to delete this page ?</p>
+        <p class="text-warning">Don't forget to update all links referring to this page.</p>
+        <PageDependencies pageId="props.pageId" mode="'collapse'"/>
+        <CheckBox onChange.bind="onConfirmCheckboxChange">
+            <p class="text-warning">I am sure about this.</p>
+        </CheckBox>
 
-<t t-name="website.DeletePageAction" t-inherit="website.DialogFooter" t-inherit-mode="primary" owl="1">
-    <xpath expr="//button[hasclass('btn-primary')]" position="attributes">
-        <attribute name="t-att-disabled">!state.confirm</attribute>
-    </xpath>
+        <t t-set-slot="footer">
+            <button class="btn btn-primary" t-on-click="() => this.onClickDelete()"  t-att-disabled="!this.state.confirm">
+                Ok
+            </button>
+            <button class="btn btn-secondary" t-on-click="() => this.props.close()">
+                Cancel
+            </button>
+        </t>
+    </WebsiteDialog>
 </t>
 
 </templates>

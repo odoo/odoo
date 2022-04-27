@@ -166,20 +166,27 @@
 </t>
 
 <t t-name="website.OptimizeSEODialog" owl="1">
-    <TitleDescription canEditDescription="canEditDescription"
-        canEditUrl="canEditUrl"
-        canEditTitle="canEditTitle"
-        seoNameHelp="seoNameHelp"
-        seoNameDefault="seoNameDefault"
-        isIndexed="isIndexed"
-        defaultTitle="defaultTitle"
-        previewDescription="previewDescription"
-        url="url"/>
-    <MetaKeywords/>
-    <ImageSelector previewDescription="socialPreviewDescription"
-        defaultTitle="defaultTitle"
-        hasSocialDefaultImage="hasSocialDefaultImage"
-        pageImages="pageImages"
-        url="url"/>
+    <WebsiteDialog close="props.close"
+        title="title"
+        size="size"
+        primaryClick="() => this.save()"
+        primaryTitle="saveButton"
+        contentClass="contentClass">
+        <TitleDescription canEditDescription="canEditDescription"
+            canEditUrl="canEditUrl"
+            canEditTitle="canEditTitle"
+            seoNameHelp="seoNameHelp"
+            seoNameDefault="seoNameDefault"
+            isIndexed="isIndexed"
+            defaultTitle="defaultTitle"
+            previewDescription="previewDescription"
+            url="url"/>
+        <MetaKeywords/>
+        <ImageSelector previewDescription="socialPreviewDescription"
+            defaultTitle="defaultTitle"
+            hasSocialDefaultImage="hasSocialDefaultImage"
+            pageImages="pageImages"
+            url="url"/>
+    </WebsiteDialog>
 </t>
 </templates>
