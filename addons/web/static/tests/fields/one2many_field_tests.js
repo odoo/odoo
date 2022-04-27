@@ -26,6 +26,7 @@ import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { createWebClient, doAction } from "../webclient/helpers";
+import { FieldOne2Many } from "web.relational_fields";
 
 let serverData;
 let target;
@@ -38,11 +39,7 @@ let testUtils,
     relationalFields,
     makeLegacyDialogMappingTestEnv,
     AbstractStorageService,
-    RamStorage,
-    patch,
-    unpatch,
-    ControlPanel,
-    FieldOne2Many;
+    RamStorage;
 
 async function clickDiscard(target) {
     await click(target.querySelector(".o_form_button_cancel"));
@@ -6440,7 +6437,7 @@ QUnit.module("Fields", (hooks) => {
             arch: `
                 <form>
                     <field name="bar"/>
-                    <field name="p">
+                    <field name="p" widget="one2many">
                         <tree>
                             <field name="turtles"/>
                         </tree>
@@ -10523,7 +10520,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many with many2many_tags in list and list in form, and onchange",
         async function (assert) {
             assert.expect(8);
@@ -10552,7 +10549,7 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -10574,26 +10571,26 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
             });
 
-            assert.containsOnce(form, ".o_field_widget[name=p] .o_data_row");
-            assert.containsOnce(form, ".o_data_row .o_field_many2manytags .badge");
+            assert.containsOnce(target, ".o_field_widget[name=p] .o_data_row");
+            assert.containsOnce(target, ".o_data_row .o_field_many2many_tags .badge");
 
-            await click(form.$(".o_data_row"));
+            await click(target.querySelector(".o_data_row .o_data_cell"));
 
-            assert.containsOnce(document.body, ".modal .o_form_view");
-            assert.containsOnce(document.body, ".modal .o_field_widget[name=turtles] .o_data_row");
+            assert.containsOnce(target, ".modal .o_form_view");
+            assert.containsOnce(target, ".modal .o_field_widget[name=turtles] .o_data_row");
             assert.strictEqual(
-                $(".modal .o_field_widget[name=turtles] .o_data_row").text(),
+                getNodesTextContent(target.querySelectorAll(".modal .o_data_cell")),
                 "new turtle"
             );
 
-            await click($(".modal .o_field_x2many_list_row_add a"));
-            assert.containsN(document.body, ".modal .o_field_widget[name=turtles] .o_data_row", 2);
+            await addRow(target.querySelector(".modal"));
+            assert.containsN(target, ".modal .o_field_widget[name=turtles] .o_data_row", 2);
             assert.strictEqual(
-                $(".modal .o_field_widget[name=turtles] .o_data_row:first").text(),
+                getNodesTextContent(target.querySelectorAll(".modal .o_data_cell")),
                 "new turtle"
             );
             assert.hasClass(
-                $(".modal .o_field_widget[name=turtles] .o_data_row:nth(1)"),
+                target.querySelectorAll(".modal .o_field_widget[name=turtles] .o_data_row")[1],
                 "o_selected_row"
             );
         }
@@ -10602,8 +10599,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL(
         "one2many with many2many_tags in list and list in form, and onchange (2)",
         async function (assert) {
-            assert.expect(7);
-
             serverData.models.partner.onchanges = {
                 bar: function (obj) {
                     obj.p = [
@@ -10633,7 +10628,7 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -10655,117 +10650,51 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
             });
 
-            assert.containsOnce(form, ".o_field_widget[name=p] .o_data_row");
+            assert.containsOnce(target, ".o_field_widget[name=p] .o_data_row");
 
-            await click(form.$(".o_data_row"));
+            await click(target.querySelector(".o_data_row .o_data_cell"));
 
-            assert.containsOnce(document.body, ".modal .o_form_view");
+            assert.containsOnce(target, ".modal .o_form_view");
 
-            await click($(".modal .o_field_x2many_list_row_add a"));
-            assert.containsN(document.body, ".modal .o_field_widget[name=turtles] .o_data_row", 2);
+            await addRow(target.querySelector(".modal"));
+            assert.containsN(target, ".modal .o_field_widget[name=turtles] .o_data_row", 2);
 
-            await testUtils.fields.editInput($(".modal .o_selected_row input"), "another one");
-            await testUtils.modal.clickButton("Save & Close");
+            await editInput(target, ".modal .o_selected_row input", "another one");
+            await click(target.querySelector(".modal .modal-footer .btn-primary"));
 
-            assert.containsNone(document.body, ".modal");
+            assert.containsNone(target, ".modal");
 
-            assert.containsOnce(form, ".o_field_widget[name=p] .o_data_row");
-            assert.containsN(form, ".o_data_row .o_field_many2manytags .badge", 2);
+            assert.containsOnce(target, ".o_field_widget[name=p] .o_data_row");
+            assert.containsN(target, ".o_data_row .o_field_many2many_tags .badge", 2);
             assert.strictEqual(
-                form.$(".o_data_row .o_field_many2manytags .o_badge_text").text(),
+                getNodesTextContent(
+                    target.querySelectorAll(".o_data_row .o_field_many2many_tags .o_tag_badge_text")
+                ),
                 "new turtleanother one"
             );
         }
     );
 
-    QUnit.skipWOWL(
-        "one2many value returned by onchange with unknown fields",
-        async function (assert) {
-            assert.expect(3);
+    QUnit.test("one2many value returned by onchange with unknown fields", async function (assert) {
+        assert.expect(3);
 
-            serverData.models.partner.onchanges = {
-                bar: function (obj) {
-                    obj.p = [
-                        [5],
-                        [
-                            0,
-                            0,
-                            {
-                                bar: true,
-                                display_name: "coucou",
-                                trululu: [2, "second record"],
-                                turtles: [[5], [0, 0, { turtle_int: 4 }]],
-                            },
-                        ],
-                    ];
-                },
-            };
-
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
-                    <form>
-                        <field name="bar"/>
-                        <field name="p" widget="many2many_tags"/>
-                    </form>`,
-                mockRPC(route, args) {
-                    if (args.method === "create") {
-                        assert.deepEqual(args.args[0].p[0][2], {
+        serverData.models.partner.onchanges = {
+            bar: function (obj) {
+                obj.p = [
+                    [5],
+                    [
+                        0,
+                        0,
+                        {
                             bar: true,
                             display_name: "coucou",
-                            trululu: 2,
+                            trululu: [2, "second record"],
                             turtles: [[5], [0, 0, { turtle_int: 4 }]],
-                        });
-                    }
-                    return this._super(...arguments);
-                },
-            });
-
-            assert.containsOnce(form, ".o_field_many2manytags .badge");
-            assert.strictEqual(form.$(".o_field_many2manytags .o_badge_text").text(), "coucou");
-
-            await clickSave(target);
-        }
-    );
-
-    QUnit.skipWOWL("mounted is called only once for x2many control panel", async function (assert) {
-        // This test could be removed as soon as the field widgets will be converted in owl.
-        // It comes with a fix for a bug that occurred because in some circonstances, 'mounted'
-        // is called twice for the x2many control panel.
-        // Specifically, this occurs when there is 'pad' widget in the form view, because this
-        // widget does a 'setValue' in its 'start', which thus resets the field x2many.
-        assert.expect(5);
-
-        const PadLikeWidget = fieldRegistry.get("char").extend({
-            start() {
-                this._setValue("some value");
+                        },
+                    ],
+                ];
             },
-        });
-        fieldRegistry.add("pad_like", PadLikeWidget);
-
-        let resolveCP;
-        const prom = new Promise((r) => {
-            resolveCP = r;
-        });
-        patch(ControlPanel.prototype, "cp_patch_mock", {
-            setup() {
-                this._super(...arguments);
-                owl.onMounted(() => {
-                    assert.step("mounted");
-                });
-                owl.onWillUnmount(() => {
-                    assert.step("willUnmount");
-                });
-            },
-            async update() {
-                const _super = this._super.bind(this);
-                // the issue is a race condition, so we manually delay the update to turn it deterministic
-                await prom;
-                _super.update(...arguments);
-            },
-        });
+        };
 
         await makeView({
             type: "form",
@@ -10773,30 +10702,31 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <form>
-                    <field name="foo" widget="pad_like"/>
-                    <field name="p">
-                        <tree><field name="display_name"/></tree>
-                    </field>
+                    <field name="bar"/>
+                    <field name="p" widget="many2many_tags"/>
                 </form>`,
-            viewOptions: {
-                withControlPanel: false, // s.t. there is only one CP: the one of the x2many
+            mockRPC(route, args) {
+                if (args.method === "create") {
+                    assert.deepEqual(args.args[0].p[0][2], {
+                        bar: true,
+                        display_name: "coucou",
+                        trululu: 2,
+                        turtles: [[5], [0, 0, { turtle_int: 4 }]],
+                    });
+                }
             },
         });
 
-        assert.verifySteps(["mounted"]);
+        assert.containsOnce(target.querySelector(".o_field_many2many_tags"), ".badge");
+        assert.strictEqual(
+            target.querySelector(".o_field_many2many_tags .o_tag_badge_text").innerText,
+            "coucou"
+        );
 
-        resolveCP();
-        await testUtils.nextTick();
-
-        assert.verifySteps([]);
-
-        unpatch(ControlPanel.prototype, "cp_patch_mock");
-        delete fieldRegistry.map.pad_like;
-
-        assert.verifySteps(["willUnmount"]);
+        await clickSave(target);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many: internal state is updated after another field changes",
         async function (assert) {
             // The FieldOne2Many is configured such that it is reset at any field change.
@@ -10805,21 +10735,26 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(2);
 
             let o2m;
-            testUtils.mock.patch(FieldOne2Many, {
+            // keep using the legacy version considering the above comment
+            const MyFieldOne2Many = FieldOne2Many.extend({
                 init() {
                     this._super(...arguments);
                     o2m = this;
                 },
             });
+            fieldRegistry.add("myone2many", MyFieldOne2Many);
+            registerCleanup(() => {
+                delete fieldRegistry.map.myone2many;
+            });
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
                 arch: `
                     <form>
                         <field name="display_name"/>
-                        <field name="p">
+                        <field name="p" widget="myone2many">
                             <tree><field name="display_name"/></tree>
                         </field>
                     </form>`,
@@ -10827,15 +10762,13 @@ QUnit.module("Fields", (hooks) => {
 
             assert.strictEqual(o2m.recordData.display_name, false);
 
-            await testUtils.fields.editInput(form.$(".o_field_widget[name=display_name]"), "val");
+            await editInput(target, ".o_field_widget[name=display_name] input", "val");
 
             assert.strictEqual(o2m.recordData.display_name, "val");
-
-            testUtils.mock.unpatch(FieldOne2Many);
         }
     );
 
-    QUnit.skipWOWL("nested one2many, onchange, no command value", async function (assert) {
+    QUnit.test("nested one2many, onchange, no command value", async function (assert) {
         // This test ensures that we always send all values to onchange rpcs for nested
         // one2manys, even if some field hasn't changed. In this particular test case,
         // a first onchange returns a value for the inner one2many, and a second onchange
@@ -10843,7 +10776,7 @@ QUnit.module("Fields", (hooks) => {
         // the nested one2many value must still be sent to onchange rpcs (on the main record),
         // as it might be used to compute other fields (so the fact that the nested o2m is empty
         // must be explicit).
-        assert.expect(3);
+        assert.expect(1);
 
         serverData.models.turtle.fields.o2m = {
             string: "o2m",
@@ -10853,16 +10786,10 @@ QUnit.module("Fields", (hooks) => {
         };
         serverData.models.turtle.fields.turtle_bar.default = true;
         serverData.models.partner.onchanges.turtles = function (obj) {};
-        serverData.models.turtle.onchanges.turtle_bar = function (obj) {
-            if (obj.turtle_bar) {
-                obj.o2m = [[5], [0, false, { display_name: "default" }]];
-            } else {
-                obj.o2m = [[5]];
-            }
-        };
+        serverData.models.turtle.onchanges.turtle_bar = function (obj) {};
 
         let step = 1;
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -10882,35 +10809,28 @@ QUnit.module("Fields", (hooks) => {
                         o2m: [], // we must send a value for this field
                     });
                 }
-                const result = await this._super(...arguments);
                 if (args.model === "turtle") {
-                    // sanity checks; this is what the onchanges on turtle must return
                     if (step === 2) {
-                        assert.deepEqual(result.value, {
-                            o2m: [[5], [0, false, { display_name: "default" }]],
-                            turtle_bar: true,
-                        });
+                        return {
+                            value: {
+                                o2m: [[5], [0, false, { display_name: "default" }]],
+                                turtle_bar: true,
+                            },
+                        };
                     }
                     if (step === 3) {
-                        assert.deepEqual(result.value, {
-                            o2m: [[5]],
-                        });
+                        return {
+                            value: { o2m: [[5]] },
+                        };
                     }
                 }
-                return result;
             },
         });
 
         step = 2;
-        await click(form.$(".o_field_x2many_list .o_field_x2many_list_row_add a"));
-        // use of owlCompatibilityExtraNextTick because we have an x2many field with a boolean field
-        // (written in owl), so when we add a line, we sequentially render the list itself
-        // (including the boolean field), so we have to wait for the next animation frame, and
-        // then we render the control panel (also in owl), so we have to wait again for the
-        // next animation frame
-        await testUtils.owlCompatibilityExtraNextTick();
+        await addRow(target);
         step = 3;
-        await click(form.$(".o_data_row .o_field_boolean input"));
+        await click(target.querySelector(".o_data_row .o_field_boolean input"));
     });
 
     QUnit.test("update a one2many from a custom field widget", async function (assert) {

@@ -416,17 +416,10 @@ export class Record extends DataPoint {
         if (!this.__bm_handle__) {
             this.__bm_handle__ = await this.model.__bm__.load({
                 ...this.__bm_load_params__,
-                fieldNames: params.fieldNames,
-                viewType: this.__viewType,
-            });
-        } else if (!this.isVirtual) {
-            await this.model.__bm__.reload(this.__bm_handle__, {
-                fieldNames: params.fieldNames,
-                keepChanges: params.keepChanges,
                 viewType: this.__viewType,
             });
         } else {
-            this.model.__bm__.generateDefaultValues(this.__bm_handle__, {
+            await this.model.__bm__.reload(this.__bm_handle__, {
                 viewType: this.__viewType,
             });
         }
@@ -447,11 +440,7 @@ export class Record extends DataPoint {
         const legDP = bm.get(this.__bm_handle__);
         this.canBeAbandoned = bm.canBeAbandoned(this.__bm_handle__);
         const data = Object.assign({}, legDP.data);
-        for (const fieldName of Object.keys(data)) {
-            if (!(fieldName in this.activeFields)) {
-                continue;
-            }
-
+        for (const fieldName of this.fieldNames) {
             const fieldType = legDP.fields[fieldName].type;
             switch (fieldType) {
                 case "date":
@@ -886,22 +875,6 @@ export class RelationalModel extends Model {
             viewType: params.viewMode,
             fieldInfo: fieldsInfo[params.viewMode].fieldsInfo[params.viewMode],
         });
-        const newRecord = new Record(this, {
-            handle: handle,
-            viewType: params.viewMode,
-            mode: params.mode,
-        });
-
-        const recordSave = Record.prototype.save;
-        record.save = recordSave;
-        record.save = async (...args) => {
-            record.__syncData();
-            const res = await recordSave.call(record, ...args);
-            record.save = recordSave;
-            return res;
-        };
-
-        newRecord.canBeAbandoned = record.canBeAbandoned;
 
         // determine fieldNames to load (comes from basic_view.js)
         const legRec = this.__bm__.get(record.__bm_handle__);
@@ -978,7 +951,37 @@ export class RelationalModel extends Model {
             }
         }
 
-        await newRecord.load({ fieldNames, keepChanges: true });
+        if (fieldNames.length) {
+            if (this.__bm__.isNew(record.__bm_handle__)) {
+                await this.__bm__.generateDefaultValues(record.__bm_handle__, {
+                    fieldNames: fieldNames,
+                    viewType: viewType,
+                });
+            } else {
+                await this.__bm__.reload(record.__bm_handle__, {
+                    fieldNames: fieldNames,
+                    keepChanges: true,
+                    viewType: viewType,
+                });
+            }
+        }
+
+        const newRecord = new Record(this, {
+            handle: handle,
+            viewType: params.viewMode,
+            mode: params.mode,
+        });
+
+        const recordSave = Record.prototype.save;
+        record.save = recordSave;
+        record.save = async (...args) => {
+            record.__syncData();
+            const res = await recordSave.call(record, ...args);
+            record.save = recordSave;
+            return res;
+        };
+
+        newRecord.canBeAbandoned = record.canBeAbandoned;
         return newRecord;
     }
     async addNewRecord(list, params) {
