@@ -13,7 +13,7 @@ import { registry } from "@web/core/registry";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { sprintf } from "@web/core/utils/strings";
 import { standardFieldProps } from "@web/fields/standard_field_props";
-import { useChildRef, useService } from "@web/core/utils/hooks";
+import { useBus, useChildRef, useService } from "@web/core/utils/hooks";
 import { useViewButtons } from "@web/views/view_button/hook";
 import { ViewButton } from "@web/views/view_button/view_button";
 
@@ -297,6 +297,8 @@ class X2ManyFieldDialog extends Component {
         this.archInfo = this.props.archInfo;
         this.record = this.props.record;
         this.title = this.props.title;
+
+        useBus(this.record.model, "update", () => this.render(true));
 
         this.modalRef = useChildRef();
 

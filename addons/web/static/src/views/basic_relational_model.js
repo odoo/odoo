@@ -476,6 +476,9 @@ export class Record extends DataPoint {
                             handle: data[fieldName].id,
                             viewType: this.activeFields[fieldName].viewMode,
                             __syncParent: async (value) => {
+                                await this.model.__bm__.save(this.__bm_handle__, {
+                                    savePoint: true,
+                                });
                                 await this.update(fieldName, value);
                             },
                         });
@@ -753,29 +756,23 @@ export class StaticList extends DataPoint {
     }
 
     async add(object, params = { isM2M: false }) {
-        const changes = {};
+        let operation;
         const bm = this.model.__bm__;
         if (object instanceof Record) {
             const recHandle = object.__bm_handle__;
             await bm.save(recHandle, { savePoint: !params.isM2M });
             if (params.isM2M) {
                 const id = bm.localData[recHandle].res_id;
-                changes[this.__fieldName__] = { operation: "ADD_M2M", ids: [{ id }] };
+                operation = { operation: "ADD_M2M", ids: [{ id }] };
             } else {
-                changes[this.__fieldName__] = { operation: "ADD", id: recHandle };
+                operation = { operation: "ADD", id: recHandle };
             }
         } else if (Array.isArray(object) && params.isM2M) {
             const oldIds = this.resIds;
             const newIds = object.filter((id) => !oldIds.includes(id)).map((id) => ({ id }));
-            changes[this.__fieldName__] = { operation: "ADD_M2M", ids: newIds };
+            operation = { operation: "ADD_M2M", ids: newIds };
         }
-
-        const legDP = bm.localData[this.__bm_handle__];
-        const parentLegDP = bm.localData[legDP.parentID];
-
-        await bm.notifyChanges(parentLegDP.id, changes);
-        this.__syncData();
-        this.model.notify();
+        await this.__syncParent(operation);
     }
 
     /** Creates a Draft record from nothing and edits it. Relevant in editable x2m's */
@@ -894,15 +891,15 @@ export class RelationalModel extends Model {
             viewType: params.viewMode,
             mode: params.mode,
         });
-        if (record.save === newRecord.save) {
-            const save = record.save;
-            record.save = async (...args) => {
-                record.__syncData();
-                const res = await save.call(record, ...args);
-                record.save = save;
-                return res;
-            };
-        }
+
+        const recordSave = Record.prototype.save;
+        record.save = recordSave;
+        record.save = async (...args) => {
+            record.__syncData();
+            const res = await recordSave.call(record, ...args);
+            record.save = recordSave;
+            return res;
+        };
 
         newRecord.canBeAbandoned = record.canBeAbandoned;
 

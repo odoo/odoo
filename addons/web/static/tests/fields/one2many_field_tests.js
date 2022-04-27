@@ -1870,11 +1870,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("onchange on one2many containing x2many in form view", async function (assert) {
-        serverData.views = {
-            "partner,false,list": '<tree><field name="foo"/></tree>',
-            "partner,false,search": "<search></search>",
-        };
+    QUnit.test("onchange on one2many containing x2many in form view", async function (assert) {
         serverData.models.partner.onchanges = {
             foo: function (obj) {
                 obj.turtles = [[0, false, { turtle_foo: "new record" }]];
