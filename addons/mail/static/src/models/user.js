@@ -81,7 +81,7 @@ registerModel({
                 // - Validity of id is not verified at insert.
                 // - There is no bus notification in case of user delete from
                 //   another tab or by another user.
-                this.env.services['notification'].notify({
+                this.messaging.notify({
                     message: this.env._t("You can only chat with existing users."),
                     type: 'warning',
                 });
@@ -104,7 +104,7 @@ registerModel({
                 );
             }
             if (!chat) {
-                this.env.services['notification'].notify({
+                this.messaging.notify({
                     message: this.env._t("An unexpected error occurred during the creation of the chat."),
                     type: 'warning',
                 });
@@ -144,7 +144,7 @@ registerModel({
                 // - Validity of id is not verified at insert.
                 // - There is no bus notification in case of user delete from
                 //   another tab or by another user.
-                this.env.services['notification'].notify({
+                this.messaging.notify({
                     message: this.env._t("You can only open the profile of existing users."),
                     type: 'warning',
                 });

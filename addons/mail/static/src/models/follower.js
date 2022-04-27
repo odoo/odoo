@@ -145,7 +145,7 @@ registerModel({
                     args: [[this.followedThread.id]],
                     kwargs,
                 }));
-                this.env.services['notification'].notify({
+                this.messaging.notify({
                     type: 'success',
                     message: this.env._t("The subscription preferences were successfully applied."),
                 });

@@ -82,7 +82,7 @@ registerModel({
                 if (this.exists()) {
                     this.update({ isFullScreen: false });
                 }
-                this.env.services.notification.notify({
+                this.messaging.notify({
                     message: this.env._t("The FullScreen mode was denied by the browser"),
                     type: 'warning',
                 });
