@@ -3,7 +3,7 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { OnChange } from '@mail/model/model_onchange';
-import { clear, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred';
 
 const { EventBus } = owl;
@@ -171,10 +171,10 @@ registerModel({
             });
             const focusedSessionId = this.focusedRtcSession && this.focusedRtcSession.id;
             if (!sessionId || focusedSessionId === sessionId) {
-                this.update({ focusedRtcSession: unlink() });
+                this.update({ focusedRtcSession: clear() });
                 return;
             }
-            this.update({ focusedRtcSession: link(rtcSession) });
+            this.update({ focusedRtcSession: replace(rtcSession) });
             if (this.userSetting.rtcLayout !== 'tiled') {
                 return;
             }

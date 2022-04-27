@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { link } from '@mail/model/model_field_command';
+import { link, replace } from '@mail/model/model_field_command';
 import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
@@ -19,7 +19,7 @@ QUnit.test('auto layout with image', async function (assert) {
     });
     const message = messaging.models['Message'].create({
         attachments: link(attachment),
-        author: link(messaging.currentPartner),
+        author: replace(messaging.currentPartner),
         body: "<p>Test</p>",
         id: 100,
     });

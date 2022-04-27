@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { insert, unlink } from '@mail/model/model_field_command';
+import { clear, insert } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'User',
@@ -19,7 +19,7 @@ registerModel({
             }
             if ('partner_id' in data) {
                 if (!data.partner_id) {
-                    data2.partner = unlink();
+                    data2.partner = clear();
                 } else {
                     const partnerNameGet = data['partner_id'];
                     const partnerData = {

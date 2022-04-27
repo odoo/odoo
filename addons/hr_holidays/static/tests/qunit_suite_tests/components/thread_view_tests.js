@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { insertAndReplace, link } from '@mail/model/model_field_command';
+import { insertAndReplace, replace } from '@mail/model/model_field_command';
 import {
     start,
     startServer,
@@ -36,7 +36,7 @@ QUnit.test('out of office message on direct chat with out of office partner', as
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
-        thread: link(thread),
+        thread: replace(thread),
     });
     await createThreadViewComponent(threadViewer.threadView);
     assert.containsOnce(

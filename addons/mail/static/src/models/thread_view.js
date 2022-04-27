@@ -3,7 +3,7 @@
 import { registerModel } from '@mail/model/model_core';
 import { RecordDeletedError } from '@mail/model/model_errors';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
@@ -38,7 +38,7 @@ registerModel({
          */
         handleVisibleMessage(message) {
             if (!this.lastVisibleMessage || this.lastVisibleMessage.id < message.id) {
-                this.update({ lastVisibleMessage: link(message) });
+                this.update({ lastVisibleMessage: replace(message) });
             }
         },
         /**
@@ -266,7 +266,7 @@ registerModel({
                     isMarkAllAsReadRequested: true,
                 });
             }
-            this.update({ lastVisibleMessage: unlink() });
+            this.update({ lastVisibleMessage: clear() });
         },
         /**
          * @private

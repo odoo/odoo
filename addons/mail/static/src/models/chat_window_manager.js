@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, link, replace } from '@mail/model/model_field_command';
 
 const BASE_VISUAL = {
     /**
@@ -121,8 +121,8 @@ registerModel({
             if (!chatWindow) {
                 chatWindow = this.messaging.models['ChatWindow'].create({
                     isFolded,
-                    manager: link(this),
-                    thread: link(thread),
+                    manager: replace(this),
+                    thread: replace(thread),
                 });
             } else {
                 chatWindow.update({ isFolded });
@@ -262,9 +262,9 @@ registerModel({
         _computeLastVisible() {
             const { length: l, [l - 1]: lastVisible } = this.allOrderedVisible;
             if (!lastVisible) {
-                return unlink();
+                return clear();
             }
-            return link(lastVisible);
+            return replace(lastVisible);
         },
         /**
          * @private

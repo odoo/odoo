@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace, replace, unlinkAll } from '@mail/model/model_field_command';
+import { clear, insert, insertAndReplace, replace } from '@mail/model/model_field_command';
 import emojis from '@mail/js/emojis';
 import { addLink, htmlToTextContentInline, parseAndTransform, timeFromNow } from '@mail/js/utils';
 
@@ -26,7 +26,7 @@ registerModel({
             const data2 = {};
             if ('attachment_ids' in data) {
                 if (!data.attachment_ids) {
-                    data2.attachments = unlinkAll();
+                    data2.attachments = clear();
                 } else {
                     data2.attachments = insertAndReplace(data.attachment_ids.map(attachmentData =>
                         this.messaging.models['Attachment'].convertData(attachmentData)
@@ -35,7 +35,7 @@ registerModel({
             }
             if ('author_id' in data) {
                 if (!data.author_id) {
-                    data2.author = unlinkAll();
+                    data2.author = clear();
                 } else if (data.author_id[0] !== 0) {
                     // partner id 0 is a hack of message_format to refer to an
                     // author non-related to a partner. display_name equals

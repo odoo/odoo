@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { insert, unlink } from '@mail/model/model_field_command';
+import { clear, insert } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Employee',
@@ -20,7 +20,7 @@ registerModel({
             if ('user_id' in data) {
                 data2.hasCheckedUser = true;
                 if (!data.user_id) {
-                    data2.user = unlink();
+                    data2.user = clear();
                 } else {
                     const partnerNameGet = data['user_partner_id'];
                     const partnerData = {

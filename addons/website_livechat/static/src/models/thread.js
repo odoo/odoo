@@ -2,7 +2,7 @@
 
 import { addFields, patchModelMethods } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
-import { insert, unlink } from '@mail/model/model_field_command';
+import { clear, insert } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/thread';
 
@@ -16,7 +16,7 @@ patchModelMethods('Thread', {
             if (data.visitor) {
                 data2.visitor = insert(this.messaging.models['Visitor'].convertData(data.visitor));
             } else {
-                data2.visitor = unlink();
+                data2.visitor = clear();
             }
         }
         return data2;

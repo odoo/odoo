@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { insert, link, unlink } from '@mail/model/model_field_command';
+import { clear, insert, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Visitor',
@@ -17,7 +17,7 @@ registerModel({
                         code: data.country_code,
                     });
                 } else {
-                    data2.country = unlink();
+                    data2.country = clear();
                 }
             }
             if ('history' in data) {
@@ -39,7 +39,7 @@ registerModel({
                 if (data.partner_id) {
                     data2.partner = insert({ id: data.partner_id });
                 } else {
-                    data2.partner = unlink();
+                    data2.partner = clear();
                 }
             }
             if ('website_name' in data) {
@@ -65,12 +65,12 @@ registerModel({
          */
         _computeCountry() {
             if (this.partner && this.partner.country) {
-                return link(this.partner.country);
+                return replace(this.partner.country);
             }
             if (this.country) {
-                return link(this.country);
+                return replace(this.country);
             }
-            return unlink();
+            return clear();
         },
         /**
          * @private
