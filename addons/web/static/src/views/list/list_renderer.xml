@@ -13,10 +13,10 @@
                             <CheckBox disabled="!!props.list.editedRecord" value="selectAll" onChange.bind="toggleSelection"/>
                         </th>
                         <t t-foreach="state.columns" t-as="column" t-key="getColumnKey(column, column_index)">
-                            <th t-if="column.type === 'field'" t-att-class="getColumnClass(column)" t-on-click="() => this.onClickSortColumn(column)">
+                            <th t-if="column.type === 'field'" t-att-style="column.widthStyle" t-att-data-fieldtype="column.name" t-att-class="getColumnClass(column)" t-on-click="() => this.onClickSortColumn(column)">
                                 <t t-if="column.hasLabel" t-esc="column.label"/>
                             </th>
-                            <th t-else=""></th>
+                            <th t-else="" t-att-style="column.widthStyle"></th>
                         </t>
                         <th t-if="props.activeActions and props.activeActions.onDelete" class="o_list_record_remove_header"/>
                     </tr>

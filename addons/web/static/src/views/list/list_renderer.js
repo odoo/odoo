@@ -20,6 +20,7 @@ const {
     useExternalListener,
     useRef,
     useState,
+    useEffect,
 } = owl;
 
 const formatterRegistry = registry.category("formatters");
@@ -82,6 +83,40 @@ export class ListRenderer extends Component {
         useBounceButton(rootRef, () => {
             return this.showNoContentHelper;
         });
+
+        useEffect(
+            (columns, isEmpty) => {
+                const widths = [];
+                for (const column of columns) {
+                    widths.push(this.calculateColumnWidth(column));
+                }
+
+                const relativeWidths = widths.filter((w) => w.type === "relative");
+                let totalOfRelativeWidths = relativeWidths.reduce((acc, w) => acc + w.value, 0);
+                for (const column of columns) {
+                    const width = widths.shift();
+                    if (width.type === "absolute") {
+                        column.widthStyle = "min-width:" + width.value + ";";
+                        if (isEmpty) {
+                            column.widthStyle = column.widthStyle + "width:" + width.value + ";";
+                        }
+                    }
+                    if (width.type === "relative" && this.props.editable && isEmpty) {
+                        const value =
+                            ((width.value / totalOfRelativeWidths) * 100).toFixed(2) + "%";
+                        column.widthStyle = "width:" + value + ";";
+                    }
+                }
+            },
+            () => [this.state.columns, this.isEmpty]
+        );
+    }
+
+    /**
+     * No records, no groups.
+     */
+    get isEmpty() {
+        return !this.props.list.records.length && !this.props.list.groups;
     }
 
     get fields() {
@@ -551,6 +586,32 @@ export class ListRenderer extends Component {
             return; // ignore clicks inside the table, they are handled directly by the renderer
         }
         this.unselectRow();
+    }
+
+    calculateColumnWidth(column) {
+        const FIXED_FIELD_COLUMN_WIDTHS = {
+            BooleanField: "70px",
+            DateField: "92px",
+            DateTimeField: "146px",
+            FloatField: "92px",
+            IntegerField: "74px",
+            MonetaryField: "104px",
+        };
+
+        if (column.options && column.options.width) {
+            return { type: "absolute", value: column.options.width };
+        }
+
+        if (column.type != "field") {
+            return { type: "relative", value: 1 };
+        }
+
+        const fieldClass = column.FieldComponent.name;
+        if (fieldClass in FIXED_FIELD_COLUMN_WIDTHS) {
+            return { type: "absolute", value: FIXED_FIELD_COLUMN_WIDTHS[fieldClass] };
+        }
+
+        return { type: "relative", value: 1 };
     }
 }
 
