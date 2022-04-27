@@ -188,7 +188,14 @@ export class X2ManyField extends Component {
         const archInfo = this.activeField.views[this.viewMode];
         const editable = archInfo.editable;
         if (editable) {
-            this.list.addNew({ context, mode: "edit", position: editable });
+            if (!this.creatingRecord) {
+                this.creatingRecord = true;
+                try {
+                    await this.list.addNew({ context, mode: "edit", position: editable });
+                } finally {
+                    this.creatingRecord = false;
+                }
+            }
         } else {
             const form = await this._getFormViewInfo();
             const recordParams = {

@@ -7316,7 +7316,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "editable list: multiple clicks on Add an item do not create invalid rows",
         async function (assert) {
             assert.expect(3);
@@ -7325,7 +7325,7 @@ QUnit.module("Fields", (hooks) => {
                 turtle_trululu: function () {},
             };
 
-            let prom;
+            let def;
             await makeView({
                 type: "form",
                 resModel: "partner",
@@ -7338,34 +7338,23 @@ QUnit.module("Fields", (hooks) => {
                             </tree>
                         </field>
                     </form>`,
-                async mockRPC(route, args, performRPC) {
-                    const result = await performRPC(route, args);
+                async mockRPC(route, args) {
                     if (args.method === "onchange") {
-                        await prom;
-                        return () => result;
+                        await Promise.resolve(def);
                     }
-                    return result;
                 },
             });
-            prom = makeDeferred();
+            def = makeDeferred();
             // click twice to add a new line
             await addRow(target);
             await addRow(target);
-            assert.containsNone(
-                target,
-                ".o_data_row",
-                "no row should have been created yet (waiting for the onchange)"
-            );
+            assert.containsNone(target, ".o_data_row");
 
             // resolve the onchange promise
-            prom.resolve();
+            def.resolve();
             await nextTick();
-            assert.containsOnce(target, ".o_data_row", "only one row should have been created");
-            assert.hasClass(
-                target.querySelector(".o_data_row"),
-                "o_selected_row",
-                "the created row should be in edition"
-            );
+            assert.containsOnce(target, ".o_data_row");
+            assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
         }
     );
 
