@@ -206,7 +206,24 @@ export class X2ManyField extends Component {
         this.addDialog(X2ManyFieldDialog, {
             archInfo: form,
             record: newRecord,
-            save: () => this.updateRecord(record),
+            save: async (record, { saveAndNew }) => {
+                if (record.id === newRecord.id) {
+                    await this.updateRecord(record);
+                } else {
+                    await this.saveRecordToList(record);
+                }
+                if (saveAndNew) {
+                    return this.list.model.addNewRecord(this.list, {
+                        context: this.list.context,
+                        resModel: this.list.resModel,
+                        activeFields: form.activeFields,
+                        fields: { ...form.fields },
+                        views: { form },
+                        mode: "edit",
+                        viewType: "form",
+                    });
+                }
+            },
             title: sprintf(
                 this.env._t("Open: %s"),
                 this.props.record.activeFields[this.props.name].string

@@ -108,6 +108,7 @@ function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType) {
             name: fieldName,
             options: fieldDescr.options,
             views,
+            widget: fieldDescr.widget,
             __WOWL_FIELD_DESCR__: fieldDescr,
         };
 
@@ -999,7 +1000,6 @@ export class RelationalModel extends Model {
             await record.save();
             operation = { operation: "TRIGGER_ONCHANGE" };
         }
-
         await list.__syncParent(operation);
     }
 

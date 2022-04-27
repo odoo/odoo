@@ -18,6 +18,7 @@ import { useSetupView } from "@web/views/helpers/view_hook";
 import { getActiveActions } from "@web/views/helpers/view_utils";
 import { KanbanModel } from "@web/views/kanban/kanban_model";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
+import { stringToOrderBy } from "@web/views/relational_model";
 import { useViewButtons } from "@web/views/view_button/hook";
 
 const { Component, useRef } = owl;
@@ -100,6 +101,7 @@ export class KanbanArchParser extends XMLParser {
     parse(arch, fields) {
         const xmlDoc = this.parseXML(arch);
         const className = xmlDoc.getAttribute("class") || null;
+        let defaultOrder = stringToOrderBy(xmlDoc.getAttribute("default_order") || null);
         const defaultGroupBy = xmlDoc.getAttribute("default_group_by");
         const limit = xmlDoc.getAttribute("limit");
         const recordsDraggable = isTruthy(xmlDoc.getAttribute("records_draggable"), true);
@@ -119,7 +121,7 @@ export class KanbanArchParser extends XMLParser {
         let kanbanBoxTemplate = createElement("t");
         let colorField = "color";
         let cardColorField = null;
-        let hasHandleWidget = null;
+        let handleField = null;
         const activeFields = {};
 
         // Root level of the template
@@ -143,7 +145,7 @@ export class KanbanArchParser extends XMLParser {
                     const tesc = createElement("span", { "t-esc": `getValue(record,'${name}')` });
                     node.replaceWith(tesc);
                 } else if (fieldInfo.widget === "handle") {
-                    hasHandleWidget = true;
+                    handleField = name;
                 }
             }
             // Converts server qweb attributes to Owl attributes.
@@ -283,14 +285,20 @@ export class KanbanArchParser extends XMLParser {
         dropdown.setAttribute("menuClass", `'${menuClass.join(" ")}'`);
         dropdown.setAttribute("togglerClass", `'${togglerClass.join(" ")}'`);
 
+        if (!defaultOrder.length && handleField) {
+            defaultOrder = stringToOrderBy(handleField);
+        }
+
         return {
             arch,
             activeActions,
             activeFields,
             className,
             defaultGroupBy,
-            hasHandleWidget,
+            handleField,
+            hasHandleWidget: !!handleField,
             colorField,
+            defaultOrder,
             onCreate,
             quickCreateView,
             recordsDraggable,

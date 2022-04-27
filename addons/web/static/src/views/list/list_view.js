@@ -71,7 +71,7 @@ export class ListArchParser extends XMLParser {
         };
         const decorations = getDecoration(xmlDoc);
         const editable = activeActions.edit ? xmlDoc.getAttribute("editable") : false;
-        const defaultOrder = stringToOrderBy(xmlDoc.getAttribute("default_order") || null);
+        let defaultOrder = stringToOrderBy(xmlDoc.getAttribute("default_order") || null);
         const expand = xmlDoc.getAttribute("expand") === "1";
         const activeFields = {};
         const columns = [];
@@ -84,6 +84,7 @@ export class ListArchParser extends XMLParser {
         const creates = [];
         const groupListArchParser = new GroupListArchParser();
         let buttonGroup;
+        let handleField = null;
         const treeAttr = {};
         let nextId = 0;
         this.visitXML(arch, (node) => {
@@ -111,6 +112,9 @@ export class ListArchParser extends XMLParser {
             } else if (node.tagName === "field") {
                 const fieldInfo = Field.parseFieldNode(node, fields, "list");
                 activeFields[fieldInfo.name] = fieldInfo;
+                if (fieldInfo.widget === "handle") {
+                    handleField = fieldInfo.name;
+                }
                 if (isFalsy(node.getAttribute("invisible"), true)) {
                     const displayName = fieldInfo.FieldComponent.displayName;
                     columns.push({
@@ -163,11 +167,16 @@ export class ListArchParser extends XMLParser {
             }
         });
 
+        if (!defaultOrder.length && handleField) {
+            defaultOrder = stringToOrderBy(handleField);
+        }
+
         return {
             activeActions,
             creates,
             editable,
             expand,
+            handleField,
             headerButtons,
             activeFields,
             columns,

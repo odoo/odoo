@@ -8484,7 +8484,7 @@ QUnit.module("Fields", (hooks) => {
             [...target.querySelectorAll('.o_data_row div[name="turtle_foo"]')].map(
                 (el) => el.innerText
             ),
-            ["kawa", "blip"]
+            ["yop", "blip"]
         );
         await click(target.querySelector(".o_list_record_remove button"));
         assert.deepEqual(
@@ -8495,11 +8495,10 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many with sequence field, override default_get, bottom when inline",
         async function (assert) {
             serverData.models.partner.records[0].turtles = [3, 2, 1];
-
             serverData.models.turtle.fields.turtle_int.default = 10;
 
             await makeView({
@@ -8532,23 +8531,21 @@ QUnit.module("Fields", (hooks) => {
             await addRow(target);
             await editInput(target, '[name="turtle_foo"] input', inputText);
             await clickSave(target);
+
             assert.deepEqual(
                 [...target.querySelectorAll(".o_data_row")].map((el) => el.textContent),
-                ["blip", "yop", "kawa", "inputText"]
+                ["blip", "yop", "kawa", inputText]
             );
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many with sequence field, override default_get, top when inline",
         async function (assert) {
-            assert.expect(2);
-
             serverData.models.partner.records[0].turtles = [3, 2, 1];
-
             serverData.models.turtle.fields.turtle_int.default = 10;
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -8562,34 +8559,37 @@ QUnit.module("Fields", (hooks) => {
                         </field>
                     </form>`,
                 resId: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
             });
 
+            await clickEdit(target);
+
             // starting condition
-            assert.strictEqual($(".o_data_cell").text(), "blipyopkawa");
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_data_row")].map((el) => el.textContent),
+                ["blip", "yop", "kawa"]
+            );
 
             // click add a new line
             // save the record
             // check line is at the correct place
-
-            var inputText = "ninja";
+            const inputText = "ninja";
             await addRow(target);
-            await testUtils.fields.editInput(form.$('.o_input[name="turtle_foo"]'), inputText);
+            await editInput(target, '[name="turtle_foo"] input', inputText);
             await clickSave(target);
 
-            assert.strictEqual($(".o_data_cell").text(), inputText + "blipyopkawa");
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_data_row")].map((el) => el.textContent),
+                [inputText, "blip", "yop", "kawa"]
+            );
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many with sequence field, override default_get, bottom when popup",
         async function (assert) {
             assert.expect(3);
 
             serverData.models.partner.records[0].turtles = [3, 2, 1];
-
             serverData.models.turtle.fields.turtle_int.default = 10;
 
             await makeView({
@@ -8610,27 +8610,35 @@ QUnit.module("Fields", (hooks) => {
                         </field>
                         </form>`,
                 resId: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
             });
 
+            await clickEdit(target);
+
             // starting condition
-            assert.strictEqual($(".o_data_cell").text(), "blipyopkawa");
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_data_row")].map((el) => el.textContent),
+                ["blip", "yop", "kawa"]
+            );
 
             // click add a new line
             // save the record
             // check line is at the correct place
+            const inputText = "ninja";
+            await addRow(target);
+            await editInput(target, '.modal [name="turtle_foo"] input', inputText);
+            await clickSave(target.querySelector(".modal"));
 
-            var inputText = "ninja";
-            await click($(".o_field_x2many_list_row_add a"));
-            await testUtils.fields.editInput($('.o_input[name="turtle_foo"]'), inputText);
-            await click($(".modal .modal-footer .btn-primary:first"));
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_data_row")].map((el) => el.textContent),
+                ["blip", "yop", "kawa", inputText]
+            );
 
-            assert.strictEqual($(".o_data_cell").text(), "blipyopkawa" + inputText);
+            await clickSave(target);
 
-            await click($(".o_form_button_save"));
-            assert.strictEqual($(".o_data_cell").text(), "blipyopkawa" + inputText);
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_data_row")].map((el) => el.textContent),
+                ["blip", "yop", "kawa", inputText]
+            );
         }
     );
 
@@ -8670,11 +8678,10 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many with sequence field, override default_get, last page",
         async function (assert) {
             serverData.models.partner.records[0].turtles = [3, 2, 1];
-
             serverData.models.turtle.fields.turtle_int.default = 10;
 
             await makeView({
@@ -8694,6 +8701,7 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
                 resId: 1,
             });
+
             await clickEdit(target);
 
             // click add a new line
@@ -8723,8 +8731,6 @@ QUnit.module("Fields", (hooks) => {
             // FieldText (turtle_description) can be reordered with a handle.
             // More specifically this will trigger a reset on a FieldText
             // while the field is not in editable mode.
-            assert.expect(4);
-
             serverData.models.turtle.fields.turtle_int.default = 10;
             serverData.models.turtle.fields.product_id.default = 37;
             serverData.models.turtle.fields.not_required_product_id = {
@@ -8748,25 +8754,24 @@ QUnit.module("Fields", (hooks) => {
                             </tree>
                         </field>
                     </form>`,
-                viewOptions: {
-                    mode: "edit",
-                },
             });
 
-            // starting condition
-            assert.strictEqual($(".o_data_cell:nth-child(2)").text(), "");
+            await clickEdit(target);
 
-            var inputText1 = "relax";
-            var inputText2 = "max";
+            // starting condition
+            assert.strictEqual(target.querySelector(".o_data_cell:nth-child(2)").innerText, "");
+
+            const inputText1 = "relax";
+            const inputText2 = "max";
             await addRow(target);
-            await testUtils.fields.editInput(form.$('.o_input[name="turtle_foo"]'), inputText1);
+            await editInput(target, 'div[name="turtle_foo"] input', inputText1);
             await addRow(target);
-            await testUtils.fields.editInput(form.$('.o_input[name="turtle_foo"]'), inputText2);
+            await editInput(target, 'div[name="turtle_foo"] input', inputText2);
             await addRow(target);
 
             assert.strictEqual($(".o_data_cell:nth-child(2)").text(), inputText1 + inputText2);
 
-            var $handles = form.$(".ui-sortable-handle");
+            const $handles = form.$(".ui-sortable-handle");
 
             assert.equal($handles.length, 3, "There should be 3 sequence handlers");
 
@@ -8988,11 +8993,9 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "onchange in a one2many with non inline view on a new record",
         async function (assert) {
-            assert.expect(6);
-
             serverData.models.turtle.onchanges = {
                 display_name: function (obj) {
                     if (obj.display_name) {
@@ -9000,40 +9003,41 @@ QUnit.module("Fields", (hooks) => {
                     }
                 },
             };
+            serverData.views = {
+                "turtle,false,list": `
+                    <tree editable="bottom">
+                        <field name="display_name"/>
+                        <field name="turtle_int"/>
+                    </tree>
+                `,
+            };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
-                arch: `<form><field name="turtles"/></form>`,
-                archs: {
-                    "turtle,false,list": `
-                        <tree editable="bottom">
-                            <field name="display_name"/>
-                            <field name="turtle_int"/>
-                        </tree>`,
-                },
+                arch: `
+                    <form>
+                        <field name="turtles" widget="one2many"/>
+                    </form>
+                `,
                 mockRPC(route, args) {
                     assert.step(args.method || route);
-                    return this._super.apply(this, arguments);
                 },
             });
 
             // add a row and trigger the onchange
             await addRow(target);
-            await testUtils.fields.editInput(
-                form.$(".o_data_row .o_field_widget[name=display_name]"),
-                "a name"
-            );
+            await editInput(target, '.o_data_row div[name="display_name"] input', "a name");
 
             assert.strictEqual(
-                form.$(".o_data_row .o_field_widget[name=turtle_int]").val(),
-                "44",
-                "should have triggered the onchange"
+                target.querySelector(".o_data_row div[name=turtle_int] input").value,
+                "44"
             );
 
             assert.verifySteps([
-                "load_views", // load sub list
+                "get_views", // load main form
+                "get_views", // load sub list
                 "onchange", // main record
                 "onchange", // sub record
                 "onchange", // edition of display_name of sub record
@@ -9041,7 +9045,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL('add a line, edit it and "Save & New"', async function (assert) {
+    QUnit.test('add a line, edit it and "Save & New"', async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -9049,17 +9053,23 @@ QUnit.module("Fields", (hooks) => {
             arch: `
                 <form>
                     <field name="p">
-                        <tree><field name="display_name"/></tree>
-                        <form><field name="display_name"/></form>
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                        <form>
+                            <field name="display_name"/>
+                        </form>
                     </field>
-                </form>`,
+                </form>
+            `,
         });
 
-        assert.containsNone(target, ".o_data_row", "there should be no record in the relation");
+        assert.containsNone(target, ".o_data_row");
         // add a new record
         await addRow(target);
         await editInput(target, ".modal .o_field_widget input", "new record");
-        await click(target.querySelector(".modal .modal-footer .btn-primary"));
+
+        await clickSave(target.querySelector(".modal"));
 
         assert.deepEqual(
             [...target.querySelectorAll(".o_data_row .o_data_cell")].map((el) => el.textContent),
@@ -9068,24 +9078,20 @@ QUnit.module("Fields", (hooks) => {
 
         // reopen freshly added record and edit it
         await click(target.querySelector(".o_data_row .o_data_cell"));
-        await editInput(target, ".modal .o_field_widget", "new record edited");
+        await editInput(target, ".modal .o_field_widget input", "new record edited");
 
         // save it, and choose to directly create another record
         await click(target.querySelectorAll(".modal .modal-footer .btn-primary")[1]);
 
         assert.containsOnce(target, ".modal");
-        assert.strictEqual(
-            target.querySelector(".modal .o_field_widget").textContent,
-            "",
-            "should have cleared the input"
-        );
+        assert.strictEqual(target.querySelector(".modal .o_field_widget").textContent, "");
 
         await editInput(target, ".modal .o_field_widget input", "another new record");
-        await click(target.querySelector(".modal .modal-footer .btn-primary"));
+        await clickSave(target.querySelector(".modal"));
 
         assert.deepEqual(
             [...target.querySelectorAll(".o_data_row .o_data_cell")].map((el) => el.textContent),
-            ["new record", "editedanother new record"]
+            ["new record edited", "another new record"]
         );
     });
 

@@ -919,6 +919,7 @@ export class Record extends DataPoint {
         }
         const limit = views[viewMode] && views[viewMode].limit;
         const orderBy = views[viewMode] && views[viewMode].defaultOrder;
+
         const editable = views[viewMode] && views[viewMode].editable;
 
         const list = this.model.createDataPoint("static_list", {
@@ -1183,7 +1184,7 @@ class DynamicList extends DataPoint {
             if (!params.onRecordWillSwitchMode && editedRecord) {
                 // not really elegant, but we only need the root list to save the record
                 if (editedRecord !== record && editedRecord.canBeAbandoned) {
-                    this.abandonRecord(editedRecord.id)
+                    this.abandonRecord(editedRecord.id);
                 } else {
                     const isSaved = await editedRecord.save();
                     if (!isSaved) {
