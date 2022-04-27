@@ -1198,7 +1198,7 @@ QUnit.test('current partner notify no longer is typing to thread members after 5
     // with a random unique id that will be referenced in the test
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { env, insertText } = await start({
+    const { advanceTime, insertText } = await start({
         autoOpenDiscuss: true,
         discuss: {
             params: {
@@ -1222,7 +1222,7 @@ QUnit.test('current partner notify no longer is typing to thread members after 5
         "should have notified current partner is typing"
     );
 
-    await env.testUtils.advanceTime(5 * 1000);
+    await advanceTime(5 * 1000);
     assert.verifySteps(
         ['notify_typing:false'],
         "should have notified current partner no longer is typing (inactive for 5 seconds)"
@@ -1236,7 +1236,7 @@ QUnit.test('current partner notify is typing again to other members every 50s of
     // with a random unique id that will be referenced in the test
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { env, insertText } = await start({
+    const { advanceTime, insertText } = await start({
         autoOpenDiscuss: true,
         discuss: {
             params: {
@@ -1265,7 +1265,7 @@ QUnit.test('current partner notify is typing again to other members every 50s of
     while (totalTimeElapsed < 50 * 1000) {
         await insertText('.o_ComposerTextInput_textarea', 'a');
         totalTimeElapsed += elapseTickTime;
-        await env.testUtils.advanceTime(elapseTickTime);
+        await advanceTime(elapseTickTime);
     }
 
     assert.verifySteps(

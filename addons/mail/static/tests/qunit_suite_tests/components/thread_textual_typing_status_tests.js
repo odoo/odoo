@@ -136,7 +136,7 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
             [0, 0, { partner_id: resPartnerId1 }],
         ],
     });
-    const { env, messaging, widget } = await start({
+    const { advanceTime, messaging, widget } = await start({
         hasTimeControl: true,
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -169,7 +169,7 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
         "Should display that demo user is typing"
     );
 
-    await afterNextRender(() => env.testUtils.advanceTime(60 * 1000));
+    await afterNextRender(() => advanceTime(60 * 1000));
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
         "",
@@ -188,7 +188,7 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
             [0, 0, { partner_id: resPartnerId1 }],
         ],
     });
-    const { env, messaging, widget } = await start({
+    const { advanceTime, messaging, widget } = await start({
         hasTimeControl: true,
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -222,7 +222,7 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
     );
 
     // simulate receive typing notification from demo "is typing" again after 50s.
-    await env.testUtils.advanceTime(50 * 1000);
+    await advanceTime(50 * 1000);
     widget.call('bus_service', 'trigger', 'notification', [{
         type: 'mail.channel.partner/typing_status',
         payload: {
@@ -232,7 +232,7 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
             partner_name: "Demo",
         },
     }]);
-    await env.testUtils.advanceTime(50 * 1000);
+    await advanceTime(50 * 1000);
     await nextAnimationFrame();
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -240,7 +240,7 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
         "Should still display that demo user is typing after 100 seconds (refreshed is typing status at 50s => (100 - 50) = 50s < 60s after assuming no-longer typing)"
     );
 
-    await afterNextRender(() => env.testUtils.advanceTime(11 * 1000));
+    await afterNextRender(() => advanceTime(11 * 1000));
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
         "",

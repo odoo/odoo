@@ -911,6 +911,9 @@ async function start(param0 = {}) {
         pyEnv,
         widget,
     };
+    if (hasTimeControl) {
+        result['advanceTime'] = env.testUtils.advanceTime;
+    }
     const { modelManager } = testEnv.services.messaging;
     registerCleanup(async() => {
         widget.destroy();
