@@ -9,6 +9,7 @@ import {
     addRow,
     click,
     clickM2OHighlightedItem,
+    clickOpenedDropdownItem,
     clickOpenM2ODropdown,
     editInput,
     editSelect,
@@ -256,10 +257,6 @@ QUnit.module("Fields", (hooks) => {
         };
 
         setupViewRegistries();
-
-        // patchWithCleanup(AutoComplete, {
-        //     delay: 0,
-        // });
     });
 
     QUnit.module("One2ManyField");
@@ -10413,7 +10410,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_list_record_remove_header");
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many reset by onchange (of another field) while being edited",
         async function (assert) {
             // In this test, we have a many2one and a one2many. The many2one has an onchange that
@@ -10421,16 +10418,20 @@ QUnit.module("Fields", (hooks) => {
             // such that the onchange is delayed. During the name_create, we click to add a new row
             // to the one2many. After a while, we unlock the name_create, which triggers the onchange
             // and resets the one2many. At the end, we want the row to be in edition.
-            assert.expect(3);
 
-            const prom = testUtils.makeTestPromise();
+            // patch setTimeout s.t. the autocomplete drodown opens directly
+            patchWithCleanup(browser, {
+                setTimeout: (fn) => fn(),
+            });
+
+            const def = makeDeferred();
             serverData.models.partner.onchanges = {
                 trululu: (obj) => {
                     obj.p = [[5]].concat(obj.p);
                 },
             };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -10441,37 +10442,30 @@ QUnit.module("Fields", (hooks) => {
                             <tree editable="top"><field name="product_id" required="1"/></tree>
                         </field>
                     </form>`,
-                mockRPC(route, args) {
-                    const result = this._super.apply(this, arguments);
+                async mockRPC(route, args) {
                     if (args.method === "name_create") {
-                        return prom.then(() => result);
+                        await def;
                     }
-                    return result;
                 },
             });
 
             // set a new value for trululu (will delay the onchange)
-            await testUtils.fields.many2one.searchAndClickItem("trululu", { search: "new value" });
+            await editInput(target, ".o_field_widget[name=trululu] input", "new value");
+            await clickOpenedDropdownItem(target, "trululu", `Create "new value"`);
 
             // add a row in p
             await addRow(target);
-            assert.containsNone(form, ".o_data_row");
+            assert.containsNone(target, ".o_data_row");
 
             // resolve the name_create to trigger the onchange, and the reset of p
-            prom.resolve();
-            await testUtils.nextTick();
-            // use of owlCompatibilityExtraNextTick because we have two sequential updates of the
-            // fieldX2Many: one because of the onchange, and one because of the click on add a line.
-            // As an update requires an update of the ControlPanel, which is an Owl Component, and
-            // waits for it, we need to wait for two animation frames before seeing the new line in
-            // the DOM
-            await testUtils.owlCompatibilityExtraNextTick();
-            assert.containsOnce(form, ".o_data_row");
-            assert.hasClass(form.$(".o_data_row"), "o_selected_row");
+            def.resolve();
+            await nextTick();
+            assert.containsOnce(target, ".o_data_row");
+            assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.skip(
         "one2many with many2many_tags in list and list in form with a limit",
         async function (assert) {
             // This test is skipped for now, as it doesn't work, and it can't be fixed in the current
