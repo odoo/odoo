@@ -2786,7 +2786,7 @@ export class OdooEditor extends EventTarget {
         const node = ev.target;
         // handle checkbox lists
         if (node.tagName == 'LI' && getListMode(node.parentElement) == 'CL') {
-            const beforStyle = window.getComputedStyle(node, 'before');
+            const beforStyle = window.getComputedStyle(node, ':before');
             const style1 = {
                 left: parseInt(beforStyle.getPropertyValue('left'), 10),
                 top: parseInt(beforStyle.getPropertyValue('top'), 10),
