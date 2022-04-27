@@ -108,16 +108,16 @@
 
 <!-- Snippet Templates -->
 <template id="s_mail_block_header_social" name="Left Logo">
-    <div class="o_mail_snippet_general o_mail_block_header_social s_header_social">
+    <div class="o_mail_snippet_general o_mail_block_header_social s_header_social pt16 pb16">
         <div class="o_mail_table_styles container">
             <div class="row">
-                <div class="col-lg-8 pt16 pb16">
-                    <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;float:none;">
+                <div class="col-lg-8">
+                    <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;"  target="_blank">
                          <img border="0" src="/mass_mailing/static/src/img/theme_basic/s_default_image_logo.png" style="height:auto;max-width:400px;" alt="Your Logo" />
                     </a>
                 </div>
-                <div class="col-lg-4 text-right o_mail_no_resize">
-                    <div class="o_mail_header_social">
+                <div class="col-lg-4">
+                    <div class="o_mail_header_social" style="text-align: right;">
                         <t t-call="mass_mailing.social_links"/>
                     </div>
                 </div>
@@ -127,17 +127,17 @@
 </template>
 
 <template id="s_mail_block_header_text_social" name="Left Text">
-    <div class="o_mail_snippet_general o_mail_block_header_text_social s_header_text_social">
+    <div class="o_mail_snippet_general o_mail_block_header_text_social s_header_text_social pt16 pb16">
         <div class="o_mail_table_styles container">
             <div class="row">
-                <div class="col-lg-8 pt16 pb16">
-                    <h3>
-                        <a t-att-href="(company_id.website) or '#'">
+                <div class="col-lg-8">
+                    <h1>
+                        <a t-att-href="(company_id.website) or '#'" target="_blank">
                             My Company
                         </a>
-                    </h3>
+                    </h1>
                 </div>
-                <div class="col-lg-4 text-right o_mail_no_resize">
+                <div class="col-lg-4" style="text-align: right;">
                     <div class="o_mail_header_social">
                         <t t-call="mass_mailing.social_links"/>
                     </div>
@@ -148,23 +148,23 @@
 </template>
 
 <template id="s_mail_block_header_logo" name="Centered Logo">
-    <div class="o_mail_snippet_general o_mail_block_header_logo s_header_logo">
+    <div class="o_mail_snippet_general o_mail_block_header_logo s_header_logo pt16 pb16">
         <div class="container o_mail_table_styles">
             <div class="row">
                 <div class="col-lg-4"/>
-                <div class="col-lg-4 text-center pt16 pb16">
-                    <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;">
+                <div class="col-lg-4" style="text-align: center;">
+                    <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;" target="_blank">
                         <img border="0" src="/mass_mailing/static/src/img/theme_basic/s_default_image_logo.png" style="height:auto;max-width:400px;width:auto"/>
                     </a>
                 </div>
-                <div class="col-lg-4 text-right"/>
+                <div class="col-lg-4" style="text-align: right;"/>
             </div>
         </div>
     </div>
 </template>
 
 <template id="s_mail_block_header_view" name="View Online">
-    <div class="o_mail_snippet_general o_snippet_view_in_browser pt16 pb16 px-3 text-center">
+    <div class="o_mail_snippet_general o_snippet_view_in_browser pt16 pb16 px-3" style="text-align: center;">
         <a href="/view">
             View Online
         </a>
