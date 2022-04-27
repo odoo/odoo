@@ -9881,14 +9881,14 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(form, ".some_button4");
     });
 
-    QUnit.skipWOWL("field context is correctly passed to x2m subviews", async function (assert) {
+    QUnit.test("field context is correctly passed to x2m subviews", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
             arch: `
                 <form>
-                    <field name="turtles" context="{some_key 1}">
+                    <field name="turtles" context="{'some_key': 1}">
                         <kanban>
                             <templates>
                                 <t t-name="kanban-box">

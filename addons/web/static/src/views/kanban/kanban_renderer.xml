@@ -95,6 +95,7 @@
                                     />
                                 </t>
                                 <t t-else="" t-call="{{ cardTemplate }}">
+                                    <t t-set="context" t-value="record.context"/>
                                     <t t-set="isSample" t-value="props.list.model.useSampleModel"/>
                                 </t>
                             </t>
@@ -110,6 +111,7 @@
                 <t t-else="">
                     <t t-call="{{ cardTemplate }}">
                         <t t-set="record" t-value="groupOrRecord.record" />
+                        <t t-set="context" t-value="record.context"/>
                         <t t-set="isSample" t-value="props.list.model.useSampleModel"/>
                     </t>
                 </t>

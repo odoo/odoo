@@ -235,11 +235,6 @@ export class KanbanRenderer extends Component {
         );
     }
 
-    // `context` can be called in the evaluated kanban template.
-    get context() {
-        return this.props.context;
-    }
-
     get showNoContentHelper() {
         const { model, isGrouped, groups } = this.props.list;
         if (model.useSampleModel) {
