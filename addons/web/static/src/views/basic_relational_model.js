@@ -385,7 +385,6 @@ export class Record extends DataPoint {
         const list = this.data[fieldName];
         const record = list.editedRecord;
         if (record && record.isNew && !record.checkValidity()) {
-            // LPE: redo that condition
             if (record.canBeAbandoned) {
                 list.abandonRecord(record.id);
             } else {
