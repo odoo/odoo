@@ -98,6 +98,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         }
         var _super = this._super.bind(this);
         this.wysiwyg.odooEditor.clean();
+        this._setValue(this._getValue());
         return this.wysiwyg.saveModifiedImages(this.$content).then(async () => {
             await this.wysiwyg.preSavePromise;
             this._isDirty = this.wysiwyg.isDirty();
