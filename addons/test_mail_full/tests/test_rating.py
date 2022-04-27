@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
+
 from odoo.addons.test_mail_full.tests.common import TestMailFullCommon, TestMailFullRecipients
 from odoo.tests import tagged
-from odoo.tests.common import users
+from odoo.tests.common import users, warmup
 from odoo.tools import mute_logger
 
 
@@ -96,3 +98,53 @@ class TestRatingFlow(TestMailFullCommon, TestMailFullRecipients):
         self.assertEqual(rating.feedback, 'Bad Feedback')
         self.assertEqual(rating.message_id, update_message)
         self.assertEqual(rating.rating, 1)
+
+    @users('__system__')
+    @warmup
+    def test_rating_last_value_perfs(self):
+
+        record_rating = self.env['mail.test.rating'].browse(self.record_rating.ids)
+
+        # prepare rating token
+        access_0 = record_rating._rating_get_access_token()
+        record_rating.rating_apply(3, token=access_0, feedback="This record is meh but it's cheap.")
+        # Make sure to update the write_date which is used to retrieve the last rating
+        record_rating.invalidate_cache(fnames=['rating_ids'])
+        record_rating.rating_ids.write_date = datetime(2022, 1, 1, 14, 00)
+        access_1 = record_rating._rating_get_access_token()
+        record_rating.rating_apply(1, token=access_1, feedback="This record sucks so much. I want to speak to the manager !")
+        record_rating.invalidate_cache(fnames=['rating_ids'])
+        record_rating.rating_ids[0].write_date = datetime(2022, 2, 1, 14, 00)
+        access_2 = record_rating._rating_get_access_token()
+        record_rating.rating_apply(5, token=access_2, feedback="This is the best record ever ! I wish I read the documentation before complaining !")
+        record_rating.invalidate_cache(fnames=['rating_ids'])
+
+        self.assertEqual(record_rating.rating_last_value, 5, "The last rating is kept.")
+        self.assertEqual(record_rating.rating_avg, 3, "The average should be equal to 3")
+
+        with self.profile():
+            RECORD_COUNT = 100
+            partners = self.env['res.partner'].create([
+                {'name': 'Jean-Luc %s' % (idx), 'email': 'jean-luc-%s@opoo.com' % (idx)} for idx in range(RECORD_COUNT)])
+            # 3810 requests if only test_mail_full is installed
+            # 5610 runbot community
+            # 6410 runbot enterprise
+            with self.assertQueryCount(__system__=6410):
+                record_ratings = self.env['mail.test.rating'].create([{
+                    'customer_id': partners[idx].id,
+                    'name': 'Test Rating',
+                    'user_id': self.user_admin.id,
+                } for idx in range(RECORD_COUNT)])
+                for record in record_ratings:
+                    access_token = record._rating_get_access_token()
+                    record.rating_apply(1, token=access_token)
+
+                record_ratings.invalidate_cache(fnames=['rating_ids'])
+                record_ratings.rating_ids.write_date = datetime(2022, 1, 1, 14, 00)
+                for record in record_ratings:
+                    access_token = record._rating_get_access_token()
+                    record.rating_apply(5, token=access_token)
+
+            record_ratings.invalidate_cache(fnames=['rating_ids'])
+            with self.assertQueryCount(__system__=101):
+                record_ratings._compute_rating_last_value()
