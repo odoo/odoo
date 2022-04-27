@@ -241,16 +241,21 @@ class SaleOrder(models.Model):
             common_lines = discounted_lines & lines_to_discount
             if line_reward.discount_mode == 'percent':
                 for line in discounted_lines:
-                    remaining_amount_per_line[line] *= (1 - line_reward.discount/100)
+                    if line_reward.discount_applicability == 'cheapest':
+                        remaining_amount_per_line[line] *= (1 - line_reward.discount / 100 / line.product_uom_qty)
+                    else:
+                        remaining_amount_per_line[line] *= (1 - line_reward.discount / 100)
             else:
                 non_common_lines = discounted_lines - lines_to_discount
-                discounted_amount = abs(sum(lines.mapped('price_total')))
+                # Fixed prices are per tax
+                discounted_amounts = {line.tax_id: abs(line.price_total) for line in lines}
                 for line in itertools.chain(non_common_lines, common_lines):
+                    discounted_amount = discounted_amounts[line.tax_id]
                     if discounted_amount == 0:
-                        break
+                        continue
                     remaining = remaining_amount_per_line[line]
                     consumed = min(remaining, discounted_amount)
-                    discounted_amount -= consumed
+                    discounted_amounts[line.tax_id] -= consumed
                     remaining_amount_per_line[line] -= consumed
 
         discountable = 0
@@ -331,7 +336,7 @@ class SaleOrder(models.Model):
             'points_cost': 0,
             'reward_identifier_code': reward_code,
             'tax_id': [(Command.CLEAR, 0, 0)] + [(Command.LINK, tax.id, False) for tax in mapped_taxes[tax]]
-        } for tax, price in discountable_per_tax.items()}
+        } for tax, price in discountable_per_tax.items() if price}
         # We only assign the point cost to one line to avoid counting the cost multiple times
         if reward_dict:
             reward_dict[next(iter(reward_dict))]['points_cost'] = point_cost
