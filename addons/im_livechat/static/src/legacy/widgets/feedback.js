@@ -1,14 +1,12 @@
-odoo.define('im_livechat.legacy.im_livechat.Feedback', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const concurrency = require('web.concurrency');
-const core = require('web.core');
-const session = require('web.session');
-const utils = require('web.utils');
-const Widget = require('web.Widget');
+import concurrency from 'web.concurrency';
+import core from 'web.core';
+import session from 'web.session';
+import utils from 'web.utils';
+import Widget from 'web.Widget';
 
-const { RATING_TO_EMOJI } = require('im_livechat.legacy.im_livechat.Constants');
-const { sprintf } = require('web.utils');
+import { RATING_TO_EMOJI } from 'im_livechat.legacy.im_livechat.Constants';
 
 const _t = core._t;
 /*
@@ -30,7 +28,7 @@ const Feedback = Widget.extend({
 
     /**
      * @param {?} parent
-     * @param {im_livechat.legacy.im_livechat.model.WebsiteLivechat} livechat
+     * @param {@im_livechat/legacy/models/website_livechat} livechat
      */
     init(parent, livechat) {
         this._super(parent);
@@ -58,7 +56,7 @@ const Feedback = Widget.extend({
             const emoji = RATING_TO_EMOJI[this.rating] || "??";
             let content;
             if (!reason) {
-                content = sprintf(_t("Rating: %s"), emoji);
+                content = utils.sprintf(_t("Rating: %s"), emoji);
             }
             else {
                 content = "Rating reason: \n" + reason;
@@ -153,6 +151,4 @@ const Feedback = Widget.extend({
     },
 });
 
-return Feedback;
-
-});
+export default Feedback;

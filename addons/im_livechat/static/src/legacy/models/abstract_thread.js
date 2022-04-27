@@ -1,8 +1,7 @@
-odoo.define('im_livechat.legacy.mail.model.AbstractThread', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const Class = require('web.Class');
-const Mixins = require('web.mixins');
+import Class from 'web.Class';
+import Mixins from'web.mixins';
 
 /**
  * Abstract thread is the super class of all threads, either backend threads
@@ -38,7 +37,7 @@ const AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
     /**
      * Add a message to this thread.
      *
-     * @param {im_livechat.legacy.mail.model.AbstractMessage} message
+     * @param {@im_livechat/legacy/models/abstract_message} message
      */
     addMessage(message) {
         this._addMessage(...arguments);
@@ -62,7 +61,7 @@ const AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
     },
     /**
      * @abstract
-     * @returns {im_livechat.legacy.mail.model.AbstractMessage[]}
+     * @returns {@im_livechat/legacy/models/abstract_message[]}
      */
     getMessages() {},
     /**
@@ -150,7 +149,7 @@ const AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      *
      * @abstract
      * @private
-     * @param {im_livechat.legacy.mail.model.AbstractMessage} message
+     * @param {@im_livechat/legacy/models/abstract_message} message
      */
     _addMessage(message) {},
     /**
@@ -192,6 +191,4 @@ const AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
     _warnUpdatedUnreadCounter() {},
 });
 
-return AbstractThread;
-
-});
+export default AbstractThread;

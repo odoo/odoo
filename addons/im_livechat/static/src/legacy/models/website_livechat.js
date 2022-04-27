@@ -1,10 +1,9 @@
-odoo.define('im_livechat.legacy.im_livechat.model.WebsiteLivechat', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const AbstractThread = require('im_livechat.legacy.mail.model.AbstractThread');
-const ThreadTypingMixin = require('im_livechat.legacy.mail.model.ThreadTypingMixin');
+import AbstractThread from '@im_livechat/legacy/models/abstract_thread';
+import ThreadTypingMixin from '@im_livechat/legacy/models/thread_typing_mixin';
 
-const session = require('web.session');
+import session from 'web.session';
 
 /**
  * Thread model that represents a livechat on the website-side. This livechat
@@ -28,7 +27,7 @@ const WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @param {string} [params.data.state] if 'folded', the livechat is folded.
      *   This is ignored if `folded` is provided and is a boolean value.
      * @param {string} params.data.uuid the UUID of this livechat.
-     * @param {im_livechat.legacy.im_livechat.LivechatButton} params.parent
+     * @param {@im_livechat/legacy/widgets/livechat_button} params.parent
      */
     init(params) {
         this._super(...arguments);
@@ -62,7 +61,7 @@ const WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
 
     /**
      * @override
-     * @returns {im_livechat.legacy.im_livechat.model.WebsiteLivechatMessage[]}
+     * @returns {@im_livechat/legacy/models/website_livechat_message[]}
      */
      getMessages() {
         // ignore removed messages
@@ -93,7 +92,7 @@ const WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
     /**
      * AKU: hack for the moment
      *
-     * @param {im_livechat.legacy.im_livechat.model.WebsiteLivechatMessage[]} messages
+     * @param {@im_livechat/legacy/models/website_livechat_message[]} messages
      */
     setMessages(messages) {
         this._messages = messages;
@@ -182,6 +181,4 @@ const WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
     },
 });
 
-return WebsiteLivechat;
-
-});
+export default WebsiteLivechat;

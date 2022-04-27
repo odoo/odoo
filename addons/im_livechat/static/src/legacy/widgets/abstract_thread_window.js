@@ -1,11 +1,10 @@
-odoo.define('im_livechat.legacy.mail.AbstractThreadWindow', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const ThreadWidget = require('im_livechat.legacy.mail.widget.Thread');
+import ThreadWidget from '@im_livechat/legacy/widgets/thread';
 
-const config = require('web.config');
-const core = require('web.core');
-const Widget = require('web.Widget');
+import config from 'web.config';
+import core from 'web.core';
+import Widget from 'web.Widget';
 
 const QWeb = core.qweb;
 const _t = core._t;
@@ -38,11 +37,11 @@ const AbstractThreadWindow = Widget.extend({
      *
      * @abstract
      * @param {Widget} parent
-     * @param {im_livechat.legacy.mail.model.AbstractThread} [thread=null] the thread that this
+     * @param {@im_livechat/legacy/models/abstract_thread} [thread=null] the thread that this
      *   thread window is linked to. If not set, it is the "blank" thread
      *   window.
      * @param {Object} [options={}]
-     * @param {im_livechat.legacy.mail.model.AbstractThread} [options.thread]
+     * @param {@im_livechat/legacy/models/abstract_thread} [options.thread]
      */
     init(parent, thread, options) {
         this._super(parent);
@@ -496,6 +495,4 @@ const AbstractThreadWindow = Widget.extend({
     },
 });
 
-return AbstractThreadWindow;
-
-});
+export default AbstractThreadWindow;

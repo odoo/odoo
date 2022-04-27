@@ -1,7 +1,6 @@
-odoo.define('im_livechat.legacy.mail.model.CCThrottleFunctionObject', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const Class = require('web.Class');
+import Class from 'web.Class';
 
 /**
  * This object models the behaviour of the clearable and cancellable (CC)
@@ -116,6 +115,4 @@ const CCThrottleFunctionObject = Class.extend({
     },
 });
 
-return CCThrottleFunctionObject;
-
-});
+export default CCThrottleFunctionObject;

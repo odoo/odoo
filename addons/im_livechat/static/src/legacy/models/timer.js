@@ -1,7 +1,6 @@
-odoo.define('im_livechat.legacy.mail.model.Timer', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const Class = require('web.Class');
+import Class from 'web.Class';
 
 /**
  * This class creates a timer which, when times out, calls a function.
@@ -64,6 +63,4 @@ const Timer = Class.extend({
 
 });
 
-return Timer;
-
-});
+export default Timer;

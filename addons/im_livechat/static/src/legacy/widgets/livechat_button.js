@@ -1,18 +1,17 @@
-odoo.define('im_livechat.legacy.im_livechat.LivechatButton', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const config = require('web.config');
-const core = require('web.core');
-const session = require('web.session');
-const time = require('web.time');
-const utils = require('web.utils');
-const Widget = require('web.Widget');
+import config from 'web.config';
+import core from 'web.core';
+import session from 'web.session';
+import time from 'web.time';
+import utils from 'web.utils';
+import Widget from 'web.Widget';
 
-const { LIVECHAT_COOKIE_HISTORY } = require('im_livechat.legacy.im_livechat.Constants');
-const Feedback = require('im_livechat.legacy.im_livechat.Feedback');
-const WebsiteLivechat = require('im_livechat.legacy.im_livechat.model.WebsiteLivechat');
-const WebsiteLivechatMessage = require('im_livechat.legacy.im_livechat.model.WebsiteLivechatMessage');
-const WebsiteLivechatWindow = require('im_livechat.legacy.im_livechat.WebsiteLivechatWindow');
+import { LIVECHAT_COOKIE_HISTORY } from 'im_livechat.legacy.im_livechat.Constants';
+import Feedback from '@im_livechat/legacy/widgets/feedback';
+import WebsiteLivechat from '@im_livechat/legacy/models/website_livechat';
+import WebsiteLivechatMessage from '@im_livechat/legacy/models/website_livechat_message';
+import WebsiteLivechatWindow from '@im_livechat/legacy/models/website_livechat_window';
 
 const _t = core._t;
 const QWeb = core.qweb;
@@ -475,6 +474,4 @@ const LivechatButton = Widget.extend({
     },
 });
 
-return LivechatButton;
-
-});
+export default LivechatButton;
