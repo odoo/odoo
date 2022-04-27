@@ -1461,3 +1461,103 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         self.assertEqual(order.amount_total, 18, "The total should be 9$.")
         self._auto_rewards(order, programs)
         self.assertEqual(order.amount_total, 9, "The total should be 9$.")
+
+    def test_specific_discount_multiple_taxes(self):
+        # Check the following setup
+        # Product A 10$ 10% tva excl
+        # Product B 10$ 20% tva excl
+        # Program A -100% on product A
+        # Program B -5$ fixed on both products
+        # Applying both programs in a different order should result in a different
+        #  outcome since discountable amounts are computed per tax
+        # Applying program A before B should yield a better final price
+        tax_10pc_excl, tax_20pc_excl = self.env['account.tax'].create([
+            {
+                'name': "10% Tax excl",
+                'amount_type': 'percent',
+                'amount': 10,
+                'type_tax_use': 'sale',
+            },
+            {
+                'name': "20% Tax excl",
+                'amount_type': 'percent',
+                'amount': 20,
+                'type_tax_use': 'sale',
+            },
+        ])
+        product_a, product_b = self.env['product.product'].create([
+            {
+                'name': 'Product A',
+                'list_price': 10,
+                'sale_ok': True,
+                'taxes_id': [(6, 0, [tax_10pc_excl.id])],
+            },
+            {
+                'name': 'Product B',
+                'list_price': 10,
+                'sale_ok': True,
+                'taxes_id': [(6, 0, [tax_20pc_excl.id])],
+            },
+        ])
+        program_a, program_b = self.env['loyalty.program'].create([
+            {
+                'name': '-100% on A',
+                'trigger': 'auto',
+                'program_type': 'promotion',
+                'applies_on': 'current',
+                'rule_ids': [(0, 0, {
+                })],
+                'reward_ids': [(0, 0, {
+                    'reward_type': 'discount',
+                    'discount': 100,
+                    'discount_mode': 'percent',
+                    'discount_applicability': 'specific',
+                    'discount_product_ids': product_a,
+                    'required_points': 1,
+                })],
+            },
+            {
+                'name': '-5 USD on [A, B]',
+                'trigger': 'auto',
+                'program_type': 'promotion',
+                'applies_on': 'current',
+                'rule_ids': [(0, 0, {
+                })],
+                'reward_ids': [(0, 0, {
+                    'reward_type': 'discount',
+                    'discount': 5,
+                    'discount_mode': 'per_point',
+                    'discount_applicability': 'specific',
+                    'discount_product_ids': product_a | product_b,
+                    'required_points': 1,
+                })],
+            },
+        ])
+
+        order = self.empty_order
+        self.env['sale.order.line'].create([
+            {
+                'product_id': product_a.id,
+                'name': 'Product A',
+                'product_uom_qty': 1,
+                'order_id': order.id,
+            },
+            {
+                'product_id': product_b.id,
+                'name': 'Product B',
+                'product_uom_qty': 1,
+                'order_id': order.id,
+            },
+        ])
+        self._auto_rewards(order, program_a)
+        self.assertEqual(order.amount_total, 12, 'Total should be 12$')
+        self._auto_rewards(order, program_b)
+        self.assertAlmostEqual(order.amount_total, 7, 0, 'Total should be 7$')
+        # Now the order way around
+        order.order_line.filtered('reward_id').unlink()
+        self._auto_rewards(order, program_b)
+        self.assertAlmostEqual(order.amount_total, 18, 0, 'Total should be 18$')
+        self._auto_rewards(order, program_a)
+        # We essentially create a discount of -100% off of an already discounted product
+        # (11 - 2.4) = 8.6$ discount ~
+        self.assertAlmostEqual(order.amount_total, 9.4, 1, 'Total should be 9.4$')
