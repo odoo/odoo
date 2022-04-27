@@ -133,7 +133,9 @@ class ResConfigSettings(models.TransientModel):
     @api.depends('website_id.auth_signup_uninvited')
     def _compute_auth_signup_uninvited(self):
         for config in self:
-            config.auth_signup_uninvited = config.website_id.auth_signup_uninvited
+            # Default to `b2b` in case no website is set to avoid not being
+            # able to save.
+            config.auth_signup_uninvited = config.website_id.auth_signup_uninvited or 'b2b'
 
     def _inverse_auth_signup_uninvited(self):
         for config in self:
