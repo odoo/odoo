@@ -2401,10 +2401,10 @@ QUnit.module("Views", (hooks) => {
         class AsyncField extends CharField {
             setup() {
                 owl.onWillStart(async () => {
-                    assert.step("load " + rpcCount);
+                    assert.step("willStart");
                 });
                 owl.onWillUpdateProps(async () => {
-                    assert.step("load " + rpcCount);
+                    assert.step("willUpdateProps");
                     if (rpcCount === 2) {
                         return new Promise(() => {});
                     }
@@ -2433,16 +2433,17 @@ QUnit.module("Views", (hooks) => {
             mockRPC(route, args) {
                 if (args.method !== "get_views") {
                     rpcCount++;
+                    assert.step(args.method + rpcCount);
                 }
             },
         });
-        assert.verifySteps(["load 1"]);
+        assert.verifySteps(["read1", "willStart"]);
 
         await click(target.querySelector(".o_form_statusbar button.p"));
-        assert.verifySteps(["load 2"]);
+        assert.verifySteps(["willUpdateProps", "read2", "willUpdateProps"]);
 
         await click(target.querySelector(".o_form_statusbar button.p"));
-        assert.verifySteps(["load 3"]);
+        assert.verifySteps(["willUpdateProps", "read3", "willUpdateProps"]);
     });
 
     QUnit.test("buttons in form view, new record", async function (assert) {

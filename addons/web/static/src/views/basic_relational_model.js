@@ -561,14 +561,12 @@ export class Record extends DataPoint {
             reload: !options.noReload,
             savePoint: options.savePoint,
         };
-        const changedFields = await this.model.__bm__.save(this.__bm_handle__, saveOptions);
+        await this.model.__bm__.save(this.__bm_handle__, saveOptions);
         this.__syncData(true);
         if (!options.stayInEdition) {
             this.switchMode("readonly");
         }
-        if (this.isVirtual || changedFields.length) {
-            this.model.notify();
-        }
+        this.model.notify();
         return true;
     }
 
