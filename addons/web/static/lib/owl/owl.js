@@ -5313,13 +5313,19 @@
             }
             this.helpers = makeHelpers(this.getTemplate.bind(this));
         }
-        addTemplate(name, template, options = {}) {
-            if (name in this.rawTemplates && !options.allowDuplicate) {
-                throw new Error(`Template ${name} already defined`);
+        addTemplate(name, template) {
+            if (name in this.rawTemplates) {
+                const rawTemplate = this.rawTemplates[name];
+                const currentAsString = typeof rawTemplate === "string" ? rawTemplate : rawTemplate.outerHTML;
+                const newAsString = typeof template === "string" ? template : template.outerHTML;
+                if (currentAsString === newAsString) {
+                    return;
+                }
+                throw new Error(`Template ${name} already defined with different content`);
             }
             this.rawTemplates[name] = template;
         }
-        addTemplates(xml, options = {}) {
+        addTemplates(xml) {
             if (!xml) {
                 // empty string
                 return;
@@ -5327,7 +5333,7 @@
             xml = xml instanceof Document ? xml : parseXML(xml);
             for (const template of xml.querySelectorAll("[t-name]")) {
                 const name = template.getAttribute("t-name");
-                this.addTemplate(name, template, options);
+                this.addTemplate(name, template);
             }
         }
         getTemplate(name) {
@@ -5606,9 +5612,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.0-beta-6';
-    __info__.date = '2022-04-19T10:09:08.600Z';
-    __info__.hash = '41f1262';
+    __info__.version = '2.0.0-beta-7';
+    __info__.date = '2022-04-27T09:08:50.320Z';
+    __info__.hash = '0cd66c8';
     __info__.url = 'https://github.com/odoo/owl';
 
 
