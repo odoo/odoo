@@ -2161,3 +2161,43 @@ class TestStockFlow(TestStockCommon):
 
         picking.write({'partner_id': partner_2.id})
         self.assertEqual(picking.move_lines.partner_id, partner_2)
+
+    def test_cancel_picking_with_scrapped_products(self):
+        """
+        The user scraps some products of a picking, then cancel this picking
+        The test ensures that the scrapped SM is not cancelled
+        """
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 10)
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+        move = self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+
+        picking.action_confirm()
+        picking.action_assign()
+
+        scrap = self.env['stock.scrap'].create({
+            'picking_id': picking.id,
+            'product_id': self.productA.id,
+            'product_uom_id': self.productA.uom_id.id,
+            'scrap_qty': 1.0,
+        })
+        scrap.do_scrap()
+
+        picking.action_cancel()
+
+        self.assertEqual(picking.state, 'cancel')
+        self.assertEqual(move.state, 'cancel')
+        self.assertEqual(scrap.move_id.state, 'done')

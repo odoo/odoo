@@ -176,7 +176,7 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
 
         applied_xpath = '''
                     <xpath expr="//AppliedTradeAllowanceCharge/ActualAmount" position="replace">
-                        <ActualAmount>75.000</ActualAmount>
+                        <ActualAmount>50.000</ActualAmount>
                     </xpath>
                     <xpath expr="//NetPriceProductTradePrice/ChargeAmount" position="replace">
                         <ChargeAmount>200.000</ChargeAmount>
