@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
-
+from odoo.osv import expression
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
@@ -13,13 +13,17 @@ class ResPartner(models.Model):
     sale_warn = fields.Selection(WARNING_MESSAGE, 'Sales Warnings', default='no-message', help=WARNING_HELP)
     sale_warn_msg = fields.Text('Message for Sales Order')
 
+    @api.model
+    def _get_sale_order_domain_count(self):
+        return []
+
     def _compute_sale_order_count(self):
         # retrieve all children partners and prefetch 'parent_id' on them
         all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
         all_partners.read(['parent_id'])
 
         sale_order_groups = self.env['sale.order']._read_group(
-            domain=[('partner_id', 'in', all_partners.ids)],
+            domain=expression.AND([self._get_sale_order_domain_count(), [('partner_id', 'in', all_partners.ids)]]),
             fields=['partner_id'], groupby=['partner_id']
         )
         partners = self.browse()
