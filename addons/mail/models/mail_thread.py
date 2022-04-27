@@ -1954,8 +1954,11 @@ class MailThread(models.AbstractModel):
         for record in self:
             values['object'] = record
             rendered_template = views._render(values, engine='ir.qweb', minimal_qcontext=True)
-            kwargs['body'] = rendered_template
-            record.message_post_with_template(False, **kwargs)
+            if self._context.get("message_log"):
+                record._message_log(body=rendered_template, **kwargs)
+            else:
+                kwargs['body'] = rendered_template
+                record.message_post_with_template(False, **kwargs)
 
     def message_post_with_template(self, template_id, email_layout_xmlid=None, auto_commit=False, **kwargs):
         """ Helper method to send a mail with a template
@@ -2031,6 +2034,10 @@ class MailThread(models.AbstractModel):
         new_message = MailThread._message_create(values)
         MailThread._notify_thread(new_message, values, **notif_kwargs)
         return new_message
+
+    def _message_log_with_view(self, views_or_xmlid, **kwargs):
+        """ Helper method to log a note using a view_id without notifying followers. """
+        return self.with_context(message_log=True)._message_compose_with_view(views_or_xmlid, **kwargs)
 
     def _message_log(self, *, body='', author_id=None, email_from=None, subject=False, message_type='notification', **kwargs):
         """ Shortcut allowing to post note on a document. It does not perform
