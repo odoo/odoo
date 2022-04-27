@@ -471,7 +471,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @param {OdooEvent} ev
      */
     _onChange: function (ev) {
-        this._doAction();
+        this._doDebouncedAction.apply(this, arguments);
     },
     /**
      * Allows Enter keypress in a textarea (source mode)
