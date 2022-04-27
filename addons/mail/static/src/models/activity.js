@@ -106,7 +106,7 @@ registerModel({
          * Delete the record from database and locally.
          */
         async deleteServerRecord() {
-            await this.async(() => this.env.services.rpc({
+            await this.async(() => this.messaging.rpc({
                 model: 'mail.activity',
                 method: 'unlink',
                 args: [[this.id]],
@@ -137,7 +137,7 @@ registerModel({
             });
         },
         async fetchAndUpdate() {
-            const [data] = await this.env.services.rpc({
+            const [data] = await this.messaging.rpc({
                 model: 'mail.activity',
                 method: 'activity_format',
                 args: [this.id],
@@ -167,7 +167,7 @@ registerModel({
          */
         async markAsDone({ attachments = [], feedback = false }) {
             const attachmentIds = attachments.map(attachment => attachment.id);
-            await this.async(() => this.env.services.rpc({
+            await this.async(() => this.messaging.rpc({
                 model: 'mail.activity',
                 method: 'action_feedback',
                 args: [[this.id]],
@@ -185,7 +185,7 @@ registerModel({
          * @returns {Object}
          */
         async markAsDoneAndScheduleNext({ feedback }) {
-            const action = await this.async(() => this.env.services.rpc({
+            const action = await this.async(() => this.messaging.rpc({
                 model: 'mail.activity',
                 method: 'action_feedback_schedule_next',
                 args: [[this.id]],
@@ -232,7 +232,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {Markup} 
+         * @returns {Markup}
          */
         _computeNoteAsMarkup() {
             return markup(this.note);

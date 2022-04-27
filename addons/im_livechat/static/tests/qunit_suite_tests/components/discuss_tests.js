@@ -111,7 +111,7 @@ QUnit.test('do not add livechat in the sidebar on visitor opening his chat', asy
     const imLivechatChannelId1 = pyEnv['im_livechat.channel'].create({
         user_ids: [pyEnv.currentUserId],
     });
-    const { env } = await start({
+    const { messaging } = await start({
         autoOpenDiscuss: true,
         hasDiscuss: true,
     });
@@ -122,7 +122,7 @@ QUnit.test('do not add livechat in the sidebar on visitor opening his chat', asy
     );
 
     // simulate livechat visitor opening his chat
-    await env.services.rpc({
+    await messaging.rpc({
         route: '/im_livechat/get_session',
         params: {
             context: {
@@ -159,7 +159,7 @@ QUnit.test('do not add livechat in the sidebar on visitor typing', async functio
         livechat_channel_id: imLivechatChannelId1,
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { env } = await start({
+    const { messaging } = await start({
         autoOpenDiscuss: true,
         hasDiscuss: true,
     });
@@ -171,7 +171,7 @@ QUnit.test('do not add livechat in the sidebar on visitor typing', async functio
 
     // simulate livechat visitor typing
     const channel = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
-    await env.services.rpc({
+    await messaging.rpc({
         route: '/im_livechat/notify_typing',
         params: {
             context: {
@@ -215,7 +215,7 @@ QUnit.test('add livechat in the sidebar on visitor sending first message', async
         livechat_channel_id: imLivechatChannelId1,
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { env } = await start({
+    const { messaging } = await start({
         autoOpenDiscuss: true,
         hasDiscuss: true,
     });
@@ -227,7 +227,7 @@ QUnit.test('add livechat in the sidebar on visitor sending first message', async
 
     // simulate livechat visitor sending a message
     const channel = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
-    await afterNextRender(async () => env.services.rpc({
+    await afterNextRender(async () => messaging.rpc({
         route: '/mail/chat_post',
         params: {
             context: {

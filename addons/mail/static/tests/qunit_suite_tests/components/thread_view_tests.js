@@ -229,7 +229,7 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
         ],
         channel_type: 'chat',
     });
-    const { afterEvent, createThreadViewComponent, env, messaging } = await start({
+    const { afterEvent, createThreadViewComponent, messaging } = await start({
         mockRPC(route, args) {
             if (args.method === 'channel_fetched') {
                 assert.strictEqual(
@@ -264,7 +264,7 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
         thread: link(thread),
     });
     await createThreadViewComponent(threadViewer.threadView);
-    await afterNextRender(async () => env.services.rpc({
+    await afterNextRender(async () => messaging.rpc({
         route: '/mail/chat_post',
         params: {
             context: {
@@ -305,7 +305,7 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
         partner_id: resPartnerId1,
     });
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { afterEvent, createThreadViewComponent, env, messaging } = await start({
+    const { afterEvent, createThreadViewComponent, messaging } = await start({
         data: this.data,
         mockRPC(route, args) {
             if (args.method === 'channel_fetched' && args.args[0] === mailChannelId1) {
@@ -335,7 +335,7 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
     // simulate receiving a message
     await afterEvent({
         eventName: 'o-thread-last-seen-by-current-partner-message-id-changed',
-        func: () => env.services.rpc({
+        func: () => messaging.rpc({
             route: '/mail/chat_post',
             params: {
                 context: {
@@ -532,7 +532,7 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
     });
     const [mailChannelPartnerId] = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId1], ['partner_id', '=', pyEnv.currentPartnerId]]);
     pyEnv['mail.channel.partner'].write([mailChannelPartnerId], { seen_message_id: mailMessageId1 });
-    const { afterEvent, createThreadViewComponent, env, messaging } = await start();
+    const { afterEvent, createThreadViewComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel'
@@ -559,7 +559,7 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
     // simulate receiving a message
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => env.services.rpc({
+        func: () => messaging.rpc({
             route: '/mail/chat_post',
             params: {
                 context: {
@@ -775,7 +775,7 @@ QUnit.test('should scroll to bottom on receiving new message if the list is init
             res_id: mailChannelId1,
         });
     }
-    const { afterEvent, createThreadViewComponent, env, messaging } = await start();
+    const { afterEvent, createThreadViewComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel'
@@ -806,7 +806,7 @@ QUnit.test('should scroll to bottom on receiving new message if the list is init
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
         func: () =>
-            env.services.rpc({
+            messaging.rpc({
                 route: '/mail/chat_post',
                 params: {
                     context: {
@@ -847,7 +847,7 @@ QUnit.test('should not scroll on receiving new message if the list is initially 
             res_id: mailChannelId1,
         });
     }
-    const { afterEvent, createThreadViewComponent, env, messaging } = await start();
+    const { afterEvent, createThreadViewComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel'
@@ -890,7 +890,7 @@ QUnit.test('should not scroll on receiving new message if the list is initially 
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: () =>
-            env.services.rpc({
+            messaging.rpc({
                 route: '/mail/chat_post',
                 params: {
                     context: {
@@ -1515,7 +1515,7 @@ QUnit.test('first unseen message should be directly preceded by the new message 
         name: "General",
         uuid: 'channel20uuid',
     });
-    const { click, createThreadViewComponent, env, messaging } = await start();
+    const { click, createThreadViewComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel'
@@ -1534,7 +1534,7 @@ QUnit.test('first unseen message should be directly preceded by the new message 
     // composer is focused by default, we remove that focus
     document.querySelector('.o_ComposerTextInput_textarea').blur();
     // simulate receiving a message
-    await afterNextRender(() => env.services.rpc({
+    await afterNextRender(() => messaging.rpc({
         route: '/mail/chat_post',
         params: {
             context: {

@@ -691,7 +691,7 @@ registerModel({
          */
         async _pingServer() {
             const channel = this.channel;
-            const { rtcSessions } = await this.env.services.rpc({
+            const { rtcSessions } = await this.messaging.rpc({
                 route: '/mail/channel/ping',
                 params: {
                     'channel_id': channel.id,
@@ -787,7 +787,7 @@ registerModel({
             await new Promise(resolve => setTimeout(resolve, this.peerNotificationWaitDelay));
             const peerNotifications = this.peerNotificationsToSend;
             try {
-                await this.env.services.rpc({
+                await this.messaging.rpc({
                     route: '/mail/rtc/session/notify_call_members',
                     params: {
                         'peer_notifications': peerNotifications.map(peerNotification =>
@@ -1202,7 +1202,7 @@ registerModel({
         },
         /**
          * @private
-         * @param {boolean} isAboveThreshold 
+         * @param {boolean} isAboveThreshold
          */
         _onThresholdAudioMonitor(isAboveThreshold) {
             this._setSoundBroadcast(isAboveThreshold);

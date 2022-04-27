@@ -137,7 +137,7 @@ registerModel({
          * @param {Array[]} domain
          */
         async markAllAsRead(domain) {
-            await this.env.services.rpc({
+            await this.messaging.rpc({
                 model: 'mail.message',
                 method: 'mark_all_as_read',
                 kwargs: { domain },
@@ -155,7 +155,7 @@ registerModel({
          * @param {Message[]} messages
          */
         async markAsRead(messages) {
-            await this.env.services.rpc({
+            await this.messaging.rpc({
                 model: 'mail.message',
                 method: 'set_message_done',
                 args: [messages.map(message => message.id)]
@@ -169,7 +169,7 @@ registerModel({
          * @returns {Message[]}
          */
         async performRpcMessageFetch(route, params) {
-            const messagesData = await this.env.services.rpc({ route, params }, { shadow: true });
+            const messagesData = await this.messaging.rpc({ route, params }, { shadow: true });
             if (!this.messaging) {
                 return;
             }
@@ -196,7 +196,7 @@ registerModel({
          * Unstar all starred messages of current user.
          */
         async unstarAll() {
-            await this.env.services.rpc({
+            await this.messaging.rpc({
                 model: 'mail.message',
                 method: 'unstar_all',
             });
@@ -209,7 +209,7 @@ registerModel({
          * @param {string} content
          */
         async addReaction(content) {
-            const messageData = await this.env.services.rpc({
+            const messageData = await this.messaging.rpc({
                 route: '/mail/message/add_reaction',
                 params: { content, message_id: this.id },
             });
@@ -223,7 +223,7 @@ registerModel({
          * partner Inbox.
          */
         async markAsRead() {
-            await this.async(() => this.env.services.rpc({
+            await this.async(() => this.messaging.rpc({
                 model: 'mail.message',
                 method: 'set_message_done',
                 args: [[this.id]]
@@ -254,7 +254,7 @@ registerModel({
          * @param {string} content
          */
         async removeReaction(content) {
-            const messageData = await this.env.services.rpc({
+            const messageData = await this.messaging.rpc({
                 route: '/mail/message/remove_reaction',
                 params: { content, message_id: this.id },
             });
@@ -267,7 +267,7 @@ registerModel({
          * Toggle the starred status of the provided message.
          */
         async toggleStar() {
-            await this.async(() => this.env.services.rpc({
+            await this.async(() => this.messaging.rpc({
                 model: 'mail.message',
                 method: 'toggle_message_starred',
                 args: [[this.id]]
@@ -280,7 +280,7 @@ registerModel({
          * @param {string} param0.body the new body of the message
          */
         async updateContent({ body, attachment_ids }) {
-            const messageData = await this.env.services.rpc({
+            const messageData = await this.messaging.rpc({
                 route: '/mail/message/update_content',
                 params: {
                     body,

@@ -277,7 +277,7 @@ registerModel({
          * @returns {Thread} The newly created group chat.
          */
         async createGroupChat({ default_display_mode, partners_to }) {
-            const channelData = await this.env.services.rpc({
+            const channelData = await this.messaging.rpc({
                 model: 'mail.channel',
                 method: 'create_group',
                 kwargs: {
@@ -300,7 +300,7 @@ registerModel({
          *  result in the context of given thread
          */
         async fetchSuggestions(searchTerm, { thread } = {}) {
-            const channelsData = await this.env.services.rpc(
+            const channelsData = await this.messaging.rpc(
                 {
                     model: 'mail.channel',
                     method: 'get_mention_suggestions',
@@ -377,7 +377,7 @@ registerModel({
             if (channelIds.length === 0) {
                 return;
             }
-            const channelPreviews = await this.env.services.rpc({
+            const channelPreviews = await this.messaging.rpc({
                 model: 'mail.channel',
                 method: 'channel_fetch_preview',
                 args: [channelIds],
@@ -393,7 +393,7 @@ registerModel({
          * @param {string} state
          */
         async performRpcChannelFold(channelId, state) {
-            return this.env.services.rpc({
+            return this.messaging.rpc({
                 model: 'mail.channel',
                 method: 'channel_fold',
                 args: [[channelId]],
@@ -410,7 +410,7 @@ registerModel({
          * @returns {Thread[]}
          */
         async performRpcChannelInfo({ ids }) {
-            const channelInfos = await this.env.services.rpc({
+            const channelInfos = await this.messaging.rpc({
                 model: 'mail.channel',
                 method: 'channel_info',
                 args: [ids],
@@ -428,7 +428,7 @@ registerModel({
          * @param {integer[]} param0.lastMessageId
          */
         async performRpcChannelSeen({ id, lastMessageId }) {
-            return this.env.services.rpc({
+            return this.messaging.rpc({
                 route: `/mail/channel/set_last_seen_message`,
                 params: {
                     channel_id: id,
@@ -444,7 +444,7 @@ registerModel({
          * @param {boolean} [param0.pinned=false]
          */
         async performRpcChannelPin({ channelId, pinned = false }) {
-            return this.env.services.rpc({
+            return this.messaging.rpc({
                 model: 'mail.channel',
                 method: 'channel_pin',
                 args: [[channelId]],
@@ -462,7 +462,7 @@ registerModel({
          * @returns {Thread} the created channel
          */
         async performRpcCreateChannel({ name, privacy }) {
-            const data = await this.env.services.rpc({
+            const data = await this.messaging.rpc({
                 model: 'mail.channel',
                 method: 'channel_create',
                 args: [name, privacy],
@@ -484,7 +484,7 @@ registerModel({
          */
         async performRpcCreateChat({ partnerIds, pinForCurrentPartner }) {
             // TODO FIX: potential duplicate chat task-2276490
-            const data = await this.env.services.rpc({
+            const data = await this.messaging.rpc({
                 model: 'mail.channel',
                 method: 'channel_get',
                 kwargs: {
@@ -512,7 +512,7 @@ registerModel({
                 ['name', 'ilike', searchTerm],
             ];
             const fields = ['channel_type', 'name'];
-            const channelsData = await this.env.services.rpc({
+            const channelsData = await this.messaging.rpc({
                 model: "mail.channel",
                 method: "search_read",
                 kwargs: {
@@ -568,7 +568,7 @@ registerModel({
          */
         async changeDescription(description) {
             this.update({ description });
-            return this.env.services.rpc({
+            return this.messaging.rpc({
                 model: 'mail.channel',
                 method: 'channel_change_description',
                 args: [[this.id]],
@@ -613,7 +613,7 @@ registerModel({
                 followers: followersData,
                 hasWriteAccess,
                 suggestedRecipients: suggestedRecipientsData,
-            } = await this.env.services.rpc({
+            } = await this.messaging.rpc({
                 route: '/mail/thread/data',
                 params: {
                     request_list: [...requestSet],
@@ -669,7 +669,7 @@ registerModel({
          * Add current user to provided thread's followers.
          */
         async follow() {
-            await this.async(() => this.env.services.rpc({
+            await this.async(() => this.messaging.rpc({
                 model: this.model,
                 method: 'message_subscribe',
                 args: [[this.id]],
@@ -683,7 +683,7 @@ registerModel({
          * Performs the rpc to leave the rtc call of the channel.
          */
         async performRpcLeaveCall() {
-            await this.async(() => this.env.services.rpc({
+            await this.async(() => this.messaging.rpc({
                 route: '/mail/rtc/channel/leave_call',
                 params: { channel_id: this.id },
             }, { shadow: true }));
@@ -723,7 +723,7 @@ registerModel({
                 });
                 return;
             }
-            const { rtcSessions, iceServers, sessionId, invitedPartners, invitedGuests } = await this.async(() => this.env.services.rpc({
+            const { rtcSessions, iceServers, sessionId, invitedPartners, invitedGuests } = await this.async(() => this.messaging.rpc({
                 route: '/mail/rtc/channel/join_call',
                 params: {
                     channel_id: this.id,
@@ -789,7 +789,7 @@ registerModel({
          * Joins this thread. Only makes sense on channels of type channel.
          */
         async join() {
-            await this.env.services.rpc({
+            await this.messaging.rpc({
                 model: 'mail.channel',
                 method: 'add_members',
                 args: [[this.id]],
@@ -800,7 +800,7 @@ registerModel({
          * Leaves this thread. Only makes sense on channels of type channel.
          */
         async leave() {
-            await this.env.services.rpc({
+            await this.messaging.rpc({
                 model: 'mail.channel',
                 method: 'action_unfollow',
                 args: [[this.id]],
@@ -810,7 +810,7 @@ registerModel({
          * Mark the specified conversation as fetched.
          */
         async markAsFetched() {
-            await this.async(() => this.env.services.rpc({
+            await this.async(() => this.messaging.rpc({
                 model: 'mail.channel',
                 method: 'channel_fetched',
                 args: [[this.id]],
@@ -1028,7 +1028,7 @@ registerModel({
          */
         async rename(name) {
             this.update({ name });
-            return this.env.services.rpc({
+            return this.messaging.rpc({
                 model: 'mail.channel',
                 method: 'channel_rename',
                 args: [[this.id]],
@@ -1043,7 +1043,7 @@ registerModel({
          * @param {string} newName
          */
         async setCustomName(newName) {
-            return this.env.services.rpc({
+            return this.messaging.rpc({
                 model: 'mail.channel',
                 method: 'channel_set_custom_name',
                 args: [this.id],
@@ -1694,7 +1694,7 @@ registerModel({
                 isTyping !== this._currentPartnerLastNotifiedIsTyping
             ) {
                 if (this.model === 'mail.channel') {
-                    await this.async(() => this.env.services.rpc({
+                    await this.async(() => this.messaging.rpc({
                         model: 'mail.channel',
                         method: 'notify_typing',
                         args: [this.id],
@@ -1827,7 +1827,7 @@ registerModel({
          * Handles click on the "load more members" button.
          */
         async onClickLoadMoreMembers() {
-            const members = await this.env.services.rpc({
+            const members = await this.messaging.rpc({
                 model: 'mail.channel',
                 method: 'load_more_members',
                 args: [[this.id]],
