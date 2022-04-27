@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { insertAndReplace, unlink } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, unlink } from '@mail/model/model_field_command';
 import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
@@ -17,7 +17,7 @@ QUnit.test('unlink: should unlink the record for x2one field', async function (a
         address: insertAndReplace({ id: 10 }),
     });
     const address = messaging.models['TestAddress'].findFromIdentifyingData({ id: 10 });
-    contact.update({ address: unlink() });
+    contact.update({ address: clear() });
     assert.strictEqual(
         contact.address,
         undefined,

@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, unlink } from '@mail/model/model_field_command';
+import { clear, insert } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
@@ -40,7 +40,7 @@ registerModel({
                   .map(notification => notification.message.originThread.id);
             const threadIds = new Set(notificationsThreadIds);
             if (threadIds.size !== 1) {
-                return unlink();
+                return clear();
             }
             return insert({
                 id: notificationsThreadIds[0],

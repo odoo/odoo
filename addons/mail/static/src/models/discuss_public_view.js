@@ -2,7 +2,7 @@
 
 import { attr, one } from '@mail/model/model_field';
 import { registerModel } from '@mail/model/model_core';
-import { clear, insertAndReplace, link } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'DiscussPublicView',
@@ -18,7 +18,7 @@ registerModel({
                     hasMemberList: true,
                     hasThreadView: true,
                     hasTopbar: true,
-                    thread: link(this.channel),
+                    thread: replace(this.channel),
                 }),
                 welcomeView: clear(),
             });
@@ -38,7 +38,7 @@ registerModel({
             this.update({
                 threadViewer: clear(),
                 welcomeView: insertAndReplace({
-                    channel: link(this.channel),
+                    channel: replace(this.channel),
                     isDoFocusGuestNameInput: true,
                     originalGuestName: this.messaging.currentGuest && this.messaging.currentGuest.name,
                     pendingGuestName: this.messaging.currentGuest && this.messaging.currentGuest.name,

@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { insert, link, unlinkAll } from '@mail/model/model_field_command';
+import { clear, insert, link } from '@mail/model/model_field_command';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
 registerModel({
@@ -20,7 +20,7 @@ registerModel({
             }
             if ('country' in data) {
                 if (!data.country) {
-                    data2.country = unlinkAll();
+                    data2.country = clear();
                 } else {
                     data2.country = insert({
                         id: data.country[0],
@@ -47,7 +47,7 @@ registerModel({
             // relation
             if ('user_id' in data) {
                 if (!data.user_id) {
-                    data2.user = unlinkAll();
+                    data2.user = clear();
                 } else {
                     let user = {};
                     if (Array.isArray(data.user_id)) {

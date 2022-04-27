@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, replace, unlinkAll } from '@mail/model/model_field_command';
+import { clear, replace } from '@mail/model/model_field_command';
 import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
@@ -118,7 +118,7 @@ registerModel({
          */
         _computePartnersThatHaveFetched() {
             if (!this.message || !this.thread || !this.thread.partnerSeenInfos) {
-                return unlinkAll();
+                return clear();
             }
             const otherPartnersThatHaveFetched = this.thread.partnerSeenInfos
                 .filter(partnerSeenInfo =>
@@ -134,7 +134,7 @@ registerModel({
                 )
                 .map(partnerSeenInfo => partnerSeenInfo.partner);
             if (otherPartnersThatHaveFetched.length === 0) {
-                return unlinkAll();
+                return clear();
             }
             return replace(otherPartnersThatHaveFetched);
         },
@@ -147,7 +147,7 @@ registerModel({
          */
         _computePartnersThatHaveSeen() {
             if (!this.message || !this.thread || !this.thread.partnerSeenInfos) {
-                return unlinkAll();
+                return clear();
             }
             const otherPartnersThatHaveSeen = this.thread.partnerSeenInfos
                 .filter(partnerSeenInfo =>
@@ -162,7 +162,7 @@ registerModel({
                     partnerSeenInfo.lastSeenMessage.id >= this.message.id)
                 .map(partnerSeenInfo => partnerSeenInfo.partner);
             if (otherPartnersThatHaveSeen.length === 0) {
-                return unlinkAll();
+                return clear();
             }
             return replace(otherPartnersThatHaveSeen);
         },

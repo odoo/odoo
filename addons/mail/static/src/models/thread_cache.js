@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { clear, link, replace, unlink } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
@@ -68,7 +68,7 @@ registerModel({
          */
         _computeFetchedMessages() {
             if (!this.thread) {
-                return unlinkAll();
+                return clear();
             }
             const toUnlinkMessages = [];
             for (const message of this.fetchedMessages) {
@@ -88,9 +88,9 @@ registerModel({
                 [l - 1]: lastFetchedMessage,
             } = this.orderedFetchedMessages;
             if (!lastFetchedMessage) {
-                return unlink();
+                return clear();
             }
-            return link(lastFetchedMessage);
+            return replace(lastFetchedMessage);
         },
         /**
          * @private
@@ -102,9 +102,9 @@ registerModel({
                 [l - 1]: lastMessage,
             } = this.orderedMessages;
             if (!lastMessage) {
-                return unlink();
+                return clear();
             }
-            return link(lastMessage);
+            return replace(lastMessage);
         },
         /**
          * @private
@@ -112,7 +112,7 @@ registerModel({
          */
         _computeMessages() {
             if (!this.thread) {
-                return unlinkAll();
+                return clear();
             }
             let newerMessages;
             if (!this.lastFetchedMessage) {

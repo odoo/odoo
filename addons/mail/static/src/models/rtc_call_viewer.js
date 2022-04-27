@@ -5,7 +5,7 @@ import { browser } from "@web/core/browser/browser";
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { OnChange } from '@mail/model/model_onchange';
-import { clear, insert, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
+import { clear, insert, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
@@ -108,7 +108,7 @@ registerModel({
                 this.update({ rtcLayoutMenu: insertAndReplace() });
                 return;
             }
-            this.update({ rtcLayoutMenu: unlink() });
+            this.update({ rtcLayoutMenu: clear() });
         },
         //----------------------------------------------------------------------
         // Private
@@ -184,16 +184,16 @@ registerModel({
          */
         _computeMainParticipantCard() {
             if (!this.messaging || !this.threadView) {
-                return unlink();
+                return clear();
             }
             if (this.messaging.focusedRtcSession && this.messaging.focusedRtcSession.channel === this.threadView.thread) {
                 return insert({
                     relationalId: `rtc_session_${this.messaging.focusedRtcSession.localId}_${this.threadView.thread.localId}`,
-                    rtcSession: link(this.messaging.focusedRtcSession),
-                    channel: link(this.threadView.thread),
+                    rtcSession: replace(this.messaging.focusedRtcSession),
+                    channel: replace(this.threadView.thread),
                 });
             }
-            return unlink();
+            return clear();
         },
         /**
          * @private
@@ -217,8 +217,8 @@ registerModel({
                 rtcSession.guest && sessionPartners.add(rtcSession.guest.id);
                 tileCards.push({
                     relationalId: `rtc_session_${rtcSession.localId}_${this.threadView.thread.localId}`,
-                    rtcSession: link(rtcSession),
-                    channel: link(this.threadView.thread),
+                    rtcSession: replace(rtcSession),
+                    channel: replace(this.threadView.thread),
                 });
             }
             for (const partner of this.threadView.thread.invitedPartners) {
@@ -227,8 +227,8 @@ registerModel({
                 }
                 tileCards.push({
                     relationalId: `invited_partner_${partner.localId}_${this.threadView.thread.localId}`,
-                    invitedPartner: link(partner),
-                    channel: link(this.threadView.thread),
+                    invitedPartner: replace(partner),
+                    channel: replace(this.threadView.thread),
                 });
             }
             for (const guest of this.threadView.thread.invitedGuests) {
@@ -237,8 +237,8 @@ registerModel({
                 }
                 tileCards.push({
                     relationalId: `invited_guest_${guest.localId}_${this.threadView.thread.localId}`,
-                    invitedGuest: link(guest),
-                    channel: link(this.threadView.thread),
+                    invitedGuest: replace(guest),
+                    channel: replace(this.threadView.thread),
                 });
             }
             return insertAndReplace(tileCards);

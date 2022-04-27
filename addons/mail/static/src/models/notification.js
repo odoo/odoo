@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace, unlinkAll } from '@mail/model/model_field_command';
+import { clear, insert, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Notification',
@@ -28,7 +28,7 @@ registerModel({
             }
             if ('res_partner_id' in data) {
                 if (!data.res_partner_id) {
-                    data2.partner = unlinkAll();
+                    data2.partner = clear();
                 } else {
                     data2.partner = insert({
                         display_name: data.res_partner_id[1],
