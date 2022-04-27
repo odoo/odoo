@@ -3,6 +3,7 @@
 import MockServer from 'web.MockServer';
 
 QUnit.module('web', {}, function () {
+QUnit.module('legacy', {}, function () {
 QUnit.module('mock_relational_fields_tests.js', {
     beforeEach() {
         this.data = {
@@ -132,4 +133,5 @@ QUnit.test('many2one_ref update should update inverse field', async function (as
     assert.deepEqual([], mockServer.data['bar'].records[0].one2many_field);
 });
 
+});
 });
