@@ -133,7 +133,7 @@ class Http(models.AbstractModel):
 
     @classmethod
     def _register_website_track(cls, response):
-        if getattr(response, 'status_code', 0) != 200:
+        if getattr(response, 'status_code', 0) != 200 or request.httprequest.headers.get('X-Disable-Tracking') == '1':
             return False
 
         template = False
