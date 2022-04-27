@@ -24,6 +24,7 @@ class IrActionsReport(models.Model):
             // Constants
             const pageHeight = 1500;
             const firstPageHeight = pageHeight + addressHeight + titleHeight + informationsHeight - theadHeight;
+            const lastPageHeight = 0; //TODO
             
             // Prints
             console.log("addressHeight: " + addressHeight);
@@ -33,22 +34,9 @@ class IrActionsReport(models.Model):
             console.log("theadHeight: " + theadHeight);
             console.log("firstPageHeight: " + firstPageHeight);
             
-            // Rows and amounts
+            // Parse main table informations into a list of dicts representing the smaller tables (one per page)
             const rows = document.querySelectorAll("tr");
             const amounts = document.querySelectorAll("span.oe_currency_value");
-
-            //For each row, add the distance between beginning and the bottom of the row as an attribute
-            for (var i = 1; i < rows.length; i++) {
-                var row = rows[i];
-                var bottom = row.getBoundingClientRect().bottom;
-                row.setAttribute("data-bottom", bottom);
-                var first_child = row.querySelector("td");
-                if (first_child != undefined){  
-                    first_child.innerText += " (b: " + bottom + ")";
-                }
-            }
-            
-            //Split main table in multiple smaller tables
             tables = [{
                 page: 0,
                 rows: [],
@@ -57,8 +45,9 @@ class IrActionsReport(models.Model):
             }]
             for (var i = 1; i < rows.length; i++) {
                 var row = rows[i];
-                const bottom = row.getAttribute("data-bottom");
-                if (amounts[i - 1] === undefined) //i-1 because we skip the header
+                const bottom = row.getBoundingClientRect().bottom;
+                row.querySelector("td") != undefined ? row.querySelector("td").innerText += " (b: " + bottom + ")" : null; // TO REMOVE
+                if (amounts[i - 1] === undefined) //i-1 because we skip the header, undefined if the row is a total
                     continue
                 tables[tables.length-1].to_carry += parseFloat(amounts[i - 1].innerText.split(",").join(""));
                 tables[tables.length-1].rows.push(i);
