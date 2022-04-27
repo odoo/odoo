@@ -617,9 +617,9 @@ class AccountMove(models.Model):
     # Business operations
     ####################################################
 
-    def action_process_edi_web_services(self):
+    def action_process_edi_web_services(self, with_commit=True):
         docs = self.edi_document_ids.filtered(lambda d: d.state in ('to_send', 'to_cancel') and d.blocking_level != 'error')
-        docs._process_documents_web_services()
+        docs._process_documents_web_services(with_commit=with_commit)
 
     def _retry_edi_documents_error_hook(self):
         ''' Hook called when edi_documents are retried. For example, when it's needed to clean a field.
