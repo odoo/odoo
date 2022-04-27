@@ -6466,7 +6466,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "nested x2many (non inline views and no widget on inner x2many in list)",
         async function (assert) {
             assert.expect(5);
@@ -7712,7 +7712,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["get_views", "read", "onchange", "onchange"]);
     });
 
-    QUnit.skipWOWL("onchange on a one2many containing a one2many", async function (assert) {
+    QUnit.test("onchange on a one2many containing a one2many", async function (assert) {
         // the purpose of this test is to ensure that the onchange specs are
         // correctly and recursively computed
         assert.expect(1);
@@ -8288,7 +8288,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("onchange on nested one2manys", async function (assert) {
+    QUnit.test("onchange on nested one2manys", async function (assert) {
         assert.expect(6);
 
         serverData.models.partner.onchanges.display_name = function (obj) {
