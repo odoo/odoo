@@ -46,6 +46,9 @@ const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
 const BG_CLASSES_REGEX = /\bbg-[^\s]*\b/g;
 
 function insert(editor, data, isText = true) {
+    if (!data) {
+        return;
+    }
     const selection = editor.document.getSelection();
     const range = selection.getRangeAt(0);
     let currentNode;
