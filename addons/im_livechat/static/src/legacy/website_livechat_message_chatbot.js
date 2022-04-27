@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import WebsiteLivechatMessage from 'im_livechat.legacy.im_livechat.model.WebsiteLivechatMessage';
+import WebsiteLivechatMessage from '@im_livechat/legacy/models/website_livechat_message';
 
 /**
  * Override of the WebsiteLivechatMessage that includes chatbot capabilities.
@@ -10,7 +10,7 @@ import WebsiteLivechatMessage from 'im_livechat.legacy.im_livechat.model.Website
  */
 WebsiteLivechatMessage.include({
     /**
-     * @param {im_livechat.legacy.im_livechat.LivechatButton} parent
+     * @param {@im_livechat/legacy/widgets/livechat_button} parent
      * @param {Object} data
      * @param {Object} options
      * @param {string} options.default_username

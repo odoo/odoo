@@ -1,7 +1,6 @@
-odoo.define('im_livechat.legacy.mail.model.CCThrottleFunction', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const CCThrottleFunctionObject = require('im_livechat.legacy.mail.model.CCThrottleFunctionObject');
+import CCThrottleFunctionObject from '@im_livechat/legacy/models/cc_throttle_function_object';
 
 /**
  * A function that creates a cancellable and clearable (CC) throttle version
@@ -53,6 +52,4 @@ const CCThrottleFunction = function (params) {
     return callable;
 };
 
-return CCThrottleFunction;
-
-});
+export default CCThrottleFunction;

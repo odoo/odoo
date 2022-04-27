@@ -1,12 +1,11 @@
-odoo.define('im_livechat.legacy.mail.widget.Thread', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const DocumentViewer = require('im_livechat.legacy.mail.DocumentViewer');
-const mailUtils = require('@mail/js/utils');
+import DocumentViewer from '@im_livechat/legacy/widgets/document_viewer';
+import * as mailUtils from '@mail/js/utils';
 
-const core = require('web.core');
-const time = require('web.time');
-const Widget = require('web.Widget');
+import core from 'web.core';
+import time from 'web.time';
+import Widget from 'web.Widget';
 
 const QWeb = core.qweb;
 const _lt = core._lt;
@@ -101,7 +100,7 @@ const ThreadWidget = Widget.extend({
         this._super();
     },
     /**
-     * @param {im_livechat.legacy.mail.model.AbstractThread} thread the thread to render.
+     * @param {@im_livechat/legacy/models/abstract_thread} thread the thread to render.
      * @param {Object} [options]
      * @param {integer} [options.displayOrder=ORDER.ASC] order of displaying
      *    messages in the thread:
@@ -435,7 +434,7 @@ const ThreadWidget = Widget.extend({
      * There is at most one such popover at any given time.
      *
      * @private
-     * @param {im_livechat.legacy.mail.model.AbstractMessage[]} messages list of messages in the
+     * @param {@im_livechat/legacy/models/abstract_message[]} messages list of messages in the
      *   rendered thread, for which popover on mouseover interaction is
      *   permitted.
      */
@@ -616,6 +615,4 @@ const ThreadWidget = Widget.extend({
 
 ThreadWidget.ORDER = ORDER;
 
-return ThreadWidget;
-
-});
+export default ThreadWidget;

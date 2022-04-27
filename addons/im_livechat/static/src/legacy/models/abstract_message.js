@@ -1,12 +1,11 @@
-odoo.define('im_livechat.legacy.mail.model.AbstractMessage', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const mailUtils = require('@mail/js/utils');
+import * as mailUtils from '@mail/js/utils';
 
-const Class = require('web.Class');
-const core = require('web.core');
-const session = require('web.session');
-const time = require('web.time');
+import Class from 'web.Class';
+import core from 'web.core';
+import session from 'web.session';
+import time from 'web.time';
 
 const _t = core._t;
 
@@ -457,6 +456,4 @@ const AbstractMessage = Class.extend({
 
 });
 
-return AbstractMessage;
-
-});
+export default AbstractMessage;
