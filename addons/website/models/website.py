@@ -695,7 +695,7 @@ class Website(models.Model):
                 endpoint.routing['auth'] in ('none', 'public') and
                 endpoint.routing.get('website', False) and
                 all(hasattr(converter, 'generate') for converter in converters)):
-            return False
+                return False
 
         # dont't list routes without argument having no default value or converter
         spec = inspect.getargspec(endpoint.method.original_func)
@@ -862,17 +862,6 @@ class Website(models.Model):
         self.ensure_one()
         return self._get_http_domain() or super(BaseModel, self).get_base_url()
 
-    @tools.ormcache('path', 'lang')
-    def _get_canonical_url_localized_cached(self, path, args, lang):
-        router = http.root.get_db_router(request.db).bind_to_environ(request.httprequest.environ)
-        for key, val in list(args.items()):
-            if isinstance(val, models.BaseModel):
-                if val.env.context.get('lang') != lang:
-                    args[key] = val.with_context(lang=lang)
-        endpoint = router.match(path_info=path, return_rule=True)[0].endpoint
-        return router.build(endpoint, args)
-
-
     def _get_canonical_url_localized(self, lang, canonical_params):
         """Returns the canonical URL for the current request with translatable
         elements appropriately translated in `lang`.
@@ -883,11 +872,13 @@ class Website(models.Model):
         """
         self.ensure_one()
         if request.endpoint:
-            path = self._get_canonical_url_localized_cached(
-                request.httprequest.path,
-                dict(request.endpoint_arguments),
-                lang.code
-            )
+            router = http.root.get_db_router(request.db).bind('')
+            arguments = dict(request.endpoint_arguments)
+            for key, val in list(arguments.items()):
+                if isinstance(val, models.BaseModel):
+                    if val.env.context.get('lang') != lang.code:
+                        arguments[key] = val.with_context(lang=lang.code)
+            path = router.build(request.endpoint, arguments)
         else:
             # The build method returns a quoted URL so convert in this case for consistency.
             path = urls.url_quote_plus(request.httprequest.path, safe='/')
