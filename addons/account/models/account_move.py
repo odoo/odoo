@@ -3644,9 +3644,8 @@ class AccountMoveLine(models.Model):
                 'discount': 0.0,
                 'price_unit': amount_currency / (quantity or 1.0),
             }
-        elif not discount_factor or not amount_currency:
-            # balance of line is 0, but discount == 100% or taxes (price included) == 100%,
-            # so we display the normal unit_price
+        elif not discount_factor:
+            # balance of line is 0, but discount  == 100% so we display the normal unit_price
             vals = {}
         else:
             # balance is 0, so unit price is 0 as well
