@@ -454,3 +454,12 @@ class TestBatchPicking(TransactionCase):
         picking_out_1.button_validate()
         self.assertFalse(picking_out_1.batch_id)
         self.assertEqual(len(picking_out_3.batch_id.picking_ids), 1)
+
+    def test_remove_all_transfers_from_confirmed_batch(self):
+        """
+            Check that the batch is canceled when all transfers are deleted
+        """
+        self.batch.action_confirm()
+        self.assertEqual(self.batch.state, 'in_progress', 'Batch Transfers should be in progress.')
+        self.batch.write({'picking_ids': [[5, 0, 0]]})
+        self.assertEqual(self.batch.state, 'cancel', 'Batch Transfers should be cancelled when there are no transfers.')
