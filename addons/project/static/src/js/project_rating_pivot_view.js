@@ -3,7 +3,7 @@
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { PivotArchParser } from "@web/views/pivot/pivot_arch_parser";
-import { PivotView } from "@web/views/pivot/pivot_view";
+import { pivotView } from "@web/views/pivot/pivot_view";
 
 const viewRegistry = registry.category("views");
 
@@ -28,7 +28,9 @@ class ProjectRatingArchParser extends PivotArchParser {
 
 // Would it be not better achiedved by using a proper arch directly?
 
-class ProjectRatingPivotView extends PivotView {}
-ProjectRatingPivotView.ArchParser = ProjectRatingArchParser;
+const projectRatingPivotView = {
+    ...pivotView,
+    ArchParser: ProjectRatingArchParser,
+};
 
-viewRegistry.add("project_rating_pivot", ProjectRatingPivotView);
+viewRegistry.add("project_rating_pivot", projectRatingPivotView);

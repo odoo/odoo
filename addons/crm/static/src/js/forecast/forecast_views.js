@@ -3,10 +3,10 @@ import { ForecastKanbanController } from './forecast_controllers';
 import { ForecastKanbanModel } from './forecast_models';
 import { ForecastKanbanRenderer } from './forecast_renderers';
 import { ForecastSearchModel } from "./forecast_search_model";
-import { GraphView } from "@web/views/graph/graph_view";
+import { graphView } from "@web/views/graph/graph_view";
 import KanbanView from 'web.KanbanView';
 import ListView from 'web.ListView';
-import { PivotView } from "@web/views/pivot/pivot_view";
+import { pivotView } from "@web/views/pivot/pivot_view";
 import { registry } from "@web/core/registry";
 import viewRegistry from 'web.view_registry';
 
@@ -16,10 +16,12 @@ import viewRegistry from 'web.view_registry';
  * - context key `forecast_field` on a date/datetime field
  * - special filter "Forecast" (which must set the `forecast_filter:1` context key)
  */
-class ForecastGraphView extends GraphView {}
-ForecastGraphView.SearchModel = ForecastSearchModel;
+export const forecastGraphView = {
+    ...graphView,
+    SearchModel: ForecastSearchModel,
+};
 
-registry.category("views").add("forecast_graph", ForecastGraphView);
+registry.category("views").add("forecast_graph", forecastGraphView);
 
 /**
  * Kanban view to be used for a Forecast
@@ -71,14 +73,14 @@ viewRegistry.add('forecast_list', ForecastListView);
  * - context key `forecast_field` on a date/datetime field
  * - special filter "Forecast" (which must set the `forecast_filter:1` context key)
  */
-class ForecastPivotView extends PivotView {}
-ForecastPivotView.SearchModel = ForecastSearchModel;
+export const forecastPivotView = {
+    ...pivotView,
+    SearchModel: ForecastSearchModel,
+};
 
-registry.category("views").add("forecast_pivot", ForecastPivotView);
+registry.category("views").add("forecast_pivot", forecastPivotView);
 
 export {
-    ForecastGraphView,
     ForecastKanbanView,
     ForecastListView,
-    ForecastPivotView,
 };

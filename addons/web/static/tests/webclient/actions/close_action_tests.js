@@ -12,7 +12,7 @@ import { createWebClient, doAction, getActionManagerServerData } from "./../help
 import FormController from "web.FormController";
 import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
 import ListController from "web.ListController";
-import { PivotView } from "@web/views/pivot/pivot_view";
+import { pivotView } from "@web/views/pivot/pivot_view";
 import { registry } from "@web/core/registry";
 
 const serviceRegistry = registry.category("services");
@@ -194,7 +194,7 @@ QUnit.module("ActionManager", (hooks) => {
         async function (assert) {
             assert.expect(7);
             let pivot;
-            patchWithCleanup(PivotView.prototype, {
+            patchWithCleanup(pivotView.Controller.prototype, {
                 setup() {
                     this._super(...arguments);
                     pivot = this;
