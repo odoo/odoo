@@ -2968,8 +2968,8 @@ QUnit.module("Fields", (hooks) => {
         // if the changes haven't been saved
     });
 
-    QUnit.skipWOWL("one2many kanban: edition", async function (assert) {
-        assert.expect(23);
+    QUnit.test("one2many kanban: edition", async function (assert) {
+        assert.expect(22);
 
         serverData.models.partner.records[0].p = [2];
         await makeView({
@@ -3004,10 +3004,16 @@ QUnit.module("Fields", (hooks) => {
             mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     const commands = args.args[1].p;
-                    assert.deepEqual(commands, []);
+                    assert.strictEqual(commands.length, 2);
+
                     assert.strictEqual(commands[0][0], 0);
-                    assert.strictEqual(commands[0][2].display_name, "new subrecord 3");
-                    assert.strictEqual(commands[1][0], 2);
+                    assert.deepEqual(commands[0][2], {
+                        color: "red",
+                        display_name: "new subrecord 3",
+                        foo: "My little Foo Value",
+                    });
+
+                    assert.deepEqual(commands[1], [2, 2, false]);
                 }
             },
         });
@@ -3034,73 +3040,89 @@ QUnit.module("Fields", (hooks) => {
             "Add"
         );
 
-        // // edit existing subrecord
-        // await click(form.$(".oe_kanban_global_click"));
+        // edit existing subrecord
+        await click($(target).find(".oe_kanban_global_click")[0]);
 
-        // await testUtils.fields.editInput($(".modal .o_form_view input").first(), "new name");
-        // await click($(".modal .modal-footer .btn-primary"));
-        // assert.strictEqual(
-        //     form.$(".o_kanban_record span:first").text(),
-        //     "new name",
-        //     "value of subrecord should have been updated"
-        // );
+        await editInput(
+            target,
+            ".modal .o_form_view .o_field_widget:nth-child(1) input",
+            "new name"
+        );
+        await click($(".modal .modal-footer .btn-primary")[0]);
+        assert.strictEqual(
+            $(target).find(".o_kanban_record span:first").text(),
+            "new name",
+            "value of subrecord should have been updated"
+        );
 
-        // // create a new subrecord
-        // await click(form.$(".o-kanban-button-new"));
-        // await testUtils.fields.editInput($(".modal .o_form_view input").first(), "new subrecord 1");
-        // await clickFirst($(".modal .modal-footer .btn-primary"));
-        // assert.strictEqual(
-        //     form.$(".o_kanban_record:not(.o_kanban_ghost)").length,
-        //     2,
-        //     "should contain 2 records"
-        // );
-        // assert.strictEqual(
-        //     form.$(".o_kanban_record:nth(1) span").text(),
-        //     "new subrecord 1Red",
-        //     'value of newly created subrecord should be "new subrecord 1"'
-        // );
+        // create a new subrecord
+        await click($(target).find(".o-kanban-button-new")[0]);
+        await editInput(
+            target,
+            ".modal .o_form_view .o_field_widget:nth-child(1) input",
+            "new subrecord 1"
+        );
+        await click($(target).find(".modal .modal-footer .btn-primary")[0]);
+        assert.strictEqual(
+            $(target).find(".o_kanban_record:not(.o_kanban_ghost)").length,
+            2,
+            "should contain 2 records"
+        );
+        assert.strictEqual(
+            $(target).find(".o_kanban_record:nth(1) span").text(),
+            "new subrecord 1Red",
+            'value of newly created subrecord should be "new subrecord 1"'
+        );
 
-        // // create two new subrecords
-        // await click(form.$(".o-kanban-button-new"));
-        // await testUtils.fields.editInput($(".modal .o_form_view input").first(), "new subrecord 2");
-        // await click($(".modal .modal-footer .btn-primary:nth(1)"));
-        // await testUtils.fields.editInput($(".modal .o_form_view input").first(), "new subrecord 3");
-        // await clickFirst($(".modal .modal-footer .btn-primary"));
-        // assert.strictEqual(
-        //     form.$(".o_kanban_record:not(.o_kanban_ghost)").length,
-        //     4,
-        //     "should contain 4 records"
-        // );
+        // create two new subrecords
+        await click($(target).find(".o-kanban-button-new")[0]);
+        await editInput(
+            target,
+            ".modal .o_form_view .o_field_widget:nth-child(1) input",
+            "new subrecord 2"
+        );
+        await click($(".modal .modal-footer .btn-primary:nth(1)")[0]);
+        await editInput(
+            target,
+            ".modal .o_form_view .o_field_widget:nth-child(1) input",
+            "new subrecord 3"
+        );
+        await click($(target).find(".modal .modal-footer .btn-primary")[0]);
+        assert.strictEqual(
+            $(target).find(".o_kanban_record:not(.o_kanban_ghost)").length,
+            4,
+            "should contain 4 records"
+        );
 
-        // // delete subrecords
-        // await click(form.$(".oe_kanban_global_click").first());
-        // assert.strictEqual(
-        //     $(".modal .modal-footer .o_btn_remove").length,
-        //     1,
-        //     "There should be a modal having Remove Button"
-        // );
-        // await click($(".modal .modal-footer .o_btn_remove"));
-        // assert.containsNone($(".o_modal"), "modal should have been closed");
-        // assert.strictEqual(
-        //     form.$(".o_kanban_record:not(.o_kanban_ghost)").length,
-        //     3,
-        //     "should contain 3 records"
-        // );
-        // await click(form.$(".o_kanban_view .delete_icon:first()"));
-        // await click(form.$(".o_kanban_view .delete_icon:first()"));
-        // assert.strictEqual(
-        //     form.$(".o_kanban_record:not(.o_kanban_ghost)").length,
-        //     1,
-        //     "should contain 1 records"
-        // );
-        // assert.strictEqual(
-        //     form.$(".o_kanban_record span:first").text(),
-        //     "new subrecord 3",
-        //     'the remaining subrecord should be "new subrecord 3"'
-        // );
+        // delete subrecords
+        await click($(target).find(".oe_kanban_global_click").first()[0]);
+        assert.strictEqual(
+            $(".modal .modal-footer .o_btn_remove").length,
+            1,
+            "There should be a modal having Remove Button"
+        );
+        await click($(".modal .modal-footer .o_btn_remove")[0]);
+        assert.containsNone($(".o_modal"), "modal should have been closed");
+        assert.strictEqual(
+            $(target).find(".o_kanban_record:not(.o_kanban_ghost)").length,
+            3,
+            "should contain 3 records"
+        );
+        await click($(target).find(".o_kanban_renderer .delete_icon:first()")[0]);
+        await click($(target).find(".o_kanban_renderer .delete_icon:first()")[0]);
+        assert.strictEqual(
+            $(target).find(".o_kanban_record:not(.o_kanban_ghost)").length,
+            1,
+            "should contain 1 records"
+        );
+        assert.strictEqual(
+            $(target).find(".o_kanban_record span:first").text(),
+            "new subrecord 3",
+            'the remaining subrecord should be "new subrecord 3"'
+        );
 
-        // // save and check that the correct command has been generated
-        // await clickSave(target);
+        // save and check that the correct command has been generated
+        await clickSave(target);
     });
 
     QUnit.test(
@@ -3173,7 +3195,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_field_x2many_kanban .delete_icon");
     });
 
-    QUnit.skipWOWL("one2many kanban: conditional create/delete actions", async function (assert) {
+    QUnit.test("one2many kanban: conditional create/delete actions", async function (assert) {
         serverData.models.partner.records[0].p = [2, 4];
 
         await makeView({

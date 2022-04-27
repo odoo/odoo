@@ -85,7 +85,7 @@ export class X2ManyField extends Component {
                 return true;
             });
         }
-        return {
+        const props = {
             activeActions: this.activeActions,
             editable: this.props.record.isInEdition && archInfo.editable,
             archInfo: { ...archInfo, columns },
@@ -93,6 +93,10 @@ export class X2ManyField extends Component {
             openRecord: this.openRecord.bind(this),
             onAdd: this.onAdd.bind(this),
         };
+        if (this.viewMode === "kanban") {
+            props.readonly = this.props.readonly;
+        }
+        return props;
     }
 
     get activeActions() {
@@ -121,12 +125,17 @@ export class X2ManyField extends Component {
         let canCreate = "create" in options ? evalDomain(options.create, evalContext) : true;
         canCreate = canCreate && subViewInfo.activeActions.create;
 
-        if (this.viewMode !== "list") {
-            return { canCreate };
-        }
-
         let canDelete = "delete" in options ? evalDomain(options.delete, evalContext) : true;
         canDelete = canDelete && subViewInfo.activeActions.delete;
+        const deleteFn = (record) => this.removeRecordFromList(record);
+
+        if (this.viewMode !== "list") {
+            const result = { canCreate };
+            if (canDelete) {
+                result.onDelete = deleteFn;
+            }
+            return result;
+        }
 
         const canLink = "link" in options ? evalDomain(options.link, evalContext) : true;
         const canUnlink = "unlink" in options ? evalDomain(options.unlink, evalContext) : true;
@@ -135,26 +144,15 @@ export class X2ManyField extends Component {
 
         const result = { canCreate, canLink, canUnlink };
 
-        const onDelete = (record) => {
-            const list = this.list;
-            const operation = this.isMany2Many ? "FORGET" : "DELETE";
-            list.delete(record.id, operation);
-            // + update pager info
-            this.render();
-        }; // use this in kanban and adapt (forget,...)?
-
         if (canDelete) {
-            result.onDelete = onDelete;
+            result.onDelete = deleteFn;
         }
 
         return result;
     }
 
     get displayAddButton() {
-        return (
-            this.viewMode === "kanban" && this.activeActions.canCreate
-            // && this.props.record.mode === "readonly"
-        );
+        return this.viewMode === "kanban" && this.activeActions.canCreate && !this.props.readonly;
     }
 
     get pagerProps() {
@@ -186,6 +184,7 @@ export class X2ManyField extends Component {
             fields: { ...form.fields },
             views: { form },
         });
+        const onDelete = this.activeActions.onDelete;
         this.addDialog(X2ManyFieldDialog, {
             archInfo: form,
             record: newRecord,
@@ -194,6 +193,7 @@ export class X2ManyField extends Component {
                 this.env._t("Open: %s"),
                 this.props.record.activeFields[this.props.name].string
             ),
+            delete: onDelete && this.viewMode === "kanban" ? () => onDelete(record) : null,
         });
     }
 
@@ -244,6 +244,12 @@ export class X2ManyField extends Component {
 
     async saveRecordToList(record) {
         await this.list.add(record);
+    }
+
+    async removeRecordFromList(record) {
+        const list = this.list;
+        const operation = this.isMany2Many ? "FORGET" : "DELETE";
+        await list.delete(record.id, operation);
     }
 
     async _getFormViewInfo() {
@@ -370,6 +376,11 @@ class X2ManyFieldDialog extends Component {
         return true;
     }
 
+    async remove() {
+        await this.props.delete();
+        this.props.close();
+    }
+
     async saveAndNew() {
         const disabledButtons = this.disableButtons();
         const saved = await this.save({ saveAndNew: true });
@@ -389,5 +400,6 @@ X2ManyFieldDialog.props = {
     record: Object,
     save: Function,
     title: String,
+    delete: { optional: true },
 };
 X2ManyFieldDialog.template = "web.X2ManyFieldDialog";

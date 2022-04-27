@@ -7,7 +7,7 @@
                 <t t-if="displayAddButton">
                     <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
                         <div>
-                            <button type="button" class="btn btn-primary o-kanban-button-new" title="Create record" accesskey="c" t-on-click="() => this.onAdd()">
+                            <button type="button" class="btn btn-secondary o-kanban-button-new" title="Create record" accesskey="c" t-on-click="() => this.onAdd()">
                                 <t t-esc="addButtonText"/>
                             </button>
                         </div>
@@ -37,6 +37,11 @@
                     <t t-elif="record.isInEdition">
                         <button class="btn btn-primary o_form_button_save" t-on-click="save" data-hotkey="c">Save</button>
                         <button class="btn btn-secondary o_form_button_cancel" t-on-click="discard" data-hotkey="j">Discard</button>
+
+                        <t t-if="props.delete">
+                            <button class="btn btn-secondary o_btn_remove" t-on-click="remove" data-hotkey="k">Remove</button>
+                        </t>
+
                     </t>
                     <t t-else="">
                         <button class="btn btn-primary o_form_button_cancel" t-on-click="() => this.props.close()" data-hotkey="j">Close</button>

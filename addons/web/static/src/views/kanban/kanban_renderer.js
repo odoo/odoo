@@ -251,6 +251,10 @@ export class KanbanRenderer extends Component {
         return !model.hasData();
     }
 
+    get read_only_mode() {
+        return this.props.readonly;
+    }
+
     /**
      * When the kanban records are grouped, the 'false' or 'undefined' group
      * must appear first.

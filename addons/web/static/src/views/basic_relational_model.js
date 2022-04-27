@@ -720,19 +720,8 @@ export class StaticList extends DataPoint {
     }
 
     async delete(recordId, operation = "DELETE") {
-        const legDP = this.model.__bm__.localData[this.__bm_handle__];
-        const parentLegDP = this.model.__bm__.localData[legDP.parentID];
-        const parentValues = { ...parentLegDP.data, ...parentLegDP._changes };
-        const fieldName = Object.keys(parentValues).find(
-            (name) => parentValues[name] === this.__bm_handle__
-        );
-        // can use this.__fieldName__
-        const changes = {};
         const record = this.records.find((r) => r.id === recordId);
-        changes[fieldName] = { operation, ids: [record.__bm_handle__] };
-        await this.model.__bm__.notifyChanges(parentLegDP.id, changes);
-        this.model.root.__syncData();
-        this.model.notify();
+        await this.__syncParent({ operation, ids: [record.__bm_handle__] });
     }
 
     async add(object, params = { isM2M: false }) {
