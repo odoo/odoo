@@ -8443,19 +8443,17 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
-        "one2many with multiple pages and sequence field, part2",
-        async function (assert) {
-            assert.expect(1);
+    QUnit.test("one2many with multiple pages and sequence field, part2", async function (assert) {
+        assert.expect(2);
 
-            serverData.models.partner.records[0].turtles = [3, 2, 1];
-            serverData.models.partner.onchanges.turtles = function () {};
+        serverData.models.partner.records[0].turtles = [3, 2, 1];
+        serverData.models.partner.onchanges.turtles = function () {};
 
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
                     <form>
                         <field name="turtles">
                             <tree limit="2">
@@ -8463,35 +8461,39 @@ QUnit.module("Fields", (hooks) => {
                                 <field name="turtle_foo"/>
                                 <field name="partner_ids" invisible="1"/>
                             </tree>
+                            <form/>
                         </field>
                     </form>`,
-                resId: 1,
-                mockRPC(route, args) {
-                    if (args.method === "onchange") {
-                        return Promise.resolve({
-                            value: {
-                                turtles: [
-                                    [5],
-                                    [1, 1, { turtle_foo: "from onchange id2", partner_ids: [[5]] }],
-                                    [1, 3, { turtle_foo: "from onchange id3", partner_ids: [[5]] }],
-                                ],
-                            },
-                        });
-                    }
-                    return this._super(route, args);
-                },
-                viewOptions: {
-                    mode: "edit",
-                },
-            });
-            await click(form.$(".o_list_record_remove:first button"));
-            assert.strictEqual(
-                form.$(".o_data_row").text(),
-                "from onchange id2from onchange id3",
-                "onchange has been properly applied"
-            );
-        }
-    );
+            resId: 1,
+            mockRPC(route, args) {
+                if (args.method === "onchange") {
+                    return Promise.resolve({
+                        value: {
+                            turtles: [
+                                [5],
+                                [1, 1, { turtle_foo: "from onchange id2", partner_ids: [[5]] }],
+                                [1, 3, { turtle_foo: "from onchange id3", partner_ids: [[5]] }],
+                            ],
+                        },
+                    });
+                }
+            },
+        });
+        await clickEdit(target);
+        assert.deepEqual(
+            [...target.querySelectorAll('.o_data_row div[name="turtle_foo"]')].map(
+                (el) => el.innerText
+            ),
+            ["kawa", "blip"]
+        );
+        await click(target.querySelector(".o_list_record_remove button"));
+        assert.deepEqual(
+            [...target.querySelectorAll('.o_data_row div[name="turtle_foo"]')].map(
+                (el) => el.innerText
+            ),
+            ["from onchange id2", "from onchange id3"]
+        );
+    });
 
     QUnit.skipWOWL(
         "one2many with sequence field, override default_get, bottom when inline",
