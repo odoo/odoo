@@ -2,20 +2,21 @@
 <templates xml:space="preserve">
 
     <t t-name="web.Many2ManyTagsAvatarField" owl="1">
-        <TagsList tags="tags" visibleTags="visibleTags" />
-        <div t-if="showM2OSelectionField" class="o_field_many2many_selection">
-            <div class="o_input_dropdown">
-                <AutoComplete
-                    value="state.autocompleteValue"
-                    placeholder="props.placeholder"
-                    sources="sources"
-                    autoSelect="true"
-                    onSelect.bind="onSelect"
-                    onInput.bind="onInput"
-                />
-                <a role="button" class="o_dropdown_button" draggable="false" />
-            </div>    
-        </div>
+        <TagsList tags="tags" visibleTags="visibleTags">
+            <div t-if="showM2OSelectionField" class="o_field_many2many_selection">
+                <div class="o_input_dropdown">
+                    <AutoComplete
+                        value="state.autocompleteValue"
+                        placeholder="props.placeholder"
+                        sources="sources"
+                        autoSelect="true"
+                        onSelect.bind="onSelect"
+                        onInput.bind="onInput"
+                    />
+                    <a role="button" class="o_dropdown_button" draggable="false" />
+                </div>    
+            </div>
+        </TagsList>
     </t>
 
 </templates>

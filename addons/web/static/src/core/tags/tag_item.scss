@@ -3,20 +3,51 @@
     display: inline-flex;
     gap: 2px;
     align-items: center;
+    height: fit-content;
 
     .badge {
         margin: 1px 2px 1px 0;
         border: 0;
         font-size: 12px;
     }
+
     .o_badge_text, a {
         @include o-text-overflow(inline-block);
         color: inherit;
         line-height: 1.1;
     }
+
+    .o_tag_badge_text {
+        font-size: 12px;
+        margin: 0 0.5rem;
+    }
+
     img {
-        height: 1.4em;
-        width: 1.4em;
-        object-fit: cover;
+        height: 1.6em;
+        aspect-ratio: 1/1;
+
+        + .o_tag_badge_text {
+            padding: 0.25em 0;
+        }
+    }
+
+    @for $size from 1 through length($o-colors) {
+        &.o_tag_color_#{$size - 1} {
+            @if $size == 1 {
+                & {
+                    background-color: $o-view-background-color;
+                    color: nth($o-colors, $size);
+                    box-shadow: inset 0 0 0 1px;
+                }
+                &::after {
+                    background-color: nth($o-colors, $size);
+                }
+            } @else {
+                &, &::after {
+                    background-color: nth($o-colors, $size);
+                    color: color-yiq(nth($o-colors, $size));
+                }
+            }
+        }
     }
 }

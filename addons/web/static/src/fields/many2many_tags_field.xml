@@ -2,28 +2,30 @@
 <templates xml:space="preserve">
 
     <t t-name="web.Many2ManyTagsField" owl="1">
-        <t t-foreach="tags" t-as="tag" t-key="tag.id or tag_index">
-            <TagItem
-                colorIndex="tag.colorIndex"
-                text="tag.name or 'tag' + tag_index"
-                handlesColor="handlesColor()"
-                onClick="(ev) => this.onBadgeClick(ev, tag)"
-                onDelete="!props.readonly ? () => this.onDelete(tag) : () => {}"
-            />
-        </t>
-        <div t-if="showM2OSelectionField" class="o_field_many2many_selection">
-            <div class="o_input_dropdown">
-                <AutoComplete
-                    value="state.autocompleteValue"
-                    placeholder="props.placeholder"
-                    sources="sources"
-                    autoSelect="true"
-                    onSelect.bind="onSelect"
-                    onInput.bind="onInput"
+        <span class="o_tags_list">
+            <t t-foreach="tags" t-as="tag" t-key="tag.id or tag_index">
+                <TagItem
+                    colorIndex="tag.colorIndex"
+                    text="tag.name or 'tag' + tag_index"
+                    handlesColor="handlesColor()"
+                    onClick="(ev) => this.onBadgeClick(ev, tag)"
+                    onDelete="!props.readonly ? () => this.onDelete(tag) : undefined"
                 />
-                <a role="button" class="o_dropdown_button" draggable="false" />
-            </div>    
-        </div>
+            </t>
+            <div t-if="showM2OSelectionField" class="o_field_many2many_selection">
+                <div class="o_input_dropdown">
+                    <AutoComplete
+                        value="state.autocompleteValue"
+                        placeholder="props.placeholder"
+                        sources="sources"
+                        autoSelect="true"
+                        onSelect.bind="onSelect"
+                        onInput.bind="onInput"
+                    />
+                    <a role="button" class="o_dropdown_button" draggable="false" />
+                </div>    
+            </div>
+        </span>
     </t>
 
     <t t-name="web.Many2ManyTagsFieldColorListPopover" owl="1">

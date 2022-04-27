@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.TagsList" owl="1">
-        <span t-att-class="props.className" t-att-name="props.name">
+        <span t-attf-class="o_tags_list {{props.className}}" t-att-name="props.name">
             <t t-if="props.tags" t-foreach="visibleTags" t-as="tag" t-key="tag.id or tag_index">
                 <TagItem t-props="tag" />
             </t>

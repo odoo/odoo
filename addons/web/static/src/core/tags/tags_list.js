@@ -22,9 +22,13 @@ TagsList.components = {
     TagItem,
 };
 TagsList.template = "web.TagsList";
+TagsList.defaultProps = {
+    className: "",
+};
 TagsList.props = {
     className: { type: String, optional: true },
     name: { type: String, optional: true },
     visibleTags: { type: Number, optional: true },
+    slots: { type: Object, optional: true },
     tags: { type: Object, optional: true },
 };

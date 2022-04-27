@@ -1,11 +1,3 @@
-.o_field_widget.o_field_many2many_tags {
-    display: inline-flex;
-    flex-wrap: wrap;
-    > span, > button {
-        flex: 0 0 auto;
-    }   
-}
-
 .o_tag_popover {
     margin: 5px;
     max-width: 150px;
@@ -17,24 +9,4 @@
 
 .o_tag_popover .custom-checkbox {
     padding-top: 5px ;
-}
-
-@for $size from 1 through length($o-colors) {
-    .o_tag_color_#{$size - 1} {
-        @if $size == 1 {
-            & {
-                background-color: $o-view-background-color;
-                color: nth($o-colors, $size);
-                box-shadow: inset 0 0 0 1px;
-            }
-            &::after {
-                background-color: nth($o-colors, $size);
-            }
-        } @else {
-            &, &::after {
-                background-color: nth($o-colors, $size);
-                color: color-yiq(nth($o-colors, $size));
-            }
-        }
-    }
 }
