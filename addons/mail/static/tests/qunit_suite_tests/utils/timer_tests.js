@@ -24,7 +24,7 @@ QUnit.module('timer_tests.js', {
 QUnit.test('timer does not timeout on initialization', async function (assert) {
     assert.expect(3);
 
-    const { env, messaging } = await start({ hasTimeControl: true });
+    const { advanceTime, messaging } = await start({ hasTimeControl: true });
 
     let hasTimedOut = false;
     this.timers.push(
@@ -40,13 +40,13 @@ QUnit.test('timer does not timeout on initialization', async function (assert) {
         "timer should not have timed out on immediate initialization"
     );
 
-    await env.testUtils.advanceTime(0);
+    await advanceTime(0);
     assert.notOk(
         hasTimedOut,
         "timer should not have timed out from initialization after 0ms"
     );
 
-    await env.testUtils.advanceTime(1000 * 1000);
+    await advanceTime(1000 * 1000);
     assert.notOk(
         hasTimedOut,
         "timer should not have timed out from initialization after 1000s"
@@ -56,7 +56,7 @@ QUnit.test('timer does not timeout on initialization', async function (assert) {
 QUnit.test('timer start (duration: 0ms)', async function (assert) {
     assert.expect(2);
 
-    const { env, messaging } = await start({ hasTimeControl: true });
+    const { advanceTime, messaging } = await start({ hasTimeControl: true });
 
     let hasTimedOut = false;
     this.timers.push(
@@ -73,7 +73,7 @@ QUnit.test('timer start (duration: 0ms)', async function (assert) {
         "timer should not have timed out immediately after start"
     );
 
-    await env.testUtils.advanceTime(0);
+    await advanceTime(0);
     assert.ok(
         hasTimedOut,
         "timer should have timed out on start after 0ms"
@@ -83,7 +83,7 @@ QUnit.test('timer start (duration: 0ms)', async function (assert) {
 QUnit.test('timer start observe termination (duration: 0ms)', async function (assert) {
     assert.expect(6);
 
-    const { env, messaging } = await start({ hasTimeControl: true });
+    const { advanceTime, messaging } = await start({ hasTimeControl: true });
 
     let hasTimedOut = false;
     this.timers.push(
@@ -116,7 +116,7 @@ QUnit.test('timer start observe termination (duration: 0ms)', async function (as
         "timer.start() should not have yet observed timeout"
     );
 
-    await env.testUtils.advanceTime(0);
+    await advanceTime(0);
     assert.ok(
         hasTimedOut,
         "timer should have timed out on start after 0ms"
@@ -130,7 +130,7 @@ QUnit.test('timer start observe termination (duration: 0ms)', async function (as
 QUnit.test('timer start (duration: 1000s)', async function (assert) {
     assert.expect(5);
 
-    const { env, messaging } = await start({ hasTimeControl: true });
+    const { advanceTime, messaging } = await start({ hasTimeControl: true });
 
     let hasTimedOut = false;
     this.timers.push(
@@ -147,25 +147,25 @@ QUnit.test('timer start (duration: 1000s)', async function (assert) {
         "timer should not have timed out immediately after start"
     );
 
-    await env.testUtils.advanceTime(0);
+    await advanceTime(0);
     assert.notOk(
         hasTimedOut,
         "timer should not have timed out on start after 0ms"
     );
 
-    await env.testUtils.advanceTime(1000);
+    await advanceTime(1000);
     assert.notOk(
         hasTimedOut,
         "timer should not have timed out on start after 1000ms"
     );
 
-    await env.testUtils.advanceTime(998 * 1000 + 999);
+    await advanceTime(998 * 1000 + 999);
     assert.notOk(
         hasTimedOut,
         "timer should not have timed out on start after 9999ms"
     );
 
-    await env.testUtils.advanceTime(1);
+    await advanceTime(1);
     assert.ok(
         hasTimedOut,
         "timer should have timed out on start after 10s"
@@ -175,7 +175,7 @@ QUnit.test('timer start (duration: 1000s)', async function (assert) {
 QUnit.test('[no cancelation intercept] timer start then immediate clear (duration: 0ms)', async function (assert) {
     assert.expect(4);
 
-    const { env, messaging } = await start({ hasTimeControl: true });
+    const { advanceTime, messaging } = await start({ hasTimeControl: true });
 
     let hasTimedOut = false;
     this.timers.push(
@@ -198,13 +198,13 @@ QUnit.test('[no cancelation intercept] timer start then immediate clear (duratio
         "timer should not have timed out immediately after start and clear"
     );
 
-    await env.testUtils.advanceTime(0);
+    await advanceTime(0);
     assert.notOk(
         hasTimedOut,
         "timer should not have timed out after 0ms of clear"
     );
 
-    await env.testUtils.advanceTime(1000);
+    await advanceTime(1000);
     assert.notOk(
         hasTimedOut,
         "timer should not have timed out after 1s of clear"
@@ -214,7 +214,7 @@ QUnit.test('[no cancelation intercept] timer start then immediate clear (duratio
 QUnit.test('[no cancelation intercept] timer start then clear before timeout (duration: 1000ms)', async function (assert) {
     assert.expect(4);
 
-    const { env, messaging } = await start({ hasTimeControl: true });
+    const { advanceTime, messaging } = await start({ hasTimeControl: true });
 
     let hasTimedOut = false;
     this.timers.push(
@@ -231,20 +231,20 @@ QUnit.test('[no cancelation intercept] timer start then clear before timeout (du
         "timer should not have timed out immediately after start"
     );
 
-    await env.testUtils.advanceTime(999);
+    await advanceTime(999);
     assert.notOk(
         hasTimedOut,
         "timer should not have timed out immediately after 999ms of start"
     );
 
     this.timers[0].clear();
-    await env.testUtils.advanceTime(1);
+    await advanceTime(1);
     assert.notOk(
         hasTimedOut,
         "timer should not have timed out after 1ms of clear that happens 999ms after start (globally 1s await)"
     );
 
-    await env.testUtils.advanceTime(1000);
+    await advanceTime(1000);
     assert.notOk(
         hasTimedOut,
         "timer should not have timed out after 1001ms after clear (timer fully cleared)"
@@ -254,7 +254,7 @@ QUnit.test('[no cancelation intercept] timer start then clear before timeout (du
 QUnit.test('[no cancelation intercept] timer start then reset before timeout (duration: 1000ms)', async function (assert) {
     assert.expect(5);
 
-    const { env, messaging } = await start({ hasTimeControl: true });
+    const { advanceTime, messaging } = await start({ hasTimeControl: true });
 
     let hasTimedOut = false;
     this.timers.push(
@@ -271,26 +271,26 @@ QUnit.test('[no cancelation intercept] timer start then reset before timeout (du
         "timer should not have timed out immediately after start"
     );
 
-    await env.testUtils.advanceTime(999);
+    await advanceTime(999);
     assert.notOk(
         hasTimedOut,
         "timer should not have timed out after 999ms of start"
     );
 
     this.timers[0].reset();
-    await env.testUtils.advanceTime(1);
+    await advanceTime(1);
     assert.notOk(
         hasTimedOut,
         "timer should not have timed out after 1ms of reset which happens 999ms after start"
     );
 
-    await env.testUtils.advanceTime(998);
+    await advanceTime(998);
     assert.notOk(
         hasTimedOut,
         "timer should not have timed out after 999ms of reset"
     );
 
-    await env.testUtils.advanceTime(1);
+    await advanceTime(1);
     assert.ok(
         hasTimedOut,
         "timer should not have timed out after 1s of reset"
@@ -341,7 +341,7 @@ QUnit.test('[with cancelation intercept] timer start then immediate clear (durat
 QUnit.test('[with cancelation intercept] timer start then immediate reset (duration: 0ms)', async function (assert) {
     assert.expect(9);
 
-    const { env, messaging } = await start({ hasTimeControl: true });
+    const { advanceTime, messaging } = await start({ hasTimeControl: true });
 
     let hasTimedOut = false;
     this.timers.push(
@@ -380,7 +380,7 @@ QUnit.test('[with cancelation intercept] timer start then immediate reset (durat
         "timer should not have timed out immediately after reset"
     );
 
-    await env.testUtils.advanceTime(0);
+    await advanceTime(0);
     assert.ok(
         hasTimedOut,
         "timer should have timed out after reset timeout"
