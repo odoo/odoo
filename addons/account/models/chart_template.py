@@ -20,6 +20,9 @@ TEMPLATES = {
     'de': {'name': 'DE', 'country': 'base.de', 'modules': ['l10n_de']},
 }
 
+class AccountChartTemplateDataError(Exception):
+    pass
+
 
 def migrate_set_tags_and_taxes_updatable(cr, registry, module):
     '''
@@ -82,7 +85,6 @@ class AccountChartTemplate(models.AbstractModel):
         else:
             company = company or self.env.company
         template_code = template_code or company and self._guess_chart_template(company)
-
         module_names = TEMPLATES[template_code].get('modules', [])
         module_ids = self.env['ir.module.module'].search([('name', 'in', module_names), ('state', '=', 'uninstalled')])
         if module_ids:
@@ -307,23 +309,25 @@ class AccountChartTemplate(models.AbstractModel):
         # Uneffected earnings account on the company (if not present yet)
         company.get_unaffected_earnings_account()
 
-    def _get_data(self, template_code, model):
+    def _get_data(self, template_code, company, model):
         name = model.replace('.', '_')
         func = getattr(self, f"_get_{template_code}_{name}", None)
         if not func:
             func = getattr(self, f"_get_{name}", None)
-        return func
+        return func and func(template_code, company) or {}
+
 
     def _post_load_data(self, template_code, company):
         company = (company or self.env.company)
         cid = company.id
 
-        template_data = self._get_data(template_code, 'template_data')(template_code, company)
-        code_digits = template_data.get('code_digits', 6)
+        template_data = self._get_data(template_code, company, 'template_data')
+        code_digits = int(template_data.get('code_digits', 6))
         bank_prefix = template_data.get('bank_account_code_prefix', '')
 
         # Apply template data to the company
-        company.write({key: val for key, val in template_data.items() if not key.startswith("property_")})
+        company.write({key: val for key, val in template_data.items()
+                       if not key.startswith("property_") and key in company._fields})
 
         # Create utility bank_accounts
         self._setup_utility_bank_accounts(template_code, company, bank_prefix, code_digits)
@@ -383,12 +387,20 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_chart_template_data(self, template_code, company):
         company = company or self.env.company
         data = {}
-        models = ('res.company', 'account.account', 'account.tax',
-                  'account.tax.group', 'account.journal', 'account.group')
-        for model in models:
-            func = self._get_data(template_code, model)
-            if func:
-                data[model] = func(template_code, company)
+        models = ('res.company', 'account.account', 'account.tax', 'account.tax.group', 'account.journal', 'account.group')
+        try:
+            for model in models:
+                data[model] = self._get_data(template_code, company, model)
+                if not isinstance(data[model], dict):
+                    raise ValueError("Wrong data result type")
+                for key, value in data[model].items():
+                    if not isinstance(key, str):
+                        raise ValueError(f"Key {key} is not a string")
+                    if not isinstance(value, dict):
+                        raise ValueError(f"Value for key {key} is not a dict")
+        except Exception as e:
+            message = f"Error in data from model {model} for template '{template_code}' and company '{company.name}' ({company.id})"
+            raise AccountChartTemplateDataError(message) from e
         return data
 
     def _get_account_account(self, template_code, company):

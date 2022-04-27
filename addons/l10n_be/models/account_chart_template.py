@@ -1,43 +1,35 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-# pylint: disable=undefined-variable
-
-from odoo import models, Command, _
+from odoo import models, Command
 
 class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
-
-    def _get_be_template_data(self, template_code, company):
-        cid = (company or self.env.company).id
-        return {
-            'bank_account_code_prefix': '550',
-            'cash_account_code_prefix': '570',
-            'transfer_account_code_prefix': '580',
-            'account_journal_suspense_account_id': f'account.{cid}_a499',
-            'property_account_receivable_id': f'account.{cid}_a400',
-            'property_account_payable_id': f'account.{cid}_a440',
-            'property_account_expense_categ_id': f'account.{cid}_a600',
-            'property_account_income_categ_id': f'account.{cid}_a7000',
-            'property_tax_payable_account_id': f'account.{cid}_a4512',
-            'property_tax_receivable_account_id': f'account.{cid}_a4112',
-        }
 
     def _get_be_chart_template_data(self, template_code, company):
         res = self._get_chart_template_data(company)
         if template_code == 'be':
             res['account.fiscal.position'] = self._get_be_fiscal_position(template_code, company)
+            res['account.reconcile.model'] = self._get_be_reconcile_model(template_code, company)
+            res['account.reconcile.model.line'] = self._get_be_reconcile_model_line(template_code, company)
+            res['account.fiscal.position.tax'] = self._get_be_fiscal_position_tax(template_code, company)
         return res
 
-    def _get_be_res_company(self, template_code, company):
+    def _get_be_template_data(self, template_code, company):
         cid = (company or self.env.company).id
         return {
-            company.get_external_id()[cid]: {
-                'currency_id': "base.EUR",
-                'account_fiscal_country_id': "base.be",
-                'account_default_pos_receivable_account_id': f'account.{cid}_a4001',
-                'income_currency_exchange_account_id': f'account.{cid}_a754',
-                'expense_currency_exchange_account_id': f'account.{cid}_a654',
+            'l10nbe_chart_template': {
+                'bank_account_code_prefix': '550',
+                'cash_account_code_prefix': '570',
+                'transfer_account_code_prefix': '580',
+                'spoken_languages': 'nl_BE;nl_NL;fr_FR;fr_BE;de_DE',
+                'code_digits': '6',
+                'property_account_receivable_id': f'account.{cid}_a400',
+                'property_account_payable_id': f'account.{cid}_a440',
+                'property_account_expense_categ_id': f'account.{cid}_a600',
+                'property_account_income_categ_id': f'account.{cid}_a7000',
+                'property_tax_payable_account_id': f'account.{cid}_a4512',
+                'property_tax_receivable_account_id': f'account.{cid}_a4112',
+                'account_journal_suspense_account_id': f'account.{cid}_a499',
             }
         }
 
@@ -436,48 +428,51 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     def _get_be_account_tax(self, template_code, company):
-        cid = company.id
+        cid = (company or self.env.company).id
         return {
             f'{cid}_attn_VAT-OUT-21-L': {
                 'sequence': 10,
                 'description': '21%',
                 'name': '21%',
-                'price_include': True,
+                'price_include': False,
                 'amount': 21.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'sale',
                 'tax_group_id': f'account.{cid}_tax_group_tva_21',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_03',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_54',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
-                        ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_49',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_64',
+                        ],
                     }),
                 ],
             },
@@ -489,39 +484,42 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 21.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'sale',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_21',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_03',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_54',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
-                        ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_49',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_64',
+                        ],
                     }),
                 ],
             },
@@ -533,39 +531,42 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 12.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'sale',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_12',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_02',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_54',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
-                        ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_49',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_64',
+                        ],
                     }),
                 ],
             },
@@ -573,42 +574,45 @@ class AccountChartTemplate(models.AbstractModel):
                 'sequence': 21,
                 'description': '12%',
                 'name': '12%',
-                'price_include': True,
+                'price_include': False,
                 'amount': 12.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'sale',
                 'tax_group_id': f'account.{cid}_tax_group_tva_12',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_02',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_54',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
-                        ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_49',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_64',
+                        ],
                     }),
                 ],
             },
@@ -620,39 +624,42 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 6.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'sale',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_6',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_01',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_54',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
-                        ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_49',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_64',
+                        ],
                     }),
                 ],
             },
@@ -660,42 +667,45 @@ class AccountChartTemplate(models.AbstractModel):
                 'sequence': 31,
                 'description': '6%',
                 'name': '6%',
-                'price_include': True,
+                'price_include': False,
                 'amount': 6.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'sale',
                 'tax_group_id': f'account.{cid}_tax_group_tva_6',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_01',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_54',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
-                        ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_49',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_64',
+                        ],
                     }),
                 ],
             },
@@ -703,41 +713,36 @@ class AccountChartTemplate(models.AbstractModel):
                 'sequence': 40,
                 'description': '0%',
                 'name': '0% S.',
-                'price_include': True,
+                'price_include': False,
                 'amount': 0.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'sale',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_0',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_00',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
-                        ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_49',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
@@ -747,40 +752,35 @@ class AccountChartTemplate(models.AbstractModel):
                 'sequence': 41,
                 'description': '0%',
                 'name': '0%',
-                'price_include': True,
+                'price_include': False,
                 'amount': 0.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'sale',
                 'tax_group_id': f'account.{cid}_tax_group_tva_0',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_00',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
-                        ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_49',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
@@ -797,33 +797,28 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_group_id': f'account.{cid}_tax_group_tva_0',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_45',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
-                        ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_49',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
@@ -840,33 +835,28 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_group_id': f'account.{cid}_tax_group_tva_0',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_44',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
-                        ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_48s44',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
@@ -883,33 +873,28 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_group_id': f'account.{cid}_tax_group_tva_0',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_46L',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
-                        ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_48s46L',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
@@ -926,33 +911,28 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_group_id': f'account.{cid}_tax_group_tva_0',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_46T',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
-                        ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_48s46T',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
@@ -969,33 +949,28 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_group_id': f'account.{cid}_tax_group_tva_0',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_47',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
-                        ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_49',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
@@ -1012,35 +987,41 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_group_id': f'account.{cid}_tax_group_tva_21',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_63',
+                        ],
                     }),
                 ],
             },
@@ -1055,35 +1036,41 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_group_id': f'account.{cid}_tax_group_tva_12',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_63',
+                        ],
                     }),
                 ],
             },
@@ -1098,35 +1085,41 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_group_id': f'account.{cid}_tax_group_tva_6',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_63',
+                        ],
                     }),
                 ],
             },
@@ -1141,33 +1134,31 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_group_id': f'account.{cid}_tax_group_tva_0',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
@@ -1184,35 +1175,41 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_group_id': f'account.{cid}_tax_group_tva_21',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_63',
+                        ],
                     }),
                 ],
             },
@@ -1224,39 +1221,45 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 21.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_21',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_63',
+                        ],
                     }),
                 ],
             },
@@ -1268,39 +1271,45 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 21.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_21',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_63',
+                        ],
                     }),
                 ],
             },
@@ -1312,39 +1321,45 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 12.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_12',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_63',
+                        ],
                     }),
                 ],
             },
@@ -1356,39 +1371,45 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 12.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_12',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_63',
+                        ],
                     }),
                 ],
             },
@@ -1400,39 +1421,45 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 6.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_6',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_63',
+                        ],
                     }),
                 ],
             },
@@ -1444,39 +1471,45 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 6.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_6',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_63',
+                        ],
                     }),
                 ],
             },
@@ -1488,37 +1521,35 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 0.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_0',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
@@ -1532,37 +1563,35 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 0.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_0',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
@@ -1576,39 +1605,45 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 21.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_21',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_63',
+                        ],
                     }),
                 ],
             },
@@ -1620,39 +1655,45 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 12.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_12',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_63',
+                        ],
                     }),
                 ],
             },
@@ -1664,39 +1705,45 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 6.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_6',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_63',
+                        ],
                     }),
                 ],
             },
@@ -1708,37 +1755,35 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 0.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_0',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
@@ -1755,35 +1800,53 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_group_id': f'account.{cid}_tax_group_tva_21',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451056',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_56',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451056',
                     }),
                 ],
             },
@@ -1795,39 +1858,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount_type': 'percent',
                 'amount': 12.0,
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_12',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451056',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_56',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451056',
                     }),
                 ],
             },
@@ -1839,39 +1920,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount_type': 'percent',
                 'amount': 6.0,
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_6',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451056',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_56',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451056',
                     }),
                 ],
             },
@@ -1883,37 +1982,37 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 0.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_0',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
@@ -1927,39 +2026,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 21.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_21',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451056',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_56',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451056',
                     }),
                 ],
             },
@@ -1971,39 +2088,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 12.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_12',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451056',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_56',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451056',
                     }),
                 ],
             },
@@ -2015,39 +2150,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 6.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_6',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451056',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_56',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451056',
                     }),
                 ],
             },
@@ -2059,37 +2212,37 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 0.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_0',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
@@ -2103,39 +2256,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 21.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_21',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451056',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_56',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451056',
                     }),
                 ],
             },
@@ -2147,39 +2318,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 12.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_12',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451056',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_56',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451056',
                     }),
                 ],
             },
@@ -2191,39 +2380,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 6.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_6',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451056',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_56',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451056',
                     }),
                 ],
             },
@@ -2235,37 +2442,37 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 0.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_0',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
@@ -2282,35 +2489,58 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_group_id': f'account.{cid}_tax_group_tva_21',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
                         ],
                     }),
-                    Command.create({
-                        'factor_percent': 100,
+                    Command.set({
+                        'factor_percent': 50,
                         'repartition_type': 'tax',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_82',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': 50,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
-                        ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
+                        ],
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_82',
                         ],
                     }),
-                    Command.create({
-                        'factor_percent': 100,
+                    Command.set({
+                        'factor_percent': 50,
                         'repartition_type': 'tax',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_82',
+                        ],
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_85',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': 50,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_63',
+                        ],
                     }),
                 ],
             },
@@ -2325,35 +2555,53 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_group_id': f'account.{cid}_tax_group_tva_21',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_55',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_84',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
                     }),
                 ],
             },
@@ -2365,39 +2613,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 12.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_12',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_55',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_84',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
                     }),
                 ],
             },
@@ -2409,39 +2675,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 6.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_6',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_55',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_84',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
                     }),
                 ],
             },
@@ -2453,37 +2737,37 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 0.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_0',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_84',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
@@ -2497,39 +2781,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 21.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_21',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_88',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_55',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_88',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_84',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
                     }),
                 ],
             },
@@ -2541,39 +2843,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 21.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_21',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_55',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_84',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
                     }),
                 ],
             },
@@ -2585,39 +2905,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 12.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_12',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_88',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_55',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_88',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_84',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
                     }),
                 ],
             },
@@ -2629,39 +2967,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 12.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_12',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_55',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_84',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
                     }),
                 ],
             },
@@ -2673,39 +3029,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount_type': 'percent',
                 'amount': 6.0,
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_6',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_88',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_55',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_88',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_84',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
                     }),
                 ],
             },
@@ -2717,39 +3091,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 6.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_6',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_55',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_84',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
                     }),
                 ],
             },
@@ -2761,37 +3153,37 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 0.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_0',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_88',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_88',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_84',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
@@ -2805,39 +3197,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 21.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_21',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_55',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_84',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
                     }),
                 ],
             },
@@ -2849,37 +3259,37 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 0.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_0',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_84',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
@@ -2893,39 +3303,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount_type': 'percent',
                 'amount': 12.0,
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_12',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_55',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_84',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
                     }),
                 ],
             },
@@ -2937,39 +3365,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount_type': 'percent',
                 'amount': 6.0,
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_6',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_86',
+                        ],
                         'factor_percent': 100,
                         'repartition_type': 'base',
-                        'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
-                        ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_55',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_84',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451055',
                     }),
                 ],
             },
@@ -2981,37 +3427,37 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 0.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_0',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_86',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_84',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
@@ -3028,35 +3474,53 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_group_id': f'account.{cid}_tax_group_tva_21',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451057',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_57',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451057',
                     }),
                 ],
             },
@@ -3065,42 +3529,60 @@ class AccountChartTemplate(models.AbstractModel):
                 'description': '12%',
                 'name': '12% EX M',
                 'amount': 12.0,
-                'price_include': True,
+                'price_include': False,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_12',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451057',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_57',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451057',
                     }),
                 ],
             },
@@ -3112,39 +3594,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 6.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_6',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451057',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_57',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451057',
                     }),
                 ],
             },
@@ -3156,37 +3656,37 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 0.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_0',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_81',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
@@ -3197,42 +3697,60 @@ class AccountChartTemplate(models.AbstractModel):
                 'description': '21%',
                 'name': '21% EX S',
                 'amount': 21.0,
-                'price_include': True,
+                'price_include': False,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_21',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451057',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_57',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451057',
                     }),
                 ],
             },
@@ -3244,39 +3762,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount_type': 'percent',
                 'amount': 12.0,
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_12',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451057',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_57',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451057',
                     }),
                 ],
             },
@@ -3288,39 +3824,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
                 'amount': 6.0,
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_6',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451057',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_57',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451057',
                     }),
                 ],
             },
@@ -3332,37 +3886,37 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 0.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_0',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_82',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
@@ -3373,42 +3927,60 @@ class AccountChartTemplate(models.AbstractModel):
                 'description': '21%',
                 'name': "21% EX IG",
                 'amount': 21.0,
-                'price_include': True,
+                'price_include': False,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_21',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451057',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_57',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451057',
                     }),
                 ],
             },
@@ -3420,39 +3992,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount_type': 'percent',
                 'amount': 12.0,
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_12',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451057',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_57',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451057',
                     }),
                 ],
             },
@@ -3464,39 +4054,57 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
                 'amount': 6.0,
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_6',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                        'plus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_59',
+                        ],
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451057',
+                        'minus_report_line_ids': [
+                            f'account.{cid}_tax_report_line_57',
+                        ],
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a411',
+                    }),
+                    Command.set({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': f'account.{cid}_a451057',
                     }),
                 ],
             },
@@ -3508,40 +4116,479 @@ class AccountChartTemplate(models.AbstractModel):
                 'amount': 0.0,
                 'amount_type': 'percent',
                 'type_tax_use': 'purchase',
-                'active': True,
+                'active': False,
                 'tax_group_id': f'account.{cid}_tax_group_tva_0',
                 'invoice_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
                 ],
                 'refund_repartition_line_ids': [
                     Command.clear(),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'minus_report_line_ids': [
-                            'l10n_be.tax_report_line_83',
-                            'l10n_be.tax_report_line_87',
+                            f'account.{cid}_tax_report_line_83',
+                            f'account.{cid}_tax_report_line_87',
                         ],
                         'plus_report_line_ids': [
-                            'l10n_be.tax_report_line_85',
+                            f'account.{cid}_tax_report_line_85',
                         ],
                     }),
-                    Command.create({
+                    Command.set({
                         'factor_percent': 100,
                         'repartition_type': 'tax',
                     }),
                 ],
+            }
+        }
+
+    def _get_be_res_company(self, template_code, company):
+        cid = (company or self.env.company).id
+        return {
+            f'base.company_{cid}': {
+                'currency_id': 'base.EUR',
+                'account_fiscal_country_id': 'base.be',
+                'account_default_pos_receivable_account_id': f'account.{cid}_a4001',
+                'income_currency_exchange_account_id': f'account.{cid}_a754',
+                'expense_currency_exchange_account_id': f'account.{cid}_a654',
+            }
+,
+        }
+
+    def _get_be_fiscal_position(self, template_code, company):
+        cid = (company or self.env.company).id
+        return {
+            f'{cid}_fiscal_position_template_1': {
+                'sequence': 1,
+                'name': 'Régime National',
+                'auto_apply': 1,
+                'vat_required': 1,
+                'country_id': 'base.be',
             },
+            f'{cid}_fiscal_position_template_5': {
+                'sequence': 2,
+                'name': 'EU privé',
+                'auto_apply': 1,
+                'country_group_id': 'base.europe',
+            },
+            f'{cid}_fiscal_position_template_2': {
+                'sequence': 4,
+                'name': 'Régime Extra-Communautaire',
+                'auto_apply': 1,
+            },
+            f'{cid}_fiscal_position_template_3': {
+                'sequence': 3,
+                'name': 'Régime Intra-Communautaire',
+                'auto_apply': 1,
+                'vat_required': 1,
+                'country_group_id': 'base.europe',
+            },
+            f'{cid}_fiscal_position_template_4': {
+                'name': 'Régime Cocontractant',
+                'sequence': 5,
+            }
+        }
+
+    def _get_be_reconcile_model(self, template_code, company):
+        cid = (company or self.env.company).id
+        return {
+            f'{cid}_escompte_template': {
+                'name': 'Escompte',
+            },
+            f'{cid}_frais_bancaires_htva_template': {
+                'name': 'Frais bancaires HTVA',
+            },
+            f'{cid}_frais_bancaires_tva21_template': {
+                'name': 'Frais bancaires TVA21',
+            },
+            f'{cid}_virements_internes_template': {
+                'name': 'Virements internes',
+                'to_check': False,
+            },
+            f'{cid}_compte_attente_template': {
+                'name': 'Compte Attente',
+                'to_check': True,
+            }
+        }
+
+    def _get_be_reconcile_model_line(self, template_code, company):
+        cid = (company or self.env.company).id
+        return {
+            f'{cid}_escompte_line_template': {
+                'model_id': 'l10n_be.escompte_template',
+                'account_id': 'a653',
+                'amount_type': 'percentage',
+                'amount_string': '100',
+                'label': 'Escompte accordé',
+            },
+            f'{cid}_frais_bancaires_htva_line_template': {
+                'model_id': 'l10n_be.frais_bancaires_htva_template',
+                'account_id': 'a6560',
+                'amount_type': 'percentage',
+                'amount_string': '100',
+                'label': 'Frais bancaires HTVA',
+            },
+            f'{cid}_frais_bancaires_tva21_line_template': {
+                'model_id': 'l10n_be.frais_bancaires_tva21_template',
+                'account_id': 'a6560',
+                'amount_type': 'percentage',
+                'tax_ids': [
+                    Command.clear([
+                        'l10n_be.attn_TVA-21-inclus-dans-prix',
+                    ]),
+                ],
+                'amount_string': '100',
+                'label': 'Frais bancaires TVA21',
+            },
+            f'{cid}_virements_internes_line_template': {
+                'model_id': 'l10n_be.virements_internes_template',
+                'account_id': None,
+                'amount_type': 'percentage',
+                'amount_string': '100',
+                'label': 'Virements internes',
+            },
+            f'{cid}_compte_attente_line_template': {
+                'model_id': 'l10n_be.compte_attente_template',
+                'account_id': 'a499',
+                'amount_type': 'percentage',
+                'amount_string': '100',
+                'label': None,
+            }
+        }
+
+    def _get_be_fiscal_position_tax(self, template_code, company):
+        cid = (company or self.env.company).id
+        return {
+            f'{cid}_afpttn_intracom_1': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-00-S',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-EU-S',
+            },
+            f'{cid}_afpttn_intracom_2': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-00-L',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-EU-L',
+            },
+            f'{cid}_afpttn_intracom_3': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-06-S',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-EU-S',
+            },
+            f'{cid}_afpttn_intracom_4': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-06-L',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-EU-L',
+            },
+            f'{cid}_afpttn_intracom_5': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-12-S',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-EU-S',
+            },
+            f'{cid}_afpttn_intracom_6': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-12-L',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-EU-L',
+            },
+            f'{cid}_afpttn_intracom_7': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-21-S',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-EU-S',
+            },
+            f'{cid}_afpttn_intracom_8': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-21-L',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-EU-L',
+            },
+            f'{cid}_afpttn_intracom_9': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V81-00',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V81-00-EU',
+            },
+            f'{cid}_afpttn_intracom_10': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V81-06',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V81-06-EU',
+            },
+            f'{cid}_afpttn_intracom_11': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V81-12',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V81-12-EU',
+            },
+            f'{cid}_afpttn_intracom_12': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V81-21',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V81-21-EU',
+            },
+            f'{cid}_afpttn_intracom_13': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V82-00-S',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V82-00-EU-S',
+            },
+            f'{cid}_afpttn_intracom_14': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V82-00-G',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V82-00-EU-G',
+            },
+            f'{cid}_afpttn_intracom_15': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V82-06-S',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V82-06-EU-S',
+            },
+            f'{cid}_afpttn_intracom_16': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V82-06-G',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V82-06-EU-G',
+            },
+            f'{cid}_afpttn_intracom_17': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V82-12-S',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V82-12-EU-S',
+            },
+            f'{cid}_afpttn_intracom_18': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V82-12-G',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V82-12-EU-G',
+            },
+            f'{cid}_afpttn_intracom_19': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V82-21-S',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V82-21-EU-S',
+            },
+            f'{cid}_afpttn_intracom_20': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V82-21-G',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V82-21-EU-G',
+            },
+            f'{cid}_afpttn_intracom_21': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V83-00',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V83-00-EU',
+            },
+            f'{cid}_afpttn_intracom_22': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V83-06',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V83-06-EU',
+            },
+            f'{cid}_afpttn_intracom_23': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V83-12',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V83-12-EU',
+            },
+            f'{cid}_afpttn_intracom_24': {
+                'position_id': f'account.{cid}_fiscal_position_template_3',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V83-21',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V83-21-EU',
+            },
+            f'{cid}_afpttn_extracom_1': {
+                'position_id': f'account.{cid}_fiscal_position_template_2',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-00-S',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-ROW',
+            },
+            f'{cid}_afpttn_extracom_2': {
+                'position_id': f'account.{cid}_fiscal_position_template_2',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-00-L',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-ROW',
+            },
+            f'{cid}_afpttn_extracom_3': {
+                'position_id': f'account.{cid}_fiscal_position_template_2',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-06-S',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-ROW',
+            },
+            f'{cid}_afpttn_extracom_4': {
+                'position_id': f'account.{cid}_fiscal_position_template_2',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-06-L',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-ROW',
+            },
+            f'{cid}_afpttn_extracom_5': {
+                'position_id': f'account.{cid}_fiscal_position_template_2',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-12-S',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-ROW',
+            },
+            f'{cid}_afpttn_extracom_6': {
+                'position_id': f'account.{cid}_fiscal_position_template_2',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-12-L',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-ROW',
+            },
+            f'{cid}_afpttn_extracom_7': {
+                'position_id': f'account.{cid}_fiscal_position_template_2',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-21-S',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-ROW',
+            },
+            f'{cid}_afpttn_extracom_8': {
+                'position_id': f'account.{cid}_fiscal_position_template_2',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-21-L',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-ROW',
+            },
+            f'{cid}_afpttn_extracom_9': {
+                'position_id': f'account.{cid}_fiscal_position_template_2',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V81-06',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V81-06-ROW-CC',
+            },
+            f'{cid}_afpttn_extracom_10': {
+                'position_id': f'account.{cid}_fiscal_position_template_2',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V81-12',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V81-12-ROW-CC',
+            },
+            f'{cid}_afpttn_extracom_11': {
+                'position_id': f'account.{cid}_fiscal_position_template_2',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V81-21',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V81-21-ROW-CC',
+            },
+            f'{cid}_afpttn_extracom_12': {
+                'position_id': f'account.{cid}_fiscal_position_template_2',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V82-06-S',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V82-06-ROW-CC',
+            },
+            f'{cid}_afpttn_extracom_13': {
+                'position_id': f'account.{cid}_fiscal_position_template_2',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V82-06-G',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V82-06-ROW-CC',
+            },
+            f'{cid}_afpttn_extracom_14': {
+                'position_id': f'account.{cid}_fiscal_position_template_2',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V82-12-S',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V82-12-ROW-CC',
+            },
+            f'{cid}_afpttn_extracom_15': {
+                'position_id': f'account.{cid}_fiscal_position_template_2',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V82-12-G',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V82-12-ROW-CC',
+            },
+            f'{cid}_afpttn_extracom_16': {
+                'position_id': f'account.{cid}_fiscal_position_template_2',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V82-21-S',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V82-21-ROW-CC',
+            },
+            f'{cid}_afpttn_extracom_17': {
+                'position_id': f'account.{cid}_fiscal_position_template_2',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V82-21-G',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V82-21-ROW-CC',
+            },
+            f'{cid}_afpttn_extracom_18': {
+                'position_id': f'account.{cid}_fiscal_position_template_2',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V83-06',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V83-06-ROW-CC',
+            },
+            f'{cid}_afpttn_extracom_19': {
+                'position_id': f'account.{cid}_fiscal_position_template_2',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V83-12',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V83-12-ROW-CC',
+            },
+            f'{cid}_afpttn_extracom_20': {
+                'position_id': f'account.{cid}_fiscal_position_template_2',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V83-21',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V83-21-ROW-CC',
+            },
+            f'{cid}_afpttn_cocontractant_1': {
+                'position_id': f'account.{cid}_fiscal_position_template_4',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-00-S',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-CC',
+            },
+            f'{cid}_afpttn_cocontractant_2': {
+                'position_id': f'account.{cid}_fiscal_position_template_4',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-00-L',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-CC',
+            },
+            f'{cid}_afpttn_cocontractant_3': {
+                'position_id': f'account.{cid}_fiscal_position_template_4',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-06-S',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-CC',
+            },
+            f'{cid}_afpttn_cocontractant_4': {
+                'position_id': f'account.{cid}_fiscal_position_template_4',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-06-L',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-CC',
+            },
+            f'{cid}_afpttn_cocontractant_5': {
+                'position_id': f'account.{cid}_fiscal_position_template_4',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-12-S',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-CC',
+            },
+            f'{cid}_afpttn_cocontractant_6': {
+                'position_id': f'account.{cid}_fiscal_position_template_4',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-12-L',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-CC',
+            },
+            f'{cid}_afpttn_cocontractant_7': {
+                'position_id': f'account.{cid}_fiscal_position_template_4',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-21-S',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-CC',
+            },
+            f'{cid}_afpttn_cocontractant_8': {
+                'position_id': f'account.{cid}_fiscal_position_template_4',
+                'tax_src_id': f'account.{cid}_attn_VAT-OUT-21-L',
+                'tax_dest_id': f'account.{cid}_attn_VAT-OUT-00-CC',
+            },
+            f'{cid}_afpttn_cocontractant_9': {
+                'position_id': f'account.{cid}_fiscal_position_template_4',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V81-06',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V81-06-CC',
+            },
+            f'{cid}_afpttn_cocontractant_10': {
+                'position_id': f'account.{cid}_fiscal_position_template_4',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V81-12',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V81-12-CC',
+            },
+            f'{cid}_afpttn_cocontractant_11': {
+                'position_id': f'account.{cid}_fiscal_position_template_4',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V81-21',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V81-21-CC',
+            },
+            f'{cid}_afpttn_cocontractant_12': {
+                'position_id': f'account.{cid}_fiscal_position_template_4',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V82-06-S',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V82-06-CC',
+            },
+            f'{cid}_afpttn_cocontractant_13': {
+                'position_id': f'account.{cid}_fiscal_position_template_4',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V82-06-G',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V82-06-CC',
+            },
+            f'{cid}_afpttn_cocontractant_14': {
+                'position_id': f'account.{cid}_fiscal_position_template_4',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V82-12-S',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V82-12-CC',
+            },
+            f'{cid}_afpttn_cocontractant_15': {
+                'position_id': f'account.{cid}_fiscal_position_template_4',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V82-12-G',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V82-12-CC',
+            },
+            f'{cid}_afpttn_cocontractant_16': {
+                'position_id': f'account.{cid}_fiscal_position_template_4',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V82-21-S',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V82-21-CC',
+            },
+            f'{cid}_afpttn_cocontractant_17': {
+                'position_id': f'account.{cid}_fiscal_position_template_4',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V82-21-G',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V82-21-CC',
+            },
+            f'{cid}_afpttn_cocontractant_18': {
+                'position_id': f'account.{cid}_fiscal_position_template_4',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V83-06',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V83-06-CC',
+            },
+            f'{cid}_afpttn_cocontractant_19': {
+                'position_id': f'account.{cid}_fiscal_position_template_4',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V83-12',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V83-12-CC',
+            },
+            f'{cid}_afpttn_cocontractant_20': {
+                'position_id': f'account.{cid}_fiscal_position_template_4',
+                'tax_src_id': f'account.{cid}_attn_VAT-IN-V83-21',
+                'tax_dest_id': f'account.{cid}_attn_VAT-IN-V83-21-CC',
+            }
         }

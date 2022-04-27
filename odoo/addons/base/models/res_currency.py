@@ -85,6 +85,8 @@ class Currency(models.Model):
     def _activate_group_multi_currency(self):
         group_user = self.env.ref('base.group_user', raise_if_not_found=False)
         group_mc = self.env.ref('base.group_multi_currency', raise_if_not_found=False)
+        print(f"------ currencies={self.env['res.currency'].search([('active', '=', 'True')]).mapped('name')}")
+        print(f"------ group_mc in group_user.implied_ids={group_mc in group_user.implied_ids}")
         if group_user and group_mc:
             group_user.sudo()._apply_group(group_mc)
 

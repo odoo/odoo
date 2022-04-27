@@ -6,7 +6,6 @@ import sys
 import csv
 import re
 import logging
-from itertools import groupby
 from pathlib import Path
 
 from lxml import etree
@@ -20,10 +19,14 @@ self = locals().get('self') or {}
 env = locals().get('env') or {}
 
 
+def get_command(x):
+    return list(Command.__members__.keys())[x-1].lower()
+
+
 def pformat(item, level=0, stream=None):
 
     def pformat_field_record(value, stream):
-        stream.write(pformat(value.get('children', {}), level=level))\
+        stream.write(pformat(value.get('children', {}), level=level))
 
     def pformat_tuple_list(value, stream):
         start, end = '[]' if isinstance(value, list) else '()'
@@ -37,10 +40,10 @@ def pformat(item, level=0, stream=None):
                 subitem = list(subitem)
                 if subitem == [5, 0, 0]:
                     value_str = Unquoted("Command.clear()")
-                elif len(subitem) == 3 and isinstance(subitem[2], Record):
-                    if subitem[0] == Command.CREATE:
-                        subvalue_str = pformat(subitem[2], level+1).strip()
-                        value_str = Unquoted(f"Command.create({subvalue_str})")
+                elif len(subitem) == 3:
+                    subvalue_str = pformat(subitem[2], level+1).strip()
+                    name = get_command(subitem[0])
+                    value_str = Unquoted(f"Command.{name}({subvalue_str})")
             else:
                 value_str = repr(subitem)
             comma = ',' if i < len(value) else ''
@@ -116,7 +119,16 @@ class Record(Node):
         super().__init__(el)
         self['tag'] = tag
         self['_model'] = el.get('model')
-        mapping = {cls._from: cls for cls in Record.__subclasses__() if cls._from}
+        def get_all_subclasses(cls):
+            subclass_list = []
+            def recurse(klass):
+                for subclass in klass.__subclasses__():
+                    subclass_list.append(subclass)
+                    recurse(subclass)
+            recurse(cls)
+            return subclass_list
+        subclasses = get_all_subclasses(Record)
+        mapping = {cls._from: cls for cls in subclasses if cls._from}
         target_cls = mapping.get(self['_model'])
         if target_cls:
             self.__class__ = target_cls
@@ -141,6 +153,8 @@ class Record(Node):
             child._value = float(child._value)
         elif record_id == 'default_pos_receivable_account_id':
             child['id'] = 'account_default_pos_receivable_account_id'
+        elif record_id == 'chart_template_id':
+            child['delete'] = True
         return child
 
     def cleanup_o2m(self, child, cls=None):
@@ -191,11 +205,14 @@ class TemplateData(Record):
             child['delete'] = True
         return child
 
+class AccountReconcileModel(Record):
+    _from = 'account.reconcile.model'
+
+class AccountReconcileModelLine(Record):
+    _from = 'account.reconcile.model.line'
+
 class ResCompany(Record):
     _from = 'res.company'
-    def cleanup(self, child):
-        child = super().cleanup(child)
-        return child
 
 class ResCountryGroup(Record):
     _from = 'res.country.group'
@@ -211,12 +228,12 @@ class AccountTax(Record):
     def cleanup(self, child):
         child = super().cleanup(child)
         record_id = child.get('id')
-        if record_id == 'chart_template_id':
-            child['delete'] = True
-        elif record_id == 'tax_group_id':
+        if record_id == 'tax_group_id':
             child._value = unquote_ref(child._value)
         elif record_id in ('invoice_repartition_line_ids', 'refund_repartition_line_ids'):
             child._value = self.cleanup_o2m(child, AccountTaxRepartitionLine)
+        elif record_id == 'price_include':
+            child._value = bool(child._value)
         return child
 
 class AccountTaxRepartitionLine(Record):
@@ -226,6 +243,8 @@ class AccountTaxRepartitionLine(Record):
         record_id = child.get('id')
         if record_id == 'account_id':
             child._value = unquote_ref(child._value)
+        elif record_id in ('plus_report_line_ids', 'minus_report_line_ids'):
+            child._value = [unquote_ref(x) for x in child._value]
         return child
 
 class AccountFiscalPosition(Record):
@@ -239,6 +258,18 @@ class AccountFiscalPosition(Record):
             child._value = Ref(child._value)
         elif record_id in ('vat_required', 'auto_apply'):
             child._value = int(child._value)
+        return child
+
+class AccountFiscalPositionTemplate(AccountFiscalPosition):
+    _from = 'account.fiscal.position.template'
+
+class AccountFiscalPositionTaxTemplate(Record):
+    _from = 'account.fiscal.position.tax.template'
+    def cleanup(self, child):
+        child = super().cleanup(child)
+        record_id = child.get('id')
+        if record_id in ('position_id', 'tax_src_id', 'tax_dest_id'):
+            child._value = unquote_ref(child._value)
         return child
 
 class AccountTaxReport(Record):
@@ -320,7 +351,6 @@ def get_records(module):
                     merge_records(value, records[key])
         except etree.ParseError as e:
             _logger.warning("Invalid XML file %s, %s", filename, e)
-
     return records
 
 # -----------------------------------------------------------
@@ -329,7 +359,7 @@ def split_template_from_company(all_records):
     company_record = ResCompany({'model': 'res.company'}, 'Record')
     company_fields = (
         'currency_id',
-        'account_fiscal_country_id',
+        'country_id',
         'default_pos_receivable_account_id',
         'account_default_pos_receivable_account_id',
         'income_currency_exchange_account_id',
@@ -342,7 +372,11 @@ def split_template_from_company(all_records):
                 record['children'][field_id]._value = unquote_ref(field._value)
         for field_id in company_fields:
             if field_id in record.get('children', {}):
-                company_record.append(record['children'].pop(field_id))
+                child = record['children'].pop(field_id)
+                # Convert the account_fiscal_country_id which was still named country_id in the ACT
+                if field_id == 'country_id':
+                    child['id'] = 'account_fiscal_country_id'
+                company_record.append(child)
     if company_record.get('children'):
         company_record['id'] = Unquoted("f'base.company_{cid}'")
         all_records['res.company'] = {company_record['id']: company_record}
@@ -352,13 +386,20 @@ def do_module(code, module, lang):
     """
         Translate an old Chart Template from a module to a new set of files and a Python class.
     """
-    grouped_records = groupby(get_records(module).values(), lambda x: x['_model'])
-    all_records = {model: {record['id']: record for record in records} for model, records in grouped_records}
+    all_records = {}
+    for value in get_records(module).values():
+        model, _id = value['_model'], value['id']
+        if model not in all_records:
+            all_records[model] = {}
+        all_records[model][_id] = value
     all_records["account.fiscal.position"] = convert_csv_to_records(module, "account_fiscal_position.csv", "account.fiscal.position", AccountFiscalPosition)
     all_records = split_template_from_company(all_records)
 
     # CSV files
-    convert_old_csv(module, source="account.account.csv", destination="account.account.csv")
+    def add_translation_header(header, rows):
+        header.append(f'"name@{lang}"')
+        return header, rows
+    convert_old_csv(module, source="account.account.csv", destination="account.account.csv", callback=add_translation_header)
     convert_old_csv(module, source='account.group.csv', destination="account.group.csv")
     content = convert_records_to_csv(module, all_records, 'account.tax.group')
     if content:
@@ -367,6 +408,25 @@ def do_module(code, module, lang):
         convert_old_csv(module, source='account.tax.group.csv', destination="account.tax.group.csv")
 
     # XML files
+    contents = {}
+    mapping = {
+        "account.chart.template":       f"_get_{code}_template_data",
+        "account.tax":                  f"_get_{code}_account_tax",
+        "res.company":                  f"_get_{code}_res_company",
+        "account.fiscal.position":      f"_get_{code}_fiscal_position",
+        "account.reconcile.model":      f"_get_{code}_reconcile_model",
+        "account.reconcile.model.line": f"_get_{code}_reconcile_model_line",
+        "account.fiscal.position.tax":  f"_get_{code}_fiscal_position_tax",
+    }
+    extra_functions = []
+    for model, function_name in mapping.items():
+        for model_name in (model, model + '.template'):
+            content = convert_records_to_function(all_records, model_name, function_name)
+            if content:
+                contents[function_name] = contents.get(function_name, "") + content
+                if model not in ("account.chart.template", "account.tax", "res.company"):
+                    extra_functions.append((model, function_name))
+
     content = (
         "# -*- coding: utf-8 -*-\n"
         "# Part of Odoo. See LICENSE file for full copyright and licensing details.\n"
@@ -374,43 +434,54 @@ def do_module(code, module, lang):
         "\n"
         "class AccountChartTemplate(models.AbstractModel):\n"
         "    _inherit = 'account.chart.template'\n\n"
-    ) + "\n".join([convert_records_to_function(module, all_records, model, function_name)
-                   for model, function_name in (
-                       ("account.chart.template",  f"_get_{code}_template_data"),
-                       ("account.tax.template",    f"_get_{code}_account_tax"),
-                       ("account.fiscal.position", f"_get_{code}_fiscal_position"),
-                       ("res.company",             f"_get_{code}_res_company"),
-                   )])
+    )
+
+    if extra_functions:
+        content += (
+            "    def _get_be_chart_template_data(self, template_code, company):\n"
+            "        res = self._get_chart_template_data(company)\n"
+            f"        if template_code == '{code}':\n"
+        )
+        for model, function_name in extra_functions:
+            content += f"            res['{model}'] = self.{function_name}(template_code, company)\n"
+        content += "        return res\n\n"
+
+    if contents:
+        content += "\n".join(contents.values())
 
     path = Path.cwd() / f'addons/{module}/models/account_chart_template.py'
     with open(str(path), 'w', encoding="utf-8") as outfile:
         outfile.write(content)
 
-def convert_records_to_function(module, all_records, model, function_name, cid=True):
+def convert_records_to_function(all_records, model, function_name, cid=True):
     """
         Convert a set of Records to a Python function.
     """
     records = all_records.get(model, {})
+    if not records:
+        return ''
+
     stream = io.StringIO()
     stream.write(indent(1, f"def {function_name}(self, template_code, company):\n") +
                  (cid and indent(2, "cid = (company or self.env.company).id\n")) +
                  indent(2, "return "))
-    if model == 'account.chart.template':
-        for _id, record in records.items():
-            stream.write(pformat(record, level=2).lstrip())
-    else:
-        stream.write("{\n")
-        for i, (_id, record) in enumerate(records.items()):
-            is_last = i >= len(records) - 1
-            if model != 'res.company':
-                key = Unquoted(f"f'{{cid}}_{record['id'].replace('.', '_')}'")
-            else:
-                key = record['id']
-            value = pformat(record, level=3).strip()
-            if not is_last:
-                value += ','
-            stream.write(indent(3, f"{key}: {value}\n"))
-        stream.write(indent(2, "}\n"))
+
+    if len(records) == 1:
+        stream.write(pformat(records, level=2).lstrip())
+        return stream.getvalue()
+
+    stream.write("{\n")
+    for i, (_id, record) in enumerate(records.items()):
+        is_last = i >= len(records) - 1
+        if model != 'res.company':
+            key = Unquoted(f"f'{{cid}}_{record['id'].replace('.', '_')}'")
+        else:
+            key = record['id']
+        value = pformat(record, level=3).strip()
+        if not is_last:
+            value += ','
+        stream.write(indent(3, f"{key}: {value}\n"))
+    stream.write(indent(2, "}\n"))
     return stream.getvalue()
 
 def convert_csv_to_records(module, filename, model, cls):
@@ -422,7 +493,7 @@ def convert_csv_to_records(module, filename, model, cls):
     records = {}
     if lines:
         header, *rows = lines
-        header, rows = remove_chart_template_id(header, rows)
+        header, rows = remove_column(header, rows, ('chart_template_id/id', 'chart_template_id:id'))
         for i, row in enumerate(rows):
             _id = f"{model}_{i}"
             records[_id] = cls({'id': _id, 'tag': cls.__name__, '_model': model}, model)
@@ -438,33 +509,44 @@ def convert_csv_to_records(module, filename, model, cls):
 # ---------------------------------------------------------
 
 def cleanup_csv(header, rows):
+    for i, column in enumerate(header):
+        if column in ('user_type_id', 'tag_ids', 'country_id'):
+            column = column + '/id'
+        header[i] = '"' + str(column).replace('"', '\\"') + '"'
     for i, row in enumerate(rows):
         for j, value in enumerate(row):
             if value in ('TRUE', 'FALSE'):
                 rows[i][j] = {'TRUE': True, 'FALSE': False}.get(value)
+            rows[i][j] = '"' + str(value).replace('"', '\\"') + '"'
     return header, rows
 
-def remove_chart_template_id(header, rows):
-    chart_template_id_col = None
+def remove_column(header, rows, fields):
+    column = None
     for i, field in enumerate(header):
-        if field in ('chart_template_id/id', 'chart_template_id:id'):
-            chart_template_id_col = i
+        if field in fields:
+            column = i
         elif field.endswith(':id') or field.endswith('/id'):
             header[i] = header[i][:-3]
-    if chart_template_id_col:
-        header.pop(chart_template_id_col)
+    if column:
+        header.pop(column)
         for row in rows:
-            row.pop(chart_template_id_col)
+            row.pop(column)
     return header, rows
 
 def convert_records_to_csv(module, all_records, model):
     records = all_records.get(model, {})
     header, rows = [], []
+    added_id = False
     for i, (_id, record) in enumerate(records.items()):
+        children = record.get('children', {})
         if i == 0:
-            for _id in record.get('children', {}):
+            for _id in children:
                 header.append(_id.replace(":", "/"))
-        rows.append([field._value for _id, field in record.get('children', {}).items()])
+            if 'id' not in header:
+                added_id = True
+                header.insert(0, "id")
+        rows.append([record['id'] if added_id else []] + [field._value for field in children.values()])
+    header, rows = cleanup_csv(header, rows)
     return generate_csv_content(header, rows)
 
 def generate_csv_content(header, rows):
@@ -484,7 +566,7 @@ def convert_old_csv(module, source, destination, callback=None):
     lines = read_csv_lines(module, filename=source)
     if lines:
         header, *rows = lines
-        header, rows = remove_chart_template_id(header, rows)
+        header, rows = remove_column(header, rows, ('chart_template_id/id', 'chart_template_id:id'))
         header, rows = cleanup_csv(header, rows)
         if callback:
             header, rows = callback(header, rows)
