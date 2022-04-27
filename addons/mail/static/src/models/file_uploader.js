@@ -99,7 +99,7 @@ registerModel({
          */
         _onAttachmentUploaded({ attachmentData, composer, thread }) {
             if (attachmentData.error || !attachmentData.id) {
-                this.env.services['notification'].notify({
+                this.messaging.notify({
                     type: 'danger',
                     message: attachmentData.error,
                 });

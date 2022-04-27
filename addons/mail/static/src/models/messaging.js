@@ -55,6 +55,22 @@ registerModel({
             }
         },
         /**
+         * Display a notification to the user.
+         *
+         * @param {Object} params
+         * @param {string} [params.message]
+         * @param {string} [params.subtitle]
+         * @param {Object[]} [params.buttons]
+         * @param {boolean} [params.sticky]
+         * @param {string} [params.type]
+         * @param {string} [params.className]
+         * @param {function} [params.onClose]
+         * @return {number} the id of the notification.
+         */
+        notify(params) {
+            return this.env.services.notification.notify(params);
+        },
+        /**
          * Opens a chat with the provided person and returns it.
          *
          * If a chat is not appropriate, a notification is displayed instead.
@@ -118,7 +134,7 @@ registerModel({
                     ))[0];
                 }
                 if (!channel) {
-                    this.env.services['notification'].notify({
+                    this.messaging.notify({
                         message: this.env._t("You can only open the profile of existing channels."),
                         type: 'warning',
                     });

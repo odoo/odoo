@@ -325,7 +325,7 @@ registerModel({
             }
             // prevent chatting with non-users
             if (!this.user) {
-                this.env.services['notification'].notify({
+                this.messaging.notify({
                     message: this.env._t("You can only chat with partners that have a dedicated user."),
                     type: 'info',
                 });

@@ -249,7 +249,7 @@ registerModel({
             ev.preventDefault();
             if (!this.composer.canPostMessage) {
                 if (this.composer.hasUploadingAttachment) {
-                    this.env.services['notification'].notify({
+                    this.messaging.notify({
                         message: this.env._t("Please wait while the file is uploading."),
                         type: 'warning',
                     });
@@ -631,13 +631,13 @@ registerModel({
                 }
                 if (threadViewThread) {
                     if (threadViewThread === this.messaging.inbox) {
-                        if (this.exists()) {
-                            this.delete();
-                        }
-                        this.env.services['notification'].notify({
+                        this.messaging.notify({
                             message: sprintf(this.env._t(`Message posted on "%s"`), message.originThread.displayName),
                             type: 'info',
                         });
+                        if (this.exists()) {
+                            this.delete();
+                        }
                     }
                     if (threadView && threadView.exists()) {
                         threadView.update({ replyingToMessageView: clear() });
@@ -672,7 +672,7 @@ registerModel({
         sendMessage() {
             if (!this.composer.canPostMessage) {
                 if (this.composer.hasUploadingAttachment) {
-                    this.env.services['notification'].notify({
+                    this.messaging.notify({
                         message: this.env._t("Please wait while the file is uploading."),
                         type: 'warning',
                     });

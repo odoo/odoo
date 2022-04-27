@@ -717,7 +717,7 @@ registerModel({
                 return;
             }
             if (!this.messaging.rtc.isClientRtcCompatible) {
-                this.env.services.notification.notify({
+                this.messaging.notify({
                     message: this.env._t("Your browser does not support webRTC."),
                     type: 'warning',
                 });
