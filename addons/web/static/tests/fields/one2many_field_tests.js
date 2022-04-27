@@ -7259,7 +7259,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many list editable: add new line before onchange returns",
         async function (assert) {
             // If the user adds a new row (with a required field with onchange), selects
@@ -7272,8 +7272,8 @@ QUnit.module("Fields", (hooks) => {
                 turtle_trululu: function () {},
             };
 
-            var prom;
-            const form = await makeView({
+            let def;
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -7285,55 +7285,33 @@ QUnit.module("Fields", (hooks) => {
                             </tree>
                         </field>
                     </form>`,
-                mockRPC(route, args) {
-                    var result = this._super.apply(this, arguments);
+                async mockRPC(route, args) {
                     if (args.method === "onchange") {
-                        return Promise.resolve(prom).then(_.constant(result));
+                        await Promise.resolve(def);
                     }
-                    return result;
                 },
             });
 
             // add a first line but hold the onchange back
             await addRow(target);
-            prom = testUtils.makeTestPromise();
-            assert.containsOnce(
-                form,
-                ".o_data_row",
-                "should have created the first row immediately"
-            );
+            def = makeDeferred();
+            assert.containsOnce(target, ".o_data_row");
             await clickOpenM2ODropdown(target, "turtle_trululu");
             await clickM2OHighlightedItem(target, "turtle_trululu");
 
             // try to add a second line and check that it is correctly waiting
             // for the onchange to return
             await addRow(target);
-            assert.strictEqual($(".modal").length, 0, "no modal should be displayed");
-            assert.strictEqual(
-                $(".o_field_invalid").length,
-                0,
-                "no field should be marked as invalid"
-            );
-            assert.containsOnce(
-                form,
-                ".o_data_row",
-                "should wait for the onchange to create the second row"
-            );
-            assert.hasClass(
-                form.$(".o_data_row"),
-                "o_selected_row",
-                "first row should still be in edition"
-            );
+            assert.containsNone(target, ".modal");
+            assert.containsNone(target, ".o_field_invalid");
+            assert.containsOnce(target, ".o_data_row");
+            assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
 
             // resolve the onchange promise
-            prom.resolve();
-            await testUtils.nextTick();
-            assert.containsN(form, ".o_data_row", 2, "second row should now have been created");
-            assert.doesNotHaveClass(
-                form.$(".o_data_row:first"),
-                "o_selected_row",
-                "first row should no more be in edition"
-            );
+            def.resolve();
+            await nextTick();
+            assert.containsN(target, ".o_data_row", 2);
+            assert.doesNotHaveClass(target.querySelector(".o_data_row"), "o_selected_row");
         }
     );
 
