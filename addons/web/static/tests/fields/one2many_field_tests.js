@@ -8250,7 +8250,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "nested one2manys with no widget in list and as invisible list in form",
         async function (assert) {
             serverData.models.partner.records[0].p = [1];
@@ -8262,8 +8262,12 @@ QUnit.module("Fields", (hooks) => {
                 arch: `
                     <form>
                         <field name="p">
-                            <tree><field name="turtles"/></tree>
-                            <form><field name="turtles" invisible="1"/></form>
+                            <tree>
+                                <field name="turtles"/>
+                            </tree>
+                            <form>
+                                <field name="turtles" invisible="1"/>
+                            </form>
                         </field>
                     </form>`,
                 resId: 1,
@@ -8276,13 +8280,13 @@ QUnit.module("Fields", (hooks) => {
                 ["1 record"]
             );
 
-            await click(target.querySelector(".o_data_row"));
+            await click(target.querySelector(".o_data_row td"));
             assert.containsOnce(target, ".modal .o_form_view");
             assert.containsNone(target, ".modal .o_form_view .o_field_one2many");
 
             // Test possible caching issues
             await clickDiscard(target.querySelector(".modal"));
-            await click(target.querySelector(".o_data_row"));
+            await click(target.querySelector(".o_data_row td"));
             assert.containsOnce(target, ".modal .o_form_view");
             assert.containsNone(target, ".modal .o_form_view .o_field_one2many");
         }
