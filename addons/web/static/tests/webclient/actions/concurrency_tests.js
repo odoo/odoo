@@ -669,7 +669,7 @@ QUnit.module("ActionManager", (hooks) => {
         let def = Promise.resolve();
 
         let id = 1;
-        class ToyView extends Component {
+        class ToyController extends Component {
             setup() {
                 this.id = id++;
                 assert.step(JSON.stringify(this.props.state || "no state"));
@@ -681,18 +681,20 @@ QUnit.module("ActionManager", (hooks) => {
                 owl.onWillStart(() => def);
             }
         }
-        ToyView.components = { ControlPanel };
-        ToyView.display_name = "Toy";
-        ToyView.icon = "fab fa-android";
-        ToyView.multiRecord = true;
-        ToyView.searchMenuTypes = ["filter"];
-        ToyView.template = xml`
+        ToyController.template = xml`
             <div class="o_toy_view">
                 <ControlPanel />
-            </div>
-        `;
-        ToyView.type = "toy";
-        registry.category("views").add("toy", ToyView);
+            </div>`;
+        ToyController.components = { ControlPanel };
+
+        registry.category("views").add("toy", {
+            type: "toy",
+            display_name: "Toy",
+            icon: "fab fa-android",
+            multiRecord: true,
+            searchMenuTypes: ["filter"],
+            Controller: ToyController,
+        });
 
         const webClient = await createWebClient({ serverData });
 

@@ -79,18 +79,17 @@ QUnit.module("Views", (hooks) => {
         setupControlPanelServiceRegistry();
         serviceRegistry.add("dialog", dialogService);
 
-        class ToyView extends LegacyComponent {}
-        ToyView.components = { ControlPanel };
-        ToyView.display_name = _lt("Toy view");
-        ToyView.icon = "fab fa-android";
-        ToyView.multiRecord = true;
-        ToyView.searchMenuTypes = ["filter", "groupBy", "comparison", "favorite"];
-        ToyView.template = xml`
-            <div class="o_toy_view">
-                <ControlPanel />
-            </div>
-        `;
-        ToyView.type = "toy";
+        class ToyController extends LegacyComponent {}
+        ToyController.template = xml`<div class="o_toy_view"><ControlPanel /></div>`;
+        ToyController.components = { ControlPanel};
+
+        viewRegistry.add("toy", {
+            type: "toy",
+            display_name: _lt("Toy view"),
+            multiRecord: true,
+            searchMenuTypes: ["filter", "groupBy", "comparison", "favorite"],
+            Controller: ToyController,
+        });
 
         const LegacyToyView = AbstractView.extend({
             display_name: _lt("Legacy toy view"),
@@ -100,7 +99,6 @@ QUnit.module("Views", (hooks) => {
             searchMenuTypes: ["filter", "groupBy", "comparison", "favorite"],
         });
 
-        viewRegistry.add("toy", ToyView);
         legacyViewRegistry.add("legacy_toy", LegacyToyView);
     });
 

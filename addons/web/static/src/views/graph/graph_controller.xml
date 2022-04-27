@@ -49,13 +49,13 @@
         <div t-att-class="props.className">
             <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''">
                 <t t-set-slot="control-panel-bottom-left">
-                    <t t-call="{{ constructor.buttonTemplate }}"/>
+                    <t t-call="{{ props.buttonTemplate }}"/>
                 </t>
                 <t t-if="model.data">
                     <t t-if="model.useSampleModel and props.info.noContentHelp" t-call="web.ActionHelper">
                         <t t-set="noContentHelp" t-value="props.info.noContentHelp"/>
                     </t>
-                    <Renderer
+                    <t t-component="props.Renderer"
                         class="model.useSampleModel ? 'o_sample_data_disabled' : ''"
                         model="model"
                         onGraphClicked="(domain) => this.onGraphClicked(domain)"

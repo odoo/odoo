@@ -162,8 +162,8 @@ export class View extends Component {
 
     async onWillStart() {
         // determine view type
-        let ViewClass = viewRegistry.get(this.props.type);
-        const type = ViewClass.type;
+        let descr = viewRegistry.get(this.props.type);
+        const type = descr.type;
 
         // determine views for which descriptions should be obtained
         let { viewId, searchViewId } = this.props;
@@ -249,7 +249,7 @@ export class View extends Component {
 
         // determine ViewClass to instantiate (if not already done)
         if (subType) {
-            ViewClass = viewRegistry.get(subType);
+            descr = viewRegistry.get(subType);
         }
 
         Object.assign(this.env.config, {
@@ -257,7 +257,7 @@ export class View extends Component {
             viewType: type,
             viewSubType: subType,
             bannerRoute,
-            ...extractLayoutComponents(ViewClass),
+            ...extractLayoutComponents(descr),
         });
 
         // prepare the view props
@@ -291,11 +291,13 @@ export class View extends Component {
             viewProps.info.noContentHelp = noContentHelp;
         }
 
+        const finalProps = descr.props ? descr.props(viewProps, descr, this.env.config) : viewProps;
         // prepare the WithSearch component props
         this.withSearchProps = {
             ...toRaw(this.props),
-            Component: ViewClass,
-            componentProps: viewProps,
+            Component: descr.Controller,
+            SearchModel: descr.SearchModel,
+            componentProps: finalProps,
         };
 
         if (searchViewId !== undefined) {
@@ -312,7 +314,7 @@ export class View extends Component {
         if (!this.withSearchProps.searchMenuTypes) {
             this.withSearchProps.searchMenuTypes =
                 this.props.searchMenuTypes ||
-                ViewClass.searchMenuTypes ||
+                descr.searchMenuTypes ||
                 this.constructor.searchMenuTypes;
         }
 

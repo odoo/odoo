@@ -20,7 +20,7 @@
         <div t-att-class="props.className">
             <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''">
                 <t t-set-slot="control-panel-bottom-left">
-                    <t t-call="{{ constructor.buttonTemplate }}"/>
+                    <t t-call="{{ props.buttonTemplate }}"/>
                 </t>
                 <t t-set="displayNoContent" t-value="
                     props.info.noContentHelp !== false and (
@@ -35,7 +35,7 @@
                     <t t-else="" t-call="web.NoContentHelper"/>
                 </t>
                 <t t-if="model.hasData() and model.metaData.activeMeasures.length">
-                    <Renderer model="model" onCellClicked="cell => this.onOpenView(cell)"/>
+                    <t t-component="props.Renderer" model="model" onCellClicked="cell => this.onOpenView(cell)"/>
                 </t>
             </Layout>
         </div>

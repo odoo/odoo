@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { GraphView } from "@web/views/graph/graph_view";
-import { PivotView } from "@web/views/pivot/pivot_view";
+import { graphView } from "@web/views/graph/graph_view";
+import { pivotView } from "@web/views/pivot/pivot_view";
 
 const viewRegistry = registry.category("views");
 
@@ -22,7 +22,7 @@ function openView(component, domain, views, context) {
     });
 }
 
-export class AttendanceReportGraphView extends GraphView {
+export class AttendanceReportGraphController extends graphView.Controller {
     /**
      * @override
      */
@@ -31,9 +31,12 @@ export class AttendanceReportGraphView extends GraphView {
     }
 }
 
-viewRegistry.add("attendance_report_graph", AttendanceReportGraphView);
+viewRegistry.add("attendance_report_graph", {
+    ...graphView,
+    Controller: AttendanceReportGraphController
+});
 
-export class AttendanceReportPivotView extends PivotView {
+export class AttendanceReportPivotController extends pivotView.Controller {
     /**
      * @override
      */
@@ -42,4 +45,7 @@ export class AttendanceReportPivotView extends PivotView {
     }
 }
 
-viewRegistry.add("attendance_report_pivot", AttendanceReportPivotView);
+viewRegistry.add("attendance_report_pivot", {
+    ...pivotView,
+    Controller: AttendanceReportPivotController
+});
