@@ -128,7 +128,7 @@ registerModel({
         }),
         isActive: attr({
             compute: '_computeIsActive',
-            default: true,
+            default: false,
         }),
         /**
          * The text that identifies this suggestion in a mention.
