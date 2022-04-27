@@ -867,7 +867,6 @@ class TestComposerResultsComment(TestMailComposer):
                             email_values={
                                 'body_content': 'TemplateBody %s' % self.test_record.name,
                                 'email_from': self.test_record.user_id.email_formatted,  # set by template
-                                'mail_server_id': self.mail_server_domain,
                                 'subject': 'TemplateSubject %s' % self.test_record.name,
                                 'attachments_info': [
                                     {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},
@@ -875,7 +874,9 @@ class TestComposerResultsComment(TestMailComposer):
                                     {'name': 'TestReport for %s.html' % self.test_record.name, 'type': 'text/plain'},
                                 ]
                             },
-                            fields_values={},
+                            fields_values={
+                                'mail_server_id': self.mail_server_domain,
+                            },
                            )
         self.assertMailMail(self.test_record.customer_id + new_partners, 'sent',
                             mail_message=message,
@@ -883,7 +884,6 @@ class TestComposerResultsComment(TestMailComposer):
                             email_values={
                                 'body_content': 'TemplateBody %s' % self.test_record.name,
                                 'email_from': self.test_record.user_id.email_formatted,  # set by template
-                                'mail_server_id': self.mail_server_domain,
                                 'subject': 'TemplateSubject %s' % self.test_record.name,
                                 'attachments_info': [
                                     {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},
@@ -891,7 +891,9 @@ class TestComposerResultsComment(TestMailComposer):
                                     {'name': 'TestReport for %s.html' % self.test_record.name, 'type': 'text/plain'},
                                 ]
                             },
-                            fields_values={},
+                            fields_values={
+                                'mail_server_id': self.mail_server_domain,
+                            },
                            )
 
         # message is posted and notified admin
@@ -1081,14 +1083,16 @@ class TestComposerResultsMass(TestMailComposer):
                                 email_values={
                                     'body_content': 'TemplateBody %s' % record.name,
                                     'email_from': self.partner_employee_2.email_formatted,
-                                    'mail_server_id': self.mail_server_global.id,
                                     'subject': 'TemplateSubject %s' % record.name,
                                     'attachments_info': [
                                         {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},
                                         {'name': 'AttFileName_01.txt', 'raw': b'AttContent_01', 'type': 'text/plain'},
                                         {'name': 'TestReport for %s.html' % record.name, 'type': 'text/plain'},
                                     ]
-                                }
+                                },
+                                fields_values={
+                                    'mail_server_id': self.mail_server_domain,
+                                },
                                )
 
     @users('employee')
@@ -1113,9 +1117,9 @@ class TestComposerResultsMass(TestMailComposer):
         self.assertEqual(len(self._mails), 2, 'Should have sent 1 email per record')
 
         for record in self.test_records:
-            # template is sent directly using customer field
-            self.assertSentEmail(self.partner_employee_2.email_formatted, record.customer_id,
-                                 author_id=self.partner_employee)
+            # template is sent directly using customer field, even if author is partner_employee
+            self.assertSentEmail(self.partner_employee_2.email_formatted,
+                                 record.customer_id)
 
         # 2: active_domain not taken into account if use_active_domain is False
         composer_form = Form(self.env['mail.compose.message'].with_context(
