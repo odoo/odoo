@@ -3,8 +3,8 @@
 import publicWidget from 'web.public.widget';
 import utils from 'web.utils';
 
-import LivechatButton from 'im_livechat.legacy.im_livechat.LivechatButton';
-import WebsiteLivechat from 'im_livechat.legacy.im_livechat.model.WebsiteLivechat';
+import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
+import WebsiteLivechat from '@im_livechat/legacy/models/website_livechat';
 
 /**
  * Override of the LivechatButton to create a testing environment for the chatbot script.

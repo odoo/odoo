@@ -1,19 +1,18 @@
-odoo.define('im_livechat.legacy.im_livechat.model.WebsiteLivechatMessage', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const AbstractMessage = require('im_livechat.legacy.mail.model.AbstractMessage');
+import AbstractMessage from '@im_livechat/legacy/models/abstract_message';
 
 /**
  * This is a message that is handled by im_livechat, without making use of the
  * mail.Manager. The purpose of this is to make im_livechat compatible with
  * mail.widget.Thread.
  *
- * @see im_livechat.legacy.mail.model.AbstractMessage for more information.
+ * @see @im_livechat/legacy/models/abstract_message for more information.
  */
 const WebsiteLivechatMessage = AbstractMessage.extend({
 
     /**
-     * @param {im_livechat.legacy.im_livechat.LivechatButton} parent
+     * @param {@im_livechat/legacy/widgets/livechat_button} parent
      * @param {Object} data
      * @param {Object} options
      * @param {string} options.default_username
@@ -61,6 +60,4 @@ const WebsiteLivechatMessage = AbstractMessage.extend({
 
 });
 
-return WebsiteLivechatMessage;
-
-});
+export default WebsiteLivechatMessage;

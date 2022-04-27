@@ -1,12 +1,11 @@
-odoo.define('im_livechat.legacy.mail.model.ThreadTypingMixin', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const CCThrottleFunction = require('im_livechat.legacy.mail.model.CCThrottleFunction');
-const Timer = require('im_livechat.legacy.mail.model.Timer');
-const Timers = require('im_livechat.legacy.mail.model.Timers');
+import CCThrottleFunction from '@im_livechat/legacy/models/cc_throttle_function';
+import Timer from '@im_livechat/legacy/models/timer';
+import Timers from '@im_livechat/legacy/models/timers';
 
-const core = require('web.core');
-const { sprintf } = require('web.utils');
+import core from 'web.core';
+import { sprintf } from 'web.utils';
 
 const _t = core._t;
 
@@ -356,6 +355,4 @@ const ThreadTypingMixin = {
     },
 };
 
-return ThreadTypingMixin;
-
-});
+export default ThreadTypingMixin;

@@ -1,12 +1,11 @@
-odoo.define('im_livechat.legacy.im_livechat.WebsiteLivechatWindow', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const AbstractThreadWindow = require('im_livechat.legacy.mail.AbstractThreadWindow');
+import AbstractThreadWindow from '@im_livechat/legacy/widgets/abstract_thread_window';
 
 /**
  * This is the widget that represent windows of livechat in the frontend.
  *
- * @see im_livechat.legacy.mail.AbstractThreadWindow for more information
+ * @see @im_livechat/legacy/widgets/abstract_thread_window for more information
  */
 const LivechatWindow = AbstractThreadWindow.extend({
     events: Object.assign(AbstractThreadWindow.prototype.events, {
@@ -14,8 +13,8 @@ const LivechatWindow = AbstractThreadWindow.extend({
     }),
     /**
      * @override
-     * @param {im_livechat.legacy.im_livechat.LivechatButton} parent
-     * @param {im_livechat.legacy.im_livechat.model.WebsiteLivechat} thread
+     * @param {@im_livechat/legacy/widgets/livechat_button} parent
+     * @param {@im_livechat/legacy/models/website_livechat} thread
      * @param {Object} [options={}]
      * @param {string} [options.headerBackgroundColor]
      * @param {string} [options.titleColor]
@@ -100,6 +99,4 @@ const LivechatWindow = AbstractThreadWindow.extend({
     },
 });
 
-return LivechatWindow;
-
-});
+export default LivechatWindow;

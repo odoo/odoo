@@ -1,10 +1,9 @@
 odoo.define('website_livechat.legacy.website_livechat.livechat_request', function (require) {
 "use strict";
 
-var utils = require('web.utils');
-var LivechatButton = require('im_livechat.legacy.im_livechat.LivechatButton');
 const config = require('web.config');
-
+var LivechatButton = require('@im_livechat/legacy/widgets/livechat_button')[Symbol.for("default")];
+var utils = require('web.utils');
 
 LivechatButton.include({
     className: `${LivechatButton.prototype.className} o_bottom_fixed_element o_bottom_fixed_element_move_up o_website_livechat_button fa fa-commenting`,

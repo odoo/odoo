@@ -1,9 +1,8 @@
-odoo.define('im_livechat.legacy.mail.DocumentViewer', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const core = require('web.core');
-const Widget = require('web.Widget');
-const { hidePDFJSButtons } = require('@web/legacy/js/libs/pdfjs');
+import core from 'web.core';
+import Widget from 'web.Widget';
+import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
 
 const QWeb = core.qweb;
 
@@ -389,5 +388,4 @@ const DocumentViewer = Widget.extend({
         this._zoom(1);
     },
 });
-return DocumentViewer;
-});
+export default DocumentViewer;

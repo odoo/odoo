@@ -6,7 +6,7 @@ import session from 'web.session';
 import time from 'web.time';
 import utils from 'web.utils';
 
-import LivechatButton from 'im_livechat.legacy.im_livechat.LivechatButton';
+import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
 
 const _t = core._t;
 const QWeb = core.qweb;

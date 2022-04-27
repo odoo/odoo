@@ -1,9 +1,8 @@
-odoo.define('im_livechat.legacy.mail.model.Timers', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const Timer = require('im_livechat.legacy.mail.model.Timer');
+import Timer from '@im_livechat/legacy/models/timer';
 
-const Class = require('web.Class');
+import Class from 'web.Class';
 
 /**
  * This class lists several timers that use a same callback and duration.
@@ -77,6 +76,4 @@ const Timers = Class.extend({
 
 });
 
-return Timers;
-
-});
+export default Timers;
