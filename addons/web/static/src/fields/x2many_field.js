@@ -130,10 +130,11 @@ export class X2ManyField extends Component {
         const deleteFn = this.removeRecordFromList.bind(this);
 
         let canLink = "link" in options ? evalDomain(options.link, evalContext) : true;
-        const canUnlink = "unlink" in options ? evalDomain(options.unlink, evalContext) : true;
+        let canUnlink = "unlink" in options ? evalDomain(options.unlink, evalContext) : true;
 
         if (!this.isMany2Many) {
-            canLink = canCreate;
+            canLink = false;
+            canUnlink = false;
         }
 
         if (this.viewMode !== "list") {
@@ -148,7 +149,7 @@ export class X2ManyField extends Component {
 
         const result = { canCreate, canDelete, canLink, canUnlink };
 
-        if (canDelete) {
+        if (canDelete || canUnlink) {
             result.onDelete = deleteFn;
         }
 

@@ -25,7 +25,8 @@
                     <t t-call="web.ListRenderer.Rows">
                         <t t-set="list" t-value="props.list"/>
                     </t>
-                    <tr t-if="props.activeActions and props.activeActions.canCreate">
+                    <t t-set="activeActions" t-value="props.activeActions" />
+                    <tr t-if="activeActions and (activeActions.canCreate or activeActions.canUnlink)">
                         <td t-if="withHandleColumn"/>
                         <td t-att-colspan="state.columns.length + 1"
                             class="o_field_x2many_list_row_add"

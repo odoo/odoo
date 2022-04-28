@@ -922,15 +922,15 @@ QUnit.module("Fields", (hooks) => {
         ]);
     });
 
-    QUnit.skipWOWL("many2many: create & delete attributes (both true)", async function (assert) {
+    QUnit.test("many2many: create & delete attributes (both true)", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records[0].timmy = [12, 14];
+        serverData.models.partner.records[0].timmy = [12, 14];
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="timmy">' +
@@ -939,30 +939,28 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
-        await testUtils.form.clickEdit(form);
+        await clickEdit(target);
 
         assert.containsOnce(
-            form,
+            target,
             ".o_field_x2many_list_row_add",
             "should have the 'Add an item' link"
         );
-        assert.containsN(form, ".o_list_record_remove", 2, "should have the 'Add an item' link");
-
-        form.destroy();
+        assert.containsN(target, ".o_list_record_remove", 2, "should have the 'Add an item' link");
     });
 
-    QUnit.skipWOWL("many2many: create & delete attributes (both false)", async function (assert) {
+    QUnit.test("many2many: create & delete attributes (both false)", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records[0].timmy = [12, 14];
+        serverData.models.partner.records[0].timmy = [12, 14];
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="timmy">' +
@@ -971,24 +969,22 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
-        await testUtils.form.clickEdit(form);
+        await clickEdit(target);
 
         assert.containsOnce(
-            form,
+            target,
             ".o_field_x2many_list_row_add",
             "should have the 'Add an item' link"
         );
         assert.containsN(
-            form,
+            target,
             ".o_list_record_remove",
             2,
             "each record should have the 'Remove Item' link"
         );
-
-        form.destroy();
     });
 
     QUnit.skipWOWL("many2many list: create action disabled", async function (assert) {
