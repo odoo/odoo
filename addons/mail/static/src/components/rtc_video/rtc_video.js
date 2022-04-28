@@ -20,15 +20,6 @@ export class RtcVideo extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {RtcSession|undefined}
-     */
-    get rtcSession() {
-        return this.messaging.models['RtcSession'].get(
-            this.props.rtcSessionLocalId
-        );
-    }
-
-    /**
      * @returns {RtcVideoView}
      */
      get rtcVideoView() {
@@ -53,10 +44,13 @@ export class RtcVideo extends Component {
         if (!this.root.el) {
             return;
         }
-        if (!this.rtcSession || !this.rtcSession.videoStream) {
+        if (!this.rtcVideoView) {
+            return;
+        }
+        if (!this.rtcVideoView.rtcSession || !this.rtcVideoView.rtcSession.videoStream) {
             this.root.el.srcObject = undefined;
         } else {
-            this.root.el.srcObject = this.rtcSession.videoStream;
+            this.root.el.srcObject = this.rtcVideoView.rtcSession.videoStream;
         }
         this.root.el.load();
     }
@@ -64,10 +58,7 @@ export class RtcVideo extends Component {
 }
 
 Object.assign(RtcVideo, {
-    props: {
-        localId: String,
-        rtcSessionLocalId: String,
-    },
+    props: { localId: String },
     template: 'mail.RtcVideo',
 });
 

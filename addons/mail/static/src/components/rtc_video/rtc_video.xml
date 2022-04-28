@@ -2,13 +2,13 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.RtcVideo" owl="1">
-        <t t-if="rtcVideoView and rtcSession">
+        <t t-if="rtcVideoView">
             <video class="o_RtcVideo"
                 t-attf-class="{{ className }}"
                 playsinline="true"
                 autoplay="true"
                 muted="true"
-                t-on-loadedmetadata="rtcSession.onVideoLoadedMetaData"
+                t-on-loadedmetadata="rtcVideoView.rtcSession.onVideoLoadedMetaData"
                 t-ref="root"
             />
         </t>
