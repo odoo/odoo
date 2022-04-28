@@ -1087,3 +1087,33 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertTrue(event, "It should have created an event")
         self.assertEqual(event.videocall_location, 'https://meet.google.com/odoo-random-test')
         self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_event_with_availability(self):
+        values = {
+            'id': 'oj44nep1ldf8a3ll02uip0c9aa',
+            'description': 'Small mini desc',
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': 'Pricing new update',
+            'visibility': 'public',
+            'attendees': [{
+                'displayName': 'Mitchell Admin',
+                'email': 'admin@yourcompany.example.com',
+                'responseStatus': 'needsAction'
+            },],
+            'reminders': {'useDefault': True},
+            'start': {
+                'dateTime': '2020-01-13T16:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+            'end': {
+                'dateTime': '2020-01-13T19:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+            'transparency': 'transparent'
+        }
+        self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
+        event = self.env['calendar.event'].search([('google_id', '=', values.get('id'))])
+        self.assertTrue(event, "It should have created an event")
+        self.assertEqual(event.show_as, 'free')
+        self.assertGoogleAPINotCalled
