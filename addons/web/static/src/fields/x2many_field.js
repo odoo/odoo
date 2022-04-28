@@ -329,7 +329,8 @@ class X2ManyFieldDialog extends Component {
 
         this.modalRef = useChildRef();
 
-        useViewButtons(this.props.record.model, this.modalRef); // maybe pass the model directly in props
+        const reload = () => this.record.load();
+        useViewButtons(this.props.record.model, this.modalRef, { reload }); // maybe pass the model directly in props
 
         if (this.archInfo.xmlDoc.querySelector("footer")) {
             this.footerArchInfo = Object.assign({}, this.archInfo);

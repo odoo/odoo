@@ -15,11 +15,12 @@ function disableButtons(el) {
     return btns;
 }
 
-export function useViewButtons(model, ref, beforeExecuteAction = () => {}) {
+export function useViewButtons(model, ref, options = {}) {
     const action = useService("action");
     const dialog = useService("dialog");
     const comp = owl.useComponent();
     const env = useEnv();
+    const beforeExecuteAction = options.beforeExecuteAction || (() => {});
     useSubEnv({
         async onClickViewButton({ clickParams, record }) {
             const manuallyDisabledButtons = disableButtons(getEl());
@@ -51,7 +52,8 @@ export function useViewButtons(model, ref, beforeExecuteAction = () => {}) {
                 context: envContext,
                 buttonContext,
                 onClose: async () => {
-                    await record.load();
+                    const reload = options.reload || (() => record.model.root.load());
+                    await reload();
                     comp.render(true); // FIXME WOWL reactivity
                 },
             });

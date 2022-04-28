@@ -177,11 +177,12 @@ export class FormView extends Component {
             this.archInfo.arch = this.archInfo.xmlDoc.outerHTML;
         }
 
-        useViewButtons(this.model, useRef("root"), (clickParams) => {
+        const beforeExecuteAction = (clickParams) => {
             if (clickParams.special !== "cancel") {
                 return this.model.root.save({ stayInEdition: true });
             }
-        });
+        };
+        useViewButtons(this.model, useRef("root"), { beforeExecuteAction });
         useSetupView({
             beforeLeave: () => {
                 if (this.model.root.isDirty) {
