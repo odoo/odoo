@@ -165,7 +165,7 @@ registerModel({
             readonly: true,
             required: true,
         }),
-        activityMarkDonePopoverView: one('ActivityMarkDonePopoverView', {
+        activityMarkDonePopoverContentView: one('ActivityMarkDonePopoverContentView', {
             default: insertAndReplace(),
             inverse: 'activityViewOwner',
             isCausal: true,
