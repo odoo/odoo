@@ -6858,7 +6858,9 @@ registry.ColoredLevelBackground = registry.BackgroundToggler.extend({
      * @private
      */
     _markColorLevel: function () {
+        this.options.wysiwyg.odooEditor.observerUnactive('_markColorLevel');
         this.$target.addClass('o_colored_level');
+        this.options.wysiwyg.odooEditor.observerActive('_markColorLevel');
     },
 });
 
