@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component, onMounted, onWillUnmount } = owl;
@@ -11,6 +12,7 @@ export class MessagingMenu extends Component {
      */
     setup() {
         super.setup();
+        useComponentToModel({ fieldName: 'component', modelName: 'MessagingMenu' });
         /**
          * global JS generated ID for this component. Useful to provide a
          * custom class to autocomplete input, so that click in an autocomplete

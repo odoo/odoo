@@ -2,6 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'MessageListView',
@@ -15,6 +16,16 @@ registerModel({
                 return this.threadViewOwner.threadViewer.chatter.scrollPanelRef.el;
             }
             return this.component.root.el;
+        },
+        /**
+         * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeHasScrollAdjust() {
+            if (this.threadViewOwner.threadViewer.chatter) {
+                return this.threadViewOwner.threadViewer.chatter.hasMessageListScrollAdjust;
+            }
+            return clear();
         },
         /***
          * @private
@@ -38,6 +49,10 @@ registerModel({
          * States the OWL component of this message list view
          */
         component: attr(),
+        hasScrollAdjust: attr({
+            compute: '_computeHasScrollAdjust',
+            default: true,
+        }),
         /**
          * States whether the message list scroll position is at the end of
          * the message list. Depending of the message list order, this could be

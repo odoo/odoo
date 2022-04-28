@@ -122,6 +122,7 @@ registerModel({
         activeTabId: attr({
             default: 'all',
         }),
+        component: attr(),
         /**
          * States the counter of this messaging menu. The counter is an integer
          * value to give to the current user an estimate of how many things

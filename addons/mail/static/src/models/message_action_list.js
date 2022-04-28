@@ -74,6 +74,13 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string}
+         */
+        _computeAddReactionText() {
+            return this.env._t("Add a Reaction");
+        },
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeHasMarkAsReadIcon() {
@@ -103,6 +110,9 @@ registerModel({
          * States the reference to the reaction action in the component.
          */
         actionReactionRef: attr(),
+        addReactionText: attr({
+            compute: '_computeAddReactionText',
+        }),
         deleteConfirmDialog: one('Dialog', {
             inverse: 'messageActionListOwnerAsDeleteConfirm',
             isCausal: true,
