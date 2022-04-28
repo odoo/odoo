@@ -1383,16 +1383,16 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("many2many list: list of id as default value", async function (assert) {
+    QUnit.test("many2many list: list of id as default value", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.fields.turtles.default = [2, 3];
-        this.data.partner.fields.turtles.type = "many2many";
+        serverData.models.partner.fields.turtles.default = [2, 3];
+        serverData.models.partner.fields.turtles.type = "many2many";
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles">' +
@@ -1404,12 +1404,10 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            form.$("td.o_data_cell").text(),
+            $(target).find("td.o_data_cell").text(),
             "blipkawa",
             "should have loaded default data"
         );
-
-        form.destroy();
     });
 
     QUnit.skipWOWL("many2many checkboxes with default values", async function (assert) {
@@ -1475,32 +1473,33 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skipWOWL("many2many list with x2many: add a record", async function (assert) {
+    QUnit.test("many2many list with x2many: add a record", async function (assert) {
         assert.expect(18);
 
-        this.data.partner_type.fields.m2m = {
+        serverData.models.partner_type.fields.m2m = {
             string: "M2M",
             type: "many2many",
             relation: "turtle",
         };
-        this.data.partner_type.records[0].m2m = [1, 2];
-        this.data.partner_type.records[1].m2m = [2, 3];
+        serverData.models.partner_type.records[0].m2m = [1, 2];
+        serverData.models.partner_type.records[1].m2m = [2, 3];
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        serverData.views = {
+            "partner_type,false,list":
+                "<tree>" +
+                '<field name="display_name"/>' +
+                '<field name="m2m" widget="many2many_tags"/>' +
+                "</tree>",
+            "partner_type,false,search":
+                "<search>" + '<field name="display_name" string="Name"/>' + "</search>",
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch: '<form string="Partners">' + '<field name="timmy"/>' + "</form>",
-            res_id: 1,
-            archs: {
-                "partner_type,false,list":
-                    "<tree>" +
-                    '<field name="display_name"/>' +
-                    '<field name="m2m" widget="many2many_tags"/>' +
-                    "</tree>",
-                "partner_type,false,search":
-                    "<search>" + '<field name="display_name" string="Name"/>' + "</search>",
-            },
+            resId: 1,
             mockRPC: function (route, args) {
                 if (args.method !== "get_views") {
                     assert.step(_.last(route.split("/")) + " on " + args.model);
@@ -1508,59 +1507,55 @@ QUnit.module("Fields", (hooks) => {
                 if (args.model === "turtle") {
                     assert.step(JSON.stringify(args.args[0])); // the read ids
                 }
-                return this._super.apply(this, arguments);
-            },
-            viewOptions: {
-                mode: "edit",
             },
         });
 
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
-        await testUtils.dom.click($(".modal .o_data_row:first"));
+        await clickEdit(target);
+
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+        await click($(target).find(".modal .o_data_row:first .o_data_cell")[0]);
 
         assert.containsOnce(
-            form,
+            target,
             ".o_data_row",
             "the record should have been added to the relation"
         );
         assert.strictEqual(
-            form.$(".o_data_row:first .o_badge_text").text(),
+            $(target).find(".o_data_row:first .o_tag_badge_text").text(),
             "leonardodonatello",
             "inner m2m should have been fetched and correctly displayed"
         );
 
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
-        await testUtils.dom.click($(".modal .o_data_row:first"));
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+        await click(target.querySelector(".modal .o_data_row:nth-child(1) .o_data_cell"));
 
         assert.containsN(
-            form,
+            target,
             ".o_data_row",
             2,
             "the second record should have been added to the relation"
         );
         assert.strictEqual(
-            form.$(".o_data_row:nth(1) .o_badge_text").text(),
+            $(target).find(".o_data_row:nth(1) .o_tag_badge_text").text(),
             "donatelloraphael",
             "inner m2m should have been fetched and correctly displayed"
         );
 
         assert.verifySteps([
             "read on partner",
-            "search_read on partner_type",
+            "web_search_read on partner_type",
             "read on turtle",
             "[1,2,3]",
             "read on partner_type",
             "read on turtle",
             "[1,2]",
-            "search_read on partner_type",
+            "web_search_read on partner_type",
             "read on turtle",
             "[2,3]",
             "read on partner_type",
             "read on turtle",
             "[2,3]",
         ]);
-
-        form.destroy();
     });
 
     QUnit.skipWOWL("many2many with a domain", async function (assert) {
