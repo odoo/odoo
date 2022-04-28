@@ -515,20 +515,22 @@ class ProductProduct(models.Model):
             positive_operators = ['=', 'ilike', '=ilike', 'like', '=like']
             product_ids = []
             if operator in positive_operators:
-                product_ids = self._search([('default_code', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid)
-                if not product_ids:
-                    product_ids = self._search([('barcode', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid)
+                product_ids = list(self._search([('barcode', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid))
             if not product_ids and operator not in expression.NEGATIVE_TERM_OPERATORS:
-                # Do not merge the 2 next lines into one single search, SQL search performance would be abysmal
-                # on a database with thousands of matching products, due to the huge merge+unique needed for the
-                # OR operator (and given the fact that the 'name' lookup results come from the ir.translation table
-                # Performing a quick memory merge of ids in Python will give much better performance
-                product_ids = self._search(args + [('default_code', operator, name)], limit=limit)
+                product_ids = list(self._search([('default_code', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid))
                 if not limit or len(product_ids) < limit:
-                    # we may underrun the limit because of dupes in the results, that's fine
                     limit2 = (limit - len(product_ids)) if limit else False
-                    product2_ids = self._search(args + [('name', operator, name), ('id', 'not in', product_ids)], limit=limit2, access_rights_uid=name_get_uid)
+                    # Do not merge the 2 next lines into one single search, SQL search performance would be abysmal
+                    # on a database with thousands of matching products, due to the huge merge+unique needed for the
+                    # OR operator (and given the fact that the 'name' lookup results come from the ir.translation table
+                    # Performing a quick memory merge of ids in Python will give much better performance
+                    product2_ids = list(self._search(args + [('default_code', operator, name), ('id', 'not in', product_ids)], limit=limit2))
                     product_ids.extend(product2_ids)
+                    if not limit2 or len(product_ids) < limit2:
+                        # we may underrun the limit because of dupes in the results, that's fine
+                        limit3 = (limit2 - len(product_ids)) if limit2 else False
+                        product3_ids = self._search(args + [('name', operator, name), ('id', 'not in', product_ids)], limit=limit3, access_rights_uid=name_get_uid)
+                        product_ids.extend(product3_ids)
             elif not product_ids and operator in expression.NEGATIVE_TERM_OPERATORS:
                 domain = expression.OR([
                     ['&', ('default_code', operator, name), ('name', operator, name)],
