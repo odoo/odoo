@@ -119,6 +119,7 @@ function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType) {
         }
 
         if (Widget.prototype.fieldsToFetch) {
+            fieldDescr.fieldsToFetch = fieldDescr.fieldsToFetch || {};
             fieldInfo.relatedFields = { ...Widget.prototype.fieldsToFetch };
             fieldInfo.viewType = "default";
             const defaultView = {};
@@ -831,6 +832,61 @@ export class StaticList extends DataPoint {
             return;
         }
         await this.__syncParent(operation);
+    }
+
+    async resequence(movedId, targetId, options = {}) {
+        const handleField = options.handleField || "sequence";
+        const fromIndex = this.records.findIndex((r) => r.id === movedId);
+        const toIndex = targetId ? this.records.findIndex((r) => r.id === targetId) : 0;
+
+        const record = this.records[fromIndex];
+
+        const lowerIndex = Math.min(fromIndex, toIndex);
+        const upperIndex = Math.max(fromIndex, toIndex) + 1;
+
+        const order = this.orderBy.find((o) => o.name === handleField);
+        const asc = !order || order.asc;
+
+        // determine if we need to reorder all records
+        let reorderAll = false;
+        let currentSequence;
+        for (let i = 0; i < this.records.length; i++) {
+            const sequence = this.records[i].data[handleField];
+            if (currentSequence && !reorderAll) {
+                reorderAll = currentSequence === sequence;
+                if (!reorderAll && (i < lowerIndex || i >= upperIndex)) {
+                    reorderAll = asc ? sequence < currentSequence : sequence > currentSequence;
+                }
+            }
+            currentSequence = sequence;
+        }
+
+        this.records = this.records.filter((r) => r.id !== movedId);
+        this.records.splice(toIndex, 0, record);
+
+        let records = this.records;
+        if (!reorderAll) {
+            records = records.slice(lowerIndex, upperIndex).filter((r) => r.id !== movedId);
+            if (fromIndex < toIndex) {
+                records.push(record);
+            } else {
+                records.unshift(record);
+            }
+        }
+        if (!asc) {
+            records.reverse();
+        }
+
+        const sequences = records.filter((r) => Boolean(r.resId)).map((r) => r[handleField]);
+        const offset = Math.min(...sequences);
+
+        const operations = records.map((record, i) => ({
+            operation: "UPDATE",
+            id: record.__bm_handle__,
+            data: { [handleField]: offset + i },
+        }));
+        await Promise.all(operations.map(this.__syncParent));
+        this.model.notify();
     }
 
     async unselectRecord() {

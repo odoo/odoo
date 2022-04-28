@@ -1339,19 +1339,35 @@ class DynamicList extends DataPoint {
      * @param {string} idProperty property on the given list used to determine each ID
      * @param {string} [movedId]
      * @param {string} [targetId]
+     * @param {Object} [options={}]
+     * @param {string} [options.handleField]
      * @returns {Promise<(Group | Record)[]>}
      */
-    async _resequence(list, idProperty, movedId, targetId) {
+    async _resequence(list, idProperty, movedId, targetId, options = {}) {
         if (movedId) {
             const target = list.find((r) => r.id === movedId);
             const index = targetId ? list.findIndex((r) => r.id === targetId) : 0;
             list = list.filter((r) => r.id !== movedId);
             list.splice(index, 0, target);
         }
+        const handleField = options.handleField || "sequence";
         const model = this.resModel;
-        const ids = list.map((r) => r[idProperty]).filter(Boolean);
+        const ids = [];
+        const sequences = [];
+        for (const el of list) {
+            if (el[idProperty]) {
+                ids.push(el[idProperty]);
+                sequences.push(el[handleField]);
+            }
+        }
         // FIMME: can't go though orm, so no context given
-        await this.model.rpc("/web/dataset/resequence", { model, ids });
+        await this.model.rpc("/web/dataset/resequence", {
+            model,
+            ids,
+            field: handleField,
+            offset: Math.min(...sequences),
+            context: this.context,
+        });
         this.model.notify();
         return list;
     }

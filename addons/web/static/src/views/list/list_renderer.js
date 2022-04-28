@@ -10,6 +10,7 @@ import { registry } from "@web/core/registry";
 import { Field } from "@web/fields/field";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "../helpers/view_hook";
+import { useSortable } from "@web/core/utils/ui";
 import { Pager } from "@web/core/pager/pager";
 
 const {
@@ -79,7 +80,29 @@ export class ListRenderer extends Component {
             }
             this.cellToFocus = null;
         });
+        let dataRowId;
         const rootRef = useRef("root");
+        useSortable({
+            ref: rootRef,
+            setup: () =>
+                this.canResequenceRows && {
+                    items: ".o_row_draggable",
+                    axis: "y",
+                    handle: ".o_handle_cell",
+                    cursor: "grabbing",
+                },
+            onStart: (_list, item) => {
+                dataRowId = item.dataset.id;
+                item.classList.add("o_dragged");
+            },
+            onStop: (_list, item) => item.classList.remove("o_dragged"),
+            onDrop: async ({ item, previous }) => {
+                item.classList.remove("o_row_draggable");
+                const refId = previous ? previous.dataset.id : null;
+                await this.props.list.resequence(dataRowId, refId);
+                item.classList.add("o_row_draggable");
+            },
+        });
         useBounceButton(rootRef, () => {
             return this.showNoContentHelper;
         });
@@ -110,6 +133,10 @@ export class ListRenderer extends Component {
             },
             () => [this.state.columns, this.isEmpty]
         );
+    }
+
+    get canResequenceRows() {
+        return true;
     }
 
     /**
@@ -330,6 +357,9 @@ export class ListRenderer extends Component {
         }
         if (this.props.list.model.useSampleModel) {
             classNames.push("o_sample_data_disabled");
+        }
+        if (this.canResequenceRows) {
+            classNames.push("o_row_draggable");
         }
         return classNames.join(" ");
     }
