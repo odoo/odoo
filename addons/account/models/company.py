@@ -168,6 +168,12 @@ class ResCompany(models.Model):
         help="Account that will be set on lines created in cash basis journal entry and used to keep track of the "
              "tax base amount.")
 
+    # Analytics
+    analytic_plan_id = fields.Many2one('account.analytic.plan', string="Default Plan", check_company=True,
+                                       readonly=False,
+                                      default=lambda self: self.env.ref('analytic.analytic_plan_default').id,
+                                               help="Default Plan for a new analytic account")
+
     # Storno Accounting
     account_storno = fields.Boolean(string="Storno accounting", readonly=False)
 

@@ -46,5 +46,19 @@
         <record id="base.res_partner_1" model="res.partner">
             <field name="property_supplier_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         </record>
+
+        <!-- Analytic part -->
+
+
+        <!-- Analytic Plans -->
+        <record id="analytic.analytic_plan_projects" model="account.analytic.plan">
+            <field name="default_applicability">optional</field>
+        </record>
+        <record id="analytic.analytic_plan_departments" model="account.analytic.plan">
+            <field name="default_applicability">mandatory</field>
+        </record>
+        <record id="analytic.analytic_plan_internal" model="account.analytic.plan">
+            <field name="default_applicability">unavailable</field>
+        </record>
     </data>
 </odoo>

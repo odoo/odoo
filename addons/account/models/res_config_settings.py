@@ -152,6 +152,12 @@ class ResConfigSettings(models.TransientModel):
     # Technical field to hide country specific fields from accounting configuration
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
 
+    # Analytic Accounting
+    analytic_plan_id = fields.Many2one(comodel_name='account.analytic.plan',
+                                       string="Default Plan",
+                                       readonly=False,
+                                       related='company_id.analytic_plan_id',)
+
     # Storno Accounting
     account_storno = fields.Boolean(string="Storno accounting", readonly=False, related='company_id.account_storno')
 

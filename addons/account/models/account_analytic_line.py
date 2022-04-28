@@ -4,6 +4,33 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
+class AccountAnalyticPlan(models.Model):
+    _inherit = 'account.analytic.plan'
+
+    default_applicability = fields.Selection([
+        ('optional', 'Optional'),
+        ('mandatory', 'Mandatory'),
+        ('unavailable', 'Unavailable'),
+    ], string="Default Applicability", required=True, default='optional', readonly=False)
+    applicability_ids = fields.One2many('account.analytic.applicability', 'analytic_plan_id', string='Applicability')
+
+    def get_applicability(self, domain=None, account_id=None, product_categ_id=None):
+        best_index = 0
+        res = self.default_applicability
+        for rec in self.applicability_ids:
+            index = 0
+            if rec.domain == domain:
+                index += 1
+            if rec.account_prefix and account_id in self.env['account.account'].search([('code', 'ilike', rec.account_prefix + '%')]):
+                index += 1
+            if rec.product_categ_id == product_categ_id:
+                index += 1
+            if index > best_index:
+                res = rec.applicability
+                best_index = index
+        return res
+
+
 class AccountAnalyticAccount(models.Model):
     _inherit = 'account.analytic.account'
 
@@ -80,6 +107,28 @@ class AccountAnalyticAccount(models.Model):
         }
         return result
 
+
+class AccountAnalyticApplicability(models.Model):
+    _name = 'account.analytic.applicability'
+    _description = "Analytic Plan's Applicabilities"
+
+    analytic_plan_id = fields.Many2one('account.analytic.plan')
+    domain = fields.Selection([
+        ('sale', 'Sales'),
+        ('purchase', 'Purchase'),
+        ('general', 'Miscellaneous'),
+    ], required=True, string='Domain')
+    account_prefix = fields.Char(string='Account Prefix', default='',
+                                 help="Prefix that define which accounts this applicability should apply on.")
+    product_categ_id = fields.Many2one('product.category', string='Product Category')
+    applicability = fields.Selection([
+        ('optional', 'Optional'),
+        ('mandatory', 'Mandatory'),
+        ('unavailable', 'Unavailable'),
+    ], required=True, string="Applicability")
+
+
+
 class AccountAnalyticTag(models.Model):
     _inherit = 'account.analytic.tag'
 
@@ -110,20 +159,31 @@ class AccountAnalyticLine(models.Model):
     _description = 'Analytic Line'
 
     product_id = fields.Many2one('product.product', string='Product', check_company=True)
-    general_account_id = fields.Many2one('account.account', string='Financial Account', ondelete='restrict', readonly=True,
-                                         related='move_id.account_id', store=True, domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
-                                         compute_sudo=True)
+    general_account_id = fields.Many2one('account.account', string='Financial Account', ondelete='restrict',
+                                         domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
+                                         readonly=False, compute="_compute_on_move_id", store=True)
+    journal_id = fields.Many2one('account.journal', string='Financial Journal', check_company=True,
+                                 readonly=False, compute="_compute_on_move_id", store=True)
     move_id = fields.Many2one('account.move.line', string='Journal Item', ondelete='cascade', index=True, check_company=True)
     code = fields.Char(size=8)
     ref = fields.Char(string='Ref.')
     category = fields.Selection(selection_add=[('invoice', 'Customer Invoice'), ('vendor_bill', 'Vendor Bill')])
+
+    @api.depends('move_id')
+    def _compute_on_move_id(self):
+        #TODO Check partner_id if stable with other modules
+        #super(AccountAnalyticLine, self)._compute_partner_id()
+        for line in self:
+            if line.move_id:
+                line.general_account_id = line.move_id.account_id
+                line.journal_id = line.move_id.journal_id
+                line.partner_id = line.move_id.partner_id or line.partner_id
 
     @api.onchange('product_id', 'product_uom_id', 'unit_amount', 'currency_id')
     def on_change_unit_amount(self):
         if not self.product_id:
             return {}
 
-        result = 0.0
         prod_accounts = self.product_id.product_tmpl_id.with_company(self.company_id)._get_product_accounts()
         unit = self.product_uom_id
         account = prod_accounts['expense']
