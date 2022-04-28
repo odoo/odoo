@@ -6,7 +6,6 @@ import ast
 import cgi
 import collections
 import contextlib
-import datetime
 import functools
 import hashlib
 import hmac
@@ -26,7 +25,7 @@ from os.path import join as opj
 from zlib import adler32
 
 import babel.core
-from datetime import datetime, date
+from datetime import datetime
 import passlib.utils
 import psycopg2
 import json
@@ -1602,7 +1601,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
     if isinstance(mtime, str):
         try:
             server_format = odoo.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
-            mtime = datetime.datetime.strptime(mtime.split('.')[0], server_format)
+            mtime = datetime.strptime(mtime.split('.')[0], server_format)
         except Exception:
             mtime = None
     if mtime is not None:
