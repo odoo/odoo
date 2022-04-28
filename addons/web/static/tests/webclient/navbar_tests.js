@@ -16,10 +16,11 @@ import {
     mount,
     nextTick,
     patchWithCleanup,
-    makeDeferred,
+    mockTimeout,
 } from "../helpers/utils";
 
 const { Component, xml } = owl;
+
 const systrayRegistry = registry.category("systray");
 const serviceRegistry = registry.category("services");
 
@@ -426,15 +427,7 @@ QUnit.test("'more' menu sections properly updated on app change", async (assert)
 QUnit.test("Do not execute adapt when navbar is destroyed", async (assert) => {
     assert.expect(5);
 
-    let prom = makeDeferred();
-
-    patchWithCleanup(browser, {
-        setTimeout: async (handler, delay, ...args) => {
-            await prom;
-            return handler(...args);
-        },
-        clearTimeout: () => {},
-    });
+    const execRegisteredTimeouts = mockTimeout();
     class MyNavbar extends NavBar {
         async adapt() {
             assert.step("adapt NavBar");
@@ -448,13 +441,10 @@ QUnit.test("Do not execute adapt when navbar is destroyed", async (assert) => {
     const navbar = await mount(MyNavbar, target, { env });
     assert.verifySteps(["adapt NavBar"]);
     window.dispatchEvent(new Event("resize"));
-    prom.resolve();
-    await prom;
-    prom = makeDeferred();
+    execRegisteredTimeouts();
     assert.verifySteps(["adapt NavBar"]);
     window.dispatchEvent(new Event("resize"));
     destroy(navbar);
-    prom.resolve();
-    await prom;
+    execRegisteredTimeouts();
     assert.verifySteps([]);
 });
