@@ -11,7 +11,7 @@ registerModel({
         _created() {
             document.addEventListener('dragenter', this._onDragenterListener, true);
             document.addEventListener('dragleave', this._onDragleaveListener, true);
-            document.addEventListener('drop', this._onDropListener, true);
+            document.addEventListener('drop', this._onDropListener);
 
             // Thoses Events prevent the browser to open or download the file if
             // it's dropped outside of the dropzone
@@ -21,7 +21,7 @@ registerModel({
         _willDelete() {
             document.removeEventListener('dragenter', this._onDragenterListener, true);
             document.removeEventListener('dragleave', this._onDragleaveListener, true);
-            document.removeEventListener('drop', this._onDropListener, true);
+            document.removeEventListener('drop', this._onDropListener);
 
             window.removeEventListener('dragover', ev => ev.preventDefault());
             window.removeEventListener('drop', ev => ev.preventDefault());
