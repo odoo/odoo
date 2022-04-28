@@ -63,7 +63,7 @@ class SaleOrder(models.Model):
     @api.depends('order_line')
     def _compute_website_order_line(self):
         for order in self:
-            order.website_order_line = order.order_line
+            order.website_order_line = order.order_line.filtered(lambda l: l._show_in_cart())
 
     @api.depends('order_line.product_uom_qty', 'order_line.product_id')
     def _compute_cart_info(self):
