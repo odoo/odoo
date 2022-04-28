@@ -298,6 +298,12 @@ class ProductTemplate(models.Model):
         # if the variant has no image anyway, spare some queries by using template
         return variant if variant.image_variant_128 else self
 
+    def _get_suitable_image_size(self, columns, x_size, y_size):
+        if x_size == 1 and y_size == 1 and columns >= 3:
+            return 'image_512'
+        return 'image_1024'
+
+
     def _get_current_company_fallback(self, **kwargs):
         """Override: if a website is set on the product or given, fallback to
         the company of the website. Otherwise use the one from parent method."""
