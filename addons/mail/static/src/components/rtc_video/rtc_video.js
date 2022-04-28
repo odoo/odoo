@@ -28,6 +28,13 @@ export class RtcVideo extends Component {
         );
     }
 
+    /**
+     * @returns {RtcVideoView}
+     */
+     get rtcVideoView() {
+        return this.messaging && this.messaging.models['RtcVideoView'].get(this.props.localId);
+    }
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -57,7 +64,10 @@ export class RtcVideo extends Component {
 }
 
 Object.assign(RtcVideo, {
-    props: { rtcSessionLocalId: String },
+    props: {
+        localId: String,
+        rtcSessionLocalId: String,
+    },
     template: 'mail.RtcVideo',
 });
 

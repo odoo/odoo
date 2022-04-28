@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.RtcVideo" owl="1">
-        <t t-if="rtcSession">
+        <t t-if="rtcVideoView and rtcSession">
             <video class="o_RtcVideo"
                 t-attf-class="{{ className }}"
                 playsinline="true"

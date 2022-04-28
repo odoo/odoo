@@ -19,8 +19,8 @@
                      t-on-click="callParticipantCard.onClick"
                 >
                     <!-- card -->
-                    <t t-if="callParticipantCard.rtcSession and callParticipantCard.rtcSession.videoStream">
-                        <RtcVideo rtcSessionLocalId="callParticipantCard.rtcSession.localId"/>
+                    <t t-if="callParticipantCard.rtcVideoView">
+                        <RtcVideo localId="callParticipantCard.rtcVideoView.localId" rtcSessionLocalId="callParticipantCard.rtcSession.localId"/>
                     </t>
                     <t t-else="">
                         <div class="o_RtcCallParticipantCard_avatarFrame mh-100 mw-100 h-100 align-items-center justify-content-center" t-att-class="{ 'o-isMinimized': callParticipantCard.isMinimized }" draggable="false">
