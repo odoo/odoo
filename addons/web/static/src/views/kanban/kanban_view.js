@@ -119,7 +119,7 @@ export class KanbanArchParser extends XMLParser {
         let kanbanBoxTemplate = createElement("t");
         let colorField = "color";
         let cardColorField = null;
-        let handleField = null;
+        let hasHandleWidget = null;
         const activeFields = {};
 
         // Root level of the template
@@ -143,7 +143,7 @@ export class KanbanArchParser extends XMLParser {
                     const tesc = createElement("span", { "t-esc": `getValue(record,'${name}')` });
                     node.replaceWith(tesc);
                 } else if (fieldInfo.widget === "handle") {
-                    handleField = name;
+                    hasHandleWidget = true;
                 }
             }
             // Converts server qweb attributes to Owl attributes.
@@ -289,7 +289,7 @@ export class KanbanArchParser extends XMLParser {
             activeFields,
             className,
             defaultGroupBy,
-            handleField,
+            hasHandleWidget,
             colorField,
             onCreate,
             quickCreateView,
