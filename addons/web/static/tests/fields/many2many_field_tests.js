@@ -1,12 +1,16 @@
 /** @odoo-module **/
 
-import { setupViewRegistries } from "../views/helpers";
+import { makeView, setupViewRegistries } from "../views/helpers";
+import { click, clickEdit, clickSave, editInput, getFixture, nextTick } from "../helpers/utils";
 
 // WOWL remove after adapting tests
 let createView, FormView, testUtils, cpHelpers;
 
 QUnit.module("Fields", (hooks) => {
+    let target;
+    let serverData;
     hooks.beforeEach(() => {
+        target = getFixture();
         // WOWL
         // eslint-disable-next-line no-undef
         serverData = {
@@ -202,18 +206,25 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("Many2ManyField");
 
-    QUnit.skipWOWL("many2many kanban: edition", async function (assert) {
+    QUnit.test("many2many kanban: edition", async function (assert) {
         assert.expect(33);
 
-        this.data.partner.records[0].timmy = [12, 14];
-        this.data.partner_type.records.push({ id: 15, display_name: "red", color: 6 });
-        this.data.partner_type.records.push({ id: 18, display_name: "yellow", color: 4 });
-        this.data.partner_type.records.push({ id: 21, display_name: "blue", color: 1 });
+        serverData.views = {
+            "partner_type,false,form": '<form string="Types"><field name="display_name"/></form>',
+            "partner_type,false,list": '<tree string="Types"><field name="display_name"/></tree>',
+            "partner_type,false,search":
+                '<search string="Types">' + '<field name="name" string="Name"/>' + "</search>",
+        };
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        serverData.models.partner.records[0].timmy = [12, 14];
+        serverData.models.partner_type.records.push({ id: 15, display_name: "red", color: 6 });
+        serverData.models.partner_type.records.push({ id: 18, display_name: "yellow", color: 4 });
+        serverData.models.partner_type.records.push({ id: 21, display_name: "blue", color: 1 });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="timmy">' +
@@ -233,15 +244,7 @@ QUnit.module("Fields", (hooks) => {
                 "</form>" +
                 "</field>" +
                 "</form>",
-            archs: {
-                "partner_type,false,form":
-                    '<form string="Types"><field name="display_name"/></form>',
-                "partner_type,false,list":
-                    '<tree string="Types"><field name="display_name"/></tree>',
-                "partner_type,false,search":
-                    '<search string="Types">' + '<field name="name" string="Name"/>' + "</search>",
-            },
-            res_id: 1,
+            resId: 1,
             mockRPC: function (route, args) {
                 if (route === "/web/dataset/call_kw/partner_type/write") {
                     assert.strictEqual(
@@ -266,7 +269,7 @@ QUnit.module("Fields", (hooks) => {
                         "generated command should be REPLACE WITH"
                     );
                     // get the created type's id
-                    var createdType = _.findWhere(this.data.partner_type.records, {
+                    var createdType = _.findWhere(serverData.models.partner_type.records, {
                         display_name: "A new type",
                     });
                     var ids = _.sortBy([12, 15, 18].concat(createdType.id), _.identity.bind(_));
@@ -275,85 +278,84 @@ QUnit.module("Fields", (hooks) => {
                         "new value should be " + ids
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         // the SelectCreateDialog requests the session, so intercept its custom
         // event to specify a fake session to prevent it from crashing
-        testUtils.mock.intercept(form, "get_session", function (event) {
-            event.data.callback({ user_context: {} });
-        });
+        // testUtils.mock.intercept(form, "get_session", function (event) {
+        //     event.data.callback({ user_context: {} });
+        // });
 
         assert.ok(
-            !form.$(".o_kanban_view .delete_icon").length,
+            !$(target).find(".o_kanban_renderer .delete_icon").length,
             "delete icon should not be visible in readonly"
         );
         assert.ok(
-            !form.$(".o_field_many2many .o-kanban-button-new").length,
+            !$(target).find(".o_field_many2many .o-kanban-button-new").length,
             '"Add" button should not be visible in readonly'
         );
 
-        await testUtils.form.clickEdit(form);
+        await clickEdit(target);
 
         assert.strictEqual(
-            form.$(".o_kanban_record:not(.o_kanban_ghost)").length,
+            $(target).find(".o_kanban_record:not(.o_kanban_ghost)").length,
             2,
             "should contain 2 records"
         );
         assert.strictEqual(
-            form.$(".o_kanban_record:first() span").text(),
+            $(target).find(".o_kanban_record:first() span").text(),
             "gold",
             "display_name of subrecord should be the one in DB"
         );
         assert.ok(
-            form.$(".o_kanban_view .delete_icon").length,
+            $(target).find(".o_kanban_renderer .delete_icon").length,
             "delete icon should be visible in edit"
         );
         assert.ok(
-            form.$(".o_field_many2many .o-kanban-button-new").length,
+            $(target).find(".o_field_many2many .o-kanban-button-new").length,
             '"Add" button should be visible in edit'
         );
         assert.strictEqual(
-            form.$(".o_field_many2many .o-kanban-button-new").text().trim(),
+            $(target).find(".o_field_many2many .o-kanban-button-new").text().trim(),
             "Add",
             'Create button should have "Add" label'
         );
 
         // edit existing subrecord
-        await testUtils.dom.click(form.$(".oe_kanban_global_click:first()"));
+        await click($(target).find(".oe_kanban_global_click:first()")[0]);
 
-        await testUtils.fields.editInput($(".modal .o_form_view input"), "new name");
-        await testUtils.dom.click($(".modal .modal-footer .btn-primary"));
+        await editInput(target, ".modal .o_form_view input", "new name");
+        await click($(".modal .modal-footer .btn-primary")[0]);
         assert.strictEqual(
-            form.$(".o_kanban_record:first() span").text(),
+            $(target).find(".o_kanban_record:first() span").text(),
             "new name",
             "value of subrecord should have been updated"
         );
 
         // add subrecords
         // -> single select
-        await testUtils.dom.click(form.$(".o_field_many2many .o-kanban-button-new"));
+        await click($(target).find(".o_field_many2many .o-kanban-button-new")[0]);
         assert.ok($(".modal .o_list_view").length, "should have opened a list view in a modal");
         assert.strictEqual(
             $(".modal .o_list_view tbody .o_list_record_selector").length,
             3,
             "list view should contain 3 records"
         );
-        await testUtils.dom.click($(".modal .o_list_view tbody tr:contains(red)"));
+        await click($(".modal .o_list_view tbody tr:contains(red) .o_data_cell")[0]);
         assert.ok(!$(".modal .o_list_view").length, "should have closed the modal");
         assert.strictEqual(
-            form.$(".o_kanban_record:not(.o_kanban_ghost)").length,
+            $(target).find(".o_kanban_record:not(.o_kanban_ghost)").length,
             3,
             "kanban should now contain 3 records"
         );
         assert.ok(
-            form.$(".o_kanban_record:contains(red)").length,
+            $(target).find(".o_kanban_record:contains(red)").length,
             'record "red" should be in the kanban'
         );
 
         // -> multiple select
-        await testUtils.dom.click(form.$(".o_field_many2many .o-kanban-button-new"));
+        await click($(target).find(".o_field_many2many .o-kanban-button-new")[0]);
         assert.ok(
             $(".modal .o_select_button").prop("disabled"),
             "select button should be disabled"
@@ -363,71 +365,71 @@ QUnit.module("Fields", (hooks) => {
             2,
             "list view should contain 2 records"
         );
-        await testUtils.dom.click($(".modal .o_list_view thead .o_list_record_selector input"));
-        await testUtils.dom.click($(".modal .o_select_button"));
+        await click($(".modal .o_list_view thead .o_list_record_selector input")[0]);
+        await nextTick();
+        await click($(".modal .o_select_button")[0]);
         assert.ok(
             !$(".modal .o_select_button").prop("disabled"),
             "select button should be enabled"
         );
         assert.ok(!$(".modal .o_list_view").length, "should have closed the modal");
         assert.strictEqual(
-            form.$(".o_kanban_record:not(.o_kanban_ghost)").length,
+            $(target).find(".o_kanban_record:not(.o_kanban_ghost)").length,
             5,
             "kanban should now contain 5 records"
         );
         // -> created record
-        await testUtils.dom.click(form.$(".o_field_many2many .o-kanban-button-new"));
-        await testUtils.dom.click($(".modal .modal-footer .btn-primary:nth(1)"));
+        await click($(target).find(".o_field_many2many .o-kanban-button-new")[0]);
+        await click($(".modal .modal-footer .btn-primary:nth(1)")[0]);
         assert.ok(
             $(".modal .o_form_view.o_form_editable").length,
             "should have opened a form view in edit mode, in a modal"
         );
-        await testUtils.fields.editInput($(".modal .o_form_view input"), "A new type");
-        await testUtils.dom.click($(".modal:nth(1) footer .btn-primary:first()"));
+        await editInput(target, ".modal .o_form_view input", "A new type");
+        await click($(".modal:not(.o_inactive_modal) footer .btn-primary:first()")[0]);
         assert.ok(!$(".modal").length, "should have closed both modals");
         assert.strictEqual(
-            form.$(".o_kanban_record:not(.o_kanban_ghost)").length,
+            $(target).find(".o_kanban_record:not(.o_kanban_ghost)").length,
             6,
             "kanban should now contain 6 records"
         );
         assert.ok(
-            form.$(".o_kanban_record:contains(A new type)").length,
+            $(target).find(".o_kanban_record:contains(A new type)").length,
             "the newly created type should be in the kanban"
         );
 
         // delete subrecords
-        await testUtils.dom.click(form.$(".o_kanban_record:contains(silver)"));
+        await click($(target).find(".o_kanban_record:contains(silver)")[0]);
         assert.strictEqual(
             $(".modal .modal-footer .o_btn_remove").length,
             1,
             "There should be a modal having Remove Button"
         );
-        await testUtils.dom.click($(".modal .modal-footer .o_btn_remove"));
+        await click($(".modal .modal-footer .o_btn_remove")[0]);
         assert.containsNone($(".o_modal"), "modal should have been closed");
         assert.strictEqual(
-            form.$(".o_kanban_record:not(.o_kanban_ghost)").length,
+            $(target).find(".o_kanban_record:not(.o_kanban_ghost)").length,
             5,
             "should contain 5 records"
         );
         assert.ok(
-            !form.$(".o_kanban_record:contains(silver)").length,
+            !$(target).find(".o_kanban_record:contains(silver)").length,
             "the removed record should not be in kanban anymore"
         );
 
-        await testUtils.dom.click(form.$(".o_kanban_record:contains(blue) .delete_icon"));
+        await click($(target).find(".o_kanban_record:contains(blue) .delete_icon")[0]);
         assert.strictEqual(
-            form.$(".o_kanban_record:not(.o_kanban_ghost)").length,
+            $(target).find(".o_kanban_record:not(.o_kanban_ghost)").length,
             4,
             "should contain 4 records"
         );
         assert.ok(
-            !form.$(".o_kanban_record:contains(blue)").length,
+            !$(target).find(".o_kanban_record:contains(blue)").length,
             "the removed record should not be in kanban anymore"
         );
 
         // save the record
-        await testUtils.form.clickSave(form);
-        form.destroy();
+        await clickSave(target);
     });
 
     QUnit.skipWOWL(
