@@ -296,7 +296,6 @@ export class KanbanArchParser extends XMLParser {
             className,
             defaultGroupBy,
             handleField,
-            hasHandleWidget: !!handleField,
             colorField,
             defaultOrder,
             onCreate,
