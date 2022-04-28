@@ -459,7 +459,7 @@ QUnit.test('[technical] new messages separator on posting message', async functi
     });
     const [mailChannelPartnerId] = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId1], ['partner_id', '=', pyEnv.currentPartnerId]]);
     pyEnv['mail.channel.partner'].write([mailChannelPartnerId], { seen_message_id: mailMessageId1 });
-    const { createThreadViewComponent, messaging } = await start();
+    const { createThreadViewComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel'
@@ -482,8 +482,7 @@ QUnit.test('[technical] new messages separator on posting message', async functi
         "should not display 'new messages' separator"
     );
 
-    document.querySelector('.o_ComposerTextInput_textarea').focus();
-    await afterNextRender(() => document.execCommand('insertText', false, "hey !"));
+    await insertText('.o_ComposerTextInput_textarea', "hey !");
     await afterNextRender(() => {
         // need to remove focus from text area to avoid set_last_seen_message
         document.querySelector('.o_Composer_buttonSend').focus();
@@ -630,7 +629,7 @@ QUnit.test('new messages separator on posting message', async function (assert) 
         channel_type: 'channel',
         name: "General",
     });
-    const { click, createThreadViewComponent, messaging } = await start();
+    const { click, createThreadViewComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel'
@@ -653,8 +652,7 @@ QUnit.test('new messages separator on posting message', async function (assert) 
         "should not display 'new messages' separator"
     );
 
-    document.querySelector('.o_ComposerTextInput_textarea').focus();
-    await afterNextRender(() => document.execCommand('insertText', false, "hey !"));
+    await insertText('.o_ComposerTextInput_textarea', "hey !");
     await click('.o_Composer_buttonSend');
     assert.containsOnce(
         document.body,
@@ -1515,7 +1513,7 @@ QUnit.test('first unseen message should be directly preceded by the new message 
         name: "General",
         uuid: 'channel20uuid',
     });
-    const { click, createThreadViewComponent, messaging } = await start();
+    const { click, createThreadViewComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel'
@@ -1527,8 +1525,7 @@ QUnit.test('first unseen message should be directly preceded by the new message 
     });
     await createThreadViewComponent(threadViewer.threadView);
     // send a command that leads to receiving a transient message
-    document.querySelector('.o_ComposerTextInput_textarea').focus();
-    await afterNextRender(() => document.execCommand('insertText', false, "/who"));
+    await insertText('.o_ComposerTextInput_textarea', "/who");
     await click('.o_Composer_buttonSend');
 
     // composer is focused by default, we remove that focus
@@ -1569,7 +1566,7 @@ QUnit.test('composer should be focused automatically after clicking on the send 
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { click, createThreadViewComponent, messaging } = await start();
+    const { click, createThreadViewComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel'
@@ -1580,8 +1577,7 @@ QUnit.test('composer should be focused automatically after clicking on the send 
         thread: link(thread),
     });
     await createThreadViewComponent(threadViewer.threadView);
-    document.querySelector('.o_ComposerTextInput_textarea').focus();
-    await afterNextRender(() => document.execCommand('insertText', false, "Dummy Message"));
+    await insertText('.o_ComposerTextInput_textarea', "Dummy Message");
     await click('.o_Composer_buttonSend');
     assert.hasClass(
         document.querySelector('.o_Composer'),

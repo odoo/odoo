@@ -371,7 +371,7 @@ QUnit.test('post message with "CTRL-Enter" keyboard shortcut', async function (a
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    const { click, createChatterContainerComponent } = await start();
+    const { click, createChatterContainerComponent, insertText } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',
@@ -383,10 +383,7 @@ QUnit.test('post message with "CTRL-Enter" keyboard shortcut', async function (a
     );
 
     await click('.o_ChatterTopbar_buttonSendMessage');
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "Test");
-    });
+    await insertText('.o_ComposerTextInput_textarea', "Test");
     await afterNextRender(() => {
         const kevt = new window.KeyboardEvent('keydown', { ctrlKey: true, key: "Enter" });
         document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
@@ -403,7 +400,7 @@ QUnit.test('post message with "META-Enter" keyboard shortcut', async function (a
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    const { click, createChatterContainerComponent } = await start();
+    const { click, createChatterContainerComponent, insertText } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',
@@ -415,10 +412,7 @@ QUnit.test('post message with "META-Enter" keyboard shortcut', async function (a
     );
 
     await click('.o_ChatterTopbar_buttonSendMessage');
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "Test");
-    });
+    await insertText('.o_ComposerTextInput_textarea', "Test");
     await afterNextRender(() => {
         const kevt = new window.KeyboardEvent('keydown', { key: "Enter", metaKey: true });
         document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
@@ -438,7 +432,7 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async function 
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    const { click, createChatterContainerComponent } = await start();
+    const { click, createChatterContainerComponent, insertText } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
         threadModel: 'res.partner',
@@ -450,10 +444,7 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async function 
     );
 
     await click('.o_ChatterTopbar_buttonSendMessage');
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "Test");
-    });
+    await insertText('.o_ComposerTextInput_textarea', "Test");
     const kevt = new window.KeyboardEvent('keydown', { key: "Enter" });
     document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
     await nextAnimationFrame();

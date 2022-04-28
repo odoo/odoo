@@ -334,7 +334,7 @@ QUnit.test('"reply to" composer should log note if message replied to is a note'
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { click } = await this.start({
+    const { click, insertText } = await this.start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.step('/mail/message/post');
@@ -377,9 +377,7 @@ QUnit.test('"reply to" composer should log note if message replied to is a note'
         "Send button text should be 'Log'"
     );
 
-    await afterNextRender(() =>
-        document.execCommand('insertText', false, "Test")
-    );
+    await insertText('.o_ComposerTextInput_textarea', "Test");
     await click('.o_Composer_buttonSend');
     assert.verifySteps(['/mail/message/post']);
 });
@@ -403,7 +401,7 @@ QUnit.test('"reply to" composer should send message if message replied to is not
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { click } = await this.start({
+    const { click, insertText } = await this.start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.step('/mail/message/post');
@@ -446,9 +444,7 @@ QUnit.test('"reply to" composer should send message if message replied to is not
         "Send button text should be 'Send'"
     );
 
-    await afterNextRender(() =>
-        document.execCommand('insertText', false, "Test")
-    );
+    await insertText('.o_ComposerTextInput_textarea', "Test");
     await click('.o_Composer_buttonSend');
     assert.verifySteps(['/mail/message/post']);
 });

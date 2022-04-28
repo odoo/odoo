@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { afterNextRender, start, startServer } from '@mail/../tests/helpers/test_utils';
+import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -226,7 +226,7 @@ QUnit.test("suggested recipients should not be notified when posting an internal
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ display_name: "John Jane", email: "john@jane.be" });
     const resFakeId1 = pyEnv['res.fake'].create({ partner_ids: [resPartnerId1] });
-    const { click, createChatterContainerComponent } = await start({
+    const { click, createChatterContainerComponent, insertText } = await start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.strictEqual(
@@ -243,8 +243,7 @@ QUnit.test("suggested recipients should not be notified when posting an internal
         threadModel: 'res.fake',
     });
     await click(`.o_ChatterTopbar_buttonLogNote`);
-    document.querySelector('.o_ComposerTextInput_textarea').focus();
-    await afterNextRender(() => document.execCommand('insertText', false, "Dummy Message"));
+    await insertText('.o_ComposerTextInput_textarea', "Dummy Message");
     await click('.o_Composer_buttonSend');
 });
 

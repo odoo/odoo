@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import {
-    afterNextRender,
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
@@ -66,7 +65,7 @@ QUnit.test('should be able to search for a new user to invite from an existing c
         channel_type: 'chat',
         public: 'private',
     });
-    const { click } = await start({
+    const { click, insertText } = await start({
         autoOpenDiscuss: true,
         discuss: {
             context: {
@@ -76,7 +75,7 @@ QUnit.test('should be able to search for a new user to invite from an existing c
         hasDiscuss: true,
     });
     await click(`.o_ThreadViewTopbar_inviteButton`);
-    await afterNextRender(() => document.execCommand('insertText', false, "TestPartner2"));
+    await insertText('.o_ChannelInvitationForm_searchInput', "TestPartner2");
     assert.strictEqual(
        document.querySelector(`.o_ChannelInvitationForm_selectablePartnerName`).textContent,
        "TestPartner2",
@@ -106,7 +105,7 @@ QUnit.test('should be able to create a new group chat from an existing chat', as
         channel_type: 'chat',
         public: 'private',
     });
-    const { click } = await start({
+    const { click, insertText } = await start({
         autoOpenDiscuss: true,
         discuss: {
             context: {
@@ -117,7 +116,7 @@ QUnit.test('should be able to create a new group chat from an existing chat', as
     });
 
     await click(`.o_ThreadViewTopbar_inviteButton`);
-    await afterNextRender(() => document.execCommand('insertText', false, "TestPartner2"));
+    await insertText('.o_ChannelInvitationForm_searchInput', "TestPartner2");
     await click(`.o_ChannelInvitationForm_selectablePartnerCheckbox`);
     await click(`.o_ChannelInvitationForm_inviteButton`);
     assert.strictEqual(

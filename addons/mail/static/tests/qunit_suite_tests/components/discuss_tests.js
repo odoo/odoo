@@ -1263,7 +1263,7 @@ QUnit.test('should not be able to reply to temporary/transient messages', async 
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { click } = await this.start({
+    const { click, insertText } = await this.start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -1271,10 +1271,7 @@ QUnit.test('should not be able to reply to temporary/transient messages', async 
         },
     });
     // these user interactions is to forge a transient message response from channel command "/who"
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "/who");
-    });
+    await insertText('.o_ComposerTextInput_textarea', "/who");
     await click('.o_Composer_buttonSend');
     // click on message to show actions on the transient message resulting from the "/who" command
     await click('.o_Message');
@@ -2661,7 +2658,7 @@ QUnit.test('post a simple message', async function (assert) {
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
     let postedMessageId;
-    const { click, messaging } = await this.start({
+    const { click, insertText, messaging } = await this.start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -2718,10 +2715,7 @@ QUnit.test('post a simple message', async function (assert) {
     );
 
     // insert some HTML in editable
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "Test");
-    });
+    await insertText('.o_ComposerTextInput_textarea', "Test");
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "Test",
@@ -2763,7 +2757,7 @@ QUnit.test('post message on channel with "Enter" keyboard shortcut', async funct
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    await this.start({
+    const { insertText } = await this.start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -2777,10 +2771,7 @@ QUnit.test('post message on channel with "Enter" keyboard shortcut', async funct
     );
 
     // insert some HTML in editable
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "Test");
-    });
+    await insertText('.o_ComposerTextInput_textarea', "Test");
     await afterNextRender(() => {
         const kevt = new window.KeyboardEvent('keydown', { key: "Enter" });
         document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
@@ -2800,7 +2791,7 @@ QUnit.test('do not post message on channel with "SHIFT-Enter" keyboard shortcut'
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    await this.start({
+    const { insertText } = await this.start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -2814,10 +2805,7 @@ QUnit.test('do not post message on channel with "SHIFT-Enter" keyboard shortcut'
     );
 
     // insert some HTML in editable
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "Test");
-    });
+    await insertText('.o_ComposerTextInput_textarea', "Test");
     const kevt = new window.KeyboardEvent('keydown', { key: "Enter", shiftKey: true });
     document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
     await nextAnimationFrame();
@@ -3123,7 +3111,7 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId, // must be for current partner
     });
-    const { click, messaging } = await this.start({
+    const { click, insertText, messaging } = await this.start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.step('message_post');
@@ -3203,9 +3191,7 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
         "composer text input should be auto-focus"
     );
 
-    await afterNextRender(() =>
-        document.execCommand('insertText', false, "Test")
-    );
+    await insertText('.o_ComposerTextInput_textarea', "Test");
     await click('.o_Composer_buttonSend');
     assert.verifySteps(['message_post']);
     assert.notOk(
@@ -3987,7 +3973,7 @@ QUnit.test('send message only once when enter is pressed twice quickly', async f
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    await this.start({
+    const { insertText } = await this.start({
         discuss: {
             context: {
                 active_id: `mail.channel_${mailChannelId1}`,
@@ -4001,10 +3987,7 @@ QUnit.test('send message only once when enter is pressed twice quickly', async f
         },
     });
     // Type message
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "test message");
-    });
+    await insertText('.o_ComposerTextInput_textarea', "test message");
     await afterNextRender(() => {
         const enterEvent = new window.KeyboardEvent('keydown', { key: 'Enter' });
         document.querySelector(`.o_ComposerTextInput_textarea`)
