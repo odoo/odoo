@@ -58,7 +58,7 @@ SQL_ORDER_BY_TYPE = defaultdict(lambda: 16, {
     'int4': 1,          # 4 bytes aligned on 4 bytes
     'varchar': 2,       # variable aligned on 4 bytes
     'date': 3,          # 4 bytes aligned on 4 bytes
-    'jsonb': 4,         # variable aligned on 4 bytes
+    'jsonb': 4,         # jsonb
     'text': 5,          # variable aligned on 4 bytes
     'numeric': 6,       # variable aligned on 4 bytes
     'bool': 7,          # 1 byte aligned on 1 byte
@@ -130,7 +130,7 @@ def convert_column(cr, tablename, columnname, columntype, fromtype=None):
                            log_exceptions=False)
             _schema.debug("Table %r: column %r altered to type %s", tablename, columnname, columntype)
             return
-        except psycopg2.errors.DatatypeMismatch:
+        except (psycopg2.NotSupportedError, psycopg2.errors.DatatypeMismatch):
             # simple convert failed so we have to do it the hard way
             pass
 
@@ -139,9 +139,9 @@ def convert_column(cr, tablename, columnname, columntype, fromtype=None):
         temp_name += '_'
     rename_column(cr, tablename, columnname, temp_name)
     create_column(cr, tablename, columnname, columntype)
-    if fromtype=='jsonb':
+    if fromtype == 'jsonb':
         query = 'UPDATE "{0}" SET "{1}"="{3}"->>\'en_US\'::{2};'
-    elif columntype=='jsonb':
+    elif columntype == 'jsonb':
         query = 'UPDATE "{0}" SET "{1}"=json_build_object(\'en_US\', {3}::varchar);'
     else:
         query = 'UPDATE "{0}" SET "{1}"= {3}::{2};'
@@ -150,7 +150,7 @@ def convert_column(cr, tablename, columnname, columntype, fromtype=None):
         with cr.savepoint(flush=False):
             cr.execute(query.format(tablename, columnname, columntype, temp_name))
         _schema.debug("Table %r: column %r changed to type %s", tablename, columnname, columntype)
-    except:
+    except Exception:
         _schema.debug("Table %r: column %r created, old renamed to %s", tablename, columnname, temp_name)
 
 def set_not_null(cr, tablename, columnname):

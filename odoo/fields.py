@@ -996,7 +996,7 @@ class Field(MetaField('DummyField', (object,), {})):
         if column['udt_name'] == self.column_type[0]:
             return
         if column['is_nullable'] == 'NO':
-            sql.drop_not_null(cr, model._table, self.name)
+            sql.drop_not_null(model._cr, model._table, self.name)
         sql.convert_column(model._cr, model._table, self.name, self.column_type[1], column['udt_name'])
 
     def update_db_notnull(self, model, column):
@@ -1599,8 +1599,8 @@ class _String(Field):
 
 
 
-    def write(self, records, value):
-        pass
+    # def write(self, records, value):
+    #     pass
 
     def _description_translate(self, env):
         return bool(self.translate)
@@ -1634,7 +1634,7 @@ class Char(_String):
     @property
     def column_type(self):
         # TODO VSC : modernize ifs
-        return (self.translate and 'jsonb' or 'varchar', self.translate and 'jsonb' or pg_varchar(self.size))
+        return ('jsonb', 'jsonb') if self.translate else ('varchar', pg_varchar(self.size))
 
     def update_db_column(self, model, column):
         if (
@@ -1680,8 +1680,7 @@ class Text(_String):
     @property
     def column_type(self):
         # TODO VSC: modernize ifs
-        ctype = self.translate and 'jsonb' or 'text'
-        return (ctype, ctype)
+        return ('jsonb', 'jsonb') if self.translate else ('text', 'text')
 
 
     def convert_to_cache(self, value, record, validate=True):
@@ -1739,8 +1738,7 @@ class Html(_String):
     @property
     def column_type(self):
         # TODO VSC: modernize ifs
-        ctype = self.translate and 'jsonb' or 'text'
-        return (ctype, ctype)
+        return ('jsonb', 'jsonb') if self.translate else ('text', 'text')
 
     def convert_to_column(self, value, record, values=None, validate=True):
         if value is None or value is False:
