@@ -198,7 +198,7 @@ class DescriptionScreen extends Component {
             // To match, every term should be contained in either the label or a
             // synonym
             for (const candidate of [val.label, ...(val.synonyms || '').split(/[|,\n]+/)]) {
-                if (terms.every(term => candidate.includes(term))) {
+                if (terms.every(term => candidate.toLowerCase().includes(term))) {
                     return true;
                 }
             }
