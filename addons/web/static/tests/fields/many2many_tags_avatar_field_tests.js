@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, getFixture, nextTick, selectDropdownItem } from "../helpers/utils";
+import { click, getFixture, selectDropdownItem } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -414,8 +414,8 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("widget many2many_tags_avatar in kanban view", async function (assert) {
-        assert.expect(13);
+    QUnit.test("widget many2many_tags_avatar in kanban view", async function (assert) {
+        assert.expect(12);
 
         const records = [];
         for (let id = 5; id <= 15; id++) {
@@ -461,21 +461,13 @@ QUnit.module("Fields", (hooks) => {
                         </t>
                     </templates>
                 </kanban>`,
-            // intercepts: {
-            //     switch_view: function (event) {
-            //         const { mode, model, resId, view_type } = event.data;
-            //         assert.deepEqual(
-            //             { mode, model, resId, view_type },
-            //             {
-            //                 mode: "readonly",
-            //                 model: "turtle",
-            //                 resId: 1,
-            //                 view_type: "form",
-            //             },
-            //             "should trigger an event to open the clicked record in a form view"
-            //         );
-            //     },
-            // },
+            selectRecord(recordId) {
+                assert.equal(
+                    recordId,
+                    1,
+                    "should call its selectRecord prop with the clicked record"
+                );
+            },
         });
         assert.strictEqual(
             target.querySelector(
@@ -493,33 +485,33 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsN(
             target,
-            ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar > span:not(.o_m2m_avatar_empty)",
+            ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_tags_list > span:not(.o_m2m_avatar_empty)",
             2,
             "should have 2 records"
         );
         assert.strictEqual(
             target.querySelector(
-                ".o_kanban_record:eq(2) .o_field_many2many_tags_avatar img.o_m2m_avatar:first"
+                ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar img.o_m2m_avatar"
             ).dataset.src,
             "/web/image/partner/1/avatar_128",
             "should have correct avatar image"
         );
         assert.strictEqual(
-            target.querySelector(
-                ".o_kanban_record:eq(2) .o_field_many2many_tags_avatar img.o_m2m_avatar:nth-child(2)"
-            ).dataset.src,
+            target.querySelectorAll(
+                ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar img.o_m2m_avatar"
+            )[1].dataset.src,
             "/web/image/partner/2/avatar_128",
             "should have correct avatar image"
         );
         assert.containsOnce(
             target,
-            ".o_kanban_record:eq(2) .o_field_many2many_tags_avatar .o_m2m_avatar_empty",
+            ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_m2m_avatar_empty",
             "should have o_m2m_avatar_empty span"
         );
         assert.strictEqual(
             target
                 .querySelector(
-                    ".o_kanban_record:eq(2) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
+                    ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
                 )
                 .textContent.trim(),
             "+2",
@@ -528,45 +520,37 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(
             target,
-            ".o_kanban_record:eq(3) .o_field_many2many_tags_avatar > span:not(.o_m2m_avatar_empty)",
+            ".o_kanban_record:nth-child(4) .o_field_many2many_tags_avatar .o_tags_list > span:not(.o_m2m_avatar_empty)",
             2,
             "should have 2 records"
         );
         assert.containsOnce(
             target,
-            ".o_kanban_record:eq(3) .o_field_many2many_tags_avatar .o_m2m_avatar_empty",
+            ".o_kanban_record:nth-child(4) .o_field_many2many_tags_avatar .o_m2m_avatar_empty",
             "should have o_m2m_avatar_empty span"
         );
         assert.strictEqual(
             target
                 .querySelector(
-                    ".o_kanban_record:eq(3) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
+                    ".o_kanban_record:nth-child(4) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
                 )
                 .textContent.trim(),
             "9+",
             "should have 9+ in o_m2m_avatar_empty"
         );
 
-        target
-            .querySelector(
-                ".o_kanban_record:eq(2) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
-            )
-            .trigger($.Event("mouseenter"));
-        await nextTick();
-        assert.containsOnce(
-            target,
-            ".popover",
-            "should open a popover hover on o_m2m_avatar_empty"
+        // check data-tooltip attribute (used by the tooltip service)
+        const tag = target.querySelector(
+            ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
         );
         assert.strictEqual(
-            target.querySelector(".popover .popover-body > div").textContent.trim(),
-            "aaarecord 5",
-            "should have a right text in popover"
+            tag.dataset["tooltip"],
+            "aaa<br/>record 5",
+            "shows a tooltip on hover with the right text"
         );
+
         await click(
-            target.querySelector(
-                ".o_kanban_record:first .o_field_many2many_tags_avatar img.o_m2m_avatar"
-            )
+            target.querySelector(".o_kanban_record .o_field_many2many_tags_avatar img.o_m2m_avatar")
         );
     });
 });

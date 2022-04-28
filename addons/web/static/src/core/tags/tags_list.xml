@@ -7,7 +7,8 @@
                 <TagItem t-props="tag" />
             </t>
             <span t-if="props.tags and otherTags" class="o_m2m_avatar_empty rounded-circle text-center font-weight-bold" t-att-data-tooltip="tooltip">
-                <span t-esc="'+' + otherTags.length"/>
+                <span t-if="otherTags.length > 9" t-esc="'9+'" />
+                <span t-else="" t-esc="'+' + otherTags.length" />
             </span>
             <t t-slot="default" />
         </span>
