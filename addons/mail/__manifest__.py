@@ -68,6 +68,7 @@
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/src/legacy/scss/import_bootstrap.scss',
             'web/static/src/legacy/scss/bootstrap_review.scss',
+            'web/static/src/libs/bs5_utility_classes.scss',
             'web/static/src/webclient/webclient.scss',
             'web/static/src/webclient/webclient_extra.scss',
             'web/static/src/core/utils/*.scss',
