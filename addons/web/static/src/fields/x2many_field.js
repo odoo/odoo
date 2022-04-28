@@ -127,7 +127,7 @@ export class X2ManyField extends Component {
 
         let canDelete = "delete" in options ? evalDomain(options.delete, evalContext) : true;
         canDelete = canDelete && subViewInfo.activeActions.delete;
-        const deleteFn = (record) => this.removeRecordFromList(record);
+        const deleteFn = this.removeRecordFromList.bind(this);
 
         let canLink = "link" in options ? evalDomain(options.link, evalContext) : true;
         const canUnlink = "unlink" in options ? evalDomain(options.unlink, evalContext) : true;
@@ -146,7 +146,7 @@ export class X2ManyField extends Component {
 
         // We need to compute some object used by (x2many renderers) based on that
 
-        const result = { canCreate, canLink, canUnlink };
+        const result = { canCreate, canDelete, canLink, canUnlink };
 
         if (canDelete) {
             result.onDelete = deleteFn;

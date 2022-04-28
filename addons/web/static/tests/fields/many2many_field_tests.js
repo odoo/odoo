@@ -759,142 +759,167 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("many2many list (editable): edition", async function (assert) {
+    QUnit.test("many2many list (editable): edition", async function (assert) {
         assert.expect(31);
 
-        this.data.partner.records[0].timmy = [12, 14];
-        this.data.partner_type.records.push({ id: 15, display_name: "bronze", color: 6 });
-        this.data.partner_type.fields.float_field = { string: "Float", type: "float" };
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<field name="timmy">' +
-                '<tree editable="top">' +
-                '<field name="display_name"/><field name="float_field"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
-            archs: {
-                "partner_type,false,list": '<tree><field name="display_name"/></tree>',
-                "partner_type,false,search": '<search><field name="display_name"/></search>',
-            },
-            mockRPC: function (route, args) {
-                if (args.method !== "get_views") {
-                    assert.step(_.last(route.split("/")));
-                }
-                if (args.method === "write") {
-                    assert.deepEqual(args.args[1].timmy, [
-                        [6, false, [12, 15]],
-                        [1, 12, { display_name: "new name" }],
-                    ]);
-                }
-                return this._super.apply(this, arguments);
-            },
-            res_id: 1,
-        });
+        serverData.models.partner.records[0].timmy = [12, 14];
+        serverData.models.partner_type.records.push({ id: 15, display_name: "bronze", color: 6 });
+        serverData.models.partner_type.fields.float_field = { string: "Float", type: "float" };
+
+        (serverData.views = {
+            "partner_type,false,list": '<tree><field name="display_name"/></tree>',
+            "partner_type,false,search": '<search><field name="display_name"/></search>',
+        }),
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch:
+                    '<form string="Partners">' +
+                    '<field name="timmy">' +
+                    '<tree editable="top">' +
+                    '<field name="display_name"/><field name="float_field"/>' +
+                    "</tree>" +
+                    "</field>" +
+                    "</form>",
+                mockRPC: function (route, args) {
+                    if (args.method !== "get_views") {
+                        assert.step(_.last(route.split("/")));
+                    }
+                    if (args.method === "write") {
+                        assert.deepEqual(args.args[1].timmy, [
+                            [6, false, [12, 15]],
+                            [1, 12, { display_name: "new name" }],
+                        ]);
+                    }
+                },
+                resId: 1,
+            });
 
         assert.ok(
-            form.$(".o_list_record_remove").length,
+            $(target).find(".o_list_record_remove").length,
             "delete icon should be visible in readonly"
         );
         assert.ok(
-            form.$(".o_field_x2many_list_row_add").length,
+            $(target).find(".o_field_x2many_list_row_add").length,
             '"Add an item" should be visible in readonly'
         );
 
-        await testUtils.form.clickEdit(form);
+        await clickEdit(target);
 
-        assert.containsN(form, ".o_list_view td.o_list_number", 2, "should contain 2 records");
+        assert.containsN(
+            target,
+            ".o_list_renderer td.o_list_number",
+            2,
+            "should contain 2 records"
+        );
         assert.strictEqual(
-            form.$(".o_list_view tbody td:first()").text(),
+            $(target).find(".o_list_renderer tbody td:first()").text(),
             "gold",
             "display_name of first subrecord should be the one in DB"
         );
-        assert.ok(form.$(".o_list_record_remove").length, "delete icon should be visible in edit");
+        assert.ok(
+            $(target).find(".o_list_record_remove").length,
+            "delete icon should be visible in edit"
+        );
         assert.hasClass(
-            form.$("td.o_list_record_remove button").first(),
+            $(target).find("td.o_list_record_remove button").first(),
             "fa fa-times",
             "should have X icons to remove (unlink) records"
         );
         assert.ok(
-            form.$(".o_field_x2many_list_row_add").length,
+            $(target).find(".o_field_x2many_list_row_add").length,
             '"Add an item" should not visible in edit'
         );
 
         // edit existing subrecord
-        await testUtils.dom.click(form.$(".o_list_view tbody td:first()"));
+        await click($(target).find(".o_list_renderer tbody td:first()")[0]);
         assert.ok(!$(".modal").length, "in edit, clicking on a subrecord should not open a dialog");
         assert.hasClass(
-            form.$(".o_list_view tbody tr:first()"),
+            $(target).find(".o_list_renderer tbody tr:first()"),
             "o_selected_row",
             "first row should be in edition"
         );
-        await testUtils.fields.editInput(form.$(".o_list_view input:first()"), "new name");
+        await editInput(
+            target,
+            ".o_list_renderer .o_data_row:nth-child(1) .o_data_cell:nth-child(1) input",
+            "new name"
+        );
         assert.hasClass(
-            form.$(".o_list_view .o_data_row:first"),
+            $(target).find(".o_list_renderer .o_data_row:first"),
             "o_selected_row",
             "first row should still be in edition"
         );
         assert.strictEqual(
-            form.$(".o_list_view input[name=display_name]").get(0),
+            $(target).find(".o_list_renderer div[name=display_name] input").get(0),
             document.activeElement,
             "edited field should still have the focus"
         );
-        await testUtils.dom.click(form.$el);
+        await click($(target).find(".o_form_view")[0]); // LPE : leave quick edit ??
         assert.doesNotHaveClass(
-            form.$(".o_list_view tbody tr:first"),
+            $(target).find(".o_list_renderer tbody tr:first"),
             "o_selected_row",
             "first row should not be in edition anymore"
         );
         assert.strictEqual(
-            form.$(".o_list_view tbody td:first()").text(),
+            $(target).find(".o_list_renderer tbody td:first()").text(),
             "new name",
             "value of subrecord should have been updated"
         );
         assert.verifySteps(["read", "read"]);
 
         // add new subrecords
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+        await click($(target).find(".o_field_x2many_list_row_add a")[0]);
         assert.strictEqual($(".modal .o_list_view").length, 1, "a modal should be open");
         assert.strictEqual(
             $(".modal .o_list_view .o_data_row").length,
             1,
             "the list should contain one row"
         );
-        await testUtils.dom.click($(".modal .o_list_view .o_data_row"));
+        await click($(".modal .o_list_view .o_data_row .o_data_cell")[0]);
         assert.strictEqual($(".modal .o_list_view").length, 0, "the modal should be closed");
-        assert.containsN(form, ".o_list_view td.o_list_number", 3, "should contain 3 subrecords");
+        assert.containsN(
+            target,
+            ".o_list_renderer td.o_list_number",
+            3,
+            "should contain 3 subrecords"
+        );
 
         // remove subrecords
-        await testUtils.dom.click(form.$(".o_list_record_remove:nth(1)"));
-        assert.containsN(form, ".o_list_view td.o_list_number", 2, "should contain 2 subrecord");
+        await click($(target).find(".o_list_record_remove:nth(1)")[0]);
+        assert.containsN(
+            target,
+            ".o_list_renderer td.o_list_number",
+            2,
+            "should contain 2 subrecord"
+        );
         assert.strictEqual(
-            form.$(".o_list_view tbody .o_data_row td:first").text(),
+            $(target).find(".o_list_renderer tbody .o_data_row td:first").text(),
             "new name",
             "the updated row still has the correct values"
         );
 
         // save
-        await testUtils.form.clickSave(form);
-        assert.containsN(form, ".o_list_view td.o_list_number", 2, "should contain 2 subrecords");
+        await clickSave(target);
+        assert.containsN(
+            target,
+            ".o_list_renderer td.o_list_number",
+            2,
+            "should contain 2 subrecords"
+        );
         assert.strictEqual(
-            form.$(".o_list_view .o_data_row td:first").text(),
+            $(target).find(".o_list_renderer .o_data_row td:first").text(),
             "new name",
             "the updated row still has the correct values"
         );
 
         assert.verifySteps([
-            "search_read", // list view in dialog
+            "web_search_read", // list view in dialog
             "read", // relational field (updated)
             "write", // save main record
             "read", // main record
             "read", // relational field
         ]);
-
-        form.destroy();
     });
 
     QUnit.skipWOWL("many2many: create & delete attributes (both true)", async function (assert) {

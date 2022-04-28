@@ -170,9 +170,17 @@
                     </td>
                 </t>
             </t>
-            <td t-if="props.activeActions and props.activeActions.onDelete" class="o_list_record_remove" t-on-click.stop="() => this.onDeleteRecord(record)">
-                <button class="fa fa-trash-o" name="delete" aria-label="Delete row"/>
-            </td>
+
+            <t t-set="activeActions" t-value="props.activeActions" />
+            <t t-if="activeActions">
+                <t t-set="canDelete" t-value="activeActions.canDelete" />
+                <t t-set="canUnlink" t-value="activeActions.canUnlink" />
+                <td t-if="activeActions.onDelete" class="o_list_record_remove" t-on-click.stop="() => this.onDeleteRecord(record)">
+                    <button class="fa"
+                        t-att-class="{ 'fa-trash-o': canDelete and !canUnlink , 'fa-times': canUnlink }"
+                        name="delete" aria-label="Delete row"/>
+                </td>
+            </t>
         </tr>
     </t>
 </templates>
