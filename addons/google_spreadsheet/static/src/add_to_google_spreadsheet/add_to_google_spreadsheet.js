@@ -3,6 +3,7 @@
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { Domain } from "@web/core/domain";
 
 const { Component } = owl;
 const favoriteMenuRegistry = registry.category("favoriteMenu");
@@ -26,11 +27,13 @@ export class AddToGoogleSpreadsheet extends Component {
 
     async addToGoogleSpreadsheet() {
         const { domain, groupBy, resModel, view } = this.env.searchModel;
+        const viewId = view ? view.id : false;
+        const domainAsString = (new Domain(domain)).toString();
 
         const result = await this.orm.call(
             "google.drive.config",
             "set_spreadsheet",
-            [resModel, domain, groupBy, view.id]
+            [resModel, domainAsString, groupBy, viewId]
         );
 
         if (result.url) {
