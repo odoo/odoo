@@ -145,7 +145,7 @@ registerModel({
                     return;
                 }
                 try {
-                    const response = await this.messaging.browser.fetch('/mail/attachment/upload', {
+                    const response = await (composer || thread).messaging.browser.fetch('/mail/attachment/upload', {
                         method: 'POST',
                         body: this._createFormData({ composer, file, thread }),
                         signal: uploadingAttachment.uploadingAbortController.signal,
