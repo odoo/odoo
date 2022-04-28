@@ -15,7 +15,6 @@ export class Composer extends Component {
         super.setup();
         useComponentToModel({ fieldName: 'component', modelName: 'ComposerView' });
         useRefToModel({ fieldName: 'buttonEmojisRef', modelName: 'ComposerView', refName: 'buttonEmojis' });
-        this._onDropZoneFilesDropped = this._onDropZoneFilesDropped.bind(this);
     }
 
     //--------------------------------------------------------------------------
@@ -27,22 +26,6 @@ export class Composer extends Component {
      */
     get composerView() {
         return this.messaging && this.messaging.models['ComposerView'].get(this.props.localId);
-    }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Called when some files have been dropped in the dropzone.
-     *
-     * @private
-     * @param {Object} detail
-     * @param {FileList} detail.files
-     */
-    async _onDropZoneFilesDropped(detail) {
-        await this.composerView.fileUploader.uploadFiles(detail.files);
-        this.composerView.useDragVisibleDropZone.update({ isVisible: false });
     }
 
 }

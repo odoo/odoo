@@ -13,7 +13,6 @@ export class MessageActionList extends Component {
     setup() {
         super.setup();
         useRefToModel({ fieldName: 'actionReactionRef', modelName: 'MessageActionList', refName: 'actionReaction' });
-        this.ADD_A_REACTION = this.env._t("Add a Reaction");
     }
 
     /**
