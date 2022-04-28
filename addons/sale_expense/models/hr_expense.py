@@ -31,6 +31,12 @@ class Expense(models.Model):
         for expense in self.filtered('sale_order_id'):
             expense.analytic_account_id = expense.sale_order_id.sudo().analytic_account_id  # `sudo` required for normal employee without sale access rights
 
+    def _get_split_values(self):
+        vals = super(Expense, self)._get_split_values()
+        for split_value in vals:
+            split_value['sale_order_id'] = self.sale_order_id.id
+        return vals
+
     def action_move_create(self):
         """ When posting expense, if the AA is given, we will track cost in that
             If a SO is set, this means we want to reinvoice the expense. But to do so, we
