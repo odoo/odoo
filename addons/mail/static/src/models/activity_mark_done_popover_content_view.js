@@ -4,7 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 
 registerModel({
-    name: 'ActivityMarkDonePopoverView',
+    name: 'ActivityMarkDonePopoverContentView',
     identifyingFields: ['activityViewOwner'],
     recordMethods: {
         /**
@@ -74,7 +74,7 @@ registerModel({
     },
     fields: {
         activityViewOwner: one('ActivityView', {
-            inverse: 'activityMarkDonePopoverView',
+            inverse: 'activityMarkDonePopoverContentView',
             readonly: true,
             required: true,
         }),
