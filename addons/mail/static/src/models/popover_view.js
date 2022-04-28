@@ -6,7 +6,7 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'PopoverView',
-    identifyingFields: [['composerViewOwnerAsEmoji', 'messageActionListOwnerAsReaction', 'threadViewTopbarOwnerAsInvite']],
+    identifyingFields: [['activityViewOwnerAsMarkDone', 'composerViewOwnerAsEmoji', 'messageActionListOwnerAsReaction', 'threadViewTopbarOwnerAsInvite']],
     lifecycleHooks: {
         _created() {
             document.addEventListener('click', this._onClickCaptureGlobal, true);
@@ -28,9 +28,22 @@ registerModel({
         },
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeActivityMarkDonePopoverContentView() {
+            if (this.activityViewOwnerAsMarkDone) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {Ref}
          */
         _computeAnchorRef() {
+            if (this.activityViewOwnerAsMarkDone) {
+                return this.activityViewOwnerAsMarkDone.markDoneButtonRef;
+            }
             if (this.threadViewTopbarOwnerAsInvite) {
                 return this.threadViewTopbarOwnerAsInvite.inviteButtonRef;
             }
@@ -57,6 +70,9 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeContent() {
+            if (this.activityMarkDonePopoverContentView) {
+                return replace(this.activityMarkDonePopoverContentView);
+            }
             if (this.channelInvitationForm) {
                 return replace(this.channelInvitationForm);
             }
@@ -83,6 +99,9 @@ registerModel({
          * @returns {string|FieldCommand}
          */
         _computeContentComponentName() {
+            if (this.activityMarkDonePopoverContentView) {
+                return 'ActivityMarkDonePopoverContent';
+            }
             if (this.channelInvitationForm) {
                 return 'ChannelInvitationForm';
             }
@@ -109,6 +128,9 @@ registerModel({
          * @returns {string}
          */
         _computePosition() {
+            if (this.activityViewOwnerAsMarkDone) {
+                return 'right';
+            }
             if (this.threadViewTopbarOwnerAsInvite) {
                 return 'bottom';
             }
@@ -140,6 +162,16 @@ registerModel({
         },
     },
     fields: {
+        activityMarkDonePopoverContentView: one('ActivityMarkDonePopoverContentView', {
+            compute: '_computeActivityMarkDonePopoverContentView',
+            inverse: 'popoverViewOwner',
+            isCausal: true,
+            readonly: true,
+        }),
+        activityViewOwnerAsMarkDone: one('ActivityView', {
+            inverse: 'markDonePopoverView',
+            readonly: true,
+        }),
         /**
          * HTML element that is used as anchor position for this popover view.
          */

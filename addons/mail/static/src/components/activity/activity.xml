@@ -119,16 +119,10 @@
 
                     <t t-if="activityView.activity.canWrite">
                         <div name="tools" class="o_Activity_tools d-flex">
-                            <t t-if="!activityView.fileUploader">
-                                <Popover position="'right'" title="activityView.markDoneText">
-                                    <button class="o_Activity_toolButton o_Activity_markDoneButton btn btn-link btn-primary pt-0 pl-0" t-att-title="activityView.markDoneText">
-                                        <i class="fa fa-check"/> Mark Done
-                                    </button>
-                                    <t t-set-slot="opened">
-                                        <ActivityMarkDonePopoverContent localId="activityView.activityMarkDonePopoverContentView.localId"/>
-                                    </t>
-                                </Popover>
-                            </t>
+                            <button class="o_Activity_toolButton o_Activity_markDoneButton btn btn-link btn-primary pt-0 pl-0" t-att-title="activityView.markDoneText" t-ref="markDoneButton" t-on-click="activityView.onClickMarkDoneButton">
+                                <i class="fa fa-check"/> Mark Done
+                            </button>
+                            <PopoverView t-if="activityView.markDonePopoverView" localId="activityView.markDonePopoverView.localId"/>
                             <t t-if="activityView.fileUploader">
                                 <button class="o_Activity_toolButton o_Activity_uploadButton btn btn-link btn-primary pt-0 pl-0" t-on-click="activityView.onClickUploadDocument">
                                     <i class="fa fa-upload"/> Upload Document

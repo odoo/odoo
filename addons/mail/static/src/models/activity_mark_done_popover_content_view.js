@@ -2,10 +2,11 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
+import { clear, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ActivityMarkDonePopoverContentView',
-    identifyingFields: ['activityViewOwner'],
+    identifyingFields: ['popoverViewOwner'],
     recordMethods: {
         /**
          * Handles blur on this feedback textarea.
@@ -69,16 +70,44 @@ registerModel({
          */
         _close() {
             this._backupFeedback();
-            this.component.trigger('o-popover-close');
+            this.activityViewOwner.update({ markDonePopoverView: clear() });
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeActivityViewOwner() {
+            if (this.popoverViewOwner.activityViewOwnerAsMarkDone) {
+                return replace(this.popoverViewOwner.activityViewOwnerAsMarkDone);
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeHeaderText() {
+            if (this.activityViewOwner) {
+                return this.activityViewOwner.markDoneText;
+            }
+            return clear();
         },
     },
     fields: {
         activityViewOwner: one('ActivityView', {
+            compute: '_computeActivityViewOwner',
+            readonly: true,
+        }),
+        component: attr(),
+        feedbackTextareaRef: attr(),
+        headerText: attr({
+            compute: '_computeHeaderText',
+            default: '',
+        }),
+        popoverViewOwner: one('PopoverView', {
             inverse: 'activityMarkDonePopoverContentView',
             readonly: true,
             required: true,
         }),
-        component: attr(),
-        feedbackTextareaRef: attr(),
     },
 });

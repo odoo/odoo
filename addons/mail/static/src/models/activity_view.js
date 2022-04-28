@@ -50,6 +50,9 @@ registerModel({
         onClickEdit() {
             this.activity.edit();
         },
+        onClickMarkDoneButton() {
+            this.update({ markDonePopoverView: this.markDonePopoverView ? clear() : insertAndReplace() });
+        },
         /**
          * Handles the click on the upload document button. This open the file
          * explorer for upload.
@@ -165,11 +168,6 @@ registerModel({
             readonly: true,
             required: true,
         }),
-        activityMarkDonePopoverContentView: one('ActivityMarkDonePopoverContentView', {
-            default: insertAndReplace(),
-            inverse: 'activityViewOwner',
-            isCausal: true,
-        }),
         /**
          * Determines whether the details are visible.
          */
@@ -221,6 +219,11 @@ registerModel({
         mailTemplateViews: many('MailTemplateView', {
             compute: '_computeMailTemplateViews',
             inverse: 'activityViewOwner',
+            isCausal: true,
+        }),
+        markDoneButtonRef: attr(),
+        markDonePopoverView: one('PopoverView', {
+            inverse: 'activityViewOwnerAsMarkDone',
             isCausal: true,
         }),
         /**
