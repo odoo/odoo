@@ -76,13 +76,19 @@ const LinkPopoverWidget = Widget.extend({
             container: this.options.wysiwyg.odooEditor.document.body,
         })
         .on('show.bs.popover.link_popover', () => {
+            this.options.wysiwyg.odooEditor.observerUnactive('show.bs.popover');
             this._loadAsyncLinkPreview();
             popoverShown = true;
         })
+        .on('inserted.bs.popover', () => {
+            this.options.wysiwyg.odooEditor.observerActive('show.bs.popover');
+        })
         .on('hide.bs.popover.link_popover', () => {
+            this.options.wysiwyg.odooEditor.observerUnactive('hide.bs.popover');
             popoverShown = false;
         })
         .on('hidden.bs.popover.link_popover', () => {
+            this.options.wysiwyg.odooEditor.observerActive('hide.bs.popover');
             for (const tooltip of tooltips) {
                 tooltip.hide();
             }
@@ -261,7 +267,15 @@ LinkPopoverWidget.createFor = async function (parent, targetEl, options) {
         return null;
     }
     const popoverWidget = new this(parent, targetEl, options);
-    return popoverWidget.appendTo(targetEl).then(() => popoverWidget);
+    const wysiwyg = $('#wrapwrap').data('wysiwyg');
+    if (wysiwyg) {
+        wysiwyg.odooEditor.observerUnactive('LinkPopoverWidget');
+    }
+    await popoverWidget.appendTo(targetEl)
+    if (wysiwyg) {
+        wysiwyg.odooEditor.observerActive('LinkPopoverWidget');
+    }
+    return popoverWidget;
 };
 
 export default LinkPopoverWidget;
