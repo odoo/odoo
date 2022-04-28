@@ -126,9 +126,9 @@ class AccountChartTemplate(models.AbstractModel):
                             if command[0] in (Command.CREATE, Command.UPDATE):
                                 deref(command[2], self.env[model._fields[field].comodel_name])
                             if command[0] == Command.SET:
-                                for i, value in enumerate(command[2]):
+                                for i, subvalue in enumerate(command[2]):
                                     if isinstance(value, str):
-                                        command[2][i] = self.env.ref(value).id
+                                        command[2][i] = self.env.ref(subvalue).id
             return values
 
         def defer(all_data):
@@ -391,13 +391,6 @@ class AccountChartTemplate(models.AbstractModel):
         try:
             for model in models:
                 data[model] = self._get_data(template_code, company, model)
-                if not isinstance(data[model], dict):
-                    raise ValueError("Wrong data result type")
-                for key, value in data[model].items():
-                    if not isinstance(key, str):
-                        raise ValueError(f"Key {key} is not a string")
-                    if not isinstance(value, dict):
-                        raise ValueError(f"Value for key {key} is not a dict")
         except Exception as e:
             message = f"Error in data from model {model} for template '{template_code}' and company '{company.name}' ({company.id})"
             raise AccountChartTemplateDataError(message) from e

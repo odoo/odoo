@@ -20,7 +20,7 @@ env = locals().get('env') or {}
 
 
 def get_command(x):
-    return list(Command.__members__.keys())[x-1].lower()
+    return ['create', 'update', 'delete', 'unlink', 'link', 'clear', 'set'][x]
 
 
 def pformat(item, level=0, stream=None):
@@ -421,7 +421,8 @@ def do_module(code, module, lang):
     extra_functions = []
     for model, function_name in mapping.items():
         for model_name in (model, model + '.template'):
-            content = convert_records_to_function(all_records, model_name, function_name)
+            one_level = model_name == 'account.chart.template'
+            content = convert_records_to_function(all_records, model_name, function_name, one_level=one_level)
             if content:
                 contents[function_name] = contents.get(function_name, "") + content
                 if model not in ("account.chart.template", "account.tax", "res.company"):
@@ -453,7 +454,7 @@ def do_module(code, module, lang):
     with open(str(path), 'w', encoding="utf-8") as outfile:
         outfile.write(content)
 
-def convert_records_to_function(all_records, model, function_name, cid=True):
+def convert_records_to_function(all_records, model, function_name, cid=True, one_level=False):
     """
         Convert a set of Records to a Python function.
     """
@@ -466,8 +467,9 @@ def convert_records_to_function(all_records, model, function_name, cid=True):
                  (cid and indent(2, "cid = (company or self.env.company).id\n")) +
                  indent(2, "return "))
 
-    if len(records) == 1:
-        stream.write(pformat(records, level=2).lstrip())
+    if one_level:
+        record = None
+        stream.write(pformat(list(records.items())[0][1], level=2).lstrip())
         return stream.getvalue()
 
     stream.write("{\n")
