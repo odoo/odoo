@@ -17,7 +17,7 @@ class AccountChartTemplate(models.Model):
         moves = demo_data_move[1]
         # Create new invoices with loooots of lines to test the multi-page carry-over
         nb_moves = len(moves)
-        for i, nb_lines in enumerate([5, 10, 15, 20, 25, 30, 40]):
+        for i, nb_lines in enumerate([5, 10, 15, 20, 25, 30, 40, 60, 100, 200]):
             invoice_line_ids = []
             for _ in range(nb_lines):
                 invoice_line_ids.append(
