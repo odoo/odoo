@@ -17,12 +17,11 @@ class Project(models.Model):
         if not self.analytic_account_id:
             self.purchase_orders_count = 0
             return
-        purchase_orders_data = self.env['purchase.order.line']._read_group([
-            ('account_analytic_id', 'in', self.analytic_account_id.ids)
-        ], ['account_analytic_id', 'order_id:count_distinct'], ['account_analytic_id'])
-        mapped_data = dict([(data['account_analytic_id'][0], data['order_id']) for data in purchase_orders_data])
         for project in self:
-            project.purchase_orders_count = mapped_data.get(project.analytic_account_id.id, 0)
+            purchase_orders = self.env['purchase.order'].search([
+                ('order_line.analytic_distribution_stored_char', '=ilike', f'%"{project.analytic_account_id.id}":%')
+            ])
+            project.purchase_orders_count = len(purchase_orders)
 
     # ----------------------------
     #  Actions
@@ -30,8 +29,7 @@ class Project(models.Model):
 
     def action_open_project_purchase_orders(self):
         purchase_orders = self.env['purchase.order'].search([
-            ('order_line.account_analytic_id', '!=', False),
-            ('order_line.account_analytic_id', 'in', self.analytic_account_id.ids)
+            ('order_line.analytic_distribution_stored_char', '=ilike', f'%"{self.analytic_account_id.id}":%')
         ])
         action_window = {
             'name': _('Purchase Orders'),
@@ -94,7 +92,7 @@ class Project(models.Model):
     def _get_profitability_aal_domain(self):
         return expression.AND([
             super()._get_profitability_aal_domain(),
-            ['|', ('move_id', '=', False), ('move_id.purchase_line_id', '=', False)],
+            ['|', ('move_line_id', '=', False), ('move_line_id.purchase_line_id', '=', False)],
         ])
 
     def _get_profitability_labels(self):
@@ -111,7 +109,7 @@ class Project(models.Model):
         profitability_items = super()._get_profitability_items(with_action)
         if self.analytic_account_id:
             purchase_order_line_read = self.env['purchase.order.line'].sudo().search_read([
-                ('account_analytic_id', 'in', self.analytic_account_id.ids),
+                ('analytic_distribution_stored_char', '=ilike', f'%"{self.analytic_account_id.id}":%'),
                 ('state', 'in', ['purchase', 'done']),
                 '|',
                 ('qty_invoiced', '>', 0),

@@ -12,13 +12,15 @@ from . import account_payment_term
 from . import account_move
 from . import account_move_line
 from . import account_move_line_tax_details
-from . import account_analytic_default
 from . import account_partial_reconcile
 from . import account_full_reconcile
 from . import account_payment
 from . import account_payment_method
 from . import account_bank_statement
 from . import chart_template
+from . import account_analytic_account
+from . import account_analytic_distribution_model
+from . import account_analytic_plan
 from . import account_analytic_line
 from . import account_journal_dashboard
 from . import product

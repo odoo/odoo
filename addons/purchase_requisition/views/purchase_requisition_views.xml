@@ -161,8 +161,13 @@
                                 <field name="product_uom_category_id" invisible="1"/>
                                 <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show" attrs="{'required': [('product_id', '!=', False)]}"/>
                                 <field name="schedule_date" optional="hide"/>
-                                <field name="account_analytic_id" optional="hide" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
-                                <field name="analytic_tag_ids" optional="hide" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
+                                <field name="analytic_distribution_stored_char" invisible="1"/>
+                                <!-- TODO widget="analytic_distribution" -->
+                                <field name="analytic_distribution"
+                                       optional="hide" invisible="1"
+                                       groups="analytic.group_analytic_accounting"
+                                       options="{'product_field': 'product_id'}"
+                                       business_domain_compute="'purchase'"/>
                                 <field name="price_unit"/>
                             </tree>
                             <form string="Products">
@@ -174,7 +179,12 @@
                                     <field name="product_uom_category_id" invisible="1"/>
                                     <field name="product_uom_id" />
                                     <field name="schedule_date"/>
-                                    <field name="account_analytic_id"  domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_distribution_stored_char" invisible="1"/>
+                                        <!-- TODO widget="analytic_distribution" -->
+                                    <field name="analytic_distribution"
+                                           groups="analytic.group_analytic_accounting" invisible="1"
+                                           options="{'product_field': 'product_id'}"
+                                           business_domain_compute="'purchase'"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 </group>
                             </form>

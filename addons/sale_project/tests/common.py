@@ -16,9 +16,14 @@ class TestSaleProjectCommon(TestSaleCommon):
         cls.uom_hour = cls.env.ref('uom.product_uom_hour')
         cls.account_sale = cls.company_data['default_account_revenue']
 
+        cls.analytic_plan = cls.env['account.analytic.plan'].create({
+            'name': 'Plan Test',
+            'company_id': cls.company_data['company'].id,
+        })
         cls.analytic_account_sale = cls.env['account.analytic.account'].create({
             'name': 'Project for selling timesheet - AA',
             'code': 'AA-2030',
+            'plan_id': cls.analytic_plan.id,
             'company_id': cls.company_data['company'].id,
         })
         Project = cls.env['project.project'].with_context(tracking_disable=True)

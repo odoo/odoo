@@ -15,7 +15,7 @@ class Project(models.Model):
         can_see_expense = with_action and self.user_has_groups('hr_expense.group_hr_expense_team_approver')
         expenses_read_group = self.env['hr.expense'].sudo()._read_group(
             [
-                ('analytic_account_id', 'in', self.analytic_account_id.ids),
+                ('analytic_distribution_stored_char', '=ilike', f'%"{self.analytic_account_id.id}":%'),
                 ('is_refused', '=', False),
                 ('state', 'in', ['approved', 'done']),
             ],

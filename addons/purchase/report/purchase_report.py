@@ -48,7 +48,6 @@ class PurchaseReport(models.Model):
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', readonly=True)
     country_id = fields.Many2one('res.country', 'Partner Country', readonly=True)
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', readonly=True)
-    account_analytic_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', 'Commercial Entity', readonly=True)
     weight = fields.Float('Gross Weight', readonly=True)
     volume = fields.Float('Volume', readonly=True)
@@ -90,7 +89,6 @@ class PurchaseReport(models.Model):
                     (sum(l.product_qty * l.price_unit / COALESCE(po.currency_rate, 1.0))/NULLIF(sum(l.product_qty/line_uom.factor*product_uom.factor),0.0))::decimal(16,2) * currency_table.rate as price_average,
                     partner.country_id as country_id,
                     partner.commercial_partner_id as commercial_partner_id,
-                    analytic_account.id as account_analytic_id,
                     sum(p.weight * l.product_qty/line_uom.factor*product_uom.factor) as weight,
                     sum(p.volume * l.product_qty/line_uom.factor*product_uom.factor) as volume,
                     sum(l.price_subtotal / COALESCE(po.currency_rate, 1.0))::decimal(16,2) * currency_table.rate as untaxed_total,
@@ -114,7 +112,6 @@ class PurchaseReport(models.Model):
                         left join product_template t on (p.product_tmpl_id=t.id)
                 left join uom_uom line_uom on (line_uom.id=l.product_uom)
                 left join uom_uom product_uom on (product_uom.id=t.uom_id)
-                left join account_analytic_account analytic_account on (l.account_analytic_id = analytic_account.id)
                 left join currency_rate cr on (cr.currency_id = po.currency_id and
                     cr.company_id = po.company_id and
                     cr.date_start <= coalesce(po.date_order, now()) and
@@ -152,7 +149,6 @@ class PurchaseReport(models.Model):
                 product_uom.factor,
                 partner.country_id,
                 partner.commercial_partner_id,
-                analytic_account.id,
                 po.id,
                 currency_table.rate
         """

@@ -56,8 +56,10 @@
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="accounting_date" optional="hide" groups="account.group_account_invoice,account.group_account_readonly" readonly="0"/>
                     <field name="reference" optional="hide" groups="account.group_account_readonly"/>
-                    <field name="analytic_account_id" optional="show" groups="analytic.group_analytic_accounting"/>
-                    <field name="analytic_tag_ids" optional="hide" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
+                    <field name="analytic_distribution_stored_char" invisible="1"/>
+                    <field name="analytic_distribution" widget="analytic_distribution"
+                           optional="show"
+                           groups="analytic.group_analytic_accounting"/>
                     <field name="account_id" optional="hide" groups="account.group_account_readonly"/>
                     <field name="company_id" optional="show" groups="base.group_multi_company" readonly="1"/>
                     <field name="unit_amount_display" string="Unit Price" optional="hide" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
@@ -185,8 +187,13 @@
                             <field name="accounting_date" attrs="{'invisible': ['|', ('accounting_date', '=', False), ('state', 'not in', ['approved', 'done'])]}" />
                             <field name="account_id" options="{'no_create': True}" domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('company_id', '=', company_id)]" groups="account.group_account_readonly" attrs="{'readonly': ['|', ('is_editable', '=', False), ('sheet_is_editable', '=', False)]}" context="{'default_company_id': company_id}"/>
                             <field name="sheet_id" invisible="1"/>
-                            <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting" attrs="{'readonly': [('is_editable', '=', False)]}"/>
-                            <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" attrs="{'readonly': [('is_editable', '=', False)]}"/>
+                            <field name="analytic_distribution_stored_char" invisible="1"/>
+                            <field name="analytic_distribution" widget="analytic_distribution"
+                                groups="analytic.group_analytic_accounting"
+                                options="{'product_field': 'product_id', 'account_field': 'account_id'}"
+                                business_domain_compute="'purchase'"
+                                attrs="{'readonly': [('is_editable', '=', False)]}"
+                                   />
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver" context="{'default_company_id': company_id}" widget="many2one_avatar_employee"/>
                             <label id="lo" for="payment_mode" attrs="{'invisible': [('product_has_cost', '=', True)]}"/>
@@ -330,7 +337,6 @@
                     <field string="Expense" name="name" filter_domain="['|', '|', ('employee_id', 'ilike', self), ('name', 'ilike', self), ('product_id', 'ilike', self)]"/>
                     <field name="date"/>
                     <field name="employee_id"/>
-                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     <filter string="My Expenses" name="my_expenses" domain="[('employee_id.user_id', '=', uid)]"/>
                     <filter string="My Team" name="my_team_expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_expense.group_hr_expense_team_approver" help="Expenses of Your Team Member"/>
                     <separator />
@@ -351,7 +357,6 @@
                     <group expand="0" string="Group By">
                         <filter string="Employee" name="employee" domain="[]" context="{'group_by': 'employee_id'}"/>
                         <filter string="Category" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
-                        <filter string="Analytic Account" name="analyticacc" domain="[]" context="{'group_by': 'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
                         <filter string="Expense Date" name="expensesmonth" domain="[]" context="{'group_by': 'date'}" help="Expense Date"/>
                         <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
@@ -743,8 +748,12 @@
                                     <field name="attachment_number" invisible="1"/>
                                     <button name="action_get_attachment_view" type="object" icon="fa-paperclip" aria-label="View Attachments" title="View Attachments" class="float-end pe-0" readonly="True" attrs="{'invisible': [('attachment_number', '=', 0)]}"/>
                                     <field name="reference" optional="hide" readonly="True"/>
-                                    <field name="analytic_account_id" optional="show" domain="['|', ('company_id', '=', parent.company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting"/>
-                                    <field name="analytic_tag_ids" optional="hide" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
+                                    <field name="analytic_distribution_stored_char" invisible="1"/>
+                                    <field name="analytic_distribution" widget="analytic_distribution"
+                                           groups="analytic.group_analytic_accounting"
+                                           optional="show"
+                                           options="{'product_field': 'product_id', 'account_field': 'account_id'}"
+                                           business_domain_compute="'purchase'"/>
                                     <field name="account_id" optional="hide" readonly="True"/>
                                     <field name="product_has_cost" invisible="True"/>
                                     <field name="unit_amount" optional="hide" widget="monetary" attrs="{'readonly': [('product_has_cost', '=', False)]}" options="{'currency_field': 'currency_id'}"/>

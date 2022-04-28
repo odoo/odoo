@@ -414,14 +414,15 @@ class TestSaleToInvoice(TestSaleCommon):
         downpayment.create_invoices()
         self.assertEqual(so_for_downpayment.invoice_ids[0].company_id.id, so_company_id, "The company of the downpayment invoice should be the same as the one from the SO")
 
-    def test_invoice_analytic_account_default(self):
+    def test_invoice_analytic_distribution_model(self):
         """ Tests whether, when an analytic account rule is set and the so has no analytic account,
-        the default analytic acount is correctly computed in the invoice.
+        the default analytic account is correctly computed in the invoice.
         """
-        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default'})
+        analytic_plan_default = self.env['account.analytic.plan'].create({'name': 'default'})
+        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default', 'plan_id': analytic_plan_default.id})
 
-        self.env['account.analytic.default'].create({
-            'analytic_id': analytic_account_default.id,
+        self.env['account.analytic.distribution.model'].create({
+            'analytic_distribution': {analytic_account_default.id: 100},
             'product_id': self.product_a.id,
         })
 
@@ -446,7 +447,7 @@ class TestSaleToInvoice(TestSaleCommon):
         down_payment.create_invoices()
 
         aml = self.env['account.move.line'].search([('move_id', 'in', so.invoice_ids.ids)])[0]
-        self.assertRecordValues(aml, [{'analytic_account_id': analytic_account_default.id}])
+        self.assertRecordValues(aml, [{'analytic_distribution': {analytic_account_default.id: 100}}])
 
     def test_invoice_analytic_account_so_not_default(self):
         """ Tests whether, when an analytic account rule is set and the so has an analytic account,
@@ -454,11 +455,12 @@ class TestSaleToInvoice(TestSaleCommon):
         """
         # Required for `analytic_account_id` to be visible in the view
         self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
-        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default'})
-        analytic_account_so = self.env['account.analytic.account'].create({'name': 'so'})
+        analytic_plan_default = self.env['account.analytic.plan'].create({'name': 'default'})
+        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default', 'plan_id': analytic_plan_default.id})
+        analytic_account_so = self.env['account.analytic.account'].create({'name': 'so', 'plan_id': analytic_plan_default.id})
 
-        self.env['account.analytic.default'].create({
-            'analytic_id': analytic_account_default.id,
+        self.env['account.analytic.distribution.model'].create({
+            'analytic_distribution': {analytic_account_default.id: 100},
             'product_id': self.product_a.id,
         })
 
@@ -484,7 +486,7 @@ class TestSaleToInvoice(TestSaleCommon):
         down_payment.create_invoices()
 
         aml = self.env['account.move.line'].search([('move_id', 'in', so.invoice_ids.ids)])[0]
-        self.assertRecordValues(aml, [{'analytic_account_id': analytic_account_so.id}])
+        self.assertRecordValues(aml, [{'analytic_distribution': {analytic_account_default.id: 100, analytic_account_so.id: 100}}])
 
     def test_invoice_after_product_return_price_not_default(self):
         so = self.env['sale.order'].create({
@@ -598,7 +600,7 @@ class TestSaleToInvoice(TestSaleCommon):
                     'product_uom_id': serv_cost.uom_id.id,
                     'quantity': 2,
                     'price_unit': serv_cost.standard_price,
-                    'analytic_account_id': so.analytic_account_id.id,
+                    'analytic_distribution': {so.analytic_account_id.id: 100},
                 }),
             ],
         })

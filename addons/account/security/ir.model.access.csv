@@ -58,6 +58,9 @@ access_account_analytic_account,account.analytic.account,analytic.model_account_
 access_account_analytic_line_readonly,account.analytic.line invoice,model_account_analytic_line,account.group_account_readonly,1,0,0,0
 access_account_analytic_line_invoice,account.analytic.line invoice,model_account_analytic_line,account.group_account_invoice,1,1,1,1
 access_account_analytic_accountant,account.analytic.account accountant,analytic.model_account_analytic_account,account.group_account_user,1,1,1,1
+access_account_analytic_plan_accountant,account.analytic.plan accountant,analytic.model_account_analytic_plan,account.group_account_user,1,1,1,1
+access_account_analytic_distribution_readonly,account.analytic.distribution invoice,analytic.model_account_analytic_distribution_model,account.group_account_readonly,1,0,0,0
+access_account_analytic_distribution_invoice,account.analytic.distribution invoice,analytic.model_account_analytic_distribution_model,account.group_account_invoice,1,1,1,1
 
 access_account_journal_readonly,account.journal,model_account_journal,account.group_account_readonly,1,0,0,0
 access_account_journal_manager,account.journal,model_account_journal,account.group_account_manager,1,1,1,1
@@ -130,9 +133,6 @@ access_account_financial_year_op,access.account.financial.year.op,model_account_
 access_account_setup_bank_manual_config,access.account.setup.bank.manual.config,model_account_setup_bank_manual_config,account.group_account_manager,1,1,1,0
 access_account_invoice_send,access.account.invoice.send,model_account_invoice_send,account.group_account_invoice,1,1,1,0
 
-access_account_analytic_default,account.analytic.default,model_account_analytic_default,account.group_account_readonly,1,0,0,0
-access_account_analytic_default_analytic,account.analytic.default analytic,model_account_analytic_default,analytic.group_analytic_accounting,1,0,0,0
-access_account_analytic_default_invoice,account.analytic.default invoice,model_account_analytic_default,account.group_account_invoice,1,1,1,1
 access_account_tour_upload_bill,account.tour.upload.bill,model_account_tour_upload_bill,account.group_account_manager,1,1,1,0
 access_account_tour_upload_bill_email_confirm,account.tour.upload.bill.email.confirm,model_account_tour_upload_bill_email_confirm,account.group_account_manager,1,1,1,0
 
