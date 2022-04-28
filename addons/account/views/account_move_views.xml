@@ -69,12 +69,10 @@
                                     <group string="States">
                                         <field name="blocked"/>
                                     </group>
-                                    <group string="Analytic" groups="analytic.group_analytic_accounting,analytic.group_analytic_tags">
-                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"
-                                            domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"
+                                    <group string="Analytic" groups="analytic.group_analytic_accounting">
+                                        <field name="analytic_distribution_stored_char" invisible="1"/>
+                                        <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting"
                                             readonly="1"/>
-                                        <field name="analytic_tag_ids" groups="analytic.group_analytic_tags"
-                                            widget="many2many_tags"/>
                                     </group>
                                 </group>
                             </page>
@@ -163,18 +161,17 @@
             <field name="model">account.move.line</field>
             <field eval="100" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Journal Items" create="false" edit="false" expand="context.get('expand', False)" multi_edit="1" sample="1">
+                <tree string="Journal Items" create="false" edit="true" expand="context.get('expand', False)" multi_edit="1" sample="1">
                     <field name="date" readonly="1"/>
                     <field name="company_id" invisible="1"/>
-                    <field name="company_id" groups="base.group_multi_company" optional="hide"/>
-                    <field name="journal_id" options='{"no_open":True}' optional="hide"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
+                    <field name="journal_id" readonly="1" options='{"no_open":True}' optional="hide"/>
                     <field name="move_name" string="Journal Entry" widget="open_move_widget"/>
                     <field name="account_id" options="{'no_open': True, 'no_create': True}" domain="[('company_id', '=', company_id)]" groups="account.group_account_readonly"/>
                     <field name="partner_id" optional="show" attrs="{'readonly':[('account_type','in', ('liability_payable','asset_receivable'))]}"/>
                     <field name="ref" optional="hide"/>
-                    <field name="product_id" optional="hide"/>
+                    <field name="product_id" readonly="1" optional="hide"/>
                     <field name="name" optional="show"/>
-                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" optional="show" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                     <field name="tax_ids" widget="many2many_tags" width="0.5" optional="hide" readonly="1"/>
                     <field name="amount_currency" groups="base.group_multi_currency" optional="show" readonly="1" attrs="{'invisible':[('is_same_currency', '=', True)]}"/>
                     <field name="currency_id" readonly="1" groups="base.group_multi_currency" optional="hide" string="Currency" attrs="{'invisible':[('is_same_currency', '=', True)]}"/>
@@ -184,14 +181,19 @@
                     <field name="discount_date" string="Discount Date"/>
                     <field name="discount_amount_currency" string="Discount Amount"/>
                     <field name="tax_line_id" string="Originator Tax" optional="hide" readonly="1"/>
-                    <field name="date_maturity" optional="hide"/>
+                    <field name="date_maturity" readonly="1" optional="hide"/>
                     <field name="balance" sum="Total Balance" optional="hide" readonly="1"/>
-                    <field name="cumulated_balance" optional="hide"/>
-                    <field name="matching_number" optional="show"/>
-                    <field name="amount_residual" sum="Total Residual" string="Residual" optional="hide" attrs="{'invisible':[('is_account_reconcile', '=', False)]}"/>
-                    <field name="amount_residual_currency" sum="Total Residual in Currency" string="Residual in Currency" optional="hide" attrs="{'invisible':['|', ('is_same_currency', '=', True), ('is_account_reconcile', '=', False)]}"/>
+                    <field name="cumulated_balance" readonly="1" optional="hide"/>
+                    <field name="matching_number" readonly="1" optional="show"/>
+                    <field name="amount_residual" sum="Total Residual" string="Residual" readonly="1" optional="hide" attrs="{'invisible':[('is_account_reconcile', '=', False)]}"/>
+                    <field name="amount_residual_currency" sum="Total Residual in Currency" string="Residual in Currency" readonly="1" optional="hide" attrs="{'invisible':['|', ('is_same_currency', '=', True), ('is_account_reconcile', '=', False)]}"/>
+                    <field name="analytic_distribution_stored_char" invisible="1"/>
+                    <field name="analytic_distribution" widget="analytic_distribution"
+                           groups="analytic.group_analytic_accounting"
+                           optional="show"
+                           options="{'product_field': 'product_id', 'account_field': 'account_id', 'force_applicability': 'optional'}"
+                           />
 
-                    <field name="move_id" invisible="1"/>
                     <field name="parent_state" invisible="1"/>
                     <field name="account_type" invisible="1"/>
                     <field name="statement_id" invisible="1"/>
@@ -274,7 +276,7 @@
                     <field name="tax_base_amount" sum="Total Base Amount"/>
                     <field name="tax_audit"/>
                 </field>
-                <field name="analytic_account_id" position="attributes">
+                <field name="analytic_distribution" position="attributes">
                     <attribute name="optional">hide</attribute>
                 </field>
                 <field name="debit" position="attributes">
@@ -345,7 +347,6 @@
                     <separator/>
                     <filter string="Report Dates" name="date_between" domain="[('date', '&gt;=', context.get('date_from')), ('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
                     <separator/>
-                    <filter string="Report Analytic Accounts" name="analytic_accounts" domain="[('analytic_account_id', 'in', context.get('analytic_ids'))]" invisible="1"/>
                     <group expand="0" string="Group By">
                         <filter string="Journal Entry" name="group_by_move" domain="[]" context="{'group_by': 'move_name'}"/>
                         <filter string="Account" name="group_by_account" domain="[]" context="{'group_by': 'account_id'}"/>
@@ -884,15 +885,12 @@
                                                options="{'no_create': True}"
                                                domain="[('deprecated', '=', False), ('account_type', 'not in', ('asset_receivable', 'liability_payable')), ('company_id', '=', parent.company_id), ('is_off_balance', '=', False)]"
                                                attrs="{'required': [('display_type', 'not in', ('line_note', 'line_section'))]}"/>
-                                        <field name="analytic_account_id"
-                                               domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
+                                        <field name="analytic_distribution_stored_char" invisible="1"/>
+                                        <field name="analytic_distribution" widget="analytic_distribution"
                                                groups="analytic.group_analytic_accounting"
-                                               optional="show"/>
-                                        <field name="analytic_tag_ids"
-                                               domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
-                                               groups="analytic.group_analytic_tags"
                                                optional="show"
-                                               widget="many2many_tags"/>
+                                               options="{'product_field': 'product_id', 'account_field': 'account_id'}"
+                                               business_domain_compute="parent.move_type in ['out_invoice', 'out_refund', 'out_receipt'] and 'sale' or parent.move_type in ['in_invoice', 'in_refund', 'in_receipt'] and 'purchase' or 'general'"/>
                                         <field name="quantity" optional="show"/>
                                         <field name="product_uom_category_id" invisible="1"/>
                                         <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
@@ -994,10 +992,10 @@
                                                 <field name="discount" string="Disc.%"/>
                                             </group>
                                             <group>
-                                                <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                                 <field name="account_id" options="{'no_create': True}" domain="[('company_id', '=', company_id)]" context="{'partner_id': partner_id, 'move_type': parent.move_type}"/>
                                                 <field name="tax_ids" widget="many2many_tags"/>
-                                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                                <field name="analytic_distribution_stored_char" invisible="1"/>
+                                                <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting"/>
                                             </group>
                                             <label for="name" string="Description" attrs="{'invisible': [('display_type', 'in', ('line_note', 'line_section'))]}"/>
                                             <label for="name" string="Section" attrs="{'invisible': [('display_type', '!=', 'line_section')]}"/>
@@ -1058,16 +1056,12 @@
                                                domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
                                                attrs="{'column_invisible': [('parent.move_type', '!=', 'entry')]}"/>
                                         <field name="name" widget="section_and_note_text" optional="show"/>
-                                        <field name="analytic_account_id"
-                                               optional="hide"
-                                               domain="['|', ('company_id', '=', parent.company_id), ('company_id', '=', False)]"
+                                        <field name="analytic_distribution_stored_char" invisible="1"/>
+                                        <field name="analytic_distribution" widget="analytic_distribution"
                                                groups="analytic.group_analytic_accounting"
-                                               attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
-                                        <field name="analytic_tag_ids"
                                                optional="show"
-                                               groups="analytic.group_analytic_tags"
-                                               widget="many2many_tags"
-                                               attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
+                                               options="{'product_field': 'product_id', 'account_field': 'account_id'}"
+                                               business_domain_compute="parent.move_type in ['out_invoice', 'out_refund', 'out_receipt'] and 'sale' or parent.move_type in ['in_invoice', 'in_refund', 'in_receipt'] and 'purchase' or 'general'"/>
                                         <field name="date_maturity"
                                                optional="hide"
                                                invisible="context.get('view_no_maturity')"
@@ -1146,8 +1140,8 @@
                                         <field name="account_id" domain="[('company_id', '=', parent.company_id), ('deprecated', '=', False)]"/>
                                         <field name="partner_id" domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
                                         <field name="name"/>
-                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                                        <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
+                                        <field name="analytic_distribution_stored_char" invisible="1"/>
+                                        <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting"/>
                                         <field name="amount_currency" groups="base.group_multi_currency"/>
                                         <field name="company_currency_id" invisible="1"/>
                                         <field name="company_id" invisible="1"/>

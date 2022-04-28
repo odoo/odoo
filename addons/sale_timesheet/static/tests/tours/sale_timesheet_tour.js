@@ -160,7 +160,7 @@ tour.register('sale_timesheet_tour', {
     content: 'Select a Sales Order Item as Default Sales Order Item for each task in this project.',
     run: 'text S',
 }, {
-    trigger: 'ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
+    trigger: '[name="sale_line_id"] ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
     content: 'Select the Sales Order Item in the autocomplete dropdown.',
 }, {
     trigger: 'div[name="sale_line_employee_ids"] td.o_field_x2many_list_row_add > a[role="button"]',
@@ -170,7 +170,7 @@ tour.register('sale_timesheet_tour', {
     content: 'Select an employee to link a Sales Order Item on his timesheets into this project.',
     run: 'click',
 }, {
-    trigger: 'ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
+    trigger: '[name="employee_id"] ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
     content: 'Select the first employee in the autocomplete dropdown',
 }, {
     trigger: 'div[name="sale_line_employee_ids"] div[name="sale_line_id"] input',
@@ -178,7 +178,7 @@ tour.register('sale_timesheet_tour', {
     position: 'bottom',
     run: 'text S',
 }, {
-    trigger: 'ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
+    trigger: '[name=sale_line_id] ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
     content: 'Select the first Sales Order Item in the autocomplete dropdown.',
 }, {
     trigger: 'h1 > div[name="name"] > input',

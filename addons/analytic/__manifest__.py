@@ -17,12 +17,22 @@ that have no counterpart in the general financial accounts.
     'data': [
         'security/analytic_security.xml',
         'security/ir.model.access.csv',
+        'views/analytic_line_views.xml',
         'views/analytic_account_views.xml',
+        'views/analytic_plan_views.xml',
+        'views/analytic_distribution_model_views.xml',
     ],
     'demo': [
-        'data/analytic_demo.xml',
-        'data/analytic_account_demo.xml',
+        'data/analytic_account_demo.xml'
     ],
+    'assets': {
+        'web.assets_backend': [
+            'analytic/static/src/components/**/*',
+        ],
+        'web.qunit_suite_tests': [
+            'analytic/static/tests/*.js',
+        ],
+    },
     'installable': True,
     'license': 'LGPL-3',
 }

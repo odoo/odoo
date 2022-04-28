@@ -313,19 +313,21 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
 
         self.assertEqual(move.amount_total, 0.01)
 
-    def test_vendor_bill_analytic_account_default_change(self):
+    def test_vendor_bill_analytic_account_model_change(self):
         """ Tests whether, when an analytic account rule is set, and user changes manually the analytic account on
         the po, it is the same that is mentioned in the bill.
         """
         # Required for `analytic.group_analytic_accounting` to be visible in the view
         self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
-        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default'})
-        analytic_account_manual = self.env['account.analytic.account'].create({'name': 'manual'})
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
+        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default', 'plan_id': analytic_plan.id})
+        analytic_account_manual = self.env['account.analytic.account'].create({'name': 'manual', 'plan_id': analytic_plan.id})
 
-        self.env['account.analytic.default'].create({
-            'analytic_id': analytic_account_default.id,
+        self.env['account.analytic.distribution.model'].create({
+            'analytic_distribution': {analytic_account_default.id: 100},
             'product_id': self.product_order.id,
         })
+        analytic_distribution_manual = {analytic_account_manual.id: 100}
 
         po_form = Form(self.env['purchase.order'].with_context(tracking_disable=True))
         po_form.partner_id = self.partner_a
@@ -334,32 +336,32 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
             po_line_form.product_id = self.product_order
             po_line_form.product_qty = 1.0
             po_line_form.price_unit = 10
-            po_line_form.account_analytic_id = analytic_account_manual
+            po_line_form.analytic_distribution = analytic_distribution_manual
 
         purchase_order = po_form.save()
         purchase_order.button_confirm()
         purchase_order.action_create_invoice()
 
         aml = self.env['account.move.line'].search([('purchase_line_id', '=', purchase_order.order_line.id)])
-        self.assertRecordValues(aml, [{'analytic_account_id': analytic_account_manual.id}])
+        self.assertRecordValues(aml, [{'analytic_distribution': analytic_distribution_manual}])
 
-    def test_vendor_bill_analytic_account_product_change(self):
+    def test_purchase_order_analytic_account_product_change(self):
         self.env.user.groups_id += self.env.ref('account.group_account_readonly')
         self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
 
-        analytic_account_super = self.env['account.analytic.account'].create({'name': 'Super Account'})
-        analytic_account_great = self.env['account.analytic.account'].create({'name': 'Great Account'})
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
+        analytic_account_super = self.env['account.analytic.account'].create({'name': 'Super Account', 'plan_id': analytic_plan.id})
+        analytic_account_great = self.env['account.analytic.account'].create({'name': 'Great Account', 'plan_id': analytic_plan.id})
 
         super_product = self.env['product.product'].create({'name': 'Super Product'})
         great_product = self.env['product.product'].create({'name': 'Great Product'})
-        product_no_account = self.env['product.product'].create({'name': 'Product No Account'})
-        self.env['account.analytic.default'].create([
+        self.env['account.analytic.distribution.model'].create([
             {
-                'analytic_id': analytic_account_super.id,
+                'analytic_distribution': {analytic_account_super.id: 100},
                 'product_id': super_product.id,
             },
             {
-                'analytic_id': analytic_account_great.id,
+                'analytic_distribution': {analytic_account_great.id: 100},
                 'product_id': great_product.id,
             },
         ])
@@ -371,23 +373,21 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
         purchase_order = po_form.save()
         purchase_order_line = purchase_order.order_line
 
-        self.assertEqual(purchase_order_line.account_analytic_id.id, analytic_account_super.id, "The analytic account should be set to 'Super Account'")
+        self.assertEqual(purchase_order_line.analytic_distribution, {analytic_account_super.id: 100}, "The analytic account should be set to 'Super Account'")
         purchase_order_line.write({'product_id': great_product.id})
-        self.assertEqual(purchase_order_line.account_analytic_id.id, analytic_account_great.id, "The analytic account should be set to 'Great Account'")
-        purchase_order_line.write({'product_id': product_no_account.id})
-        self.assertFalse(purchase_order_line.account_analytic_id.id, "The analytic account should not be set")
+        self.assertEqual(purchase_order_line.analytic_distribution, {analytic_account_great.id: 100}, "The analytic account should be set to 'Great Account'")
 
-        po_no_analytic_account = self.env['purchase.order'].create({
+        po_no_analytic_distribution = self.env['purchase.order'].create({
             'partner_id': self.env.ref('base.res_partner_1').id,
         })
-        pol_no_analytic_account = self.env['purchase.order.line'].create({
+        pol_no_analytic_distribution = self.env['purchase.order.line'].create({
             'name': super_product.name,
             'product_id': super_product.id,
-            'order_id': po_no_analytic_account.id,
-            'account_analytic_id': False,
+            'order_id': po_no_analytic_distribution.id,
+            'analytic_distribution': False,
         })
-        po_no_analytic_account.button_confirm()
-        self.assertFalse(pol_no_analytic_account.account_analytic_id.id, "The compute should not overwrite what the user has set.")
+        po_no_analytic_distribution.button_confirm()
+        self.assertFalse(pol_no_analytic_distribution.analytic_distribution, "The compute should not overwrite what the user has set.")
 
     def test_sequence_invoice_lines_from_multiple_purchases(self):
         """Test if the invoice lines are sequenced by purchase order when creating an invoice

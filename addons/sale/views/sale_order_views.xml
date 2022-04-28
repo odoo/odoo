@@ -362,7 +362,12 @@
                                         <div name="lead">
                                             <field name="customer_lead" class="oe_inline"/> days
                                         </div>
-                                        <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" options="{'color_field': 'color'}" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                        <field name="analytic_distribution_stored_char" invisible="1"/>
+                                        <!-- TODO widget="analytic_distribution" -->
+                                        <field name="analytic_distribution"
+                                           groups="analytic.group_analytic_accounting" invisible="1"
+                                           options="{'product_field': 'product_id'}"
+                                           business_domain_compute="'sale'"/>
                                     </group>
                                 </group>
                                 <label for="name" string="Description" attrs="{'invisible': [('display_type', '!=', False)]}"/>
@@ -430,14 +435,13 @@
                                     domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
                                     widget="product_configurator"/>
                                 <field name="name" widget="section_and_note_text" optional="show"/>
-                                <field
-                                    name="analytic_tag_ids"
-                                    optional="hide"
-                                    groups="analytic.group_analytic_tags"
-                                    widget="many2many_tags"
-                                    options="{'color_field': 'color'}"
-                                    domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
-                                />
+                                <field name="analytic_distribution_stored_char" invisible="1"/>
+                                <!-- TODO widget="analytic_distribution" -->
+                                <field name="analytic_distribution"
+                                           optional="hide" invisible="1"
+                                           groups="analytic.group_analytic_accounting"
+                                           options="{'product_field': 'product_id'}"
+                                           business_domain_compute="'sale'"/>
                                 <field
                                     name="product_uom_qty"
                                     decoration-info="(not display_type and invoice_status == 'to invoice')" decoration-bf="(not display_type and invoice_status == 'to invoice')"

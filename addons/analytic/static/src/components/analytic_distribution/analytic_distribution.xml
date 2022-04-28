@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="analytic_distribution" owl="1">
+        <div class="analytic_distribution" t-ref="analyticDistribution" t-on-keydown="onWidgetKeydown">
+            <t t-call="analytic_distribution.tags"/>
+            <t t-if="!props.readonly">
+                <div class="o_input o_input_dropdown hidden-focus" tabindex="0" t-ref="mainElement" t-on-focus="onMainElementFocus">
+                    <a role="button" class="o_dropdown_button" draggable="false" />
+                    <t t-call="analytic_distribution.popup"/>
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="analytic_distribution_form" owl="1">
+        <div class="analytic_distribution" t-ref="analyticDistribution" t-on-keydown="onWidgetKeydown">
+
+            <t t-call="analytic_distribution.tags"/>
+            <t t-if="!props.readonly">
+                <div class="o_input o_input_dropdown hidden-focus" tabindex="0" t-ref="mainElement" t-on-focus="onMainElementFocus" t-on-click="onMainElementFocus">
+                    <input class="invisible"/>
+                    <a role="button" class="o_dropdown_button" draggable="false" />
+                    <t t-call="analytic_distribution.popup"/>
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="analytic_distribution.tags" owl="1">
+        <div class="tag-list d-inline-flex flex-wrap">
+            <TagsList tags="tags"/>
+        </div>
+    </t>
+
+    <t t-name="analytic_distribution.popup" owl="1">
+        <div class="analytic_distribution_popup o-dropdown-menu show rounded py-0" t-if="state.showDropdown" t-ref="analyticDropdown">
+            <div class="popover-header">
+                <div class="d-flex">
+                    <div class="h5 mt-2 me-auto">Analytic</div>
+                    <div class="popupButtons">
+                        <span t-if="tags.length and allowSave" class="btn o_button" t-on-click="onSaveNew"><i class="fa fa-save"/></span>
+                        <span class="o_button ms-2 cursor-pointer" t-on-click.stop="() => this.closeAnalyticEditor()"><span class="fa fa-close"/></span>
+                    </div>
+                </div>
+            </div>
+            <div class="p-2">
+                <span t-if="!sortedList.length">No plans available</span>
+                <t t-foreach="sortedList" t-as="plan" t-key="plan.id">
+                    <table class="o_list_table table table-sm table-hover o_analytic_table mb-2 table-borderless" t-attf-id="plan_{{plan.id}}">
+                        <tr class="border-bottom">
+                            <th class="o_analytic_account_name">
+                                <t t-esc="plan.name"/>
+                                <t t-if="plan.account_count === 0"> (no accounts)</t>
+                                <span t-attf-class="o_status d-inline-block o_analytic_status_{{groupStatus(plan.id)}}" t-att-title="applicabilityStatus(plan.id) + ' ' + formatPercentage(sumByGroup(plan.id))"/>
+                            </th>
+                        </tr>
+                        <t t-foreach="plan.distribution" t-as="dist_tag" t-key="dist_tag.id">
+                            <tr t-attf-class="{{tagIsReady(dist_tag) and 'ready' or !!dist_tag.analytic_account_id and 'to_remove' or 'incomplete'}} tag_{{dist_tag.id}}">
+                                <td class="o_analytic_account_name">
+                                    <AnalyticAutoComplete
+                                        id="dist_tag.id.toString()"
+                                        placeholder="'Search Analytic Account'"
+                                        value="dist_tag.analytic_account_name"
+                                        sources="sourcesAnalyticAccount"
+                                        autoSelect="true"
+                                        onSelect.bind="(option, params) => this.onSelect(option, params, dist_tag)"
+                                        onFocus.bind="() => this.groupAutocompleteFocus(plan.id)"
+                                        onInput.bind="(inputVal) => this.autoCompleteInput(dist_tag, inputVal)"/>
+                                </td>
+                                <td class="o_analytic_percentage">
+                                    <input
+                                        class="o_input"
+                                        inputmode="numeric"
+                                        type="text"
+                                        t-att-value="formatPercentage(dist_tag.percentage)"
+                                        t-on-click.stop=""
+                                        t-on-change="(ev) => this.percentageChanged(dist_tag, ev)"/>
+                                </td>
+                                <td>
+                                    <span class="fa fa-trash-o cursor-pointer" t-on-click.stop="() => this.deleteTag(dist_tag.id)"/>
+                                </td>
+                            </tr>
+                        </t>
+                        <tr>
+                            <td class="o_field_x2many_list_row_add" colspan="3">
+                                <a t-if="plan.all_account_count" href="#" role="button" tabindex="-1" t-on-click.prevent.stop="() => this.addLineToGroup(plan.id)">Add a line</a>
+                            </td>
+                        </tr>
+                    </table>
+                </t>
+                <div tabindex="0" class="hidden-focus"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

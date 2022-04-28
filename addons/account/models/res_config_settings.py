@@ -70,7 +70,6 @@ class ResConfigSettings(models.TransientModel):
         domain="[('reconcile', '=', True), ('account_type', '=', 'asset_current')]",
         help="Intermediary account used when moving from a liquidity account to another.")
     module_account_accountant = fields.Boolean(string='Accounting')
-    group_analytic_tags = fields.Boolean(string='Analytic Tags', implied_group='analytic.group_analytic_tags')
     group_warning_account = fields.Boolean(string="Warnings in Invoices", implied_group='account.group_warning_account')
     group_cash_rounding = fields.Boolean(string="Cash Rounding", implied_group='account.group_cash_rounding')
     # group_show_line_subtotals_tax_excluded and group_show_line_subtotals_tax_included are opposite,

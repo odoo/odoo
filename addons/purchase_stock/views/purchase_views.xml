@@ -52,7 +52,7 @@
             <field name="invoice_status" position="before">
                 <field name="receipt_status" attrs="{'invisible': [('state', 'not in', ('purchase', 'done'))]}"/>
             </field>
-            <xpath expr="//field[@name='order_line']/form//field[@name='account_analytic_id']" position="before">
+            <xpath expr="//field[@name='order_line']/form//field[@name='analytic_distribution']" position="before">
                 <field name="propagate_cancel" groups="base.group_no_one"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree//field[@name='qty_received']" position="attributes">

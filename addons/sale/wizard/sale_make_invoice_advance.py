@@ -6,6 +6,7 @@ import time
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.fields import Command
+from odoo.tools import float_is_zero
 
 
 class SaleAdvancePaymentInv(models.TransientModel):
@@ -220,6 +221,15 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     def _prepare_so_line_values(self, order):
         self.ensure_one()
+        analytic_distribution = {}
+        amount_total = sum(order.order_line.mapped("price_total"))
+        if not float_is_zero(amount_total, precision_rounding=self.currency_id.rounding):
+            for line in order.order_line:
+                distrib_dict = line.analytic_distribution or {}
+                for account, distribution in distrib_dict.items():
+                    analytic_distribution[account] = distribution * line.price_total + analytic_distribution.get(account, 0)
+            for account, distribution_amount in analytic_distribution.items():
+                analytic_distribution[account] = distribution_amount/amount_total
         context = {'lang': order.partner_id.lang}
         so_values = {
             'name': _('Down Payment: %s (Draft)', time.strftime('%m %Y')),
@@ -228,11 +238,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'order_id': order.id,
             'discount': 0.0,
             'product_id': self.product_id.id,
-            'analytic_tag_ids': [
-                Command.link(analytic_tag.id)
-                for line in order.order_line
-                for analytic_tag in line.analytic_tag_ids
-            ],
+            'analytic_distribution': analytic_distribution,
             'is_downpayment': True,
             'sequence': order.order_line and order.order_line[-1].sequence + 1 or 10,
         }

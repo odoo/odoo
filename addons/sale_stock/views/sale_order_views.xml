@@ -44,10 +44,10 @@
                     <field name="show_json_popover" invisible="1"/>
                     <field string=" " name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
                 </xpath>
-                <xpath expr="//field[@name='order_line']/form/group/group/field[@name='analytic_tag_ids']" position="before">
+                <xpath expr="//field[@name='order_line']/form/group/group/field[@name='analytic_distribution']" position="before">
                     <field name="route_id" groups="stock.group_adv_location" options="{'no_create': True}"/>
                 </xpath>
-                <xpath expr="//field[@name='order_line']/tree/field[@name='analytic_tag_ids']" position="after">
+                <xpath expr="//field[@name='order_line']/tree/field[@name='analytic_distribution']" position="after">
                     <field name="route_id" groups="stock.group_adv_location" options="{'no_create': True}" optional="hide"/>
                 </xpath>
            </field>

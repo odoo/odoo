@@ -49,7 +49,11 @@
                                     <td>
                                         <span t-field="line.name"/>
                                         <span t-field="line.description"/><br/>
-                                        <span t-field="line.analytic_account_id.name"/>
+                                        <span>
+                                            <div t-foreach="line.analytic_distribution" t-as="distribution">
+                                                <t t-esc="line.env['account.analytic.account'].browse(distribution)[0].name"/>: <t t-esc="line.analytic_distribution.get(distribution)"/>
+                                            </div>
+                                        </span>
                                     </td>
                                     <td style="text-center">
                                         <span t-field="line.reference"/>

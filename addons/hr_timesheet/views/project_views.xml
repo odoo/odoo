@@ -152,7 +152,6 @@
                             <field name="user_id" invisible="1"/>
                             <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}"/>
                             <field name="name" required="0"/>
-                            <field name="tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" optional="hide"/>
                             <field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24 or unit_amount &lt; 0"/>
                             <field name="project_id" invisible="1"/>
                             <field name="task_id" invisible="1"/>

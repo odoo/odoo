@@ -237,8 +237,13 @@
                                         force_save="1" domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                     <field name="name" widget="section_and_note_text"/>
                                     <field name="date_planned" optional="hide" attrs="{'required': [('display_type', '=', False)]}" force_save="1"/>
-                                    <field name="account_analytic_id" optional="hide" context="{'default_partner_id':parent.partner_id}" groups="analytic.group_analytic_accounting" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
-                                    <field name="analytic_tag_ids" optional="hide" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                    <field name="analytic_distribution_stored_char" invisible="1"/>
+                                    <!-- TODO widget="analytic_distribution" -->
+                                    <field name="analytic_distribution"
+                                           optional="hide" invisible="1"
+                                           groups="analytic.group_analytic_accounting"
+                                           options="{'product_field': 'product_id'}"
+                                           business_domain_compute="'purchase'"/>
                                     <field name="product_qty"/>
                                     <field name="qty_received_manual" invisible="1"/>
                                     <field name="qty_received_method" invisible="1"/>
@@ -282,8 +287,12 @@
                                             </group>
                                             <group>
                                                 <field name="date_planned" widget="date" attrs="{'required': [('display_type', '=', False)]}"/>
-                                                <field name="account_analytic_id" colspan="2" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
-                                                <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                                <field name="analytic_distribution_stored_char" invisible="1"/>
+                                                <!-- TODO widget="analytic_distribution" -->
+                                                <field name="analytic_distribution"
+                                                       groups="analytic.group_analytic_accounting" invisible="1"
+                                                       options="{'product_field': 'product_id'}"
+                                                       business_domain_compute="'purchase'"/>
                                             </group>
                                             <group colspan="12">
                                             <notebook>
@@ -733,7 +742,12 @@
                                     domain="[('type_tax_use', '=', 'purchase')]"/>
                                 <field name="date_planned" widget="date" readonly="1"/>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                                <field name="account_analytic_id" colspan="4" groups="analytic.group_analytic_accounting"/>
+                                <field name="analytic_distribution_stored_char" invisible="1"/>
+                                <!-- TODO widget="analytic_distribution" -->
+                                <field name="analytic_distribution"
+                                       groups="analytic.group_analytic_accounting" invisible="1"
+                                       options="{'product_field': 'product_id'}"
+                                       business_domain_compute="'purchase'"/>
                             </group>
                         </group>
                         <field name="name"/>

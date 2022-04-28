@@ -13,7 +13,7 @@ from odoo.tools.misc import clean_context, format_date
 class HrExpense(models.Model):
 
     _name = "hr.expense"
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'analytic.mixin']
     _description = "Expense"
     _order = "date desc, id desc"
     _check_company_auto = True
@@ -78,8 +78,6 @@ class HrExpense(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=False, store=True, states={'reported': [('readonly', True)], 'approved': [('readonly', True)], 'done': [('readonly', True)]}, compute='_compute_currency_id', default=lambda self: self.env.company.currency_id)
     currency_rate = fields.Float(compute='_compute_currency_rate')
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', check_company=True)
-    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     account_id = fields.Many2one('account.account', compute='_compute_from_product_id_company_id', store=True, readonly=False, precompute=True, string='Account',
         domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('company_id', '=', company_id)]", help="An expense account is expected")
     description = fields.Text('Internal Notes', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]})
@@ -308,17 +306,17 @@ class HrExpense(models.Model):
                 exp.duplicate_expense_ids = [(6, 0, ids)]
                 expenses = expenses - exp
 
-    # sgv todo replace with depends?
-    @api.onchange('product_id', 'date', 'account_id')
-    def _onchange_product_id_date_account_id(self):
-        rec = self.env['account.analytic.default'].sudo().account_get(
-            product_id=self.product_id.id,
-            account_id=self.account_id.id,
-            company_id=self.company_id.id,
-            date=self.date
-        )
-        self.analytic_account_id = self.analytic_account_id or rec.analytic_id.id
-        self.analytic_tag_ids = self.analytic_tag_ids or rec.analytic_tag_ids.ids
+    @api.depends('product_id', 'account_id')
+    def _compute_analytic_distribution_stored_char(self):
+        for expense in self:
+            distribution = self.env['account.analytic.distribution.model']._get_distributionjson({
+                'product_id': expense.product_id.id,
+                'product_categ_id': expense.product_id.categ_id.id,
+                'account_prefix': expense.account_id.code,
+                'company_id': expense.company_id.id,
+            })
+            expense.analytic_distribution_stored_char = distribution or expense.analytic_distribution_stored_char
+            expense._compute_analytic_distribution()
 
     @api.constrains('payment_mode')
     def _check_payment_mode(self):
@@ -385,7 +383,7 @@ class HrExpense(models.Model):
                 raise UserError(_('You cannot delete a posted or approved expense.'))
 
     def write(self, vals):
-        if 'tax_ids' in vals or 'analytic_account_id' in vals or 'account_id' in vals:
+        if 'tax_ids' in vals or 'analytic_distribution' in vals or 'account_id' in vals:
             if any(not expense.is_editable for expense in self):
                 raise UserError(_('You are not authorized to edit this expense report.'))
         if 'reference' in vals:
@@ -537,7 +535,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             'tax_ids': self.tax_ids.ids,
             'currency_id': self.currency_id.id,
             'company_id': self.company_id.id,
-            'analytic_account_id': self.analytic_account_id.id,
+            'analytic_distribution': self.analytic_distribution,
             'employee_id': self.employee_id.id,
             'expense_id': self.id,
         } for price in [price_round_up, price_round_down]]
@@ -607,8 +605,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
                         'price_unit': expense.total_amount,
                         'product_id': expense.product_id.id,
                         'product_uom_id': expense.product_uom_id.id,
-                        'analytic_account_id': expense.analytic_account_id.id,
-                        'analytic_tag_ids': [(6, 0, expense.analytic_tag_ids.ids)],
+                        'analytic_distribution': expense.analytic_distribution,
                         'expense_id': expense.id,
                         'partner_id': expense.employee_id.sudo().address_home_id.commercial_partner_id.id,
                         'tax_ids': [(6, 0, expense.tax_ids.ids)],

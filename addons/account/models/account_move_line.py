@@ -6,7 +6,7 @@ from functools import lru_cache
 
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import frozendict, formatLang, format_date
+from odoo.tools import frozendict, formatLang, format_date, float_is_zero
 from odoo.tools.sql import create_index
 from odoo.addons.web.controllers.utils import clean_action
 
@@ -15,6 +15,7 @@ INTEGRITY_HASH_LINE_FIELDS = ('debit', 'credit', 'account_id', 'partner_id')
 
 class AccountMoveLine(models.Model):
     _name = "account.move.line"
+    _inherit = 'analytic.mixin'
     _description = "Journal Item"
     _order = "date desc, move_name desc, sequence, id"
     _check_company_auto = True
@@ -346,23 +347,8 @@ class AccountMoveLine(models.Model):
 
     # === Analytic fields === #
     analytic_line_ids = fields.One2many(
-        comodel_name='account.analytic.line', inverse_name='move_id',
+        comodel_name='account.analytic.line', inverse_name='move_line_id',
         string='Analytic lines',
-    )
-    analytic_account_id = fields.Many2one(
-        comodel_name='account.analytic.account',
-        string='Analytic Account',
-        compute="_compute_analytic_account_id", store=True, readonly=False,
-        index='btree_not_null',
-        check_company=True,
-        copy=True,
-    )
-    analytic_tag_ids = fields.Many2many(
-        comodel_name='account.analytic.tag',
-        string='Analytic Tags',
-        compute="_compute_analytic_tag_ids", store=True, readonly=False,
-        check_company=True,
-        copy=True,
     )
 
     # === Early Pay fields === #
@@ -893,7 +879,7 @@ class AccountMoveLine(models.Model):
 
         return tax_ids
 
-    @api.depends('tax_ids', 'currency_id', 'partner_id', 'account_id', 'group_tax_id', 'analytic_tag_ids', 'analytic_account_id')
+    @api.depends('tax_ids', 'currency_id', 'partner_id', 'account_id', 'group_tax_id', 'analytic_distribution')
     def _compute_tax_key(self):
         for line in self:
             if line.tax_repartition_line_id:
@@ -902,8 +888,7 @@ class AccountMoveLine(models.Model):
                     'group_tax_id': line.group_tax_id.id,
                     'account_id': line.account_id.id,
                     'currency_id': line.currency_id.id,
-                    'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids or [])],
-                    'analytic_account_id': line.analytic_account_id.id,
+                    'analytic_distribution': line.analytic_distribution,
                     'tax_ids': [(6, 0, line.tax_ids.ids)],
                     'tax_tag_ids': [(6, 0, line.tax_tag_ids.ids)],
                     'partner_id': line.partner_id.id,
@@ -912,7 +897,7 @@ class AccountMoveLine(models.Model):
             else:
                 line.tax_key = frozendict({'id': line.id})
 
-    @api.depends('tax_ids', 'currency_id', 'partner_id', 'analytic_tag_ids', 'analytic_account_id', 'balance', 'partner_id', 'move_id.partner_id', 'price_unit')
+    @api.depends('tax_ids', 'currency_id', 'partner_id', 'analytic_distribution', 'balance', 'partner_id', 'move_id.partner_id', 'price_unit')
     def _compute_all_tax(self):
         for line in self:
             sign = line.move_id.direction_sign
@@ -955,8 +940,7 @@ class AccountMoveLine(models.Model):
                     'group_tax_id': tax['group'] and tax['group'].id or False,
                     'account_id': tax['account_id'] or line.account_id.id,
                     'currency_id': line.currency_id.id,
-                    'analytic_tag_ids': [(6, 0, tax['analytic'] and line.analytic_tag_ids.ids or [])],
-                    'analytic_account_id': tax['analytic'] and line.analytic_account_id.id,
+                    'analytic_distribution': tax['analytic'] and line.analytic_distribution,
                     'tax_ids': [(6, 0, tax['tax_ids'])],
                     'tax_tag_ids': [(6, 0, tax['tag_ids'])],
                     'partner_id': line.move_id.partner_id.id or line.partner_id.id,
@@ -981,8 +965,7 @@ class AccountMoveLine(models.Model):
             if line.display_type == 'epd' and line.company_id.early_pay_discount_computation == 'mixed':
                 line.epd_key = frozendict({
                     'account_id': line.account_id.id,
-                    'analytic_account_id': line.analytic_account_id.id,
-                    'analytic_tag_ids': [Command.set(line.analytic_tag_ids.ids)],
+                    'analytic_distribution': line.analytic_distribution,
                     'tax_ids': [Command.set(line.tax_ids.ids)],
                     'tax_tag_ids': [Command.set(line.tax_tag_ids.ids)],
                     'move_id': line.move_id.id,
@@ -990,7 +973,7 @@ class AccountMoveLine(models.Model):
             else:
                 line.epd_key = False
 
-    @api.depends('move_id.needed_terms', 'account_id', 'analytic_account_id', 'analytic_tag_ids', 'tax_ids', 'tax_tag_ids', 'company_id')
+    @api.depends('move_id.needed_terms', 'account_id', 'analytic_distribution', 'tax_ids', 'tax_tag_ids', 'company_id')
     def _compute_epd_needed(self):
         for line in self:
             line.epd_dirty = True
@@ -1013,8 +996,7 @@ class AccountMoveLine(models.Model):
                     frozendict({
                         'move_id': line.move_id.id,
                         'account_id': line.account_id.id,
-                        'analytic_account_id': line.analytic_account_id.id,
-                        'analytic_tag_ids': [Command.set(line.analytic_tag_ids.ids)],
+                        'analytic_distribution': line.analytic_distribution,
                         'tax_ids': [Command.set(line.tax_ids.ids)],
                         'tax_tag_ids': [Command.set(line.tax_tag_ids.ids)],
                         'display_type': 'epd',
@@ -1076,35 +1058,19 @@ class AccountMoveLine(models.Model):
             else:
                 line.term_key = False
 
-    @api.depends('product_id', 'account_id', 'partner_id', 'date')
-    def _compute_analytic_account_id(self):
-        for record in self:
-            if record.display_type == 'product' or not record.move_id.is_invoice(include_receipts=True):
-                rec = self.env['account.analytic.default'].account_get(
-                    product_id=record.product_id.id,
-                    partner_id=record.partner_id.commercial_partner_id.id or record.move_id.partner_id.commercial_partner_id.id,
-                    account_id=record.account_id.id,
-                    user_id=record.env.uid,
-                    date=record.date,
-                    company_id=record.move_id.company_id.id
-                )
-                if rec:
-                    record.analytic_account_id = rec.analytic_id
-
-    @api.depends('product_id', 'account_id', 'partner_id', 'date')
-    def _compute_analytic_tag_ids(self):
-        for record in self:
-            if record.display_type == 'product' or not record.move_id.is_invoice(include_receipts=True):
-                rec = self.env['account.analytic.default'].account_get(
-                    product_id=record.product_id.id,
-                    partner_id=record.partner_id.commercial_partner_id.id or record.move_id.partner_id.commercial_partner_id.id,
-                    account_id=record.account_id.id,
-                    user_id=record.env.uid,
-                    date=record.date,
-                    company_id=record.move_id.company_id.id
-                )
-                if rec:
-                    record.analytic_tag_ids = rec.analytic_tag_ids
+    @api.depends('account_id', 'partner_id', 'product_id')
+    def _compute_analytic_distribution_stored_char(self):
+        for line in self:
+            distribution = self.env['account.analytic.distribution.model']._get_distributionjson({
+                "product_id": line.product_id.id,
+                "product_categ_id": line.product_id.categ_id.id,
+                "partner_id": line.partner_id.id,
+                "partner_category_id": line.partner_id.category_id.ids,
+                "account_prefix": line.account_id.code,
+                "company_id": line.company_id.id,
+            })
+            line.analytic_distribution_stored_char = distribution or line.analytic_distribution_stored_char
+            line._compute_analytic_distribution()
 
     # -------------------------------------------------------------------------
     # INVERSE METHODS
@@ -1133,6 +1099,16 @@ class AccountMoveLine(models.Model):
     def _inverse_debit_credit(self):
         for line in self:
             line.balance = line.debit - line.credit
+
+    @api.onchange('analytic_distribution')
+    def _inverse_analytic_distribution(self):
+        """ Unlink and recreate analytic_lines when modifying the distribution."""
+        super()._inverse_analytic_distribution()
+        lines_to_modify = self.env['account.move.line'].browse([
+            line.id for line in self if line.parent_state == "posted"
+        ])
+        lines_to_modify.analytic_line_ids.unlink()
+        lines_to_modify._create_analytic_lines()
 
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
@@ -2334,87 +2310,59 @@ class AccountMoveLine(models.Model):
     # ANALYTIC
     # -------------------------------------------------------------------------
 
-    def _prepare_analytic_line(self):
-        """ Prepare the values used to create() an account.analytic.line upon validation of an account.move.line having
-            an analytic account. This method is intended to be extended in other modules.
-            :return list of values to create analytic.line
-            :rtype list
+    def _create_analytic_lines(self):
+        """ Create analytic items upon validation of an account.move.line having an analytic distribution.
         """
-        result = []
-        for move_line in self:
-            amount = (move_line.credit or 0.0) - (move_line.debit or 0.0)
-            default_name = move_line.name or (move_line.ref or '/' + ' -- ' + (move_line.partner_id and move_line.partner_id.name or '/'))
-            category = 'other'
-            if move_line.move_id.is_sale_document():
-                category = 'invoice'
-            elif move_line.move_id.is_purchase_document():
-                category = 'vendor_bill'
-            result.append({
-                'name': default_name,
-                'date': move_line.date,
-                'account_id': move_line.analytic_account_id.id,
-                'group_id': move_line.analytic_account_id.group_id.id,
-                'tag_ids': [(6, 0, move_line._get_analytic_tag_ids())],
-                'unit_amount': move_line.quantity,
-                'product_id': move_line.product_id and move_line.product_id.id or False,
-                'product_uom_id': move_line.product_uom_id and move_line.product_uom_id.id or False,
-                'amount': amount,
-                'general_account_id': move_line.account_id.id,
-                'ref': move_line.ref,
-                'move_id': move_line.id,
-                'user_id': move_line.move_id.invoice_user_id.id or self._uid,
-                'partner_id': move_line.partner_id.id,
-                'company_id': move_line.analytic_account_id.company_id.id or move_line.move_id.company_id.id,
-                'category': category,
-            })
-        return result
+        analytic_line_vals = []
+        for line in self:
+            analytic_line_vals.extend(line._prepare_analytic_lines())
 
-    def _prepare_analytic_distribution_line(self, distribution):
+        self.env['account.analytic.line'].create(analytic_line_vals)
+
+    def _prepare_analytic_lines(self):
+        self.ensure_one()
+        analytic_line_vals = []
+        self._compute_analytic_distribution()
+        if self.analytic_distribution:
+            # distribution_on_each_plan corresponds to the proportion that is distributed to each plan to be able to
+            # give the real amount when we achieve a 100% distribution
+            distribution_on_each_plan = {}
+
+            for account_id, distribution in self.analytic_distribution.items():
+                line_values = self._prepare_analytic_distribution_line(float(distribution), account_id, distribution_on_each_plan)
+                if not float_is_zero(line_values.get("amount"), precision_digits=self.env.company.currency_id.decimal_places):
+                    analytic_line_vals.append(line_values)
+        return analytic_line_vals
+
+    def _prepare_analytic_distribution_line(self, distribution, account_id, distribution_on_each_plan):
         """ Prepare the values used to create() an account.analytic.line upon validation of an account.move.line having
             analytic tags with analytic distribution.
         """
         self.ensure_one()
-        amount = -self.balance * distribution.percentage / 100.0
+        account_id = int(account_id)
+        account = self.env['account.analytic.account'].browse(account_id)
+        distribution_plan = distribution_on_each_plan.get(account.root_plan_id, 0) + distribution
+        if self.env.company.currency_id.compare_amounts(distribution_plan, 100) == 0:
+            amount = -self.balance * (100 - distribution_on_each_plan.get(account.root_plan_id, 0)) / 100.0
+        else:
+            amount = -self.balance * distribution / 100.0
+        distribution_on_each_plan[account.root_plan_id] = distribution_plan
         default_name = self.name or (self.ref or '/' + ' -- ' + (self.partner_id and self.partner_id.name or '/'))
         return {
             'name': default_name,
             'date': self.date,
-            'account_id': distribution.account_id.id,
-            'group_id': distribution.account_id.group_id.id,
+            'account_id': account_id,
             'partner_id': self.partner_id.id,
-            'tag_ids': [(6, 0, [distribution.tag_id.id] + self._get_analytic_tag_ids())],
             'unit_amount': self.quantity,
             'product_id': self.product_id and self.product_id.id or False,
             'product_uom_id': self.product_uom_id and self.product_uom_id.id or False,
             'amount': amount,
             'general_account_id': self.account_id.id,
             'ref': self.ref,
-            'move_id': self.id,
+            'move_line_id': self.id,
             'user_id': self.move_id.invoice_user_id.id or self._uid,
-            'company_id': distribution.account_id.company_id.id or self.company_id.id or self.env.company.id,
+            'company_id': account.company_id.id or self.company_id.id or self.env.company.id,
         }
-
-    def _get_analytic_tag_ids(self):
-        self.ensure_one()
-        return self.analytic_tag_ids.filtered(lambda r: not r.active_analytic_distribution).ids
-
-    def create_analytic_lines(self):
-        """ Create analytic items upon validation of an account.move.line having an analytic account or an analytic distribution.
-        """
-        lines_to_create_analytic_entries = self.env['account.move.line']
-        analytic_line_vals = []
-        for obj_line in self:
-            for tag in obj_line.analytic_tag_ids.filtered('active_analytic_distribution'):
-                for distribution in tag.analytic_distribution_ids:
-                    analytic_line_vals.append(obj_line._prepare_analytic_distribution_line(distribution))
-            if obj_line.analytic_account_id:
-                lines_to_create_analytic_entries |= obj_line
-
-        # create analytic entries in batch
-        if lines_to_create_analytic_entries:
-            analytic_line_vals += lines_to_create_analytic_entries._prepare_analytic_line()
-
-        self.env['account.analytic.line'].create(analytic_line_vals)
 
     # -------------------------------------------------------------------------
     # MISC
@@ -2485,8 +2433,7 @@ class AccountMoveLine(models.Model):
             quantity=self.quantity if is_invoice else 1.0,
             discount=self.discount if is_invoice else 0.0,
             account=self.account_id,
-            analytic_account=self.analytic_account_id,
-            analytic_tags=self.analytic_tag_ids,
+            analytic_distribution=self.analytic_distribution,
             price_subtotal=sign * self.amount_currency,
             is_refund=self.is_refund,
             rate=(abs(self.amount_currency) / abs(self.balance)) if self.balance else 1.0
@@ -2509,8 +2456,7 @@ class AccountMoveLine(models.Model):
             tax_repartition_line=self.tax_repartition_line_id,
             group_tax=self.group_tax_id,
             account=self.account_id,
-            analytic_account=self.analytic_account_id,
-            analytic_tags=self.analytic_tag_ids,
+            analytic_distribution=self.analytic_distribution,
             tax_amount=sign * self.amount_currency,
         )
 

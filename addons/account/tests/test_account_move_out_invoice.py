@@ -1164,57 +1164,49 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
     def test_out_invoice_line_onchange_analytic(self):
         self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
-        self.env.user.groups_id += self.env.ref('analytic.group_analytic_tags')
 
-        analytic_tag = self.env['account.analytic.tag'].create({
-            'name': 'test_analytic_tag',
-        })
-
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
         analytic_account = self.env['account.analytic.account'].create({
             'name': 'test_analytic_account',
             'partner_id': self.invoice.partner_id.id,
+            'plan_id': analytic_plan.id,
             'code': 'TEST'
         })
 
+        analytic_distribution = {analytic_account.id: 100}
+
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
-            line_form.analytic_account_id = analytic_account
-            line_form.analytic_tag_ids.add(analytic_tag)
+            line_form.analytic_distribution = analytic_distribution
         move_form.save()
 
         # The tax is not flagged as an analytic one. It should change nothing on the taxes.
         self.assertInvoiceValues(self.invoice, [
             {
                 **self.product_line_vals_1,
-                'analytic_account_id': analytic_account.id,
-                'analytic_tag_ids': analytic_tag.ids,
+                'analytic_distribution': analytic_distribution,
             },
             {
                 **self.product_line_vals_2,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.tax_line_vals_1,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.tax_line_vals_2,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.term_line_vals_1,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
         ], self.move_vals)
 
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
-            line_form.analytic_account_id = self.env['account.analytic.account']
-            line_form.analytic_tag_ids.clear()
+            line_form.analytic_distribution = {}
         move_form.save()
 
         # Enable the analytic
@@ -1222,8 +1214,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
-            line_form.analytic_account_id = analytic_account
-            line_form.analytic_tag_ids.add(analytic_tag)
+            line_form.analytic_distribution = analytic_distribution
         move_form.save()
 
         # The tax is flagged as an analytic one.
@@ -1231,103 +1222,94 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertInvoiceValues(self.invoice, [
             {
                 **self.product_line_vals_1,
-                'analytic_account_id': analytic_account.id,
-                'analytic_tag_ids': analytic_tag.ids,
+                'analytic_distribution': analytic_distribution,
             },
             {
                 **self.product_line_vals_2,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.tax_line_vals_1,
                 'amount_currency': -150.0,
                 'credit': 150.0,
-                'analytic_account_id': analytic_account.id,
-                'analytic_tag_ids': analytic_tag.ids,
+                'analytic_distribution': analytic_distribution,
             },
             {
                 **self.tax_line_vals_1,
                 'amount_currency': -30.0,
                 'credit': 30.0,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.tax_line_vals_2,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.term_line_vals_1,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
         ], self.move_vals)
 
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
-            line_form.analytic_account_id = self.env['account.analytic.account']
-            line_form.analytic_tag_ids.clear()
+            line_form.analytic_distribution = {}
         with move_form.invoice_line_ids.edit(1) as line_form:
-            line_form.analytic_account_id = self.env['account.analytic.account']
-            line_form.analytic_tag_ids.clear()
+            line_form.analytic_distribution = {}
         move_form.save()
 
         # The tax line has been removed.
         self.assertInvoiceValues(self.invoice, [
             {
                 **self.product_line_vals_1,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.product_line_vals_2,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.tax_line_vals_1,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.tax_line_vals_2,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.term_line_vals_1,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
         ], self.move_vals)
 
     def test_out_invoice_line_onchange_analytic_2(self):
         self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
 
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
         analytic_account = self.env['account.analytic.account'].create({
             'name': 'test_analytic_account1',
+            'plan_id': analytic_plan.id,
             'code': 'TEST1'
         })
 
+        analytic_distribution = {analytic_account.id: 100}
+
         self.invoice.write({'invoice_line_ids': [(1, self.invoice.invoice_line_ids.ids[0], {
-            'analytic_account_id': analytic_account.id,
+            'analytic_distribution': analytic_distribution,
         })]})
 
         self.assertRecordValues(self.invoice.invoice_line_ids, [
-            {'analytic_account_id': analytic_account.id},
-            {'analytic_account_id': False},
+            {'analytic_distribution': analytic_distribution},
+            {'analytic_distribution': False},
         ])
 
         # We can remove the analytic account, it is not recomputed by an invalidation
         self.invoice.write({'invoice_line_ids': [(1, self.invoice.invoice_line_ids.ids[0], {
-            'analytic_account_id': False,
+            'analytic_distribution': False,
         })]})
 
         self.assertRecordValues(self.invoice.invoice_line_ids, [
-            {'analytic_account_id': False},
-            {'analytic_account_id': False},
+            {'analytic_distribution': False},
+            {'analytic_distribution': False},
         ])
 
     def test_out_invoice_line_onchange_cash_rounding_1(self):

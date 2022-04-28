@@ -685,8 +685,8 @@ class TestSaleService(TestCommonSaleTimesheet):
 
         # Check that the resulting invoice line and the project have the same analytic account
         invoice_line = self.sale_order.invoice_ids.line_ids.filtered(lambda line: line.product_id == product_add)
-        self.assertEqual(invoice_line.analytic_account_id, self.project_global.analytic_account_id,
-             "SOL's analytic account should be the same as the project's")
+        self.assertEqual(invoice_line.analytic_distribution, {self.project_global.analytic_account_id.id: 100},
+             "SOL's analytic distribution should contain the project analytic account")
 
     def test_sale_timesheet_invoice(self):
         """ Test timesheet is correctly linked to an invoice when its SOL is invoiced

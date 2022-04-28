@@ -31,9 +31,15 @@ class TestSaleFlow(TestSaleCommonBase):
             'company_id': False,
         })
 
+        cls.analytic_plan = cls.env['account.analytic.plan'].create({
+            'name': 'Plan',
+            'company_id': cls.company.id,
+        })
+
         cls.analytic_account = cls.env['account.analytic.account'].create({
             'name': 'Test analytic_account',
             'code': 'analytic_account',
+            'plan_id': cls.analytic_plan.id,
             'company_id': cls.company.id,
             'partner_id': cls.partner_a.id
         })

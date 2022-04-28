@@ -145,7 +145,6 @@ class SaleOrderLine(models.Model):
         return {
             'name': '%s - %s' % (self.order_id.client_order_ref, self.order_id.name) if self.order_id.client_order_ref else self.order_id.name,
             'analytic_account_id': account.id,
-            'analytic_tag_ids': [Command.set(self.analytic_tag_ids.ids)],
             'partner_id': self.order_id.partner_id.id,
             'sale_line_id': self.id,
             'active': True,
@@ -200,7 +199,6 @@ class SaleOrderLine(models.Model):
         return {
             'name': title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title),
             'analytic_account_id': project.analytic_account_id.id,
-            'analytic_tag_ids': [Command.set(project.analytic_tag_ids.ids)],
             'planned_hours': planned_hours,
             'partner_id': self.order_id.partner_id.id,
             'email_from': self.order_id.partner_id.email,
@@ -323,12 +321,12 @@ class SaleOrderLine(models.Model):
             to this sale order line, or the analytic account of the project which uses this sale order line, if it exists.
         """
         values = super(SaleOrderLine, self)._prepare_invoice_line(**optional_values)
-        if not values.get('analytic_account_id'):
+        if not values.get('analytic_distribution'):
             task_analytic_account = self.task_id._get_task_analytic_account_id() if self.task_id else False
             if task_analytic_account:
-                values['analytic_account_id'] = task_analytic_account.id
+                values['analytic_distribution'] = {task_analytic_account.id: 100}
             elif self.project_id.analytic_account_id:
-                values['analytic_account_id'] = self.project_id.analytic_account_id.id
+                values['analytic_distribution'] = {self.project_id.analytic_account_id.id: 100}
             elif self.is_service and not self.is_expense:
                 task_analytic_account_id = self.env['project.task'].read_group([
                     ('sale_line_id', '=', self.id),
@@ -344,16 +342,7 @@ class SaleOrderLine(models.Model):
                 ], ['analytic_account_id'], ['analytic_account_id'])
                 analytic_account_ids = {rec['analytic_account_id'][0] for rec in (task_analytic_account_id + project_analytic_account_id)}
                 if len(analytic_account_ids) == 1:
-                    values['analytic_account_id'] = analytic_account_ids.pop()
-        if self.task_id.analytic_tag_ids:
-            values['analytic_tag_ids'] += [Command.link(tag_id.id) for tag_id in self.task_id.analytic_tag_ids]
-        if self.task_id.analytic_tag_ids or self.task_id.project_id.analytic_tag_ids:
-            values['analytic_tag_ids'] += [Command.link(tag_id.id) for tag_id in self.task_id.analytic_tag_ids | self.task_id.project_id.analytic_tag_ids]
-        elif self.is_service and not self.is_expense:
-            tag_ids = self.env['account.analytic.tag'].search([
-                '|', ('task_ids.sale_line_id', '=', self.id), ('project_ids.sale_line_id', '=', self.id)
-            ])
-            values['analytic_tag_ids'] += [Command.link(tag_id.id) for tag_id in tag_ids]
+                    values['analytic_distribution'] = {analytic_account_ids.pop(): 100}
         return values
 
     def _get_action_per_item(self):

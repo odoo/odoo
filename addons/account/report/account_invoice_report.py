@@ -47,7 +47,6 @@ class AccountInvoiceReport(models.Model):
     product_categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
     invoice_date_due = fields.Date(string='Due Date', readonly=True)
     account_id = fields.Many2one('account.account', string='Revenue/Expense Account', readonly=True, domain=[('deprecated', '=', False)])
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', groups="analytic.group_analytic_accounting")
     price_subtotal = fields.Float(string='Untaxed Total', readonly=True)
     price_total = fields.Float(string='Total', readonly=True)
     price_average = fields.Float(string='Average Price', readonly=True, group_operator="avg")
@@ -59,7 +58,7 @@ class AccountInvoiceReport(models.Model):
         ],
         'account.move.line': [
             'quantity', 'price_subtotal', 'price_total', 'amount_residual', 'balance', 'amount_currency',
-            'move_id', 'product_id', 'product_uom_id', 'account_id', 'analytic_account_id',
+            'move_id', 'product_id', 'product_uom_id', 'account_id',
             'journal_id', 'company_id', 'currency_id', 'partner_id',
         ],
         'product.product': ['product_tmpl_id'],
@@ -81,7 +80,6 @@ class AccountInvoiceReport(models.Model):
                 line.move_id,
                 line.product_id,
                 line.account_id,
-                line.analytic_account_id,
                 line.journal_id,
                 line.company_id,
                 line.company_currency_id,

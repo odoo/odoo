@@ -393,7 +393,7 @@ class StockMove(models.Model):
 
         return res
 
-    def _prepare_analytic_line(self):
+    def _prepare_analytic_lines(self):
         self.ensure_one()
         if not self._get_analytic_account():
             return False
@@ -411,9 +411,9 @@ class StockMove(models.Model):
             accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
             account_valuation = accounts_data.get('stock_valuation', False)
             analytic_line_vals = self.stock_valuation_layer_ids.account_move_id.line_ids.filtered(
-                lambda l: l.account_id == account_valuation)._prepare_analytic_line()
-            amount = - sum(vals['amount'] for vals in analytic_line_vals)
-            unit_amount = - sum(vals['unit_amount'] for vals in analytic_line_vals)
+                lambda l: l.account_id == account_valuation)._prepare_analytic_lines()
+            amount = - sum(sum(vals['amount'] for vals in lists) for lists in analytic_line_vals)
+            unit_amount = - sum(sum(vals['unit_amount'] for vals in lists) for lists in analytic_line_vals)
         elif sum(self.stock_valuation_layer_ids.mapped('quantity')):
             amount = sum(self.stock_valuation_layer_ids.mapped('value'))
             unit_amount = - sum(self.stock_valuation_layer_ids.mapped('quantity'))
@@ -520,7 +520,7 @@ class StockMove(models.Model):
         analytic_lines_vals = []
         moves_to_link = []
         for move in self:
-            analytic_line_vals = move._prepare_analytic_line()
+            analytic_line_vals = move._prepare_analytic_lines()
             if not analytic_line_vals:
                 continue
             moves_to_link.append(move.id)

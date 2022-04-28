@@ -177,8 +177,7 @@ class AccountMove(models.Model):
                     'price_unit': -price_unit,
                     'amount_currency': amount_currency,
                     'account_id': credit_expense_account.id,
-                    'analytic_account_id': line.analytic_account_id.id,
-                    'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
+                    'analytic_distribution': line.analytic_distribution,
                     'display_type': 'cogs',
                     'tax_ids': [],
                 })

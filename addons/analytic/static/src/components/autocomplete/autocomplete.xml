@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="analytic.AutoComplete" t-inherit="web.AutoComplete" t-inherit-mode="primary" owl="1">
+        <xpath expr="//input" position="attributes">
+            <attribute name="t-on-click"></attribute>
+            <attribute name="t-on-click.stop">onInputClick</attribute>
+            <attribute name="t-on-focus">props.onFocus</attribute>
+        </xpath>
+    </t>
+</templates>

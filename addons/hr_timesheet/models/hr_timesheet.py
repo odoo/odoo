@@ -115,7 +115,7 @@ class AccountAnalyticLine(models.Model):
     @api.depends('employee_id')
     def _compute_user_id(self):
         for line in self:
-            line.user_id = line.employee_id.user_id if line.employee_id else line._default_user()
+            line.user_id = line.employee_id.user_id if line.employee_id else self._default_user()
 
     @api.depends('employee_id')
     def _compute_department_id(self):
@@ -272,20 +272,12 @@ class AccountAnalyticLine(models.Model):
             task_analytic_account_id = task._get_task_analytic_account_id()
             vals['account_id'] = task_analytic_account_id.id
             vals['company_id'] = task_analytic_account_id.company_id.id or task.company_id.id
-            if vals.get('tag_ids'):
-                vals['tag_ids'] += [Command.link(tag_id.id) for tag_id in task.analytic_tag_ids]
-            else:
-                vals['tag_ids'] = [Command.set(task.analytic_tag_ids.ids)]
             if not task_analytic_account_id.active:
                 raise UserError(_('You cannot add timesheets to a project or a task linked to an inactive analytic account.'))
         # project implies analytic account
         elif project and not vals.get('account_id'):
             vals['account_id'] = project.analytic_account_id.id
             vals['company_id'] = project.analytic_account_id.company_id.id or project.company_id.id
-            if vals.get('tag_ids'):
-                vals['tag_ids'] += [Command.link(tag_id.id) for tag_id in project.analytic_tag_ids]
-            else:
-                vals['tag_ids'] = [Command.set(project.analytic_tag_ids.ids)]
             if not project.analytic_account_id.active:
                 raise UserError(_('You cannot add timesheets to a project linked to an inactive analytic account.'))
         # force customer partner, from the task or the project
@@ -351,3 +343,6 @@ class AccountAnalyticLine(models.Model):
         if len(task_ids) == 1:
             return _('Timesheets - %s', task_ids.name)
         return _('Timesheets')
+
+    def _default_user(self):
+        return self.env.context.get('user_id', self.env.user.id)

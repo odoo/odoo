@@ -3573,7 +3573,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         move_form.invoice_date = fields.Date.from_string('2019-01-01')
         move_form.partner_id = self.partner_a
         self.cash_basis_tax_a_third_amount.analytic = True
-        test_analytic_account = self.env['account.analytic.account'].create({'name': 'test_analytic_account'})
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
+        test_analytic_account = self.env['account.analytic.account'].create({'name': 'test_analytic_account', 'plan_id': analytic_plan.id})
 
         tax = self.cash_basis_tax_a_third_amount
 
@@ -3583,7 +3584,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             line_form.product_id = self.product_a
             line_form.tax_ids.clear()
             line_form.tax_ids.add(tax)
-            line_form.analytic_account_id = test_analytic_account
+            line_form.analytic_distribution = {test_analytic_account.id: 100}
             line_form.price_unit = 100
 
         # line with analytic account, will generate other 2 lines in CABA move

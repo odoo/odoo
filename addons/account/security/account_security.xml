@@ -291,14 +291,6 @@
         <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
     </record>
 
-    <!-- account analytic default-->
-    <record id="analytic_default_comp_rule" model="ir.rule">
-        <field name="name">Analytic Default multi company rule</field>
-        <field name="model_id" ref="model_account_analytic_default"/>
-        <field eval="True" name="global"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
-    </record>
-
     <record id="report_external_value_comp_rule" model="ir.rule">
         <field name="name">Report External Value multi-company</field>
         <field name="model_id" ref="model_account_report_external_value"/>

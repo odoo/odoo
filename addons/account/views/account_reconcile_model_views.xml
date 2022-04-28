@@ -24,8 +24,11 @@
                             <field name="show_force_tax_included" invisible="1"/>
                             <field name="force_tax_included"
                                    attrs="{'invisible': [('show_force_tax_included', '=', False)]}" force_save="1"/>
-                            <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting"/>
-                            <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
+                            <!-- TODO widget="analytic_distribution" -->
+                            <field name="analytic_distribution_stored_char" invisible="1"/>
+                            <field name="analytic_distribution" invisible="1" groups="analytic.group_analytic_accounting"
+                                                       options="{'product_field': 'product_id', 'account_field': 'account_id'}"
+                                                       business_domain_compute="parent.move_type in ['out_invoice', 'out_refund', 'out_receipt'] and 'sale' or parent.move_type in ['in_invoice', 'in_refund', 'in_receipt'] and 'purchase' or 'general'"/>
                             <field name="company_id" invisible="1"/>
                         </group>
                         <group>
@@ -243,13 +246,12 @@
                                                 <field name="tax_ids"
                                                        widget="many2many_tags"
                                                        optional="hide"/>
-                                                <field name="analytic_account_id"
-                                                       groups="analytic.group_analytic_accounting"
-                                                       optional="hide"/>
-                                                <field name="analytic_tag_ids"
-                                                       widget="many2many_tags"
-                                                       groups="analytic.group_analytic_tags"
-                                                       optional="hide"/>
+                                                <field name="analytic_distribution_stored_char" invisible="1"/>
+                                                <!-- TODO widget="analytic_distribution" -->
+                                                <field name="analytic_distribution"
+                                                       invisible="1" groups="analytic.group_analytic_accounting"
+                                                       options="{'product_field': 'product_id', 'account_field': 'account_id'}"
+                                                       business_domain_compute="parent.move_type in ['out_invoice', 'out_refund', 'out_receipt'] and 'sale' or parent.move_type in ['in_invoice', 'in_refund', 'in_receipt'] and 'purchase' or 'general'"/>
                                                 <field name="force_tax_included"
                                                        widget="boolean_toggle"
                                                        attrs="{'invisible': [('show_force_tax_included', '=', False)]}"

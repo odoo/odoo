@@ -14,9 +14,14 @@ class TestProjectProfitabilityCommon(TransactionCase):
             'name': 'Georges',
             'email': 'georges@project-profitability.com'})
 
+        cls.analytic_plan = cls.env['account.analytic.plan'].create({
+            'name': 'Plan A',
+            'company_id': False,
+        })
         cls.analytic_account = cls.env['account.analytic.account'].create({
             'name': 'Project - AA',
             'code': 'AA-1234',
+            'plan_id': cls.analytic_plan.id,
         })
         cls.project = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
             'name': 'Project',

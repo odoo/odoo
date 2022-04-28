@@ -374,27 +374,23 @@ class TestSalesTeam(SaleCommon):
         sale_order.user_id = self.user_not_in_team
         self.assertEqual(sale_order.team_id.id, self.sale_team_2.id, 'Should not reset the team to default')
 
-    def test_sale_order_analytic_tag_change(self):
+    def test_sale_order_analytic_distribution_change(self):
         self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
-        self.env.user.groups_id += self.env.ref('analytic.group_analytic_tags')
 
-        analytic_account_super = self.env['account.analytic.account'].create({'name': 'Super Account'})
-        analytic_account_great = self.env['account.analytic.account'].create({'name': 'Great Account'})
-        analytic_tag_super = self.env['account.analytic.tag'].create({'name': 'Super Tag'})
-        analytic_tag_great = self.env['account.analytic.tag'].create({'name': 'Great Tag'})
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
+        analytic_account_super = self.env['account.analytic.account'].create({'name': 'Super Account', 'plan_id': analytic_plan.id})
+        analytic_account_great = self.env['account.analytic.account'].create({'name': 'Great Account', 'plan_id': analytic_plan.id})
         super_product = self.env['product.product'].create({'name': 'Super Product'})
         great_product = self.env['product.product'].create({'name': 'Great Product'})
         product_no_account = self.env['product.product'].create({'name': 'Product No Account'})
-        self.env['account.analytic.default'].create([
+        self.env['account.analytic.distribution.model'].create([
             {
-                'analytic_id': analytic_account_super.id,
+                'analytic_distribution': {analytic_account_super.id: 100},
                 'product_id': super_product.id,
-                'analytic_tag_ids': [analytic_tag_super.id],
             },
             {
-                'analytic_id': analytic_account_great.id,
+                'analytic_distribution': {analytic_account_great.id: 100},
                 'product_id': great_product.id,
-                'analytic_tag_ids': [analytic_tag_great.id],
             },
         ])
         sale_order = self.env['sale.order'].create({
@@ -406,11 +402,9 @@ class TestSalesTeam(SaleCommon):
             'order_id': sale_order.id,
         })
 
-        self.assertEqual(sol.analytic_tag_ids.id, analytic_tag_super.id, "The analytic tag should be set to 'Super Tag'")
+        self.assertEqual(sol.analytic_distribution, {analytic_account_super.id: 100}, "The analytic distribution should be set to Super Account")
         sol.write({'product_id': great_product.id})
-        self.assertEqual(sol.analytic_tag_ids.id, analytic_tag_great.id, "The analytic tag should be set to 'Great Tag'")
-        sol.write({'product_id': product_no_account.id})
-        self.assertFalse(sol.analytic_tag_ids.id, "The analytic account should not be set")
+        self.assertEqual(sol.analytic_distribution, {analytic_account_great.id: 100}, "The analytic distribution should be set to Great Account")
 
         so_no_analytic_account = self.env['sale.order'].create({
             'partner_id': self.env.ref('base.res_partner_1').id,
@@ -419,7 +413,7 @@ class TestSalesTeam(SaleCommon):
             'name': super_product.name,
             'product_id': super_product.id,
             'order_id': so_no_analytic_account.id,
-            'analytic_tag_ids': False,
+            'analytic_distribution': False,
         })
         so_no_analytic_account.action_confirm()
-        self.assertFalse(sol_no_analytic_account.analytic_tag_ids.id, "The compute should not overwrite what the user has set.")
+        self.assertFalse(sol_no_analytic_account.analytic_distribution, "The compute should not overwrite what the user has set.")

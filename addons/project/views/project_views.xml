@@ -519,7 +519,6 @@
                             <group>
                                 <group>
                                     <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" context="{'default_partner_id': partner_id}" groups="analytic.group_analytic_accounting"/>
-                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                     <field name="privacy_visibility" widget="radio"/>
                                     <span colspan="2" class="text-muted" attrs="{'invisible':[('access_instruction_message', '=', '')]}">
                                         <i class="fa fa-lightbulb-o"/>&amp;nbsp;<field name="access_instruction_message" nolabel="1"/>
@@ -1319,7 +1318,6 @@
                                     <field name="is_analytic_account_id_changed" invisible="1"/>
                                     <field name="parent_id" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" context="{'default_partner_id': partner_id}"/>
-                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                     <field name="sequence" groups="base.group_no_one"/>
                                     <field name="email_from" invisible="1"/>

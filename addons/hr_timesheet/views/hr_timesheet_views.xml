@@ -28,7 +28,6 @@
                     <field name="project_id" required="1" options="{'no_create_edit': True, 'no_open': 1}"/>
                     <field name="task_id" optional="show" options="{'no_create_edit': True, 'no_open': True}" widget="task_with_hours" context="{'default_project_id': project_id}"/>
                     <field name="name" optional="show" required="0"/>
-                    <field name="tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" optional="hide"/>
                     <field name="unit_amount" optional="show" widget="timesheet_uom" sum="Total" decoration-danger="unit_amount &gt; 24 or unit_amount &lt; 0"/>
                     <field name="company_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
@@ -140,7 +139,6 @@
                             <group>
                                 <field name="project_id" required="1"/>
                                 <field name="task_id" widget="task_with_hours" context="{'default_project_id': project_id}"/>
-                                <field name="tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                 <field name="name"/>
                                 <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                             </group>
@@ -181,7 +179,6 @@
                     <field name="project_id"/>
                     <field name="ancestor_task_id" groups="project.group_subtask_project"/>
                     <field name="task_id"/>
-                    <field name="tag_ids" groups="analytic.group_analytic_tags"/>
                     <field name="name"/>
                     <field name="department_id"/>
                     <field name="manager_id"/>
