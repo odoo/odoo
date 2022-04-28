@@ -987,12 +987,13 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("many2many list: create action disabled", async function (assert) {
+    QUnit.test("many2many list: create action disabled", async function (assert) {
         assert.expect(2);
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="timmy">' +
@@ -1001,27 +1002,25 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         assert.containsOnce(
-            form,
+            target,
             ".o_field_x2many_list_row_add",
             '"Add an item" link should be available in readonly'
         );
 
-        await testUtils.form.clickEdit(form);
+        await clickEdit(target);
 
         assert.containsOnce(
-            form,
+            target,
             ".o_field_x2many_list_row_add",
             '"Add an item" link should be available in edit'
         );
-
-        form.destroy();
     });
 
-    QUnit.skipWOWL("fieldmany2many list comodel not writable", async function (assert) {
+    QUnit.test("fieldmany2many list comodel not writable", async function (assert) {
         /**
          * Many2Many List should behave as the m2m_tags
          * that is, the relation can be altered even if the comodel itself is not CRUD-able
@@ -1030,19 +1029,20 @@ QUnit.module("Fields", (hooks) => {
          */
         assert.expect(12);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        serverData.views = {
+            "partner_type,false,list": `<tree create="false" delete="false" edit="false">
+                                                <field name="display_name"/>
+                                            </tree>`,
+            "partner_type,false,search": '<search><field name="display_name"/></search>',
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch: `<form string="Partners">
                     <field name="timmy" widget="many2many" can_create="false" can_write="false"/>
                 </form>`,
-            archs: {
-                "partner_type,false,list": `<tree create="false" delete="false" edit="false">
-                                                <field name="display_name"/>
-                                            </tree>`,
-                "partner_type,false,search": '<search><field name="display_name"/></search>',
-            },
             mockRPC: function (route, args) {
                 if (route === "/web/dataset/call_kw/partner/create") {
                     assert.deepEqual(args.args[0], { timmy: [[6, false, [12]]] });
@@ -1050,33 +1050,30 @@ QUnit.module("Fields", (hooks) => {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     assert.deepEqual(args.args[1], { timmy: [[6, false, []]] });
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
-        assert.containsOnce(form, ".o_field_many2many .o_field_x2many_list_row_add");
-        await testUtils.dom.click(form.$(".o_field_many2many .o_field_x2many_list_row_add a"));
-        assert.containsOnce(document.body, ".modal");
+        assert.containsOnce(target, ".o_field_many2many .o_field_x2many_list_row_add");
+        await click($(target).find(".o_field_many2many .o_field_x2many_list_row_add a")[0]);
+        assert.containsOnce(target, ".modal");
 
         assert.containsN($(".modal-footer"), "button", 2);
         assert.containsOnce($(".modal-footer"), "button.o_select_button");
         assert.containsOnce($(".modal-footer"), "button.o_form_button_cancel");
 
-        await testUtils.dom.click($(".modal .o_list_view .o_data_cell:first()"));
-        assert.containsNone(document.body, ".modal");
+        await click($(".modal .o_list_view .o_data_cell:first()")[0]);
+        assert.containsNone(target, ".modal");
 
-        assert.containsOnce(form, ".o_field_many2many .o_data_row");
+        assert.containsOnce(target, ".o_field_many2many .o_data_row");
         assert.equal($(".o_field_many2many .o_data_row").text(), "gold");
-        assert.containsOnce(form, ".o_field_many2many .o_field_x2many_list_row_add");
+        assert.containsOnce(target, ".o_field_many2many .o_field_x2many_list_row_add");
 
-        await testUtils.form.clickSave(form);
-        await testUtils.form.clickEdit(form);
+        await clickSave(target);
+        await clickEdit(target);
 
-        assert.containsOnce(form, ".o_field_many2many .o_data_row .o_list_record_remove");
-        await testUtils.dom.click(form.$(".o_field_many2many .o_data_row .o_list_record_remove"));
-        await testUtils.form.clickSave(form);
-
-        form.destroy();
+        assert.containsOnce(target, ".o_field_many2many .o_data_row .o_list_record_remove");
+        await click($(target).find(".o_field_many2many .o_data_row .o_list_record_remove")[0]);
+        await clickSave(target);
     });
 
     QUnit.skipWOWL("many2many list: conditional create/delete actions", async function (assert) {

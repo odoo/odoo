@@ -21,6 +21,8 @@ import { escape } from "@web/core/utils/strings";
 const { date: parseDate, datetime: parseDateTime } = parse;
 const { markup } = owl;
 
+export const forcedActiveFieldSymbol = Symbol("forcedActiveField");
+
 function mapWowlValueToLegacy(value, type) {
     switch (type) {
         case "date":
@@ -495,6 +497,19 @@ export class Record extends DataPoint {
             }
         }
         this.data = data;
+
+        // clean up forced fields: sometimes we push display_name in the form model
+        // when it is not present in the view. It shouldn't be part of the basicModel.
+        if (
+            "display_name" in this.activeFields &&
+            forcedActiveFieldSymbol in this.activeFields["display_name"]
+        ) {
+            const realDp = bm.localData[this.__bm_handle__];
+            delete realDp.data["display_name"];
+            if (realDp._changes) {
+                delete realDp._changes["display_name"];
+            }
+        }
     }
 
     getFieldContext(fieldName) {

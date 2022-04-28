@@ -13,7 +13,7 @@ import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
 import { getActiveActions, isX2Many } from "@web/views/helpers/view_utils";
 import { Layout } from "@web/search/layout";
-import { RelationalModel } from "@web/views/basic_relational_model";
+import { RelationalModel, forcedActiveFieldSymbol } from "@web/views/basic_relational_model";
 import { useViewButtons } from "@web/views/view_button/hook";
 import { Field } from "@web/fields/field";
 
@@ -125,7 +125,11 @@ export class FormView extends Component {
         this.archInfo = new FormArchParser().parse(this.props.arch, this.props.fields);
         const activeFields = this.archInfo.activeFields;
         if (!activeFields.display_name) {
-            activeFields.display_name = { name: "display_name", type: "char" };
+            activeFields.display_name = {
+                name: "display_name",
+                type: "char",
+                [forcedActiveFieldSymbol]: true,
+            };
         }
         let resId;
         if ("resId" in this.props) {
