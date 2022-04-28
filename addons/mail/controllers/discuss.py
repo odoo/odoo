@@ -271,10 +271,7 @@ class DiscussController(http.Controller):
                 attachmentData['accessToken'] = attachment.access_token
         except AccessError:
             attachmentData = {'error': _("You are not allowed to upload an attachment here.")}
-        return request.make_response(
-            data=json.dumps(attachmentData),
-            headers=[('Content-Type', 'application/json')]
-        )
+        return request.make_json_response(attachmentData)
 
     @http.route('/mail/attachment/delete', methods=['POST'], type='json', auth='public')
     def mail_attachment_delete(self, attachment_id, access_token=None, **kwargs):
