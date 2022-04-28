@@ -2165,3 +2165,25 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(picking.state, 'cancel')
         self.assertEqual(move.state, 'cancel')
         self.assertEqual(scrap.move_id.state, 'done')
+
+    def test_receive_tracked_product(self):
+        self.productA.tracking = 'serial'
+        type_in = self.env['stock.picking.type'].browse(self.picking_type_in)
+
+        receipt_form = Form(self.env['stock.picking'].with_context(default_immediate_transfer=True))
+        receipt_form.picking_type_id = type_in
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.productA
+        receipt = receipt_form.save()
+
+        move_form = Form(receipt.move_ids, view='stock.view_stock_move_nosuggest_operations')
+        with move_form.move_line_nosuggest_ids.new() as line:
+            line.lot_name = "USN01"
+        move_form.save()
+
+        receipt.button_validate()
+        quant = self.productA.stock_quant_ids.filtered(lambda q: q.location_id.id == self.stock_location)
+
+        self.assertEqual(receipt.state, 'done')
+        self.assertEqual(quant.quantity, 1.0)
+        self.assertEqual(quant.lot_id.name, 'USN01')
