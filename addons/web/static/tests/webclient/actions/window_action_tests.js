@@ -976,8 +976,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("action with html help returned by a call_button", async function (assert) {
-        assert.expect(1);
+    QUnit.test("action with html help returned by a call_button", async function (assert) {
         const mockRPC = async (route, args) => {
             if (route === "/web/dataset/call_button") {
                 return Promise.resolve({
@@ -2174,9 +2173,7 @@ QUnit.module("ActionManager", (hooks) => {
         });
     });
 
-    QUnit.skipWOWL("window action in target new fails (onchange)", async (assert) => {
-        assert.expect(3);
-
+    QUnit.test("window action in target new fails (onchange)", async (assert) => {
         /*
          * By-pass QUnit's and test's error handling because the error service needs to be active
          */
@@ -2303,8 +2300,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsN(target, ".o_pivot_view tbody th", 6);
     });
 
-    QUnit.skipWOWL("action help given to View in props if not empty", async function (assert) {
-        // need noContentHelp be used in list view...
+    QUnit.test("action help given to View in props if not empty", async function (assert) {
         serverData.models.partner.records = [];
         const action = serverData.actions[3];
         serverData.actions[3] = {
