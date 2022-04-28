@@ -2,8 +2,11 @@
 
 from unittest.mock import patch
 from odoo.http import root
+from lxml import html
+
 from odoo.tests import common, HttpCase, tagged
-from odoo.tools import mute_logger
+from odoo.tests.common import HOST
+from odoo.tools import config, mute_logger
 from odoo.addons.website.tools import MockRequest
 
 
@@ -283,3 +286,20 @@ class WithContext(HttpCase):
             # no session should be saved for website visitor
             self.url_open(self.page.url).raise_for_status()
             session_save.assert_not_called()
+
+    def test_homepage_not_slash_url(self):
+        website = self.env['website'].browse([1])
+        # Set another page (/page_1) as homepage
+        website.write({
+            'homepage_id': self.page.id,
+            'domain': f"http://{HOST}:{config['http_port']}",
+        })
+        assert self.page.url != '/'
+
+        r = self.url_open('/')
+        r.raise_for_status()
+        self.assertEqual(r.status_code, 200,
+                         "There should be no crash when a public user is accessing `/` which is rerouting to another page with a different URL.")
+        root_html = html.fromstring(r.content)
+        canonical_url = root_html.xpath('//link[@rel="canonical"]')[0].attrib['href']
+        self.assertEqual(canonical_url, website.domain + "/")
