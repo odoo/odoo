@@ -1,5 +1,7 @@
 {
     'name': 'Mental Health Notes',
+    'author': 'SBU Senior Project Team',
+    'sequence': -100,
     'depends': [
         'base',
         'contacts',
