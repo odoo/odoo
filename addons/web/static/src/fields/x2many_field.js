@@ -129,16 +129,20 @@ export class X2ManyField extends Component {
         canDelete = canDelete && subViewInfo.activeActions.delete;
         const deleteFn = (record) => this.removeRecordFromList(record);
 
+        let canLink = "link" in options ? evalDomain(options.link, evalContext) : true;
+        const canUnlink = "unlink" in options ? evalDomain(options.unlink, evalContext) : true;
+
+        if (!this.isMany2Many) {
+            canLink = canCreate;
+        }
+
         if (this.viewMode !== "list") {
-            const result = { canCreate };
+            const result = { canCreate, canLink };
             if (canDelete) {
                 result.onDelete = deleteFn;
             }
             return result;
         }
-
-        const canLink = "link" in options ? evalDomain(options.link, evalContext) : true;
-        const canUnlink = "unlink" in options ? evalDomain(options.unlink, evalContext) : true;
 
         // We need to compute some object used by (x2many renderers) based on that
 
@@ -152,7 +156,8 @@ export class X2ManyField extends Component {
     }
 
     get displayAddButton() {
-        return this.viewMode === "kanban" && this.activeActions.canCreate && !this.props.readonly;
+        const { canCreate, canLink } = this.activeActions;
+        return this.viewMode === "kanban" && (canLink || canCreate) && !this.props.readonly;
     }
 
     get pagerProps() {

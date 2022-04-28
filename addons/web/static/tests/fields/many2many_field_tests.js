@@ -466,15 +466,21 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("many2many kanban: create action disabled", async function (assert) {
+    QUnit.test("many2many kanban: create action disabled", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[0].timmy = [12, 14];
+        serverData.models.partner.records[0].timmy = [12, 14];
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        serverData.views = {
+            "partner_type,false,list": '<tree><field name="name"/></tree>',
+            "partner_type,false,search":
+                "<search>" + '<field name="display_name" string="Name"/>' + "</search>",
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="timmy">' +
@@ -491,39 +497,31 @@ QUnit.module("Fields", (hooks) => {
                 "</kanban>" +
                 "</field>" +
                 "</form>",
-            archs: {
-                "partner_type,false,list": '<tree><field name="name"/></tree>',
-                "partner_type,false,search":
-                    "<search>" + '<field name="display_name" string="Name"/>' + "</search>",
-            },
-            res_id: 1,
-            session: { user_context: {} },
+            resId: 1,
         });
 
         assert.ok(
-            !form.$(".o-kanban-button-new").length,
+            !$(target).find(".o-kanban-button-new").length,
             '"Add" button should not be available in readonly'
         );
 
-        await testUtils.form.clickEdit(form);
+        await clickEdit(target);
 
         assert.ok(
-            form.$(".o-kanban-button-new").length,
+            $(target).find(".o-kanban-button-new").length,
             '"Add" button should be available in edit'
         );
         assert.ok(
-            form.$(".o_kanban_view .delete_icon").length,
+            $(target).find(".o_kanban_renderer .delete_icon").length,
             "delete icon should be visible in edit"
         );
 
-        await testUtils.dom.click(form.$(".o-kanban-button-new"));
+        await click($(target).find(".o-kanban-button-new")[0]);
         assert.strictEqual(
             $(".modal .modal-footer .btn-primary").length,
             1, // only button 'Select'
             '"Create" button should not be available in the modal'
         );
-
-        form.destroy();
     });
 
     QUnit.skipWOWL("many2many kanban: conditional create/delete actions", async function (assert) {
