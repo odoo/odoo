@@ -90,32 +90,81 @@ class TestCRMLeadMultiCompany(TestCrmCommon):
     @users('user_sales_manager_mc')
     def test_lead_mc_company_computation_env_user_restrict(self):
         """ Check that the computed company is allowed (aka in self.env.companies).
-        User is logged in company_main even their default default company is
-        company_2. """
+        User is logged in company_main even their default company is company_2.
+        Conversely, if not company is set on team, preferentially choose env current company."""
         LeadUnsyncCids = self.env['crm.lead'].with_context(allowed_company_ids=[self.company_main.id])
         self.assertEqual(LeadUnsyncCids.env.company, self.company_main)
         self.assertEqual(LeadUnsyncCids.env.companies, self.company_main)
         self.assertEqual(LeadUnsyncCids.env.user.company_id, self.company_2)
 
         # simulate auto-creation through sudo (assignment-like)
-        lead = LeadUnsyncCids.sudo().create({
-            'name': 'My Lead MC',
+        lead_1_auto = LeadUnsyncCids.sudo().create({
+            'name': 'My Lead MC 1 Auto',
         })
-        self.assertFalse(lead.company_id,
-                         'Lead: due to MC rule, avoid setting a company when it would cause crashes')
-        self.assertEqual(lead.team_id, self.sales_team_1,
-                         'Lead: due to MC rule, took first availability in other company')
-        self.assertEqual(lead.user_id, self.user_sales_manager_mc)
+        self.assertEqual(lead_1_auto.company_id, self.company_main)
+        self.assertEqual(lead_1_auto.team_id, self.sales_team_1,
+                         'Lead: due to MC rule, took first available team')
+        self.assertEqual(lead_1_auto.user_id, self.user_sales_manager_mc)
 
         # manual creation
-        lead = LeadUnsyncCids.create({
+        lead_1_manual = LeadUnsyncCids.create({
             'name': 'My Lead MC',
         })
-        self.assertFalse(lead.company_id,
-                         'Lead: due to MC rule, avoid setting a company when it would cause crashes')
-        self.assertEqual(lead.team_id, self.sales_team_1)
-        self.assertEqual(lead.user_id, self.user_sales_manager_mc)
+        self.assertEqual(lead_1_manual.company_id, self.company_main)
+        self.assertEqual(lead_1_manual.team_id, self.sales_team_1)
+        self.assertEqual(lead_1_manual.user_id, self.user_sales_manager_mc)
 
+        # Logged on other company will use that one for the lead company with sales_team_2 as is assigned to company_2
+        LeadUnsyncCids = self.env['crm.lead'].with_context(allowed_company_ids=[self.company_main.id, self.company_2.id])
+        LeadUnsyncCids = LeadUnsyncCids.with_company(self.company_2)
+        self.assertEqual(LeadUnsyncCids.env.company, self.company_2)
+
+        # simulate auto-creation through sudo (assignment-like)
+        lead_2_auto = LeadUnsyncCids.sudo().create({
+            'name': 'My Lead MC 2 Auto',
+        })
+        self.assertEqual(lead_2_auto.company_id, self.company_2)
+        self.assertEqual(lead_2_auto.team_id, self.team_company2)
+
+        # Manual assignment
+        lead_2_manual = LeadUnsyncCids.create({
+            'name': 'My Lead MC 2 Manual',
+        })
+        self.assertEqual(lead_2_manual.company_id, self.company_2)
+        self.assertEqual(lead_2_auto.team_id, self.team_company2)
+
+        # If company_2 and other teams have no set company, current company is used, with first
+        # sales team including user.
+        self.team_company2.write({'company_id': False})
+        lead_3_auto = LeadUnsyncCids.sudo().create({
+            'name': 'My Lead MC 3 Auto',
+        })
+        self.assertEqual(lead_3_auto.company_id, self.company_2)
+        self.assertEqual(lead_3_auto.team_id, self.team_company2)
+
+        # Manual assignment
+        lead_3_manual = LeadUnsyncCids.create({
+            'name': 'My Lead MC 3 Manual',
+        })
+        self.assertEqual(lead_3_manual.company_id, self.company_2)
+        self.assertEqual(lead_3_manual.team_id, self.team_company2)
+
+        # If company_2 does not include user, then the first sales team is used again
+        self.team_company2.write({'member_ids': [(3, self.user_sales_manager_mc.id)]})
+
+        # simulate auto-creation through sudo (assignment-like)
+        lead_4_auto = LeadUnsyncCids.sudo().create({
+            'name': 'My Lead MC 4 Auto',
+        })
+        self.assertEqual(lead_4_auto.company_id, self.company_2)
+        self.assertEqual(lead_4_auto.team_id, self.sales_team_1)
+
+        # Manual assignment
+        lead_4_manual = LeadUnsyncCids.create({
+            'name': 'My Lead MC 4 Manual',
+        })
+        self.assertEqual(lead_4_manual.company_id, self.company_2)
+        self.assertEqual(lead_4_manual.team_id, self.sales_team_1)
 
     @users('user_sales_manager_mc')
     def test_lead_mc_company_computation_partner_restrict(self):

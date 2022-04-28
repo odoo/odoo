@@ -275,41 +275,33 @@ class Lead(models.Model):
     def _compute_company_id(self):
         """ Compute company_id coherency. """
         for lead in self:
-            proposal = lead.company_id
 
             # invalidate wrong configuration
-            if proposal:
+            if lead.company_id:
                 # company not in responsible companies
-                if lead.user_id and proposal not in lead.user_id.company_ids:
-                    proposal = False
+                if lead.user_id and lead.company_id not in lead.user_id.company_ids:
+                    lead.company_id = False
                 # inconsistent
-                if lead.team_id.company_id and proposal != lead.team_id.company_id:
-                    proposal = False
+                elif lead.team_id.company_id and lead.company_id != lead.team_id.company_id:
+                    lead.company_id = False
                 # void company on team and no assignee
-                if lead.team_id and not lead.team_id.company_id and not lead.user_id:
-                    proposal = False
+                elif lead.team_id and not lead.team_id.company_id and not lead.user_id:
+                    lead.company_id = False
                 # no user and no team -> void company and let assignment do its job
                 # unless customer has a company
-                if not lead.team_id and not lead.user_id and \
-                   (not lead.partner_id or lead.partner_id.company_id != proposal):
-                    proposal = False
+                elif not lead.team_id and not lead.user_id and \
+                   (not lead.partner_id or lead.partner_id.company_id != lead.company_id):
+                    lead.company_id = False
 
-            # propose a new company based on responsible, limited by team
-            if not proposal:
-                if lead.user_id and lead.team_id.company_id:
-                    proposal = lead.team_id.company_id
+            # Set a new company based on team > user (respecting context) > partner
+            if not lead.company_id:
+                if lead.team_id.company_id:
+                    lead.company_id = lead.team_id.company_id
                 elif lead.user_id:
-                    proposal = lead.user_id.company_id & self.env.companies
-                elif lead.team_id:
-                    proposal = lead.team_id.company_id
+                    lead.company_id = self.env.company & lead.user_id.company_ids \
+                                      or lead.user_id.company_id & self.env.companies
                 elif lead.partner_id:
-                    proposal = lead.partner_id.company_id
-                else:
-                    proposal = False
-
-            # set a new company
-            if lead.company_id != proposal:
-                lead.company_id = proposal
+                    lead.company_id = lead.partner_id.company_id
 
     @api.depends('team_id', 'type')
     def _compute_stage_id(self):
